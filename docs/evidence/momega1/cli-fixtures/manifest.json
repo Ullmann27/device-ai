@@ -1,0 +1,29 @@
+{
+  "baseCommit": "878393350db82e2b34738b09c20dbf655f1bad9d",
+  "evidenceClass": "CLI_ADMISSION_CONTRACT",
+  "originalFullNodeSource": "645b2215",
+  "originalFullNodeSha256": "e08b8cc3b213172ed578e7c1cb7252fe89e18b01b25721a06bdcc739e887f2de",
+  "testBlobs": {
+    "scripts/continuum-coding-brain.test.mjs": {
+      "645": "e27a4973e31156d4acdd5bae709a507d69c6a9d4",
+      "878": "e27a4973e31156d4acdd5bae709a507d69c6a9d4",
+      "patchedSha256": "d4b67ae50f50a21b35a69f082fbf4f63c05ffa5f60c48d79300f772898aadb2c"
+    },
+    "scripts/continuum-m2-model-preflight.test.mjs": {
+      "645": "53a8b8bff5265714bdeb5479634a26af31323a7d",
+      "878": "53a8b8bff5265714bdeb5479634a26af31323a7d",
+      "patchedSha256": "19c502e8bab125bbc8a3cd9e00c08bdde3af68b47022c3fe5407bf44366d4437"
+    }
+  },
+  "unchangedProductionBlobs": {
+    "scripts/continuum-local-brain-cli.mjs": "92869777b694f9dcc4381b9f29784058ab63d042",
+    "scripts/continuum-local-model-observation.mjs": "33dc2b6ef30c72407cc35ab43ba397d8edbd0ca5",
+    "scripts/continuum-m2-model-preflight.mjs": "bbfd4ffc4e5f6c6c623e1ae6317f1d1e66d74fa2"
+  },
+  "evidenceSha256": {
+    "focused-green.tap": "f8b3e1517c21e061d8fe1df38785c40136aeea9bbc70251c6116e54278b6e332",
+    "original-three-failures-645b2215.tap": "81a87df97464e35b80d549dd0f2debd9a3c0dcc6bf2fd079382d0f99b1738a51",
+    "focused-red.tap": "a4a1bd32ab3107782168fd9845128f232d52b51f024d74a7b0798ad2c07c8c9c"
+  },
+  "realInference": false
+}

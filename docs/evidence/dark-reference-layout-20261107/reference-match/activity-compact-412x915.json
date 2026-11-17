@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "fidelity": "android_activity_host_native_canvas_api28_explicit_2d_head",
+  "source_commit": "60ec75e3fc468b6cf96237a338f3f6388e6bcaf0",
+  "capture_state": "home",
+  "pixel_width": 412,
+  "pixel_height": 915,
+  "viewport_width_dp": 412,
+  "viewport_height_dp": 915,
+  "density": 1,
+  "font_scale": 1,
+  "has_feature_tiles": true,
+  "live_panel_expanded": false,
+  "animation_duration_scale": 0,
+  "head_mode": "existing_2d_renderer_explicitly_selected",
+  "native_filament_verified": false,
+  "physical_device_verified": false,
+  "data_policy": "isolated empty test storage; real application startup; no invented status data",
+  "bounds_coordinate_space": "each View relative to its real parent; no synthetic composition",
+  "home_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 412,
+    "bottom": 2568
+  },
+  "avatar_bounds": {
+    "left": 12,
+    "top": 74,
+    "right": 400,
+    "bottom": 394
+  },
+  "shell_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 412,
+    "bottom": 2568
+  },
+  "scroll_viewport_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 412,
+    "bottom": 841
+  },
+  "scroll_x_px": 0,
+  "scroll_y_px": 0,
+  "scroll_y_dp": 0,
+  "scroll_content_height_px": 2625,
+  "slot_bounds_coordinate_space": "actual shell-local dp",
+  "slot_bounds_dp": {
+    "TILES": {
+      "left": 12,
+      "top": 536,
+      "right": 400,
+      "bottom": 1854.270263671875
+    },
+    "STATUS": {
+      "left": 12,
+      "top": 1864.270263671875,
+      "right": 400,
+      "bottom": 1954.270263671875
+    },
+    "ROW_AGENTS": {
+      "left": 12,
+      "top": 1978.270263671875,
+      "right": 201,
+      "bottom": 2142.270263671875
+    },
+    "ROW_TASKS": {
+      "left": 211,
+      "top": 1978.270263671875,
+      "right": 400,
+      "bottom": 2142.270263671875
+    },
+    "ROW_MEMORY": {
+      "left": 12,
+      "top": 2152.270263671875,
+      "right": 201,
+      "bottom": 2316.270263671875
+    },
+    "ROW_MODEL": {
+      "left": 211,
+      "top": 2152.270263671875,
+      "right": 400,
+      "bottom": 2316.270263671875
+    }
+  },
+  "png_sha256": "31adef16f8b0dd00a95871d2db044b19fabdbcf50d061df0dd2770c7fa04aefd"
+}

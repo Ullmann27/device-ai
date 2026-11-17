@@ -1,0 +1,16 @@
+{
+  "source_commit": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+  "run_id": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+  "source_journal": "/workspace/scratch/2d62a799e417/qa/android-focused-5b935b4f/junit-progress.ndjson",
+  "record_type": "verbatim existing failure; ongoing run left untouched",
+  "record_sha256": "a7ce538db826d5f4d4754c7398800b7497d9f0cc4d6a939d3bc397a2f4dbda28",
+  "baseline_source_sha256": {
+    "app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt": "d742006414cb25119d2fe8da4929da627a42b057b6236a9214c7eddb739349b6",
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "d588466bb1b02e57725bfdf206f37f3e51b0b4d333c91d25d791ad26d12845ff",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt": "c5398ae4d0392b96ddc635f3fecc19281c6bbadc767add0eccb7a63efc4b8603"
+  },
+  "new_test_source_sha256": "9ec460be07d324f7c509f5fcc35e7bf1d0f99aac7eab3df0907ab76928f4445d",
+  "production_changed": false,
+  "focused_retest": "NOT_RUN",
+  "gradle_started_by_agent": false
+}

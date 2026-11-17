@@ -1,0 +1,12 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-run-once",
+  "status": "OK",
+  "result": {
+    "outcome": "DONE_INVESTIGATION",
+    "ccc1": "ABSTAINED",
+    "taskId": "t-e961f2e2028f159d",
+    "detail": "CCC1 ABSTAINED task t-e961f2e202"
+  }
+}

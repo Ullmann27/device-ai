@@ -1,0 +1,47 @@
+{
+  "schema": "continuum-mcp-canonical-host-check",
+  "version": 1,
+  "sourceCommit": "c900dfa8ec022cb0db31f5f74a172000e6d6ca3d",
+  "node": "v24.19.0",
+  "environment": "HOST",
+  "deviceVerified": false,
+  "modelInference": "NOT_RUN",
+  "codingRepair": "NOT_RUN",
+  "chatgptConnection": "NOT_CONFIGURED",
+  "checks": [
+    {
+      "name": "separate authenticated CLI process initialized over HTTP",
+      "status": "PASS"
+    },
+    {
+      "name": "real Kotlin20 profile metadata and current canonical stopped status; read-only bytes unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "actual owner inbox task visible without invented execution evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "new observer process rereads persisted identities and canonical task",
+      "status": "PASS"
+    },
+    {
+      "name": "actual canonical owner cancellation visible and evidence denied",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "elapsedMs": 5241.604272,
+  "toolReads": 12,
+  "latencyMs": {
+    "p50": 184.64029499999924,
+    "p95": 526.3949559999992,
+    "samples": 12
+  },
+  "parentProcessUsage": {
+    "userCpuMicros": 125677,
+    "systemCpuMicros": 41517,
+    "maxRssKiB": 65664,
+    "scope": "check controller only; child Java/Node resources excluded, not energy"
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "schema": "CONTINUUM_ULTIMATE_INTAKE_V1",
+  "canonical": {
+    "repository": "Ullmann27/device-ai",
+    "branch": "integration/continuum-ultimate-system-20261110",
+    "pr": 740,
+    "integrator": "root",
+    "sourceCheckpoint": "c8f772fd97c05fd06cae6988299b7c01b5e95e18"
+  },
+  "baseline": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
+  "entries": [
+    {
+      "pr": 715,
+      "branch": "cinema/fluid-light-stage-20261110",
+      "headAtSnapshot": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
+      "classification": "INTEGRATED",
+      "decision": "Cinema baseline, original assets and existing event bus.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 716,
+      "branch": "research/continuum-context-cinema-20261110",
+      "headAtSnapshot": "00cf15d925d2c114d8ce57ee23dac473a89e6e0f",
+      "classification": "INTEGRATED_SHADOW_ONLY",
+      "decision": "CTX3 retained behind its existing explicit shadow switch.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 717,
+      "branch": "research/continuum-cognitive-budget-20261110",
+      "headAtSnapshot": "4ee9f9c05a1f4623427b41735733ab633f291c6b",
+      "classification": "RESEARCH_ONLY",
+      "decision": "Budget candidate has no verified production caller; specialized budget override review remains unproven.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 718,
+      "branch": "research/brain-lab-controlled-20261110",
+      "headAtSnapshot": "401f94602ea5622e7dbcc513787eba3c91107488",
+      "classification": "REJECT_PROMOTION",
+      "decision": "Controlled lab did not qualify for production.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 719,
+      "branch": "research/continuum-memory-skills-20261110",
+      "headAtSnapshot": "dafb3187faf2580d0a060a66fb7e82915f8fc6fc",
+      "classification": "RESEARCH_ONLY",
+      "decision": "Memory/skill candidate host evidence does not prove real-model integration.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 720,
+      "branch": "fix/dialog-context-reference-20261110",
+      "headAtSnapshot": "de831d06034c46c6ae039a6df32d52a4392a3521",
+      "classification": "INTEGRATED",
+      "decision": "Dialog correction, consent tickets and spoken replies via #725.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 721,
+      "branch": "research/omega-work-contract-20261110",
+      "headAtSnapshot": "340bfb0972db1bbc76ef4fb7d0afeb00fdf45bce",
+      "classification": "REJECT_PROMOTION",
+      "decision": "Rejected OMEGA context prototype; not imported or activated.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 722,
+      "branch": "support/code52-draft-readback-20261110",
+      "headAtSnapshot": "5a40b40e1361262c025e19d6e6f5ca28b397b52a",
+      "classification": "PROTECTED_RELEASE_ONLY",
+      "decision": "Signer/readback support outside unsigned candidate; no dispatch.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 723,
+      "branch": "fix/ctx3-negation-support-20261110",
+      "headAtSnapshot": "6d515bc48fc6e1fa284d4586788f7d39fbf17d61",
+      "classification": "INTEGRATED_SHADOW_ONLY",
+      "decision": "Reviewed negation fixes; ordinary startet case corrected; no activation change.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 724,
+      "branch": "fix/cinema-queued-result-support-20261110",
+      "headAtSnapshot": "e61458f4c46f7af118614d01e71060b73a0c5521",
+      "classification": "INTEGRATED",
+      "decision": "Queued result/session identity via #725.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 725,
+      "branch": "support/cinema-dialog-integration-20261110",
+      "headAtSnapshot": "b0a1635b77f568692ac6ff6b662f52d6b6eb7231",
+      "classification": "INTEGRATED",
+      "decision": "Reviewed dialog and Cinema donor; follow-up consent/ASR repairs included.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 726,
+      "branch": "support/cinema-outcome-evidence-20261110",
+      "headAtSnapshot": "d3185e72967832c7e0a5aee4a1b77ddad522caec",
+      "classification": "INTEGRATED",
+      "decision": "Delivered output remains distinct from verified outcomes.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 727,
+      "branch": "research/continuum-learning-integration-20261110",
+      "headAtSnapshot": "ff27033e36e2e6dfa552c570a0bea0f8f57fc386",
+      "classification": "INTEGRATED",
+      "decision": "Experience recency filter precedes bounded selection; Android combined gate pending.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 728,
+      "branch": "research/continuum-model-weights-20261110",
+      "headAtSnapshot": "1d9eab1275a7fcc92ad4c5e2d1dd52d1db411667",
+      "classification": "REJECT_PROMOTION",
+      "decision": "Experimental model weights failed retention qualification; not imported.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 729,
+      "branch": "qa/cinema-layout-review-20261110",
+      "headAtSnapshot": "cfdac5ea7101239d561007de0e9685e8028fcce9",
+      "classification": "HISTORICAL_EVIDENCE",
+      "decision": "Source-bound layout evidence inherited via Cinema; not current device evidence.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 730,
+      "branch": "qa/avatar-state-render-20261110",
+      "headAtSnapshot": "0ed9c0e186249d1486c87605803959f08b663331",
+      "classification": "ALREADY_PRESENT_SOURCE",
+      "decision": "Avatar QA source matches candidate; original asset not replaced.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 731,
+      "branch": "fix/cinema-compact-modules-20261110",
+      "headAtSnapshot": "59a1dfd8973c9fb88e1e94f14ef05a8a99e8ba08",
+      "classification": "ALREADY_PRESENT_SOURCE",
+      "decision": "Compact module fix inherited; stronger full-stroke geometry test retained.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 732,
+      "branch": "qa/cinema-render-coverage-20261110",
+      "headAtSnapshot": "6234c9b41db6bb41efd42dbc9aa4a7a50af33698",
+      "classification": "ALREADY_PRESENT_SOURCE",
+      "decision": "Capture tooling inherited; untracked-source provenance hole repaired.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 733,
+      "branch": "qa/cinema-thermal-visual-20261110",
+      "headAtSnapshot": "5dfb7d298343cb12763a78eb57a35d5bc042f997",
+      "classification": "ALREADY_PRESENT_SOURCE",
+      "decision": "Thermal rendering test source matches candidate; device thermals NOT_RUN.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 734,
+      "branch": "fix/cinema-settled-result-20261110",
+      "headAtSnapshot": "19c07ed57ff0a1adf203f229972375108313004b",
+      "classification": "ALREADY_PRESENT_SOURCE",
+      "decision": "Settled-result opacity fix and tests match candidate.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 735,
+      "branch": "feature/android-system-intelligence-20261110",
+      "headAtSnapshot": "acca372a49972e35c2d8d0377187793416fa5a4f",
+      "classification": "INTEGRATED",
+      "decision": "Production source unchanged between merged 1223dc8 and acca372 (git diff app/src/main empty); later evidence remains available in donor PR. Local integration repairs retained.",
+      "deviceVerified": false,
+      "lastMergedHead": "1223dc82ab6c8482d3f5be44bf2863cd2425ee8e"
+    },
+    {
+      "pr": 736,
+      "branch": "feature/android-system-access-20261110",
+      "headAtSnapshot": "a1fcc4c34ef8b12b8f05657ca91fcf3211652626",
+      "classification": "ALREADY_PRESENT_SOURCE",
+      "decision": "Shizuku identity/revocation and native information paths match candidate via #735.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 737,
+      "branch": "feature/android-system-measurements-20261110",
+      "headAtSnapshot": "74b3a95882b5b1afdb7f78359e2888b8724711e8",
+      "classification": "INTEGRATED_WITH_REPAIRS",
+      "decision": "Measurement evaluator/capture source present; storage drift, charging and truncated frame-window repairs retained.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 738,
+      "branch": "feature/android-system-storage-20261110",
+      "headAtSnapshot": "8e7ffd35a0db14d3ed7ccf6231d12a65e164296c",
+      "classification": "ALREADY_PRESENT_SOURCE",
+      "decision": "Storage/undo production files match candidate; exact-budget and expiry regressions added.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 739,
+      "branch": "integration/continuum-cinema-apk53-20261110",
+      "headAtSnapshot": "f495fd633509e11a52519a0bd89d96b22cb91b3b",
+      "classification": "INTEGRATED",
+      "decision": "Includes idle admission/non-execution follow-up for five direct research callers; model-awaiting approval retains its existing busy path. Final combined QA required.",
+      "deviceVerified": false
+    },
+    {
+      "pr": 740,
+      "branch": "integration/continuum-ultimate-system-20261110",
+      "headAtSnapshot": "c8f772fd97c05fd06cae6988299b7c01b5e95e18",
+      "classification": "CANONICAL_CANDIDATE",
+      "decision": "This mission; all production readiness claims await exact-source gates.",
+      "deviceVerified": false
+    }
+  ],
+  "historicalAudit": {
+    "catalog": "docs/integration/PR-BESTAND-20261109.jsonl",
+    "branchCatalog": "docs/integration/BRANCH-BESTAND-20261109.jsonl",
+    "ledger": "docs/integration/CODE52_NO_ORPHANS_LEDGER.json",
+    "note": "Prior file/callsite audits are retained. Metadata, ancestry and a passing build do not prove every historical feature is connected. Entries without individual source evidence remain AUDIT_REQUIRED."
+  },
+  "boundaries": {
+    "physicalFold7": "NOT_RUN",
+    "realGemma": "NOT_RUN",
+    "microphoneTts": "NOT_RUN",
+    "filamentGpu": "NOT_RUN",
+    "deviceThermal": "NOT_RUN",
+    "originalSigning": "NOT_AUTHORIZED",
+    "mainMerge": "NOT_AUTHORIZED",
+    "publication": "NOT_AUTHORIZED",
+    "modelWeightsChanged": false,
+    "originalAvatarChanged": false
+  },
+  "recordedAtUtc": "2026-11-10T23:02:07.735956+00:00",
+  "finalQualification": {
+    "remoteSource": "3ae6e2252b00aa72ae42c9221cce648c8382ffbf",
+    "identicalGitTree": "b9a10f21e2c5768c4443d2126ce84fcf671a539b",
+    "androidHost": {
+      "tests": 4617,
+      "passed": 4600,
+      "skipped": 17,
+      "failures": 0,
+      "errors": 0
+    },
+    "androidMode": "FULL_SUITE_PLUS_CHANGED_TEST_REGRESSION",
+    "singleGreenFullRun": false,
+    "node": {
+      "total": 2493,
+      "passed": 2456,
+      "failed": 0,
+      "skipped": 37
+    },
+    "apk": {
+      "file": "Continuum_53_Ultimate_unsigned_3ae6e225.apk",
+      "bytes": 102670016,
+      "sha256": "435b3fd600bfa7d09a249bc12a8054d472d1d7e7eaf90cfa8ed6d1e93cfd6a6a",
+      "package": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 53,
+      "versionName": "0.3.52",
+      "abis": [
+        "arm64-v8a"
+      ],
+      "signed": false,
+      "zipIntegrity": "PASS",
+      "zipAlignment16KiB": "PASS"
+    },
+    "Fold7": "NOT_RUN",
+    "latestDonorSourceEquivalence": "../evidence/ultimate-system-20261110/source-equivalence-final.json",
+    "historicalPriorityAudit": "../evidence/ultimate-system-20261110/historical-callsite-notes.md"
+  }
+}

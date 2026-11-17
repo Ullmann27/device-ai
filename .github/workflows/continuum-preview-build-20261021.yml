@@ -1,0 +1,124 @@
+name: Continuum isolated preview APK (owner requested)
+on:
+  push:
+    branches:
+      - chatgpt/continuum-apk-preview-20261021
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-apk-preview-20261021
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    if: github.ref == 'refs/heads/chatgpt/continuum-apk-preview-20261021'
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Checkout exactly this source commit without retained token
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Install Android SDK 36 tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          test -x "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" 'platforms;android-36' 'build-tools;35.0.0'
+
+      - name: Test Node Continuum and isolated research contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=tap --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
+
+      - name: Test and syntax-check backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix backend --ignore-scripts --no-audit --no-fund
+          npm --prefix backend run check
+          npm --prefix backend test
+
+      - name: Prepare isolated parity fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/continuum/backlog-fixtures.mjs roundtrip-prepare "$RUNNER_TEMP/backlog-roundtrip"
+          node .github/continuum/contrastive-parity.mjs prepare "$RUNNER_TEMP/contrastive-parity"
+          node .github/continuum/cre-parity.mjs prepare "$RUNNER_TEMP/cre1-parity"
+
+      - name: Compile, unit-test, lint and build side-by-side preview
+        shell: bash
+        env:
+          CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/backlog-roundtrip
+          CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/contrastive-parity
+          CONTINUUM_CRE1_PARITY_DIR: ${{ runner.temp }}/cre1-parity
+        run: |
+          set -euo pipefail
+          gradle :app:testDebugUnitTest :app:lintDebug :app:assembleDebug -PdeviceAiPreview=true --stacktrace
+          node .github/continuum/cre-parity.mjs verify "$RUNNER_TEMP/cre1-parity"
+          node .github/continuum/contrastive-parity.mjs verify "$RUNNER_TEMP/contrastive-parity"
+          node .github/continuum/backlog-fixtures.mjs roundtrip-verify "$RUNNER_TEMP/backlog-roundtrip"
+
+      - name: Independently inspect package, signature, source and hash
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          test -x "$TOOLS/aapt"
+          test -x "$TOOLS/apksigner"
+          mkdir -p preview-artifact
+          "$TOOLS/aapt" dump badging "$APK" > preview-artifact/PACKAGE-INFO.txt
+          grep -Fq "package: name='at.heinz.deviceai.preview'" preview-artifact/PACKAGE-INFO.txt
+          "$TOOLS/apksigner" verify --verbose --print-certs "$APK" > preview-artifact/SIGNATURE-INFO.txt
+          grep -Fq 'Verified using v2 scheme (APK Signature Scheme v2): true' preview-artifact/SIGNATURE-INFO.txt
+          cp "$APK" preview-artifact/DeviceAI-Continuum-PR50-preview.apk
+          (cd preview-artifact && sha256sum DeviceAI-Continuum-PR50-preview.apk > SHA256SUMS.txt)
+          {
+            printf 'SOURCE_COMMIT=%s\n' "$GITHUB_SHA"
+            printf 'SOURCE_REF=%s\n' "$GITHUB_REF"
+            printf 'PACKAGE=at.heinz.deviceai.preview\n'
+            printf 'SIGNATURE=ephemeral GitHub Actions debug signer (NOT existing installed app signer)\n'
+            printf 'STATUS=BUILD_VERIFIED_NOT_DEVICE_INSTALLED\n'
+          } > preview-artifact/BUILD-INFO.txt
+
+      - name: Upload preview APK and verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-PR50-isolated-preview-apk
+          path: preview-artifact/
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Upload JVM test XML on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-PR50-JVM-tests-on-failure
+          path: app/build/test-results/testDebugUnitTest/TEST-*.xml
+          if-no-files-found: ignore

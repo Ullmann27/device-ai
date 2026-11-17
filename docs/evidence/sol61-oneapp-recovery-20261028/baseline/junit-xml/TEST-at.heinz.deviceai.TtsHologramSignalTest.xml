@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.TtsHologramSignalTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:17" hostname="b50d54a1ac03" time="0.029">
+  <properties/>
+  <testcase name="channelCountAndNewUtterancesDoNotReuseStaleAmplitude" classname="at.heinz.deviceai.TtsHologramSignalTest" time="0.001"/>
+  <testcase name="boundedHistoryPreservesDurationWeightedAudioPower" classname="at.heinz.deviceai.TtsHologramSignalTest" time="0.011"/>
+  <testcase name="invalidPlaybackFrameCannotRewindAnActiveSignal" classname="at.heinz.deviceai.TtsHologramSignalTest" time="0.0"/>
+  <testcase name="synthesisIsSilentUntilAudibleStartAndFollowsPlaybackFrame" classname="at.heinz.deviceai.TtsHologramSignalTest" time="0.001"/>
+  <testcase name="invalidPlaybackFrameCannotStartTheAudioSignal" classname="at.heinz.deviceai.TtsHologramSignalTest" time="0.0"/>
+  <testcase name="delayedCallbacksCannotResetOrMoveTheNextUtterance" classname="at.heinz.deviceai.TtsHologramSignalTest" time="0.0"/>
+  <testcase name="longSynthesisKeepsLaterAudioAndItsPlaybackPosition" classname="at.heinz.deviceai.TtsHologramSignalTest" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

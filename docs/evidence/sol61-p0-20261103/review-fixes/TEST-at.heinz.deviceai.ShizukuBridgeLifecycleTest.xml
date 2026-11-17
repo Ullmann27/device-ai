@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ShizukuBridgeLifecycleTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-03T05:52:05" hostname="be4b77f2bd6b" time="2.354">
+  <properties/>
+  <testcase name="pendingPermissionDoesNotOpenRepeatedDialogs" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="1.885"/>
+  <testcase name="permissionCallbackCannotClaimARealPermissionThatIsNotGranted" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.039"/>
+  <testcase name="lateDenialReplacesTheExpiredPermissionTimeoutDiagnosis" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.05"/>
+  <testcase name="permissionGrantedAfterWatchdogTimeoutStillConnectsWhenActuallyGranted" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.054"/>
+  <testcase name="permissionGrantedWhileCallbackMissingCanBindOnRefresh" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.031"/>
+  <testcase name="destroyedBindingDoesNotLetLateShellCallbackResurrectAccess" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.039"/>
+  <testcase name="timedOutBindingCanRetryAndLateCallbackCannotReplaceNewSession" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.027"/>
+  <testcase name="repeatedRefreshAndTapKeepOnePendingBinding" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.026"/>
+  <testcase name="refreshKeepsAConnectingBindingAndShowsSpecificStatus" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.045"/>
+  <testcase name="callbackAfterStopCannotResurrectTheShell" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.026"/>
+  <testcase name="nullBindingIsVisibleAndAllowsRetry" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.019"/>
+  <testcase name="stoppedServerReportsMissingWithoutRequestingPermissionOrBinding" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.022"/>
+  <testcase name="permissionRequestTimeoutDoesNotLockOutFutureOwnerRetry" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.044"/>
+  <testcase name="serverDisappearingWithoutDeadCallbackNeverRemainsReady" classname="at.heinz.deviceai.ShizukuBridgeLifecycleTest" time="0.042"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

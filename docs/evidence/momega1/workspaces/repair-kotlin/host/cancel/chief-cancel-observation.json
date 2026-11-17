@@ -1,0 +1,16 @@
+{
+  "body": "Workspace task=t-2377e6e34a37858c source=cbf7e09e6ed6b5f882104892860d0e5a52044d8e request=ef9d2063-170c-46c9-bcfe-544c7a2a6c47 workerStatus=CANCELLED Vom Chef abgebrochen.",
+  "observedBefore": {
+    "active": 1,
+    "containerIds": [
+      "4600a3fec27b"
+    ]
+  },
+  "observedAfter": {
+    "active": 0,
+    "containerIds": []
+  },
+  "runnerClosed": true,
+  "containerClosed": true,
+  "successReceiptCreated": false
+}

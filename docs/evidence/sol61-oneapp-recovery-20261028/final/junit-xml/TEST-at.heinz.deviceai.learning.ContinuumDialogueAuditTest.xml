@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumDialogueAuditTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:35" hostname="b50d54a1ac03" time="0.122">
+  <properties/>
+  <testcase name="greetingsDoNotCiteIncidentalKeywordsAndUnknownQuestionsBreakTopicDrift" classname="at.heinz.deviceai.learning.ContinuumDialogueAuditTest" time="0.012"/>
+  <testcase name="provenanceAndRevocationGateExcludesSyntheticAndWithdrawnClaims" classname="at.heinz.deviceai.learning.ContinuumDialogueAuditTest" time="0.003"/>
+  <testcase name="namedEntityRetrievalIsRepeatableAndUnknownEntitiesAreNotInvented" classname="at.heinz.deviceai.learning.ContinuumDialogueAuditTest" time="0.107"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

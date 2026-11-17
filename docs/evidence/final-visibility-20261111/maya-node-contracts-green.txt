@@ -1,0 +1,18 @@
+✔ dictation remains a draft; only the explicit mode routes recognized speech to Send (3.286552ms)
+✔ owner decision: a microphone tap starts hands-free talk; long press keeps silent dictation (2.693032ms)
+✔ listening resumes only after the bound reply and never over dialogs or approvals (2.740329ms)
+✔ ending the recognition scope (pause, new chat, bot switch) ends hands-free mode (0.724799ms)
+✔ pure policy and its JVM regressions cover turns, stale callbacks, pause, stop and approvals (0.274686ms)
+✔ voice input barge-in silences TTS engine and avatar mouth before the recognizer starts (150.037917ms)
+✔ assistant TTS is refused while the on-device microphone turn is active (156.502744ms)
+✔ dictation is merged at the cursor and never overwrites a typed composer draft (185.805439ms)
+✔ model load path is gated by measured RAM/thermal admission before the native engine starts (116.929218ms)
+✔ live runLocal model binds every step to the model captured at turn start (131.523837ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 924.804806

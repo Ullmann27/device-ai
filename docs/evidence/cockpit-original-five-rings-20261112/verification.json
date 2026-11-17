@@ -1,0 +1,64 @@
+{
+  "renderCheckoutHead": "62c8602b1437c6b9f6637b2e101f603452089705",
+  "productBase": "62c8602b1437c6b9f6637b2e101f603452089705",
+  "toolCheckoutHead": "c1d4046236f732433a5887639ca02aa3726bd2c7",
+  "sourceStable": true,
+  "sourceWorkingTree": "",
+  "outputHashesVerified": 11,
+  "sourceHashesVerified": 68,
+  "toolFilesSha256": {
+    "WorkstationHostExport.kt": "ea979680f54130810be71e3de0f084338ecebe18c1665ccac1c46397e599856b",
+    "HostExampleContent.kt": "834ddabc0502f9ccfc64c60e14f008494d35b62b9cb4229a67e686ac618869cc",
+    "render_host.py": "ae6020d0b0528964ccbf42cb3acd6a9b971ca11f9fb644e76cf91f029871953c",
+    "compose_host.py": "85ba8e1bbc10ef8d71f0063ef9086a0c0b10b8abbedb1fb00700365846eacdc7",
+    "preview.py": "654c16632bff31b7c8d3bffb9056f7b16fa9f1a019a16b450c64a32d46a72868"
+  },
+  "renderedFrames": 66,
+  "projectionMaxErrorPixels": 0.00037155715943981704,
+  "ringCount": 5,
+  "orbClock": {
+    "mode": "CONSTANT_READY_REPLAY",
+    "initialPhase": 0.4,
+    "maxDeltaSeconds": 0.1,
+    "source": "ContinuumHologramView phase update and stateEnergy(READY)",
+    "sampleHz": 20,
+    "energy": 0.18
+  },
+  "phaseFirst": 0.4,
+  "phaseLast": 1.6083206,
+  "denoising": false,
+  "sampleCounts": {
+    "stills": 32,
+    "sequence": 16
+  },
+  "assets": {
+    "cockpit": "03b6364e2ff396fd9207b129e765ce5d4a93975113315cc3896844e53fd8ad30",
+    "orb": "fdfe54ce9aa2ed6af5ec6866c1078a4a34ece511e66b29cd1b3672f83229079c",
+    "avatarRuntime": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+    "avatarOriginal": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+  },
+  "matchingIntegratedToolCommit": "38d5b32e6f976f020f21008e2dbbf10580876203",
+  "integratedToolFileHashesEqual": true,
+  "video": {
+    "status": "PASS",
+    "decodedFrameCount": 60,
+    "uniqueDecodedFrameHashes": 60,
+    "stream": {
+      "width": 884,
+      "height": 830,
+      "r_frame_rate": "20/1",
+      "duration": "3.000000",
+      "nb_frames": "60"
+    },
+    "file": "fold-monitor-motion.mp4",
+    "sha256": "3546db997fd29382f07d22fcd2d6f25205ade1a79bc2294119771fa4668344ad"
+  },
+  "denoisingAttempt": {
+    "status": "UNAVAILABLE",
+    "renderer": "Blender 4.3.2 Cycles CPU",
+    "requestedBackend": "OPENIMAGEDENOISE",
+    "observedError": "enum OPENIMAGEDENOISE not found in ()",
+    "failedBeforeAssetImport": true,
+    "finalDenoisingEnabled": false
+  }
+}

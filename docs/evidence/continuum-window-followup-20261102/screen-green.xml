@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ScreenObservationRevisionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-02T10:32:38" hostname="e9081157-c2d" time="2.161">
+  <properties/>
+  <testcase name="contentEventInvalidatesRevisionWithoutInventingFreshLaunchEvidence" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="1.962"/>
+  <testcase name="oldServiceAndNullEventsCannotInvalidateCurrentService" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.033"/>
+  <testcase name="stableReadRetainsBoundedObservedText" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.086"/>
+  <testcase name="unknownWindowDuringReadInvalidatesSnapshotAndLaunchEvidence" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.029"/>
+  <testcase name="contentChangeDuringReadFailsClosedInsteadOfReleasingStaleText" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.025"/>
+  <testcase name="unknownWindowCannotLeaveOldForegroundConfirmation" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.024"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

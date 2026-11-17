@@ -1,0 +1,283 @@
+{
+  "schema": "continuum.post_fable_integration_review.v1",
+  "review_time_utc": "2026-11-01T14:37:28.779115+00:00",
+  "baseline_sha": "702b57ae5c2724a819048bcc3b7775272b48f2b3",
+  "branch": "research/continuum-sol61-post-fable-20261101",
+  "prs": [
+    {
+      "pr": 327,
+      "head_sha": "0c104e5d83e94096ab634685bf6184f753fc4e72",
+      "base_sha": "2ffe3de940c932a5408b5b6235b4554726cf04ea",
+      "is_baseline_ancestor": true,
+      "mergebase_with_331": "0c104e5d83e94096ab634685bf6184f753fc4e72",
+      "status": "INHERITED",
+      "meaning": "Offline hard-lock, evidence slots and safe Termux recovery already present; preserve original-request network veto.",
+      "changed_production_files": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/Cdx1EvidenceSlotBinder.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt"
+      ],
+      "remaining_compatible_source_files": [],
+      "remaining_docs": []
+    },
+    {
+      "pr": 328,
+      "head_sha": "081065b7d3628bf6a51239360f1e377f20df3fff",
+      "base_sha": "0c104e5d83e94096ab634685bf6184f753fc4e72",
+      "is_baseline_ancestor": true,
+      "mergebase_with_331": "081065b7d3628bf6a51239360f1e377f20df3fff",
+      "status": "INHERITED",
+      "meaning": "Version36 owner-release contract already present. Public publisher now offers36; another in-place release must exceed the actually installed code.",
+      "changed_production_files": [],
+      "remaining_compatible_source_files": [],
+      "remaining_docs": []
+    },
+    {
+      "pr": 329,
+      "head_sha": "3064ceb85a84b24dd1d2a4d36c9059fccbf68d24",
+      "base_sha": "081065b7d3628bf6a51239360f1e377f20df3fff",
+      "is_baseline_ancestor": true,
+      "mergebase_with_331": "3064ceb85a84b24dd1d2a4d36c9059fccbf68d24",
+      "status": "INHERITED_AND_HARDENED",
+      "meaning": "Schema3, strict JUnit/TAP and correctly ordered backend TAP invocation already present through331. Original329 failed deploy is superseded for this source.",
+      "changed_production_files": [],
+      "remaining_compatible_source_files": [],
+      "remaining_docs": []
+    },
+    {
+      "pr": 330,
+      "head_sha": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+      "base_sha": "081065b7d3628bf6a51239360f1e377f20df3fff",
+      "is_baseline_ancestor": true,
+      "mergebase_with_331": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+      "status": "INHERITED_AND_EXTENDED",
+      "meaning": "Natural-location baseline already present and extended by331/334; do not restore old verifier source.",
+      "changed_production_files": [
+        "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt"
+      ],
+      "remaining_compatible_source_files": [],
+      "remaining_docs": []
+    },
+    {
+      "pr": 331,
+      "head_sha": "cc9a56b152afb1a8359b768417cf395583db2027",
+      "base_sha": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+      "is_baseline_ancestor": false,
+      "mergebase_with_331": "cc9a56b152afb1a8359b768417cf395583db2027",
+      "status": "SOURCE_INHERITED_DOC_ONLY_MISSING",
+      "meaning": "All source commits through8417 are inherited. Sole331 commit absent from702 iscc9a56b1, adding the owner-update handoff markdown.",
+      "changed_production_files": [
+        "app/src/main/assets/continuum-research/natural-location-v3.csx",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumResidualSpanCore.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/span/DualEvidenceReadContract.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/span/EntityRelationLocationShadowAdapter.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/span/NaturalLocationLabComparison.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/span/VerifiedLocationSpanResearch.kt"
+      ],
+      "remaining_compatible_source_files": [],
+      "remaining_docs": [
+        "docs/research/omega/CONTINUUM-V36-OWNER-UPDATE-HANDOFF.md"
+      ]
+    },
+    {
+      "pr": 332,
+      "head_sha": "27bdfccda95d870b70529f93716a861c054eebb5",
+      "base_sha": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+      "is_baseline_ancestor": true,
+      "mergebase_with_331": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+      "status": "INHERITED",
+      "meaning": "Explanation/local routing, output placeholder rejection, regional search-engine exclusion and imperative query focus are present. Do not merge older331 files over these fixes.",
+      "changed_production_files": [
+        "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/GeneralWebDiscoveryProvider.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LocalDialogueQualityGate.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt"
+      ],
+      "remaining_compatible_source_files": [],
+      "remaining_docs": []
+    },
+    {
+      "pr": 333,
+      "head_sha": "cc878fb9e2e8374805648a12455f6b08fbce00e0",
+      "base_sha": "27bdfccda95d870b70529f93716a861c054eebb5",
+      "is_baseline_ancestor": true,
+      "mergebase_with_331": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+      "status": "INHERITED_PARTLY_RESEARCH_ONLY",
+      "meaning": "Reflex, prompt firewall, turn consent upper bound and RIS provider have callers. TemporalRoleEvidenceLedger/ConstrainedResourceFabric remain source-only research; no operating capability claimed.",
+      "changed_production_files": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ConstrainedResourceFabric.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/JarvisUnifiedEvidenceContract.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LegalRisEvidenceProvider.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationPromptFirewall.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/TemporalRoleEvidenceLedger.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/TurnScopedInternetMode.kt"
+      ],
+      "remaining_compatible_source_files": [],
+      "remaining_docs": []
+    },
+    {
+      "pr": 334,
+      "head_sha": "702b57ae5c2724a819048bcc3b7775272b48f2b3",
+      "base_sha": "cc878fb9e2e8374805648a12455f6b08fbce00e0",
+      "is_baseline_ancestor": true,
+      "mergebase_with_331": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+      "status": "BASELINE_HOST_ONLY_NEW_SOURCE",
+      "meaning": "Genesis research-to-dialogue, freshness, session/owner location reflex and RIS discovery are present. Full Android QA of702 and newS1 source is still missing.",
+      "changed_production_files": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LegalRisDiscoveryProvider.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LegalRisEvidenceProvider.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LocalDialogueQualityGate.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/Research.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoff.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/span/EntityRelationLocationShadowAdapter.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt"
+      ],
+      "remaining_compatible_source_files": [],
+      "remaining_docs": []
+    }
+  ],
+  "evidence": {
+    "actual_github_file_patches": 49,
+    "all_pr_head_objects_available": true,
+    "baseline_vs_331_missing_commit": "cc9a56b152afb1a8359b768417cf395583db2027",
+    "missing_commit_source_changes": false,
+    "missing_doc_blob": "341c1c96ddb3ec258fe93fb99438fa5b9b1f7671",
+    "source_files_sha256_at_review": {
+      "app/build.gradle.kts": "90eb3ea13034246b674d3266342631dfd969faab3e5f9d51a291877e3af17cdd",
+      "scripts/render-continuum-m8-qa.sh": "8e82303c0b39519c5f35150b62d7c90da0066ab6de6036d76aa5160e76257c78",
+      "scripts/continuum-architecture-proof.mjs": "e2a56b6b467cdf246e19fdac22ed94cb33cb612c7cad9fa3bc74d3baf1d4b441",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "ba361dc256e2fe782873b9f3f11ecb11c134c3c5f28eeace106c0f8250ab30a5",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "e248b715356da47a13954aa1cf087dded64457b7645059615cb28aa61b1367c4",
+      "app/src/main/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoff.kt": "b585f65bc269ef9fa5cb2ad9f2b65a9f74b071a74a0e4563ca03d972b1814249"
+    }
+  },
+  "qa": {
+    "current_full_android_source_coverage": [
+      {
+        "label": "pr332",
+        "sha": "27bdfccda95d870b70529f93716a861c054eebb5",
+        "schema": 3,
+        "binaryIdentity": {
+          "packageName": "at.heinz.deviceai.continuumlocal",
+          "versionCode": 36,
+          "versionName": "0.3.35"
+        },
+        "gradle_and_assembly_report_hashes_independently_match_receipt": true
+      },
+      {
+        "label": "pr333",
+        "sha": "cc878fb9e2e8374805648a12455f6b08fbce00e0",
+        "schema": 3,
+        "binaryIdentity": {
+          "packageName": "at.heinz.deviceai.continuumlocal",
+          "versionCode": 36,
+          "versionName": "0.3.35"
+        },
+        "gradle_and_assembly_report_hashes_independently_match_receipt": true
+      },
+      {
+        "label": "pr331",
+        "sha": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+        "schema": 3,
+        "binaryIdentity": {
+          "packageName": "at.heinz.deviceai.continuumlocal",
+          "versionCode": 36,
+          "versionName": "0.3.35"
+        },
+        "gradle_and_assembly_report_hashes_independently_match_receipt": true
+      }
+    ],
+    "baseline_702_full_android_qa_found": false,
+    "fable_1511_host_result_scope": "HOST_JVM_WITH_COMPILE_ONLY_LITERT_STAND_IN_NOT_ANDROID_APK",
+    "real_gradle_dependency": "com.google.ai.edge.litertlm:litertlm-android:0.18.0",
+    "gradle_build_file_git_blob_all_pr327_to334": "f581fa410866d87c1a8c9aeb48bdefb1676faace",
+    "dependency_changed_by_332_333_334": false,
+    "new_branch_allowlist_added_by_root": true,
+    "current_required_junit_suites": [
+      "at.heinz.deviceai.cognitive.NetworkTurnConstraintTest",
+      "at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest",
+      "at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest",
+      "at.heinz.deviceai.learning.ContinuumEvidenceWindowTest",
+      "at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest",
+      "at.heinz.deviceai.learning.span.NaturalLocationVerificationTest",
+      "at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest",
+      "at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest",
+      "at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest",
+      "at.heinz.deviceai.learning.span.RoleAwareShadowTest",
+      "at.heinz.deviceai.learning.span.DualEvidenceReadContractTest",
+      "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+      "at.heinz.deviceai.cognitive.TurnScopedInternetModeTest",
+      "at.heinz.deviceai.cognitive.JarvisUnifiedEvidenceContractTest",
+      "fields.name !== 'at.heinz.deviceai.continuumlocal' || fields.versionCode !== String(versionCode) ||",
+      "packageName: 'at.heinz.deviceai.continuumlocal"
+    ]
+  },
+  "missing_or_risky": [
+    {
+      "id": "S1_CURRENT_ACCESS",
+      "status": "ROOT_FIX_FROZEN_REVIEWING",
+      "scope": "Render PUBLIC_WEB historical-only in OFF/ASK-without-current-approval/owner veto; rebuild frame for each model callback with turn revision ceiling."
+    },
+    {
+      "id": "S1_NATIVE_TOOL_CONTINUATION",
+      "status": "OPEN_REVIEW_FINDING",
+      "paths": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6295",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6304",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt:182"
+      ],
+      "problem": "The recomposed prompt/history is not sent in respondToTools branches; native conversation can retain its earlier online/FRESH frame after revocation. setInternetMode does not cancel active local agent; device-only tool turns have no web-session final revocation guard.",
+      "smallest_fix": "Fail closed before every native tool continuation if the consent revision changed; alternatively restart with a fully rebuilt prompt. Guard rejected-tool recovery too."
+    },
+    {
+      "id": "S2_ANDROID_ACCEPTANCE",
+      "status": "MISSING_FOR_NEW_HEAD",
+      "smallest_fix": "Use unchanged real Gradle/LiteRT dependency and existing full unsigned QA script on a new isolated QA service/pinned final SHA. Keep branch allowlist and three new S1 required JUnit suites; no SKIP/LiteRT stand-ins for APK acceptance."
+    },
+    {
+      "id": "S2_DOC_COPY",
+      "status": "MISSING_DOC_ONLY",
+      "smallest_fix": "Selectively restore only docs/research/omega/CONTINUUM-V36-OWNER-UPDATE-HANDOFF.md fromcc9a56b1; preserve its dated historical statements and add current release readback separately. No branch merge."
+    },
+    {
+      "id": "S1_PERSISTED_ASK_MODE",
+      "status": "OPEN_PREEXISTING_PERMISSION_FINDING",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5425",
+      "problem": "restoreInternetMode maps any persisted mode except OFF to ALWAYS_ON, including explicit ASK. showInternetSettings calls it on every opening, so ASK silently becomes ALWAYS_ON.",
+      "smallest_fix": "Preserve explicitly persisted ASK and OFF; use existing ALWAYS_ON default only for missing/legacy values. Add persisted ASK reopening/restart regression."
+    }
+  ],
+  "release_contract": {
+    "expected_package": "at.heinz.deviceai.continuumlocal",
+    "current_unsigned_qa_code": 36,
+    "current_unsigned_qa_name": "0.3.35",
+    "protected_publisher_service": "srv-dbf1tr2vcj2c73ehpfog",
+    "pinned_host": "continuum-owner-v23-release-preflight.onrender.com",
+    "public_manifest_current_code": 36,
+    "public_manifest_current_name": "0.3.35",
+    "public_manifest_current_source": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+    "readback_scope": "PUBLIC_MANIFEST_AND_RENDER_METADATA_ONLY_NO_APK_CERT_REAUDIT",
+    "publisher_changes_by_reviewer": false,
+    "next_installable_update": "Must strictly exceed actually installed code; if installed36, needs>=37 with separately authorized contract update."
+  },
+  "reviewer_actions": {
+    "shared_repository_edits": false,
+    "builds_started": false,
+    "publisher_mutations": false,
+    "blind_fixture_read": false
+  }
+}

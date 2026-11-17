@@ -1,0 +1,85 @@
+{
+  "label": "controls-diagnostic-compile-01",
+  "scope": "DIAGNOSTIC_MAIN_COMPILE_ONLY_NOT_FINAL_VALIDATION",
+  "source_commit": "5e7b9eddb5252d570e7a99eaaa845afb53e38485",
+  "source_unchanged": true,
+  "elapsed_seconds": 34.275,
+  "kotlin_compiler_errors": [],
+  "original_source_after": {
+    "head": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "branch_ref": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "status": "",
+    "head_name": "integrate/continuum-command03-android-20261115"
+  },
+  "historical_release_unchanged": true,
+  "historical_reset_unchanged": true,
+  "baseline_apk_unchanged": true,
+  "main_classes": {
+    "at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "488e9a27a5b67378c18761199f1f0b9b5bafc5b586a24afafa68c222f1f41695",
+      "mtime": 1794810304.457005
+    },
+    "at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "c8ddac223193c7b46ba8b72867350b07c5429f2dcf087683703d3d83bdaa9897",
+      "mtime": 1794810304.4710224
+    },
+    "at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "c6d1e83bf88ab1e411268eb3d80cea5aa24f824f76d83e433b6bf9d8620f05cf",
+      "mtime": 1794810304.470232
+    }
+  },
+  "existing_main_classes_before": {
+    "debug/at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "2e2da58811db6c10b1c9c90a285b2f93e64c327dd027c2b6d396da5502911b35",
+      "mtime": 1794805981.6741052
+    },
+    "debug/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "114cfc2e75f36d7016652dc54dc598797e7c87bb88c93d9eaefbf65249d12c56",
+      "mtime": 1794805981.681271
+    },
+    "debug/at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "2c0c940e065f30d4ee0ad04454b9c25dc9ea8676f817249c03d75c8c950c03c0",
+      "mtime": 1794805981.6801226
+    },
+    "release/at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "593ffc19542f7538f9d7a4d1e4533830e530794487782b62f316193cf98bbe6b",
+      "mtime": 1794806546.734361
+    },
+    "release/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "e8acc693a9b2a2a71034f247ba67ad26089e06a9ac0d81a0e9b96d1680424295",
+      "mtime": 1794806546.7513127
+    },
+    "release/at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "f13c0628446dd28f156278e393cd8259f5da286126b6f7a78209e8dc56509368",
+      "mtime": 1794806546.7497907
+    }
+  },
+  "java": [],
+  "actual_main_compile_task_lines": [
+    "> Task :app:compileDebugKotlin"
+  ],
+  "input_changes": [
+    "  Input property 'sources' file /workspace/scratch/5d87eafb90be/device-ai-android/app/src/main/java/at/heinz/deviceai/AgentActivity.kt has changed.",
+    "  Input property 'sources' file /workspace/scratch/5d87eafb90be/device-ai-android/app/src/main/java/at/heinz/deviceai/ui/Command03BridgeContract.kt has changed.",
+    "  Input property 'sources' file /workspace/scratch/5d87eafb90be/device-ai-android/app/src/main/java/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.kt has changed."
+  ],
+  "both_locks_acquired_nonblocking": true,
+  "locks_released": true,
+  "workspace_free_bytes": 791269376,
+  "evidence_sha256": {
+    "runs/controls-diagnostic-compile-01.json": "11720e49f2a68e8d2016e26aabf4da06c5e0ab1f3367a54d7f7bd1a70e941ada",
+    "runs/controls-diagnostic-compile-01-orchestration.json": "64f91da37bfc777dffca0d84afafc64eeac056f901ce1834cdcba28100ca77a2",
+    "runs/controls-diagnostic-compile-01.log": "6e6adc4ed9d7cd93ba86162046890c66f439acdf5ffdb093c6c4553105802584",
+    "runs/controls-diagnostic-compile-01-resources.jsonl": "1db5c1f83f7e09a56e636954e94529dc5209cd2f6614490d0d6f102324c8d63e"
+  },
+  "finished_utc": "2026-11-16T06:25:57Z"
+}

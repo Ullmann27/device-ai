@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "verifiedAt": "2026-11-07T03:27:24.816239+00:00",
+  "catalogUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/latest.json",
+  "sourceCommit": "7732b8668f912419d7aac7a1609a97097d727cbf",
+  "versionCode": 47,
+  "versionName": "0.3.46",
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "apkUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-35f93b41ed835bf2ec16890b62d4e640d3b1ea28c2e8a098065bd08f64dc2481.apk",
+  "apkSha256": "35f93b41ed835bf2ec16890b62d4e640d3b1ea28c2e8a098065bd08f64dc2481",
+  "byteLength": 101925655,
+  "signerSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+  "signatureV2": true,
+  "abis": [
+    "arm64-v8a"
+  ],
+  "originalAvatarSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "physicalDeviceTested": false
+}

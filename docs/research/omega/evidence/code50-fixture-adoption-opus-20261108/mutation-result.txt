@@ -1,0 +1,11 @@
+ctrl-A: exit=0 tests=8 failed=0 pinned_red(replication,quota,timeout)=[False, False, False]
+ctrl-B: exit=0 tests=8 failed=0 pinned_red(replication,quota,timeout)=[False, False, False]
+mut-A: exit=1 tests=8 failed=3 pinned_red(replication,quota,timeout)=[True, True, True]
+    - real two-process replication, corruption failover, repair, unavailable node, cache and restart => Missing expected rejection. [Error [ERR_TEST_FAILURE]: Missing expected rejection.] { code: 'ERR_TEST_FAILURE'
+    - real disk/quota limits reject new writes without committing object or claiming synthetic capaci => Missing expected rejection. [Error [ERR_TEST_FAILURE]: Missing expected rejection.] { code: 'ERR_TEST_FAILURE'
+    - a measured HTTP timeout withholds metadata and a queued healthy write still commits => Missing expected rejection. [Error [ERR_TEST_FAILURE]: Missing expected rejection.] { code: 'ERR_TEST_FAILURE'
+mut-B: exit=1 tests=8 failed=3 pinned_red(replication,quota,timeout)=[True, True, True]
+    - real two-process replication, corruption failover, repair, unavailable node, cache and restart => Missing expected rejection. [Error [ERR_TEST_FAILURE]: Missing expected rejection.] { code: 'ERR_TEST_FAILURE'
+    - real disk/quota limits reject new writes without committing object or claiming synthetic capaci => Missing expected rejection. [Error [ERR_TEST_FAILURE]: Missing expected rejection.] { code: 'ERR_TEST_FAILURE'
+    - a measured HTTP timeout withholds metadata and a queued healthy write still commits => Missing expected rejection. [Error [ERR_TEST_FAILURE]: Missing expected rejection.] { code: 'ERR_TEST_FAILURE'
+VERDICT controls_green=True mutations_red_in_all_three_pinning_tests=True

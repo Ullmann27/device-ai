@@ -1,0 +1,14 @@
+{
+  "swb1": {
+    "bytes": 32960,
+    "sha256": "5ba8ba7e22efc19a099148d224ab000dcd21953bb74b5d6504f49621fe56b2b6",
+    "updates": 335150,
+    "embeddingParameters": 4096
+  },
+  "archive": {
+    "bytes": 369758,
+    "sha256": "6e710bb86459bd8c2a414ff0b2b554bda5ff0b8d8c03ad48dc787d05c1269aff",
+    "entries": 548
+  },
+  "rawContentsPublished": false
+}

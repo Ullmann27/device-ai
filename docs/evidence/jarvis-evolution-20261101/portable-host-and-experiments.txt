@@ -1,0 +1,22 @@
+JUnit version 4.13.2
+...PASS residual gradient checks=38 maximumError=1.5443709852624998E-10
+PASS missing/ambiguous gold targets rejected without updates
+PASS checked synthetic counterfactual and negative leakage guards
+PASS checkpoint roundtrip, exact size and SHA-256 corruption gates
+PASS cancellation and preflight fail-before-first-update
+MEASURED synthetic DEV accuracy: 2/5 -> 3/5
+MEASURED training: 300 steps, loss 1.2136851176488221 -> 0.6067638047117935, interrupted=false
+CASE expected=Salzburg, predicted=Salzburg
+CASE expected=XZ-902, predicted=XZ-902
+CASE expected=Zange, predicted=Zange
+CASE expected=ABSTAIN, predicted=Salzburg
+CASE expected=ABSTAIN, predicted=XZ-902
+PASS executable JVM test finished; public dev cases are not a blind holdout.
+..................
+Time: 1.651
+
+OK (21 tests)
+
+{"naturalBinding":false,"checkpointBytes":32932,"trainNllAfter":0.01675266448586247,"dev":[{"evidence":"Eva ist in Bern. Otto ist in Kiel.","question":"Wo ist Eva?","expected":"Bern","prediction":"Bern"},{"evidence":"Eva ist in Bern. Otto ist in Kiel.","question":"Wo ist Otto?","expected":"Kiel","prediction":null},{"evidence":"Otto ist in Bern. Eva ist in Kiel.","question":"Wo ist Eva?","expected":"Kiel","prediction":"Kiel"},{"evidence":"Eva ist nicht in Bern.","question":"Wo ist Eva?","expected":null,"prediction":null},{"evidence":"Eva ist in Bern.","question":"Wo ist Otto?","expected":null,"prediction":null}],"trainingItems":64,"trainNllBefore":1.4555404591981465,"steps":3200,"elapsedMs":1143.509171}
+{"naturalBinding":true,"checkpointBytes":32932,"trainNllAfter":0.009566268307629768,"dev":[{"evidence":"Eva ist in Bern. Otto ist in Kiel.","question":"Wo ist Eva?","expected":"Bern","prediction":"Bern"},{"evidence":"Eva ist in Bern. Otto ist in Kiel.","question":"Wo ist Otto?","expected":"Kiel","prediction":"Kiel"},{"evidence":"Otto ist in Bern. Eva ist in Kiel.","question":"Wo ist Eva?","expected":"Kiel","prediction":"Kiel"},{"evidence":"Eva ist nicht in Bern.","question":"Wo ist Eva?","expected":null,"prediction":null},{"evidence":"Eva ist in Bern.","question":"Wo ist Otto?","expected":null,"prediction":null}],"trainingItems":64,"trainNllBefore":1.4555404591981465,"steps":3200,"elapsedMs":1203.733773}
+{"total":5,"before":5.550288889725416,"after":0.5812410896434919,"steps":2520,"freeCorrect":2}

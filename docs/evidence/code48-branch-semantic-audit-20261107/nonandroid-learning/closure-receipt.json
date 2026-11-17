@@ -1,0 +1,29 @@
+{
+  "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "assignedPaths": 29,
+  "mappedPaths": 29,
+  "uniqueBlobs": 29,
+  "textSourcesReviewed": 25,
+  "bytecodeArtifactsClassified": 4,
+  "allAssignedPathsCovered": true,
+  "categoryCounts": {
+    "DOCUMENTATION": 1,
+    "GENERATED_BYTECODE": 4,
+    "ANALYTICAL_RESEARCH": 2,
+    "HOST_STORAGE_BENCHMARK": 1,
+    "RESEARCH_UNIT_TEST": 1,
+    "HISTORICAL_EXPERIMENT_HARNESS": 3,
+    "EXPERIMENT_CAPTURE_HOOK": 1,
+    "HOST_QA_HARNESS": 13,
+    "EXTERNAL_RESEARCH_WORKER": 1,
+    "CRE1_RESEARCH_TRAINING_WRAPPER": 1,
+    "EXTERNAL_SERVICE_INSTALLER": 1
+  },
+  "headMatchesSource": true,
+  "candidateCleanAtEvidenceTime": true,
+  "projectExecutionPerformed": false,
+  "sourceRefConfigMutationPerformed": false,
+  "matrixSha256": "83e6cb6739239e5c3355647865d9d4e4b6e245c0b1591ff01b3df4f60a21e856",
+  "jsonSha256": "7bc7a74e2e5f0070c58fea4ac77787e631f527413e030ced1edac01f720c7cb9"
+}

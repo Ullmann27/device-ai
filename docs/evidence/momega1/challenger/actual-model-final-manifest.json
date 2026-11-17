@@ -1,0 +1,32 @@
+{
+  "acceptedSource": "9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96",
+  "classification": "LOCAL_MODEL_HOST",
+  "independentControls": {
+    "pass": 50,
+    "fail": 0,
+    "skip": 0
+  },
+  "actualDefaultProvider": {
+    "verifiedModelExecution": true,
+    "originalBrandTrusted": true,
+    "cloneTrusted": false,
+    "decodedTokens": 142,
+    "elapsedMs": 26562
+  },
+  "repairTests": {
+    "pass": 6,
+    "fail": 2,
+    "repairAccepted": false
+  },
+  "fold7": "FOLD7_NOT_RUN",
+  "sha256": {
+    "ACTUAL-MODEL-FINAL-ASSESSMENT.md": "4db5982b458aa8d6cd8e536273678b08ebbe82483667197b9d07b27f03803864",
+    "APPROVED-PAIR-REVIEW.json": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+    "final-genuine-controls.tap": "0379d8c4bc24dfa99fb26cb759f80e28350682d2f429a2675db14edf9c666e76",
+    "registry-review-promotion.diff": "4bc109f0315a8ed6a01d85a453f621b51f2307f6d0ceafb367ecbf87371d848f",
+    "independent-rebuild.json": "444ae21a6ab5408d92aa3d83b4e2ca03a1c985fc0f362aa810947a57e5d156f7",
+    "actual-native-compatible/final-provider-result.json": "f0d0b9aa337a336483370e47a8bb143b62cd502c4884a3033d10dd3d2bda72eb",
+    "actual-native-compatible/final-provider-resources.json": "8b4e8e11af987b7ce5639a01f98cbd3782fcfd7c49ff21982b238ef1348938c3",
+    "actual-native-compatible/final-provider-boundary-result.json": "750a238e335b65a5eb415d73d49f151a413666cd5a0af51cf2b7973eea9807f0"
+  }
+}

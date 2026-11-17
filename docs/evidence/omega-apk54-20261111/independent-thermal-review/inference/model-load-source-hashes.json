@@ -1,0 +1,98 @@
+{
+  "reviewer": "/root/logic",
+  "review_scope": "Model-load only; no broader thermal/inference review",
+  "base_commit": "9a6de6c4547feb62c9822520596e786a852ed83b",
+  "reviewed_commit": "1ba7b9458fd47184cedaed18e94e9aae1bd76c39",
+  "byte_identical_current_commit": "8decff576dc05ed3cdb0b8ded680b6098a1d8537",
+  "verification": "Read-only git object contents; SHA-256; existing test evidence inspected, no tests rerun",
+  "source_hashes": [
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelLoadSourceTest.kt",
+      "reviewed_sha256": "cdb8e9f25f25906ec7ca4631917b76391fc7fee1388a732ce39639f7ff50a93c",
+      "current_sha256": "cdb8e9f25f25906ec7ca4631917b76391fc7fee1388a732ce39639f7ff50a93c",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "cdb8e9f25f25906ec7ca4631917b76391fc7fee1388a732ce39639f7ff50a93c",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt",
+      "reviewed_sha256": "e8c7873aafd9f1fdfe74009a476c2a0053894d6df1efaec4c5ef8f8e367adbc9",
+      "current_sha256": "e8c7873aafd9f1fdfe74009a476c2a0053894d6df1efaec4c5ef8f8e367adbc9",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "e8c7873aafd9f1fdfe74009a476c2a0053894d6df1efaec4c5ef8f8e367adbc9",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelImportStreamTest.kt",
+      "reviewed_sha256": "23c37dc3015c9227f85f23f2ab09c0bbb7f192dda655e121fbd960a739d2d086",
+      "current_sha256": "23c37dc3015c9227f85f23f2ab09c0bbb7f192dda655e121fbd960a739d2d086",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "23c37dc3015c9227f85f23f2ab09c0bbb7f192dda655e121fbd960a739d2d086",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelReloadLifecycleTest.kt",
+      "reviewed_sha256": "7dbbc6fa16c7ba34991049aa7716953e76eeaaa9197e8949b1b8a2b143cf51e0",
+      "current_sha256": "7dbbc6fa16c7ba34991049aa7716953e76eeaaa9197e8949b1b8a2b143cf51e0",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "7dbbc6fa16c7ba34991049aa7716953e76eeaaa9197e8949b1b8a2b143cf51e0",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelThermalGuardTest.kt",
+      "reviewed_sha256": "29aa239916348b05192d2ea3a889516b5df6e15f3bdcadace076ca1a6a27a08d",
+      "current_sha256": "29aa239916348b05192d2ea3a889516b5df6e15f3bdcadace076ca1a6a27a08d",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "29aa239916348b05192d2ea3a889516b5df6e15f3bdcadace076ca1a6a27a08d",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelGenerationPolicyTest.kt",
+      "reviewed_sha256": "f2886c9e438eab422baab50475ee9dea1da8ba917c838b1d2a62b238f2e64905",
+      "current_sha256": "f2886c9e438eab422baab50475ee9dea1da8ba917c838b1d2a62b238f2e64905",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "f2886c9e438eab422baab50475ee9dea1da8ba917c838b1d2a62b238f2e64905",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelComputeBudgetTest.kt",
+      "reviewed_sha256": "beeb26e329c4d297123aa7a4df2bddef2481022fc7fae1d8765ab60c05c82867",
+      "current_sha256": "beeb26e329c4d297123aa7a4df2bddef2481022fc7fae1d8765ab60c05c82867",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "beeb26e329c4d297123aa7a4df2bddef2481022fc7fae1d8765ab60c05c82867",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+      "reviewed_sha256": "169e685b28b39392c33cd644362ddf58efeee98c3f4f806cf98a297bec579202",
+      "current_sha256": "169e685b28b39392c33cd644362ddf58efeee98c3f4f806cf98a297bec579202",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "169e685b28b39392c33cd644362ddf58efeee98c3f4f806cf98a297bec579202",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "reviewed_sha256": "3c2b2864b3e51eda5a79ea3166b902a6e809493cb1fa910514de01b44779a029",
+      "current_sha256": "3c2b2864b3e51eda5a79ea3166b902a6e809493cb1fa910514de01b44779a029",
+      "byte_identical": true,
+      "evidence_manifest_sha256": "3c2b2864b3e51eda5a79ea3166b902a6e809493cb1fa910514de01b44779a029",
+      "evidence_matches_reviewed": true
+    },
+    {
+      "path": ".github/continuum/gemma-reopen-lifecycle.test.mjs",
+      "reviewed_sha256": "517d005f84aafb087831464a03e7f487a883446d04ba84c4c0a61b18a42fb90c",
+      "current_sha256": "517d005f84aafb087831464a03e7f487a883446d04ba84c4c0a61b18a42fb90c",
+      "byte_identical": true,
+      "evidence_manifest_sha256": null,
+      "evidence_matches_reviewed": null
+    },
+    {
+      "path": "docs/research/omega/THERMAL-INFERENCE-HANDOFF-20261111.md",
+      "reviewed_sha256": "aea67255bd17bf9effe0b9ffea07c2a329256e1fb713d2b7c4668c4bbafcebf2",
+      "current_sha256": "aea67255bd17bf9effe0b9ffea07c2a329256e1fb713d2b7c4668c4bbafcebf2",
+      "byte_identical": true,
+      "evidence_manifest_sha256": null,
+      "evidence_matches_reviewed": null
+    }
+  ]
+}

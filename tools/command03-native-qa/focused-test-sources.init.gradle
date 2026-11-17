@@ -1,0 +1,45 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+
+// Focused host compilation only: no production source, SDK, classpath or assertion change.
+def manifestPath = System.getProperty('continuum.native.testSources')
+def actualPath = System.getProperty('continuum.native.compiledTestSources')
+if (!manifestPath || !actualPath) throw new GradleException('Focused source provenance is required')
+def manifest = new JsonSlurper().parse(new File(manifestPath))
+if (manifest.scope != 'FOCUSED_HOST_TESTS_ONLY' || !manifest.files) throw new GradleException('Invalid source manifest')
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    def root = gradle.rootProject.projectDir.canonicalFile
+    def entries = manifest.files.collect { entry ->
+        def source = new File(root, entry.path).canonicalFile
+        if (!source.isFile() || !(entry.path.startsWith('app/src/test/') || entry.path.startsWith('app/src/uiTest/')) ||
+                !source.toPath().startsWith(root.toPath())) {
+            throw new GradleException('Physical test source outside the expected checkout')
+        }
+        [entry: entry, source: source]
+    }
+    def files = entries.collect { it.source }
+    app.tasks.named('compileDebugUnitTestKotlin').configure { task ->
+        task.setSource(app.files(files))
+        task.doFirst {
+            def actual = (task.sources.files + task.javaSources.files).findAll {
+                it.name.endsWith('.kt') || it.name.endsWith('.java')
+            }.collect { it.canonicalPath }.toSet()
+            if (actual != files.collect { it.canonicalPath }.toSet()) throw new GradleException('Actual source list differs')
+            entries.each { item ->
+                def sha = MessageDigest.getInstance('SHA-256').digest(item.source.bytes).encodeHex().toString()
+                if (sha != item.entry.sha256) throw new GradleException('Test source changed: ' + item.entry.path)
+            }
+            new File(actualPath).text = JsonOutput.prettyPrint(JsonOutput.toJson([
+                scope: 'FOCUSED_HOST_TESTS_ONLY', source_commit: manifest.source_commit,
+                physical_sources_verified: true, files: manifest.files,
+                main_compilation: 'unchanged real Android main/SDK dependencies'])) + '\n'
+            println('FOCUSED_TEST_SOURCES_VERIFIED count=' + entries.size())
+        }
+    }
+    app.tasks.named('compileDebugUnitTestJavaWithJavac').configure { task ->
+        task.setSource(app.files(files.findAll { it.name.endsWith('.java') }))
+    }
+}

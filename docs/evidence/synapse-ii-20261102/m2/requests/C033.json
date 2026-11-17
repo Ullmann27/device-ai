@@ -1,0 +1,18 @@
+{
+  "id": "C033",
+  "question": "Wo lebt Zypusadu?",
+  "sources": [
+    {
+      "revision": 5,
+      "sha256": "3bff5d56a462f64efbdd67dbd0e21476332396a54712ba4a15ce9336def82c76",
+      "sourceId": "bc:C033:s1",
+      "text": "Zypusadu lebt in Uvsajaha Uvmejuji Uvrisoga."
+    },
+    {
+      "revision": 6,
+      "sha256": "1abb5c74e2a2d1ed8f74c31d5dd4ae00cd81888c4f5df84254692ba886838948",
+      "sourceId": "bc:C033:s2",
+      "text": "Zypusadu lebt in Uvgihufi."
+    }
+  ]
+}

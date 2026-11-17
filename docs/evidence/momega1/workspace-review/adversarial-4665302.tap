@@ -1,0 +1,105 @@
+TAP version 13
+# {"label":"ABORTED_TASK_EXECUTED","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-3b0be2a8b1e799a94df0ff90","workspaceBinding":{"workerId":"worker-review","taskId":"t-b41b7fa31b211344","requestMessageId":"d9102de1-44ab-4d13-97b6-23fbf99980a0","requestHash":"aeb9e1f756e009aa7f40310831bbf69346ea2d0b36602584401937f429131954","sourceCommit":"7eb064f40f24f3be8718e1d7cb10f8481fe3f9d4","jobId":"01c0eb58-f50b-4b4e-b390-fb95111357dd"},"observed":{"containerId":"6480291f02f2a12187a3b8f350e6b9adaa2600d7ad23163abaa6e4e5472d6801","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# {"label":"CLAIMED_TASK_EXECUTED","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-95a9b6d0f4a47f622e127763","workspaceBinding":{"workerId":"worker-review","taskId":"t-b1bf578317c720ec","requestMessageId":"bcd594b6-b151-4fc1-aad7-82da2bf0c9b2","requestHash":"c59d4e352e5ca82aeececa23ad231c3c928a21f3783b8e895ac7f28bc4240306","sourceCommit":"590f9810c4df90fcb609e0f97672b6cc0fd54e9e","jobId":"879e4c95-c807-4ff3-b6b9-1ce6ad3adadb"},"observed":{"containerId":"62c1daea6e9c6ce9d663bfd3d2590122bb5572148a94b8a10bf39c79701a89d1","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# {"label":"FIRST_EXECUTION","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-993356dfe3579f2b8490d9f5","workspaceBinding":{"workerId":"worker-review","taskId":"t-1e233d379c2fae1c","requestMessageId":"ccf01af5-5cf9-4913-a3f6-3892fbf22285","requestHash":"763ffb95ae46f893ffc1d25bfcbf6526a2ba583690ba0430bbb1e7ef9533c2f5","sourceCommit":"590f9810c4df90fcb609e0f97672b6cc0fd54e9e","jobId":"0763273b-4b5a-449b-a50c-cba8af2af184"},"observed":{"containerId":"5a32156e1765d62ba9ea10d44b9c4799f9d3ccc32b8074956dd07302986c0a4f","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# {"label":"REPEATED_EXECUTION","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-c892a4784ca8f25d3f3c98e4","workspaceBinding":{"workerId":"worker-review","taskId":"t-1e233d379c2fae1c","requestMessageId":"ccf01af5-5cf9-4913-a3f6-3892fbf22285","requestHash":"763ffb95ae46f893ffc1d25bfcbf6526a2ba583690ba0430bbb1e7ef9533c2f5","sourceCommit":"590f9810c4df90fcb609e0f97672b6cc0fd54e9e","jobId":"0763273b-4b5a-449b-a50c-cba8af2af184"},"observed":{"containerId":"24470489dfe707a1c7527f746edd43172b3645cbcd2c6e228cb37addaec4a85d","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# {"label":"CORRUPT_JOURNAL_EXECUTED","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-5a049e6b7bc1d6cb408c3eef","workspaceBinding":{"workerId":"worker-review","taskId":"t-8c7a04e86064d582","requestMessageId":"411797e3-17d5-4d75-837e-61ab1fae63b1","requestHash":"573364fa5bb725c03483fc3a134f57b34d063c215ecf1e27db08364d236183c1","sourceCommit":"374bf36e786def5c2e605ada9927ef2e76cbef8e","jobId":"3509d35f-9ae8-45b1-a173-aac8a21cff56"},"observed":{"containerId":"6eb64e1958103fe16a1b1cf8f164504c35a8b0b45c3fdfc8d9966cb99ffd90eb","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# Subtest: owner ABORT after binding must prevent a real Docker launch
+not ok 1 - owner ABORT after binding must prevent a real Docker launch
+  ---
+  duration_ms: 405.479922
+  type: 'test'
+  location: '/workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:20:20
+    fixture (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:15:342)
+    TestContext.<anonymous> (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:17:72)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: canonical claimed job after binding must prevent replay in real Docker
+not ok 2 - canonical claimed job after binding must prevent replay in real Docker
+  ---
+  duration_ms: 414.75751
+  type: 'test'
+  location: '/workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:26:9
+    fixture (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:15:342)
+    TestContext.<anonymous> (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:22:83)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: bound request cannot execute twice without fresh canonical admission
+not ok 3 - bound request cannot execute twice without fresh canonical admission
+  ---
+  duration_ms: 754.282714
+  type: 'test'
+  location: '/workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:28:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:30:9
+    fixture (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:15:342)
+    TestContext.<anonymous> (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:28:81)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: corrupted MAC journal after binding must prevent execution
+not ok 4 - corrupted MAC journal after binding must prevent execution
+  ---
+  duration_ms: 404.289421
+  type: 'test'
+  location: '/workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:35:9
+    fixture (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:15:342)
+    TestContext.<anonymous> (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:32:71)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2085.906022

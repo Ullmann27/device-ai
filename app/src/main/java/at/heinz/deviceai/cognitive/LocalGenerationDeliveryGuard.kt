@@ -1,0 +1,15 @@
+package at.heinz.deviceai.cognitive
+
+import at.heinz.deviceai.localmodel.ImportedLocalModel
+import at.heinz.deviceai.localmodel.LocalTurnModelBinding
+
+internal class LocalGenerationDeliveryGuard(
+    private val cancellation: DeliberationCancellation,
+    private val sessionId: String,
+    private val model: ImportedLocalModel
+) {
+    fun isCurrent(activeCancellation: DeliberationCancellation?, currentSessionId: String,
+        currentModel: ImportedLocalModel?): Boolean = activeCancellation === cancellation &&
+            sessionId == currentSessionId && runCatching { cancellation.throwIfCancelled() }.isSuccess &&
+            LocalTurnModelBinding.stillBound(model, currentModel)
+}

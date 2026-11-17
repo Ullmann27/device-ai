@@ -1,0 +1,30 @@
+[
+  {
+    "path": ".github/continuum/coding-orchestrator.mjs",
+    "upstreamPr": 515,
+    "upstreamCommit": "572e12ecc4ce5f7c79f2634a5b5773047b6d674f",
+    "gitBlob": "31f7a598d4d560e0374b9e8656446b30c512e611",
+    "sha256": "0ef121bb5dfba45a800f73543bacb0c6fbded3b4a4020a674df999d7503131dd"
+  },
+  {
+    "path": ".github/continuum/coding-service-worker.mjs",
+    "upstreamPr": 515,
+    "upstreamCommit": "572e12ecc4ce5f7c79f2634a5b5773047b6d674f",
+    "gitBlob": "0d3097bd2b9422993849fb6882868e1d431b65b6",
+    "sha256": "4de2311305c1dd536e185afe06bdaeb44081324c96243f1b176cbcdcc4e5b062"
+  },
+  {
+    "path": ".github/continuum/coding-service-reader.mjs",
+    "upstreamPr": 515,
+    "upstreamCommit": "572e12ecc4ce5f7c79f2634a5b5773047b6d674f",
+    "gitBlob": "eef34b205f791e1b8e82871020635400addfbde4",
+    "sha256": "970b9461a893bf81c72ef23630e991c4142e212f9a2056f17453bb5e2a7e32b4"
+  },
+  {
+    "path": ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+    "upstreamPr": 515,
+    "upstreamCommit": "572e12ecc4ce5f7c79f2634a5b5773047b6d674f",
+    "gitBlob": "8ebcc0900571c78fdf279038a40fff7706a491be",
+    "sha256": "21b472c0dc965f4896e42e967a362baaf156ccf3b67f5a79ec0c59439de6aa12"
+  }
+]

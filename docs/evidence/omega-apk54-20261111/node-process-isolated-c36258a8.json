@@ -1,0 +1,30 @@
+{
+  "source": {
+    "head": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+    "tree": "3f6bbca28a7e41aa67316c818af0e5a58cd45677",
+    "status": ""
+  },
+  "inputSha256": {
+    ".github/continuum/local-worker-process.test.mjs": "d3c877fe09f772f948c3aeab19f20053a7df57e2d675e8d6d78f94807a2af2cc",
+    "scripts/continuum-owned-process.test.mjs": "a72926e538c19100e3f51259cfb1b6eea4e8c22bbd3f590dc2d3744b74c33d86",
+    "scripts/continuum-owned-process.mjs": "0548ba638e76a71b41ce0ee6bc20a7aa14dc1c2fc0ffff6c7a6f1d2f77a1354a",
+    "scripts/continuum-worker-lease.mjs": "3c3f6c0f3248923dde17385ff03b684efd66c36a747c2a8b6fc7ec2e62113b83",
+    "scripts/continuum-local-development-worker.mjs": "78c42407252b6b167384ca47f337b880f4609a6cecd80a7004eaf0d2c83bd5c8"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    ".github/continuum/local-worker-process.test.mjs",
+    "scripts/continuum-owned-process.test.mjs"
+  ],
+  "status": "COMPLETE",
+  "exit": 0,
+  "elapsedSeconds": 56.02,
+  "sourceAfter": {
+    "head": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+    "tree": "3f6bbca28a7e41aa67316c818af0e5a58cd45677",
+    "status": ""
+  },
+  "sourceUnchanged": true
+}

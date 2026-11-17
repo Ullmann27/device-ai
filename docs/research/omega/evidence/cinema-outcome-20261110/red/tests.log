@@ -1,0 +1,43 @@
+JUnit version 4.13.2
+....E.....E....E.E.E
+Time: 3.019
+There were 5 failures:
+1) deliveredReplyCannotApproveWaitingStep(at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest)
+java.lang.AssertionError: expected:<BLOCKED> but was:<DONE>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest.deliveredReplyCannotApproveWaitingStep(CockpitAnimationTriggersTest.kt:78)
+2) deliveryAloneDoesNotConfirmWorkOrToolOutcome(at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest)
+org.junit.ComparisonFailure: expected:<[UNVERIFIED]> but was:<[DONE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest.deliveryAloneDoesNotConfirmWorkOrToolOutcome(CockpitAnimationTriggersTest.kt:70)
+3) acceptedAnswerIsNotVerifiedTaskSuccess(at.heinz.deviceai.LocalTurnOutcomeUiTest)
+org.junit.ComparisonFailure: expected:<[UNVERIFIED]> but was:<[DONE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.acceptedAnswerIsNotVerifiedTaskSuccess$lambda$0(LocalTurnOutcomeUiTest.kt:110)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.withRun(LocalTurnOutcomeUiTest.kt:93)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.withRun$default(LocalTurnOutcomeUiTest.kt:67)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.acceptedAnswerIsNotVerifiedTaskSuccess(LocalTurnOutcomeUiTest.kt:109)
+4) replacedSessionCannotReportSuccess(at.heinz.deviceai.LocalTurnOutcomeUiTest)
+org.junit.ComparisonFailure: expected:<[FAILED]> but was:<[DONE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.replacedSessionCannotReportSuccess$lambda$0(LocalTurnOutcomeUiTest.kt:117)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.withRun(LocalTurnOutcomeUiTest.kt:93)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.replacedSessionCannotReportSuccess(LocalTurnOutcomeUiTest.kt:116)
+5) failedModelCannotMarkWorkDone(at.heinz.deviceai.LocalTurnOutcomeUiTest)
+org.junit.ComparisonFailure: expected:<[FAILED]> but was:<[DONE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.failedModelCannotMarkWorkDone$lambda$0(LocalTurnOutcomeUiTest.kt:105)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.withRun(LocalTurnOutcomeUiTest.kt:93)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.withRun$default(LocalTurnOutcomeUiTest.kt:67)
+	at at.heinz.deviceai.LocalTurnOutcomeUiTest.failedModelCannotMarkWorkDone(LocalTurnOutcomeUiTest.kt:104)
+
+FAILURES!!!
+Tests run: 15,  Failures: 5
+

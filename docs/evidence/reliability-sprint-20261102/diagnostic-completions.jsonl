@@ -1,0 +1,5 @@
+{"pid":66973,"completion":{"schemaVersion":1,"taskId":"mob-63621e74f218a4ea","code":0,"exitSignal":null,"error":"TERMINATION_UNCONFIRMED","terminationConfirmed":false},"profiles":[]}
+{"pid":67515,"completion":{"schemaVersion":1,"taskId":"mob-2f0be77b74bd05d1","code":0,"exitSignal":null,"error":"TERMINATION_UNCONFIRMED","terminationConfirmed":false},"profiles":[]}
+{"pid":68641,"profiles":[{"profile":"node-continuum","passed":true}]}
+{"pid":78136,"completion":{"schemaVersion":1,"taskId":"coding-scoped-one","code":1,"exitSignal":null,"error":"TERMINATION_UNCONFIRMED","terminationConfirmed":false},"profiles":[]}
+{"pid":79638,"completion":{"schemaVersion":1,"taskId":"repair-watched","code":null,"exitSignal":null,"error":"ABORTED","terminationConfirmed":false},"profiles":[]}

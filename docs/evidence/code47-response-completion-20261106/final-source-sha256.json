@@ -1,0 +1,16 @@
+{
+  "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt": "101dfd8517e1681c368b93a96e728cf67bad84c4e573d3d1c509b99ef5da80a6",
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicy.kt": "0d450f05d7dcd3d8531365b02af3d2b9bc103e481dfc1e7c238bd5903cec1aec",
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationCapture.kt": "94c178ab1cf8230af5ae3df1e3de9860986aadd3bc1e4a4ee25bd95f58a01cd4",
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationDeliveryGuard.kt": "7c34a2b4eb13b2891e8de3eb3f471d0418ff64335beef1a7aa42d19c5d0a3803",
+  "app/src/test/java/at/heinz/deviceai/cognitive/AgentModelOutputBoundaryTest.kt": "33c0e72a1bb6178e72b0137091bca073fae7c7c8c26a4f3f8885f658dc753271",
+  "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDialogueOutputTest.kt": "42d4991f307a84b397f97bce0c33e696217b5c173733922c08fdbe10597ebe12",
+  "app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentTest.kt": "5ab297a2f0726306c118133efb2772b6368234925a12c4cd637d68adef1f9ba2",
+  "app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt": "481f9372d193865b78b6da783f08593956a4049f240ad5a1876da5c48768140d",
+  "app/src/test/java/at/heinz/deviceai/cognitive/AgentCancellationRegressionTest.kt": "3841f01fa55bab71b78d79258fd7fc51e58be9a935cb867eff93db32b78c400c",
+  "app/src/test/java/at/heinz/deviceai/cognitive/ToolWorkJournalDispatchBoundaryTest.kt": "879a4553f060e3739fb9a52d8362d5c30ad5f17c7b88b878af336c14a0908be3",
+  "app/src/test/java/at/heinz/deviceai/cognitive/ToolWorkJournalIntegrationTest.kt": "2e7d8e74b62c7e7d27341c8e229bcb28b936c3f12b8f22e50f09642ef48d3e2a",
+  "app/src/test/java/at/heinz/deviceai/cognitive/LocalGenerationCaptureTest.kt": "69dddb4c2883c2a7627310f049d6ee93e014c110ba429e4f1814baa40827acd2",
+  "app/src/test/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicyTest.kt": "501a5dca9b52f2dc6daddcf83ee1a3cd19b7d75940361712917b5424ea12a2cf",
+  "app/src/test/java/at/heinz/deviceai/cognitive/LocalGenerationDeliveryGuardTest.kt": "e3bcd4b5cfaa4ffcbd9d72022df31fbc618a10355c6801044c8311b7e689f036"
+}

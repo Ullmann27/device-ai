@@ -1,0 +1,27 @@
+{
+  "experiment": "CINE-RESULT-OPACITY",
+  "base_local": "b498becd85b1e0a53a465791bf0bd63bf9a01b0c",
+  "base_remote": "4a8fc1e8b9d86151f80c5004abeab8991fbe2418",
+  "base_tree": "2a74e12b80a80a7e46bd65363df8a8757e5f2216",
+  "red": {
+    "tests": 3,
+    "failures": 2,
+    "errors": 0,
+    "result_text_alpha": 0.843878,
+    "process_return_text_alpha": 0.9804847
+  },
+  "green": {
+    "tests": 33,
+    "failures": 0,
+    "errors": 0,
+    "focused_tests": 4,
+    "existing_entrance_tests": 29
+  },
+  "backend": "Pure Kotlin JVM / JUnit 4.13.2; changed production timing source compiled over existing host preview dependencies",
+  "compiler_heap_mib": 256,
+  "test_heap_mib": 128,
+  "Android_runtime": "NOT_RUN",
+  "render": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "root_integration": "Two settled-state calls in ShellRenderer and ShellView still need substitution; files owned by integration agent."
+}

@@ -1,0 +1,45 @@
+{
+  "taskId": "C1-AVATAR-005",
+  "phase": "red",
+  "sourceBase": "eb736544e0864f8f1a58a891d9cd0dce2904dcc2",
+  "productionPath": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+  "productionSha256": "88bbdff0ca524500a5e63fdac6c360868f05a4c0606d84acdb44ea5577d7634a",
+  "testSha256": "66e85d2ab1b13486e2aa9218ab77765ea061b5e973621f532a6ec900886eafe7",
+  "requestedAt": "2026-11-04T20:22:01.358089+00:00",
+  "scope": "Actual internal Kotlin production class; JUnit boundary cases; no Android/GPU/device/model execution.",
+  "commands": [
+    {
+      "stage": "compile",
+      "command": [
+        "/workspace/scratch/18845e31bc4a/regression-audit/real-kotlinc/bin/kotlinc",
+        "/workspace/scratch/174c84456ee3/continuum-c1/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+        "/workspace/scratch/174c84456ee3/qa/avatar-idle/AvatarIdleMotionBoundaryTest.kt",
+        "-jvm-target",
+        "17",
+        "-classpath",
+        "/workspace/scratch/18845e31bc4a/host-qa/compiler-deps/junit-4.13.2.jar",
+        "-d",
+        "/workspace/scratch/174c84456ee3/qa/avatar-idle/red/classes.jar"
+      ],
+      "exitCode": 0
+    },
+    {
+      "stage": "junit",
+      "command": [
+        "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/java",
+        "-Xmx256m",
+        "-cp",
+        "/workspace/scratch/174c84456ee3/qa/avatar-idle/red/classes.jar:/workspace/scratch/18845e31bc4a/host-qa/compiler-deps/junit-4.13.2.jar:/workspace/scratch/18845e31bc4a/host-qa/compiler-deps/hamcrest-core-1.3.jar:/workspace/scratch/18845e31bc4a/host-qa/compiler-deps/kotlin-stdlib-2.4.0.jar",
+        "org.junit.runner.JUnitCore",
+        "at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest"
+      ],
+      "exitCode": 1
+    }
+  ],
+  "status": "FAIL",
+  "exitCode": 1,
+  "startedAt": "2026-11-04T20:22:46.172369+00:00",
+  "productionUnchanged": true,
+  "testUnchanged": true,
+  "finishedAt": "2026-11-04T20:22:51.491737+00:00"
+}

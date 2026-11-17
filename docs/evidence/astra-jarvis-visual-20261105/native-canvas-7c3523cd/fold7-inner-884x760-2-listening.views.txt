@@ -1,0 +1,123 @@
+DecorView tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+FrameLayout tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+FrameLayout tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+FrameLayout tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+LinearLayout tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+ScrollView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+ tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+ContinuumElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Gerät: robolectric, 6:49 PM, Thu5Nov. Navigation: Start, Gespräch, Gedächtnis, Denken und Planen, Forschung, Assistenten, Aufgaben, Internet, Lernen, Gerätesteuerung, Systemstatus. Aktiv: Start
+View tag=home shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Start
+View tag=chat shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Gespräch
+View tag=memory shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Gedächtnis
+View tag=logic shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Denken und Planen
+View tag=research shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Forschung
+View tag=agents shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Assistenten
+View tag=tasks shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Aufgaben
+View tag=web shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Internet
+View tag=learning shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Lernen
+View tag=device shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Gerätesteuerung
+View tag=system shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Systemstatus
+LinearLayout tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+ tag=conversation-camera-stop shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=KAMERA AN · STOPPEN
+ScrollView tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=Continuum-Cockpit, vertikal scrollbar: Chat, Arbeitsbereiche und tatsächlicher Systemstatus
+LinearLayout tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+ContinuumHomeView tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+JarvisShellView tag=null shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+ContinuumHologramView tag=null shown=true bounds=Rect(147, 40 - 697, 422) alpha=1.0 scale=1.0/1.0 text=
+JarvisSequenceView tag=null shown=true bounds=Rect(147, 40 - 697, 422) alpha=1.0 scale=1.0/1.0 text=
+AvatarSlotPlaceholder tag=null shown=false bounds=Rect(147, 40 - 697, 422) alpha=1.0 scale=1.0/1.0 text=Jarvis Avatar – Renderer nicht angedockt
+ tag=jarvis-foreground shown=true bounds=Rect(0, 0 - 884, 760) alpha=1.0 scale=1.0/1.0 text=
+ScrollView tag=null shown=true bounds=Rect(6, 55 - 139, 686) alpha=1.0 scale=1.0/1.0 text=Navigation
+ShellRailList tag=null shown=true bounds=Rect(6, 55 - 138, 685) alpha=1.0 scale=1.0/1.0 text=
+ShellActionView tag=jarvis-rail:home shown=true bounds=Rect(12, 66 - 131, 114) alpha=1.0 scale=1.0/1.0 text=Start
+ShellActionView tag=jarvis-rail:chat shown=true bounds=Rect(12, 114 - 131, 162) alpha=1.0 scale=1.0/1.0 text=Gespräch
+ShellActionView tag=jarvis-rail:memory shown=true bounds=Rect(12, 162 - 131, 210) alpha=1.0 scale=1.0/1.0 text=Gedächtnis
+ShellActionView tag=jarvis-rail:logic shown=true bounds=Rect(12, 210 - 131, 258) alpha=1.0 scale=1.0/1.0 text=Denken und Planen
+ShellActionView tag=jarvis-rail:research shown=true bounds=Rect(12, 258 - 131, 306) alpha=1.0 scale=1.0/1.0 text=Forschung
+ShellActionView tag=jarvis-rail:agents shown=true bounds=Rect(12, 306 - 131, 354) alpha=1.0 scale=1.0/1.0 text=Assistenten
+ShellActionView tag=jarvis-rail:tasks shown=true bounds=Rect(12, 354 - 131, 402) alpha=1.0 scale=1.0/1.0 text=Aufgaben
+ShellActionView tag=jarvis-rail:web shown=true bounds=Rect(12, 402 - 131, 450) alpha=1.0 scale=1.0/1.0 text=Internet
+ShellActionView tag=jarvis-rail:learning shown=true bounds=Rect(12, 450 - 131, 498) alpha=1.0 scale=1.0/1.0 text=Lernen
+ShellActionView tag=jarvis-rail:device shown=true bounds=Rect(12, 498 - 131, 546) alpha=1.0 scale=1.0/1.0 text=Gerätesteuerung
+ShellActionView tag=jarvis-rail:system shown=true bounds=Rect(12, 546 - 131, 594) alpha=1.0 scale=1.0/1.0 text=Systemstatus
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Continuum, Device AI, JARVIS. Zur Startseite.
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Wissensarchiv durchsuchen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Keine offenen Hinweise
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Persönliche Einstellungen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=KI-Gehirn. Nur Startkern. Modell: Continuum-Startkern (SWB1). Zustand: Nur Startkern. Gedächtnis: 2 Einträge · +2 heute. Antwortzeit: nicht verfügbar. Kontext: 1 Zug (Thema). Auftragsphase: Noch kein Auftrag
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Aktuelle Prozesse. Keine laufenden Prozesse
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Live-Dialog. Noch kein Gespräch
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Systemstatus. 0 offen. CPU (App): nicht verfügbar. RAM: nicht verfügbar. Speicher: nicht verfügbar. Akku: nicht verfügbar. Akku-Temp.: nicht verfügbar
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Aktive Agenten. Agenten-Pool: noch nicht gestartet
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Nachricht an JARVIS schreiben oder sprechen. Öffnet das Gespräch.
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Gedächtnis öffnen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Agenten öffnen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Bots öffnen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=System öffnen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Netz: Offline. Interneteinstellungen öffnen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Lernstand: Webforschung eingeplant. Lernübersicht öffnen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Denken: Gespräch öffnen. Bereit
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Recherchieren: Recherchemodus wählen. Bereit
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Lernen: Lernzentrum öffnen. Bereit
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Entwickeln: Entwicklungszentrum öffnen. Bereit
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Ausführen: Auftrag entwerfen; nichts startet ohne deine Bestätigung
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Überprüfen: Diagnose und offene Fehlermeldungen öffnen. keine offenen Fehlermeldungen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Ansicht Avatar, ausgewählt
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Ansicht Kugel, auswählen
+ElementView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Ansicht Kompakt, auswählen
+ShellActionView tag=jarvis-tile:chat shown=true bounds=Rect(148, 426 - 288, 474) alpha=1.0 scale=1.0/1.0 text=Gespräch: Noch kein Auftrag
+ShellActionView tag=jarvis-tile:memory shown=true bounds=Rect(295, 426 - 434, 474) alpha=1.0 scale=1.0/1.0 text=Gedächtnis: 2 Einträge
+ShellActionView tag=jarvis-tile:logic shown=true bounds=Rect(441, 426 - 581, 474) alpha=1.0 scale=1.0/1.0 text=Denken und Planen: Continuum-Startkern (SWB1)
+ShellActionView tag=jarvis-tile:research shown=true bounds=Rect(588, 426 - 728, 474) alpha=1.0 scale=1.0/1.0 text=Forschung: nicht verfügbar
+ShellActionView tag=jarvis-tile:agents shown=true bounds=Rect(735, 426 - 874, 474) alpha=1.0 scale=1.0/1.0 text=Assistenten: nicht verfügbar
+ShellActionView tag=jarvis-tile:tasks shown=true bounds=Rect(148, 481 - 288, 530) alpha=1.0 scale=1.0/1.0 text=Aufgaben: nicht verfügbar
+ShellActionView tag=jarvis-tile:web shown=true bounds=Rect(295, 481 - 434, 530) alpha=1.0 scale=1.0/1.0 text=Internet: nicht verfügbar
+ShellActionView tag=jarvis-tile:learning shown=true bounds=Rect(441, 481 - 581, 530) alpha=1.0 scale=1.0/1.0 text=Lernen: nicht verfügbar
+ShellActionView tag=jarvis-tile:device shown=true bounds=Rect(588, 481 - 728, 530) alpha=1.0 scale=1.0/1.0 text=Gerätesteuerung: nicht verfügbar
+ShellActionView tag=jarvis-tile:system shown=true bounds=Rect(735, 481 - 874, 530) alpha=1.0 scale=1.0/1.0 text=Systemstatus: nicht verfügbar
+ShellActionView tag=jarvis-dialog:conversation shown=true bounds=Rect(147, 275 - 310, 364) alpha=1.0 scale=1.0/1.0 text=JARVIS: Konversation öffnen
+ShellActionView tag=jarvis-dialog:voice-input shown=true bounds=Rect(152, 368 - 200, 416) alpha=1.0 scale=1.0/1.0 text=Mikrofon starten
+ShellActionView tag=jarvis-dialog:camera-settings shown=true bounds=Rect(205, 368 - 253, 416) alpha=1.0 scale=1.0/1.0 text=Kamera und Wahrnehmung: Einstellungen
+ShellActionView tag=jarvis-dialog:avatar-appearance shown=true bounds=Rect(257, 368 - 305, 416) alpha=1.0 scale=1.0/1.0 text=Avatar-Darstellung
+ShellActionView tag=jarvis-camera:settings shown=true bounds=Rect(690, 51 - 874, 99) alpha=1.0 scale=1.0/1.0 text=Kamera und Wahrnehmung: Einstellungen
+ShellActionView tag=jarvis-panel:ROW_AGENTS shown=true bounds=Rect(148, 537 - 315, 681) alpha=1.0 scale=1.0/1.0 text=Assistenten
+ShellActionView tag=jarvis-panel:ROW_TASKS shown=true bounds=Rect(322, 537 - 481, 681) alpha=1.0 scale=1.0/1.0 text=Aufgaben
+ShellActionView tag=jarvis-panel:ROW_MEMORY shown=true bounds=Rect(488, 537 - 663, 681) alpha=1.0 scale=1.0/1.0 text=Gedächtnis
+ShellActionView tag=jarvis-panel:ROW_MODEL shown=true bounds=Rect(669, 537 - 874, 681) alpha=1.0 scale=1.0/1.0 text=Lokales Modell und Gerät
+ShellActionView tag=jarvis-panel:COCKPIT_SECONDARY shown=true bounds=Rect(701, 104 - 874, 315) alpha=1.0 scale=1.0/1.0 text=Systemstatus
+ShellActionView tag=jarvis-panel:STATUS shown=true bounds=Rect(9, 692 - 874, 740) alpha=1.0 scale=1.0/1.0 text=Systemstatus
+ShellActionView tag=jarvis-header:home shown=true bounds=Rect(109, 1 - 268, 49) alpha=1.0 scale=1.0/1.0 text=Device AI Continuum: Start
+ShellActionView tag=jarvis-header:mode shown=true bounds=Rect(470, 0 - 576, 48) alpha=1.0 scale=1.0/1.0 text=JARVIS-Modus: Darstellung
+ShellActionView tag=jarvis-header:notifications shown=true bounds=Rect(777, 0 - 825, 48) alpha=1.0 scale=1.0/1.0 text=Benachrichtigungen
+ShellActionView tag=jarvis-header:settings shown=true bounds=Rect(825, 0 - 873, 48) alpha=1.0 scale=1.0/1.0 text=Einstellungen
+TextView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Bereit — · 0s · Fortschritt: nicht messbar
+LinearLayout tag=null shown=true bounds=Rect(0, 760 - 884, 802) alpha=1.0 scale=1.0/1.0 text=
+LinearLayout tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+TextView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=AKTIONSPLAN
+TextView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+TextView tag=null shown=true bounds=Rect(14, 760 - 870, 792) alpha=1.0 scale=1.0/1.0 text=CONTINUUM · offline-semantic-bootstrap: angenommen (550 Schritte)
+LinearLayout tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+TextView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=‹ START   ·   Continuum
+LinearLayout tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+Button tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=DIALOG
+Button tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=INTERNET
+Button tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=GERÄT
+TextView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=NEURON · Auto-Lernen aus Noch kein Lernzyklus.
+ProgressBar tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Fortschritt des lokalen neuronalen Trainings
+ScrollView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+LinearLayout tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+LinearLayout tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+TextView tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. Mit „Was kannst du?“ erfährst du meine aktuell
+LinearLayout tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+LinearLayout tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+ tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=＋
+EditText tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+ tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=🎙
+ tag=conversation-camera-toggle shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=📷
+LinearLayout tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=
+ tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=✧ Denken
+ tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=◎ Web
+ tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=⌁ Datei
+ tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=TON AUS
+ tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=➤
+ViewStub tag=null shown=false bounds=Rect(0, 0 - 0, 0) alpha=1.0 scale=1.0/1.0 text=

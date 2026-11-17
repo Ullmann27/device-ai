@@ -1,0 +1,8 @@
+{
+  "variant": "NEURAL_TOP1",
+  "translationStatus": "NOT_APPLICABLE",
+  "selectedOperatorId": "STRUCT_OP_sort",
+  "operatorAttempts": 1,
+  "candidateSha256": null,
+  "result": null
+}

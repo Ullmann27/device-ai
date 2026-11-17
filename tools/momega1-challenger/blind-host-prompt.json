@@ -1,0 +1,8 @@
+{
+  "schema": "momega1-independent-native-prompt-v1",
+  "classification": "FULLY_SYNTHETIC_REVIEWER_TASK",
+  "userPrompt": "Repair the following JavaScript module. It should return successive nonempty batches of at most width items, preserve item order and return no batches for an empty input. Positive integer width is required; preserve its existing rejection behavior. The present implementation incorrectly includes an empty trailing batch for some input lengths. Propose a minimal change to lib/batches.mjs only, with a short explanation of the boundary error. Source:\nexport function batches(items, width) {\n  if (!Number.isInteger(width) || width <= 0) throw new RangeError('width');\n  const result = [];\n  for (let offset = 0; offset <= items.length; offset += width) {\n    result.push(items.slice(offset, offset + width));\n  }\n  return result;\n}\n",
+  "allowedTrackedPaths": ["lib/batches.mjs"],
+  "source": "export function batches(items, width) {\n  if (!Number.isInteger(width) || width <= 0) throw new RangeError('width');\n  const result = [];\n  for (let offset = 0; offset <= items.length; offset += width) {\n    result.push(items.slice(offset, offset + width));\n  }\n  return result;\n}\n",
+  "acceptance": ["Empty input yields []", "Exact multiples contain no empty batch", "Remainder preserves order", "Invalid width still throws"]
+}

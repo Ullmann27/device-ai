@@ -1,0 +1,51 @@
+// Isolate the Fold7 regression matrix.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching { it.name == 'testDebugUnitTest' }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.cognitive.Fold7RoutingRegressionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchEngineTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerResearchCommandTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchQuestionFocusTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchTopicAuthorityTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ResearchTopicAuthorityLengthTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalPoliteFollowUpTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalShortClarificationTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalFollowUpTaskFrameTest'
+            includeTestsMatching 'at.heinz.deviceai.avatar3d.GazeBlinkPolicyTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveCaptureDiagnosticsTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveComputerFramesTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumProjectionCommandIsolationUiTest'
+            includeTestsMatching 'at.heinz.deviceai.AndroidLiveNodePortTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectScopeCorrectionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectStateLedgerTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectStateCountChangeTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectStateLedgerHistoryPromptTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectStateReopenMemoryTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ConversationControlTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest'
+            includeTestsMatching 'at.heinz.deviceai.ui.AvatarFramePacingTest'
+            includeTestsMatching 'at.heinz.deviceai.HologramAudioTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumHologramMotionUiTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveActionCancellationBoundaryTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveComputerActionsTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LiveScrollEvidenceTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.VerifiedNodeClickTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ProactiveMemoryDateTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.ProactiveSideQuestAndCountdownEngineTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.HybridMemoryIdentityTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.HybridMemoryRetrievalParityTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}

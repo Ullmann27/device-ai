@@ -1,0 +1,57 @@
+{
+  "status": 0,
+  "error": null,
+  "signal": null,
+  "stdout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"Chief fixed Node workspace probe\" time=\"3.006412\" classname=\"test\" file=\"/work/.github/continuum/isolation.test.mjs\"/>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 1 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 3060.212768 -->\n</testsuites>\n\n",
+  "stderr": "",
+  "ms": 0,
+  "junitFiles": [
+    "/tmp/momega1-chief-host-final/pool-mailbox/junit/isolated-3cbb80fbdfdfa09e92c6/TEST-0.xml"
+  ],
+  "isolation": {
+    "schema": "continuum-isolation-v1",
+    "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+    "network": "none",
+    "user": "1000:1000",
+    "readOnly": true,
+    "noNewPrivileges": true,
+    "capabilities": [],
+    "memoryMb": 256,
+    "pids": 64,
+    "cpus": 1,
+    "timeoutMs": 15000,
+    "runtime": "runc",
+    "sourceSha256": "1a419728f0cb03ee2a3fd76ebb34af49730ed88779bf9cd835fcf507b880d336",
+    "profile": "node-continuum",
+    "untrustedReports": true,
+    "workspaceId": "continuum-509bd8e3553f34105252c0b8",
+    "workspaceBinding": {
+      "workerId": "worker-beta",
+      "taskId": "t-e4627814528cd7ff",
+      "requestMessageId": "207a662a-59c7-4d2c-90e8-5c06ae826668",
+      "requestHash": "fb7efd90494a5aa37e20a97e5e3135d62c0b2a569a36298f06ee7e0fe63ef19b",
+      "sourceCommit": "913afca42270b0fbce9dc3c1dd848cb3688f6186",
+      "jobId": "13e920cd-b51f-4ccf-a84b-f166528df824"
+    },
+    "observed": {
+      "containerId": "baccf180491729b971522d3da4d12ee652ffaff2436d03fdcbabbccc6fc9ae37",
+      "runtime": "runc",
+      "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+      "user": "1000:1000",
+      "network": "none",
+      "readOnly": true,
+      "memoryBytes": 268435456,
+      "memorySwapBytes": 268435456,
+      "nanoCpus": 1000000000,
+      "pids": 64,
+      "capDrop": [
+        "ALL"
+      ],
+      "securityOpt": [
+        "no-new-privileges:true"
+      ],
+      "writableHostMounts": 0
+    },
+    "teardownConfirmed": true
+  }
+}

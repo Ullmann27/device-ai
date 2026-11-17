@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:15:32" hostname="0f4ac18d136f" time="0.189">
+  <properties/>
+  <testcase name="theStatementIsCapturedInTheExistingObjectStateMemory" classname="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" time="0.095"/>
+  <testcase name="whatDidISayBeforeUsesTheCorrectionHistory" classname="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" time="0.022"/>
+  <testcase name="theStatementSurvivesTheFourTurnDialogueWindow" classname="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" time="0.007"/>
+  <testcase name="theFactStatementIsNeitherAToolSearchAppLookupNorABlockedRequest" classname="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" time="0.036"/>
+  <testcase name="theRecallIsAnsweredFromMemoryWithoutAModelTurn" classname="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" time="0.004"/>
+  <testcase name="theCorrectionChainKeepsColourAndPlace" classname="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" time="0.006"/>
+  <testcase name="neighbouringSubjectFormsStayConservative" classname="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" time="0.015"/>
+  <testcase name="recallAndHistoryQuestionsAreNotHijackedBeforeTheObjectStateAnswer" classname="at.heinz.deviceai.OwnerObjectStateFieldStatementTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

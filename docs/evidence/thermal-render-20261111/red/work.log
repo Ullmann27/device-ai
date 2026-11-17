@@ -1,0 +1,5 @@
+CASES=72
+MAX_SIN_CALLS=1526
+DRAW_COMMAND_SHA256=33f640d7a6108c7245cf355eeb3e62131ad327d8fb11944e9ad2d73dd82dccd7
+Exception in thread "main" java.lang.IllegalStateException: repeated control-point work: 1526 > 70
+	at thermal.render.FlowWorkProbeKt.main(FlowWorkProbe.kt:105)

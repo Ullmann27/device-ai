@@ -1,0 +1,15 @@
+--- app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -9243,9 +9243,10 @@
+         // Dossier 4.2: a same-session follow-up ("Nun ... statt 4", "ursprünglich")
+         // becomes one self-contained task from the owner's own earlier turns of this
+         // session. Owner-write/tool authorization still uses only 'text'.
+-        val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(
++        /* val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(
+             text, resolvedQuestion, if (botTask == null && codingPlanning == null)
+-                localConversationContext.sessionEvidence(localSessionId) else null)
++                localConversationContext.sessionEvidence(localSessionId) else null) */
++        val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(text, resolvedQuestion, null)
+         val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
+         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
+         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)

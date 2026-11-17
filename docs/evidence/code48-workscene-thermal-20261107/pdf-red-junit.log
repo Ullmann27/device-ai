@@ -1,0 +1,35 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=36917 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=36917 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ContinuumDocumentSceneUiTest#typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork
+.E
+Time: 8.766
+There was 1 failure:
+1) typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork(at.heinz.deviceai.ContinuumDocumentSceneUiTest)
+java.lang.AssertionError: A typed PDF task must open its animated work window
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork$lambda$0(ContinuumDocumentSceneUiTest.kt:190)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.withCockpit(ContinuumDocumentSceneUiTest.kt:113)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork(ContinuumDocumentSceneUiTest.kt:173)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+CASE at.heinz.deviceai.ContinuumDocumentSceneUiTest#documentWorkWaitsForFreshShellGeometry
+.E
+Time: 2.892
+There was 1 failure:
+1) documentWorkWaitsForFreshShellGeometry(at.heinz.deviceai.ContinuumDocumentSceneUiTest)
+java.lang.AssertionError: A pending layout must not discard the document scene
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.documentWorkWaitsForFreshShellGeometry$lambda$0(ContinuumDocumentSceneUiTest.kt:210)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.withCockpit(ContinuumDocumentSceneUiTest.kt:113)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.documentWorkWaitsForFreshShellGeometry(ContinuumDocumentSceneUiTest.kt:202)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=2 failures=2

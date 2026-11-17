@@ -1,0 +1,78 @@
+{
+  "assetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "source": "Actual GLB import and exact Kotlin preflight camera focus, neutral pose, Blender CPU render; not Android/Filament pixel equivalence.",
+  "cameras": [
+    {
+      "frame": "phone-full-bust",
+      "logicalViewport": [
+        279,
+        390
+      ],
+      "renderPixels": [
+        558,
+        780
+      ],
+      "targetCanonical": [
+        0.0,
+        0.19633804727034487,
+        0.05450478568673134
+      ],
+      "verticalWorldSpan": 0.8512262587906211,
+      "horizontalWorldSpan": 0.6089541697502135
+    },
+    {
+      "frame": "phone-head-upper-neck",
+      "logicalViewport": [
+        279,
+        390
+      ],
+      "renderPixels": [
+        558,
+        780
+      ],
+      "targetCanonical": [
+        -0.0003228597342967987,
+        0.2862764969468117,
+        0.06414049118757248
+      ],
+      "verticalWorldSpan": 0.26987639117625456,
+      "horizontalWorldSpan": 0.19306541830301288
+    },
+    {
+      "frame": "fold-full-bust",
+      "logicalViewport": [
+        587,
+        470
+      ],
+      "renderPixels": [
+        1174,
+        940
+      ],
+      "targetCanonical": [
+        0.0,
+        0.19633804727034487,
+        0.05450478568673134
+      ],
+      "verticalWorldSpan": 0.6089541697502135,
+      "horizontalWorldSpan": 0.7605448886029262
+    },
+    {
+      "frame": "fold-head-upper-neck",
+      "logicalViewport": [
+        587,
+        470
+      ],
+      "renderPixels": [
+        1174,
+        940
+      ],
+      "targetCanonical": [
+        -0.0003228597342967987,
+        0.2862764969468117,
+        0.06414049118757248
+      ],
+      "verticalWorldSpan": 0.2559767407178879,
+      "horizontalWorldSpan": 0.3196986102157451
+    }
+  ]
+}

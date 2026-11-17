@@ -1,0 +1,8 @@
+{
+  "schema": "OMEGA_QA_RESERVE_FREEZE_V1",
+  "frozenAtUtc": "2026-11-03T18:40:11.478034+00:00",
+  "file": "cognition-reserve20.json",
+  "count": 20,
+  "sha256": "9c94f5ee88c4bcb42a60efa1e5eab6d2afb8d54129ac971700eba27364d77947",
+  "timing": "First24 outcomes and candidate107a source seen; first24 already published. Reserve20 frozen independently before followup candidate; no cases or labels shared with author. Not an external blind benchmark."
+}

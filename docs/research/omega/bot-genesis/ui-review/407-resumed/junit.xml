@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentBotRosterUiTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-11-03T20:45:47" hostname="5268aff5350a" time="11.052">
+  <properties/>
+  <testcase name="narrowLargeFontHasScrollableReachableControlsAndLabelledWorkingEditor" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="5.374"/>
+  <testcase name="twentyFirstProfileIsCreatedThroughUiAndSurvivesStoreAndDialogRestart" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="1.312"/>
+  <testcase name="dismissedLoadCannotReviveWindow" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.075"/>
+  <testcase name="showingAfterActivityDestructionAdmitsNoStorageWork" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.027"/>
+  <testcase name="renameAndNotesStayOnStableIdentityAcrossRestartWithoutGrantingRights" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="1.068"/>
+  <testcase name="rejectedIoQueueShowsFailureInsteadOfFakeProfiles" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.087"/>
+  <testcase name="staleProfileSaveShowsFailureWithoutOverwritingNewerName" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.38"/>
+  <testcase name="destroyedActivityCannotApplyLateLoad" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.141"/>
+  <testcase name="lateSaveWritesOnlySelectedIdentityAndDoesNotReopenItsProfile" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.58"/>
+  <testcase name="corruptedRegistryShowsFailureAndDoesNotSilentlyReseed" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.291"/>
+  <testcase name="closeDuringAcceptedWritePreservesOnlyThatIdentityWithoutRevivingPresentation" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.355"/>
+  <testcase name="repeatedOpeningHonorsOneInFlightStorageBudget" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.47"/>
+  <testcase name="actualTwentyProfilesPageExactlyOnceAndRegisteredMeansNoRunningModel" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.388"/>
+  <testcase name="olderLoadCannotReplaceNewRosterAndCallbacksStayBounded" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.294"/>
+  <testcase name="storageAndSeedingWaitForBackgroundExecutorWhileMainLooperRemainsResponsive" classname="at.heinz.deviceai.IndependentBotRosterUiTest" time="0.195"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

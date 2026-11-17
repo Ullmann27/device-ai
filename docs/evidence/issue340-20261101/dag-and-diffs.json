@@ -1,0 +1,123 @@
+{
+  "heads": {
+    "main": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+    "pr334": "702b57ae5c2724a819048bcc3b7775272b48f2b3",
+    "pr335": "b06889f586ed54f074d2b2d36535a0b5a820ed61",
+    "release336": "80062368a469ea858c3b7cc6e21c5947b1c67e6b",
+    "pr337": "56e9a82fde0062db9a7daa8cfb16840a6615380d",
+    "pr338": "6f082d062e50e91cfe5bc586f2977d5b75874976"
+  },
+  "pairs": [
+    {
+      "left": "main",
+      "right": "pr334",
+      "left_only": 25,
+      "right_only": 3203,
+      "merge_base": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4"
+    },
+    {
+      "left": "main",
+      "right": "pr335",
+      "left_only": 25,
+      "right_only": 3210,
+      "merge_base": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4"
+    },
+    {
+      "left": "main",
+      "right": "release336",
+      "left_only": 25,
+      "right_only": 3216,
+      "merge_base": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4"
+    },
+    {
+      "left": "main",
+      "right": "pr337",
+      "left_only": 25,
+      "right_only": 3223,
+      "merge_base": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4"
+    },
+    {
+      "left": "main",
+      "right": "pr338",
+      "left_only": 25,
+      "right_only": 3229,
+      "merge_base": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4"
+    },
+    {
+      "left": "pr334",
+      "right": "pr335",
+      "left_only": 0,
+      "right_only": 7,
+      "merge_base": "702b57ae5c2724a819048bcc3b7775272b48f2b3"
+    },
+    {
+      "left": "pr334",
+      "right": "release336",
+      "left_only": 0,
+      "right_only": 13,
+      "merge_base": "702b57ae5c2724a819048bcc3b7775272b48f2b3"
+    },
+    {
+      "left": "pr334",
+      "right": "pr337",
+      "left_only": 0,
+      "right_only": 20,
+      "merge_base": "702b57ae5c2724a819048bcc3b7775272b48f2b3"
+    },
+    {
+      "left": "pr334",
+      "right": "pr338",
+      "left_only": 0,
+      "right_only": 26,
+      "merge_base": "702b57ae5c2724a819048bcc3b7775272b48f2b3"
+    },
+    {
+      "left": "pr335",
+      "right": "release336",
+      "left_only": 0,
+      "right_only": 6,
+      "merge_base": "b06889f586ed54f074d2b2d36535a0b5a820ed61"
+    },
+    {
+      "left": "pr335",
+      "right": "pr337",
+      "left_only": 0,
+      "right_only": 13,
+      "merge_base": "b06889f586ed54f074d2b2d36535a0b5a820ed61"
+    },
+    {
+      "left": "pr335",
+      "right": "pr338",
+      "left_only": 0,
+      "right_only": 19,
+      "merge_base": "b06889f586ed54f074d2b2d36535a0b5a820ed61"
+    },
+    {
+      "left": "release336",
+      "right": "pr337",
+      "left_only": 0,
+      "right_only": 7,
+      "merge_base": "80062368a469ea858c3b7cc6e21c5947b1c67e6b"
+    },
+    {
+      "left": "release336",
+      "right": "pr338",
+      "left_only": 0,
+      "right_only": 13,
+      "merge_base": "80062368a469ea858c3b7cc6e21c5947b1c67e6b"
+    },
+    {
+      "left": "pr337",
+      "right": "pr338",
+      "left_only": 0,
+      "right_only": 6,
+      "merge_base": "56e9a82fde0062db9a7daa8cfb16840a6615380d"
+    }
+  ],
+  "diffs": {
+    "pr334..pr335": "M\tAGENTS.md\nM\tapp/src/main/java/at/heinz/deviceai/AgentActivity.kt\nM\tapp/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt\nM\tapp/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt\nM\tapp/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt\nM\tapp/src/main/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoff.kt\nM\tapp/src/main/java/at/heinz/deviceai/cognitive/TurnScopedInternetMode.kt\nM\tapp/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt\nM\tapp/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt\nM\tapp/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt\nM\tapp/src/test/java/at/heinz/deviceai/cognitive/NetworkTurnConstraintTest.kt\nM\tapp/src/test/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoffTest.kt\nM\tapp/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt\nA\tapp/src/test/java/at/heinz/deviceai/learning/OwnerMemoryAgeSpecialistTest.kt\nA\tdocs/evidence/sol61-post-fable-20261101/final-host/MANIFEST.json\nA\tdocs/evidence/sol61-post-fable-20261101/final-host/SUMMARY.txt\nA\tdocs/evidence/sol61-post-fable-20261101/final-host/checks.txt\nA\tdocs/evidence/sol61-post-fable-20261101/final-host/compile-check.txt\nA\tdocs/evidence/sol61-post-fable-20261101/final-host/final-all-node.tap\nA\tdocs/evidence/sol61-post-fable-20261101/final-host/harness-node.tap\nA\tdocs/evidence/sol61-post-fable-20261101/final-host/junit.txt\nA\tdocs/evidence/sol61-post-fable-20261101/final-host/junit.txt.gz\nA\tdocs/evidence/sol61-post-fable-20261101/integration/FINALFIX-S1-HARDGATE.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/FINALFIX-S3-AGE-SOURCE-REVIEW.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/README.md\nA\tdocs/evidence/sol61-post-fable-20261101/integration/S3-AGE-SOURCE-REVIEW.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/dag-blob-comparison.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/final-dag-verification.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/final-github-snapshot.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/github-file-patches.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/github-snapshot.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/integration-matrix.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/owner-public-manifest-readonly.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/post-fable-12152-ARCHITECTURE-PROOF.json\nA\tdocs/evidence/sol61-post-fable-20261101/integration/post-fable-12152-STATUS.txt\nA\tdocs/evidence/sol61-post-fable-20261101/integration/published-qa-readback.json\nA\tdocs/evidence/sol61-post-fable-20261101/s1-hardgate/checks.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-hardgate/junit.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-hardgate/post-fable-hardgate-focused-app.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-hardgate/post-fable-hardgate-focused.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-hardgate/post-fable-portable-span.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-hardgate/post-fable-s1-veto-final.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-hardgate/post-fable-veto-red.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-native/checks.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-native/junit.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-native/post-fable-native-green.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-native/post-fable-native-red.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-native/post-fable-s1-final.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1-native/proof-tests.tap\nA\tdocs/evidence/sol61-post-fable-20261101/s1/OfflineDefaultRegression.kt\nA\tdocs/evidence/sol61-post-fable-20261101/s1/checks.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1/compile-check.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1/full-green-junit.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1/post-fable-proof-tests.tap\nA\tdocs/evidence/sol61-post-fable-20261101/s1/post-fable-s1-green.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1/safe-default-green.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s1/safe-default-red.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/849-immutable-host.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/849-render-failure.json\nA\tdocs/evidence/sol61-post-fable-20261101/s2/fc9560bd-render/APK-BADGING.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/fc9560bd-render/ARCHITECTURE-PROOF.json\nA\tdocs/evidence/sol61-post-fable-20261101/s2/fc9560bd-render/ASSEMBLY.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/fc9560bd-render/GRADLE-QA.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/fc9560bd-render/STATUS.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/harness/6e-host-false-classification.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/harness/litert-membership-green.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/harness/litert-membership-red.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/obsolete-source-contract-red.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s2/source-contracts-green.tap\nA\tdocs/evidence/sol61-post-fable-20261101/s3/FamilyInvalidatorRegression.kt\nA\tdocs/evidence/sol61-post-fable-20261101/s3/family-invalidator-red.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s3/post-fable-age-final.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s3/post-fable-age-red.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s3/post-fable-all-node.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s3/post-fable-backend.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s3/post-fable-consent-disk.txt\nA\tdocs/evidence/sol61-post-fable-20261101/s6-preflight/README.md\nA\tdocs/evidence/sol61-post-fable-20261101/s6-preflight/SHA256.json\nA\tdocs/evidence/sol61-post-fable-20261101/s6-preflight/abgb678-structured.json\nA\tdocs/evidence/sol61-post-fable-20261101/s6-preflight/art7-structured.json\nA\tdocs/evidence/sol61-post-fable-20261101/s6-preflight/article7-page1.json\nM\tdocs/research/omega/CONTINUUM-NEXT-AGENT-ENTRYPOINT.md\nA\tdocs/research/omega/CONTINUUM-V36-OWNER-UPDATE-HANDOFF.md\nA\tdocs/research/omega/SOL61-GPT6-FABLE-CONTINUATION.pdf\nA\tdocs/research/omega/SOL61-GPT6-NEXT-AGENT-INSTRUCTIONS.md\nA\tdocs/research/omega/SOL61-POST-FABLE-CHECKPOINT-HISTORY.md\nA\tdocs/research/omega/SOL61-POST-FABLE-HANDOFF.md\nM\tscripts/android-kotlin-compile-check.sh\nA\tscripts/android-kotlin-compile-check.test.mjs\nM\tscripts/continuum-architecture-proof.mjs\nM\tscripts/continuum-v32-autonomy-gate.test.mjs\nM\tscripts/render-continuum-m8-qa.sh",
+    "pr335..release336": "A\tdocs/release/CONTINUUM-LOCAL-0.3.36-RENDER.md\nA\tscripts/continuum-v37-owner-render-release.test.mjs\nM\tscripts/render-continuum-m8-owner-release.sh\nA\tscripts/render-continuum-v37-owner-release.sh\nA\tscripts/render-continuum-v37-qa.sh",
+    "release336..pr337": "M\tapp/src/main/java/at/heinz/deviceai/AgentActivity.kt\nA\tapp/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicy.kt\nA\tapp/src/test/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicyTest.kt\nA\tscripts/continuum-fold7-stream-scroll.test.mjs",
+    "pr337..pr338": "M\tapp/src/main/AndroidManifest.xml\nM\tapp/src/main/java/at/heinz/deviceai/AgentActivity.kt\nA\tapp/src/main/java/at/heinz/deviceai/ContinuumAvatarLabActivity.kt\nA\tdocs/AVATAR-LAB-OFFLINE-20261101.md\nA\tscripts/continuum-avatar-lab-contract.test.mjs"
+  }
+}

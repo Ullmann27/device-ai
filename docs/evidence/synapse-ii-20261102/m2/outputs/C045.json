@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C045:s1",
+    "decision": "SPAN",
+    "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+    "endExclusive": 90,
+    "start": 64,
+    "text": "Uvjalicu Uvhetilu Uvhugoma",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "RULE": {
+    "sourceId": "bc:C045:s1",
+    "decision": "SPAN",
+    "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+    "endExclusive": 90,
+    "start": 64,
+    "text": "Uvjalicu Uvhetilu Uvhugoma",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C045:s1",
+    "decision": "SPAN",
+    "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+    "endExclusive": 90,
+    "start": 64,
+    "text": "Uvjalicu Uvhetilu Uvhugoma",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "rawMillis": 53.644787
+}

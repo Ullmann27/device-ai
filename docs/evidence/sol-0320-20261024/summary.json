@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "verifiedSourceCommit": "074fa80729a088644769df300c23b2e093e56553",
+  "signed019SourceCommit": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62",
+  "sourceFrozenForFinalRuns": true,
+  "node": {
+    "tests": 1109,
+    "pass": 1109,
+    "fail": 0,
+    "skipped": 0,
+    "exitCode": 0
+  },
+  "backend": {
+    "tests": 60,
+    "pass": 60,
+    "fail": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "syntaxCheckExitCode": 0
+  },
+  "sdkJunit": {
+    "tests": 971,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "robolectricCases": 32,
+    "exitCode": 0
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 0,
+    "exitCode": 0
+  },
+  "instrumentation": {
+    "compiled": true,
+    "ranOnDevice": false,
+    "reason": "No adb device; SDK_UNAVAILABLE does not apply because actual SDK is available"
+  },
+  "parity": {
+    "CRE1": 0,
+    "SWB1_SWB2": 0,
+    "Node_Kotlin_Node_backlog": 0
+  },
+  "ownerRelease": {
+    "versionName": "0.3.20",
+    "versionCode": 21,
+    "signed": false,
+    "dispatcherExitCode": 69,
+    "installed": false
+  },
+  "testCommandsFile": "COMMANDS.md",
+  "evidenceScope": "Linux x86_64 host; actual SDK and native Robolectric Canvas, not Fold7 validation",
+  "syntheticAutoDialogueProbe": {
+    "exitCode": 0,
+    "stage": 1,
+    "steps": 32,
+    "acceptedResearchCandidate": true,
+    "stoppedEarly": false,
+    "trainBefore": 0.8890785011264535,
+    "trainAfter": 0.8779996561023329,
+    "auditBefore": 0.8044421427489398,
+    "auditAfter": 0.8013026808202466,
+    "elapsedMillis": 302,
+    "SWB1AndOwnerFactsUnchanged": true,
+    "productionPromotion": false
+  }
+}

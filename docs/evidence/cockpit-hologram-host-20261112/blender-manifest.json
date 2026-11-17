@@ -1,0 +1,966 @@
+{
+  "evidenceClass": "HOST_ASSET_RENDER",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "stillsSamples": 32,
+  "sequenceSamples": 16,
+  "threads": 2,
+  "denoising": false,
+  "seed": 731,
+  "assets": {
+    "cockpit": "3223168a58e5fa51c48bb56ba36aabbf0cdb936025a01d96d4b14e5e0fa023aa",
+    "avatar": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+  },
+  "lighting": "Fixed host inspection studio; not Filament photometric equivalence",
+  "avatarPose": "Original GLB neutral rest pose; runtime-hidden tooth nodes excluded",
+  "frames": [
+    {
+      "key": "fold-idle",
+      "image": "fold-idle-stage.png",
+      "imageSha256": "b7670321444457d81bb070367e800ccb19ecc33f769a889c6c9efd9944bfdae7",
+      "samples": 32,
+      "projectionMaxErrorPixels": 0.00038074195862236593,
+      "projectedContentQuad": [
+        173.32535362243652,
+        282.6706552505493,
+        681.3202965259552,
+        283.2298278808594,
+        681.3202965259552,
+        447.15784192085266,
+        173.32535362243652,
+        444.4782507419586
+      ]
+    },
+    {
+      "key": "fold-transition",
+      "image": "fold-transition-stage.png",
+      "imageSha256": "71376782761cfd475d04652a4f8733ca69764bd1ce2cb46b0846bbfefeac1415",
+      "samples": 32,
+      "projectionMaxErrorPixels": 0.0003603012085022783,
+      "projectedContentQuad": [
+        174.4397011399269,
+        275.5746603012085,
+        683.7250821590424,
+        276.3582515716553,
+        684.5616331100464,
+        442.1973931789398,
+        169.971189558506,
+        437.79428601264954
+      ]
+    },
+    {
+      "key": "fold-working",
+      "image": "fold-working-stage.png",
+      "imageSha256": "bb3229bc78a60c4fc404f991ab7947ac33204a642a58075e8037e2a29dfc72a7",
+      "samples": 32,
+      "projectionMaxErrorPixels": 0.00034748229978731615,
+      "projectedContentQuad": [
+        153.80242896080017,
+        271.5149974822998,
+        698.1975710391998,
+        271.5149974822998,
+        698.1975710391998,
+        445.13691544532776,
+        153.80242896080017,
+        445.13691544532776
+      ]
+    },
+    {
+      "key": "fold-sequence-000",
+      "image": "fold-sequence-000-stage.png",
+      "imageSha256": "28703abff9ef8f7cf8822256f8b725e7a71464dd69c2be8f7446a162a163d7b4",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00038074195862236593,
+      "projectedContentQuad": [
+        173.32535362243652,
+        282.6706552505493,
+        681.3202965259552,
+        283.2298278808594,
+        681.3202965259552,
+        447.15784192085266,
+        173.32535362243652,
+        444.4782507419586
+      ]
+    },
+    {
+      "key": "fold-sequence-001",
+      "image": "fold-sequence-001-stage.png",
+      "imageSha256": "4997a5296fa8a59ebdc29cbbdeb0d173a594a12cd57eb7c2d0288fc3aef67899",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034617919919810447,
+      "projectedContentQuad": [
+        173.3907369375229,
+        282.5763273239136,
+        681.3063311576843,
+        283.1417655944824,
+        681.3308086395264,
+        447.0951461791992,
+        173.33133333921432,
+        444.3803322315216
+      ]
+    },
+    {
+      "key": "fold-sequence-002",
+      "image": "fold-sequence-002-stage.png",
+      "imageSha256": "30c373f08e5a821253b5d902554fd60bd24e7f113130053194b63d4cf15e8d76",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034702911375461554,
+      "projectedContentQuad": [
+        173.5808817744255,
+        282.30644702911377,
+        681.2667202949524,
+        282.8897953033447,
+        681.3589932918549,
+        446.9123411178589,
+        173.34763473272324,
+        444.096257686615
+      ]
+    },
+    {
+      "key": "fold-sequence-003",
+      "image": "fold-sequence-003-stage.png",
+      "imageSha256": "077c30e2ed8f0d941f9038b4ea25a7b1ad12e9523ce7179d09a73165f7604b6f",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034560089113711,
+      "projectedContentQuad": [
+        173.88597428798676,
+        281.8840456008911,
+        681.2074055671692,
+        282.4952745437622,
+        681.3990612030029,
+        446.61613941192627,
+        173.3692810535431,
+        443.6400854587555
+      ]
+    },
+    {
+      "key": "fold-sequence-004",
+      "image": "fold-sequence-004-stage.png",
+      "imageSha256": "5409e3b04362b9186efea09d7845096a99942053c410ea66f197068f1a973c0d",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003445829009933732,
+      "projectedContentQuad": [
+        174.29098266363144,
+        281.3359308242798,
+        681.1388483047485,
+        281.98283672332764,
+        681.4461879730225,
+        446.2135934829712,
+        173.38638228178024,
+        443.028484582901
+      ]
+    },
+    {
+      "key": "fold-sequence-005",
+      "image": "fold-sequence-005-stage.png",
+      "imageSha256": "5136d87076e9d000b685cf3ef7375dd8b91ac5c9627325794c4d0adc2fdc1fba",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003356011200139619,
+      "projectedContentQuad": [
+        174.76829355955124,
+        280.69167137145996,
+        681.0794320106506,
+        281.3791751861572,
+        681.5019986629486,
+        445.7156503200531,
+        173.38126587867737,
+        442.28555560112
+      ]
+    },
+    {
+      "key": "fold-sequence-006",
+      "image": "fold-sequence-006-stage.png",
+      "imageSha256": "315502e97498df8043de181cadea27a6ce3901b468588a23cd15c9b09809c441",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003497412109254583,
+      "projectedContentQuad": [
+        175.27277344465256,
+        279.9817371368408,
+        681.0558178424835,
+        280.7112407684326,
+        681.5782749652863,
+        445.14060974121094,
+        173.32785469293594,
+        441.44681096076965
+      ]
+    },
+    {
+      "key": "fold-sequence-007",
+      "image": "fold-sequence-007-stage.png",
+      "imageSha256": "aa4c5dd99d2a9c76a7dc57d3ee709299c454930f3eeaa907c0dc7268703a8feb",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00037070388793836173,
+      "projectedContentQuad": [
+        175.7391278743744,
+        279.2348098754883,
+        681.1028430461884,
+        280.0036096572876,
+        681.7005608081818,
+        444.51667070388794,
+        173.1918573975563,
+        440.56180357933044
+      ]
+    },
+    {
+      "key": "fold-sequence-008",
+      "image": "fold-sequence-008-stage.png",
+      "imageSha256": "dda33edd3d829f7094b1c2fe0b18637c1f8da40bd52a737758c54c391fdced20",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034312019346316447,
+      "projectedContentQuad": [
+        176.08331072330475,
+        278.47503662109375,
+        681.2607786655426,
+        279.27605152130127,
+        681.9085178375244,
+        443.8827431201935,
+        172.9338916540146,
+        439.6934902667999
+      ]
+    },
+    {
+      "key": "fold-sequence-009",
+      "image": "fold-sequence-009-stage.png",
+      "imageSha256": "590a6600bf2d54744e22dd6abd5071680d84ba14c23a7a3a9310185f96f820c7",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003443107605107798,
+      "projectedContentQuad": [
+        176.2101924419403,
+        277.7201271057129,
+        681.5707082748413,
+        278.54194164276123,
+        682.2521674633026,
+        443.2863986492157,
+        172.51362293958664,
+        438.9143443107605
+      ]
+    },
+    {
+      "key": "fold-sequence-010",
+      "image": "fold-sequence-010-stage.png",
+      "imageSha256": "e708d75865b5132053576592ac479b79877fb5a5c7e22637fa04d9a90215ecc8",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00035965156553174893,
+      "projectedContentQuad": [
+        176.0254179239273,
+        276.9812250137329,
+        682.0692973136902,
+        277.80866146087646,
+        682.7838163375854,
+        442.77835965156555,
+        171.89496982097626,
+        438.2981872558594
+      ]
+    },
+    {
+      "key": "fold-sequence-011",
+      "image": "fold-sequence-011-stage.png",
+      "imageSha256": "b3467a9284639ce41d7ce333229037225978055004089608f2d459c92be22bbe",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00035408790586188843,
+      "projectedContentQuad": [
+        175.45094615221024,
+        276.2645959854126,
+        682.7834100723267,
+        277.0797300338745,
+        683.5464777946472,
+        442.4045240879059,
+        171.05156314373016,
+        437.9098355770111
+      ]
+    },
+    {
+      "key": "fold-sequence-012",
+      "image": "fold-sequence-012-stage.png",
+      "imageSha256": "2a91edfe7cb9ebc3a7ad4864236c310fa0bd775e67379e4c98f35a7de879e922",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003603012085022783,
+      "projectedContentQuad": [
+        174.4397011399269,
+        275.5746603012085,
+        683.7250821590424,
+        276.3582515716553,
+        684.5616331100464,
+        442.1973931789398,
+        169.971189558506,
+        437.79428601264954
+      ]
+    },
+    {
+      "key": "fold-sequence-013",
+      "image": "fold-sequence-013-stage.png",
+      "imageSha256": "bb51bac293835395ded00d3bddfde922a9bb39e1d30b84fad4ef3078dceb211b",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003800521850507721,
+      "projectedContentQuad": [
+        172.98690927028656,
+        274.91682529449463,
+        684.889032125473,
+        275.6500768661499,
+        685.8208014965057,
+        442.16928005218506,
+        168.65888929367065,
+        437.9684615135193
+      ]
+    },
+    {
+      "key": "fold-sequence-014",
+      "image": "fold-sequence-014-stage.png",
+      "imageSha256": "b3098750a4f1836257fc9e312bd019368a17c5a72143e43082ae6921c3dcac84",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034963348389283055,
+      "projectedContentQuad": [
+        171.13394612073898,
+        274.2991590499878,
+        686.251137971878,
+        274.9653196334839,
+        687.2829501628876,
+        442.3098134994507,
+        167.13856852054596,
+        438.4178566932678
+      ]
+    },
+    {
+      "key": "fold-sequence-015",
+      "image": "fold-sequence-015-stage.png",
+      "imageSha256": "5e5a564a85c28016f15cec499f8b803316193494f1ba6fef896da2eb5b1874dc",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034430938723062354,
+      "projectedContentQuad": [
+        168.9641468524933,
+        273.73188972473145,
+        687.7700114250183,
+        274.3177843093872,
+        688.8802835941315,
+        442.588495016098,
+        165.45205986499786,
+        439.0990483760834
+      ]
+    },
+    {
+      "key": "fold-sequence-016",
+      "image": "fold-sequence-016-stage.png",
+      "imageSha256": "5e1f0558f5b100bd409d95fb7b3935c069013913792d4cfbf5911eabe43006d2",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003524772644141194,
+      "projectedContentQuad": [
+        166.59196400642395,
+        273.2253885269165,
+        689.3892831802368,
+        273.72236251831055,
+        690.5288572311401,
+        442.96170830726624,
+        163.6569133400917,
+        439.9474024772644
+      ]
+    },
+    {
+      "key": "fold-sequence-017",
+      "image": "fold-sequence-017-stage.png",
+      "imageSha256": "206e1d4f70d604bcccb0162d4b73dca649e097105087412c5d39f7c0fc646eee",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003491003417934735,
+      "projectedContentQuad": [
+        164.1471358537674,
+        272.7876091003418,
+        691.0432398319244,
+        273.19194316864014,
+        692.1431014537811,
+        443.38130593299866,
+        161.82183855772018,
+        440.88769912719727
+      ]
+    },
+    {
+      "key": "fold-sequence-018",
+      "image": "fold-sequence-018-stage.png",
+      "imageSha256": "4b917a5316180d16f8f26bff74fe0060561bab0216774b253fc9a871f567b721",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00033897766115842387,
+      "projectedContentQuad": [
+        161.75913405418396,
+        272.42199897766113,
+        692.6612420082092,
+        272.7349090576172,
+        693.6469430923462,
+        443.80303859710693,
+        160.02205806970596,
+        441.84497594833374
+      ]
+    },
+    {
+      "key": "fold-sequence-019",
+      "image": "fold-sequence-019-stage.png",
+      "imageSha256": "930d7a400ba9e2f3e250eae5640fe93644e584463ab9090779cf18d214abfa44",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00036807289126272735,
+      "projectedContentQuad": [
+        159.54469639062881,
+        272.12714195251465,
+        694.1740214824677,
+        272.35435009002686,
+        694.9823369979858,
+        444.19222712516785,
+        158.33331495523453,
+        442.75296807289124
+      ]
+    },
+    {
+      "key": "fold-sequence-020",
+      "image": "fold-sequence-020-stage.png",
+      "imageSha256": "b73ef01fb97c472d93aeb8e5f12e5c3eeed734fc29653ad78a6a1f3d47477265",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00033602600097992763,
+      "projectedContentQuad": [
+        157.6006282567978,
+        271.8979024887085,
+        695.5173375606537,
+        272.049036026001,
+        696.1098754405975,
+        444.5255398750305,
+        156.8276070356369,
+        443.55865359306335
+      ]
+    },
+    {
+      "key": "fold-sequence-021",
+      "image": "fold-sequence-021-stage.png",
+      "imageSha256": "0092c18b4dfc132cb8de0b39ad8a75d45f7e7f2df28aa92f481f5cb6970ac548",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034476943972094887,
+      "projectedContentQuad": [
+        156.00243151187897,
+        271.7273283004761,
+        696.6352272033691,
+        271.8152904510498,
+        697.0065536499023,
+        444.7903847694397,
+        155.56945431232452,
+        444.2233622074127
+      ]
+    },
+    {
+      "key": "fold-sequence-022",
+      "image": "fold-sequence-022-stage.png",
+      "imageSha256": "42b50ab0d1e7758832dbdfa029db8e974a7b9ecd496909086ba133172d8ae7fd",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003597126769818715,
+      "projectedContentQuad": [
+        154.80732607841492,
+        271.6090393066406,
+        697.4803605079651,
+        271.6493511199951,
+        697.6596758365631,
+        444.981529712677,
+        154.61497217416763,
+        444.7201716899872
+      ]
+    },
+    {
+      "key": "fold-sequence-023",
+      "image": "fold-sequence-023-stage.png",
+      "imageSha256": "ea2a765ecc46b199f3bcc10f6cab50a624317a0a3d39fb9f823778f06a3347c3",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003455830383245484,
+      "projectedContentQuad": [
+        154.06045818328857,
+        271.53868675231934,
+        698.0128726959229,
+        271.549072265625,
+        698.0605072975159,
+        445.09751558303833,
+        154.01196026802063,
+        445.03002762794495
+      ]
+    },
+    {
+      "key": "fold-sequence-024",
+      "image": "fold-sequence-024-stage.png",
+      "imageSha256": "5034968da708ccea0c917676a93676b737ed710322ca0d4dca7e9f49ea1c4394",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034748229978731615,
+      "projectedContentQuad": [
+        153.80242896080017,
+        271.5149974822998,
+        698.1975710391998,
+        271.5149974822998,
+        698.1975710391998,
+        445.13691544532776,
+        153.80242896080017,
+        445.13691544532776
+      ]
+    },
+    {
+      "key": "fold-sequence-025",
+      "image": "fold-sequence-025-stage.png",
+      "imageSha256": "3e3ae4bd2b96671ed54202264b5cabebd57b6ec13ecc1d203a6a4e3d543d69fb",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003455830383245484,
+      "projectedContentQuad": [
+        154.06045818328857,
+        271.53868675231934,
+        698.0128726959229,
+        271.549072265625,
+        698.0605072975159,
+        445.09751558303833,
+        154.01196026802063,
+        445.03002762794495
+      ]
+    },
+    {
+      "key": "fold-sequence-026",
+      "image": "fold-sequence-026-stage.png",
+      "imageSha256": "23de7dd257cf023076a9cb1e8fe613c0a29d95e19681a47e3836490b98eca272",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003597126769818715,
+      "projectedContentQuad": [
+        154.80732607841492,
+        271.6090393066406,
+        697.4803605079651,
+        271.6493511199951,
+        697.6596758365631,
+        444.981529712677,
+        154.61497217416763,
+        444.7201716899872
+      ]
+    },
+    {
+      "key": "fold-sequence-027",
+      "image": "fold-sequence-027-stage.png",
+      "imageSha256": "9c128c28976607227acac4dbd4fb50686dc2fef2fb15ab52285b0d0a2e559ed4",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034476943972094887,
+      "projectedContentQuad": [
+        156.00243151187897,
+        271.7273283004761,
+        696.6352272033691,
+        271.8152904510498,
+        697.0065536499023,
+        444.7903847694397,
+        155.56945431232452,
+        444.2233622074127
+      ]
+    },
+    {
+      "key": "fold-sequence-028",
+      "image": "fold-sequence-028-stage.png",
+      "imageSha256": "9e17166aee824bb8b0424a9b5ebd76ce2656a9a1d6b6a66306dc24042deda9ee",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00033602600097992763,
+      "projectedContentQuad": [
+        157.6006282567978,
+        271.8979024887085,
+        695.5173375606537,
+        272.049036026001,
+        696.1098754405975,
+        444.5255398750305,
+        156.8276070356369,
+        443.55865359306335
+      ]
+    },
+    {
+      "key": "fold-sequence-029",
+      "image": "fold-sequence-029-stage.png",
+      "imageSha256": "a1c66e681f1ef6bdc58b936eaf600c73778f6ee10c0e117d4be9fd829bf67155",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00036807289126272735,
+      "projectedContentQuad": [
+        159.54469639062881,
+        272.12714195251465,
+        694.1740214824677,
+        272.35435009002686,
+        694.9823369979858,
+        444.19222712516785,
+        158.33331495523453,
+        442.75296807289124
+      ]
+    },
+    {
+      "key": "fold-sequence-030",
+      "image": "fold-sequence-030-stage.png",
+      "imageSha256": "faaf62532dbb6ced10ac7959e8462be07b8f048d9d38cdc179021b8e2e3a14ae",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00033897766115842387,
+      "projectedContentQuad": [
+        161.75913405418396,
+        272.42199897766113,
+        692.6612420082092,
+        272.7349090576172,
+        693.6469430923462,
+        443.80303859710693,
+        160.02205806970596,
+        441.84497594833374
+      ]
+    },
+    {
+      "key": "fold-sequence-031",
+      "image": "fold-sequence-031-stage.png",
+      "imageSha256": "e8d9edfa72897fc0a7328be715443ded6693468fd749b8d9ea303fccc0424343",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003491003417934735,
+      "projectedContentQuad": [
+        164.1471358537674,
+        272.7876091003418,
+        691.0432398319244,
+        273.19194316864014,
+        692.1431014537811,
+        443.38130593299866,
+        161.82183855772018,
+        440.88769912719727
+      ]
+    },
+    {
+      "key": "fold-sequence-032",
+      "image": "fold-sequence-032-stage.png",
+      "imageSha256": "02a649fb375dca64e3dfcedd6fd6f73e2409db4ddce4c68eb5d54ef6f7d9cf35",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003524772644141194,
+      "projectedContentQuad": [
+        166.59196400642395,
+        273.2253885269165,
+        689.3892831802368,
+        273.72236251831055,
+        690.5288572311401,
+        442.96170830726624,
+        163.6569133400917,
+        439.9474024772644
+      ]
+    },
+    {
+      "key": "fold-sequence-033",
+      "image": "fold-sequence-033-stage.png",
+      "imageSha256": "aebfc7f050a9e6f398db62823fdf76b7a25d99d7d9265e3253a7fa93a7c65585",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034430938723062354,
+      "projectedContentQuad": [
+        168.9641468524933,
+        273.73188972473145,
+        687.7700114250183,
+        274.3177843093872,
+        688.8802835941315,
+        442.588495016098,
+        165.45205986499786,
+        439.0990483760834
+      ]
+    },
+    {
+      "key": "fold-sequence-034",
+      "image": "fold-sequence-034-stage.png",
+      "imageSha256": "ced5004115269b6f400bdb5de992a17f772ff1f80e2e57c5992f4d8735bcb898",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034963348389283055,
+      "projectedContentQuad": [
+        171.13394612073898,
+        274.2991590499878,
+        686.251137971878,
+        274.9653196334839,
+        687.2829501628876,
+        442.3098134994507,
+        167.13856852054596,
+        438.4178566932678
+      ]
+    },
+    {
+      "key": "fold-sequence-035",
+      "image": "fold-sequence-035-stage.png",
+      "imageSha256": "6cdf50a97819df42c0f4f89e039245fafa1f9278a10faee25d1e99272e7c8bb1",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003800521850507721,
+      "projectedContentQuad": [
+        172.98690927028656,
+        274.91682529449463,
+        684.889032125473,
+        275.6500768661499,
+        685.8208014965057,
+        442.16928005218506,
+        168.65888929367065,
+        437.9684615135193
+      ]
+    },
+    {
+      "key": "fold-sequence-036",
+      "image": "fold-sequence-036-stage.png",
+      "imageSha256": "d6a4cc2faa865d33245d1209d8f25a6e5969742cc199badd47916a316f2ed757",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003603012085022783,
+      "projectedContentQuad": [
+        174.4397011399269,
+        275.5746603012085,
+        683.7250821590424,
+        276.3582515716553,
+        684.5616331100464,
+        442.1973931789398,
+        169.971189558506,
+        437.79428601264954
+      ]
+    },
+    {
+      "key": "fold-sequence-037",
+      "image": "fold-sequence-037-stage.png",
+      "imageSha256": "f83d318dd9f4f7e1a2e97ce5515584dc68b35c1bd3fb333c71afab84a05b5e3e",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00035408790586188843,
+      "projectedContentQuad": [
+        175.45094615221024,
+        276.2645959854126,
+        682.7834100723267,
+        277.0797300338745,
+        683.5464777946472,
+        442.4045240879059,
+        171.05156314373016,
+        437.9098355770111
+      ]
+    },
+    {
+      "key": "fold-sequence-038",
+      "image": "fold-sequence-038-stage.png",
+      "imageSha256": "bc652a690eb763d654f8bd4257f850abdc0af58a9809b2f0013113f7511c59a1",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00035965156553174893,
+      "projectedContentQuad": [
+        176.0254179239273,
+        276.9812250137329,
+        682.0692973136902,
+        277.80866146087646,
+        682.7838163375854,
+        442.77835965156555,
+        171.89496982097626,
+        438.2981872558594
+      ]
+    },
+    {
+      "key": "fold-sequence-039",
+      "image": "fold-sequence-039-stage.png",
+      "imageSha256": "32a72c731a8ea8d919292877a940d94d987c69c01a1ff1ba0976a4b4961c06c6",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003443107605107798,
+      "projectedContentQuad": [
+        176.2101924419403,
+        277.7201271057129,
+        681.5707082748413,
+        278.54194164276123,
+        682.2521674633026,
+        443.2863986492157,
+        172.51362293958664,
+        438.9143443107605
+      ]
+    },
+    {
+      "key": "fold-sequence-040",
+      "image": "fold-sequence-040-stage.png",
+      "imageSha256": "df5d07a17e0b71b115a441ccb68b408f0b6c3e14409d84f6b2cd70cda0671e69",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034312019346316447,
+      "projectedContentQuad": [
+        176.08331072330475,
+        278.47503662109375,
+        681.2607786655426,
+        279.27605152130127,
+        681.9085178375244,
+        443.8827431201935,
+        172.9338916540146,
+        439.6934902667999
+      ]
+    },
+    {
+      "key": "fold-sequence-041",
+      "image": "fold-sequence-041-stage.png",
+      "imageSha256": "7881a65a3393dfd8c4547cd8b2e538979b4c6508d4726bcc83c1c66583aa9cb4",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00037070388793836173,
+      "projectedContentQuad": [
+        175.7391278743744,
+        279.2348098754883,
+        681.1028430461884,
+        280.0036096572876,
+        681.7005608081818,
+        444.51667070388794,
+        173.1918573975563,
+        440.56180357933044
+      ]
+    },
+    {
+      "key": "fold-sequence-042",
+      "image": "fold-sequence-042-stage.png",
+      "imageSha256": "6000f48147d5679095918728686a7a86a56b073e2c9c4f302a6b5cac47849ea2",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003497412109254583,
+      "projectedContentQuad": [
+        175.27277344465256,
+        279.9817371368408,
+        681.0558178424835,
+        280.7112407684326,
+        681.5782749652863,
+        445.14060974121094,
+        173.32785469293594,
+        441.44681096076965
+      ]
+    },
+    {
+      "key": "fold-sequence-043",
+      "image": "fold-sequence-043-stage.png",
+      "imageSha256": "37f65ffbfc5677ce825863df918a7ce10a4cea10099888994f628cd2fd749bfe",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003356011200139619,
+      "projectedContentQuad": [
+        174.76829355955124,
+        280.69167137145996,
+        681.0794320106506,
+        281.3791751861572,
+        681.5019986629486,
+        445.7156503200531,
+        173.38126587867737,
+        442.28555560112
+      ]
+    },
+    {
+      "key": "fold-sequence-044",
+      "image": "fold-sequence-044-stage.png",
+      "imageSha256": "015cdd222738c468dee72cd127390ee1dbbdd5faf928c80f49b2de835b2d8a20",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.0003445829009933732,
+      "projectedContentQuad": [
+        174.29098266363144,
+        281.3359308242798,
+        681.1388483047485,
+        281.98283672332764,
+        681.4461879730225,
+        446.2135934829712,
+        173.38638228178024,
+        443.028484582901
+      ]
+    },
+    {
+      "key": "fold-sequence-045",
+      "image": "fold-sequence-045-stage.png",
+      "imageSha256": "3e6fc552ad8b5f5b780c222e3f99a5ab10e9c6b37fe26e3572abc9ac0454ae72",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034560089113711,
+      "projectedContentQuad": [
+        173.88597428798676,
+        281.8840456008911,
+        681.2074055671692,
+        282.4952745437622,
+        681.3990612030029,
+        446.61613941192627,
+        173.3692810535431,
+        443.6400854587555
+      ]
+    },
+    {
+      "key": "fold-sequence-046",
+      "image": "fold-sequence-046-stage.png",
+      "imageSha256": "a5db86dd832655e46b9c71a620fb5b3d4cffc8fcdcc535d93c42c8e4ccfc8d6a",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034702911375461554,
+      "projectedContentQuad": [
+        173.5808817744255,
+        282.30644702911377,
+        681.2667202949524,
+        282.8897953033447,
+        681.3589932918549,
+        446.9123411178589,
+        173.34763473272324,
+        444.096257686615
+      ]
+    },
+    {
+      "key": "fold-sequence-047",
+      "image": "fold-sequence-047-stage.png",
+      "imageSha256": "f1c0c8ba8d832a3e1aedfcd0cec232327851df7c2faaa421cf701787de6dd5f2",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00034617919919810447,
+      "projectedContentQuad": [
+        173.3907369375229,
+        282.5763273239136,
+        681.3063311576843,
+        283.1417655944824,
+        681.3308086395264,
+        447.0951461791992,
+        173.33133333921432,
+        444.3803322315216
+      ]
+    },
+    {
+      "key": "fold-sequence-048",
+      "image": "fold-sequence-048-stage.png",
+      "imageSha256": "5d015225539c0c9822e4e4f0de99ef844e9c2d5f8d1c99e0705cddfac35cee9a",
+      "samples": 16,
+      "projectionMaxErrorPixels": 0.00038074195862236593,
+      "projectedContentQuad": [
+        173.32535362243652,
+        282.6706552505493,
+        681.3202965259552,
+        283.2298278808594,
+        681.3202965259552,
+        447.15784192085266,
+        173.32535362243652,
+        444.4782507419586
+      ]
+    },
+    {
+      "key": "fold-avatar-neutral",
+      "image": "fold-avatar.png",
+      "imageSha256": "9e6822dae7353fc42e0d7894c89bc19d4c182ff3b2f1c97f9cfec00e9ade3793"
+    },
+    {
+      "key": "phone-idle",
+      "image": "phone-idle-stage.png",
+      "imageSha256": "2f74dcbd4b436fdff68de650066b81f412508ff666a1b64ba9f5fd64a1c4b4a1",
+      "samples": 32,
+      "projectionMaxErrorPixels": 0.00023827575682844326,
+      "projectedContentQuad": [
+        13.63958628103137,
+        339.30996322631836,
+        375.0407536625862,
+        340.0177745819092,
+        375.04077672958374,
+        537.2704982757568,
+        13.63958628103137,
+        533.8785810470581
+      ]
+    },
+    {
+      "key": "phone-transition",
+      "image": "phone-transition-stage.png",
+      "imageSha256": "e9f742425ddf5cd01dbb56ade4a79a6d3d2d83d9feeccdcff255ff0baf1f6568",
+      "samples": 32,
+      "projectionMaxErrorPixels": 0.0002685317992927594,
+      "projectedContentQuad": [
+        24.558267384767532,
+        330.4917869567871,
+        366.87240689992905,
+        331.4222774505615,
+        367.8448192477226,
+        527.7296533584595,
+        19.298826154321432,
+        522.4992685317993
+      ]
+    },
+    {
+      "key": "phone-working",
+      "image": "phone-working-stage.png",
+      "imageSha256": "8cdd061d17d9f2a5577bdb8c6cfbd1b2e1346e755e511c6bd78872b6449b7ffd",
+      "samples": 32,
+      "projectionMaxErrorPixels": 0.00022054748535538238,
+      "projectedContentQuad": [
+        12.496864523738623,
+        327.28692054748535,
+        374.50313115119934,
+        327.28692054748535,
+        374.50313115119934,
+        534.8709812164307,
+        12.496864523738623,
+        534.8709812164307
+      ]
+    },
+    {
+      "key": "phone-avatar-neutral",
+      "image": "phone-avatar.png",
+      "imageSha256": "67d6b05af09c697a1466a0d3fe7a1e29215f7b702b8ffa6cb67870cb2280d17b"
+    }
+  ],
+  "Filament": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "deviceFps": "NOT_MEASURED",
+  "deviceThermal": "NOT_MEASURED"
+}

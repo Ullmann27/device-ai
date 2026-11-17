@@ -1,0 +1,23 @@
+{
+  "selection": "fixed60epochs/rate0.05/seeds17,29; no holdout tuning",
+  "trials": [
+    {
+      "checkpointBytes": 447,
+      "trainClassifierNll": 0.010384389829751785,
+      "seed": 17,
+      "trainMillis": 286.297772,
+      "batchPredictMillis": 106.954095,
+      "validationClassifierNll": 0.010384389829751782
+    },
+    {
+      "checkpointBytes": 448,
+      "trainClassifierNll": 0.010380645328505777,
+      "seed": 29,
+      "trainMillis": 42.557711,
+      "batchPredictMillis": 84.625291,
+      "validationClassifierNll": 0.010380645328505808
+    }
+  ],
+  "parameters": 13,
+  "promotion": "FORBIDDEN_RESEARCH_ONLY"
+}

@@ -1,0 +1,44 @@
+{
+  "source": "cf96c19fb22c5a3b1b06f259c3b2e92866077c07",
+  "runs": [
+    {
+      "model": "gemma-selected",
+      "runtime": "0.18.1",
+      "exitCode": 0,
+      "command": [
+        "/workspace/continuum-toolchain/litert-python/bin/python",
+        "/workspace/device-ai/scripts/continuum-local-language-benchmark.py",
+        "gemma-selected",
+        "0.18.1",
+        "/workspace/continuum-verification/gemma-4-E4B-it.litertlm",
+        "/workspace/continuum-brain-research/breakthroughs-20261026/gemma-selected-0.18.1.json"
+      ]
+    },
+    {
+      "model": "gemma-selected",
+      "runtime": "0.18.0",
+      "exitCode": 0,
+      "command": [
+        "/workspace/continuum-toolchain/litert-python-0.18.0/bin/python",
+        "/workspace/device-ai/scripts/continuum-local-language-benchmark.py",
+        "gemma-selected",
+        "0.18.0",
+        "/workspace/continuum-verification/gemma-4-E4B-it.litertlm",
+        "/workspace/continuum-brain-research/breakthroughs-20261026/gemma-selected-0.18.0.json"
+      ]
+    },
+    {
+      "model": "qwen3-public-reference",
+      "runtime": "0.18.0",
+      "exitCode": -9,
+      "command": [
+        "/workspace/continuum-toolchain/litert-python-0.18.0/bin/python",
+        "/workspace/device-ai/scripts/continuum-local-language-benchmark.py",
+        "qwen3-public-reference",
+        "0.18.0",
+        "/workspace/continuum-verification/Qwen3-0.6B.litertlm",
+        "/workspace/continuum-brain-research/breakthroughs-20261026/qwen3-public-reference-0.18.0.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="persistent ALWAYS_ON is explicit, revocable and uses the existing web gate" time="0.001537" classname="test" file="/home/qa/repo-m/.github/continuum/android-always-on-wiring.test.mjs"/>
+	<testcase name="local model receives web policy and keeps bounded tool requests" time="0.000901" classname="test" file="/home/qa/repo-m/.github/continuum/android-always-on-wiring.test.mjs"/>
+	<testcase name="orb states follow real work and Android TTS callbacks" time="0.001610" classname="test" file="/home/qa/repo-m/.github/continuum/android-always-on-wiring.test.mjs"/>
+	<testcase name="learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android" time="0.329531" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="cognitive runtime owns the single chat path, privacy boundaries and background diagnostics" time="0.645632" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="background consolidation records failure without losing interrupted source trials" time="0.004689" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="experimental module is inspectable and not on any automatic model promotion path" time="0.000203" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="activity request codes are unique and every one has a result handler" time="0.265208" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="scheduled offline job names the JobService declared in the manifest" time="0.000317" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="user-visible texts contain line breaks, not a literal backslash-n" time="0.006892" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="learning-core and research store I/O stays off the UI thread in dialogs and chat input" time="0.933783" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="neural weights are saved by compare-and-swap and foreground practice can be stopped" time="0.054409" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="startup bootstrap training stops with the activity and is retried later" time="0.114040" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="startup I/O off the UI thread and shell commands stop with their activity" time="0.223030" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="local language model path is reachable: model center, loading, chat escalation and reasoning chain" time="0.451405" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="every area has a center reachable from the start screen; no demo buttons; experiments marked" time="0.200616" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="Teamleader Android UI reports status without false success" time="0.070143" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="live model status does not revert the beginner cockpit to English" time="0.054295" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="model setup stays usable for beginners while preserving SHA-256 integrity" time="0.174206" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="new visual start screen is local, accessible and honest about capabilities" time="0.119772" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="neural training failures expose bounded diagnostics without claiming saved weights" time="0.058568" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="Wikipedia article research uses bounded authentic extracts and original citations" time="0.000535" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="Android-first Teamleader is scheduled, observable and serialized across background and chat" time="0.000690" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="explicit M5 project planning command reaches reviewed builder without bypassing approval" time="0.000654" classname="test" file="/home/qa/repo-m/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="auto-discovered titles can reach only the official MediaWiki API" time="0.000822" classname="test" file="/home/qa/repo-m/.github/continuum/autonomous-topic-frontier.test.mjs"/>
+	<testcase name="bounded topic frontier persists discoveries and avoids duplicate processing" time="0.000155" classname="test" file="/home/qa/repo-m/.github/continuum/autonomous-topic-frontier.test.mjs"/>
+	<testcase name="provider rate limits are obeyed, and background work remains finite" time="0.000139" classname="test" file="/home/qa/repo-m/.github/continuum/autonomous-topic-frontier.test.mjs"/>
+	<testcase name="archive capacity grows without deleting sources or exhausting phone storage" time="0.000122" classname="test" file="/home/qa/repo-m/.github/continuum/autonomous-topic-frontier.test.mjs"/>
+	<testcase name="training rejection identifies each failing holdout and does not promote unsafe candidates" time="0.000273" classname="test" file="/home/qa/repo-m/.github/continuum/autonomous-topic-frontier.test.mjs"/>
+	<testcase name="owner facts win, and retrieval is clearly labelled a non-verified excerpt" time="0.000431" classname="test" file="/home/qa/repo-m/.github/continuum/autonomous-topic-frontier.test.mjs"/>
+	<testcase name="research and legal backup menu indices match their action labels" time="0.000282" classname="test" file="/home/qa/repo-m/.github/continuum/autonomous-topic-frontier.test.mjs"/>
+	<testcase name="coding agent has one integrated entry from Android home, no second app" time="0.001037" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-speech-wiring.test.mjs"/>
+	<testcase name="developer speech uses actual German Android recognizer and a unique callback" time="0.001104" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-speech-wiring.test.mjs"/>
+	<testcase name="voice text is always previewed; neither recognition nor chat command executes code" time="0.000709" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-speech-wiring.test.mjs"/>
+	<testcase name="existing mobile builder remains opt-in, not falsely labelled an app generator" time="0.000340" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-speech-wiring.test.mjs"/>
+	<testcase name="Gemma restoration is scheduled once on Activity creation, not on every onResume" time="0.001383" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="restore is not a separate worker, timer or background service" time="0.000187" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="only owner-selected original SHA and version can be restored" time="0.000178" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="restart cannot start a second engine while loading, generating or unloading" time="0.000133" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="owner manual unload disables restoration immediately" time="0.000115" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="a verified successful original load alone enables future restore" time="0.000096" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="a failed load stops repeated startup retries" time="0.000100" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="process-wide loaded Gemma is intentionally retained at Activity finish" time="0.000150" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="a cold restart verifies the stored file SHA-256 before initializing the engine" time="0.000183" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="the old model download is never required on restart" time="0.000413" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="a fresh restoration does not invent a successful local answer" time="0.000180" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="original 3.66 GB model import remains separate and SHA-verified" time="0.000278" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="regression suite covers correct original, opt-out, foreign SHA, busy engine" time="0.000151" classname="test" file="/home/qa/repo-m/.github/continuum/gemma-reopen-lifecycle.test.mjs"/>
+	<testcase name="external mentor has an explicit per-request consent UI" time="0.001566" classname="test" file="/home/qa/repo-m/.github/continuum/groq-mentor-ui-wiring.test.mjs"/>
+	<testcase name="Android only sends bounded question text to the private backend" time="0.001196" classname="test" file="/home/qa/repo-m/.github/continuum/groq-mentor-ui-wiring.test.mjs"/>
+	<testcase name="server never accepts mentor request without owner grant and bearer authentication" time="0.000256" classname="test" file="/home/qa/repo-m/.github/continuum/groq-mentor-ui-wiring.test.mjs"/>
+	<testcase name="external reply is labelled unverified and cannot write memory or perform tools" time="0.000563" classname="test" file="/home/qa/repo-m/.github/continuum/groq-mentor-ui-wiring.test.mjs"/>
+	<testcase name="a rejected import cannot relabel the independently loaded runtime as failed" time="0.001543" classname="test" file="/home/qa/repo-m/.github/continuum/model-import-identity.test.mjs"/>
+	<testcase name="smoke result names the captured catalog identity and rejects a model swap" time="0.000493" classname="test" file="/home/qa/repo-m/.github/continuum/model-import-identity.test.mjs"/>
+	<testcase name="the five beginner destinations stay reachable from the reference start screen" time="0.000928" classname="test" file="/home/qa/repo-m/.github/continuum/nexus-beginner-ui.test.mjs"/>
+	<testcase name="start-screen routes use real existing Android screens, not placeholder success actions" time="0.000563" classname="test" file="/home/qa/repo-m/.github/continuum/nexus-beginner-ui.test.mjs"/>
+	<testcase name="advanced routes remain available from the start screen, its rail and the More sheet" time="0.002200" classname="test" file="/home/qa/repo-m/.github/continuum/nexus-beginner-ui.test.mjs"/>
+	<testcase name="Nexus keeps real hologram and voice entry tied to Android speech and system state" time="0.000713" classname="test" file="/home/qa/repo-m/.github/continuum/nexus-beginner-ui.test.mjs"/>
+	<testcase name="fold, small display and enlarged-font behaviour are expressed by a pure policy" time="0.000430" classname="test" file="/home/qa/repo-m/.github/continuum/nexus-beginner-ui.test.mjs"/>
+	<testcase name="personalisation is a real choice and cannot silently train models or install apps" time="0.000189" classname="test" file="/home/qa/repo-m/.github/continuum/nexus-beginner-ui.test.mjs"/>
+	<testcase name="start screen and chat never overlap after leaving or returning from chat" time="0.000426" classname="test" file="/home/qa/repo-m/.github/continuum/nexus-beginner-ui.test.mjs"/>
+	<testcase name="Android 14+ background network jobs declare ACCESS_NETWORK_STATE" time="0.000765" classname="test" file="/home/qa/repo-m/.github/continuum/research-job-permission.test.mjs"/>
+	<testcase name="persisted source research job is registered but never exported" time="0.000177" classname="test" file="/home/qa/repo-m/.github/continuum/research-job-permission.test.mjs"/>
+	<testcase name="owner consent, cellular network and measured 20pct resource gates remain required" time="0.001370" classname="test" file="/home/qa/repo-m/.github/continuum/research-job-permission.test.mjs"/>
+	<!-- tests 64 -->
+	<!-- suites 0 -->
+	<!-- pass 64 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 3796.696296 -->
+</testsuites>

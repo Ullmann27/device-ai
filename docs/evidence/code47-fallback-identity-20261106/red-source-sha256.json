@@ -1,0 +1,6 @@
+{
+  "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "3cc35d1b991af864d1cc3c8b18b764562a7373bf811cdd5fc4619ed97a01318c",
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalAssistantIdentity.kt": "6adb9d2d1970d03a59641453875121e397b891e3bf2244c5213dec966e7eb84b",
+  "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "40a78cee9e558c6f75acea361c43b3e3bc2862ac303df296a4a36b684a106390",
+  "app/src/uiTest/java/at/heinz/deviceai/OwnerFallbackIdentityUiTest.kt": "d8953d29e356c00cb4be28fdc50b29472670222651a75745822e72983ee1b11b"
+}

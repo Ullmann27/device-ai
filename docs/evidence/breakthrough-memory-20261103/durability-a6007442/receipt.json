@@ -1,0 +1,30 @@
+{
+  "source_sha": "a6007442768b24f5aa700c61dae7c46049c1911a",
+  "source_hashes": {
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt": "fa48bd2ef74caa41efee6cc64f3f3de58b25f7aa6e27d4dca24ee6ff94346665",
+    "app/src/main/java/at/heinz/deviceai/learning/Lex3LearningExperienceStore.kt": "54f0ccaffa01f27541c0542004b32f846d96ece339f0616114d77f6e21884ffa",
+    "docs/evidence/omega-memory-20261103/DurabilityRetryProbe.kt": "863e65a1ddc0e7182a70d1cfa9077bd45542d9b6aed6614ab1bd9f5644bb52af"
+  },
+  "cases": [
+    {
+      "mode": "status",
+      "exit": 0,
+      "successful_fsyncs_after_eio": 2
+    },
+    {
+      "mode": "append",
+      "exit": 0,
+      "successful_fsyncs_after_eio": 2
+    },
+    {
+      "mode": "batch",
+      "exit": 0,
+      "successful_fsyncs_after_eio": 2
+    },
+    {
+      "mode": "matching",
+      "exit": 0,
+      "successful_fsyncs_after_eio": 2
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+✖ same Android order cannot bind another checkout even with identical commit bytes (95.646762ms)
+✖ new order cannot deduplicate an open goal belonging to another checkout (69.275198ms)
+✖ stale source supplied to a new order is refused before a task exists (39.946971ms)
+✔ same checkout/order is idempotent after module restart and canonical symlink (79.845016ms)
+✖ bound worker cycle refuses a different checkout before indexing or execution (79.014405ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 1
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 615.045151
+
+✖ failing tests:
+
+test at .github/continuum/ccc1-checkout-binding.test.mjs:22:1
+✖ same Android order cannot bind another checkout even with identical commit bytes (95.646762ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-post-fable/.github/continuum/ccc1-checkout-binding.test.mjs:24:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CCC1_CHECKOUT_MISMATCH/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/ccc1-checkout-binding.test.mjs:27:1
+✖ new order cannot deduplicate an open goal belonging to another checkout (69.275198ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-post-fable/.github/continuum/ccc1-checkout-binding.test.mjs:29:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CCC1_CHECKOUT_MISMATCH/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/ccc1-checkout-binding.test.mjs:32:1
+✖ stale source supplied to a new order is refused before a task exists (39.946971ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-post-fable/.github/continuum/ccc1-checkout-binding.test.mjs:33:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CCC1_SOURCE_MISMATCH/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/ccc1-checkout-binding.test.mjs:43:1
+✖ bound worker cycle refuses a different checkout before indexing or execution (79.014405ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/continuum-post-fable/.github/continuum/ccc1-checkout-binding.test.mjs:45:2)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CCC1_CHECKOUT_MISMATCH/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

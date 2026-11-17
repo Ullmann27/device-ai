@@ -1,0 +1,94 @@
+{
+  "base_local_commit": "9918891a6da1d74275b087a04f4aa86c79074d46",
+  "base_public_commit": "5f87bdc610944b93d3173a83c5beeea315abeb66",
+  "scope": "Fresh scoped Kotlin capture sources; frozen unrelated dependency classes/resources; no device/GPU/OS-consent assertion",
+  "toolchain": {
+    "kotlin": "2.4.0",
+    "junit": "4.13.2",
+    "robolectric_sdks": [
+      28,
+      35
+    ]
+  },
+  "shared_build_lock": true,
+  "red": {
+    "compile_result": 0,
+    "test_result": 1,
+    "tests": 67,
+    "failures": 3,
+    "source_stable": true,
+    "source_hashes": {
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "89ac810d7795f14733424b0f7d908d8edd83f08bdb26033e338f14bab104d239",
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt": "0fedbdc5cddbbd87db0ea38dbee8942dd48cff41c1bb205a00b985274a503fad",
+      "app/src/main/java/at/heinz/deviceai/AndroidGpuFrameCopier.kt": "28201c0f68bfb5b8eeab29785c0861566efa2d01b5dee9cfc291a8019cafef9a",
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt": "62f37d8606352caeb053bc00e495e720bf212b045b5d606aed642bc5d5198347",
+      "app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt": "e2b6369c1fb6748827f21e8a45cc04bd8d8385e8296c07215f95e02e054c8ee1",
+      "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "d6111a8d7ce07f69e181e514b3e516673ca81f14326c1bdb282041644f7d4afa",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "13723d111bc2248aa8e7ffa677e00cffb28eb10cd6e52948da828ef177988e88",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowCapture.kt": "2e85fd899823b97bd5ebeee7594e06f197ba1ba3e7422890551277574034dbb6",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowSafety.kt": "510f17c80bd109687fbb77c172dae3a56db21555f571a62d6d516a32de4c41a7",
+      "app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt": "bb39aa741efb44644f7efdfd21a2de58aed3ae459b8825920665d5f3e4d4885b",
+      "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "adeaa956fbfcf9ef363e75b148293ebc36f90004891825a94fe57c17d9242561",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+      "app/src/main/java/at/heinz/deviceai/cognitive/BoundedScreenReader.kt": "624bf47bda458b8c1ed542f80a68f40f1db139bbbd3319eccd946e8f22b42440",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerFramesTest.kt": "d0afed0302bca9ac71517b1477dcbfd41e3ae09e97e22e078fe8210f4a9538c9",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LiveWindowCaptureTest.kt": "9275eda4179ba80f4123460af69bdbf04661bf797cee541edd8d2b325b3c7f1a",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LiveWindowSafetyTest.kt": "c539415b3e65ebf5727538208cb3b264e62982989c142b16eb640a510ca692ca",
+      "app/src/test/java/at/heinz/deviceai/cognitive/ProjectionCropGeometryTest.kt": "dc1ed60d4038e1a5793ae737920f63df38ba77154b8fff5dd071285bd1105669",
+      "app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt": "f195c38ac55b9fc2f0d4122ba186aca35a29e9c240dc6db9ab237f404346a420",
+      "app/src/uiTest/java/at/heinz/deviceai/AndroidWindowCaptureTest.kt": "a1229581f7f7df4ac281817801fdc4eb404125c0211fbc11f6cc41673305673c",
+      "app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt": "b5b6e7a11212b8596f58a3480991df4eb5f01c3841146d0b48861454c3aacab0",
+      "app/src/uiTest/java/at/heinz/deviceai/AndroidLiveNodePortTest.kt": "cee4d0a479c12c85423205c14969f8b16744446c96e06fed4acf35cd46ef195f"
+    }
+  },
+  "green": {
+    "compile_result": 0,
+    "test_result": 0,
+    "tests": 67,
+    "failures": 0,
+    "source_stable": true,
+    "source_hashes": {
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "4e33fe8b6e70ed9ea02e3b34a6f2c7cd8464fb8a9aeeb286b8e043e74ac33268",
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt": "0fedbdc5cddbbd87db0ea38dbee8942dd48cff41c1bb205a00b985274a503fad",
+      "app/src/main/java/at/heinz/deviceai/AndroidGpuFrameCopier.kt": "28201c0f68bfb5b8eeab29785c0861566efa2d01b5dee9cfc291a8019cafef9a",
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt": "62f37d8606352caeb053bc00e495e720bf212b045b5d606aed642bc5d5198347",
+      "app/src/main/java/at/heinz/deviceai/ContinuumLiveProjectionService.kt": "e2b6369c1fb6748827f21e8a45cc04bd8d8385e8296c07215f95e02e054c8ee1",
+      "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "d6111a8d7ce07f69e181e514b3e516673ca81f14326c1bdb282041644f7d4afa",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "13723d111bc2248aa8e7ffa677e00cffb28eb10cd6e52948da828ef177988e88",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowCapture.kt": "2e85fd899823b97bd5ebeee7594e06f197ba1ba3e7422890551277574034dbb6",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowSafety.kt": "510f17c80bd109687fbb77c172dae3a56db21555f571a62d6d516a32de4c41a7",
+      "app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt": "bb39aa741efb44644f7efdfd21a2de58aed3ae459b8825920665d5f3e4d4885b",
+      "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "adeaa956fbfcf9ef363e75b148293ebc36f90004891825a94fe57c17d9242561",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+      "app/src/main/java/at/heinz/deviceai/cognitive/BoundedScreenReader.kt": "624bf47bda458b8c1ed542f80a68f40f1db139bbbd3319eccd946e8f22b42440",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerFramesTest.kt": "d0afed0302bca9ac71517b1477dcbfd41e3ae09e97e22e078fe8210f4a9538c9",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LiveWindowCaptureTest.kt": "9275eda4179ba80f4123460af69bdbf04661bf797cee541edd8d2b325b3c7f1a",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LiveWindowSafetyTest.kt": "c539415b3e65ebf5727538208cb3b264e62982989c142b16eb640a510ca692ca",
+      "app/src/test/java/at/heinz/deviceai/cognitive/ProjectionCropGeometryTest.kt": "dc1ed60d4038e1a5793ae737920f63df38ba77154b8fff5dd071285bd1105669",
+      "app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt": "f195c38ac55b9fc2f0d4122ba186aca35a29e9c240dc6db9ab237f404346a420",
+      "app/src/uiTest/java/at/heinz/deviceai/AndroidWindowCaptureTest.kt": "a1229581f7f7df4ac281817801fdc4eb404125c0211fbc11f6cc41673305673c",
+      "app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt": "b5b6e7a11212b8596f58a3480991df4eb5f01c3841146d0b48861454c3aacab0",
+      "app/src/uiTest/java/at/heinz/deviceai/AndroidLiveNodePortTest.kt": "cee4d0a479c12c85423205c14969f8b16744446c96e06fed4acf35cd46ef195f"
+    }
+  },
+  "test_counts": {
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerFramesTest.kt": 13,
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveWindowCaptureTest.kt": 6,
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveWindowSafetyTest.kt": 6,
+    "app/src/test/java/at/heinz/deviceai/cognitive/ProjectionCropGeometryTest.kt": 7,
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveProjectionServiceUiTest.kt": 18,
+    "app/src/uiTest/java/at/heinz/deviceai/AndroidWindowCaptureTest.kt": 4,
+    "app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt": 13
+  },
+  "frozen_dependency_jar_sha256": "6f5f1cfee967e825b11537f8b9abf05686378def648b7fd8edfbe8aea925e952",
+  "regression": "700ms local acquisition-to-offer + 900ms holding must exceed 1500ms freshness; pre-acquisition queue age remains unverified",
+  "evidence_sha256": {
+    "green.txt": "0278533b878d948e2d02e2a09eb405e215480d37684db3bb806b26a98f42f1ef",
+    "red-source.patch": "d2a7133c5a72c2e77ec2a4250abf2a992036256062e46e549858eb919f44a166",
+    "red.txt": "823b9c4596866b4d8a7576858c6091ec136718596dc4e9378d8afbc2110bb6ed"
+  }
+}

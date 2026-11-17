@@ -1,0 +1,271 @@
+{
+  "observed_at": "2026-11-03T18:40Z",
+  "repository": "Ullmann27/device-ai",
+  "main_unchanged": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+  "pull_requests": [
+    {
+      "number": 338,
+      "title": "[AVATAR-LAB][EXPERIMENT] Kostenloser Offline-Sprachavatar als optionale Android-Testansicht",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-fold7-stream-scroll-20261101",
+      "base_sha": "56e9a82fde0062db9a7daa8cfb16840a6615380d",
+      "head": "experiment/continuum-avatar-lab-offline-20261101",
+      "head_sha": "6f082d062e50e91cfe5bc586f2977d5b75874976",
+      "url": "https://github.com/Ullmann27/device-ai/pull/338"
+    },
+    {
+      "number": 350,
+      "title": "Quantumflow: pinned Android 3D avatar, lipsync, face tracking and cinematic HUD source intake",
+      "state": "open",
+      "draft": true,
+      "base": "research/continuum-grand-challenge-20261102",
+      "base_sha": "93422eb6a4f10fa34edb6efb5bfc45fa65dd0c13",
+      "head": "research/continuum-quantumflow-upstreams-20261102",
+      "head_sha": "8d2011f34fe5786d5e9d93a50eadb3102df9dc85",
+      "url": "https://github.com/Ullmann27/device-ai/pull/350"
+    },
+    {
+      "number": 373,
+      "title": "Continuum M3 (Grok): Review-#370-Fixes, attestierter CCC1-RED→GREEN-Verifier, Offline-Eval, Selbstkorrektur, deutsches Retrieval",
+      "state": "open",
+      "draft": true,
+      "base": "continuum/m2-grok-context-state-20261103",
+      "base_sha": "ea7854324a1421dac7695fade60bcbb3c61447fe",
+      "head": "continuum/m3-grok-selbstrekonstruktion-20261103",
+      "head_sha": "26162442c88929738600c1862f17e24b944a44d4",
+      "url": "https://github.com/Ullmann27/device-ai/pull/373"
+    },
+    {
+      "number": 378,
+      "title": "WIP: Jarvis-Avatar live (Holo AAA v1) – Zwischenstand",
+      "state": "open",
+      "draft": true,
+      "base": "continuum/m3-grok-selbstrekonstruktion-20261103",
+      "base_sha": "26162442c88929738600c1862f17e24b944a44d4",
+      "head": "jarvis-grafik/avatar-live",
+      "head_sha": "b95d08cad3f40293743ec414fd6aaa2b5ef9270a",
+      "url": "https://github.com/Ullmann27/device-ai/pull/378"
+    },
+    {
+      "number": 384,
+      "title": "[DRAFT] Continuum Ω Chief-Team-Staging: 20 Spezialisten, Worker-Abbruch, Routinen und Mailbox verbunden",
+      "state": "open",
+      "draft": true,
+      "base": "integration/continuum-grok1-369-372-20261103",
+      "base_sha": "9d0596b68563a1f9afe65da86864f52f9106dc5c",
+      "head": "integration/continuum-chief-team-staging-20261103",
+      "head_sha": "34543f9c6cb94c8dc471099dd656ad932d690b96",
+      "url": "https://github.com/Ullmann27/device-ai/pull/384"
+    },
+    {
+      "number": 385,
+      "title": "feat(chief): bounded multi-specialist task DAG, path-conflict serialization and independent QA gate",
+      "state": "open",
+      "draft": true,
+      "base": "integration/continuum-chief-team-staging-20261103",
+      "base_sha": "34543f9c6cb94c8dc471099dd656ad932d690b96",
+      "head": "feature/continuum-chief-task-dag-20261103",
+      "head_sha": "8f64178818399c0d5412bbe20bab6b178b98c037",
+      "url": "https://github.com/Ullmann27/device-ai/pull/385"
+    },
+    {
+      "number": 386,
+      "title": "feat(chief): verifier-gated repair experience ledger for proven failures and successes",
+      "state": "open",
+      "draft": true,
+      "base": "feature/continuum-chief-task-dag-20261103",
+      "base_sha": "066009bc9a04e1101631cf5e096896d9d54ff95a",
+      "head": "feature/continuum-chief-proof-gated-strategy-ledger-20261103",
+      "head_sha": "ee9b2dfde74499a499f86ba3e07c19f48b89c446",
+      "url": "https://github.com/Ullmann27/device-ai/pull/386"
+    },
+    {
+      "number": 387,
+      "title": "feat(ccc1): executable four-role Alpha Squad entry on existing local repair worker",
+      "state": "open",
+      "draft": true,
+      "base": "feature/continuum-chief-proof-gated-strategy-ledger-20261103",
+      "base_sha": "db35c7cafe1e0dd33a771b253627b4a8a6eaa040",
+      "head": "feature/continuum-alpha-squad-ccc1-entry-20261103",
+      "head_sha": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+      "url": "https://github.com/Ullmann27/device-ai/pull/387"
+    },
+    {
+      "number": 388,
+      "title": "[DRAFT] Continuum Lokal Code40 candidate: Grok 1951 integration + B5, safe Chief workers and Android chat status",
+      "state": "open",
+      "draft": true,
+      "base": "research/continuum-m8-render-signed-release-20261031",
+      "base_sha": "a9709854f48d2fd6589f9ce5ea97f6ec3be0d233",
+      "head": "fix/continuum-code40-chief-apk-gates-20261103",
+      "head_sha": "c986aa5ac771b13c886bfb880cf906454775d898",
+      "url": "https://github.com/Ullmann27/device-ai/pull/388"
+    },
+    {
+      "number": 390,
+      "title": "fix(code40): Jarvis colon routing and zero-ms paired benchmark regression",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-code40-chief-apk-gates-20261103",
+      "base_sha": "c986aa5ac771b13c886bfb880cf906454775d898",
+      "head": "fix/continuum-code40-router-race-review-20261103",
+      "head_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "url": "https://github.com/Ullmann27/device-ai/pull/390"
+    },
+    {
+      "number": 391,
+      "title": "design(continuum): refined avatar, preserved core sphere and consumer UI handoff",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-code40-router-race-review-20261103",
+      "base_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "head": "design/continuum-avatar-user-ui-20261103",
+      "head_sha": "a0b19100352e1876c180af51e126a0644a70aa68",
+      "url": "https://github.com/Ullmann27/device-ai/pull/391"
+    },
+    {
+      "number": 392,
+      "title": "Continuum Ω: verified context, LEX3 memory and CCC1 integration",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-code40-router-race-review-20261103",
+      "base_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "head": "codex/team-chief/omega-20261103",
+      "head_sha": "7e83281a4fc5f7bd925adb56951237a31e560cf6",
+      "url": "https://github.com/Ullmann27/device-ai/pull/392"
+    },
+    {
+      "number": 393,
+      "title": "fix(ccc1): reject inconsistent receipt counts and incomplete repair verdicts",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-code40-router-race-review-20261103",
+      "base_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "head": "codex/team-03-ccc1-omega-20261103",
+      "head_sha": "56f4577aca23e79064b80ccac7a894b7fca02017",
+      "url": "https://github.com/Ullmann27/device-ai/pull/393"
+    },
+    {
+      "number": 394,
+      "title": "fix(context): respect denied quantities and owner resignation",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-code40-router-race-review-20261103",
+      "base_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "head": "codex/team-01-intelligence-omega-20261103",
+      "head_sha": "afade03dd1a5a101562f8b008c572b9fdfe88d75",
+      "url": "https://github.com/Ullmann27/device-ai/pull/394"
+    },
+    {
+      "number": 395,
+      "title": "feat(avatar): optional native head using existing TTS and runtime events",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-code40-router-race-review-20261103",
+      "base_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "head": "codex/team-04-android-omega-20261103",
+      "head_sha": "82a83ec9b8f21eb91df1e1ef5c886dd32b5e4880",
+      "url": "https://github.com/Ullmann27/device-ai/pull/395"
+    },
+    {
+      "number": 396,
+      "title": "Omega quality: independent host acceptance and unsigned Code40 evidence",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-code40-router-race-review-20261103",
+      "base_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "head": "codex/team-05-quality-omega-20261103",
+      "head_sha": "e934ba310dc36d46e4afa26ce751586113c8dbe9",
+      "url": "https://github.com/Ullmann27/device-ai/pull/396"
+    },
+    {
+      "number": 397,
+      "title": "memory: durable segmented ledger beyond 256 protected records",
+      "state": "open",
+      "draft": true,
+      "base": "fix/continuum-code40-router-race-review-20261103",
+      "base_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "head": "codex/team-02-memory-omega-20261103",
+      "head_sha": "3304abce60edb8cf1c3843f90ef02fd3a7a525e5",
+      "url": "https://github.com/Ullmann27/device-ai/pull/397"
+    },
+    {
+      "number": 398,
+      "title": "fix(cognition): prevent stale quantity context after owner retractions",
+      "state": "open",
+      "draft": true,
+      "base": "codex/team-chief/omega-20261103",
+      "base_sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "head": "codex/breakthrough-cognition-20261103",
+      "head_sha": "4ef4f71246473760abe2da6b595027e812dca741",
+      "url": "https://github.com/Ullmann27/device-ai/pull/398"
+    },
+    {
+      "number": 399,
+      "title": "[DRAFT] memory: reuse bounded replay selections after full integrity checks",
+      "state": "open",
+      "draft": true,
+      "base": "codex/team-chief/omega-20261103",
+      "base_sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "head": "codex/breakthrough-memory-20261103",
+      "head_sha": "d1b39228922eb1be8d3a05e14618341aeb2ab2a5",
+      "url": "https://github.com/Ullmann27/device-ai/pull/399"
+    },
+    {
+      "number": 400,
+      "title": "fix(ccc1): reject repairs that drop or replace executed baseline tests",
+      "state": "open",
+      "draft": true,
+      "base": "codex/team-chief/omega-20261103",
+      "base_sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "head": "codex/breakthrough-autonomy-20261103",
+      "head_sha": "43a50b8f852f04b8165af5064804e75b67f68a33",
+      "url": "https://github.com/Ullmann27/device-ai/pull/400"
+    },
+    {
+      "number": 401,
+      "title": "[DRAFT] Research: bind extractive claims to their supplying evidence",
+      "state": "open",
+      "draft": true,
+      "base": "codex/team-chief/omega-20261103",
+      "base_sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "head": "codex/breakthrough-research-20261103",
+      "head_sha": "95022f31d27c0bf0322b61bc2e12bdb3c4ab5038",
+      "url": "https://github.com/Ullmann27/device-ai/pull/401"
+    },
+    {
+      "number": 402,
+      "title": "[DRAFT] CDX2 slot residual experiment: RAW gain, rejected after regression",
+      "state": "open",
+      "draft": true,
+      "base": "codex/team-chief/omega-20261103",
+      "base_sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "head": "codex/breakthrough-neural-20261103",
+      "head_sha": "8123e6df2bc48068b2eb32a088b6e6c6768cfe3d",
+      "url": "https://github.com/Ullmann27/device-ai/pull/402"
+    },
+    {
+      "number": 403,
+      "title": "[WIP] Independent frozen breakthrough QA challenges",
+      "state": "open",
+      "draft": true,
+      "base": "codex/team-chief/omega-20261103",
+      "base_sha": "7e83281a4fc5f7bd925adb56951237a31e560cf6",
+      "head": "codex/team-05-quality-breakthrough-20261103",
+      "head_sha": "60e70d2573ed5e5bc9f2b41f400018feff2f2049",
+      "url": "https://github.com/Ullmann27/device-ai/pull/403"
+    },
+    {
+      "number": 404,
+      "title": "Living JARVIS3D: preserve owner-derived reference and start mesh validation",
+      "state": "open",
+      "draft": true,
+      "base": "codex/team-chief/omega-20261103",
+      "base_sha": "7e83281a4fc5f7bd925adb56951237a31e560cf6",
+      "head": "codex/living-jarvis-3d-20261103",
+      "head_sha": "fa34ce264ee3b761f15e72fbcb4aa128b1d48c09",
+      "url": "https://github.com/Ullmann27/device-ai/pull/404"
+    }
+  ]
+}

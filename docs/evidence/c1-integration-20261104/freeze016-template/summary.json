@@ -1,0 +1,44 @@
+{
+  "sourceDirectory": "/workspace/scratch/174c84456ee3/apk-audit/freeze016",
+  "archive": "freeze016-template.tar.xz",
+  "sha256": "aea413c5281fb4a2ba24bb1bb549ba82a362961920279920604eb89bde06e3df",
+  "scope": "READ_ONLY_REVIEW_OR_TEMPLATE; see exact source in members; not current full acceptance",
+  "members": [
+    {
+      "path": "C1-FREEZE-016.json",
+      "sha256": "42a4f89f967c27c8894164c4eaedc9df92d948b2c911e74ebc8ad188e7137ca9"
+    },
+    {
+      "path": "C1-FREEZE-016.md",
+      "sha256": "c95e98ff0126fd974ac4b7d44526f37a20b647d20fbd37052a64b53edf54cd3a"
+    },
+    {
+      "path": "board-link-review/board-links-proposed.patch",
+      "sha256": "55bfa8242ff18dc09b3ed30f0041de038333af64f352725dd140be172816bb1a"
+    },
+    {
+      "path": "board-link-review/board-links.json",
+      "sha256": "41d58eb50fac70fdd5bd5e5ac5ae04d0bd328941a45a6efd355c457b0cd9ba35"
+    },
+    {
+      "path": "board-link-review/board-links.md",
+      "sha256": "aea5dc27aa436f166b8ebdc9755fffc2f90fc94f4b7a8902801a75cc686824c6"
+    },
+    {
+      "path": "board-link-review/original/docs/evidence/astra-nucleus-20261104/parameter-layout-counts.json",
+      "sha256": "50e71eb62034c14269a290e037a7f2849e52dc8cb66d5ce5f8453b43246d05f8"
+    },
+    {
+      "path": "board-link-review/original/docs/research/omega/ASTRA-NUCLEUS-ACTION-PACKAGE-20261104.md",
+      "sha256": "92b441e7041cf0dd999a9421c3ba39d507bf2c991a6c170b7698f257e992696b"
+    },
+    {
+      "path": "board-link-review/original/docs/research/omega/astra-nucleus/GENERATION-1.json",
+      "sha256": "7b495ae973f896c6464e0cd3c3465d2aa2bb876639ff8344de4c0dc18304c242"
+    },
+    {
+      "path": "board-link-review/retrieved-files.json",
+      "sha256": "e7ffb8e45b72354dd6af55ea3d95556ced40d7fc3fb7edf209f9f2b09f6e6761"
+    }
+  ]
+}

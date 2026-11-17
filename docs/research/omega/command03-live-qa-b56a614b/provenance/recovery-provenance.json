@@ -1,0 +1,16 @@
+{
+  "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "recovery_receipt": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/compiler-state-recovery-533.json",
+  "recovery_receipt_sha256": "2daf36e5ea889c70a1bf12220f3a980566425ad2847b878123fd0a4bcf4b86f5",
+  "compile_evidence_requirement": "Normal Gradle input re-evaluation and actual changed source compilation; UP-TO-DATE alone is insufficient; no old test results accepted.",
+  "fresh_resources": {
+    "epoch": 1794805949.9096775,
+    "global_oom_kill": 35,
+    "workspace_free_bytes": 498708480,
+    "memory": [
+      "MemAvailable:    3109960 kB",
+      "SwapTotal:             0 kB",
+      "Shmem:           5625988 kB"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCodingConversationTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:08" hostname="5c9e18abbd30" time="0.183">
+  <properties/>
+  <testcase name="explicitRejectionsAndInternetChangesInvalidateEveryPreview" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.007"/>
+  <testcase name="concurrentApprovalsConsumeExactlyOnePreview" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.174"/>
+  <testcase name="negativeInstructionsCannotKeepOrResurrectAnExistingPlan" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="aQuestionNeedsAnExplicitRequirementBeforeAnOldPreviewCanReturn" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="multiTurnNotesPlanNeedsExplicitStorageAndRevisionBoundApproval" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="fiveTurnDialogueDoesNotTurnAQuestionIntoAnExplicitRequirement" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="aQuestionMarkInsideATurnNeverConfirmsStorage" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="unsupportedTodoFeaturesAreNeverSilentlyDropped" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="consumedHandoffCannotBeRearmedByAnUnrelatedTurn" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="counterCorrectionsConditionsAndNegationNeverGrantAuthority" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="independentCatalogMustStillValidateBeforeHandoff" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="postponedBuildAndIndirectDocumentTextInvalidateAReadyPlan" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

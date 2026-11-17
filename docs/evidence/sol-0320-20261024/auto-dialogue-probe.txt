@@ -1,0 +1,5 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+SOURCE=074fa80729a088644769df300c23b2e093e56553; SYNTHETIC_HOST_PROBE_NOT_DEVICE
+Round(stage=1, accepted=true, steps=32, stoppedEarly=false, trainBefore=0.8890785011264535, trainAfter=0.8779996561023329, auditBefore=0.8044421427489398, auditAfter=0.8013026808202466, modelHash=0e7fdca56c191cabbd7df00e9b4fdf1b36cb7d4f562a36c32530a7e24cd1307f)
+elapsedMillis=302
+productiveSwbUnchanged=true; ownerFactsUnchanged=true; attemptedStages=1; promotion=false

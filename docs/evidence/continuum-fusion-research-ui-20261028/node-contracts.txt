@@ -1,0 +1,17 @@
+✔ finished experiment review is reachable in primary learning center (0.948327ms)
+✔ CTX3 test is discoverable and stays confined to existing nonexported lab (0.275008ms)
+✔ Orion personal memory is not mistaken for an entity definition (0.150257ms)
+✔ permanent research catalog belongs to canonical Continuum experiment registry (1.505469ms)
+✔ all 15 upstream candidates are anchored to source links and local interfaces (0.446367ms)
+✔ all developer entrypoints preserve integration mission (4.202047ms)
+✔ research evaluation uses existing brain retrieval, never writes or runs tools (0.465241ms)
+✔ the historical owner release gates have not been weakened by research files (0.287779ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 406.297678
+EXIT_CODE=0

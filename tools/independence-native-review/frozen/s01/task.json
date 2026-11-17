@@ -1,0 +1,13 @@
+{
+  "id": "independence-s01",
+  "title": "Repair a signed circular rotation used to reorder a scheduler queue",
+  "requirements": [
+    "rotateRight(items, amount) must return a new dense array of the same elements after a circular RIGHT rotation by amount positions. A positive amount moves trailing elements to the front; a negative amount rotates left. amount is any JavaScript safe integer, including zero and magnitudes greater than the array length.",
+    "Do not mutate the input array or elements. Preserve element references and order modulo the rotation. Return a distinct array even for zero/full rotations. Empty and singleton arrays are valid. Change only lib/subject.mjs; tests and dependencies are fixed."
+  ],
+  "allowedPaths": ["lib/subject.mjs"],
+  "maxModelCalls": 1,
+  "externalAnswer": false,
+  "priorCaseReuse": false,
+  "independentTestsExposedToBuilder": false
+}

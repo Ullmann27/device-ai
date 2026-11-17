@@ -1,0 +1,41 @@
+{
+  "counts": {
+    "adversarial": 30,
+    "primaryMissing": 5,
+    "primarySupported": 20,
+    "total": 55
+  },
+  "files": {
+    "SCORING.md": {
+      "bytes": 5488,
+      "sha256": "6d195d580e4936865043deef63379bd380e20a3c3ba900122e6cda5623250be3"
+    },
+    "corpus.json": {
+      "bytes": 41250,
+      "sha256": "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c"
+    },
+    "corpus.schema.json": {
+      "bytes": 3685,
+      "sha256": "e4262adc20e13d327a14ec885c872be10cccb0cc17f0ca8f3bbb51a2a13f769c"
+    },
+    "freeze.py": {
+      "bytes": 2507,
+      "sha256": "eff68c2fef466095351bc44e3e715411cb00e73336379604015c430e1306f004"
+    },
+    "generate.py": {
+      "bytes": 7480,
+      "sha256": "18835f1e2ae19f8788632e45c20ca5fe17a4d47603c26bbf320b45dfbd2f7f15"
+    },
+    "inputs.json": {
+      "bytes": 30828,
+      "sha256": "167de32908d1d4bde41c78024e315dbd3780606dd9be64b0b93bfb765f70ae6d"
+    },
+    "overlap.json": {
+      "bytes": 1071,
+      "sha256": "25bdf53eab87f0f7d9051e2fb349228c0a86392598a1c74133713f7f6683cfac"
+    }
+  },
+  "schema": "ISSUE340_BLIND_C_FREEZE_V1",
+  "seed": 34020261101,
+  "status": "FROZEN_NOT_RUN_LOCAL_ONLY"
+}

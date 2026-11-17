@@ -1,0 +1,213 @@
+{
+  "source_sha": "d19380535145079003f315198882d3e410588a66",
+  "run_id": 43356537474,
+  "node_job_id": 131659794565,
+  "node_job_result": "SUCCESS",
+  "node_receipts": [
+    {
+      "cancelled": false,
+      "checks": [
+        {
+          "code": 0,
+          "error": null,
+          "id": "process",
+          "reason": null,
+          "status": "PASS",
+          "terminationConfirmed": true,
+          "tests": {
+            "evidenceComplete": true,
+            "executed": 37,
+            "failed": 0,
+            "passed": 37,
+            "placeholders": 0,
+            "skipped": 0,
+            "total": 37
+          }
+        },
+        {
+          "code": 0,
+          "error": null,
+          "id": "storage-agent",
+          "reason": null,
+          "status": "PASS",
+          "terminationConfirmed": true,
+          "tests": {
+            "evidenceComplete": true,
+            "executed": 32,
+            "failed": 0,
+            "passed": 32,
+            "placeholders": 0,
+            "skipped": 0,
+            "total": 32
+          }
+        },
+        {
+          "code": 0,
+          "error": null,
+          "id": "android-source-contracts",
+          "reason": null,
+          "status": "PASS",
+          "terminationConfirmed": true,
+          "tests": {
+            "evidenceComplete": true,
+            "executed": 66,
+            "failed": 0,
+            "passed": 66,
+            "placeholders": 0,
+            "skipped": 0,
+            "total": 66
+          }
+        },
+        {
+          "code": 0,
+          "error": null,
+          "id": "host-checker",
+          "reason": null,
+          "status": "PASS",
+          "terminationConfirmed": true,
+          "tests": {
+            "evidenceComplete": true,
+            "executed": 2,
+            "failed": 0,
+            "passed": 2,
+            "placeholders": 0,
+            "skipped": 0,
+            "total": 2
+          }
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "gradle",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "lint",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "apk",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "fold7",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "model-inference",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        }
+      ],
+      "profile": "critical",
+      "sourceUnchanged": true,
+      "source_sha": "d19380535145079003f315198882d3e410588a66",
+      "status": "PASS"
+    },
+    {
+      "cancelled": false,
+      "checks": [
+        {
+          "code": 0,
+          "error": null,
+          "id": "full-node",
+          "reason": null,
+          "status": "PASS",
+          "terminationConfirmed": true,
+          "tests": {
+            "evidenceComplete": true,
+            "executed": 2461,
+            "failed": 0,
+            "passed": 2461,
+            "placeholders": 0,
+            "skipped": 37,
+            "total": 2498
+          }
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "gradle",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "lint",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "apk",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "fold7",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        },
+        {
+          "code": null,
+          "error": null,
+          "id": "model-inference",
+          "reason": "OUTSIDE_SELECTED_HOST_SCOPE",
+          "status": "NOT_RUN",
+          "terminationConfirmed": null,
+          "tests": {}
+        }
+      ],
+      "profile": "full-node",
+      "sourceUnchanged": true,
+      "source_sha": "d19380535145079003f315198882d3e410588a66",
+      "status": "PASS"
+    }
+  ],
+  "backend": {
+    "tests": 64,
+    "passed": 64,
+    "failed": 0,
+    "skipped": 0
+  },
+  "native_job_id": 131659794267,
+  "native_job_result": "FAILED_BEFORE_BOOT",
+  "native_compile": "PASS",
+  "native_failure": "Metadata command emulator -version selected GUI QEMU and failed resolving libpulse.so.0; no probe executed. Use explicit -no-window for the same headless binary as actual boot.",
+  "native_app_status": "NOT_RUN_ON_THIS_ATTEMPT",
+  "primary_launcher_source": "https://android.googlesource.com/platform/external/qemu/+/emu-master-dev/android/emulator/main-emulator.cpp"
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "fidelity": "android_activity_host_native_canvas_api28_explicit_2d_head",
+  "source_commit": "101c0810334a347001a7b50da3faff378987ff00",
+  "capture_state": "home",
+  "pixel_width": 832,
+  "pixel_height": 748,
+  "viewport_width_dp": 832,
+  "viewport_height_dp": 748,
+  "density": 1,
+  "font_scale": 2,
+  "has_feature_tiles": false,
+  "animation_duration_scale": 0,
+  "head_mode": "existing_2d_renderer_explicitly_selected",
+  "native_filament_verified": false,
+  "physical_device_verified": false,
+  "data_policy": "isolated empty test storage; real application startup; no invented status data",
+  "bounds_coordinate_space": "each View relative to its real parent; no synthetic composition",
+  "home_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 832,
+    "bottom": 2613
+  },
+  "avatar_bounds": {
+    "left": 273,
+    "top": 138,
+    "right": 820,
+    "bottom": 433
+  },
+  "shell_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 832,
+    "bottom": 2613
+  },
+  "scroll_viewport_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 832,
+    "bottom": 748
+  },
+  "scroll_x_px": 0,
+  "scroll_y_px": 0,
+  "scroll_y_dp": 0,
+  "scroll_content_height_px": 2701,
+  "slot_bounds_coordinate_space": "actual shell-local dp",
+  "slot_bounds_dp": {
+    "STATUS": {
+      "left": 12,
+      "top": 2015.2449951171875,
+      "right": 820,
+      "bottom": 2127.2451171875
+    },
+    "ROW_AGENTS": {
+      "left": 273.25,
+      "top": 1467.2449951171875,
+      "right": 820,
+      "bottom": 1731.2449951171875
+    },
+    "ROW_TASKS": {
+      "left": 273.25,
+      "top": 1741.2449951171875,
+      "right": 820,
+      "bottom": 2005.2449951171875
+    },
+    "ROW_MEMORY": {
+      "left": 273.25,
+      "top": 687.2449951171875,
+      "right": 820,
+      "bottom": 1067.2449951171875
+    },
+    "ROW_MODEL": {
+      "left": 273.25,
+      "top": 1077.2449951171875,
+      "right": 820,
+      "bottom": 1457.2449951171875
+    }
+  },
+  "png_sha256": "b0bfb80d78e4326e17ba604607d35047981c3fe788d5e14286bf788ef460ecea"
+}

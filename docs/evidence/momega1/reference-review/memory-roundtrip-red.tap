@@ -1,0 +1,293 @@
+TAP version 13
+# Subtest: RT01 persisted snapshot keeps valid MAC and fresh-process recall: top-level optional verifier field
+not ok 1 - RT01 persisted snapshot keeps valid MAC and fresh-process recall: top-level optional verifier field
+  ---
+  duration_ms: 21.097042
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:42:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'd789f8b0218d04a11a451535ec152c281d2fa7bfe1f1ad3ce433dab53c9079c6'
+    - '620e703fd9072b392d57c21ec9e8ade5feb90573139262d5c6d0c4ed415c8b00'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '620e703fd9072b392d57c21ec9e8ade5feb90573139262d5c6d0c4ed415c8b00'
+  actual: 'd789f8b0218d04a11a451535ec152c281d2fa7bfe1f1ad3ce433dab53c9079c6'
+  operator: 'strictEqual'
+  stack: |-
+    assertMac (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:28:64)
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:45:2)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: RT01 persisted snapshot keeps valid MAC and fresh-process recall: nested verifier diagnostics
+not ok 2 - RT01 persisted snapshot keeps valid MAC and fresh-process recall: nested verifier diagnostics
+  ---
+  duration_ms: 7.02868
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:42:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '1f293c66e50a4e2c892ddcae0762bc0096d9610822a85d6b5f72423a526567e1'
+    - '9095d1902834147e96b2d94a63f2a2ea83f9ff2ef5a24cf96d5aa24af5bff7a7'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '9095d1902834147e96b2d94a63f2a2ea83f9ff2ef5a24cf96d5aa24af5bff7a7'
+  actual: '1f293c66e50a4e2c892ddcae0762bc0096d9610822a85d6b5f72423a526567e1'
+  operator: 'strictEqual'
+  stack: |-
+    assertMac (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:28:64)
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:45:2)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: RT01 persisted snapshot keeps valid MAC and fresh-process recall: undefined in verifier arrays
+not ok 3 - RT01 persisted snapshot keeps valid MAC and fresh-process recall: undefined in verifier arrays
+  ---
+  duration_ms: 7.178903
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:42:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'c33d4dfc031e722d93a1df8408a78043f75c805b1a8110a88908a6a6214a279e'
+    - '44ac59068705b5b7e14aed5a0452d7ffbb7f2dbccaaf24ccd8ffb2993ddcbbd7'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '44ac59068705b5b7e14aed5a0452d7ffbb7f2dbccaaf24ccd8ffb2993ddcbbd7'
+  actual: 'c33d4dfc031e722d93a1df8408a78043f75c805b1a8110a88908a6a6214a279e'
+  operator: 'strictEqual'
+  stack: |-
+    assertMac (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:28:64)
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:45:2)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RT01 persisted snapshot keeps valid MAC and fresh-process recall: sparse verifier arrays
+not ok 4 - RT01 persisted snapshot keeps valid MAC and fresh-process recall: sparse verifier arrays
+  ---
+  duration_ms: 7.848273
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:42:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '3d4175959834e41d479f4b6a8a5f2e1ef8640fc2758eefb53f02e3d9c6b0c9bb'
+    - '1a369537fba4185e4617557a00307b10fc5b60bc0658f2ce43071cbfee6318f0'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '1a369537fba4185e4617557a00307b10fc5b60bc0658f2ce43071cbfee6318f0'
+  actual: '3d4175959834e41d479f4b6a8a5f2e1ef8640fc2758eefb53f02e3d9c6b0c9bb'
+  operator: 'strictEqual'
+  stack: |-
+    assertMac (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:28:64)
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:45:2)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RT01 persisted snapshot keeps valid MAC and fresh-process recall: nested optional runtime observation
+not ok 5 - RT01 persisted snapshot keeps valid MAC and fresh-process recall: nested optional runtime observation
+  ---
+  duration_ms: 6.784146
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:42:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '4becb6857dbc3f64fe3407fe9b93412016a6e8414cca46855e65c2955a95ce50'
+    - '3a14a507eceac25dd5d2f193da537193ba1f68238bbac52b8e9065938adfeb42'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '3a14a507eceac25dd5d2f193da537193ba1f68238bbac52b8e9065938adfeb42'
+  actual: '4becb6857dbc3f64fe3407fe9b93412016a6e8414cca46855e65c2955a95ce50'
+  operator: 'strictEqual'
+  stack: |-
+    assertMac (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:28:64)
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:45:2)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RT01 persisted snapshot keeps valid MAC and fresh-process recall: optional runtime array slots
+not ok 6 - RT01 persisted snapshot keeps valid MAC and fresh-process recall: optional runtime array slots
+  ---
+  duration_ms: 7.136277
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:42:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '4442e85927779ef6fd7ef98127f80e046de55950ce11952a379c3ded034a258f'
+    - '16b4ab5fd3940c6900ad8e56555c79f8efb227d544ca4b4fefd9331a86d4042e'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '16b4ab5fd3940c6900ad8e56555c79f8efb227d544ca4b4fefd9331a86d4042e'
+  actual: '4442e85927779ef6fd7ef98127f80e046de55950ce11952a379c3ded034a258f'
+  operator: 'strictEqual'
+  stack: |-
+    assertMac (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:28:64)
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:45:2)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RT02 normalization does not mutate original branded observations
+not ok 7 - RT02 normalization does not mutate original branded observations
+  ---
+  duration_ms: 7.671827
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:50:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '9e5242a3f3bf55f234982b458da4a4f822a1e7c685a060693cd497e551e4c348'
+    - '14768066a659e2887b91462fbf3857aea2d29d6a4f72931657e2376f6ddf5395'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '14768066a659e2887b91462fbf3857aea2d29d6a4f72931657e2376f6ddf5395'
+  actual: '9e5242a3f3bf55f234982b458da4a4f822a1e7c685a060693cd497e551e4c348'
+  operator: 'strictEqual'
+  stack: |-
+    assertMac (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:28:64)
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:56:75)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RT03 post-serialization model binding change is rejected before ledger write
+not ok 8 - RT03 post-serialization model binding change is rejected before ledger write
+  ---
+  duration_ms: 6.800831
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:59:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:62:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RT04 post-serialization verifier patch substitution is rejected before ledger write
+not ok 9 - RT04 post-serialization verifier patch substitution is rejected before ledger write
+  ---
+  duration_ms: 4.711866
+  type: 'test'
+  location: '/workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:65:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/jarvis-reference-review/tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs:68:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: RT05 persisted content tamper stays rejected even after outer hash-chain rewrite
+ok 10 - RT05 persisted content tamper stays rejected even after outer hash-chain rewrite
+  ---
+  duration_ms: 92.55405
+  type: 'test'
+  ...
+# Subtest: RT06 JSON-copy model cannot inherit the original brand
+ok 11 - RT06 JSON-copy model cannot inherit the original brand
+  ---
+  duration_ms: 5.603212
+  type: 'test'
+  ...
+# Subtest: RT06 JSON-copy verifier cannot inherit the original brand
+ok 12 - RT06 JSON-copy verifier cannot inherit the original brand
+  ---
+  duration_ms: 4.280995
+  type: 'test'
+  ...
+# Subtest: RT07 unserializable circular is refused before ledger write
+ok 13 - RT07 unserializable circular is refused before ledger write
+  ---
+  duration_ms: 4.619477
+  type: 'test'
+  ...
+# Subtest: RT07 unserializable bigint is refused before ledger write
+ok 14 - RT07 unserializable bigint is refused before ledger write
+  ---
+  duration_ms: 3.686307
+  type: 'test'
+  ...
+# Subtest: RT08 signed optional numeric normalization remains stable
+ok 15 - RT08 signed optional numeric normalization remains stable
+  ---
+  duration_ms: 112.256426
+  type: 'test'
+  ...
+# Subtest: RT09 a false execution tier is never repaired by serialization
+ok 16 - RT09 a false execution tier is never repaired by serialization
+  ---
+  duration_ms: 4.240163
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 7
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 446.784858

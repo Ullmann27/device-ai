@@ -2,7 +2,7 @@ name: Build Device AI APK
 
 on:
   push:
-    branches: [ "main", "v0.2-redesign", "v0.3-agent", "copilot/**" ]
+    branches: [ "main", "v0.2-redesign", "v0.3-agent", "copilot/**", "continuum/argon-safety-review-20261017" ]
     paths-ignore:
       - ".github/continuum/**"
       - ".github/workflows/continuum-zero-cost.yml"
@@ -34,8 +34,118 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install backend HTTP test dependencies
+        run: npm install --prefix backend --ignore-scripts --no-audit --no-fund
+
       - name: Validate backend syntax
-        run: node --check backend/src/server.js
+        run: npm --prefix backend run check
+
+      - name: Test autonomous continuum backend
+        run: npm --prefix backend test
+
+      - name: Test portable contrastive training
+        run: node --test .github/continuum/contrastive-views.test.mjs
+
+      - name: Check Android integration wiring
+        run: node --test .github/continuum/android-integration-wiring.test.mjs .github/continuum/android-cockpit-shortcuts.test.mjs
+
+      - name: Check neural optimizer analytical gradients
+        run: node --test .github/continuum/semantic-gradient.test.mjs
+
+      - name: Validate portable SWB2 and experimental decoder syntax
+        run: |
+          node --check .github/continuum/portable-subword.mjs
+          node --check .github/continuum/trainable-context-decoder.mjs
+
+      - name: Verify SWB1 compatibility, SWB2 neural gradients and grounded token decoder
+        run: node --test .github/continuum/swb2-verification.test.mjs .github/continuum/cir-security-regressions.test.mjs
+
+      - name: Measure frozen SWB2 paraphrase holdout with real trained weights
+        run: |
+          node --test .github/continuum/neural-generalization-audit.test.mjs
+          node .github/continuum/neural-generalization-audit.mjs "$RUNNER_TEMP/swb2-heldout-audit.json"
+
+      - name: Upload SWB2 heldout research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-SWB2-heldout-evidence
+          path: ${{ runner.temp }}/swb2-heldout-audit.json
+          if-no-files-found: error
+
+      - name: Multi-seed masked retrieval generalization audit
+        run: |
+          node --test .github/continuum/contrastive-generalization.test.mjs
+          node .github/continuum/contrastive-generalization.mjs "$RUNNER_TEMP/continuum-generalization.json"
+
+      - name: Evaluate neural versus production lexical retrieval
+        run: |
+          node --test .github/continuum/retrieval-alignment.test.mjs
+          node .github/continuum/retrieval-alignment.mjs "$RUNNER_TEMP/continuum-retrieval-alignment.json"
+
+      - name: Upload retrieval alignment audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-retrieval-alignment
+          path: ${{ runner.temp }}/continuum-retrieval-alignment.json
+          if-no-files-found: error
+
+      - name: Audit manually reworded retrieval questions
+        run: |
+          node --test .github/continuum/retrieval-paraphrase.test.mjs
+          node .github/continuum/retrieval-paraphrase.mjs "$RUNNER_TEMP/continuum-paraphrases.json"
+
+      - name: Upload paraphrase retrieval evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-paraphrase-retrieval
+          path: ${{ runner.temp }}/continuum-paraphrases.json
+          if-no-files-found: error
+
+      - name: Upload experimental generalization evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-contrastive-generalization
+          path: ${{ runner.temp }}/continuum-generalization.json
+          if-no-files-found: error
+
+      - name: Continual learning retention and forgetting audit
+        run: |
+          node --test .github/continuum/contrastive-retention.test.mjs
+          node .github/continuum/contrastive-retention.mjs "$RUNNER_TEMP/continuum-retention.json"
+
+      - name: Upload forgetting evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-contrastive-retention
+          path: ${{ runner.temp }}/continuum-retention.json
+          if-no-files-found: error
+
+      - name: Reject unverified neural model promotion
+        run: |
+          node --test .github/continuum/contrastive-gate.test.mjs
+          node .github/continuum/contrastive-gate.mjs "$RUNNER_TEMP/continuum-generalization.json" "$RUNNER_TEMP/continuum-retention.json" "$RUNNER_TEMP/continuum-gate.json"
+
+      - name: Upload experimental promotion decision
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-contrastive-promotion-decision
+          path: ${{ runner.temp }}/continuum-gate.json
+          if-no-files-found: error
+
+      - name: Evaluate DEV-calibrated CRE1 lexical fallback (research only)
+        run: |
+          node --test .github/continuum/cre-hybrid-research.test.mjs
+          node .github/continuum/cre-hybrid-research.mjs "$RUNNER_TEMP/cre1-hybrid-report.json"
+
+      - name: Upload non-promotable CRE1 hybrid research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-CRE1-DEV-hybrid-research
+          path: ${{ runner.temp }}/cre1-hybrid-report.json
+          if-no-files-found: error
+
+      - name: Verify Groq mentor UI consent and isolation
+        run: node --test .github/continuum/groq-mentor-ui-wiring.test.mjs
 
       - name: Accept Android SDK licenses
         run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
@@ -48,8 +158,58 @@ jobs:
         with:
           gradle-version: "8.11.1"
 
+      # Shared development backlog: Node writes, Kotlin (DevelopmentBacklogRoundtripTest)
+      # verifies and changes it through its store, Node verifies the result.
+      - name: Backlog round trip, Node writes
+        run: node .github/continuum/backlog-fixtures.mjs roundtrip-prepare "$RUNNER_TEMP/backlog-roundtrip"
+
+      - name: Prepare Node contrastive parity reference
+        run: node .github/continuum/contrastive-parity.mjs prepare "$RUNNER_TEMP/contrastive-parity"
+
+      - name: Prepare trained CRE1 Node checkpoint for Kotlin parity
+        run: node .github/continuum/cre-parity.mjs prepare "$RUNNER_TEMP/cre1-parity"
+
       - name: Run unit tests
+        env:
+          CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/backlog-roundtrip
+          CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/contrastive-parity
+          CONTINUUM_CRE1_PARITY_DIR: ${{ runner.temp }}/cre1-parity
         run: gradle :app:testDebugUnitTest --stacktrace
+
+      - name: Verify Kotlin CRE1 inference against trained Node checkpoint
+        run: node .github/continuum/cre-parity.mjs verify "$RUNNER_TEMP/cre1-parity"
+
+      - name: Verify Kotlin-trained encoder against Node
+        run: node .github/continuum/contrastive-parity.mjs verify "$RUNNER_TEMP/contrastive-parity"
+
+      - name: Backlog round trip, Node verifies the Kotlin changes
+        run: node .github/continuum/backlog-fixtures.mjs roundtrip-verify "$RUNNER_TEMP/backlog-roundtrip"
+
+      - name: Summarize JVM test results
+        run: |
+          python3 - <<'PY'
+          import glob, xml.etree.ElementTree as ET
+          reports = glob.glob('app/build/test-results/testDebugUnitTest/TEST-*.xml')
+          assert reports, 'Missing JVM test evidence'
+          totals = {key: 0 for key in ('tests', 'failures', 'errors', 'skipped')}
+          for path in reports:
+              root = ET.parse(path).getroot()
+              for key in totals:
+                  totals[key] += int(root.get(key, '0'))
+          print('JVM results:', totals)
+          assert totals['tests'] > 0 and totals['failures'] == 0 and totals['errors'] == 0
+          PY
+
+      - name: Upload unit test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeviceAI-unit-test-results
+          path: app/build/test-results/testDebugUnitTest/TEST-*.xml
+          if-no-files-found: warn
+
+      - name: API level check (lint NewApi, minSdk 26)
+        run: gradle :app:lintDebug --stacktrace
 
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
@@ -60,3 +220,88 @@ jobs:
           name: DeviceAI-v0.3-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Build side-by-side preview APK
+        run: gradle :app:clean :app:assembleDebug -PdeviceAiPreview=true --stacktrace
+
+      - name: Upload preview APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeviceAI-v0.3.1-preview-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+
+  # Continuum developer agent: reproduce a failed build of a development branch,
+  # search a verified repair in an isolated worktree and export it as a patch.
+  # Read-only token: this job executes repository build code.
+  repair:
+    needs: build
+    if: failure() && github.event_name == 'push' && startsWith(github.ref_name, 'copilot/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Android 36 SDK
+        run: |
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
+          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Reproduce, diagnose and verify a repair
+        run: node .github/continuum/developer-agent.mjs repair --chain android --base "$GITHUB_SHA" --out agent-repair --trigger android-build-failure --minutes 40
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-agent-repair
+          path: agent-repair/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # Publishes only what the read-only job verified. No build code runs here.
+  publish-repair:
+    needs: repair
+    if: always() && needs.repair.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: continuum-agent-repair
+          path: agent-repair
+      - name: Draft pull request with the verified repair
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/continuum/developer-agent.mjs publish --out agent-repair --target-branch "$GITHUB_REF_NAME"
+      - name: Persist repair experience
+        run: node .github/continuum/developer-agent.mjs ledger-save --out agent-repair --branch continuum-agent-state
+      - name: Record the repair session in the development backlog
+        run: node .github/continuum/developer-agent.mjs backlog-save --branch continuum-agent-state --repairs agent-repair
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-agent-publication
+          path: agent-repair/publish.json
+          if-no-files-found: ignore

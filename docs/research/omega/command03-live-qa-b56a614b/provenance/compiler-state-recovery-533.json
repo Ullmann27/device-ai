@@ -1,0 +1,31 @@
+{
+  "started_epoch": 1794805937.0425057,
+  "source_of_snapshot": "533eb104e51004b1900c54f216b760e57177f7c0",
+  "next_compile_source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "original_build_path": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+  "snapshot_path": "/workspace/scratch/8f95e7fd540d/native-qa-output/original-build-backup-533eb104",
+  "restored_units": [
+    "project-cache",
+    "app-build/kotlin",
+    "app-build/tmp/kotlin-classes"
+  ],
+  "quarantine_archive": "/dev/shm/continuum-live-preserved-8f95e7fd540d/failed-compiler-state-b56-before-533-recovery.tar.gz",
+  "script_sha256": "07a036e7fa900d576d126e2c42d07112858eea3841706aa95747563c85f34b91",
+  "old_test_results_reports_and_apk_restored": false,
+  "cache_contents_edited": false,
+  "snapshot_manifest_sha256": "a160f9fe000151fc4eef34383e6f71134894bff2b52c13ca6afaa76f72c298ec",
+  "snapshot_file_count": 7012,
+  "quarantined_file_count": 3587,
+  "historical_apk_sha256_before": "744b1e158d73506fbf76ec6036b5e9c0f229452bb443e051f48cfcd9f1a33bc0",
+  "quarantine_manifest": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/compiler-state-before-533-recovery-manifest.json",
+  "quarantine_manifest_sha256": "a8c6335a20973cbe1159c8676a824d4f78c3eb6b82ad626be571eee08f24a62e",
+  "archive_member_verification": "PASS_ALL_FILE_BYTES_AND_HASHES",
+  "archive_bytes": 13497622,
+  "archive_sha256": "f7b223d47537491481f277e0b2da7c0326a0d80bb3ab21fe01d17e0c01b3d62a",
+  "restore_verification": "PASS_ALL_ORIGINAL_FILES_AND_METADATA",
+  "historical_apk_sha256_after": "744b1e158d73506fbf76ec6036b5e9c0f229452bb443e051f48cfcd9f1a33bc0",
+  "source_head_after": "fbdb612f31158075bdb746d4cb267ba671179fa4",
+  "source_status_after": "",
+  "free_bytes_after": 498716672,
+  "finished_epoch": 1794805940.4535065
+}

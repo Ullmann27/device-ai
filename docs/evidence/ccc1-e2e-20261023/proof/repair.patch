@@ -1,0 +1,11 @@
+diff --git a/.github/continuum/console-policy.mjs b/.github/continuum/console-policy.mjs
+index 418b7d4..7dc9812 100644
+--- a/.github/continuum/console-policy.mjs
++++ b/.github/continuum/console-policy.mjs
+@@ -5,5 +5,5 @@ export function isOwnerComment(repository, login) {
+   const parts=repository.split("/");
+   if (parts.length!==2 || !parts[0] || !parts[1]) return false;
+   const name=login.trim();
+-  return name.length>0 && name.toLowerCase().startsWith(parts[0].toLowerCase());
++  return name.length>0 && name.toLowerCase()===parts[0].toLowerCase();
+ }

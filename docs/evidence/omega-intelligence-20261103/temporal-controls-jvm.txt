@@ -1,0 +1,37 @@
+source_commit=017ab811aeff4b6663df2d3a600234173d5da3e2
+source_status:
+ M app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt
+ M docs/evidence/omega-intelligence-20261103/run-temporal-jvm.sh
+?? docs/evidence/omega-intelligence-20261103/temporal-controls-jvm.txt
+?? docs/evidence/omega-intelligence-20261103/temporal-green-jvm.txt
+952fe9a19caa125d1317c2f8df1da8dcd63c544309b16535fd5382fce2590ea0  app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt
+0b21f902674e705e8651c528409bb2b8092fef6d40580e2f414b76a37f9cea15  app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt
+5e52c556b39d556907db2fb7eb7a8f8b9badf42dc6a9f99c545ae06e7bee11d5  app/src/main/java/at/heinz/deviceai/learning/OwnerStatementModality.kt
+aee0953c667286c3155ea64c0d56522eb78785e5b9a458b8fda63bc73e1a1257  app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Lexicon.kt
+2f2af21601bf233092672c0725fabb7d72d64c51e8ca590085823f8289b206ca  app/src/main/java/at/heinz/deviceai/cognitive/TemporalRoleEvidenceLedger.kt
+308ef23e5bc6bba89ce9d240b044e93ff3286f38ca3bc9f6f319555a1ff9b1bd  app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryTest.kt
+cc06501f26cce0edc5a3a399bd1d0d51837aabbefb6ef834d1ccca2182485d77  app/src/test/java/at/heinz/deviceai/learning/OwnerStatementModalityTest.kt
+1c353d8cf4e9fadec8d0e3474dc8f61979e44cab3f6a57f973ed8c0e6e38e463  app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryHoldoutTest.kt
+b1ac81db963229a61068ba2dbb7e6e87aa343e56e17d47c077f63f3462d83a38  app/src/test/java/at/heinz/deviceai/cognitive/TemporalRoleEvidenceLedgerTest.kt
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:55: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart && inYearEnd -> " (${date(from!!)}–${date(to!!)})"
+                                                      ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:69: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart && inYearEnd -> " (${date(from!!)}–${date(to!!)})"
+                                                                    ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:350:45: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart -> " (ab ${date(from!!)})"
+                                            ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:351:42: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearEnd -> " (bis ${date(to!!)})"
+                                         ^^
+JUnit version 4.13.2
+............................M2-METRIC holdout_cases=20 correct=18 abstained=2 wrong=0
+....
+Time: 0.306
+
+OK (32 tests)
+

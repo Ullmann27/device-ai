@@ -1,0 +1,948 @@
+[
+  {
+    "name": "compile",
+    "command": [
+      "/workspace/post-fable-toolchain/bin/kotlinc",
+      "-cp",
+      "/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "/workspace/continuum-post-fable/tools/continuum-span-research/Cdx2CounterfactualShadowChecks.kt",
+      "/workspace/continuum-post-fable/tools/continuum-span-research/Cdx2PointerCandidate.kt",
+      "/workspace/continuum-post-fable/app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+      "/workspace/continuum-post-fable/tools/continuum-span-research/Cdx2CounterfactualShadow.kt",
+      "-d",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes"
+    ],
+    "exitCode": 0,
+    "millis": 15726.114044000042
+  },
+  {
+    "name": "holdout-d-001",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-001.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-001.json"
+    ],
+    "exitCode": 0,
+    "millis": 246.91564700015078
+  },
+  {
+    "name": "holdout-d-002",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-002.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-002.json"
+    ],
+    "exitCode": 0,
+    "millis": 261.00213900008384
+  },
+  {
+    "name": "holdout-d-003",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-003.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-003.json"
+    ],
+    "exitCode": 0,
+    "millis": 226.74226300023292
+  },
+  {
+    "name": "holdout-d-004",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-004.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-004.json"
+    ],
+    "exitCode": 0,
+    "millis": 266.3797430000159
+  },
+  {
+    "name": "holdout-d-005",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-005.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-005.json"
+    ],
+    "exitCode": 0,
+    "millis": 243.4721399999944
+  },
+  {
+    "name": "holdout-d-006",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-006.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-006.json"
+    ],
+    "exitCode": 0,
+    "millis": 256.78854199986745
+  },
+  {
+    "name": "holdout-d-007",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-007.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-007.json"
+    ],
+    "exitCode": 0,
+    "millis": 251.10127600009946
+  },
+  {
+    "name": "holdout-d-008",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-008.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-008.json"
+    ],
+    "exitCode": 0,
+    "millis": 262.2519389997251
+  },
+  {
+    "name": "holdout-d-009",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-009.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-009.json"
+    ],
+    "exitCode": 0,
+    "millis": 234.94089100040583
+  },
+  {
+    "name": "holdout-d-010",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-010.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-010.json"
+    ],
+    "exitCode": 0,
+    "millis": 253.0056880000302
+  },
+  {
+    "name": "holdout-d-011",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-011.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-011.json"
+    ],
+    "exitCode": 0,
+    "millis": 232.1701609998854
+  },
+  {
+    "name": "holdout-d-012",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-012.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-012.json"
+    ],
+    "exitCode": 0,
+    "millis": 249.6072440003445
+  },
+  {
+    "name": "holdout-d-013",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-013.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-013.json"
+    ],
+    "exitCode": 0,
+    "millis": 239.96493199956603
+  },
+  {
+    "name": "holdout-d-014",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-014.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-014.json"
+    ],
+    "exitCode": 0,
+    "millis": 249.05433100002483
+  },
+  {
+    "name": "holdout-d-015",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-015.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-015.json"
+    ],
+    "exitCode": 0,
+    "millis": 239.28511099984462
+  },
+  {
+    "name": "holdout-d-016",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-016.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-016.json"
+    ],
+    "exitCode": 0,
+    "millis": 261.0150200002863
+  },
+  {
+    "name": "holdout-d-017",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-017.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-017.json"
+    ],
+    "exitCode": 0,
+    "millis": 228.23068700017757
+  },
+  {
+    "name": "holdout-d-018",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-018.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-018.json"
+    ],
+    "exitCode": 0,
+    "millis": 232.7584019999449
+  },
+  {
+    "name": "holdout-d-019",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-019.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-019.json"
+    ],
+    "exitCode": 0,
+    "millis": 283.85868500026845
+  },
+  {
+    "name": "holdout-d-020",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-020.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-020.json"
+    ],
+    "exitCode": 0,
+    "millis": 253.83082600001217
+  },
+  {
+    "name": "holdout-d-021",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-021.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-021.json"
+    ],
+    "exitCode": 0,
+    "millis": 212.6784429997315
+  },
+  {
+    "name": "holdout-d-022",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-022.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-022.json"
+    ],
+    "exitCode": 0,
+    "millis": 178.25118300015674
+  },
+  {
+    "name": "holdout-d-023",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-023.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-023.json"
+    ],
+    "exitCode": 0,
+    "millis": 219.31331099995077
+  },
+  {
+    "name": "holdout-d-024",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-024.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-024.json"
+    ],
+    "exitCode": 0,
+    "millis": 219.44483600009335
+  },
+  {
+    "name": "holdout-d-025",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-025.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-025.json"
+    ],
+    "exitCode": 0,
+    "millis": 229.14319000028627
+  },
+  {
+    "name": "holdout-d-026",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-026.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-026.json"
+    ],
+    "exitCode": 0,
+    "millis": 253.54284300010477
+  },
+  {
+    "name": "holdout-d-027",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-027.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-027.json"
+    ],
+    "exitCode": 0,
+    "millis": 277.9615650001688
+  },
+  {
+    "name": "holdout-d-028",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-028.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-028.json"
+    ],
+    "exitCode": 0,
+    "millis": 234.11255500013795
+  },
+  {
+    "name": "holdout-d-029",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-029.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-029.json"
+    ],
+    "exitCode": 0,
+    "millis": 249.03998400031924
+  },
+  {
+    "name": "holdout-d-030",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-030.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-030.json"
+    ],
+    "exitCode": 0,
+    "millis": 271.61919599984685
+  },
+  {
+    "name": "holdout-d-031",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-031.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-031.json"
+    ],
+    "exitCode": 0,
+    "millis": 249.428996000006
+  },
+  {
+    "name": "holdout-d-032",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-032.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-032.json"
+    ],
+    "exitCode": 0,
+    "millis": 166.1041329998625
+  },
+  {
+    "name": "holdout-d-033",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-033.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-033.json"
+    ],
+    "exitCode": 0,
+    "millis": 251.42708600014885
+  },
+  {
+    "name": "holdout-d-034",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-034.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-034.json"
+    ],
+    "exitCode": 0,
+    "millis": 177.8073279997443
+  },
+  {
+    "name": "holdout-d-035",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-035.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-035.json"
+    ],
+    "exitCode": 0,
+    "millis": 482.20405200027017
+  },
+  {
+    "name": "holdout-d-036",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-036.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-036.json"
+    ],
+    "exitCode": 0,
+    "millis": 369.6035849998225
+  },
+  {
+    "name": "holdout-d-037",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-037.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-037.json"
+    ],
+    "exitCode": 0,
+    "millis": 180.0318629998401
+  },
+  {
+    "name": "holdout-d-038",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-038.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-038.json"
+    ],
+    "exitCode": 0,
+    "millis": 238.05046200004654
+  },
+  {
+    "name": "holdout-d-039",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-039.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-039.json"
+    ],
+    "exitCode": 0,
+    "millis": 298.3014800001911
+  },
+  {
+    "name": "holdout-d-040",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-040.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-040.json"
+    ],
+    "exitCode": 0,
+    "millis": 236.83799599984923
+  },
+  {
+    "name": "holdout-d-041",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-041.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-041.json"
+    ],
+    "exitCode": 0,
+    "millis": 249.96591700028148
+  },
+  {
+    "name": "holdout-d-042",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-042.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-042.json"
+    ],
+    "exitCode": 0,
+    "millis": 240.9767680001096
+  },
+  {
+    "name": "holdout-d-043",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-043.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-043.json"
+    ],
+    "exitCode": 0,
+    "millis": 233.93455699988408
+  },
+  {
+    "name": "holdout-d-044",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-044.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-044.json"
+    ],
+    "exitCode": 0,
+    "millis": 237.91714600019986
+  },
+  {
+    "name": "holdout-d-045",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-045.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-045.json"
+    ],
+    "exitCode": 0,
+    "millis": 243.87445599995772
+  },
+  {
+    "name": "holdout-d-046",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-046.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-046.json"
+    ],
+    "exitCode": 0,
+    "millis": 242.96817399999782
+  },
+  {
+    "name": "holdout-d-047",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-047.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-047.json"
+    ],
+    "exitCode": 0,
+    "millis": 248.0629679998856
+  },
+  {
+    "name": "holdout-d-048",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-048.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-048.json"
+    ],
+    "exitCode": 0,
+    "millis": 238.20707000004404
+  },
+  {
+    "name": "holdout-d-049",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-049.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-049.json"
+    ],
+    "exitCode": 0,
+    "millis": 237.44768799997473
+  },
+  {
+    "name": "holdout-d-050",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-050.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-050.json"
+    ],
+    "exitCode": 0,
+    "millis": 246.3882460001514
+  },
+  {
+    "name": "holdout-d-051",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-051.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-051.json"
+    ],
+    "exitCode": 0,
+    "millis": 271.99907900012477
+  },
+  {
+    "name": "holdout-d-052",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-052.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-052.json"
+    ],
+    "exitCode": 0,
+    "millis": 195.1651720000882
+  },
+  {
+    "name": "holdout-d-053",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-053.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-053.json"
+    ],
+    "exitCode": 0,
+    "millis": 185.09858699962933
+  },
+  {
+    "name": "holdout-d-054",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-054.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-054.json"
+    ],
+    "exitCode": 0,
+    "millis": 242.52139100008208
+  },
+  {
+    "name": "holdout-d-055",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/requests/holdout-d-055.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-outputs/holdout-d-055.json"
+    ],
+    "exitCode": 0,
+    "millis": 252.98184199982643
+  },
+  {
+    "name": "train-predict",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2CounterfactualShadow",
+      "run",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/train.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/validation.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/holdout-d-inputs.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/candidate"
+    ],
+    "exitCode": 0,
+    "millis": 1149.0265679999538
+  },
+  {
+    "name": "score-baseline",
+    "command": [
+      "node",
+      "/workspace/continuum-post-fable/scripts/cdx2-blind-score.mjs",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/holdout-d.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-predictions.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/baseline-score.json",
+      "ab5b6f363b04f7461f432d9a8150c1b891584f9580c6d1a07461d57fc69fb4c8"
+    ],
+    "exitCode": 0,
+    "millis": 64.23762300028102
+  },
+  {
+    "name": "score-seed17",
+    "command": [
+      "node",
+      "/workspace/continuum-post-fable/scripts/cdx2-blind-score.mjs",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/holdout-d.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/candidate/predictions-17.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/seed17-score.json",
+      "ab5b6f363b04f7461f432d9a8150c1b891584f9580c6d1a07461d57fc69fb4c8"
+    ],
+    "exitCode": 0,
+    "millis": 78.37037899980714
+  },
+  {
+    "name": "score-seed29",
+    "command": [
+      "node",
+      "/workspace/continuum-post-fable/scripts/cdx2-blind-score.mjs",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/holdout-d.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/candidate/predictions-29.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/seed29-score.json",
+      "ab5b6f363b04f7461f432d9a8150c1b891584f9580c6d1a07461d57fc69fb4c8"
+    ],
+    "exitCode": 0,
+    "millis": 66.02156099961576
+  },
+  {
+    "name": "score-ablation17",
+    "command": [
+      "node",
+      "/workspace/continuum-post-fable/scripts/cdx2-blind-score.mjs",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/holdout-d.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/candidate/ablation-predictions-17.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/ablation17-score.json",
+      "ab5b6f363b04f7461f432d9a8150c1b891584f9580c6d1a07461d57fc69fb4c8"
+    ],
+    "exitCode": 0,
+    "millis": 58.49184899989268
+  },
+  {
+    "name": "score-ablation29",
+    "command": [
+      "node",
+      "/workspace/continuum-post-fable/scripts/cdx2-blind-score.mjs",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/holdout-d.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/candidate/ablation-predictions-29.json",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/ablation29-score.json",
+      "ab5b6f363b04f7461f432d9a8150c1b891584f9580c6d1a07461d57fc69fb4c8"
+    ],
+    "exitCode": 0,
+    "millis": 58.30598000011378
+  },
+  {
+    "name": "independent-controls-17",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2CounterfactualShadowChecks",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/candidate/checkpoint-17.json"
+    ],
+    "exitCode": 0,
+    "millis": 190.36799100013013
+  },
+  {
+    "name": "independent-controls-29",
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2CounterfactualShadowChecks",
+      "/workspace/continuum-checks/synapse-iii/shadow-proof/candidate/checkpoint-29.json"
+    ],
+    "exitCode": 0,
+    "millis": 192.4433429999226
+  }
+]

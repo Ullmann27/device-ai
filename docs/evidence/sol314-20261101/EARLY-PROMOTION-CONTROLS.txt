@@ -1,0 +1,12 @@
+Baseline actual Kotlin/JUnit host controls; seed CDX91, SWB73. No device checkpoint.
+TRAIN Anna/Graz, AUDIT Berta/Graz (same answer value):
+120 updates accepted=true, trainNLL5.553120659826368->4.537414223443785, auditNLL5.553122751266401->4.537419764238896, output48*a.
+600 updates accepted=true, trainNLL5.553120659826368->0.16107004534575428, auditNLL5.553122751266401->0.16110290772557284, output Graz.
+The600-update positive control shows learnability of one repeated answer, NOT unseen-value generalisation.
+TRAIN full Mira-woh-Graz sentence, AUDIT full Tim-woh-Wien sentence:
+120 updates accepted=true, trainNLL5.549362145202118->5.1716484890123455, auditNLL5.548483505530157->5.240699040317674, output48 spaces.
+600 updates accepted=true, trainNLL5.549362145202118->2.746209177499291, auditNLL5.548483505530157->3.6467966232819586, output48 spaces.
+TRAIN Anna/Graz, AUDIT Berta/Linz:
+120 updates accepted=true, trainNLL5.553120659826368->4.537414223443785, auditNLL5.551677857797594->5.1859544910379, output48*a.
+600 updates accepted=false, auditNLL5.551677857797594->5.903413651387258; no active output published.
+These are the old NLL-only bridge outcomes. New generative promotion rejects the invalid candidates. Published25-probe TEST remains unchanged; public examples are consumed regression data.

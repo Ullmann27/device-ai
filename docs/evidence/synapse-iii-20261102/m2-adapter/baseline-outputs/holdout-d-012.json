@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-012:s1",
+    "decision": "SPAN",
+    "sha256": "e0c23cf17241f6564c884526576ecee3c6d80de880aa9eba3d5eb42671a66941",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDavapisa",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-012:s1",
+    "decision": "SPAN",
+    "sha256": "e0c23cf17241f6564c884526576ecee3c6d80de880aa9eba3d5eb42671a66941",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDavapisa",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-012:s1",
+    "decision": "SPAN",
+    "sha256": "e0c23cf17241f6564c884526576ecee3c6d80de880aa9eba3d5eb42671a66941",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDavapisa",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 75.408083
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "fidelity": "android_activity_host_native_canvas_api28_explicit_2d_head",
+  "source_commit": "3b0e4dd2f40575561b87bd84327caea0a8e63eb9",
+  "capture_state": "home",
+  "pixel_width": 840,
+  "pixel_height": 1050,
+  "viewport_width_dp": 840,
+  "viewport_height_dp": 1050,
+  "density": 1,
+  "font_scale": 1,
+  "animation_duration_scale": 0,
+  "head_mode": "existing_2d_renderer_explicitly_selected",
+  "native_filament_verified": false,
+  "physical_device_verified": false,
+  "data_policy": "isolated empty test storage; real application startup; no invented status data",
+  "bounds_coordinate_space": "each View relative to its real parent; no synthetic composition",
+  "home_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 840,
+    "bottom": 1578
+  },
+  "avatar_bounds": {
+    "left": 144,
+    "top": 84,
+    "right": 828,
+    "bottom": 531
+  },
+  "shell_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 840,
+    "bottom": 1578
+  },
+  "scroll_viewport_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 840,
+    "bottom": 1050
+  },
+  "scroll_x_px": 0,
+  "scroll_y_px": 0,
+  "scroll_y_dp": 0,
+  "scroll_content_height_px": 1620,
+  "slot_bounds_coordinate_space": "actual shell-local dp",
+  "slot_bounds_dp": {
+    "TILES": {
+      "left": 144.890625,
+      "top": 611.423095703125,
+      "right": 828,
+      "bottom": 958
+    },
+    "STATUS": {
+      "left": 12,
+      "top": 970,
+      "right": 828,
+      "bottom": 1026
+    },
+    "ROW_AGENTS": {
+      "left": 144.890625,
+      "top": 1050,
+      "right": 480.4453125,
+      "bottom": 1214
+    },
+    "ROW_TASKS": {
+      "left": 492.4453125,
+      "top": 1050,
+      "right": 828,
+      "bottom": 1214
+    },
+    "ROW_MEMORY": {
+      "left": 144.890625,
+      "top": 1226,
+      "right": 480.4453125,
+      "bottom": 1390
+    },
+    "ROW_MODEL": {
+      "left": 492.4453125,
+      "top": 1226,
+      "right": 828,
+      "bottom": 1390
+    }
+  },
+  "png_sha256": "b45a35431a301b39a333c39ae01f17e666bb31e44ceebda25b44b82f8d8828fa"
+}

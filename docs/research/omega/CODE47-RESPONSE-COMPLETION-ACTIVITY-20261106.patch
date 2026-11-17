@@ -1,0 +1,383 @@
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -60,6 +60,7 @@
+ import at.heinz.deviceai.cognitive.LocalDialogueQualityGate
+ import at.heinz.deviceai.cognitive.AgentModel
+ import at.heinz.deviceai.cognitive.AgentModelOutput
++import at.heinz.deviceai.cognitive.LocalGenerationCompletion
+ import at.heinz.deviceai.cognitive.AgentToolApproval
+ import at.heinz.deviceai.cognitive.AgentToolApprovalProvider
+ import at.heinz.deviceai.cognitive.AiContextCompiler
+@@ -128,7 +129,9 @@
+         val response: String,
+         val proposal: ToolProposal?,
+         val rejectedToolResponses: List<LocalToolResponse>,
+-        val failure: String?
++        val failure: String?,
++        val completion: LocalGenerationCompletion = if (failure == null)
++            LocalGenerationCompletion.COMPLETE else LocalGenerationCompletion.FAILED
+     )
+
+     companion object {
+@@ -9224,6 +9227,14 @@
+                 val newObservations = observations.drop(submittedToolObservationCount)
+                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
+                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
++                val ownerDialogueOutput = botTask == null && codingPlanning == null
++                fun requireUsableGeneration(value: LocalGeneration) {
++                    if (value.completion == LocalGenerationCompletion.COMPLETE) value.failure?.let { error(it) }
++                    else check(ownerDialogueOutput && value.response.isNotBlank() &&
++                        value.completion != LocalGenerationCompletion.CANCELLED) {
++                        value.failure ?: "LOCAL_GENERATION_INCOMPLETE"
++                    }
++                }
+                 var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                     internetRevisionAtTurnStart, internetConsent::revision) {
+                     val taskRemaining = botTask?.reserveModelCall(sessionId)
+@@ -9239,10 +9250,11 @@
+                             }, callback = callback)
+                     }
+                 }
+-                generation.failure?.let { error(it) }
++                requireUsableGeneration(generation)
+                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
+                 var rejectionRecoveries = 0
+-                while (generation.rejectedToolResponses.isNotEmpty()) {
++                while (generation.completion == LocalGenerationCompletion.COMPLETE &&
++                    generation.rejectedToolResponses.isNotEmpty()) {
+                     check(!hasScreen) {"SCREEN_TOOL_REJECTION_REQUIRES_NEW_TURN"}
+                     if (++rejectionRecoveries > 1) {
+                         error("The model repeated a rejected tool request; no tool was executed.")
+@@ -9255,14 +9267,15 @@
+                             callback -> localRuntime.respondToTools(rejected, callback)
+                         }
+                     }
+-                    generation.failure?.let { error(it) }
++                    requireUsableGeneration(generation)
+                 }
+                 check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
+-                AgentModelOutput(
+-                    "litertlm:${imported.id}@${imported.version}",
+-                    generation.response,
+-                    generation.proposal
+-                )
++                if (ownerDialogueOutput && generation.proposal == null) AgentModelOutput.ownerDialogue(
++                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion)
++                else {
++                    check(generation.completion == LocalGenerationCompletion.COMPLETE) { "LOCAL_GENERATION_INCOMPLETE" }
++                    AgentModelOutput("litertlm:${imported.id}@${imported.version}", generation.response, generation.proposal)
++                }
+             },
+             // the same confirmed owner facts the chat answers from, plus the agent's own memories
+             memories = { if(codingPlanning == null && botTask == null) memoryStore.all() + ownerFactMemories() else emptyList() },
+@@ -9380,11 +9393,20 @@
+                     (sessionId == localSessionId && foregroundLearningActive && codingPlanningEpoch == planningEpoch &&
+                         runCatching { cancellation.throwIfCancelled() }.isSuccess &&
+                         LocalTurnModelBinding.stillBound(imported,localRuntime.loadedModel))
++                val ownerDeliveryCurrent = botTask != null || codingPlanning != null ||
++                    at.heinz.deviceai.cognitive.LocalGenerationDeliveryGuard(
++                        cancellation, localSessionId, imported).isCurrent(
++                        activeChatCancellation, this@AgentActivity.sessionId, localRuntime.loadedModel)
+                 cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
+                 activeChatCancellation = null
+                 activeOrchestrator = null
+                 activeLocalRequest = false
+                 planCard.visibility = View.GONE
++                if (!ownerDeliveryCurrent) {
++                    setBusy(false)
++                    refreshLocalModelUi()
++                    return
++                }
+                 if (botTask != null && (activeBotTask !== botTask || !botTask.isCurrent(sessionId) ||
+                         sessionId != localSessionId ||
+                         runCatching { cancellation.throwIfCancelled() }.isFailure ||
+@@ -9426,7 +9448,8 @@
+                         botTask?.let { finishBotTask(it, "Bildschirmfreigabe geändert · Antwort verworfen") }
+                         setBusy(false);return@onSuccess
+                     }
+-                    val successful=run.blocker==null && run.response.isNotBlank()
++                    val hasPartialResponse = !run.responseComplete && run.response.isNotBlank()
++                    val successful = run.responseComplete && run.blocker == null && run.response.isNotBlank()
+                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
+                     if (botTask != null) {
+                         val calls = run.taskEvidence?.calls.orEmpty()
+@@ -9455,8 +9478,12 @@
+                         if(audit.isFailure)addToolActivity("CONTINUUM · Laufprotokoll nicht gespeichert")
+                     }
+                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
+-                    val visibleAnswer=if(!successful && groundedRecall!=null)groundedRecall.failureAnswer()
+-                        else run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
++                    val visibleAnswer = when {
++                        hasPartialResponse -> (run.blocker ?: "Antwort unvollständig.") + "\n\n" + run.response
++                        !run.responseComplete -> run.blocker ?: "Keine vollständige Antwort erhalten."
++                        !successful && groundedRecall != null -> groundedRecall.failureAnswer()
++                        else -> run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
++                    }
+                     val keepOwnerSession = !ephemeralScreenRun.get() && sessionId == localSessionId
+                     // Owner flow: a document draft opens its result surface in the cockpit; the chat records it too.
+                     val draftTurn = documentDraftTurn?.takeIf { it.prompt.request == text }
+@@ -10184,19 +10211,31 @@
+         require(maxOutputBytes == null || maxOutputBytes in 1..64_000)
+         cancellation?.throwIfCancelled()
+         val completed = CountDownLatch(1)
+-        val response = StringBuilder()
++        val capture = at.heinz.deviceai.cognitive.LocalGenerationCapture()
+         val rejectedResponses = mutableListOf<LocalToolResponse>()
+         val proposalGuard = ToolProposalTurnGuard()
+         val eventLock = Any()
+-        var terminalEventReceived = false
+-        var outputBudgetExceeded = false
+-        var failure: String? = null
++        var cancelNative = false
+         val generationStartedNanos = System.nanoTime()
+-        var streamedChunks = 0
+-        var firstTextNanos: Long? = null
+-        var lastTextNanos: Long? = null
+         var lastPreviewNanos = generationStartedNanos
+         val previewToken = Any()
++        fun elapsedMillis() = (System.nanoTime() - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
++        fun capturedGeneration(
++            overrideCompletion: at.heinz.deviceai.cognitive.LocalGenerationCompletion? = null,
++            overrideFailure: String? = null
++        ): LocalGeneration = synchronized(eventLock) {
++            val snapshot = capture.snapshot()
++            val completion = overrideCompletion ?: snapshot.completion ?: LocalGenerationCompletion.FAILED
++            val accepted = if (completion == LocalGenerationCompletion.COMPLETE) proposalGuard.acceptedProposal() else null
++            if (completion == LocalGenerationCompletion.COMPLETE &&
++                (proposalGuard.isAmbiguous() || (accepted != null && rejectedResponses.isNotEmpty()))) {
++                LocalGeneration("", null, emptyList(),
++                    "Local model emitted multiple or conflicting tool proposals; none were submitted.",
++                    LocalGenerationCompletion.FAILED)
++            } else LocalGeneration(snapshot.response, accepted,
++                if (completion == LocalGenerationCompletion.COMPLETE) rejectedResponses.toList() else emptyList(),
++                overrideFailure ?: snapshot.failure, completion)
++        }
+         runOnUiThread {
+             if (!isFinishing && !isDestroyed && activeChatCancellation === cancellation) {
+                 val stillActive = try {
+@@ -10213,146 +10252,123 @@
+             }
+         }
+         try {
+-        runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
+-        val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
+-            synchronized(eventLock) {
+-                if (!terminalEventReceived) {
++            runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
++            val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
++                synchronized(eventLock) {
++                    val before = capture.snapshot()
++                    if (before.terminal) return@LocalInferenceCallback
+                     if (event is LocalInferenceEvent.TextDelta && maxOutputBytes != null &&
+-                        (response.length.toLong() + event.text.length > maxOutputBytes ||
+-                            (response.toString() + event.text).toByteArray(Charsets.UTF_8).size > maxOutputBytes)) {
+-                        outputBudgetExceeded = true
+-                        failure = "BOT_OUTPUT_BUDGET_EXCEEDED"
+-                        terminalEventReceived = true
++                        (before.response.length.toLong() + event.text.length > maxOutputBytes ||
++                            (before.response + event.text).toByteArray(Charsets.UTF_8).size > maxOutputBytes)) {
++                        capture.fail("BOT_OUTPUT_BUDGET_EXCEEDED")
++                        cancelNative = true
+                         completed.countDown()
+                         return@LocalInferenceCallback
+                     }
+                     when (event) {
+-                        is LocalInferenceEvent.TextDelta -> if (
+-                            event.text.isNotEmpty() &&
+-                            response.length < at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS
+-                        ) {
++                        is LocalInferenceEvent.TextDelta -> {
+                             val now = System.nanoTime()
+-                            if (firstTextNanos == null) firstTextNanos = now
+-                            lastTextNanos = now
+-                            streamedChunks++
+-                            response.append(event.text.take(
+-                                at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS - response.length))
+-                            // One UI refresh per second is enough for natural reading
+-                            // without repeatedly remeasuring an expanding TextView.
+-                            if (streamedChunks == 1 ||
+-                                now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(1_000)) {
++                            val snapshot = capture.append(event.text,
++                                (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L)
++                            if (event.text.isNotEmpty() && (snapshot.streamedChunks == 1 ||
++                                    now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(1_000))) {
+                                 lastPreviewNanos = now
+-                                val draft = response.toString()
+-                                val chunks = streamedChunks
+-                                val elapsed = (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+-                                val first = firstTextNanos?.let {
+-                                    (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L }
++                                val elapsed = elapsedMillis()
+                                 runOnUiThread {
+                                     updateLocalStreamPreview(previewToken, cancellation,
+-                                        draft, chunks, elapsed, first)
++                                        snapshot.response, snapshot.streamedChunks, elapsed, snapshot.firstTextMillis)
+                                 }
++                            }
++                            if (snapshot.terminal) {
++                                turnTrace?.event(TraceStage.MODEL_FAILED)
++                                cancelNative = true
++                                completed.countDown()
+                             }
+                         }
+                         is LocalInferenceEvent.ToolProposal -> proposalGuard.observe(event.proposal)
+                         is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
+                             event.name,
+-                            org.json.JSONObject()
+-                                .put("status", "REJECTED")
+-                                .put("reason", event.reason.take(512))
+-                                .toString()
++                            org.json.JSONObject().put("status", "REJECTED")
++                                .put("reason", event.reason.take(512)).toString()
+                         )
+                         is LocalInferenceEvent.ToolBatchRejected -> rejectedResponses += event.responses
+                         is LocalInferenceEvent.Failed -> {
+                             turnTrace?.event(TraceStage.MODEL_FAILED)
+-                            failure = event.message
+-                            terminalEventReceived = true
++                            capture.fail(event.message)
+                             completed.countDown()
+                         }
+                         LocalInferenceEvent.Cancelled -> {
+                             turnTrace?.event(TraceStage.MODEL_FAILED)
+-                            // A native cancellation alone does not prove a timeout,
+-                            // a thinking-template problem or an OOM. Do not guess.
+-                            val elapsedMillis = (System.nanoTime() -
+-                                generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+-                            failure = "Local generation cancelled. " +
+-                                "Diagnose: ${elapsedMillis} ms, " +
+-                                "${streamedChunks} Textblöcke, " +
+-                                "${response.length} Zeichen. Ursache nicht bestimmt."
+-                            terminalEventReceived = true
++                            capture.cancel("Local generation cancelled. Diagnose: ${elapsedMillis()} ms, " +
++                                "${before.streamedChunks} Textblöcke, ${before.response.length} Zeichen. Ursache nicht bestimmt.")
+                             completed.countDown()
+                         }
+                         is LocalInferenceEvent.Completed -> {
+                             turnTrace?.event(TraceStage.MODEL_COMPLETED)
+-                            terminalEventReceived = true
++                            capture.complete()
+                             completed.countDown()
+                         }
+                     }
+                 }
+             }
+-        }
+-        val started = runCatching { cancellation?.throwIfCancelled(); turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED); localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF,it.sha256) }; start(callback) }
+-        if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
+-        while (true) {
+-            cancellation?.throwIfCancelled()
+-            if (completed.await(250, TimeUnit.MILLISECONDS)) {
+-                if (synchronized(eventLock) { outputBudgetExceeded }) localRuntime.cancel()
+-                break
+-            }
+-            if (hardDeadlineMillis != null &&
+-                System.nanoTime() - generationStartedNanos >= TimeUnit.MILLISECONDS.toNanos(hardDeadlineMillis)) {
+-                synchronized(eventLock) { terminalEventReceived = true }
+-                localRuntime.cancel()
+-                return LocalGeneration("", null, emptyList(), "BOT_DEADLINE_EXCEEDED")
+-            }
+-            val diagnostic = synchronized(eventLock) {
+-                val elapsedMillis = (System.nanoTime() - generationStartedNanos)
+-                    .coerceAtLeast(0L) / 1_000_000L
+-                val lastTextMillis = lastTextNanos?.let {
+-                    (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+-                }
+-                val reason = if (terminalEventReceived) null else
+-                    at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.stalled(
+-                        elapsedMillis, lastTextMillis, response.length)
+-                if (reason == null) null else {
+-                    terminalEventReceived = true
+-                    val firstTextMillis = firstTextNanos?.let {
+-                        (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+-                    }
+-                    "Local generation stopped after stalled native progress (${reason.name}). " +
++            val started = runCatching {
++                cancellation?.throwIfCancelled()
++                turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED)
++                localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF, it.sha256) }
++                start(callback)
++            }
++            started.exceptionOrNull()?.let { error ->
++                if (error is java.util.concurrent.CancellationException) throw error
++                synchronized(eventLock) { capture.fail(error.message ?: error.javaClass.simpleName) }
++                return capturedGeneration(overrideCompletion = LocalGenerationCompletion.FAILED,
++                    overrideFailure = error.message ?: error.javaClass.simpleName)
++            }
++            while (true) {
++                cancellation?.throwIfCancelled()
++                if (completed.await(250, TimeUnit.MILLISECONDS)) {
++                    if (synchronized(eventLock) { cancelNative }) localRuntime.cancel()
++                    break
++                }
++                if (hardDeadlineMillis != null && elapsedMillis() >= hardDeadlineMillis) {
++                    synchronized(eventLock) { capture.fail("BOT_DEADLINE_EXCEEDED") }
++                    localRuntime.cancel()
++                    return capturedGeneration(overrideCompletion = LocalGenerationCompletion.FAILED,
++                        overrideFailure = "BOT_DEADLINE_EXCEEDED")
++                }
++                val snapshot = synchronized(eventLock) { capture.poll(elapsedMillis()) }
++                if (snapshot.completion in setOf(LocalGenerationCompletion.STALLED, LocalGenerationCompletion.OUTPUT_LIMIT)) {
++                    val diagnostic = "Local generation stopped (${snapshot.completion}; ${snapshot.failure}). " +
+                         "Keine feste Gesamtdauer, solange weiter Text entsteht. " +
+                         "Diagnose: Eingabezeichen=" + (promptCharacters?.toString() ?: "unbekannt") +
+-                        ", Textblöcke=$streamedChunks, Ausgabezeichen=${response.length}, " +
+-                        "erster Text nach=" + (firstTextMillis?.toString() ?: "keinem") + " ms." +
++                        ", Textblöcke=${snapshot.streamedChunks}, Ausgabezeichen=${snapshot.response.length}, " +
++                        "erster Text nach=" + (snapshot.firstTextMillis?.toString() ?: "keinem") + " ms." +
+                         "\nLetztes numerisches Laufzeitprofil:\n" +
+                         (localRuntime.inferenceProfiles.lastOrNull()?.safeSummary() ?: "Nicht verfügbar.")
+-                }
+-            }
+-            if (diagnostic != null) {
++                    localRuntime.cancel()
++                    localRuntimeError = diagnostic
++                    runOnUiThread { refreshLocalModelUi() }
++                    return capturedGeneration(overrideFailure = diagnostic)
++                }
++            }
++            cancellation?.throwIfCancelled()
++            val readyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2)
++            while (localRuntime.state == LocalModelState.GENERATING && System.nanoTime() < readyDeadline) {
++                cancellation?.throwIfCancelled()
++                Thread.sleep(10)
++            }
++            if (localRuntime.state == LocalModelState.GENERATING) {
+                 localRuntime.cancel()
+-                localRuntimeError = diagnostic
++                localRuntimeError = "Local runtime did not finish generation."
+                 runOnUiThread { refreshLocalModelUi() }
+-                return LocalGeneration("", null, emptyList(), diagnostic)
+-            }
+-        }
+-        cancellation?.throwIfCancelled()
+-        val readyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2)
+-        while (localRuntime.state == LocalModelState.GENERATING && System.nanoTime() < readyDeadline) {
+-            cancellation?.throwIfCancelled()
+-            Thread.sleep(10)
+-        }
+-        if (localRuntime.state == LocalModelState.GENERATING) {
+-            localRuntime.cancel()
+-            localRuntimeError = "Local runtime did not finish generation."
+-            runOnUiThread { refreshLocalModelUi() }
+-            return LocalGeneration("", null, emptyList(), "Local runtime did not finish generation.")
+-        }
+-        val accepted = proposalGuard.acceptedProposal()
+-        if (proposalGuard.isAmbiguous() || (accepted != null && rejectedResponses.isNotEmpty())) {
+-            return LocalGeneration(
+-                "", null, emptyList(), "Local model emitted multiple or conflicting tool proposals; none were submitted."
+-            )
+-        }
+-        return LocalGeneration(response.toString(), accepted, rejectedResponses.toList(), failure)
++                return capturedGeneration(
++                    overrideCompletion = LocalGenerationCompletion.FAILED.takeIf { capture.snapshot().responseComplete },
++                    overrideFailure = "Local runtime did not finish generation.")
++            }
++            return capturedGeneration()
++        } catch (cancelled: java.util.concurrent.CancellationException) {
++            synchronized(eventLock) { capture.cancel(cancelled.message) }
++            runCatching { localRuntime.cancel() }
++            throw cancelled
+         } finally {
+             runOnUiThread { clearLocalStreamPreview(previewToken) }
+         }

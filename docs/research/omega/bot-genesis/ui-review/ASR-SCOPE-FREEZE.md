@@ -1,0 +1,9 @@
+# Actual Activity speech-input scope — independent regression freeze
+
+Five tests frozen before execution on baseline66f or corrected source. The broad Team E criterion already required stale speech/session/identity rejection. Chief's caller reviewer found the missing ASR invalidation and Chief announced source0b1a0127; the pending busy-microphone repair has not been inspected. These are independently authored API-bound regression tests, not an unknown intelligence holdout.
+
+The tests instantiate the actual Activity constructor/attached context, install minimal real widgets and the actual on-device speech controller, and deliver platform ASR callbacks through Robolectric SDK35 (already cached). No Activity.onCreate/bootstrap, microphone recording, native model or tool execution occurs. Three cases deliver an old transcript after bot switch, return to JARVIS and selected-profile context edit. A fourth delivers an old microphone permission grant after changing bot. The fifth keeps an actual DevelopmentCoordinator instance bound to the Activity with counting adapter/runtime ports, activates dictation while busy, and requires that neither cancellation nor inference occurs and only the composer receives the transcript.
+
+Source: `tools/genesis-ui-review/selection/IndependentBotSpeechScopeTest.kt`. All5 are NOT_RUN at this freeze. Corrected combined target becomes34 scoped checks (previous29 +5), while the existing29/29 PASS remains tied to66fce742. Any test setup/compile error is infrastructure evidence, never a reproduced product defect. No synthetic ASR callback is claimed as on-device audio or completed coding work.
+
+`-PgenesisAsrReviewOnly=true` selects only these5 while keeping the same production/test compilation. Final unfiltered acceptance omits all three reviewer filter properties.

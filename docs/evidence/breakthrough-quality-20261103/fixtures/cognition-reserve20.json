@@ -1,0 +1,265 @@
+{
+  "schema": "OMEGA_QA_OWNER_TIMELINE_V2_RESERVE",
+  "cases": [
+    {
+      "id": "QB-C2-001",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 22 Äpfel, im beigen 73."
+      ],
+      "currentTurn": "Meine Mengenangabe zum grünen Korb nehme ich zurück.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        22,
+        73
+      ]
+    },
+    {
+      "id": "QB-C2-002",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 25 Äpfel, im beigen 77."
+      ],
+      "currentTurn": "Die Zahl der Äpfel im beigen Korb ist unzutreffend.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        25,
+        77
+      ]
+    },
+    {
+      "id": "QB-C2-003",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 28 Äpfel, im beigen 81."
+      ],
+      "currentTurn": "Korrektur: Meine Angabe zur Anzahl im grünen Korb ist falsch.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        28,
+        81
+      ]
+    },
+    {
+      "id": "QB-C2-004",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 31 Äpfel, im beigen 85."
+      ],
+      "currentTurn": "Ich widerrufe meine Mengenangabe für den beigen Korb.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        31,
+        85
+      ]
+    },
+    {
+      "id": "QB-C2-005",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 34 Äpfel, im beigen 89."
+      ],
+      "currentTurn": "Die frühere Anzahl im grünen Korb stimmt nicht mehr.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        34,
+        89
+      ]
+    },
+    {
+      "id": "QB-C2-006",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 37 Äpfel, im beigen 93."
+      ],
+      "currentTurn": "Meine Aussage über die Menge der Äpfel gilt nicht mehr.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        37,
+        93
+      ]
+    },
+    {
+      "id": "QB-C2-007",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 40 Äpfel, im beigen 97."
+      ],
+      "currentTurn": "Die Anzahl im beigen Korb ist mir nicht mehr sicher.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        40,
+        97
+      ]
+    },
+    {
+      "id": "QB-C2-008",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 43 Äpfel, im beigen 101."
+      ],
+      "currentTurn": "Ich bin bei meiner Mengenangabe für den grünen Korb unsicher.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        43,
+        101
+      ]
+    },
+    {
+      "id": "QB-C2-009",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 46 Äpfel, im beigen 105."
+      ],
+      "currentTurn": "Die Zahl der Äpfel im beigen Korb ist nur eine Schätzung.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        46,
+        105
+      ]
+    },
+    {
+      "id": "QB-C2-010",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 49 Äpfel, im beigen 109."
+      ],
+      "currentTurn": "Vielleicht war meine Angabe zum grünen Korb falsch.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        49,
+        109
+      ]
+    },
+    {
+      "id": "QB-C2-011",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 52 Äpfel, im beigen 113."
+      ],
+      "currentTurn": "Die Menge der Äpfel ist noch ungeklärt.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        52,
+        113
+      ]
+    },
+    {
+      "id": "QB-C2-012",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 55 Äpfel, im beigen 117."
+      ],
+      "currentTurn": "Ich weiß die Anzahl im beigen Korb nicht mehr.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        55,
+        117
+      ]
+    },
+    {
+      "id": "QB-C2-013",
+      "category": "CONTROL",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 58 Äpfel, im beigen 121."
+      ],
+      "currentTurn": "Der grüne Korb ist nicht wasserfest.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        58,
+        121
+      ]
+    },
+    {
+      "id": "QB-C2-014",
+      "category": "CONTROL",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 61 Äpfel, im beigen 125."
+      ],
+      "currentTurn": "Die Äpfel im beigen Korb sind wahrscheinlich süß.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        61,
+        125
+      ]
+    },
+    {
+      "id": "QB-C2-015",
+      "category": "CONTROL",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 64 Äpfel, im beigen 129."
+      ],
+      "currentTurn": "Bitte veröffentliche die Mengenangabe nicht.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        64,
+        129
+      ]
+    },
+    {
+      "id": "QB-C2-016",
+      "category": "CONTROL",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 67 Äpfel, im beigen 133."
+      ],
+      "currentTurn": "Die Zahl auf dem Etikett des grünen Korbs stimmt nicht.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        67,
+        133
+      ]
+    },
+    {
+      "id": "QB-C2-017",
+      "category": "CONTROL",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 70 Äpfel, im beigen 137."
+      ],
+      "currentTurn": "Wenn meine Mengenangabe falsch wäre, würde ich es sagen.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        70,
+        137
+      ]
+    },
+    {
+      "id": "QB-C2-018",
+      "category": "CONTROL",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 73 Äpfel, im beigen 141."
+      ],
+      "currentTurn": "Ist meine Angabe zum beigen Korb falsch?",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        73,
+        141
+      ]
+    },
+    {
+      "id": "QB-C2-019",
+      "category": "CONTROL",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 76 Äpfel, im beigen 145."
+      ],
+      "currentTurn": "Die Angabe zur Farbe des grünen Korbs war falsch.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        76,
+        145
+      ]
+    },
+    {
+      "id": "QB-C2-020",
+      "category": "CONTROL",
+      "previousOwnerTurns": [
+        "Im grünen Korb liegen 79 Äpfel, im beigen 149."
+      ],
+      "currentTurn": "Die Äpfel sind nicht für morgen bestimmt.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        79,
+        149
+      ]
+    }
+  ]
+}

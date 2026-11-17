@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -9727,7 +9727,7 @@
+                         if (successful || hasPartialResponse) {
+                             lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
+                             localConversationContext.record(localSessionId, text, run.response,
+-                                responseComplete = run.responseComplete)
++                                responseComplete = true)
+                         } else localConversationContext.recordUnanswered(localSessionId, text)
+                     }
+                     checkpointContinuumAsync()

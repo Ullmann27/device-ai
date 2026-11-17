@@ -1,0 +1,50 @@
+✔ square positive control (0.918468ms)
+✖ quad positive regression (0.638008ms)
+✖ quad zero regression (0.14191ms)
+✖ quad negative regression (0.82637ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 163.588548
+
+✖ failing tests:
+
+test at .github/continuum/math.test.mjs:5:1
+✖ quad positive regression (0.638008ms)
+  ReferenceError: sqare is not defined
+      at quad (file:///tmp/continuum-synapse-m3-9KKVjI/fixture/.github/continuum/math.mjs:2:25)
+      at TestContext.<anonymous> (file:///tmp/continuum-synapse-m3-9KKVjI/fixture/.github/continuum/math.test.mjs:5:50)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at .github/continuum/math.test.mjs:6:1
+✖ quad zero regression (0.14191ms)
+  ReferenceError: sqare is not defined
+      at quad (file:///tmp/continuum-synapse-m3-9KKVjI/fixture/.github/continuum/math.mjs:2:25)
+      at TestContext.<anonymous> (file:///tmp/continuum-synapse-m3-9KKVjI/fixture/.github/continuum/math.test.mjs:6:46)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at .github/continuum/math.test.mjs:7:1
+✖ quad negative regression (0.82637ms)
+  ReferenceError: sqare is not defined
+      at quad (file:///tmp/continuum-synapse-m3-9KKVjI/fixture/.github/continuum/math.mjs:2:25)
+      at TestContext.<anonymous> (file:///tmp/continuum-synapse-m3-9KKVjI/fixture/.github/continuum/math.test.mjs:7:50)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

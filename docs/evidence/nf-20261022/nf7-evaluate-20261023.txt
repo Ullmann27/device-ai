@@ -1,0 +1,8 @@
+== NF-7 residual training against Kneser-Ney 7 (section 8f + amendment 8f-A; NFC2 VALIDATION, epoch 6)
+  independent G-M                          neural 2.3926 2.4089 2.4305 | mixture 1.8474 1.8502 1.8519 | lambda per fold 0.200/0.150 0.175/0.150 0.175/0.150
+  residual G-M-res (cross-fitted)          neural 3.9904 4.0761 4.0626 | mixture 1.8640 1.8646 1.8623 | lambda per fold 0.100/0.075 0.100/0.075 0.100/0.075
+  residual G-M-resin (in-sample, no rule)  neural 8.2796 8.1035 8.2435 | mixture 1.8852 1.8857 1.8851 | lambda per fold 0.025/0.025 0.000/0.025 0.025/0.025
+  KN-7 alone 1.8856
+  H7-1 residual mixture <= independent mixture - 0.02 in every seed: gains -0.0166 -0.0144 -0.0104 -> REFUTED
+  H7-2 residual mixture <= KN-7 - 0.05 in every seed: gains +0.0216 +0.0210 +0.0233 -> REFUTED
+  reported: cross-fitted vs in-sample targets, mixture gain +0.0212 +0.0211 +0.0228

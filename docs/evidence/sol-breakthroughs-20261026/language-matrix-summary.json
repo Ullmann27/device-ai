@@ -1,0 +1,67 @@
+{
+  "sourceCommit": "cf96c19fb22c5a3b1b06f259c3b2e92866077c07",
+  "fixtureSha256": "ea8f83cb45765a9034fd777954e4e62a36fd35647c41d9922bbe2fe0b0d841a7",
+  "arms": [
+    {
+      "model": "gemma-selected",
+      "runtime": "0.18.1",
+      "rawStatus": "MEASURED_HOST_ONLY",
+      "correct": 18,
+      "incorrect": 2,
+      "completedTasks": 20,
+      "totalTasks": 20,
+      "unrun": 0,
+      "observedErrors": 0,
+      "correctOverAllTasks": 0.9,
+      "peakRssKiB": 3370248,
+      "loadSeconds": 1.6769671820002259,
+      "caseSeconds": 135.72640389800654
+    },
+    {
+      "model": "gemma-selected",
+      "runtime": "0.18.0",
+      "rawStatus": "MEASURED_HOST_ONLY",
+      "correct": 18,
+      "incorrect": 2,
+      "completedTasks": 20,
+      "totalTasks": 20,
+      "unrun": 0,
+      "observedErrors": 0,
+      "correctOverAllTasks": 0.9,
+      "peakRssKiB": 3371564,
+      "loadSeconds": 0.5282117959977768,
+      "caseSeconds": 103.29471075598485
+    },
+    {
+      "model": "qwen3-public-reference",
+      "runtime": "0.18.0",
+      "rawStatus": "RUNNING",
+      "correct": 11,
+      "incorrect": 8,
+      "completedTasks": 19,
+      "totalTasks": 20,
+      "unrun": 1,
+      "observedErrors": 0,
+      "correctOverAllTasks": 0.55,
+      "peakRssKiB": 1994268,
+      "loadSeconds": 3.5092848599997524,
+      "caseSeconds": 116.20216543000788
+    }
+  ],
+  "gemmaOutputsIdenticalAcrossHostRuntimes": true,
+  "gemmaWrongCaseIds": [
+    "DE-P01",
+    "DE-P02"
+  ],
+  "qwenProcessExitCode": -9,
+  "qwenFinalStatus": "INTERRUPTED_NATIVE_SIGKILL_NOT_COMPLETE",
+  "qwenInterruptionCause": "Not independently established; fixed240CPU-second/8GiB limits were in force; do not silently complete or rerun after owner stop",
+  "limits": [
+    "No Qwen replacement or Fold7 acceptance",
+    "Reference Qwen original SHA verified; owner installed Qwen hash unknown",
+    "Thinking disabled for both; no general reasoning/coding-quality claim",
+    "Native completed does not expose exact EOS vs output-token limit",
+    "All raw reports byte-preserved, including Qwen unfinished RUNNING status; this manifest records termination",
+    "No new runs after owner stop; no model process remains"
+  ]
+}

@@ -1,0 +1,54 @@
+✔ pending deterministic report hashes actual bytes, repeats and never mutates journal (64.860561ms)
+✖ canonical grant substitution during reporting is rechecked before returning (35.323739ms)
+✖ uncommitted source mutation during reporting is rechecked before returning (33.993504ms)
+✔ initial dirty source is rejected (33.962137ms)
+✔ reporter removal invalidates report without changing canonical state (27.787867ms)
+✔ assignment expiry cannot produce a report (25.477076ms)
+✔ tampered report cannot be accepted by deterministic regeneration (51.767692ms)
+✔ symlink evidence directory never receives report bytes (30.423064ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 6
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 447.853934
+
+✖ failing tests:
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:41:1
+✖ canonical grant substitution during reporting is rechecked before returning (35.323739ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:44:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:46:1
+✖ uncommitted source mutation during reporting is rechecked before returning (33.993504ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:49:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

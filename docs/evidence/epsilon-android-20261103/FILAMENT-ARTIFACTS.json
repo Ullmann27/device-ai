@@ -1,0 +1,40 @@
+{
+  "version": "1.56.0",
+  "license": "Apache-2.0",
+  "source": "https://github.com/google/filament/tree/v1.56.0",
+  "repository": "https://repo.maven.apache.org/maven2/com/google/android/filament/",
+  "files": {
+    "filament.aar": {
+      "bytes": 3815202,
+      "sha256": "b03d35dd50698d0c61e28eec24734b7b257a0f13017817375598c0d3af49da39",
+      "native_libraries": [
+        "jni/arm64-v8a/libfilament-jni.so",
+        "jni/armeabi-v7a/libfilament-jni.so",
+        "jni/x86/libfilament-jni.so",
+        "jni/x86_64/libfilament-jni.so"
+      ]
+    },
+    "gltfio.aar": {
+      "bytes": 13557880,
+      "sha256": "25370a7b6a5af3be66367b6d609deed18b37333e1963b7ee6856f50e0dab544e",
+      "native_libraries": [
+        "jni/arm64-v8a/libgltfio-jni.so",
+        "jni/armeabi-v7a/libgltfio-jni.so",
+        "jni/x86/libgltfio-jni.so",
+        "jni/x86_64/libgltfio-jni.so"
+      ]
+    },
+    "filament-sources.jar": {
+      "bytes": 165166,
+      "sha256": "866303d5b098f4fa22a1929ff43fdf9707493ad198d736398fba0d37d85a6a75"
+    },
+    "gltfio-sources.jar": {
+      "bytes": 17834,
+      "sha256": "cc690b509c10806317b628f87374ac033f7779f70f7b8f8394e7e6a4abc009d1"
+    },
+    "LICENSE": {
+      "bytes": 11362,
+      "sha256": "02d70b593dd8e9355dd8e1ca8d13c303bee5bcaf3065b66ff6e4f534e1e6a2c1"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "source_sha": "8a882e662cb48e3363213eb5005cb091828d89ec",
+  "source_files": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "0f0235e4336bb3ebfc6066cfa250eefb3a52fabaad9c2e762cd5a98c74455f2e",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "9ec2393d534dd970f2f181126a0ae468b004748d8df70d5e3f0d8156be36aecd",
+    "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "f87adcad148e8cfb177403ac4d45c3005ad923fd076c086bec49de67184a30ea",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComposeSemantics.kt": "5314801dfc221383b35383f243fac290046cf20272a1fd359c8a9d3da2ab543c",
+    "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+    "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+    "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveRenderedActionSourceTest.kt": "96fe76e4ec55566cb3951294f49742ad00813965dfb1e4126973605971c206c9",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveMonitorSubmissionTest.kt": "d0010f9f58dd443c899a4579aaa0f9b2c0ca6c59679eb231ca62f705df41ae46",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerFramesTest.kt": "d0afed0302bca9ac71517b1477dcbfd41e3ae09e97e22e078fe8210f4a9538c9",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerActionsTest.kt": "e195333da8153333157223c9f825adea58459cfbd5113ad3c31d87ccee2b142e",
+    "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",
+    "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f"
+  },
+  "compile_exit": 0,
+  "mutation": false,
+  "android_device": "NOT_RUN",
+  "junit_exit": 0
+}

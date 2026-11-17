@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:51" hostname="7b281259906f" time="0.036">
+  <properties/>
+  <testcase name="unsafeZipNamesAreRejectedWithoutWritingAnyRecords" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.014"/>
+  <testcase name="legalArchiveIsNotMisreportedAsLegalValidity" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.006"/>
+  <testcase name="directArchiveQuestionNeedsAnExplicitSourceTitleTopic" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.005"/>
+  <testcase name="indexedOfflineArchiveStoresCitationsAndRevisions" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.007"/>
+  <testcase name="invalidDomainsAndUnsafeReferencesAreRejected" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.0"/>
+  <testcase name="zipRoundTripPersistsAndVerifiesOriginalCitationRecords" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.003"/>
+  <testcase name="genericWikipediaTitleWordCannotHijackMarsFollowUp" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

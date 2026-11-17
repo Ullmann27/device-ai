@@ -1,0 +1,32 @@
+95230 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+95254 +++ exited with 0 +++
+95230 fsync(18)                         = 0
+95230 rename("/tmp/breakthrough-memory-durability-a6007442/fixture-status/experiences-v3/lex3-14825336149493825424.tmp", "/tmp/breakthrough-memory-durability-a6007442/fixture-status/experiences-v3/2edf8f78646cc1f626537a8c7c277cbcc08a7e7db8367cc1a07e83e729be22d4.seg") = 0
+95230 fsync(18)                         = 0
+95230 fsync(18)                         = 0
+95230 rename("/tmp/breakthrough-memory-durability-a6007442/fixture-status/lex3-7664957934352924591.tmp", "/tmp/breakthrough-memory-durability-a6007442/fixture-status/experiences-v2.bin") = 0
+95230 fsync(18)                         = -1 EIO (Input/output error) (INJECTED)
+95230 fsync(18)                         = 0
+95230 fsync(18)                         = 0
+95251 +++ exited with 0 +++
+95235 +++ exited with 0 +++
+95234 +++ exited with 0 +++
+95232 +++ exited with 0 +++
+95236 +++ exited with 0 +++
+95230 +++ exited with 0 +++
+95262 +++ exited with 0 +++
+95261 +++ exited with 0 +++
+95256 +++ exited with 0 +++
+95252 +++ exited with 0 +++
+95249 +++ exited with 0 +++
+95248 +++ exited with 0 +++
+95247 +++ exited with 0 +++
+95246 +++ exited with 0 +++
+95237 +++ exited with 0 +++
+95231 +++ exited with 0 +++
+95233 +++ exited with 0 +++
+95245 +++ exited with 0 +++
+95250 +++ exited with 0 +++
+95238 +++ exited with 0 +++
+95244 +++ exited with 0 +++
+95229 +++ exited with 0 +++

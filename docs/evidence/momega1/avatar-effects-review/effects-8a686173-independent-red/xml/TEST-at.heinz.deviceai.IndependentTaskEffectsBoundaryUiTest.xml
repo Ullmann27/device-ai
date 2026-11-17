@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" tests="4" skipped="0" failures="3" errors="0" timestamp="2026-11-03T21:32:01" hostname="b354f2cb821b" time="5.018">
+  <properties/>
+  <testcase name="pauseBoundaryCannotReplayCapturedArrivalEvenWhenCallerReappliesScope" classname="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" time="4.418">
+    <failure message="java.lang.AssertionError: Captured pre-pause work cannot appear after scope reapplication" type="java.lang.AssertionError">java.lang.AssertionError: Captured pre-pause work cannot appear after scope reapplication
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.pauseBoundaryCannotReplayCapturedArrivalEvenWhenCallerReappliesScope$lambda$0(IndependentTaskEffectsBoundaryUiTest.kt:42)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.withView(IndependentTaskEffectsBoundaryUiTest.kt:36)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.pauseBoundaryCannotReplayCapturedArrivalEvenWhenCallerReappliesScope(IndependentTaskEffectsBoundaryUiTest.kt:39)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="hiddenBoundaryCannotReplayCapturedArrivalAfterBecomingVisible" classname="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" time="0.132">
+    <failure message="java.lang.AssertionError: Invisible work arrival must not replay on visibility return" type="java.lang.AssertionError">java.lang.AssertionError: Invisible work arrival must not replay on visibility return
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.hiddenBoundaryCannotReplayCapturedArrivalAfterBecomingVisible$lambda$0(IndependentTaskEffectsBoundaryUiTest.kt:48)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.withView(IndependentTaskEffectsBoundaryUiTest.kt:36)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.hiddenBoundaryCannotReplayCapturedArrivalAfterBecomingVisible(IndependentTaskEffectsBoundaryUiTest.kt:45)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="productionOverlayIsAboveOpaqueChildAndScopeEndRestoresExactPixels" classname="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" time="0.381"/>
+  <testcase name="explicitScopeEndCannotAcceptAnOlderTimestampWhenSameScopeReturns" classname="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" time="0.086">
+    <failure message="java.lang.AssertionError: Ended work scope cannot replay its captured arrival" type="java.lang.AssertionError">java.lang.AssertionError: Ended work scope cannot replay its captured arrival
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.explicitScopeEndCannotAcceptAnOlderTimestampWhenSameScopeReturns$lambda$0(IndependentTaskEffectsBoundaryUiTest.kt:53)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.withView(IndependentTaskEffectsBoundaryUiTest.kt:36)
+	at at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.explicitScopeEndCannotAcceptAnOlderTimestampWhenSameScopeReturns(IndependentTaskEffectsBoundaryUiTest.kt:51)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

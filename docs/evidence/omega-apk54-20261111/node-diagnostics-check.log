@@ -1,0 +1,75 @@
+✔ the same live scheduler automatically continues from a failed cycle to a healthy cycle (3985.057893ms)
+✖ finite scheduler returns zero only when its single full cycle passed (12993.241684ms)
+✔ an owner abort ends a running step and its detached grandchild within seconds (1152.015861ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19177.259265
+
+✖ failing tests:
+
+test at .github/continuum/local-worker-process.test.mjs:89:1
+✖ finite scheduler returns zero only when its single full cycle passed (12993.241684ms)
+  AssertionError [ERR_ASSERTION]: 
+  {
+    "schema": "continuum-local-worker-v2",
+    "id": "2026-11-11T15-37-48-253Z-ceda3ecd-8b3a-4b6f-922a-9b749ea92a2f",
+    "branch": "test/worker",
+    "sourceSha": "280e31ae80698059aa9e54ccee63e914393c8133",
+    "sourceTree": "7e5a2b539ae2dd5cc7f10b3f3b2da8b894c4af36",
+    "inventoryHash": "9478fec4920996d3209304f30ba0dc15458a81d5b3616676ed0e68a0c2b019e8",
+    "inventoryCount": 1,
+    "started": "2026-11-11T15:37:48.261Z",
+    "completed": "2026-11-11T15:37:54.287Z",
+    "sourceUnchanged": true,
+    "leaseHeld": true,
+    "status": "FAILED",
+    "tests": null,
+    "pass": null,
+    "failed": null,
+    "cancelled": null,
+    "skipped": null,
+    "todo": null,
+    "exitCode": null,
+    "error": "TIMEOUT",
+    "stderrTail": "",
+    "signal": "SIGKILL",
+    "stdoutHash": "3ca49ac7157a49ebb5dfc735f21c6a62ec966b4e4e4d3545fc30766fa8835a24",
+    "stderrHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "limits": {
+      "timeoutMs": 1000,
+      "heapMb": 256,
+      "testConcurrency": 2,
+      "maxEvidenceMb": 64,
+      "intervalMs": 100,
+      "maxCycles": 1
+    },
+    "recoveredLease": false,
+    "candidatePromoted": false,
+    "patchApplied": false,
+    "weightsUpdated": false,
+    "ownerReviewRequired": true
+  }
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/omega-integrate/.github/continuum/local-worker-process.test.mjs:102:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

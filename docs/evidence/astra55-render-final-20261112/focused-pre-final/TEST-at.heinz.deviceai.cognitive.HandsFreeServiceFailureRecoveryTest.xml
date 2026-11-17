@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.HandsFreeServiceFailureRecoveryTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:20" hostname="0f4ac18d136f" time="0.025">
+  <properties/>
+  <testcase name="busyKeepsItsDocumentedBoundedScheduleAndHardErrorsPauseAtOnce" classname="at.heinz.deviceai.cognitive.HandsFreeServiceFailureRecoveryTest" time="0.024"/>
+  <testcase name="repeatedServiceFailuresNeverLoopWithoutTheOwner" classname="at.heinz.deviceai.cognitive.HandsFreeServiceFailureRecoveryTest" time="0.0"/>
+  <testcase name="serviceFailureGetsOneDelayedFreshReArmThenPausesForOneTapResume" classname="at.heinz.deviceai.cognitive.HandsFreeServiceFailureRecoveryTest" time="0.0"/>
+  <testcase name="serviceFailurePauseReasonIsHonestAboutTheSingleAttempt" classname="at.heinz.deviceai.cognitive.HandsFreeServiceFailureRecoveryTest" time="0.0"/>
+  <testcase name="benignSilenceNeverKillsTheModeAndKeepsItsSingleRetry" classname="at.heinz.deviceai.cognitive.HandsFreeServiceFailureRecoveryTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

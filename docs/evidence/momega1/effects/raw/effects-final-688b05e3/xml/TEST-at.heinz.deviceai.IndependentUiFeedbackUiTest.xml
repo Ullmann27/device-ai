@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentUiFeedbackUiTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:47:56" hostname="b354f2cb821b" time="0.131">
+  <properties/>
+  <testcase name="exactCooldownBoundaryAndReplacementRetainOnlyOneTrack" classname="at.heinz.deviceai.IndependentUiFeedbackUiTest" time="0.029"/>
+  <testcase name="frameworkReceivesBoundedPcmWithoutFocusOrVolumeMutation" classname="at.heinz.deviceai.IndependentUiFeedbackUiTest" time="0.025"/>
+  <testcase name="musicStreamZeroAndSystemMuteNeverAllocateOrWrite" classname="at.heinz.deviceai.IndependentUiFeedbackUiTest" time="0.024"/>
+  <testcase name="systemOptOutOnNextPlayReleasesPreviousAudioAndCloseCannotRevive" classname="at.heinz.deviceai.IndependentUiFeedbackUiTest" time="0.024"/>
+  <testcase name="everyOwnerVoiceAndForegroundRevocationReleasesExistingTrack" classname="at.heinz.deviceai.IndependentUiFeedbackUiTest" time="0.028"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

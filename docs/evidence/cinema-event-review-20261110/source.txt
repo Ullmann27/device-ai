@@ -1,0 +1,12 @@
+d4d7971545d11ee5697f4175c6ea39444e3b9a6b
+f00393b840750f85d12639e23f5cd5d7a539f072
+fdd0b742f1f7c291d66e346022a871b0092c8c6249cc4d431670ca8f9464633d  app/src/main/java/at/heinz/deviceai/ui/WindowProjectedMotionSampler.kt
+93422fb2f0d6900049e3aef1fd37697edb45677a66ce5aef38697c0a52c09bc3  app/src/main/java/at/heinz/deviceai/ui/JarvisWindowGaze.kt
+6815e0f3318163a990104783f54a26e7264f09ae5f466a1d7e4213c5a8cdc6c6  app/src/test/java/at/heinz/deviceai/ui/WindowProjectedMotionSamplerTest.kt
+13db69379a927db622007e9609ed9116702253bcd89216a132df7d4e5b57800b  /tmp/continuum-toolchain/cinema-event-review/BaselineSampler.kt
+25766f72cd511f247950c7d558fe323be6be2d4c
+db972eea5028e650361907777c863510a1f14c60
+88b7af559170091539c6c42e97ffe388dcc9f43b7a0a7ee7e57d1672e782de4c  /workspace/scratch/5900afa6af29/cognitive-memory-qa/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCinemaEntrance.class
+9777a015a88ffc6b328a0026e499a3381cdfc095c6abfb86902822e3a86e8063  /workspace/scratch/5900afa6af29/cognitive-memory-qa/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellLayout.class
+c52219c49c63e9e6920df2b5e67324cefd2348354cec41c46f41b5ad92f413ab  /workspace/scratch/5900afa6af29/cognitive-memory-qa/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/cockpit/WindowProjectedMotion.class
+942f492fde75155e2a4ab1db30f88635f28655793b5f3a2d74604f76464ddba8  /workspace/scratch/5900afa6af29/cognitive-memory-qa/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/avatar/GazeTarget.class

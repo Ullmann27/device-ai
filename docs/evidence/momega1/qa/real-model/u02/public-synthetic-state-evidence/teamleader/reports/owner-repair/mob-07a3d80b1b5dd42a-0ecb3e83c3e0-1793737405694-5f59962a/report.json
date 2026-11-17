@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "base": "0ecb3e83c3e0d27d544fc3eb6ea76d1524d41368",
+  "chain": "node",
+  "startedAt": "2026-11-03T20:23:25.710Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "modelInvocations": 2,
+    "localRequests": 2,
+    "verifiedModelExecution": true,
+    "candidateStatus": "UNAVAILABLE_OR_REJECTED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "712af8373f716973",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_PATCH_NOT_EXACT",
+        "hypothesis": ""
+      },
+      {
+        "candidate": "39918cea58ae5aea",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_PATCH_NOT_EXACT",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_PATCH_NOT_EXACT",
+        "repeated": false,
+        "responseSha256": "712af8373f7169734b82a1badc183326b5afaf2f3330d491c7b857113ae4e8cb"
+      },
+      {
+        "code": "CODING_PATCH_NOT_EXACT",
+        "repeated": false,
+        "responseSha256": "39918cea58ae5aeaaef12a0a18395650d490630efc5d6d8bd2da23dac1970f75"
+      }
+    ],
+    "reason": "Original local inference observations; candidate correctness requires separate verification",
+    "lastRejectCode": "CODING_PATCH_NOT_EXACT"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 15000,
+          "runtime": "runc",
+          "sourceSha256": "eadb0cba51b2e867c89f908d5a811fb44ca1458318344a7de95494e3327e7be7",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-8846f9f13d099ef5f9f52f6b",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-b93a569240a303fe",
+            "requestMessageId": "a10b54c0-6f82-4d54-9ee5-ab1506c7f93b",
+            "requestHash": "8e8f169d8013f39b500e9b3aa14030355dd3040aad5955215ffb800cc4e7e979",
+            "sourceCommit": "0ecb3e83c3e0d27d544fc3eb6ea76d1524d41368",
+            "jobId": "553776f6-e38e-4b29-9a2e-49281f35eab6"
+          },
+          "observed": {
+            "containerId": "e55e5e9ca450753f727f8d40fc81ef1b5b2dd62c4888b37cb323eaa252e390ca",
+            "runtime": "runc",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 1,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 0,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Deadline boundary\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "a9ec0d9444fdc65a959421d57ebd7bb3130cc07d3066ef8138cdd9ca9aac5f96"
+          ],
+          "executedCaseHashes": [
+            "ffd6288498eb9422a2d37d724890ace113b4df65c7c80bbe19927b2c2b79e4d1"
+          ]
+        },
+        "diagnostics": 1
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Deadline boundary",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 5,
+        "col": 8,
+        "message": "Expected values to be strictly equal:\n\ntrue !== false",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "5fb89a0dca238555"
+      }
+    ]
+  },
+  "attempts": [],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "progress": [
+    {
+      "phase": "CHECKING_BASELINE",
+      "at": "2026-11-03T20:23:25.710Z",
+      "attempt": 0
+    },
+    {
+      "phase": "BASELINE_FAILED",
+      "at": "2026-11-03T20:23:26.171Z",
+      "attempt": 0
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:23:26.183Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PROPOSAL_REJECTED",
+      "at": "2026-11-03T20:23:54.553Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CORRECTING",
+      "at": "2026-11-03T20:23:54.562Z",
+      "attempt": 1
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:23:54.564Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PROPOSAL_REJECTED",
+      "at": "2026-11-03T20:24:18.630Z",
+      "attempt": 2
+    }
+  ],
+  "coding": {
+    "taskId": "mob-07a3d80b1b5dd42a",
+    "taskFingerprint": "60e1e8a6550adfb2065dcc2775067590736b74850b82ed0938b690b1bf09200f",
+    "sourceCommit": "0ecb3e83c3e0d27d544fc3eb6ea76d1524d41368",
+    "allowedPaths": [
+      "lib/subject.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED"
+    ],
+    "candidateCount": 0,
+    "contextSha256": null
+  },
+  "finishedAt": "2026-11-03T20:24:18.638Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "0ecb3e83c3e0d27d544fc3eb6ea76d1524d41368",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 1,
+        "proof": "e638aa0917974f8a5c26b0add711a48b928d069a9b646632afc59d1bd512886c"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "162d361ab56137b121704aecc2f4b0aadf00092f0e48eb5e59451bb307af855d"
+  }
+}

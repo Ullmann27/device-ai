@@ -1,0 +1,19 @@
+{
+  "status": "UNSIGNED_BUILD_VERIFIED_NOT_PUBLISHED",
+  "source_local_commit": "d57a8ce093efe4c37491116bb954abe0a0bfa434",
+  "working_tree_clean": true,
+  "verified_at_utc": "2026-11-06T17:01:01.710446+00:00",
+  "package": "at.heinz.deviceai.continuumlocal",
+  "versionCode": 46,
+  "versionName": "0.3.45",
+  "abis": [
+    "arm64-v8a"
+  ],
+  "apk_bytes": 101872407,
+  "apk_sha256": "dad0c9a6203eb1f2817ff6aa5bfe4133db948b995e00cbd5e72e9b054763c5db",
+  "aab_bytes": 71341420,
+  "aab_sha256": "19f4a30fc229052e975564d9c7433bff01cd633b24973d7749aebed1171fb17d",
+  "archive_crc_validation": "PASS",
+  "owner_signed": false,
+  "published": false
+}

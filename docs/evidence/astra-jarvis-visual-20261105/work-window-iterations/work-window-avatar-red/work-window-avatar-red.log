@@ -1,0 +1,119 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+JarvisWorkWindowUiTest > detachingReleasesFrameSubscription FAILED
+    java.lang.AssertionError at JarvisWorkWindowUiTest.kt:43
+        Caused by: java.lang.ClassNotFoundException at JarvisWorkWindowUiTest.kt:41
+
+JarvisWorkWindowUiTest > geometryFindsPhoneAndFoldSpaceWithoutCoveringHeadOrDialog FAILED
+    java.lang.AssertionError at JarvisWorkWindowUiTest.kt:43
+        Caused by: java.lang.ClassNotFoundException at JarvisWorkWindowUiTest.kt:41
+
+JarvisWorkWindowUiTest > reducedMotionSettlesBothDirectionsOnNextSuppliedFrame FAILED
+    java.lang.AssertionError at JarvisWorkWindowUiTest.kt:43
+        Caused by: java.lang.ClassNotFoundException at JarvisWorkWindowUiTest.kt:41
+
+JarvisWorkWindowUiTest > protectedAreaRemainsTransparentDuringOpening FAILED
+    java.lang.AssertionError at JarvisWorkWindowUiTest.kt:43
+        Caused by: java.lang.ClassNotFoundException at JarvisWorkWindowUiTest.kt:41
+
+JarvisWorkWindowUiTest > outsideAndProtectedTouchesReachCockpit FAILED
+    java.lang.AssertionError at JarvisWorkWindowUiTest.kt:43
+        Caused by: java.lang.ClassNotFoundException at JarvisWorkWindowUiTest.kt:41
+
+JarvisWorkWindowUiTest > immediateCloseReleasesBodyAndCallbackExactlyOnce FAILED
+    java.lang.AssertionError at JarvisWorkWindowUiTest.kt:43
+        Caused by: java.lang.ClassNotFoundException at JarvisWorkWindowUiTest.kt:41
+
+JarvisWorkWindowUiTest > suppliedFramesOpenExistingBodyAndKeepCloseOutsideScroll FAILED
+    java.lang.AssertionError at JarvisWorkWindowUiTest.kt:43
+        Caused by: java.lang.ClassNotFoundException at JarvisWorkWindowUiTest.kt:41
+
+AvatarMotionEvidenceTest > listeningSpeechAndStopClearWindowIntentWithoutInventingAudio FAILED
+    java.lang.AssertionError at AvatarMotionEvidenceTest.kt:87
+
+AvatarMotionEvidenceTest > conversationSceneDrivesEyesHeadMouthAndStopsCleanly FAILED
+    java.lang.AssertionError at AvatarMotionEvidenceTest.kt:87
+
+AvatarMotionEvidenceTest > windowIntentExpiresAndClearRejectsQueuedReplay FAILED
+    java.lang.AssertionError at AvatarMotionEvidenceTest.kt:87
+
+AvatarMotionEvidenceTest > windowIntentLeadsWithEyesAndRestoresCurrentCameraGaze FAILED
+    java.lang.AssertionError at AvatarMotionEvidenceTest.kt:87
+
+AvatarMotionEvidenceTest > explicitConfirmationMakesOneBoundedNodWithCooldown FAILED
+    java.lang.AssertionError at AvatarMotionEvidenceTest.kt:87
+
+AvatarMotionEvidenceTest > thinkingHasSubtleMotionWithoutOpeningMouth FAILED
+    java.lang.AssertionError at AvatarMotionEvidenceTest.kt:227
+
+AvatarMotionEvidenceTest > confirmationRespectsFramingBoundsAndReducedMotion FAILED
+    java.lang.AssertionError at AvatarMotionEvidenceTest.kt:87
+AUDIT_TESTS tests=14 passed=0 failed=14 skipped=0
+
+14 tests completed, 14 failed
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///workspace/scratch/76b7222771d5/continuum/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/scratch/76b7222771d5/continuum/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 25s
+31 actionable tasks: 2 executed, 29 up-to-date

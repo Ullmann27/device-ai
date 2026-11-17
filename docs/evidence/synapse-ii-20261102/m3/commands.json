@@ -1,0 +1,250 @@
+[
+  {
+    "label": "source-head",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/workspace/continuum-post-fable",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "source-branch",
+    "cmd": "git",
+    "args": [
+      "branch",
+      "--show-current"
+    ],
+    "cwd": "/workspace/continuum-post-fable",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-init",
+    "cmd": "git",
+    "args": [
+      "init",
+      "-q",
+      "-b",
+      "synapse-m3-fixture"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-add-seed",
+    "cmd": "git",
+    "args": [
+      "add",
+      "."
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-commit-seed",
+    "cmd": "git",
+    "args": [
+      "-c",
+      "user.name=continuum-m3-fixture",
+      "-c",
+      "user.email=m3-fixture@example.invalid",
+      "commit",
+      "-qm",
+      "seed: bounded arithmetic fixture"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-seed-head",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "seed-test",
+    "cmd": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "args": [
+      "--test",
+      ".github/continuum/math.test.mjs"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-commit-fault",
+    "cmd": "git",
+    "args": [
+      "-c",
+      "user.name=continuum-m3-fixture",
+      "-c",
+      "user.email=m3-fixture@example.invalid",
+      "commit",
+      "-qam",
+      "fault: unresolved numeric helper"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-fault-head",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "baseline-raw",
+    "cmd": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "args": [
+      "--test",
+      ".github/continuum/math.test.mjs"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 1,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-after-worker-head",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-after-worker-status",
+    "cmd": "git",
+    "args": [
+      "status",
+      "--porcelain"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "proposal-parent",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "ccf1108a3249c28fc2c53f03d5fa558bbed1c50b^"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "proposal-commit-patch",
+    "cmd": "git",
+    "args": [
+      "diff",
+      "--binary",
+      "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+      "ccf1108a3249c28fc2c53f03d5fa558bbed1c50b"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-after-publish-head",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-after-publish-status",
+    "cmd": "git",
+    "args": [
+      "status",
+      "--porcelain"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "committed-control-worktree",
+    "cmd": "git",
+    "args": [
+      "worktree",
+      "add",
+      "--detach",
+      "/tmp/continuum-synapse-m3-9KKVjI/committed-control",
+      "ccf1108a3249c28fc2c53f03d5fa558bbed1c50b"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "committed-control-raw",
+    "cmd": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "args": [
+      "--test",
+      ".github/continuum/math.test.mjs"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/committed-control",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-bundle",
+    "cmd": "git",
+    "args": [
+      "bundle",
+      "create",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m3/fixture.bundle",
+      "HEAD",
+      "ccf1108a3249c28fc2c53f03d5fa558bbed1c50b"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-9KKVjI/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  }
+]

@@ -1,0 +1,220 @@
+package at.heinz.deviceai.cognitive
+
+/** Intents never grant execution. */
+internal object OwnerAppLookupIntent {
+    sealed interface Intake {
+        data class Lookup(
+            val query: String,
+            val opening: Boolean,
+            val requireInstalledCandidate: Boolean = false,
+            val messagePlanningIfMatched: Boolean = false
+        ) : Intake
+        data class Planning(val original: String, val clarification: String? = null) : Intake
+        data class Clarify(val subject: String, val opening: Boolean? = null) : Intake
+    }
+
+    private val negation = Regex("(?iu)\\b(nicht|niemals|kein|keine|keinen|keinem|keiner|ohne)\\b")
+    private val installedCheck = Regex(
+        """(?iu)^(?:prüf(?:e)?|überprüf(?:e)?|kontrollier(?:e)?|check(?:e)?)\s*,?\s*ob\s+(?:die\s+app\s+)?([\p{L}\p{N}][\p{L}\p{N} ._+-]{0,79}?)\s+(?:auf\s+(?:meinem|dem|diesem)\s+(?:handy|gerät|smartphone)\s+)?installiert\s+ist$"""
+    )
+    private val safeLookupTail = Regex(
+        """(?iu)^(?:öffne\s+(?:keine\s+app|nichts|[\p{L}\p{N}._+-]{1,40}\s+nicht)|(?:verschick(?:e)?|versende|sende|schick(?:e)?)\s+keine\s+nachricht|nenne\s+mir\s+nur\s+das\s+ergebnis\s+und\s+den\s+gefundenen\s+paketnamen)$"""
+    )
+    private val safeConjunction = Regex(
+        """(?iu)\s+und\s+(?=(?:verschick(?:e)?|versende|sende|schick(?:e)?)\s+keine\s+nachricht\b)"""
+    )
+    private val additional = Regex("(?iu)\\b(und|oder|danach|anschließend|sende|senden|schreibe|schreiben|tippe|lösche|installiere|kaufe|bezahle|überweise)\\b")
+    private val direct = Regex("(?iu)^(öffne|starte|suche|finde|zeige)\\s+(.+?)[.!?]*$")
+    private val polite = Regex("(?iu)^(?:kannst|könntest|würdest|magst)\\s+du\\s+(.+?)\\s+(öffnen|starten|suchen|finden|zeigen)(?:\\s+bitte)?[.!?]*$")
+    private val desire = Regex("(?iu)^ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)\\s+(.+?)\\s+(öffnen|starten)[.!?]*$")
+    private val verbFinal = Regex("(?iu)^(.+?)\\s+(öffnen|starten)(?:\\s+bitte)?[.!?]*$")
+    private val nonCommandSubject = Regex("(?iu)^(?:wie|warum|wo|wer|was|welche\\p{L}*|ich|du|er|sie|es|man|wir|ihr|uns|euch|lass|lasst)(?![\\p{L}\\p{N}_])")
+    private val indirectModal = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:kann|können|könnt|könnte|könnten|kannst|" +
+        "soll|sollen|sollte|will|wollen|wollt|wollte|möchte|möchten|muss|müssen|müsst|müsste|müssten|" +
+        "darf|dürfen|dürft|dürfte|dürften|werden|werdet|wird|würde|würden)(?![\\p{L}\\p{N}_])")
+    private val missingName = Regex("(?iu)^(?:(?:eine|irgendeine)\\s+)?app$")
+    private val openUp = Regex("(?iu)^mach(?:e)?\\s+(.+?)\\s+auf[.!?]*$")
+    private val needPrefix = Regex("(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\b")
+    private val needExplicitApp = Regex(
+        "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?(?:(?:die|eine)\\s+)?app\\s+" +
+            "([\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{0,79})[.!?]*$"
+    )
+    private val needTrailingApp = Regex(
+        "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?([\\p{L}\\p{N}][\\p{L}\\p{N}._+-]{1,39})\\s+app[.!?]*$"
+    )
+    private val needSingleApp = Regex(
+        "(?iu)^ich\\s+(?:brauche|bräuchte|benötige)\\s+(?:bitte\\s+)?([\\p{L}\\p{N}][\\p{L}\\p{N}._+-]{1,39})[.!?]*$"
+    )
+    private val nonAppNeedTargets = setOf("hilfe", "pause", "rat", "dich", "mich", "dir", "mir",
+        "zeit", "ruhe", "mehr", "antwort", "auskunft")
+    private val vague = Regex("(?iu)^(?:ich\\s+)?(?:bräuchte|brauche|hätte\\s+gern(?:e)?|möchte|will)\\s+(?:bitte\\s+)?(?:etwas|was)\\s+(?:von|aus|in)\\s+(.+?)[.!?]*$")
+    private val action = Regex(
+        "(?iu)(?<![\\p{L}\\p{N}_])(öffne|öffnen|starte|starten|suche|suchen|finde|finden|aufmachen)(?![\\p{L}\\p{N}_])"
+    )
+    private val requestStart = Regex("(?iu)^(?:öffne|starte|suche|finde|zeige|mach(?:e)?|kannst|könntest|würdest|magst|ich)\\b")
+    private val query = Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} ._+-]{0,79}")
+    private val courtesy = Regex("(?iu)^(?:(?:bitte|mir|mal|kurz|eben)|für\\s+mich)\\s+")
+    private val trailingCourtesy = Regex("(?iu)\\s+(?:bitte|für\\s+mich)$")
+    private val reference = Regex("(?iu)^(?:sie|es|diese|diese\\s+app|die\\s+app|die|erste|zweite|dritte|vierte|fünfte|letzte|[1-9]|[1-9]\\.)$")
+    private val fileTarget = Regex("(?iu)\\b(datei|dateien|ordner|verzeichnis|download-ordner|downloadordner|downloads|download|pdf|dokument|dokumente)\\b|[/\\\\]|\\.(?:pdf|txt|docx|csv|json|jpg|png)\\b")
+    private val messageAction = Regex("(?iu)\\b(schreib|schreibe|schreiben|sende|senden|schick|schicke|schicken|nachricht)\\b")
+    private val explicitMessageApp = Regex(
+        "(?iu)^(?:schreib|schreibe|sende|schick|schicke)\\s+(?:(?:in|über|auf)\\s+)?(?:(?:die|eine)\\s+)?" +
+            "(?:app\\s+([\\p{L}\\p{N}._+-]{2,40})|([\\p{L}\\p{N}._+-]{2,40})\\s+app)[.!?]*$"
+    )
+    private val shortMessageTarget = Regex(
+        "(?iu)^(?:schreib|schreibe|sende|schick|schicke)\\s+(?:(?:in|über|auf)\\s+)?(?:(?:die|eine)\\s+)?" +
+            "([\\p{L}\\p{N}._+-]{2,40})[.!?]*$"
+    )
+
+    /** A file, folder, document or path word: the file flow owns the request (shared with internal navigation). */
+    fun looksLikeFileTarget(target: String): Boolean = fileTarget.containsMatchIn(target)
+
+    fun hasNonCommandGrammar(text: String): Boolean =
+        nonCommandSubject.containsMatchIn(text) || indirectModal.containsMatchIn(text)
+
+    fun parse(utterance: String): String? = (inspect(utterance) as? Intake.Lookup)
+        ?.takeUnless { it.requireInstalledCandidate }
+        ?.query
+
+    private fun readOnlyAppLookup(text: String): Intake.Lookup? {
+        val clauses = text.replace(safeConjunction, ". ")
+            .split(Regex("""[.!?]+\s*""")).map(String::trim).filter(String::isNotEmpty)
+        val first = clauses.firstOrNull() ?: return null
+        if (negation.containsMatchIn(first)) return null
+        val raw = installedCheck.matchEntire(first)?.groupValues?.get(1)
+            ?: direct.matchEntire(first)?.takeIf {
+                clauses.size > 1 && it.groupValues[1].lowercase() in setOf("suche", "finde", "zeige")
+            }?.groupValues?.get(2)
+            ?: return null
+        if (clauses.drop(1).any { !safeLookupTail.matches(it) }) return null
+        val name = raw.trim()
+            .replace(Regex("""(?iu)^(?:mir\s+)?(?:(?:die|den|das)\s+)?(?:app\s+)?"""), "").trim()
+        if (!query.matches(name) || name.contains("..") || isReference(name) ||
+            fileTarget.containsMatchIn(name) || additional.containsMatchIn(name)) return null
+        return Intake.Lookup(name, opening = false)
+    }
+
+    fun inspect(utterance: String, assistantName: String? = null): Intake? {
+        if (utterance.length !in 5..1_000 || utterance.any { it.isISOControl() || it in "\"„“”«»" }) return null
+        var text = stripAddress(utterance.trim(), assistantName)
+        text = text.replace(Regex("(?iu)^bitte\\s+"), "")
+        // Internal cockpit screens have exactly one owner (OwnerInternalNavigationIntent).
+        if (OwnerInternalNavigationIntent.resolve(utterance, assistantName) != null) return null
+        readOnlyAppLookup(text)?.let { return it }
+        if (negation.containsMatchIn(text)) return null
+        vague.matchEntire(text)?.let { return Intake.Clarify(it.groupValues[1].trim().take(100)) }
+        explicitMessageApp.matchEntire(text)?.let { match ->
+            val app = match.groupValues.drop(1).firstOrNull { it.isNotBlank() }
+            if (app != null) return planning(utterance)
+        }
+        shortMessageTarget.matchEntire(text)?.let { match ->
+            val target = match.groupValues[1].trim()
+            if (isReference(target) ||
+                target.lowercase() in setOf("das", "den", "ihn", "ihm", "ihr", "uns", "euch")
+            ) return null
+            return Intake.Lookup(
+                query = target,
+                opening = false,
+                requireInstalledCandidate = true,
+                messagePlanningIfMatched = true
+            )
+        }
+        if (needPrefix.containsMatchIn(text) && messageAction.containsMatchIn(text)) return planning(utterance)
+        val explicitNeedTarget = needExplicitApp.matchEntire(text)?.groupValues?.get(1)?.trim()
+            ?: needTrailingApp.matchEntire(text)?.groupValues?.get(1)?.trim()
+        val implicitNeedTarget = if (explicitNeedTarget == null) {
+            needSingleApp.matchEntire(text)?.groupValues?.get(1)?.trim()?.takeIf {
+                it.lowercase() !in nonAppNeedTargets && !isReference(it) &&
+                    it.lowercase() !in setOf("das", "den", "ihn", "ihm", "ihr", "uns", "euch")
+            }
+        } else null
+        val needTarget = explicitNeedTarget ?: implicitNeedTarget
+        var requireInstalledCandidate = explicitNeedTarget == null && implicitNeedTarget != null
+        val opening: Boolean
+        val target: String
+        val d = direct.matchEntire(text)
+        val p = polite.matchEntire(text) ?: desire.matchEntire(text)
+        val m = openUp.matchEntire(text)
+        val finalVerb = verbFinal.matchEntire(text)?.takeUnless {
+            hasNonCommandGrammar(it.groupValues[1])
+        }
+        when {
+            d != null -> { opening = d.groupValues[1].lowercase() in setOf("öffne", "starte"); target = d.groupValues[2] }
+            p != null -> { opening = p.groupValues[2].lowercase() in setOf("öffnen", "starten"); target = p.groupValues[1] }
+            m != null -> { opening = true; target = m.groupValues[1] }
+            needTarget != null -> { opening = true; target = needTarget }
+            finalVerb != null -> {
+                opening = true; target = finalVerb.groupValues[1]; requireInstalledCandidate = true
+            }
+            else -> return if (requestStart.containsMatchIn(text) && action.containsMatchIn(text)) planning(utterance) else null
+        }
+        if (!Regex("(?iu)\\bapp\\b").containsMatchIn(target) && fileTarget.containsMatchIn(target)) return null
+        if (additional.containsMatchIn(target)) return planning(utterance)
+        var name = target.trim().trimEnd('.', '!', '?').trim()
+        repeat(4) { name = name.replace(courtesy, "").replace(trailingCourtesy, "").trim() }
+        if (missingName.matches(name)) return Intake.Clarify("App", opening)
+        if (isReference(name)) return Intake.Lookup(name, opening, requireInstalledCandidate)
+        name = name.replace(Regex("(?iu)^(?:die|den|das|meine|meinen)\\s+"), "")
+            .replace(Regex("(?iu)^app\\s+"), "").replace(Regex("(?iu)\\s+app$"), "").trim()
+        if (at.heinz.deviceai.systemintelligence.SystemIntelligenceCommands.isDiagnosisTarget(name)) return null
+        if (!query.matches(name) || name.contains("..") || name.contains(Regex("(?iu)\\b(etwas|irgendwas|irgendetwas)\\b")))
+            return planning(utterance)
+        return Intake.Lookup(
+            query = name,
+            opening = opening,
+            requireInstalledCandidate = requireInstalledCandidate
+        )
+    }
+
+    fun shouldFallbackToConversation(
+        intake: Intake.Lookup,
+        lookupVerified: Boolean,
+        candidateCount: Int,
+        exactMatch: Boolean
+    ): Boolean = intake.requireInstalledCandidate && lookupVerified &&
+        (candidateCount == 0 || !exactMatch)
+
+    fun shouldClarifyMessage(
+        intake: Intake.Lookup,
+        lookupVerified: Boolean,
+        candidateCount: Int,
+        exactMatch: Boolean
+    ): Boolean = intake.messagePlanningIfMatched && lookupVerified &&
+        candidateCount > 0 && exactMatch
+
+    fun messageClarification(): String =
+        "Welche Nachricht soll ich für welchen konkreten Empfänger vorbereiten? " +
+            "Wenn du eine App meinst, kann ich einen Entwurf vorbereiten und sie nach deiner Bestätigung öffnen. " +
+            "Direktes Eingeben oder Senden in fremden Apps ist hier noch nicht angebunden."
+
+    private fun planning(original: String) = Intake.Planning(
+        original,
+        if (messageAction.containsMatchIn(original)) messageClarification() else null
+    )
+
+    fun isReference(query: String): Boolean = reference.matches(query)
+
+    fun contextualTarget(query: String, candidates: List<NativeAppCandidate>): String? {
+        if (!isReference(query)) return query
+        val reference = query.lowercase().trimEnd('.')
+        val index = when (reference) {
+            "erste", "1" -> 0
+            "zweite", "2" -> 1
+            "dritte", "3" -> 2
+            "vierte", "4" -> 3
+            "fünfte", "5" -> 4
+            "letzte" -> candidates.lastIndex
+            else -> reference.toIntOrNull()?.minus(1)
+                ?: return candidates.singleOrNull()?.packageName
+        }
+        return candidates.getOrNull(index)?.packageName
+    }
+
+    fun stripAddress(text: String, configured: String?): String {
+        val names = (listOf("Jarvis", "Continuum") + listOfNotNull(configured))
+            .filter { it.length in 2..80 && it.none(Char::isISOControl) }.distinct()
+            .sortedByDescending(String::length).joinToString("|", transform = Regex::escape)
+        return text.replace(Regex("(?iu)^(?:(?:hey|hallo)\\s+)?(?:$names)[,:]?\\s+"), "")
+    }
+}

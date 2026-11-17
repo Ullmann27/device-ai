@@ -1,0 +1,166 @@
+JUnit version 4.13.2
+..E........E...E..E.E.E.E.E.E.E..E.E.E.E
+Time: 0.105
+There were 14 failures:
+1) idleEyesMakeSmallGazeChangesWithoutOwnerTextOrCamera(at.heinz.deviceai.referencecheck.MapperMotionChallengeTest)
+java.lang.AssertionError: Idle gaze never changes
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.referencecheck.MapperMotionChallengeTest.idleEyesMakeSmallGazeChangesWithoutOwnerTextOrCamera(MapperMotionChallengeTest.kt:30)
+2) idleHeadHasBoundedNaturalMovementAcrossAFullMinute(at.heinz.deviceai.referencecheck.MapperMotionChallengeTest)
+java.lang.AssertionError: Idle head never moves
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.referencecheck.MapperMotionChallengeTest.idleHeadHasBoundedNaturalMovementAcrossAFullMinute(MapperMotionChallengeTest.kt:24)
+3) observedLookOverridesAllCosmeticIdleDrift(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_API:GazeObserved
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:24)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observed(ObservedGazeChallengeTest.kt:16)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observedLookOverridesAllCosmeticIdleDrift(ObservedGazeChallengeTest.kt:122)
+	... 32 trimmed
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.avatar.AvatarEvent$GazeObserved
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:23)
+	... 35 more
+4) clearWatermarkRejectsStaleAndEqualTimestampReplay(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_API:GazeObserved
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:24)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observed(ObservedGazeChallengeTest.kt:16)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.clearWatermarkRejectsStaleAndEqualTimestampReplay(ObservedGazeChallengeTest.kt:91)
+	... 32 trimmed
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.avatar.AvatarEvent$GazeObserved
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:23)
+	... 35 more
+5) observationExpiresExactlyAfterSevenHundredFiftyMilliseconds(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_API:GazeObserved
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:24)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observed(ObservedGazeChallengeTest.kt:16)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observationExpiresExactlyAfterSevenHundredFiftyMilliseconds(ObservedGazeChallengeTest.kt:62)
+	... 32 trimmed
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.avatar.AvatarEvent$GazeObserved
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:23)
+	... 35 more
+6) legacyPoseDoesNotClaimObservedTracking(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_POSE_FLAG
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.isObserved(ObservedGazeChallengeTest.kt:28)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.legacyPoseDoesNotClaimObservedTracking(ObservedGazeChallengeTest.kt:40)
+	... 32 trimmed
+Caused by: java.lang.NoSuchMethodException: at.heinz.deviceai.avatar.AvatarPose.getGazeObserved()
+	at java.base/java.lang.Class.getMethod(Class.java:2229)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.isObserved(ObservedGazeChallengeTest.kt:27)
+	... 34 more
+7) discardedFutureObservationCannotLockOutNewCurrentObservations(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_API:GazeObserved
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:24)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observed(ObservedGazeChallengeTest.kt:16)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.discardedFutureObservationCannotLockOutNewCurrentObservations(ObservedGazeChallengeTest.kt:75)
+	... 32 trimmed
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.avatar.AvatarEvent$GazeObserved
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:23)
+	... 35 more
+8) speechCallbacksDoNotFabricateOrEraseAValidLook(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_API:GazeObserved
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:24)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observed(ObservedGazeChallengeTest.kt:16)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.speechCallbacksDoNotFabricateOrEraseAValidLook(ObservedGazeChallengeTest.kt:133)
+	... 32 trimmed
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.avatar.AvatarEvent$GazeObserved
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:23)
+	... 35 more
+9) futureObservationIsNeverPresentedAsCurrent(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_API:GazeObserved
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:24)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observed(ObservedGazeChallengeTest.kt:16)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.futureObservationIsNeverPresentedAsCurrent(ObservedGazeChallengeTest.kt:68)
+	... 32 trimmed
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.avatar.AvatarEvent$GazeObserved
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:23)
+	... 35 more
+10) invalidDirectorSampleClearsEarlierObservation(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_DIRECTOR_API
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.submit(ObservedGazeChallengeTest.kt:33)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.invalidDirectorSampleClearsEarlierObservation(ObservedGazeChallengeTest.kt:56)
+	... 32 trimmed
+Caused by: java.lang.NoSuchMethodException: at.heinz.deviceai.avatar.AvatarDirector.onObservedGaze(at.heinz.deviceai.avatar.GazeTarget,int,long)
+	at java.base/java.lang.Class.getMethod(Class.java:2229)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.submit(ObservedGazeChallengeTest.kt:31)
+	... 34 more
+11) directorAllowsOnlyIdleListeningAndSpeaking(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_DIRECTOR_API
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.submit(ObservedGazeChallengeTest.kt:33)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.directorAllowsOnlyIdleListeningAndSpeaking(ObservedGazeChallengeTest.kt:116)
+	... 32 trimmed
+Caused by: java.lang.NoSuchMethodException: at.heinz.deviceai.avatar.AvatarDirector.onObservedGaze(at.heinz.deviceai.avatar.GazeTarget,int,long)
+	at java.base/java.lang.Class.getMethod(Class.java:2229)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.submit(ObservedGazeChallengeTest.kt:31)
+	... 34 more
+12) directorAcceptsBoundaryConfidenceAndAgeInItsOwnClock(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_DIRECTOR_API
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.submit(ObservedGazeChallengeTest.kt:33)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.directorAcceptsBoundaryConfidenceAndAgeInItsOwnClock(ObservedGazeChallengeTest.kt:46)
+	... 32 trimmed
+Caused by: java.lang.NoSuchMethodException: at.heinz.deviceai.avatar.AvatarDirector.onObservedGaze(at.heinz.deviceai.avatar.GazeTarget,int,long)
+	at java.base/java.lang.Class.getMethod(Class.java:2229)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.submit(ObservedGazeChallengeTest.kt:31)
+	... 34 more
+13) taskStatesRejectTrackingAndCannotReviveAnOldObservation(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_API:GazeObserved
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:24)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observed(ObservedGazeChallengeTest.kt:16)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.taskStatesRejectTrackingAndCannotReviveAnOldObservation(ObservedGazeChallengeTest.kt:100)
+	... 32 trimmed
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.avatar.AvatarEvent$GazeObserved
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:23)
+	... 35 more
+14) outOfOrderOlderObservationCannotReplaceTheLatest(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: MISSING_OBSERVED_GAZE_API:GazeObserved
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:24)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.observed(ObservedGazeChallengeTest.kt:16)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.outOfOrderOlderObservationCannotReplaceTheLatest(ObservedGazeChallengeTest.kt:84)
+	... 32 trimmed
+Caused by: java.lang.ClassNotFoundException: at.heinz.deviceai.avatar.AvatarEvent$GazeObserved
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:377)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.requiredClass(ObservedGazeChallengeTest.kt:23)
+	... 35 more
+
+FAILURES!!!
+Tests run: 26,  Failures: 14
+

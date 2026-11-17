@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.AiContextIntegrityTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T20:35:14" hostname="04c8b0ba7ea6" time="0.022">
+  <properties/>
+  <testcase name="overflowOmitsTheWholeSelectedMemoryGroupIncludingItsIds" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.002"/>
+  <testcase name="finalModelCharacterCapCannotUndoAtomicCompilation" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.001"/>
+  <testcase name="completeSmallMemoryIdsMatchVisibleBodiesAndContradictionOverflowBlocks" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.003"/>
+  <testcase name="researchEvidenceKeepsItsNegativeSuffixAndBalancedUntrustedFrame" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.001"/>
+  <testcase name="secretRedactionAndWholeUnicodeMemoryRespectTheByteLimit" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.002"/>
+  <testcase name="lateNegationSurvivesAsPartOfTheWholeMemory" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.009"/>
+  <testcase name="requiredRequestCannotBeSilentlyCutBeforeItsNegation" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.001"/>
+  <testcase name="secretRedactionCannotConsumeTheResearchClosingBoundary" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.001"/>
+  <testcase name="allContradictionsPrecedeOptionalMemoryAndCannotBePartiallyLost" classname="at.heinz.deviceai.cognitive.AiContextIntegrityTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

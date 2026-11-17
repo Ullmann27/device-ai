@@ -1,0 +1,27 @@
+JUnit version 4.13.2
+.E..E...E.....
+Time: 0.186
+There were 3 failures:
+1) undeclaredProfileCannotHideBehindEmptyToolRequest(at.heinz.deviceai.chief.IndependentBotHandoffTest)
+java.lang.AssertionError: expected java.lang.RuntimeException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.chief.IndependentBotHandoffTest.undeclaredProfileCannotHideBehindEmptyToolRequest(IndependentBotHandoffTest.kt:102)
+2) registeredButUnassignedSenderCannotIssueWork(at.heinz.deviceai.chief.IndependentBotHandoffTest)
+java.lang.AssertionError: expected:<REJECT> but was:<ADMIT>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.chief.IndependentBotHandoffTest.registeredButUnassignedSenderCannotIssueWork(IndependentBotHandoffTest.kt:95)
+3) recipientProfileCapCannotBeExpandedByParentRemainder(at.heinz.deviceai.chief.IndependentBotHandoffTest)
+java.lang.AssertionError: expected:<REJECT> but was:<ADMIT>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.chief.IndependentBotHandoffTest.recipientProfileCapCannotBeExpandedByParentRemainder(IndependentBotHandoffTest.kt:99)
+
+FAILURES!!!
+Tests run: 11,  Failures: 3
+

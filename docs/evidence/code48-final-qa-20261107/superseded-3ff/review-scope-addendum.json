@@ -1,0 +1,6 @@
+{
+  "observedAt": "2026-11-07T06:07:07.431369+00:00",
+  "sourceCommit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+  "scopeCorrection": "The actual shell presenter intentionally suppresses legacy notice fallback. CalculationShown bus does not create transientCard. The targeted repair concerns existing public Home.showTransientCard API layout and Z order only. No presenter route is enabled.",
+  "priorInterruptionPreserved": true
+}

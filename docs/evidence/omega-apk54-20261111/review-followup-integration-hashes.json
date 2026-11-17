@@ -1,0 +1,161 @@
+{
+  "verified": 31,
+  "mismatches": 0,
+  "files": [
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppVerbFinalIntentTest.kt",
+      "sha256": "7f61c171b8cca3520b3d57fd8cc009bb51f77da5f87d0151ca091fb292d13a13",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppOpenRoutingTest.kt",
+      "sha256": "c26616a49a6fb86f0d3a500f067a8930e6919091af0394fe7a38be188fc08754",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntentTest.kt",
+      "sha256": "0a179b608dd84d37907998d426e81cfb10e2a049c706d81e89f945f36765cf53",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppLookupNaturalRegressionTest.kt",
+      "sha256": "e93ffea41033fa97c4d9bc1120aedc4b3ed4e5d9bbc48dd36203fa49d20baa8e",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppClarificationTest.kt",
+      "sha256": "61aaf6988c1a375bdc1161306cf87e6771f0d4316da53850b1e3a7fb3a4eedec",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppActionFlowTest.kt",
+      "sha256": "7cd8feddf9a9cc391adc08f522d6033dcf127aeebf31e4e2d6cfb84805ad25a8",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt",
+      "sha256": "1072e49288fbc9781b36eb1f404d9bc5cd733d628190519648ebaec3c91cb000",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+      "sha256": "bdf6ed4af869f3d2a20906de6d6ce10d48bba403274cd062cd5ac9bde96688eb",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt",
+      "sha256": "f1569524035bf9c4520a261941b319ae03365f7a435be3326ae012ef08324a08",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt",
+      "sha256": "c5398ae4d0392b96ddc635f3fecc19281c6bbadc767add0eccb7a63efc4b8603",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt",
+      "sha256": "da1b17653eba41a6eba0fdae6d79136994c483f691ce83d841236e56420a5539",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt",
+      "sha256": "1320ea3e28a0ce0e5c8b17af794b5755f89a1d1d194dd39c5372b3d7e203d730",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt",
+      "sha256": "a81c7a218124a4c38a82678739b35b7d9b9ba27f54e973462bf9f224991e9e78",
+      "manifest": "docs/evidence/omega-app-grammar-20261111/green/inputs.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/GermanNumberWords.kt",
+      "sha256": "8a8f528bb43a43b50dffaeea8c3f05627577a47ae0d07915eadeda730ed52e30",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt",
+      "sha256": "80093b9f9edf658f5492c789a21341b90b2a466745b0e91e90dbc8469db91f22",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+      "sha256": "332643aac7d0c5087253a00e63671fb8b1006a44fce85cddc6edb18a63cb8f1f",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+      "sha256": "8f2d0e7f108aa751602574b57544c57eb9774afaa6a3985172b633ec823e9228",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt",
+      "sha256": "11c6f3d7af094104069a227375343d4eb77e5ee8d06ff93348108e2e11729d54",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalContextRetentionPolicy.kt",
+      "sha256": "6fbf305b24c8f1aeecabcd4d2b8f88182fcf11e0fead8a516d4e7d42d0d89add",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt",
+      "sha256": "07b6181f2954236b8a1eb5c597b804769da7e10cf2295e5ad96546058b94eaed",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt",
+      "sha256": "09eeacb38b58b829598474c7d574e33a02da3a4544370a3868bf7f9736740452",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerTest.kt",
+      "sha256": "f10d312f9c09240c7258bbb96cd58270291ac58b41de42c272b1ce6e2a4ab361",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerSafetyTest.kt",
+      "sha256": "351b72503c6b80919832e7f10ddac7873de7da79ea75c3d589e57d617f617cab",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/HybridMemoryRetrieverTest.kt",
+      "sha256": "be50c2ee8442e3f1406fc3c241faf85c8f77ca7bd8a816674e77a501bba2bcb3",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicyTest.kt",
+      "sha256": "a85c455588dae74c52d60898cfbac5ab748fdbae24339068c0248013c4b2107f",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalContextRetentionTest.kt",
+      "sha256": "3c2012fe56e4ea074a8fbcf7c81f31c8d2d2eec928e1494bf5c4f4c5e88d5702",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalDialogueRetentionTest.kt",
+      "sha256": "ade0f91e955662805bf10782b3b1271a01a1a89dd568a91a9a0c597c935aedca",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpIntegrationTest.kt",
+      "sha256": "b7320cf22aff36da16c7df29619cf64c3299f46aa77ead81e4eb2b0321ba5ffe",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalFollowUpTaskFrameTest.kt",
+      "sha256": "fa96f6172fafc06457dddcc92aa9f54502125d909c56b8a2c0974bcf8d1e899d",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerPromptBudgetTest.kt",
+      "sha256": "c40034f45b26ad23363b984b40ad00fe4a5a08b3fb22e368302683e3f186333c",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerHistoryPromptTest.kt",
+      "sha256": "e375364f61c5a046b8bfc557f73765c0a3dfef8a798061a753a24a63df9c382a",
+      "manifest": "docs/evidence/omega-memory-history-20261111/history-green-manifest.json"
+    }
+  ]
+}

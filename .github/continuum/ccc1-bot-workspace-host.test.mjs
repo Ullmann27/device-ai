@@ -1,0 +1,77 @@
+/** Explicit scripted integration fixture, never a local-model repair score. */
+import test from 'node:test';import assert from 'node:assert/strict';
+import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {spawnSync} from 'node:child_process';
+import {prepareCodingTask} from './coding-orchestrator.mjs';
+import {createCodingCandidateProvider} from './coding-provider.mjs';
+import {createCcc1BotAssignment,assertCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
+import {createIsolatedExecutor,validWorkspaceEvidence} from './isolated-executor.mjs';
+import {bindCcc1Workspace} from './ccc1-workspace.mjs';
+import {DurableTaskJournal,runtimeKey} from './ccc1-journal.mjs';
+import {envelope} from './ccc1-envelope.mjs';
+import {jobIdFor,teamleaderStateOf} from './ccc1-recovery.mjs';
+import {BacklogStore} from './development-backlog.mjs';
+import {executeOwnerRepairTask} from './backlog-repair-worker.mjs';
+import {jobTaskId} from '../../scripts/continuum-mobile-coding.mjs';
+import {profileStoreReader} from '../../tools/genesis-workspaces/adapter-bridge.mjs';
+
+test('HOST SOFTWARE CONTRACT: real persisted Forge/Lint profiles receive distinct observed containers for builder and both verifier sites',
+ {skip:process.env.CONTINUUM_WORKSPACE_HOST_PROOF!=='1',timeout:60000},()=>{
+ const home=fs.mkdtempSync(path.join(os.tmpdir(),'genesis-bot-workspace-'));
+ const root=path.join(home,'repo'),stateDir=path.join(home,'state'),profilesDir=path.join(home,'profiles');
+ fs.mkdirSync(path.join(root,'.github/continuum'),{recursive:true});fs.mkdirSync(path.join(root,'lib'));
+ fs.writeFileSync(path.join(root,'lib/offset.mjs'),'export function offset(a,b){return a-b;}\n');
+ fs.writeFileSync(path.join(root,'.github/continuum/offset.test.mjs'),
+  "import test from 'node:test';import assert from 'node:assert/strict';import {offset} from '../../lib/offset.mjs';test('offset',()=>assert.equal(offset(3,8),5));\n");
+ const git=(...args)=>{const r=spawnSync('git',args,{cwd:root,encoding:'utf8'});assert.equal(r.status,0,r.stderr);return r.stdout.trim();};
+ try{
+  git('init','-q','-b','fixture');git('add','.');git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','scripted integration RED');
+  const cp=process.env.GENESIS_HANDOFF_CLASSPATH;assert.ok(cp,'exact-source Kotlin bridge required');
+  const seeded=spawnSync('java',['-Xmx128m','-cp',cp,'at.heinz.deviceai.chief.HandoffHostChecks','seed',profilesDir],{encoding:'utf8'});
+  assert.equal(seeded.status,0,seeded.stderr);assert.equal(JSON.parse(seeded.stdout).count,20);
+  const task={schema:'continuum-coding-task',version:1,id:'genesis-host-fixture',sourceCommit:git('rev-parse','HEAD'),kind:'BUGFIX',
+   goal:'Controlled software fixture only',allowedPaths:['lib/offset.mjs'],acceptance:['offset(3,8) equals 5'],chain:'node',
+   limits:{maxModelCalls:1,maxContextChars:6000}};
+  const prepared=prepareCodingTask({project:root,stateDir,task});
+  const assignment=createCcc1BotAssignment({task,ccc1TaskId:prepared.ccc1TaskId,builderId:'bot-forge',verifierId:'bot-lint',
+   profileStore:profileStoreReader(profilesDir)});
+  const journal=DurableTaskJournal.forTask(stateDir,prepared.ccc1TaskId,runtimeKey(stateDir)),goal=journal.entries()[0];
+  const hypothesis=journal.append(envelope({binding:goal,sender:'REASONER',kind:'HYPOTHESIS',payload:{claim:'Scripted fixture',repair:{chain:'node'},basis:'Software integration'},sequence:1})).entry;
+  const request=journal.append(envelope({binding:goal,sender:'REASONER',kind:'TEST_REQUEST',payload:{hypothesis:hypothesis.messageId,repair:{chain:'node'},budgetMinutes:1},sequence:2})).entry;
+  const job=jobIdFor(prepared.ccc1TaskId,request.messageId),id=jobTaskId(job);
+  const file=path.join(teamleaderStateOf(stateDir),'development-backlog.json'),store=new BacklogStore(file,{actor:'fixture-owner'});
+  const admitted=store.apply([{op:'propose',actor:'fixture-owner',at:Date.now(),task:{id,title:'Controlled integration fixture',kind:'REPAIR',source:'owner',subject:{base:task.sourceCommit,chain:'node'}}},
+   {op:'accept',actor:'fixture-owner',at:Date.now(),id}]);assert.ok(admitted.results.every(r=>r.ok));
+  const executor=createIsolatedExecutor({image:process.env.GENESIS_ISOLATION_IMAGE,
+   nodeHome:'/opt/codex/runtimes/codex-primary-runtime/dependencies/node',memoryMb:256,pids:64,cpus:1,timeoutMs:10000});
+  const identity=stage=>assertCcc1BotAssignment(assignment,{task,ccc1TaskId:prepared.ccc1TaskId,stage});
+  const bound=stage=>bindCcc1Workspace({executor,project:root,stateDir,taskId:prepared.ccc1TaskId,job,
+   workerId:identity(stage).agentId,identityGuard:()=>identity(stage)});
+  let calls=0;
+  const candidateProvider=createCodingCandidateProvider({root,task:{...task,id},env:{},run:()=>{calls++;return {
+   status:0,stdout:JSON.stringify({mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,proposal:{
+    plan:['Scripted integration only'],hypothesis:'Not generated by any model',patches:[{file:'lib/offset.mjs',oldText:'a-b',newText:'a>b?a-b:b-a'}]}})};}});
+  const result=executeOwnerRepairTask({root,file,id,out:path.join(stateDir,'reports'),budgetMinutes:1,
+   candidateProvider,executor:bound('BUILD'),verifierExecutor:bound('VERIFY'),executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY'});
+  assert.equal(result.status,'DONE');assert.equal(calls,1);
+  const report=JSON.parse(fs.readFileSync(result.report,'utf8'));
+  const build=report.baseline.results.map(r=>r.isolation);
+  const candidate=report.attempts.find(a=>a.independentVerification)?.independentVerification;
+  assert.equal(candidate.verdict,'VERIFIED');
+  const verify=[...candidate.red.results,...candidate.green.results,...report.independent.profiles].map(r=>r.isolation);
+  assert.ok(build.length&&verify.length>=3);
+  for(const [observations,workerId] of [[build,'bot-forge'],[verify,'bot-lint']])for(const observed of observations){
+   assert.equal(validWorkspaceEvidence(observed,'node-continuum'),true);
+   assert.equal(observed.workspaceBinding.workerId,workerId);
+   assert.equal(observed.workspaceBinding.taskId,prepared.ccc1TaskId);
+   assert.equal(observed.workspaceBinding.jobId,job);
+   assert.equal(observed.workspaceBinding.requestHash,request.hash);
+  }
+  assert.equal(new Set([...build,...verify].map(x=>x.workspaceId)).size,build.length+verify.length);
+  assert.equal(git('status','--porcelain'),'');
+  assert.equal(store.read().doc.tasks.find(t=>t.id===id).state,'DONE');
+  const out=process.env.CONTINUUM_WORKSPACE_EVIDENCE_DIR;
+  if(out){fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'split-verifier.json'),JSON.stringify({
+   evidenceClass:'HOST_SOFTWARE_INTEGRATION',proposalSource:'SCRIPTED_FIXTURE',actualModelInference:false,deviceVerified:false,
+   task,assignment,result,buildObservations:build,verifierObservations:verify},null,2)+'\n');}
+ }finally{fs.rmSync(home,{recursive:true,force:true});}
+});

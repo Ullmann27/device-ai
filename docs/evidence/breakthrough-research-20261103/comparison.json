@@ -1,0 +1,65 @@
+{
+  "experimentId": "EXP-06/R1-EXTRACTIVE-SOURCE-ADMISSION",
+  "baselineCommit": "64ec06a73f50cae9ee49035c840710d87777d50f",
+  "candidateSourceSha256": "b51c363635aa829f9f8bd7c1443524957ea902cf520b07ffec84ac517515b2c6",
+  "comparison": {
+    "frozenDevelopment": {
+      "baseline": {
+        "tests": 10,
+        "passed": 4,
+        "failed": 6
+      },
+      "candidate": {
+        "tests": 10,
+        "passed": 10,
+        "failed": 0
+      }
+    },
+    "existingRegressions": {
+      "baseline": {
+        "tests": 40,
+        "passed": 40,
+        "failed": 0
+      },
+      "candidate": {
+        "tests": 40,
+        "passed": 40,
+        "failed": 0
+      }
+    }
+  },
+  "independentQA": {
+    "fixtureSha256": "1d3fadb7c3a6fdbb9a31f440f7c756161847280f74eaf031d50cc4d95d9f848c",
+    "initialBaselinePassed": 6,
+    "initialCandidatePassed": 15,
+    "total": 16,
+    "failedCase": "QB-R-010",
+    "state": "CONSUMED_AFTER_FIRST_EVALUATION",
+    "followup": "Known16 local regression rerun16/16 after frozen78b9691; independent after-fix rerun pending quality lane."
+  },
+  "status": "NARROW_JVM_PASS_NOT_DEVICE_OR_MODEL_VERIFIED",
+  "dependencyClasses": "/workspace/continuum-quality/app/build/tmp/kotlin-classes/debug, supplied by independent quality lane from full gate on baseline64ec; ResearchEngine.kt recompiled separately for baseline and candidate.",
+  "rawLogs": [
+    "candidate-harness-friend-path-failure.log",
+    "candidate-compile-test.log",
+    "baseline-source-compile.log",
+    "baseline-junit.log",
+    "candidate-all-junit.log",
+    "baseline-exact-source-junit.log",
+    "initial-harness-compile-failure.log",
+    "baseline-compile.log",
+    "baseline-all-junit.log",
+    "candidate-compile-main.log"
+  ],
+  "initialFailures": [
+    "Two fixture lambdas returned Claim rather than List<Claim>; corrected before baseline.",
+    "Candidate test compilation initially lacked friend path for freshly compiled main classes; fixed harness, production unchanged."
+  ],
+  "limits": [
+    "Frozen development fixtures are authored by implementing agent, not blind.",
+    "Source identity remains domain/mirror heuristic, not independently owned organization proof.",
+    "Literal occurrence is not entailment or truth; surrounding negation/conditions can change meaning.",
+    "No model, hardware/device, latency or energy tests.",
+    "Quota NOT_VISIBLE."
+  ]
+}

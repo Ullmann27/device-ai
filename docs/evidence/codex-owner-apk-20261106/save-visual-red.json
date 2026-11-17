@@ -1,0 +1,80 @@
+{
+  "category": "HOST_JVM_AND_ROBOLECTRIC",
+  "source_local_commit": "23f821d2fbcb773cc63cc65b3474c953ba49a175",
+  "source_tree": "00daf861718bcc07b8a7cf98de66697ebebaf18f",
+  "tests": 11,
+  "passed": 3,
+  "failed": 8,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "name": "anUnboundDraftCannotAdoptALaterEpisode",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "name": "cancellingThePickerPreservesBothJournalEntries",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "name": "aDelayedWriteCannotMarkANewerEpisodeSaved",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: expected:<SAVED> but was:<DRAFTED>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "name": "pickerResultKeepsTheEpisodeSelectedBeforeThePicker",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: expected:<SAVED> but was:<DRAFTED>"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "exitingCardCannotSlideIntoProtectedRegion",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Drawn card 0 overlaps protected region"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "commandTrailCannotCrossTheOrbWhenChipAndHubAreClear",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Light trail avoids protected orb"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "leavingLastCardIsCheckedBeyondTheActiveStack",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Drawn card 1 overlaps protected region"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "flyingCommandChipCannotCoverTheHeadWhenHubIsClear",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Overlapping chip text is suppressed"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "dismissingTheOnlyCardKeepsTheHeadProtected",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Dismissed cards remain protected expected:<0> but was:<1>"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "unobstructedCommandsAndCardsStillAnimate",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "name": "expandingCommandRingsCannotReachAProtectedHead",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: Shock ring avoids protected head"
+    }
+  ],
+  "real_device": "NOT_RUN",
+  "real_gpu_output": "NOT_RUN",
+  "interpretation": "Visual failures reproduced. Save failures superseded: initial fixture did not pump paused frames. Do not treat those two failures as a proven product defect; corrected fixture rerun required."
+}

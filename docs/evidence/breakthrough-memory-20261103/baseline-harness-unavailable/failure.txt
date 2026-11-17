@@ -1,0 +1,4 @@
+Source 0e4a27f7170e29746e7ad3777a3cf21f21a9a1cf compiled successfully.
+Focused test process was NOT_STARTED: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/time'.
+The harness was corrected to use os.wait4 per-process resource accounting in 2ad4099bb676d0785625bb12cbc4cd47b785a0f5.
+No production source was changed before the successful baseline run.

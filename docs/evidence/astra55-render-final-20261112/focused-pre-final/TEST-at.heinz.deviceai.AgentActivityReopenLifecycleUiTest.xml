@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AgentActivityReopenLifecycleUiTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:14:00" hostname="0f4ac18d136f" time="15.27">
+  <properties/>
+  <testcase name="documentPickerReturnAfterAConfigurationChangeShowsNoGreeting" classname="at.heinz.deviceai.AgentActivityReopenLifecycleUiTest" time="6.781"/>
+  <testcase name="documentPickerReturnAfterTheSystemDestroyedTheActivityShowsNoGreeting" classname="at.heinz.deviceai.AgentActivityReopenLifecycleUiTest" time="0.673"/>
+  <testcase name="firstOpenOfAnEmptyConversationShowsTheGreetingOnce" classname="at.heinz.deviceai.AgentActivityReopenLifecycleUiTest" time="0.287"/>
+  <testcase name="configurationRecreateKeepsConversationAndObjectStateWithoutReplay" classname="at.heinz.deviceai.AgentActivityReopenLifecycleUiTest" time="0.31"/>
+  <testcase name="restoreTimeoutIsVisibleInsteadOfASilentlyEmptyContext" classname="at.heinz.deviceai.AgentActivityReopenLifecycleUiTest" time="6.384"/>
+  <testcase name="reopenedConversationContinuesWithoutTheGenericGreeting" classname="at.heinz.deviceai.AgentActivityReopenLifecycleUiTest" time="0.292"/>
+  <testcase name="reopenedAppKeepsTheToolboxStateBeyondTheFourTurnModelWindow" classname="at.heinz.deviceai.AgentActivityReopenLifecycleUiTest" time="0.543"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

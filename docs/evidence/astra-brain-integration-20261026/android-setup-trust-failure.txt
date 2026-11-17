@@ -1,0 +1,110 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl FAILED
+[Incubating] Problems report is available at: file:///workspace/device-ai/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugAidl'.
+> Could not resolve all files for configuration ':app:debugCompileClasspath'.
+   > Could not resolve org.jetbrains.kotlin:kotlin-stdlib:2.4.0.
+     Required by:
+         project :app
+      > Could not resolve org.jetbrains.kotlin:kotlin-stdlib:2.4.0.
+         > Could not get resource 'https://dl.google.com/dl/android/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.4.0/kotlin-stdlib-2.4.0.pom'.
+            > Could not GET 'https://dl.google.com/dl/android/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.4.0/kotlin-stdlib-2.4.0.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+      > Could not resolve org.jetbrains.kotlin:kotlin-stdlib:2.4.0.
+         > Could not get resource 'https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.4.0/kotlin-stdlib-2.4.0.pom'.
+            > Could not GET 'https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.4.0/kotlin-stdlib-2.4.0.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+   > Could not resolve androidx.annotation:annotation:1.9.1.
+     Required by:
+         project :app
+      > Could not resolve androidx.annotation:annotation:1.9.1.
+         > Could not get resource 'https://dl.google.com/dl/android/maven2/androidx/annotation/annotation/1.9.1/annotation-1.9.1.pom'.
+            > Could not GET 'https://dl.google.com/dl/android/maven2/androidx/annotation/annotation/1.9.1/annotation-1.9.1.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+      > Could not resolve androidx.annotation:annotation:1.9.1.
+         > Could not get resource 'https://repo.maven.apache.org/maven2/androidx/annotation/annotation/1.9.1/annotation-1.9.1.pom'.
+            > Could not GET 'https://repo.maven.apache.org/maven2/androidx/annotation/annotation/1.9.1/annotation-1.9.1.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+   > Could not resolve dev.rikka.shizuku:api:13.1.5.
+     Required by:
+         project :app
+      > Could not resolve dev.rikka.shizuku:api:13.1.5.
+         > Could not get resource 'https://dl.google.com/dl/android/maven2/dev/rikka/shizuku/api/13.1.5/api-13.1.5.pom'.
+            > Could not GET 'https://dl.google.com/dl/android/maven2/dev/rikka/shizuku/api/13.1.5/api-13.1.5.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+      > Could not resolve dev.rikka.shizuku:api:13.1.5.
+         > Could not get resource 'https://repo.maven.apache.org/maven2/dev/rikka/shizuku/api/13.1.5/api-13.1.5.pom'.
+            > Could not GET 'https://repo.maven.apache.org/maven2/dev/rikka/shizuku/api/13.1.5/api-13.1.5.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+   > Could not resolve dev.rikka.shizuku:provider:13.1.5.
+     Required by:
+         project :app
+      > Could not resolve dev.rikka.shizuku:provider:13.1.5.
+         > Could not get resource 'https://dl.google.com/dl/android/maven2/dev/rikka/shizuku/provider/13.1.5/provider-13.1.5.pom'.
+            > Could not GET 'https://dl.google.com/dl/android/maven2/dev/rikka/shizuku/provider/13.1.5/provider-13.1.5.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+      > Could not resolve dev.rikka.shizuku:provider:13.1.5.
+         > Could not get resource 'https://repo.maven.apache.org/maven2/dev/rikka/shizuku/provider/13.1.5/provider-13.1.5.pom'.
+            > Could not GET 'https://repo.maven.apache.org/maven2/dev/rikka/shizuku/provider/13.1.5/provider-13.1.5.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+   > Could not resolve com.google.ai.edge.litertlm:litertlm-android:0.18.0.
+     Required by:
+         project :app
+      > Could not resolve com.google.ai.edge.litertlm:litertlm-android:0.18.0.
+         > Could not get resource 'https://dl.google.com/dl/android/maven2/com/google/ai/edge/litertlm/litertlm-android/0.18.0/litertlm-android-0.18.0.pom'.
+            > Could not GET 'https://dl.google.com/dl/android/maven2/com/google/ai/edge/litertlm/litertlm-android/0.18.0/litertlm-android-0.18.0.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+      > Could not resolve com.google.ai.edge.litertlm:litertlm-android:0.18.0.
+         > Could not get resource 'https://repo.maven.apache.org/maven2/com/google/ai/edge/litertlm/litertlm-android/0.18.0/litertlm-android-0.18.0.pom'.
+            > Could not GET 'https://repo.maven.apache.org/maven2/com/google/ai/edge/litertlm/litertlm-android/0.18.0/litertlm-android-0.18.0.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+   > Could not resolve com.squareup.okhttp3:okhttp:4.12.0.
+     Required by:
+         project :app
+      > Could not resolve com.squareup.okhttp3:okhttp:4.12.0.
+         > Could not get resource 'https://dl.google.com/dl/android/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.pom'.
+            > Could not GET 'https://dl.google.com/dl/android/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+      > Could not resolve com.squareup.okhttp3:okhttp:4.12.0.
+         > Could not get resource 'https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.pom'.
+            > Could not GET 'https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.pom'.
+               > Got SSL handshake exception during request. It might be caused by SSL misconfiguration
+                  > (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 17s
+1 actionable task: 1 executed

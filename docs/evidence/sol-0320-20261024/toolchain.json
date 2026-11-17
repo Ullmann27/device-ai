@@ -1,0 +1,19 @@
+{
+  "sourceHead": "074fa80729a088644769df300c23b2e093e56553",
+  "host": "Linux x86_64",
+  "node": "v24.19.0",
+  "java": [
+    "Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts",
+    "openjdk version \"17.0.21\" 2026-10-20",
+    "OpenJDK Runtime Environment Temurin-17.0.21+9 (build 17.0.21+9)",
+    "OpenJDK 64-Bit Server VM Temurin-17.0.21+9 (build 17.0.21+9, mixed mode, sharing)"
+  ],
+  "kotlin": [
+    "Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts",
+    "info: kotlinc-jvm 2.4.0 (JRE 17.0.21+9)"
+  ],
+  "sdkApi": 36,
+  "gradle": "8.11.1",
+  "agp": "8.10.0",
+  "profile": "real Linux Android SDK, Robolectric native Canvas; no physical device"
+}

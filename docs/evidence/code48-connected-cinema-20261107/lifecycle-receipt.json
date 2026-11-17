@@ -1,0 +1,27 @@
+{
+  "baseline": "f55d5b3c7134399f93362c304da344f807719202",
+  "red": {
+    "tests": 2,
+    "failures": 2
+  },
+  "green": {
+    "tests": 5,
+    "failures": 0
+  },
+  "productionCompilationExit": 0,
+  "testCompilationExit": 0,
+  "evidenceClass": "FOCUSED_SDK_COMPILED_PRODUCTION_OVERLAY_ROBOLECTRIC",
+  "fullSourceApk": "PENDING",
+  "physicalDevice": "NOT_RUN",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "939ca205c55fa20699fbaed6cb782cce2d4e77dd7ecc9b3e73ff002b3890af86",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarIconBurst.kt": "281633a50029b24b7410158122a8696a38d1cd5189f4f45a9aa0c35a2eac5a99",
+    "app/src/main/java/at/heinz/deviceai/avatar/ContinuumAvatarRenderer.kt": "c09d7de2100d55eb4912dff47ed95678280621c3b27534276c13b2375d4b5fc2",
+    "app/src/main/java/at/heinz/deviceai/avatar/JarvisHoloAvatar.kt": "25745448c714901bda0a1372cfa1abbc1fef5dbd5e2b027ffbfa3da530aed27f",
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt": "6873b4652a01873e8736781c9eafc13b006e92c9a537e457e151630e029b94b6",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt": "3cf77e12d4b128f0f10a66e9a05f8106fe11317cd3503c68a07cd68ef2d08ab5",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "e789cd7d336d33f04868adb749db9c6cb7736de195dd4a6263e640327a0240e5",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt": "867d6eb631f33c2b4bf2b04d87743d342ba0715e69404f7ec4e15997f7f6ff12",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitCinematicCueUiTest.kt": "0df23f528faa4736206dd7758350a11f092ed08fcaaf2c41d152924aebca0092"
+  }
+}

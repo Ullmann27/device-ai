@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "UNCOMMITTED_FIX_ON_90c73257",
+  "baseCommit": "853a8ee08359ce41375ddb9334ac8ae9c2e2c59e",
+  "dependencyClasses": "/workspace/continuum-breakthrough-quality/app/build/tmp/kotlin-classes/debug",
+  "compileCommand": [
+    "java",
+    "-Xmx384m",
+    "-cp",
+    "/workspace/continuum-build-env/jvm-deps/annotations-13.0.jar:/workspace/continuum-build-env/jvm-deps/hamcrest-core-1.3.jar:/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/jvm-deps/junit-4.13.2.jar:/workspace/continuum-build-env/jvm-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/jvm-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+    "-no-stdlib",
+    "-no-reflect",
+    "-classpath",
+    "/workspace/continuum-breakthrough-quality/app/build/tmp/kotlin-classes/debug:/workspace/continuum-build-env/jvm-deps/annotations-13.0.jar:/workspace/continuum-build-env/jvm-deps/hamcrest-core-1.3.jar:/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/jvm-deps/junit-4.13.2.jar:/workspace/continuum-build-env/jvm-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/jvm-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+    "-jvm-target",
+    "17",
+    "-d",
+    "/workspace/delta-pool-proof/green-classes",
+    "/workspace/delta-pool-completion/app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt",
+    "/workspace/delta-pool-completion/app/src/test/java/at/heinz/deviceai/chief/ChiefWorkerPoolTest.kt"
+  ],
+  "testCommand": [
+    "java",
+    "-Xmx256m",
+    "-cp",
+    "/workspace/delta-pool-proof/green-classes:/workspace/continuum-breakthrough-quality/app/build/tmp/kotlin-classes/debug:/workspace/continuum-build-env/jvm-deps/annotations-13.0.jar:/workspace/continuum-build-env/jvm-deps/hamcrest-core-1.3.jar:/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/jvm-deps/junit-4.13.2.jar:/workspace/continuum-build-env/jvm-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/jvm-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.chief.ChiefWorkerPoolTest"
+  ],
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt": "ffbc8949160ad7fd82034c305f036f5cfb3c9ca444bffdaef449f50af6a50660",
+    "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkerPoolTest.kt": "04724414d5e340a5532c54b86de9a913b6510ea6c85d99c1f743260fe0db64bf"
+  },
+  "testExit": 0
+}

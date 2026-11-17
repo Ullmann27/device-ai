@@ -1,0 +1,27 @@
+{
+  "base_commit": "a07b183b67b9c00192bb96b61a0002f74e23372b",
+  "red_commit": "239843d8b5bcd1a5778cf1d43149d1114dc72d17",
+  "red": {
+    "tests": 8,
+    "failures": 1
+  },
+  "green": {
+    "tests": 8,
+    "failures": 0,
+    "junit_seconds": 0.009
+  },
+  "scope": "Actual snapshot accent selection into existing SpatialWindowLight.tint; no JNI/GPU",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "f35000922c9fbb0a377b60c631fd0608e54facef7599a042af60922dc328d832",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CinemaWindowLightState.kt": "f07b2a7e284133c7a21087efd8f35cb279b260ac1c114c038dc76aa7bb905afb",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/SpatialWindowLight.kt": "491b32b3efb773ac4bab53effe4cf0dff8766a592d456c2d3585563d4e67b9d4",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCoreLighting.kt": "6450fc6918bc46803646dd8b7503efd9d9c590ba6221653db4fc83223219a48e",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/SpatialWindowLightTest.kt": "6512291270366467d843d0c8a179f65ce9ea5006d9170f2d52b1e72c071e97af"
+  },
+  "asset_sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "not_run": [
+    "Combined Android/Filament compilation (root owns)",
+    "GPU render",
+    "Fold7"
+  ]
+}

@@ -1,0 +1,6 @@
+source_sha=7732b8668f912419d7aac7a1609a97097d727cbf
+version=0.3.46
+package=at.heinz.deviceai.continuumlocal
+signer_sha256=6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23
+apk_sha256=35f93b41ed835bf2ec16890b62d4e640d3b1ea28c2e8a098065bd08f64dc2481
+status=SIGNED_STAGED_FOR_PINNED_HOST

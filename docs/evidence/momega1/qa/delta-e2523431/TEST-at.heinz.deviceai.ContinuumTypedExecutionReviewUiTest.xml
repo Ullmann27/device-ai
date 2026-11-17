@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:26:18" hostname="b354f2cb821b" time="4.677">
+  <properties/>
+  <testcase name="foregroundPrepareCallbackEnablesRunWithoutStartingIt" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="3.016"/>
+  <testcase name="pausedBuilderRefreshesOnlyWhenResumed" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.188"/>
+  <testcase name="alteredCommitWhileExecutionDialogIsOpenCannotDispatch" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.346"/>
+  <testcase name="receiverCarriesOnlyTheValidatedFullTaskIntoPreparedState" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.026"/>
+  <testcase name="legacyPreparedTupleCannotEnableExecution" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.154"/>
+  <testcase name="executionAfterRecreationDisplaysTheCompleteTaskBeforeDispatch" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.291"/>
+  <testcase name="dispatchedRunConsumesThePreparedTaskAndCannotRearmAfterCallback" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.249"/>
+  <testcase name="changedFullTaskCannotBecomePreparedOrEnableRunWithTheOldDigest" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.119"/>
+  <testcase name="invalidOrReplayedPrepareCallbackCannotReplaceTheCurrentAbortTarget" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.057"/>
+  <testcase name="typedPreparationBindsTheExistingExplicitAbortTargetDuringRun" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.227"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

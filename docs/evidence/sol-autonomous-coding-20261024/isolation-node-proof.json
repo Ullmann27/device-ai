@@ -1,0 +1,39 @@
+{
+  "schema": "runtime-isolation-node-proof-v1",
+  "modelUsed": false,
+  "sourceCommit": "a68ffb42d8c7ca9e05b31984211264804d6d35e8",
+  "sourceRoot": "/workspace/scratch/isolation-node-fixture/source",
+  "exitCode": 0,
+  "evidence": [
+    {
+      "file": "/workspace/scratch/isolation-node-fixture/out/isolated-0d40259f8af1576ed18f/TEST-0.xml",
+      "total": 3,
+      "failed": 0,
+      "skipped": 0,
+      "placeholders": 0,
+      "executed": 3,
+      "passed": 3,
+      "diagnostics": [],
+      "skippedCaseHashes": []
+    }
+  ],
+  "isolation": {
+    "schema": "continuum-isolation-v1",
+    "image": "sha256:f9cb3de7fe3810796e00cec72f29142e2d3a4beada075443c5614024efdca182",
+    "network": "none",
+    "user": "1000:1000",
+    "readOnly": true,
+    "noNewPrivileges": true,
+    "capabilities": [],
+    "memoryMb": 512,
+    "pids": 32,
+    "cpus": 1,
+    "timeoutMs": 30000,
+    "sourceSha256": "28549bd5b9a20ba9658713d01a9d0fe80585f82f6c57973bbee351938cbaeae5",
+    "profile": "node-continuum",
+    "untrustedReports": true
+  },
+  "hostMarkerAbsent": true,
+  "ownerUnchanged": true,
+  "hostSourceUnchanged": true
+}

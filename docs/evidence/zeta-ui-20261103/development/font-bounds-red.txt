@@ -1,0 +1,16 @@
+JUnit version 4.13.2
+..E
+Time: 32.262
+There was 1 failure:
+1) largeTypeAndRealLongValuesStayInsideEachCardWithoutTextCollisions(at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest)
+java.lang.AssertionError: 320.0/1.6/BRAND 'Dein lokaler KI-Assistent' inside Box(left=12.0, top=4.0, right=308.0, bottom=66.0): RectF(56.0, 47.800003, 226.0, 63.800003)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest$largeTypeAndRealLongValuesStayInsideEachCardWithoutTextCollisions$measured$1.drawText(ContinuumAdaptiveCockpitUiTest.kt:93)
+	at at.heinz.deviceai.ui.ContinuumPainter.drawText$default(ContinuumPainter.kt:40)
+	at at.heinz.deviceai.ui.HeaderBrandElement.draw(ContinuumHomeElements.kt:47)
+	at at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest.largeTypeAndRealLongValuesStayInsideEachCardWithoutTextCollisions(ContinuumAdaptiveCockpitUiTest.kt:102)
+
+FAILURES!!!
+Tests run: 2,  Failures: 1
+

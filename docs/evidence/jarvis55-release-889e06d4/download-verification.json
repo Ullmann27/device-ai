@@ -1,0 +1,124 @@
+{
+  "source": "889e06d47fffd2230fa5b062dd1f31b65992e728",
+  "artifacts": [
+    {
+      "artifactId": 14013238378,
+      "bytes": 74432966,
+      "sha256": "4f65b2d88799aafee6d2f1d1e11b7858afa498d7409d9f0d4d368ccd6867d38a",
+      "entries": 10,
+      "uncompressedBytes": 103824705,
+      "largestEntryBytes": 103787127,
+      "integrity": "PASS",
+      "apk": {
+        "sha256": "d8fb018277076009631118616775d41688aaad455856c4b5b79b207dc8251332",
+        "bytes": 103787127,
+        "identity": {
+          "package": "at.heinz.deviceai.continuumlocal",
+          "versionCode": 55,
+          "versionName": "0.3.54",
+          "abi": "arm64-v8a",
+          "minSdk": 26,
+          "targetSdk": 36,
+          "debuggable": false
+        },
+        "zipalign16KiB": "PASS"
+      }
+    },
+    {
+      "artifactId": 14013253216,
+      "bytes": 1657859,
+      "sha256": "a6c4e69894947c5de7797b2382e0c8066164281cd03230687df0eba4682a3dcf",
+      "entries": 14,
+      "uncompressedBytes": 6051246,
+      "largestEntryBytes": 2833121,
+      "integrity": "PASS",
+      "nodeReports": [
+        {
+          "profile": "critical",
+          "checks": [
+            {
+              "id": "process",
+              "tests": {
+                "total": 37,
+                "failed": 0,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 37,
+                "passed": 37,
+                "diagnostics": [],
+                "evidenceComplete": true
+              }
+            },
+            {
+              "id": "storage-agent",
+              "tests": {
+                "total": 32,
+                "failed": 0,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 32,
+                "passed": 32,
+                "diagnostics": [],
+                "evidenceComplete": true
+              }
+            },
+            {
+              "id": "android-source-contracts",
+              "tests": {
+                "total": 66,
+                "failed": 0,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 66,
+                "passed": 66,
+                "diagnostics": [],
+                "evidenceComplete": true
+              }
+            },
+            {
+              "id": "host-checker",
+              "tests": {
+                "total": 2,
+                "failed": 0,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 2,
+                "diagnostics": [],
+                "evidenceComplete": true
+              }
+            }
+          ]
+        },
+        {
+          "profile": "full-node",
+          "checks": [
+            {
+              "id": "full-node",
+              "tests": {
+                "total": 2511,
+                "failed": 0,
+                "skipped": 37,
+                "placeholders": 0,
+                "executed": 2474,
+                "passed": 2474,
+                "diagnostics": [],
+                "evidenceComplete": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "artifactId": 14013089205,
+      "bytes": 18851,
+      "sha256": "8f843fc2452b7cd357c17de1f05e556abf7e41c30e1afe0a0afaba6b87f5c848",
+      "entries": 19,
+      "uncompressedBytes": 63140,
+      "largestEntryBytes": 38612,
+      "integrity": "PASS",
+      "nativeSourcesAndCompletions": "PASS"
+    }
+  ]
+}

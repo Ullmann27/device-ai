@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumDashboardMathTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:57" hostname="5c9e18abbd30" time="0.007">
+  <properties/>
+  <testcase name="metricHistoryPersistsThrottlesAndFeedsTheDelta" classname="at.heinz.deviceai.ui.ContinuumDashboardMathTest" time="0.002"/>
+  <testcase name="delta24hNeedsARealMeasurementFromADayAgo" classname="at.heinz.deviceai.ui.ContinuumDashboardMathTest" time="0.0"/>
+  <testcase name="changeQualityMedianAndUsageAreHonest" classname="at.heinz.deviceai.ui.ContinuumDashboardMathTest" time="0.0"/>
+  <testcase name="hourlySeriesCountsOnlyTheLastDayAndKeepsOrder" classname="at.heinz.deviceai.ui.ContinuumDashboardMathTest" time="0.0"/>
+  <testcase name="dailySeriesAndTodayYesterdayUseCalendarDays" classname="at.heinz.deviceai.ui.ContinuumDashboardMathTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

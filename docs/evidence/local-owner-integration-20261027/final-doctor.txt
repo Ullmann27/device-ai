@@ -1,0 +1,5 @@
+CONTINUUM_LOCAL_DOCTOR=READY
+source_sha=06d5950ea26eab7bfad326c5bedbd175af0332fe
+termux=false
+expected_owner_signer=2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc
+original_keystore=NOT_PRESENT

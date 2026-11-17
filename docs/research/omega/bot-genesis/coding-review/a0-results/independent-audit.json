@@ -1,0 +1,230 @@
+{
+  "schema": "genesis-a0-independent-audit-v1",
+  "source": "fd743adce297c0958aadce1576b80580817837f0",
+  "auditorSha256": "817e9961b53f30505a29335018181b4dd1cac239c291ba864f9fd9abfe0dad01",
+  "reservedCalls": 6,
+  "admittedGenuineCalls": 5,
+  "confirmedRepairs": 0,
+  "checks": [
+    {
+      "caseId": "g01",
+      "status": "ABSTAINED",
+      "reservedCalls": 2,
+      "admittedGenuineCalls": 1,
+      "verdicts": [
+        {
+          "job": "fafab142-6add-47a1-a076-c6ced1eb20b0",
+          "verdict": "REFUTED",
+          "reasons": [
+            "no repair candidate passed independently (NO_VERIFIED_REPAIR)"
+          ]
+        }
+      ],
+      "journalVerified": true,
+      "journalEntries": 7,
+      "journalKinds": [
+        [
+          "OWNER",
+          "GOAL"
+        ],
+        [
+          "REASONER",
+          "HYPOTHESIS"
+        ],
+        [
+          "REASONER",
+          "PLAN"
+        ],
+        [
+          "REASONER",
+          "TEST_REQUEST"
+        ],
+        [
+          "VERIFIER",
+          "RECEIPT"
+        ],
+        [
+          "REASONER",
+          "CRITIQUE"
+        ],
+        [
+          "REASONER",
+          "ABSTAIN"
+        ]
+      ],
+      "journalTerminal": {
+        "reason": "Die bestehende Reparaturpipeline hat keinen unabhängig bestätigten Patch gefunden: no repair candidate passed independently (NO_VERIFIED_REPAIR)"
+      },
+      "experienceRecords": 1,
+      "experienceOutcome": "ABSTAINED",
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecall": 0,
+      "sourceAndTestsUnchanged": true,
+      "isolation": [
+        {
+          "workspaceId": "continuum-2cf20d5ae4df7757f27477c1",
+          "jobId": "fafab142-6add-47a1-a076-c6ced1eb20b0",
+          "sourceSha256": "7b19ed0c2acd8e1adf90690f4f56e62b4cbc17394000f17dcc74c694e9a6c8d8",
+          "containerId": "e07c0037efb9e1e3cbb4d5f5f51e577e4803b6afd9941482529aeada8b5e37c4",
+          "teardownConfirmed": true
+        },
+        {
+          "workspaceId": "continuum-c7b084a81541c82a3255b42c",
+          "jobId": "fafab142-6add-47a1-a076-c6ced1eb20b0",
+          "sourceSha256": "b596ed5c5ce4585489d07a53ff43d4d231ede93abcd8bb77dd50edf66bf14fcd",
+          "containerId": "642f6c1bed6c5637c8c22e3d105fdfcfaefcae67f7d3e5aecccebd19266b3d53",
+          "teardownConfirmed": true
+        }
+      ]
+    },
+    {
+      "caseId": "g02",
+      "status": "ABSTAINED",
+      "reservedCalls": 2,
+      "admittedGenuineCalls": 2,
+      "verdicts": [
+        {
+          "job": "61663ae4-ff2b-41fb-8626-d68b8c5e6440",
+          "verdict": "REFUTED",
+          "reasons": [
+            "no repair candidate passed independently (NO_VERIFIED_REPAIR)"
+          ]
+        }
+      ],
+      "journalVerified": true,
+      "journalEntries": 7,
+      "journalKinds": [
+        [
+          "OWNER",
+          "GOAL"
+        ],
+        [
+          "REASONER",
+          "HYPOTHESIS"
+        ],
+        [
+          "REASONER",
+          "PLAN"
+        ],
+        [
+          "REASONER",
+          "TEST_REQUEST"
+        ],
+        [
+          "VERIFIER",
+          "RECEIPT"
+        ],
+        [
+          "REASONER",
+          "CRITIQUE"
+        ],
+        [
+          "REASONER",
+          "ABSTAIN"
+        ]
+      ],
+      "journalTerminal": {
+        "reason": "Die bestehende Reparaturpipeline hat keinen unabhängig bestätigten Patch gefunden: no repair candidate passed independently (NO_VERIFIED_REPAIR)"
+      },
+      "experienceRecords": 1,
+      "experienceOutcome": "ABSTAINED",
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecall": 0,
+      "sourceAndTestsUnchanged": true,
+      "isolation": [
+        {
+          "workspaceId": "continuum-be8f284b095bb4397ad4518e",
+          "jobId": "61663ae4-ff2b-41fb-8626-d68b8c5e6440",
+          "sourceSha256": "b42767f663e9bb375f79681cd3f3d3094b72ede321fd63b5bc3853e1bb0192bb",
+          "containerId": "ee7d9391e943a4469994807ebc2bfa30982b7fd243d13da4e1b71eb76b1119cc",
+          "teardownConfirmed": true
+        },
+        {
+          "workspaceId": "continuum-cf16b668dfe56e41fa75e05c",
+          "jobId": "61663ae4-ff2b-41fb-8626-d68b8c5e6440",
+          "sourceSha256": "131b1f2a44555d43006e8d676923c732e618e86d3387384f8dc7dde7877c07e1",
+          "containerId": "2b70210d8ef38507c2a54c7b0981127bb417de0e1f803b6deaba25599cd40607",
+          "teardownConfirmed": true
+        }
+      ]
+    },
+    {
+      "caseId": "g03",
+      "status": "ABSTAINED",
+      "reservedCalls": 2,
+      "admittedGenuineCalls": 2,
+      "verdicts": [
+        {
+          "job": "e31747a9-edb8-488b-b343-8d439b2cc129",
+          "verdict": "REFUTED",
+          "reasons": [
+            "no repair candidate passed independently (NO_VERIFIED_REPAIR)"
+          ]
+        }
+      ],
+      "journalVerified": true,
+      "journalEntries": 7,
+      "journalKinds": [
+        [
+          "OWNER",
+          "GOAL"
+        ],
+        [
+          "REASONER",
+          "HYPOTHESIS"
+        ],
+        [
+          "REASONER",
+          "PLAN"
+        ],
+        [
+          "REASONER",
+          "TEST_REQUEST"
+        ],
+        [
+          "VERIFIER",
+          "RECEIPT"
+        ],
+        [
+          "REASONER",
+          "CRITIQUE"
+        ],
+        [
+          "REASONER",
+          "ABSTAIN"
+        ]
+      ],
+      "journalTerminal": {
+        "reason": "Die bestehende Reparaturpipeline hat keinen unabhängig bestätigten Patch gefunden: no repair candidate passed independently (NO_VERIFIED_REPAIR)"
+      },
+      "experienceRecords": 1,
+      "experienceOutcome": "ABSTAINED",
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecall": 0,
+      "sourceAndTestsUnchanged": true,
+      "isolation": [
+        {
+          "workspaceId": "continuum-2b33aa27127946b1ecfbbe46",
+          "jobId": "e31747a9-edb8-488b-b343-8d439b2cc129",
+          "sourceSha256": "ad2a26771a4d75cbbc9a841b8c033e3fafd5702807c94e230488954e22f1252c",
+          "containerId": "e58e0e1dbfd043ee2fc61481ea782172bc64ff6cce2b9d589857c229b9681acd",
+          "teardownConfirmed": true
+        },
+        {
+          "workspaceId": "continuum-7027616cca82ffb5af84f4ed",
+          "jobId": "e31747a9-edb8-488b-b343-8d439b2cc129",
+          "sourceSha256": "d79b9e2ad05ecdcdf5bab30837c0643662e635a89e4814426dc3ca708907111b",
+          "containerId": "bbe850e68d42eab6add03a2df2ce5b35543eefa7d5c10cb849ebfd1aa4c91631",
+          "teardownConfirmed": true
+        },
+        {
+          "workspaceId": "continuum-e4f3aad74c7ebf38983b90b4",
+          "jobId": "e31747a9-edb8-488b-b343-8d439b2cc129",
+          "sourceSha256": "d35c863679b986b3a25811dc5b634b99259bec165b70dce75d5586f7fe579f51",
+          "containerId": "1c9950ed492e2fb2ae591723772af3a0f172fe5d95cead68b1ea5eb2c7af11cd",
+          "teardownConfirmed": true
+        }
+      ]
+    }
+  ]
+}

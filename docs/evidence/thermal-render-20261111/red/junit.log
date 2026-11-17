@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+....E......
+Time: 0.723
+There was 1 failure:
+1) unchangedFramesReusePathsAndGradient(at.heinz.deviceai.ui.JarvisLightStreamReuseTest)
+java.lang.AssertionError: static path must reuse native cache expected same:<at.heinz.deviceai.ui.VectorPath@2812cbfa> was not:<at.heinz.deviceai.ui.VectorPath@2acf57e3>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotSame(Assert.java:829)
+	at org.junit.Assert.assertSame(Assert.java:772)
+	at at.heinz.deviceai.ui.JarvisLightStreamReuseTest.unchangedFramesReusePathsAndGradient(JarvisLightStreamReuseTest.kt:37)
+
+FAILURES!!!
+Tests run: 10,  Failures: 1
+

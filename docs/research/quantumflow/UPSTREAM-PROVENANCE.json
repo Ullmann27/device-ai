@@ -1,0 +1,263 @@
+{
+  "schema": "CONTINUUM_QUANTUMFLOW_UPSTREAM_V1",
+  "date": "2026-11-02",
+  "base_commit": "93422eb6a4f10fa34edb6efb5bfc45fa65dd0c13",
+  "status": "AUDIT_SNAPSHOTS_ONLY_NOT_RUNTIME_INTEGRATED",
+  "sources": [
+    {
+      "repo": "met4citizen/TalkingHead",
+      "commit": "8c3fe13df098fac1ad62bb61972a404d2827ba54",
+      "license": "MIT",
+      "roles": [
+        "German phoneme/viseme rules",
+        "GLB facial rig reference"
+      ],
+      "snapshots": [
+        [
+          "talkinghead/modules/lipsync-de.mjs",
+          "7677a8d2bab84b06271f6a517b10303f205553e2"
+        ],
+        [
+          "talkinghead/LICENSE",
+          "183221df3d801fc7f1a4d03682a186ccfdbceab3"
+        ]
+      ],
+      "notes": "Cloud TTS is the default; a local audio source must replace it. Example 3D character assets have separate permissions; never redistribute non-commercial demo avatars.",
+      "source_url": "https://github.com/met4citizen/TalkingHead/tree/8c3fe13df098fac1ad62bb61972a404d2827ba54",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/talkinghead/modules/lipsync-de.mjs",
+          "git_blob_sha1": "7677a8d2bab84b06271f6a517b10303f205553e2"
+        },
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/talkinghead/LICENSE",
+          "git_blob_sha1": "183221df3d801fc7f1a4d03682a186ccfdbceab3"
+        }
+      ]
+    },
+    {
+      "repo": "met4citizen/HeadAudio",
+      "commit": "c6d8af35034068b1c98dcc0fa3ec9602d711e784",
+      "license": "MIT",
+      "roles": [
+        "Audio-driven viseme classifier reference",
+        "browser AudioWorklet prototype"
+      ],
+      "snapshots": [
+        [
+          "headaudio/modules/headaudio.mjs",
+          "677676131196a58e3bc4bfce3805d31058bbabad"
+        ],
+        [
+          "headaudio/modules/headworklet.mjs",
+          "6a41d81927142eaece2970487cfe2968b11264b4"
+        ],
+        [
+          "headaudio/LICENSE",
+          "2eb54c72d8ff864ee311c17565a37c750b98c7a8"
+        ]
+      ],
+      "notes": "Snapshots are not an executable complete dependency closure. On-device Android audio bridge, lifecycle and performance must be validated.",
+      "source_url": "https://github.com/met4citizen/HeadAudio/tree/c6d8af35034068b1c98dcc0fa3ec9602d711e784",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/headaudio/modules/headaudio.mjs",
+          "git_blob_sha1": "677676131196a58e3bc4bfce3805d31058bbabad"
+        },
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/headaudio/modules/headworklet.mjs",
+          "git_blob_sha1": "6a41d81927142eaece2970487cfe2968b11264b4"
+        },
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/headaudio/LICENSE",
+          "git_blob_sha1": "2eb54c72d8ff864ee311c17565a37c750b98c7a8"
+        }
+      ]
+    },
+    {
+      "repo": "google-ai-edge/mediapipe-samples",
+      "commit": "90e4a0e8f162e20dcf1df7c688d30b9b1dbe3370",
+      "license": "Apache-2.0",
+      "roles": [
+        "CameraX Face Landmarker Android reference",
+        "52 blendshape scores and pose"
+      ],
+      "snapshots": [
+        [
+          "mediapipe/FaceLandmarkerHelper.kt",
+          "b6a76fc179ba66be77434900aaf67e305b5b3b1f"
+        ],
+        [
+          "mediapipe/LICENSE",
+          "73e971336a768ce92a90e7fff98854f4f0f1e564"
+        ]
+      ],
+      "notes": "Face Landmarker is not biometric identity verification, no image retention or background camera; task model asset license must be reviewed separately.",
+      "source_url": "https://github.com/google-ai-edge/mediapipe-samples/tree/90e4a0e8f162e20dcf1df7c688d30b9b1dbe3370",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/mediapipe/FaceLandmarkerHelper.kt",
+          "git_blob_sha1": "b6a76fc179ba66be77434900aaf67e305b5b3b1f"
+        },
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/mediapipe/LICENSE",
+          "git_blob_sha1": "73e971336a768ce92a90e7fff98854f4f0f1e564"
+        }
+      ]
+    },
+    {
+      "repo": "aligh993/JARVIS",
+      "commit": "c52bfaec97dae31ca40828039899b4c43c7816a2",
+      "license": "MIT",
+      "roles": [
+        "HUD rotating radar and data panels",
+        "visual design reference"
+      ],
+      "snapshots": [
+        [
+          "jarvis-hud/dashboard.html",
+          "3b8beee3a236907eae8fdaef2ec58cd4d9f2631c"
+        ],
+        [
+          "jarvis-hud/LICENSE",
+          "ef6d5b25f04dd615dec1de35aefcf597fabc4a3b"
+        ]
+      ],
+      "notes": "Imported HTML is a read-only research snapshot with externally loaded scripts and simulated gauges. Never execute it inside the main app, equate demo metrics with real telemetry, or bundle remote CDNs.",
+      "source_url": "https://github.com/aligh993/JARVIS/tree/c52bfaec97dae31ca40828039899b4c43c7816a2",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/jarvis-hud/dashboard.html",
+          "git_blob_sha1": "3b8beee3a236907eae8fdaef2ec58cd4d9f2631c"
+        },
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/jarvis-hud/LICENSE",
+          "git_blob_sha1": "ef6d5b25f04dd615dec1de35aefcf597fabc4a3b"
+        }
+      ]
+    },
+    {
+      "repo": "pixiv/three-vrm",
+      "commit": "3caf7a21ee68f0d5dfa363ab3d577450bbf60136",
+      "license": "MIT",
+      "roles": [
+        "Gaze/head look-at animation",
+        "ARKit style facial expressions"
+      ],
+      "snapshots": [
+        [
+          "three-vrm/lookat-advanced.html",
+          "6e5186d8097f11ddb79ded298c32ebb643c4c8a1"
+        ],
+        [
+          "three-vrm/expressions.html",
+          "df2d321740be8f76623bc7226449b658bb061943"
+        ],
+        [
+          "three-vrm/LICENSE",
+          "ed87d5f2705cf27f2bba838cfb7aebaba004ba49"
+        ]
+      ],
+      "notes": "Web/Three.js VRM runtime, not a native Android Kotlin renderer. Only research reference or isolated offline WebView demonstrator.",
+      "source_url": "https://github.com/pixiv/three-vrm/tree/3caf7a21ee68f0d5dfa363ab3d577450bbf60136",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/three-vrm/lookat-advanced.html",
+          "git_blob_sha1": "6e5186d8097f11ddb79ded298c32ebb643c4c8a1"
+        },
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/three-vrm/expressions.html",
+          "git_blob_sha1": "df2d321740be8f76623bc7226449b658bb061943"
+        },
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/three-vrm/LICENSE",
+          "git_blob_sha1": "ed87d5f2705cf27f2bba838cfb7aebaba004ba49"
+        }
+      ]
+    },
+    {
+      "repo": "sceneview/sceneview",
+      "commit": "422f217e98dd0dbdc88f854c2d4e620db10acd79",
+      "license": "Apache-2.0",
+      "roles": [
+        "Android Filament glTF/GLB real-time rendering",
+        "Compose 3D node/animation patterns"
+      ],
+      "snapshots": [
+        [
+          "sceneview/ContinuousCameraManipulator.kt",
+          "b5a8c83a904b7df60cd4655c3fd4f653023e34c2"
+        ],
+        [
+          "sceneview/LICENSE",
+          "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+        ]
+      ],
+      "notes": "Modern SceneView 4.x is Jetpack Compose native; Continuum AgentActivity is a classic Android View/Activity. Confirm ComposeView vs direct Filament adapter and Gradle compatibility before integrating.",
+      "source_url": "https://github.com/sceneview/sceneview/tree/422f217e98dd0dbdc88f854c2d4e620db10acd79",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/sceneview/ContinuousCameraManipulator.kt",
+          "git_blob_sha1": "b5a8c83a904b7df60cd4655c3fd4f653023e34c2"
+        },
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/sceneview/LICENSE",
+          "git_blob_sha1": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+        }
+      ]
+    },
+    {
+      "repo": "LottieFiles/dotlottie-android",
+      "commit": "7b81497851c2b63308ccfa1c79f3385f333381d7",
+      "license": "MIT",
+      "roles": [
+        "Android View/Compose animated UI state machines",
+        "document cards and ring motion"
+      ],
+      "snapshots": [
+        [
+          "dotlottie-android/LICENSE",
+          "5aab31bc718782907c4548567b2b26c604ed4299"
+        ]
+      ],
+      "notes": "Runtime is JNI/Rust-backed; don't bundle paid/unlicensed animation packs. Imported LICENSE only; no runtime dependency installed.",
+      "source_url": "https://github.com/LottieFiles/dotlottie-android/tree/7b81497851c2b63308ccfa1c79f3385f333381d7",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/dotlottie-android/LICENSE",
+          "git_blob_sha1": "5aab31bc718782907c4548567b2b26c604ed4299"
+        }
+      ]
+    },
+    {
+      "repo": "airbnb/lottie-android",
+      "commit": "05ea92e90381eb8a8ae06855ea2b74f322bebbec",
+      "license": "Apache-2.0",
+      "roles": [
+        "Android native vector HUD progress/transition animations"
+      ],
+      "snapshots": [
+        [
+          "lottie-android/LICENSE",
+          "9c8f3ea0871e0bfe81da0fa6e7c1d7d156dc380e"
+        ]
+      ],
+      "notes": "Use vetted bundled Lottie JSON animations, not arbitrary remote LottieFiles assets. Imported LICENSE only; no runtime dependency installed.",
+      "source_url": "https://github.com/airbnb/lottie-android/tree/05ea92e90381eb8a8ae06855ea2b74f322bebbec",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/lottie-android/LICENSE",
+          "git_blob_sha1": "9c8f3ea0871e0bfe81da0fa6e7c1d7d156dc380e"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "No 3D model or face-rig has been generated",
+    "No face identity or owner-authentication system implemented",
+    "No Android Gradle/Render/Fold7 test on this research branch",
+    "Preserved upstream sample files are not automatically Android-compatible",
+    "Model/example asset licenses remain separate",
+    "Full npm or Android dependency closures have not been vendored"
+  ]
+}

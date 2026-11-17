@@ -1,0 +1,99 @@
+{
+  "taskId": "C1-OPT-021-WORKER",
+  "status": "SOURCE_INTEGRATED_OWN_FOCUS_PENDING",
+  "integrationBaseLocal": "9a442485f2569b39be2bcd8d6687da6f6c15c45d",
+  "integrationBaseRemote": "0d8a3d46c409e5918c49b6f3407bb63f3519b846",
+  "sourceRemote": "972f7d46312885eeff41df7f771f4700b2619b0b",
+  "sourceFinalHandoff": "7c1642af96ccf626c91a40a602c7127e02fb9eea",
+  "patchSha256": "65abb18658fa30cd01a8e6c40fe1547c3aaa175198387a4881e0d50e173e045d",
+  "archiveSha256": "8c64554eb8d041358db7594809cd59143aaf2e84d622777c55b36f55b813972d",
+  "paths": [
+    {
+      "path": ".github/continuum/development-backlog.mjs",
+      "change": "MODIFY",
+      "base": {
+        "blob": "64f798d5cf86ec7b541bd5135972f30fef1be746",
+        "sha256": "5db9cdc903d2926ba01f23571abe740a115a60bf12ba651fa3ba7cc30e84a0a0",
+        "bytes": 42109,
+        "mode": "100644"
+      },
+      "target": {
+        "blob": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+        "sha256": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+        "bytes": 42182,
+        "mode": "100644"
+      },
+      "upstream_tested_blob": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+      "equals_upstream": true,
+      "origin": "Exact immutable #523 source, retained #511 R1",
+      "source_url": "https://github.com/Ullmann27/device-ai/blob/972f7d46312885eeff41df7f771f4700b2619b0b/.github/continuum/development-backlog.mjs"
+    },
+    {
+      "path": ".github/continuum/development-backlog.test.mjs",
+      "change": "MODIFY",
+      "base": {
+        "blob": "ef164ab7d4e8ce2e901e98b77f6380afcb877802",
+        "sha256": "fd0c1ad34faebef89c969fa4142d0ec94a094f672cd48e7e600d48abc79bae16",
+        "bytes": 15041,
+        "mode": "100644"
+      },
+      "target": {
+        "blob": "b1ea996a9aed21ef5dccca67dcab16e481314f25",
+        "sha256": "16916542394004488ebd6dec492676c812ea91d8a389b58f6a24f89e6e5a0d8f",
+        "bytes": 19634,
+        "mode": "100644"
+      },
+      "upstream_tested_blob": "b1ea996a9aed21ef5dccca67dcab16e481314f25",
+      "equals_upstream": true,
+      "origin": "Exact immutable #523 source, retained #511 R1",
+      "source_url": "https://github.com/Ullmann27/device-ai/blob/972f7d46312885eeff41df7f771f4700b2619b0b/.github/continuum/development-backlog.test.mjs"
+    },
+    {
+      "path": "tools/completed-connections-822e-r2/worker/selection-parity.mjs",
+      "change": "ADD",
+      "base": null,
+      "target": {
+        "blob": "0c4468007d0d3a62dd23d08acd50dbfe7284ad38",
+        "sha256": "be2cc8a03238f3262f6ad9fc39623b31fc6af92eedac25441167921a47f63998",
+        "bytes": 4059,
+        "mode": "100644"
+      },
+      "upstream_tested_blob": "0c4468007d0d3a62dd23d08acd50dbfe7284ad38",
+      "equals_upstream": true,
+      "origin": "Exact immutable #523 source, retained #511 R1",
+      "source_url": "https://github.com/Ullmann27/device-ai/blob/972f7d46312885eeff41df7f771f4700b2619b0b/tools/completed-connections-822e-r2/worker/selection-parity.mjs"
+    }
+  ],
+  "applyCheckExitCode": 0,
+  "applyExitCode": 0,
+  "dependencyDifference": {
+    "path": ".github/continuum/local-teamleader-loop.mjs",
+    "preparedBaseBlob": "3dc5d63077fce0244e2bdeeb20b310aa762d2cfa",
+    "currentIntegratedBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+    "reason": "Separate completed Missing022 source-preflight slice, actual26PASS before this optimization. No loop hunk imported here."
+  },
+  "acceptance": {
+    "status": "NOT_RUN",
+    "node": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      ".github/continuum/development-backlog.test.mjs",
+      ".github/continuum/backlog-cli.test.mjs",
+      ".github/continuum/backlog-contract-cli.test.mjs",
+      ".github/continuum/backlog-investigator.test.mjs",
+      ".github/continuum/backlog-investigator-recovery.test.mjs",
+      ".github/continuum/backlog-repair-worker.test.mjs",
+      ".github/continuum/owner-contract-worker.test.mjs",
+      ".github/continuum/autonomous-teamleader.test.mjs",
+      ".github/continuum/local-teamleader-loop.test.mjs",
+      ".github/continuum/coding-orchestrator-failure-report.test.mjs"
+    ],
+    "parity": [
+      "node",
+      "tools/completed-connections-822e-r2/worker/selection-parity.mjs"
+    ],
+    "expected_node_cases_if_frozen_10_suites_unchanged": 121,
+    "expected_parity_object_identity_cases": 40960
+  }
+}

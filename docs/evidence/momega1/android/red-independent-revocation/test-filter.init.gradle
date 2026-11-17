@@ -1,0 +1,7 @@
+allprojects {
+ afterEvaluate { p -> if(p.name=='app') p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/android-independent-a3e257a1') }
+ tasks.withType(Test).configureEach {
+  executable = '/usr/bin/java'
+  filter { includeTestsMatching 'at.heinz.deviceai.IndependentTypedAuthorizationUiTest' }
+ }
+}

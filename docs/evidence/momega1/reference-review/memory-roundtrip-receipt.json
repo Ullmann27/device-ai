@@ -1,0 +1,62 @@
+{
+  "schema": "momega1-independent-memory-roundtrip-review",
+  "version": 1,
+  "evidenceClass": "CONTRACT_TEST",
+  "freezeCommit": "462e43fd",
+  "baselineSource": "19474261c15a3503a9f041244b4b4c3eaed4636f",
+  "baselineEquivalentHelperAt": "d8a927dd6ced4dea489e2042afb4b5624157fa3b",
+  "candidateSource": "6baec1bcd6585d2d04688a7d15651c830b4886d7",
+  "verdict": "ACCEPT_DURABLE_PROOF_JSON_SNAPSHOT_FIX",
+  "productionChangesByReviewer": false,
+  "counts": {
+    "independentBaseline": {
+      "pass": 7,
+      "fail": 9,
+      "skip": 0,
+      "exit": 1
+    },
+    "independentCandidate": {
+      "pass": 16,
+      "fail": 0,
+      "skip": 0,
+      "exit": 0
+    },
+    "canonicalCandidate": {
+      "pass": 51,
+      "fail": 0,
+      "skip": 0,
+      "exit": 0
+    }
+  },
+  "commands": [
+    {
+      "cwd": "/workspace/jarvis-reference-review",
+      "command": "MOMEGA1_CANDIDATE_ROOT=/workspace/momega1-build-env/combined-19474261 node --test --test-reporter=tap tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs"
+    },
+    {
+      "cwd": "/workspace/jarvis-reference-review",
+      "command": "MOMEGA1_CANDIDATE_ROOT=/workspace/jarvis-reference-memory-candidate node --test --test-reporter=tap tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs"
+    },
+    {
+      "cwd": "/workspace/jarvis-reference-memory-candidate",
+      "command": "node --test --test-reporter=tap .github/continuum/ccc1-technical-recall.test.mjs .github/continuum/ccc1-experience-durability.test.mjs"
+    }
+  ],
+  "seams": [
+    "Independent disposable WeakSet runtime and verifier brands replace only the two imported live validators in a data-URL copy of exact production helper.",
+    "Existing independent synthetic CCC1 grant/journal fixtures supply valid bounded provenance. No local model or true verifier observation is forged into production state.",
+    "Fresh recall uses an actual new Node process and unmodified candidate helper; disposable key is passed only through stdin, never logged."
+  ],
+  "sourceReview": "Original live runtime/verifier admission remains before serialization. Candidate snapshots JSON, revalidates persisted bindings, and MACs only the snapshot. No existing record re-signing or read-gate weakening.",
+  "sha256": {
+    "docs/evidence/momega1/reference-review/memory-roundtrip-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/evidence/momega1/reference-review/memory-canonical-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/evidence/momega1/reference-review/memory-roundtrip-green.tap": "317f2daf02d584948dac164d847da729216368dbc03ab1cac5c2e3c9e5b74f8e",
+    "docs/evidence/momega1/reference-review/memory-canonical-regression.tap": "0254c7bdcb5fb3d08114303d6917b608829a9e028db0fb6433ab0df22f350ef5",
+    "docs/evidence/momega1/reference-review/memory-roundtrip-red.tap": "815045ff4b03303caf7deb744f6279fc5fbff5b7ff10b0456b0fc07fb296f9c8",
+    "docs/evidence/momega1/reference-review/memory-roundtrip-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "tools/jarvis-reference-review/memory-roundtrip/roundtrip.test.mjs": "f58fb1e4bdfc21104e4ecad015f038272b85003291f1352e91c8ad563a1b4a2c",
+    "baseline/.github/continuum/ccc1-technical-recall.mjs": "aab07d4c04fc069186b62e1c6a5d8e442624e6753b7f1cc0f64c77aaaef4c7f7",
+    "candidate/.github/continuum/ccc1-technical-recall.mjs": "b37f88b38e4ccb6cb787e5609f1653a1c0dbb604995839ef2044e448b7fc75d6"
+  }
+}

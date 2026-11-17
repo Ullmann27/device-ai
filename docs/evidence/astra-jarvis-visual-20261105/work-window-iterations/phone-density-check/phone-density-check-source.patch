@@ -1,0 +1,140 @@
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt
+new file mode 100644
+index 00000000..1e4a87b0
+--- /dev/null
++++ b/app/src/uiTest/java/at/heinz/deviceai/JarvisPhoneWorkWindowDensityUiTest.kt
+@@ -0,0 +1,134 @@
++package at.heinz.deviceai
++
++import android.app.Activity
++import android.graphics.Bitmap
++import android.graphics.Canvas
++import android.graphics.Rect
++import android.graphics.RectF
++import android.os.Looper
++import android.view.View
++import android.widget.FrameLayout
++import android.widget.TextView
++import at.heinz.deviceai.ui.ContinuumHomeLayout
++import at.heinz.deviceai.ui.JarvisShellLayout
++import at.heinz.deviceai.ui.JarvisWorkWindow
++import at.heinz.deviceai.ui.JarvisWorkWindowGeometry
++import org.junit.Assert.*
++import org.junit.Before
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.Robolectric
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.Shadows.shadowOf
++import org.robolectric.annotation.Config
++import org.robolectric.annotation.GraphicsMode
++import org.robolectric.annotation.LooperMode
++import org.robolectric.shadows.ShadowChoreographer
++import java.time.Duration
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [28])
++@GraphicsMode(GraphicsMode.Mode.NATIVE)
++@LooperMode(LooperMode.Mode.PAUSED)
++class JarvisPhoneWorkWindowDensityUiTest {
++    @Before fun pauseVsync() {
++        ShadowChoreographer.setPaused(true)
++        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
++    }
++
++    @Test @Config(qualifiers = "w412dp-h915dp-hdpi")
++    fun largeTextPhoneOpensInsideSafePixelsAtHdpi() = assertRealDensityWindow(1.5f)
++
++    @Test @Config(qualifiers = "w412dp-h915dp-420dpi")
++    fun largeTextPhoneOpensInsideSafePixelsAt420Dpi() = assertRealDensityWindow(2.625f)
++
++    private fun assertRealDensityWindow(expectedDensity: Float) {
++        val previousFont = RuntimeEnvironment.getApplication().resources.configuration.fontScale
++        RuntimeEnvironment.setFontScale(2f)
++        val controller = Robolectric.buildActivity(Activity::class.java).setup()
++        val activity = controller.get()
++        val listeners = linkedSetOf<(Long, Float) -> Boolean>()
++        val source: ((Long, Float) -> Boolean) -> AutoCloseable = { listener ->
++            listeners.add(listener)
++            AutoCloseable { listeners.remove(listener) }
++        }
++        val window = JarvisWorkWindow(activity, source) {}
++        var bitmap: Bitmap? = null
++        try {
++            val config = activity.resources.configuration
++            val density = activity.resources.displayMetrics.density
++            assertEquals(expectedDensity, density, 0f)
++            assertEquals(2f, config.fontScale, 0f)
++            assertEquals(412, config.screenWidthDp)
++            assertEquals(915, config.screenHeightDp)
++            val root = FrameLayout(activity)
++            root.addView(window, FrameLayout.LayoutParams(-1, -1))
++            activity.setContentView(root)
++            controller.visible()
++            val width = activity.resources.displayMetrics.widthPixels
++            val height = activity.resources.displayMetrics.heightPixels
++            fun layout() {
++                root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
++                    View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
++                root.layout(0, 0, width, height)
++            }
++            layout()
++            assertTrue("Native dimensions exist", root.width > 0 && root.height > 0)
++            val shell = JarvisShellLayout.forContent(root.width / density,
++                root.height / density, config.fontScale,
++                externalBottomBarHeightDp = ContinuumHomeLayout.PHONE_NAV_HEIGHT)
++            fun pixels(box: JarvisShellLayout.Box) = RectF(box.left * density,
++                box.top * density, box.right * density, box.bottom * density)
++            val head = requireNotNull(shell.headBounds)
++            val orb = requireNotNull(shell.orbBounds)
++            val dialogue = requireNotNull(shell[JarvisShellLayout.Slot.DIALOG])
++            assertTrue("Head remains usable", head.height >= 220f)
++            assertTrue("Original orb remains usable", orb.height >= 112f)
++            assertTrue("Both identities precede dialogue", head.bottom <= dialogue.top &&
++                orb.bottom <= dialogue.top && head.right < orb.left)
++            val protected = listOf(head, orb, dialogue).map(::pixels)
++            val viewport = RectF(0f, 0f, shell.width * density, shell.viewportHeight * density)
++            protected.forEach { assertTrue("Visible protected region $it", viewport.contains(it)) }
++            val candidate = JarvisWorkWindowGeometry.destination(viewport, protected, density)
++            assertNotNull("Native free area: ${root.width}x${root.height}px density=$density viewport=$viewport", candidate)
++            val destination = requireNotNull(candidate)
++            println("DENSITY_WINDOW native=${root.width}x${root.height}px density=$density font=${config.fontScale} viewport=$viewport target=$destination protected=$protected")
++            val body = TextView(activity).apply { text = "Host-Geometrieprüfung" }
++            val origin = pixels(shell.tileBoxes().last())
++            assertTrue("Native work area must open: density=$density, viewport=$viewport, target=$destination",
++                window.open(body, origin, destination, "Systemstatus", protected))
++            listeners.toList().forEach { it(1_000L, 1f) }
++            listeners.toList().forEach { it(2_500L, 1f) }
++            shadowOf(Looper.getMainLooper()).idle()
++            layout()
++            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
++            root.draw(Canvas(bitmap!!))
++            val panel = window.findViewWithTag<View>("jarvis-work-window:panel")
++            val actual = RectF(panel.left.toFloat(), panel.top.toFloat(),
++                panel.right.toFloat(), panel.bottom.toFloat())
++            assertTrue(window.isShowing)
++            assertTrue("Native panel width", actual.width() >= 200f * density)
++            assertTrue("Native panel height", actual.height() >= 160f * density)
++            assertTrue("Native pixels remain inside destination", destination.contains(actual))
++            assertTrue("Native pixels remain in viewport", viewport.contains(actual))
++            protected.forEach { assertFalse("Window protects $it", RectF.intersects(actual, it)) }
++            assertEquals(1f, panel.scaleX, 0f)
++            assertEquals(1f, panel.scaleY, 0f)
++            assertEquals(0f, panel.translationX, 0f)
++            assertEquals(0f, panel.translationY, 0f)
++            val close = window.findViewWithTag<View>("jarvis-work-window:close")
++            val visible = Rect()
++            assertTrue(close.getGlobalVisibleRect(visible))
++            assertTrue("Full close target height", close.height >= 48f * density)
++            assertEquals("Close target is not clipped", close.height, visible.height())
++            assertEquals("Close target is not scaled", close.width, visible.width())
++        } finally {
++            window.dispose()
++            shadowOf(Looper.getMainLooper()).idle()
++            bitmap?.recycle()
++            controller.pause().stop().destroy()
++            RuntimeEnvironment.setFontScale(previousFont)
++        }
++    }
++}

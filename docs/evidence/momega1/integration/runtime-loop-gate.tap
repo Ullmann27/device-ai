@@ -1,0 +1,44 @@
+✔ MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence (635.935285ms)
+✔ MΩ canonical fresh verifier rejects removal of a baseline identity (697.316896ms)
+✔ MΩ independent counterexample revises inside the same canonical task and model-call budget (2082.247955ms)
+✔ MΩ strict execution blocks before provider or missing journal when isolation is absent (0.644915ms)
+✔ MΩ model-observation gate rejects self-certified task-bound JSON (0.710625ms)
+✔ MΩ PR400 self-closing suite does not capture following actual Node cases (588.212767ms)
+✔ MΩ PR400 actual Node identities survive a symlinked TMPDIR (572.486917ms)
+✔ MΩ quality embedded patch receipt rejects patchSha256 (98.729405ms)
+✔ MΩ quality embedded patch receipt rejects red.sha (83.627929ms)
+✔ MΩ quality embedded patch receipt rejects green.sha (57.773093ms)
+✔ MΩ QA isolated localized file attributes retain actual Node identities under path aliases (282.972106ms)
+✔ MΩ QA correlated green source claims reject existing-wrong-tree (84.581995ms)
+✔ MΩ QA correlated green source claims reject nonexistent (57.279802ms)
+✔ normal caller cannot certify a serialized runtime observation (1.234237ms)
+✔ coding CLI blocks endpoint-only configuration before any network/model call (100.875487ms)
+✔ unapproved or absent local weights never produce runtime observations (0.928274ms)
+✔ actual namespace binds admitted descriptors and fixture output; never inference evidence (123.761193ms)
+✔ altered model/runtime, unsafe executable and mismatched request cannot execute (105.640419ms)
+✔ deadline cancels actual isolated process with bounded return (352.625281ms)
+✔ STOP cancels actual isolated process and leaves no trusted observation (240.688388ms)
+✔ malformed/oversized output and missing generation counters are rejected (342.167172ms)
+✔ sandbox exposes no checkout, HOME, network, secret or configurable shell (1.981037ms)
+✔ actual FD mount retains selected inode across model path replacement (130.246276ms)
+✔ prompt evaluation counter alone cannot masquerade as output generation (91.103397ms)
+✔ inference sandbox denies host files, external interfaces, secrets and writable model (92.585613ms)
+✔ seccomp denies fork and rlimits bound native memory/descriptor budgets (73.585531ms)
+✔ changing model during actual execution invalidates otherwise valid output (278.21138ms)
+✔ production provider rejects synthetic fixture receipt even when transport MAC is valid (189.801583ms)
+✔ self-asserted inference flag is rejected instead of upgraded or accepted (72.863259ms)
+✔ native worker threads remain permitted while process creation stays denied (62.097965ms)
+✔ unavailable isolation launcher fails closed and creates no observation (32.977152ms)
+✔ integration strict observation option rejects injected unobserved provider replies (65.353126ms)
+✔ integration technical recall enters prompt as bounded untrusted data within context budget (58.28129ms)
+✔ integration malformed recall and strict remote selection fail before transport (45.37543ms)
+✔ process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind (141.724214ms)
+✔ MΩ Android run selects admitted local-model observation gate (0.931198ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3605.191933

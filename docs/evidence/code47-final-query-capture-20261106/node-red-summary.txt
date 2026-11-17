@@ -1,0 +1,43 @@
+TAP version 13
+# Subtest: stream preview does not force focus to bottom or make live draft selectable
+ok 1 - stream preview does not force focus to bottom or make live draft selectable
+# Subtest: owner scrolling pauses auto-follow while a native response streams
+ok 2 - owner scrolling pauses auto-follow while a native response streams
+# Subtest: time deadline is based on progress, not fixed wall clock
+not ok 3 - time deadline is based on progress, not fixed wall clock
+  location: '/workspace/scratch/b31a9d731016/app-query-format-evidence/node-red-source/scripts/continuum-fold7-stream-scroll.test.mjs:28:1'
+  failureType: 'testCodeFailure'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+# Subtest: existing cancellation and unverified-draft protections remain in place
+not ok 4 - existing cancellation and unverified-draft protections remain in place
+  location: '/workspace/scratch/b31a9d731016/app-query-format-evidence/node-red-source/scripts/continuum-fold7-stream-scroll.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+# Subtest: native delta preview is throttled, bounded and tied to the active request
+not ok 5 - native delta preview is throttled, bounded and tied to the active request
+  location: '/workspace/scratch/b31a9d731016/app-query-format-evidence/node-red-source/scripts/continuum-local-chat-streaming.test.mjs:5:1'
+  failureType: 'testCodeFailure'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+# Subtest: stream completion removes only its own transient row
+ok 6 - stream completion removes only its own transient row
+# Subtest: Stop clears preview synchronously and queued rendering checks cancellation state
+ok 7 - Stop clears preview synchronously and queued rendering checks cancellation state
+# Subtest: native text deltas preserve standalone whitespace while ignoring empty chunks
+ok 8 - native text deltas preserve standalone whitespace while ignoring empty chunks
+# Subtest: invocation time consumes the same generation budget and safe profile reaches existing status
+not ok 9 - invocation time consumes the same generation budget and safe profile reaches existing status
+  location: '/workspace/scratch/b31a9d731016/app-query-format-evidence/node-red-source/scripts/continuum-local-chat-streaming.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+# tests 9
+# suites 0
+# pass 5
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 139.489874

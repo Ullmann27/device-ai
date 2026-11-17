@@ -1,0 +1,119 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {evaluateReleaseSource,inspectReleaseCheckout,inspectHostEnvironment} from './continuum-release-host-preflight.mjs';
+const SHA='c'.repeat(40);
+const source=()=>({gradle:'continuumLocalStandaloneQa applicationIdSuffix = ".qa" "at.heinz.deviceai.continuumlocal" continuumLocalSigningPath.isNullOrBlank()',
+  runner:'-PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=27 :app:testDebugUnitTest :app:lintDebug',
+  release:'-PcontinuumLocalStandalone=true at.heinz.deviceai.continuumlocal',branch:'research/proof',
+  origin:'https://github.com/Ullmann27/device-ai.git',sha:SHA,expectedSha:SHA,dirty:false});
+const denied=(patch,reason)=>assert.ok(evaluateReleaseSource({...source(),...patch}).blockers.includes(reason));
+test('valid sources grant only permission to attempt the QA build',()=>{
+  const x=evaluateReleaseSource(source());assert.equal(x.sourceAdmission,true);assert.deepEqual(x.blockers,[]);
+});
+test('wrong exact source HEAD fails',()=>denied({expectedSha:'a'.repeat(40)},'EXACT_HEAD_MISMATCH'));
+test('dirty checkout fails',()=>denied({dirty:true},'UNCLEAN_CHECKOUT'));
+test('main, production and release branch variants fail',()=>{
+  for(const branch of ['main','production','release/owner','master','prod/dev'])denied({branch},'PROTECTED_BRANCH');
+});
+test('untrusted or missing remote fails',()=>denied({origin:'https://example.invalid/device-ai'},'UNTRUSTED_GIT_REMOTE'));
+test('old app package fails',()=>denied({gradle:'applicationId="at.heinz.deviceai"'},'STANDALONE_QA_SOURCE_MISSING'));
+test('QA without sign exclusion fails',()=>denied({gradle:'continuumLocalStandaloneQa applicationIdSuffix = ".qa" "at.heinz.deviceai.continuumlocal"'},'STANDALONE_QA_SOURCE_MISSING'));
+test('runner without actual QA flag fails',()=>denied({runner:'-PdeviceAiMentorPreview=true :app:testDebugUnitTest :app:lintDebug'},'STANDALONE_QA_RUNNER_MISSING'));
+test('wrong signing release lane fails',()=>denied({release:'-PdeviceAiMentorPreview=true'},'ORIGINAL_RELEASE_ROUTE_MISSING'));
+test('host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads',()=>{
+  const r=inspectHostEnvironment({});assert.equal(r.hostReadyToAttemptQa,false);
+  assert.equal(r.androidCompilationExecuted,false);assert.equal(r.apkSigned,false);
+  for(const name of ['EXPLICIT_JDK_NOT_FOUND','SDK36_NOT_FOUND','GRADLE8111_NOT_FOUND','NATIVE_AAPT2_NOT_FOUND'])
+    assert.ok(r.blockers.includes(name),name);
+});
+test('host with existing incompatible Java detects JDK17 requirement',()=>{
+  const home=process.env.JAVA_HOME;
+  if(!home || !fs.existsSync(path.join(home,'bin','javac')))return;
+  const r=inspectHostEnvironment({JAVA_HOME:home});
+  assert.equal(r.hostReadyToAttemptQa,false);
+  assert.ok(r.blockers.some(x=>x.startsWith('JDK')||x.startsWith('SDK')));
+});
+test('host probes receive the explicit environment without mutating process.env',t=>{
+  const home=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-preflight-env-'));
+  t.after(()=>fs.rmSync(home,{recursive:true,force:true}));
+  const bin=path.join(home,'bin'),sdk=path.join(home,'sdk');
+  fs.mkdirSync(bin);fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
+  fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');
+  const guard='#!/bin/sh\n[ -n "$JAVA_HOME" ] && [ "$PATH" = "$JAVA_HOME/bin" ] || exit 71\n';
+  for(const [name,version] of [['java','printf \'openjdk version "17.0.1"\\n\' >&2'],
+    ['javac','printf \'javac 17.0.1\\n\''],['gradle','printf \'Gradle 8.11.1\\n\'']]){
+    fs.writeFileSync(path.join(bin,name),guard+`printf '%s\\n' '${name}' >> "$JAVA_HOME/probes.log"\n`+version+'\n',{mode:0o700});
+  }
+  const aapt2=path.join(bin,'aapt2');
+  fs.writeFileSync(aapt2,'#!/bin/sh\nprintf "%s\\n" "Android Asset Packaging Tool (aapt) 2.19-12345678"\n',{mode:0o700});
+  const env={JAVA_HOME:home,PATH:bin,ANDROID_HOME:sdk,CONTINUUM_GRADLE_PATH:path.join(bin,'gradle'),CONTINUUM_AAPT2_PATH:aapt2};
+  const before={...process.env},input={...env},r=inspectHostEnvironment(env);
+  assert.deepEqual(r.blockers,[]);assert.equal(r.hostReadyToAttemptQa,true);
+  assert.equal(fs.readFileSync(path.join(home,'probes.log'),'utf8'),'java\njavac\ngradle\n');
+  assert.equal(r.androidCompilationExecuted,false);assert.equal(r.androidTestExecuted,false);assert.equal(r.apkSigned,false);
+  assert.deepEqual({...process.env},before);assert.deepEqual(env,input);
+});
+function fixture(work){
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-preflight-repo-'));
+  const git=(...args)=>{const x=spawnSync('git',args,{cwd:root,encoding:'utf8'});assert.equal(x.status,0,x.stderr);return x.stdout.trim();};
+  try {
+    const write=(p,content)=>{const dest=path.join(root,p);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,content);};
+    const s=source();write('app/build.gradle.kts',s.gradle);
+    write('scripts/continuum-fusion-full-regression.sh',s.runner);
+    write('scripts/continuum-fold7-standalone-apk.sh',s.release);
+    git('init','-q');git('checkout','-qb','research/synthetic');git('config','user.name','Fixture');
+    git('config','user.email','fixture@example.invalid');git('remote','add','origin','https://github.com/Ullmann27/device-ai.git');
+    git('add','.');git('commit','-qm','initial public-only fixture');
+    return work({root,git,write,head:git('rev-parse','HEAD')});
+  } finally {fs.rmSync(root,{recursive:true,force:true});}
+}
+test('read-only admission accepts a clean synthetic Git checkout with exact SHA',()=>fixture(({root,head})=>{
+  const a=inspectReleaseCheckout(root,head);assert.equal(a.sourceAdmission,true);
+  assert.equal(a.blockers.length,0);
+}));
+test('read-only admission reports dirty synthetic checkout',()=>fixture(({root,head,write})=>{
+  write('app/build.gradle.kts','changed');
+  const a=inspectReleaseCheckout(root,head);assert.ok(a.blockers.includes('UNCLEAN_CHECKOUT'));
+}));
+test('refuses symlinked release source',()=>fixture(({root,head})=>{
+  const file=path.join(root,'scripts/continuum-fold7-standalone-apk.sh');fs.unlinkSync(file);fs.symlinkSync('/etc/passwd',file);
+  assert.throws(()=>inspectReleaseCheckout(root,head),/SOURCE_SYMLINK/);
+}));
+test('refuses parent directory rather than exact repository root',()=>fixture(({root,head})=>{
+  assert.throws(()=>inspectReleaseCheckout(path.dirname(root),head));
+}));
+
+test('native AAPT2 must execute and identify as AAPT2 before QA admission',t=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-apk-b6-'));
+  t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+  const bin=path.join(root,'bin'),sdk=path.join(root,'sdk');
+  fs.mkdirSync(bin);
+  fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
+  fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');
+  for(const [name,version] of [
+    ['java','printf \'openjdk version "17.0.1"\\n\' >&2'],
+    ['javac','printf \'javac 17.0.1\\n\''],
+    ['gradle','printf \'Gradle 8.11.1\\n\'']
+  ])fs.writeFileSync(path.join(bin,name),'#!/bin/sh\n'+version+'\n',{mode:0o700});
+  const aapt2=path.join(bin,'aapt2');
+  const env={JAVA_HOME:root,PATH:bin,ANDROID_HOME:sdk,
+    CONTINUUM_GRADLE_PATH:path.join(bin,'gradle'),
+    CONTINUUM_AAPT2_PATH:aapt2};
+  const verify=(script,mode,allowed)=>{
+    fs.writeFileSync(aapt2,script,{mode});
+    fs.chmodSync(aapt2,mode);
+    const result=inspectHostEnvironment(env);
+    assert.equal(result.hostReadyToAttemptQa,allowed,result.blockers.join(','));
+    assert.equal(result.blockers.includes('NATIVE_AAPT2_INVALID'),!allowed);
+    assert.equal(result.androidCompilationExecuted,false);
+    assert.equal(result.apkSigned,false);
+  };
+  verify('fixture only',0o600,false);
+  verify('#!/bin/sh\nexit 77\n',0o700,false);
+  verify('#!/bin/sh\necho another-tool\n',0o700,false);
+  verify('#!/bin/sh\necho "Android Asset Packaging Tool (aapt) 2.19-123"\n',0o700,true);
+});

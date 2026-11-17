@@ -1,0 +1,88 @@
+{
+  "baseCommit": "6161132e2ed7263af83febc9fabce3f146cb9715",
+  "status": "PASS_WITH_DOCUMENTED_SOURCE_OVERLAY",
+  "exitCode": 0,
+  "tests": 79,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.ContinuumBrainHypothesisUiTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSourceRoundJournalTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSourceNoveltyTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumLearningCoreTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.RecoveredContextCredentialBoundaryTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.BrainOrbSignalsTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContextCredentialFramingTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContextCredentialHoldoutTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSourceRoundRecoveryTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "changedSources": {
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumSourceNovelty.kt": "f95071dc7970cbf6aacc8b8d7394165c3edaf129a319cd835733e2dfb98cc244",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceRoundJournalTest.kt": "73d935b7052c5e0e14cf29d9991cc98b96cf9968334d37495c8185102a04085a",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceRoundRecoveryTest.kt": "8a6e824fe47a1fffabac7edb5833c80793c1361786ddff967123b8852c876dc6",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumBrainHypothesisUiTest.kt": "da35baf32a12ed4723f2bf83be4ed4e00bdf7423dfc337a34f673dc8b4b4ed65"
+  },
+  "physicalDevice": "NOT_RUN"
+}

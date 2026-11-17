@@ -1,0 +1,25 @@
+{
+  "source": "24547da95790ca43b0293ed06b4f2bd6e5a7814c",
+  "start": "2026-11-06T20:20:55.830410+00:00",
+  "command": [
+    "gradle",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "--info",
+    "--refresh-dependencies",
+    "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumStandaloneVersionCode=47",
+    ":app:compileDebugKotlin"
+  ],
+  "networkCorrection": "Use current inherited HTTPS_PROXY instead of stale browser-proxy from GRADLE_OPTS; retain TLS verification and inherited trust CA",
+  "finalRepairVerification": false,
+  "exitCode": 0,
+  "end": "2026-11-06T20:25:25.795916+00:00",
+  "headAfter": "24547da95790ca43b0293ed06b4f2bd6e5a7814c",
+  "trackedSourceClean": true
+}

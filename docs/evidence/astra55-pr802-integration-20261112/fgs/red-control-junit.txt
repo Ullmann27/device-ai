@@ -1,0 +1,50 @@
+JUnit version 4.13.2
+..E.EE.....E..E.E.
+Time: 5.147
+There were 6 failures:
+1) projectionStopFailureStillRemovesForegroundAndStopsService(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.SecurityException: Synthetic revoked projection
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest$ProjectionShadow.stop(ContinuumLiveProjectionServiceUiTest.kt:105)
+	at android.media.projection.MediaProjection.stop(MediaProjection.java)
+	at at.heinz.deviceai.ContinuumLiveProjectionService.closeCapture(ContinuumLiveProjectionService.kt:295)
+	at at.heinz.deviceai.ContinuumLiveProjectionService.onTaskRemoved(ContinuumLiveProjectionService.kt:303)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.projectionStopFailureStillRemovesForegroundAndStopsService(ContinuumLiveProjectionServiceUiTest.kt:258)
+2) resizeSurfaceFailureEndsCaptureInsideCallback(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.IllegalStateException: Synthetic detached display
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest$DisplayShadow.setSurface(ContinuumLiveProjectionServiceUiTest.kt:114)
+	at android.hardware.display.VirtualDisplay.setSurface(VirtualDisplay.java)
+	at at.heinz.deviceai.ContinuumLiveProjectionService.updateSurface(ContinuumLiveProjectionService.kt:172)
+	at at.heinz.deviceai.ContinuumLiveProjectionService.updateSurface$default(ContinuumLiveProjectionService.kt:165)
+	at at.heinz.deviceai.ContinuumLiveProjectionService$callback$1.onCapturedContentResize(ContinuumLiveProjectionService.kt:83)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.resizeSurfaceFailureEndsCaptureInsideCallback(ContinuumLiveProjectionServiceUiTest.kt:274)
+3) resizeSurfaceFailureEndsCaptureInsideCallback(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.IllegalStateException: Synthetic detached display
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest$DisplayShadow.setSurface(ContinuumLiveProjectionServiceUiTest.kt:114)
+	at android.hardware.display.VirtualDisplay.setSurface(VirtualDisplay.java)
+	at at.heinz.deviceai.ContinuumLiveProjectionService.closeCapture(ContinuumLiveProjectionService.kt:289)
+	at at.heinz.deviceai.ContinuumLiveProjectionService.onDestroy(ContinuumLiveProjectionService.kt:308)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.cleanup(ContinuumLiveProjectionServiceUiTest.kt:142)
+4) matchingStopIntentEndsCaptureAndForeground(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.matchingStopIntentEndsCaptureAndForeground(ContinuumLiveProjectionServiceUiTest.kt:305)
+5) oldStopIntentCannotStopCurrentService(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.oldStopIntentCannotStopCurrentService(ContinuumLiveProjectionServiceUiTest.kt:291)
+6) nullStartAcceptanceCannotLeaveAnActiveCapture(at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.ContinuumLiveProjectionServiceUiTest.nullStartAcceptanceCannotLeaveAnActiveCapture(ContinuumLiveProjectionServiceUiTest.kt:235)
+
+FAILURES!!!
+Tests run: 12,  Failures: 6
+

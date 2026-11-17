@@ -1,0 +1,736 @@
+TAP version 13
+# Subtest: zero-paid-service worker repairs/checks each immutable head once and then idles
+ok 1 - zero-paid-service worker repairs/checks each immutable head once and then idles
+  ---
+  duration_ms: 17.172332
+  type: 'test'
+  ...
+# Subtest: teamleader refuses symlinked state directory pointing back into source checkout
+ok 2 - teamleader refuses symlinked state directory pointing back into source checkout
+  ---
+  duration_ms: 2.376308
+  type: 'test'
+  ...
+# Subtest: owner-accepted repair runs before baseline and only records an independently verified patch
+ok 3 - owner-accepted repair runs before baseline and only records an independently verified patch
+  ---
+  duration_ms: 3.870023
+  type: 'test'
+  ...
+# Subtest: two distinct accepted owner repairs run in consecutive local cycles on one unchanged HEAD
+ok 4 - two distinct accepted owner repairs run in consecutive local cycles on one unchanged HEAD
+  ---
+  duration_ms: 2.905393
+  type: 'test'
+  ...
+# Subtest: accepted owner TEST is dispatched before baseline and a verified new contract is review-only
+ok 5 - accepted owner TEST is dispatched before baseline and a verified new contract is review-only
+  ---
+  duration_ms: 2.586174
+  type: 'test'
+  ...
+# Subtest: owner TEST cannot falsely claim DONE without increasing or independently checking tests
+ok 6 - owner TEST cannot falsely claim DONE without increasing or independently checking tests
+  ---
+  duration_ms: 1.221715
+  type: 'test'
+  ...
+# Subtest: failed owner TEST also leaves the immutable HEAD eligible for one real baseline
+ok 7 - failed owner TEST also leaves the immutable HEAD eligible for one real baseline
+  ---
+  duration_ms: 2.323269
+  type: 'test'
+  ...
+# Subtest: owner REPAIR retains priority over TEST and both finish on the same HEAD
+ok 8 - owner REPAIR retains priority over TEST and both finish on the same HEAD
+  ---
+  duration_ms: 2.247595
+  type: 'test'
+  ...
+# Subtest: retry is bounded by caller and cannot preempt accepted Owner REPAIR or TEST
+ok 9 - retry is bounded by caller and cannot preempt accepted Owner REPAIR or TEST
+  ---
+  duration_ms: 1.075976
+  type: 'test'
+  ...
+# Subtest: owner repair evidence cannot be faked by a driver claiming DONE
+ok 10 - owner repair evidence cannot be faked by a driver claiming DONE
+  ---
+  duration_ms: 1.432792
+  type: 'test'
+  ...
+# Subtest: READY read-only INVESTIGATE is handled once; no write or deployment
+ok 11 - READY read-only INVESTIGATE is handled once; no write or deployment
+  ---
+  duration_ms: 1.980034
+  type: 'test'
+  ...
+# Subtest: Teamleader refuses fabricated DONE when no tests actually executed
+ok 12 - Teamleader refuses fabricated DONE when no tests actually executed
+  ---
+  duration_ms: 1.77145
+  type: 'test'
+  ...
+# Subtest: verified repair is a PROPOSAL only; never described as applied
+ok 13 - verified repair is a PROPOSAL only; never described as applied
+  ---
+  duration_ms: 1.289196
+  type: 'test'
+  ...
+# Subtest: an internally passing repair without an independent proof is NOT verified
+ok 14 - an internally passing repair without an independent proof is NOT verified
+  ---
+  duration_ms: 1.244739
+  type: 'test'
+  ...
+# Subtest: a failed second-worktree check vetoes an otherwise passing repair
+ok 15 - a failed second-worktree check vetoes an otherwise passing repair
+  ---
+  duration_ms: 0.819972
+  type: 'test'
+  ...
+# Subtest: failed or interrupted work is preserved, never marked successful
+ok 16 - failed or interrupted work is preserved, never marked successful
+  ---
+  duration_ms: 1.516478
+  type: 'test'
+  ...
+# Subtest: tampered state, invalid accepted task, and an existing lock fail closed
+ok 17 - tampered state, invalid accepted task, and an existing lock fail closed
+  ---
+  duration_ms: 1.823839
+  type: 'test'
+  ...
+# Subtest: unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs
+ok 18 - unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs
+  ---
+  duration_ms: 5.165008
+  type: 'test'
+  ...
+# Subtest: old lock of a definitively dead same-host process recovers automatically
+ok 19 - old lock of a definitively dead same-host process recovers automatically
+  ---
+  duration_ms: 1.542296
+  type: 'test'
+  ...
+# Subtest: repeat checking a proven head requires explicit manual retry
+ok 20 - repeat checking a proven head requires explicit manual retry
+  ---
+  duration_ms: 2.102989
+  type: 'test'
+  ...
+# Subtest: CLI budget, command and retry flags are validated before execution
+ok 21 - CLI budget, command and retry flags are validated before execution
+  ---
+  duration_ms: 0.755976
+  type: 'test'
+  ...
+# Subtest: idle unchanged source HEAD receives exactly one structural discovery, new HEAD re-enables scan
+ok 22 - idle unchanged source HEAD receives exactly one structural discovery, new HEAD re-enables scan
+  ---
+  duration_ms: 9.735321
+  type: 'test'
+  ...
+# Subtest: crashed discovery records a failure and never hot-loops on the same HEAD
+ok 23 - crashed discovery records a failure and never hot-loops on the same HEAD
+  ---
+  duration_ms: 1.846664
+  type: 'test'
+  ...
+# Subtest: Teamleader can read older version-1 states that lack discoveryHeads
+ok 24 - Teamleader can read older version-1 states that lack discoveryHeads
+  ---
+  duration_ms: 1.297018
+  type: 'test'
+  ...
+# Subtest: measured progress distinguishes real completed tasks, proposed patch and failed checks
+ok 25 - measured progress distinguishes real completed tasks, proposed patch and failed checks
+  ---
+  duration_ms: 1.378901
+  type: 'test'
+  ...
+# Subtest: discovery heads counter counts analysis only, not hourly idle loops
+ok 26 - discovery heads counter counts analysis only, not hourly idle loops
+  ---
+  duration_ms: 3.158634
+  type: 'test'
+  ...
+# Subtest: state policy rejects malformed heads and never schedules unauthorised actions
+ok 27 - state policy rejects malformed heads and never schedules unauthorised actions
+  ---
+  duration_ms: 0.236966
+  type: 'test'
+  ...
+# Subtest: unverified repair is redacted consistently without modifying the audit original
+ok 28 - unverified repair is redacted consistently without modifying the audit original
+  ---
+  duration_ms: 0.269154
+  type: 'test'
+  ...
+# Subtest: successful independent second-worktree result keeps verified proposal intact
+ok 29 - successful independent second-worktree result keeps verified proposal intact
+  ---
+  duration_ms: 0.156936
+  type: 'test'
+  ...
+# Subtest: legacy internal VERIFIED without independent observation cannot leak success
+ok 30 - legacy internal VERIFIED without independent observation cannot leak success
+  ---
+  duration_ms: 0.136274
+  type: 'test'
+  ...
+# Subtest: a running Android build blocks teamleader before any repair and releases local state lock
+ok 31 - a running Android build blocks teamleader before any repair and releases local state lock
+  ---
+  duration_ms: 1.05859
+  type: 'test'
+  ...
+# Subtest: backlog CLI: a human task is DONE only after verify ran the fixed checks on the submitted patch
+ok 32 - backlog CLI: a human task is DONE only after verify ran the fixed checks on the submitted patch
+  ---
+  duration_ms: 356.943156
+  type: 'test'
+  ...
+# Subtest: backlog CLI: a patch that fails the checks records failing evidence and returns the task
+ok 33 - backlog CLI: a patch that fails the checks records failing evidence and returns the task
+  ---
+  duration_ms: 298.184221
+  type: 'test'
+  ...
+# Subtest: backlog CLI rejects path traversal and unknown commands
+ok 34 - backlog CLI rejects path traversal and unknown commands
+  ---
+  duration_ms: 0.324688
+  type: 'test'
+  ...
+# Subtest: state branch: backlog is saved with compare-and-swap, reloaded, and unreadable state fails closed
+ok 35 - state branch: backlog is saved with compare-and-swap, reloaded, and unreadable state fails closed
+  ---
+  duration_ms: 267.061568
+  type: 'test'
+  ...
+# Subtest: public CLI can propose then accept a task conforming to the Kotlin/Node scalar subject schema
+ok 36 - public CLI can propose then accept a task conforming to the Kotlin/Node scalar subject schema
+  ---
+  duration_ms: 67.743429
+  type: 'test'
+  ...
+# Subtest: CLI refuses noncanonical array objects and uncontrolled shell-shaped operations
+ok 37 - CLI refuses noncanonical array objects and uncontrolled shell-shaped operations
+  ---
+  duration_ms: 29.842276
+  type: 'test'
+  ...
+# Subtest: Kotlin IMPLEMENT CLI persists only scalar v2 owner oracle and requires separate owner acceptance
+ok 38 - Kotlin IMPLEMENT CLI persists only scalar v2 owner oracle and requires separate owner acceptance
+  ---
+  duration_ms: 52.717477
+  type: 'test'
+  ...
+# Subtest: Kotlin IMPLEMENT CLI blocks unsupported types, paths and object-valued case specs
+ok 39 - Kotlin IMPLEMENT CLI blocks unsupported types, paths and object-valued case specs
+  ---
+  duration_ms: 36.315503
+  type: 'test'
+  ...
+# Subtest: process death after persisting investigation verdict cannot strand green checks in VERIFYING
+ok 40 - process death after persisting investigation verdict cannot strand green checks in VERIFYING
+  ---
+  duration_ms: 438.462711
+  type: 'test'
+  ...
+# Subtest: process death after persisting investigation verdict cannot strand red checks in VERIFYING
+ok 41 - process death after persisting investigation verdict cannot strand red checks in VERIFYING
+  ---
+  duration_ms: 523.027631
+  type: 'test'
+  ...
+# Subtest: scheduler recovers an expired investigation claim and honours the remaining attempt budget
+ok 42 - scheduler recovers an expired investigation claim and honours the remaining attempt budget
+  ---
+  duration_ms: 37.040672
+  type: 'test'
+  ...
+# Subtest: scheduler keeps a live investigation claim and its token intact
+ok 43 - scheduler keeps a live investigation claim and its token intact
+  ---
+  duration_ms: 25.191165
+  type: 'test'
+  ...
+# Subtest: direct investigation worker recovers an expired claim before selecting its exact task
+ok 44 - direct investigation worker recovers an expired claim before selecting its exact task
+  ---
+  duration_ms: 264.738684
+  type: 'test'
+  ...
+# Subtest: investigation rejects source report before changing source or claim state
+ok 45 - investigation rejects source report before changing source or claim state
+  ---
+  duration_ms: 26.967362
+  type: 'test'
+  ...
+# Subtest: investigation rejects symlink report before changing source or claim state
+ok 46 - investigation rejects symlink report before changing source or claim state
+  ---
+  duration_ms: 28.295387
+  type: 'test'
+  ...
+# Subtest: investigation rejects source backlog before changing source or claim state
+ok 47 - investigation rejects source backlog before changing source or claim state
+  ---
+  duration_ms: 23.985454
+  type: 'test'
+  ...
+# Subtest: investigation rejects symlink backlog before changing source or claim state
+ok 48 - investigation rejects symlink backlog before changing source or claim state
+  ---
+  duration_ms: 28.691011
+  type: 'test'
+  ...
+# Subtest: INVESTIGATE worker reproduces findings but never invents wiring patches
+ok 49 - INVESTIGATE worker reproduces findings but never invents wiring patches
+  ---
+  duration_ms: 1.544921
+  type: 'test'
+  ...
+# Subtest: INVESTIGATE declines changes for findings no longer present
+ok 50 - INVESTIGATE declines changes for findings no longer present
+  ---
+  duration_ms: 0.500552
+  type: 'test'
+  ...
+# Subtest: only accepted structural INVESTIGATE tasks are eligible
+ok 51 - only accepted structural INVESTIGATE tasks are eligible
+  ---
+  duration_ms: 0.640002
+  type: 'test'
+  ...
+# Subtest: empty or failed test chain cannot complete backlog investigation
+ok 52 - empty or failed test chain cannot complete backlog investigation
+  ---
+  duration_ms: 0.236025
+  type: 'test'
+  ...
+# Subtest: worker honours Teamleader-selected task and never skips backlog dependencies
+ok 53 - worker honours Teamleader-selected task and never skips backlog dependencies
+  ---
+  duration_ms: 4.316293
+  type: 'test'
+  ...
+# Subtest: owner independent evidence rejects silent test-count and skipped-test regressions
+ok 54 - owner independent evidence rejects silent test-count and skipped-test regressions
+  ---
+  duration_ms: 2.986385
+  type: 'test'
+  ...
+# Subtest: expired execution budget fails closed before launching fixed subprocesses
+ok 55 - expired execution budget fails closed before launching fixed subprocesses
+  ---
+  duration_ms: 4.565417
+  type: 'test'
+  ...
+# Subtest: an unrelated automatic REPAIR task cannot starve an accepted owner task
+ok 56 - an unrelated automatic REPAIR task cannot starve an accepted owner task
+  ---
+  duration_ms: 4.324165
+  type: 'test'
+  ...
+# Subtest: eligible owner selection cannot be starved by stale HEAD or higher priority
+ok 57 - eligible owner selection cannot be starved by stale HEAD or higher priority
+  ---
+  duration_ms: 2.436469
+  type: 'test'
+  ...
+# Subtest: owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE
+ok 58 - owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE
+  ---
+  duration_ms: 1276.229996
+  type: 'test'
+  ...
+# Subtest: an owner cancel during the session stops at the next step boundary and is never DONE
+ok 59 - an owner cancel during the session stops at the next step boundary and is never DONE
+  ---
+  duration_ms: 361.534577
+  type: 'test'
+  ...
+# Subtest: an owner cancel during a running check step ends that step within seconds and is never DONE
+ok 60 - an owner cancel during a running check step ends that step within seconds and is never DONE
+  ---
+  duration_ms: 927.130978
+  type: 'test'
+  ...
+# Subtest: passing fixture is not reported as successful code development
+ok 61 - passing fixture is not reported as successful code development
+  ---
+  duration_ms: 973.266187
+  type: 'test'
+  ...
+# Subtest: stale owner claim is recovered after worker crash without faking success
+ok 62 - stale owner claim is recovered after worker crash without faking success
+  ---
+  duration_ms: 342.209147
+  type: 'test'
+  ...
+# Subtest: unapproved task, incorrect HEAD, foreign source and unknown chain fail closed
+ok 63 - unapproved task, incorrect HEAD, foreign source and unknown chain fail closed
+  ---
+  duration_ms: 25.57782
+  type: 'test'
+  ...
+# Subtest: corrupted backlog never executes repair, and original Git checkout remains intact
+ok 64 - corrupted backlog never executes repair, and original Git checkout remains intact
+  ---
+  duration_ms: 27.636122
+  type: 'test'
+  ...
+# Subtest: strict observation failure exposes the canonical negative Echo report without learning
+ok 65 - strict observation failure exposes the canonical negative Echo report without learning
+  ---
+  duration_ms: 452.609884
+  type: 'test'
+  ...
+# Subtest: resuming a negative task reuses its report without inference, execution or journal changes
+ok 66 - resuming a negative task reuses its report without inference, execution or journal changes
+  ---
+  duration_ms: 503.185334
+  type: 'test'
+  ...
+# Subtest: a reporter removed during a failed attempt cannot receive a canonical report
+ok 67 - a reporter removed during a failed attempt cannot receive a canonical report
+  ---
+  duration_ms: 286.159315
+  type: 'test'
+  ...
+# Subtest: strict replay of an older completed repair cannot publish success without a current model observation
+ok 68 - strict replay of an older completed repair cannot publish success without a current model observation
+  ---
+  duration_ms: 1718.654399
+  type: 'test'
+  ...
+# Subtest: a competing writer cannot turn a strict observation failure into an older success report
+ok 69 - a competing writer cannot turn a strict observation failure into an older success report
+  ---
+  duration_ms: 1731.416171
+  type: 'test'
+  ...
+# Subtest: service attempt persists the canonical negative report for owner lookup while rejecting
+ok 70 - service attempt persists the canonical negative report for owner lookup while rejecting
+  ---
+  duration_ms: 394.749584
+  type: 'test'
+  ...
+# Subtest: provider-shaped and JSON-copied errors cannot acquire canonical failure evidence
+ok 71 - provider-shaped and JSON-copied errors cannot acquire canonical failure evidence
+  ---
+  duration_ms: 283.730696
+  type: 'test'
+  ...
+# Subtest: failure evidence persistence cannot replace the model error or overwrite a prior record
+ok 72 - failure evidence persistence cannot replace the model error or overwrite a prior record
+  ---
+  duration_ms: 276.369841
+  type: 'test'
+  ...
+# Subtest: owner lookup offers only the checked negative report for an unknown delivery
+ok 73 - owner lookup offers only the checked negative report for an unknown delivery
+  ---
+  duration_ms: 750.040313
+  type: 'test'
+  ...
+# Subtest: nextEligible retains task identity and priority, oldest-first and id tie breaks without mutation
+ok 74 - nextEligible retains task identity and priority, oldest-first and id tie breaks without mutation
+  ---
+  duration_ms: 7.397435
+  type: 'test'
+  ...
+# Subtest: nextEligible combines every optional scope and respects empty filters and null subjects
+ok 75 - nextEligible combines every optional scope and respects empty filters and null subjects
+  ---
+  duration_ms: 1.289376
+  type: 'test'
+  ...
+# Subtest: nextEligible checks eligibility before kinds and sources, retaining filter short circuit order
+ok 76 - nextEligible checks eligibility before kinds and sources, retaining filter short circuit order
+  ---
+  duration_ms: 1.742637
+  type: 'test'
+  ...
+# Subtest: nextEligible releases dependent tasks only after matching completed-task evidence
+ok 77 - nextEligible releases dependent tasks only after matching completed-task evidence
+  ---
+  duration_ms: 4.871577
+  type: 'test'
+  ...
+# Subtest: conformance vectors: every step and final state as recorded (shared with Kotlin)
+ok 78 - conformance vectors: every step and final state as recorded (shared with Kotlin)
+  ---
+  duration_ms: 169.388446
+  type: 'test'
+  ...
+# Subtest: committed fixtures are exactly what the current rules produce
+ok 79 - committed fixtures are exactly what the current rules produce
+  ---
+  duration_ms: 197.399491
+  type: 'test'
+  ...
+# Subtest: stability backlog completion rejects a backend profile with zero executed tests
+ok 80 - stability backlog completion rejects a backend profile with zero executed tests
+  ---
+  duration_ms: 1.089416
+  type: 'test'
+  ...
+# Subtest: documents round-trip byte-identically and unknown fields survive operations
+ok 81 - documents round-trip byte-identically and unknown fields survive operations
+  ---
+  duration_ms: 7.502138
+  type: 'test'
+  ...
+# Subtest: invalid documents fail with the shared error codes
+ok 82 - invalid documents fail with the shared error codes
+  ---
+  duration_ms: 6.094623
+  type: 'test'
+  ...
+# Subtest: development-planner output (schema 1) migrates without losing data
+ok 83 - development-planner output (schema 1) migrates without losing data
+  ---
+  duration_ms: 3.621649
+  type: 'test'
+  ...
+# Subtest: a task is never DONE without matching executed-test evidence, also when forged in a file
+ok 84 - a task is never DONE without matching executed-test evidence, also when forged in a file
+  ---
+  duration_ms: 1.575867
+  type: 'test'
+  ...
+# Subtest: canonical JSON escaping and ordering equal JSON.stringify for valid strings
+ok 85 - canonical JSON escaping and ordering equal JSON.stringify for valid strings
+  ---
+  duration_ms: 0.328383
+  type: 'test'
+  ...
+# Subtest: store writes atomically, keeps a backup and does not rewrite unchanged content
+ok 86 - store writes atomically, keeps a backup and does not rewrite unchanged content
+  ---
+  duration_ms: 3.628749
+  type: 'test'
+  ...
+# Subtest: a corrupt backlog is recovered from the backup and quarantined, never deleted
+ok 87 - a corrupt backlog is recovered from the backup and quarantined, never deleted
+  ---
+  duration_ms: 2.178011
+  type: 'test'
+  ...
+# Subtest: without a valid backup a corrupt backlog fails closed and nothing is touched
+ok 88 - without a valid backup a corrupt backlog fails closed and nothing is touched
+  ---
+  duration_ms: 1.140683
+  type: 'test'
+  ...
+# Subtest: revision conflicts and rejected batches write nothing; lenient batches report every rejection
+ok 89 - revision conflicts and rejected batches write nothing; lenient batches report every rejection
+  ---
+  duration_ms: 1.502546
+  type: 'test'
+  ...
+# Subtest: a fresh foreign lock times out, a stale one is broken; interrupted writes are cleaned
+ok 90 - a fresh foreign lock times out, a stale one is broken; interrupted writes are cleaned
+  ---
+  duration_ms: 205.687819
+  type: 'test'
+  ...
+# Subtest: stale backlog lock is not stolen while same-host PID is still alive
+ok 91 - stale backlog lock is not stolen while same-host PID is still alive
+  ---
+  duration_ms: 151.441712
+  type: 'test'
+  ...
+# Subtest: concurrent writer processes lose no update
+ok 92 - concurrent writer processes lose no update
+  ---
+  duration_ms: 283.649941
+  type: 'test'
+  ...
+# Subtest: a planner v1 file is migrated on the first write and the original is kept
+ok 93 - a planner v1 file is migrated on the first write and the original is kept
+  ---
+  duration_ms: 15.622393
+  type: 'test'
+  ...
+# Subtest: round-trip verifier accepts a correct Kotlin half and rejects a missing or wrong one
+ok 94 - round-trip verifier accepts a correct Kotlin half and rejects a missing or wrong one
+  ---
+  duration_ms: 18.0235
+  type: 'test'
+  ...
+# Subtest: three local cycles pace on a fixed one-hour schedule and persist honest heartbeat
+ok 95 - three local cycles pace on a fixed one-hour schedule and persist honest heartbeat
+  ---
+  duration_ms: 4.844065
+  type: 'test'
+  ...
+# Subtest: failures stay failed, sleep with increasing backoff and eventually recover
+ok 96 - failures stay failed, sleep with increasing backoff and eventually recover
+  ---
+  duration_ms: 0.603597
+  type: 'test'
+  ...
+# Subtest: signal stopping terminates without another cycle or artificial success
+ok 97 - signal stopping terminates without another cycle or artificial success
+  ---
+  duration_ms: 0.384758
+  type: 'test'
+  ...
+# Subtest: invalid intervals, cycle limits and CLI mode combinations are rejected
+ok 98 - invalid intervals, cycle limits and CLI mode combinations are rejected
+  ---
+  duration_ms: 1.076978
+  type: 'test'
+  ...
+# Subtest: unverified repair and interruption increment failure counters, not successes
+ok 99 - unverified repair and interruption increment failure counters, not successes
+  ---
+  duration_ms: 0.46621
+  type: 'test'
+  ...
+# Subtest: unknown or unfinished worker result must fail closed
+ok 100 - unknown or unfinished worker result must fail closed
+  ---
+  duration_ms: 0.429625
+  type: 'test'
+  ...
+# Subtest: signal while waiting persists terminal STOPPED heartbeat
+ok 101 - signal while waiting persists terminal STOPPED heartbeat
+  ---
+  duration_ms: 0.436786
+  type: 'test'
+  ...
+# Subtest: one-shot CLI exits nonzero for failed, unverified or unknown outcomes
+ok 102 - one-shot CLI exits nonzero for failed, unverified or unknown outcomes
+  ---
+  duration_ms: 0.290026
+  type: 'test'
+  ...
+# Subtest: failure backoff never retries before a user configured interval
+ok 103 - failure backoff never retries before a user configured interval
+  ---
+  duration_ms: 0.393351
+  type: 'test'
+  ...
+# Subtest: a failing baseline without a code diagnostic remains a failed worker cycle
+ok 104 - a failing baseline without a code diagnostic remains a failed worker cycle
+  ---
+  duration_ms: 0.726421
+  type: 'test'
+  ...
+# Subtest: scheduler wait failure persists terminal ERROR rather than false WAITING
+ok 105 - scheduler wait failure persists terminal ERROR rather than false WAITING
+  ---
+  duration_ms: 1.284199
+  type: 'test'
+  ...
+# Subtest: saved status validates legitimate heartbeats and rejects spoofed or corrupt states
+ok 106 - saved status validates legitimate heartbeats and rejects spoofed or corrupt states
+  ---
+  duration_ms: 0.572319
+  type: 'test'
+  ...
+# Subtest: durable restart retains total cycle budget and pending backoff
+ok 107 - durable restart retains total cycle budget and pending backoff
+  ---
+  duration_ms: 106.708537
+  type: 'test'
+  ...
+# Subtest: durable cancellation during work records interruption and a stopped session
+ok 108 - durable cancellation during work records interruption and a stopped session
+  ---
+  duration_ms: 56.824174
+  type: 'test'
+  ...
+# Subtest: pre-aborted durable run writes STOPPED without executing work
+ok 109 - pre-aborted durable run writes STOPPED without executing work
+  ---
+  duration_ms: 35.146778
+  type: 'test'
+  ...
+# Subtest: durable state fails closed on corruption, changed budgets and changed source
+ok 110 - durable state fails closed on corruption, changed budgets and changed source
+  ---
+  duration_ms: 75.380005
+  type: 'test'
+  ...
+# Subtest: durable scheduling requires a finite budget and state outside source
+ok 111 - durable scheduling requires a finite budget and state outside source
+  ---
+  duration_ms: 42.753512
+  type: 'test'
+  ...
+# Subtest: durable integrity validation rejects plausible counter edits
+ok 112 - durable integrity validation rejects plausible counter edits
+  ---
+  duration_ms: 59.696269
+  type: 'test'
+  ...
+# Subtest: source drift while waiting terminates the saved cadence before another cycle
+ok 113 - source drift while waiting terminates the saved cadence before another cycle
+  ---
+  duration_ms: 57.622955
+  type: 'test'
+  ...
+# Subtest: source drift during a cycle cannot retain its reported verification success
+ok 114 - source drift during a cycle cannot retain its reported verification success
+  ---
+  duration_ms: 65.562038
+  type: 'test'
+  ...
+# Subtest: durable loop rejects a competing scheduler before its work executes
+ok 115 - durable loop rejects a competing scheduler before its work executes
+  ---
+  duration_ms: 57.788798
+  type: 'test'
+  ...
+# Subtest: SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay
+ok 116 - SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay
+  ---
+  duration_ms: 192.556853
+  type: 'test'
+  ...
+# Subtest: a complete M4 TEST task passes baseline, adds meaningful tests, independently checks patch and finishes DONE
+ok 117 - a complete M4 TEST task passes baseline, adds meaningful tests, independently checks patch and finishes DONE
+  ---
+  duration_ms: 1048.31887
+  type: 'test'
+  ...
+# Subtest: a false owner-supplied expected value stays FAILED and never produces DONE
+ok 118 - a false owner-supplied expected value stays FAILED and never produces DONE
+  ---
+  duration_ms: 509.070859
+  type: 'test'
+  ...
+# Subtest: red baseline is not laundered into a DONE synthetic test job
+ok 119 - red baseline is not laundered into a DONE synthetic test job
+  ---
+  duration_ms: 255.06234
+  type: 'test'
+  ...
+# Subtest: synthetic fake test totals and non-increasing test counts cannot pass evidence gate
+ok 120 - synthetic fake test totals and non-increasing test counts cannot pass evidence gate
+  ---
+  duration_ms: 0.331528
+  type: 'test'
+  ...
+# Subtest: no unaccepted task is executed and paths cannot point back into source
+ok 121 - no unaccepted task is executed and paths cannot point back into source
+  ---
+  duration_ms: 31.490812
+  type: 'test'
+  ...
+1..121
+# tests 121
+# suites 0
+# pass 121
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6636.894123

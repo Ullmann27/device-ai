@@ -1,0 +1,49 @@
+JUnit version 4.13.2
+.E.........E.E.E...E.E.
+Time: 0.037
+There were 6 failures:
+1) outputBufferIsExplicitlyBounded(at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest)
+java.lang.AssertionError: expected null, but was:<OUTPUT_LIMIT>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest.outputBufferIsExplicitlyBounded(LocalGenerationDeadlinePolicyTest.kt:29)
+2) overflowAfterExactCapPreservesTheBoundedDraft(at.heinz.deviceai.cognitive.LocalGenerationCaptureTest)
+java.lang.AssertionError: expected:<OUTPUT_LIMIT> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LocalGenerationCaptureTest.overflowAfterExactCapPreservesTheBoundedDraft(LocalGenerationCaptureTest.kt:51)
+3) exactCapCompletesAfterWatchdogPoll(at.heinz.deviceai.cognitive.LocalGenerationCaptureTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.LocalGenerationCaptureTest.exactCapCompletesAfterWatchdogPoll(LocalGenerationCaptureTest.kt:32)
+4) partialTextSurvivesARealStreamStall(at.heinz.deviceai.cognitive.LocalGenerationCaptureTest)
+org.junit.ComparisonFailure: expected:<[Bereits erzeugter Anfang. Noch unvollständig]> but was:<[]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LocalGenerationCaptureTest.partialTextSurvivesARealStreamStall(LocalGenerationCaptureTest.kt:72)
+5) splitOverflowDoesNotSplitASupplementaryCharacter(at.heinz.deviceai.cognitive.LocalGenerationCaptureTest)
+java.lang.AssertionError: expected:<OUTPUT_LIMIT> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LocalGenerationCaptureTest.splitOverflowDoesNotSplitASupplementaryCharacter(LocalGenerationCaptureTest.kt:61)
+6) oversizedChunkCannotBecomeComplete(at.heinz.deviceai.cognitive.LocalGenerationCaptureTest)
+java.lang.AssertionError: expected:<OUTPUT_LIMIT> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LocalGenerationCaptureTest.oversizedChunkCannotBecomeComplete(LocalGenerationCaptureTest.kt:41)
+
+FAILURES!!!
+Tests run: 17,  Failures: 6
+
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=39925 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=39925 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts

@@ -1,0 +1,18 @@
+JUnit version 4.13.2
+..E........E..
+Time: 0.085
+There were 2 failures:
+1) idleEyesMakeSmallGazeChangesWithoutOwnerTextOrCamera(at.heinz.deviceai.referencecheck.MapperMotionChallengeTest)
+java.lang.AssertionError: Idle gaze never changes
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.referencecheck.MapperMotionChallengeTest.idleEyesMakeSmallGazeChangesWithoutOwnerTextOrCamera(MapperMotionChallengeTest.kt:30)
+2) idleHeadHasBoundedNaturalMovementAcrossAFullMinute(at.heinz.deviceai.referencecheck.MapperMotionChallengeTest)
+java.lang.AssertionError: Idle head never moves
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.referencecheck.MapperMotionChallengeTest.idleHeadHasBoundedNaturalMovementAcrossAFullMinute(MapperMotionChallengeTest.kt:24)
+
+FAILURES!!!
+Tests run: 12,  Failures: 2
+

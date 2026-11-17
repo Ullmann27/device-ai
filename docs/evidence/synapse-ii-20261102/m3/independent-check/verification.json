@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "head": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+  "taskId": "mob-d0260da8b7efc105",
+  "patchSha256": "da5c8bbf0e3a012d3cab4d8877c73f9c21ad6beec04df3411f169c2dd52a5a43",
+  "execution": {
+    "mode": "HOST_LEGACY",
+    "cancellation": "STEP_WATCHDOG"
+  },
+  "checkedAt": "2026-11-02T02:22:21.878Z",
+  "passed": true,
+  "evidenceSufficient": true,
+  "reasons": [],
+  "executedTests": 4,
+  "profiles": [
+    {
+      "profile": "node-continuum",
+      "passed": true,
+      "executed": 4,
+      "failed": 0,
+      "skipped": 0
+    }
+  ]
+}

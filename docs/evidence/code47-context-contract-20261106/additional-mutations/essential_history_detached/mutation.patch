@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptFrame.kt
++++ app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptFrame.kt
+@@ -6,7 +6,7 @@
+                  advisory: String?, requiredTail: String, maxCharacters: Int,
+                  requireHistory: Boolean): String? {
+         val essential = LocalPromptFrame.assemble(
+-            requiredBody = requiredBody, optionalHistory = safeHistory,
++            requiredBody = requiredBody, optionalHistory = "",
+             advisory = advisory, requiredTail = requiredTail,
+             maxCharacters = maxCharacters, requireHistory = requireHistory
+         ) ?: return null

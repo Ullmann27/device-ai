@@ -1,0 +1,5 @@
+TIMEOUT: returned=TIMED_OUT, backendBeforeRelease=false
+TIMEOUT: backendAfterTerminal=true
+CANCEL: returned=CANCELLED, backendBeforeRelease=false
+CANCEL: backendAfterTerminal=true
+OUTPUT: error=java.lang.IllegalArgumentException: Failed requirement., result=null, experiences=0, terminal=BLOCKED

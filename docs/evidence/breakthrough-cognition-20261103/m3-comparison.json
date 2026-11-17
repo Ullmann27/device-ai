@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "benchmark": "continuum-m3-de-v1",
+  "status": "NO_REGRESSION_REPORTED",
+  "evidenceLevel": "HOST_DETERMINISTIC_REPORTS_ONLY",
+  "blindHoldout": false,
+  "deviceVerified": false,
+  "limitation": "Submitted scorer output only; requires separate SHA-bound execution logs and independent review. No Gemma or Fold7 performance claim.",
+  "digests": {
+    "fixture": "c12eb68895fa2171e2258e73784dcb7ee5fc3c5053c96f0c9e57da16a9ad5b41",
+    "baseline": "7db43dd5fd837aef24cc22cc233cd2378f6a9895c25004072be5418576b7eef1",
+    "candidate": "7db43dd5fd837aef24cc22cc233cd2378f6a9895c25004072be5418576b7eef1"
+  },
+  "total": {
+    "baseline": {
+      "total": 81,
+      "correct": 77,
+      "wrong": 4,
+      "harmful": 0
+    },
+    "candidate": {
+      "total": 81,
+      "correct": 77,
+      "wrong": 4,
+      "harmful": 0
+    },
+    "deltaCorrect": 0
+  },
+  "categories": {
+    "ROUTE": {
+      "baseline": {
+        "total": 18,
+        "correct": 14,
+        "wrong": 4,
+        "harmful": 0
+      },
+      "candidate": {
+        "total": 18,
+        "correct": 14,
+        "wrong": 4,
+        "harmful": 0
+      },
+      "deltaCorrect": 0
+    },
+    "NEG": {
+      "baseline": {
+        "total": 12,
+        "correct": 12,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "candidate": {
+        "total": 12,
+        "correct": 12,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "deltaCorrect": 0
+    },
+    "TIME": {
+      "baseline": {
+        "total": 10,
+        "correct": 10,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "candidate": {
+        "total": 10,
+        "correct": 10,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "deltaCorrect": 0
+    },
+    "MULTI": {
+      "baseline": {
+        "total": 8,
+        "correct": 8,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "candidate": {
+        "total": 8,
+        "correct": 8,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "deltaCorrect": 0
+    },
+    "FRAME": {
+      "baseline": {
+        "total": 6,
+        "correct": 6,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "candidate": {
+        "total": 6,
+        "correct": 6,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "deltaCorrect": 0
+    },
+    "QUALITY": {
+      "baseline": {
+        "total": 8,
+        "correct": 8,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "candidate": {
+        "total": 8,
+        "correct": 8,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "deltaCorrect": 0
+    },
+    "MEMORY": {
+      "baseline": {
+        "total": 12,
+        "correct": 12,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "candidate": {
+        "total": 12,
+        "correct": 12,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "deltaCorrect": 0
+    },
+    "PLAN": {
+      "baseline": {
+        "total": 7,
+        "correct": 7,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "candidate": {
+        "total": 7,
+        "correct": 7,
+        "wrong": 0,
+        "harmful": 0
+      },
+      "deltaCorrect": 0
+    }
+  },
+  "regressions": [],
+  "improvements": []
+}

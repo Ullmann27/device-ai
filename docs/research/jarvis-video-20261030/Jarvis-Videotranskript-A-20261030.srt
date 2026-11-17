@@ -1,0 +1,964 @@
+1
+00:00:00,098 --> 00:00:03,397
+Hallo und herzlich willkommen
+zu unserer heutigen Analyse.
+
+2
+00:00:03,937 --> 00:00:07,758
+Stell dir mal Folgendes vor: Wie wäre
+es, wenn du deinen ganz persönlichen,
+
+3
+00:00:07,918 --> 00:00:12,058
+hochintelligenten KI-Assistenten direkt
+auf deinem eigenen Rechner hättest?
+
+4
+00:00:12,677 --> 00:00:15,578
+Und ich rede hier nicht von
+irgendeinem simplen Smart-Home-Gadget,
+
+5
+00:00:15,617 --> 00:00:16,838
+das dir nur einen Timer stellt.
+
+6
+00:00:17,258 --> 00:00:20,938
+Ich meine ein richtiges System, das für
+dich mitdenkt, sich ganz natürlich mit dir
+
+7
+00:00:20,977 --> 00:00:23,178
+unterhält und dir echte Aufgaben abnimmt.
+
+8
+00:00:23,418 --> 00:00:26,598
+Genau das schauen wir uns in dieser
+Übersicht nämlich mal im Detail an.
+
+9
+00:00:26,958 --> 00:00:30,018
+Wir klären heute Schritt für Schritt,
+wie man Jarvis Version drei Punkt null
+
+10
+00:00:30,058 --> 00:00:31,838
+installiert und für sich konfiguriert.
+
+11
+00:00:32,478 --> 00:00:32,818
+Wow.
+
+12
+00:00:33,238 --> 00:00:35,798
+Stell dir mal vor, du setzt
+dich morgens an den Schreibtisch
+
+13
+00:00:35,858 --> 00:00:37,478
+und wirst exakt so begrüßt.
+
+14
+00:00:37,978 --> 00:00:40,178
+Das klingt wie aus einem krassen
+Science-Fiction-Film, oder?
+
+15
+00:00:40,718 --> 00:00:41,598
+Aber das ist kein Skript.
+
+16
+00:00:41,938 --> 00:00:45,598
+Das ist die tatsächliche Sprachausgabe
+des Systems, das wir heute aufbauen.
+
+17
+00:00:46,198 --> 00:00:49,458
+Unser Quellenmaterial demonstriert
+wirklich eindrucksvoll, was dieses
+
+18
+00:00:49,518 --> 00:00:51,038
+Jarvis drei Punkt null so draufhat.
+
+19
+00:00:51,518 --> 00:00:53,698
+Es liest hier nicht einfach
+nur stumpf Nachrichten vor.
+
+20
+00:00:54,098 --> 00:00:57,238
+Es analysiert die Weltlage, verknüpft
+sie, wie hier die steigenden
+
+21
+00:00:57,318 --> 00:01:00,518
+Ölpreise wegen aktueller Spannungen
+und hat gleichzeitig noch deinen
+
+22
+00:01:00,558 --> 00:01:02,098
+kompletten Terminkalender im Blick.
+
+23
+00:01:02,578 --> 00:01:05,298
+Das ist ein völlig neues
+Level der digitalen Assistenz.
+
+24
+00:01:05,858 --> 00:01:09,498
+Das versetzt dich quasi in der ersten
+Sekunde direkt in den Arbeitsmodus.
+
+25
+00:01:10,098 --> 00:01:13,398
+Bevor wir uns jetzt aber die Hände
+schmutzig machen und in die Installation
+
+26
+00:01:13,458 --> 00:01:16,778
+gehen, müssen wir kurz klären, warum
+sich dieser Aufwand überhaupt lohnt.
+
+27
+00:01:17,118 --> 00:01:19,078
+Warum ist das Ding so ein Game Changer?
+
+28
+00:01:19,798 --> 00:01:21,658
+Es gibt da vier echte Kernfunktionen.
+
+29
+00:01:22,078 --> 00:01:24,018
+Erstens: das sogenannte Wake Word.
+
+30
+00:01:24,458 --> 00:01:27,218
+Jarvis lauscht dezent im
+Hintergrund und ist sofort hellwach,
+
+31
+00:01:27,518 --> 00:01:28,938
+sobald du „Hey, Jarvis" sagst.
+
+32
+00:01:29,398 --> 00:01:32,618
+Zweitens, und das finde ich
+persönlich mega: das erinnerbare
+
+33
+00:01:32,678 --> 00:01:34,918
+Gedächtnis oder Recallable Memory.
+
+34
+00:01:35,538 --> 00:01:38,438
+Jarvis merkt sich Details aus früheren
+Gesprächen und holt sie später
+
+35
+00:01:38,478 --> 00:01:39,998
+wieder hervor, wenn du danach fragst.
+
+36
+00:01:40,418 --> 00:01:41,858
+Wie ein echter Kollege eben.
+
+37
+00:01:42,498 --> 00:01:45,858
+Drittens hast du Echtzeitsprache
+für absolut natürliche Dialoge
+
+38
+00:01:45,958 --> 00:01:47,518
+ohne diese nervigen Verzögerungen.
+
+39
+00:01:47,958 --> 00:01:50,718
+Und viertens, der absolute
+Wahnsinn: die Systemsteuerung.
+
+40
+00:01:51,198 --> 00:01:54,498
+Jarvis kann deinen kompletten PC allein
+durch deine Sprachbefehle bedienen.
+
+41
+00:01:54,838 --> 00:01:57,398
+Das ändert wirklich alles daran,
+wie wir am Rechner arbeiten.
+
+42
+00:01:58,018 --> 00:01:59,598
+Also, was haben wir heute vor?
+
+43
+00:02:00,038 --> 00:02:03,578
+Hier ist unser kurzer Fahrplan, um
+das Ganze super machbar zu halten.
+
+44
+00:02:03,958 --> 00:02:06,098
+Erstens: dein eigener KI-Assistent.
+
+45
+00:02:06,558 --> 00:02:09,158
+Zweitens: der Gemini-API-Schlüssel.
+
+46
+00:02:09,438 --> 00:02:12,118
+Drittens: Jarvis
+herunterladen und vorbereiten.
+
+47
+00:02:12,478 --> 00:02:14,778
+Viertens: Python
+installieren und einrichten.
+
+48
+00:02:15,118 --> 00:02:17,998
+Fünftens: der Systemstart
+und die Konfiguration.
+
+49
+00:02:18,558 --> 00:02:21,698
+Und am Ende als Sechstes:
+die Zukunft der PC-Steuerung.
+
+50
+00:02:22,418 --> 00:02:26,138
+Keine Sorge, das sieht nach viel aus,
+ist aber absolut logisch aufgebaut.
+
+51
+00:02:26,994 --> 00:02:29,274
+Okay, lasst uns direkt eintauchen.
+
+52
+00:02:29,634 --> 00:02:32,834
+Abschnitt eins: Dein eigener KI-Assistent.
+
+53
+00:02:33,434 --> 00:02:36,414
+Der Weg zum persönlichen J.A.R.V.I.S.
+
+54
+00:02:37,234 --> 00:02:40,314
+Gucken wir uns mal das Fundament
+von diesem KI-Assistenten an.
+
+55
+00:02:40,834 --> 00:02:44,714
+Das Quellenmaterial verrät uns, dass
+diese echt bemerkenswerte KI von einem
+
+56
+00:02:44,754 --> 00:02:48,654
+Entwickler namens Feomakes stammt
+und die Quelle geht sogar so weit,
+
+57
+00:02:48,734 --> 00:02:52,594
+es als die beste persönliche KI zu
+bezeichnen, die bisher gefunden wurde.
+
+58
+00:02:53,274 --> 00:02:56,274
+Aber hier kommt der Teil, der dich
+wahrscheinlich komplett umhauen wird.
+
+59
+00:02:56,774 --> 00:03:00,574
+Trotz all dieser krassen Fähigkeiten,
+dem Gedächtnis, der PC-Steuerung, der
+
+60
+00:03:00,634 --> 00:03:04,214
+Echtzeitsprache, ist das Erstellen
+von diesem persönlichen Assistenten
+
+61
+00:03:04,334 --> 00:03:06,054
+zu hundert Prozent kostenlos.
+
+62
+00:03:06,334 --> 00:03:07,214
+Ja, richtig gehört.
+
+63
+00:03:07,674 --> 00:03:10,554
+Du brauchst hier keine Angst vor
+irgendwelchen teuren Abos oder
+
+64
+00:03:10,574 --> 00:03:13,394
+versteckten Gebühren zu haben,
+um dieses Jarvis-Erlebnis auf
+
+65
+00:03:13,434 --> 00:03:14,934
+deinen eigenen Rechner zu holen.
+
+66
+00:03:15,294 --> 00:03:15,954
+Wahnsinn, oder?
+
+67
+00:03:16,634 --> 00:03:18,894
+Weiter geht's mit dem
+nächsten großen Schritt.
+
+68
+00:03:19,354 --> 00:03:23,894
+Abschnitt zwei: Der Gemini
+API-Schlüssel, das Gehirn der KI.
+
+69
+00:03:24,534 --> 00:03:28,934
+Wir wissen ja, jeder geniale Assistent
+braucht ein Gehirn und in unserem Fall
+
+70
+00:03:28,974 --> 00:03:31,054
+kommt diese Intelligenz direkt von Google.
+
+71
+00:03:31,614 --> 00:03:35,134
+Unser allererster richtiger Schritt
+ist es also, ins Google AI Studio zu
+
+72
+00:03:35,174 --> 00:03:36,954
+gehen und uns ein Gehirn zu besorgen.
+
+73
+00:03:37,314 --> 00:03:40,294
+Wir generieren einen
+sogenannten APK-Schlüssel.
+
+74
+00:03:40,674 --> 00:03:44,194
+Das ist quasi unsere direkte Standleitung
+zu dem riesigen Sprachmodell,
+
+75
+00:03:44,254 --> 00:03:45,674
+das Jarvis nachher antreibt.
+
+76
+00:03:45,994 --> 00:03:46,654
+Wie machen wir das?
+
+77
+00:03:46,794 --> 00:03:47,234
+Ganz simpel.
+
+78
+00:03:47,574 --> 00:03:50,314
+Du machst deinen Browser auf und
+suchst nach dem offiziellen Google
+
+79
+00:03:50,434 --> 00:03:54,034
+AI Studio, loggst dich mit deinem
+Account ein und gehst aufs Dashboard.
+
+80
+00:03:54,454 --> 00:03:58,054
+Dort springt dir eigentlich schon direkt
+ein Button ins Auge: Create API Key.
+
+81
+00:03:58,374 --> 00:03:58,934
+Klick da drauf.
+
+82
+00:03:59,274 --> 00:04:00,874
+Du kannst dem Schlüssel
+jetzt einen Namen geben.
+
+83
+00:04:01,234 --> 00:04:04,654
+Die Quelle empfiehlt etwas
+wie Jarvis Version 3.0,
+
+84
+00:04:05,074 --> 00:04:07,034
+damit du später noch weißt,
+wofür der eigentlich war.
+
+85
+00:04:07,374 --> 00:04:10,154
+Und dann einfach kurz geduldig
+warten, während Google diesen
+
+86
+00:04:10,214 --> 00:04:14,006
+einzigartigen Schlüssel für
+dich bastelt Okay, kurzer Stopp.
+
+87
+00:04:14,466 --> 00:04:17,226
+Hier müssen wir für eine
+Sekunde absolut ernst werden.
+
+88
+00:04:17,486 --> 00:04:20,626
+Das Quellenmaterial haut hier nämlich
+eine sehr, sehr deutliche Warnung
+
+89
+00:04:20,666 --> 00:04:22,906
+raus und das aus extrem gutem Grund.
+
+90
+00:04:23,506 --> 00:04:26,346
+Teile diesen API-Schlüssel
+niemals mit irgendwem.
+
+91
+00:04:26,626 --> 00:04:27,166
+Ernsthaft.
+
+92
+00:04:27,586 --> 00:04:30,586
+Dieser Code ist quasi wie die
+PIN für deine Bankkarte oder der
+
+93
+00:04:30,626 --> 00:04:32,046
+Haustürschlüssel zu deiner Wohnung.
+
+94
+00:04:32,466 --> 00:04:34,986
+Wenn jemand anderes diesen
+Schlüssel in die Finger kriegt, kann
+
+95
+00:04:35,026 --> 00:04:39,046
+derjenige auf deine Kosten und in
+deinem Namen auf die KI zugreifen.
+
+96
+00:04:39,266 --> 00:04:42,846
+Also kopier dir diesen Schlüssel,
+pack ihn in ein einfaches Textdokument
+
+97
+00:04:42,886 --> 00:04:44,346
+und speicher ihn super sicher ab.
+
+98
+00:04:44,726 --> 00:04:46,386
+Wir werden den gleich
+noch dringend brauchen.
+
+99
+00:04:46,866 --> 00:04:50,226
+Was an diesem nächsten Schritt wirklich
+extrem interessant ist, ist, dass
+
+100
+00:04:50,266 --> 00:04:51,766
+wir jetzt an die Substanz gehen.
+
+101
+00:04:52,046 --> 00:04:56,706
+Abschnitt drei: Jarvis herunterladen
+und vorbereiten, den Code beschaffen.
+
+102
+00:04:57,226 --> 00:05:00,926
+Wir verlassen jetzt das AI Studio
+und besorgen uns die tatsächlichen
+
+103
+00:05:00,946 --> 00:05:02,406
+Bausteine für unser System.
+
+104
+00:05:02,826 --> 00:05:06,086
+Wir holen uns den Code, der die
+ganze Magie lokal auf deinem PC
+
+105
+00:05:06,126 --> 00:05:07,266
+überhaupt erst möglich macht.
+
+106
+00:05:07,846 --> 00:05:09,366
+Also, wie läuft das chronologisch ab?
+
+107
+00:05:09,846 --> 00:05:13,066
+In der Quelle gibt es einen direkten
+Link zu dem Code Repository.
+
+108
+00:05:13,566 --> 00:05:16,806
+Dort schnappen wir uns die neueste
+Version, die wird hier Mark L two genannt.
+
+109
+00:05:17,145 --> 00:05:19,666
+Das lädst du dir einfach als
+ganz normale Zip-Datei runter.
+
+110
+00:05:20,066 --> 00:05:23,346
+Hast du das gemacht, suchst du diese Datei
+auf deinem PC, machst einen Rechtsklick
+
+111
+00:05:23,646 --> 00:05:25,166
+und klickst auf alle extrahieren.
+
+112
+00:05:25,366 --> 00:05:27,046
+Ganz entspannt in einen
+Ordner deiner Wahl.
+
+113
+00:05:27,566 --> 00:05:28,166
+Und jetzt kommt's.
+
+114
+00:05:28,486 --> 00:05:31,666
+Genau diesen entpackten Ordner
+öffnest du jetzt in einem Programm
+
+115
+00:05:31,746 --> 00:05:33,566
+namens Visual Studio Code.
+
+116
+00:05:34,006 --> 00:05:36,526
+Das ist der Editor, quasi
+unsere Werkstatt, in der wir dem
+
+117
+00:05:36,566 --> 00:05:38,226
+Assistenten gleich Leben einhauchen.
+
+118
+00:05:38,806 --> 00:05:41,206
+Bevor das klappt, fehlt
+noch eine Kleinigkeit.
+
+119
+00:05:41,646 --> 00:05:44,886
+Abschnitt vier: Python
+installieren und einrichten,
+
+120
+00:05:45,346 --> 00:05:46,786
+die richtige Umgebung schaffen.
+
+121
+00:05:47,466 --> 00:05:50,786
+Damit Visual Studio Code und dein
+Rechner überhaupt checken, was
+
+122
+00:05:50,826 --> 00:05:54,346
+dieser ganze Jarvis-Code bedeuten
+soll, brauchen wir einen Übersetzer.
+
+123
+00:05:54,866 --> 00:05:58,506
+Dieses gesamte Konstrukt basiert nämlich
+auf der Programmiersprache Python.
+
+124
+00:05:59,006 --> 00:06:01,066
+Ohne Python läuft hier
+wörtlich gar nichts.
+
+125
+00:06:01,566 --> 00:06:04,066
+Aber keine Panik, das
+ist super unkompliziert.
+
+126
+00:06:04,546 --> 00:06:08,546
+Du gehst wieder in den Browser, tippst
+Python Download ein und gehst auf die
+
+127
+00:06:08,606 --> 00:06:10,726
+offizielle Seite python punkt org.
+
+128
+00:06:11,166 --> 00:06:13,706
+Da suchst du dir die Version
+für dein Betriebssystem raus.
+
+129
+00:06:14,206 --> 00:06:18,586
+Die Quelle sagt ganz klar: Nimm eine
+Version, die neuer ist als drei Punkt elf.
+
+130
+00:06:18,986 --> 00:06:22,766
+Die Vorlage nutzt hier zum Beispiel
+die drei Punkt dreizehn Punkt vierzehn.
+
+131
+00:06:23,306 --> 00:06:26,946
+Download abwarten und dann einfach
+mit einem Klick den Installer starten.
+
+132
+00:06:27,646 --> 00:06:31,546
+Also der absolut entscheidende Punkt
+hier ist und pass jetzt bitte genau auf,
+
+133
+00:06:31,946 --> 00:06:37,106
+eine kleine, total unscheinbare Checkbox
+direkt am Anfang im Installationsfenster.
+
+134
+00:06:37,486 --> 00:06:40,146
+Da steht Add Python Punkt exe to Path.
+
+135
+00:06:40,566 --> 00:06:42,766
+Das Quellenmaterial betont das so massiv.
+
+136
+00:06:43,046 --> 00:06:46,006
+Das ist der absolut wichtigste
+Schritt im kompletten Tutorial.
+
+137
+00:06:46,266 --> 00:06:46,686
+Kein Witz.
+
+138
+00:06:47,146 --> 00:06:50,366
+Wenn du diesen Haken nicht setzt,
+weiß dein Computer später schlichtweg
+
+139
+00:06:50,426 --> 00:06:53,726
+nicht, wo er Python finden soll,
+wenn wir den Code starten wollen.
+
+140
+00:06:54,226 --> 00:06:57,406
+Also noch mal zum Mitschreiben:
+Unbedingt diesen Haken setzen,
+
+141
+00:06:57,486 --> 00:06:58,826
+bevor du auf Install klickst.
+
+142
+00:06:59,146 --> 00:07:01,566
+Das erspart dir später extrem viel Frust.
+
+143
+00:07:02,402 --> 00:07:05,662
+So, wenn du's bis hierhin geschafft
+hast, herzlichen Glückwunsch,
+
+144
+00:07:05,942 --> 00:07:07,222
+die Vorarbeit ist erledigt.
+
+145
+00:07:07,861 --> 00:07:10,621
+Abschnitt fünf: Systemstart
+und Konfiguration.
+
+146
+00:07:11,102 --> 00:07:12,962
+Wir erwecken Jarvis jetzt zum Leben.
+
+147
+00:07:13,642 --> 00:07:17,301
+Alle Programme sind da, der Code
+liegt bereit in Visual Studio Code.
+
+148
+00:07:17,662 --> 00:07:18,621
+Jetzt wird es ernst.
+
+149
+00:07:19,121 --> 00:07:22,902
+Du gehst in Visual Studio Code oben ins
+Menü und öffnest ein neues Terminal.
+
+150
+00:07:23,222 --> 00:07:26,222
+Das ist quasi unsere direkte
+Eingabeaufforderung ans System.
+
+151
+00:07:26,762 --> 00:07:30,142
+Hier gibt es jetzt einen superwichtigen
+Unterschied zwischen zwei Befehlen.
+
+152
+00:07:30,702 --> 00:07:33,741
+Als Allererstes tippst du py-setup.py
+
+153
+00:07:33,822 --> 00:07:34,942
+ein und drückst Enter.
+
+154
+00:07:35,381 --> 00:07:37,022
+Das ist unser Installationsbefehl.
+
+155
+00:07:37,262 --> 00:07:40,962
+Der sagt dem System: „Hey, geh ins
+Netz und lade mir alle Bibliotheken
+
+156
+00:07:41,022 --> 00:07:43,582
+und Module runter, die Jarvis
+braucht, um zu funktionieren."
+
+157
+00:07:44,241 --> 00:07:47,462
+Erst wenn dieser Befehl komplett
+durchgelaufen ist, dann und
+
+158
+00:07:47,522 --> 00:07:51,442
+wirklich erst dann nutzen wir
+den zweiten Befehl py main.py.
+
+159
+00:07:51,801 --> 00:07:54,162
+Der startet den KI-Assistenten
+dann tatsächlich.
+
+160
+00:07:54,801 --> 00:07:57,902
+Während dieser erste
+Befehl, also das setup.py
+
+161
+00:07:57,942 --> 00:08:01,042
+läuft, heißt es für dich:
+einfach mal zurücklehnen, Kaffee
+
+162
+00:08:01,102 --> 00:08:02,322
+trinken und ruhig bleiben.
+
+163
+00:08:02,822 --> 00:08:05,902
+Du wirst auf dem Bildschirm sehen,
+wie haufenweise Text durchrattert und
+
+164
+00:08:05,942 --> 00:08:08,142
+verschiedene Installationsprozesse laufen.
+
+165
+00:08:08,562 --> 00:08:10,921
+Das kann gut und gerne einen
+kleinen Moment dauern, also
+
+166
+00:08:10,962 --> 00:08:12,042
+brich das bloß nicht ab.
+
+167
+00:08:12,381 --> 00:08:14,322
+Du wartest auf genau eine einzige Sache.
+
+168
+00:08:14,921 --> 00:08:18,222
+Irgendwann taucht eine leuchtend grüne
+Nachricht auf deinem Bildschirm auf.
+
+169
+00:08:18,602 --> 00:08:18,921
+Bam.
+
+170
+00:08:19,241 --> 00:08:20,801
+Wenn du das siehst, hast du's geschafft.
+
+171
+00:08:21,062 --> 00:08:23,642
+Das ist das Signal, dass die
+Architektur deines persönlichen
+
+172
+00:08:23,702 --> 00:08:24,902
+Assistenten jetzt steht.
+
+173
+00:08:25,602 --> 00:08:27,202
+Jetzt bringen wir den Zug ins Rollen.
+
+174
+00:08:27,722 --> 00:08:30,001
+Du tippst nun endlich py main.py
+
+175
+00:08:30,062 --> 00:08:31,022
+ins Terminal ein.
+
+176
+00:08:31,881 --> 00:08:35,322
+Weil es der allererste Start ist,
+wird Jarvis ein paar kurze Fragen
+
+177
+00:08:35,361 --> 00:08:37,281
+haben, um sich final einzurichten.
+
+178
+00:08:38,242 --> 00:08:40,102
+Zuerst fragt er nach deinem API-Schlüssel.
+
+179
+00:08:40,582 --> 00:08:44,602
+Genau, das ist dieser extrem wichtige
+Code aus dem Google AI Studio, den
+
+180
+00:08:44,642 --> 00:08:47,502
+du hoffentlich ganz tief in deinem
+Notepad vor den Superschurken
+
+181
+00:08:47,542 --> 00:08:48,682
+dieser Welt versteckt hast.
+
+182
+00:08:49,522 --> 00:08:50,802
+Den fügst du da jetzt ein.
+
+183
+00:08:51,702 --> 00:08:53,961
+Danach will das System nur
+noch wissen, auf was für einem
+
+184
+00:08:53,981 --> 00:08:55,502
+Betriebssystem du unterwegs bist.
+
+185
+00:08:55,962 --> 00:08:57,422
+Windows, Mac oder Linux.
+
+186
+00:08:58,242 --> 00:09:01,102
+Du drückst deine Wahl und
+das System fängt an, sich ein
+
+187
+00:09:01,142 --> 00:09:02,562
+letztes Mal zu initialisieren.
+
+188
+00:09:03,242 --> 00:09:07,062
+Und das, Leute, illustriert auf
+absolut brillante Weise, wie
+
+189
+00:09:07,142 --> 00:09:09,042
+sich diese ganze Arbeit auszahlt.
+
+190
+00:09:09,502 --> 00:09:12,582
+Abschnitt sechs: Die
+Zukunft der PC-Steuerung.
+
+191
+00:09:13,162 --> 00:09:14,862
+Dein Assistent ist online.
+
+192
+00:09:15,342 --> 00:09:18,142
+Wir haben die ganzen technischen
+Hürden gemeistert, den Code
+
+193
+00:09:18,202 --> 00:09:21,802
+eingerichtet und jetzt erwacht die
+Zukunft direkt vor unseren Augen.
+
+194
+00:09:22,302 --> 00:09:24,182
+Hier schließt sich der
+Kreis zu unserem Einstieg.
+
+195
+00:09:24,562 --> 00:09:27,522
+Genau mit dieser Begrüßung meldet
+sich dein System jetzt online.
+
+196
+00:09:27,942 --> 00:09:31,282
+Er weiß, wie spät es ist, checkt
+automatisch die Nachrichtenlage und
+
+197
+00:09:31,322 --> 00:09:33,302
+ist ab sofort komplett einsatzbereit.
+
+198
+00:09:33,622 --> 00:09:37,162
+Bereit für komplett natürliche,
+zweiseitige Gespräche in Echtzeit.
+
+199
+00:09:37,542 --> 00:09:40,542
+Er ist bereit, sich an eure alten
+Chats zu erinnern und er ist vor
+
+200
+00:09:40,582 --> 00:09:43,862
+allem bereit, deinen kompletten PC
+einfach durch deine Stimme zu steuern.
+
+201
+00:09:44,502 --> 00:09:46,502
+Lass dir das mal auf der Zunge zergehen.
+
+202
+00:09:46,942 --> 00:09:51,262
+Du hast dir gerade aus ein paar Bausteinen
+aus dem Internet ein extrem mächtiges,
+
+203
+00:09:51,422 --> 00:09:55,002
+hochintelligentes System zusammengebaut,
+das dir aufs Wort gehorcht.
+
+204
+00:09:55,562 --> 00:09:58,342
+Ein Assistent, der für dich
+Dateien öffnet, das Netz durchsucht
+
+205
+00:09:58,602 --> 00:10:00,002
+und echt mit dir interagiert.
+
+206
+00:10:00,522 --> 00:10:03,662
+Und das lässt uns mit einer ziemlich
+coolen, spannenden Frage zurück:
+
+207
+00:10:04,122 --> 00:10:06,842
+Die Installation ist durch, dein
+Mikrofon ist scharf geschaltet.
+
+208
+00:10:07,402 --> 00:10:11,502
+Nun, da dein ganz persönlicher
+KI-Assistent bereit ist, was wird
+
+209
+00:10:11,562 --> 00:10:13,202
+sein allererster Befehl sein?

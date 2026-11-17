@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.HybridMemoryIdentityTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:33:16" hostname="04c8b0ba7ea6" time="0.007">
+  <properties/>
+  <testcase name="hiddenUniqueRecordsNeverReachScorersOrChangeVisibleScores" classname="at.heinz.deviceai.cognitive.HybridMemoryIdentityTest" time="0.001"/>
+  <testcase name="aLateConflictIsRejectedEvenWhenTheResultLimitIsOne" classname="at.heinz.deviceai.cognitive.HybridMemoryIdentityTest" time="0.001"/>
+  <testcase name="repeatedIdenticalRecordsHaveTheSameScoresAsOneRecord" classname="at.heinz.deviceai.cognitive.HybridMemoryIdentityTest" time="0.0"/>
+  <testcase name="privacyConflictsAreRejectedBeforeAnyScorerSeesEitherVariant" classname="at.heinz.deviceai.cognitive.HybridMemoryIdentityTest" time="0.001"/>
+  <testcase name="aThirdCopyCannotReviveAnAlreadyConflictingIdentity" classname="at.heinz.deviceai.cognitive.HybridMemoryIdentityTest" time="0.0"/>
+  <testcase name="identicalTextDoesNotHideConflictingProvenanceOrEvidence" classname="at.heinz.deviceai.cognitive.HybridMemoryIdentityTest" time="0.003"/>
+  <testcase name="conflictingContentsCannotShareAnEvidenceIdentity" classname="at.heinz.deviceai.cognitive.HybridMemoryIdentityTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

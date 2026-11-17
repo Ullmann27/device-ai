@@ -1,0 +1,32 @@
+95440 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+95483 +++ exited with 0 +++
+95440 fsync(18)                         = 0
+95440 rename("/tmp/breakthrough-memory-durability-a6007442/fixture-batch/experiences-v3/lex3-8604274559280518838.tmp", "/tmp/breakthrough-memory-durability-a6007442/fixture-batch/experiences-v3/2edf8f78646cc1f626537a8c7c277cbcc08a7e7db8367cc1a07e83e729be22d4.seg") = 0
+95440 fsync(18)                         = 0
+95440 fsync(18)                         = 0
+95440 rename("/tmp/breakthrough-memory-durability-a6007442/fixture-batch/lex3-9265362628746199459.tmp", "/tmp/breakthrough-memory-durability-a6007442/fixture-batch/experiences-v2.bin") = 0
+95440 fsync(18)                         = -1 EIO (Input/output error) (INJECTED)
+95440 fsync(18)                         = 0
+95440 fsync(18)                         = 0
+95481 +++ exited with 0 +++
+95469 +++ exited with 0 +++
+95470 +++ exited with 0 +++
+95462 +++ exited with 0 +++
+95471 +++ exited with 0 +++
+95440 +++ exited with 0 +++
+95488 +++ exited with 0 +++
+95487 +++ exited with 0 +++
+95485 +++ exited with 0 +++
+95477 +++ exited with 0 +++
+95476 +++ exited with 0 +++
+95474 +++ exited with 0 +++
+95463 +++ exited with 0 +++
+95460 +++ exited with 0 +++
+95473 +++ exited with 0 +++
+95472 +++ exited with 0 +++
+95482 +++ exited with 0 +++
+95480 +++ exited with 0 +++
+95479 +++ exited with 0 +++
+95475 +++ exited with 0 +++
+95478 +++ exited with 0 +++
+95437 +++ exited with 0 +++

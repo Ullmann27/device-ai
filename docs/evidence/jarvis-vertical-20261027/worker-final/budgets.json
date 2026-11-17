@@ -1,0 +1,7 @@
+{
+  "timeoutMs": 360000,
+  "heapMb": 512,
+  "testConcurrency": 2,
+  "maxEvidenceMb": 64,
+  "maxCycles": 1
+}

@@ -1,0 +1,65 @@
+02:59:26 | INFO: Data are loaded, start creating Blender stuff
+02:59:26 | INFO: Blender create Mesh node rounded-desk
+02:59:26 | INFO: Blender create Mesh node rounded-desk-edge
+02:59:26 | INFO: Blender create Mesh node rounded-smoked-glass
+02:59:26 | INFO: Blender create Mesh node rounded-desk-light
+02:59:26 | INFO: Blender create Mesh node bevel-metal
+02:59:26 | INFO: Blender create Mesh node keyboard-keycaps
+02:59:26 | INFO: Blender create Mesh node rounded-monitor-shell
+02:59:26 | INFO: Blender create Mesh node rounded-rear-edge
+02:59:26 | INFO: Blender create Mesh node monitor-metal-bezel
+02:59:26 | INFO: Blender create Mesh node monitor-glass-bezel
+02:59:26 | INFO: Blender create Mesh node monitor-light-rim
+02:59:26 | INFO: Blender create Mesh node side-metal-bezel
+02:59:26 | INFO: Blender create Mesh node side-glass-bezel
+02:59:26 | INFO: Blender create Mesh node side-light-rim
+02:59:26 | INFO: glTF import finished in 0.01s
+INFO Draco mesh compression is available, use library at /home/runner/work/_temp/blacksite-tools/blender-4.3.2-linux-x64/4.3/python/lib/python3.11/site-packages/libextern_draco.so
+02:59:27 | INFO: Starting glTF 2.0 export
+02:59:27 | INFO: Extracting primitive: bunker-concrete-shell
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: bunker-conduits
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: bunker-cyan-channels
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: bunker-titanium-structure
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: bunker-violet-channels
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: rounded-desk
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: rounded-desk-edge
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: rounded-smoked-glass
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: rounded-desk-light
+02:59:27 | INFO: Primitives created: 2
+02:59:27 | INFO: Extracting primitive: keyboard-keycaps
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: bevel-metal
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: monitor-metal-bezel
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: monitor-glass-bezel
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: monitor-live-pixels
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: monitor-light-rim
+02:59:27 | INFO: Primitives created: 2
+02:59:27 | INFO: Extracting primitive: rounded-monitor-shell
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: rounded-rear-edge
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: side-metal-bezel
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: side-glass-bezel
+02:59:27 | INFO: Primitives created: 1
+02:59:27 | INFO: Extracting primitive: side-light-rim
+02:59:27 | INFO: Primitives created: 2
+02:59:27 | INFO: Finished glTF 2.0 export in 0.04927706718444824 s
+
+ASSET_BUILT app/src/main/assets/cinema3d/cockpit-workstation.glb 645592 1a958f2b9fcfb4e6dca19fceb9424c1ad920be35e471646e45ecde7e9b031712
+ASSET_BUILT app/src/main/assets/cinema3d/continuum-orb.glb 1148836 fdfe54ce9aa2ed6af5ec6866c1078a4a34ece511e66b29cd1b3672f83229079c
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 01:31:14)
+
+Blender quit

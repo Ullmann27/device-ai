@@ -1,0 +1,41 @@
+[
+  {
+    "name": "compile",
+    "command": [
+      "kotlinc",
+      "-cp",
+      "/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/kotlin-official/kotlinc/lib/kotlin-stdlib.jar",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/breakthrough-neural-20261103/GeneralizationProbe.kt",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/breakthrough-neural-20261103/GroundedSlotResidual.kt",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/Cdx2PointerCandidate.kt",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/Cdx2CounterfactualShadow.kt",
+      "/workspace/breakthrough-neural/app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+      "-d",
+      "/workspace/qa-neural-transport-fresh/classes"
+    ],
+    "exitCode": 0,
+    "wallMillis": 11115.166243999738,
+    "userCpuSeconds": 20.129124,
+    "systemCpuSeconds": 0.42791599999999996,
+    "cumulativeChildPeakRssKiB": 620724
+  },
+  {
+    "name": "predict",
+    "command": [
+      "java",
+      "-cp",
+      "/workspace/qa-neural-transport-fresh/classes:/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/kotlin-official/kotlinc/lib/kotlin-stdlib.jar",
+      "at.heinz.deviceai.learning.span.GeneralizationProbe",
+      "/workspace/breakthrough-neural/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/breakthrough-neural/docs/evidence/synapse-iii-20261102/m2-adapter/candidate/checkpoint-17.json",
+      "/workspace/continuum-breakthrough-private/neural-transport-inputs.json",
+      "/workspace/qa-neural-transport-fresh/predictions",
+      "docs/evidence/breakthrough-neural-20261103/checkpoints/residual15.json"
+    ],
+    "exitCode": 0,
+    "wallMillis": 539.3470050003089,
+    "userCpuSeconds": 0.8532329999999995,
+    "systemCpuSeconds": 0.07332099999999997,
+    "cumulativeChildPeakRssKiB": 620724
+  }
+]

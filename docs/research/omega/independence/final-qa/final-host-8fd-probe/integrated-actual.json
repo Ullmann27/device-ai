@@ -1,0 +1,70 @@
+{
+  "schema": "continuum-independent-service-mcp-check",
+  "version": 1,
+  "sourceCommit": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+  "environment": "HOST",
+  "deviceVerified": false,
+  "modelInference": "NOT_RUN",
+  "repair": "NOT_RUN",
+  "chatgptConnection": "NOT_CONFIGURED",
+  "node": "v24.19.0",
+  "checks": [
+    {
+      "name": "real Kotlin20 seed, stable rename, private context retained on new JVM",
+      "status": "PASS",
+      "elapsedMs": 887.939613
+    },
+    {
+      "name": "documented owner init and stopped no-cloud source-pinned status",
+      "status": "PASS",
+      "elapsedMs": 329.238243
+    },
+    {
+      "name": "wrong owner review cannot grant, correct review deduplicates canonical task",
+      "status": "PASS",
+      "elapsedMs": 2745.814361
+    },
+    {
+      "name": "actual MCP init-token owner modes and no token stdout",
+      "status": "PASS",
+      "elapsedMs": 64.03784900000028
+    },
+    {
+      "name": "actual loopback MCP authentication and protocol session",
+      "status": "PASS",
+      "elapsedMs": 64.37378900000022
+    },
+    {
+      "name": "real paginated20 renamed metadata excludes private context and fabricated capability",
+      "status": "PASS",
+      "elapsedMs": 2339.2390699999996
+    },
+    {
+      "name": "readonly valid/negative MCP requests leave canonical state and profiles byte-identical",
+      "status": "PASS",
+      "elapsedMs": 332.46109199999955
+    },
+    {
+      "name": "owner cancellation persists through new observer and evidence never becomes success",
+      "status": "PASS",
+      "elapsedMs": 514.1287419999999
+    },
+    {
+      "name": "real idle daemon start and duplicate admission retain one process",
+      "status": "PASS",
+      "elapsedMs": 1409.1217100000013
+    },
+    {
+      "name": "stop and restart preserve cancellation without model or receipt execution",
+      "status": "PASS",
+      "elapsedMs": 2024.4482169999992
+    }
+  ],
+  "status": "PASS",
+  "latencyMs": {
+    "samples": 25,
+    "p50": 79.35371700000087,
+    "p95": 345.9849919999997,
+    "scope": "sequential HTTP calls; child JVM startup included; no inference"
+  }
+}

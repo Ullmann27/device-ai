@@ -1,0 +1,14 @@
+{
+  "runnerClosed": true,
+  "successReceiptCreated": false,
+  "observedBefore": {
+    "containerIds": ["735ca0c8b7dc"],
+    "active": 1
+  },
+  "containerClosed": true,
+  "body": "Workspace task=t-753f0fd623633166 source=faf0356b544d8f0a061dcff6c3dc39f90686ec44 request=d1ff0771-d5a8-4afe-b3f4-22fe16d72215 workerStatus=CANCELLED Vom Chef abgebrochen.",
+  "observedAfter": {
+    "containerIds": [],
+    "active": 0
+  }
+}

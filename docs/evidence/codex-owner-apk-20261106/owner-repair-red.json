@@ -1,0 +1,55 @@
+{
+  "category": "HOST_ROBOLECTRIC_CONTROLLED_ENGINE",
+  "baseline_commit": "705d35b10377e8d2ef7940f31606e180fe33882c",
+  "new_regression_tests": "added locally before product fix",
+  "tests": 7,
+  "passed": 1,
+  "failed": 6,
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "name": "failedOwnerVoiceFallsBackToAnActuallyLoadableOfflineVoice",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: expected:<true> but was:<false>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "name": "brokenAutomaticWinnerDoesNotPreventTheNextOfflineVoice",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: expected:<true> but was:<false>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "name": "selectingAWorkingVoiceWhileMutedDoesNotReportFailure",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: expected null, but was:<Diese Stimme konnte nicht gesetzt werden.>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "name": "allOfflineFailuresNeverSelectANetworkVoice",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "anEmptyDecisionQueryClearsThePreviousFocus",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: no old focus after an empty answer expected:<null> but was:<(cdf07675-2f8a-4bb2-9dcf-9da10410e477, Focus(items=[Item(at=1793980760332, text=Entwurf zu „Beispiel.pdf“ erstellt, noch nicht gespeichert, origin=JOURNAL, episodeId=w-1793980760332-abdeqw, done=false, next=Entwurf prüfen und speichern, revokedAt=null, change=false)], shown=[Item(at=1793980760332, text=Entwurf zu „Beispiel.pdf“ erstellt, noch nicht gespeichert, origin=JOURNAL, episodeId=w-1793980760332-abdeqw, done=false, next=Entwurf prüfen und speichern, revokedAt=null, change=false)], index=0))>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "stopRejectsAQueuedPdfFailureAndItsPicker",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: no picker after STOP expected:<null> but was:<org.robolectric.shadows.ShadowActivity$IntentForResult@7be64305{intent=Intent { act=android.intent.action.OPEN_DOCUMENT cat=[android.intent.category.OPENABLE] typ=application/pdf flg=0x41 }, requestCode=2245, options=null}>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "stopRejectsAQueuedDecisionContinuation",
+      "status": "FAIL",
+      "failure": "java.lang.AssertionError: STOP prevents a late draft window"
+    }
+  ],
+  "real_device": "NOT_RUN",
+  "real_model": "NOT_RUN",
+  "real_audio": "NOT_RUN"
+}

@@ -1,0 +1,151 @@
+{
+  "taskId": "C1-LAYOUT-018",
+  "status": "SOURCE_APPLIED_OWN_ANDROID_PENDING",
+  "baseLocal": "d3487a83ea1cc61a34afcde4e17601c56def9ed2",
+  "baseRemote": "4b6c38902c1ebb93598dd125f5ea0bcc3cddabf8",
+  "baseTree": "5c9745630cca44da3cb297761c8c59622e6c3a15",
+  "sourcePr": 524,
+  "sourceHead": "235d764f790dee7685c6590cf0a5d07d1fafdce2",
+  "productionCommit": "652e6e30e63a427546c6a30988906c351406be25",
+  "expectedBlobs": {
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt": "245c8c94abdadbe065138561d2c9a2901456b3c2",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionChecks.kt": "5ca3700d084a3914fba23526ef9309b02cc3f0fc",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionTest.kt": "cae7403e7291b61cf435679c03c4e6a0756a2503"
+  },
+  "preservedOriginalTestBlob": "6554c2ed59d79f2ac9626f32c5e8acee0499c1ca",
+  "archive": "C1-LAYOUT-018-reviewed-intake.tar.xz",
+  "archiveSha256": "77f8c52f1a6572bdf4bb1c795ffebac743be323c96022a19a8b6baa9803fa301",
+  "archiveMembers": [
+    {
+      "path": "C1-LAYOUT-018.patch",
+      "sha256": "eab1da6e6ed461b068ce90a4d652fc958a840e2c1441bd3c08918e0dba98023a"
+    },
+    {
+      "path": "REVIEW.md",
+      "sha256": "b7f77f14b14dcfa39b10be0a3076332ad9dd3a9b9398289fed854acc6d901308"
+    },
+    {
+      "path": "SHA256SUMS",
+      "sha256": "72db3f20ff66541117f6aa5b9e7a48323c03c1c0a30b3011d1cdac832009da55"
+    },
+    {
+      "path": "base/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+      "sha256": "eeb83a88101eb8afcac26bd02395067e5bd5e67f4a13edb04a56965eeb091583"
+    },
+    {
+      "path": "base/app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+      "sha256": "0854bc7a19eb97fbf6ff35b8a81394cf436bba4af69c510fc10344eb4c56bfeb"
+    },
+    {
+      "path": "base/app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt",
+      "sha256": "4548332c8398453f4ebcbfa1e43d5a972dda90e24272f1716a7c8698a4de5bb6"
+    },
+    {
+      "path": "base/app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+      "sha256": "11bc47ff48b924e53edc81caa18ec8fb83c3b049b195649e96dbc25a9090ff5f"
+    },
+    {
+      "path": "base/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "sha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302"
+    },
+    {
+      "path": "base/app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt",
+      "sha256": "76ef62bd480f5177f8d341a0c9ab755346baf4c457db474bf62ba0904c68223d"
+    },
+    {
+      "path": "base/app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+      "sha256": "a2e8de4febaf1336d93551bf5442f6cd8d9b2e6f500c6650d402251d68078be1"
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "a66de81c47407c8bb3480932b545736741b148365cbce8ebaa7493c9ba2e738d"
+    },
+    {
+      "path": "upstream/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+      "sha256": "eeb83a88101eb8afcac26bd02395067e5bd5e67f4a13edb04a56965eeb091583"
+    },
+    {
+      "path": "upstream/app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+      "sha256": "90af9b43049ae73d07af34bc58dfadffd0a8b8094f40f4d4ee7f0801fb4cf072"
+    },
+    {
+      "path": "upstream/app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt",
+      "sha256": "4548332c8398453f4ebcbfa1e43d5a972dda90e24272f1716a7c8698a4de5bb6"
+    },
+    {
+      "path": "upstream/app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+      "sha256": "11bc47ff48b924e53edc81caa18ec8fb83c3b049b195649e96dbc25a9090ff5f"
+    },
+    {
+      "path": "upstream/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "sha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302"
+    },
+    {
+      "path": "upstream/app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt",
+      "sha256": "76ef62bd480f5177f8d341a0c9ab755346baf4c457db474bf62ba0904c68223d"
+    },
+    {
+      "path": "upstream/app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt",
+      "sha256": "a2e8de4febaf1336d93551bf5442f6cd8d9b2e6f500c6650d402251d68078be1"
+    },
+    {
+      "path": "upstream/app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionChecks.kt",
+      "sha256": "41f3ad43ac4e5a2b61625cc1e9299dcb8b4bfc71803cf2caa51321bea861f09b"
+    },
+    {
+      "path": "upstream/app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionTest.kt",
+      "sha256": "23ec260137884f14aa931c03bd880890b0c492dc89cdcfa637c376a50fca29d6"
+    },
+    {
+      "path": "upstream/docs/evidence/g1-r6-landscape-20261104/ConstantsOnly.kt",
+      "sha256": "165bd0f7675b28ce7255f5c4f81130842b355a4d5298017d298ddbb72da08458"
+    },
+    {
+      "path": "upstream/docs/evidence/g1-r6-landscape-20261104/PrecisionRunner.kt",
+      "sha256": "c6dd8aafca8c82fa242257c4b1f748dffc3b3ff2ed80e140224ea3d39243d1d3"
+    },
+    {
+      "path": "upstream/docs/evidence/g1-r6-landscape-20261104/README.md",
+      "sha256": "0fe1973a491a7fc035e99f2b86d68d1fbdac610478c7ae75e44053fec248999a"
+    },
+    {
+      "path": "upstream/docs/evidence/g1-r6-landscape-20261104/green.log",
+      "sha256": "8437210da08b59d16440161d4d3b46ec64f77c590acfb43442e7f06fe4a35ada"
+    },
+    {
+      "path": "upstream/docs/evidence/g1-r6-landscape-20261104/red.log",
+      "sha256": "062a546f4dc4560478ce1ccab2630db02fe3e9489e0fc1066ea3c040c49fd30f"
+    },
+    {
+      "path": "upstream/docs/evidence/g1-r6-landscape-20261104/source-binding.json",
+      "sha256": "d7b4d52b6174195cd221d3990621c7a9eb62268b135657514c519e279fffa42d"
+    },
+    {
+      "path": "upstream/docs/research/omega/G1-R6-LANDSCAPE-832-REPAIR-20261104.md",
+      "sha256": "7dacee63f22fa9bc53627d60ab47b04b5df46cd5545bec2f0469bebf4c97d218"
+    },
+    {
+      "path": "upstream-provenance.json",
+      "sha256": "b68628ddadc369cced7fb51a370cfb85d5b7b3c735583cfa094ce90500038800"
+    }
+  ],
+  "commands": [
+    {
+      "command": "sha256sum --check --quiet SHA256SUMS",
+      "cwd": "/workspace/scratch/174c84456ee3/repair-review/layout018",
+      "exitCode": 0
+    },
+    {
+      "command": "git apply --check /workspace/scratch/174c84456ee3/repair-review/layout018/C1-LAYOUT-018.patch",
+      "exitCode": 0
+    },
+    {
+      "command": "git apply /workspace/scratch/174c84456ee3/repair-review/layout018/C1-LAYOUT-018.patch",
+      "exitCode": 0
+    }
+  ],
+  "ownRunPendingClasses": {
+    "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest": 4,
+    "at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest": 3
+  }
+}

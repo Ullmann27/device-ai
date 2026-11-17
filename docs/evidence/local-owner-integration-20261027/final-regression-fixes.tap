@@ -1,0 +1,43 @@
+✔ living hologram schedules subsequent visible frames and stops callbacks on detach (0.968619ms)
+✔ orbital rings use visible phase movement, not the old near-static factor (0.156636ms)
+✔ header and the six orbital text labels are fitted to their real drawing boxes (0.121404ms)
+✔ battery, app CPU, RAM and GPU measurements remain honestly distinguished (0.143256ms)
+✔ CCC1 integrated in same owner-app source without changing private app identity (0.128797ms)
+✔ existing on-device learning state and protected independent training are never reset by launch (0.100684ms)
+✔ new same-package release script parses in bash (7.032263ms)
+✔ v18 release fails before any build without explicit owner approval (3.720184ms)
+✔ historical v18 script remains intact and current owner build advances beyond published code23 (0.143663ms)
+✔ Astra source and exact commit gates precede signing operations (0.173045ms)
+✔ existing signed owner 0.3.16 remains the immutable rollback, not the new output (0.41874ms)
+✔ local provider rejects unsafe scope and authentication before any subprocess (2.441282ms)
+✔ provider sends bounded source data only through a fixed non-shell child (1.43023ms)
+✔ timeouts and a model changing its allowed file fail closed (0.802844ms)
+✔ model-derived recipe replay retains its review and risk boundary (1.518218ms)
+✔ actual authenticated HTTP candidate is tested in an isolated Git worktree (879.976049ms)
+✔ coding loopback uses bounded structured schema and accepts relevant larger context (121.14166ms)
+✔ coding output cannot add tools, duplicate paths, unknown files or blank hunks (43.86278ms)
+✔ coding CLI UTF-8 transport accommodates the character-bounded multilingual context (148.691753ms)
+✔ owner candidate advances beyond published 0.3.22/code23 without a new application ID (4.136098ms)
+✔ release uses existing signer, pinned source, and refuses dirty or unapproved code (5.310318ms)
+✔ release never replaces the old APK without byte-checked 0.3.17 rollback (0.351421ms)
+✔ relevant UI and CCC1 source blobs are explicitly attested (0.341872ms)
+✔ owner release executes the optional Android widget and lifecycle test source set (0.537774ms)
+✔ v20 uses identical owner certificate and requires 0.3.18 byte-valid rollback (0.26905ms)
+✔ v20 attests all prior thirty-two sources and pixel-motion/widget tests (0.620476ms)
+✔ v22 is strictly an owner in-place update and leaves historical releases intact (15.20915ms)
+✔ missing or wrong exact SHA cannot reach owner signer (68.869238ms)
+✔ a v22 source proposal is never mistaken for signed authorization (296.161709ms)
+✔ exact approved source blob inventory is internally complete (CI simulation, NEVER signs) (313.853292ms)
+✔ v24 remains one in-place owner package with exact older certificate and rollback (13.351485ms)
+✔ v24 dispatcher rejects missing, mismatched and legacy owner grants (78.047235ms)
+✔ v24 source gate rejects partial, mismatched and old-version approval (595.983198ms)
+✔ v24 historical inventory remains intact but cannot approve the new v25 files (96.549031ms)
+✔ QA builder always uses a deliberately different certificate, not the owner key (0.418279ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2171.157201

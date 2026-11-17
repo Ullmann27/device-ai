@@ -1,0 +1,48 @@
+{
+  "source": "c5f9b06b02fbe8b80f9472a17784fb000812398c",
+  "suites": [
+    {
+      "name": "IndependentBotRosterUiTest",
+      "tests": 15,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 6.288
+    },
+    {
+      "name": "IndependentActivitySpeechTest",
+      "tests": 3,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 1.515
+    },
+    {
+      "name": "IndependentBotSelectionUiTest",
+      "tests": 8,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 1.77
+    },
+    {
+      "name": "IndependentBotAddressRouterTest",
+      "tests": 3,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 0.23
+    },
+    {
+      "name": "IndependentBotSpeechScopeTest",
+      "tests": 5,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 6.083
+    }
+  ],
+  "tests": 34,
+  "failures": 0,
+  "skipped": 0,
+  "gradleExit": 0,
+  "compilation": "PASS",
+  "sourceAndTestsUnchanged": true,
+  "scope": "34 independent checks; whole-app final acceptance pending",
+  "environment": "Linux x86_64 host Robolectric SDK28/35; real Activity/controllers, shadow Android speech; no model/audio hardware"
+}

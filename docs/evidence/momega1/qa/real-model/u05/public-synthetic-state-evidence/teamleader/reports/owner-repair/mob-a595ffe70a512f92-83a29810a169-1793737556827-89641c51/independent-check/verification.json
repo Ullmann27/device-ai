@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "head": "83a29810a169e9b77aaec20858ae7becc1560288",
+  "taskId": "mob-a595ffe70a512f92",
+  "patchSha256": "6da4b4ab42526074164e592626cdef17ae34ba8af3504aca8c9dc91db7897d8d",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "checkedAt": "2026-11-03T20:26:23.856Z",
+  "passed": true,
+  "evidenceSufficient": true,
+  "reasons": [],
+  "executedTests": 1,
+  "profiles": [
+    {
+      "profile": "node-continuum",
+      "passed": true,
+      "executed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 256,
+        "pids": 64,
+        "cpus": 1,
+        "timeoutMs": 15000,
+        "runtime": "runc",
+        "sourceSha256": "28d1e211dbc49b48e5e305bf0d1d8acd341865f997d80edfde4584d99d81efeb",
+        "profile": "node-continuum",
+        "untrustedReports": true,
+        "workspaceId": "continuum-05c9dc1412b2b6c39599b427",
+        "workspaceBinding": {
+          "workerId": "typed-coding-worker",
+          "taskId": "t-2c0129a4b83d190f",
+          "requestMessageId": "1e74a32e-a5c8-4e12-8867-d7fb10f9fabb",
+          "requestHash": "6b48777f7f31ba6740582e54e2c845455d147391de36a48e24f768609b672fe0",
+          "sourceCommit": "83a29810a169e9b77aaec20858ae7becc1560288",
+          "jobId": "df4775a0-f55b-4717-8b0a-689caea431c3"
+        },
+        "observed": {
+          "containerId": "5b0b34d2b202718015167601801b7a48dd3dd4095d513e2e0897024b1584a157",
+          "runtime": "runc",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "user": "1000:1000",
+          "network": "none",
+          "readOnly": true,
+          "memoryBytes": 268435456,
+          "memorySwapBytes": 268435456,
+          "nanoCpus": 1000000000,
+          "pids": 64,
+          "capDrop": [
+            "ALL"
+          ],
+          "securityOpt": [
+            "no-new-privileges:true"
+          ],
+          "writableHostMounts": 0
+        },
+        "teardownConfirmed": true
+      }
+    }
+  ]
+}

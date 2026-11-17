@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:18" hostname="b50d54a1ac03" time="0.039">
+  <properties/>
+  <testcase name="wrongSignerCannotSilentlyAuthorizeExistingDna" classname="at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest" time="0.014"/>
+  <testcase name="missingStateRootIsRejectedWithoutAttemptingRepair" classname="at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest" time="0.003"/>
+  <testcase name="noIdentityDoesNotCreateOneOrRequestAnAndroidKeystoreKey" classname="at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest" time="0.001"/>
+  <testcase name="aModifiedSeedWithNoValidFallbackIsRejectedAndPreserved" classname="at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest" time="0.005"/>
+  <testcase name="validSignedStateIsVerifiedAfterRestartWithoutMutatingTheSeed" classname="at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest" time="0.016"/>
+  <testcase name="orphanedArchiveDoesNotTriggerCreationOfAReplacementIdentity" classname="at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

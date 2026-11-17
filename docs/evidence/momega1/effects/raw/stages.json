@@ -1,0 +1,50 @@
+{
+  "effects-red-1535e31e": {
+    "tests": 13,
+    "failures": 13,
+    "errors": 0,
+    "skipped": 0
+  },
+  "effects-green-0477c9e5": {
+    "tests": 44,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "avatar3d-baseline-ebefd45a": {
+    "tests": 3,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "effects-candidate-v2-8a686173": {
+    "tests": 44,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "effects-independent-8a686173": {
+    "tests": 17,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "effects-combined-0d34baae": {
+    "tests": 62,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "effects-final-688b05e3": {
+    "tests": 62,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "avatar3d-fixture-baseline-28bd1978": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

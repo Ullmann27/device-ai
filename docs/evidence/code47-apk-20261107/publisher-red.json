@@ -1,0 +1,791 @@
+{
+  "serviceId": "srv-dbf1tr2vcj2c73ehpfog",
+  "deployId": "dep-dbn4sbrfm27c73dbo9n0",
+  "sourceCommit": "7b9c03804301e00ab9801708eef8a2b50ed3e5f2",
+  "query": {
+    "startTime": "2026-11-06T23:12:00Z",
+    "endTime": "2026-11-06T23:20:00Z"
+  },
+  "selectedFailureTail": [
+    {
+      "id": "d50d40bc-c03c-432f-b62c-db45340586ae",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384771917Z"
+    },
+    {
+      "id": "0e333cb1-7583-40e3-b021-1a24fba520a8",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE",
+      "timestamp": "2026-11-06T23:15:56.384773817Z"
+    },
+    {
+      "id": "5673052e-f569-4872-809e-8170510cfe5c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:processDebugUnitTestJavaRes",
+      "timestamp": "2026-11-06T23:15:56.384775434Z"
+    },
+    {
+      "id": "5dc6f1e6-b2dc-4a90-89f8-b288050b4042",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:testDebugUnitTest",
+      "timestamp": "2026-11-06T23:15:56.38477701Z"
+    },
+    {
+      "id": "db1acf7a-23c2-49eb-9f7f-cf41d31316aa",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384778128Z"
+    },
+    {
+      "id": "0069f715-adf7-4f7b-8b14-6be4bbf32160",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "OwnerAppActionWorkSceneUiTest > foregroundLaunchKeepsActualResultForReturn FAILED",
+      "timestamp": "2026-11-06T23:15:56.384779654Z"
+    },
+    {
+      "id": "f59d44f3-8b69-4fae-b733-e5c20140b7cd",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "    java.lang.AssertionError at OwnerAppActionWorkSceneUiTest.kt:187",
+      "timestamp": "2026-11-06T23:15:56.384781413Z"
+    },
+    {
+      "id": "8fb73d5e-ab26-4634-95ee-b76c95d4dd35",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.38478256Z"
+    },
+    {
+      "id": "8ea83fe0-e7c8-4c9f-9a8b-8d336ca7c72c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "OwnerAppActionWorkSceneUiTest > stopBeforePostedBackendStartCannotReopenScene FAILED",
+      "timestamp": "2026-11-06T23:15:56.384783892Z"
+    },
+    {
+      "id": "b39eac78-24a6-40b5-b1a5-15bb3d0f53f6",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "    java.lang.AssertionError at OwnerAppActionWorkSceneUiTest.kt:176",
+      "timestamp": "2026-11-06T23:15:56.38478509Z"
+    },
+    {
+      "id": "c8e8d5ea-26cc-4c03-b2a5-5e6b6641fb2f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384786205Z"
+    },
+    {
+      "id": "6ade09fc-3496-48f7-9faa-ff83c0da347b",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "OwnerAppActionWorkSceneUiTest > chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult FAILED",
+      "timestamp": "2026-11-06T23:15:56.384787896Z"
+    },
+    {
+      "id": "cc0a165b-76b6-4686-a63d-32e454204f93",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "    java.lang.AssertionError at OwnerAppActionWorkSceneUiTest.kt:155",
+      "timestamp": "2026-11-06T23:15:56.38478911Z"
+    },
+    {
+      "id": "6d88fab5-401d-490b-b8a1-39bad5220a4f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384790204Z"
+    },
+    {
+      "id": "85c5698e-fbc4-4447-93e5-d288af362a0b",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "3718 tests completed, 3 failed, 20 skipped",
+      "timestamp": "2026-11-06T23:15:56.384791497Z"
+    },
+    {
+      "id": "54c889ee-0cb1-4238-931d-3622308e281f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384792639Z"
+    },
+    {
+      "id": "c6de100b-2cfc-44c3-9fe1-ac2acd8ece12",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:testDebugUnitTest FAILED",
+      "timestamp": "2026-11-06T23:15:56.384793865Z"
+    },
+    {
+      "id": "7136e2cf-639c-4bf2-b035-fef62fdf3089",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "[Incubating] Problems report is available at: file:///opt/render/project/src/build/reports/problems/problems-report.html",
+      "timestamp": "2026-11-06T23:15:56.384795437Z"
+    },
+    {
+      "id": "262e649f-0cbc-4c9f-95bc-9f4494ece804",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384796597Z"
+    },
+    {
+      "id": "5392c382-7d2d-41c6-a1bc-267231c880ec",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "FAILURE: Build failed with an exception.",
+      "timestamp": "2026-11-06T23:15:56.384797794Z"
+    },
+    {
+      "id": "f434addd-70d6-41af-9b8c-e075224e41b6",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384798903Z"
+    },
+    {
+      "id": "5940b1ba-e162-4944-9cad-15f7d7ae2748",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "* What went wrong:",
+      "timestamp": "2026-11-06T23:15:56.384800377Z"
+    },
+    {
+      "id": "e22f0740-ce94-4b59-86c7-838801549191",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Execution failed for task ':app:testDebugUnitTest'.",
+      "timestamp": "2026-11-06T23:15:56.384801613Z"
+    },
+    {
+      "id": "b9daaa12-ab2c-41b0-ada0-09dca04a6545",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> There were failing tests. See the report at: file:///opt/render/project/src/app/build/reports/tests/testDebugUnitTest/index.html",
+      "timestamp": "2026-11-06T23:15:56.384802974Z"
+    },
+    {
+      "id": "24944745-8ea6-43f3-b6f9-b77bb48a1b21",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384804107Z"
+    },
+    {
+      "id": "4d819b52-0e1d-4206-b9ae-811fcecc6331",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "* Try:",
+      "timestamp": "2026-11-06T23:15:56.384805355Z"
+    },
+    {
+      "id": "b5566276-8d8c-406e-869c-21e3f5a02faf",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Run with --scan to get full insights.",
+      "timestamp": "2026-11-06T23:15:56.384806634Z"
+    },
+    {
+      "id": "ef0c1585-387e-4f06-b171-de01e5302a7a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-06T23:15:56.384807737Z"
+    },
+    {
+      "id": "bbf333b0-2139-491a-8dc6-4024a3d9edcd",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "BUILD FAILED in 38m 14s",
+      "timestamp": "2026-11-06T23:15:56.38480895Z"
+    },
+    {
+      "id": "4cae48c7-ad22-4660-8cfa-295c059f278a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "37 actionable tasks: 37 executed",
+      "timestamp": "2026-11-06T23:15:56.384810279Z"
+    },
+    {
+      "id": "91b4a622-3afd-4c6c-abe8-1d4921024bae",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "QA_RED android-gradle",
+      "timestamp": "2026-11-06T23:15:56.384817014Z"
+    },
+    {
+      "id": "d105b8ec-9a91-430e-a8f8-b8215b7a4014",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "QA_RED incomplete-or-stale-android-junit",
+      "timestamp": "2026-11-06T23:16:14.716500347Z"
+    },
+    {
+      "id": "76ff97ef-d7dd-47fa-8047-a536932d3ddc",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "QA_RED mandatory owner suites {'seen': {'at.heinz.deviceai.ShizukuBridgeLifecycleTest': 14, 'at.heinz.deviceai.ShizukuConnectionDialogTest': 2, 'at.heinz.deviceai.ui.ContinuumControlsTest': 10, 'at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest': 5, 'at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest': 6}, 'skips': {'at.heinz.deviceai.ShizukuBridgeLifecycleTest': 0, 'at.heinz.deviceai.ShizukuConnectionDialogTest': 0, 'at.heinz.deviceai.ui.ContinuumControlsTest': 0, 'at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest': 0, 'at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest': 0}, 'failures': 3}",
+      "timestamp": "2026-11-06T23:16:14.782787217Z"
+    },
+    {
+      "id": "55187a0f-3861-40fa-8511-ab15ea4b59cb",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "QA_RED mandatory-owner-Fold7-suites",
+      "timestamp": "2026-11-06T23:16:14.7863879Z"
+    },
+    {
+      "id": "c226cf0e-2641-41ce-b6ff-179848483d4f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "QA_SUMMARY failed_gates=3 SHA=7b9c03804301e00ab9801708eef8a2b50ed3e5f2 Original signing and download remain BLOCKED",
+      "timestamp": "2026-11-06T23:19:12.00615961Z"
+    },
+    {
+      "id": "b886a6f8-2329-40e2-9469-2f61aa6aef39",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_QA_BLOCKED: At least one genuine QA gate is red; no owner APK is published",
+      "timestamp": "2026-11-06T23:19:12.0061854Z"
+    },
+    {
+      "id": "a1274ab4-469c-4079-b5ce-f1dbd7949340",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_OWNER_RENDER_RELEASE_BLOCKED: Node, Android unit tests, lint or unsigned QA build failed",
+      "timestamp": "2026-11-06T23:19:12.006574337Z"
+    },
+    {
+      "id": "de7ee608-5cde-47bb-bb5a-ccdfe9d06042",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[31m\u001b[1m==> Build failed 😞\u001b(B\u001b[m",
+      "timestamp": "2026-11-06T23:19:12.071138113Z"
+    },
+    {
+      "id": "49d668ba-71da-4afc-9f25-df77efb687ac",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mCommon ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys\u001b(B\u001b[m",
+      "timestamp": "2026-11-06T23:19:12.071151237Z"
+    },
+    {
+      "id": "7a499d88-1d1a-4129-9127-ba8d84c70218",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mUsing Node.js version 24.22.1 via environment variable NODE_VERSION\u001b[22m",
+      "timestamp": "2026-11-06T23:19:12.136288316Z"
+    },
+    {
+      "id": "c32a3db6-8888-4102-8288-20a14a658231",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mDocs on specifying a Node.js version: https://render.com/docs/node-version\u001b[22m",
+      "timestamp": "2026-11-06T23:19:12.136290629Z"
+    }
+  ],
+  "completeBuildLog": false
+}

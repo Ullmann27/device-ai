@@ -1,0 +1,44 @@
+{
+  "sourceCommit": "62122c55077644de5bb1993347b7749c7e53610b",
+  "evidenceClass": "CONTRACT_TEST_AND_HOST_ASSET_VALIDATION",
+  "independent": false,
+  "kotlinJUnit": {
+    "pass": 38,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0
+  },
+  "packagedProductionPreflight": "PASS",
+  "nodeSourceContracts": {
+    "pass": 5,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0
+  },
+  "pythonCheckerUnitTests": {
+    "pass": 8,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0
+  },
+  "legacyEpsilonAssetCheck": {
+    "status": "FAIL",
+    "exitCode": 1,
+    "case": "rig_hierarchy_orientation",
+    "reason": "Frozen old chin-pivot location is incompatible with elevated anatomical hinge; independent semantic V2 review pending, V1 unchanged",
+    "notAFrontSurfaceIntersectionResult": true
+  },
+  "packagedAssetSha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+  "independentReview": "Separate PR434: V2 27/27, same exact packaged GLB/hash/preflight; six plus113 canonical front-surface intersection cases passed",
+  "rawLogSha256": {
+    "contracts.txt": "823f43559193fa084e23d0fa5d3ef8c0e219ea2bba63d1cd5325b1c3f7c47965",
+    "node.txt": "974fffd146c9a17d672f8d2c5af7e2e280d254b184d0614b3fa9c7c1ed8968b4",
+    "python.txt": "23d0a927fbc9389e7cbeff2d5545619839b9712d5a86ee6784d5909b6ba5c6b8",
+    "geometry.txt": "b22648a744d929d6086d7ceba93e0ca5d5cb65f2da880f2fab9b0d937f763712",
+    "node-wrong-path-attempt.txt": "48c0809c8b1ed89585256f8fc53cb36bba7c30a731931bcd54439640ba2a5a60"
+  },
+  "device": "FOLD7_NOT_RUN",
+  "appearance": "NOT_ACCEPTED",
+  "fullAppQa": "NOT_RUN_BY_THIS_LANE",
+  "commandError": "Initial Node command used nonexistent scripts/ path, exited1 before tests; corrected .github/continuum/ path executed five tests. Both outputs retained."
+}

@@ -1,0 +1,33 @@
+JUnit version 4.13.2
+..E.E.E.E
+Time: 0.334
+There were 4 failures:
+1) separateStoreInstancesCannotLoseParallelReceipts(at.heinz.deviceai.ToolDurableOutcomeTest)
+java.lang.AssertionError: expected:<32> but was:<13>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ToolDurableOutcomeTest.separateStoreInstancesCannotLoseParallelReceipts(ToolDurableOutcomeTest.kt:89)
+2) failureAfterPossibleSideEffectsNeverBecomesADefiniteRollback(at.heinz.deviceai.ToolDurableOutcomeTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.ToolDurableOutcomeTest.failureAfterPossibleSideEffectsNeverBecomesADefiniteRollback(ToolDurableOutcomeTest.kt:60)
+3) dispatchCommitIsDurableBeforeTheBackendIsEntered(at.heinz.deviceai.ToolDurableOutcomeTest)
+java.lang.AssertionError: expected:<SUCCEEDED> but was:<FAILED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ToolDurableOutcomeTest.dispatchCommitIsDurableBeforeTheBackendIsEntered(ToolDurableOutcomeTest.kt:23)
+4) postDispatchTimeoutAndLateResultRemainUnknownAcrossRestart(at.heinz.deviceai.ToolDurableOutcomeTest)
+org.junit.ComparisonFailure: expected:<[UNKNOWN_AFTER_DISPATCH]> but was:<[TIMED_OUT]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ToolDurableOutcomeTest.postDispatchTimeoutAndLateResultRemainUnknownAcrossRestart(ToolDurableOutcomeTest.kt:44)
+
+FAILURES!!!
+Tests run: 5,  Failures: 4
+

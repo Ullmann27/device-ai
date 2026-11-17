@@ -1,0 +1,149 @@
+{
+  "schema": "momega1-related-memory-operational-freeze-v2",
+  "createdAt": "2026-11-03T19:57:29.555Z",
+  "phase": "FROZEN_BEFORE_ANY_MODEL_EXPOSURE",
+  "originalManifestSha256": "1055d66300b0f4664978f103d1e5adb73a9619a337539ad41e898b7217a92407",
+  "experimentBoundary": "Separate paired protocol. Original 12-task fixtures and original materialized SHAs remain unchanged.",
+  "history": {
+    "earlier": "eb9118d511281f3dac39a36b33b7253fd82f221c",
+    "later": "ad0be980d8642c2d016dec441e436d36aa28cd33",
+    "directParent": true
+  },
+  "arms": [
+    {
+      "name": "earlier-u02",
+      "checkout": "/workspace/momega1-build-env/frozen-paired-v2/earlier-u02/device-ai",
+      "binding": {
+        "task": {
+          "schema": "continuum-coding-task",
+          "version": 1,
+          "id": "momega1-u02",
+          "sourceCommit": "eb9118d511281f3dac39a36b33b7253fd82f221c",
+          "kind": "BUGFIX",
+          "goal": "A lease is active only while now is strictly less than its deadline.",
+          "allowedPaths": [
+            "lib/subject.mjs"
+          ],
+          "acceptance": [
+            "A lease is active only while now is strictly less than its deadline."
+          ],
+          "chain": "node",
+          "limits": {
+            "maxModelCalls": 2,
+            "maxContextChars": 8192
+          }
+        },
+        "fixture": "u02",
+        "sourceSha256": "82069e925d6d1525a61c4eba6a0fe8ad986526a44d584f03bba59bb1c0771fd1",
+        "frozenTestSha256": "4ff062996dc48346cbebf6a498bbc29c161dca97ffbf9dd29d4f78ef62ec48db",
+        "materializedTestSha256": "dd8889a2cc477b94e7001f8605bfd3d1804a12961c3b058ff0d1f89fd139b8a3",
+        "transformation": "Only fixed relative import path changed; assertions and source bytes unchanged.",
+        "inferenceStatus": "NOT_RUN",
+        "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+      },
+      "baseline": {
+        "exit": 1,
+        "tapSha256": "ab48d2d5d7bf146252f61c49aa1e0e4a71d4ec8d35af493d2007dfe905580a9b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "later-u12-memory-off",
+      "checkout": "/workspace/momega1-build-env/frozen-paired-v2/later-u12-memory-off/device-ai",
+      "binding": {
+        "task": {
+          "schema": "continuum-coding-task",
+          "version": 1,
+          "id": "momega1-u12",
+          "sourceCommit": "ad0be980d8642c2d016dec441e436d36aa28cd33",
+          "kind": "BUGFIX",
+          "goal": "A cached entry is fresh only before insertedAt+ttl; equality is expired, and ttl zero is immediately expired.",
+          "allowedPaths": [
+            "lib/subject.mjs"
+          ],
+          "acceptance": [
+            "A cached entry is fresh only before insertedAt+ttl; equality is expired, and ttl zero is immediately expired."
+          ],
+          "chain": "node",
+          "limits": {
+            "maxModelCalls": 2,
+            "maxContextChars": 8192
+          }
+        },
+        "fixture": "u12",
+        "sourceSha256": "dd2b92f855c5ac10ca45e192fef5d952348c41b63990f35c9a08c0444bc2dcf7",
+        "frozenTestSha256": "7a766b4452d0068bf39027d7bfbfb632b0386543be1abdc397026729d820faa1",
+        "materializedTestSha256": "a2c43f9570094e39e8368db60671be85762c2c76293778af692ec74e76f8a101",
+        "transformation": "Only fixed relative import path changed; assertions and source bytes unchanged.",
+        "inferenceStatus": "NOT_RUN",
+        "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+      },
+      "baseline": {
+        "exit": 1,
+        "tapSha256": "cd15efe5cec3042ad32e394a3d7dbdbbc6827adad160d641903f9fb9d202284b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "later-u12-memory-on",
+      "checkout": "/workspace/momega1-build-env/frozen-paired-v2/later-u12-memory-on/device-ai",
+      "binding": {
+        "task": {
+          "schema": "continuum-coding-task",
+          "version": 1,
+          "id": "momega1-u12",
+          "sourceCommit": "ad0be980d8642c2d016dec441e436d36aa28cd33",
+          "kind": "BUGFIX",
+          "goal": "A cached entry is fresh only before insertedAt+ttl; equality is expired, and ttl zero is immediately expired.",
+          "allowedPaths": [
+            "lib/subject.mjs"
+          ],
+          "acceptance": [
+            "A cached entry is fresh only before insertedAt+ttl; equality is expired, and ttl zero is immediately expired."
+          ],
+          "chain": "node",
+          "limits": {
+            "maxModelCalls": 2,
+            "maxContextChars": 8192
+          }
+        },
+        "fixture": "u12",
+        "sourceSha256": "dd2b92f855c5ac10ca45e192fef5d952348c41b63990f35c9a08c0444bc2dcf7",
+        "frozenTestSha256": "7a766b4452d0068bf39027d7bfbfb632b0386543be1abdc397026729d820faa1",
+        "materializedTestSha256": "a2c43f9570094e39e8368db60671be85762c2c76293778af692ec74e76f8a101",
+        "transformation": "Only fixed relative import path changed; assertions and source bytes unchanged.",
+        "inferenceStatus": "NOT_RUN",
+        "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+      },
+      "baseline": {
+        "exit": 1,
+        "tapSha256": "5861a128f6fe78618ea2d74b73d02994641abe7bbdd9dbabe3c8d232b3aa5f7d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "canonicalRepositoryIdentity": "local/device-ai",
+  "supersedes": "v1 never executed inference; distinct arm basenames would produce distinct existing repositoryOf identities.",
+  "controls": {
+    "sameLaterCommit": true,
+    "sameLaterSourceAndTests": true,
+    "sameModelRuntimeAndBudgetsRequired": true,
+    "perTaskLimits": {
+      "maxModelCalls": 2,
+      "maxContextChars": 8192
+    },
+    "inheritedSyntheticState": "Both later arms must start from identical completed earlier-state snapshot; keys stay private.",
+    "differingTreatment": "Only independently accepted explicit technical-recall toggle. Interface currently NOT_YET_ACCEPTED.",
+    "noSolutionPatches": true,
+    "noTeacherAnswers": true,
+    "noModelExposure": true
+  },
+  "admission": "Requires independently accepted genuine inference and canonical ancestry authorization; do not weaken proof, grant, revocation or workspace checks.",
+  "order": [
+    "earlier-u02",
+    "later-u12-memory-off",
+    "later-u12-memory-on"
+  ],
+  "success": "Measure outcomes and actual calls/time, including failure. Positive reuse requires genuine persisted earlier proof and authorized recalled item; no gain inferred from unrelated state.",
+  "deviceStatus": "FOLD7_NOT_RUN"
+}

@@ -1,0 +1,139 @@
+{
+  "sourceCommit": "cee7d2c974ae9e01ec41edfc03ee41b2b582c7bb",
+  "runId": "06648a64-96b7-40ef-b167-2b0d752d6a8a",
+  "proofSha256": "26899aa97b87ea1edff1e60ffd04dcf773f59e8158b8fe235aa6cf7db9223d2e",
+  "proofUrl": "https://continuum-synapse-iii-qa-20261102.onrender.com/ARCHITECTURE-PROOF.json",
+  "logsReadbackVerified": {
+    "ARCHITECTURE-PROOF-TESTS.txt": {
+      "bytes": 11419,
+      "sha256": "dfc9f9b1027178878f796b7cf1c47f36234e24177c8aae96b936a1ad33d1aa80"
+    },
+    "TERMUX-RECOVERY-TESTS.txt": {
+      "bytes": 1308,
+      "sha256": "680ffed78a136863a1709c965ee4aed34f60345f605911fbae36d8714662eddc"
+    },
+    "NODE-TESTS.txt": {
+      "bytes": 3154,
+      "sha256": "a69e107ab1340cd138be01cf10d2a0e3d17cc4cbe45d02055e02ffbb8eb1f612"
+    },
+    "FRONTIER-NODE-TESTS.txt": {
+      "bytes": 8019,
+      "sha256": "0356016c566e9177add5fa212b08fa38ca47c335de5f14875e471eb1c82a4975"
+    },
+    "RELEASE-CONTRACT-TESTS.txt": {
+      "bytes": 1485,
+      "sha256": "2600b9d642d90db38d1c6c1e9297332db7437ea90a106d999130bcb4457576a7"
+    },
+    "JARVIS-READBACK-TESTS.txt": {
+      "bytes": 6682,
+      "sha256": "02bc7cbfa9497c0ad492546452a8eae9ace8c45d402c96b752eca6388670f3e1"
+    },
+    "BACKEND-TESTS.txt": {
+      "bytes": 13711,
+      "sha256": "863e6e3f56d733b9ec97d18bd8824fe312ea1a1a79aff4309f8b5e967b3b6bea"
+    },
+    "GRADLE-QA.txt": {
+      "bytes": 16975,
+      "sha256": "2e695218b1cac74f30a026620310785ec921aedda87dabc3a34f669a4c8bfc84"
+    },
+    "ASSEMBLY.txt": {
+      "bytes": 13269,
+      "sha256": "5b2c17cd0eb722b808a6cf694fec7cb80b0ebb32c0a6f8c3cdda0f5da88801e2"
+    },
+    "APK-BADGING.txt": {
+      "bytes": 1344,
+      "sha256": "9bea995f9ceeb9cfd7395e9b40d4621877a917af6440eff23eb9ff7c8ef34539"
+    }
+  },
+  "nodeSummaries": {
+    "ARCHITECTURE-PROOF-TESTS.txt": {
+      "tests": 55,
+      "pass": 55,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "TERMUX-RECOVERY-TESTS.txt": {
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "NODE-TESTS.txt": {
+      "tests": 15,
+      "pass": 15,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "FRONTIER-NODE-TESTS.txt": {
+      "tests": 47,
+      "pass": 47,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "RELEASE-CONTRACT-TESTS.txt": {
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "JARVIS-READBACK-TESTS.txt": {
+      "tests": 31,
+      "pass": 31,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "BACKEND-TESTS.txt": {
+      "tests": 64,
+      "pass": 64,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  },
+  "newJUnitSuites": {
+    "at.heinz.deviceai.learning.OwnerLocationRevisionBarrierTest": {
+      "tests": 4,
+      "bytes": 1029,
+      "sha256": "0d0ab1e88cfc9963382a617491de8f87368f53cf33a0cd01e6f0a86b58841256"
+    },
+    "at.heinz.deviceai.cognitive.UnscopedLocationCorrectionTest": {
+      "tests": 4,
+      "bytes": 1023,
+      "sha256": "0bce468e80b440196a8a1283d8d1be86669f4ef41f666c071fa0195123dc4f66"
+    },
+    "at.heinz.deviceai.cognitive.SessionRevisionRoutingTest": {
+      "tests": 4,
+      "bytes": 987,
+      "sha256": "3dbafbb563b54bfb8047e68e806a10afef0275d74882c082b15519791210ada7"
+    }
+  },
+  "unsignedApkIdentity": {
+    "packageName": "at.heinz.deviceai.continuumlocal",
+    "versionCode": 36,
+    "versionName": "0.3.35"
+  },
+  "unsignedApk": {
+    "bytes": 54602735,
+    "sha256": "64e29ababafcc0c5d95b066c4278331b22b6cfbc043a40a27ad409deb0a99378"
+  },
+  "unsignedAab": {
+    "bytes": 26484586,
+    "sha256": "f2647009c89a1b781ec965adaec3b82d7b96d431e8cf19dee6763bbb029833d7"
+  },
+  "device": "NOT_RUN",
+  "signing": "NOT_RUN_NO_OWNER_RELEASE",
+  "artifactCaveat": "APK/AAB hashes and aapt identity generated on builder; binaries intentionally not published/downloaded; not original-signature acceptance"
+}

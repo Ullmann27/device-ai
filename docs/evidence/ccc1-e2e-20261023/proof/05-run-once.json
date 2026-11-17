@@ -1,0 +1,12 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-run-once",
+  "status": "OK",
+  "result": {
+    "outcome": "VERIFIED_PATCH_PENDING_REVIEW",
+    "ccc1": "COMPLETED",
+    "taskId": "t-a1bf9c70fe199bb7",
+    "detail": "CCC1 COMPLETED task t-a1bf9c70fe"
+  }
+}

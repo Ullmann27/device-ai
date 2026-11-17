@@ -1,0 +1,27 @@
+{
+  "source": "713949a86e10fb4fe4cc22d03f1af1afdcdf51e8",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    ".github/continuum/momega1-loop.test.mjs",
+    ".github/continuum/momega1-verifier-regressions.test.mjs",
+    ".github/continuum/ccc1-workspace.test.mjs",
+    ".github/continuum/isolated-executor.test.mjs",
+    ".github/continuum/ccc1-technical-recall.test.mjs",
+    ".github/continuum/ccc1-experience-durability.test.mjs",
+    "scripts/continuum-momega1-bridge.test.mjs"
+  ],
+  "exit": 0,
+  "elapsedSeconds": 9.356252670288086,
+  "testSha256": {
+    ".github/continuum/momega1-loop.test.mjs": "bf7007080e347896feed279f373ffc1500fdca4fc8c98359ce83575b2c2d2457",
+    ".github/continuum/momega1-verifier-regressions.test.mjs": "eaf757cc8d8ba583078fba899bb91deea18f3678c8031a39fec583089f8be2aa",
+    ".github/continuum/ccc1-workspace.test.mjs": "78780f04a5e15f37614e011a50131e7203d65f03eb98322958c01a1d57662159",
+    ".github/continuum/isolated-executor.test.mjs": "df7f1b9adb325ba4bd11a1e8e9a9a413c083d3541d0cab90786cd8c21e46af29",
+    ".github/continuum/ccc1-technical-recall.test.mjs": "91fd2f0e21b32319816c198e51b3dcc28337810a9109fcf761088027c0e89ce1",
+    ".github/continuum/ccc1-experience-durability.test.mjs": "72047810a525fcf901ca16533d5d18147dcf67fa188feaf4416e124085159b78",
+    "scripts/continuum-momega1-bridge.test.mjs": "6b6fd09bbae44ce93b3b3174c68985c716248810c5c4e44bb1181ee1019214f4"
+  }
+}

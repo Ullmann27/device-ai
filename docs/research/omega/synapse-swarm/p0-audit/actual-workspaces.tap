@@ -1,0 +1,120 @@
+TAP version 13
+# Subtest: HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces
+ok 1 - HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces
+  ---
+  duration_ms: 5034.003227
+  type: 'test'
+  ...
+# Subtest: HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs
+ok 2 - HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs
+  ---
+  duration_ms: 1705.137342
+  type: 'test'
+  ...
+# Subtest: HOST_INTEGRATION: live canonical lease clamps the real Docker timeout
+ok 3 - HOST_INTEGRATION: live canonical lease clamps the real Docker timeout
+  ---
+  duration_ms: 648.583179
+  type: 'test'
+  ...
+# Subtest: HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint
+ok 4 - HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint
+  ---
+  duration_ms: 1972.050679
+  type: 'test'
+  ...
+# Subtest: HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay
+ok 5 - HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay
+  ---
+  duration_ms: 2306.851082
+  type: 'test'
+  ...
+# {"status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"4e1927ce4007ff2dba36571f6f3f603b93c832bbc16bf7191f6637744a898632","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-b9b46d72392fde531b16addc","workspaceBinding":{"workerId":"worker-review","taskId":"t-e3cbea2f3eadfa1a","requestMessageId":"9567081d-d70b-4e6c-9679-140946524707","requestHash":"a906a7c31ca00b7de72ed794f7699a5ed9f27846a006063b239868cb0dc5e5f0","sourceCommit":"36f5355c9e610c2fa22e22dce65786298b7511c3","jobId":"ed134e81-9423-4785-8aad-9921ce03b435"},"observed":{"containerId":"cf1ce4c9a48b11d9c125b5c7fd529e929fb072f1c5a5199acc3d6bfa6e40c50e","runtime":"runc","image":"sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# {"status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"4e1927ce4007ff2dba36571f6f3f603b93c832bbc16bf7191f6637744a898632","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-74bf6a4a964d377481fb2ff8","workspaceBinding":{"workerId":"worker-review","taskId":"t-e3cbea2f3eadfa1a","requestMessageId":"9567081d-d70b-4e6c-9679-140946524707","requestHash":"a906a7c31ca00b7de72ed794f7699a5ed9f27846a006063b239868cb0dc5e5f0","sourceCommit":"36f5355c9e610c2fa22e22dce65786298b7511c3","jobId":"ed134e81-9423-4785-8aad-9921ce03b435"},"observed":{"containerId":"5c0cd5e57653f3a671f4ad7ef4159620415a74425b064559c22ed49e8766875f","runtime":"runc","image":"sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# Subtest: unclaimed scoped executor always refuses execution
+ok 6 - unclaimed scoped executor always refuses execution
+  ---
+  duration_ms: 73.653491
+  type: 'test'
+  ...
+# Subtest: canonical live claim permits multiple fixed verification profiles
+ok 7 - canonical live claim permits multiple fixed verification profiles
+  ---
+  duration_ms: 841.839139
+  type: 'test'
+  ...
+# Subtest: wrong claim token cannot activate execution
+ok 8 - wrong claim token cannot activate execution
+  ---
+  duration_ms: 61.593833
+  type: 'test'
+  ...
+# Subtest: wrong canonical job cannot activate execution
+ok 9 - wrong canonical job cannot activate execution
+  ---
+  duration_ms: 72.303366
+  type: 'test'
+  ...
+# Subtest: copied backlog outside canonical state cannot activate execution
+ok 10 - copied backlog outside canonical state cannot activate execution
+  ---
+  duration_ms: 64.408846
+  type: 'test'
+  ...
+# Subtest: claim activated before canonical owner ABORT cannot execute
+ok 11 - claim activated before canonical owner ABORT cannot execute
+  ---
+  duration_ms: 60.603264
+  type: 'test'
+  ...
+# Subtest: claim activated before MAC corruption cannot execute
+ok 12 - claim activated before MAC corruption cannot execute
+  ---
+  duration_ms: 63.271381
+  type: 'test'
+  ...
+# Subtest: claim activated before canonical source mutation cannot execute
+ok 13 - claim activated before canonical source mutation cannot execute
+  ---
+  duration_ms: 72.630062
+  type: 'test'
+  ...
+# Subtest: claim activated before backlog abort cannot execute or reactivate
+ok 14 - claim activated before backlog abort cannot execute or reactivate
+  ---
+  duration_ms: 82.516257
+  type: 'test'
+  ...
+# Subtest: controlled-clock expired lease cannot execute
+ok 15 - controlled-clock expired lease cannot execute
+  ---
+  duration_ms: 72.579967
+  type: 'test'
+  ...
+# Subtest: controlled-clock expired goal cannot execute with a longer live lease
+ok 16 - controlled-clock expired goal cannot execute with a longer live lease
+  ---
+  duration_ms: 86.442626
+  type: 'test'
+  ...
+# Subtest: claim cannot expand fixed chain or introduce arbitrary shell profile
+ok 17 - claim cannot expand fixed chain or introduce arbitrary shell profile
+  ---
+  duration_ms: 73.817001
+  type: 'test'
+  ...
+# Subtest: replaced canonical claim token invalidates already activated executor
+ok 18 - replaced canonical claim token invalidates already activated executor
+  ---
+  duration_ms: 71.669919
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13745.311996

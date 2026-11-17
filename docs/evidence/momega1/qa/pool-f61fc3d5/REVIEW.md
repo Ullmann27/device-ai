@@ -1,0 +1,9 @@
+# Narrow inherited pool/inventory repair review
+
+Fetched read-only through GitHub connector; never edited the feature implementation. The old pool Git blob3fbbc651e0e3637826ab73646a7360a4f565967a from foreign853 exactly equals our baseline. Candidate f61fc3d56b9437d762b78625f748e64f887ef5f6 pool blob6023e52e41e62bfa94ec6806ad64baf42557b8cd and its final9-test blob7acd71b9a7bf27a6196d811d12650082454fe388 verified before compiling.
+
+Independent actual Kotlin execution with official compiler and real compiled app dependencies: oldpool+frozen9 tests7pass/2fail, exit1 (callback completion and rejected-admission cleanup). Exact candidate9/9pass; candidate plus unchanged actual ChiefBrainWiring4 tests13/13pass, exit0. No stubs, sleeps, retries or relaxed assertions introduced by QA. Atomic unfinished count covers synchronous report callback completion while early slot removal preserves reentrant capacity. Exceptions always decrement; executor rejection rolls back admission and rethrows. Preexisting queued-runner shutdown/report gap and callback self-await remain outside this bounded fix, as the foreign handoff explicitly states.
+
+Separate test-only7234ee774351363681e81aad762b254ba33a8723: exact detached source6/6 Node checks pass,0skip, exit0. Correct real NUL/tab parsing, malformed/truncated/duplicate rejection, a populated-current-inventory assertion and finite16MiB metadata buffer replace broken literal-backslash parsing/default output bound. No signing operation. Initial invocation raced incomplete worktree checkout and could not find the test file; that setup failure is retained, followed by the completed-checkout run.
+
+Recommend narrow import of pool source + its preceding regression-test commits and only the inventory test repair. No UI3D/layout/motion tests or other foreign application changes are approved by this evidence. Full combined QA must still run on the new exact source.

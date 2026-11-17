@@ -1,0 +1,57 @@
+{
+  "source": "713949a86e10fb4fe4cc22d03f1af1afdcdf51e8",
+  "tools": {
+    "node": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "docker": "/usr/local/bin/docker",
+    "bwrap": "/usr/bin/bwrap",
+    "prlimit": "/usr/bin/prlimit",
+    "gcc": "/usr/bin/gcc",
+    "adb": null,
+    "llama-cli": null,
+    "llama-server": null
+  },
+  "node": {
+    "command": [
+      "node",
+      "--version"
+    ],
+    "exit": 0,
+    "stdout": "v24.19.0",
+    "stderr": ""
+  },
+  "dockerPinnedImage": {
+    "command": [
+      "docker",
+      "--host=unix:///var/run/docker.sock",
+      "image",
+      "inspect",
+      "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+      "--format",
+      "{{.Id}}"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "Error response from daemon: No such image: sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1"
+  },
+  "weightsSearch": {
+    "command": [
+      "rg",
+      "--files",
+      "/workspace",
+      "-g",
+      "*.gguf",
+      "-g",
+      "*.litertlm",
+      "-g",
+      "*.safetensors",
+      "-g",
+      "llama-cli",
+      "-g",
+      "llama-server"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "quota": "NOT_VISIBLE"
+}

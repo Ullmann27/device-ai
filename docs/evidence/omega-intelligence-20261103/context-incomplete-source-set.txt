@@ -1,0 +1,37 @@
+source_commit=242bbee184fe3747a17ffa7239bf6fed673ad3f8
+source_status:
+ M app/src/main/java/at/heinz/deviceai/cognitive/OwnerStatementTimeline.kt
+ M app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt
+?? docs/evidence/omega-intelligence-20261103/
+cacf4f226e9b13555a7e49bf9a6fc36b41f56a58a8a20608111de9dda3b884d1  app/src/main/java/at/heinz/deviceai/cognitive/OwnerStatementTimeline.kt
+8491828e0068bc9354559df8ffffabc8b86fd1900aa5e3506c74be9a5ab2adfc  app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt
+212b0865f2ed180498c5f29e7c116a188e9d594813880a8f51c754fb7a6a7a30  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt
+5f5843a01fe409a474f79dd1e3db2a318014acb3e03972bf53d4b6fe74d6cea0  app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicyTest.kt
+88b134dd7b9ad73eacece1d680dd6597fafcb8db308c6f4166acd64b9416850e  app/src/main/java/at/heinz/deviceai/cognitive/LocalFollowUpTaskFrame.kt
+fa96f6172fafc06457dddcc92aa9f54502125d909c56b8a2c0974bcf8d1e899d  app/src/test/java/at/heinz/deviceai/cognitive/LocalFollowUpTaskFrameTest.kt
+f26701c4fee418906ad110ab1f624dd9cdb3f583cc9d1d3d04f98d01824dab93  app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt
+fc1f3d8a0c97a42deb3e235aaa0d1fd51bc3e5e57860d4c4fde276af99cdf7d7  app/src/test/java/at/heinz/deviceai/cognitive/LocalChatPromptBudgetTest.kt
+14fb020deae924870be1040f4e0029da369172534c48c1b649b2b4a85dd700c8  app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt
+d5b46b5c3c212c6048748d3951d0127d2cfcf08aeecf4c93185eab1f6b34c31a  app/src/test/java/at/heinz/deviceai/cognitive/LocalPromptFrameTest.kt
+89d79987c0920e6d759891c231d685bb670a1ce69dcf6e451a14a47efd29f842  app/src/main/java/at/heinz/deviceai/cognitive/LocalContextIntegrityProbe.kt
+68e69422bc72906605e74caa4e7c3d7f56445bb0d531b2d432a9d261c7158aff  app/src/test/java/at/heinz/deviceai/cognitive/LocalContextIntegrityProbeTest.kt
+c0055a89b234991baeb2f6c1311532b26512c0a45383e745e39b4a7fb5ee5327  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationPromptFirewall.kt
+af671c5717244f3bd7b3cd65fb71d5d683037d491ff7f0e7dca23d9882c2b254  app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationPromptFirewallTest.kt
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)
+app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt:32:26: error: unresolved reference 'ContinuumTaskClassifier'.
+        val assessment = ContinuumTaskClassifier.classify(task)
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt:39:25: error: unresolved reference 'ChatReasoningRouter'.
+        val candidate = ChatReasoningRouter.composePrompt(body, advisory, requiredTail, maxCharacters)
+                        ^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt:45:31: error: unresolved reference 'ChatReasoningRouter'.
+        val withoutAdvisory = ChatReasoningRouter.composePrompt(body, null, requiredTail, maxCharacters)
+                              ^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt:46:32: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        return withoutAdvisory.takeIf { it.startsWith(body) &&
+                               ^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt:46:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        return withoutAdvisory.takeIf { it.startsWith(body) &&
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^

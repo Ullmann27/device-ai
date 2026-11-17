@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "status": "FOCUSED_RED_GREEN_PASSED",
+  "test_commit": "dbdcc8fdc695ab40a8eabe194bf4660465b3e7c0",
+  "actual_activity_source": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "red": {
+    "tests": 4,
+    "failures": 1,
+    "exit": 1,
+    "failure": "expected assistant_name=Jarvis, actual Continuum"
+  },
+  "controls_passed": [
+    "default identity when state remains absent",
+    "assigned-bot owner identity/profile exclusion",
+    "real compiler budget failure with zero inference calls"
+  ],
+  "raw_sha256": {
+    "red-compile-command.json": "ec8416de815a2639b45187a5b64fa98a26e0149a124b971674ca87e0642c2070",
+    "red-compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "red-junit-command.json": "5f5c8f3a916ffcbcff5e5a959761cc0e664b28f52cc9ae38c315c2c2a8c5a418",
+    "red-junit.txt": "38c4c934a564f9fb16ec76631af799cb502e2312ab235ec3acae8beebe7bca4a",
+    "red-source-sha256.json": "6a85f1c086706f5906b5796a2161827adc7c1be7849a15e9d0db983a24e0bee4",
+    "red-activity-class-sha256.json": "42f8c25fe3194728e0a390b6742035c687d65629c45c5577bd41b92bf3255f5d",
+    "run-ui.py": "95b436100177e035d3b3a57b690b945d6c293bf10711569dce625d95e3dd6971",
+    "green-junit-command.json": "6bbf68ec020e31f2aa8a5328b6afbdb54743ae89c42ca6262a785ade9c817748",
+    "green-junit.txt": "8da1603e8ba8f615e648b28d9ad5d1e70f31ef3f186a0681441812b64b9c1c8d",
+    "green-activity-compile.json": "b0a504895aa8fe0e64f021ac1674b2366346dfecee4b249e48da8da97887f4f8",
+    "green-overlay-class-sha256.json": "9f0a1da47f52f0c8429078197a16fb3eb9d6d1788597d0b62f3be669c4a5a926",
+    "unchanged-test-class-sha256.json": "a60d4270ae146c4f008026af879c348a07a648738897cbb575e8e73c960a092a"
+  },
+  "green": {
+    "tests": 4,
+    "failures": 0,
+    "exit": 0,
+    "elapsed_seconds": 3.514,
+    "test_recompiled": false,
+    "activity_source_sha256": "b3551528e76061191a29d2cbaf9be7ff9d183dea9d3757e3c22ab7091bd25e38",
+    "activity_class_sha256": "609634bbb2de9f704c90837d9b1e10bcc7d4e6ec1f26b5805cec8f48d1aad848",
+    "activity_writer": "Bot1 / PR583",
+    "overlay_contains_other_authorized_routing_and_pdf_changes": true
+  },
+  "source_note": "This test-only branch keeps c3d2 Activity; GREEN requires Bot1 compiled minimal identity hunk and final overlay. No whole-branch or device claim."
+}

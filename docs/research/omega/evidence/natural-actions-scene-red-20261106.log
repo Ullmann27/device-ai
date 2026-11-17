@@ -1,0 +1,15 @@
+JUnit version 4.13.2
+.......E.
+Time: 0.029
+There was 1 failure:
+1) closingThenStartingInSameMillisecondRetainsRetiredCalls(at.heinz.deviceai.ui.ToolWorkSceneLeaseTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.ui.ToolWorkSceneLeaseTest.closingThenStartingInSameMillisecondRetainsRetiredCalls(ToolWorkSceneLeaseTest.kt:51)
+
+FAILURES!!!
+Tests run: 8,  Failures: 1
+

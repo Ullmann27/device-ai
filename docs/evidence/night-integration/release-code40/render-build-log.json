@@ -1,0 +1,3545 @@
+{
+  "serviceId": "srv-dbf1tr2vcj2c73ehpfog",
+  "deployId": "dep-dbl70arm8hqs73ch40pg",
+  "range": {
+    "startTime": "2026-11-03T23:37:00Z",
+    "endTime": "2026-11-03T23:52:00Z"
+  },
+  "complete": true,
+  "logs": [
+    {
+      "id": "5cf3ec50-94de-4a5b-b71b-0fed8bacaa18",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mDownloading cache...\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:37:17.861649108Z"
+    },
+    {
+      "id": "9ca2f859-e489-4973-8f6c-bf2acc7e3cd8",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mCloning from https://github.com/Ullmann27/device-ai\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:37:17.889702974Z"
+    },
+    {
+      "id": "2629bc90-65e2-4a53-81a0-129e95c7c4a9",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mDownloaded and extracted 33 MiB cache in 6s.\u001b[22m",
+      "timestamp": "2026-11-03T23:37:24.139279553Z"
+    },
+    {
+      "id": "cb0c841f-d8f4-479e-9d0e-c4562eb0e364",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mChecking out commit 0ff2cef550db8fc84c32690793921edf3a7830e9 in branch research/continuum-m8-render-signed-release-20261031\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:37:29.649116767Z"
+    },
+    {
+      "id": "eb774aa0-5ab2-4d65-9bd5-111bcd31df01",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mRunning build command 'bash scripts/render-continuum-m8-owner-release.sh'...\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:37:32.563287906Z"
+    },
+    {
+      "id": "b9400012-628d-4f07-91f6-062f456184ea",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mRequesting Node.js version >=20\u001b[22m",
+      "timestamp": "2026-11-03T23:37:32.697020247Z"
+    },
+    {
+      "id": "01ff47ac-65a0-4aa8-b9fc-624f2c938214",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mUsing Node.js version 26.13.0 via backend/package.json\u001b[22m",
+      "timestamp": "2026-11-03T23:37:32.880471899Z"
+    },
+    {
+      "id": "f7760b37-5987-41e4-baff-3f18ae8ab61c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mDocs on specifying a Node.js version: https://render.com/docs/node-version\u001b[22m",
+      "timestamp": "2026-11-03T23:37:32.880487817Z"
+    },
+    {
+      "id": "3c3d2448-c198-4c39-baf4-661030001700",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mInstalling Node.js version 26.13.0...\u001b[22m",
+      "timestamp": "2026-11-03T23:37:32.880608788Z"
+    },
+    {
+      "id": "d25ecf5d-d8e3-4063-bf2e-7481f8121d52",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Switched to a new branch 'integration/continuum-all-systems-apk-qa-20261102'",
+      "timestamp": "2026-11-03T23:37:34.027440915Z"
+    },
+    {
+      "id": "bb3ecb14-4b8f-46e1-b75b-015818b7bf14",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current",
+      "timestamp": "2026-11-03T23:37:34.062930058Z"
+    },
+    {
+      "id": "8a99686e-1e0f-471d-a36b-e1c4ebfe69d3",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "                                 Dload  Upload   Total   Spent    Left  Speed",
+      "timestamp": "2026-11-03T23:37:34.062951274Z"
+    },
+    {
+      "id": "fe7074a1-3b21-41f9-b2ae-2c0910bc0400",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0",
+      "timestamp": "2026-11-03T23:37:34.42132603Z"
+    },
+    {
+      "id": "5700d6ea-5061-4120-8049-a000b5718089",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\r 27  184M   27 49.9M    0     0  75.0M      0  0:00:02 --:--:--  0:00:02 75.0M\r100  184M  100  184M    0     0   152M      0  0:00:01  0:00:01 --:--:--  247M",
+      "timestamp": "2026-11-03T23:37:35.272409453Z"
+    },
+    {
+      "id": "00376b9e-9316-4af6-a395-75de4ee93449",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "openjdk version \"17.0.20.1\" 2026-08-18",
+      "timestamp": "2026-11-03T23:37:38.213746637Z"
+    },
+    {
+      "id": "e3b05834-82dd-4a3d-a544-8e59c96015a4",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)",
+      "timestamp": "2026-11-03T23:37:38.213764127Z"
+    },
+    {
+      "id": "9717ceeb-0ac0-4882-976c-01072588c178",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)",
+      "timestamp": "2026-11-03T23:37:38.213791438Z"
+    },
+    {
+      "id": "fd2d3472-a9ee-458c-9695-761c2dba31dd",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current",
+      "timestamp": "2026-11-03T23:37:38.248773002Z"
+    },
+    {
+      "id": "2b812b3f-27c5-44d0-92e6-ea2ca38b0e56",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "                                 Dload  Upload   Total   Spent    Left  Speed",
+      "timestamp": "2026-11-03T23:37:38.248806472Z"
+    },
+    {
+      "id": "e8d11ad7-601a-41a0-973f-fc9fbd68ef17",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r 49  157M   49 78.4M    0     0   163M      0 --:--:-- --:--:-- --:--:--  163M\r100  157M  100  157M    0     0   191M      0 --:--:-- --:--:-- --:--:--  191M",
+      "timestamp": "2026-11-03T23:37:39.068462973Z"
+    },
+    {
+      "id": "7e4b1a7b-d376-431f-93ed-215907a51cd4",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Loading package information...                                                  \rLoading local repository...                                                     \r[                                       ] 3% Loading local repository...        \r[                                       ] 3% Fetch remote repository...         \r[=                                      ] 3% Fetch remote repository...         \r[=                                      ] 4% Fetch remote repository...         \r[=                                      ] 5% Fetch remote repository...         \r[==                                     ] 5% Fetch remote repository...         \r[==                                     ] 6% Fetch remote repository...         \r[==                                     ] 7% Fetch remote repository...         \r[==                                     ] 7% Computing updates...               \r[===                                    ] 8% Computing updates...               \r[===                                    ] 10% Computing updates...              \r[===                                    ] 10% Installing Android SDK Build-Tools\r[===                                    ] 10% Downloading build-tools_r35_linux.\r[====                                   ] 10% Downloading build-tools_r35_linux.\r[====                                   ] 11% Downloading build-tools_r35_linux.\r[====                                   ] 12% Downloading build-tools_r35_linux.\r[=====                                  ] 13% Downloading build-tools_r35_linux.\r[=====                                  ] 14% Downloading build-tools_r35_linux.\r[=====                                  ] 15% Downloading build-tools_r35_linux.\r[======                                 ] 15% Downloading build-tools_r35_linux.\r[======                                 ] 16% Downloading build-tools_r35_linux.\r[======                                 ] 17% Downloading build-tools_r35_linux.\r[=======                                ] 18% Downloading build-tools_r35_linux.\r[=======                                ] 19% Downloading build-tools_r35_linux.\r[=======                                ] 20% Downloading build-tools_r35_linux.\r[========                               ] 20% Downloading build-tools_r35_linux.\r[========                               ] 21% Downloading build-tools_r35_linux.\r[========                               ] 21% Unzipping...                      \r[========                               ] 21% Unzipping... android-15/NOTICE.txt\r[========                               ] 21% Unzipping... android-15/aapt      \r[========                               ] 21% Unzipping... android-15/aapt2     \r[========                               ] 22% Unzipping... android-15/aapt2     \r[========                               ] 22% Unzipping... android-15/aarch64-li\r[========                               ] 22% Unzipping... android-15/aidl      \r[========                               ] 22% Unzipping... android-15/apksigner \r[========                               ] 22% Unzipping... android-15/arm-linux-\r[========                               ] 22% Unzipping... android-15/bcc_compat\r[========                               ] 22% Unzipping... android-15/core-lambd\r[========                               ] 22% Unzipping... android-15/d8        \r[========                               ] 22% Unzipping... android-15/dexdump   \r[=========                              ] 23% Unzipping... android-15/dexdump   \r[=========                              ] 23% Unzipping... android-15/i686-linux\r[=========                              ] 23% Unzipping... android-15/lld       \r[=========                              ] 23% Unzipping... android-15/llvm-rs-cc\r[=========                              ] 23% Unzipping... android-15/mipsel-lin\r[=========                              ] 23% Unzipping... android-15/runtime.pr\r[=========                              ] 23% Unzipping... android-15/source.pro\r[=========                              ] 23% Unzipping... android-15/split-sele\r[=========                              ] 23% Unzipping... android-15/x86_64-lin\r[=========                              ] 23% Unzipping... android-15/zipalign  \r[=========                              ] 23% Unzipping... android-15/lib/apksig\r[=========                              ] 23% Unzipping... android-15/lib/d8.jar\r[=========                              ] 24% Unzipping... android-15/lib/d8.jar\r[=========                              ] 25% Unzipping... android-15/lib/d8.jar\r[==========                             ] 25% Unzipping... android-15/lib/d8.jar\r[==========                             ] 25% Unzipping... android-15/lib64/libL\r[==========                             ] 26% Unzipping... android-15/lib64/libL\r[==========                             ] 27% Unzipping... android-15/lib64/libL\r[==========                             ] 27% Unzipping... android-15/lib64/libb\r[==========                             ] 27% Unzipping... android-15/lib64/libc\r[===========                            ] 28% Unzipping... android-15/lib64/libc\r[===========                            ] 29% Unzipping... android-15/lib64/libc\r[===========                            ] 29% Unzipping... android-15/lld-bin/ll\r[===========                            ] 30% Unzipping... android-15/lld-bin/ll\r[============                           ] 30% Unzipping... android-15/lld-bin/ll\r[============                           ] 31% Unzipping... android-15/lld-bin/ll\r[============                           ] 31% Unzipping... android-15/renderscri\r[============                           ] 32% Unzipping... android-15/renderscri\r[=============                          ] 33% Unzipping... android-15/renderscri\r[=====================                  ] 55% Unzipping... android-15/renderscri\r[=====================                  ] 55% Installing Android SDK Platform 36\r[=====================                  ] 55% Downloading platform-36_r02.zip...\r[======================                 ] 55% Downloading platform-36_r02.zip...\r[======================                 ] 56% Downloading platform-36_r02.zip...\r[======================                 ] 57% Downloading platform-36_r02.zip...\r[=======================                ] 58% Downloading platform-36_r02.zip...\r[=======================                ] 59% Downloading platform-36_r02.zip...\r[=======================                ] 60% Downloading platform-36_r02.zip...\r[========================               ] 60% Downloading platform-36_r02.zip...\r[========================               ] 61% Downloading platform-36_r02.zip...\r[========================               ] 62% Downloading platform-36_r02.zip...\r[=========================              ] 63% Downloading platform-36_r02.zip...\r[=========================              ] 64% Downloading platform-36_r02.zip...\r[=========================              ] 65% Downloading platform-36_r02.zip...\r[==========================             ] 65% Downloading platform-36_r02.zip...\r[==========================             ] 66% Downloading platform-36_r02.zip...\r[==========================             ] 66% Unzipping... android-15/renderscri\r[==========================             ] 66% Unzipping... android-36/android-st\r[==========================             ] 67% Unzipping... android-36/android-st\r[===========================            ] 68% Unzipping... android-36/android-st\r[===========================            ] 68% Unzipping... android-36/android.ja\r[===========================            ] 69% Unzipping... android-36/android.ja\r[===========================            ] 70% Unzipping... android-36/android.ja\r[============================           ] 70% Unzipping... android-36/android.ja\r[============================           ] 71% Unzipping... android-36/android.ja\r[============================           ] 72% Unzipping... android-36/android.ja\r[============================           ] 72% Unzipping... android-36/build.prop\r[============================           ] 72% Unzipping... android-36/core-for-s\r[============================           ] 72% Unzipping... android-36/data/NOTIC\r[============================           ] 72% Unzipping... android-36/data/activ\r[============================           ] 72% Unzipping... android-36/data/annot\r[============================           ] 72% Unzipping... android-36/data/api-v\r[============================           ] 72% Unzipping... android-36/data/broad\r[============================           ] 72% Unzipping... android-36/data/categ\r[============================           ] 72% Unzipping... android-36/data/featu\r[============================           ] 72% Unzipping... android-36/data/res/a\r[============================           ] 72% Unzipping... android-36/data/res/c\r[============================           ] 72% Unzipping... android-36/data/res/d\r[=============================          ] 73% Unzipping... android-36/data/res/d\r[=============================          ] 74% Unzipping... android-36/data/res/d\r[=============================          ] 75% Unzipping... android-36/data/res/d\r[=============================          ] 75% Unzipping... android-36/data/res/i\r[=============================          ] 75% Unzipping... android-36/data/res/l\r[==============================         ] 75% Unzipping... android-36/data/res/l\r[==============================         ] 75% Unzipping... android-36/data/res/m\r[==============================         ] 75% Unzipping... android-36/data/res/r\r[==============================         ] 75% Unzipping... android-36/data/res/t\r[==============================         ] 75% Unzipping... android-36/data/res/v\r[==============================         ] 76% Unzipping... android-36/data/res/v\r[==============================         ] 77% Unzipping... android-36/data/res/v\r[==============================         ] 77% Unzipping... android-36/data/res/x\r[==============================         ] 77% Unzipping... android-36/data/servi\r[==============================         ] 77% Unzipping... android-36/data/widge\r[==============================         ] 77% Unzipping... android-36/framework.\r[==============================         ] 77% Unzipping... android-36/optional/a\r[==============================         ] 77% Unzipping... android-36/optional/l\r[==============================         ] 77% Unzipping... android-36/optional/o\r[==============================         ] 77% Unzipping... android-36/optional/w\r[==============================         ] 77% Unzipping... android-36/sdk.proper\r[==============================         ] 77% Unzipping... android-36/skins/HVGA\r[==============================         ] 77% Unzipping... android-36/skins/NOTI\r[==============================         ] 77% Unzipping... android-36/skins/QVGA\r[==============================         ] 77% Unzipping... android-36/skins/WQVG\r[==============================         ] 77% Unzipping... android-36/skins/WSVG\r[==============================         ] 77% Unzipping... android-36/skins/WVGA\r[==============================         ] 77% Unzipping... android-36/skins/WXGA\r[==============================         ] 77% Unzipping... android-36/source.pro\r[==============================         ] 77% Unzipping... android-36/templates/\r[==============================         ] 77% Unzipping... android-36/uiautomato\r[==============================         ] 78% Unzipping... android-36/uiautomato\r[=======================================] 100% Unzipping... android-36/uiautomat",
+      "timestamp": "2026-11-03T23:37:47.061638282Z"
+    },
+    {
+      "id": "5977d059-233d-49d2-a86e-b8199625cdb2",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:47.065437122Z"
+    },
+    {
+      "id": "411027f6-974a-40a8-9855-22c881ad4bfa",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current",
+      "timestamp": "2026-11-03T23:37:47.099776444Z"
+    },
+    {
+      "id": "a43e5011-92f2-4ed8-aa6d-ab16049cdde6",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "                                 Dload  Upload   Total   Spent    Left  Speed",
+      "timestamp": "2026-11-03T23:37:47.099820737Z"
+    },
+    {
+      "id": "37362549-6acc-4beb-af4a-8d93ac690cb1",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   169  100   169    0     0   2699      0 --:--:-- --:--:-- --:--:--  2725",
+      "timestamp": "2026-11-03T23:37:47.162262262Z"
+    },
+    {
+      "id": "c876039c-53ac-464b-93d8-369a9b71b504",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0",
+      "timestamp": "2026-11-03T23:37:47.42612628Z"
+    },
+    {
+      "id": "7dbda2d6-ad10-4af5-8419-50c083534b6b",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\r 53  130M   53 70.0M    0     0   111M      0  0:00:01 --:--:--  0:00:01  111M\r100  130M  100  130M    0     0   161M      0 --:--:-- --:--:-- --:--:--  340M",
+      "timestamp": "2026-11-03T23:37:47.90805412Z"
+    },
+    {
+      "id": "43a0831f-595d-4a01-899f-2f6941b9c18c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current",
+      "timestamp": "2026-11-03T23:37:47.916658694Z"
+    },
+    {
+      "id": "e5d4a67f-39c2-4230-89ef-9c2d7b4a16fc",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "                                 Dload  Upload   Total   Spent    Left  Speed",
+      "timestamp": "2026-11-03T23:37:47.916693519Z"
+    },
+    {
+      "id": "c8a0f7b9-3258-4df5-a8a3-d524cc003f7d",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   167  100   167    0     0   2764      0 --:--:-- --:--:-- --:--:--  2783",
+      "timestamp": "2026-11-03T23:37:47.976986183Z"
+    },
+    {
+      "id": "d2b63e7d-68d6-4881-b4a5-3f2e74815561",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\r100    64  100    64    0     0    530      0 --:--:-- --:--:-- --:--:--   530",
+      "timestamp": "2026-11-03T23:37:48.037277468Z"
+    },
+    {
+      "id": "c477da66-bb08-4a3c-82d2-92650b7121d9",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:50.074141869Z"
+    },
+    {
+      "id": "6c819850-d5fb-45a4-87b6-bee637116219",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Welcome to Gradle 8.11.1!",
+      "timestamp": "2026-11-03T23:37:50.074191256Z"
+    },
+    {
+      "id": "ff7af0b9-d9eb-465b-a211-009f14f90fa2",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:50.074236428Z"
+    },
+    {
+      "id": "7abdd544-9eb5-427a-a443-7a23d9ea90ea",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Here are the highlights of this release:",
+      "timestamp": "2026-11-03T23:37:50.07431035Z"
+    },
+    {
+      "id": "8e671de0-d0c5-442f-91d2-5fc672d70b84",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": " - Parallel load and store for Configuration Cache",
+      "timestamp": "2026-11-03T23:37:50.074432582Z"
+    },
+    {
+      "id": "daadd592-278e-468d-8490-3d4659e2d7a6",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": " - Java compilation errors at the end of the build output",
+      "timestamp": "2026-11-03T23:37:50.074620481Z"
+    },
+    {
+      "id": "167b6512-0f30-41da-9620-285dcf92b22c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": " - Consolidated report for warnings and deprecations",
+      "timestamp": "2026-11-03T23:37:50.074710811Z"
+    },
+    {
+      "id": "75ae77a9-8409-4278-a353-5bbbbff73f09",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:50.074733905Z"
+    },
+    {
+      "id": "1f33456a-42da-434f-bfe1-bec07d2b8df0",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "For more details see https://docs.gradle.org/8.11.1/release-notes.html",
+      "timestamp": "2026-11-03T23:37:50.07485515Z"
+    },
+    {
+      "id": "d9d902c1-0e60-45ba-92c2-01c90dbf8510",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:50.074879724Z"
+    },
+    {
+      "id": "b0216394-e54d-4cd6-a961-e694fd7639c7",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:50.074907604Z"
+    },
+    {
+      "id": "26b5e819-2c9a-4fd6-a469-6ce8f46b0b35",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "------------------------------------------------------------",
+      "timestamp": "2026-11-03T23:37:50.075007776Z"
+    },
+    {
+      "id": "877d9117-cf6e-411f-9b59-7491c3bede62",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Gradle 8.11.1",
+      "timestamp": "2026-11-03T23:37:50.075062124Z"
+    },
+    {
+      "id": "5f7163eb-c3df-495b-91c9-497e7208ac18",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "------------------------------------------------------------",
+      "timestamp": "2026-11-03T23:37:50.075136505Z"
+    },
+    {
+      "id": "2d8873e8-846a-458b-ad86-9354fadc5f0b",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:50.075164776Z"
+    },
+    {
+      "id": "62e54812-8a36-498e-908c-92422f7ba448",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Build time:    2024-11-20 16:56:46 UTC",
+      "timestamp": "2026-11-03T23:37:50.075215641Z"
+    },
+    {
+      "id": "307bec6d-cfc2-4561-a0d6-75dda7bb4327",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Revision:      481cb05a490e0ef9f8620f7873b83bd8a72e7c39",
+      "timestamp": "2026-11-03T23:37:50.075333284Z"
+    },
+    {
+      "id": "e924cfc2-6d6f-4d7d-8c91-e79ab523da0e",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:50.07534508Z"
+    },
+    {
+      "id": "e604ad4a-5810-4ab5-9573-3113ca22be3f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Kotlin:        2.0.20",
+      "timestamp": "2026-11-03T23:37:50.075389274Z"
+    },
+    {
+      "id": "37905825-1f25-4194-8a64-62e6713098e1",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Groovy:        3.0.22",
+      "timestamp": "2026-11-03T23:37:50.075433458Z"
+    },
+    {
+      "id": "1197d336-a51a-4b88-9afb-dfbc4b40f0ea",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Ant:           Apache Ant(TM) version 1.10.14 compiled on August 16 2023",
+      "timestamp": "2026-11-03T23:37:50.075499381Z"
+    },
+    {
+      "id": "643f3eac-1ee0-49d7-813d-062bc87c7a3a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Launcher JVM:  17.0.20.1 (Eclipse Adoptium 17.0.20.1+1)",
+      "timestamp": "2026-11-03T23:37:50.075566063Z"
+    },
+    {
+      "id": "0a0fbe85-ae51-430c-b036-342b46f9d6ba",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Daemon JVM:    /opt/render/project/src/.continuum-render-build/jdk17 (no JDK specified, using current Java home)",
+      "timestamp": "2026-11-03T23:37:50.075686762Z"
+    },
+    {
+      "id": "55496ddd-de46-4162-b00d-32f050b45904",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "OS:            Linux 7.0.0-1009-aws amd64",
+      "timestamp": "2026-11-03T23:37:50.075732099Z"
+    },
+    {
+      "id": "d658ac79-82b4-46a9-932c-853a26e1a4b4",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:37:50.075757072Z"
+    },
+    {
+      "id": "41e9b680-5070-4c42-9f94-71e4531b2994",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "v26.13.0",
+      "timestamp": "2026-11-03T23:37:50.110731936Z"
+    },
+    {
+      "id": "f5a3b19a-771e-41ff-a0d7-1858e8d055ff",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "HISTORICAL_QA_PINNED_BLOB_SNAPSHOT_READY: full protocol test will verify all bytes",
+      "timestamp": "2026-11-03T23:37:50.117307844Z"
+    },
+    {
+      "id": "09f66a08-18eb-4504-9129-a0599de6cd3d",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "/home/render/envwrappers/python3",
+      "timestamp": "2026-11-03T23:37:50.118635725Z"
+    },
+    {
+      "id": "2ec53350-c47f-4f08-ac20-87057152c4f3",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mUsing Python version 3.14.8 (default)\u001b[22m",
+      "timestamp": "2026-11-03T23:37:50.181998458Z"
+    },
+    {
+      "id": "479eb90a-ba70-4ec9-a385-2c800f8f8ebd",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mDocs on specifying a Python version: https://render.com/docs/python-version\u001b[22m",
+      "timestamp": "2026-11-03T23:37:50.182002226Z"
+    },
+    {
+      "id": "04650223-57c0-427d-96e5-971ec52e5963",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mInstalling Python version 3.14.8...\u001b[22m",
+      "timestamp": "2026-11-03T23:37:50.182165346Z"
+    },
+    {
+      "id": "26dfb6cf-c3ea-4755-abcb-b56583cceff8",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mUsing Poetry version 2.1.3 (default)\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:37:55.857730964Z"
+    },
+    {
+      "id": "f3e21d99-ceab-42e4-912f-331f21049271",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mDocs on specifying a Poetry version: https://render.com/docs/poetry-version\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:37:55.897141077Z"
+    },
+    {
+      "id": "e78c0f8e-6020-4d03-bff3-ca6923ea1953",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mInstalling Poetry version 2.1.3\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:37:55.924603459Z"
+    },
+    {
+      "id": "b4afeafa-c7c6-4cec-b92c-f7a364a856b2",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Retrieving Poetry metadata",
+      "timestamp": "2026-11-03T23:38:04.667713169Z"
+    },
+    {
+      "id": "ad5409d9-89b1-4144-a59d-f452ff2deadc",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667729171Z"
+    },
+    {
+      "id": "bee7ed0f-f162-4126-924d-45e3c552970b",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "# Welcome to Poetry!",
+      "timestamp": "2026-11-03T23:38:04.667731445Z"
+    },
+    {
+      "id": "090ffb92-375a-42dd-871e-80c054aed08a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667732797Z"
+    },
+    {
+      "id": "d648fe77-0fbb-4e63-81e9-b6ee5e3db04c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "This will download and install the latest version of Poetry,",
+      "timestamp": "2026-11-03T23:38:04.667734717Z"
+    },
+    {
+      "id": "dd4a6e2d-c7a3-48ce-90de-a8b164be44c8",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "a dependency and package manager for Python.",
+      "timestamp": "2026-11-03T23:38:04.667736517Z"
+    },
+    {
+      "id": "f7172c72-e4f6-427e-be67-3bdc43be7767",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667737925Z"
+    },
+    {
+      "id": "a2b942de-8491-4442-aef6-9858c2c50cbf",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "It will add the `poetry` command to Poetry's bin directory, located at:",
+      "timestamp": "2026-11-03T23:38:04.667739703Z"
+    },
+    {
+      "id": "0161bc70-4d04-42aa-8d7e-2ea6c41d6e5a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667740972Z"
+    },
+    {
+      "id": "62f22b08-e9f4-456e-be39-7ca5e7fce5bf",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "/opt/render/project/poetry/bin",
+      "timestamp": "2026-11-03T23:38:04.667742259Z"
+    },
+    {
+      "id": "cba88159-326f-4b9a-9ed0-65e3512f6b4f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667743449Z"
+    },
+    {
+      "id": "8af829fa-251f-4110-9c40-f1fd18f20e3c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "You can uninstall at any time by executing this script with the --uninstall option,",
+      "timestamp": "2026-11-03T23:38:04.66774513Z"
+    },
+    {
+      "id": "3c3d99b0-0e38-4a6e-bdbf-cca34926bf33",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "and these changes will be reverted.",
+      "timestamp": "2026-11-03T23:38:04.667752376Z"
+    },
+    {
+      "id": "3b2b7d9e-3312-47f7-b041-fc34f04cffe3",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667753596Z"
+    },
+    {
+      "id": "6a4c7e96-f1de-4ef8-b6f1-4cd33d8a04aa",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Installing Poetry (2.1.3)",
+      "timestamp": "2026-11-03T23:38:04.667754869Z"
+    },
+    {
+      "id": "74121c6d-1691-498d-93a0-89846a57d2f5",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Installing Poetry (2.1.3): Creating environment",
+      "timestamp": "2026-11-03T23:38:04.667756196Z"
+    },
+    {
+      "id": "40b69bc0-3317-41bb-a28f-2be0d893b297",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Installing Poetry (2.1.3): Installing Poetry",
+      "timestamp": "2026-11-03T23:38:04.667757525Z"
+    },
+    {
+      "id": "bf6f672e-88fe-4b25-8cf0-126b9abc20ee",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Installing Poetry (2.1.3): Creating script",
+      "timestamp": "2026-11-03T23:38:04.667758823Z"
+    },
+    {
+      "id": "f0b2b42d-3822-45ac-9989-8a06d9bc58ed",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Installing Poetry (2.1.3): Done",
+      "timestamp": "2026-11-03T23:38:04.667760094Z"
+    },
+    {
+      "id": "a5ba0974-7f09-4333-9690-e58d2e8b797f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667761416Z"
+    },
+    {
+      "id": "b7a25432-71d3-434f-a64f-56b9251b28a3",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Poetry (2.1.3) is installed now. Great!",
+      "timestamp": "2026-11-03T23:38:04.667762779Z"
+    },
+    {
+      "id": "82903ea7-1af2-4672-b4e9-551efbcb5474",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667763885Z"
+    },
+    {
+      "id": "aa5bba28-e150-4198-a51c-866848bf49c7",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "You can test that everything is set up by executing:",
+      "timestamp": "2026-11-03T23:38:04.66776525Z"
+    },
+    {
+      "id": "ef4ca200-c4b3-453d-ac84-18795529314a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667766383Z"
+    },
+    {
+      "id": "610fd93f-6bb3-47ca-9818-989e60d1da0c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "`poetry --version`",
+      "timestamp": "2026-11-03T23:38:04.667767726Z"
+    },
+    {
+      "id": "09d795d5-5b43-4c5d-9858-765731504b31",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:38:04.667768885Z"
+    },
+    {
+      "id": "8d295dd0-85f0-43e5-86fd-bc19b3653734",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "PYTHON_QA_READY 3.14.8",
+      "timestamp": "2026-11-03T23:38:04.74448894Z"
+    },
+    {
+      "id": "87710902-5546-4f36-bc03-0f48bbeca8f6",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_QA_TOOL_PRESENT git=/usr/bin/git",
+      "timestamp": "2026-11-03T23:38:04.749778998Z"
+    },
+    {
+      "id": "63459a3e-49e5-44e1-889c-db2df9a76dfe",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_QA_TOOL_PRESENT node=/home/render/envwrappers/node",
+      "timestamp": "2026-11-03T23:38:04.750235881Z"
+    },
+    {
+      "id": "ad45c25d-aeca-406f-a562-db8b11eca59e",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_QA_TOOL_PRESENT java=/opt/render/project/src/.continuum-render-build/jdk17/bin/java",
+      "timestamp": "2026-11-03T23:38:04.750734103Z"
+    },
+    {
+      "id": "b629c753-f60d-4481-8f86-21c98b02845a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_QA_TOOL_PRESENT python3=/home/render/envwrappers/python3",
+      "timestamp": "2026-11-03T23:38:04.751214789Z"
+    },
+    {
+      "id": "eb0fc1f8-9b1b-4b88-908a-ad1db9ee5f54",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_QA_TOOL_PRESENT timeout=/usr/bin/timeout",
+      "timestamp": "2026-11-03T23:38:04.751749715Z"
+    },
+    {
+      "id": "13620289-0a7a-4c17-9d8c-2002ed3791d8",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_QA_TOOL_PRESENT readlink=/usr/bin/readlink",
+      "timestamp": "2026-11-03T23:38:04.75228754Z"
+    },
+    {
+      "id": "8454efc0-1198-4dcf-a255-991b0ed8069f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_CONTINUOUS_OWNER_REQUIRED_ANDROID_GREEN {'at.heinz.deviceai.ShizukuBridgeLifecycleTest': 14, 'at.heinz.deviceai.ShizukuConnectionDialogTest': 2, 'at.heinz.deviceai.ui.ContinuumControlsTest': 7, 'at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest': 5, 'at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest': 6}",
+      "timestamp": "2026-11-03T23:47:32.524734494Z"
+    },
+    {
+      "id": "001b9580-d48d-4136-b814-997f4845d725",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_OWNER_PRESIGN_QA_PASS SHA=0ff2cef550db8fc84c32690793921edf3a7830e9 PACKAGE=at.heinz.deviceai.continuumlocal CODE=40 UNSIGNED_NOT_PUBLISHED",
+      "timestamp": "2026-11-03T23:50:08.158333635Z"
+    },
+    {
+      "id": "6d34425b-ebce-47b9-8278-492db7f3182a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.",
+      "timestamp": "2026-11-03T23:50:09.100707223Z"
+    },
+    {
+      "id": "97813e2e-665a-476a-b4d7-547e3ed6958a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Daemon will be stopped at the end of the build ",
+      "timestamp": "2026-11-03T23:50:10.100282148Z"
+    },
+    {
+      "id": "57dea507-9b62-47cc-9301-f5591bc56f03",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:50:16.300266719Z"
+    },
+    {
+      "id": "d0eb802c-1bdc-42d2-95d4-ff9c3a3debd7",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Configure project :app",
+      "timestamp": "2026-11-03T23:50:16.301680485Z"
+    },
+    {
+      "id": "f25312d3-5055-45a2-8356-04629eb9c85f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "w: ⚠️ Deprecated Gradle Version",
+      "timestamp": "2026-11-03T23:50:16.301793198Z"
+    },
+    {
+      "id": "c1e0ed76-a05a-41a1-8771-1b0b44f64395",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.",
+      "timestamp": "2026-11-03T23:50:16.30198538Z"
+    },
+    {
+      "id": "cae469aa-0b5d-48e5-aacb-65092fd33576",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.",
+      "timestamp": "2026-11-03T23:50:16.302160317Z"
+    },
+    {
+      "id": "4a5012c8-29a1-4275-9bb8-5885009436cd",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:50:16.302164081Z"
+    },
+    {
+      "id": "0970841b-2f5b-4e77-a46e-01d144ec0e0c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "warning"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "This warning can be suppressed in 'gradle.properties':",
+      "timestamp": "2026-11-03T23:50:16.30226583Z"
+    },
+    {
+      "id": "914d4e75-433f-4968-a42b-cd8d8e7b8cbc",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning",
+      "timestamp": "2026-11-03T23:50:16.302356704Z"
+    },
+    {
+      "id": "b38f8701-f6a8-4ae5-98b1-92e8632bddb1",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "Solution: Please update the Gradle version to at least Gradle 8.14.4.",
+      "timestamp": "2026-11-03T23:50:16.302441227Z"
+    },
+    {
+      "id": "108aa35a-fab4-4959-bd72-393293bb14c3",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:50:16.302463818Z"
+    },
+    {
+      "id": "28c843ad-7c34-4e84-ae35-76a7d257712c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:50:17.699890125Z"
+    },
+    {
+      "id": "c7cf4d00-d335-4a7f-ad2b-974db5ddab65",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:buildKotlinToolingMetadata UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.699965886Z"
+    },
+    {
+      "id": "b6ea2d44-e75b-47a6-b39e-56e2d5afbb51",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:preBuild UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.700074794Z"
+    },
+    {
+      "id": "07c21fd3-e671-429b-bdb4-dc2a869cb25c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:preReleaseBuild UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.700150172Z"
+    },
+    {
+      "id": "e82d02b2-fb79-44d3-aac7-b99cc40d39f1",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:compileReleaseAidl UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.799890071Z"
+    },
+    {
+      "id": "84be32f9-0a97-48b7-a415-211a76581ebf",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED",
+      "timestamp": "2026-11-03T23:50:17.799958333Z"
+    },
+    {
+      "id": "90b71ad9-e88d-4a71-b1a7-7a020248eecd",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:generateReleaseBuildConfig UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.800046551Z"
+    },
+    {
+      "id": "08a64835-d6c0-44ad-9732-2fdfaeb08e02",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:checkReleaseAarMetadata UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.800147083Z"
+    },
+    {
+      "id": "5c61722c-9447-4253-8fe7-c6e88173f708",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:generateReleaseResValues UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.800218304Z"
+    },
+    {
+      "id": "9088c46f-25d2-4d59-b353-45ac901f9c3c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mapReleaseSourceSetPaths UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.899887829Z"
+    },
+    {
+      "id": "a876d2a9-490d-4cc6-8cb5-4eff498cd9cd",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:generateReleaseResources UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.899911899Z"
+    },
+    {
+      "id": "703d47b4-411f-4383-bfb7-abc31c4fbd57",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseResources UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.899973698Z"
+    },
+    {
+      "id": "3936aff3-da15-4008-80df-3fb869a1e98e",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:packageReleaseResources UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.900054087Z"
+    },
+    {
+      "id": "7b8e6bf2-573d-4074-9945-e50ee2814a6e",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:parseReleaseLocalResources UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.900123583Z"
+    },
+    {
+      "id": "d81af184-5731-4be7-a087-fc23a6cf849d",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:createReleaseCompatibleScreenManifests",
+      "timestamp": "2026-11-03T23:50:17.99988848Z"
+    },
+    {
+      "id": "8581fb81-862d-4daf-a831-02ca1b6394f3",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:extractDeepLinksRelease UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.999921992Z"
+    },
+    {
+      "id": "8c27940b-5dad-4611-ab14-3ad5e05606f2",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:processReleaseMainManifest UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:17.999983252Z"
+    },
+    {
+      "id": "498d5c5f-7aaa-4d18-944e-c0a57fa353be",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:processReleaseManifest",
+      "timestamp": "2026-11-03T23:50:18.099872094Z"
+    },
+    {
+      "id": "2896aaca-19ca-4f46-96f8-1fa976d6223c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:processReleaseManifestForPackage UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.099956967Z"
+    },
+    {
+      "id": "a055ac11-db67-4307-a613-54767de0c4ba",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:javaPreCompileRelease UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.199893387Z"
+    },
+    {
+      "id": "d9e88396-398d-4239-bc96-17d9fbb9babc",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:extractProguardFiles UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.199924831Z"
+    },
+    {
+      "id": "5cf4f4f5-7512-4485-9a53-73a0f61755d2",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:preReleaseUnitTestBuild UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.19996538Z"
+    },
+    {
+      "id": "76e08476-da15-4ddf-9209-dc3c763d00d1",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseJniLibFolders UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.200018498Z"
+    },
+    {
+      "id": "6484e181-3225-49ae-956f-84ddc7bbee4d",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseNativeLibs UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.200092651Z"
+    },
+    {
+      "id": "c9e8d88b-0321-4eda-b8cc-b137589dd474",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:stripReleaseDebugSymbols UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.20016835Z"
+    },
+    {
+      "id": "3f0330b0-ce70-4dbf-b635-66eb9f595c80",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:extractReleaseNativeSymbolTables UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.20022333Z"
+    },
+    {
+      "id": "76023d5d-c6cc-4ba3-9083-24839be694ca",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE",
+      "timestamp": "2026-11-03T23:50:18.200270547Z"
+    },
+    {
+      "id": "6fa21ee8-f130-4d48-9f57-eb42091a512a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:checkReleaseDuplicateClasses UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.299953891Z"
+    },
+    {
+      "id": "33cab1d4-c51b-4063-aab4-7273a8df5b97",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:desugarReleaseFileDependencies UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.29999207Z"
+    },
+    {
+      "id": "f561b3ac-57a6-4c88-84c7-3046eee54ca3",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseStartupProfile UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.300001154Z"
+    },
+    {
+      "id": "37a53dfc-11ac-48c5-b08d-6931a6283d40",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeExtDexRelease UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.399849038Z"
+    },
+    {
+      "id": "80b7dfb1-0ed9-4bc6-a3e6-60d10da1bdd9",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseArtProfile UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.39994726Z"
+    },
+    {
+      "id": "7c706576-ac12-4415-aa73-d76252c2b29f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseShaders UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.400014243Z"
+    },
+    {
+      "id": "a4f04e37-d966-42f9-b0df-27506fdd38dd",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:compileReleaseShaders NO-SOURCE",
+      "timestamp": "2026-11-03T23:50:18.400109261Z"
+    },
+    {
+      "id": "7c78c317-750f-4236-80bc-8c74ae33f9af",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:generateReleaseAssets UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.400284426Z"
+    },
+    {
+      "id": "cc0cdf15-555a-4537-a929-26b39cf1433c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseAssets UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.400343341Z"
+    },
+    {
+      "id": "d1ba5882-49f1-4bd7-ab89-20041e151c74",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:compressReleaseAssets UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.49988456Z"
+    },
+    {
+      "id": "8101f08b-20a9-43b7-9963-9d0b2c22aae8",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:extractReleaseVersionControlInfo UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.499941735Z"
+    },
+    {
+      "id": "0e4da5b4-12ad-4919-95d3-66cecb894d3e",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:collectReleaseDependencies UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.500008181Z"
+    },
+    {
+      "id": "5e08a760-d602-4feb-bef5-007c799363e8",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:sdkReleaseDependencyData UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.500070744Z"
+    },
+    {
+      "id": "abdc4ddd-3150-4740-b54c-8f0b06579f74",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:validateSigningRelease",
+      "timestamp": "2026-11-03T23:50:18.500115978Z"
+    },
+    {
+      "id": "b08ab308-709d-4d4e-8418-ae999165f2c9",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:writeReleaseAppMetadata UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.500172812Z"
+    },
+    {
+      "id": "2144e31a-e3af-4faa-adda-9060d78ab31e",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:writeReleaseSigningConfigVersions UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.500215798Z"
+    },
+    {
+      "id": "fa39b5f2-0cdf-4e5a-a8d0-ea2487e04eab",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:processReleaseResources",
+      "timestamp": "2026-11-03T23:50:18.500252851Z"
+    },
+    {
+      "id": "e537fe05-4b77-4a1b-ade3-407842232926",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:compileReleaseKotlin UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.699894028Z"
+    },
+    {
+      "id": "abae6525-55ae-4a69-8e29-d306ad9307bc",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:compileReleaseJavaWithJavac UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:18.799817674Z"
+    },
+    {
+      "id": "742c01c4-3306-4fca-ad96-3125c5fb8871",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:generateReleaseLintReportModel",
+      "timestamp": "2026-11-03T23:50:18.899890074Z"
+    },
+    {
+      "id": "d8115835-83a4-493b-990a-bc96b5614902",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:bundleReleaseClassesToCompileJar",
+      "timestamp": "2026-11-03T23:50:19.199860911Z"
+    },
+    {
+      "id": "bd8a9214-86fc-42f7-9fc3-7674d781706e",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:generateReleaseUnitTestLintModel",
+      "timestamp": "2026-11-03T23:50:19.399856946Z"
+    },
+    {
+      "id": "ef7cfaf0-ab9b-4158-8558-e11fb544a6ca",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:lintAnalyzeReleaseUnitTest",
+      "timestamp": "2026-11-03T23:50:31.899883584Z"
+    },
+    {
+      "id": "782e3f82-fdfe-4ede-a0ce-25aa1b11e414",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:dexBuilderRelease UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:32.099874998Z"
+    },
+    {
+      "id": "da49d3c2-e207-4b71-8114-26f27637246b",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeDexRelease UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:32.099960158Z"
+    },
+    {
+      "id": "e80c1762-b71c-40a8-9b9e-828f3df34823",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseGlobalSynthetics UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:32.100016891Z"
+    },
+    {
+      "id": "578083ab-b563-49eb-a5a4-235ed018e228",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:compileReleaseArtProfile UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:32.100079218Z"
+    },
+    {
+      "id": "812ecb4d-e8d2-4102-b807-d2b5101ff503",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:processReleaseJavaRes UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:32.100147898Z"
+    },
+    {
+      "id": "3dafe63b-50b3-4a1c-af4c-c57f15ea0cc6",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:mergeReleaseJavaResource UP-TO-DATE",
+      "timestamp": "2026-11-03T23:50:32.199879493Z"
+    },
+    {
+      "id": "956ddc45-c887-43fd-af52-36552f50b5f4",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:optimizeReleaseResources",
+      "timestamp": "2026-11-03T23:50:32.199906594Z"
+    },
+    {
+      "id": "72e491ee-ba65-4ff3-aef6-0b01b8e0b23c",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:packageRelease",
+      "timestamp": "2026-11-03T23:50:34.799855759Z"
+    },
+    {
+      "id": "7dc042e5-2cce-48de-a88d-34d9a56a50a0",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:createReleaseApkListingFileRedirect",
+      "timestamp": "2026-11-03T23:50:34.799890507Z"
+    },
+    {
+      "id": "52cf8815-a594-43b3-b45e-ff0fe51a5fba",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:assembleRelease",
+      "timestamp": "2026-11-03T23:50:34.799924991Z"
+    },
+    {
+      "id": "37e738ff-160c-460a-8235-d17679861e1a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:lintAnalyzeRelease",
+      "timestamp": "2026-11-03T23:50:48.899888205Z"
+    },
+    {
+      "id": "4204c9c4-3ce6-4726-b42f-ea018935e412",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:lintReportRelease",
+      "timestamp": "2026-11-03T23:51:46.683880063Z"
+    },
+    {
+      "id": "9d334e2a-902d-4727-a153-67a736bd3c2a",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:lintRelease",
+      "timestamp": "2026-11-03T23:51:46.683924479Z"
+    },
+    {
+      "id": "4caf0089-6a4e-4455-9238-8cdaa37e0961",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "[Incubating] Problems report is available at: file:///opt/render/project/src/build/reports/problems/problems-report.html",
+      "timestamp": "2026-11-03T23:51:46.683995427Z"
+    },
+    {
+      "id": "60a09762-2878-41f6-8276-add20e97d11d",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-03T23:51:46.684009139Z"
+    },
+    {
+      "id": "532702f1-1652-4c24-b9b0-182b15d2e211",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "BUILD SUCCESSFUL in 1m 38s",
+      "timestamp": "2026-11-03T23:51:46.684041611Z"
+    },
+    {
+      "id": "5c5bcfec-2510-4909-b39b-9ce9b8761681",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "54 actionable tasks: 14 executed, 40 up-to-date",
+      "timestamp": "2026-11-03T23:51:46.684077853Z"
+    },
+    {
+      "id": "f04b43fe-0cca-436e-b981-1107fcbfd4de",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_OWNER_CATALOG_ANDROID_COMPATIBLE source=0ff2cef550db8fc84c32690793921edf3a7830e9 versionCode=40 apkSha256=416ff0a388df82532bea73dfb938a8985169d85688743527133be04ca8683d19",
+      "timestamp": "2026-11-03T23:51:48.074149233Z"
+    },
+    {
+      "id": "c250aefe-74cb-4120-838f-ece565cab59b",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_OWNER_RENDER_SIGNED_STAGED_FOR_PINNED_HOST",
+      "timestamp": "2026-11-03T23:51:48.077123777Z"
+    },
+    {
+      "id": "43ed53bf-a401-44e4-bd5e-403774d34b93",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mRequesting Node.js version >=20\u001b[22m",
+      "timestamp": "2026-11-03T23:51:48.144285602Z"
+    },
+    {
+      "id": "98495417-62e7-4a6f-a93f-9c6c033c18fb",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mUsing Node.js version 26.13.0 via backend/package.json\u001b[22m",
+      "timestamp": "2026-11-03T23:51:48.238220822Z"
+    },
+    {
+      "id": "8ccee72d-1481-40db-8fa4-36fa87c01938",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mDocs on specifying a Node.js version: https://render.com/docs/node-version\u001b[22m",
+      "timestamp": "2026-11-03T23:51:48.238236291Z"
+    },
+    {
+      "id": "fa42966b-fc1a-435a-9712-ca217bc04b2f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mUploading build...\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:51:48.74024187Z"
+    },
+    {
+      "id": "367db452-f2ee-4784-8132-ec1dd721d9e6",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[32m\u001b[1m==>\u001b(B\u001b[m \u001b[1mYour site is live 🎉\u001b(B\u001b[m",
+      "timestamp": "2026-11-03T23:51:49.339718029Z"
+    }
+  ]
+}

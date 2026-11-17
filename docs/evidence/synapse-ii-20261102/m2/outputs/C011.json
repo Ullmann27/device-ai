@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C011:s2",
+    "decision": "SPAN",
+    "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+    "endExclusive": 34,
+    "start": 17,
+    "text": "Uvkunoji Uvrataba",
+    "offsetEncoding": "UTF-16",
+    "revision": 5
+  },
+  "RULE": {
+    "sourceId": "bc:C011:s2",
+    "decision": "SPAN",
+    "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+    "endExclusive": 34,
+    "start": 17,
+    "text": "Uvkunoji Uvrataba",
+    "offsetEncoding": "UTF-16",
+    "revision": 5
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C011:s2",
+    "decision": "SPAN",
+    "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+    "endExclusive": 34,
+    "start": 17,
+    "text": "Uvkunoji Uvrataba",
+    "offsetEncoding": "UTF-16",
+    "revision": 5
+  },
+  "rawMillis": 52.446532
+}

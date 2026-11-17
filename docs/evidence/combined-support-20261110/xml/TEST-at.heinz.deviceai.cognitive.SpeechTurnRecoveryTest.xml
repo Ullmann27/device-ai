@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:07" hostname="1a6f5c6cf9c0" time="0.003">
+  <properties/>
+  <testcase name="throwingColdRestartReportsStartFailedOnce" classname="at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest" time="0.002"/>
+  <testcase name="retryFiringAfterCloseIsIgnored" classname="at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest" time="0.0"/>
+  <testcase name="fourthBusyGivesUpSoTheTurnFailsExactlyOnce" classname="at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest" time="0.0"/>
+  <testcase name="duplicateErrorWhileRetryPendingIsSwallowed" classname="at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest" time="0.0"/>
+  <testcase name="closeCancelsPendingRetryAndLaterErrorsDoNothing" classname="at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest" time="0.0"/>
+  <testcase name="busyBusyBusyIsRecoveredByWarmWarmColdWithoutReportingFailure" classname="at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest" time="0.001"/>
+  <testcase name="throwingWarmStartKeepsTheOriginalNonBusyReason" classname="at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,63 @@
+{
+  "integratedSource": "1595389274acb840c4ab544fa699c9eb2a04bd53",
+  "integratedTree": "8af597f1662a6c437b33f0edf810add9ffd43314",
+  "qaRunnerSha256": "a43f13a831c14fdf0e3bdda12d5dab27bf3e5951a62619e1d04e60a80618f309",
+  "fixture": {
+    "task": {
+      "schema": "continuum-coding-task",
+      "version": 1,
+      "id": "genesis-g04",
+      "sourceCommit": "b7e9596addc9807cd5d04d835d83acf1e3fdb43a",
+      "kind": "BUGFIX",
+      "goal": "median(values) returns the numeric median of a nonempty array of finite numbers: middle value for odd length; arithmetic mean of the two middle values for even length. It must not change the input array or its order. Values may be negative, repeated or fractional.",
+      "allowedPaths": [
+        "lib/subject.mjs"
+      ],
+      "acceptance": [
+        "median(values) returns the numeric median of a nonempty array of finite numbers: middle value for odd length; arithmetic mean of the two middle values for even length. It must not change the input array or its order. Values may be negative, repeated or fractional."
+      ],
+      "chain": "node",
+      "limits": {
+        "maxModelCalls": 1,
+        "maxContextChars": 8192
+      }
+    },
+    "fixture": "g04",
+    "sourceSha256": "445023759358b653ba156ad6012035a548b28998579a9d9bd1b71ef52e0d3feb",
+    "frozenTestSha256": "3af62b92c318d3a5881dfd537fe44488c8021fb38873832115cd1ce9725abab7",
+    "materializedTestSha256": "3af62b92c318d3a5881dfd537fe44488c8021fb38873832115cd1ce9725abab7",
+    "transformation": "File paths materialized only; assertions, imports and source bytes unchanged.",
+    "inferenceStatus": "NOT_RUN",
+    "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+  },
+  "taskFingerprint": "a7e2eba21f0424251768536022b5c482314e4ef002e79875a814f1d1473d5b1d",
+  "fixtureTree": "8b5c76bb6d9fca415cd3ff1804222bac879e66be",
+  "freezeManifestSha256": "4df194f5f8d5ad7957bc050291aadd37327dc6fbccd6547fcb67a4985a5a9ec0",
+  "configuration": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME": "llama.cpp",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT": "gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_SHA256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL": "OWNER_APPROVED_ALTERNATE_GGUF",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "/workspace/synapse-local-model/model-pin.json",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND": "LLAMA_CPP",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "/workspace/genesis-g04-experiment/isolation.json",
+    "GENESIS_PROFILE_STORE": "/workspace/genesis-g04-experiment/profile-store",
+    "GENESIS_HANDOFF_CLASSPATH": "/workspace/genesis-g04-experiment/kotlin-host/classes:/workspace/synapse-ui-candidate/app/build/tmp/kotlin-classes/debug:/workspace/continuum-build-env/native-graph-deps/json-20240303.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/junit-4.13.2.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/native-graph-deps/annotations-13.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/hamcrest-core-1.3.jar:/workspace/continuum-build-env/native-graph-deps/okio-jvm-3.6.0.jar:/workspace/continuum-build-env/native-graph-deps/okhttp-4.12.0.jar:/workspace/continuum-build-env/native-graph-deps/android-all-15-robolectric-12650502.jar:"
+  },
+  "fileHashes": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "85fcbad40a1b6f182331d4cc285d86c0d07dd785ce6db35fe530b0fced900d2b",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "5f97ba4c52712414d4fcf7588c62b80de2b10fb34d98a65d92fde0c52e920594"
+  },
+  "technicalRecallEnabled": false,
+  "inheritedState": null,
+  "nodeVersion": "v24.19.0",
+  "startedAt": "2026-11-03T21:34:19.664Z",
+  "deviceStatus": "FOLD7_NOT_RUN",
+  "modelAnswersSupplied": false
+}

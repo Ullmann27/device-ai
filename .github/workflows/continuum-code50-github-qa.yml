@@ -1,25 +1,197 @@
 name: "Continuum Code51 — source QA and unsigned APK"
 
-# Inert default-branch registration for manual workflow_dispatch.
-# The full source-bound QA exists only on the Code51 integration branch.
-# This default-branch file never builds, tests, signs, or publishes an APK.
+# Existing registered workflow path; explicit owner Code51 channel approval, 2026-11-09.
 on:
+  push:
+    branches:
+      - copilot/code51-master-integrator-20261108
+    paths:
+      - 'app/**'
+      - '.github/workflows/continuum-code50-github-qa.yml'
+      - '.github/workflows/continuum-branch-tests.yml'
+      - '.github/continuum/**'
+      - 'scripts/continuum-code51-*'
+      - 'scripts/continuum-reliability-qa.mjs'
+      - 'backend/**'
   workflow_dispatch:
     inputs:
       expected_sha:
-        description: "Exact Code51 source SHA on the #663 integration branch"
+        description: "Exact Code51 source SHA on the #663 branch"
         required: true
         type: string
 
 permissions:
   contents: read
 
+concurrency:
+  group: continuum-code51-github-qa-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
+
 jobs:
-  registration-only:
+  node-backend:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/copilot/code51-master-integrator-20261108'
     runs-on: ubuntu-latest
-    timeout-minutes: 1
+    timeout-minutes: 100
     steps:
-      - name: Reject default-branch execution
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Bind exact source
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
         run: |
-          echo "::error::This is registration only. Select branch copilot/code51-master-integrator-20261108 to run the full Code51 QA."
-          exit 1
+          set -euo pipefail
+          # Push: SHA is GitHub's immutable event revision. Dispatch: explicit owner SHA remains mandatory.
+          if [[ "$GITHUB_EVENT_NAME" == 'push' ]]; then EXPECTED_SHA="$GITHUB_SHA"; fi
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EXPECTED_SHA" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
+      - name: Source-bound full critical and Node QA
+        run: |
+          set -euo pipefail
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code51-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code51-full"
+          node -e "for(const p of ['code51-critical','code51-full']){const r=require(process.env.RUNNER_TEMP+'/'+p+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.GITHUB_SHA||!r.sourceUnchanged)process.exit(69);console.log(p+' SOURCE_BOUND_PASS')}"
+      - name: Backend check and tests
+        run: |
+          set -euo pipefail
+          npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+          npm --prefix backend run check
+          npm --prefix backend test
+      - name: Preserve Node receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code51-github-node-evidence
+          path: |
+            ${{ runner.temp }}/code51-critical/
+            ${{ runner.temp }}/code51-full/
+          if-no-files-found: warn
+          retention-days: 14
+
+  android-host:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/copilot/code51-master-integrator-20261108'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Bind exact source
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          set -euo pipefail
+          # Push: SHA is GitHub's immutable event revision. Dispatch: explicit owner SHA remains mandatory.
+          if [[ "$GITHUB_EVENT_NAME" == 'push' ]]; then EXPECTED_SHA="$GITHUB_SHA"; fi
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EXPECTED_SHA" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Install official Android SDK components
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Kotlin, all unit and widget tests, lifecycle and lint
+        run: |
+          set -euo pipefail
+          accepted=0
+          for attempt in 1 2 3; do
+            if gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain \
+                -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
+                -Pkotlin.compiler.execution.strategy=in-process \
+                -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true \
+                -PcontinuumLocalStandaloneQa=true -PcontinuumOwnerArm64=true \
+                -PcontinuumStandaloneVersionCode=51 \
+                :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug \
+                2>&1 | tee "$RUNNER_TEMP/code51-android-gradle-$attempt.log"; then
+              accepted=1
+              break
+            fi
+            if ! grep -Eiq 'Received status code 50[234]|Gateway Time-out|Connection reset by peer|Read timed out' \
+                "$RUNNER_TEMP/code51-android-gradle-$attempt.log"; then
+              echo "::error::Non-network Android/Gradle failure; no retry."
+              exit 1
+            fi
+            echo "::warning::Transient artifact/server error; bounded retry $attempt/3"
+            if (( attempt < 3 )); then sleep 10; fi
+          done
+          test "$accepted" -eq 1
+          python3 scripts/continuum-code51-junit-check.py \
+            app/build/test-results/testDebugUnitTest "$RUNNER_TEMP/junit-totals.txt"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Build original-package unsigned ARM64 APK
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2500m -XX:MaxMetaspaceSize=768m' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=51 :app:assembleRelease
+          apk='app/build/outputs/apk/release/app-release-unsigned.apk'
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$apk" > "$RUNNER_TEMP/badging.txt"
+          grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='51' versionName='0.3.50'" "$RUNNER_TEMP/badging.txt"
+          grep -Fx "native-code: 'arm64-v8a'" "$RUNNER_TEMP/badging.txt"
+          if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify "$apk" >/dev/null 2>&1; then
+            echo "::error::QA transport must remain unsigned"; exit 69
+          fi
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          mkdir -p "$RUNNER_TEMP/code51-unsigned"
+          cp "$apk" "$RUNNER_TEMP/code51-unsigned/Continuum-Code51-UNSIGNED-NOT-INSTALLABLE.apk"
+          (cd "$RUNNER_TEMP/code51-unsigned" && sha256sum Continuum-Code51-UNSIGNED-NOT-INSTALLABLE.apk > SHA256SUMS.txt)
+          printf 'status=UNSIGNED_QA_NOT_INSTALLABLE\nsource_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=51\nversionName=0.3.50\noriginalSigner=NOT_USED\nFold7=NOT_RUN\nqa_run_id=%s\nqa_run_attempt=%s\nqa_ref=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$GITHUB_REF" > "$RUNNER_TEMP/code51-unsigned/BUILD-INFO.txt"
+          cat "$RUNNER_TEMP/junit-totals.txt" >> "$RUNNER_TEMP/code51-unsigned/BUILD-INFO.txt"
+      - name: Verify the actual published Code50 upgrade baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          baseline='38b39da66a96d8be08b84937dd6412868fa279eb477a3ff5700d9195611a2778'
+          tag='continuum-local-code50-473f79727e4b52509cc7d1af71e59b80ab9b6be5'
+          mkdir "$RUNNER_TEMP/code50-baseline"
+          gh release download "$tag" --repo Ullmann27/device-ai --pattern "Continuum-Lokal-$baseline.apk" --dir "$RUNNER_TEMP/code50-baseline"
+          apk="$RUNNER_TEMP/code50-baseline/Continuum-Lokal-$baseline.apk"
+          test "$(sha256sum "$apk" | cut -d' ' -f1)" = "$baseline"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$apk" > "$RUNNER_TEMP/code50-certificate.txt"
+          grep -Fx 'Signer #1 certificate SHA-256 digest: 6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23' "$RUNNER_TEMP/code50-certificate.txt"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging "$apk" > "$RUNNER_TEMP/code50-badging.txt"
+          grep -F "package: name='at.heinz.deviceai.continuumlocal' versionCode='50' versionName='0.3.49'" "$RUNNER_TEMP/code50-badging.txt"
+          printf 'code50_apk_sha256=%s\n' "$baseline" >> "$RUNNER_TEMP/code51-unsigned/BUILD-INFO.txt"
+      - name: Upload unsigned APK only after all Android gates
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code51-UNSIGNED-NOT-INSTALLABLE
+          path: ${{ runner.temp }}/code51-unsigned/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve Android receipts even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code51-github-android-evidence
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/
+            ${{ runner.temp }}/junit-totals.txt
+            ${{ runner.temp }}/badging.txt
+            ${{ runner.temp }}/code50-certificate.txt
+            ${{ runner.temp }}/code50-badging.txt
+          if-no-files-found: warn
+          retention-days: 14

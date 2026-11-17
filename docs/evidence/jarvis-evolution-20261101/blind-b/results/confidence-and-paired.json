@@ -1,0 +1,71 @@
+{
+  "verifiedKnownWilson95": {
+    "correct": 19,
+    "total": 20,
+    "estimate": 0.95,
+    "lower95": 0.763868806553258,
+    "upper95": 0.9911185511992047
+  },
+  "verifiedMissingWilson95": {
+    "correct": 17,
+    "total": 17,
+    "estimate": 1.0,
+    "lower95": 0.8156818649911483,
+    "upper95": 1
+  },
+  "paired": [
+    {
+      "from": "baseline",
+      "to": "final-probe",
+      "wins": 8,
+      "losses": 0,
+      "ties": 29,
+      "winIds": [
+        "b-guard-01",
+        "b-guard-02",
+        "b-guard-05",
+        "b-guard-06",
+        "b-guard-07",
+        "b-guard-08",
+        "b-guard-10",
+        "b-guard-11"
+      ],
+      "lossIds": [],
+      "exactMcNemarTwoSidedP": 0.0078125
+    },
+    {
+      "from": "baseline",
+      "to": "TRAINED_VERIFIED",
+      "wins": 8,
+      "losses": 1,
+      "ties": 28,
+      "winIds": [
+        "b-guard-01",
+        "b-guard-02",
+        "b-guard-05",
+        "b-guard-06",
+        "b-guard-07",
+        "b-guard-08",
+        "b-guard-10",
+        "b-guard-11"
+      ],
+      "lossIds": [
+        "b-main-15"
+      ],
+      "exactMcNemarTwoSidedP": 0.0390625
+    },
+    {
+      "from": "final-probe",
+      "to": "TRAINED_VERIFIED",
+      "wins": 0,
+      "losses": 1,
+      "ties": 36,
+      "winIds": [],
+      "lossIds": [
+        "b-main-15"
+      ],
+      "exactMcNemarTwoSidedP": 1.0
+    }
+  ],
+  "interpretation": "Nominal binomial Wilson intervals and exploratory exact paired comparisons on a small authored synthetic set, not representative population estimates or evidence of general neural/Android capability. Strict no-regression still fails if one previously correct case is lost, regardless of p-value."
+}

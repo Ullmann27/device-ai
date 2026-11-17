@@ -1,0 +1,17 @@
+{
+  "source": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "5f4a13f6c933bcad1bd41a66445f85e410be8c2cd7b6e7b82ef429ebc5561531",
+    "app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt": "e643762e368a38f7fc07c874b8e5ce72f65338b85ca5ae00a78291405646cdad",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechInputPolicy.kt": "d0dd7adc8b8fbd5691189a839d4417f79a2a33d531e2a5ce0b4884e7dbeedef0",
+    "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentCoordinator.kt": "e3ae7e9979ac246f8ce9a02ee1cbdd23757967f652f8138b3311bb697144cd19"
+  },
+  "reviewSha256": {
+    "tools/genesis-ui-review/selection/IndependentBotAddressRouterTest.kt": "940c6d1974081ce30cd06957ef71f4e9c41af73e75697223318289ab74be83ea",
+    "tools/genesis-ui-review/selection/IndependentBotSelectionUiTest.kt": "7f34f1cfa489c50ad5063653e84643b26d84c5f6fb02983476e2ad020584fe91",
+    "tools/genesis-ui-review/selection/IndependentBotSpeechScopeTest.kt": "60fb40fafdf0e8023ecd3f8ba9e91f4c9c8151ca7cbc1856c457bd4402cec3e9",
+    "tools/genesis-ui-review/speech/IndependentActivitySpeechTest.kt": "f3326c41a3925560e18a1f1630b09120716ecd0e8a8731888ca6fe34565fbc4d",
+    "tools/genesis-ui-review/connection.init.gradle": "a3c1e1fc1210e9039fa58cb0d951e50bfa1bd5543082055b17bfe8194163e4fc",
+    "tools/synapse-ui-review/IndependentBotRosterUiTest.kt": "e73820805756b7e69e4b90a1f898a1228eef26866e314e0723ad3fb127708373"
+  }
+}

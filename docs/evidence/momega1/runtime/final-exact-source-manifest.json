@@ -1,0 +1,29 @@
+{
+  "source": "37e16cefac4ee3b794d79540214a69f1c6181b82",
+  "evidenceClass": "CONTRACT_TEST",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/coding-agent-loop.test.mjs",
+    ".github/continuum/coding-agent-risk-tools.test.mjs",
+    ".github/continuum/coding-agent-speech-wiring.test.mjs",
+    ".github/continuum/coding-context.test.mjs",
+    ".github/continuum/coding-orchestrator.test.mjs",
+    ".github/continuum/coding-outcome-journal.test.mjs",
+    ".github/continuum/coding-provider-remote.test.mjs",
+    ".github/continuum/coding-provider.test.mjs",
+    ".github/continuum/coding-rejection-feedback.test.mjs",
+    ".github/continuum/coding-task-android-extensions.test.mjs",
+    ".github/continuum/coding-task.test.mjs",
+    ".github/continuum/coding-time-budget.test.mjs",
+    "scripts/continuum-local-model-observation.test.mjs",
+    "scripts/continuum-local-brain.test.mjs",
+    "scripts/continuum-gguf.test.mjs",
+    "scripts/continuum-gguf-preflight.test.mjs",
+    "scripts/continuum-gguf-preflight.integration.test.mjs"
+  ],
+  "exit": 0,
+  "nativeModelInference": "NOT_RUN",
+  "fold7": "NOT_RUN"
+}

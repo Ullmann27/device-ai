@@ -1,0 +1,421 @@
+{
+  "review_source_local": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+  "review_source_remote": "5457351a7585eada2393f80aa81db4bff5cc8897",
+  "review_source_tree": "6906b84e8434d4247a759ac0e7cf701ad82416dc",
+  "frames_inspected": 22,
+  "scope": "read-only native Canvas screenshot and source review; no render or tests executed",
+  "device": "NOT_RUN",
+  "backend": "Robolectric API28 native Canvas, existing 2D fallback",
+  "frames": [
+    {
+      "path": "cinema-native-sequence/native-cover-idle.png",
+      "sha256": "aef22b0408687189febf3d105d2250528dd0075601fd7c9a5cdaa17dde880297",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "idle",
+        "sha256": "aef22b0408687189febf3d105d2250528dd0075601fd7c9a5cdaa17dde880297",
+        "width": 412,
+        "height": 915,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-cover-work-280ms.png",
+      "sha256": "e712f5d9d6478aaf7421fd03be3d6207d3d29f50abfe108cbeaa772a7772aaef",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "work-280ms",
+        "sha256": "e712f5d9d6478aaf7421fd03be3d6207d3d29f50abfe108cbeaa772a7772aaef",
+        "width": 412,
+        "height": 915,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-cover-work-650ms.png",
+      "sha256": "3879bd04dda499984066ed945950af2821ee3d154d778036a258988a500de41e",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "work-650ms",
+        "sha256": "3879bd04dda499984066ed945950af2821ee3d154d778036a258988a500de41e",
+        "width": 412,
+        "height": 915,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-cover-work-1180ms.png",
+      "sha256": "18b9e147a72ca3b09da066d03a68435cafcae0f1b6a0a1ec39c6ab2e7106c120",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "work-1180ms",
+        "sha256": "18b9e147a72ca3b09da066d03a68435cafcae0f1b6a0a1ec39c6ab2e7106c120",
+        "width": 412,
+        "height": 915,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-cover-return-650ms.png",
+      "sha256": "90a291995bfa7d7a06e8e36bb048ab33b5d5a84488998ef78cb307a097f1caf4",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "return-650ms",
+        "sha256": "90a291995bfa7d7a06e8e36bb048ab33b5d5a84488998ef78cb307a097f1caf4",
+        "width": 412,
+        "height": 915,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-cover-returned.png",
+      "sha256": "5043ec4c4fe450a70e9822c344f7b5bc1334e5a919826fabe879a10faa6cf7ad",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "returned",
+        "sha256": "5043ec4c4fe450a70e9822c344f7b5bc1334e5a919826fabe879a10faa6cf7ad",
+        "width": 412,
+        "height": 915,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-inner-idle.png",
+      "sha256": "6c1d3c0d506dc925db5ef4b2e88ec7c72f584a43aaafd6dded485ceab88ec57f",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "idle",
+        "sha256": "6c1d3c0d506dc925db5ef4b2e88ec7c72f584a43aaafd6dded485ceab88ec57f",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-inner-work-280ms.png",
+      "sha256": "41b1910136584a42f4e6297f270c046e01ea17b2daffcb8157f294e022e67ebf",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "work-280ms",
+        "sha256": "41b1910136584a42f4e6297f270c046e01ea17b2daffcb8157f294e022e67ebf",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-inner-work-650ms.png",
+      "sha256": "d82dfadea4a9daf4e9942b0114717111a2eeac7c3ae91e3f66946c547c380e62",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "work-650ms",
+        "sha256": "d82dfadea4a9daf4e9942b0114717111a2eeac7c3ae91e3f66946c547c380e62",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-inner-work-1180ms.png",
+      "sha256": "cf54b1dcffa3546bc5d3fee36876db246c5f6ec360a242cd43fe99def8b5287c",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "work-1180ms",
+        "sha256": "cf54b1dcffa3546bc5d3fee36876db246c5f6ec360a242cd43fe99def8b5287c",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-inner-return-650ms.png",
+      "sha256": "1e62dd0cf9355f736cd39c44ee6af3e149ba075c5f3b729c24e23ce2283df889",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "return-650ms",
+        "sha256": "1e62dd0cf9355f736cd39c44ee6af3e149ba075c5f3b729c24e23ce2283df889",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-native-sequence/native-inner-returned.png",
+      "sha256": "2dcf5b542aeec987ab2c6dc97f878bdcea40063ceb0be92b765c07857a55fb38",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+        "phase": "returned",
+        "sha256": "2dcf5b542aeec987ab2c6dc97f878bdcea40063ceb0be92b765c07857a55fb38",
+        "width": 884,
+        "height": 760,
+        "backend": "Robolectric API28 native Canvas",
+        "inputs": "Scripted command and reasoning lifecycle; no model inference",
+        "avatar": "Existing 2D fallback",
+        "Filament": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-stop-completed/stop-352ms.png",
+      "sha256": "714ebaec4bd38eb087b47827925fd25dce98d966d116a7b2740df0d0867d5aa5",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "0d71b82c06632ec10400d1384113e517a9b09387",
+        "backend": "Robolectric API28 native Canvas, 2D fallback",
+        "input": "Actual decor STOP touch; scripted work lifecycle",
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-stop-completed/stop-returned.png",
+      "sha256": "62758946e7e06359a38bf4d7ce1a6fd36623a4ea1400f6a8471c0f0ca5bb6790",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "0d71b82c06632ec10400d1384113e517a9b09387",
+        "backend": "Robolectric API28 native Canvas, 2D fallback",
+        "input": "Actual decor STOP touch; scripted work lifecycle",
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-button-before/button-cover-idle.png",
+      "sha256": "f53013ab0679f1d141d43ee577b78908a589509ebb2567f4a495c79965ce476c",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+        "backend": "Robolectric API28 native Canvas; 2D fallback",
+        "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+        "pressed_key": null,
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-button-before/button-cover-held-160ms.png",
+      "sha256": "f84e7e3e22b0afef771ad018d0c732c234307fa08ce418d7ce76397af674f0cf",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+        "backend": "Robolectric API28 native Canvas; 2D fallback",
+        "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+        "pressed_key": null,
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-button-before/button-cover-opening-672ms.png",
+      "sha256": "0e66f5431be88508e79688f3b50bcc1b848d5ae4a7ba1978cafc0ef0862d8b82",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+        "backend": "Robolectric API28 native Canvas; 2D fallback",
+        "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+        "pressed_key": null,
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-button-before/button-cover-opened.png",
+      "sha256": "53e93250a8a56b7e24d33e8a00b742c0db0badece1e5e063990ccca19561b6bd",
+      "width": 412,
+      "height": 915,
+      "source_metadata": {
+        "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+        "backend": "Robolectric API28 native Canvas; 2D fallback",
+        "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+        "pressed_key": null,
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-button-before/button-inner-idle.png",
+      "sha256": "3867e7ac5ec810b27ed58e968b83dfa498a0b42fc3b2d6911f6f69f7c8ba4fd4",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+        "backend": "Robolectric API28 native Canvas; 2D fallback",
+        "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+        "pressed_key": null,
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-button-before/button-inner-held-160ms.png",
+      "sha256": "953668d1279ce27c5bb18202d1f06fe68a61e904f424c88e5d3446b3eb5883b9",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+        "backend": "Robolectric API28 native Canvas; 2D fallback",
+        "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+        "pressed_key": null,
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-button-before/button-inner-opening-672ms.png",
+      "sha256": "8bc1ebdd96436a5df5f1baf69fd0af860a668550898ece46871fbc4a37243c5a",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+        "backend": "Robolectric API28 native Canvas; 2D fallback",
+        "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+        "pressed_key": null,
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    },
+    {
+      "path": "cinema-button-before/button-inner-opened.png",
+      "sha256": "915096e89fa67622a91ae588b0a8ad6794615255e5532f1e87f0caffa03b3b4d",
+      "width": 884,
+      "height": 760,
+      "source_metadata": {
+        "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+        "backend": "Robolectric API28 native Canvas; 2D fallback",
+        "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+        "pressed_key": null,
+        "model_inference": "NOT_RUN",
+        "Fold7": "NOT_RUN"
+      },
+      "inspection": "view_image at original frame size"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "sha256": "80cb6329301780a1a998b3116e8792da7a8ef80aef2e0acc9e0806d379d2ce46"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGridContent.kt",
+      "sha256": "376678c15af1e9ecc2fd8ea9e8b47d1e9740ec12702e06397a5a8792bb659889"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt",
+      "sha256": "33a4248ebf56a761d81ab0cf1058f1513a9dde84e597113a70c587900da27026"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+      "sha256": "29663562fc8c96e8e8703bb8baa7621f571da84e38b05c6ec42a032d28fae310"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowGeometry.kt",
+      "sha256": "5bd330702f3e21af6811852dde4da7811677c6baad00e2f7ce6e4d78e62be88e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumIcons.kt",
+      "sha256": "ce0a00016560753110669e5871d400f53fa7c45a9c3af7b57dffc41716e6b98b"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt",
+      "sha256": "85ddef985fa295b9ff3d4448f481a294c81bc8a7416d13508809ad071a90fd5d"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/CinemaButtonMaterialUiTest.kt",
+      "sha256": "52db043744cdc14a89911b81ddea9dbcc34c7d98804415c5ffbba733d02f8d40"
+    }
+  ]
+}

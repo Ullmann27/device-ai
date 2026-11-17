@@ -1,0 +1,3 @@
+0: Copyright 2019 The Manrope Project Authors (https://github.com/googlefonts/manrope)
+
+14: https://openfontlicense.org

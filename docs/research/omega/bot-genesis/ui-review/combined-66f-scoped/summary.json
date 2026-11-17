@@ -1,0 +1,41 @@
+{
+  "source": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+  "suites": [
+    {
+      "name": "IndependentBotRosterUiTest",
+      "tests": 15,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 5.369
+    },
+    {
+      "name": "IndependentActivitySpeechTest",
+      "tests": 3,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 2.254
+    },
+    {
+      "name": "IndependentBotSelectionUiTest",
+      "tests": 8,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 1.636
+    },
+    {
+      "name": "IndependentBotAddressRouterTest",
+      "tests": 3,
+      "failures": 0,
+      "skipped": 0,
+      "seconds": 0.254
+    }
+  ],
+  "tests": 29,
+  "failures": 0,
+  "skipped": 0,
+  "gradleExit": 0,
+  "compilation": "PASS",
+  "sourceAndTestsUnchanged": true,
+  "environment": "Robolectric SDK28 host; real registry/widgets/Activity listener, Android TTS shadow; no model/audio hardware",
+  "scope": "29 independent checks; not whole-app final acceptance"
+}

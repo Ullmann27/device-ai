@@ -1,0 +1,47 @@
+✔ optional research verification leaves the default path unchanged (0.781503ms)
+✖ research verification requires exact source, suite and complete positive checks (0.312008ms)
+✖ exceptions, promises and elapsed deadlines never turn into verification (0.176395ms)
+✖ a numeric counterexample is bounded data and cannot carry arbitrary diagnostics (0.197737ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52.627297
+
+✖ failing tests:
+
+test at .github/continuum/repair-research-verifier.test.mjs:16:1
+✖ research verification requires exact source, suite and complete positive checks (0.312008ms)
+  TypeError: Cannot read properties of null (reading 'status')
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/repair-research-verifier.test.mjs:17:55)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at .github/continuum/repair-research-verifier.test.mjs:23:1
+✖ exceptions, promises and elapsed deadlines never turn into verification (0.176395ms)
+  TypeError: Cannot read properties of null (reading 'status')
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/repair-research-verifier.test.mjs:28:23)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at .github/continuum/repair-research-verifier.test.mjs:33:1
+✖ a numeric counterexample is bounded data and cannot carry arbitrary diagnostics (0.197737ms)
+  TypeError: Cannot read properties of null (reading 'status')
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/repair-research-verifier.test.mjs:36:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

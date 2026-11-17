@@ -1,0 +1,202 @@
+TAP version 13
+# Subtest: coding loopback uses bounded structured schema and accepts relevant larger context
+ok 1 - coding loopback uses bounded structured schema and accepts relevant larger context
+  ---
+  duration_ms: 31.509549
+  type: 'test'
+  ...
+# Subtest: coding output cannot add tools, duplicate paths, unknown files or blank hunks
+ok 2 - coding output cannot add tools, duplicate paths, unknown files or blank hunks
+  ---
+  duration_ms: 2.887462
+  type: 'test'
+  ...
+# Subtest: coding CLI UTF-8 transport accommodates the character-bounded multilingual context
+ok 3 - coding CLI UTF-8 transport accommodates the character-bounded multilingual context
+  ---
+  duration_ms: 124.910068
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 01: no model
+ok 4 - M2 model admission denies 01: no model
+  ---
+  duration_ms: 1.884757
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 02: empty model
+ok 5 - M2 model admission denies 02: empty model
+  ---
+  duration_ms: 0.187513
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 03: whitespace model
+ok 6 - M2 model admission denies 03: whitespace model
+  ---
+  duration_ms: 0.22486
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 04: NUL model
+ok 7 - M2 model admission denies 04: NUL model
+  ---
+  duration_ms: 0.240404
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 05: linebreak model
+ok 8 - M2 model admission denies 05: linebreak model
+  ---
+  duration_ms: 0.195876
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 06: oversized name
+ok 9 - M2 model admission denies 06: oversized name
+  ---
+  duration_ms: 0.13224
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 07: unspecified local fallback
+ok 10 - M2 model admission denies 07: unspecified local fallback
+  ---
+  duration_ms: 0.169416
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 07a: implicit default alias
+ok 11 - M2 model admission denies 07a: implicit default alias
+  ---
+  duration_ms: 0.167684
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 07b: automatic model alias
+ok 12 - M2 model admission denies 07b: automatic model alias
+  ---
+  duration_ms: 0.175535
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 08: missing format
+ok 13 - M2 model admission denies 08: missing format
+  ---
+  duration_ms: 0.391011
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 09: unexpected format spelling
+ok 14 - M2 model admission denies 09: unexpected format spelling
+  ---
+  duration_ms: 0.279903
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 10: selected original Gemma name
+ok 15 - M2 model admission denies 10: selected original Gemma name
+  ---
+  duration_ms: 0.181474
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 11: original selected file
+ok 16 - M2 model admission denies 11: original selected file
+  ---
+  duration_ms: 0.148545
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 12: selected native LiteRT format
+ok 17 - M2 model admission denies 12: selected native LiteRT format
+  ---
+  duration_ms: 0.166973
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 13: unsupported native runtime
+ok 18 - M2 model admission denies 13: unsupported native runtime
+  ---
+  duration_ms: 1.159772
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 14: remote runtime
+ok 19 - M2 model admission denies 14: remote runtime
+  ---
+  duration_ms: 0.136846
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 15: omitted checkpoint digest
+ok 20 - M2 model admission denies 15: omitted checkpoint digest
+  ---
+  duration_ms: 0.162906
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 16: malformed digest
+ok 21 - M2 model admission denies 16: malformed digest
+  ---
+  duration_ms: 0.153902
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 17: uppercase digest
+ok 22 - M2 model admission denies 17: uppercase digest
+  ---
+  duration_ms: 0.074292
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 18: digest with junk
+ok 23 - M2 model admission denies 18: digest with junk
+  ---
+  duration_ms: 0.072609
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 19: Gemma original digest wrongly asserted as GGUF
+ok 24 - M2 model admission denies 19: Gemma original digest wrongly asserted as GGUF
+  ---
+  duration_ms: 0.068604
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 20: consent absent
+ok 25 - M2 model admission denies 20: consent absent
+  ---
+  duration_ms: 0.071789
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 21: consent not explicit
+ok 26 - M2 model admission denies 21: consent not explicit
+  ---
+  duration_ms: 0.117697
+  type: 'test'
+  ...
+# Subtest: M2 model admission denies 22: consent mismatched
+ok 27 - M2 model admission denies 22: consent mismatched
+  ---
+  duration_ms: 0.115294
+  type: 'test'
+  ...
+# Subtest: explicit approved alternate GGUF is configuration ONLY, not inference proof
+ok 28 - explicit approved alternate GGUF is configuration ONLY, not inference proof
+  ---
+  duration_ms: 0.134103
+  type: 'test'
+  ...
+# Subtest: a Qwen name NEVER enters absent explicit consent and remains only configuration with consent
+ok 29 - a Qwen name NEVER enters absent explicit consent and remains only configuration with consent
+  ---
+  duration_ms: 0.112911
+  type: 'test'
+  ...
+# Subtest: production coding CLI blocks missing pinned runtime before legacy Gemma configuration
+ok 30 - production coding CLI blocks missing pinned runtime before legacy Gemma configuration
+  ---
+  duration_ms: 71.592581
+  type: 'test'
+  ...
+# Subtest: production coding CLI blocks missing pinned runtime despite legacy unspecified-model credentials
+ok 31 - production coding CLI blocks missing pinned runtime despite legacy unspecified-model credentials
+  ---
+  duration_ms: 60.26888
+  type: 'test'
+  ...
+# Subtest: harness coding CLI cannot bypass the selected Gemma format gate
+ok 32 - harness coding CLI cannot bypass the selected Gemma format gate
+  ---
+  duration_ms: 103.293219
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 337.828876

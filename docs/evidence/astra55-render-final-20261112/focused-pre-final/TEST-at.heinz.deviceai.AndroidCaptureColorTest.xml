@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AndroidCaptureColorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:14:15" hostname="0f4ac18d136f" time="3.136">
+  <properties/>
+  <testcase name="knownP3KeepsItsActualInputProfile" classname="at.heinz.deviceai.AndroidCaptureColorTest" time="2.817"/>
+  <testcase name="unknownInputNeverAssumesSrgb" classname="at.heinz.deviceai.AndroidCaptureColorTest" time="0.035"/>
+  <testcase name="knownSrgbRemainsSrgb" classname="at.heinz.deviceai.AndroidCaptureColorTest" time="0.283"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

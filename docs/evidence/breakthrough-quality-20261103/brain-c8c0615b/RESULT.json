@@ -1,0 +1,63 @@
+{
+  "applicationSourceSha": "c8c0615bc9f5398ad2e47b94669e3117ecf9f32d",
+  "jvmFirst": {
+    "tests": 2142,
+    "pass": 2129,
+    "fail": 1,
+    "skipped": 12,
+    "soleFailure": "specialistLatencyBudgetOnTenYearHistory",
+    "p50ms": 1.301,
+    "p95ms": 21.446,
+    "answersCorrect": "819/819",
+    "concurrentLoad": "Approximately6Java+2Blender processes; four-core CPU quota"
+  },
+  "quietBaseline64Method": {
+    "p50ms": 0.76,
+    "p95ms": 1.213,
+    "pass": true
+  },
+  "quietCandidateC8Method": {
+    "p50ms": 0.734,
+    "p95ms": 1.173,
+    "pass": true
+  },
+  "quietFull": {
+    "tests": 2142,
+    "pass": 2130,
+    "fail": 0,
+    "skipped": 12,
+    "suites": 387,
+    "p95ms": 1.323,
+    "lint": "PASS_CONFIGURED_NEW_API_ONLY",
+    "compile": "PASS",
+    "creParity": 0,
+    "swbParity": 0,
+    "removedTestIdentities": 0,
+    "changedPriorStatuses": 0
+  },
+  "nodeFirst": {
+    "total": 2191,
+    "pass": 2184,
+    "fail": 2,
+    "skipped": 5,
+    "exit": 1,
+    "backendPass": 64,
+    "backendFail": 0,
+    "note": "Two old optional native JVM scripts newly enabled by CONTINUUM_FABRIC_JVM_DEPS failed incomplete source closures. They were explicitly skipped in prior67 Node. Initial repair edits briefly touched these two scripts after their failing tests completed, then were moved to isolated54a338e3 checkout and restored exactly; this failed Node attempt is not a final frozen-source acceptance receipt."
+  },
+  "M3": {
+    "total": 81,
+    "correct": 77,
+    "wrong": 4,
+    "harmful": 0,
+    "perCaseRegressions": 0
+  },
+  "LME40": {
+    "correct": 35,
+    "abstained": 5,
+    "wrong": 0,
+    "forbidden": 0
+  },
+  "thresholdChanged": false,
+  "apk": "NOT_BUILT_FOR_C8: finalUI/native source supersedes; first64unsignedartifact retained"
+}

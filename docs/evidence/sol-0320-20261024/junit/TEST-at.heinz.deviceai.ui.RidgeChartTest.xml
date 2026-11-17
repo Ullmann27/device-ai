@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.RidgeChartTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:57" hostname="5c9e18abbd30" time="0.011">
+  <properties/>
+  <testcase name="withoutMeasurementsOnlyTheAxisIsDrawn" classname="at.heinz.deviceai.ui.RidgeChartTest" time="0.007"/>
+  <testcase name="meshLinesEndOnTheDrawnCurveAndNeverAboveTheHighestSample" classname="at.heinz.deviceai.ui.RidgeChartTest" time="0.001"/>
+  <testcase name="everySamplePointIsAMeasuredValue" classname="at.heinz.deviceai.ui.RidgeChartTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

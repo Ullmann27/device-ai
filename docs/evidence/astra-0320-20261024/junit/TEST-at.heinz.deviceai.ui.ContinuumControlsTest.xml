@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumControlsTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:33" hostname="5c9e18abbd30" time="1.96">
+  <properties/>
+  <testcase name="dialogThemePreservesExplicitApprovalAndCancellation" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.858"/>
+  <testcase name="statusKeepsUnknownAndFailureTextAndDrawsAtLargeFont" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.056"/>
+  <testcase name="measuredGridReflowsAtLargeFontAndRetainsEveryAction" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.066"/>
+  <testcase name="nativePanelsAndGaugesRemainReadableAtPhoneAndFoldWidths" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.672"/>
+  <testcase name="actionHasButtonSemanticsAndRealStateChangesWithoutLosingItsCallback" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.162"/>
+  <testcase name="glassHonoursDrawableAlphaAndControlsVisiblyChangeState" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.107"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

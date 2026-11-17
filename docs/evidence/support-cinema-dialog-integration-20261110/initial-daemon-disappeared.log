@@ -1,0 +1,85 @@
+
+Welcome to Gradle 8.11.1!
+
+Here are the highlights of this release:
+ - Parallel load and store for Configuration Cache
+ - Java compilation errors at the end of the build output
+ - Consolidated report for warnings and deprecations
+
+For more details see https://docs.gradle.org/8.11.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+
+> Task :app:prepareOwnerFaceModels
+CONTINUUM_OWNER_FACE_MODELS_VERIFIED {"models":[{"id":"yunet","asset":"faceid/face_detection_yunet_2023mar.onnx","sha256":"8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4","byteLength":232589},{"id":"sface","asset":"faceid/face_recognition_sface_2021dec.onnx","sha256":"0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79","byteLength":38696353}],"opencvSha256":"a8c9b0929d8d6367bb476320a1f36587db2b57ea18d8f7521ce509514903ca04"}
+
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :app:compileDebugAidl
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig
+> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :app:compileDebugKotlin
+
+The message received from the daemon indicates that the daemon has disappeared.
+Build request sent: Build{id=0ab29f20-23e4-4238-a90b-b5fca1f05c4d, currentDir=/workspace/scratch/006ff0a2565d/cinema-dialog-integration}
+Attempting to read last messages from the daemon log...
+Daemon pid: 50
+  log file: /workspace/scratch/006ff0a2565d/dialog-gradle-home/daemon/8.11.1/daemon-50.out.log
+----- Last 20 lines from daemon log file - daemon-50.out.log -----
+2026-11-10T21:38:48.334+0100 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 31: dispatching org.gradle.launcher.daemon.protocol.BuildStarted@40bae261
+2026-11-10T21:38:48.336+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.EstablishBuildEnvironment] Configuring env variables: [PATH, NO_PROXY, CAAS_IMAGE_VERSION, ELECTRON_GET_USE_PROXY, PIP_CERT, ANDROID_HOME, XDG_CACHE_HOME, GH_PAGER, PLAYWRIGHT_NODEJS_PATH, COLORTERM, NODE_USE_ENV_PROXY, NPM_CONFIG_AUDIT, PWD, CAAS_PREFIX_TRANSFER_AUTH_TOKEN_FILE, NPM_CONFIG_HTTP_PROXY, FTP_PROXY, PAGER, CLOUD_AEON_OS_PERSONALIZATION_URL, CODEX_HOME, CODEX_NETWORK_PROXY_ACTIVE, ALL_PROXY, LC_ALL, BROWSER_USE_CHATGPT_ENVIRONMENT, npm_config_http_proxy, LC_CTYPE, CODEX_SESSION_ID, SHLVL, NPM_CONFIG_PROXY, CAAS_IMAGE_GIT_COMMIT_SHA, CODEX_FLORA_CCA_GATEWAY_RESOLUTION_HOST, JAVA_HOME, CODEX_NETWORK_ALLOW_LOCAL_BINDING, TERM, HTTP_PROXY, CODEX_FLORA_CCA_REUSE_EXECUTOR, CODEX_FLORA_CCA_WORKSPACE_CWD, CODEX_FLORA_CCA_BOOTSTRAP_ATTEMPT_ID, GRADLE_USER_HOME, CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS, HTTPS_PROXY, NODE_EXTRA_CA_CERTS, CODEX_THREAD_ID, _, no_proxy, SSL_CERT_FILE, OTEL_TRACES_SAMPLER_ARG, DOCKER_HTTP_PROXY, ENABLE_BROWSER_WEBMCP, CODEX_PRIMARY_RUNTIME_NODE, GRADLE_OPTS, YARN_HTTPS_PROXY, https_proxy, GIT_PAGER, BUNDLE_HTTP_PROXY, CODEX_PRIMARY_RUNTIME, CODEX_BROWSER_DEFER_ACTIVATION, XDG_STATE_HOME, WSS_PROXY, CODEX_PRIMARY_RUNTIME_ROOT, CODEX_PRIMARY_RUNTIME_BUNDLE_VERSION, YARN_HTTP_PROXY, DD_SERVICE, npm_config_https_proxy, wss_proxy, NETWORK, CODEX_SANDBOX_NETWORK_DISABLED, npm_config_noproxy, REQUESTS_CA_BUNDLE, NPM_CONFIG_PREFIX, TMPDIR, ENABLE_BROWSER_CREDENTIAL_CAPABILITIES, SITES_MANAGED_LINUX_CONTAINER, PIP_PROXY, NPM_CONFIG_FUND, DEBIAN_FRONTEND, CODEX_EXEC_SERVER_REMOTE_BASE_URL, BUNDLE_HTTPS_PROXY, CODEX_PRIMARY_RUNTIME_NODE_MODULES, CODEX_ENVIRONMENT_ID, LANG, NPM_CONFIG_NOPROXY, ftp_proxy, BUNDLE_NO_PROXY, all_proxy, NO_COLOR, NPM_CONFIG_HTTPS_PROXY, CODEX_FLORA_CCA_EXPECTED_EXECUTOR_PID, NODE_PATH, ws_proxy, BROWSER_USE_AUTOMATIC_OTP_ENABLED, CODEX_CI, http_proxy, DOCKER_HTTPS_PROXY, XDG_DATA_HOME, npm_config_proxy, CODEX_PRIMARY_RUNTIME_PYTHON, CODEX_TOOL_CALL_ID, XDG_CONFIG_HOME, OTEL_TRACES_SAMPLER, CODEX_PROXY_CERT, BROWSER_MANAGEMENT_SOCKET_PATH, OTEL_RESOURCE_ATTRIBUTES, CODEX_FLORA_CCA_GATEWAY_HOST_ALIASES, CODEX_VERSION, XDG_RUNTIME_DIR, WS_PROXY, HOME, OPENAI_CLUSTER]
+2026-11-10T21:38:48.344+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.LogToClient] About to start relaying all logs to the client via the connection.
+2026-11-10T21:38:48.345+0100 [INFO] [org.gradle.launcher.daemon.server.exec.LogToClient] The client will now receive all logging from the daemon (pid: 50). The daemon log file: /workspace/scratch/006ff0a2565d/dialog-gradle-home/daemon/8.11.1/daemon-50.out.log
+2026-11-10T21:38:48.346+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.RequestStopIfSingleUsedDaemon] Requesting daemon stop after processing Build{id=0ab29f20-23e4-4238-a90b-b5fca1f05c4d, currentDir=/workspace/scratch/006ff0a2565d/cinema-dialog-integration}
+2026-11-10T21:38:48.346+0100 [LIFECYCLE] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Daemon will be stopped at the end of the build 
+2026-11-10T21:38:48.347+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Stop as soon as idle requested. The daemon is busy
+2026-11-10T21:38:48.347+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon stop has been requested. Sleeping until state changes.
+2026-11-10T21:38:48.347+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has started executing the build.
+2026-11-10T21:38:48.347+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=dc6b04cc-2ff8-4658-98f0-555230e9b082,javaHome=/workspace/scratch/5900afa6af29/qa-installed-tools/jdk,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=/workspace/scratch/006ff0a2565d/dialog-gradle-home/daemon,pid=50,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-Xmx2g,-Dfile.encoding=UTF-8,-Duser.country,-Duser.language=en,-Duser.variant]
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+CONTINUUM_OWNER_FACE_MODELS_VERIFIED {"models":[{"id":"yunet","asset":"faceid/face_detection_yunet_2023mar.onnx","sha256":"8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4","byteLength":232589},{"id":"sface","asset":"faceid/face_recognition_sface_2021dec.onnx","sha256":"0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79","byteLength":38696353}],"opencvSha256":"a8c9b0929d8d6367bb476320a1f36587db2b57ea18d8f7521ce509514903ca04"}----- End of the daemon log -----
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.

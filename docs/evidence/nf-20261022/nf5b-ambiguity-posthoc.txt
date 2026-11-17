@@ -1,0 +1,18 @@
+candidates 103
+sha256             examples 1 probed  65 meetAll 4 intendedAmongThem true others ["repair-diagnostics.mjs#sha256"]
+clip               examples 2 probed  49 meetAll 2 intendedAmongThem true others []
+single-line        examples 2 probed  49 meetAll 1 intendedAmongThem true others []
+repo-path          examples 2 probed  65 meetAll 1 intendedAmongThem true others []
+canonical          examples 3 probed  65 meetAll 2 intendedAmongThem true others ["capability-research.mjs#canonical"]
+finding-id         examples 2 probed  13 meetAll 1 intendedAmongThem true others []
+kotlin-keyword     examples 3 probed  65 meetAll 1 intendedAmongThem true others []
+owner-account      examples 3 probed  49 meetAll 1 intendedAmongThem true others []
+adv-wrong-example  examples 1 probed  65 meetAll 0 intendedAmongThem false others []
+adv-no-example     no examples
+adv-non-primitive  no examples
+context-cost       examples 2 probed  65 meetAll 1 intendedAmongThem true others []
+json-digest        examples 1 probed  65 meetAll 2 intendedAmongThem true others ["relational-memory-data.mjs#fingerprint"]
+feature-bucket     examples 2 probed  65 meetAll 1 intendedAmongThem true others []
+word-evidence      examples 2 probed  49 meetAll 1 intendedAmongThem true others []
+memory-relation    examples 2 probed  65 meetAll 1 intendedAmongThem true others []
+memory-subject     examples 2 probed  65 meetAll 1 intendedAmongThem true others []

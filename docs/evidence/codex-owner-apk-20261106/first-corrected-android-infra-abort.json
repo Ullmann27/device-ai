@@ -1,0 +1,20 @@
+{
+  "status": "INCOMPLETE",
+  "category": "HOST_FULL_ANDROID_REGRESSION",
+  "source_commit": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "exit_code": 1,
+  "classification": "INFRA_ABORT_CAUSE_UNDETERMINED",
+  "error": "Gradle build daemon disappeared unexpectedly",
+  "phase": ":app:testDebugUnitTest",
+  "complete_junit_result": false,
+  "counted_as_pass": false,
+  "oom_verified": false,
+  "jvm_crash_evidence_found": false,
+  "kernel_memory_counters": "NOT_ACCESSIBLE",
+  "jvm_max_heap": "2g",
+  "metaspace_max": "512m",
+  "original_log_sha256": "695ddb7fc86c49353d3a4d84571b82eabba23df73e89ed74c07caea4a72b8d31",
+  "log_last_modified_utc": "2026-11-06T17:44:50.915774+00:00",
+  "sequential_retry_started_at_utc": "2026-11-06T17:48:53.117018+00:00",
+  "retry_status": "RUNNING_AT_RECORDING"
+}

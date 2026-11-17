@@ -1,0 +1,12 @@
+{
+  "source_head": "f88d7d1936b9c0d53c176a0af31108fb863199e6",
+  "cached_dependencies": "/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug",
+  "test_classes": [
+    "at.heinz.deviceai.localmodel.LocalModelLoadSourceTest"
+  ],
+  "source_sha256": {
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelLoadSourceTest.kt": "cdb8e9f25f25906ec7ca4631917b76391fc7fee1388a732ce39639f7ff50a93c",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt": "35bdddaaf71ce938a2e36eab2c44c5d51ce01d088ad23db4b16c518ae767f716",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt": "3c2b2864b3e51eda5a79ea3166b902a6e809493cb1fa910514de01b44779a029"
+  }
+}

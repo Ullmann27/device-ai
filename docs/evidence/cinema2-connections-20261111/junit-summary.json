@@ -1,0 +1,378 @@
+{
+ "green1": {
+  "total": {
+   "tests": 86,
+   "failures": 0,
+   "errors": 0,
+   "skipped": 0
+  },
+  "classes": [
+   {
+    "class": "at.heinz.deviceai.JarvisWorkWindowHostViewportUiTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:09",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:16",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.JarvisWorkWindowUiTest",
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:21",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.Cinema2DepthLightTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.CinemaConnectionsTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiCinematicsTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiConnectionsUiTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiConstructTest",
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:26",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiDepthPlaneTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:26",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiLiveDataTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:26",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiMaterialRegressionTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:26",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiWindowUiTest",
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:26",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiWorkActivityTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:27",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.JarvisFluidLightTest",
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:27",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.JarvisWorkWindowDepthTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:39:27",
+    "failed": []
+   }
+  ]
+ },
+ "mutation-red": {
+  "total": {
+   "tests": 12,
+   "failures": 5,
+   "errors": 0,
+   "skipped": 0
+  },
+  "classes": [
+   {
+    "class": "at.heinz.deviceai.ui.CinemaConnectionsTest",
+    "tests": 7,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:43:39",
+    "failed": [
+     {
+      "test": "packetNeedsTheBandAndHonoursTheBudget",
+      "message": "java.lang.AssertionError: expected:<0.0> but was:<35.32982>"
+     },
+     {
+      "test": "receiptPacketRidesOnTheBandFromWindowToOrb",
+      "message": "java.lang.AssertionError: the packet centre lies on the band itself (0.05) expected:<0.0> but was:<38.40528>"
+     }
+    ]
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiConnectionsUiTest",
+    "tests": 5,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:43:40",
+    "failed": [
+     {
+      "test": "readingThreadOnlyWhileRealWorkRunsAndNeverInsideTheFace",
+      "message": "java.lang.AssertionError: no work, no thread expected:<0> but was:<286>"
+     },
+     {
+      "test": "readingThreadHonoursReducedMotionAndBudget",
+      "message": "java.lang.AssertionError: reduced motion: no thread expected:<0> but was:<276>"
+     },
+     {
+      "test": "receiptPacketOnlyAfterAVerifiedStepAndOnlyOnTheBand",
+      "message": "java.lang.AssertionError: receipt pixel (163,531) leaves the band"
+     }
+    ]
+   }
+  ]
+ },
+ "matrix-run": {
+  "total": {
+   "tests": 115,
+   "failures": 0,
+   "errors": 0,
+   "skipped": 0
+  },
+  "classes": [
+   {
+    "class": "at.heinz.deviceai.TtsHologramSignalTest",
+    "tests": 11,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.avatar.CinemaWindowGazeBridgeTest",
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.avatar3d.CinemaAvatarExperimentTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.avatar3d.GazeBlinkPolicyTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.avatar3d.SpatialWindowLightTest",
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:25",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.AgslHologramEdgeCoordinatesTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:30",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.CinemaConnectionsTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:17",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.CinemaExperimentRuntimeToggleTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:30",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.CinemaExperimentWiringTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:31",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiConnectionsUiTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:17",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiDepthPlaneTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.HollywoodFuiWorkActivityTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+    "tests": 29,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.JarvisProtectedDepthSurfacesTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.JarvisRenderQualityAdaptiveTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.JarvisThermalVisualContractTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.JarvisWindowOrbPulseTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.LuxuryHoloButtonRendererTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   },
+   {
+    "class": "at.heinz.deviceai.ui.PerimeterWingChoreographerTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timestamp": "2026-11-11T14:45:32",
+    "failed": []
+   }
+  ]
+ }
+}

@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: quality control: consistent baseline failure and two retained passes are accepted
+ok 1 - quality control: consistent baseline failure and two retained passes are accepted
+  ---
+  duration_ms: 2.787163
+  type: 'test'
+  ...
+# Subtest: quality rejects candidate expansion lost at independent run
+ok 2 - quality rejects candidate expansion lost at independent run
+  ---
+  duration_ms: 0.470347
+  type: 'test'
+  ...
+# Subtest: quality rejects summary conceals candidate count
+ok 3 - quality rejects summary conceals candidate count
+  ---
+  duration_ms: 0.428765
+  type: 'test'
+  ...
+# Subtest: quality rejects summary conceals independent count
+ok 4 - quality rejects summary conceals independent count
+  ---
+  duration_ms: 0.699262
+  type: 'test'
+  ...
+# Subtest: quality rejects baseline summary lies about failed count
+ok 5 - quality rejects baseline summary lies about failed count
+  ---
+  duration_ms: 0.508595
+  type: 'test'
+  ...
+# Subtest: quality rejects baseline summary lies about executed count
+ok 6 - quality rejects baseline summary lies about executed count
+  ---
+  duration_ms: 0.411579
+  type: 'test'
+  ...
+# Subtest: quality rejects string counts
+ok 7 - quality rejects string counts
+  ---
+  duration_ms: 0.409436
+  type: 'test'
+  ...
+# Subtest: quality rejects fractional counts
+ok 8 - quality rejects fractional counts
+  ---
+  duration_ms: 0.368605
+  type: 'test'
+  ...
+# Subtest: quality rejects nonfinite counts
+ok 9 - quality rejects nonfinite counts
+  ---
+  duration_ms: 0.529056
+  type: 'test'
+  ...
+# Subtest: quality rejects unsafe integer counts
+ok 10 - quality rejects unsafe integer counts
+  ---
+  duration_ms: 0.399531
+  type: 'test'
+  ...
+# Subtest: quality rejects baseline failure count exceeds total
+ok 11 - quality rejects baseline failure count exceeds total
+  ---
+  duration_ms: 0.252009
+  type: 'test'
+  ...
+# Subtest: quality rejects baseline timeout
+ok 12 - quality rejects baseline timeout
+  ---
+  duration_ms: 0.277727
+  type: 'test'
+  ...
+# Subtest: quality rejects baseline successful exit
+ok 13 - quality rejects baseline successful exit
+  ---
+  duration_ms: 0.268164
+  type: 'test'
+  ...
+# Subtest: quality rejects baseline signal-like exit
+ok 14 - quality rejects baseline signal-like exit
+  ---
+  duration_ms: 0.364509
+  type: 'test'
+  ...
+# Subtest: quality rejects baseline negative exit
+ok 15 - quality rejects baseline negative exit
+  ---
+  duration_ms: 0.216525
+  type: 'test'
+  ...
+# Subtest: quality rejects candidate timeout marker absent
+ok 16 - quality rejects candidate timeout marker absent
+  ---
+  duration_ms: 0.215885
+  type: 'test'
+  ...
+# Subtest: quality rejects duplicate candidate phase
+ok 17 - quality rejects duplicate candidate phase
+  ---
+  duration_ms: 0.269916
+  type: 'test'
+  ...
+# Subtest: quality rejects null command item
+ok 18 - quality rejects null command item
+  ---
+  duration_ms: 0.245319
+  type: 'test'
+  ...
+# Subtest: quality rejects object commands
+ok 19 - quality rejects object commands
+  ---
+  duration_ms: 0.215384
+  type: 'test'
+  ...
+# Subtest: quality rejects missing baseline
+ok 20 - quality rejects missing baseline
+  ---
+  duration_ms: 0.463988
+  type: 'test'
+  ...
+# Subtest: quality rejects extra unaudited phase
+ok 21 - quality rejects extra unaudited phase
+  ---
+  duration_ms: 0.376026
+  type: 'test'
+  ...
+# Subtest: quality rejects non-allowlisted command
+ok 22 - quality rejects non-allowlisted command
+  ---
+  duration_ms: 0.313462
+  type: 'test'
+  ...
+# Subtest: quality rejects unbound commit
+ok 23 - quality rejects unbound commit
+  ---
+  duration_ms: 0.369315
+  type: 'test'
+  ...
+# Subtest: quality rejects unrecognized chain without looking up inherited profile properties
+ok 24 - quality rejects unrecognized chain without looking up inherited profile properties
+  ---
+  duration_ms: 0.401664
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 132.557201

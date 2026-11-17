@@ -1,0 +1,23 @@
+{
+  "source_head": "2de5e46c2064a087bc34e4fde6eed7fe14336f75",
+  "baseline": "711f23b33a8fc602a3a0e4baa37aa61e42e6fc64",
+  "reviewer": "support_scene",
+  "method": "Independent read-only source review with exact normalized comparison",
+  "result": "NO_FINDING_IN_SCOPE",
+  "production_hashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "3be9f4e497624e2c40213cfae7012bbda63fbebf03c40f01c45dfd6d30f68ad6",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitTransformUpdates.kt": "75e7b55604f7990a4d4e6398fa074ef96d43b72fdec8f2c57c650ffa75bb6bf3",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "08bdd2f38ce40ab2f2bb39d431b43387c6e992585eca0725114dc2ae3157a794"
+  },
+  "preserved": [
+    "LiveMonitorSubmission",
+    "frameSubmitted/frameFailed",
+    "frame freshness and source viewport",
+    "buffer ownership and native input authorization"
+  ],
+  "constructor_callers_checked": [
+    "FilamentAvatarRenderer.configureCockpit",
+    "FilamentCockpitStage initialization"
+  ],
+  "device": "NOT_RUN"
+}

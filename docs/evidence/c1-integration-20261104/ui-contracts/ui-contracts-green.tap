@@ -1,0 +1,298 @@
+TAP version 13
+# Subtest: transparent native 3D hero has no network, model execution or fake status
+ok 1 - transparent native 3D hero has no network, model execution or fake status
+  ---
+  duration_ms: 18.097791
+  type: 'test'
+  ...
+# Subtest: reference start screen reaches all seven real Android feature paths
+ok 2 - reference start screen reaches all seven real Android feature paths
+  ---
+  duration_ms: 1.289006
+  type: 'test'
+  ...
+# Subtest: responsive dashboard retains chat composer, updates and keyboard visibility
+ok 3 - responsive dashboard retains chat composer, updates and keyboard visibility
+  ---
+  duration_ms: 0.527903
+  type: 'test'
+  ...
+# Subtest: reference-style composer keeps real model/web/file actions and truthful idle state
+ok 4 - reference-style composer keeps real model/web/file actions and truthful idle state
+  ---
+  duration_ms: 0.549164
+  type: 'test'
+  ...
+# Subtest: large text is bounded and propagated into adaptive layout without window shrinking
+ok 5 - large text is bounded and propagated into adaptive layout without window shrinking
+  ---
+  duration_ms: 1.535476
+  type: 'test'
+  ...
+# Subtest: start screen never manufactures ready model or internet state
+ok 6 - start screen never manufactures ready model or internet state
+  ---
+  duration_ms: 1.546562
+  type: 'test'
+  ...
+# Subtest: exactly five owner-visible work areas remain in fixed order
+ok 7 - exactly five owner-visible work areas remain in fixed order
+  ---
+  duration_ms: 1.663108
+  type: 'test'
+  ...
+# Subtest: phone bottom navigation stays outside conversation pane and above system bar
+ok 8 - phone bottom navigation stays outside conversation pane and above system bar
+  ---
+  duration_ms: 0.526731
+  type: 'test'
+  ...
+# Subtest: all navigation taps route to existing trusted screens
+ok 9 - all navigation taps route to existing trusted screens
+  ---
+  duration_ms: 0.428603
+  type: 'test'
+  ...
+# Subtest: home work areas are reachable without expert-only controls
+ok 10 - home work areas are reachable without expert-only controls
+  ---
+  duration_ms: 1.080903
+  type: 'test'
+  ...
+# Subtest: Fold rail offers every current destination without a second bottom bar
+ok 11 - Fold rail offers every current destination without a second bottom bar
+  ---
+  duration_ms: 1.254394
+  type: 'test'
+  ...
+# Subtest: existing chat, learning monitoring and owner permission boundaries remain
+ok 12 - existing chat, learning monitoring and owner permission boundaries remain
+  ---
+  duration_ms: 0.491258
+  type: 'test'
+  ...
+# Subtest: Fold rail and start screen reach all actions at short heights
+ok 13 - Fold rail and start screen reach all actions at short heights
+  ---
+  duration_ms: 0.344787
+  type: 'test'
+  ...
+# Subtest: start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+ok 14 - start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+  ---
+  duration_ms: 1.991201
+  type: 'test'
+  ...
+# Subtest: recreated activity preserves chat selection and draft without persistent More selection
+ok 15 - recreated activity preserves chat selection and draft without persistent More selection
+  ---
+  duration_ms: 0.501403
+  type: 'test'
+  ...
+# Subtest: design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+ok 16 - design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+  ---
+  duration_ms: 4.176582
+  type: 'test'
+  ...
+# Subtest: real drawn Canvas frames are counted separately from animation callbacks
+ok 17 - real drawn Canvas frames are counted separately from animation callbacks
+  ---
+  duration_ms: 1.352541
+  type: 'test'
+  ...
+# Subtest: Fold7 owner can run a 1.6s diagnostic without changing animation preferences
+ok 18 - Fold7 owner can run a 1.6s diagnostic without changing animation preferences
+  ---
+  duration_ms: 0.690898
+  type: 'test'
+  ...
+# Subtest: unfold reflows from actual laid out root window width, not stale screenWidthDp
+ok 19 - unfold reflows from actual laid out root window width, not stale screenWidthDp
+  ---
+  duration_ms: 1.013232
+  type: 'test'
+  ...
+# Subtest: reflow preserves the active agent, user draft, conversation views and dashboard telemetry
+ok 20 - reflow preserves the active agent, user draft, conversation views and dashboard telemetry
+  ---
+  duration_ms: 0.978269
+  type: 'test'
+  ...
+# Subtest: Fold rail and phone navigation are mutually exclusive after a reflow
+ok 21 - Fold rail and phone navigation are mutually exclusive after a reflow
+  ---
+  duration_ms: 1.041615
+  type: 'test'
+  ...
+# Subtest: keyboard-only height change does not recreate the Fold dashboard
+ok 22 - keyboard-only height change does not recreate the Fold dashboard
+  ---
+  duration_ms: 1.197318
+  type: 'test'
+  ...
+# Subtest: Fold portrait uses the shared width/font profile and one labelled rail
+ok 23 - Fold portrait uses the shared width/font profile and one labelled rail
+  ---
+  duration_ms: 3.529932
+  type: 'test'
+  ...
+# Subtest: current information panels and separate status keep real sources and complete scrollable rows
+ok 24 - current information panels and separate status keep real sources and complete scrollable rows
+  ---
+  duration_ms: 0.40652
+  type: 'test'
+  ...
+# Subtest: ten action controls share draw bounds while head and original orb retain separate regions
+ok 25 - ten action controls share draw bounds while head and original orb retain separate regions
+  ---
+  duration_ms: 0.941224
+  type: 'test'
+  ...
+# Subtest: Fold chat remains a real native action and both content and rail stay scrollable
+ok 26 - Fold chat remains a real native action and both content and rail stay scrollable
+  ---
+  duration_ms: 0.460641
+  type: 'test'
+  ...
+# Subtest: phone and Fold share the original live surface and preserve its lifecycle during reflow
+ok 27 - phone and Fold share the original live surface and preserve its lifecycle during reflow
+  ---
+  duration_ms: 0.356606
+  type: 'test'
+  ...
+# Subtest: existing Shizuku and device tools stay available (no replacement with parallel toolgate)
+ok 28 - existing Shizuku and device tools stay available (no replacement with parallel toolgate)
+  ---
+  duration_ms: 1.167534
+  type: 'test'
+  ...
+# Subtest: mobile builder is added to existing worker chat routing
+ok 29 - mobile builder is added to existing worker chat routing
+  ---
+  duration_ms: 0.294062
+  type: 'test'
+  ...
+# Subtest: builder stays in the existing agent UI and opens only an allowlisted Android activity
+ok 30 - builder stays in the existing agent UI and opens only an allowlisted Android activity
+  ---
+  duration_ms: 1.033021
+  type: 'test'
+  ...
+# Subtest: primary AI dashboard remains the only Android launcher, preview builder stays owner-operated
+ok 31 - primary AI dashboard remains the only Android launcher, preview builder stays owner-operated
+  ---
+  duration_ms: 1.261174
+  type: 'test'
+  ...
+# Subtest: builder is a subpage with explicit return to the original AI dashboard
+ok 32 - builder is a subpage with explicit return to the original AI dashboard
+  ---
+  duration_ms: 0.939742
+  type: 'test'
+  ...
+# Subtest: the old inaccurate PC-only guidance has been removed
+ok 33 - the old inaccurate PC-only guidance has been removed
+  ---
+  duration_ms: 1.095385
+  type: 'test'
+  ...
+# Subtest: the five beginner destinations stay reachable from the reference start screen
+ok 34 - the five beginner destinations stay reachable from the reference start screen
+  ---
+  duration_ms: 0.895245
+  type: 'test'
+  ...
+# Subtest: start-screen routes use real existing Android screens, not placeholder success actions
+ok 35 - start-screen routes use real existing Android screens, not placeholder success actions
+  ---
+  duration_ms: 0.499821
+  type: 'test'
+  ...
+# Subtest: advanced routes remain available from the start screen, its rail and the More sheet
+ok 36 - advanced routes remain available from the start screen, its rail and the More sheet
+  ---
+  duration_ms: 2.09088
+  type: 'test'
+  ...
+# Subtest: Nexus keeps real hologram and voice entry tied to Android speech and system state
+ok 37 - Nexus keeps real hologram and voice entry tied to Android speech and system state
+  ---
+  duration_ms: 0.755024
+  type: 'test'
+  ...
+# Subtest: fold, small display and enlarged-font behaviour are expressed by a pure policy
+ok 38 - fold, small display and enlarged-font behaviour are expressed by a pure policy
+  ---
+  duration_ms: 0.374623
+  type: 'test'
+  ...
+# Subtest: personalisation is a real choice and cannot silently train models or install apps
+ok 39 - personalisation is a real choice and cannot silently train models or install apps
+  ---
+  duration_ms: 0.213791
+  type: 'test'
+  ...
+# Subtest: start screen and chat never overlap after leaving or returning from chat
+ok 40 - start screen and chat never overlap after leaving or returning from chat
+  ---
+  duration_ms: 0.384899
+  type: 'test'
+  ...
+# Subtest: phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+ok 41 - phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+  ---
+  duration_ms: 1.41814
+  type: 'test'
+  ...
+# Subtest: home dashboard remains in a scrolling viewport, not hidden behind the navigation
+ok 42 - home dashboard remains in a scrolling viewport, not hidden behind the navigation
+  ---
+  duration_ms: 0.641264
+  type: 'test'
+  ...
+# Subtest: keyboard hides phone navigation and frees the same reserved space
+ok 43 - keyboard hides phone navigation and frees the same reserved space
+  ---
+  duration_ms: 0.243826
+  type: 'test'
+  ...
+# Subtest: all five bottom destinations open their own category
+ok 44 - all five bottom destinations open their own category
+  ---
+  duration_ms: 1.823048
+  type: 'test'
+  ...
+# Subtest: Fold rail has actual click targets for every visible category
+ok 45 - Fold rail has actual click targets for every visible category
+  ---
+  duration_ms: 2.647005
+  type: 'test'
+  ...
+# Subtest: dashboard cards open the matching owner-controlled centers
+ok 46 - dashboard cards open the matching owner-controlled centers
+  ---
+  duration_ms: 0.40577
+  type: 'test'
+  ...
+# Subtest: category center buttons invoke real handlers and CCC1 has a direct development entry
+ok 47 - category center buttons invoke real handlers and CCC1 has a direct development entry
+  ---
+  duration_ms: 0.655314
+  type: 'test'
+  ...
+# Subtest: signed owner package uses its own builder Activity, not a missing external preview
+ok 48 - signed owner package uses its own builder Activity, not a missing external preview
+  ---
+  duration_ms: 0.237667
+  type: 'test'
+  ...
+1..48
+# tests 48
+# suites 0
+# pass 48
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1202.370145

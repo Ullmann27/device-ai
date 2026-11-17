@@ -1,0 +1,20 @@
+✔ HTTPS setup verifies access first, converts only official origin and redacts credential tool output (803.669215ms)
+✔ missing auth gives bounded device login instructions without changing remote (93.345852ms)
+✔ owner doctor rejects a JRE and uses complete JAVA_HOME ahead of system Java (346.948707ms)
+✔ owner-local builder is a syntactically valid executable Bash program (28.608158ms)
+✔ only explicit doctor and build commands accepted; no shell injection (74.64438ms)
+✔ main app update retains exact original application ID, checked not preview app (0.472524ms)
+✔ signed build requires original existing certificate AND pinned Git HEAD (4.005401ms)
+✔ supports updated owner version after code25 with no version downgrade (0.172598ms)
+✔ runs genuine main-app Android JUnit, lint, compile and validates output (0.186583ms)
+✔ supports previously cached fully offline local builds (0.098309ms)
+✔ never downloads model weights, calls Cloud CI or installs any APK (0.188976ms)
+✔ reports only after independently verifying signer, package and content checksum (1.141936ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1931.716972

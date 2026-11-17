@@ -1,0 +1,156 @@
+{
+  "taskId": "C1-MISSING-022",
+  "status": "TARGETED_INTEGRATED_HOST_PASS",
+  "local": "9a442485f2569b39be2bcd8d6687da6f6c15c45d",
+  "remote": "0d8a3d46c409e5918c49b6f3407bb63f3519b846",
+  "tree": "8fe54137e976c718c91a4b3bbcfc02d50ca52bdd",
+  "counts": {
+    "tests": 26,
+    "pass": 26,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "cases": [
+    {
+      "number": 1,
+      "name": "initial durable source preflight rejects fsmonitor before any Git status or checkpoint"
+    },
+    {
+      "number": 2,
+      "name": "configuration changed while waiting is rejected before the next scheduler status check"
+    },
+    {
+      "number": 3,
+      "name": "configuration changed during work is rejected before post-work Git filters or success acceptance"
+    },
+    {
+      "number": 4,
+      "name": "an invalid preflight option fails closed before a source status or work callback"
+    },
+    {
+      "number": 5,
+      "name": "three local cycles pace on a fixed one-hour schedule and persist honest heartbeat"
+    },
+    {
+      "number": 6,
+      "name": "failures stay failed, sleep with increasing backoff and eventually recover"
+    },
+    {
+      "number": 7,
+      "name": "signal stopping terminates without another cycle or artificial success"
+    },
+    {
+      "number": 8,
+      "name": "invalid intervals, cycle limits and CLI mode combinations are rejected"
+    },
+    {
+      "number": 9,
+      "name": "unverified repair and interruption increment failure counters, not successes"
+    },
+    {
+      "number": 10,
+      "name": "unknown or unfinished worker result must fail closed"
+    },
+    {
+      "number": 11,
+      "name": "signal while waiting persists terminal STOPPED heartbeat"
+    },
+    {
+      "number": 12,
+      "name": "one-shot CLI exits nonzero for failed, unverified or unknown outcomes"
+    },
+    {
+      "number": 13,
+      "name": "failure backoff never retries before a user configured interval"
+    },
+    {
+      "number": 14,
+      "name": "a failing baseline without a code diagnostic remains a failed worker cycle"
+    },
+    {
+      "number": 15,
+      "name": "scheduler wait failure persists terminal ERROR rather than false WAITING"
+    },
+    {
+      "number": 16,
+      "name": "saved status validates legitimate heartbeats and rejects spoofed or corrupt states"
+    },
+    {
+      "number": 17,
+      "name": "durable restart retains total cycle budget and pending backoff"
+    },
+    {
+      "number": 18,
+      "name": "durable cancellation during work records interruption and a stopped session"
+    },
+    {
+      "number": 19,
+      "name": "pre-aborted durable run writes STOPPED without executing work"
+    },
+    {
+      "number": 20,
+      "name": "durable state fails closed on corruption, changed budgets and changed source"
+    },
+    {
+      "number": 21,
+      "name": "durable scheduling requires a finite budget and state outside source"
+    },
+    {
+      "number": 22,
+      "name": "durable integrity validation rejects plausible counter edits"
+    },
+    {
+      "number": 23,
+      "name": "source drift while waiting terminates the saved cadence before another cycle"
+    },
+    {
+      "number": 24,
+      "name": "source drift during a cycle cannot retain its reported verification success"
+    },
+    {
+      "number": 25,
+      "name": "durable loop rejects a competing scheduler before its work executes"
+    },
+    {
+      "number": 26,
+      "name": "SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "blob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "sha256": "a6f9cf6b556386ca7f04eeedaa97fdf277817ed160f40f7a6945d4b28641e71e"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "blob": "13c5661432115c883fc2b64161757aad9d1128f4",
+      "sha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.test.mjs",
+      "blob": "d325c114c5a35a5d1ce21969f5aa58d53cf4ad56",
+      "sha256": "96883a253ea904660543278b472f9b7cddacd73d0da0ad76c1bc74ebe4a02f45"
+    }
+  ],
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+    ".github/continuum/local-teamleader-loop.test.mjs"
+  ],
+  "exitCode": 0,
+  "startedAt": "2026-11-04T22:12:09.194713+00:00",
+  "finishedAt": "2026-11-04T22:12:10.196593+00:00",
+  "limits": [
+    "26 includes the four new and22 existing tests; do not add overlapping earlier4 or external183.",
+    "Existing four caller entrypoints do not supply the optional hook.",
+    "Not full-node, Android, model, device, or running branchbot acceptance."
+  ],
+  "archiveSha256": "b12189e67bbdfcc77d7d983833052d60b88dfdf3ffc129cb8627c53f4facd87a",
+  "archive": "missing022-integrated-02.tar.xz"
+}

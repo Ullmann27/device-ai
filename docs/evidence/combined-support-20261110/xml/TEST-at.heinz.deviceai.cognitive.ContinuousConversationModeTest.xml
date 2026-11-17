@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:06" hostname="1a6f5c6cf9c0" time="0.003">
+  <properties/>
+  <testcase name="dictationIsNotAConversationTurnUntilExplicitlyStarted" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="nonSilenceRecognizerErrorPausesImmediately" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="bargeInTapDuringReplyListensImmediately" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="oldReplyCallbackCannotReopenTheMicrophone" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="ownerInterruptingTheReplyPausesInsteadOfListening" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="severalGermanTurnsIncludingFollowUpRunWithoutNewGesture" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="startIsIdempotentAndStopInvalidatesTokens" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="lateRecognizerResultOfAnOldTurnIsIgnored" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="openDialogPausesSoNoVoiceTurnCanAnswerAnApprovalPrompt" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="spokenStopEndsTheModeAndIsNotSentAsChat" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.001"/>
+  <testcase name="rejectedSendPausesAndKeepsTheDraftForTheOwner" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="spokenPauseKeepsTheModeAndTapResumes" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="busyModelKeepsWaitingForTheReply" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="silenceIsRetriedOnceThenPauses" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="stopInsideASentenceIsAnOrdinaryTurn" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <testcase name="newChatSessionEndsTheMode" classname="at.heinz.deviceai.cognitive.ContinuousConversationModeTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

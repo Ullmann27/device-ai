@@ -1,0 +1,28 @@
+{
+  "taskId": "C1-COMBINED-GATES-001",
+  "label": "node-critical-01",
+  "source": {
+    "commit": "a15a2b771bb934d998b2f9c9552c30d30400f707",
+    "tree": "a457d368b13ec939f4f71438a3cfda3ef5a4c10d",
+    "dirty": ""
+  },
+  "command": [
+    "node",
+    "scripts/continuum-reliability-qa.mjs",
+    "critical",
+    "--out",
+    "/workspace/scratch/174c84456ee3/qa/critical-01"
+  ],
+  "requestedAt": "2026-11-04T20:00:08.152271+00:00",
+  "locks": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+    "/workspace/scratch/d663e8444310/qa/gradle.lock"
+  ],
+  "exitCode": 1,
+  "status": "FAIL",
+  "freeBytesAtStart": 705507328,
+  "startedAt": "2026-11-04T20:00:08.152457+00:00",
+  "finishedAt": "2026-11-04T20:00:08.267156+00:00",
+  "sourceUnchanged": true,
+  "recordedAt": "2026-11-04T20:00:08.299509+00:00"
+}

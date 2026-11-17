@@ -1,0 +1,15 @@
+{
+  "schema": "momega1-independent-caller-review-v1",
+  "sourceSha": "713949a86e10fb4fe4cc22d03f1af1afdcdf51e8",
+  "sourceHashes": {
+    ".github/continuum/coding-orchestrator.mjs": "02039b624ca34f0e2a46672e151cb92eab9ffce7331baff5b76671c25ae42b56",
+    ".github/continuum/momega1-typed-workspace-host.test.mjs": "69498c25e9ae9910d783e206b87c2b86f246c7d4d7fa12f1231e0b012506152b",
+    ".github/continuum/ccc1-workspace.mjs": "2a10e1284720a96d15ae7e5248826ee06bd6c9b0bd483c06882d0e891808e4db",
+    ".github/continuum/backlog-repair-worker.mjs": "8b36cf7aadc5d6e0a1238ed4b689d3587ef4db6a163cd4cb16f3d39ea95d1fb5"
+  },
+  "claimTestSha256": "73fb2d0d600fb86a051c48adc7fe8a54354b14bda2b3a58125b2ce344c5888ae",
+  "scope": "minimal typed coding dispatcher binding only",
+  "actualModelInference": false,
+  "qaHoldoutInspected": false,
+  "device": "FOLD7_NOT_RUN"
+}

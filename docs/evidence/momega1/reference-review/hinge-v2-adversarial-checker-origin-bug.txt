@@ -1,0 +1,34 @@
+test_01_actual_candidate_preserves_fixed_region (__main__.HingeV2Challenge.test_01_actual_candidate_preserves_fixed_region) ... ERROR
+test_02_original_hinge_does_not_get_free_v2_pass (__main__.HingeV2Challenge.test_02_original_hinge_does_not_get_free_v2_pass) ... ok
+test_03_low_hinge_with_preserved_neutral_is_rejected (__main__.HingeV2Challenge.test_03_low_hinge_with_preserved_neutral_is_rejected) ... ok
+test_04_above_eye_hinge_with_preserved_neutral_is_rejected (__main__.HingeV2Challenge.test_04_above_eye_hinge_with_preserved_neutral_is_rejected) ... ok
+test_05_front_hinge_with_preserved_neutral_is_rejected (__main__.HingeV2Challenge.test_05_front_hinge_with_preserved_neutral_is_rejected) ... ok
+test_06_lateral_hinge_with_preserved_neutral_is_rejected (__main__.HingeV2Challenge.test_06_lateral_hinge_with_preserved_neutral_is_rejected) ... ok
+test_07_missing_child_compensation_is_rejected (__main__.HingeV2Challenge.test_07_missing_child_compensation_is_rejected) ... ok
+test_08_translated_tooth_is_rejected (__main__.HingeV2Challenge.test_08_translated_tooth_is_rejected) ... ok
+test_09_changed_parent_is_rejected (__main__.HingeV2Challenge.test_09_changed_parent_is_rejected) ... ok
+test_10_nonfinite_hinge_is_rejected (__main__.HingeV2Challenge.test_10_nonfinite_hinge_is_rejected) ... ok
+test_11_skinned_jaw_dependency_is_rejected (__main__.HingeV2Challenge.test_11_skinned_jaw_dependency_is_rejected) ... ok
+test_12_changed_eye_order_is_rejected (__main__.HingeV2Challenge.test_12_changed_eye_order_is_rejected) ... ok
+test_13_upper_face_mouth_deformation_is_rejected (__main__.HingeV2Challenge.test_13_upper_face_mouth_deformation_is_rejected) ... ok
+test_14_lower_face_blink_deformation_is_rejected (__main__.HingeV2Challenge.test_14_lower_face_blink_deformation_is_rejected) ... ok
+test_15_original_landmark_cannot_be_reauthored (__main__.HingeV2Challenge.test_15_original_landmark_cannot_be_reauthored) ... ok
+test_16_original_bad_control_family_remains_rejected (__main__.HingeV2Challenge.test_16_original_bad_control_family_remains_rejected) ... ok
+
+======================================================================
+ERROR: test_01_actual_candidate_preserves_fixed_region (__main__.HingeV2Challenge.test_01_actual_candidate_preserves_fixed_region)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/jarvis-reference-review/tools/jarvis-reference-review/test_hinge_v2.py", line 56, in test_01_actual_candidate_preserves_fixed_region
+    v2.validate(self.original, self.candidate, self.legacy)["status"])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/jarvis-reference-review/tools/jarvis-reference-review/validate_hinge_v2.py", line 114, in validate
+    require(tooth_centres and actual_hinge[2] < min(p[2] for p in tooth_centres),
+  File "/workspace/jarvis-reference-review/tools/jarvis-reference-review/validate_hinge_v2.py", line 22, in require
+    raise ValueError(reason)
+ValueError: Actual hinge must be behind all teeth
+
+----------------------------------------------------------------------
+Ran 16 tests in 10.976s
+
+FAILED (errors=1)

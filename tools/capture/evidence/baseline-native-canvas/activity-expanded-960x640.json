@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "fidelity": "android_activity_host_native_canvas_api28_explicit_2d_head",
+  "source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "pixel_width": 960,
+  "pixel_height": 640,
+  "viewport_width_dp": 960,
+  "viewport_height_dp": 640,
+  "density": 1,
+  "font_scale": 1,
+  "animation_duration_scale": 0,
+  "head_mode": "existing_2d_renderer_explicitly_selected",
+  "native_filament_verified": false,
+  "physical_device_verified": false,
+  "data_policy": "isolated empty test storage; real application startup; no invented status data",
+  "bounds_coordinate_space": "each View relative to its real parent; no synthetic composition",
+  "home_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 814,
+    "bottom": 640
+  },
+  "avatar_bounds": {
+    "left": 215,
+    "top": 60,
+    "right": 584,
+    "bottom": 565
+  },
+  "shell_bounds": {
+    "left": 0,
+    "top": 0,
+    "right": 814,
+    "bottom": 640
+  },
+  "png_sha256": "f6eed4d949e5e0e740041c43dc589274f5d295b6c0a4c24fbbeb827d9fec744d"
+}

@@ -1,0 +1,194 @@
+{
+  "expectedResearchSha256": "63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca",
+  "actualResearchSha256": "49df4e35ab58b0e4d8cf8561d2fae2e28a9211ef227dc1e67146bf0be9debed7",
+  "fullRebuildByteIdentical": false,
+  "jsonIdentical": true,
+  "allPositionsByteIdentical": true,
+  "allTriangleSetsIdentical": true,
+  "allMorphsByteIdentical": true,
+  "checks": [
+    {
+      "mesh": "EyeballLeftMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": true,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "EyeballRightMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "FaceMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": true,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "IrisLeftMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "IrisRightMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "MouthInteriorMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "NeuralThreadsMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": true,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "NeuralThreadsMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": true,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "PupilLeftMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "PupilRightMesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothLower0Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothLower1Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothLower2Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothLower3Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothLower4Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothLower5Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothLower6Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothLower7Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothUpper0Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothUpper1Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothUpper2Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothUpper3Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothUpper4Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothUpper5Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothUpper6Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": false,
+      "morphsByteIdentical": true
+    },
+    {
+      "mesh": "ToothUpper7Mesh",
+      "positionsByteIdentical": true,
+      "triangleSetsIdentical": true,
+      "indicesByteIdentical": true,
+      "morphsByteIdentical": true
+    }
+  ],
+  "limitation": "Rigid UV-sphere tessellation ordering and normal float rounding may differ across Blender rebuilds. Do not claim byte-identical procedural GLB rebuild."
+}

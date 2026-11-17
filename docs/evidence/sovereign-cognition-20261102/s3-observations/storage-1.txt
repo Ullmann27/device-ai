@@ -1,0 +1,8 @@
+Speicherbeobachtung v1
+Bereich: App-Datenträger
+Gesamt: 5226229760 Byte
+Für die App nutzbar: 5226082304 Byte
+Zeitpunkt: 1793625842182
+ToolExecutionReceipt(callId=authorized-storage-1-1, toolName=get_storage_info, argumentFingerprint=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, sanitizedArguments={}, risk=READ_ONLY, createdAtMillis=1793625842178, transitions=[ToolReceiptTransition(state=PROPOSED, atMillis=1793625842178), ToolReceiptTransition(state=APPROVED, atMillis=1793625842180), ToolReceiptTransition(state=STARTED, atMillis=1793625842181), ToolReceiptTransition(state=SUCCEEDED, atMillis=1793625842183)], outputLength=133, outputSha256=590094eb71907e645fa3a8c00a99c9085f8331e51c34e8f27ac4d9678767ca15)
+independentFileStoreTotal=5226229760
+timeBounds=1793625842177..1793625842185

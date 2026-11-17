@@ -1,0 +1,39 @@
+{
+  "gate": "node-full",
+  "startedAt": "2026-11-07T06:26:46.270310+00:00",
+  "startedEpochMillis": 1794032806270,
+  "finishedAt": "2026-11-07T06:30:11.481998+00:00",
+  "sourceBefore": {
+    "commit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+    "branch": "codex/continuum-code48-fullstage-cinema-20261107",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+    "branch": "codex/continuum-code48-fullstage-cinema-20261107",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "node",
+        "scripts/continuum-reliability-qa.mjs",
+        "full-node",
+        "--out",
+        "/workspace/scratch/3d1967be6193/qa/combined/final-5d91442e98f7-notice-final/full-node"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate",
+      "exitCode": 0
+    }
+  ],
+  "logSha256": "0372fe31bd10569bc290b9b2bf081c169a268e664b351360a53cce0dbff320e6",
+  "logBytes": 272,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "PASS"
+}

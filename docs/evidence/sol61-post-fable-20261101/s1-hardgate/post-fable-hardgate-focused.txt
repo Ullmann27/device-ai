@@ -1,0 +1,33 @@
+JUnit version 4.13.2
+.E.E....E.......E.......
+Time: 0.116
+There were 4 failures:
+1) ownerCanStillExplicitlyAuthorizeNonNegatedSearch(at.heinz.deviceai.cognitive.NetworkTurnConstraintTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.cognitive.InternetConsentPolicy.clearPending$app()'
+	at at.heinz.deviceai.cognitive.ApprovedWebToolGate.prepare(ApprovedWebToolGate.kt:40)
+	at at.heinz.deviceai.cognitive.NetworkTurnConstraintTest.ownerCanStillExplicitlyAuthorizeNonNegatedSearch(NetworkTurnConstraintTest.kt:106)
+2) askAndAlwaysOnNeverMintNetworkTicketForNegatedTurn(at.heinz.deviceai.cognitive.NetworkTurnConstraintTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.cognitive.InternetConsentPolicy.clearPending$app()'
+	at at.heinz.deviceai.cognitive.ApprovedWebToolGate.prepare(ApprovedWebToolGate.kt:40)
+	at at.heinz.deviceai.cognitive.NetworkTurnConstraintTest.askAndAlwaysOnNeverMintNetworkTicketForNegatedTurn(NetworkTurnConstraintTest.kt:97)
+3) mixedNegativePositiveFailsClosedAndCannotReusePriorApproval(at.heinz.deviceai.cognitive.NetworkTurnConstraintTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.cognitive.InternetConsentPolicy.clearPending$app()'
+	at at.heinz.deviceai.cognitive.ApprovedWebToolGate.prepare(ApprovedWebToolGate.kt:40)
+	at at.heinz.deviceai.cognitive.NetworkTurnConstraintTest.mixedNegativePositiveFailsClosedAndCannotReusePriorApproval(NetworkTurnConstraintTest.kt:115)
+4) newlyMintedSessionDuringCaptureCannotReachTheOldTurnDispatcher(at.heinz.deviceai.cognitive.TurnScopedInternetModeTest)
+java.lang.AssertionError: unexpected exception type thrown; expected:<java.lang.IllegalStateException> but was:<java.lang.NoSuchMethodError>
+	at org.junit.Assert.assertThrows(Assert.java:1020)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.cognitive.TurnScopedInternetModeTest.newlyMintedSessionDuringCaptureCannotReachTheOldTurnDispatcher(TurnScopedInternetModeTest.kt:76)
+	... 30 trimmed
+Caused by: java.lang.NoSuchMethodError: 'void at.heinz.deviceai.cognitive.InternetConsentPolicy.clearPending$app()'
+	at at.heinz.deviceai.cognitive.ApprovedWebToolGate.authorizeAlwaysOn(ApprovedWebToolGate.kt:48)
+	at at.heinz.deviceai.cognitive.TurnScopedInternetModeTest.newlyMintedSessionDuringCaptureCannotReachTheOldTurnDispatcher$lambda$9$lambda$7(TurnScopedInternetModeTest.kt:80)
+	at at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(TurnScopedInternetMode.kt:19)
+	at at.heinz.deviceai.cognitive.TurnScopedInternetModeTest.newlyMintedSessionDuringCaptureCannotReachTheOldTurnDispatcher$lambda$9(TurnScopedInternetModeTest.kt:77)
+	at org.junit.Assert.assertThrows(Assert.java:1001)
+	... 33 more
+
+FAILURES!!!
+Tests run: 20,  Failures: 4
+

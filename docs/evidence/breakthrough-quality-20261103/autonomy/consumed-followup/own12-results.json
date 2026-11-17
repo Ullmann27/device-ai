@@ -1,0 +1,1259 @@
+{
+  "fixtureSha256": "05e0a45a94b71b3d5542643ab801cefd7e8a631a1113ca133d934b269b50a16b",
+  "cases": [
+    {
+      "id": "QB-A-001",
+      "scenario": "DUPLICATE_NAME_DIFFERENT_FILES",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-001-gupKWq",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "21d88d09db81148c4cd06a4f446c445f09bae0bbbc098ccec81483cc8d6ffbd7",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "450ff910642833d57c5cfc53e652d50a5c315de1fa5908c7088ab585f1db5a75",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "f340af24d3e7fe7242675f62b4766f02c13978dba450804dceaac44d70146c65",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "21d88d09db81148c4cd06a4f446c445f09bae0bbbc098ccec81483cc8d6ffbd7",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "1556a9b8ba4fdca51abb3842c238b8a728b60695ba5cb8e6fa755401f8541132",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "e48d6c814733608fc555aa98d7a393fe937528a0c55b45426978584736d35b73",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "QB-A-001",
+      "scenario": "DUPLICATE_NAME_DIFFERENT_FILES",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-001-gupKWq",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "ab8627338ec17c38ab1fe23f1f97c7080489d4d5898d9ac610946a5c3a9e7de2",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED",
+          "TARGET_IDENTITY_AMBIGUOUS",
+          "TARGET_NOT_PASSING_IN_GREEN",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "f1917df0102109e1c7f030179da3e13418ea62a6d0be69fca0bc67a9804bfbab",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 2
+        },
+        "green": {
+          "xmlSha256": "51cd05c878d58d6a34564b0d6bde3ffbd32d6ee00855f7d0e965fab45e7944cb",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "ab8627338ec17c38ab1fe23f1f97c7080489d4d5898d9ac610946a5c3a9e7de2",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED",
+          "TARGET_IDENTITY_AMBIGUOUS",
+          "TARGET_NOT_PASSING_IN_GREEN",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "62ea8348c730d5ffc9b36690a82e3f171a600685e160b6afe7c453918adb8cdf",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 2
+        },
+        "green": {
+          "xmlSha256": "1eac9029762f70286203d632703eebd79580b9556e90fe1335ec8bf29bd99c45",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-002",
+      "scenario": "DUPLICATE_NAME_DIFFERENT_SUITES",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-002-vAlDmF",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "a11298aa5ae4109b9fc54bff80c6b893f7f33247a10e4ea20ac41b29dcc1c834",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "78a0d87193480aad73ffeef4fa7671625d9e80bcd42a00508b790d40ec29ec0c",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "f3e890ae20cd6a7cf8acdfe30402e6a2202ffd7cea4a984ec7db5c3884fff17e",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "a11298aa5ae4109b9fc54bff80c6b893f7f33247a10e4ea20ac41b29dcc1c834",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "078a28b2d09851610fa33660b9e9385df9303e6c73e4fd28b231e3c9d5a9a6ff",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "425c0ea7852d4990ee4a841c03f368460dfc7a93a02ab42b04b1c45b0f19d223",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "QB-A-002",
+      "scenario": "DUPLICATE_NAME_DIFFERENT_SUITES",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-002-vAlDmF",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "051cd80f8e09574d0378e4cccc650f1b8254cc4a5ae53441ff559e104aff450e",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED",
+          "TARGET_IDENTITY_AMBIGUOUS",
+          "TARGET_NOT_PASSING_IN_GREEN",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "73b4440663eceb95e2bde73d65bef50652f79918453bb3fd3015bf61cd7f22c6",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 2
+        },
+        "green": {
+          "xmlSha256": "4c42e1d84b962460157d4a7833c7d48e39e2bd0d5d1b749e3223e6c7b0544e5a",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "051cd80f8e09574d0378e4cccc650f1b8254cc4a5ae53441ff559e104aff450e",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED",
+          "TARGET_IDENTITY_AMBIGUOUS",
+          "TARGET_NOT_PASSING_IN_GREEN",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "40aafefaeabb994ecc860a21da3430a483d3adf9bf2157ae76e9347ea70e9be2",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 2
+        },
+        "green": {
+          "xmlSha256": "cc29bcd7036414c7660eb6eeabae16ef7b56755753b663086f9a2f96e4b82362",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-003",
+      "scenario": "DUPLICATE_OCCURRENCES",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-003-5rcPds",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c6bf3c36a3661ffb067f0d909463626d2b9f492ff1ae50ddff2b95fa12ccbc4f",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "2a4b8d7737192dd0bdd51c75439cea5c493d7c52faa17e9efbd74ae3d1ebdebe",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "818809a65cec5b349405f7a9b1202176ed8852cbb42444f7e4883e72930804d6",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c6bf3c36a3661ffb067f0d909463626d2b9f492ff1ae50ddff2b95fa12ccbc4f",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "1ac4e4caaf7ee77ba47d0c337fb7228ad74e2da73b16b349dfc032e45f257086",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "c9f64bcb3608c656071fe06506cf2f8e9cdabb5ebe9122b025d1d23eb8c8428d",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "QB-A-003",
+      "scenario": "DUPLICATE_OCCURRENCES",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-003-5rcPds",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "4f5800bcfe59305e1e903603c9c9d23f398647b10e2b87deca9e6657c7cbc8b1",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED",
+          "TARGET_IDENTITY_AMBIGUOUS",
+          "TARGET_NOT_PASSING_IN_GREEN",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "19c0f37e3593cd881bfa3530bf84479129106dc79711f1de259732f951d2e6dc",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 2
+        },
+        "green": {
+          "xmlSha256": "b362b89b88ff3b1b3af6099c7e8056e2e652b1bf6949d96c382f1dbc0731183f",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "4f5800bcfe59305e1e903603c9c9d23f398647b10e2b87deca9e6657c7cbc8b1",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED",
+          "TARGET_IDENTITY_AMBIGUOUS",
+          "TARGET_NOT_PASSING_IN_GREEN",
+          "CLAIMED_GREEN_TARGETS_DIFFER"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "13514278dbb02baecfff316d552870ec1d3406bf6b1553e2f87a865fc8fcbb63",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 2
+        },
+        "green": {
+          "xmlSha256": "a863a65e91c6aba802c7295e091ad48980eada574a1ff4adfc0c7cd455cb46fe",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-004",
+      "scenario": "NON_TARGET_REMOVED",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-004-h3rqWo",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "52d7483ba6a725be03524be2f8b471c81cdfcd4a54f2ed888eb5cb9fa8f0b5b6",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "c7383de0393aed564fbf15ba47a01c1d3ccd17e8d3aa8ce20131f6f35340eb5a",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "9b6d8574775fc2e9c913ad14c592c07cdae6d30481dc5a25ed0cad244a405503",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "52d7483ba6a725be03524be2f8b471c81cdfcd4a54f2ed888eb5cb9fa8f0b5b6",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "bfd6bc65bc71d4082bc486f947190ca18b98a5f0afcbaca2f1d4525d01c53df9",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "2a8ed5189e95123f2c4b7d53599d5ba64d6d337e6b3d19d2b30684525e82b823",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "QB-A-004",
+      "scenario": "NON_TARGET_REMOVED",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-004-h3rqWo",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "52d7483ba6a725be03524be2f8b471c81cdfcd4a54f2ed888eb5cb9fa8f0b5b6",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "f36af60b746e76b21fa5adc386ac02eac6379ebc59eb240c1d7bc0b37ec045a0",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "27ed1e3484f365022aed7bf624e747e96c008259bd85780a4e583376a01aa7a6",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "52d7483ba6a725be03524be2f8b471c81cdfcd4a54f2ed888eb5cb9fa8f0b5b6",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "3372371f4013d304793235f471314573efd4f80c3f4624538888ee5740e2a692",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "5f32f9e281745913ee246782ba6b44ea0fdf7f141db240b810968b211e240c54",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-005",
+      "scenario": "NON_TARGET_RENAMED",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-005-4QQ6Jr",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "8f88cb76f6e01658459ee69e6b6e3ce8c555bf85e251fafe68da8b6a0a7cb425",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "b92b3da843c44443dc59b4a8b2e27a7510cdb09136a434dfbd3afd0bb3426c67",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "18a9fade8d4c5f0ae9ed425e7c2757919eef151f488d64d88959d6907d547cce",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "8f88cb76f6e01658459ee69e6b6e3ce8c555bf85e251fafe68da8b6a0a7cb425",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "cae921997eed14e68b52448d642a201763c67bb52aed1193d8cbb9fe99205e13",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "6745706d167373e316dd2f77befce52ba22c8f437b61946dae710b028c7a50f0",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "QB-A-005",
+      "scenario": "NON_TARGET_RENAMED",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-005-4QQ6Jr",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "8f88cb76f6e01658459ee69e6b6e3ce8c555bf85e251fafe68da8b6a0a7cb425",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "d54dd8cf4f625d13480b83d1c674a72da09ec9dbe9dc16ad4c54d482aa8d1ac3",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "d752b7e147f358b1ad1f9ec37061bf91d2212582d2b383bcdd6fb8303db06240",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "8f88cb76f6e01658459ee69e6b6e3ce8c555bf85e251fafe68da8b6a0a7cb425",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "e2865a40c38c420d554895fc9b5419153735a1014f64cd1e0d04bff04f03a6f4",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "3ea77dc1b6ad887d96be87c60b9ace10987ec416268ed6e79be875217552d869",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-006",
+      "scenario": "PASS_BECOMES_SKIPPED",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-006-k66lZ3",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "3b922fcad15958946b8f09f88e27162d71f872a6113b143470c42e8d39a2b450",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "eb363af8fca2b0a73f6274fbc9ada1aed525bddc71cfb38509f67b3c0cd0a441",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "15f5badd9bb16e99cae305d5af44eaa58f068660ccb22e44388b1a0ff570c4cd",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "3b922fcad15958946b8f09f88e27162d71f872a6113b143470c42e8d39a2b450",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "0eb1e191e4919b8e35fbf27ac20bb2da88632409f502e6b8bde9cb62e241d210",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "92db71c03ffb786b53bc74dd3bec9049bbe909ae356f2214a7acb804b53a8fb3",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "QB-A-006",
+      "scenario": "PASS_BECOMES_SKIPPED",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-006-k66lZ3",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "3b922fcad15958946b8f09f88e27162d71f872a6113b143470c42e8d39a2b450",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_EXECUTION_CHANGED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "769d6f8c4480158b3ee3a4547e8ddf68c0907f1736fc91b3b85b5e8cf4454fcc",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "139c5c6bfad8e864e938aaa20f9ab0a73f92d98830b9a09db857c2aa8c9a1aa1",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "3b922fcad15958946b8f09f88e27162d71f872a6113b143470c42e8d39a2b450",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_EXECUTION_CHANGED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "a7dcc392fb26f86e740cd813ff9d11516285db0536c5383a87634265b7313cf8",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "080fa681e770a22e9468bb3e6dfe56b5e95a03354848549906509f1e6701982e",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-007",
+      "scenario": "SKIP_BECOMES_TODO",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-007-IF9YnO",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "64f0580e32d1b1af2b5b8e51b7eb23522a991d2e2a6f7fc1e7d6a8afbfd6e651",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "459185ecb77d28d826eaf0a197a346fabb7c0cce207bf345e23723a2c1345295",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "7fb6d5f25864d24c78e62261a9af6e45e89e5f013b2bc3b14d69b2ab5bebc15c",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "64f0580e32d1b1af2b5b8e51b7eb23522a991d2e2a6f7fc1e7d6a8afbfd6e651",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "b6233838f37277f3d4e0e46d5e7ef4086317358371e67d87868f7fe585a225e5",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "4dfc630dee449094a1d087bb8a8d7a615079711ab3e66237ea238e972f21d862",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "QB-A-007",
+      "scenario": "SKIP_BECOMES_TODO",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-007-IF9YnO",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "64f0580e32d1b1af2b5b8e51b7eb23522a991d2e2a6f7fc1e7d6a8afbfd6e651",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_EXECUTION_CHANGED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "dcb57692d002f0148d234e051ac6ff8b3b5c144df3ba14a65caa53b1b9258e69",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "9bb16b704ef2e808bf425300462f906137a88dd0dd73bb62d20a860cc9b6dac1",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "64f0580e32d1b1af2b5b8e51b7eb23522a991d2e2a6f7fc1e7d6a8afbfd6e651",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_EXECUTION_CHANGED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "95bb37cc5ebaea144b060c39add6c914ed15c0564dd415ecb918d59f704563ce",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "8822d793b81376fa8f0ab795e8d719a4ee49cb4bec335e6ca6d8464f477d778a",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-008",
+      "scenario": "CHILD_SUITE_MOVED",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-008-JbHw1V",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "b2df7d8a31b35ec5f02dd5bfc5c4e69cfe160f2d929de61e005490d416513464",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "8180a416079a236d036058ce518ac81b2f160adcdedf45779ae82b2c56d27d98",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "2666117a087b10feeb0bef7cc5370641f9d884e9822cd2d272f327c6d2acc50f",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "b2df7d8a31b35ec5f02dd5bfc5c4e69cfe160f2d929de61e005490d416513464",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "28d03b36b316ec10992d2c6b07ddb27baf573ccc068bb45390213b7eed7d11dc",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "3cfab110be45a55d193fdb4c523566d76738f9e734608bb9fc5d8d81f5792293",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "QB-A-008",
+      "scenario": "CHILD_SUITE_MOVED",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-008-JbHw1V",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "b2df7d8a31b35ec5f02dd5bfc5c4e69cfe160f2d929de61e005490d416513464",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "3ae9568175942d63f3ec1512dcea63877a4daee256b4363676d81e07d30fd644",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "c8961d12a9f24360f7cb083f9dcc8f2ed7f064feb0e1cbaef5d67d40e48e28be",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "b2df7d8a31b35ec5f02dd5bfc5c4e69cfe160f2d929de61e005490d416513464",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "4a56a74675d218add26d730e8153512e8694adf5fcf4fc4e40c37c6011ff0b68",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "1c5640c37886a639e972218c75005e8291096464c9b9c5bb1a2291c0d4cb0f75",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-009",
+      "scenario": "FOREIGN_COMMIT",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-009-0QeIGN",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c4b463a78d4377af7fd9c6676c721c78cfb80ec757048c8e18e59d6d747ed538",
+        "verdict": "REJECTED",
+        "reasons": [
+          "COMMIT_NOT_IN_REPOSITORY"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c4b463a78d4377af7fd9c6676c721c78cfb80ec757048c8e18e59d6d747ed538",
+        "verdict": "REJECTED",
+        "reasons": [
+          "COMMIT_NOT_IN_REPOSITORY"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-009",
+      "scenario": "FOREIGN_COMMIT",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-009-0QeIGN",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c4b463a78d4377af7fd9c6676c721c78cfb80ec757048c8e18e59d6d747ed538",
+        "verdict": "REJECTED",
+        "reasons": [
+          "COMMIT_NOT_IN_REPOSITORY"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "c4b463a78d4377af7fd9c6676c721c78cfb80ec757048c8e18e59d6d747ed538",
+        "verdict": "REJECTED",
+        "reasons": [
+          "COMMIT_NOT_IN_REPOSITORY"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-010",
+      "scenario": "PATCH_PATH_MISMATCH",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-010-j0yXkQ",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "a5589910ab4d870d1adc4b312cb7042cfd9477e06e8d3a69f791c4ee5a0bb7b2",
+        "verdict": "REJECTED",
+        "reasons": [
+          "PATCH_HASH_MISMATCH"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "a5589910ab4d870d1adc4b312cb7042cfd9477e06e8d3a69f791c4ee5a0bb7b2",
+        "verdict": "REJECTED",
+        "reasons": [
+          "PATCH_HASH_MISMATCH"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-010",
+      "scenario": "PATCH_PATH_MISMATCH",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-010-j0yXkQ",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "a5589910ab4d870d1adc4b312cb7042cfd9477e06e8d3a69f791c4ee5a0bb7b2",
+        "verdict": "REJECTED",
+        "reasons": [
+          "PATCH_HASH_MISMATCH"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "a5589910ab4d870d1adc4b312cb7042cfd9477e06e8d3a69f791c4ee5a0bb7b2",
+        "verdict": "REJECTED",
+        "reasons": [
+          "PATCH_HASH_MISMATCH"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": null,
+        "red": null,
+        "green": null
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-011",
+      "scenario": "INTERRUPTED_BASELINE",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-011-XpXAKy",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "7b9f5b1bbfa35729046a14eadd4c42a19cd51af51c2db68ba6eb06e1783c6382",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "5d53114ae90d292441635831b83ff33e59dd82e32705a150dc19130074b4d662",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "2e761965dd19d4c263c13c3ef21f204ed63b40ef44d2a5f5c767f2a43bf24cab",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "7b9f5b1bbfa35729046a14eadd4c42a19cd51af51c2db68ba6eb06e1783c6382",
+        "verdict": "REJECTED",
+        "reasons": [
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "77370b09a8d616a511fd5f976f0021d6ef21dc3603a3c8a08d83148c038ede89",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "fce5703e1bace80c6e6b383fd11e5b83de33e2755f6a7c891a3434bb15dd1fc5",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-011",
+      "scenario": "INTERRUPTED_BASELINE",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-011-XpXAKy",
+      "expected": "REJECTED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "7b9f5b1bbfa35729046a14eadd4c42a19cd51af51c2db68ba6eb06e1783c6382",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING",
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "35c7fb0602952505957811e8f94d6c5b8a066f23b46e2e9c2ac963a654720667",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "c8ecd09ccea4879222e6c6a32bfb91a1de080fbe61af7a8a755074fa3d11ba4d",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "7b9f5b1bbfa35729046a14eadd4c42a19cd51af51c2db68ba6eb06e1783c6382",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING",
+          "RED_FAILS_OUTSIDE_TARGETS",
+          "TARGET_MISSING_IN_RED"
+        ],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "e2399b871a71d5d21ed45e09c9cc36212d96c4bc5a6f3fa08763d0dbc18bc9ff",
+          "exitCode": 1,
+          "executed": 1,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "e6e531e927f197c185f274d2844d885b8fe6180cb5ff20b435cddcecc11f87de",
+          "exitCode": 0,
+          "executed": 1,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-012",
+      "scenario": "UNCHANGED_POSITIVE",
+      "label": "baseline",
+      "sourceSha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+      "sourceHash": "39f4669cff094c5c25f3d416d95084b108c139c12e0ed4ccba14988b9478ccf8",
+      "repo": "/tmp/qa-executor-QB-A-012-VQmkjY",
+      "expected": "VERIFIED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "2cbd8c3ff4e6fb0877ae6ddc74411fc80a06a96234bc1357431f7de9a03caa3b",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "277140008c722f3bf0d95014fcb638c929b590ad7607eb0d05a04df7c849b772",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "82b1994898828d90a7aababbfaac1bbb318800deaf710b20c7ac69ebcd835314",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "2cbd8c3ff4e6fb0877ae6ddc74411fc80a06a96234bc1357431f7de9a03caa3b",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "4f9cba81cab5637e581167b8bf9121d7bdc6feb95ac1bf6010b979a01e5eb9b7",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "9f12a2c88db7615a4592f0b2dd56efe2aec0f05faf74757aefbe6f060f5ead82",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "QB-A-012",
+      "scenario": "UNCHANGED_POSITIVE",
+      "label": "candidate",
+      "sourceSha": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+      "sourceHash": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+      "repo": "/tmp/qa-executor-QB-A-012-VQmkjY",
+      "expected": "VERIFIED",
+      "commit": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "2cbd8c3ff4e6fb0877ae6ddc74411fc80a06a96234bc1357431f7de9a03caa3b",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "78d9225bc99bf1ae944d885b111fad550abfba4e2fe630c5b39264eb67f09e01",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "978fbcaa07d6b79e6dbdf9c33adc270b44a59f4645c4b0100a8682bd55b7f48b",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "patch": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "2cbd8c3ff4e6fb0877ae6ddc74411fc80a06a96234bc1357431f7de9a03caa3b",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "436bbd491c845fc104a236e3817def54ba8abe0e9f42d4d35df2f5146b0fd5e0",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "04de6a9fa237edb0594978ae790de524b18be2f8fb818bc27deb93fe4c0da008",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      },
+      "pass": true
+    }
+  ]
+}

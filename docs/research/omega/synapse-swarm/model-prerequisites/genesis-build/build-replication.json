@@ -1,0 +1,21 @@
+{
+  "observedUtc": "2026-11-03T20:50:16.794422+00:00",
+  "sourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+  "sourceTree": "42065e172024f95eb242763caa06812c09d363e7",
+  "command": [
+    "/workspace/synapse-local-model/build-tools/cmake-wheel/cmake/data/bin/cmake",
+    "--build",
+    "/workspace/synapse-local-model/build-cpu",
+    "--target",
+    "llama-completion",
+    "--parallel",
+    "2"
+  ],
+  "maxCompileJobs": 2,
+  "exit": 0,
+  "wallSeconds": 130.7437581610011,
+  "childrenUserCpuSeconds": 237.230962,
+  "childrenSystemCpuSeconds": 10.989744,
+  "childrenMaxRssKiB": 520540,
+  "inferenceStatus": "NOT_RUN"
+}

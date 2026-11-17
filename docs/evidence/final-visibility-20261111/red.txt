@@ -1,0 +1,21 @@
+JUnit version 4.13.2
+.....E...E.
+Time: 0.038
+There were 2 failures:
+1) cinemaAdaptationRetainsCoolInferenceLighting(at.heinz.deviceai.ui.JarvisRenderQualityTest)
+java.lang.AssertionError: EXP15 must retain cool lighting
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.ui.JarvisRenderQualityTest.cinemaAdaptationRetainsCoolInferenceLighting(JarvisRenderQualityTest.kt:12)
+2) cinemaLightingCannotOverrideSafetySignals(at.heinz.deviceai.ui.JarvisRenderQualityTest)
+java.lang.AssertionError: expected:<false> but was:<true>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ui.JarvisRenderQualityTest.cinemaLightingCannotOverrideSafetySignals(JarvisRenderQualityTest.kt:25)
+
+FAILURES!!!
+Tests run: 9,  Failures: 2
+

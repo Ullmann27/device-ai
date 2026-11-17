@@ -1,0 +1,224 @@
+1905  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", ["node", "tools/continuum-worker-proof/run-m3.mjs"], 0x7ffe0fb6a700 /* 63 vars */) = 0
+1932  execve("/home/agent/.local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1932  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1932  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1932  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1932  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1932  execve("/opt/codex/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1932  execve("/usr/local/sbin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1932  execve("/usr/local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = 0
+1932  exit_group(0)                     = ?
+1932  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1932, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1933  execve("/home/agent/.local/bin/git", ["git", "branch", "--show-current"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1933  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "branch", "--show-current"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1933  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "branch", "--show-current"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1933  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "branch", "--show-current"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1933  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "branch", "--show-current"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1933  execve("/opt/codex/bin/git", ["git", "branch", "--show-current"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1933  execve("/usr/local/sbin/git", ["git", "branch", "--show-current"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1933  execve("/usr/local/bin/git", ["git", "branch", "--show-current"], 0x3b427c30 /* 63 vars */) = 0
+1933  exit_group(0)                     = ?
+1933  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1933, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1936  execve("/home/agent/.local/bin/git", ["git", "init", "-q", "-b", "synapse-m3-fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1936  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "init", "-q", "-b", "synapse-m3-fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1936  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "init", "-q", "-b", "synapse-m3-fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1936  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "init", "-q", "-b", "synapse-m3-fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1936  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "init", "-q", "-b", "synapse-m3-fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1936  execve("/opt/codex/bin/git", ["git", "init", "-q", "-b", "synapse-m3-fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1936  execve("/usr/local/sbin/git", ["git", "init", "-q", "-b", "synapse-m3-fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1936  execve("/usr/local/bin/git", ["git", "init", "-q", "-b", "synapse-m3-fixture"], 0x3b427c30 /* 63 vars */) = 0
+1936  exit_group(0)                     = ?
+1936  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1936, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1953  execve("/home/agent/.local/bin/git", ["git", "add", "."], 0x3b429d80 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1953  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "add", "."], 0x3b429d80 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1953  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "add", "."], 0x3b429d80 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1953  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "add", "."], 0x3b429d80 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1953  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "add", "."], 0x3b429d80 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1953  execve("/opt/codex/bin/git", ["git", "add", "."], 0x3b429d80 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1953  execve("/usr/local/sbin/git", ["git", "add", "."], 0x3b429d80 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1953  execve("/usr/local/bin/git", ["git", "add", "."], 0x3b429d80 /* 63 vars */) = 0
+1953  exit_group(0)                     = ?
+1953  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1953, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1954  execve("/home/agent/.local/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qm", "seed: bounded arithmetic fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1954  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qm", "seed: bounded arithmetic fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1954  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qm", "seed: bounded arithmetic fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1954  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qm", "seed: bounded arithmetic fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1954  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qm", "seed: bounded arithmetic fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1954  execve("/opt/codex/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qm", "seed: bounded arithmetic fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1954  execve("/usr/local/sbin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qm", "seed: bounded arithmetic fixture"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1954  execve("/usr/local/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qm", "seed: bounded arithmetic fixture"], 0x3b427c30 /* 63 vars */) = 0
+1964  execve("/usr/local/libexec/git-core/git", ["/usr/local/libexec/git-core/git", "maintenance", "run", "--auto", "--quiet", "--detach"], 0x5621ce967870 /* 69 vars */) = 0
+1964  exit_group(0)                     = ?
+1964  +++ exited with 0 +++
+1954  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1964, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1954  exit_group(0)                     = ?
+1954  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1954, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1974  exit_group(0)                     = ?
+1974  +++ exited with 0 +++
+1975  execve("/home/agent/.local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1975  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1975  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1975  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1975  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1975  execve("/opt/codex/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1975  execve("/usr/local/sbin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+1975  execve("/usr/local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = 0
+1975  exit_group(0)                     = ?
+1975  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1975, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1977  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "--test", ".github/continuum/math.test.mjs"], 0x3b427c30 /* 63 vars */) = 0
+2021  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "--experimental-addon-modules", "--test-coverage-functions=0", "--test-concurrency=0", "--inspect-publish-uid=stderr,http", "--inspect-port=127.0.0.1:9229", "--report-signal=SIGUSR2", "--test-coverage-lines=0", "--test-isolation=process", "--heap-prof-interval=524288", "--cpu-prof-interval=1000", "--v8-pool-size=4", "--trace-event-file-pattern=node_trace.${rotation}.log", "--secure-heap-min=2", "--network-family-autoselection-attempt-timeout=250", "--tls-cipher-list=TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA", "--use-largepages=off", "--secure-heap=0", "--watch-kill-signal=SIGTERM", "--test-coverage-branches=0", "--max-http-header-size=16384", "--test-timeout=0", "--node-snapshot", "--stack-trace-limit=10", "--heapsnapshot-near-heap-limit=0", ".github/continuum/math.test.mjs"], 0x1f17f760 /* 65 vars */) = 0
+2025  +++ exited with 0 +++
+2024  +++ exited with 0 +++
+2022  +++ exited with 0 +++
+2027  +++ exited with 0 +++
+2023  +++ exited with 0 +++
+2021  exit_group(0)                     = ?
+2045  +++ exited with 0 +++
+2021  +++ exited with 0 +++
+1977  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2021, si_uid=1000, si_status=0, si_utime=5 /* 0.05 s */, si_stime=3 /* 0.03 s */} ---
+2001  +++ exited with 0 +++
+2000  +++ exited with 0 +++
+1998  +++ exited with 0 +++
+1999  +++ exited with 0 +++
+1997  +++ exited with 0 +++
+1977  exit_group(0)                     = ?
+1977  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1977, si_uid=1000, si_status=0, si_utime=6 /* 0.06 s */, si_stime=5 /* 0.05 s */} ---
+2064  execve("/home/agent/.local/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qam", "fault: unresolved numeric helper"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2064  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qam", "fault: unresolved numeric helper"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2064  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qam", "fault: unresolved numeric helper"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2064  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qam", "fault: unresolved numeric helper"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2064  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qam", "fault: unresolved numeric helper"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2064  execve("/opt/codex/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qam", "fault: unresolved numeric helper"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2064  execve("/usr/local/sbin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qam", "fault: unresolved numeric helper"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2064  execve("/usr/local/bin/git", ["git", "-c", "user.name=continuum-m3-fixture", "-c", "user.email=m3-fixture@example.invalid", "commit", "-qam", "fault: unresolved numeric helper"], 0x3b427c30 /* 63 vars */) = 0
+2065  execve("/usr/local/libexec/git-core/git", ["/usr/local/libexec/git-core/git", "maintenance", "run", "--auto", "--quiet", "--detach"], 0x55efc2881120 /* 69 vars */) = 0
+2065  exit_group(0)                     = ?
+2065  +++ exited with 0 +++
+2064  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2065, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+2064  exit_group(0)                     = ?
+2064  +++ exited with 0 +++
+2067  exit_group(0)                     = ?
+2067  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2064, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+2075  execve("/home/agent/.local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2075  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2075  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2075  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2075  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2075  execve("/opt/codex/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2075  execve("/usr/local/sbin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2075  execve("/usr/local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = 0
+2075  exit_group(0)                     = ?
+2075  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2075, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+2087  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "--test", ".github/continuum/math.test.mjs"], 0x3b427c30 /* 63 vars */) = 0
+2093  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "--experimental-addon-modules", "--test-coverage-functions=0", "--test-concurrency=0", "--inspect-publish-uid=stderr,http", "--inspect-port=127.0.0.1:9229", "--report-signal=SIGUSR2", "--test-coverage-lines=0", "--test-isolation=process", "--heap-prof-interval=524288", "--cpu-prof-interval=1000", "--v8-pool-size=4", "--trace-event-file-pattern=node_trace.${rotation}.log", "--secure-heap-min=2", "--network-family-autoselection-attempt-timeout=250", "--tls-cipher-list=TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA", "--use-largepages=off", "--secure-heap=0", "--watch-kill-signal=SIGTERM", "--test-coverage-branches=0", "--max-http-header-size=16384", "--test-timeout=0", "--node-snapshot", "--stack-trace-limit=10", "--heapsnapshot-near-heap-limit=0", ".github/continuum/math.test.mjs"], 0x98b21c0 /* 65 vars */) = 0
+2096  +++ exited with 0 +++
+2097  +++ exited with 0 +++
+2098  +++ exited with 0 +++
+2094  +++ exited with 0 +++
+2095  +++ exited with 0 +++
+2093  exit_group(1)                     = ?
+2099  +++ exited with 1 +++
+2093  +++ exited with 1 +++
+2087  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2093, si_uid=1000, si_status=1, si_utime=5 /* 0.05 s */, si_stime=1 /* 0.01 s */} ---
+2090  +++ exited with 0 +++
+2092  +++ exited with 0 +++
+2091  +++ exited with 0 +++
+2089  +++ exited with 0 +++
+2088  +++ exited with 0 +++
+2087  exit_group(1)                     = ?
+2087  +++ exited with 1 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2087, si_uid=1000, si_status=1, si_utime=5 /* 0.05 s */, si_stime=2 /* 0.02 s */} ---
+2109  execve("/home/agent/.local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2109  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2109  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2109  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2109  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2109  execve("/opt/codex/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2109  execve("/usr/local/sbin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2109  execve("/usr/local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b427c30 /* 63 vars */) = 0
+2109  exit_group(0)                     = ?
+2109  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2109, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+2127  execve("/home/agent/.local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2127  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "rev-parse", "HEAD"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2127  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "rev-parse", "HEAD"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2127  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "rev-parse", "HEAD"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2127  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "rev-parse", "HEAD"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2127  execve("/opt/codex/bin/git", ["git", "rev-parse", "HEAD"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2127  execve("/usr/local/sbin/git", ["git", "rev-parse", "HEAD"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2127  execve("/usr/local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b42f070 /* 63 vars */) = 0
+2127  exit_group(0)                     = ?
+2127  +++ exited with 0 +++
+1923  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2127, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+2128  execve("/home/agent/.local/bin/git", ["git", "status", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2128  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "status", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2128  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "status", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2128  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "status", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2128  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "status", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2128  execve("/opt/codex/bin/git", ["git", "status", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2128  execve("/usr/local/sbin/git", ["git", "status", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2128  execve("/usr/local/bin/git", ["git", "status", "--porcelain"], 0x3b42f070 /* 63 vars */) = 0
+2128  exit_group(0)                     = ?
+2128  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2128, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+2129  execve("/home/agent/.local/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2129  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2129  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2129  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2129  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2129  execve("/opt/codex/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2129  execve("/usr/local/sbin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2129  execve("/usr/local/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = 0
+2129  exit_group(0)                     = ?
+2129  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2129, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+2130  execve("/home/agent/.local/bin/git", ["git", "worktree", "prune"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2130  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "worktree", "prune"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2130  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "worktree", "prune"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2130  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "worktree", "prune"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2130  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "worktree", "prune"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2130  execve("/opt/codex/bin/git", ["git", "worktree", "prune"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2130  execve("/usr/local/sbin/git", ["git", "worktree", "prune"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2130  execve("/usr/local/bin/git", ["git", "worktree", "prune"], 0x3b42f070 /* 63 vars */) = 0
+2130  exit_group(0)                     = ?
+2130  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2130, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+2131  execve("/home/agent/.local/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2131  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2131  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2131  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2131  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2131  execve("/opt/codex/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2131  execve("/usr/local/sbin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2131  execve("/usr/local/bin/git", ["git", "worktree", "list", "--porcelain"], 0x3b42f070 /* 63 vars */) = 0
+2131  exit_group(0)                     = ?
+2131  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2131, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+2132  execve("/home/agent/.local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b433290 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2132  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override/git", ["git", "rev-parse", "HEAD"], 0x3b433290 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2132  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/git", ["git", "rev-parse", "HEAD"], 0x3b433290 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2132  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/git", ["git", "rev-parse", "HEAD"], 0x3b433290 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2132  execve("/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/git", ["git", "rev-parse", "HEAD"], 0x3b433290 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2132  execve("/opt/codex/bin/git", ["git", "rev-parse", "HEAD"], 0x3b433290 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2132  execve("/usr/local/sbin/git", ["git", "rev-parse", "HEAD"], 0x3b433290 /* 63 vars */) = -1 ENOENT (No such file or directory)
+2132  execve("/usr/local/bin/git", ["git", "rev-parse", "HEAD"], 0x3b433290 /* 63 vars */) = 0
+2132  exit_group(0)                     = ?
+2132  +++ exited with 0 +++
+1905  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2132, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1929  +++ exited with 0 +++
+1928  +++ exited with 0 +++
+1923  +++ exited with 0 +++
+1925  +++ exited with 0 +++
+1927  +++ exited with 0 +++
+1905  exit_group(1)                     = ?
+1930  +++ exited with 1 +++
+1905  +++ exited with 1 +++

@@ -1,0 +1,310 @@
+{
+  "parent": "d49031843b03af6ce21427a41e761d671aa05b58",
+  "prs": [
+    {
+      "pr": 354,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "url": "https://github.com/Ullmann27/device-ai/pull/354",
+          "number": 354,
+          "state": "open",
+          "merged": false,
+          "mergeable": true,
+          "draft": true,
+          "body": "## Mission OS B — owner order 6576751507, window reliability checkpoint\n\n**IMPLEMENTED / HOST_TESTED:** commits `6fc252ecc05d49508023efe2835a983c14299074` and `579ec1bd6c0dce8e78cbb25fcd1e76ec0e064889` address both Gitar window-event findings and additional reproduced cases: events from another or unidentified window can no longer confirm a click or foreground launch. `c3697ecfc5dd800bddba816cab937e11bdfd8269` preserves the original logs. No automatic retry is added. Final SDK Gradle: **1698 PASS / 0 FAIL / 3 SKIP**, including 26 Robolectric native cases; Kotlin compile and lint PASS. Final critical Node: **135 PASS**. Full Node: **1938 PASS / 0 FAIL / 13 SKIP**, exit 0, process cleanup confirmed. Failures before the fixes, exact commands and hashes are retained.\n\n**REACHABLE: NO.** The experimental owner-confirmation/native-click integration is archived only as a patch and is not enabled. A durable receipt still needs to distinguish rejection before dispatch from a dispatched but unconfirmed **UNKNOWN** outcome, and the actual Activity/confirmation lifecycle needs proof. A host prototype passed its synthetic chain tests, but that is not product integration or a device test. Do not apply or deploy the archived patch as-is.\n\n**DEVICE_VERIFIED: NOT_RUN.** No Android device was listed by the SDK; no Fold7 interaction, APK assembly or signing took place. Next: implement a backwards-compatible durable dispatch/UNKNOWN receipt, finish owner-visible confirmation and window restoration, test cancellation/replay, then obtain an explicitly owner-authorized Fold7 session. The GitHub Gitar check completed successfully on `c3697ecf`, but no new review or findings were published; the CodeRabbit check was skipped, so an independent published review is still outstanding.\n\n[Handoff and continuation instructions](https://github.com/Ullmann27/device-ai/blob/c3697ecfc5dd800bddba816cab937e11bdfd8269/docs/research/omega/CODERABBIT-MISSION-B-WINDOW-IDENTITY-20261102.md) · [Results, logs and archived prototype](https://github.com/Ullmann27/device-ai/blob/c3697ecfc5dd800bddba816cab937e11bdfd8269/docs/evidence/continuum-window-identity-20261102/results.json)\n\n---\n\n## Mission OS B — incomplete, no real click enabled\n\nCommit `83b5691d`: an internal click verification protocol candidate and six synthetic-port tests are staged. This is NOT_INTEGRATED: no `ACTION_CLICK`, native window/overlay port, registration or owner approval capability exists. The synthetic Boolean is not proof of a real approval. Existing external-screen firewall and ToolGate remain unchanged.\n\nExisting confirmation summarizes string arguments as lengths, so it does not display the exact node/expected result. The accessibility service does not request the interactive window list or verify overlays. Its own Activity confirmation can change the active window. These gaps must be solved and checked before enabling a real click; no successful click, battery workflow or Fold7 test is claimed.\n\nFull Android Gradle:1672 PASS/0 FAIL/3 SKIP, six synthetic candidate tests PASS, lint0 issues and compile PASS. Critical Node135 PASS. Initial RED failed at compile due absent new types; intermediate run failed due test typo, corrected. Prior full Node1938 PASS/0 FAIL/13 SKIP was not rerun. No APK/signing/device work.\n\n[Handoff and precise next steps](https://github.com/Ullmann27/device-ai/blob/83b5691d/docs/research/omega/CODERABBIT-MISSION-B-CANDIDATE-20261102.md) · [Actual evidence](https://github.com/Ullmann27/device-ai/blob/83b5691d/docs/evidence/continuum-mission-b-candidate-20261102/results.json)\n\n## Node release fixture — 3 previous failures resolved\n\nCommit `70db0f01` isolates the immutable 0.3.24 release source inventory and actual builder scripts in a temporary Git repository. Exact synthetic approvals now exercise the intended historical tree; wrong approvals, altered/missing/symlinked/unattested files and wrong branch remain blocked. No production source gate, manifest, release pin or signing script changed. The pinned historical commit `5270202e0699764b0eac5d4dd3e6a587b982ae05` and its objects must be locally available; shallow checkouts must fetch them.\n\nBefore:4 PASS / 3 FAIL in the affected test file. After:10 PASS / 0 FAIL. Final full-node QA: **1938 PASS / 0 FAIL / 13 SKIP** (1951 cases, exit0, confirmed process cleanup). Earlier entries below describe earlier runs; the three historical fixture failures were resolved here. The13 skipped cases remain unverified. No APK/device/model acceptance claimed.\n\n[Handoff](https://github.com/Ullmann27/device-ai/blob/70db0f01/docs/research/omega/CODERABBIT-NODE-RELEASE-FIXTURE-20261102.md) · [Original results](https://github.com/Ullmann27/device-ai/blob/70db0f01/docs/evidence/continuum-release-fixture-20261102/results.json)\n\n## Mission OS owner sprint A — completed\n\nOwner order [comment6575155127](https://github.com/Ullmann27/device-ai/pull/354#issuecomment-6575155127), architecture [Issue355](https://github.com/Ullmann27/device-ai/issues/355). Commit `6e4fcfc7` on the existing isolated research branch.\n\nActive read target is published/cleared under lock/finally. Well-formed other-package framework events do not invalidate that read; same/unknown/malformed packages, missing-root window transitions and permission/epoch changes still invalidate. Concurrent reads are explicitly rejected; cancellation/deadline checked before result publication. No retry or redispatch. Dynamic event subscription and new click/scroll remain deferred.\n\nNative RED reproduces foreign-sender and reader-concurrency failures; third failing case was a recycled test fixture, corrected. Final actual second-thread test passes. GREEN:1666PASS/0FAIL/3SKIP,12/12 screen tests; compile/lint PASS (zero lint issues). Critical135PASS. Full Node1932PASS/3FAIL/13SKIP, exit1: original historical release fixture failures preserved. Earlier optional JVM failures unchanged, not rerun. Fold7/APK/Gemma/WhatsApp/SAF NOT_RUN; B/C not implemented in this sprint.\n\n[Handoff](https://github.com/Ullmann27/device-ai/blob/6e4fcfc7/docs/research/omega/CODERABBIT-MISSION-OS-SPRINT-A-20261102.md) · [Raw evidence and exact source hashes](https://github.com/Ullmann27/device-ai/blob/6e4fcfc7/docs/evidence/continuum-mission-a-20261102/results.json)\n\n<!-- coderabbit-ai-generated:v1 -->\n## Follow-up: unknown foreground window — fixed\n\nCommit `91271b4d`: delivered window events with no accessible root/usable package previously left an in-flight read valid and retained stale foreground evidence. Two Robolectric regressions reproduced both outcomes (4 PASS / 2 FAIL, exit1). The handler now invalidates the revision and clears old foreground confirmation. Full SDK Gradle rerun: 1660 PASS, 0 FAIL, 3 SKIP; six screen tests pass, lint0 issues, compile pass, exit0. Raw logs, XML, exact environment and hashes: [follow-up results](https://github.com/Ullmann27/device-ai/blob/91271b4d/docs/evidence/continuum-window-followup-20261102/results.json). Delayed or missing events and Fold7 remain unverified.\n\nThe unrelated-package read-abort finding is addressed by the Mission OS sprint above. Dynamic subscription, device frequency and battery measurements remain open; unknown-package and missing-window safety is retained.\n\n## Verified scope\n\nDependent draft on PR #353; no merge. Code checkpoint `3eb7701cc033a620c9b038d2072fb872e3f6e547`; final documentation/evidence checkpoint `4d50b9e5`. Main, owner signing, package identity, ToolGate, owner knowledge and model weights unchanged.\n\n### Implemented\n\n- Clear stale typed research/freshness evidence when dialogue scope is explicitly or ambiguously corrected. Normal research follow-ups retain their evidence. Actual Activity/context call path traced; native red/green regression.\n- Invalidate an in-flight bounded screen read when the current service receives a content-change event. Events collect no text and create no foreground launch confirmation. Four actual service/Robolectric controls; two fail against the original service and all four pass after the patch. This does not implement tap/scroll or claim an atomic Android snapshot.\n- Add a repository-local QA CLI with fixed test profiles, existing owned-process cleanup, original codes/signals, source/branch content binding, PASS/FAIL/SKIP/NOT_RUN, case diagnostics, severity and JSON/Markdown reports. No API/account dependency, automatic scheduler or arbitrary model shell.\n- Publish a call-path architecture matrix and reproducible evidence, including failed runs and unfinished device boundaries.\n\n### Observed validation (overlapping runs; do not add)\n\n| Scope | Result | Exit |\n|---|---|---|\n| Critical process/storage/coding/source contracts/compiler checker |135 PASS,0 FAIL,0 SKIP|0|\n| Full Node profile at final code identity |1932 PASS,3 FAIL,13 SKIP /1948 cases|1|\n| Real SDK Gradle unit/Robolectric + lint + Kotlin compile |1658 PASS,0 FAIL,3 SKIP /1661 cases; lint0 issues|0|\n| Native host Kotlin2.4.0 (compile-only LiteRT stub, no inference) |1621 PASS +4 Checks|0|\n| Additional native coding tests |7 PASS|0|\n| Native Fabric → byte-identical Node contract |19 JVM +9 Node PASS|0|\n| Optional manual Android/action/dialogue script source lists |1 PASS,3 FAIL|1|\n| QA CLI unit tests |4 PASS|0|\n\nCritical135 is reused for unchanged selected inputs; the later full-node run covers all those cases and has no final code/config mismatches. SDK Gradle covers the final service patch. Original manifests identify exact source bytes and scope.\n\n### Open issues / no blanket acceptance\n\n- Three full Node failures are historical live-release source/branch fixtures. The original inventory already fails on detached PR351. Frozen release pins and signing gates were preserved.\n- Three separately activated native scripts omit current source dependencies. A minimal official16-jar rerun reproduces missing classes; full SDK compilation succeeds. This is a demonstrated harness defect, not demonstrated broken Android product source.\n- Supplemental native runs executed10 originally skipped Node identities (7 PASS,3 FAIL); standard13 SKIP remain in their original report. Two Harness SDK and one configured Docker case remain NOT_RUN. Three Gradle parity skips remain separately recorded.\n- Fold7, Settings→battery E2E, APK assembly/signing, real model inference/ASR/TTS performance and storage power-loss NOT_RUN. No DEVICE_VERIFIED claim.\n- No complete independent CodeRabbit review result exists; no approval claimed. The actual Gitar completion-I/O finding on PR353 was reproduced and repaired there.\n- No new external code, model or avatar asset imported; PR350 provenance is not runtime/license acceptance.\n\n### Handoff and evidence\n\n- [Technical handoff and copyable Codex/Astra/Sol continuation](https://github.com/Ullmann27/device-ai/blob/4d50b9e5/docs/research/omega/CODERABBIT-BRAIN-INTEGRATION-20261102.md)\n- [Architecture matrix](https://github.com/Ullmann27/device-ai/blob/4d50b9e5/docs/research/omega/CONTINUUM-ARCHITECTURE-MATRIX-20261102.md)\n- [Machine-readable results, original logs and SHA256 manifest](https://github.com/Ullmann27/device-ai/blob/4d50b9e5/docs/evidence/continuum-integration-20261102/final-results.json)\n- [Exact successful/failed argv and safe environment/dependency identities](https://github.com/Ullmann27/device-ai/blob/4d50b9e5/docs/evidence/continuum-integration-20261102/commands.json)\n\n[View coding task](https://app.coderabbit.ai/code/tasks/de3d7eb3-755d-48fb-a379-ac0c7675c503?source=coding_agent_github_pr_description)\n\n<!-- /coderabbit-ai-generated:v1 -->\n\n\n",
+          "title": "Continuum: correct research scope resets and add reproducible reliability QA",
+          "base": "coderabbit/continuum-reliability-sprint-20261102",
+          "base_sha": "86032c31a36547888536446c765a719cd6ee5c5c",
+          "head": "coderabbit/continuum-brain-integration-20261102",
+          "head_sha": "c3697ecfc5dd800bddba816cab937e11bdfd8269",
+          "head_repo_id": 1415878393,
+          "head_repo_full_name": "Ullmann27/device-ai",
+          "merge_commit_sha": "c0c8a08ffd0158bad49b76d5d687286b6f05996d",
+          "user": {
+            "login": "Ullmann27",
+            "name": "Ullmann27",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/u/64243701?v=4",
+            "id": 64243701
+          },
+          "requested_reviewers": null,
+          "requested_team_reviewers": null,
+          "diff": null,
+          "comments": null,
+          "created_at": "2026-11-02T10:02:15Z",
+          "updated_at": "2026-11-02T13:12:19Z",
+          "closed_at": null,
+          "merged_at": null,
+          "commits": 11,
+          "changed_files": 228,
+          "additions": 86892,
+          "deletions": 26,
+          "display_url": "https://github.com/Ullmann27/device-ai/pull/354",
+          "display_title": "Continuum: correct research scope resets and add reproducible reliability QA"
+        },
+        "isError": false
+      }
+    },
+    {
+      "pr": 356,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "url": "https://github.com/Ullmann27/device-ai/pull/356",
+          "number": 356,
+          "state": "open",
+          "merged": false,
+          "mergeable": true,
+          "draft": true,
+          "body": "Independent EXP-05/EXP-12 research branch based on PR #354 source 41e1897b. Scope is ONLY the existing Termux llama/GGUF model admission; no changes to CodeRabbit's Android click, ToolGate, AGENTS/main/signing or owner weights. WIP / NOT_TESTED until executable and tests land. Real Fold7, second model inference and APK NOT_RUN. Reuse existing parser and Termux runtime; enforce explicit pinned SHA-256/size before owner-started second local backend. See docs/research/omega/GPT6-SOVEREIGN-GGUF-HANDOFF-20261102.md.\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n\n<!-- coderabbit-ai-generated:v1 -->\n\n## Summary by CodeRabbit\n\n- **New Features**\n  - Termux local GGUF startup now requires a pinned model manifest and completes verification before launching the server. Missing or mismatched model details prevent startup.\n  - API keys must meet both the required length and lowercase hexadecimal format.\n\n- **Documentation**\n  - Added a handoff and preflight record describing validation results, evidence limitations, unresolved risks, and next steps.\n  - Recorded 12 passing host tests and shell syntax validation; Android builds and real model inference were not tested.\n\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+          "title": "Sovereign GGUF: require pinned offline model before Termux llama launch",
+          "base": "coderabbit/continuum-brain-integration-20261102",
+          "base_sha": "41e1897b9099b911286d312a53c8c19307a49484",
+          "head": "research/continuum-sovereign-gguf-admission-20261102",
+          "head_sha": "d85810508744ce61a9092a1ac531fc4fdf5e843c",
+          "head_repo_id": 1415878393,
+          "head_repo_full_name": "Ullmann27/device-ai",
+          "merge_commit_sha": "5bb69461688e9217de8abf695eade3efceb396c0",
+          "user": {
+            "login": "Ullmann27",
+            "name": "Ullmann27",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/u/64243701?v=4",
+            "id": 64243701
+          },
+          "requested_reviewers": null,
+          "requested_team_reviewers": null,
+          "diff": null,
+          "comments": null,
+          "created_at": "2026-11-02T12:21:26Z",
+          "updated_at": "2026-11-02T12:53:41Z",
+          "closed_at": null,
+          "merged_at": null,
+          "commits": 10,
+          "changed_files": 6,
+          "additions": 460,
+          "deletions": 5,
+          "display_url": "https://github.com/Ullmann27/device-ai/pull/356",
+          "display_title": "Sovereign GGUF: require pinned offline model before Termux llama launch"
+        },
+        "isError": false
+      }
+    },
+    {
+      "pr": 357,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "url": "https://github.com/Ullmann27/device-ai/pull/357",
+          "number": 357,
+          "state": "open",
+          "merged": false,
+          "mergeable": true,
+          "draft": true,
+          "body": "The existing model-context path could lose late corrections/negation while reporting memories as included. This branch keeps selected evidence groups complete, rejects oversized required context/tasks, skips incomplete optional reasoning passes, and guards final prompt containment. Existing orchestration now exposes task-bound plan/approval/execution/verification metadata and fixes experience-ID collisions across distinct task namespaces. No second brain, memory database, model manager or coding agent.\n\nMilestones (real commits):\n- S1 `c1af43392af6efa208b36724771fb7c0892c5deb`: canonical context path; SOURCE_INTEGRATED/HOST_VERIFIED.\n- S2 `c6f79e0e0c91ab6ca5a5ca062eaa8568071dac00`: preregistered synthetic compiler/verifier controls, 48→72 correct (24 improved, 0 regressed, 48 unchanged); RESEARCH_SHADOW, not Gemma/CDX generation quality. Twelve new role swaps rejected the universal identical-bucket hypothesis. No weights changed.\n- S3 `0e22bdb75124e46dce14f4d46977bedcb235751c`: three actual host storage measurements, durable receipts and independent FileStore checks; one owner-review-only experience candidate.\n- Fresh review found three Important issues; repaired in `aabd8ea7dcd09863fb5fe214ed027cd145ce2fb0` with genuine RED/GREEN controls for delayed backend starts after timeout/cancel and remaining request/advisory clipping. Stronger existing source contract in `babba3326475521bfc8d03807ee1ad8873e01b91`.\n\nValidation: complete Kotlin host main/test compilation, 1648 JUnit/303 classes +4 Checks PASS; critical Node135 PASS; full Node1938 PASS/0FAIL/13SKIP; final frozen replay and real task/receipt rerun PASS. Host uses the existing compile-only LiteRT stub. Compiled source aabd8ea7 and Node acceptance babba332: all727 main/test/resource/harness inputs hash-equal through final documentation HEAD `d49031843b03af6ce21427a41e761d671aa05b58`. Two intermittent intermediate failures with unknown causes remain in raw evidence; no original safety assertions weakened.\n\nFinal report (all ten owner questions): docs/research/omega/SOVEREIGN-COGNITION-ABSCHLUSS-20261102.md. Central and per-milestone handoffs in the same directory. Complete raw logs/JUnit, source/artefact hashes, commands and status: docs/evidence/sovereign-cognition-20261102/final-verification.json.\n\nNOT_RUN: native Gradle/lint/real LiteRT or Gemma quality, Fold7, S4 adapters. No APK built/signed/installed, main write/merge/release, owner-data or productive-weight change. PR354 Android-click and PR356 GGUF/Termux files untouched. Draft remains open for review.",
+          "title": "Sovereign cognition: whole evidence, measured controls and task-bound receipts",
+          "base": "coderabbit/continuum-brain-integration-20261102",
+          "base_sha": "c3697ecfc5dd800bddba816cab937e11bdfd8269",
+          "head": "research/continuum-sovereign-cognition-20261102",
+          "head_sha": "d49031843b03af6ce21427a41e761d671aa05b58",
+          "head_repo_id": 1415878393,
+          "head_repo_full_name": "Ullmann27/device-ai",
+          "merge_commit_sha": "e1544f4425e1cc25152fe1dec09f8d6d4b47079e",
+          "user": {
+            "login": "Ullmann27",
+            "name": "Ullmann27",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/u/64243701?v=4",
+            "id": 64243701
+          },
+          "requested_reviewers": null,
+          "requested_team_reviewers": null,
+          "diff": null,
+          "comments": null,
+          "created_at": "2026-11-02T13:04:59Z",
+          "updated_at": "2026-11-02T13:55:39Z",
+          "closed_at": null,
+          "merged_at": null,
+          "commits": 8,
+          "changed_files": 153,
+          "additions": 12592,
+          "deletions": 99,
+          "display_url": "https://github.com/Ullmann27/device-ai/pull/357",
+          "display_title": "Sovereign cognition: whole evidence, measured controls and task-bound receipts"
+        },
+        "isError": false
+      }
+    }
+  ],
+  "reviews": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "reviews": [
+        {
+          "id": "PRR_kwDOVGSW-c8AAAABVfOPAA",
+          "state": "COMMENTED",
+          "body": "",
+          "submitted_at": "2026-11-02T13:06:59Z",
+          "author": {
+            "login": "gitar-bot",
+            "name": "gitar-bot",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/in/827041?v=4",
+            "id": null
+          }
+        },
+        {
+          "id": "PRR_kwDOVGSW-c8AAAABVfPqNw",
+          "state": "COMMENTED",
+          "body": "",
+          "submitted_at": "2026-11-02T13:08:57Z",
+          "author": {
+            "login": "gitar-bot",
+            "name": "gitar-bot",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/in/827041?v=4",
+            "id": null
+          }
+        },
+        {
+          "id": "PRR_kwDOVGSW-c8AAAABVfT5zQ",
+          "state": "COMMENTED",
+          "body": "",
+          "submitted_at": "2026-11-02T13:14:55Z",
+          "author": {
+            "login": "gitar-bot",
+            "name": "gitar-bot",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/in/827041?v=4",
+            "id": null
+          }
+        }
+      ]
+    },
+    "isError": false
+  },
+  "threads": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "review_threads": [
+        {
+          "id": "PRRT_kwDOVGSW-c6yrZlc",
+          "is_resolved": false,
+          "is_outdated": true,
+          "path": "docs/research/omega/SOVEREIGN-COGNITION-HANDOFF-20261102.md",
+          "line": null,
+          "diff_side": "RIGHT",
+          "start_line": null,
+          "start_diff_side": "RIGHT",
+          "original_line": 21,
+          "original_start_line": 7,
+          "resolved_by": null,
+          "comments": [
+            {
+              "id": "PRRC_kwDOVGSW-c8AAAABCM6sow",
+              "database_id": 4442729635,
+              "body": "<details>\n<summary>💡 <b>Quality:</b> Handoff lacks required test commands, entry point and authorization ref</summary>\n\nAGENTS.md item 4 says the mandatory handoff must include test commands/results and a next entry point (concrete file/symbol and command), so that another developer can continue without the same cloud workspace. This handoff names S1–S3 and target classes, but it gives no runnable test commands, no exact files or tests to start from, and no environment or SHA for the RED step. Its claim that \"the owner's detailed directive explicitly authorizes autonomous implementation and pushes\" also has no link. Other handoffs (e.g. PR354, which links owner comment 6575155127) cite their authorization, and the rules forbid unverifiable evidence. Fix: add a 'Next entry point / test commands' section with the exact Gradle/Node commands and target test files, and link the owner directive comment or issue.\n\n\n**Add the missing required handoff sections and a verifiable authorization reference.:**\n````\nOwner authorization: <link to exact owner directive comment/issue>.\n\n## Next entry point and test commands\n\n- Start: `app/src/main/java/at/heinz/deviceai/.../AiContextCompiler.kt` (`compile`), new RED test `<TestClass>`.\n- Commands: `<exact Gradle testDebugUnitTest --tests ...>`, `<exact node scripts/... profile>`; current status: NOT_RUN.\n````\n\n<!-- gitar:apply-fix-start -->\n<!-- gitar:fix-id:01a19c5e-c019-75be-972f-e0a445529308 -->\n- [ ] Apply fix\n<!-- gitar:apply-fix-end -->\n\n<sub><!-- gitar:footer-start -->Check the box to apply the fix or reply for a change | Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>",
+              "created_at": "2026-11-02T13:06:59Z",
+              "updated_at": "2026-11-02T13:06:59Z",
+              "author": {
+                "login": "gitar-bot",
+                "name": "gitar-bot",
+                "email": null,
+                "avatar_url": "https://avatars.githubusercontent.com/in/827041?v=4",
+                "id": null
+              },
+              "viewer_did_author": false
+            }
+          ]
+        },
+        {
+          "id": "PRRT_kwDOVGSW-c6yrcYD",
+          "is_resolved": false,
+          "is_outdated": false,
+          "path": "docs/evidence/sovereign-cognition-20261102/frozen-context-holdout.json",
+          "line": 56,
+          "diff_side": "RIGHT",
+          "start_line": 42,
+          "start_diff_side": "RIGHT",
+          "original_line": 56,
+          "original_start_line": 42,
+          "resolved_by": null,
+          "comments": [
+            {
+              "id": "PRRC_kwDOVGSW-c8AAAABCM7yjQ",
+              "database_id": 4442747533,
+              "body": "<details>\n<summary>💡 <b>Quality:</b> Frozen holdout has only 54 unique cases, not 72</summary>\n\nPREREGISTRATION.md describes 72 generated cases from three seeds with eight bindings each. Six of the 24 name→city bindings repeat across seeds, though: Nadira→Ålesund (113-1, 227-0), Tarek→Tórshavn (113-2, 227-2, 409-6), Joline→Bad Ischl (113-4, 227-4), Fedor→Stendal (227-1, 409-4) and Kilian→Brüggen (227-5, 409-1). Each repeat brings its short, late-negation and budget-edge rows with identical content, so only 54 of the 72 (kind, content) rows are distinct. The planned exact-correct and paired improvement/regression counts would count these duplicates as separate evidence and overstate the sample size. The corpus is frozen and must not be tuned, so leave the rows as they are. Instead, state in the preregistration that 54 rows are unique and that duplicates are reported or deduplicated, or regenerate under a new holdout SHA before any candidate runs.\n\n\n**Disclose the duplication in the preregistration so the metrics are not inflated (the frozen JSON stays unchanged):**\n````\nThe 72 generated rows (three seeds × eight bindings × three families) contain 54 unique (kind, content) rows; seeds re-draw 6 identical name→city bindings. Metrics are reported both over all 72 rows and over the 54 deduplicated rows.\n````\n\n<!-- gitar:apply-fix-start -->\n<!-- gitar:fix-id:01a19c60-8ed9-733a-866d-cf7d9ef89b6e -->\n- [ ] Apply fix\n<!-- gitar:apply-fix-end -->\n\n<sub><!-- gitar:footer-start -->Check the box to apply the fix or reply for a change | Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>",
+              "created_at": "2026-11-02T13:08:57Z",
+              "updated_at": "2026-11-02T13:08:57Z",
+              "author": {
+                "login": "gitar-bot",
+                "name": "gitar-bot",
+                "email": null,
+                "avatar_url": "https://avatars.githubusercontent.com/in/827041?v=4",
+                "id": null
+              },
+              "viewer_did_author": false
+            }
+          ]
+        },
+        {
+          "id": "PRRT_kwDOVGSW-c6yrkqR",
+          "is_resolved": false,
+          "is_outdated": false,
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "line": 6366,
+          "diff_side": "RIGHT",
+          "start_line": 6353,
+          "start_diff_side": "RIGHT",
+          "original_line": 6358,
+          "original_start_line": 6345,
+          "resolved_by": null,
+          "comments": [
+            {
+              "id": "PRRC_kwDOVGSW-c8AAAABCM_HSw",
+              "database_id": 4442801995,
+              "body": "<details>\n<summary>⚠️ <b>Bug:</b> Prompt budgets don't fit together, so long requests always fail the turn</summary>\n\n`runLocal` puts the task in the prompt twice. It is written raw as `Aktueller Auftrag:` (up to 7,900 chars) and again as the required `USER REQUEST` section inside `compiledContext`. A ~1k-char instruction header comes first and a ~700-char tail comes after. `composePrompt` then cuts everything to `FULL_CHARACTERS = 15_500`, and the compiler's own cap is 10,500 bytes. With a task of roughly 6.5k+ chars (or about 3k+ chars when memories, grounded recall or contradictions fill the compiled block), the cut always lands inside the compiled text. The new `requireCompleteIn(prompt)` then throws `COMPILED_CONTEXT_TRUNCATED`, and every retry of that request fails. Before this change the prompt was only clipped. Removing `runCatching` around `compile()` also means one long CONTRADICTED memory, now passed with no length cap as a required contradiction, makes compile throw `MANDATORY_CONTEXT_EXCEEDS_BUDGET`. The whole turn then aborts instead of answering. Fix: work out the compiler budget from `promptCap` minus the header, tail and grounded recall, and drop the duplicate raw task (the compiled `USER REQUEST` already holds it). Alternatively, put the compiled context ahead of the non-essential parts. Add a test that runs the real `runLocal` prompt assembly with a long task and a full memory set.\n\n\n**Size the compiled context to fit inside the final prompt cap, and stop duplicating the task outside it:**\n````\n// in promptBody: when compiledContext != null, skip append(\"Aktueller Auftrag:\n\").append(task)\n// and compile with a per-turn policy:\nval compileBudget = (promptCap - fixedHeader.length - promptTail.length - (groundedRecall?.render()?.length ?: 0) - 64)\n    .coerceIn(1_024, 10_500)\nAiContextCompiler(AiContextPolicy(maxBytes = compileBudget, memoryLimit = 8, researchSourceLimit = 4)).compile(...)\n````\n\n<!-- gitar:apply-fix-start -->\n<!-- gitar:fix-id:01a19c66-05b7-7418-b6f5-5f0e0a537d9d -->\n- [ ] Apply fix\n<!-- gitar:apply-fix-end -->\n\n<sub><!-- gitar:footer-start -->Check the box to apply the fix or reply for a change | Was this helpful? React with 👍 / 👎<!-- gitar:footer-end --></sub>\n\n</details>",
+              "created_at": "2026-11-02T13:14:55Z",
+              "updated_at": "2026-11-02T13:14:55Z",
+              "author": {
+                "login": "gitar-bot",
+                "name": "gitar-bot",
+                "email": null,
+                "avatar_url": "https://avatars.githubusercontent.com/in/827041?v=4",
+                "id": null
+              },
+              "viewer_did_author": false
+            }
+          ]
+        }
+      ]
+    },
+    "isError": false
+  }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:07" hostname="1a6f5c6cf9c0" time="0.013">
+  <properties/>
+  <testcase name="sessionResetAndTopicCorrectionDiscardOldOwnerProof" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.002"/>
+  <testcase name="originalWhitespaceAndSwappedRolesKeepExactSourceOffsets" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.007"/>
+  <testcase name="researchQuestionsAndModelRepliesAreNeverOwnerEvidence" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.0"/>
+  <testcase name="confirmedLiteralKeepsOriginalWhitespaceAndOffsets" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.0"/>
+  <testcase name="oversizedOwnerTurnInvalidatesProofInsteadOfKeepingATruncatedOrOldClaim" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.001"/>
+  <testcase name="negationAfterPromptPreviewLimitCannotBecomeAPositiveProof" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.001"/>
+  <testcase name="temporalCorrectionAfterPromptPreviewLimitCannotBecomeACurrentProof" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.001"/>
+  <testcase name="unnamedRetractionMustNotBeFilteredOutBeforeVerification" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.0"/>
+  <testcase name="directHelperCannotIgnoreOversizedCorrection" classname="at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

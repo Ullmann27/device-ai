@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "--test",
+    "--test-concurrency=2",
+    "--test-reporter=junit",
+    "--test-reporter-destination=/workspace/scratch/b31a9d731016/context-contract-evidence/group-green.xml",
+    ".github/continuum/android-always-on-wiring.test.mjs",
+    ".github/continuum/android-integration-wiring.test.mjs",
+    ".github/continuum/autonomous-topic-frontier.test.mjs",
+    ".github/continuum/coding-agent-speech-wiring.test.mjs",
+    ".github/continuum/gemma-reopen-lifecycle.test.mjs",
+    ".github/continuum/groq-mentor-ui-wiring.test.mjs",
+    ".github/continuum/model-import-identity.test.mjs",
+    ".github/continuum/nexus-beginner-ui.test.mjs",
+    ".github/continuum/research-job-permission.test.mjs"
+  ],
+  "exit": 0,
+  "tests": 64,
+  "failed": 0,
+  "failures": []
+}

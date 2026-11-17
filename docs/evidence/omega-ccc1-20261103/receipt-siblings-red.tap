@@ -1,0 +1,743 @@
+# Source HEAD: c619521145cecff7cfacc2df0f65e15a8a94c4d2; new regressions are uncommitted
+# UTC: 2026-11-03T17:59:08.952425+00:00
+# Command argv: ['node', '--test', '--test-reporter=tap', '--test-name-pattern=the verifier checks a receipt|non-success repair verdicts', '.github/continuum/ccc1.test.mjs', '.github/continuum/ccc1-repair.test.mjs']
+# Exit: 1
+TAP version 13
+# Subtest: non-success repair verdicts require completed baseline evidence
+    # Subtest: NO_FAILURE_FOUND valid completed baseline
+    ok 1 - NO_FAILURE_FOUND valid completed baseline
+      ---
+      duration_ms: 18.199092
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND timeout
+    not ok 2 - NO_FAILURE_FOUND timeout
+      ---
+      duration_ms: 1.884165
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: NO_FAILURE_FOUND signal exit
+    not ok 3 - NO_FAILURE_FOUND signal exit
+      ---
+      duration_ms: 0.602376
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: NO_FAILURE_FOUND contradicting exit
+    not ok 4 - NO_FAILURE_FOUND contradicting exit
+      ---
+      duration_ms: 0.300933
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: NO_FAILURE_FOUND zero executed tests
+    ok 5 - NO_FAILURE_FOUND zero executed tests
+      ---
+      duration_ms: 0.297448
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND string executed count
+    not ok 6 - NO_FAILURE_FOUND string executed count
+      ---
+      duration_ms: 0.324528
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: NO_FAILURE_FOUND extra run record
+    not ok 7 - NO_FAILURE_FOUND extra run record
+      ---
+      duration_ms: 0.320662
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: FAILED_REPAIR valid completed baseline
+    ok 8 - FAILED_REPAIR valid completed baseline
+      ---
+      duration_ms: 0.211718
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR timeout
+    not ok 9 - FAILED_REPAIR timeout
+      ---
+      duration_ms: 0.463437
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: FAILED_REPAIR signal exit
+    not ok 10 - FAILED_REPAIR signal exit
+      ---
+      duration_ms: 0.344217
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: FAILED_REPAIR contradicting exit
+    not ok 11 - FAILED_REPAIR contradicting exit
+      ---
+      duration_ms: 0.326992
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: FAILED_REPAIR zero executed tests
+    not ok 12 - FAILED_REPAIR zero executed tests
+      ---
+      duration_ms: 0.257517
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: FAILED_REPAIR string executed count
+    not ok 13 - FAILED_REPAIR string executed count
+      ---
+      duration_ms: 0.281313
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: FAILED_REPAIR extra run record
+    not ok 14 - FAILED_REPAIR extra run record
+      ---
+      duration_ms: 0.198269
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'REFUTED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'REFUTED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:180:11)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    1..14
+not ok 1 - non-success repair verdicts require completed baseline evidence
+  ---
+  duration_ms: 45.867221
+  type: 'test'
+  location: '/workspace/continuum-ccc1/.github/continuum/ccc1-repair.test.mjs:162:1'
+  failureType: 'subtestsFailed'
+  error: '11 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: the verifier checks a receipt against the real patch bytes, runs, profile and the exact order
+    # Subtest: baseline execution exceeds its summary
+    not ok 1 - baseline execution exceeds its summary
+      ---
+      duration_ms: 2.95902
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+      ...
+    # Subtest: candidate execution is below its summary
+    not ok 2 - candidate execution is below its summary
+      ---
+      duration_ms: 0.623878
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: independent execution is below its summary
+    not ok 3 - independent execution is below its summary
+      ---
+      duration_ms: 0.414824
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: summary changes candidate count without command evidence
+    not ok 4 - summary changes candidate count without command evidence
+      ---
+      duration_ms: 0.444348
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: independent command drops candidate tests
+    not ok 5 - independent command drops candidate tests
+      ---
+      duration_ms: 0.406091
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: string command counts
+    not ok 6 - string command counts
+      ---
+      duration_ms: 0.396837
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: fractional command counts
+    not ok 7 - fractional command counts
+      ---
+      duration_ms: 0.317247
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: unsafe command counts
+    not ok 8 - unsafe command counts
+      ---
+      duration_ms: 0.491139
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: expected tests cannot be zero
+    not ok 9 - expected tests cannot be zero
+      ---
+      duration_ms: 0.579201
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: expected tests must match the ordered cases
+    not ok 10 - expected tests must match the ordered cases
+      ---
+      duration_ms: 0.406231
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: null command entry
+    not ok 11 - null command entry
+      ---
+      duration_ms: 0.27231
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of null (reading 'phase')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        file:///workspace/continuum-ccc1/.github/continuum/ccc1-verifier.mjs:32:29
+        Array.find (<anonymous>)
+        verifyJobReceipt (file:///workspace/continuum-ccc1/.github/continuum/ccc1-verifier.mjs:32:19)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:16)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+      ...
+    # Subtest: commands are not an array
+    not ok 12 - commands are not an array
+      ---
+      duration_ms: 0.348184
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: 'runs.find is not a function'
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        verifyJobReceipt (file:///workspace/continuum-ccc1/.github/continuum/ccc1-verifier.mjs:32:19)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:16)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: missing timeout completion evidence
+    not ok 13 - missing timeout completion evidence
+      ---
+      duration_ms: 0.303456
+      type: 'test'
+      location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        + actual - expected
+        
+        + 'CONFIRMED'
+        - 'INCONCLUSIVE'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'INCONCLUSIVE'
+      actual: 'CONFIRMED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:183:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:181:47)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: additional candidate and independent coverage is accepted
+    ok 14 - additional candidate and independent coverage is accepted
+      ---
+      duration_ms: 0.264949
+      type: 'test'
+      ...
+    1..14
+not ok 2 - the verifier checks a receipt against the real patch bytes, runs, profile and the exact order
+  ---
+  duration_ms: 15.646542
+  type: 'test'
+  location: '/workspace/continuum-ccc1/.github/continuum/ccc1.test.mjs:142:1'
+  failureType: 'subtestsFailed'
+  error: '13 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..2
+# tests 30
+# suites 0
+# pass 4
+# fail 26
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 294.006898

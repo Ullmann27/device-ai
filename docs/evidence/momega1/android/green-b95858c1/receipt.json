@@ -1,0 +1,12 @@
+{
+  "sourceHead": "b95858c103243ec921c1de9c8fb9ae8da0e88c29",
+  "beforeAfterIdentical": true,
+  "beforeSha256": "386a6dce1354f43056462fe60aa83b5e2e1b17fbd71673539195035f812884a9",
+  "afterSha256": "386a6dce1354f43056462fe60aa83b5e2e1b17fbd71673539195035f812884a9",
+  "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/delta-b95858c1/source-before.txt",
+  "exit": 0,
+  "tests": 32,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0
+}

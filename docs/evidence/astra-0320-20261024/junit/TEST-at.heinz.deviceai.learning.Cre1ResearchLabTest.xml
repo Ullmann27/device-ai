@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.Cre1ResearchLabTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:15" hostname="5c9e18abbd30" time="0.524">
+  <properties/>
+  <testcase name="corruptedCre1ResearchCheckpointNeverSilentlyResetsToFreshWeights" classname="at.heinz.deviceai.learning.Cre1ResearchLabTest" time="0.088"/>
+  <testcase name="evaluatedCandidateIsEitherAtomicAndValidOrRolledBack" classname="at.heinz.deviceai.learning.Cre1ResearchLabTest" time="0.098"/>
+  <testcase name="interruptionNeverPublishesWeightsAndRejectsOverlappingAudit" classname="at.heinz.deviceai.learning.Cre1ResearchLabTest" time="0.095"/>
+  <testcase name="interruptedRoundPreservesExistingCheckpointByteForByte" classname="at.heinz.deviceai.learning.Cre1ResearchLabTest" time="0.193"/>
+  <testcase name="continuumLearningCoreConnectsCre1WithoutModifyingProductiveSwb1" classname="at.heinz.deviceai.learning.Cre1ResearchLabTest" time="0.05"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

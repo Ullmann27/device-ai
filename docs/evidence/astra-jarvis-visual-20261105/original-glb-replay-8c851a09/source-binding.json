@@ -1,0 +1,56 @@
+{
+  "evidenceClass": "HOST_BLENDER_NOT_FILAMENT_DEVICE",
+  "sourceCommit": "8c851a09d7c641bdfc02d5e2d2c432cd3fda0e8c",
+  "sourceMeaning": "Avatar/renderer/framing/test files exactly match the archived unchanged GREEN run and public commit8c851a09. Receipt started at7159aba8 with the subsequently committed WorkWindow lifecycle delta. No clean7159 claim.",
+  "testReceiptHead": "7159aba8ca29d71d779e7b1b83efd00a3bee0b3f",
+  "testReceiptPath": "/workspace/scratch/76b7222771d5/build-env/logs/integrated-lifecycle-green-attempt1-receipt.json",
+  "testReceiptSha256": "c23241f81ba124397d529d50aecc48f9bf6c7986fc9c9b791bf2aec565280de6",
+  "testReceiptSourceUnchanged": true,
+  "assetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "timelineSha256": "c73c222cc552104b826f2b662046290cb7cec02bfb36380fc372c8f7ecece56c",
+  "testReportSha256": "73b4b7544518084081e7fd5ea28bcba5edaeedf00cf1ea8144f4e62513a01d73",
+  "sourceFileSha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "da5a4f4259a7070b9ee05bee5abf4c6dfaec454f260a45f1271f7cc54a1dc86d",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "8d1aa4231c0e68f2d2362c18b70ef4e901e835cfd3d1b35550168ca870e76122",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "014182901958ba57d80c73cbc1778a658a23c1161ce87cbba88adbf11b657842",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "dbe2f23b9f07732ae5c799bafa972f0cf116f496d1b45188cd5ed68bc6caf462",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarFraming.kt": "2a7f52251729e3cf0359997806b15e3d971eadd54e02a5a44de57865eda55ed2",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "fd9a803053f2b6ca4e9aa4e045d71ea95c363b6c006a7c8817684edc8edd850f",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "a00c36a5d3e1ad1bb83f8732153c7daa7ca7792498fceb4c6074992bba0580e9",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt": "41fe6fc9ac47cf5d3f373da042753e5c3f1edd2732e8e1e0256b94689946d67c"
+  },
+  "motionTestResult": {
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "relevantTestSuites": {
+    "at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarIntentLifecycleTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarTaskGestureTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.AvatarExplicitConfirmationUiTest": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "integratedRunResult": "196 passed / 196, no failures or skips",
+  "inputOrigin": "Scripted host Director/camera/TTS events; no device or actual PCM"
+}

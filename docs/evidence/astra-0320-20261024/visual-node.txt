@@ -1,0 +1,25 @@
+✔ no new Flutter dependency and existing native layout remains authoritative (0.87489ms)
+✔ scanline effect runs in draw pass, never as an input-intercepting view (0.178495ms)
+✔ background glows behind live cards, do not obscure labels or inflate telemetry (0.148371ms)
+✔ all existing cockpit destinations remain connected to owner callbacks (0.326505ms)
+✔ system gauges show only measured values and explain unknown GPU (0.683616ms)
+✔ device storage legend does not present unidentified data as measured system bytes (0.1278ms)
+✔ positive measured event deltas use green in both form factors (0.122312ms)
+✔ both phone and Fold storage cards show compact legend without losing measured category names (0.189612ms)
+✔ living hologram schedules subsequent visible frames and stops callbacks on detach (1.29833ms)
+✔ orbital rings use visible phase movement, not the old near-static factor (0.177664ms)
+✔ header and the six orbital text labels are fitted to their real drawing boxes (0.212005ms)
+✔ battery, app CPU, RAM and GPU measurements remain honestly distinguished (0.199857ms)
+✔ CCC1 integrated in same owner-app source without changing private app identity (0.265905ms)
+✔ existing on-device learning state and protected independent training are never reset by launch (0.202911ms)
+✔ both layouts display the same measured journal series and native painter (1.448093ms)
+✔ missing or zero measurements render no fabricated decorative peaks (0.204504ms)
+✔ new-sample highlights are finite, foreground-bound and never edit measurements (0.434335ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 360.966898

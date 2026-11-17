@@ -1,0 +1,33 @@
+{
+  "type": "DIRECT_ROBOLECTRIC_HOST_TESTS",
+  "sdk": 28,
+  "graphics": "NATIVE",
+  "robolectric": "4.14.1",
+  "junit": "4.13.2",
+  "kotlin_test_compiler": "2.4.0",
+  "production_source_head": "e9523efd0bc36bacecf845e195f2f655bfa603ef",
+  "production_jar_sha256_before": "e6f5fda932025fd26405b4a2a7871f865f886cb0f686365b9ab01461aaff2d29",
+  "production_jar_sha256_after": "e6f5fda932025fd26405b4a2a7871f865f886cb0f686365b9ab01461aaff2d29",
+  "production_jar_unchanged_during_test": true,
+  "source_sha256": {
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitMonitorLifecycleUiTest.kt": "2ebffd7cf57e02ad5bfa2db8ad46ce59e33db00e2ea061624e0b7c657e1cc314",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitMonitorMotionUiTest.kt": "4ff1a0ef28efbab0d94187d0b806f5d1a2287bbb5e07a499c2ff588081d5b0b7",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitMonitorPixelsUiTest.kt": "458e8acf0a25c406f5f7cb8b5a63c79f2480ee1da4d0ca1014cc138850a557e7"
+  },
+  "test_classpath_sha256": "2e0c0777844c33bf52373ff2cc3c6bc36bb68440a811d008243cc1e298d10fed",
+  "compiled_fixture_class_sha256": {
+    "at/heinz/deviceai/ui/CockpitMonitorLifecycleUiTest$CountingFeed.class": "63fbf4d6fbe4b8de086ad9ec46114ba9bc596f9a497009e6cf9c85e195491e48",
+    "at/heinz/deviceai/ui/CockpitMonitorLifecycleUiTest.class": "1105f69ee28901ec376103587075336f19d61257f17fd57857fc521c95dede39",
+    "at/heinz/deviceai/ui/CockpitMonitorMotionUiTest.class": "69210d2146d3978aef2d2bf2db931f5ce8880db55e12a9d32fa21be011e4fd87"
+  },
+  "classes": [
+    "at.heinz.deviceai.ui.CockpitMonitorLifecycleUiTest",
+    "at.heinz.deviceai.ui.CockpitMonitorMotionUiTest",
+    "at.heinz.deviceai.ui.CockpitMonitorPixelsUiTest"
+  ],
+  "exit_code": 0,
+  "tests": 8,
+  "max_heap_mb": 384,
+  "android_device": "NOT_RUN",
+  "gradle_executed_for_this_receipt": false
+}

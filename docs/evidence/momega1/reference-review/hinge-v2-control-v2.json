@@ -1,0 +1,79 @@
+{
+  "status": "PASS_SEPARATE_HINGE_AND_FIXED_REGION_V2",
+  "actualAssetSha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+  "originalLandmarkSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "actualHinge": [
+    0.0,
+    0.26699999809265135,
+    0.03499999921768904
+  ],
+  "actualOralSupportMaximumY": 0.25978612899780273,
+  "actualToothMinimumZ": 0.1366769978776574,
+  "actualEyeY": [
+    0.2884144186973572,
+    0.2884144186973572
+  ],
+  "neutralWorldMaximumError": 2.7755575615628914e-17,
+  "diagnosticNeutralMaximumError": 2.7755575615628914e-17,
+  "diagnosticViewSha256": "4c93a85f2a0b544fa702d4971b5fb2eb4b9a8cc3083de69e026392c39dc6d717",
+  "diagnosticViewLegacyResult": {
+    "sha256": "4c93a85f2a0b544fa702d4971b5fb2eb4b9a8cc3083de69e026392c39dc6d717",
+    "bytes": 8690616,
+    "vertices": 42292,
+    "triangles": 57000,
+    "morph_primitives": 3,
+    "status": "PASS",
+    "failures": [],
+    "measurements": {
+      "eye_separation_m": 0.06102388724684715,
+      "mesh_2_0_bounds": [
+        [
+          -0.25803142786026,
+          0.25803142786026
+        ],
+        [
+          -2.887162224851636e-07,
+          0.39267638325691223
+        ],
+        [
+          -0.058718241751194,
+          0.16772781312465668
+        ]
+      ],
+      "mesh_6_0_bounds": [
+        [
+          -0.25840508937835693,
+          0.25866106152534485
+        ],
+        [
+          -0.0008531801286153495,
+          0.3934977948665619
+        ],
+        [
+          -0.05950663611292839,
+          0.16802126169204712
+        ]
+      ],
+      "mesh_6_1_bounds": [
+        [
+          -0.25840508937835693,
+          0.25866106152534485
+        ],
+        [
+          -0.0008531801286153495,
+          0.3934977948665619
+        ],
+        [
+          -0.05950663611292839,
+          0.16802126169204712
+        ]
+      ]
+    },
+    "limits": "Numerical geometry only; no likeness/phonetic/naturalness/device certification."
+  },
+  "limits": [
+    "Diagnostic view is not the actual candidate; actual V1 outcome remains separate.",
+    "Functional stylized hinge constraints, not measured human TMJ anatomy.",
+    "Actual-hinge pose intersections, visual appearance and device checks remain separate."
+  ]
+}

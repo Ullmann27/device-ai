@@ -1,0 +1,33 @@
+--- a/app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt
++++ b/app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt
+@@ -4,7 +4,7 @@
+ 
+ /** Classifies intent, never grants permission. */
+ internal object OwnerDeviceRequestSafety {
+-    enum class Category { READ_ONLY, PROPOSAL, DEFERRED_CHANGE, NEGATED_CHANGE, CHANGE, ROLE_MANIPULATION }
++    enum class Category { READ_ONLY, PROPOSAL, DEFERRED_CHANGE, NEGATED_CHANGE, CHANGE, ROLE_MANIPULATION, CONVERSATION }
+     data class Assessment(val categories: Set<Category>, val readOnlyText: String) {
+         val blocked: Boolean get() = Category.ROLE_MANIPULATION in categories || Category.CHANGE in categories
+         val roleManipulation: Boolean get() = Category.ROLE_MANIPULATION in categories
+@@ -57,6 +57,12 @@
+     private val readOnlyStart = Regex("(?iu)^(?:bitte\\s+)?starte\\s+(?:bitte\\s+)?" +
+         "(?:(?:eine|die)\\s+)?(?:systemdiagnose|handyanalyse|geräteanalyse|geraeteanalyse|" +
+         "analyse\\s+(?:meines|des)\\s+(?:handys|geräts|geraets|smartphones))$")
++    private val collectiveStart = Regex("(?iu)^(?:wir\\s+starten(?:\\s+[\\p{L}\\p{N} -]+)?|" +
++        "(?:lass(?:t)?\\s+uns|wir\\s+(?:wollen|möchten|werden|können)|" +
++        "ihr\\s+(?:wollt|möchtet|werdet|könnt)|" +
++        "(?:heute|morgen|jetzt|bald|später)\\s+(?:(?:wollen|möchten|werden|können)\\s+wir|" +
++        "(?:wollt|möchtet|werdet|könnt)\\s+ihr))(?:\\s+[\\p{L}\\p{N} -]+)?\\s+starten)$")
++    private val directedStart = words("du|dich|dir|dein\\p{L}*|sie|ihnen|dass|damit")
+ 
+     fun inspect(text: String): Assessment {
+         if (roleHeader.containsMatchIn(text) || ruleOverride.containsMatchIn(text) || roleTakeover.containsMatchIn(text))
+@@ -86,6 +92,8 @@
+                 proposalSubject.containsMatchIn(clause) && proposalModal.containsMatchIn(clause) &&
+                     proposalQuestion.containsMatchIn(clause) -> Category.PROPOSAL
+                 changes.singleOrNull()?.let { negatesAction(clause, it) } == true -> Category.NEGATED_CHANGE
++                changes.singleOrNull()?.value == "starten" && !improvements.containsMatchIn(clause) &&
++                    collectiveStart.matches(clause) && !directedStart.containsMatchIn(clause) -> Category.CONVERSATION
+                 else -> Category.CHANGE
+             }
+             categories += category

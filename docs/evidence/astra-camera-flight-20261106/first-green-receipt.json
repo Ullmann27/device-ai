@@ -1,0 +1,80 @@
+{
+  "status": "HOST_PASS",
+  "baseCommit": "acfedb543d5b409c24049d9fb75f41d8012c1375",
+  "environment": "HOST_GEOMETRY_AND_ROBOLECTRIC_NOT_FILAMENT_NOT_DEVICE",
+  "exitCode": 0,
+  "sourceUnchangedDuringRun": true,
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.ContinuumAuraLifecycleUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "0e533ced74ca4cdfe873f1f25925f4811b526f3e6a6d638a08aeb97809627835"
+    },
+    {
+      "suite": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "844e3b9fb0f98ecdf35455cf93cf58145e6a2d75dc44039e75589b6e69fb74d3"
+    },
+    {
+      "suite": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "d98309e3bc265b8113fcf3d89e4eb8ac64a913135048f43658e20cec51064212"
+    },
+    {
+      "suite": "at.heinz.deviceai.avatar3d.AvatarFramingTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "c54d80411aef88e1d15f132e34ccefd02ae809b69f2546d9cee73d213752de7b"
+    }
+  ],
+  "tests": 19,
+  "failures": 0,
+  "skipped": 0,
+  "sourceManifest": {
+    "app/src/main/java/at/heinz/deviceai/AndroidAvatarCameraInput.kt": "89a66270319c36275b876baa69adf2e3ca621c0426064f25d287de236bdbcc5c",
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "997101c83d5f7bdfda883aa83b7c7c1339648695bfea303cb68490ff3cc3576f",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraFraming.kt": "94f3cbccf652830d82f729fc88db9f3ef9f801961dd14051a46c761409ee249a",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraMotion.kt": "b46dde7eba334e651c68a1c9154781c62197d89bc2cb949099af978236ab6a6c",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "180aa7ae684feaf4c69d450b8ca1af6f73b44771d584f277b8edfb68610bacf3",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AvatarCameraPolicy.kt": "d7174f72709901a7f3976ed8fc925c457d3e7d9a42b5dcaa505c3522c7484993",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt": "23fce88c2ab3d4601cbabd05ba04a075a3c38229dd3a02f48cdfdaa4e4b5e96e",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraMotionTest.kt": "4fdd085c5c22d69b8b1b0601cfa24d8a7d4ff7d009c0ad6da74a7659b89e0ce9",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarFramingTest.kt": "8b92dbd8d27cd31442f60f88f5f1f2207b169e8eef41e153e9182673b41cfbc8",
+    "app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt": "b558ac92877d0af42a72f334c89969dc43c083ad7ce118fdfb5976f3a8240f97",
+    "app/src/uiTest/java/at/heinz/deviceai/AndroidAvatarCameraInputUiTest.kt": "0b6e753e24d498b9ac07e865bd3eb637e34f4d90998e3fd1a990c7b44b875c05",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumAuraLifecycleUiTest.kt": "2cf676a319a5174c4a25af3ae94a061be4b3c183728f943d16c393cf1e6b591e",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt": "35fff049675e76a42c289df80be72a9fa1ae3170fc9b3bff6cdeb1885b95215c"
+  },
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/faf5b489dd1c/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+    "--tests",
+    "at.heinz.deviceai.avatar3d.AvatarFramingTest",
+    "--tests",
+    "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.workWindowMovesTheOriginalHeadProjectionAndReturns",
+    "--tests",
+    "at.heinz.deviceai.ContinuumAuraLifecycleUiTest"
+  ]
+}

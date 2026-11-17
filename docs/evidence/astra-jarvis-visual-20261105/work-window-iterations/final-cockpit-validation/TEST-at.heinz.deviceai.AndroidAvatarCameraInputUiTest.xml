@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:14:27" hostname="6e2f8005d77e" time="2.212">
+  <properties/>
+  <testcase name="androidPermissionIsCheckedByNativeAdapter" classname="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" time="1.995"/>
+  <testcase name="constructionAndCapabilityProbeDoNotOpenCameraOrInventObservation" classname="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" time="0.038"/>
+  <testcase name="androidPermissionWithoutOwnerGestureStaysOff" classname="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" time="0.03"/>
+  <testcase name="ownerGestureCannotStartInBackground" classname="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" time="0.046"/>
+  <testcase name="backgroundThreadCannotAcquireCameraLifecycleOwnership" classname="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" time="0.025"/>
+  <testcase name="absentHardwareBlocksAndDoesNotScheduleAHiddenFallback" classname="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" time="0.027"/>
+  <testcase name="pauseAndReturnClearButNeverStartAnUnrequestedSession" classname="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" time="0.025"/>
+  <testcase name="repeatedCancellationIsSafeAndCallbacksStayOnMainLooper" classname="at.heinz.deviceai.AndroidAvatarCameraInputUiTest" time="0.026"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

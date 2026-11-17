@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:22" hostname="b50d54a1ac03" time="0.054">
+  <properties/>
+  <testcase name="roleAndMarkupNeutralizationSurvivesBudgeting" classname="at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest" time="0.0"/>
+  <testcase name="truncationDoesNotSplitReplacementTokensOrSurrogatePairs" classname="at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest" time="0.046"/>
+  <testcase name="maliciousSuffixOutsideInputBudgetNeverAppears" classname="at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest" time="0.001"/>
+  <testcase name="escapingExpansionCannotExceedOutputBudget" classname="at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest" time="0.001"/>
+  <testcase name="smallAndZeroBudgetsHaveDefinedBoundedResults" classname="at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,11 @@
+{
+  "path": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+  "bytes": 1117320768,
+  "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+  "magic": "GGUF",
+  "version": 3,
+  "revision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+  "license": "Apache-2.0",
+  "licenseSha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+  "downloadLog": "http_code=200\nsize_download=1117320768\ntime_total=67.383142\n"
+}

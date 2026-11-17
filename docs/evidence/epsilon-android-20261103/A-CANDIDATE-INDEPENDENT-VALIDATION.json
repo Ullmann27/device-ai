@@ -1,0 +1,9 @@
+{
+  "status": "FAIL",
+  "failures": [
+    {
+      "test": "binary_structure",
+      "error": "Unexpected authored animation"
+    }
+  ]
+}

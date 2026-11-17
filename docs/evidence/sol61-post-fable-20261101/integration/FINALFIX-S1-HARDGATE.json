@@ -1,0 +1,109 @@
+{
+  "schema": "continuum.post_fable_s1_final_source_review.v1",
+  "review_time_utc": "2026-11-01T15:06:39.849215+00:00",
+  "review_type": "INDEPENDENT_READ_ONLY_SOURCE_REVIEW",
+  "head_sha": "94f4a77cb3acae62d87359888a15027705410d7d",
+  "source_state": "FROZEN_UNCOMMITTED_FOLLOWUP_AFTER_94F4A77C",
+  "result": "NO_ADDITIONAL_CONCRETE_S1_SOURCE_BLOCKER_FOUND",
+  "earlier_reports_preserved": [
+    "README.md",
+    "integration-matrix.json"
+  ],
+  "source_files_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "68b9af70237483fed3bdc67f4af65829d8112c5a87f7d01102c19789c76bfd12",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt": "42cfcf1ba99a90db427196ed67d9e32caef5ea90f68c09eee91e0355b122c4dc",
+    "app/src/main/java/at/heinz/deviceai/cognitive/TurnScopedInternetMode.kt": "21b8a6154134bd1b1ce13ef5e861eea5519b561ec1bdb9116b430e53c6b8cb36",
+    "app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt": "30b9d4cf451898330fb7a15e856b7189a8c90c9a9f57e4e28900bfe8bec15ab3",
+    "app/src/test/java/at/heinz/deviceai/cognitive/NetworkTurnConstraintTest.kt": "f0bb2e197299f999944653145e39ab1f31a91dd6ff1f0c19d939b936ba6b53ca",
+    "app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt": "93d43c95bc00ade593772111f86ed47c142011c11e1745fb126f579656e7297b",
+    "app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt": "f101eeaa1bde369cd60d321a5dbc0b99bd4d58902d3379b07a8bed082bbbe236",
+    "scripts/continuum-architecture-proof.mjs": "86a968ca1b76be37f2081bbdc92153d72f43ed52711a6a86b6bcd1d45fe5e448"
+  },
+  "working_diff_sha256": "91132f383f7a9b17d2147901216afb88ad0160d23a10687796b8cb1691a5f3e6",
+  "working_status": [
+    "M app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    " M app/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt",
+    " M app/src/test/java/at/heinz/deviceai/cognitive/NetworkTurnConstraintTest.kt",
+    " M app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt"
+  ],
+  "finding_dispositions": [
+    {
+      "id": "S1_NATIVE_TOOL_CONTINUATION",
+      "status": "SOURCE_REVIEW_CLOSED_IN_94F4A77C",
+      "evidence": "Both generateLocal branches, including respondToTools(rejected), have consent-revision checks before and after generation. Whole orchestrator and final UI publication are guarded as well."
+    },
+    {
+      "id": "S1_PERSISTED_ASK_MODE",
+      "status": "SOURCE_REVIEW_CLOSED_IN_94F4A77C",
+      "evidence": "InternetConsentPolicy.restoredMode preserves OFF, ASK and ALWAYS_ON; missing preference keeps the established fresh-install default, corrupt strings map OFF; restoreInternetMode uses the helper."
+    },
+    {
+      "id": "S1_ORIGINAL_TURN_WEB_VETO",
+      "status": "SOURCE_REVIEW_CLOSED_IN_FROZEN_FOLLOWUP",
+      "evidence": "runLocal passes original text into createToolGate. NetworkTurnConstraint.withOriginalTurn evaluates the captured original text and blocks web_search/web_read before executing the dispatch closure; proposal approval also rejects the veto. A rewritten model query cannot remove the owner prohibition."
+    },
+    {
+      "id": "S1_WEBDISPATCH_REAUTH_RACE",
+      "status": "SOURCE_REVIEW_CLOSED_IN_FROZEN_FOLLOWUP",
+      "evidence": "Proposal approval rejects changed consent revision or OFF. Web dispatch checks the original revision both before and after atomic session capture. A new session minted during OFF-to-ALWAYS_ON cannot pass the postcheck. After capture the existing immutable session and session.checkActive checks guard actual discovery and HTTP."
+    }
+  ],
+  "reviewed_authority_chain": [
+    "AgentActivity.runLocal original text and initial consent revision",
+    "AgentActivity approvalProvider rejects web on original veto/revision change/OFF",
+    "AgentActivity.createToolGate bound by NetworkTurnConstraint.withOriginalTurn",
+    "TurnScopedInternetMode.withCurrentConsentRevision around approvedModelWebSession.getAndSet(null)",
+    "ApprovedWebResearchToolRunner -> ApprovedWebResearchSession.execute/request equality/checkValid",
+    "ApprovedWebResearchSession.discovery/provider and transport accessCheck=session::checkActive"
+  ],
+  "nonblocking_test_precision": {
+    "path": "app/src/test/java/at/heinz/deviceai/cognitive/NetworkTurnConstraintTest.kt",
+    "status": "SOURCE_REVIEW_CLOSED_IN_STDLIB_REFACTOR",
+    "detail": "The direct dispatch-boundary test now uses registered web_search query, web_read url and get_battery_info. It verifies policy denial before delegate execution; it remains a unit test rather than an Android transport integration test."
+  },
+  "qa": {
+    "reviewer_started_tests_or_builds": false,
+    "git_diff_check": "PASS",
+    "root_full_host_run": "FINAL_IMMUTABLE_RERUN_PENDING_AFTER_PUSH",
+    "final_immutable_android_qa": "PENDING_FINAL_COMMIT_AND_EXACT_SHA_PROOF",
+    "real_litert_dependency_required": "com.google.ai.edge.litertlm:litertlm-android:0.18.0",
+    "corrected_current_required_junit_suites": [
+      "at.heinz.deviceai.cognitive.NetworkTurnConstraintTest",
+      "at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest",
+      "at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest",
+      "at.heinz.deviceai.learning.ContinuumEvidenceWindowTest",
+      "at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest",
+      "at.heinz.deviceai.learning.span.NaturalLocationVerificationTest",
+      "at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest",
+      "at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest",
+      "at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest",
+      "at.heinz.deviceai.learning.span.RoleAwareShadowTest",
+      "at.heinz.deviceai.learning.span.DualEvidenceReadContractTest",
+      "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+      "at.heinz.deviceai.cognitive.TurnScopedInternetModeTest",
+      "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+      "at.heinz.deviceai.cognitive.JarvisUnifiedEvidenceContractTest"
+    ],
+    "earlier_matrix_suite_list_correction": "Earlier regex extraction accidentally included two following parser source lines. The bounded REQUIRED_JUNIT extraction here is the authoritative 15-suite list for this reviewed freeze.",
+    "root_reported_prior_verification": {
+      "full_host_tests": 1520,
+      "pure_span_checks": 35,
+      "independently_executed_by_reviewer": false
+    },
+    "root_reported_focus_harness_correction": "The initial four focus failures used Kotlin module-name main instead of app and are not accepted as app regressions. Corrected -module-name app rerun is pending per root."
+  },
+  "reviewer_boundaries": {
+    "shared_repo_edits": false,
+    "publisher_mutations": false,
+    "builds_started": false,
+    "blind_fixture_reads": false
+  },
+  "prior_report_snapshot": "FINALFIX-S1-HARDGATE.before-stdlib-refactor.json",
+  "latest_review_scope": "Only the stdlib-only withOriginalTurn refactor, actual ToolRunner factory wrapping, and corrected registered test parameters; no additional areas reviewed.",
+  "stdlib_refactor": {
+    "status": "SOURCE_REVIEW_COMPATIBLE",
+    "policy_dependency": "Kotlin/Java stdlib only; no Android ToolRunner dependency remains in NetworkTurnConstraint",
+    "execution_semantics": "withOriginalTurn checks the original immutable ownerTurn before calling execute exactly once. The actual ToolRunner wraps its complete web/device dispatch in the helper.",
+    "authority_guards_unchanged": "Original owner text and start epoch remain passed by runLocal. Early approval rejection and pre/post atomic-session-capture epoch checks are unchanged."
+  }
+}

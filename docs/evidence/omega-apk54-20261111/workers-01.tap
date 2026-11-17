@@ -1,0 +1,10 @@
+✔ the same live scheduler automatically continues from a failed cycle to a healthy cycle (2508.252252ms)
+✔ finite scheduler returns zero only when its single full cycle passed (2170.128693ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5001.447696

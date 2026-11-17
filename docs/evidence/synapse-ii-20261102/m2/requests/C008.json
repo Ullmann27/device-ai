@@ -1,0 +1,30 @@
+{
+  "id": "C008",
+  "question": "Wo steht Zyvibaru?",
+  "sources": [
+    {
+      "revision": 1,
+      "sha256": "8e79ef8b6959d5d9566991e20555aedb03cf1d92139fce3b884972df33082764",
+      "sourceId": "bc:C008:s1",
+      "text": "Qetogate steht in Uvnogacu. Qecohucu steht in Uvgagica."
+    },
+    {
+      "revision": 2,
+      "sha256": "869457b1a4f129948e64b065f115b9ef81205b8dcb21e66db0dce15a243ac56e",
+      "sourceId": "bc:C008:s2",
+      "text": "Qegejunu steht in Uvrakico. Qecohucu steht in Uvgagica."
+    },
+    {
+      "revision": 3,
+      "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+      "sourceId": "bc:C008:s3",
+      "text": "Zyvibaru steht in Uvhiloza Uvjogeka und Qezonuca steht in Uvtubufi Uvnefobe Uvbohega."
+    },
+    {
+      "revision": 4,
+      "sha256": "2bedd37aab77d167e992f295d4dc98f0af48d01ba913aa378029f811b3df97ea",
+      "sourceId": "bc:C008:s4",
+      "text": "Qekujite steht in Uvmezore. Qecohucu steht in Uvgagica."
+    }
+  ]
+}

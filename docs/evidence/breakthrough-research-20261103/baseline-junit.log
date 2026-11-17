@@ -1,0 +1,46 @@
+JUnit version 4.13.2
+..E.E..E.E..E..E
+Time: 0.369
+There were 6 failures:
+1) literalExcerptKeepsTextButCannotClaimOwnerAuthorityOrForeignAttribution(at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest)
+org.junit.ComparisonFailure: expected:<[The Lumen sensor records air pressure every minute.]> but was:<[  The Lumen sensor records air pressure every minute.  ]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest.literalExcerptKeepsTextButCannotClaimOwnerAuthorityOrForeignAttribution(ResearchClaimAdmissionTest.kt:22)
+2) unrelatedFetchedPagesCannotVerifyAnInventedClaim(at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest.unrelatedFetchedPagesCannotVerifyAnInventedClaim(ResearchClaimAdmissionTest.kt:35)
+3) oneSupplyingPageCannotBorrowCorroborationFromAnUnrelatedPage(at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest)
+java.lang.AssertionError: expected:<UNVERIFIED> but was:<VERIFIED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest.oneSupplyingPageCannotBorrowCorroborationFromAnUnrelatedPage(ResearchClaimAdmissionTest.kt:46)
+4) twoPagesOnOneDomainCountAsOneSourceGroup(at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest)
+java.lang.AssertionError: expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest.twoPagesOnOneDomainCountAsOneSourceGroup(ResearchClaimAdmissionTest.kt:68)
+5) nonliteralParaphrasesAndCaseChangesAreNotExtractiveEvidence(at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest.nonliteralParaphrasesAndCaseChangesAreNotExtractiveEvidence(ResearchClaimAdmissionTest.kt:87)
+6) graphStringsReceiveTheSameBoundaryAsSourceSnippets(at.heinz.deviceai.cognitive.ResearchPromptGraphBoundaryTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ResearchPromptGraphBoundaryTest.graphStringsReceiveTheSameBoundaryAsSourceSnippets(ResearchPromptGraphBoundaryTest.kt:17)
+
+FAILURES!!!
+Tests run: 10,  Failures: 6
+

@@ -1,0 +1,20 @@
+✔ existing profile port selects distinct immutable identities without changing task budget (6.40457ms)
+✔ copied JSON and unregistered identities cannot acquire assignment origin (0.883398ms)
+✔ same builder/verifier and unsupported stage are rejected (0.619772ms)
+✔ prepared task fingerprint and canonical task cannot be exchanged (4.962191ms)
+✔ rename retains identity; removal and workspace change invalidate current association (1.142508ms)
+✔ replacing the external store method cannot substitute the admitted reader (1.280986ms)
+✔ profile model cap restricts task and a later budget reduction revokes the association (0.610078ms)
+✔ bot execution requires actual admitted isolation before reading journals or invoking provider (0.972792ms)
+✔ workspace binding is bounded correlation, never a shell or grant (1.099303ms)
+✔ lookalike executors and self-named journals cannot bind a workspace (0.698801ms)
+✔ canonical recovery preserves pending identity and rejects corrupt/torn journal (71.944252ms)
+✔ bound workspace evidence requires observation and teardown for the exact resource policy (0.86458ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 269.232514

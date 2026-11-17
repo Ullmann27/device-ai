@@ -1,0 +1,12 @@
+{
+  "baseline": "107a7bb0ce680ad0c362b4226308942aa0dfaaec",
+  "candidate": "410320c6eeaa83943ecfff81578f568e2ecd84b1",
+  "fixtureSha256": "9c94f5ee88c4bcb42a60efa1e5eab6d2afb8d54129ac971700eba27364d77947",
+  "baselinePass": 8,
+  "candidatePass": 9,
+  "wins": 1,
+  "regressions": 0,
+  "allSetupValid": true,
+  "decision": "SMALL_BOUNDED_EXTENSION; no broad cognition gain; no further tuning in this wave",
+  "nowConsumed": true
+}

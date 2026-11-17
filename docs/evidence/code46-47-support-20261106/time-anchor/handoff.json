@@ -1,0 +1,27 @@
+{
+  "base_sha": "9ee7535bb131504cc85419afd30f446089a40171",
+  "branch": "codex/continuum-code47-time-anchor-test-20261106",
+  "worktree": "/workspace/scratch/b31a9d731016/time-anchor-test-contract",
+  "patch_sha256": "b2bff37c5e9b5a51064164b78fc4e43014acfe38792b40d441268988c970cff0",
+  "test_sha256": "f6ce339222f65d36a1045821aa247c3baae784636258ae9c09d89ace203e6efa",
+  "red": {
+    "tests": 8,
+    "failures": 1,
+    "compile_exit": 0,
+    "junit_exit": 1
+  },
+  "green": {
+    "tests": 8,
+    "failures": 0,
+    "compile_exit": 0,
+    "junit_exit": 0
+  },
+  "negative_controls": 5,
+  "unchanged_control_tests": 8,
+  "production_files_changed": false,
+  "full_gradle_run": false,
+  "root_integration_pending": true,
+  "review": "APPROVED",
+  "reviewer": "/root/build_kontrolle",
+  "review_scope": "Diff, source/hash binding, actual classpath, RED/GREEN raw logs and all five mutation controls independently inspected; no weakened assertion."
+}

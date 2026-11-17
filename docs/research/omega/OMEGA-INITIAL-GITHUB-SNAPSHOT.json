@@ -1,0 +1,127 @@
+{
+  "observedAt": "2026-11-03T17:49:00Z",
+  "source": "GitHub connector read-only REST; full branch snapshot from local fetch recorded separately",
+  "main": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+  "stacks": [
+    {
+      "pr": 338,
+      "head": "6f082d062e50e91cfe5bc586f2977d5b75874976",
+      "branch": "experiment/continuum-avatar-lab-offline-20261101",
+      "base": "fix/continuum-fold7-stream-scroll-20261101",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "[AVATAR-LAB][EXPERIMENT] Kostenloser Offline-Sprachavatar als optionale Android-Testansicht"
+    },
+    {
+      "pr": 350,
+      "head": "8d2011f34fe5786d5e9d93a50eadb3102df9dc85",
+      "branch": "research/continuum-quantumflow-upstreams-20261102",
+      "base": "research/continuum-grand-challenge-20261102",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "Quantumflow: pinned Android 3D avatar, lipsync, face tracking and cinematic HUD source intake"
+    },
+    {
+      "pr": 373,
+      "head": "26162442c88929738600c1862f17e24b944a44d4",
+      "branch": "continuum/m3-grok-selbstrekonstruktion-20261103",
+      "base": "continuum/m2-grok-context-state-20261103",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "Continuum M3 (Grok): Review-#370-Fixes, attestierter CCC1-RED→GREEN-Verifier, Offline-Eval, Selbstkorrektur, deutsches Retrieval"
+    },
+    {
+      "pr": 375,
+      "head": "68a34bd9cb0660a97f7a4262b0a7612f31c929cc",
+      "branch": "integration/continuum-grok1-369-372-20261103",
+      "base": "main",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "[DRAFT/NICHT MERGEN] Integration #369–#373 + #371-H1/H2 – JUnit 1856/0, volle QA"
+    },
+    {
+      "pr": 378,
+      "head": "b95d08cad3f40293743ec414fd6aaa2b5ef9270a",
+      "branch": "jarvis-grafik/avatar-live",
+      "base": "continuum/m3-grok-selbstrekonstruktion-20261103",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "WIP: Jarvis-Avatar live (Holo AAA v1) – Zwischenstand"
+    },
+    {
+      "pr": 384,
+      "head": "34543f9c6cb94c8dc471099dd656ad932d690b96",
+      "branch": "integration/continuum-chief-team-staging-20261103",
+      "base": "integration/continuum-grok1-369-372-20261103",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "[DRAFT] Continuum Ω Chief-Team-Staging: 20 Spezialisten, Worker-Abbruch, Routinen und Mailbox verbunden"
+    },
+    {
+      "pr": 385,
+      "head": "8f64178818399c0d5412bbe20bab6b178b98c037",
+      "branch": "feature/continuum-chief-task-dag-20261103",
+      "base": "integration/continuum-chief-team-staging-20261103",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "feat(chief): bounded multi-specialist task DAG, path-conflict serialization and independent QA gate"
+    },
+    {
+      "pr": 386,
+      "head": "ee9b2dfde74499a499f86ba3e07c19f48b89c446",
+      "branch": "feature/continuum-chief-proof-gated-strategy-ledger-20261103",
+      "base": "feature/continuum-chief-task-dag-20261103",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "feat(chief): verifier-gated repair experience ledger for proven failures and successes"
+    },
+    {
+      "pr": 387,
+      "head": "eed77e56b526d199141b658a4bdd38acd2d896e0",
+      "branch": "feature/continuum-alpha-squad-ccc1-entry-20261103",
+      "base": "feature/continuum-chief-proof-gated-strategy-ledger-20261103",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "feat(ccc1): executable four-role Alpha Squad entry on existing local repair worker"
+    },
+    {
+      "pr": 388,
+      "head": "c986aa5ac771b13c886bfb880cf906454775d898",
+      "branch": "fix/continuum-code40-chief-apk-gates-20261103",
+      "base": "research/continuum-m8-render-signed-release-20261031",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "[DRAFT] Continuum Lokal Code40 candidate: Grok 1951 integration + B5, safe Chief workers and Android chat status"
+    },
+    {
+      "pr": 389,
+      "head": "00851b3d5ed91e3fde2e3eb1327bbfe38051c115",
+      "branch": "coordination/codex-six-agent-team-20261103",
+      "base": "main",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "docs(codex): bootstrap 5 isolated coding lanes + Chief coordination"
+    },
+    {
+      "pr": 390,
+      "head": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+      "branch": "fix/continuum-code40-router-race-review-20261103",
+      "base": "fix/continuum-code40-chief-apk-gates-20261103",
+      "state": "open",
+      "draft": true,
+      "mergedAt": null,
+      "title": "fix(code40): Jarvis colon routing and zero-ms paired benchmark regression"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: local pinned fallback is advisory, not a fake 511GB inference
+ok 1 - local pinned fallback is advisory, not a fake 511GB inference
+  ---
+  duration_ms: 2.796215
+  type: 'test'
+  ...
+# Subtest: remote route requires separate internet and owner-compute consent
+ok 2 - remote route requires separate internet and owner-compute consent
+  ---
+  duration_ms: 0.625805
+  type: 'test'
+  ...
+# Subtest: private memories never leave local site through this planner
+ok 3 - private memories never leave local site through this planner
+  ---
+  duration_ms: 0.276063
+  type: 'test'
+  ...
+# Subtest: remote model identity must match both exact model and pinned revision
+ok 4 - remote model identity must match both exact model and pinned revision
+  ---
+  duration_ms: 0.16492
+  type: 'test'
+  ...
+# Subtest: reject unavailable, expired, unowned, oversized and overbudget compute
+ok 5 - reject unavailable, expired, unowned, oversized and overbudget compute
+  ---
+  duration_ms: 0.8284
+  type: 'test'
+  ...
+# Subtest: local selection is preferred, but never substitutes an unpinned model
+ok 6 - local selection is preferred, but never substitutes an unpinned model
+  ---
+  duration_ms: 0.255278
+  type: 'test'
+  ...
+# Subtest: reuses pinned 48-shard Hub manifest validator without downloading weights
+ok 7 - reuses pinned 48-shard Hub manifest validator without downloading weights
+  ---
+  duration_ms: 1.126914
+  type: 'test'
+  ...
+# Subtest: malformed request, duplicate nodes and deadline fail closed
+ok 8 - malformed request, duplicate nodes and deadline fail closed
+  ---
+  duration_ms: 0.533346
+  type: 'test'
+  ...
+# Subtest: routing snapshots primitive offer data against later mutation
+ok 9 - routing snapshots primitive offer data against later mutation
+  ---
+  duration_ms: 0.438609
+  type: 'test'
+  ...
+# Subtest: AES-GCM envelope validates ciphertext digest, plaintext digest, key and auth tag
+ok 10 - AES-GCM envelope validates ciphertext digest, plaintext digest, key and auth tag
+  ---
+  duration_ms: 10.238827
+  type: 'test'
+  ...
+# Subtest: real two-process replication, corruption failover, repair, unavailable node, cache and restart
+ok 11 - real two-process replication, corruption failover, repair, unavailable node, cache and restart
+  ---
+  duration_ms: 715.07673
+  type: 'test'
+  ...
+# Subtest: versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery
+ok 12 - versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery
+  ---
+  duration_ms: 364.59815
+  type: 'test'
+  ...
+# Subtest: real HTTP rejects absent/wrong/scoped tokens, traversal, wrong namespace, malformed hash and oversized body
+ok 13 - real HTTP rejects absent/wrong/scoped tokens, traversal, wrong namespace, malformed hash and oversized body
+  ---
+  duration_ms: 229.214239
+  type: 'test'
+  ...
+# Subtest: real disk/quota limits reject new writes without committing object or claiming synthetic capacity
+ok 14 - real disk/quota limits reject new writes without committing object or claiming synthetic capacity
+  ---
+  duration_ms: 206.719781
+  type: 'test'
+  ...
+# Subtest: root/block/cache symlinks and catalog HMAC tampering fail closed; untrusted bytes are data only
+ok 15 - root/block/cache symlinks and catalog HMAC tampering fail closed; untrusted bytes are data only
+  ---
+  duration_ms: 226.251129
+  type: 'test'
+  ...
+# Subtest: bounded encrypted cache evicts within quota and does not replace object/tombstone checks
+ok 16 - bounded encrypted cache evicts within quota and does not replace object/tombstone checks
+  ---
+  duration_ms: 226.51339
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2194.797028

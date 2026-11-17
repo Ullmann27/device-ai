@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "failed_log_sha256": "77784de7d17b0933924e2b04cdc2f38596a6568ff8d692060bac35dfc19c7121",
+  "error": "LocalModelLoadSourceTest.kt:79:71 actual String, expected Double",
+  "changed_path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelLoadSourceTest.kt",
+  "new_sha256": "b0aa7c3f1347c4fe2188727b0635737fa7b5e1d5f9374b1c34bb36fbbcffb0e9",
+  "production_changed": false,
+  "assertions_changed": false,
+  "combined_android": "NOT_RUN",
+  "reference_remote_source": "8decff576dc05ed3cdb0b8ded680b6098a1d8537",
+  "external_run_reported_source": "18e16d5ad5ca7005bba2b8bcfd494ccd1475a18d",
+  "external_head_observed_after_failure": "d351471c3ccd342a42dd07c24b1ec38aada63562",
+  "external_freeze_attested_by_root": false,
+  "independent_api_review": "Android-36 android.jar exposes Provider(String,double,String); same constructor exists in JDK21. Exact one-literal diff; all assertions and provider lifecycle unchanged."
+}

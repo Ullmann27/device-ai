@@ -1,0 +1,24 @@
+{
+  "composition_base": "22136ce6c3c23682a40006d446ad9b7234ac76e0",
+  "helper_blob_source": "ed6e59101d33faa830b1ac2c0beb8fb4f0972128",
+  "frozen_tests_commit": "d673a504",
+  "composition_is_git_commit": false,
+  "verdict": "ACCEPT_RECALL_CONTROL_PROVIDER_BOUNDARY",
+  "evidence_class": "CONTRACT_TEST",
+  "real_inference": "NOT_RUN",
+  "command": "MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-ablation-22136-ed6e node --import ./tools/momega1-memory-review/tests/fixture-tier-compat.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/recall-ablation.test.mjs",
+  "cwd": "/workspace/momega1-memory-review",
+  "exit": 0,
+  "pass": 6,
+  "fail": 0,
+  "skip": 0,
+  "sha256": {
+    "docs/evidence/momega1/memory-review/ablation-candidate.tap": "11fd50716cdc905b057bf084cb4059e6fd7d0c050f8714bd3f2dc572bb2de200",
+    "docs/evidence/momega1/memory-review/ablation-frozen-tests.sha256": "a3237d22752b3a5501ab1157a1717759b70e1f0dce5de7cf85905f206f55cc7e",
+    "docs/evidence/momega1/memory-review/ablation-candidate.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "tools/momega1-memory-review/tests/recall-ablation.test.mjs": "b1c7aada3395f288a9988a81fbec318a4878297ab11d0ee7762053698ffdefb6",
+    "tools/momega1-memory-review/tests/ablation-fixture.mjs": "9c80f73f8b5e83f8c807665daa23151f70c9c58fe5d974fecdda831b84d84927",
+    "composition/.github/continuum/coding-orchestrator.mjs": "163fcf953ab26635214fb5f0d961ba3c24e77d7f81aad43b06e34a349f43e31c",
+    "composition/.github/continuum/ccc1-technical-recall.mjs": "aab07d4c04fc069186b62e1c6a5d8e442624e6753b7f1cc0f64c77aaaef4c7f7"
+  }
+}

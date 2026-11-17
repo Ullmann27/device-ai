@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2026-11-11T13:51:52" hostname="35a0f840332e" time="41.068">
+  <properties/>
+  <testcase name="actualProviderReadRendersAndExtractsSyntheticPdf" classname="at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest" time="41.068">
+    <failure message="java.lang.NoSuchMethodError: 'long java.io.FileDescriptor.getOwnerId$()'" type="java.lang.NoSuchMethodError">java.lang.NoSuchMethodError: 'long java.io.FileDescriptor.getOwnerId$()'
+	at libcore.io.IoUtils.acquireRawFd(IoUtils.java:74)
+	at android.os.ParcelFileDescriptor.acquireRawFd(ParcelFileDescriptor.java:1315)
+	at android.os.ParcelFileDescriptor.detachFd(ParcelFileDescriptor.java:818)
+	at android.os.ParcelFileDescriptor.detachFd(ParcelFileDescriptor.java:813)
+	at android.graphics.pdf.PdfProcessor.create(PdfProcessor.java:112)
+	at android.graphics.pdf.PdfRenderer.__constructor__(PdfRenderer.java:193)
+	at android.graphics.pdf.PdfRenderer.&lt;init&gt;(PdfRenderer.java:187)
+	at at.heinz.deviceai.PdfDocumentIntake.read(PdfDocumentIntake.kt:46)
+	at at.heinz.deviceai.PdfDocumentIntake.read$default(PdfDocumentIntake.kt:36)
+	at at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest.actualProviderReadRendersAndExtractsSyntheticPdf(PdfIntakeNativeDecodeProbeUiTest.kt:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

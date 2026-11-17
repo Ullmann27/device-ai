@@ -1,0 +1,14 @@
+{
+  "observedUtc": "2026-11-03T20:44:32.520340+00:00",
+  "modelPath": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+  "modelBytes": 1117320768,
+  "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+  "modelUid": 1000,
+  "currentUid": 1000,
+  "modelHardlinks": 1,
+  "runtimeExists": false,
+  "buildExitExists": false,
+  "runtimeEnvExists": false,
+  "sourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+  "sourceTrackedClean": true
+}

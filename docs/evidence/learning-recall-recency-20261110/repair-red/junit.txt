@@ -1,0 +1,21 @@
+JUnit version 4.13.2
+..........E.E...................
+Time: 0.237
+There were 2 failures:
+1) higherRelevanceExpiredCandidatesCannotDisplaceEligibleRecall(at.heinz.deviceai.cognitive.ExperienceRecallWindowTest)
+java.lang.AssertionError: expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ExperienceRecallWindowTest.higherRelevanceExpiredCandidatesCannotDisplaceEligibleRecall(ExperienceRecallWindowTest.kt:34)
+2) futureCandidatesCannotDisplaceEligibleRecall(at.heinz.deviceai.cognitive.ExperienceRecallWindowTest)
+java.lang.AssertionError: expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ExperienceRecallWindowTest.futureCandidatesCannotDisplaceEligibleRecall(ExperienceRecallWindowTest.kt:24)
+
+FAILURES!!!
+Tests run: 30,  Failures: 2

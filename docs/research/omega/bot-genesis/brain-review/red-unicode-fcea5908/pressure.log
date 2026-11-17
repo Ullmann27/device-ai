@@ -1,0 +1,20 @@
+PASS zero-profile-model-budget-blocks-preparation-without-poisoning-slot
+PASS expired-profile-deadline-rejects-current-and-completion
+PASS accepted-output-becomes-stale-after-note-withdrawal
+FAIL valid-unicode-history-stays-within-actual-serialization-budget: IllegalArgumentException: Failed requirement.
+java.lang.IllegalArgumentException: Failed requirement.
+	at at.heinz.deviceai.chief.ChiefBotConversationCodec.encode(ChiefBotConversation.kt:281)
+	at at.heinz.deviceai.chief.ChiefBotProfileStore.saveConversation$lambda$0$0(ChiefBotProfileStore.kt:217)
+	at at.heinz.deviceai.chief.ChiefBotProfileStore.update(ChiefBotProfileStore.kt:293)
+	at at.heinz.deviceai.chief.ChiefBotProfileStore.saveConversation$lambda$0(ChiefBotProfileStore.kt:214)
+	at at.heinz.deviceai.chief.ChiefBotProfileStore.locked(ChiefBotProfileStore.kt:387)
+	at at.heinz.deviceai.chief.ChiefBotProfileStore.saveConversation$main(ChiefBotProfileStore.kt:213)
+	at at.heinz.deviceai.chief.ChiefBotConversation.complete(ChiefBotConversation.kt:232)
+	at at.heinz.deviceai.chief.ConversationPressureChecks.main$lambda$3(ConversationPressureChecks.kt:99)
+	at at.heinz.deviceai.chief.ConversationPressureChecks.test(ConversationPressureChecks.kt:29)
+	at at.heinz.deviceai.chief.ConversationPressureChecks.main(ConversationPressureChecks.kt:94)
+OBSERVATION committedBeforeFull=90 retainedConversationBytes=4172924 resetClearedPointer=true oldObjectsRetained=true
+PASS real-object-budget-saturation-preserves-last-commit-and-withdrawal
+RESULT passed=4 failed=1
+Exception in thread "main" java.lang.IllegalStateException: Check failed.
+	at at.heinz.deviceai.chief.ConversationPressureChecks.main(ConversationPressureChecks.kt:128)

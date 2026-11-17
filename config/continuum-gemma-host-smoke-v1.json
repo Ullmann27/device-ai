@@ -1,0 +1,11 @@
+{
+  "schema": "CONTINUUM_HOST_SMOKE_V1",
+  "provenance": "Authored synthetic public test prompts; no owner memories or chat data",
+  "purpose": "First bounded real native inference check, not a blind general-intelligence benchmark",
+  "cases": [
+    {"id": "arithmetic", "prompt": "Berechne 38 + 47. Antworte nur mit der Ergebniszahl.", "expected": "85"},
+    {"id": "identifier-positive", "prompt": "Beleg: Roboter KIRA-62 wohnt in Wien. Frage: Wo wohnt KIRA-62? Antworte nur mit dem Ortsnamen aus dem Beleg.", "expected": "Wien"},
+    {"id": "identifier-absent", "prompt": "Beleg: Roboter KIRA-62 wohnt in Wien. Frage: Wo wohnt KIRA-63? Falls der Beleg diese Frage nicht beantwortet, antworte nur UNBEKANNT. Erfinde keinen Ort.", "expected": "UNBEKANNT"},
+    {"id": "logic", "prompt": "Jeder Luro ist ein Tavo. Kein Tavo ist blau. Kann ein Luro blau sein? Antworte nur JA oder NEIN.", "expected": "NEIN"}
+  ]
+}

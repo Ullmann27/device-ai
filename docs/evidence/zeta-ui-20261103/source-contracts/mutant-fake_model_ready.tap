@@ -1,0 +1,604 @@
+TAP version 13
+# Subtest: transparent native 3D hero has no network, model execution or fake status
+ok 1 - transparent native 3D hero has no network, model execution or fake status
+  ---
+  duration_ms: 2.003104
+  type: 'test'
+  ...
+# Subtest: reference start screen reaches all seven real Android feature paths
+ok 2 - reference start screen reaches all seven real Android feature paths
+  ---
+  duration_ms: 0.908427
+  type: 'test'
+  ...
+# Subtest: responsive dashboard retains chat composer, updates and keyboard visibility
+ok 3 - responsive dashboard retains chat composer, updates and keyboard visibility
+  ---
+  duration_ms: 0.280893
+  type: 'test'
+  ...
+# Subtest: reference-style composer keeps real model/web/file actions and truthful idle state
+ok 4 - reference-style composer keeps real model/web/file actions and truthful idle state
+  ---
+  duration_ms: 0.475546
+  type: 'test'
+  ...
+# Subtest: large text is bounded and propagated into adaptive layout without window shrinking
+ok 5 - large text is bounded and propagated into adaptive layout without window shrinking
+  ---
+  duration_ms: 0.323096
+  type: 'test'
+  ...
+# Subtest: start screen never manufactures ready model or internet state
+not ok 6 - start screen never manufactures ready model or internet state
+  ---
+  duration_ms: 1.998977
+  type: 'test'
+  location: '/workspace/zeta-ui-node/.github/continuum/android-holographic-home.test.mjs:111:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /val online: Boolean = false/. Input:
+    
+    'package at.heinz.deviceai.ui\n' +
+      '\n' +
+      'import java.util.Locale\n' +
+      '\n' +
+      '/**\n' +
+      " * Everything the Continuum start screen shows, as plain values read from the app's real subsystems\n" +
+      ' * (learning core, backlog, model runtime, storage, permissions). `null` always means "not measured / not available"\n' +
+      ' * and is rendered as "—"; no field ever carries a sample number. Example values for the JVM preview live only in the\n' +
+      ' * test sources.\n' +
+      ' */\n' +
+      'data class ContinuumDashboardState(\n' +
+      '    val model: ModelStatus = ModelStatus(),\n' +
+      '    val learning: LearningStatus = LearningStatus(),\n' +
+      '    val storage: StorageStatus = StorageStatus(),\n' +
+      '    val development: DevelopmentStatus = DevelopmentStatus(),\n' +
+      '    val system: SystemStatus = SystemStatus(),\n' +
+      '    val core: CoreStatus = CoreStatus(),\n' +
+      '    /** Real pending items (curiosity question, receipts to review, web learning inbox); 0 hides the bell badge. */\n' +
+      '    val pendingNotifications: Int = 0\n' +
+      ') {\n' +
+      '    data class ModelStatus(\n' +
+      '        /** Name of the core that currently answers in chat, e.g. the loaded local model or the start core. */\n' +
+      '        val name: String = "Continuum-Kern",\n' +
+      '        /** True only while a loaded local language model is READY; a merely readable SWB1 learning status is not "online". */\n' +
+      '        val online: Boolean = true,\n' +
+      '        val stateLabel: String = "Offline",\n' +
+      '        /**\n' +
+      '         * Share of correctly answered held-out check questions of the learning core (intent + semantic cases), in percent;\n' +
+      '         * null = not measured. A narrow test score, not a measure of general language intelligence.\n' +
+      '         */\n' +
+      '        val qualityPercent: Int? = null,\n' +
+      '        /** Change of [qualityPercent] against the measurement 24 h ago, in percentage points; null = no 24-h history yet. */\n' +
+      '        val qualityDelta24h: Int? = null,\n' +
+      '        /** Median of the measured response times of the last chat answers; null = no answer measured yet. */\n' +
+      '        val latencyMs: Int? = null,\n' +
+      '        /** Real context capacity of the answering core, e.g. "8 Züge"; null = unknown. */\n' +
+      '        val context: String? = null,\n' +
+      '        val mode: String = "Lokal",\n' +
+      '        val lastUpdate: String? = null\n' +
+      '    )\n' +
+      '\n' +
+      '    data class Event(val title: String, val ago: String, val kind: Int = 0)\n' +
+      '\n' +
+      '    data class LearningStatus(\n' +
+      '        /** Learning events recorded today (journal entries / weight updates); null = journal unreadable. */\n' +
+      '        val today: Int? = null,\n' +
+      '        /** Change versus yesterday in percent; null when yesterday had no data. */\n' +
+      '        val changePercent: Int? = null,\n' +
+      '        /** Real per-hour activity of the last 24 h (oldest first); empty = nothing recorded. */\n' +
+      '        val series: List<Float> = emptyList(),\n' +
+      '        val recent: List<Event> = emptyList(),\n' +
+      '        val live: Boolean = false\n' +
+      '    )\n' +
+      '\n' +
+      '    data class Segment(val label: String, val bytes: Long?, val color: Int)\n' +
+      '\n' +
+      '    data class StorageStatus(\n' +
+      '        /** Used share of the device storage that holds the app data; null = unreadable. */\n' +
+      '        val usedPercent: Int? = null,\n' +
+      '        val segments: List<Segment> = emptyList(),\n' +
+      '        val activeSources: Int? = null,\n' +
+      '        val totalSources: Int? = null,\n' +
+      '        val syncLabel: String = "Keine Synchronisation"\n' +
+      '    )\n' +
+      '\n' +
+      '    data class Project(val name: String, val status: String, val state: ProjectState, val ago: String)\n' +
+      '    enum class ProjectState { OK, RUNNING, WORKING, READY, FAILED, IDLE }\n' +
+      '\n' +
+      '    data class DevelopmentStatus(\n' +
+      '        val activeProjects: Int? = null,\n' +
+      '        val runningTasks: Int? = null,\n' +
+      '        val errors: Int? = null,\n' +
+      '        /** Real per-day completed checks of the last 14 days (oldest first); empty = none recorded. */\n' +
+      '        val series: List<Float> = emptyList(),\n' +
+      '        val projects: List<Project> = emptyList()\n' +
+      '    ) {\n' +
+      '        val healthy: Boolean? get() = errors?.let { it == 0 }\n' +
+      '        val statusLabel: String get() = when (healthy) {\n' +
+      '            true -> "Keine Fehlschläge"\n' +
+      '            false -> "${errors} fehlgeschlagen"\n' +
+      '            null -> "Status unbekannt"\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    data class SystemStatus(\n' +
+      '        /** CPU share of this app process, measured over the last refresh interval. */\n' +
+      '        val appCpuPercent: Int? = null,\n' +
+      '        /** System-reported battery capacity; unknown when Android supplies no valid reading. */\n' +
+      '        val batteryPercent: Int? = null,\n' +
+      '        /** Device RAM in use. */\n' +
+      '        val memoryPercent: Int? = null,\n' +
+      '        /** Device storage in use. */\n' +
+      '        val storagePercent: Int? = null,\n' +
+      '        /** Connectivity: true = validated internet, false = offline, null = unknown. */\n' +
+      '        val networkOnline: Boolean? = null,\n' +
+      '        val networkLabel: String = "—",\n' +
+      '        /** Real recent activity values (e.g. app CPU samples), oldest first. */\n' +
+      '        val activity: List<Float> = emptyList(),\n' +
+      '        /** Open diagnostics issues; null = the issue list could not be read (never shown as "no problems"). */\n' +
+      '        val openIssues: Int? = null\n' +
+      '    ) {\n' +
+      '        /** Short badge text: only what the diagnostics list says; an empty list is not called "optimal". */\n' +
+      '        val overall: String get() = when (openIssues) {\n' +
+      '            null -> "Liste unlesbar"\n' +
+      '            else -> "$openIssues offen"\n' +
+      '        }\n' +
+      '        /** The same fact as a sentence for TalkBack. */\n' +
+      '        val overallSpoken: String get() = when (openIssues) {\n' +
+      '            null -> "Fehlerliste nicht lesbar"\n' +
+      '            0 -> "keine offenen Fehlermeldungen"\n' +
+      '            1 -> "eine offene Fehlermeldung"\n' +
+      '            else -> "$openIssues offene Fehlermeldungen"\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    /** Status lines under the six labels around the core; each is a real state, never a slogan. */\n' +
+      '    data class CoreStatus(\n' +
+      '        val connected: String = "Offline",\n' +
+      '        val thinking: String = "Bereit",\n' +
+      '        val learning: String = "Bereit",\n' +
+      '        val analysing: String = "Bereit",\n' +
+      '        val developing: String = "Bereit",\n' +
+      '        val evolving: String = "Aus"\n' +
+      '    )\n' +
+      '\n' +
+      '    companion object {\n' +
+      '        const val UNKNOWN = "—"\n' +
+      '\n' +
+      '        fun percent(value: Int?): String = value?.let { "$it%" } ?: UNKNOWN\n' +
+      '\n' +
+      '        /**\n' +
+      '         * Visual short labels for the physically narrow storage legend.\n' +
+      '         * The full, measured storage category remains in Segment.label and\n' +
+      "         * the element's spoken TalkBack description.\n" +
+      '         */\n' +
+      '        fun compactStorageLabel(label: String): String = when (label) {\n' +
+      '            "App: eigene Dateien" -> "Eigene"\n' +
+      '            "App: Wissensquellen" -> "Quellen"\n' +
+      '            "App: Projektdateien" -> "Projekte"\n' +
+      '            "Übrige Gerätebelegung" -> "Übrige"\n' +
+      '            else -> label\n' +
+      '        }\n' +
+      '\n' +
+      '        /** "24 h: +3 Pkt.", "24 h: −2 Pkt.", "24 h: unverändert" or "24 h: noch kein Vergleich" – also shows declines. */\n' +
+      '        fun delta24h(value: Int?): String = when {\n' +
+      '            value == null -> "24 h: noch kein Vergleich"\n' +
+      '            value > 0 -> "24 h: +$value Pkt."\n' +
+      '            value < 0 -> "24 h: −${-value} Pkt."\n' +
+      '            else -> "24 h: unverändert"\n' +
+      '        }\n' +
+      '        fun count(value: Int?): String = value?.toString() ?: UNKNOWN\n' +
+      '        fun millis(value: Int?): String = value?.let { "$it ms" } ?: UNKNOWN\n' +
+      '\n' +
+      '        /** "432 GB", "1,4 GB", "820 MB", "12 KB" – German decimal comma, as in the reference. */\n' +
+      '        fun bytes(value: Long?): String {\n' +
+      '            if (value == null || value < 0) return UNKNOWN\n' +
+      '            val units = arrayOf("B", "KB", "MB", "GB", "TB")\n' +
+      '            var v = value.toDouble(); var u = 0\n' +
+      '            while (v >= 1000.0 && u < units.size - 1) { v /= 1000.0; u++ }\n' +
+      '            val text = if (v >= 100 || u == 0) String.format(Locale.GERMANY, "%.0f", v) else String.format(Locale.GERMANY, "%.1f", v)\n' +
+      '            return "$text ${units[u]}"\n' +
+      '        }\n' +
+      '\n' +
+      '        /** "vor 6 Min.", "vor 2 Std.", "vor 3 Tagen" (as in the reference) from an age in milliseconds. */\n' +
+      '        fun ago(ageMs: Long?): String {\n' +
+      '            if (ageMs == null || ageMs < 0) return UNKNOWN\n' +
+      '            val minutes = ageMs / 60_000\n' +
+      '            return when {\n' +
+      '                minutes < 1 -> "gerade eben"\n' +
+      '                minutes < 60 -> "vor $minutes Min."\n' +
+      '                minutes < 60 * 24 -> "vor ${minutes / 60} Std."\n' +
+      '                else -> "vor ${minutes / (60 * 24)} Tagen"\n' +
+      '            }\n' +
+      '        }\n' +
+      '    }\n' +
+      '}\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    package at.heinz.deviceai.ui
+    
+    import java.util.Locale
+    
+    /**
+     * Everything the Continuum start screen shows, as plain values read from the app's real subsystems
+     * (learning core, backlog, model runtime, storage, permissions). `null` always means "not measured / not available"
+     * and is rendered as "—"; no field ever carries a sample number. Example values for the JVM preview live only in the
+     * test sources.
+     */
+    data class ContinuumDashboardState(
+        val model: ModelStatus = ModelStatus(),
+        val learning: LearningStatus = LearningStatus(),
+        val storage: StorageStatus = StorageStatus(),
+        val development: DevelopmentStatus = DevelopmentStatus(),
+        val system: SystemStatus = SystemStatus(),
+        val core: CoreStatus = CoreStatus(),
+        /** Real pending items (curiosity question, receipts to review, web learning inbox); 0 hides the bell badge. */
+        val pendingNotifications: Int = 0
+    ) {
+        data class ModelStatus(
+            /** Name of the core that currently answers in chat, e.g. the loaded local model or the start core. */
+            val name: String = "Continuum-Kern",
+            /** True only while a loaded local language model is READY; a merely readable SWB1 learning status is not "online". */
+            val online: Boolean = true,
+            val stateLabel: String = "Offline",
+            /**
+             * Share of correctly answered held-out check questions of the learning core (intent + semantic cases), in percent;
+             * null = not measured. A narrow test score, not a measure of general language intelligence.
+             */
+            val qualityPercent: Int? = null,
+            /** Change of [qualityPercent] against the measurement 24 h ago, in percentage points; null = no 24-h history yet. */
+            val qualityDelta24h: Int? = null,
+            /** Median of the measured response times of the last chat answers; null = no answer measured yet. */
+            val latencyMs: Int? = null,
+            /** Real context capacity of the answering core, e.g. "8 Züge"; null = unknown. */
+            val context: String? = null,
+            val mode: String = "Lokal",
+            val lastUpdate: String? = null
+        )
+    
+        data class Event(val title: String, val ago: String, val kind: Int = 0)
+    
+        data class LearningStatus(
+            /** Learning events recorded today (journal entries / weight updates); null = journal unreadable. */
+            val today: Int? = null,
+            /** Change versus yesterday in percent; null when yesterday had no data. */
+            val changePercent: Int? = null,
+            /** Real per-hour activity of the last 24 h (oldest first); empty = nothing recorded. */
+            val series: List<Float> = emptyList(),
+            val recent: List<Event> = emptyList(),
+            val live: Boolean = false
+        )
+    
+        data class Segment(val label: String, val bytes: Long?, val color: Int)
+    
+        data class StorageStatus(
+            /** Used share of the device storage that holds the app data; null = unreadable. */
+            val usedPercent: Int? = null,
+            val segments: List<Segment> = emptyList(),
+            val activeSources: Int? = null,
+            val totalSources: Int? = null,
+            val syncLabel: String = "Keine Synchronisation"
+        )
+    
+        data class Project(val name: String, val status: String, val state: ProjectState, val ago: String)
+        enum class ProjectState { OK, RUNNING, WORKING, READY, FAILED, IDLE }
+    
+        data class DevelopmentStatus(
+            val activeProjects: Int? = null,
+            val runningTasks: Int? = null,
+            val errors: Int? = null,
+            /** Real per-day completed checks of the last 14 days (oldest first); empty = none recorded. */
+            val series: List<Float> = emptyList(),
+            val projects: List<Project> = emptyList()
+        ) {
+            val healthy: Boolean? get() = errors?.let { it == 0 }
+            val statusLabel: String get() = when (healthy) {
+                true -> "Keine Fehlschläge"
+                false -> "${errors} fehlgeschlagen"
+                null -> "Status unbekannt"
+            }
+        }
+    
+        data class SystemStatus(
+            /** CPU share of this app process, measured over the last refresh interval. */
+            val appCpuPercent: Int? = null,
+            /** System-reported battery capacity; unknown when Android supplies no valid reading. */
+            val batteryPercent: Int? = null,
+            /** Device RAM in use. */
+            val memoryPercent: Int? = null,
+            /** Device storage in use. */
+            val storagePercent: Int? = null,
+            /** Connectivity: true = validated internet, false = offline, null = unknown. */
+            val networkOnline: Boolean? = null,
+            val networkLabel: String = "—",
+            /** Real recent activity values (e.g. app CPU samples), oldest first. */
+            val activity: List<Float> = emptyList(),
+            /** Open diagnostics issues; null = the issue list could not be read (never shown as "no problems"). */
+            val openIssues: Int? = null
+        ) {
+            /** Short badge text: only what the diagnostics list says; an empty list is not called "optimal". */
+            val overall: String get() = when (openIssues) {
+                null -> "Liste unlesbar"
+                else -> "$openIssues offen"
+            }
+            /** The same fact as a sentence for TalkBack. */
+            val overallSpoken: String get() = when (openIssues) {
+                null -> "Fehlerliste nicht lesbar"
+                0 -> "keine offenen Fehlermeldungen"
+                1 -> "eine offene Fehlermeldung"
+                else -> "$openIssues offene Fehlermeldungen"
+            }
+        }
+    
+        /** Status lines under the six labels around the core; each is a real state, never a slogan. */
+        data class CoreStatus(
+            val connected: String = "Offline",
+            val thinking: String = "Bereit",
+            val learning: String = "Bereit",
+            val analysing: String = "Bereit",
+            val developing: String = "Bereit",
+            val evolving: String = "Aus"
+        )
+    
+        companion object {
+            const val UNKNOWN = "—"
+    
+            fun percent(value: Int?): String = value?.let { "$it%" } ?: UNKNOWN
+    
+            /**
+             * Visual short labels for the physically narrow storage legend.
+             * The full, measured storage category remains in Segment.label and
+             * the element's spoken TalkBack description.
+             */
+            fun compactStorageLabel(label: String): String = when (label) {
+                "App: eigene Dateien" -> "Eigene"
+                "App: Wissensquellen" -> "Quellen"
+                "App: Projektdateien" -> "Projekte"
+                "Übrige Gerätebelegung" -> "Übrige"
+                else -> label
+            }
+    
+            /** "24 h: +3 Pkt.", "24 h: −2 Pkt.", "24 h: unverändert" or "24 h: noch kein Vergleich" – also shows declines. */
+            fun delta24h(value: Int?): String = when {
+                value == null -> "24 h: noch kein Vergleich"
+                value > 0 -> "24 h: +$value Pkt."
+                value < 0 -> "24 h: −${-value} Pkt."
+                else -> "24 h: unverändert"
+            }
+            fun count(value: Int?): String = value?.toString() ?: UNKNOWN
+            fun millis(value: Int?): String = value?.let { "$it ms" } ?: UNKNOWN
+    
+            /** "432 GB", "1,4 GB", "820 MB", "12 KB" – German decimal comma, as in the reference. */
+            fun bytes(value: Long?): String {
+                if (value == null || value < 0) return UNKNOWN
+                val units = arrayOf("B", "KB", "MB", "GB", "TB")
+                var v = value.toDouble(); var u = 0
+                while (v >= 1000.0 && u < units.size - 1) { v /= 1000.0; u++ }
+                val text = if (v >= 100 || u == 0) String.format(Locale.GERMANY, "%.0f", v) else String.format(Locale.GERMANY, "%.1f", v)
+                return "$text ${units[u]}"
+            }
+    
+            /** "vor 6 Min.", "vor 2 Std.", "vor 3 Tagen" (as in the reference) from an age in milliseconds. */
+            fun ago(ageMs: Long?): String {
+                if (ageMs == null || ageMs < 0) return UNKNOWN
+                val minutes = ageMs / 60_000
+                return when {
+                    minutes < 1 -> "gerade eben"
+                    minutes < 60 -> "vor $minutes Min."
+                    minutes < 60 * 24 -> "vor ${minutes / 60} Std."
+                    else -> "vor ${minutes / (60 * 24)} Tagen"
+                }
+            }
+        }
+    }
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/android-holographic-home.test.mjs:114:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: exactly five owner-visible work areas remain in fixed order
+ok 7 - exactly five owner-visible work areas remain in fixed order
+  ---
+  duration_ms: 2.486211
+  type: 'test'
+  ...
+# Subtest: phone bottom navigation stays outside conversation pane and above system bar
+ok 8 - phone bottom navigation stays outside conversation pane and above system bar
+  ---
+  duration_ms: 0.429676
+  type: 'test'
+  ...
+# Subtest: all navigation taps route to existing trusted screens
+ok 9 - all navigation taps route to existing trusted screens
+  ---
+  duration_ms: 0.383257
+  type: 'test'
+  ...
+# Subtest: home work areas are reachable without expert-only controls
+ok 10 - home work areas are reachable without expert-only controls
+  ---
+  duration_ms: 1.145524
+  type: 'test'
+  ...
+# Subtest: Fold rail offers the five work areas without a second bottom bar
+ok 11 - Fold rail offers the five work areas without a second bottom bar
+  ---
+  duration_ms: 0.401945
+  type: 'test'
+  ...
+# Subtest: existing chat, learning monitoring and owner permission boundaries remain
+ok 12 - existing chat, learning monitoring and owner permission boundaries remain
+  ---
+  duration_ms: 1.207186
+  type: 'test'
+  ...
+# Subtest: Fold rail and start screen reach all actions at short heights
+ok 13 - Fold rail and start screen reach all actions at short heights
+  ---
+  duration_ms: 0.33928
+  type: 'test'
+  ...
+# Subtest: start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+ok 14 - start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+  ---
+  duration_ms: 0.689368
+  type: 'test'
+  ...
+# Subtest: recreated activity preserves chat selection and draft without persistent More selection
+ok 15 - recreated activity preserves chat selection and draft without persistent More selection
+  ---
+  duration_ms: 0.466301
+  type: 'test'
+  ...
+# Subtest: design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+ok 16 - design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+  ---
+  duration_ms: 0.568706
+  type: 'test'
+  ...
+# Subtest: living hologram schedules subsequent visible frames and stops callbacks on detach
+ok 17 - living hologram schedules subsequent visible frames and stops callbacks on detach
+  ---
+  duration_ms: 1.475671
+  type: 'test'
+  ...
+# Subtest: orbital rings use visible phase movement, not the old near-static factor
+ok 18 - orbital rings use visible phase movement, not the old near-static factor
+  ---
+  duration_ms: 0.259461
+  type: 'test'
+  ...
+# Subtest: header and six live action tiles fit their boxes while legacy orbital controls stay available
+ok 19 - header and six live action tiles fit their boxes while legacy orbital controls stay available
+  ---
+  duration_ms: 0.579432
+  type: 'test'
+  ...
+# Subtest: battery, app CPU, RAM and GPU measurements remain honestly distinguished
+ok 20 - battery, app CPU, RAM and GPU measurements remain honestly distinguished
+  ---
+  duration_ms: 0.186981
+  type: 'test'
+  ...
+# Subtest: CCC1 integrated in same owner-app source without changing private app identity
+ok 21 - CCC1 integrated in same owner-app source without changing private app identity
+  ---
+  duration_ms: 0.367964
+  type: 'test'
+  ...
+# Subtest: existing on-device learning state and protected independent training are never reset by launch
+ok 22 - existing on-device learning state and protected independent training are never reset by launch
+  ---
+  duration_ms: 0.236096
+  type: 'test'
+  ...
+# Subtest: portrait selection keeps actual Fold window threshold and separate landscape rail
+ok 23 - portrait selection keeps actual Fold window threshold and separate landscape rail
+  ---
+  duration_ms: 1.271384
+  type: 'test'
+  ...
+# Subtest: seven live cards reflow in shared columns and remain inside scrolling content
+ok 24 - seven live cards reflow in shared columns and remain inside scrolling content
+  ---
+  duration_ms: 0.509226
+  type: 'test'
+  ...
+# Subtest: six controls stay below the shared hero and all real card data remains connected
+ok 25 - six controls stay below the shared hero and all real card data remains connected
+  ---
+  duration_ms: 1.03679
+  type: 'test'
+  ...
+# Subtest: Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+ok 26 - Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+  ---
+  duration_ms: 0.444058
+  type: 'test'
+  ...
+# Subtest: phone and Fold preserve renderer lifecycle through the shared adaptive layout
+ok 27 - phone and Fold preserve renderer lifecycle through the shared adaptive layout
+  ---
+  duration_ms: 0.291959
+  type: 'test'
+  ...
+# Subtest: the five beginner destinations stay reachable from the reference start screen
+ok 28 - the five beginner destinations stay reachable from the reference start screen
+  ---
+  duration_ms: 0.865813
+  type: 'test'
+  ...
+# Subtest: start-screen routes use real existing Android screens, not placeholder success actions
+ok 29 - start-screen routes use real existing Android screens, not placeholder success actions
+  ---
+  duration_ms: 0.392621
+  type: 'test'
+  ...
+# Subtest: advanced routes remain available from the start screen, its rail and the More sheet
+ok 30 - advanced routes remain available from the start screen, its rail and the More sheet
+  ---
+  duration_ms: 3.669952
+  type: 'test'
+  ...
+# Subtest: Nexus keeps real hologram and voice entry tied to Android speech and system state
+ok 31 - Nexus keeps real hologram and voice entry tied to Android speech and system state
+  ---
+  duration_ms: 0.448996
+  type: 'test'
+  ...
+# Subtest: fold, small display and enlarged-font behaviour are expressed by a pure policy
+ok 32 - fold, small display and enlarged-font behaviour are expressed by a pure policy
+  ---
+  duration_ms: 0.217107
+  type: 'test'
+  ...
+# Subtest: personalisation is a real choice and cannot silently train models or install apps
+ok 33 - personalisation is a real choice and cannot silently train models or install apps
+  ---
+  duration_ms: 0.19279
+  type: 'test'
+  ...
+# Subtest: start screen and chat never overlap after leaving or returning from chat
+ok 34 - start screen and chat never overlap after leaving or returning from chat
+  ---
+  duration_ms: 0.362475
+  type: 'test'
+  ...
+# Subtest: phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+ok 35 - phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+  ---
+  duration_ms: 1.252565
+  type: 'test'
+  ...
+# Subtest: home dashboard remains in a scrolling viewport, not hidden behind the navigation
+ok 36 - home dashboard remains in a scrolling viewport, not hidden behind the navigation
+  ---
+  duration_ms: 0.237968
+  type: 'test'
+  ...
+# Subtest: keyboard hides phone navigation and frees the same reserved space
+ok 37 - keyboard hides phone navigation and frees the same reserved space
+  ---
+  duration_ms: 0.242334
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 36
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 169.600669

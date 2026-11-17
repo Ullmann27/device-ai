@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "fresh-20261102-5-0",
+    "decision": "SPAN",
+    "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+    "endExclusive": 66,
+    "start": 54,
+    "text": "Neulhgdpfbpz",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "RULE": {
+    "sourceId": "fresh-20261102-5-0",
+    "decision": "SPAN",
+    "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+    "endExclusive": 66,
+    "start": 54,
+    "text": "Neulhgdpfbpz",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "VERIFIED": {
+    "sourceId": "fresh-20261102-5-0",
+    "decision": "SPAN",
+    "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+    "endExclusive": 66,
+    "start": 54,
+    "text": "Neulhgdpfbpz",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "rawMillis": 166.655912
+}

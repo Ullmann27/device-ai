@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumFirstVoiceUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:19:13" hostname="b354f2cb821b" time="1.923">
+  <properties/>
+  <testcase name="storedMuteChoiceAndOwnerFactsAreNeverChangedByTheNewDefault" classname="at.heinz.deviceai.ContinuumFirstVoiceUiTest" time="1.884"/>
+  <testcase name="unconfiguredInstallOffersVoiceOutputFromItsFirstOpen" classname="at.heinz.deviceai.ContinuumFirstVoiceUiTest" time="0.039"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

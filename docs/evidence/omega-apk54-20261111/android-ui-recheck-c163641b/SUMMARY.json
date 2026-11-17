@@ -1,0 +1,50 @@
+{
+  "source": {
+    "commit": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+    "tree": "f2a1638d66c2d9486853010ac40e1513ac05c7e5",
+    "branch": "integrate/omega-apk54-20261111",
+    "status": ""
+  },
+  "phase": "ui-recheck",
+  "tests": 25,
+  "pass": 11,
+  "fail": 14,
+  "skip": 0,
+  "complete": true,
+  "source_unchanged": true,
+  "missing_required_classes": [],
+  "startedAt": "2026-11-11T17:57:35.330588+00:00",
+  "finishedAt": "2026-11-11T18:10:07.333513+00:00",
+  "elapsedSeconds": 752.003,
+  "gradle_exit": 1,
+  "configured_NewApi_lint": {
+    "status": "PASS",
+    "issues": 0,
+    "analysis_tasks": "Executed on c163; lintDebug completed; only testDebugUnitTest failed",
+    "report_task": "lintReportDebug UP-TO-DATE",
+    "reports": [
+      {
+        "file": "lint-results-debug.html",
+        "sha256": "e291fe46339b88d73ba05f9a31202965a27846e8bb3cdbed109f63633e7b91d4",
+        "mtime": "2026-11-11T17:32:36.707393+00:00"
+      },
+      {
+        "file": "lint-results-debug.txt",
+        "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334",
+        "mtime": "2026-11-11T17:32:36.699393+00:00"
+      },
+      {
+        "file": "lint-results-debug.xml",
+        "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+        "mtime": "2026-11-11T17:32:36.714570+00:00"
+      }
+    ],
+    "report_note": "Existing identical report outputs validated/reused by Gradle; not newly emitted XML. Driver correctly did not copy them as fresh; root preserved their actual timestamps here."
+  },
+  "failure_classes": {
+    "OwnerAppActionWorkSceneUiTest": 1,
+    "OwnerAppPlanningContextUiTest": 9,
+    "OwnerObjectStateConversationUiTest": 4
+  },
+  "diagnosis": "13 immediate post-touch CHAT assertions precede SDK28 View.post(mPerformClick); one STOP case keeps expected memory-center dialog open. Reviewed follow-ups preserve functional assertions and deadlines; common retest NOT_RUN."
+}

@@ -1,0 +1,30 @@
+✖ HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs (545.494377ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 636.292728
+
+✖ failing tests:
+
+test at .github/continuum/ccc1-workspace-lifecycle-host.test.mjs:12:1
+✖ HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs (545.494377ms)
+  AssertionError [ERR_ASSERTION]: {"schema":"continuum-mobile-coding-receipt","version":1,"job":"2122a746-566d-4c6c-923f-15effb7d745f","operation":"code-repair","taskId":"mob-54c6bbd6cac6b8e3","commit":"69d38beb5c334a59598fbab2570219de9349db4c","toolchain":{"node":"v24.19.0","platform":"linux","arch":"x64","git":"git version 2.52.0"},"order":{"chain":"node"},"status":"FAILED_REPAIR","teamleaderOutcome":"NO_VERIFIED_REPAIR","patch":null,"evidence":null,"commands":[{"phase":"baseline","exitCode":1,"passed":false,"executed":1,"failed":1,"timedOut":false,"command":"node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"}],"failure":{"code":"NO_VERIFIED_REPAIR","message":"Repair ended NO_VERIFIED_REPAIR"},"backlog":{"state":"READY","attempts":1,"maxAttempts":3,"error":{"code":"NO_VERIFIED_REPAIR","message":"NO_VERIFIED_REPAIR"}},"approvedForMerge":false,"apk":null,"installed":false,"deviceVerified":false,"createdAt":"2026-11-03T19:41:17.159Z","repair":{"outcome":"NO_VERIFIED_REPAIR","strategy":null,"files":[],"diagnostics":1,"attempts":0}}
+  + actual - expected
+  
+  + 'FAILED_REPAIR'
+  - 'REPAIR_PATCH_VERIFIED_PENDING_REVIEW'
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-workspaces/.github/continuum/ccc1-workspace-lifecycle-host.test.mjs:28:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'FAILED_REPAIR',
+    expected: 'REPAIR_PATCH_VERIFIED_PENDING_REVIEW',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

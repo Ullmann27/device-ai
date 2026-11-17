@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: source inventory parses real NUL records and literal whitespace in paths
+ok 1 - source inventory parses real NUL records and literal whitespace in paths
+  ---
+  duration_ms: 1.35674
+  type: 'test'
+  ...
+# Subtest: source inventory rejects truncated, malformed and duplicate records
+ok 2 - source inventory rejects truncated, malformed and duplicate records
+  ---
+  duration_ms: 1.945425
+  type: 'test'
+  ...
+# Subtest: v22 is strictly an owner in-place update and leaves historical releases intact
+ok 3 - v22 is strictly an owner in-place update and leaves historical releases intact
+  ---
+  duration_ms: 10.278536
+  type: 'test'
+  ...
+# Subtest: missing or wrong exact SHA cannot reach owner signer
+ok 4 - missing or wrong exact SHA cannot reach owner signer
+  ---
+  duration_ms: 22.267564
+  type: 'test'
+  ...
+# Subtest: a v22 source proposal is never mistaken for signed authorization
+ok 5 - a v22 source proposal is never mistaken for signed authorization
+  ---
+  duration_ms: 100.154609
+  type: 'test'
+  ...
+# Subtest: exact approved source blob inventory is internally complete (CI simulation, NEVER signs)
+ok 6 - exact approved source blob inventory is internally complete (CI simulation, NEVER signs)
+  ---
+  duration_ms: 158.86002
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 356.408622

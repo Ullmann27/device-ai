@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:45:12" hostname="6e2f8005d77e" time="25.234">
+  <properties/>
+  <testcase name="measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="6.96"/>
+  <testcase name="installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="3.114"/>
+  <testcase name="previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="3.99"/>
+  <testcase name="appLookupCancellationStopsSpeechBeforeReturning" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="3.043"/>
+  <testcase name="chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="1.625"/>
+  <testcase name="aTtsEngineWithoutPcmRetainsWordRangeMotion" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="1.541"/>
+  <testcase name="lookupCancellationClosesWorkWindowAndLateStatusCannotReopenIt" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="4.961"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

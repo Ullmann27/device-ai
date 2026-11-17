@@ -1,0 +1,30 @@
+{
+  "source": "12b023cc1b6e92990b2ce4dce0a35495659cfa27",
+  "tree": "7ab2c31558aacc548f043cf5735d4dc80f0a05a3",
+  "dirty": "",
+  "checkout": "/workspace/scratch/d663e8444310/continuum-anschluss",
+  "args": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    ":app:testDebugUnitTest",
+    "-PcontinuumUiWidgetTests=true",
+    "--tests",
+    "*ChiefBotTaskIntakeTest",
+    "--tests",
+    "*ChiefWorkerScopeAdmissionTest",
+    "--tests",
+    "*MemoryRecallActivityUiTest",
+    "--tests",
+    "*ContinuumBotToolTaskUiTest",
+    "--tests",
+    "*ContinuumAdaptiveAvatarNavigationUiTest"
+  ],
+  "started_at": "2026-11-04T19:04:55.345768+00:00",
+  "exit_code": 0,
+  "source_unchanged": true,
+  "finished_at": "2026-11-04T19:07:46.024767+00:00"
+}

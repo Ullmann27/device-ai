@@ -1,0 +1,23 @@
+{
+  "schema": "momega1-independent-actual-native-host-v1",
+  "evidenceClass": "ACTUAL_NATIVE_RUN_PENDING_REVIEW",
+  "approvedModelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+  "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+  "modelBytes": 1117320768,
+  "runtimeBytes": 12476968,
+  "promptSha256": "4028bf4f1d6665636418d282c39635463d57246beed01d7e7e15772cc5780e19",
+  "stdoutSha256": "0f9ae7eb1e42b52b66486c345af53665d14658bf156b0e3d0dd0415bf83be6ca",
+  "stderrSha256": "b3b886b073e713327cb21c46b3efb78fdbcfac3dcbe861aea4b27a2ed3bb7881",
+  "elapsedMs": 74368,
+  "exitCode": 137,
+  "signal": null,
+  "refusal": null,
+  "peakRssKiB": 924,
+  "peakProcesses": 1,
+  "outputBytes": 6422,
+  "node": "v24.19.0",
+  "platform": "linux",
+  "arch": "x64",
+  "pinsStable": true,
+  "parseError": "CODING_RESPONSE_INVALID:2c31c010852c03e465a9821599aefbde18d6384754b413676eafc420c7b98e84"
+}

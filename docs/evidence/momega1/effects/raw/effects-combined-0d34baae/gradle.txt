@@ -1,0 +1,90 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:compileDebugKotlin
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:436:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:437:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:439:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:750:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1952:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3493:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3508:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3537:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6014:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6541:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6541:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7560:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:processDebugJavaRes UP-TO-DATE
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/ui/ContinuumTaskEffectsTest.kt:14:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt:35:13 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:33:17 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:49:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+ContinuumTaskEffectsTest > toolGlyphRemainsLegibleAtPhoneFoldAndCompactHeroSizes FAILED
+    java.lang.AssertionError at ContinuumTaskEffectsTest.kt:107
+
+62 tests completed, 1 failed
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///workspace/momega1-build-env/guide-green-source-a39b614b/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 1m 15s
+30 actionable tasks: 11 executed, 19 up-to-date

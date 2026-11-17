@@ -1,0 +1,231 @@
+name: "Code56 - exact-source full QA and unsigned ARM64 APK"
+on:
+  push:
+    branches:
+      - release/code56-apk-qa-20261113
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code56-source-qa-v2-20261113
+  cancel-in-progress: false
+
+jobs:
+  unsigned-arm64:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code56-apk-qa-20261113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Exact source and original package
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          test -f app/src/main/assets/cinema3d/monitor-rear-details.glb
+          test -f tools/cockpit-workstation/build_monitor_rear.py
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Assemble Code56 from verified source without signing credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
+            -PcontinuumLocalRenderUnsigned=true :app:assembleRelease
+      - name: Check exact version, ARM64, alignment, signing status and SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk=app/build/outputs/apk/release/app-release-unsigned.apk
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          test -s "$apk"
+          "$tools/aapt2" dump badging "$apk" > /tmp/code56-badging.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='56' versionName='0.3.55'" /tmp/code56-badging.txt
+          grep -Fxq "native-code: 'arm64-v8a'" /tmp/code56-badging.txt
+          "$tools/zipalign" -c -P 16 -v 4 "$apk" > /dev/null
+          if "$tools/apksigner" verify "$apk" > /dev/null 2>&1; then
+            echo "Refusing unexpectedly signed test artifact" >&2
+            exit 1
+          fi
+          mkdir -p code56-evidence
+          cp "$apk" code56-evidence/Continuum-Code56-UNSIGNED-NOT-INSTALLABLE.apk
+          sha256sum code56-evidence/Continuum-Code56-UNSIGNED-NOT-INSTALLABLE.apk > code56-evidence/SHA256SUMS.txt
+          printf 'source=%s\nsource_tree=%s\nversionCode=56\nversionName=0.3.55\npackage=at.heinz.deviceai.continuumlocal\nabi=arm64-v8a\nstatus=UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > code56-evidence/BUILD-INFO.txt
+      - name: Save verified unsigned APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code56-UNSIGNED-NOT-INSTALLABLE
+          path: code56-evidence/
+          if-no-files-found: error
+          retention-days: 14
+
+  renderer-preflight:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code56-apk-qa-20261113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Source identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Android SDK
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Actual Android compilation and renderer regressions
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I .github/continuum/code56-renderer-tests.init.gradle :app:testDebugUnitTest
+          python3 - <<'PY'
+          import pathlib, xml.etree.ElementTree as ET
+          files = list(pathlib.Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))
+          cases = [c for f in files for c in ET.parse(f).getroot().iter('testcase')]
+          assert cases, 'No actual JUnit results'
+          assert not any(c.find(x) is not None for c in cases for x in ('failure', 'error', 'skipped'))
+          repair = [c for c in cases if c.attrib.get('classname') == 'at.heinz.deviceai.avatar3d.CockpitMonitorPresentationTest']
+          assert len(repair) == 6, f'Missing monitor regression cases: {len(repair)}'
+          print(f'CODE56_RENDERER_PREFLIGHT_PASS cases={len(cases)} repair_cases={len(repair)}')
+          PY
+      - name: Preserve renderer JUnit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code56-Renderer-regressions
+          path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
+          retention-days: 14
+
+  full-android:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code56-apk-qa-20261113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Source identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Android SDK
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Full unfiltered Android and UI regression suite (motion exercised without PNG export)
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            :app:testDebugUnitTest
+      - name: Require exact declared skip policy
+        if: always()
+        run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
+      - name: Android lint
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=56 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true :app:lintDebug
+      - name: Preserve real test and lint evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code56-Android-full-QA
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/lint-results-debug.*
+          if-no-files-found: warn
+          retention-days: 14
+
+  node-backend:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/release/code56-apk-qa-20261113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify source identity
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - name: Full Node QA and critical contracts
+        run: |
+          set -euo pipefail
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code56-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code56-full"
+      - name: Backend checks
+        run: |
+          set -euo pipefail
+          npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+          npm --prefix backend run check
+          npm --prefix backend test
+      - name: Preserve exact Node QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code56-Node-backend-QA
+          path: |
+            ${{ runner.temp }}/code56-critical/
+            ${{ runner.temp }}/code56-full/
+          if-no-files-found: warn
+          retention-days: 14

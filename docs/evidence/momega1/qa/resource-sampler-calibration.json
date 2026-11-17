@@ -1,0 +1,100 @@
+{
+  "schema": "momega1-native-resource-observation-v1",
+  "command": [
+    "/workspace/momega1-build-env/resource-sampler-calibration"
+  ],
+  "runtimePath": "/workspace/momega1-build-env/resource-sampler-calibration",
+  "runtimeSha256": "60313890036f3540d8dbd7c83b5311921988e454891598297acb6093fbb3d63a",
+  "runtimeDevice": 27,
+  "runtimeInode": 1217643,
+  "exit": 0,
+  "elapsedSeconds": 1.743,
+  "clockTicksPerSecond": 100,
+  "processes": [
+    {
+      "pid": 200971,
+      "startTicks": 405410,
+      "samples": 6,
+      "rssKiB": 66100,
+      "hwmKiB": 66100,
+      "pssKiB": 65713,
+      "threads": 1,
+      "observedCpuSeconds": 1.28
+    }
+  ],
+  "samples": [
+    {
+      "pid": 200971,
+      "elapsedSeconds": 0.038,
+      "rssKiB": 66100,
+      "hwmKiB": 66100,
+      "threads": 1,
+      "startTicks": 405410,
+      "userCpuTicks": 1,
+      "systemCpuTicks": 2,
+      "observedCpuSeconds": 0.03,
+      "pssKiB": 65684
+    },
+    {
+      "pid": 200971,
+      "elapsedSeconds": 0.293,
+      "rssKiB": 66100,
+      "hwmKiB": 66100,
+      "threads": 1,
+      "startTicks": 405410,
+      "userCpuTicks": 5,
+      "systemCpuTicks": 23,
+      "observedCpuSeconds": 0.28,
+      "pssKiB": 65690
+    },
+    {
+      "pid": 200971,
+      "elapsedSeconds": 0.551,
+      "rssKiB": 66100,
+      "hwmKiB": 66100,
+      "threads": 1,
+      "startTicks": 405410,
+      "userCpuTicks": 10,
+      "systemCpuTicks": 44,
+      "observedCpuSeconds": 0.54,
+      "pssKiB": 65684
+    },
+    {
+      "pid": 200971,
+      "elapsedSeconds": 0.802,
+      "rssKiB": 66100,
+      "hwmKiB": 66100,
+      "threads": 1,
+      "startTicks": 405410,
+      "userCpuTicks": 16,
+      "systemCpuTicks": 63,
+      "observedCpuSeconds": 0.79,
+      "pssKiB": 65699
+    },
+    {
+      "pid": 200971,
+      "elapsedSeconds": 1.045,
+      "rssKiB": 66100,
+      "hwmKiB": 66100,
+      "threads": 1,
+      "startTicks": 405410,
+      "userCpuTicks": 20,
+      "systemCpuTicks": 83,
+      "observedCpuSeconds": 1.03,
+      "pssKiB": 65705
+    },
+    {
+      "pid": 200971,
+      "elapsedSeconds": 1.293,
+      "rssKiB": 66100,
+      "hwmKiB": 66100,
+      "threads": 1,
+      "startTicks": 405410,
+      "userCpuTicks": 28,
+      "systemCpuTicks": 100,
+      "observedCpuSeconds": 1.28,
+      "pssKiB": 65713
+    }
+  ],
+  "measurement": "Executable-inode-matched native processes, 200ms samples. Missing readings are UNAVAILABLE, never zero. Sampled peaks and cumulative CPU observations may miss process start/exit/transients. Requires exclusive use of this binary; cannot attribute an unrelated concurrent invocation. No wrapper RSS, device metric, GPU metric or latency advantage is inferred."
+}

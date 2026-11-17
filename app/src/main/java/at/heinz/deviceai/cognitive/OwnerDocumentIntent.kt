@@ -1,0 +1,82 @@
+package at.heinz.deviceai.cognitive
+
+/**
+ * The owner asks JARVIS to read a PDF („Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.“). The only
+ * consequence is Android's own document picker: the owner chooses the file, nothing is read without that choice, and
+ * nothing is sent anywhere. Negations and destructive or sharing verbs never match.
+ */
+internal object OwnerDocumentIntent {
+    /** [reuse]: the owner means the PDF chosen before („die ausgewählte/letzte/gleiche PDF“), not a new choice. */
+    data class Request(val wantsDraft: Boolean, val reuse: Boolean = false, val firstPageOnly: Boolean = false)
+
+    // Word edges as Unicode lookarounds: `\b` is ASCII-only on the JVM since JDK 19 („Öffne“) but Unicode on Android.
+    private const val START = "(?<![\\p{L}\\p{N}_])"
+    private const val END = "(?![\\p{L}\\p{N}_])"
+    private val read = Regex(
+        "(?iu)$START(lies|lese|öffne|zeige|analysiere|prüfe|fasse|nimm|verwende)$END[^.!?]{0,40}?$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
+    )
+    private val namedPdf = Regex(
+        "(?iu)^(lies|lese|öffne|zeige)\\s+(?:die\\s+)?datei\\s+[\\p{L}\\p{N} _-]{1,80}\\.pdf[.!?]*$"
+    )
+    /** Read-only Android picker followed by a draft restricted to the actual first page. */
+    private val chooseFirstPage = Regex(
+        "(?iu)^(?:ich\\s+(?:möchte|will|würde\\s+gern(?:e)?)|(?:kannst|könntest|würdest)\\s+du)\\s+" +
+            "(?:(?:mir|bitte)\\s+)*(?:(?:eine|die|meine|diese)\\s+)?pdf(?:-datei|-dokument)?\\s+" +
+            "auswählen\\s+und\\s+(?:(?:bitte|mir)\\s+)*(?:die\\s+)?erste\\s+seite\\s+zusammenfassen[.!?]*$"
+    )
+    private const val COURTESY = "(?:(?:bitte|mir|mal|kurz|eben|für\\s+mich)\\s+)*"
+    private val politeRead = Regex(
+        "(?iu)^(?:(?:kannst|könntest|würdest|magst)\\s+du|ich\\s+(?:möchte|will|würde\\s+gern(?:e)?))\\s+" +
+            COURTESY + "(?:(?:die|das|ein|eine|mein|meine|diese|dieses)\\s+)?" +
+            "(?:(?:ausgewählte[nrs]?|letzte[nrs]?|gleiche[nrs]?|dieselbe|selbe[nrs]?|vorige[nrs]?|gestrige[nrs]?)\\s+)?" +
+            "(?:pdf(?:-datei|-dokument)?|dokument)\\s+" + COURTESY +
+            "(?:öffnen|anzeigen|zeigen|lesen|vorlesen|analysieren|prüfen|zusammenfassen|suchen|heraussuchen|auswählen)" +
+            "(?:\\s+(?:bitte|für\\s+mich))?[.!?]*$"
+    )
+    /**
+     * Code55 field bug: „Suche mir eine PDF“ went to web research. As a whole utterance it means a PDF on this device,
+     * so it opens Android's own picker; any further words („… im Internet“, „… über Quantenphysik“) keep their route.
+     */
+    private val findPdf = Regex(
+        "(?iu)^(?:such|suche|finde|hol|hole|wähle)(?:\\s+(?:mir|bitte|mal|kurz|eben))*\\s+" +
+            "(?:(?:eine|die|das|ein|meine|mein)\\s+)?(?:pdf|pdf-datei|pdf-dokument)" +
+            "(?:\\s+(?:aus|auf|von)\\s+(?:meinem|dem)\\s+(?:handy|gerät|telefon|speicher))?(?:\\s+bitte)?[.!?]*$"
+    )
+    private val extraAction = Regex(
+        "(?iu)(?:^|[.!?,;]\\s*|\\s+(?:und|danach|anschließend|dann)\\s+)" +
+            "(?:(?:bitte|danach|anschließend|dann)\\s+)*" +
+            "(öffne|öffnen|starte|starten|zeig|zeige|zeigen|suche|suchen|finde|finden|" +
+            "schreib|schreibe|schreiben|tippe|installiere|kaufe|bezahle|überweise)$END"
+    )
+    private val joinedObject = Regex("(?iu)\\s+(?:und|sowie|oder)\\s+")
+    // Presentation never authorizes another tool.
+    private val presentationTail = Regex(
+        "(?iu)(?:\\s+und\\s+|[.!?,;]\\s*)(?:bitte\\s+)?zeig(?:e)?\\s+(?:mir\\s+)?" +
+            "(?:jeden\\s+(?:einzelnen\\s+)?arbeitsschritt|(?:alle|die)\\s+(?:einzelnen\\s+)?arbeitsschritte)" +
+            "(?:\\s+bitte)?[.!?]*$"
+    )
+    private val earlier = Regex(
+        "(?iu)$START(ausgewählte|ausgewählten|letzte|letzten|gleiche|gleichen|dieselbe|selbe|selben|vorige|vorigen|gestrige|gestrigen)$END" +
+            "\\s+$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
+    )
+    private val draft = Regex("(?iu)$START(zusammenfassung|zusammen|zusammenfassen|entwurf|kurzfassung)$END")
+    private val prohibited = Regex(
+        "(?iu)$START(nicht|niemals|kein|keine|keinen|lösche|löschen|sende|senden|schicke|teile|teilen|hochladen|drucke|signiere)$END"
+    )
+
+    @JvmOverloads
+    fun parse(utterance: String, assistantName: String? = null): Request? {
+        if (utterance.length !in 8..160 || utterance.any { it.isISOControl() }) return null
+        val original = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName)
+            .replace(Regex("(?iu)^bitte\\s+"), "")
+        if (prohibited.containsMatchIn(original)) return null
+        val text = original.replace(presentationTail, "").trimEnd()
+        if (chooseFirstPage.matches(text)) return Request(wantsDraft = true, firstPageOnly = true)
+        val direct = read.find(text) ?: namedPdf.matchEntire(text)
+        if (findPdf.matches(text)) return Request(wantsDraft = false, reuse = false)
+        if (direct == null && !politeRead.matches(text)) return null
+        if (direct != null && (joinedObject.containsMatchIn(direct.value) ||
+                extraAction.findAll(text).any { it.groups[1]!!.range.first != direct.range.first })) return null
+        return Request(wantsDraft = draft.containsMatchIn(text), reuse = earlier.containsMatchIn(text))
+    }
+}

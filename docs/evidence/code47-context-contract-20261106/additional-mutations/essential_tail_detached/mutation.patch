@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptFrame.kt
++++ app/src/main/java/at/heinz/deviceai/cognitive/LocalDecisionPromptFrame.kt
+@@ -7,7 +7,7 @@
+                  requireHistory: Boolean): String? {
+         val essential = LocalPromptFrame.assemble(
+             requiredBody = requiredBody, optionalHistory = safeHistory,
+-            advisory = advisory, requiredTail = requiredTail,
++            advisory = advisory, requiredTail = "",
+             maxCharacters = maxCharacters, requireHistory = requireHistory
+         ) ?: return null
+         if (!decisionDigest.startsWith(LocalDecisionPromptDigest.HEADER)) return essential

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ProjectionCropGeometryTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:30" hostname="0f4ac18d136f" time="0.014">
+  <properties/>
+  <testcase name="viewportPreservesKeyboardCropForClickCoordinates" classname="at.heinz.deviceai.cognitive.ProjectionCropGeometryTest" time="0.006"/>
+  <testcase name="keyboardAndSystemBarPixelsStayOutsideCrop" classname="at.heinz.deviceai.cognitive.ProjectionCropGeometryTest" time="0.007"/>
+  <testcase name="viewportRejectsForeignPixelsAndInvalidBuffers" classname="at.heinz.deviceai.cognitive.ProjectionCropGeometryTest" time="0.0"/>
+  <testcase name="ownOverlappingAndFullscreenTargetAreRejected" classname="at.heinz.deviceai.cognitive.ProjectionCropGeometryTest" time="0.0"/>
+  <testcase name="singleAppOrStaleRotationDimensionsCannotPretendFullDisplay" classname="at.heinz.deviceai.cognitive.ProjectionCropGeometryTest" time="0.0"/>
+  <testcase name="cropMapsSplitScreenInwardWithoutAnyOwnPixel" classname="at.heinz.deviceai.cognitive.ProjectionCropGeometryTest" time="0.001"/>
+  <testcase name="invalidAndOffDisplayGeometryFailsClosed" classname="at.heinz.deviceai.cognitive.ProjectionCropGeometryTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,14 @@
+{
+  "status": "FROZEN_BEFORE_BLIND_LEARNED_EXECUTION",
+  "checkpointTrainingClaim": "parent-reported seed77,3200steps,64authoredTRAIN; reviewer performs restore/predict only",
+  "sources": {
+    "ContinuumResidualSpanCore.kt": "daf65ff935390f02684aec4264985435c00db8c16a976e4cc71d0db843762bab",
+    "EvidenceBoundNaturalLocationProbe.kt": "fb14985dcac0487ffb953cb1bf1f1c1d1995c001f6744a62ace0416484ee02ae",
+    "VerifiedLocationSpanResearch.kt": "3783355d944950635d507cd60e7d8f8af3226d4e72911c5ece9e544918b65702"
+  },
+  "checkpointSha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92",
+  "predictionMutatedCheckpoint": false,
+  "afterCheckpointSha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92",
+  "sourceFilesUnchanged": true,
+  "binaryTreeSha256": "953a15cb5ecbdf363e386d4a349feb8c0c79971b20630db328971b129a07a333"
+}

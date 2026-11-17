@@ -1,0 +1,7 @@
+{
+  "tools/cockpit-workstation/source/pr801-workstation.glb": "f1edabf082ee4d30e275a862a375ac73dea65ab4e1f140ddb021845c87e6bcc3",
+  "app/src/main/assets/cinema3d/cockpit-workstation.glb": "03b6364e2ff396fd9207b129e765ce5d4a93975113315cc3896844e53fd8ad30",
+  "app/src/main/assets/cinema3d/continuum-orb.glb": "fdfe54ce9aa2ed6af5ec6866c1078a4a34ece511e66b29cd1b3672f83229079c",
+  "app/src/main/assets/avatar3d/continuum-avatar.glb": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "app/src/main/assets/cinema3d/live-monitor.filamat": "1b24ad728cecce23e9fca904c45370eb35ea5f9e2c0cd85ed3914f7490e27ac3"
+}

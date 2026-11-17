@@ -1,0 +1,13 @@
+Independent scoped closure review
+Source: 62b3aa90f0b418db4522249d967bfa1bca5b4f3a
+Reviewer: separate jarvis_final_review agent, no source mutations
+Verdict: APPROVE only the previously confirmed closure cases
+
+Busy journal: one execution, typed UNKNOWN blocker, no experience.
+Completed replay: replayed=true, no further model call/execution, no experience.
+Queued unload: first text and Cancelled only; late text/Completed suppressed.
+All three independent asserted probes exited successfully.
+
+Native probes use declared API stand-ins, not LiteRT weights or Fold7.
+Full SDK/Node22/APK acceptance is a separate gate, not certified by this review.
+Windows durability, actual JNI scheduling, original signing and device tests NOT_RUN.

@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { isWithinPath } from '../../lib/subject.mjs';
+const cases = [
+  ['docs', 'docs', true], ['docs/a', 'docs', true], ['docs/a/b', 'docs', true],
+  ['docs-old/a', 'docs', false], ['docs2', 'docs', false], ['doc', 'docs', false],
+  ['lib/tools/x', 'lib/tools', true], ['lib/toolset/x', 'lib/tools', false],
+  ['Docs/a', 'docs', false], ['a/b', 'a/b/c', false],
+];
+for (let i = 0; i < cases.length; i++) test(`frozen path component boundary ${i}`, () => {
+  const [candidate, root, expected] = cases[i];
+  assert.equal(isWithinPath(candidate, root), expected);
+});

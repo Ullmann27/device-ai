@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:36:36" hostname="04c8b0ba7ea6" time="0.013">
+  <properties/>
+  <testcase name="queuedAssignmentDoesNotGainToolsAddedAfterSubmission" classname="at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest" time="0.01"/>
+  <testcase name="queuedAssignmentKeepsToolsRemovedAfterSubmission" classname="at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest" time="0.001"/>
+  <testcase name="directRunnerDoesNotGainToolsAddedAfterCreation" classname="at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest" time="0.001"/>
+  <testcase name="directRunnerKeepsToolsRemovedAfterCreation" classname="at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest" time="0.0"/>
+  <testcase name="directModelKeepsToolsRemovedAfterCreation" classname="at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest" time="0.0"/>
+  <testcase name="directModelDoesNotGainToolsAddedAfterCreation" classname="at.heinz.deviceai.chief.ChiefWorkerScopeAdmissionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

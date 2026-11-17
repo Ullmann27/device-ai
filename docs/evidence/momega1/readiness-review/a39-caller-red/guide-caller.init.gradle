@@ -1,0 +1,12 @@
+allprojects {
+ afterEvaluate { p ->
+  if (p.name == 'app') p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/guide-independent-caller')
+ }
+ tasks.withType(Test).configureEach {
+  executable = '/usr/bin/java'
+  filter {
+   includeTestsMatching 'at.heinz.deviceai.ContinuumReadinessGuideUiTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentReadinessCallerUiTest'
+  }
+ }
+}

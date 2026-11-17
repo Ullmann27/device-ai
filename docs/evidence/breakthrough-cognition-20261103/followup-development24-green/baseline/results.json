@@ -1,0 +1,170 @@
+{"cases": [
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-001",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 13 Münzen (unverändert)\n- Truhe (silbern): 41 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-002",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 15 Münzen (unverändert)\n- Truhe (silbern): 44 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-003",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 17 Münzen (unverändert)\n- Truhe (silbern): 47 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-004",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 19 Münzen (unverändert)\n- Truhe (silbern): 50 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-005",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 21 Münzen (unverändert)\n- Truhe (silbern): 53 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-006",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 23 Münzen (unverändert)\n- Truhe (silbern): 56 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-007",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 25 Münzen (unverändert)\n- Truhe (silbern): 59 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-008",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 27 Münzen (unverändert)\n- Truhe (silbern): 62 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-009",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 29 Münzen (unverändert)\n- Truhe (silbern): 65 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-010",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 31 Münzen (unverändert)\n- Truhe (silbern): 68 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-011",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 33 Münzen (unverändert)\n- Truhe (silbern): 71 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-012",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 35 Münzen (unverändert)\n- Truhe (silbern): 74 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-013",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 37 Münzen (unverändert)\n- Truhe (silbern): 77 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-014",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 39 Münzen (unverändert)\n- Truhe (silbern): 80 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-015",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 41 Münzen (unverändert)\n- Truhe (silbern): 83 Münzen (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C-016",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 43 Münzen (unverändert)\n- Truhe (silbern): 86 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-017",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 45 Münzen (unverändert)\n- Truhe (silbern): 89 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-018",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 47 Münzen (unverändert)\n- Truhe (silbern): 92 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-019",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 49 Münzen (unverändert)\n- Truhe (silbern): 95 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-020",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 51 Münzen (unverändert)\n- Truhe (silbern): 98 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-021",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 53 Münzen (unverändert)\n- Truhe (silbern): 101 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-022",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 55 Münzen (unverändert)\n- Truhe (silbern): 104 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-023",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 57 Münzen (unverändert)\n- Truhe (silbern): 107 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-024",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 59 Münzen (unverändert)\n- Truhe (silbern): 110 Münzen (unverändert)\n"
+  }
+]}

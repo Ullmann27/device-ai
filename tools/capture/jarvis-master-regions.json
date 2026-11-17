@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "reference": "docs/design-screenshots/jarvis-master-20261104.jpg",
+  "reference_sha256": "e0afbdd199f619e0e8ee4ed791c8f930d34dd7769c3f0a9b154ccbfbb80749de",
+  "raster_size": [1536, 1024],
+  "regions": [
+    {"name": "header", "box": [8, 4, 1528, 97]},
+    {"name": "navigation", "box": [8, 96, 246, 900]},
+    {"name": "avatar_and_dialog", "box": [246, 64, 810, 502]},
+    {"name": "brain_and_pedestal", "box": [802, 176, 1218, 502]},
+    {"name": "module_panel", "box": [1215, 153, 1525, 407]},
+    {"name": "action_tiles", "box": [255, 502, 1525, 690]},
+    {"name": "activity_panels", "box": [255, 696, 1525, 894]},
+    {"name": "status_strip", "box": [8, 904, 1526, 982]}
+  ],
+  "masks": [
+    {"box": [30, 18, 158, 80], "reason": "Clock/date are real values and may use the configured locale."},
+    {"box": [292, 377, 631, 434], "reason": "Reference dialogue claims connectivity; the app must display its actual dialogue instead."},
+    {"box": [1432, 174, 1510, 388], "reason": "Reference module health and counts are illustrations, not permitted fixture values."},
+    {"box": [1272, 111, 1420, 134], "reason": "Camera tracking must not claim an observation without permission and a real source."},
+    {"box": [277, 749, 537, 875], "reason": "Agent names and running tasks depend on authentic runtime events."},
+    {"box": [578, 736, 829, 875], "reason": "Plan progress depends on real execution; checkmarks cannot be copied from the reference."},
+    {"box": [862, 744, 1140, 875], "reason": "Memory graph and counts require actual memory events; zero/offline is valid."},
+    {"box": [1223, 736, 1503, 875], "reason": "Model/device values and readiness depend on a real loaded model and measurements."},
+    {"box": [40, 924, 1510, 958], "reason": "Status text and lights must truthfully describe device/network/model state; frame remains compared."}
+  ]
+}

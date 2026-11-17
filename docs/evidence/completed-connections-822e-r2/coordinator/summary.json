@@ -1,0 +1,279 @@
+{
+  "status": "SOURCE_INTEGRATED_TARGETED_ANDROID_HOST_PASS",
+  "review": "https://github.com/Ullmann27/device-ai/pull/523",
+  "branch": "integration/continuum-completed-tuning-20261104-822e",
+  "published_source_commit": "972f7d46312885eeff41df7f771f4700b2619b0b",
+  "tested_local_commit": "578ea5dd64f059de1b8173badf4d34d0e52a5b76",
+  "identical_complete_source_tree": "9a47db6426d84708b8edaee8557f59fa8305007b",
+  "parent": {
+    "published_commit": "a54583816df92bcd0cdf4e75f06cdefffb5dafcc",
+    "equivalent_local_commit": "0dac310728a84bd1adc296377ed7d124bc09692a",
+    "tree": "3e9373b19dc0b7b3751ebfbdd2ac09cd7455b667",
+    "initial_parent": "1a5302c504a78a50d5e64ca727f2915529bf2b06",
+    "retained": [
+      "#513",
+      "#512",
+      "#506",
+      "#491",
+      "canonical negative ECHO report from #515",
+      "C1 source inventory correction",
+      "C1 avatar signed-zero boundary correction"
+    ]
+  },
+  "input_source": {
+    "pr": 511,
+    "commit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+    "decision": "Only retained R1 production changes; rejected R2 candidates excluded"
+  },
+  "helpers": [
+    {
+      "name": "connect_completed_lm",
+      "local_contribution": "60a582b6c635568944ab852f8ede0a5ca3d59112",
+      "fresh_junit_methods": 5
+    },
+    {
+      "name": "connect_completed_context",
+      "local_contribution": "00050a2fa9ae5ecb86cc5a94c7a0bc11606f87d8",
+      "fresh_candidate_junit_methods": 21,
+      "baseline_junit_methods": 21,
+      "parity_assertions": 462
+    },
+    {
+      "name": "connect_completed_worker",
+      "local_contribution": "4018ac0ed17dc7851027b592d9ae54084ad0b383",
+      "fresh_node_tests": 112,
+      "parity_assertions": 40960
+    }
+  ],
+  "coordinator_gates": {
+    "android_host": {
+      "status": "PASS",
+      "gradle_exit": 0,
+      "selected_class_count": 15,
+      "tests": 76,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "classes": [
+        {
+          "class": "at.heinz.deviceai.ContinuumBotPersonalityUiTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 13.618
+        },
+        {
+          "class": "at.heinz.deviceai.MemoryRecallActivityUiTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.259
+        },
+        {
+          "class": "at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.001
+        },
+        {
+          "class": "at.heinz.deviceai.chief.ChiefBotConversationTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.194
+        },
+        {
+          "class": "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.029
+        },
+        {
+          "class": "at.heinz.deviceai.cognitive.AgentContextFallbackTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.001
+        },
+        {
+          "class": "at.heinz.deviceai.cognitive.AiContextByteBudgetTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.033
+        },
+        {
+          "class": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.011
+        },
+        {
+          "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.022
+        },
+        {
+          "class": "at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.015
+        },
+        {
+          "class": "at.heinz.deviceai.cognitive.MemoryContextBoundaryTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.009
+        },
+        {
+          "class": "at.heinz.deviceai.cognitive.MemoryContextIdentityTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.005
+        },
+        {
+          "class": "at.heinz.deviceai.cognitive.MemoryRecallObservationTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.014
+        },
+        {
+          "class": "at.heinz.deviceai.learning.lm.LmRuntimeTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.801
+        },
+        {
+          "class": "at.heinz.deviceai.learning.lm.LmSamplingTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.189
+        }
+      ],
+      "log": "android/gradle.txt",
+      "xml": "android/xml",
+      "all_requested_classes_reported": true,
+      "compile_production_and_tests": "PASS",
+      "scope": "Selected JVM/Robolectric integration tests, not full repository or device acceptance"
+    },
+    "lint": {
+      "status": "PASS",
+      "configured_scope": "NewApi only",
+      "issues": 0,
+      "log": "android/lint-results-debug.xml"
+    },
+    "node": {
+      "status": "PASS",
+      "exit": 0,
+      "tests": 121,
+      "pass": 121,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suite_files": 10,
+      "log": "combined-node.tap"
+    },
+    "context_replay": {
+      "status": "PASS",
+      "exit": 0,
+      "candidate_junit_methods": 21,
+      "baseline_junit_methods": 21,
+      "cases": 462,
+      "successfulContexts": 408,
+      "identicalExceptions": 54,
+      "truncatedContexts": 300,
+      "outcomesUtf16Sha256": "a3d389027eaf618170e352ca9d974ff31902695e228cb38e4e7db594d35fb854",
+      "fullDataClassEquality": true,
+      "utf8ByteEquality": true,
+      "clockCallEquality": true,
+      "seed": "0x434F4E54455854",
+      "baseline_blob": "f42f526cefaa96295205f161241fbc8035f27c01",
+      "runner_fix": "Portable immutable blob replaces unpublished local commit dependency; original helper receipts retained"
+    },
+    "worker_parity": {
+      "status": "PASS",
+      "exact_object_identity_assertions": 40960,
+      "baseline_blob": "64f798d5cf86ec7b541bd5135972f30fef1be746",
+      "candidate_sha256": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+      "harness_sha256": "be2cc8a03238f3262f6ad9fc39623b31fc6af92eedac25441167921a47f63998"
+    },
+    "source_integrity": {
+      "worktree_clean_before_and_after": true,
+      "before_equals_after": true,
+      "subtrees": {
+        "app": "4549dc627c99d234be26c64622116aee898e69cc",
+        ".github": "8cf476f8506a49800ef02d6736d329d03e94b191",
+        "scripts": "24047e8caa4a1c3503822bbd91fa076eb93eff4a",
+        "tools": "3d3e36f426edcd96a9775626d01ffad83cdff87f"
+      },
+      "critical_sha256": {
+        "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+        "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+        "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "6adf073f1e9b06c45c847ca46c379f295f5be0598ba7fd028b63993da30de02a",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "7a10cb4f0eabb5fb223bf329b7e26ac063cda8ca2a9c4ab11348917ebf529848",
+        ".github/continuum/development-backlog.mjs": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+        ".github/continuum/autonomous-teamleader.mjs": "57d2680c3173e92b987294041e3ac323a235f76b8954fafb2a7ef3b60e04c869",
+        ".github/continuum/local-teamleader-loop.mjs": "09e5e3ff93e615270e955055777d5549477ba496b688095389eafa01cbe558f4",
+        ".github/continuum/coding-orchestrator.mjs": "0ef121bb5dfba45a800f73543bacb0c6fbded3b4a4020a674df999d7503131dd",
+        ".github/continuum/coding-service-worker.mjs": "4de2311305c1dd536e185afe06bdaeb44081324c96243f1b176cbcdcc4e5b062",
+        ".github/continuum/coding-service-reader.mjs": "970b9461a893bf81c72ef23630e991c4142e212f9a2056f17453bb5e2a7e32b4"
+      }
+    },
+    "resource_control": {
+      "both_shared_locks_held": true,
+      "lock_receipt": "android/build-locks.json",
+      "offline_gradle": true,
+      "gradle_workers": 1,
+      "gradle_heap": "1 GiB"
+    },
+    "review": {
+      "status": "NO_MATERIAL_PRODUCTION_BLOCKER_WITHIN_REVIEWED_SCOPE",
+      "record": "independent-reviews.json",
+      "portable_replay_finding": "CORRECTED_AND_REEXECUTED"
+    }
+  },
+  "counting": "76 includes the 5 imported LM and 21 context tests; those repeated standalone groups are not added. 121 includes helper112. Parity assertions and historical305/352 results are not extra test methods.",
+  "limits": {
+    "full_repository_suite": "NOT_RUN_BY_THIS_CHILD",
+    "device_fold7_gpu_audible_voice": "NOT_RUN",
+    "apk_signing_install_release": "NOT_RUN",
+    "model_quality_or_frontier_comparison": "NOT_EVALUATED",
+    "performance": "No new timings on this C1 tree. Prior component timings do not establish whole-app/device speed.",
+    "lm_runtime_scope": "Existing LM1 sample callers only; no active Gemma/LiteRT chat activation. Existing LmRuntimeTest trains tiny temporary test fixtures; no product training, trained checkpoint change or promotion.",
+    "known_existing_findings": [
+      "Existing authorization=Bearer token redaction edge unchanged",
+      "Separate #522 contradiction-privacy/mapper work not imported",
+      "M2.9 retriever not activated in main chat; known ranking acceptance remains separate",
+      "Device/reference/rig and complete C1 acceptance gates remain independent"
+    ],
+    "authority": "No new scheduler, model service, ToolGate authority, owner-data migration or live-worker activation"
+  },
+  "artifact_policy": "Coordinator logs and original JUnit XML copied byte-for-byte. Helper context logs declare their prior whitespace normalization in their own handoff. Evidence manifest hashes stored bytes."
+}

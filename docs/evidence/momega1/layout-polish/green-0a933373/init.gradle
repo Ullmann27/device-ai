@@ -1,0 +1,26 @@
+allprojects {
+ afterEvaluate { p ->
+  if (p.name == 'app') {
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/android-independent-final')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/workspace-independent-final')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/planning-independent-final-v2')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/reference-independent-final-v2')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/readiness-independent-final')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/guide-independent-caller-final')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/firstwelcome-independent-v2')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/visible-avatar-independent-native')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/full-layout-independent-final')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/effects-caller-independent')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/effects-independent')
+  }
+ }
+ tasks.withType(Test).configureEach {
+  executable = '/usr/bin/java'
+  systemProperty('continuum.layout.evidenceDir', '/workspace/momega1-build-env/visual-polish-green-0a933373/layout-ui')
+  systemProperty('continuum.workspace.repo', rootProject.projectDir.absolutePath)
+  doFirst { logger.lifecycle('MOMEGA_FINAL_TEST_EXECUTABLE=' + executable) }
+ }
+}
+
+allprojects { afterEvaluate { p -> if(p.name == 'app') p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/visual-polish-independent') }
+ tasks.withType(Test).configureEach { filter { includeTestsMatching 'at.heinz.deviceai.IndependentFinalVisualPolishUiTest'; includeTestsMatching 'at.heinz.deviceai.IndependentFullLayoutUiTest' }; systemProperty('continuum.polish.evidenceDir','/workspace/momega1-build-env/visual-polish-green-0a933373/polish-ui') } }

@@ -1,0 +1,1817 @@
+diff --git a/.github/continuum/coding-provider.mjs b/.github/continuum/coding-provider.mjs
+index 2bfe1c68..b481ca57 100644
+--- a/.github/continuum/coding-provider.mjs
++++ b/.github/continuum/coding-provider.mjs
+@@ -218,7 +218,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
+     reviewedBuildEvidenceSha256:verified?pair.buildEvidenceSha256:null,independentReviewEvidenceSha256:verified?pair.independentReviewEvidenceSha256:null};
+    const expectedMac=observation&&createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
+    if(!observation||observation.schema!=='momega1-local-process-observation-v1'||
+-    (requiresPinnedModelJob(childEnv)&&(observation.resourceProfileId!=='momega1-qwen25coder7b-q4km-llamacpp-6cb3e672-linux-x64'||observation.nativeAddressSpaceBytes!==7516192768||observation.disableWeightRepacking!==true||observation.jobMemoryLimit?.enforcement!=='CGROUP_V2'||observation.jobMemoryLimit?.maxJobMemoryBytes!==7516192768||observation.jobMemoryLimit?.maxJobSwapBytes!==0))||
++    (requiresPinnedModelJob(childEnv)&&(observation.resourceProfileId!=='momega1-qwen25coder7b-q4km-llamacpp-6cb3e672-linux-x64'||observation.nativeAddressSpaceBytes!==7516192768||observation.disableWeightRepacking!==true||observation.nativeCpuThreads!==2||!Number.isSafeInteger(observation.nativeWallTimeoutMs)||observation.nativeWallTimeoutMs<1||observation.nativeWallTimeoutMs>timeoutMs||observation.nativeCpuSeconds!==2*Math.ceil(observation.nativeWallTimeoutMs/1000)||observation.jobMemoryLimit?.enforcement!=='CGROUP_V2'||observation.jobMemoryLimit?.maxJobMemoryBytes!==7516192768||observation.jobMemoryLimit?.maxJobSwapBytes!==0))||
+     observation.evidenceClass!==(verified?'LOCAL_MODEL_HOST':'HOST_INTEGRATION')||observation.isolation!=='BWRAP_UNSHARE_ALL'||
+     Object.entries(expected).some(([key,value])=>observation[key]!==value)||wire.verifiedModelExecution!==verified||
+     !/^[a-f0-9]{64}$/.test(observation.outputSha256??'')||observation.exitCode!==0||
+@@ -255,8 +255,9 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
+     /^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):([a-f0-9]{64})$/
+      .exec(String(response.stderr??'').trim());
+    const localBlock=!remoteTeacher&&/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (BLOCKED_LOCAL_[A-Z_]+)$/.exec(String(response.stderr??'').trim());
++   const localProcess=!remoteTeacher&&/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (LOCAL_RUNTIME_(?:SIGNAL_SIGXCPU|SIGNAL_SIGKILL|EXIT_137|EXIT_152|PROCESS_FAILED))$/.exec(String(response.stderr??'').trim());
+    const localTimeout=!remoteTeacher&&String(response.stderr??'').trim()==='LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_TIMEOUT';
+-   const failureKind=response.error?.code==='ETIMEDOUT'||localTimeout?'TIMEOUT':
++   const failureKind=response.error?.code==='ETIMEDOUT'||localTimeout?'TIMEOUT':localProcess?localProcess[1]:
+     response.error?'PROCESS_ERROR':response.signal?'SIGNALLED':
+     rejected?.[1]==='CODING_NOOP_PATCH'?'NOOP_PATCH':
+     rejected?.[1]==='CODING_RESPONSE_INVALID'?'INVALID_MODEL_RESPONSE':'CHILD_EXIT_NONZERO';
+@@ -267,6 +268,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
+    }
+    if(localBlock)throw rejectedModelOutput(localBlock[1]);
+    if(localTimeout)throw rejectedModelOutput('CODING_MODEL_TIMEOUT');
++   if(localProcess)throw rejectedModelOutput(localProcess[1]);
+    if(rejected)throw rejectedModelOutput(rejected[1],rejected[2]);
+    throw rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
+   }
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/baseline-red.exit b/docs/evidence/momega1/runtime/7b-cpu/baseline-red.exit
+new file mode 100644
+index 00000000..d00491fd
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/baseline-red.exit
+@@ -0,0 +1 @@
++1
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/baseline-red.tap b/docs/evidence/momega1/runtime/7b-cpu/baseline-red.tap
+new file mode 100644
+index 00000000..daf79bb5
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/baseline-red.tap
+@@ -0,0 +1,126 @@
++TAP version 13
++# Subtest: actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++not ok 1 - actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++  ---
++  duration_ms: 10.162659
++  type: 'test'
++  location: '/source/scripts/continuum-local-model-cpu.test.mjs:17:1'
++  failureType: 'testCodeFailure'
++  error: |-
++    The expression evaluated to a falsy value:
++    
++      assert.ok(f.args.includes('--cpu=354'))
++    
++  code: 'ERR_ASSERTION'
++  name: 'AssertionError'
++  expected: true
++  actual: false
++  operator: '=='
++  stack: |-
++    TestContext.<anonymous> (file:///source/scripts/continuum-local-model-cpu.test.mjs:18:79)
++    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++    async Test.run (node:internal/test_runner/test:1389:7)
++    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
++  ...
++# Subtest: legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++ok 2 - legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++  ---
++  duration_ms: 2.697724
++  type: 'test'
++  ...
++# Subtest: resource profile clone or arbitrary caller budget cannot reach spawn
++not ok 3 - resource profile clone or arbitrary caller budget cannot reach spawn
++  ---
++  duration_ms: 1.769772
++  type: 'test'
++  location: '/source/scripts/continuum-local-model-cpu.test.mjs:25:1'
++  failureType: 'testCodeFailure'
++  error: |-
++    The input did not match the regular expression /INVALID_LOCAL_RESOURCE_PROFILE/. Input:
++    
++    'Error: BLOCKED_LOCAL_ISOLATION_UNAVAILABLE'
++    
++  code: 'ERR_ASSERTION'
++  name: 'AssertionError'
++  expected:
++  actual:
++  error: 'BLOCKED_LOCAL_ISOLATION_UNAVAILABLE'
++  stack: |-
++    file:///source/scripts/continuum-local-model-observation.mjs:150:16
++    new Promise (<anonymous>)
++    launchLocalModel (file:///source/scripts/continuum-local-model-observation.mjs:140:16)
++    TestContext.<anonymous> (file:///source/scripts/continuum-local-model-cpu.test.mjs:27:23)
++    Test.runInAsyncScope (node:async_hooks:227:14)
++    Test.run (node:internal/test_runner/test:1382:25)
++    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
++    Test.postRun (node:internal/test_runner/test:1522:19)
++    Test.run (node:internal/test_runner/test:1447:12)
++    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++  operator: 'rejects'
++  stack: |-
++    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++    async TestContext.<anonymous> (file:///source/scripts/continuum-local-model-cpu.test.mjs:27:2)
++    async Test.run (node:internal/test_runner/test:1389:7)
++    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
++  ...
++# Subtest: two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++not ok 4 - two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++  ---
++  duration_ms: 43.991066
++  type: 'test'
++  location: '/source/scripts/continuum-local-model-cpu.test.mjs:29:1'
++  failureType: 'testCodeFailure'
++  error: |-
++    The expression evaluated to a falsy value:
++    
++      assert.ok(f.args.includes('--cpu=2'))
++    
++  code: 'ERR_ASSERTION'
++  name: 'AssertionError'
++  expected: true
++  actual: false
++  operator: '=='
++  stack: |-
++    TestContext.<anonymous> (file:///source/scripts/continuum-local-model-cpu.test.mjs:30:140)
++    async Test.run (node:internal/test_runner/test:1389:7)
++    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
++  ...
++# Subtest: native termination returns bounded signal or numeric-exit code without output or inference receipt
++not ok 5 - native termination returns bounded signal or numeric-exit code without output or inference receipt
++  ---
++  duration_ms: 3.011078
++  type: 'test'
++  location: '/source/scripts/continuum-local-model-cpu.test.mjs:32:1'
++  failureType: 'testCodeFailure'
++  error: |-
++    Expected values to be strictly equal:
++    + actual - expected
++    
++    + 'LOCAL_RUNTIME_PROCESS_FAILED'
++    - 'LOCAL_RUNTIME_SIGNAL_SIGXCPU'
++                     ^
++    
++  code: 'ERR_ASSERTION'
++  name: 'AssertionError'
++  expected: 'LOCAL_RUNTIME_SIGNAL_SIGXCPU'
++  actual: 'LOCAL_RUNTIME_PROCESS_FAILED'
++  operator: 'strictEqual'
++  stack: |-
++    Object.<anonymous> (file:///source/scripts/continuum-local-model-cpu.test.mjs:34:72)
++    expectedException (node:assert:578:17)
++    expectsError (node:assert:703:21)
++    strict.rejects (node:assert:769:3)
++    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++    async TestContext.<anonymous> (file:///source/scripts/continuum-local-model-cpu.test.mjs:34:30)
++    async Test.run (node:internal/test_runner/test:1389:7)
++    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
++  ...
++1..5
++# tests 5
++# suites 0
++# pass 1
++# fail 4
++# cancelled 0
++# skipped 0
++# todo 0
++# duration_ms 145.196647
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/candidate-green-expanded.exit b/docs/evidence/momega1/runtime/7b-cpu/candidate-green-expanded.exit
+new file mode 100644
+index 00000000..d00491fd
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/candidate-green-expanded.exit
+@@ -0,0 +1 @@
++1
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/candidate-green-expanded.tap b/docs/evidence/momega1/runtime/7b-cpu/candidate-green-expanded.tap
+new file mode 100644
+index 00000000..c8080a43
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/candidate-green-expanded.tap
+@@ -0,0 +1,63 @@
++TAP version 13
++# Subtest: actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++ok 1 - actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++  ---
++  duration_ms: 5.805477
++  type: 'test'
++  ...
++# Subtest: legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++ok 2 - legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++  ---
++  duration_ms: 19.311372
++  type: 'test'
++  ...
++# Subtest: resource profile clone or arbitrary caller budget cannot reach spawn
++ok 3 - resource profile clone or arbitrary caller budget cannot reach spawn
++  ---
++  duration_ms: 0.873028
++  type: 'test'
++  ...
++# Subtest: two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++ok 4 - two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++  ---
++  duration_ms: 42.625114
++  type: 'test'
++  ...
++# Subtest: native termination returns bounded signal or numeric-exit code without output or inference receipt
++ok 5 - native termination returns bounded signal or numeric-exit code without output or inference receipt
++  ---
++  duration_ms: 4.964902
++  type: 'test'
++  ...
++# Subtest: fixed container CLI heap is bounded independently of model weights and native address space
++not ok 6 - fixed container CLI heap is bounded independently of model weights and native address space
++  ---
++  duration_ms: 10.841733
++  type: 'test'
++  location: '/source/scripts/continuum-local-model-cpu.test.mjs:37:1'
++  failureType: 'testCodeFailure'
++  error: |-
++    The expression evaluated to a falsy value:
++    
++      assert.ok(getHeapStatistics().heap_size_limit<=384*1024*1024)
++    
++  code: 'ERR_ASSERTION'
++  name: 'AssertionError'
++  expected: true
++  actual: false
++  operator: '=='
++  stack: |-
++    TestContext.<anonymous> (file:///source/scripts/continuum-local-model-cpu.test.mjs:42:9)
++    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
++    async Test.run (node:internal/test_runner/test:1389:7)
++    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
++  ...
++1..6
++# tests 6
++# suites 0
++# pass 5
++# fail 1
++# cancelled 0
++# skipped 0
++# todo 0
++# duration_ms 211.554941
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/candidate-green-heap.exit b/docs/evidence/momega1/runtime/7b-cpu/candidate-green-heap.exit
+new file mode 100644
+index 00000000..573541ac
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/candidate-green-heap.exit
+@@ -0,0 +1 @@
++0
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/candidate-green-heap.tap b/docs/evidence/momega1/runtime/7b-cpu/candidate-green-heap.tap
+new file mode 100644
+index 00000000..c5d0b9d8
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/candidate-green-heap.tap
+@@ -0,0 +1,46 @@
++TAP version 13
++# Subtest: actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++ok 1 - actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++  ---
++  duration_ms: 5.619144
++  type: 'test'
++  ...
++# Subtest: legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++ok 2 - legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++  ---
++  duration_ms: 1.363608
++  type: 'test'
++  ...
++# Subtest: resource profile clone or arbitrary caller budget cannot reach spawn
++ok 3 - resource profile clone or arbitrary caller budget cannot reach spawn
++  ---
++  duration_ms: 1.041232
++  type: 'test'
++  ...
++# Subtest: two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++ok 4 - two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++  ---
++  duration_ms: 41.195228
++  type: 'test'
++  ...
++# Subtest: native termination returns bounded signal or numeric-exit code without output or inference receipt
++ok 5 - native termination returns bounded signal or numeric-exit code without output or inference receipt
++  ---
++  duration_ms: 2.382898
++  type: 'test'
++  ...
++# Subtest: fixed container CLI heap is bounded independently of model weights and native address space
++ok 6 - fixed container CLI heap is bounded independently of model weights and native address space
++  ---
++  duration_ms: 1.78862
++  type: 'test'
++  ...
++1..6
++# tests 6
++# suites 0
++# pass 6
++# fail 0
++# cancelled 0
++# skipped 0
++# todo 0
++# duration_ms 120.974172
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/candidate-green.exit b/docs/evidence/momega1/runtime/7b-cpu/candidate-green.exit
+new file mode 100644
+index 00000000..573541ac
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/candidate-green.exit
+@@ -0,0 +1 @@
++0
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/candidate-green.tap b/docs/evidence/momega1/runtime/7b-cpu/candidate-green.tap
+new file mode 100644
+index 00000000..7cc6f7e1
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/candidate-green.tap
+@@ -0,0 +1,40 @@
++TAP version 13
++# Subtest: actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++ok 1 - actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++  ---
++  duration_ms: 6.686356
++  type: 'test'
++  ...
++# Subtest: legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++ok 2 - legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++  ---
++  duration_ms: 2.596641
++  type: 'test'
++  ...
++# Subtest: resource profile clone or arbitrary caller budget cannot reach spawn
++ok 3 - resource profile clone or arbitrary caller budget cannot reach spawn
++  ---
++  duration_ms: 0.906359
++  type: 'test'
++  ...
++# Subtest: two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++ok 4 - two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++  ---
++  duration_ms: 42.536328
++  type: 'test'
++  ...
++# Subtest: native termination returns bounded signal or numeric-exit code without output or inference receipt
++ok 5 - native termination returns bounded signal or numeric-exit code without output or inference receipt
++  ---
++  duration_ms: 3.952518
++  type: 'test'
++  ...
++1..5
++# tests 5
++# suites 0
++# pass 5
++# fail 0
++# cancelled 0
++# skipped 0
++# todo 0
++# duration_ms 144.974957
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/kernel-green.exit b/docs/evidence/momega1/runtime/7b-cpu/kernel-green.exit
+new file mode 100644
+index 00000000..573541ac
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/kernel-green.exit
+@@ -0,0 +1 @@
++0
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/kernel-green.tap b/docs/evidence/momega1/runtime/7b-cpu/kernel-green.tap
+new file mode 100644
+index 00000000..e2ac0cc1
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/kernel-green.tap
+@@ -0,0 +1,52 @@
++TAP version 13
++# Subtest: actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++ok 1 - actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
++  ---
++  duration_ms: 5.755411
++  type: 'test'
++  ...
++# Subtest: legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++ok 2 - legacy launcher CPU budget remains one CPU second per wall second and ignores env override
++  ---
++  duration_ms: 1.424942
++  type: 'test'
++  ...
++# Subtest: resource profile clone or arbitrary caller budget cannot reach spawn
++ok 3 - resource profile clone or arbitrary caller budget cannot reach spawn
++  ---
++  duration_ms: 1.424782
++  type: 'test'
++  ...
++# Subtest: two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++ok 4 - two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
++  ---
++  duration_ms: 42.161708
++  type: 'test'
++  ...
++# Subtest: native termination returns bounded signal or numeric-exit code without output or inference receipt
++ok 5 - native termination returns bounded signal or numeric-exit code without output or inference receipt
++  ---
++  duration_ms: 4.031378
++  type: 'test'
++  ...
++# Subtest: fixed container CLI heap is bounded independently of model weights and native address space
++ok 6 - fixed container CLI heap is bounded independently of model weights and native address space
++  ---
++  duration_ms: 2.174905
++  type: 'test'
++  ...
++# Subtest: actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit
++ok 7 - actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit
++  ---
++  duration_ms: 47.908506
++  type: 'test'
++  ...
++1..7
++# tests 7
++# suites 0
++# pass 7
++# fail 0
++# cancelled 0
++# skipped 0
++# todo 0
++# duration_ms 179.319237
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/receipt.json b/docs/evidence/momega1/runtime/7b-cpu/receipt.json
+new file mode 100644
+index 00000000..6334755f
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/receipt.json
+@@ -0,0 +1,28 @@
++{
++  "baseSourceCommit": "d8234479beaa775226f540781e39d81e6b5fdf3d",
++  "evidenceClass": "CONTRACT_TEST",
++  "author7BInferenceRun": false,
++  "cpuBudgetChange": "7B only: 2 * ceil(remainingWallMs / 1000); legacy unchanged",
++  "sourceSha256": {
++    ".github/continuum/coding-provider.mjs": "15b59137c396fe1544ba36336c1e9925fb35700b585e4eb2d15344af646a80e8",
++    "scripts/continuum-local-model-pins.mjs": "67365f513e7ac0fcc0b776aec3f21c665f55d1f639f285cb56ecf3e832666991",
++    "scripts/continuum-local-model-observation.mjs": "1e9222b80220efbed50a75a07467dc27c20238c39ed340283a0c93381e0e9cf5",
++    "scripts/continuum-local-model-job.mjs": "b288e6a945e673a9608c730211e1121c6ecfa55ddc236b13763d4b8ab8f65ae0",
++    "scripts/continuum-local-model-cpu.test.mjs": "04ff5720eab6450746a8d1dc927b0e52b582ca4476eef8810b91baf82882224a"
++  },
++  "filesSha256": {
++    "candidate-green-expanded.tap": "0ef07d7fadda138c8c466a1eed3f9536e35449c8fb16edadb2bc250f12a7d106",
++    "baseline-red.tap": "fd8bd5e9a4e561f22357a53359785ea86cfdf7d4d93d20fc817568d436736dec",
++    "candidate-green-heap.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
++    "baseline-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
++    "regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
++    "candidate-green-heap.tap": "3a855653cceddd4aa3f6d75f7d47aead94f0094f3fd1cb188bda6d14d5fb065e",
++    "regression.tap": "5f52a8c8e8a62a020b39c959d1e567be3e0e37cfaddeb3f0627748dd0ce56ec7",
++    "kernel-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
++    "kernel-green.tap": "3ee5cac146d7f2235457e0ea90f745779f1b9164fa4ff7908dc7cb66ec5bd5f2",
++    "candidate-green.tap": "10626fc4fd81fbb47c47de1b769c6982855fb576ff02023df329aac53726eb0c",
++    "run-cpu-tests.sh": "87e8c71400f8faeea4b8c93758301eba815d653eb881397af3c681dac8e29bcf",
++    "candidate-green-expanded.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
++    "candidate-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
++  }
++}
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/regression.exit b/docs/evidence/momega1/runtime/7b-cpu/regression.exit
+new file mode 100644
+index 00000000..573541ac
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/regression.exit
+@@ -0,0 +1 @@
++0
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/regression.tap b/docs/evidence/momega1/runtime/7b-cpu/regression.tap
+new file mode 100644
+index 00000000..e7db5a44
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/regression.tap
+@@ -0,0 +1,562 @@
++TAP version 13
++# Subtest: small granted files include complete helper bodies instead of disconnected declaration windows
++ok 1 - small granted files include complete helper bodies instead of disconnected declaration windows
++  ---
++  duration_ms: 81.02783
++  type: 'test'
++  ...
++# Subtest: retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies
++ok 2 - retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies
++  ---
++  duration_ms: 124.843994
++  type: 'test'
++  ...
++# Subtest: reads committed blobs even when working sources are changed or symlinked
++ok 3 - reads committed blobs even when working sources are changed or symlinked
++  ---
++  duration_ms: 69.53824
++  type: 'test'
++  ...
++# Subtest: indexes JavaScript literal imports and symbols without executing repository code
++ok 4 - indexes JavaScript literal imports and symbols without executing repository code
++  ---
++  duration_ms: 106.21786
++  type: 'test'
++  ...
++# Subtest: does not resolve import text from comments, quoted strings or template literals
++ok 5 - does not resolve import text from comments, quoted strings or template literals
++  ---
++  duration_ms: 145.094483
++  type: 'test'
++  ...
++# Subtest: fails closed for stale commits and abbreviated or option-shaped commit selectors
++ok 6 - fails closed for stale commits and abbreviated or option-shaped commit selectors
++  ---
++  duration_ms: 92.868673
++  type: 'test'
++  ...
++# Subtest: rejects grants outside the repository or protected control and secret paths
++ok 7 - rejects grants outside the repository or protected control and secret paths
++  ---
++  duration_ms: 90.096285
++  type: 'test'
++  ...
++# Subtest: rejects tracked symlink grants and skips symlinks from wider inventory
++ok 8 - rejects tracked symlink grants and skips symlinks from wider inventory
++  ---
++  duration_ms: 99.092521
++  type: 'test'
++  ...
++# Subtest: wider inventory excludes signing, workflow and secret files without leaking content
++ok 9 - wider inventory excludes signing, workflow and secret files without leaking content
++  ---
++  duration_ms: 85.706365
++  type: 'test'
++  ...
++# Subtest: keeps the complete JSON within the hard budget and prioritizes diagnostic lines
++ok 10 - keeps the complete JSON within the hard budget and prioritizes diagnostic lines
++  ---
++  duration_ms: 1014.966658
++  type: 'test'
++  ...
++# Subtest: rejects overlarge granted sources before reading their full contents
++ok 11 - rejects overlarge granted sources before reading their full contents
++  ---
++  duration_ms: 81.031216
++  type: 'test'
++  ...
++# Subtest: query and diagnostics remain inert data and cannot redirect source paths
++ok 12 - query and diagnostics remain inert data and cannot redirect source paths
++  ---
++  duration_ms: 92.53673
++  type: 'test'
++  ...
++# Subtest: search operates on serializable bounded ranges and enforces its result cap
++ok 13 - search operates on serializable bounded ranges and enforces its result cap
++  ---
++  duration_ms: 101.268387
++  type: 'test'
++  ...
++# Subtest: rejects an exhausted retrieval deadline before invoking Git
++ok 14 - rejects an exhausted retrieval deadline before invoking Git
++  ---
++  duration_ms: 53.739282
++  type: 'test'
++  ...
++# Subtest: limits returned source ranges even when many declarations match the query
++ok 15 - limits returned source ranges even when many declarations match the query
++  ---
++  duration_ms: 272.269746
++  type: 'test'
++  ...
++# Subtest: typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
++ok 16 - typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
++  ---
++  duration_ms: 4180.447296
++  type: 'test'
++  ...
++# Subtest: canonical provider preserves explicit model admission metadata without forwarding unrelated credentials
++ok 17 - canonical provider preserves explicit model admission metadata without forwarding unrelated credentials
++  ---
++  duration_ms: 101.179046
++  type: 'test'
++  ...
++# Subtest: provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI
++ok 18 - provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI
++  ---
++  duration_ms: 91.232671
++  type: 'test'
++  ...
++# Subtest: model child receives only local credentials and durable trace excludes raw source/model output
++ok 19 - model child receives only local credentials and durable trace excludes raw source/model output
++  ---
++  duration_ms: 105.511269
++  type: 'test'
++  ...
++# Subtest: malformed model name is rejected before invoking the local child
++ok 20 - malformed model name is rejected before invoking the local child
++  ---
++  duration_ms: 128.553279
++  type: 'test'
++  ...
++# Subtest: unsafe evidence paths fail before dirtying the source checkout
++ok 21 - unsafe evidence paths fail before dirtying the source checkout
++  ---
++  duration_ms: 60.08448
++  type: 'test'
++  ...
++# Subtest: same canonical job resumes its request budget without repeating evidence slots
++ok 22 - same canonical job resumes its request budget without repeating evidence slots
++  ---
++  duration_ms: 110.706649
++  type: 'test'
++  ...
++# Subtest: request reservation is durable before inference and interrupted calls consume the budget
++ok 23 - request reservation is durable before inference and interrupted calls consume the budget
++  ---
++  duration_ms: 94.315186
++  type: 'test'
++  ...
++# Subtest: foreign or corrupt persisted requests block before another inference
++ok 24 - foreign or corrupt persisted requests block before another inference
++  ---
++  duration_ms: 86.870884
++  type: 'test'
++  ...
++# Subtest: real full GGUF admission: exact bytes -> identity receipt, no runtime authority
++ok 25 - real full GGUF admission: exact bytes -> identity receipt, no runtime authority
++  ---
++  duration_ms: 163.857863
++  type: 'test'
++  ...
++# Subtest: real full admission rejects modified tensor bytes under unchanged pin
++ok 26 - real full admission rejects modified tensor bytes under unchanged pin
++  ---
++  duration_ms: 275.793933
++  type: 'test'
++  ...
++# Subtest: malformed GGUF with self-consistent SHA is rejected structurally
++ok 27 - malformed GGUF with self-consistent SHA is rejected structurally
++  ---
++  duration_ms: 157.890381
++  type: 'test'
++  ...
++# Subtest: altered manifest size and missing manifest do not admit
++ok 28 - altered manifest size and missing manifest do not admit
++  ---
++  duration_ms: 275.946609
++  type: 'test'
++  ...
++# Subtest: simulated Termux actually executes preflight before touching even server --help
++ok 29 - simulated Termux actually executes preflight before touching even server --help
++  ---
++  duration_ms: 371.413064
++  type: 'test'
++  ...
++# Subtest: valid canonical owner pin is read without persistence or mutation
++ok 30 - valid canonical owner pin is read without persistence or mutation
++  ---
++  duration_ms: 51.844009
++  type: 'test'
++  ...
++# Subtest: manifest missing, symlinked, hardlinked or group-writable fails closed
++ok 31 - manifest missing, symlinked, hardlinked or group-writable fails closed
++  ---
++  duration_ms: 9.117959
++  type: 'test'
++  ...
++# Subtest: oversize, malformed JSON and all invalid manifest fields refuse
++ok 32 - oversize, malformed JSON and all invalid manifest fields refuse
++  ---
++  duration_ms: 23.40881
++  type: 'test'
++  ...
++# Subtest: no pin or file-name mismatch never calls admission
++ok 33 - no pin or file-name mismatch never calls admission
++  ---
++  duration_ms: 4.724424
++  type: 'test'
++  ...
++# Subtest: admission must independently confirm bytes, identity and disabled execution
++ok 34 - admission must independently confirm bytes, identity and disabled execution
++  ---
++  duration_ms: 24.277191
++  type: 'test'
++  ...
++# Subtest: rejected model admission propagates and prints no false success receipt
++ok 35 - rejected model admission propagates and prints no false success receipt
++  ---
++  duration_ms: 24.766264
++  type: 'test'
++  ...
++# Subtest: Termux launcher rejects missing pinned manifest before running even server --help
++ok 36 - Termux launcher rejects missing pinned manifest before running even server --help
++  ---
++  duration_ms: 44.952743
++  type: 'test'
++  ...
++# Subtest: parses real GGUF v2/v3 structure and bounded tensor bytes
++ok 37 - parses real GGUF v2/v3 structure and bounded tensor bytes
++  ---
++  duration_ms: 3.083978
++  type: 'test'
++  ...
++# Subtest: rejects magic, endian and unsupported versions
++ok 38 - rejects magic, endian and unsupported versions
++  ---
++  duration_ms: 0.619676
++  type: 'test'
++  ...
++# Subtest: rejects truncation and oversized counts before iteration or allocation
++ok 39 - rejects truncation and oversized counts before iteration or allocation
++  ---
++  duration_ms: 0.499324
++  type: 'test'
++  ...
++# Subtest: rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
++ok 40 - rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
++  ---
++  duration_ms: 1.050497
++  type: 'test'
++  ...
++# Subtest: skips tokenizer arrays without retaining tokens or evaluating templates
++ok 41 - skips tokenizer arrays without retaining tokens or evaluating templates
++  ---
++  duration_ms: 0.717834
++  type: 'test'
++  ...
++# Subtest: rejects nested arrays, enormous array/string lengths and invalid alignment
++ok 42 - rejects nested arrays, enormous array/string lengths and invalid alignment
++  ---
++  duration_ms: 0.596972
++  type: 'test'
++  ...
++# Subtest: rejects wrong metadata scalar types, non-finite floats and booleans
++ok 43 - rejects wrong metadata scalar types, non-finite floats and booleans
++  ---
++  duration_ms: 2.12524
++  type: 'test'
++  ...
++# Subtest: rejects tensor overflow, out-of-file ranges, overlap and misalignment
++ok 44 - rejects tensor overflow, out-of-file ranges, overlap and misalignment
++  ---
++  duration_ms: 0.667227
++  type: 'test'
++  ...
++# Subtest: rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
++ok 45 - rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
++  ---
++  duration_ms: 0.533576
++  type: 'test'
++  ...
++# Subtest: computes quantized row storage from audited block sizes
++ok 46 - computes quantized row storage from audited block sizes
++  ---
++  duration_ms: 0.301835
++  type: 'test'
++  ...
++# Subtest: rejects bounded header exhaustion and missing/unsafe architecture metadata
++ok 47 - rejects bounded header exhaustion and missing/unsafe architecture metadata
++  ---
++  duration_ms: 0.347966
++  type: 'test'
++  ...
++# Subtest: file admission hashes actual bytes and records identity without model trust
++ok 48 - file admission hashes actual bytes and records identity without model trust
++  ---
++  duration_ms: 40.190232
++  type: 'test'
++  ...
++# Subtest: admission rejects links, writable files, directories and malformed provenance
++ok 49 - admission rejects links, writable files, directories and malformed provenance
++  ---
++  duration_ms: 12.397892
++  type: 'test'
++  ...
++# Subtest: file admission enforces caller resource and cancellation bounds
++ok 50 - file admission enforces caller resource and cancellation bounds
++  ---
++  duration_ms: 8.473867
++  type: 'test'
++  ...
++# Subtest: chat only contacts fixed localhost and returns text as untrusted data
++ok 51 - chat only contacts fixed localhost and returns text as untrusted data
++  ---
++  duration_ms: 13.60112
++  type: 'test'
++  ...
++# Subtest: rejects missing authentication, unverified facts and external configuration
++ok 52 - rejects missing authentication, unverified facts and external configuration
++  ---
++  duration_ms: 1.354295
++  type: 'test'
++  ...
++# Subtest: patch proposal is schema constrained, validated and never applied
++ok 53 - patch proposal is schema constrained, validated and never applied
++  ---
++  duration_ms: 6.50297
++  type: 'test'
++  ...
++# Subtest: server errors and overly long outputs fail closed
++ok 54 - server errors and overly long outputs fail closed
++  ---
++  duration_ms: 1.125931
++  type: 'test'
++  ...
++# Subtest: health never transmits authorization and discriminates loading/unavailable
++ok 55 - health never transmits authorization and discriminates loading/unavailable
++  ---
++  duration_ms: 0.91427
++  type: 'test'
++  ...
++# Subtest: actual Node HTTP loopback fixture exercises an end-to-end POST
++ok 56 - actual Node HTTP loopback fixture exercises an end-to-end POST
++  ---
++  duration_ms: 77.908095
++  type: 'test'
++  ...
++# Subtest: local structured patch request sends nested schema to real loopback HTTP endpoint
++ok 57 - local structured patch request sends nested schema to real loopback HTTP endpoint
++  ---
++  duration_ms: 12.967322
++  type: 'test'
++  ...
++# Subtest: schema-compatible server response still cannot smuggle authority or unsafe file edits
++ok 58 - schema-compatible server response still cannot smuggle authority or unsafe file edits
++  ---
++  duration_ms: 1.540747
++  type: 'test'
++  ...
++# Subtest: 7B exact owner pin admits a bounded manifest without inference promotion
++ok 59 - 7B exact owner pin admits a bounded manifest without inference promotion
++  ---
++  duration_ms: 40.897209
++  type: 'test'
++  ...
++# Subtest: resource profile is frozen and restricted to every exact pin field plus runtime hash
++ok 60 - resource profile is frozen and restricted to every exact pin field plus runtime hash
++  ---
++  duration_ms: 0.647168
++  type: 'test'
++  ...
++# Subtest: 7B uses the fixed Qwen ChatML serialization, unknown model does not
++ok 61 - 7B uses the fixed Qwen ChatML serialization, unknown model does not
++  ---
++  duration_ms: 0.368607
++  type: 'test'
++  ...
++# Subtest: 7B total-job memory check is real and cannot accept the shared16GiB host group
++ok 62 - 7B total-job memory check is real and cannot accept the shared16GiB host group
++  ---
++  duration_ms: 0.773929
++  type: 'test'
++  ...
++# Subtest: large header requires exact complete provenance, no caller file-size bypass
++ok 63 - large header requires exact complete provenance, no caller file-size bypass
++  ---
++  duration_ms: 0.977186
++  type: 'test'
++  ...
++# Subtest: fixed Docker CLI transport rejects mismatched weights before native launch, with no observation
++ok 64 - fixed Docker CLI transport rejects mismatched weights before native launch, with no observation
++  ---
++  duration_ms: 558.756582
++  type: 'test'
++  ...
++# Subtest: native pinned completion counters preserve actual timestamped format
++ok 65 - native pinned completion counters preserve actual timestamped format
++  ---
++  duration_ms: 1.474778
++  type: 'test'
++  ...
++# Subtest: only known native completion trailer is removed; raw hash input is unchanged
++ok 66 - only known native completion trailer is removed; raw hash input is unchanged
++  ---
++  duration_ms: 0.745526
++  type: 'test'
++  ...
++# Subtest: official Qwen bytes select ChatML, with schema constraint supplied as inert data
++ok 67 - official Qwen bytes select ChatML, with schema constraint supplied as inert data
++  ---
++  duration_ms: 1.060261
++  type: 'test'
++  ...
++# Subtest: normal caller cannot certify a serialized runtime observation
++ok 68 - normal caller cannot certify a serialized runtime observation
++  ---
++  duration_ms: 0.938267
++  type: 'test'
++  ...
++# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
++ok 69 - coding CLI blocks endpoint-only configuration before any network/model call
++  ---
++  duration_ms: 153.305368
++  type: 'test'
++  ...
++# Subtest: unapproved or absent local weights never produce runtime observations
++ok 70 - unapproved or absent local weights never produce runtime observations
++  ---
++  duration_ms: 1.486164
++  type: 'test'
++  ...
++# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
++ok 71 - actual namespace binds admitted descriptors and fixture output; never inference evidence
++  ---
++  duration_ms: 212.302615
++  type: 'test'
++  ...
++# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
++ok 72 - altered model/runtime, unsafe executable and mismatched request cannot execute
++  ---
++  duration_ms: 126.329106
++  type: 'test'
++  ...
++# Subtest: deadline cancels actual isolated process with bounded return
++ok 73 - deadline cancels actual isolated process with bounded return
++  ---
++  duration_ms: 372.430435
++  type: 'test'
++  ...
++# Subtest: STOP cancels actual isolated process and leaves no trusted observation
++ok 74 - STOP cancels actual isolated process and leaves no trusted observation
++  ---
++  duration_ms: 224.007391
++  type: 'test'
++  ...
++# Subtest: malformed/oversized output and missing generation counters are rejected
++ok 75 - malformed/oversized output and missing generation counters are rejected
++  ---
++  duration_ms: 428.206668
++  type: 'test'
++  ...
++# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
++ok 76 - sandbox exposes no checkout, HOME, network, secret or configurable shell
++  ---
++  duration_ms: 1.03247
++  type: 'test'
++  ...
++# Subtest: actual FD mount retains selected inode across model path replacement
++ok 77 - actual FD mount retains selected inode across model path replacement
++  ---
++  duration_ms: 144.20869
++  type: 'test'
++  ...
++# Subtest: prompt evaluation counter alone cannot masquerade as output generation
++ok 78 - prompt evaluation counter alone cannot masquerade as output generation
++  ---
++  duration_ms: 130.710347
++  type: 'test'
++  ...
++# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
++ok 79 - inference sandbox denies host files, external interfaces, secrets and writable model
++  ---
++  duration_ms: 159.487186
++  type: 'test'
++  ...
++# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
++ok 80 - seccomp denies fork and rlimits bound native memory/descriptor budgets
++  ---
++  duration_ms: 104.68194
++  type: 'test'
++  ...
++# Subtest: changing model during actual execution invalidates otherwise valid output
++ok 81 - changing model during actual execution invalidates otherwise valid output
++  ---
++  duration_ms: 258.223062
++  type: 'test'
++  ...
++# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
++ok 82 - production provider rejects synthetic fixture receipt even when transport MAC is valid
++  ---
++  duration_ms: 357.605115
++  type: 'test'
++  ...
++# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
++ok 83 - self-asserted inference flag is rejected instead of upgraded or accepted
++  ---
++  duration_ms: 96.493315
++  type: 'test'
++  ...
++# Subtest: native worker threads remain permitted while process creation stays denied
++ok 84 - native worker threads remain permitted while process creation stays denied
++  ---
++  duration_ms: 173.914137
++  type: 'test'
++  ...
++# Subtest: unavailable isolation launcher fails closed and creates no observation
++ok 85 - unavailable isolation launcher fails closed and creates no observation
++  ---
++  duration_ms: 114.997037
++  type: 'test'
++  ...
++# Subtest: integration strict observation option rejects injected unobserved provider replies
++ok 86 - integration strict observation option rejects injected unobserved provider replies
++  ---
++  duration_ms: 195.181733
++  type: 'test'
++  ...
++# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
++ok 87 - integration technical recall enters prompt as bounded untrusted data within context budget
++  ---
++  duration_ms: 140.154973
++  type: 'test'
++  ...
++# Subtest: integration malformed recall and strict remote selection fail before transport
++ok 88 - integration malformed recall and strict remote selection fail before transport
++  ---
++  duration_ms: 159.177348
++  type: 'test'
++  ...
++# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
++ok 89 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
++  ---
++  duration_ms: 361.05282
++  type: 'test'
++  ...
++# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
++ok 90 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
++  ---
++  duration_ms: 0.505374
++  type: 'test'
++  ...
++# Subtest: invalid model JSON retains authenticated process observation without a candidate
++ok 91 - invalid model JSON retains authenticated process observation without a candidate
++  ---
++  duration_ms: 80.373208
++  type: 'test'
++  ...
++# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
++ok 92 - provider retains authenticated rejected-response observation and consumed durable budget
++  ---
++  duration_ms: 302.950435
++  type: 'test'
++  ...
++1..92
++# tests 92
++# suites 0
++# pass 92
++# fail 0
++# cancelled 0
++# skipped 0
++# todo 0
++# duration_ms 7944.200147
+diff --git a/docs/evidence/momega1/runtime/7b-cpu/run-cpu-tests.sh b/docs/evidence/momega1/runtime/7b-cpu/run-cpu-tests.sh
+new file mode 100644
+index 00000000..78f6c48c
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b-cpu/run-cpu-tests.sh
+@@ -0,0 +1,2 @@
++#!/bin/bash
++docker run --rm --pull=never --init --network=none --memory=7g --memory-swap=7g --cpus=2 --pids-limit=64 --cap-drop=ALL --security-opt=no-new-privileges:true --security-opt=systempaths=unconfined --security-opt=seccomp=/workspace/momega1-runtime/scripts/continuum-local-model-outer-seccomp.json --user=1000:1000 --read-only --tmpfs /tmp:rw,nosuid,nodev,exec,size=128m --mount type=bind,src=/usr,dst=/usr,readonly --mount type=bind,src=/lib,dst=/lib,readonly --mount type=bind,src=/lib64,dst=/lib64,readonly --mount type=bind,src=/opt/codex/runtimes/codex-primary-runtime/dependencies/node,dst=/node,readonly --mount type=bind,src=/workspace/momega1-runtime/scripts,dst=/source/scripts,readonly --mount type=bind,src=/workspace/momega1-runtime/.github/continuum,dst=/source/.github/continuum,readonly --workdir /source sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1 /node/bin/node --max-old-space-size=256 --max-semi-space-size=16 --test --test-reporter=tap scripts/continuum-local-model-cpu.test.mjs
+diff --git a/docs/evidence/momega1/runtime/7b/candidate-receipt.json b/docs/evidence/momega1/runtime/7b/candidate-receipt.json
+index 939f1147..d49939a7 100644
+--- a/docs/evidence/momega1/runtime/7b/candidate-receipt.json
++++ b/docs/evidence/momega1/runtime/7b/candidate-receipt.json
+@@ -45,5 +45,10 @@
+     "transport-contract-first.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+     "docker-restricted-fixtures-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+     "docker-restricted-green.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+-  }
++  },
++  "testedSourceCommitSha": "e192b9a6af55f599de5d33725265ac348e84a12e",
++  "exactSourceRegressionExit": 0,
++  "exactSourceRegressionSha256": "e87a4a204767f5b98d324d6fb2ff4c38b3b072516b7ec541d92f49570a8fc344",
++  "draftPr": "https://github.com/Ullmann27/device-ai/pull/449",
++  "exactSourceHashesMatch": true
+ }
+diff --git a/docs/evidence/momega1/runtime/7b/e192-regression.exit b/docs/evidence/momega1/runtime/7b/e192-regression.exit
+new file mode 100644
+index 00000000..573541ac
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b/e192-regression.exit
+@@ -0,0 +1 @@
++0
+diff --git a/docs/evidence/momega1/runtime/7b/e192-regression.tap b/docs/evidence/momega1/runtime/7b/e192-regression.tap
+new file mode 100644
+index 00000000..31369d65
+--- /dev/null
++++ b/docs/evidence/momega1/runtime/7b/e192-regression.tap
+@@ -0,0 +1,562 @@
++TAP version 13
++# Subtest: small granted files include complete helper bodies instead of disconnected declaration windows
++ok 1 - small granted files include complete helper bodies instead of disconnected declaration windows
++  ---
++  duration_ms: 50.120127
++  type: 'test'
++  ...
++# Subtest: retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies
++ok 2 - retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies
++  ---
++  duration_ms: 65.531344
++  type: 'test'
++  ...
++# Subtest: reads committed blobs even when working sources are changed or symlinked
++ok 3 - reads committed blobs even when working sources are changed or symlinked
++  ---
++  duration_ms: 54.883754
++  type: 'test'
++  ...
++# Subtest: indexes JavaScript literal imports and symbols without executing repository code
++ok 4 - indexes JavaScript literal imports and symbols without executing repository code
++  ---
++  duration_ms: 40.968348
++  type: 'test'
++  ...
++# Subtest: does not resolve import text from comments, quoted strings or template literals
++ok 5 - does not resolve import text from comments, quoted strings or template literals
++  ---
++  duration_ms: 38.113053
++  type: 'test'
++  ...
++# Subtest: fails closed for stale commits and abbreviated or option-shaped commit selectors
++ok 6 - fails closed for stale commits and abbreviated or option-shaped commit selectors
++  ---
++  duration_ms: 35.578199
++  type: 'test'
++  ...
++# Subtest: rejects grants outside the repository or protected control and secret paths
++ok 7 - rejects grants outside the repository or protected control and secret paths
++  ---
++  duration_ms: 29.633453
++  type: 'test'
++  ...
++# Subtest: rejects tracked symlink grants and skips symlinks from wider inventory
++ok 8 - rejects tracked symlink grants and skips symlinks from wider inventory
++  ---
++  duration_ms: 64.359706
++  type: 'test'
++  ...
++# Subtest: wider inventory excludes signing, workflow and secret files without leaking content
++ok 9 - wider inventory excludes signing, workflow and secret files without leaking content
++  ---
++  duration_ms: 33.324066
++  type: 'test'
++  ...
++# Subtest: keeps the complete JSON within the hard budget and prioritizes diagnostic lines
++ok 10 - keeps the complete JSON within the hard budget and prioritizes diagnostic lines
++  ---
++  duration_ms: 454.337075
++  type: 'test'
++  ...
++# Subtest: rejects overlarge granted sources before reading their full contents
++ok 11 - rejects overlarge granted sources before reading their full contents
++  ---
++  duration_ms: 28.245919
++  type: 'test'
++  ...
++# Subtest: query and diagnostics remain inert data and cannot redirect source paths
++ok 12 - query and diagnostics remain inert data and cannot redirect source paths
++  ---
++  duration_ms: 31.546582
++  type: 'test'
++  ...
++# Subtest: search operates on serializable bounded ranges and enforces its result cap
++ok 13 - search operates on serializable bounded ranges and enforces its result cap
++  ---
++  duration_ms: 31.230134
++  type: 'test'
++  ...
++# Subtest: rejects an exhausted retrieval deadline before invoking Git
++ok 14 - rejects an exhausted retrieval deadline before invoking Git
++  ---
++  duration_ms: 18.016849
++  type: 'test'
++  ...
++# Subtest: limits returned source ranges even when many declarations match the query
++ok 15 - limits returned source ranges even when many declarations match the query
++  ---
++  duration_ms: 146.128058
++  type: 'test'
++  ...
++# Subtest: typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
++ok 16 - typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
++  ---
++  duration_ms: 1619.538163
++  type: 'test'
++  ...
++# Subtest: canonical provider preserves explicit model admission metadata without forwarding unrelated credentials
++ok 17 - canonical provider preserves explicit model admission metadata without forwarding unrelated credentials
++  ---
++  duration_ms: 50.643267
++  type: 'test'
++  ...
++# Subtest: provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI
++ok 18 - provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI
++  ---
++  duration_ms: 44.380259
++  type: 'test'
++  ...
++# Subtest: model child receives only local credentials and durable trace excludes raw source/model output
++ok 19 - model child receives only local credentials and durable trace excludes raw source/model output
++  ---
++  duration_ms: 56.869688
++  type: 'test'
++  ...
++# Subtest: malformed model name is rejected before invoking the local child
++ok 20 - malformed model name is rejected before invoking the local child
++  ---
++  duration_ms: 59.04415
++  type: 'test'
++  ...
++# Subtest: unsafe evidence paths fail before dirtying the source checkout
++ok 21 - unsafe evidence paths fail before dirtying the source checkout
++  ---
++  duration_ms: 18.321104
++  type: 'test'
++  ...
++# Subtest: same canonical job resumes its request budget without repeating evidence slots
++ok 22 - same canonical job resumes its request budget without repeating evidence slots
++  ---
++  duration_ms: 43.905872
++  type: 'test'
++  ...
++# Subtest: request reservation is durable before inference and interrupted calls consume the budget
++ok 23 - request reservation is durable before inference and interrupted calls consume the budget
++  ---
++  duration_ms: 33.678601
++  type: 'test'
++  ...
++# Subtest: foreign or corrupt persisted requests block before another inference
++ok 24 - foreign or corrupt persisted requests block before another inference
++  ---
++  duration_ms: 36.694225
++  type: 'test'
++  ...
++# Subtest: real full GGUF admission: exact bytes -> identity receipt, no runtime authority
++ok 25 - real full GGUF admission: exact bytes -> identity receipt, no runtime authority
++  ---
++  duration_ms: 87.44967
++  type: 'test'
++  ...
++# Subtest: real full admission rejects modified tensor bytes under unchanged pin
++ok 26 - real full admission rejects modified tensor bytes under unchanged pin
++  ---
++  duration_ms: 62.436674
++  type: 'test'
++  ...
++# Subtest: malformed GGUF with self-consistent SHA is rejected structurally
++ok 27 - malformed GGUF with self-consistent SHA is rejected structurally
++  ---
++  duration_ms: 67.480729
++  type: 'test'
++  ...
++# Subtest: altered manifest size and missing manifest do not admit
++ok 28 - altered manifest size and missing manifest do not admit
++  ---
++  duration_ms: 120.155342
++  type: 'test'
++  ...
++# Subtest: simulated Termux actually executes preflight before touching even server --help
++ok 29 - simulated Termux actually executes preflight before touching even server --help
++  ---
++  duration_ms: 146.82824
++  type: 'test'
++  ...
++# Subtest: valid canonical owner pin is read without persistence or mutation
++ok 30 - valid canonical owner pin is read without persistence or mutation
++  ---
++  duration_ms: 16.667691
++  type: 'test'
++  ...
++# Subtest: manifest missing, symlinked, hardlinked or group-writable fails closed
++ok 31 - manifest missing, symlinked, hardlinked or group-writable fails closed
++  ---
++  duration_ms: 5.038983
++  type: 'test'
++  ...
++# Subtest: oversize, malformed JSON and all invalid manifest fields refuse
++ok 32 - oversize, malformed JSON and all invalid manifest fields refuse
++  ---
++  duration_ms: 21.783255
++  type: 'test'
++  ...
++# Subtest: no pin or file-name mismatch never calls admission
++ok 33 - no pin or file-name mismatch never calls admission
++  ---
++  duration_ms: 3.144218
++  type: 'test'
++  ...
++# Subtest: admission must independently confirm bytes, identity and disabled execution
++ok 34 - admission must independently confirm bytes, identity and disabled execution
++  ---
++  duration_ms: 6.598072
++  type: 'test'
++  ...
++# Subtest: rejected model admission propagates and prints no false success receipt
++ok 35 - rejected model admission propagates and prints no false success receipt
++  ---
++  duration_ms: 2.915872
++  type: 'test'
++  ...
++# Subtest: Termux launcher rejects missing pinned manifest before running even server --help
++ok 36 - Termux launcher rejects missing pinned manifest before running even server --help
++  ---
++  duration_ms: 9.948221
++  type: 'test'
++  ...
++# Subtest: parses real GGUF v2/v3 structure and bounded tensor bytes
++ok 37 - parses real GGUF v2/v3 structure and bounded tensor bytes
++  ---
++  duration_ms: 2.954041
++  type: 'test'
++  ...
++# Subtest: rejects magic, endian and unsupported versions
++ok 38 - rejects magic, endian and unsupported versions
++  ---
++  duration_ms: 0.772597
++  type: 'test'
++  ...
++# Subtest: rejects truncation and oversized counts before iteration or allocation
++ok 39 - rejects truncation and oversized counts before iteration or allocation
++  ---
++  duration_ms: 0.543741
++  type: 'test'
++  ...
++# Subtest: rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
++ok 40 - rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
++  ---
++  duration_ms: 0.728139
++  type: 'test'
++  ...
++# Subtest: skips tokenizer arrays without retaining tokens or evaluating templates
++ok 41 - skips tokenizer arrays without retaining tokens or evaluating templates
++  ---
++  duration_ms: 2.174754
++  type: 'test'
++  ...
++# Subtest: rejects nested arrays, enormous array/string lengths and invalid alignment
++ok 42 - rejects nested arrays, enormous array/string lengths and invalid alignment
++  ---
++  duration_ms: 0.546275
++  type: 'test'
++  ...
++# Subtest: rejects wrong metadata scalar types, non-finite floats and booleans
++ok 43 - rejects wrong metadata scalar types, non-finite floats and booleans
++  ---
++  duration_ms: 0.488637
++  type: 'test'
++  ...
++# Subtest: rejects tensor overflow, out-of-file ranges, overlap and misalignment
++ok 44 - rejects tensor overflow, out-of-file ranges, overlap and misalignment
++  ---
++  duration_ms: 0.509189
++  type: 'test'
++  ...
++# Subtest: rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
++ok 45 - rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
++  ---
++  duration_ms: 0.390019
++  type: 'test'
++  ...
++# Subtest: computes quantized row storage from audited block sizes
++ok 46 - computes quantized row storage from audited block sizes
++  ---
++  duration_ms: 0.266642
++  type: 'test'
++  ...
++# Subtest: rejects bounded header exhaustion and missing/unsafe architecture metadata
++ok 47 - rejects bounded header exhaustion and missing/unsafe architecture metadata
++  ---
++  duration_ms: 1.961461
++  type: 'test'
++  ...
++# Subtest: file admission hashes actual bytes and records identity without model trust
++ok 48 - file admission hashes actual bytes and records identity without model trust
++  ---
++  duration_ms: 17.042693
++  type: 'test'
++  ...
++# Subtest: admission rejects links, writable files, directories and malformed provenance
++ok 49 - admission rejects links, writable files, directories and malformed provenance
++  ---
++  duration_ms: 7.526014
++  type: 'test'
++  ...
++# Subtest: file admission enforces caller resource and cancellation bounds
++ok 50 - file admission enforces caller resource and cancellation bounds
++  ---
++  duration_ms: 1.591723
++  type: 'test'
++  ...
++# Subtest: chat only contacts fixed localhost and returns text as untrusted data
++ok 51 - chat only contacts fixed localhost and returns text as untrusted data
++  ---
++  duration_ms: 6.378791
++  type: 'test'
++  ...
++# Subtest: rejects missing authentication, unverified facts and external configuration
++ok 52 - rejects missing authentication, unverified facts and external configuration
++  ---
++  duration_ms: 1.438732
++  type: 'test'
++  ...
++# Subtest: patch proposal is schema constrained, validated and never applied
++ok 53 - patch proposal is schema constrained, validated and never applied
++  ---
++  duration_ms: 2.379052
++  type: 'test'
++  ...
++# Subtest: server errors and overly long outputs fail closed
++ok 54 - server errors and overly long outputs fail closed
++  ---
++  duration_ms: 1.485412
++  type: 'test'
++  ...
++# Subtest: health never transmits authorization and discriminates loading/unavailable
++ok 55 - health never transmits authorization and discriminates loading/unavailable
++  ---
++  duration_ms: 2.598654
++  type: 'test'
++  ...
++# Subtest: actual Node HTTP loopback fixture exercises an end-to-end POST
++ok 56 - actual Node HTTP loopback fixture exercises an end-to-end POST
++  ---
++  duration_ms: 38.563907
++  type: 'test'
++  ...
++# Subtest: local structured patch request sends nested schema to real loopback HTTP endpoint
++ok 57 - local structured patch request sends nested schema to real loopback HTTP endpoint
++  ---
++  duration_ms: 12.341059
++  type: 'test'
++  ...
++# Subtest: schema-compatible server response still cannot smuggle authority or unsafe file edits
++ok 58 - schema-compatible server response still cannot smuggle authority or unsafe file edits
++  ---
++  duration_ms: 1.072489
++  type: 'test'
++  ...
++# Subtest: 7B exact owner pin admits a bounded manifest without inference promotion
++ok 59 - 7B exact owner pin admits a bounded manifest without inference promotion
++  ---
++  duration_ms: 14.374845
++  type: 'test'
++  ...
++# Subtest: resource profile is frozen and restricted to every exact pin field plus runtime hash
++ok 60 - resource profile is frozen and restricted to every exact pin field plus runtime hash
++  ---
++  duration_ms: 0.485513
++  type: 'test'
++  ...
++# Subtest: 7B uses the fixed Qwen ChatML serialization, unknown model does not
++ok 61 - 7B uses the fixed Qwen ChatML serialization, unknown model does not
++  ---
++  duration_ms: 0.474446
++  type: 'test'
++  ...
++# Subtest: 7B total-job memory check is real and cannot accept the shared16GiB host group
++ok 62 - 7B total-job memory check is real and cannot accept the shared16GiB host group
++  ---
++  duration_ms: 0.752806
++  type: 'test'
++  ...
++# Subtest: large header requires exact complete provenance, no caller file-size bypass
++ok 63 - large header requires exact complete provenance, no caller file-size bypass
++  ---
++  duration_ms: 1.377901
++  type: 'test'
++  ...
++# Subtest: fixed Docker CLI transport rejects mismatched weights before native launch, with no observation
++ok 64 - fixed Docker CLI transport rejects mismatched weights before native launch, with no observation
++  ---
++  duration_ms: 276.312974
++  type: 'test'
++  ...
++# Subtest: native pinned completion counters preserve actual timestamped format
++ok 65 - native pinned completion counters preserve actual timestamped format
++  ---
++  duration_ms: 1.170988
++  type: 'test'
++  ...
++# Subtest: only known native completion trailer is removed; raw hash input is unchanged
++ok 66 - only known native completion trailer is removed; raw hash input is unchanged
++  ---
++  duration_ms: 0.282327
++  type: 'test'
++  ...
++# Subtest: official Qwen bytes select ChatML, with schema constraint supplied as inert data
++ok 67 - official Qwen bytes select ChatML, with schema constraint supplied as inert data
++  ---
++  duration_ms: 0.853118
++  type: 'test'
++  ...
++# Subtest: normal caller cannot certify a serialized runtime observation
++ok 68 - normal caller cannot certify a serialized runtime observation
++  ---
++  duration_ms: 1.21228
++  type: 'test'
++  ...
++# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
++ok 69 - coding CLI blocks endpoint-only configuration before any network/model call
++  ---
++  duration_ms: 60.537014
++  type: 'test'
++  ...
++# Subtest: unapproved or absent local weights never produce runtime observations
++ok 70 - unapproved or absent local weights never produce runtime observations
++  ---
++  duration_ms: 1.058087
++  type: 'test'
++  ...
++# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
++ok 71 - actual namespace binds admitted descriptors and fixture output; never inference evidence
++  ---
++  duration_ms: 69.63307
++  type: 'test'
++  ...
++# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
++ok 72 - altered model/runtime, unsafe executable and mismatched request cannot execute
++  ---
++  duration_ms: 42.656732
++  type: 'test'
++  ...
++# Subtest: deadline cancels actual isolated process with bounded return
++ok 73 - deadline cancels actual isolated process with bounded return
++  ---
++  duration_ms: 283.567093
++  type: 'test'
++  ...
++# Subtest: STOP cancels actual isolated process and leaves no trusted observation
++ok 74 - STOP cancels actual isolated process and leaves no trusted observation
++  ---
++  duration_ms: 183.865454
++  type: 'test'
++  ...
++# Subtest: malformed/oversized output and missing generation counters are rejected
++ok 75 - malformed/oversized output and missing generation counters are rejected
++  ---
++  duration_ms: 167.11579
++  type: 'test'
++  ...
++# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
++ok 76 - sandbox exposes no checkout, HOME, network, secret or configurable shell
++  ---
++  duration_ms: 0.945598
++  type: 'test'
++  ...
++# Subtest: actual FD mount retains selected inode across model path replacement
++ok 77 - actual FD mount retains selected inode across model path replacement
++  ---
++  duration_ms: 42.184649
++  type: 'test'
++  ...
++# Subtest: prompt evaluation counter alone cannot masquerade as output generation
++ok 78 - prompt evaluation counter alone cannot masquerade as output generation
++  ---
++  duration_ms: 52.016985
++  type: 'test'
++  ...
++# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
++ok 79 - inference sandbox denies host files, external interfaces, secrets and writable model
++  ---
++  duration_ms: 54.163181
++  type: 'test'
++  ...
++# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
++ok 80 - seccomp denies fork and rlimits bound native memory/descriptor budgets
++  ---
++  duration_ms: 52.225349
++  type: 'test'
++  ...
++# Subtest: changing model during actual execution invalidates otherwise valid output
++ok 81 - changing model during actual execution invalidates otherwise valid output
++  ---
++  duration_ms: 251.847698
++  type: 'test'
++  ...
++# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
++ok 82 - production provider rejects synthetic fixture receipt even when transport MAC is valid
++  ---
++  duration_ms: 149.673311
++  type: 'test'
++  ...
++# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
++ok 83 - self-asserted inference flag is rejected instead of upgraded or accepted
++  ---
++  duration_ms: 62.06785
++  type: 'test'
++  ...
++# Subtest: native worker threads remain permitted while process creation stays denied
++ok 84 - native worker threads remain permitted while process creation stays denied
++  ---
++  duration_ms: 57.172309
++  type: 'test'
++  ...
++# Subtest: unavailable isolation launcher fails closed and creates no observation
++ok 85 - unavailable isolation launcher fails closed and creates no observation
++  ---
++  duration_ms: 35.119482
++  type: 'test'
++  ...
++# Subtest: integration strict observation option rejects injected unobserved provider replies
++ok 86 - integration strict observation option rejects injected unobserved provider replies
++  ---
++  duration_ms: 68.403848
++  type: 'test'
++  ...
++# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
++ok 87 - integration technical recall enters prompt as bounded untrusted data within context budget
++  ---
++  duration_ms: 61.080475
++  type: 'test'
++  ...
++# Subtest: integration malformed recall and strict remote selection fail before transport
++ok 88 - integration malformed recall and strict remote selection fail before transport
++  ---
++  duration_ms: 53.617006
++  type: 'test'
++  ...
++# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
++ok 89 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
++  ---
++  duration_ms: 152.259194
++  type: 'test'
++  ...
++# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
++ok 90 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
++  ---
++  duration_ms: 0.399022
++  type: 'test'
++  ...
++# Subtest: invalid model JSON retains authenticated process observation without a candidate
++ok 91 - invalid model JSON retains authenticated process observation without a candidate
++  ---
++  duration_ms: 54.287663
++  type: 'test'
++  ...
++# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
++ok 92 - provider retains authenticated rejected-response observation and consumed durable budget
++  ---
++  duration_ms: 155.526478
++  type: 'test'
++  ...
++1..92
++# tests 92
++# suites 0
++# pass 92
++# fail 0
++# cancelled 0
++# skipped 0
++# todo 0
++# duration_ms 3732.771075
+diff --git a/docs/research/omega/momega1/HOST-7B-RUNTIME-HANDOFF.md b/docs/research/omega/momega1/HOST-7B-RUNTIME-HANDOFF.md
+index c5793198..6ac6355d 100644
+--- a/docs/research/omega/momega1/HOST-7B-RUNTIME-HANDOFF.md
++++ b/docs/research/omega/momega1/HOST-7B-RUNTIME-HANDOFF.md
+@@ -17,3 +17,19 @@ Non-secret 7B environment: `/workspace/momega1-local-model/qwen7b/runtime-env.js
+ Evidence is in `docs/evidence/momega1/runtime/7b`. Baseline 5feb1a93 produced four RED boundaries (manifest, profile API, ChatML, hard cap). Expanded host regressions cover the existing GGUF/provider/orchestrator path plus six new boundaries. Real Docker negative transport verifies the actual CLI rejects dummy weights and a mismatched full manifest without an observation. Docker synthetic process contracts are CONTRACT_TEST only. Early Docker logs preserve missing Node path, PID1/parent checks, missing tool symlinks, proc masking and noexec tmpfs failures. The final synthetic contract command uses **exec on its test-only tmpfs** to execute compiled C fixtures; production transport retains noexec tmpfs and uses only the fixed pinned host runtime mount. Neither fixture nor these bootstrap probes is evidence of model inference.
+ 
+ Actual native runs remain deferred for QA/UI priority and independent challenger review. Required next evidence: full-file identity/format through the real helper, clean normal decoding, exact observed cgroup cap and combined container/host-caller memory, bounded cancellation, immutable model/runtime identity, and default-provider brand/forgery controls. Do not raise the resource cap if the first run fails.
++
++## Explicit CPU-budget correction after independent native failure
++
++Independent review at challenger `392f459a6f80102546d29c773f25407decd0a261` did not approve 7B admission. Its real 180-second wall trial reached native decoding, then exited 137 after about 95 seconds with `--cpu=177`, two workers, partial coherent JSON and no OOM/wall-time event. Exit 137 does not alone prove the kernel signal origin, but aggregate observed CPU near 181 seconds supports exhaustion of the previous aggregate CPU allowance. This failed result remains preserved; it is not a model-load failure or a successful response.
++
++This revision **increases only the fixed 7B aggregate CPU allowance** to `2 * ceil(remaining native wall milliseconds / 1000)`. The exact immutable profile now has `nativeCpuThreads:2`; callers cannot pass a cloned/constructed profile to the launcher or increase this through environment configuration. Example: 176123 milliseconds remaining now yields 354 CPU seconds rather than 177. The original wall watchdog still kills at 176123 milliseconds. The 1.5B legacy path still receives 177 CPU seconds for that wall interval. Container CPU capacity stays two CPUs, container charged-memory limit 7 GiB with zero swap, native virtual-address limit 7 GiB, and all decoding/prompt/schema/model/context/call limits remain unchanged. This changed CPU allowance must be disclosed when comparing runs. QA's original 60-second/two-call/8192-context protocol is unchanged.
++
++Successful or invalid-response 7B observations now bind `nativeCpuThreads`, `nativeCpuSeconds` and `nativeWallTimeoutMs` under the existing per-request MAC. The provider requires exactly two threads, a positive integer native wall budget no larger than the request deadline, and the exact CPU formula. No genuine tier is granted by these fields. The 7B tuple still has candidate status and null independent review certificate.
++
++Native termination diagnostics preserve only bounded codes: `LOCAL_RUNTIME_SIGNAL_SIGXCPU`, `LOCAL_RUNTIME_SIGNAL_SIGKILL`, or numeric wrapper statuses `LOCAL_RUNTIME_EXIT_137` / `LOCAL_RUNTIME_EXIT_152`. Numeric status is not asserted to be an observed signal, an OOM, or proven CPU exhaustion. Timeout/cancellation classifications retain priority. No partial private output, raw stderr or incomplete inference observation is emitted; no terminated process becomes an admitted proposal.
++
++The 7B container CLI now starts with fixed `--max-old-space-size=256 --max-semi-space-size=16`. Testing showed that the old-generation flag alone did not bound the young-generation allowance sufficiently; the additional explicit semi-space flag gives a measured V8 heap ceiling below 384 MiB. This is a managed-heap bound, not a claim that total Node RSS equals that value. Existing CLI input is bounded to 180000 bytes, provider capture to 40000 bytes, native combined capture to 65536 bytes, source context to 24000 characters, GGUF header allocation to 32 MiB and each hash chunk to 1 MiB. The host provider never allocates the complete weights file. Its existing independent observed peak RSS was about 35 MiB.
++
++Memory accounting must distinguish kernel page charging from resident memory. The previous independent native RSS was about 5.01 GiB while the leaf cgroup charge was about 0.73 GB. Shared file-cache pages can remain charged to an ancestor/earlier reader. Therefore leaf `memory.current` is not a measurement of total model RSS, and `memory.max` is a charge cap, not an independent full working-set meter. Native AS, bounded CLI allocations, and separate host headroom remain relevant bounds; the challenger must measure summed native/CLI/caller RSS or PSS again and verify the owner 8 GiB envelope. Do not describe the earlier run as using only 0.73 GB.
++
++Evidence: `docs/evidence/momega1/runtime/7b-cpu`. The unchanged candidate produced four RED launcher contracts and one legacy PASS. The correction passes seven Docker contracts, including actual kernel `getrlimit` observation from a tiny compiled synthetic ELF, profile clone rejection, environment non-authority, unchanged wall cancellation, signal/status diagnostics and heap bounds. The synthetic ELF is **not model inference**. Its test-only Docker tmpfs explicitly allows execution for compilation; production tmpfs remains noexec. The host regression command remains the recorded GGUF/provider/orchestrator/local-brain set. No author 7B inference ran during this correction; independent real canonical response/cancellation/memory review remains required before promotion.
+diff --git a/scripts/continuum-local-model-cpu.test.mjs b/scripts/continuum-local-model-cpu.test.mjs
+new file mode 100644
+index 00000000..62f7a254
+--- /dev/null
++++ b/scripts/continuum-local-model-cpu.test.mjs
+@@ -0,0 +1,59 @@
++/** Run in the fixed 7GiB Docker group. Synthetic launcher contracts, never inference. */
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++import path from 'node:path';
++import os from 'node:os';
++import {spawnSync} from 'node:child_process';
++import {EventEmitter} from 'node:events';
++import {PassThrough} from 'node:stream';
++import {getLocalModelResourceProfile} from './continuum-local-model-pins.mjs';
++import {launchLocalModel} from './continuum-local-model-observation.mjs';
++const provenance={repository:'Qwen/Qwen2.5-Coder-7B-Instruct-GGUF',revision:'13fb94bfda8c8cf22497dc57b78f391a9acb426a',filename:'qwen2.5-coder-7b-instruct-q4_k_m.gguf',license:'Apache-2.0',sizeBytes:4683073536,sha256:'509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c'};
++const profile=getLocalModelResourceProfile({provenance,runtimeSha256:'c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a'});
++function fake({code=0,signal=null,hang=false}={}){
++ let args,options;const child=new EventEmitter();child.stdout=new PassThrough();child.stderr=new PassThrough();child.pid=2147483647;
++ child.kill=()=>setImmediate(()=>child.emit('close',null,'SIGKILL'));
++ return {get args(){return args;},get options(){return options;},spawn(command,a,o){assert.equal(command,'/usr/bin/prlimit');args=a;options=o;
++  if(!hang)setImmediate(()=>{child.stderr.write('eval time = 1.0 ms / 1 tokens\n');child.emit('close',code,signal);});return child;}};
++}
++const launch=(f,extra={})=>launchLocalModel({fds:[0,0],promptFd:0,timeoutMs:176123,spawnImpl:f.spawn,...extra});
++test('actual launcher gives exact private 7B profile two CPU seconds per remaining wall second',async()=>{
++ const f=fake();const result=await launch(f,{resourceProfile:profile});assert.ok(f.args.includes('--cpu=354'));assert.ok(f.args.includes('--as=7516192768'));
++ assert.equal(result.nativeCpuSeconds,354);assert.equal(result.nativeCpuThreads,2);assert.equal(result.nativeWallTimeoutMs,176123);assert.equal(result.evidenceClass,'CONTRACT_TEST');
++ assert.equal(f.options.env&&Object.keys(f.options.env).length,0);
++});
++test('legacy launcher CPU budget remains one CPU second per wall second and ignores env override',async()=>{
++ process.env.CONTINUUM_LOCAL_BRAIN_NATIVE_CPU_THREADS='999';try{const f=fake();await launch(f);assert.ok(f.args.includes('--cpu=177'));assert.ok(f.args.includes('--as=4294967296'));}finally{delete process.env.CONTINUUM_LOCAL_BRAIN_NATIVE_CPU_THREADS;}
++});
++test('resource profile clone or arbitrary caller budget cannot reach spawn',async()=>{
++ for(const resourceProfile of [{...profile},{nativeCpuThreads:999,requiresJobMemoryLimit:false}]){let called=false;
++ await assert.rejects(launchLocalModel({fds:[0,0],promptFd:0,timeoutMs:100,resourceProfile,spawnImpl:()=>{called=true;throw Error();}}),/INVALID_LOCAL_RESOURCE_PROFILE/);assert.equal(called,false);}
++});
++test('two-thread CPU allowance leaves the existing wall cancellation deadline unchanged',async()=>{
++ const f=fake({hang:true}),start=Date.now();await assert.rejects(launch(f,{resourceProfile:profile,timeoutMs:40}),/CODING_TIMEOUT/);assert.ok(f.args.includes('--cpu=2'));assert.ok(Date.now()-start<1000);
++});
++test('native termination returns bounded signal or numeric-exit code without output or inference receipt',async()=>{
++ for(const [code,signal,want] of [[null,'SIGXCPU','LOCAL_RUNTIME_SIGNAL_SIGXCPU'],[null,'SIGKILL','LOCAL_RUNTIME_SIGNAL_SIGKILL'],[137,null,'LOCAL_RUNTIME_EXIT_137'],[152,null,'LOCAL_RUNTIME_EXIT_152']]){
++ const f=fake({code,signal});await assert.rejects(launch(f),e=>{assert.equal(e.message,want);assert.equal(e.modelInferenceEnvelope,undefined);assert.equal(e.modelObservation,undefined);return true;});}
++});
++
++test('fixed container CLI heap is bounded independently of model weights and native address space',async()=>{
++ const {LOCAL_MODEL_JOB_NODE_ARGS}=await import('./continuum-local-model-job.mjs');
++ const {getHeapStatistics}=await import('node:v8');
++ assert.ok(Object.isFrozen(LOCAL_MODEL_JOB_NODE_ARGS));assert.deepEqual(LOCAL_MODEL_JOB_NODE_ARGS,['--max-old-space-size=256','--max-semi-space-size=16']);
++ assert.ok(process.execArgv.includes('--max-old-space-size=256'));
++ assert.ok(getHeapStatistics().heap_size_limit<=384*1024*1024);
++});
++
++test('actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit',async t=>{
++ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cpu-kernel-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
++ const source=path.join(dir,'probe.c'),binary=path.join(dir,'probe'),model=path.join(dir,'model'),prompt=path.join(dir,'prompt');
++ fs.writeFileSync(source,'#include <sys/resource.h>\n#include <stdio.h>\nint main(){struct rlimit c,a; if(getrlimit(RLIMIT_CPU,&c)||getrlimit(RLIMIT_AS,&a))return 3; printf("CPU=%llu AS=%llu\\n",(unsigned long long)c.rlim_cur,(unsigned long long)a.rlim_cur); fputs("eval time = 1.0 ms / 1 tokens\\n",stderr); return 0;}');
++ const compiled=spawnSync('/usr/bin/x86_64-linux-gnu-gcc-14',[source,'-o',binary],{encoding:'utf8'});assert.equal(compiled.status,0,compiled.stderr);fs.chmodSync(binary,0o700);
++ fs.writeFileSync(model,'GGUF',{mode:0o600});fs.writeFileSync(prompt,'synthetic limit probe',{mode:0o600});
++ const fds=[model,binary,prompt].map(f=>fs.openSync(f,'r'));try{
++ const result=await launchLocalModel({fds:fds.slice(0,2),promptFd:fds[2],timeoutMs:176123,resourceProfile:profile});
++ assert.equal(result.text,'CPU=354 AS=7516192768\n');assert.equal(result.nativeCpuSeconds,354);assert.equal(result.modelObservation,undefined);assert.equal(result.verifiedModelExecution,undefined);
++ }finally{for(const fd of fds)fs.closeSync(fd);}
++});
+diff --git a/scripts/continuum-local-model-job.mjs b/scripts/continuum-local-model-job.mjs
+index 278f8be9..441ec43c 100644
+--- a/scripts/continuum-local-model-job.mjs
++++ b/scripts/continuum-local-model-job.mjs
+@@ -8,6 +8,7 @@ import {randomBytes} from 'node:crypto';
+ const ROOT=fileURLToPath(new URL('../',import.meta.url));
+ const POLICY=fileURLToPath(new URL('./continuum-local-model-outer-seccomp.json',import.meta.url));
+ export const LOCAL_MODEL_JOB_IMAGE='sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1';
++export const LOCAL_MODEL_JOB_NODE_ARGS=Object.freeze(['--max-old-space-size=256','--max-semi-space-size=16']);
+ const MODEL='509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c';
+ const RUNTIME='c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a';
+ export function requiresPinnedModelJob(env){return env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256===MODEL&&env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256===RUNTIME&&env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND==='LLAMA_CPP';}
+@@ -31,7 +32,7 @@ export function runPinnedModelJob({cli,command,options}){
+   mount(file);
+  }
+  for(const key of ['CONTINUUM_LOCAL_BRAIN_MODEL','CONTINUUM_LOCAL_BRAIN_RUNTIME','CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT','CONTINUUM_LOCAL_BRAIN_MODEL_SHA256','CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL','CONTINUUM_LOCAL_BRAIN_MODEL_PATH','CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST','CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH','CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256','CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND'])args.push('--env',key+'='+options.env[key]);
+- args.push(LOCAL_MODEL_JOB_IMAGE,'/source/'+path.relative(ROOT,cli),command);
++ args.push(LOCAL_MODEL_JOB_IMAGE,...LOCAL_MODEL_JOB_NODE_ARGS,'/source/'+path.relative(ROOT,cli),command);
+  const config=fs.mkdtempSync('/tmp/continuum-model-docker-');fs.chmodSync(config,0o700);
+  fs.writeFileSync(path.join(config,'config.json'),'{}',{mode:0o600});
+  const fixed=['--host=unix:///var/run/docker.sock','--config='+config];
+diff --git a/scripts/continuum-local-model-observation.mjs b/scripts/continuum-local-model-observation.mjs
+index 8ea4ee49..33dc2b6e 100644
+--- a/scripts/continuum-local-model-observation.mjs
++++ b/scripts/continuum-local-model-observation.mjs
+@@ -6,7 +6,7 @@ import {createHash,createHmac} from 'node:crypto';
+ import {readPinnedGgufManifest} from './continuum-gguf-preflight.mjs';
+ import {admitGgufFile} from './continuum-gguf.mjs';
+ import {buildCodingRequest,parseCodingResponse} from './continuum-local-brain.mjs';
+-import {getReviewedLocalModelPair,getLocalModelResourceProfile,LOCAL_MODEL_RUNTIME_CANDIDATES} from './continuum-local-model-pins.mjs';
++import {getReviewedLocalModelPair,getLocalModelResourceProfile,isPinnedLocalModelResourceProfile,LOCAL_MODEL_RUNTIME_CANDIDATES} from './continuum-local-model-pins.mjs';
+ import {canonical} from '../.github/continuum/development-backlog.mjs';
+ import {requireCodingModelPreflight} from './continuum-m2-model-preflight.mjs';
+ const BWRAP='/usr/bin/bwrap',PRLIMIT='/usr/bin/prlimit';
+@@ -131,6 +131,9 @@ export function assertLocalModelJobMemoryLimit(profile){
+ export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,signal,resourceProfile=null,spawnImpl=spawn,bwrap=BWRAP}={}){
+  if(!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>300000)fail('INVALID_CODING_BOUNDS');
+  if(signal?.aborted)fail('CODING_CANCELLED');
++ if(resourceProfile!==null&&!isPinnedLocalModelResourceProfile(resourceProfile))fail('INVALID_LOCAL_RESOURCE_PROFILE');
++ const nativeCpuThreads=resourceProfile?.nativeCpuThreads??1;
++ const nativeCpuSeconds=nativeCpuThreads*Math.ceil(timeoutMs/1000);
+  assertLocalModelJobMemoryLimit(resourceProfile);
+  let filterDir,filterFd;
+  try{
+@@ -145,7 +148,7 @@ export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,sign
+   let refusal=null;
+   const cancel=()=>{refusal='CODING_CANCELLED';kill();};
+   const finish=(error,value)=>{if(settled)return;settled=true;cleanup();if(error)reject(error);else resolve(value);};
+-  try{child=spawnImpl(PRLIMIT,['--as='+(resourceProfile?.nativeAddressSpaceBytes??4294967296),'--cpu='+Math.ceil(timeoutMs/1000),'--nofile=64','--fsize=1048576','--',bwrap,...localModelSandboxArgs({schemaFd:jsonSchemaFd===undefined?null:7,noRepack:resourceProfile?.disableWeightRepacking===true})],{shell:false,detached:true,
++  try{child=spawnImpl(PRLIMIT,['--as='+(resourceProfile?.nativeAddressSpaceBytes??4294967296),'--cpu='+nativeCpuSeconds,'--nofile=64','--fsize=1048576','--',bwrap,...localModelSandboxArgs({schemaFd:jsonSchemaFd===undefined?null:7,noRepack:resourceProfile?.disableWeightRepacking===true})],{shell:false,detached:true,
+    cwd:'/',env:{},stdio:['ignore','pipe','pipe',fds[0],fds[1],promptFd,filterFd,...(jsonSchemaFd===undefined?[]:[jsonSchemaFd])]});}
+   catch{finish(Error('BLOCKED_LOCAL_ISOLATION_UNAVAILABLE'));return;}
+   timer=setTimeout(()=>{refusal='CODING_TIMEOUT';kill();},timeoutMs);
+@@ -156,12 +159,16 @@ export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,sign
+   child.once('close',(code,term)=>{
+    // A successful runtime must terminate normally and emit actual decoding stats.
+    if(refusal){finish(Error(refusal));return;}
+-   if(code!==0||term){finish(Error('LOCAL_RUNTIME_PROCESS_FAILED'));return;}
++   if(code!==0||term){
++    const failure=term==='SIGXCPU'?'LOCAL_RUNTIME_SIGNAL_SIGXCPU':term==='SIGKILL'?'LOCAL_RUNTIME_SIGNAL_SIGKILL':
++     code===137?'LOCAL_RUNTIME_EXIT_137':code===152?'LOCAL_RUNTIME_EXIT_152':'LOCAL_RUNTIME_PROCESS_FAILED';
++    finish(Error(failure));return;
++   }
+    const stderr=Buffer.concat(err).toString('utf8');
+    const outputTokens=parseNativeGenerationCount(stderr);
+    if(outputTokens===null){finish(Error('LOCAL_RUNTIME_GENERATION_UNOBSERVED'));return;}
+    let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(out));}catch{finish(Error('LOCAL_RUNTIME_OUTPUT_INVALID'));return;}
+-   finish(null,{text,outputTokens,pid:child.pid,exitCode:code,
++   finish(null,{text,outputTokens,pid:child.pid,exitCode:code,nativeCpuThreads,nativeCpuSeconds,nativeWallTimeoutMs:timeoutMs,
+     evidenceClass:spawnImpl===spawn&&bwrap===BWRAP?'HOST_INTEGRATION':'CONTRACT_TEST'});
+   });
+  });
+@@ -238,7 +245,7 @@ export async function queryPinnedLocalCoding({userPrompt,allowedTrackedPaths,tim
+    outputSha256:hash(execution.text),proposalSha256:parsed?hash(canonical(parsed.proposal)):null,
+    responseStatus:responseError?'INVALID_MODEL_RESPONSE':'PROPOSAL',
+    outputTokens:execution.outputTokens,pid:execution.pid,exitCode:execution.exitCode,
+-   isolation:'BWRAP_UNSHARE_ALL',...(jobMemoryLimit?{jobMemoryLimit,resourceProfileId:resourceProfile.id,nativeAddressSpaceBytes:resourceProfile.nativeAddressSpaceBytes,disableWeightRepacking:resourceProfile.disableWeightRepacking}:{}),elapsedMs:Date.now()-started};
++   isolation:'BWRAP_UNSHARE_ALL',...(jobMemoryLimit?{jobMemoryLimit,resourceProfileId:resourceProfile.id,nativeAddressSpaceBytes:resourceProfile.nativeAddressSpaceBytes,disableWeightRepacking:resourceProfile.disableWeightRepacking,nativeCpuThreads:execution.nativeCpuThreads,nativeCpuSeconds:execution.nativeCpuSeconds,nativeWallTimeoutMs:execution.nativeWallTimeoutMs}:{}),elapsedMs:Date.now()-started};
+   const observationMac=createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
+   if(responseError){
+    const errorCode=String(responseError.message).split(':')[0];
+diff --git a/scripts/continuum-local-model-pins.mjs b/scripts/continuum-local-model-pins.mjs
+index 9fc4ce3a..4e6deb67 100644
+--- a/scripts/continuum-local-model-pins.mjs
++++ b/scripts/continuum-local-model-pins.mjs
+@@ -28,7 +28,9 @@ const sevenB=Object.freeze({...tuple,
+ });
+ export const LOCAL_MODEL_RUNTIME_CANDIDATES=Object.freeze([tuple,sevenB]);
+ const sevenBProfile=Object.freeze({id:sevenB.id,maxFileBytes:4683073536,
+- nativeAddressSpaceBytes:7516192768,maxJobMemoryBytes:8589934592,requiresJobMemoryLimit:true,disableWeightRepacking:true});
++ nativeAddressSpaceBytes:7516192768,maxJobMemoryBytes:8589934592,requiresJobMemoryLimit:true,disableWeightRepacking:true,nativeCpuThreads:2});
++/** Runtime policy authority is the original frozen tuple, never a caller clone. */
++export function isPinnedLocalModelResourceProfile(profile){return profile===sevenBProfile;}
+ function matchesProvenance(pin,p){return !!p&&pin.modelRepository===p.repository&&
+  pin.modelRevision===p.revision&&pin.modelFilename===p.filename&&pin.modelLicense===p.license&&
+  pin.modelBytes===p.sizeBytes&&pin.modelSha256===p.sha256;}

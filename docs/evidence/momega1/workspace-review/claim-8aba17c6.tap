@@ -1,0 +1,90 @@
+TAP version 13
+# {"status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"4e1927ce4007ff2dba36571f6f3f603b93c832bbc16bf7191f6637744a898632","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-63e2a7bf08dc97e955cbd2a3","workspaceBinding":{"workerId":"worker-review","taskId":"t-9236bae50cb6647c","requestMessageId":"1c97fb3f-77eb-4fe2-a27d-d878a686fe90","requestHash":"44c6bd6f4e4fbf5504beb1df830de3802de7e1e66a13300bf3b4e9a6af9c8603","sourceCommit":"9e2eea01c211b64374ee077846a1a280f908c0fe","jobId":"09542529-da39-4a12-9c19-021677cb1acc"},"observed":{"containerId":"f0845ae29adccaa4609f89acb40614162fe8af909dce6764072f307b1a2ebe97","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# {"status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"4e1927ce4007ff2dba36571f6f3f603b93c832bbc16bf7191f6637744a898632","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-12ad6d61890a118a3e23abff","workspaceBinding":{"workerId":"worker-review","taskId":"t-9236bae50cb6647c","requestMessageId":"1c97fb3f-77eb-4fe2-a27d-d878a686fe90","requestHash":"44c6bd6f4e4fbf5504beb1df830de3802de7e1e66a13300bf3b4e9a6af9c8603","sourceCommit":"9e2eea01c211b64374ee077846a1a280f908c0fe","jobId":"09542529-da39-4a12-9c19-021677cb1acc"},"observed":{"containerId":"129f83afb43d6dc208a575b0e2d1340d1addb5e91ca82e288b3059f4a3ca9922","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+# Subtest: unclaimed scoped executor always refuses execution
+ok 1 - unclaimed scoped executor always refuses execution
+  ---
+  duration_ms: 75.545294
+  type: 'test'
+  ...
+# Subtest: canonical live claim permits multiple fixed verification profiles
+ok 2 - canonical live claim permits multiple fixed verification profiles
+  ---
+  duration_ms: 1076.236114
+  type: 'test'
+  ...
+# Subtest: wrong claim token cannot activate execution
+ok 3 - wrong claim token cannot activate execution
+  ---
+  duration_ms: 80.267009
+  type: 'test'
+  ...
+# Subtest: wrong canonical job cannot activate execution
+ok 4 - wrong canonical job cannot activate execution
+  ---
+  duration_ms: 93.687712
+  type: 'test'
+  ...
+# Subtest: copied backlog outside canonical state cannot activate execution
+ok 5 - copied backlog outside canonical state cannot activate execution
+  ---
+  duration_ms: 74.763333
+  type: 'test'
+  ...
+# Subtest: claim activated before canonical owner ABORT cannot execute
+ok 6 - claim activated before canonical owner ABORT cannot execute
+  ---
+  duration_ms: 100.306957
+  type: 'test'
+  ...
+# Subtest: claim activated before MAC corruption cannot execute
+ok 7 - claim activated before MAC corruption cannot execute
+  ---
+  duration_ms: 58.503517
+  type: 'test'
+  ...
+# Subtest: claim activated before canonical source mutation cannot execute
+ok 8 - claim activated before canonical source mutation cannot execute
+  ---
+  duration_ms: 70.912138
+  type: 'test'
+  ...
+# Subtest: claim activated before backlog abort cannot execute or reactivate
+ok 9 - claim activated before backlog abort cannot execute or reactivate
+  ---
+  duration_ms: 113.282921
+  type: 'test'
+  ...
+# Subtest: controlled-clock expired lease cannot execute
+ok 10 - controlled-clock expired lease cannot execute
+  ---
+  duration_ms: 80.691319
+  type: 'test'
+  ...
+# Subtest: controlled-clock expired goal cannot execute with a longer live lease
+ok 11 - controlled-clock expired goal cannot execute with a longer live lease
+  ---
+  duration_ms: 75.418517
+  type: 'test'
+  ...
+# Subtest: claim cannot expand fixed chain or introduce arbitrary shell profile
+ok 12 - claim cannot expand fixed chain or introduce arbitrary shell profile
+  ---
+  duration_ms: 57.91929
+  type: 'test'
+  ...
+# Subtest: replaced canonical claim token invalidates already activated executor
+ok 13 - replaced canonical claim token invalidates already activated executor
+  ---
+  duration_ms: 80.703297
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2158.821096

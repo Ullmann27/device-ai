@@ -1,0 +1,22 @@
+{
+  "source": "4b881f81ddfbe38729a551d9e460e818c6b3b715",
+  "productionEquivalent": "c7ec853e2ffaa488b92826306f015bfaa67f5bb7",
+  "reviewTestCommit": "7bb1cfd5cf3beab9d5a1caf0d84180c815172bd0",
+  "tests": 15,
+  "pass": 15,
+  "fail": 0,
+  "skip": 0,
+  "gradleExit": 0,
+  "sourceAndTestHashesStable": true,
+  "scope": "HOST_WIDGET_TEST; actual registry and production widgets; no device/inference/GPU claim",
+  "priorBaseline": "c50266b27ba65a7e253be75c67b5f4d7f89a6973",
+  "priorResult": {
+    "tests": 13,
+    "pass": 12,
+    "fail": 1,
+    "skip": 0
+  },
+  "disclosedTestAdaptation": "Two stale-read tests follow busy/retry admission; original sixteen-open/bound1 unchanged; two extra close/destroy controls",
+  "testDurationSeconds": 11.052,
+  "gradleWallSeconds": 50
+}

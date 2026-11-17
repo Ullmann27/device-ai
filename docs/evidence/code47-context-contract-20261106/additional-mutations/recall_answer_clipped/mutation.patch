@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -5781,7 +5781,7 @@
+                                 // throw from the UI callback or synthesize on incomplete facts.
+                                 turnTrace.event(TraceStage.GATED_FALLBACK)
+                                 publishCognitiveTrace(turnTrace,TraceOutcome.MEMORY_EXACT)
+-                                addNonModelReply(request, answer, at.heinz.deviceai.cognitive.NonModelReplyKind.MEMORY_RECALL)
++                                addNonModelReply(request, answer.take(4_000), at.heinz.deviceai.cognitive.NonModelReplyKind.MEMORY_RECALL)
+                                 addToolActivity(evidence.take(2_000)+
+                                     " · Zusatzanalyse nicht gestartet: Abruf überschreitet sichere Modellgrenzen.")
+                             } else {

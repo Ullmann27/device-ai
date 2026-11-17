@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "sourceCommit": "d32fe38ad2f6464bfaefa8001bfed1f2469165e7",
+  "baselineCommit": "d8a927dd6ced4dea489e2042afb4b5624157fa3b",
+  "classification": "CONTRACT_TEST",
+  "independent": false,
+  "compileExitCode": 0,
+  "junitExitCode": 0,
+  "identityRunExitCode": 0,
+  "tests": {
+    "total": 36,
+    "pass": 36,
+    "fail": 0,
+    "skip": 0,
+    "pure": 28,
+    "androidRobolectric": 8
+  },
+  "sourceSha256": {
+    "app/src/main/AndroidManifest.xml": "2fe747922fe352e3f2f4a52ad196198d784ad4f0e3a7b27c3684584f5bdef5c0",
+    "app/src/main/java/at/heinz/deviceai/AndroidAvatarCameraInput.kt": "692e9951cd475d730e1928e14d2578acb1958d3dd5bde38937da7a25b041226b",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AvatarCameraPolicy.kt": "9775304d2b5312515286850e9b557655950b62b7fc0df70b4792b9ee39233dff",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuide.kt": "dfd47d33a47f116c58ad6f928b43206a9f64f1eec4e3343db19a62ed2481f2fb",
+    "app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt": "6288a9a3ac8fa5f3db830e1fa1912bb4b8b22f5835f53de1cc3e53b0cde6b1ea",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt": "fcd6e65d3c98534108efb0bd035019765abc0327095df97962f566d69e0cf386",
+    "app/src/uiTest/java/at/heinz/deviceai/AndroidAvatarCameraInputUiTest.kt": "0b6e753e24d498b9ac07e865bd3eb637e34f4d90998e3fd1a990c7b44b875c05"
+  },
+  "compiledJarSha256": "f7aa82b88bafd2bac4ed2fef991e249e402f6df3593ba3f03bfddea37fce2970",
+  "device": "FOLD7_NOT_RUN",
+  "nativeCameraCapture": "NOT_RUN",
+  "voiceHeard": "NOT_RUN",
+  "speechInputOnDevice": "NOT_RUN",
+  "accountApiConnections": "NOT_RUN",
+  "activityHook": "PENDING_CHIEF_INTEGRATION",
+  "independentReview": "PENDING",
+  "evidenceSha256": {
+    "COMMANDS.txt": "8e7ea24bbac02e5347856fff28abab52d57ec2ef154dc3472ca43f46676913de",
+    "ReadinessJUnit.java": "c3f03cb835e72800e17ffdb003b454b99d48e27ee503c5ca22e9f0b44a03341f",
+    "compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "dependencies.json": "00dc7f14de23b691310b8ec17c3dbcad8840963d9be9ec634e32ce93a6b7f011",
+    "junit.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "junit.txt": "933070b3d6439b9c558f3548ff1368535237ef39d29100c5babad833db6d5602",
+    "test-classpath.txt": "7095de4e5c9b9c5fe4bc372bf73c7bf3a8c15c4d27849a23de3a4cf521030b18",
+    "test-identities.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "test-identities.txt": "5fc5f95dc91c0a6600eb37c4f9797a23dfcc982f069f7cc0f74769315a4ea489"
+  }
+}

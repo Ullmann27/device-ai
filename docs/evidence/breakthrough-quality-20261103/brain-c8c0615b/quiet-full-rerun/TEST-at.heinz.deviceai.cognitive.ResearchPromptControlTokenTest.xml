@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:12:54" hostname="5268aff5350a" time="0.022">
+  <properties/>
+  <testcase name="sourceLiteralRemainsBoundWhileOnlyPromptRepresentationChanges" classname="at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest" time="0.003"/>
+  <testcase name="commonControlTokensAreQuotedInAllUntrustedPromptSurfaces" classname="at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest" time="0.003"/>
+  <testcase name="appSourceNumbersRemainDistinctFromQuotedSourceImitations" classname="at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest" time="0.0"/>
+  <testcase name="knownQaInstGraphIdCannotRemainARawDelimiter" classname="at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest" time="0.001"/>
+  <testcase name="ordinaryBracketedMathUnitsAndQuotesStayReadable" classname="at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest" time="0.0"/>
+  <testcase name="displayMarkersAndBudgetedRenderingRemainIdempotent" classname="at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

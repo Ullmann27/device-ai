@@ -1,0 +1,49 @@
+diff --git a/.github/continuum/repair-loop.mjs b/.github/continuum/repair-loop.mjs
+index 27765f80..baf1eeb8 100644
+--- a/.github/continuum/repair-loop.mjs
++++ b/.github/continuum/repair-loop.mjs
+@@ -16,6 +16,7 @@ import {validateCodingTask,validateCodingProposal,taskFingerprint} from './codin
+ import {runCandidateVerifier} from './repair-research-verifier.mjs';
+ import {parseJunit,isTrustedCodingVerification} from './ccc1-redgreen-verifier.mjs';
+ import {canonical} from './development-backlog.mjs';
++import {isTrustedLocalModelObservation} from './coding-provider.mjs';
+ 
+ /**
+  * Test verifier and orchestrator of one repair session:
+@@ -563,6 +564,20 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
+   report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:null,
+     localRequests:0,verifiedModelExecution:false,candidateStatus:'NOT_REQUESTED',
+     repeatedCandidates:0,history:structuredClone(history),rejections:[],reason:'Provider calls do not independently establish model execution'};
++  const observedExecutions=new Set(),observedModels=new Set();
++  // Reporting consumes the original runtime observation, never a model claim.
++  // A decoded but rejected response still consumed inference; this grants no
++  // candidate execution, repair success or permission to store an experience.
++  const noteObservedInference=observation=>{
++    if(!isTrustedLocalModelObservation(observation)||!Object.isFrozen(observation)||
++       observation.verifiedModelExecution!==true||observation.taskId!==taskSpec.id||
++       observation.taskFingerprint!==fingerprint||observation.sourceCommit!==base||
++       observedExecutions.has(observation.executionId))return;
++    observedExecutions.add(observation.executionId);observedModels.add(observation.reviewedModelId);
++    Object.assign(report.inference,{verifiedModelExecution:true,modelInvocations:observedExecutions.size,
++      modelId:observedModels.size===1?observation.reviewedModelId:null,
++      reason:'Original local inference observations; candidate correctness requires separate verification'});
++  };
+   report.coding={taskId:taskSpec.id,taskFingerprint:fingerprint,sourceCommit:base,allowedPaths:[...scope],
+     milestones:['BASELINE_FAILED'],candidateCount:0,contextSha256:null};
+   let diagnostics=actionable;
+@@ -615,6 +630,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
+       if(typeof candidateProvider!=='function')throw Error('LOCAL_PROVIDER_UNAVAILABLE');
+       const raw=candidateProvider({wt,base,chain,deadline,readFile,
+         diagnostics:structuredClone(boundedDiagnostics(diagnostics)),history:structuredClone(history.slice(-3))});
++      noteObservedInference(raw?.trace?.modelObservation);
+       // The context record is provenance data only; it cannot grant files or commands.
+       if(raw?.mode!=='LOCAL_CODING_PATCH_PROPOSAL_V1'||raw.trusted!==false||raw.autoApply!==false||raw.localRequests!==1||
+          raw.context?.commit!==base||!/^[a-f0-9]{64}$/.test(raw.context.contextSha256??'')||
+@@ -642,6 +658,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
+       report.coding.milestones.push('LOCAL_PROPOSAL_RECEIVED');
+       report.coding.plan=[...proposal.plan];
+     }catch(error){
++      noteObservedInference(error?.modelObservation);
+       report.inference.candidateStatus='UNAVAILABLE_OR_REJECTED';
+       const claimedCode=error?.code??error?.message;
+       const code=knownCodes.has(claimedCode)?claimedCode:'CODING_PROVIDER_ERROR';

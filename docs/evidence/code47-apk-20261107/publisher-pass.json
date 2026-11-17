@@ -1,0 +1,58 @@
+{
+  "observedAt": "2026-11-07T03:27:40.050Z",
+  "serviceId": "srv-dbf1tr2vcj2c73ehpfog",
+  "publisherHost": "https://continuum-owner-v23-release-preflight.onrender.com",
+  "deployment": {
+    "commit": {
+      "createdAt": "2026-11-07T02:40:38Z",
+      "id": "7732b8668f912419d7aac7a1609a97097d727cbf",
+      "message": "test(code47): synchronize real app approval and workscene host frames\n\nPump the actual confirmation callback until stable device-port entry, retain the mock backend while native Canvas renders, and deliver frames across animated close. All four cases pass individually and together in normal JUnit ordering. Preserve every approval, progress, gaze, STOP, foreground and negative assertion. Production, avatar assets and publisher gates unchanged. Full original publisher QA and binary readback remain mandatory."
+    },
+    "createdAt": "2026-11-07T02:41:11.606594Z",
+    "finishedAt": "2026-11-07T03:26:55.784526Z",
+    "id": "dep-dbn8vhpsrm7s738np9jg",
+    "startedAt": "2026-11-07T02:41:11.604493Z",
+    "status": "live",
+    "trigger": "api",
+    "updatedAt": "2026-11-07T03:26:55.784787Z"
+  },
+  "logScope": "Selected source-bound success markers and release tasks from the original publisher; no aggregate test total inferred.",
+  "events": [
+    {
+      "timestamp": "2026-11-07T02:44:37.607162485Z",
+      "message": "QA_GREEN backend-lockfile-check-and-tests"
+    },
+    {
+      "timestamp": "2026-11-07T03:22:15.108671481Z",
+      "message": "CONTINUUM_CONTINUOUS_OWNER_REQUIRED_ANDROID_GREEN {'at.heinz.deviceai.ShizukuBridgeLifecycleTest': 14, 'at.heinz.deviceai.ShizukuConnectionDialogTest': 2, 'at.heinz.deviceai.ui.ContinuumControlsTest': 10, 'at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest': 5, 'at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest': 6}"
+    },
+    {
+      "timestamp": "2026-11-07T03:25:04.766695214Z",
+      "message": "CONTINUUM_OWNER_PRESIGN_QA_PASS SHA=7732b8668f912419d7aac7a1609a97097d727cbf PACKAGE=at.heinz.deviceai.continuumlocal CODE=47 UNSIGNED_NOT_PUBLISHED"
+    },
+    {
+      "timestamp": "2026-11-07T03:25:32.471969205Z",
+      "message": "> Task :app:assembleRelease"
+    },
+    {
+      "timestamp": "2026-11-07T03:26:51.825171224Z",
+      "message": "> Task :app:lintRelease"
+    },
+    {
+      "timestamp": "2026-11-07T03:26:51.825229934Z",
+      "message": "BUILD SUCCESSFUL in 1m 46s"
+    },
+    {
+      "timestamp": "2026-11-07T03:26:53.35330461Z",
+      "message": "CONTINUUM_OWNER_CATALOG_ANDROID_COMPATIBLE source=7732b8668f912419d7aac7a1609a97097d727cbf versionCode=47 apkSha256=35f93b41ed835bf2ec16890b62d4e640d3b1ea28c2e8a098065bd08f64dc2481"
+    },
+    {
+      "timestamp": "2026-11-07T03:26:53.35518244Z",
+      "message": "CONTINUUM_OWNER_RENDER_SIGNED_STAGED_FOR_PINNED_HOST"
+    },
+    {
+      "timestamp": "2026-11-07T03:26:55.266291321Z",
+      "message": "==> Your site is live 🎉"
+    }
+  ]
+}

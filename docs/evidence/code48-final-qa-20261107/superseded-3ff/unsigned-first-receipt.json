@@ -1,0 +1,46 @@
+{
+  "gate": "unsigned",
+  "startedAt": "2026-11-07T05:46:11.779403+00:00",
+  "startedEpochMillis": 1794030371779,
+  "finishedAt": "2026-11-07T05:47:16.366410+00:00",
+  "sourceBefore": {
+    "commit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+    "tree": "5206abd91b3740838661aa0e27e6702b3891591b",
+    "branch": "",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+    "tree": "5206abd91b3740838661aa0e27e6702b3891591b",
+    "branch": "",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "gradle",
+        "--no-daemon",
+        "--max-workers=2",
+        "--console=plain",
+        "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-PdeviceAiMentorPreview=true",
+        "-PcontinuumStandaloneVersionCode=48",
+        "-PcontinuumLocalRenderUnsigned=true",
+        "-PcontinuumOwnerArm64=true",
+        ":app:assembleRelease",
+        ":app:bundleRelease"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/unsigned-build",
+      "exitCode": 1
+    }
+  ],
+  "logSha256": "27c2d407b03757d707d7476112f2a13bde0f152954dbcbf3f9aaa0e6370a9458",
+  "logBytes": 2750,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "FAIL"
+}

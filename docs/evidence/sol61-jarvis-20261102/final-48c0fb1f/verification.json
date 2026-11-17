@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "testedSourceCommit": "48c0fb1f2b4db06619e170bf36f8d070e002eca4",
+  "reviewedRuntimeCommit": "62b3aa90f0b418db4522249d967bfa1bca5b4f3a",
+  "android": {
+    "status": "PASS",
+    "startedAtMillis": 1793650639916,
+    "finishedAtMillis": 1793650703951,
+    "xmlFiles": 312,
+    "mandatory": [
+      {
+        "name": "at.heinz.deviceai.ReadOnlyToolSizeRegressionTest",
+        "tests": 3,
+        "executed": 3,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.ToolDurableOutcomeTest",
+        "tests": 8,
+        "executed": 8,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.ToolExecutionStartLatchTest",
+        "tests": 7,
+        "executed": 7,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.JournalAvailabilityTest",
+        "tests": 2,
+        "executed": 2,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.LocalPromptFrameTest",
+        "tests": 8,
+        "executed": 8,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest",
+        "tests": 1,
+        "executed": 1,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest",
+        "tests": 3,
+        "executed": 3,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest",
+        "tests": 3,
+        "executed": 3,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest",
+        "tests": 2,
+        "executed": 2,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest",
+        "tests": 2,
+        "executed": 2,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "name": "at.heinz.deviceai.localmodel.LocalToolContinuationTest",
+        "tests": 8,
+        "executed": 8,
+        "skipped": 0,
+        "failures": 0,
+        "errors": 0
+      }
+    ],
+    "counts": {
+      "total": 1690,
+      "executed": 1687,
+      "passed": 1687,
+      "failed": 0,
+      "skipped": 3
+    },
+    "failures": []
+  },
+  "node": {
+    "critical": {
+      "status": "PASS",
+      "executed": 135
+    },
+    "full": {
+      "status": "PASS",
+      "sourceUnchanged": true,
+      "counts": {
+        "total": 1982,
+        "executed": 1969,
+        "passed": 1969,
+        "failed": 0,
+        "skipped": 13
+      }
+    }
+  },
+  "apk": {
+    "sourceCommit": "48c0fb1f2b4db06619e170bf36f8d070e002eca4",
+    "packageName": "at.heinz.deviceai.continuumlocal",
+    "versionName": "0.3.37",
+    "versionCode": 38,
+    "sha256": "abf0664e2bb79190e932c4f8e46adf8545fc50c006c9e37bdc34f5d4a9669845",
+    "bytes": 54669275,
+    "zipCrcVerified": true,
+    "v1SignatureFilesPresent": false,
+    "apkSigningBlockPresent": false,
+    "ownerSigned": false,
+    "published": false,
+    "installed": false,
+    "deviceVerified": false
+  },
+  "sourceStatus": "SOURCE_INTEGRATED",
+  "hostStatus": "HOST_VERIFIED",
+  "realModelInference": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "ownerSigning": "NOT_RUN",
+  "publication": "NOT_RUN",
+  "installation": "NOT_RUN",
+  "paidApiRequired": false
+}

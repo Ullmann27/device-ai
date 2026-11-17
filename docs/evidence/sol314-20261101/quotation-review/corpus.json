@@ -1,0 +1,130 @@
+{
+  "name": "independent-evidence-window-v1",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "scope": "Pure lexical selector integrity, complete-anchor inclusion, exact substring/SHA256/UTF8 offsets; not factual correctness, title/consent gates, Android integration or source authority.",
+  "oracle": "Non-null results must be exact bounded original-source substrings with both hashes/byte offsets correct and contain the labeled complete anchors. No result is allowed when no complete matching anchor can fit the budget.",
+  "cases": [
+    {
+      "id": "window-01",
+      "question": "Wozu dient das Wolkenradarverfahren?",
+      "source": "Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Allgemeiner Buchvorspann. Das Wolkenradarverfahren misst Schichtgrenzen mit der Kennung NEBEL-241. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. Anhang ohne Fachbegriffe. ",
+      "nonnull": true,
+      "contains": [
+        "Wolkenradarverfahren",
+        "NEBEL-241"
+      ],
+      "maxChars": 350,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-02",
+      "question": "Wozu dient das Wolkenradarverfahren?",
+      "source": "Das Wolkenradarverfahren misst sichtbare Wolkenhöhen.",
+      "nonnull": false,
+      "contains": [],
+      "maxChars": 350,
+      "hashMode": "wrong"
+    },
+    {
+      "id": "window-03",
+      "question": "Was bedeutet Quantenmarker?",
+      "source": "Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Fremdthema. Keine passenden Messangaben zu diesem Datensatz.",
+      "nonnull": false,
+      "contains": [],
+      "maxChars": 350,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-04",
+      "question": "Wie arbeitet Prisma-17?",
+      "source": "Prisma-170 ist eine anders bezeichnete Baureihe mit eigenem Datenblatt.",
+      "nonnull": false,
+      "contains": [],
+      "maxChars": 350,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-05",
+      "question": "Wie arbeitet Prisma-17?",
+      "source": "Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Vorwort. Prisma-17 nutzt gepulste Laser zur Abtastung. Nachsatz. Nachsatz. Nachsatz. Nachsatz. Nachsatz. Nachsatz. Nachsatz. Nachsatz. Nachsatz. Nachsatz. Nachsatz. Nachsatz. ",
+      "nonnull": true,
+      "contains": [
+        "Prisma-17"
+      ],
+      "maxChars": 350,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-06",
+      "question": "Was ist Caféquanten?",
+      "source": "😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. 😀 Zwischenbemerkung. Caféquanten beschreibt eine fiktive Messreihe. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. Restlicher Anhang. ",
+      "nonnull": true,
+      "contains": [
+        "Caféquanten"
+      ],
+      "maxChars": 100,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-07",
+      "question": "Wie wirkt der Silberpuls?",
+      "source": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀 Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort.  Vorwort. Der Silberpuls wird im Labor als Vergleichssignal verwendet. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. 😀 Nachwort. ",
+      "nonnull": true,
+      "contains": [
+        "Silberpuls"
+      ],
+      "maxChars": 81,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-08",
+      "question": "Was sind Alpengletscher Windkanal Resonanz?",
+      "source": "Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Alpengletscher Zwischenteil. Zwischenteil. Zwischenteil. Zwischenteil. Zwischenteil. Zwischenteil. Zwischenteil. Zwischenteil. Zwischenteil. Zwischenteil. Windkanal und Resonanz stehen hier gemeinsam im Versuchssatz. Schluss. Schluss. Schluss. Schluss. Schluss. Schluss. Schluss. Schluss. Schluss. Schluss. ",
+      "nonnull": true,
+      "contains": [
+        "Windkanal",
+        "Resonanz"
+      ],
+      "maxChars": 120,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-09",
+      "question": "Was bedeutet Quantenankerxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?",
+      "source": "Vorspann zur Forschung. Quantenankerxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx bezeichnet ein einziges unteilbares Fantasiewort.",
+      "nonnull": false,
+      "contains": [],
+      "maxChars": 80,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-10",
+      "question": "Was bedeutet Sternenkammer?",
+      "source": "Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Neutrale Einleitung. Die Schlussbemerkung nennt zuletzt die Sternenkammer.",
+      "nonnull": true,
+      "contains": [
+        "Sternenkammer"
+      ],
+      "maxChars": 100,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-11",
+      "question": "Was bedeutet Sternenkammer?",
+      "source": "Sternenkammer xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "nonnull": false,
+      "contains": [],
+      "maxChars": 350,
+      "hashMode": "correct"
+    },
+    {
+      "id": "window-12",
+      "question": "Sternenkammer qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+      "source": "Die Sternenkammer ist ein ausdrücklich fiktiver Laborraum.",
+      "nonnull": false,
+      "contains": [],
+      "maxChars": 350,
+      "hashMode": "correct"
+    }
+  ]
+}

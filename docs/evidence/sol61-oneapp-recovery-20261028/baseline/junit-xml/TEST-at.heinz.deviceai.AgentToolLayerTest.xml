@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AgentToolLayerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:14" hostname="b50d54a1ac03" time="0.237">
+  <properties/>
+  <testcase name="sideEffectingRegisteredToolsRequireConfirmationRisk" classname="at.heinz.deviceai.AgentToolLayerTest" time="0.058"/>
+  <testcase name="proposalsOnlyAddressRegisteredToolsAndStructuredArguments" classname="at.heinz.deviceai.AgentToolLayerTest" time="0.056"/>
+  <testcase name="gateEnforcesCallBudgetTimeoutCancellationOutputAndRedaction" classname="at.heinz.deviceai.AgentToolLayerTest" time="0.054"/>
+  <testcase name="skillGraphRejectsMissingCyclesAndDuplicateVersionsAndRequiresDependencies" classname="at.heinz.deviceai.AgentToolLayerTest" time="0.017"/>
+  <testcase name="toolTurnGuardRejectsProposalsAcrossSeparateEvents" classname="at.heinz.deviceai.AgentToolLayerTest" time="0.0"/>
+  <testcase name="gateRequiresPolicyAndConfirmationByRisk" classname="at.heinz.deviceai.AgentToolLayerTest" time="0.02"/>
+  <testcase name="deviceStatusSkillComposesRegisteredReadOnlyTools" classname="at.heinz.deviceai.AgentToolLayerTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

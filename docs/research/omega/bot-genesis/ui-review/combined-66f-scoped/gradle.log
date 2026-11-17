@@ -1,0 +1,89 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:444:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:445:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:447:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:766:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1490:62 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1490:77 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2193:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3736:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3751:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3780:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6260:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6785:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6785:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7788:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:444:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:445:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:447:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:766:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1490:62 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1490:77 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2193:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3736:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3751:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3780:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6260:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6785:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6785:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/synapse-ui-candidate/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7788:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///workspace/genesis-ui-review/tools/synapse-ui-review/IndependentBotRosterUiTest.kt:281:28 'fun updateConfiguration(p0: Configuration!, p1: DisplayMetrics!): Unit' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+OMEGA_TEST_EXECUTABLE=/usr/bin/java
+[Incubating] Problems report is available at: file:///workspace/synapse-ui-candidate/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m 2s
+30 actionable tasks: 5 executed, 25 up-to-date

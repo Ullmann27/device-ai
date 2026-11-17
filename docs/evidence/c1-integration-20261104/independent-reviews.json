@@ -1,0 +1,43 @@
+{
+  "recordedAt": "2026-11-04T20:18:13.970743+00:00",
+  "source_audit": {
+    "task": "C1-SOURCE-001",
+    "status": "SOURCE_REVIEW_COMPLETE",
+    "candidateRemote": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+    "candidateTree": "e52acc146e66ae66a95429da2fb0f34242ad1791",
+    "ancestry": "491->506->512->513 independently read as ahead/behind_by=0",
+    "unresolved": "Unknown implicit Select swallowed in routeBotInput; same router blob c825513f675adf72e03555cb90c5389dd2a56030 in current493 and513. Ambiguous/store-error cases must stay blocked.",
+    "qaSource002": "STATIC_APPROVED; no independent test execution",
+    "modelOrDeviceTest": false
+  },
+  "repair_review": {
+    "task": "C1-REPAIR-REVIEW-001",
+    "status": "STATIC_APPROVED_AND_INDEPENDENT_TARGETED_PASS",
+    "command": [
+      "env",
+      "-u",
+      "CONTINUUM_REPAIR_DEPTH",
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      ".github/continuum/coding-orchestrator-failure-report.test.mjs"
+    ],
+    "cwd": "/workspace/scratch/174c84456ee3/continuum-c1",
+    "exitCode": 0,
+    "tests": 9,
+    "pass": 9,
+    "fail": 0,
+    "skip": 0,
+    "reportedDurationSeconds": 5.83,
+    "limitation": "Host fixtures, no actual Docker/Java isolation or model inference. Nine tests overlap C1 52, never add.",
+    "reviewedSourceLocal": "a15a2b771bb934d998b2f9c9552c30d30400f707",
+    "reviewedTree": "a457d368b13ec939f4f71438a3cfda3ef5a4c10d",
+    "executedSourceLocal": "8873030fdfe23bdd4153f96004b786bff2cddecf",
+    "executionWorktreeScope": "Seven source-contract test updates present; four ECHO files unchanged from reviewed slice",
+    "executionReceiptType": "Independent agent reported actual command/exit/counts; no separately supplied raw log."
+  },
+  "externalC2": {
+    "status": "PENDING_HANDOFF_ACK_NOT_OBSERVED",
+    "notEquivalentToC1Subagents": true
+  }
+}

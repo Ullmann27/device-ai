@@ -1,0 +1,25 @@
+{
+  "candidateCommit": "30cd8ce4c27cb78aada96b8ec5b405a2b5c8a127",
+  "base": "cf34fb6a",
+  "evidenceClass": "HOST_INTEGRATION",
+  "files": {
+    ".github/continuum/isolated-executor.mjs": "4346f03e7dfd40f0d593feecd6758c94d343b3ea99fb33489bffa930ad097e69",
+    ".github/continuum/ccc1-workspace.mjs": "b7374b9222331929df73bfb7f1eb3b7000ab508dd9e3fd94538ad1afa34e3d41",
+    ".github/continuum/ccc1-workspace.test.mjs": "78780f04a5e15f37614e011a50131e7203d65f03eb98322958c01a1d57662159",
+    ".github/continuum/ccc1-workspace-host.test.mjs": "581992cc1c21004869c51974a4d37c144d53cb432dffbef66e6862bc8bfe0e58",
+    ".github/continuum/ccc1-workspace-fixture.mjs": "cfbd3e08d50b44f6f338674c44656a62b65c2611a266fc9a4b226ace0b848674"
+  },
+  "hostSha256": {
+    "docs/evidence/momega1/workspaces/host/worker-beta-receipt.json": "498bc0a65e4f8fe27aafdfe45a90d5170baba0a401995e30a6f84889789c4136",
+    "docs/evidence/momega1/workspaces/host/summary.json": "6752004b3e8395472582610973d00a4d16627fabf8ca7d47eea783973e73d21d",
+    "docs/evidence/momega1/workspaces/host/worker-alpha-receipt.json": "5174b76dd154e65743fe9dc9f7475a1cfdf02a3383997305a932e46c843313e8",
+    "docs/evidence/momega1/workspaces/host/isolated-c4028065e3290bcb50c2/TEST-0.xml": "7778d42f082bea288fa65e0add86b55dd8cd7c3eeda6d685418fe8b03d9db596",
+    "docs/evidence/momega1/workspaces/host/isolated-e296e7bb5f7e6aeb8df6/TEST-0.xml": "08f61ebcfbf756b9b469c4ab40b07d0c4db6dc1c2ba8497db414f4ba50d1039d",
+    "docs/evidence/momega1/workspaces/host/isolated-313047fa39f8b15a6478/TEST-0.xml": "04c50fd26adf72d12a1e4bbecd6c8781ebffa61aee34a5d459c5904d43221d65",
+    "docs/evidence/momega1/workspaces/host/isolated-ace93f910d19df1f9733/TEST-0.xml": "bd8ef3e420fcc3af8771065f0870c7d82da603b84bbf47bff15a72a5e28ff791",
+    "docs/evidence/momega1/workspaces/host/isolated-e29ea0153d93e01acba8/TEST-0.xml": "c1826159c31f2c61bd45acdad241c05a264b964333bda8888df1454c532fef18",
+    "docs/evidence/momega1/workspaces/host/isolated-a27b8fe5dab4feb39d57/TEST-0.xml": "6aaaa32b35539d1cbea41a028d15c5667559d7e50b533da204f6f43a58f3677c",
+    "docs/evidence/momega1/workspaces/host/isolated-2d02b937c8060481f559/TEST-0.xml": "5b3925c1393fa9b9ab57f455115ffe782b2cdae8e03802ff8590bdd39373d346",
+    "docs/evidence/momega1/workspaces/host/isolated-d2944bc12139e3e73b4f/TEST-0.xml": "de233137a04fba6753957701e7d8896736e758e2cebe92373bcd6f7ff58d29f4"
+  }
+}

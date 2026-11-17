@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "CodeRabbit Agent",
+  "generator": "scripts/continuum-reliability-qa.mjs",
+  "profile": "critical",
+  "startedAt": "2026-11-03T23:33:47.831Z",
+  "environment": {
+    "node": "24.22.1",
+    "platform": "linux",
+    "arch": "x64",
+    "release": "6.18.57"
+  },
+  "status": "PASS",
+  "sourceUnchanged": true,
+  "cancelled": false,
+  "finishedAt": "2026-11-03T23:34:20.433Z",
+  "source": {
+    "commit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+    "branch": "release/continuum-night-integration-20261103",
+    "treeDigest": "3691bfda273d37d41fccda705b8a88982fada49330434197bd08fb761bf59f14"
+  },
+  "originalReport": {
+    "buildEnvPath": "critical-0ff2cef5/report.json",
+    "sha256": "a498c11db08bea353c7cd7eccc754e40a5c103eab97baa2e8b65c31a0ef4f24c",
+    "bytes": 1975765
+  },
+  "omittedFields": [
+    "source.inputsSha256",
+    "checks[].tests.executedCaseHashes",
+    "checks[].tests.skippedCaseHashes"
+  ],
+  "commands": "commands.json",
+  "checks": [
+    {
+      "id": "process",
+      "severity": "P0",
+      "cwd": "/workspace/scratch/391c0f6de827/device-ai/",
+      "status": "PASS",
+      "reason": null,
+      "code": 0,
+      "exitSignal": null,
+      "error": null,
+      "terminationConfirmed": true,
+      "junitSha256": "1df7ce21fdd8b9cf63fa0a5ef11b760ff65b8a59186a446e646e19c64d8396fb",
+      "regressionFingerprint": "3ea98e0f18c2d6eb77b8509156228c757817d8f569a3c223587b2b11b030bc82",
+      "tests": {
+        "total": 37,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 37,
+        "passed": 37,
+        "diagnostics": [],
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "storage-agent",
+      "severity": "P0",
+      "cwd": "/workspace/scratch/391c0f6de827/device-ai/",
+      "status": "PASS",
+      "reason": null,
+      "code": 0,
+      "exitSignal": null,
+      "error": null,
+      "terminationConfirmed": true,
+      "junitSha256": "e3c9c6e6a68bab2ffea7cbc9aa54c4a1725762c7b61d36f30e1630a7d5883519",
+      "regressionFingerprint": "952597cfb3c9a38dd64c0ac61f7fa79dcc17411e7045bbb1e4fecdd73fddaa45",
+      "tests": {
+        "total": 32,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 32,
+        "passed": 32,
+        "diagnostics": [],
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "android-source-contracts",
+      "severity": "P1",
+      "cwd": "/workspace/scratch/391c0f6de827/device-ai/",
+      "status": "PASS",
+      "reason": null,
+      "code": 0,
+      "exitSignal": null,
+      "error": null,
+      "terminationConfirmed": true,
+      "junitSha256": "38e6b0d7e9de7995fe5626cfa3f85fd45366d691ffe33a4c1a2229a1a21bdcbf",
+      "regressionFingerprint": "332e247fc48b17d35b0a5f2c227b9c4534251d835120f74e2ba0c4681d4bf693",
+      "tests": {
+        "total": 64,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 64,
+        "passed": 64,
+        "diagnostics": [],
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "host-checker",
+      "severity": "P0",
+      "cwd": "/workspace/scratch/391c0f6de827/device-ai/",
+      "status": "PASS",
+      "reason": null,
+      "code": 0,
+      "exitSignal": null,
+      "error": null,
+      "terminationConfirmed": true,
+      "junitSha256": "0c99f31c73dab7eb8885163b5a48d983d4239b16ce5a29858ba8936ed6b1a0d4",
+      "regressionFingerprint": "eab51da4330da21abb64dc97390fdeb893c44470d1f79974aa6f263e6e2eac57",
+      "tests": {
+        "total": 2,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 2,
+        "passed": 2,
+        "diagnostics": [],
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "gradle",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "lint",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "apk",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "fold7",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "model-inference",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    }
+  ]
+}

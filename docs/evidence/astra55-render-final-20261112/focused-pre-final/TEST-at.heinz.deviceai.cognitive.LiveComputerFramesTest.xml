@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.LiveComputerFramesTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:22" hostname="0f4ac18d136f" time="0.006">
+  <properties/>
+  <testcase name="rateLimitOutOfOrderAndOversizedFramesAreDroppedBeforeAnyWork" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.002"/>
+  <testcase name="pauseAndEndAreVisibleAndReleaseFrames" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <testcase name="secureUnverifiedAndForeignSourcesNeverShow" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.001"/>
+  <testcase name="liveOnlyForFreshFrameOfBoundSessionThenPaused" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <testcase name="protectionClearsFrameEvenInsideRateLimit" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <testcase name="deliveryAndGpuDelayDoNotRenewCaptureFreshness" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <testcase name="pausedSourceCannotReplayOlderFrame" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <testcase name="latestOnlyWithAtMostTwoFramesAliveAndLeaseSafeRelease" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.002"/>
+  <testcase name="alreadyStaleOrInvalidCaptureIsReleasedWithoutBecomingLive" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <testcase name="appSwitchDropsPreviousAppFramesImmediately" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <testcase name="ownWindowAndScreenInScreenAreRefusedAndCoverTheMonitor" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.001"/>
+  <testcase name="oldSessionCannotPauseNewCapture" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <testcase name="unboundHolderRefusesAndReleasesEveryFrame" classname="at.heinz.deviceai.cognitive.LiveComputerFramesTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,30 @@
+{
+  "source_ref": "f88d7d1936b9c0d53c176a0af31108fb863199e6",
+  "copied_git_paths": [
+    ".github/continuum/gemma-reopen-lifecycle.test.mjs",
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "app/src/main/java/at/heinz/deviceai/ContinuumGemmaRestorePolicy.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt",
+    "app/src/test/java/at/heinz/deviceai/ContinuumGemmaRestorePolicyTest.kt"
+  ],
+  "sha256": {
+    ".github/continuum/gemma-reopen-lifecycle.test.mjs": "dee00a853cd3780931b6df31d0cb56ff9c08ee6e95a711264ca1087e5fbe0fc6",
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "72cb6d84b028191e86e7dbbf748feaa6482cd31e952cc4e5854e844a635d209d",
+    "app/src/main/java/at/heinz/deviceai/ContinuumGemmaRestorePolicy.kt": "4fb2edc288a23a3c414988fc85981a5de45016d10b1388565f58c8b7c240d2a8",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt": "7ce2f65791ebbe8fe16a0483ad65d8f91006fa8d650264b293b9e02bf4ea9e4e",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt": "2b1a35c865630b076eb27eb900df4e7cfdfef381fc164f5c90bf4f998e3f21ec",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt": "b4916cad4259a6bf0ac929d7305999b5dfe045381315a4a918c51ba06aeb7235",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt": "d3c27e04ba81785c4cda6a7e1d81dd03e5e9fee8ba4f280730eb7f8f48fd68d4",
+    "app/src/test/java/at/heinz/deviceai/ContinuumGemmaRestorePolicyTest.kt": "6e070541a6c79a4a7b66109ac5fe9d52e83c342a78aff99594d764082358fbdc"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/gemma-reopen-lifecycle.test.mjs"
+  ],
+  "exit_code": 0
+}

@@ -1,0 +1,202 @@
+TAP version 13
+# Subtest: D10: real HTTP -> fixed subprocess -> canonical CCC1 and actual persisted Kotlin profiles
+ok 1 - D10: real HTTP -> fixed subprocess -> canonical CCC1 and actual persisted Kotlin profiles
+  ---
+  duration_ms: 3160.155059
+  type: 'test'
+  ...
+# Subtest: D01/D08/D09/D10: real service canonical reader uses actual20 profiles and immutable negative evidence
+ok 2 - D01/D08/D09/D10: real service canonical reader uses actual20 profiles and immutable negative evidence
+  ---
+  duration_ms: 4876.469812
+  type: 'test'
+  ...
+# Subtest: D03/D07: snapshot status/private nested fields cannot override canonical abstention or leak
+ok 3 - D03/D07: snapshot status/private nested fields cannot override canonical abstention or leak
+  ---
+  duration_ms: 2183.446241
+  type: 'test'
+  ...
+# Subtest: D02/D03: revoked owner grant and changed source never reuse prior successful read
+ok 4 - D02/D03: revoked owner grant and changed source never reuse prior successful read
+  ---
+  duration_ms: 1490.427594
+  type: 'test'
+  ...
+# Subtest: D03/D08: tampered metrics/hash/journal binding are refused
+ok 5 - D03/D08: tampered metrics/hash/journal binding are refused
+  ---
+  duration_ms: 458.512185
+  type: 'test'
+  ...
+# Subtest: D04/D05/D06: evidence, grant, key, journal and parent links never become arbitrary reads
+ok 6 - D04/D05/D06: evidence, grant, key, journal and parent links never become arbitrary reads
+  ---
+  duration_ms: 2099.841317
+  type: 'test'
+  ...
+# Subtest: D03: fabricated confirmed journal verdict lacks an independent receipt and is refused
+ok 7 - D03: fabricated confirmed journal verdict lacks an independent receipt and is refused
+  ---
+  duration_ms: 404.598931
+  type: 'test'
+  ...
+# Subtest: D01/B02: corrupted delivery/descriptor and invalid page bounds fail closed
+ok 8 - D01/B02: corrupted delivery/descriptor and invalid page bounds fail closed
+  ---
+  duration_ms: 339.888354
+  type: 'test'
+  ...
+# Subtest: D10: changed pinned profile classpath is refused before Java metadata execution
+ok 9 - D10: changed pinned profile classpath is refused before Java metadata execution
+  ---
+  duration_ms: 1002.226724
+  type: 'test'
+  ...
+# Subtest: actual Kotlin profile bridge:20 identities, fresh rename, no private context, strict pagination
+ok 10 - actual Kotlin profile bridge:20 identities, fresh rename, no private context, strict pagination
+  ---
+  duration_ms: 2583.070211
+  type: 'test'
+  ...
+# Subtest: P01/P03/P04: actual HTTP initialization, notification, exact read-only discovery and calls
+ok 11 - P01/P03/P04: actual HTTP initialization, notification, exact read-only discovery and calls
+  ---
+  duration_ms: 44.195716
+  type: 'test'
+  ...
+# Subtest: P02: unknown initialization version negotiates supported; invalid subsequent version400
+ok 12 - P02: unknown initialization version negotiates supported; invalid subsequent version400
+  ---
+  duration_ms: 9.505922
+  type: 'test'
+  ...
+# Subtest: A01/A02/A03/A04: bearer checked every request; body/query/session never credentials
+ok 13 - A01/A02/A03/A04: bearer checked every request; body/query/session never credentials
+  ---
+  duration_ms: 11.522898
+  type: 'test'
+  ...
+# Subtest: A05/A06: cross-origin and rebinding names cannot access local read state
+ok 14 - A05/A06: cross-origin and rebinding names cannot access local read state
+  ---
+  duration_ms: 11.780174
+  type: 'test'
+  ...
+# Subtest: P05/P07/A07: no writable/dynamic tool route and no actor-name authorization
+ok 15 - P05/P07/A07: no writable/dynamic tool route and no actor-name authorization
+  ---
+  duration_ms: 26.188152
+  type: 'test'
+  ...
+# Subtest: P06: malformed JSON and invalid RPC objects reject without crashing or reading
+ok 16 - P06: malformed JSON and invalid RPC objects reject without crashing or reading
+  ---
+  duration_ms: 15.439806
+  type: 'test'
+  ...
+# Subtest: P08/P09/A04: cancellation notifications do not cancel tasks; unknown sessions deny
+ok 17 - P08/P09/A04: cancellation notifications do not cancel tasks; unknown sessions deny
+  ---
+  duration_ms: 7.867948
+  type: 'test'
+  ...
+# Subtest: B01: transport media/body limits before reads; valid request still works
+ok 18 - B01: transport media/body limits before reads; valid request still works
+  ---
+  duration_ms: 9.088105
+  type: 'test'
+  ...
+# Subtest: B02/B04: bounded page arguments, forged cursors and unknown fields
+ok 19 - B02/B04: bounded page arguments, forged cursors and unknown fields
+  ---
+  duration_ms: 19.141279
+  type: 'test'
+  ...
+# Subtest: D04: evidence selectors cannot be paths or caller-selected permission
+ok 20 - D04: evidence selectors cannot be paths or caller-selected permission
+  ---
+  duration_ms: 10.504135
+  type: 'test'
+  ...
+# Subtest: B06: backend errors are sanitized instead of publishing key/path/debug details
+ok 21 - B06: backend errors are sanitized instead of publishing key/path/debug details
+  ---
+  duration_ms: 6.329734
+  type: 'test'
+  ...
+# Subtest: B06: oversized and hung canonical views have hard response/time bounds
+ok 22 - B06: oversized and hung canonical views have hard response/time bounds
+  ---
+  duration_ms: 113.600425
+  type: 'test'
+  ...
+# Subtest: B05: bounded session admission and rate limit
+ok 23 - B05: bounded session admission and rate limit
+  ---
+  duration_ms: 15.27939
+  type: 'test'
+  ...
+# Subtest: D01: each call obtains the fresh read projection
+ok 24 - D01: each call obtains the fresh read projection
+  ---
+  duration_ms: 5.488318
+  type: 'test'
+  ...
+# Subtest: B03/B04: real pages are bounded, cursor-bound to tool and session, no duplicate identities
+ok 25 - B03/B04: real pages are bounded, cursor-bound to tool and session, no duplicate identities
+  ---
+  duration_ms: 9.124209
+  type: 'test'
+  ...
+# Subtest: A08/P09: bearer rotation and deletion invalidate existing sessions
+ok 26 - A08/P09: bearer rotation and deletion invalidate existing sessions
+  ---
+  duration_ms: 12.064136
+  type: 'test'
+  ...
+# Subtest: B01/P06: explicit null arguments and malformed UTF-8 cannot become valid calls
+ok 27 - B01/P06: explicit null arguments and malformed UTF-8 cannot become valid calls
+  ---
+  duration_ms: 6.644347
+  type: 'test'
+  ...
+# Subtest: B05/P08: simultaneous reads are bounded; cancellation ends only that read
+ok 28 - B05/P08: simultaneous reads are bounded; cancellation ends only that read
+  ---
+  duration_ms: 8.891473
+  type: 'test'
+  ...
+# Subtest: D08: MCP rejects mismatched evidence content hash instead of forwarding it
+ok 29 - D08: MCP rejects mismatched evidence content hash instead of forwarding it
+  ---
+  duration_ms: 4.281141
+  type: 'test'
+  ...
+# Subtest: A08/P09: server restart drops old sessions while the owner credential remains usable
+ok 30 - A08/P09: server restart drops old sessions while the owner credential remains usable
+  ---
+  duration_ms: 5.401097
+  type: 'test'
+  ...
+# Subtest: B05/P09: idle sessions expire and exhausted per-session read budget does not reset by new request IDs
+ok 31 - B05/P09: idle sessions expire and exhausted per-session read budget does not reset by new request IDs
+  ---
+  duration_ms: 89.009764
+  type: 'test'
+  ...
+# Subtest: P09: unknown GET sessions return404 before the unsupported-SSE405 response
+ok 32 - P09: unknown GET sessions return404 before the unsupported-SSE405 response
+  ---
+  duration_ms: 6.033283
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19414.38848

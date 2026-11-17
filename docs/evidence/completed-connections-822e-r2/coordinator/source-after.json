@@ -1,0 +1,24 @@
+{
+  "checkout": "/workspace/scratch/822e72396ed9/continuum-attach-r2",
+  "local_commit": "578ea5dd64f059de1b8173badf4d34d0e52a5b76",
+  "complete_tree": "9a47db6426d84708b8edaee8557f59fa8305007b",
+  "worktree_clean": true,
+  "subtrees": {
+    "app": "4549dc627c99d234be26c64622116aee898e69cc",
+    ".github": "8cf476f8506a49800ef02d6736d329d03e94b191",
+    "scripts": "24047e8caa4a1c3503822bbd91fa076eb93eff4a",
+    "tools": "3d3e36f426edcd96a9775626d01ffad83cdff87f"
+  },
+  "critical_sha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "6adf073f1e9b06c45c847ca46c379f295f5be0598ba7fd028b63993da30de02a",
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "7a10cb4f0eabb5fb223bf329b7e26ac063cda8ca2a9c4ab11348917ebf529848",
+    ".github/continuum/development-backlog.mjs": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+    ".github/continuum/autonomous-teamleader.mjs": "57d2680c3173e92b987294041e3ac323a235f76b8954fafb2a7ef3b60e04c869",
+    ".github/continuum/local-teamleader-loop.mjs": "09e5e3ff93e615270e955055777d5549477ba496b688095389eafa01cbe558f4",
+    ".github/continuum/coding-orchestrator.mjs": "0ef121bb5dfba45a800f73543bacb0c6fbded3b4a4020a674df999d7503131dd",
+    ".github/continuum/coding-service-worker.mjs": "4de2311305c1dd536e185afe06bdaeb44081324c96243f1b176cbcdcc4e5b062",
+    ".github/continuum/coding-service-reader.mjs": "970b9461a893bf81c72ef23630e991c4142e212f9a2056f17453bb5e2a7e32b4"
+  }
+}

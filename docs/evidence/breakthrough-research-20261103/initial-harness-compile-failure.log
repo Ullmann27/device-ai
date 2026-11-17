@@ -1,0 +1,6 @@
+app/src/test/java/at/heinz/deviceai/cognitive/ResearchClaimAdmissionTest.kt:20:54: error: return type mismatch: expected 'List<Claim>', actual 'Claim'.
+        val result = run(listOf(a), ClaimExtractor { candidate("  $sentence  ", listOf("https://forged.example.org/proof")) })
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ResearchClaimAdmissionTest.kt:34:56: error: return type mismatch: expected 'List<Claim>', actual 'Claim'.
+        val result = run(listOf(a,b), ClaimExtractor { candidate(sentence, listOf(a.url,b.url)) })
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

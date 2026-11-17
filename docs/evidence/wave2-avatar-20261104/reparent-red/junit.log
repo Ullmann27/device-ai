@@ -1,0 +1,28 @@
+JUnit version 4.13.2
+..................................................E.E..E...........................
+Time: 2.124
+There were 3 failures:
+1) attachRestoresOnlyLiveCuesWithTheirOriginalDeadlines(at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest)
+java.lang.AssertionError: expected:<[VisemeCue(utteranceId=u, viseme=AA, weight=1.0, durationMs=160, atMillis=1160)]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest.attachRestoresOnlyLiveCuesWithTheirOriginalDeadlines(AvatarSpeechReattachmentTest.kt:20)
+2) attachRestoresUpcomingCuesWithoutPlayingThemEarly(at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest)
+java.lang.AssertionError: expected:<AA> but was:<SIL>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest.attachRestoresUpcomingCuesWithoutPlayingThemEarly(AvatarSpeechReattachmentTest.kt:39)
+3) repeatedAttachCannotExtendTheWordOrMultiplyQueuedCues(at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest)
+java.lang.AssertionError: expected:<AA> but was:<SIL>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest.repeatedAttachCannotExtendTheWordOrMultiplyQueuedCues(AvatarSpeechReattachmentTest.kt:53)
+
+FAILURES!!!
+Tests run: 80,  Failures: 3

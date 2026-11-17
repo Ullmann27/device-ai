@@ -1,0 +1,59 @@
+{
+  "raw_logs_retained_in_scratch": true,
+  "public_placeholders": [
+    "<RUN_ROOT>",
+    "<REPO>",
+    "<DEPENDENCY_CACHE>"
+  ],
+  "normalization": "Only known local path prefixes and final blank lines; no result/assertion changes.",
+  "files": [
+    {
+      "file": "compile.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_and_final_blank_line_normalization": true
+    },
+    {
+      "file": "experiment-junit.txt",
+      "raw_sha256": "addbbc5575b2ef2e91643ae5c095710d6361d6352055ee486ac8326b4f1b1cf0",
+      "published_sha256": "f69ece602f788e1b70be4001818a4e76e8a19396cd8fdf2b10089bd15e36c481",
+      "path_redaction_and_final_blank_line_normalization": true
+    },
+    {
+      "file": "neighbors-junit.txt",
+      "raw_sha256": "e5f38458524393bb431003dacf3000676e491b8cd2657ccca0f62db612228098",
+      "published_sha256": "fcd0bc5203d5cdb7b1b77120c62399786a2def58bb1293db9e1e41003f6d0681",
+      "path_redaction_and_final_blank_line_normalization": true
+    },
+    {
+      "file": "metrics.csv",
+      "raw_sha256": "81e82ee9a7db0c6c71230fddb389ce88d8346d66a10fcbd86277449b5e41592a",
+      "published_sha256": "81e82ee9a7db0c6c71230fddb389ce88d8346d66a10fcbd86277449b5e41592a",
+      "path_redaction_and_final_blank_line_normalization": true
+    },
+    {
+      "file": "metrics-summary.json",
+      "raw_sha256": "177351176508f30c35b1e6cd058920c4a800dc651921cdb4797d016a5ab88448",
+      "published_sha256": "177351176508f30c35b1e6cd058920c4a800dc651921cdb4797d016a5ab88448",
+      "path_redaction_and_final_blank_line_normalization": true
+    },
+    {
+      "file": "result.json",
+      "raw_sha256": "b5a2d0b3a0c4f56101da175ff5c9e43ba552737052730eb6e8f3915b1666d787",
+      "published_sha256": "b5a2d0b3a0c4f56101da175ff5c9e43ba552737052730eb6e8f3915b1666d787",
+      "path_redaction_and_final_blank_line_normalization": true
+    },
+    {
+      "file": "source-manifest.json",
+      "raw_sha256": "bd555c4eac502fe1d8b7202ac06f5a272229af62e23d88e78330e1f0ac6d93a5",
+      "published_sha256": "bd555c4eac502fe1d8b7202ac06f5a272229af62e23d88e78330e1f0ac6d93a5",
+      "path_redaction_and_final_blank_line_normalization": true
+    },
+    {
+      "file": "tool-artifacts.json",
+      "raw_sha256": "3a0ec77934d4c75b415a5e78f21f9815a7df1313f47fb823fc3f3f4772be6942",
+      "published_sha256": "3a0ec77934d4c75b415a5e78f21f9815a7df1313f47fb823fc3f3f4772be6942",
+      "path_redaction_and_final_blank_line_normalization": true
+    }
+  ]
+}

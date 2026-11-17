@@ -1,0 +1,27 @@
+{
+  "label": "frame-clock-red",
+  "head": "a15624bed87470260adef810ce1610b986f9f02d",
+  "command": [
+    "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-I",
+    "/workspace/scratch/76b7222771d5/build-env/observe-tests.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisShellMotionUiTest"
+  ],
+  "started": 1793894678.9295955,
+  "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+  "statusBefore": " M app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt\n",
+  "exitCode": 1,
+  "ended": 1793894705.5345497,
+  "statusAfter": " M app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt\n",
+  "log": "/workspace/scratch/76b7222771d5/build-env/logs/frame-clock-red.log",
+  "sourceNote": "Baseline source b294fc91. Subsequent a15624be differs only by the continuation document. Root frame-clock source delta is archived separately."
+}

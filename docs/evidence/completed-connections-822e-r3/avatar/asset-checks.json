@@ -1,0 +1,279 @@
+{
+  "evidence_class": "HOST_NUMERICAL_NOT_DEVICE",
+  "status": "PASS",
+  "asset_bytes": 12552372,
+  "asset_sha256": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+  "checks": {
+    "actual_bytes_runtime_notice": "PASS",
+    "source_texture_notice": "PASS",
+    "builder_notice": "PASS",
+    "mesh_license_present": "PASS",
+    "runtime_contract_only_pin_changed": "PASS",
+    "glb_structure": "PASS",
+    "geometry_and_21_morph_payloads": "PASS",
+    "embedded_atlas_notice": "PASS"
+  },
+  "geometry": {
+    "status": "PASS",
+    "method": "Oriented rendered triangles and all protected vertex/morph/skin attributes; seam duplication permitted",
+    "nodeAndRigTransformsUnchanged": true,
+    "inverseBindMatricesUnchanged": true,
+    "positionAndMorphToleranceMetres": 2e-07,
+    "normalAndWeightTolerance": 2e-06,
+    "triangles": 57000,
+    "primitiveVertexReferences": 46218,
+    "primitives": [
+      {
+        "mesh": "EyeballLeftMesh",
+        "primitive": 0,
+        "sourceVertices": 266,
+        "candidateVertices": 266,
+        "triangles": 528,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "EyeballRightMesh",
+        "primitive": 0,
+        "sourceVertices": 266,
+        "candidateVertices": 266,
+        "triangles": 528,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "FaceMesh",
+        "primitive": 0,
+        "sourceVertices": 12980,
+        "candidateVertices": 16650,
+        "triangles": 25924,
+        "morphTargets": 21,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "IrisLeftMesh",
+        "primitive": 0,
+        "sourceVertices": 266,
+        "candidateVertices": 394,
+        "triangles": 528,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "IrisRightMesh",
+        "primitive": 0,
+        "sourceVertices": 266,
+        "candidateVertices": 394,
+        "triangles": 528,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "MouthInteriorMesh",
+        "primitive": 0,
+        "sourceVertices": 266,
+        "candidateVertices": 266,
+        "triangles": 528,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "NeuralThreadsMesh",
+        "primitive": 0,
+        "sourceVertices": 13389,
+        "candidateVertices": 13389,
+        "triangles": 12912,
+        "morphTargets": 21,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "NeuralThreadsMesh",
+        "primitive": 1,
+        "sourceVertices": 13389,
+        "candidateVertices": 13389,
+        "triangles": 13188,
+        "morphTargets": 21,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "PupilLeftMesh",
+        "primitive": 0,
+        "sourceVertices": 266,
+        "candidateVertices": 266,
+        "triangles": 528,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "PupilRightMesh",
+        "primitive": 0,
+        "sourceVertices": 266,
+        "candidateVertices": 266,
+        "triangles": 528,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothLower0Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothLower1Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothLower2Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothLower3Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothLower4Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothLower5Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothLower6Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothLower7Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothUpper0Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothUpper1Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothUpper2Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothUpper3Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothUpper4Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothUpper5Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothUpper6Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      },
+      {
+        "mesh": "ToothUpper7Mesh",
+        "primitive": 0,
+        "sourceVertices": 42,
+        "candidateVertices": 42,
+        "triangles": 80,
+        "morphTargets": 0,
+        "maximumProtectedScalarDifference": 0.0
+      }
+    ]
+  },
+  "embedded_images": [
+    {
+      "mimeType": "image/png",
+      "bytes": 2614137,
+      "sha256": "92d5adebe1e794cfbed434ac533f53dda25053177129a399e5eaf0c07c79533b"
+    }
+  ],
+  "not_run": [
+    "UV raster replay",
+    "Blender renders",
+    "Android JUnit",
+    "Android lint",
+    "native Filament",
+    "Fold7",
+    "audio lip synchronization"
+  ],
+  "known_source_limit": "Inherited independent rig_hierarchy_orientation window failure remains open; this comparison proves preservation, not anatomical approval."
+}

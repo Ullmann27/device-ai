@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: MΩ model-observation gate rejects self-certified task-bound JSON
+not ok 1 - MΩ model-observation gate rejects self-certified task-bound JSON
+  ---
+  duration_ms: 1.550542
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:64:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:66:9)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 118.041358

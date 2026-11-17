@@ -1,0 +1,12 @@
+[
+  {
+    "operation": "mkdir docs/evidence/c1-integration-20261104/host-gates-8873030",
+    "outcome": "ENOSPC",
+    "effect": "Archive copy had not started; production source unaffected; no build started."
+  },
+  {
+    "observation": "Subsequent disk read showed 2024304640 free bytes; directory creation succeeded.",
+    "cause": "NOT_ESTABLISHED",
+    "retryBasis": "Fresh successful capacity/read-write observation, no removal of foreign files."
+  }
+]

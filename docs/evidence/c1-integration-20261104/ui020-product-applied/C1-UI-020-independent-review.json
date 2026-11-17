@@ -1,0 +1,262 @@
+{
+  "task": "C1-UI-020-INDEPENDENT-READONLY-PRODUCT-REVIEW",
+  "status": "NO_MATERIAL_STATIC_BLOCKER_WITHIN_REVIEWED_SCOPE_RUNTIME_NOT_RUN",
+  "observed_utc": "2026-11-04T21:54:06.947683+00:00",
+  "reviewer_role": "C1 source-audit subagent; not external C2",
+  "review_base_commit": "f31855138d77ecb5e05e7a17a620b1fd6e9d28c5",
+  "review_base_tree": "323227c1c05017b0733509e24f0aebc2cc9faa25",
+  "product_patch": {
+    "sha256": "fb3799bfc0b9045d72563dd03ac9e24c0ea262c9920b42bbd02af2f5965ff12d",
+    "bytes": 13609,
+    "exact_paths": [
+      "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+      "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+    ],
+    "against_current_base": true
+  },
+  "product_files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "mode": "100644",
+      "base": {
+        "bytes": 33052,
+        "git_blob": "020c388468ce2ad5017579f7ba1551b5c17fbcf6",
+        "sha256": "75f53008759b2e1212f4df64e29682cb3cfac2ae28cf534145eb3941d83dc9ec"
+      },
+      "target": {
+        "bytes": 33965,
+        "git_blob": "0b3a53ad6e777330ad5104b165de90059fe3ed82",
+        "sha256": "c096632532563b649406b8153b326b30d315b81f546062b46da98f41c850947c"
+      },
+      "equals_59d8_and_cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "mode": "100644",
+      "base": {
+        "bytes": 45761,
+        "git_blob": "0052c24095dee7a11b498254bfc426294cc198b3",
+        "sha256": "2952a1a322c6a085aae4ebc396a05fc6b8543a18b0f7477bcc81be74b9b47f1b"
+      },
+      "target": {
+        "bytes": 46318,
+        "git_blob": "977f50f5304677aaaf32f48b4cd0e96794948e8a",
+        "sha256": "da5aca2d991f571933d1b927f438ff2598cf907ae4fd5acc13b9265c3b10bee7"
+      },
+      "equals_59d8_and_cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+      "mode": "100644",
+      "base": {
+        "bytes": 6490,
+        "git_blob": "891319e0cbb4a59225702e41083f5bf3925df1ec",
+        "sha256": "cdfa74b5fcd86d4a1dc5b5a9a0fe9558ee2870e54e6359cf6609e6ce8f84e472"
+      },
+      "target": {
+        "bytes": 6953,
+        "git_blob": "5e637a17a26bf7f7706ae1f67d8f9fc14d3157f6",
+        "sha256": "8e2bb2585b38f389591967d24cbda94eaaa28b35eca1a247d8b67de982bf4cb5"
+      },
+      "equals_59d8_and_cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "mode": "100644",
+      "base": {
+        "bytes": 11888,
+        "git_blob": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+        "sha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302"
+      },
+      "target": {
+        "bytes": 12832,
+        "git_blob": "796bc098d11d166d0ff530228a35dbb19b39b843",
+        "sha256": "312f66288074e6b044b88b399ff09b36cda0707ff12b14a171a38dca10aeb8c5"
+      },
+      "equals_59d8_and_cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "mode": "100644",
+      "base": {
+        "bytes": 618819,
+        "git_blob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+        "sha256": "c01049c44c18db04b8f1ccb71b3a8fef77c64353728c78ada17fc5bc1e3a32b7"
+      },
+      "target": {
+        "bytes": 619078,
+        "git_blob": "26cbaa9362171b012f2285f85fc671f95c19510a",
+        "sha256": "d550292350c061cc74b7a4596b1c852988a22e944fe03369fefe77d7c3fd92b0"
+      },
+      "equals_59d8_and_cdea": true
+    }
+  ],
+  "product_patch_reconstruction": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "hunks": 2,
+      "reconstructed_target": {
+        "bytes": 33965,
+        "git_blob": "0b3a53ad6e777330ad5104b165de90059fe3ed82",
+        "sha256": "c096632532563b649406b8153b326b30d315b81f546062b46da98f41c850947c"
+      },
+      "byte_equal_target": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "hunks": 4,
+      "reconstructed_target": {
+        "bytes": 46318,
+        "git_blob": "977f50f5304677aaaf32f48b4cd0e96794948e8a",
+        "sha256": "da5aca2d991f571933d1b927f438ff2598cf907ae4fd5acc13b9265c3b10bee7"
+      },
+      "byte_equal_target": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+      "hunks": 2,
+      "reconstructed_target": {
+        "bytes": 6953,
+        "git_blob": "5e637a17a26bf7f7706ae1f67d8f9fc14d3157f6",
+        "sha256": "8e2bb2585b38f389591967d24cbda94eaaa28b35eca1a247d8b67de982bf4cb5"
+      },
+      "byte_equal_target": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "hunks": 5,
+      "reconstructed_target": {
+        "bytes": 12832,
+        "git_blob": "796bc098d11d166d0ff530228a35dbb19b39b843",
+        "sha256": "312f66288074e6b044b88b399ff09b36cda0707ff12b14a171a38dca10aeb8c5"
+      },
+      "byte_equal_target": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "hunks": 3,
+      "reconstructed_target": {
+        "bytes": 619078,
+        "git_blob": "26cbaa9362171b012f2285f85fc671f95c19510a",
+        "sha256": "d550292350c061cc74b7a4596b1c852988a22e944fe03369fefe77d7c3fd92b0"
+      },
+      "byte_equal_target": true
+    }
+  ],
+  "tests": "NOT_RUN",
+  "lifecycle_routing_cache_checks": {
+    "one_callback_assignment_per_pane": true,
+    "callback_uses_current_home_not_captured_old_home": true,
+    "onDestroy_clears_callback": true,
+    "same_live_hologram_reused": true,
+    "same_chooser_long_press": true,
+    "same_chooser_system_route": true,
+    "same_chooser_shell_route": true,
+    "preferences_share_exact_store": true,
+    "compact_key": true,
+    "explicit_2d_3d_return_key": true,
+    "home_passes_compact_to_draw_cache": true,
+    "home_measure_and_hit_geometry_pass_compact": true,
+    "cache_compact_comparison": true,
+    "cache_geometry_passes_compact": true,
+    "refresh_requests_layout": true,
+    "more_calls_only_existing_navigation": true
+  },
+  "layout_analysis": {
+    "whole_layout_reduces_exactly_to_base_when_new_flag_false": true,
+    "base_sha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302",
+    "reduced_sha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302",
+    "new_flag_defaults_false_in_both_public_functions": true,
+    "compact_geometry": "Separate header; two horizontally disjoint 120dp head/orb bounds with 10dp gap; entire one-avatar surface is 120dp high; dialog follows after 10dp. Existing orb-only renderer fills the whole live surface.",
+    "wide_semantics": "compactPresentation bypasses reference(), retaining the profile column counts and using vertical reflow. Whole content can be taller than normal reference.",
+    "wide_static_example": {
+      "kind": "Manual algebra from source, NOT_A_TEST_RUN",
+      "input": {
+        "widthDp": 840,
+        "heightDp": 649,
+        "fontScale": 1,
+        "externalRailWidthDp": 0,
+        "externalBottomBarHeightDp": 0
+      },
+      "normal_content_dp": 649,
+      "compact_content_dp": 858,
+      "derivation": "top64 + gap10 + header70 + gap10 + avatar120 + gap10 + dialog128 + gap10 + input52 + gap10 + tiles(2*64+10) + gap10 + information(148+10) + status56 + margin12 = 858",
+      "narrow_only_total_height_claim": true
+    },
+    "readability": "No new text scaling down; existing tile/input/info heights and profile-based columns retained. Actual rendering, clipping and reading comfort require fresh host/device observation."
+  },
+  "immutable_dependencies": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt",
+      "bytes": 2211,
+      "git_blob": "e875023c009128c865581fd3e8c3a18669e18c77",
+      "sha256": "76ef62bd480f5177f8d341a0c9ab755346baf4c457db474bf62ba0904c68223d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+      "bytes": 5469,
+      "git_blob": "717aee7ec7d841286c76c89e4a6eada0a00d5667",
+      "sha256": "11bc47ff48b924e53edc81caa18ec8fb83c3b049b195649e96dbc25a9090ff5f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+      "bytes": 12052,
+      "git_blob": "bb4e0a5cc54a241d003eecf5654542cb259c74ed",
+      "sha256": "94fcda30c17dd0c66a2c5a9648d53a0d31e857c81710b31851abaffd14ca50a2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt",
+      "bytes": 7282,
+      "git_blob": "bfca80b88de4fd2acabc59cc357171c3846f9d58",
+      "sha256": "4548332c8398453f4ebcbfa1e43d5a972dda90e24272f1716a7c8698a4de5bb6"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt",
+      "bytes": 6091,
+      "git_blob": "65721776eea1beebf05864312f3d5f59dd289efe",
+      "sha256": "79261f72e178e89541d390f0fe5e5bb5aa24b56f8dd0b4ad4dc5f694d0f84f9c"
+    }
+  ],
+  "read_locations": {
+    "listener": [
+      "AgentActivity.kt onDestroy",
+      "AgentActivity.kt buildConversationPane",
+      "ContinuumHologramView.kt showAppearanceChooser"
+    ],
+    "geometry": [
+      "ContinuumHomeView.kt configure/onMeasure/shellGeometry/updateCockpitRegions/onLayout",
+      "JarvisShellView.kt onDraw cache and drawForeground",
+      "JarvisShellLayout.kt create/forContent/reflow",
+      "ContinuumHologramView.kt setCockpitRegions/resolveOrbBounds/onDraw"
+    ],
+    "authority": [
+      "AgentActivity.kt showSystemCenter/showCenter/showMoreWorkAreas/showDashboardCategory/navigateDashboardTarget"
+    ],
+    "test_scope": [
+      "ContinuumReferenceCockpitUiTest.kt all eight methods and actual decor-based tap helpers"
+    ]
+  },
+  "findings": [],
+  "bounded_review_notes": [
+    "All five baselines equal f318551,59d8d7e,cdea744. All source hunk application reconstructed in memory; no repository application.",
+    "Callback property is singular, replaced on pane rebuild and cleared before teardown; lambda reads current homeView and checks finishing/destroyed.",
+    "Chooser writes existing compact and avatar-3d keys, uses existing appearance setters and notifies current home. No second avatar/controller/model created.",
+    "compact=false whole layout reduces to exact original source. Compact=true can increase total wide-window content height; no universal space-saving claim.",
+    "More action dismisses current centre through existing makeAction then opens existing category; explicit category selection uses unchanged owner-gated route.",
+    "Test source remains frozen; runtime RED/GREEN belongs to root and was not read or executed in this review."
+  ],
+  "remaining_acceptance": [
+    "Fresh C1 RED then GREEN with frozen eight cases and unchanged source identity",
+    "Host evidence images/hierarchy review with explicit mode/profile identification",
+    "Wide compact visuals are absent from frozen eight-case capture set",
+    "Long-press/3D/device/IME/GPU behavior cannot be inferred as passed"
+  ],
+  "repo_changes": "NONE",
+  "builds": "NOT_RUN",
+  "models": "NOT_RUN",
+  "locks": "NOT_ACQUIRED",
+  "external_C2_ACK": "NOT_CLAIMED"
+}

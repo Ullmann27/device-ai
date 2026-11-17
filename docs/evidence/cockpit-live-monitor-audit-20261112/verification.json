@@ -1,0 +1,63 @@
+{
+  "audit_base_local_commit": "9918891a6da1d74275b087a04f4aa86c79074d46",
+  "audit_base_public_commit": "5f87bdc610944b93d3173a83c5beeea315abeb66",
+  "identical_base_tree": "cae47c3abaee1a378b4157f26abf7e6ec33df2c1",
+  "execution": {
+    "compiler": "Kotlin 2.4.0 K2JVMCompiler",
+    "jvm_target": "17",
+    "junit": "4.13.2",
+    "mode": "Selected current production sources and test sources compiled directly; existing dependency classpath",
+    "shared_heavy_work_lock": true,
+    "elapsed_seconds": 8.213015219000226,
+    "exit_code": 0,
+    "tests_passed": 52,
+    "test_classes": [
+      "LiveMonitorSubmissionTest",
+      "LiveComputerDispatchGuardTest",
+      "LiveComputerFramesTest",
+      "LiveWindowSafetyTest",
+      "ProjectionCropGeometryTest",
+      "LiveWindowCaptureTest"
+    ],
+    "dependency_base_jar_sha256": "6f5f1cfee967e825b11537f8b9abf05686378def648b7fd8edfbe8aea925e952"
+  },
+  "tested_source_hashes": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "b1dd139af2e44f6c79b817bd7b4714e934210b4f25a31b501463a5bdf8b8793e",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerDispatchGuard.kt": "0b11fc8375b93140beda810d5ba110f8ffd1c5a8c6a2adad98030e0916814a1b",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowSafety.kt": "510f17c80bd109687fbb77c172dae3a56db21555f571a62d6d516a32de4c41a7",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt": "bb39aa741efb44644f7efdfd21a2de58aed3ae459b8825920665d5f3e4d4885b",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowCapture.kt": "2e85fd899823b97bd5ebeee7594e06f197ba1ba3e7422890551277574034dbb6",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveMonitorSubmissionTest.kt": "d0010f9f58dd443c899a4579aaa0f9b2c0ca6c59679eb231ca62f705df41ae46",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerDispatchGuardTest.kt": "3c9eab144c09b904f76275f6f46ea66fd21b527256c2f74b54376d3c43d938bf",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerFramesTest.kt": "d0afed0302bca9ac71517b1477dcbfd41e3ae09e97e22e078fe8210f4a9538c9",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveWindowSafetyTest.kt": "c539415b3e65ebf5727538208cb3b264e62982989c142b16eb640a510ca692ca",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ProjectionCropGeometryTest.kt": "dc1ed60d4038e1a5793ae737920f63df38ba77154b8fff5dd071285bd1105669",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveWindowCaptureTest.kt": "9275eda4179ba80f4123460af69bdbf04661bf797cee541edd8d2b325b3c7f1a"
+  },
+  "changed_source_hashes": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "67de6e148d182864c2833a7b6f9e1ea85cfa4665e041d78ac8c2ac4756ef9081",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "ceeca7e6f728920c82fc2e10450b3b96893af61015ab1ebca4d2974b1681f02f",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "5f06e1a4dd5d402b3e1b445bc5fad7b71ca2c6881e3156421d338266e38b9b27",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "80a3390521c9720c6306713523b612058e1d354b80212a578d335ee332d842fc",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerDispatchGuard.kt": "0b11fc8375b93140beda810d5ba110f8ffd1c5a8c6a2adad98030e0916814a1b",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "1dd295223166ed0a1425bb7a928d4ab4124e122c8067dbf9355df4aba826d6f2",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt": "b1dd139af2e44f6c79b817bd7b4714e934210b4f25a31b501463a5bdf8b8793e",
+    "app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt": "98d6fe168eeff5b88c9d260ce0a1256ddb338f1273930063ebe2630426d1ea6a",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerDispatchGuardTest.kt": "3c9eab144c09b904f76275f6f46ea66fd21b527256c2f74b54376d3c43d938bf",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LiveMonitorSubmissionTest.kt": "d0010f9f58dd443c899a4579aaa0f9b2c0ca6c59679eb231ca62f705df41ae46"
+  },
+  "source_stable": true,
+  "limits": [
+    "No Android GPU import or physical-panel execution in this child test run",
+    "Native renderer and view wiring require the combined root compilation and lifecycle suite",
+    "endFrame submission is not a GPU-completion or physical-presentation acknowledgement",
+    "Controller waiting and final NodePort viewport coupling are integrated by the parent and action agent"
+  ],
+  "implementation_commits": [
+    "ab42bf6e7d03de1880c4b6bf37e558bdb8d910ca",
+    "27e668aafa38c9faa89cf4d4e2d1c27b18ba752d"
+  ],
+  "source_checkout_commit": "27e668aafa38c9faa89cf4d4e2d1c27b18ba752d"
+}

@@ -1,0 +1,21 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=32897 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=32897 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+JUnit version 4.13.2
+...E.E
+Time: 6.191
+There were 2 failures:
+1) restartDoesNotBringBackContextTheAppHadCleared(at.heinz.deviceai.ContinuumChatPersistenceUiTest)
+java.lang.NoSuchMethodException: at.heinz.deviceai.AgentActivity.rememberContextTurn(java.lang.String,java.lang.String,java.lang.String)
+	at java.base/java.lang.Class.getDeclaredMethod(Class.java:2677)
+	at at.heinz.deviceai.ContinuumChatPersistenceUiTest.restartDoesNotBringBackContextTheAppHadCleared$lambda$0(ContinuumChatPersistenceUiTest.kt:133)
+	at at.heinz.deviceai.ContinuumChatPersistenceUiTest.withActivity(ContinuumChatPersistenceUiTest.kt:67)
+	at at.heinz.deviceai.ContinuumChatPersistenceUiTest.restartDoesNotBringBackContextTheAppHadCleared(ContinuumChatPersistenceUiTest.kt:129)
+2) reopenedAppRestoresTheModelDialogueContextOfThatChat(at.heinz.deviceai.ContinuumChatPersistenceUiTest)
+java.lang.NoSuchMethodException: at.heinz.deviceai.AgentActivity.rememberContextTurn(java.lang.String,java.lang.String,java.lang.String)
+	at java.base/java.lang.Class.getDeclaredMethod(Class.java:2677)
+	at at.heinz.deviceai.ContinuumChatPersistenceUiTest.reopenedAppRestoresTheModelDialogueContextOfThatChat$lambda$0(ContinuumChatPersistenceUiTest.kt:111)
+	at at.heinz.deviceai.ContinuumChatPersistenceUiTest.withActivity(ContinuumChatPersistenceUiTest.kt:67)
+	at at.heinz.deviceai.ContinuumChatPersistenceUiTest.reopenedAppRestoresTheModelDialogueContextOfThatChat(ContinuumChatPersistenceUiTest.kt:106)
+
+FAILURES!!!
+Tests run: 4,  Failures: 2
+

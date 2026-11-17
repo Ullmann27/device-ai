@@ -1,0 +1,203 @@
+{
+  "finalCodeCommit": "d1a5a215f42d6e7dbf08bc92eb8837653c1d119c",
+  "pullRequests": [
+    {
+      "pr": 151,
+      "base": "sol/continuum-infrastructure-repair-20261025",
+      "baseSha": "ad14f8b82f9be2cd0026bc16eef71a16bec41424",
+      "head": "sol/continuum-brain-breakthroughs-20261026",
+      "headSha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99"
+    },
+    {
+      "pr": 152,
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "head": "sol/cdx-generation-repair-20261026",
+      "headSha": "e53c91404fce44ac32aa448b901a9eeeb90d2431",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": false,
+      "mergeBaseWithFinalCode": "c391b83244bd2cc945a1b37bcdd829da27e15ba6"
+    },
+    {
+      "pr": 153,
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "head": "sol/grounding-relations-20261026",
+      "headSha": "b41408b3cae889b4727b00648a0340419298b1f0",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": false,
+      "mergeBaseWithFinalCode": "c391b83244bd2cc945a1b37bcdd829da27e15ba6"
+    },
+    {
+      "pr": 154,
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "head": "sol/deepseek-authenticated-bridge-20261026",
+      "headSha": "2fb604609d8f7c86ec49fe5ebd4d9158b80beb5a",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": false,
+      "mergeBaseWithFinalCode": "c391b83244bd2cc945a1b37bcdd829da27e15ba6"
+    },
+    {
+      "pr": 155,
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "head": "sol/coding-discovery-safety-20261026",
+      "headSha": "d08d6396aa91f1abe43fa1e3a615be61fb18cfd7",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": false,
+      "mergeBaseWithFinalCode": "c391b83244bd2cc945a1b37bcdd829da27e15ba6"
+    },
+    {
+      "pr": 156,
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "head": "sol/continuum-fast-repair-20261026",
+      "headSha": "df4b395ff6cee7fdedbe742560f1685eaff5767c",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": false,
+      "mergeBaseWithFinalCode": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99"
+    },
+    {
+      "pr": 157,
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "head": "review/continuum-brain-safety-continuation-20261026",
+      "headSha": "95e6ad4f4a80d51a5a3293dbb914cdb9288d8c29",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": false,
+      "mergeBaseWithFinalCode": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99"
+    },
+    {
+      "pr": 158,
+      "base": "main",
+      "baseSha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+      "head": "review/continuum-baby-memory-migration-20261026",
+      "headSha": "4cff5abda4f71bcb46795323e468cf0e0fb3429a",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": false,
+      "mergeBaseWithFinalCode": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4"
+    },
+    {
+      "pr": 159,
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "head": "astra/continuum-brain-integration-20261026",
+      "headSha": "301fe804700189ee99533662ce57be96c29ae450",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "301fe804700189ee99533662ce57be96c29ae450"
+    },
+    {
+      "pr": 160,
+      "base": "astra/continuum-brain-integration-20261026",
+      "baseSha": "301fe804700189ee99533662ce57be96c29ae450",
+      "head": "review/continuum-repair-learning-evidence-gate-20261026",
+      "headSha": "bc424dfe208e2b06ae3c12a4adf7abb02ec79b05",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "bc424dfe208e2b06ae3c12a4adf7abb02ec79b05"
+    },
+    {
+      "pr": 161,
+      "base": "review/continuum-repair-learning-evidence-gate-20261026",
+      "baseSha": "bc424dfe208e2b06ae3c12a4adf7abb02ec79b05",
+      "head": "integration/continuum-typed-source-identity-20261026",
+      "headSha": "4b569515bb3f43abccf008e1889eac68d570a105",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "4b569515bb3f43abccf008e1889eac68d570a105"
+    },
+    {
+      "pr": 162,
+      "base": "integration/continuum-typed-source-identity-20261026",
+      "baseSha": "4b569515bb3f43abccf008e1889eac68d570a105",
+      "head": "integration/continuum-grounded-recall-fallback-20261026",
+      "headSha": "cafc337a14eca01dc49e38eea3dd299034460552",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "cafc337a14eca01dc49e38eea3dd299034460552"
+    },
+    {
+      "pr": 163,
+      "base": "integration/continuum-grounded-recall-fallback-20261026",
+      "baseSha": "cafc337a14eca01dc49e38eea3dd299034460552",
+      "head": "research/continuum-coin-wm-independent-audit-20261026",
+      "headSha": "2b824792487a36c99efecf190a02f0bcf7724bbb",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "2b824792487a36c99efecf190a02f0bcf7724bbb"
+    },
+    {
+      "pr": 164,
+      "base": "research/continuum-coin-wm-independent-audit-20261026",
+      "baseSha": "2b824792487a36c99efecf190a02f0bcf7724bbb",
+      "head": "review/continuum-ccc1-test-parity-20261026",
+      "headSha": "f763c5491290555228ae385c54e8fad9e91b392c",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "f763c5491290555228ae385c54e8fad9e91b392c"
+    },
+    {
+      "pr": 165,
+      "base": "review/continuum-ccc1-test-parity-20261026",
+      "baseSha": "f763c5491290555228ae385c54e8fad9e91b392c",
+      "head": "integration/continuum-sol-numeric-binding-20261026",
+      "headSha": "da81db718612aa6f12ba27bd6db043e57c739e5f",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "da81db718612aa6f12ba27bd6db043e57c739e5f"
+    },
+    {
+      "pr": 166,
+      "base": "integration/continuum-sol-numeric-binding-20261026",
+      "baseSha": "da81db718612aa6f12ba27bd6db043e57c739e5f",
+      "head": "research/continuum-bottleneck-diagnosis-a-b-c-20261026",
+      "headSha": "736aa0d67f8045d055e15098a5c414525a6660fd",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "736aa0d67f8045d055e15098a5c414525a6660fd"
+    },
+    {
+      "pr": 167,
+      "base": "research/continuum-bottleneck-diagnosis-a-b-c-20261026",
+      "baseSha": "736aa0d67f8045d055e15098a5c414525a6660fd",
+      "head": "research/continuum-bottleneck-scorecard-local-escalation-20261026",
+      "headSha": "9a4f0632af2ef6d5ecc017eee009fccfe6969172",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "9a4f0632af2ef6d5ecc017eee009fccfe6969172"
+    },
+    {
+      "pr": 168,
+      "base": "research/continuum-bottleneck-diagnosis-a-b-c-20261026",
+      "baseSha": "736aa0d67f8045d055e15098a5c414525a6660fd",
+      "head": "research/continuum-virtual-model-fabric-20261026",
+      "headSha": "78ceeeb863a3806b0bc088a4a2c2544d96be24cd",
+      "state": "open",
+      "draft": true,
+      "headIsAncestorOfFinalCode": true,
+      "mergeBaseWithFinalCode": "78ceeeb863a3806b0bc088a4a2c2544d96be24cd"
+    }
+  ]
+}

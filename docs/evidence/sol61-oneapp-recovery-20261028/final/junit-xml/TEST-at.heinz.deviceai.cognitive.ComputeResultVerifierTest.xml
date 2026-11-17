@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ComputeResultVerifierTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:23" hostname="b50d54a1ac03" time="0.01">
+  <properties/>
+  <testcase name="cancellationAndLateSubmissionFailClosed" classname="at.heinz.deviceai.cognitive.ComputeResultVerifierTest" time="0.003"/>
+  <testcase name="revokedNodeOrPrivateKeyContextRejected" classname="at.heinz.deviceai.cognitive.ComputeResultVerifierTest" time="0.002"/>
+  <testcase name="oneShotPreventsDuplicateOrWrongNodeResult" classname="at.heinz.deviceai.cognitive.ComputeResultVerifierTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

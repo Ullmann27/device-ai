@@ -1,0 +1,180 @@
+{
+  "sourceCommit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+  "includedIn": "android-junit.tar.gz",
+  "countsAreSubsetOfFullAndroid": true,
+  "suites": [
+    {
+      "report": "TEST-at.heinz.deviceai.learning.LearningExperienceStoreTest.xml",
+      "class": "at.heinz.deviceai.learning.LearningExperienceStoreTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testCases": [
+        {
+          "name": "fullLegacyLedgerRefusesLowTrustChurnThenMigratesProtectedOverflow",
+          "status": "passed"
+        },
+        {
+          "name": "checksumAndContentHashRejectTampering",
+          "status": "passed"
+        },
+        {
+          "name": "persistentTypedReplayIsBoundedAndDeduplicated",
+          "status": "passed"
+        },
+        {
+          "name": "storeKeepsOnlyNewestBoundedReplayWindow",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.xml",
+      "class": "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testCases": [
+        {
+          "name": "invalidLegacyPrimaryCannotMigrateOrOverwriteBackup",
+          "status": "passed"
+        },
+        {
+          "name": "oversizedPrimaryIsRejectedBeforeWholeFileAllocation",
+          "status": "passed"
+        },
+        {
+          "name": "seededHoldoutInterleavesRestartDuplicateStatusAndReplay",
+          "status": "passed"
+        },
+        {
+          "name": "independentProcessesCannotLoseConcurrentAppendsOrRevocation",
+          "status": "passed"
+        },
+        {
+          "name": "symlinksForSegmentDirectoryFilesAndLockAreRejected",
+          "status": "passed"
+        },
+        {
+          "name": "migrationDoesNotResurrectRevokedRecordWhenOldInputIsReappended",
+          "status": "passed"
+        },
+        {
+          "name": "interruptedLaterWriteCannotUndoCommittedRevocation",
+          "status": "passed"
+        },
+        {
+          "name": "missingOrCorruptCommittedSegmentsNeverFallBackToLegacy",
+          "status": "passed"
+        },
+        {
+          "name": "hardCapacityRefusesOverflowWithoutChangingAnyCommittedRecord",
+          "status": "passed"
+        },
+        {
+          "name": "cachedFingerprintStillDetectsSameLengthSegmentTampering",
+          "status": "passed"
+        },
+        {
+          "name": "unknownManifestVersionWithValidChecksumIsRejected",
+          "status": "passed"
+        },
+        {
+          "name": "protected257thRecordSurvivesRestartWithoutLosingLegacyBytes",
+          "status": "passed"
+        },
+        {
+          "name": "missingOrDamagedManifestCannotReopenOriginalSnapshot",
+          "status": "passed"
+        },
+        {
+          "name": "rootDirectorySymlinkIsRejected",
+          "status": "passed"
+        },
+        {
+          "name": "restartAfterInterruptedMigrationKeepsOriginalThenSafelyRetries",
+          "status": "passed"
+        },
+        {
+          "name": "terminatedWriterBeforeManifestCommitLeavesOldCompleteState",
+          "status": "passed"
+        },
+        {
+          "name": "largeUnicodeRecordsMigrateBeforeLegacyByteLimitWithoutTruncation",
+          "status": "passed"
+        },
+        {
+          "name": "thousandDaysAtFourRecordsPerDayRetainEveryRecordAndRevocation",
+          "status": "passed"
+        },
+        {
+          "name": "uncertainFailureAfterCommitLeavesCompleteNewStateAndIdempotentRetry",
+          "status": "passed"
+        },
+        {
+          "name": "byteAndBatchLimitsRefuseBeforeChangingCommittedState",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.PersonalLearningTransferTest.xml",
+      "class": "at.heinz.deviceai.learning.PersonalLearningTransferTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testCases": [
+        {
+          "name": "realLedgerExportPreservesFactsAndRevocationsWithoutChangingSource",
+          "status": "passed"
+        },
+        {
+          "name": "nearMaximumLex3BytesExportCompletelyWithMaximumPackageLength",
+          "status": "passed"
+        },
+        {
+          "name": "sourceClaimsTrainingAndCommandsNeverBecomeAutomaticallyConfirmedFacts",
+          "status": "passed"
+        },
+        {
+          "name": "incomingRevocationsAndMissingTombstonesArePreservedForExplicitReview",
+          "status": "passed"
+        },
+        {
+          "name": "previewIsIdempotentAndDoesNotMutateActualTargetLedger",
+          "status": "passed"
+        },
+        {
+          "name": "targetRevocationCannotBeUndoneEvenByNewerLookingBackup",
+          "status": "passed"
+        },
+        {
+          "name": "boundedCountsDuplicateIdsAndInvalidSourceAreRejected",
+          "status": "passed"
+        },
+        {
+          "name": "malformedChecksumTrailingDataUnknownSchemaAndHugeInputAreRejected",
+          "status": "passed"
+        },
+        {
+          "name": "capacityPressureIsExplicitAndDoesNotEvictExistingProtectedRecords",
+          "status": "passed"
+        },
+        {
+          "name": "documentReaderBoundsEmptyReadsSizeAndInterruption",
+          "status": "passed"
+        },
+        {
+          "name": "segmentedLedgerExportRoundTripsRevocationAndLargeTargetPreview",
+          "status": "passed"
+        }
+      ]
+    }
+  ]
+}

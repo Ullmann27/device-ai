@@ -1,0 +1,44 @@
+{
+  "verifiedAtUtc": "2026-10-26T03:03:13.453808+00:00",
+  "scope": "Remote snapshot before final docs-only verification receipt; parent head advances only for this receipt/typo correction",
+  "remoteHeads": {
+    "main": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+    "sol/cdx-generation-repair-20261026": "e53c91404fce44ac32aa448b901a9eeeb90d2431",
+    "sol/coding-discovery-safety-20261026": "fd6d96ee239a5c48ca562d1837146dcd5a6319a3",
+    "sol/continuum-brain-breakthroughs-20261026": "4f7e1401d7f18ed6783c674c48082ca1e6339fdf",
+    "sol/continuum-infrastructure-repair-20261025": "ad14f8b82f9be2cd0026bc16eef71a16bec41424",
+    "sol/deepseek-authenticated-bridge-20261026": "2fb604609d8f7c86ec49fe5ebd4d9158b80beb5a",
+    "sol/grounding-relations-20261026": "b41408b3cae889b4727b00648a0340419298b1f0"
+  },
+  "worktrees": {
+    "parent": {
+      "head": "4f7e1401d7f18ed6783c674c48082ca1e6339fdf",
+      "cleanBeforeFinalEvidenceCommit": false
+    },
+    "cdx": {
+      "head": "e53c91404fce44ac32aa448b901a9eeeb90d2431",
+      "cleanBeforeFinalEvidenceCommit": true
+    },
+    "grounding": {
+      "head": "b41408b3cae889b4727b00648a0340419298b1f0",
+      "cleanBeforeFinalEvidenceCommit": true
+    },
+    "coding": {
+      "head": "fd6d96ee239a5c48ca562d1837146dcd5a6319a3",
+      "cleanBeforeFinalEvidenceCommit": true
+    },
+    "deepseek": {
+      "head": "2fb604609d8f7c86ec49fe5ebd4d9158b80beb5a",
+      "cleanBeforeFinalEvidenceCommit": true
+    }
+  },
+  "parentPendingFiles": "Only final handoff typo correction and this receipt; executable source remains cf96c19f",
+  "mainUnchanged": true,
+  "pr150Unchanged": true,
+  "activeResearchProcesses": "None found by final process inspection; sibling agents independently report no model/Docker/fixture processes",
+  "ownerWeightsOrMemoryModified": false,
+  "mainMerged": false,
+  "signedOrInstalledApk": false,
+  "sourceReviews": "NOT_RUN_OWNER_STOP",
+  "fullNewAndroidSuite": "NOT_RUN_OWNER_STOP"
+}

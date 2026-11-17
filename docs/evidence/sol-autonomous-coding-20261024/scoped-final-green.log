@@ -1,0 +1,45 @@
+✔ coding agent has one integrated entry from Android home, no second app (0.868882ms)
+✔ developer speech uses actual German Android recognizer and a unique callback (0.802822ms)
+✔ voice text is always previewed; neither recognition nor chat command executes code (0.637152ms)
+✔ existing mobile builder remains opt-in, not falsely labelled an app generator (0.229256ms)
+✔ retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies (45.761645ms)
+✔ reads committed blobs even when working sources are changed or symlinked (22.323575ms)
+✔ indexes JavaScript literal imports and symbols without executing repository code (23.11474ms)
+✔ does not resolve import text from comments, quoted strings or template literals (23.370826ms)
+✔ fails closed for stale commits and abbreviated or option-shaped commit selectors (22.044574ms)
+✔ rejects grants outside the repository or protected control and secret paths (21.438704ms)
+✔ rejects tracked symlink grants and skips symlinks from wider inventory (38.977367ms)
+✔ wider inventory excludes signing, workflow and secret files without leaking content (25.269805ms)
+✔ keeps the complete JSON within the hard budget and prioritizes diagnostic lines (317.822392ms)
+✔ rejects overlarge granted sources before reading their full contents (20.636687ms)
+✔ query and diagnostics remain inert data and cannot redirect source paths (21.244786ms)
+✔ search operates on serializable bounded ranges and enforces its result cap (24.112227ms)
+✔ rejects an exhausted retrieval deadline before invoking Git (14.013705ms)
+✔ limits returned source ranges even when many declarations match the query (102.131109ms)
+✔ typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source (657.940508ms)
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (88.077714ms)
+✔ typed task pins scope, source, acceptance and resource bounds (21.695336ms)
+✔ structured proposal is data only and cannot widen task scope (3.464843ms)
+✔ owner worker refuses a supplied untrusted executor before claim or checks (61.902181ms)
+✔ scoped task identity and commit are checked before claiming the owner task (112.811239ms)
+✔ scoped revision receives actual failed diagnostics and bounded history then verifies independently (1426.591109ms)
+✔ repeated scoped patch is rejected without a second candidate check (387.682566ms)
+✔ scoped proposals cannot edit outside task grants or change context commit (736.92356ms)
+✔ scoped pure numeric changes can cover two files on the host (787.146072ms)
+✔ general scoped source is blocked before executing candidate code without isolation (311.65123ms)
+✔ new coding and isolation control files stay protected by the critic (0.270649ms)
+✔ general scoped proposals cannot mutate test APIs or write their own reports (0.345812ms)
+✔ scoped successes remain owner-review evidence without automatic learning (0.566456ms)
+✔ scoped provider failures count against the fixed model-call budget (288.398635ms)
+✔ total scoped candidate limit bounds revisions even when model budget remains (551.029054ms)
+✔ local teamleader forwards the scoped provider through the canonical owner worker (1348.656859ms)
+✔ coding loopback uses bounded structured schema and accepts relevant larger context (34.782175ms)
+✔ coding output cannot add tools, duplicate paths, unknown files or blank hunks (3.396759ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8240.736126

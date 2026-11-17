@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.WorkflowReviewTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:33" hostname="0f4ac18d136f" time="0.085">
+  <properties/>
+  <testcase name="staleDispatchCannotReusePreviousObservation" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.052"/>
+  <testcase name="searchNeverBecomesSend" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.01"/>
+  <testcase name="observationsNeverMoveBackwards" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.001"/>
+  <testcase name="stopAndForeignIdentityRemainBlocked" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.0"/>
+  <testcase name="completedStepCannotDispatchTwice" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.0"/>
+  <testcase name="lateFailureDoesNotPauseSuccessor" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.005"/>
+  <testcase name="lateOldObservationCannotPoisonNewStepVerification" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.004"/>
+  <testcase name="freshSuccessorNeedsItsOwnObservation" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.0"/>
+  <testcase name="preservesDraftPunctuation" classname="at.heinz.deviceai.cognitive.WorkflowReviewTest" time="0.012"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

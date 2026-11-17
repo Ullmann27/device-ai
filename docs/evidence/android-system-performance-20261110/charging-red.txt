@@ -1,0 +1,162 @@
+test_apk_build_key_binds_split_hashes_and_os (test_system_capture.SystemCaptureTest.test_apk_build_key_binds_split_hashes_and_os) ... ok
+test_battery_uses_scale_and_status (test_system_capture.SystemCaptureTest.test_battery_uses_scale_and_status) ... ok
+test_bounds_rejected_before_device_access (test_system_capture.SystemCaptureTest.test_bounds_rejected_before_device_access) ... ok
+test_capture_preserves_unavailable_and_private_serial (test_system_capture.SystemCaptureTest.test_capture_preserves_unavailable_and_private_serial) ... ok
+test_charging_status_does_not_require_power_source_fields (test_system_capture.SystemCaptureTest.test_charging_status_does_not_require_power_source_fields) ... FAIL
+test_frame_bound_does_not_silently_truncate (test_system_capture.SystemCaptureTest.test_frame_bound_does_not_silently_truncate) ... ok
+test_frame_boundary_excludes_old_and_duplicate_frames (test_system_capture.SystemCaptureTest.test_frame_boundary_excludes_old_and_duplicate_frames) ... ok
+test_missing_battery_is_not_zero_or_unplugged (test_system_capture.SystemCaptureTest.test_missing_battery_is_not_zero_or_unplugged) ... ok
+test_no_baseline_or_new_frames_is_unavailable (test_system_capture.SystemCaptureTest.test_no_baseline_or_new_frames_is_unavailable) ... ok
+test_plugged_full_and_not_charging_are_not_charging (test_system_capture.SystemCaptureTest.test_plugged_full_and_not_charging_are_not_charging) ... 
+  test_plugged_full_and_not_charging_are_not_charging (test_system_capture.SystemCaptureTest.test_plugged_full_and_not_charging_are_not_charging) (status=3) ... FAIL
+  test_plugged_full_and_not_charging_are_not_charging (test_system_capture.SystemCaptureTest.test_plugged_full_and_not_charging_are_not_charging) (status=4) ... FAIL
+  test_plugged_full_and_not_charging_are_not_charging (test_system_capture.SystemCaptureTest.test_plugged_full_and_not_charging_are_not_charging) (status=5) ... FAIL
+test_requires_consent_without_device_access (test_system_capture.SystemCaptureTest.test_requires_consent_without_device_access) ... ok
+test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) ... 
+  test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='') ... FAIL
+  test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='status: 1\n') ... FAIL
+  test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='status: 0\n') ... FAIL
+  test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='status: 6\n') ... FAIL
+  test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='status: 22\n') ... FAIL
+test_storage_units_and_invalid_data (test_system_capture.SystemCaptureTest.test_storage_units_and_invalid_data) ... ok
+test_untrusted_package_path_never_becomes_command (test_system_capture.SystemCaptureTest.test_untrusted_package_path_never_becomes_command) ... ok
+
+======================================================================
+FAIL: test_charging_status_does_not_require_power_source_fields (test_system_capture.SystemCaptureTest.test_charging_status_does_not_require_power_source_fields)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 35, in test_charging_status_does_not_require_power_source_fields
+    self.assertEqual(capture.battery_conditions("level: 80\nscale: 100\nstatus: 2\n"), (80, True))
+AssertionError: Tuples differ: (80, None) != (80, True)
+
+First differing element 1:
+None
+True
+
+- (80, None)
++ (80, True)
+
+======================================================================
+FAIL: test_plugged_full_and_not_charging_are_not_charging (test_system_capture.SystemCaptureTest.test_plugged_full_and_not_charging_are_not_charging) (status=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 25, in test_plugged_full_and_not_charging_are_not_charging
+    self.assertEqual(capture.battery_conditions(f"level: 100\nscale: 100\nstatus: {status}\n"
+AssertionError: Tuples differ: (100, True) != (100, False)
+
+First differing element 1:
+True
+False
+
+- (100, True)
++ (100, False)
+
+======================================================================
+FAIL: test_plugged_full_and_not_charging_are_not_charging (test_system_capture.SystemCaptureTest.test_plugged_full_and_not_charging_are_not_charging) (status=4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 25, in test_plugged_full_and_not_charging_are_not_charging
+    self.assertEqual(capture.battery_conditions(f"level: 100\nscale: 100\nstatus: {status}\n"
+AssertionError: Tuples differ: (100, True) != (100, False)
+
+First differing element 1:
+True
+False
+
+- (100, True)
++ (100, False)
+
+======================================================================
+FAIL: test_plugged_full_and_not_charging_are_not_charging (test_system_capture.SystemCaptureTest.test_plugged_full_and_not_charging_are_not_charging) (status=5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 25, in test_plugged_full_and_not_charging_are_not_charging
+    self.assertEqual(capture.battery_conditions(f"level: 100\nscale: 100\nstatus: {status}\n"
+AssertionError: Tuples differ: (100, True) != (100, False)
+
+First differing element 1:
+True
+False
+
+- (100, True)
++ (100, False)
+
+======================================================================
+FAIL: test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 31, in test_status_unknown_or_missing_stays_unknown_when_plugged
+    self.assertEqual(capture.battery_conditions("level: 75\nscale: 100\n" + status_line +
+AssertionError: Tuples differ: (75, True) != (75, None)
+
+First differing element 1:
+True
+None
+
+- (75, True)
++ (75, None)
+
+======================================================================
+FAIL: test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='status: 1\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 31, in test_status_unknown_or_missing_stays_unknown_when_plugged
+    self.assertEqual(capture.battery_conditions("level: 75\nscale: 100\n" + status_line +
+AssertionError: Tuples differ: (75, True) != (75, None)
+
+First differing element 1:
+True
+None
+
+- (75, True)
++ (75, None)
+
+======================================================================
+FAIL: test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='status: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 31, in test_status_unknown_or_missing_stays_unknown_when_plugged
+    self.assertEqual(capture.battery_conditions("level: 75\nscale: 100\n" + status_line +
+AssertionError: Tuples differ: (75, True) != (75, None)
+
+First differing element 1:
+True
+None
+
+- (75, True)
++ (75, None)
+
+======================================================================
+FAIL: test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='status: 6\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 31, in test_status_unknown_or_missing_stays_unknown_when_plugged
+    self.assertEqual(capture.battery_conditions("level: 75\nscale: 100\n" + status_line +
+AssertionError: Tuples differ: (75, True) != (75, None)
+
+First differing element 1:
+True
+None
+
+- (75, True)
++ (75, None)
+
+======================================================================
+FAIL: test_status_unknown_or_missing_stays_unknown_when_plugged (test_system_capture.SystemCaptureTest.test_status_unknown_or_missing_stays_unknown_when_plugged) (status_line='status: 22\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/cc2ab95db73d/system-measurements/tools/fold7_quality_lab/tests/test_system_capture.py", line 31, in test_status_unknown_or_missing_stays_unknown_when_plugged
+    self.assertEqual(capture.battery_conditions("level: 75\nscale: 100\n" + status_line +
+AssertionError: Tuples differ: (75, True) != (75, None)
+
+First differing element 1:
+True
+None
+
+- (75, True)
++ (75, None)
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.010s
+
+FAILED (failures=9)

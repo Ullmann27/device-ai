@@ -1,0 +1,30 @@
+{
+  "id": "C016",
+  "question": "Wo steht Zyvojumu?",
+  "sources": [
+    {
+      "revision": 2,
+      "sha256": "0516060770625716121c9861ed052e58c45f640698982912307ecd0670fdfd77",
+      "sourceId": "bc:C016:s1",
+      "text": "Qejifela steht in Uvtedipi. Qemocoke steht in Uvmomomi."
+    },
+    {
+      "revision": 3,
+      "sha256": "fc8037384a2f47b558e2035f4212ce5bf6bf78400d9c63629c080bc81c6ddaa9",
+      "sourceId": "bc:C016:s2",
+      "text": "Qevizebi steht in Uvmafefu. Qemocoke steht in Uvmomomi."
+    },
+    {
+      "revision": 4,
+      "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+      "sourceId": "bc:C016:s3",
+      "text": "Zyvojumu steht in Uvpatema."
+    },
+    {
+      "revision": 5,
+      "sha256": "46322068212822e10e2dd4cc0cb67917c61ef6bab43e71276dbbd96bab59c5bc",
+      "sourceId": "bc:C016:s4",
+      "text": "Qesazeju steht in Uvrisado. Qemocoke steht in Uvmomomi."
+    }
+  ]
+}

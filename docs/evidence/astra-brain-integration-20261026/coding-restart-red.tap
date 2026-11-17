@@ -1,0 +1,51 @@
+✖ infrastructure failures without executed failed tests do not blacklist a candidate after restart (741.578163ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 956.445693
+
+✖ failing tests:
+
+test at .github/continuum/scoped-repair-pipeline.test.mjs:197:1
+✖ infrastructure failures without executed failed tests do not blacklist a candidate after restart (741.578163ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   {
+  +     candidate: 'acdd4d74462807e6',
+  +     diagnostic: 'node-continuum executed=0 failed=0 skipped=0',
+  +     hypothesis: '',
+  +     outcome: 'FAILED_TESTS'
+  +   },
+  +   {
+  +     candidate: 'fd88e076391488aa',
+  +     diagnostic: 'CODING_REPEATED_PATCH',
+  +     hypothesis: '',
+  +     outcome: 'REJECTED_MODEL_OUTPUT'
+  +   },
+  +   {
+  +     candidate: 'fd88e076391488aa',
+  +     diagnostic: 'CODING_REPEATED_PATCH',
+  +     hypothesis: '',
+  +     outcome: 'REJECTED_MODEL_OUTPUT'
+  +   }
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/scoped-repair-pipeline.test.mjs:204:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { candidate: 'acdd4d74462807e6', outcome: 'FAILED_TESTS', hypothesis: '', diagnostic: 'node-continuum executed=0 failed=0 skipped=0' }, { candidate: 'fd88e076391488aa', outcome: 'REJECTED_MODEL_OUTPUT', diagnostic: 'CODING_REPEATED_PATCH', hypothesis: '' }, { candidate: 'fd88e076391488aa', outcome: 'REJECTED_MODEL_OUTPUT', diagnostic: 'CODING_REPEATED_PATCH', hypothesis: '' } ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,456 @@
+{
+  "status": "WIP_HOST_TARGETED_PASS_FULL_RERUN_PENDING",
+  "runs": [
+    {
+      "label": "camera-drift-and-corner",
+      "baseCommit": "565f97fc0157357e488eb1b34ebf11d28582353e",
+      "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+      "startedUtc": "2026-11-06T02:52:02.877123+00:00",
+      "endedUtc": "2026-11-06T02:52:29.073038+00:00",
+      "exitCode": 0,
+      "sourceUnchangedDuringRun": true,
+      "allSourceManifestSha256": "37880051f971261540abb727410150b0fa3fe940122506248ff5fe1b4e4072c4",
+      "sourceManifest": {
+        "app/src/main/assets/avatar3d/continuum-avatar.glb": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "997101c83d5f7bdfda883aa83b7c7c1339648695bfea303cb68490ff3cc3576f",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraFraming.kt": "94f3cbccf652830d82f729fc88db9f3ef9f801961dd14051a46c761409ee249a",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraMotion.kt": "b46dde7eba334e651c68a1c9154781c62197d89bc2cb949099af978236ab6a6c",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "180aa7ae684feaf4c69d450b8ca1af6f73b44771d584f277b8edfb68610bacf3",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt": "23fce88c2ab3d4601cbabd05ba04a075a3c38229dd3a02f48cdfdaa4e4b5e96e",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraFramingTest.kt": "77c87475afcc5047ca32e1c94fb2433e39968584c1098934f975c80354d687a8",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraMotionTest.kt": "4fdd085c5c22d69b8b1b0601cfa24d8a7d4ff7d009c0ad6da74a7659b89e0ce9",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarFramingTest.kt": "f5d294ce79ac399221841fdcb5f1c7f2c50376d57cb4b46bd46355a2d587311d",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt": "0aa5f09878ab468bde1be4ecbd6db0e9ce64641c8680cab03feb37a32320f8e3",
+        "app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt": "f5262009151bfec9b934d5ae44bcd9341a555e220058632a6d1dc13cbda7cfe9"
+      },
+      "suites": [
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarCameraFramingTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "366edcd8d72e9cc3c882b0ce9ae8e77f94c23a21c1eb7f4914fd0d1d17598988"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarFramingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "e00f4d6e2c8f26dda6ff8feb8dffc88a0f3501118470b30dda21f51b2358cd8b"
+        }
+      ],
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 5,
+      "command": [
+        "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+        "--offline",
+        "--no-daemon",
+        "--max-workers=2",
+        "--console=plain",
+        "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-I",
+        "/workspace/scratch/faf5b489dd1c/build-env/observe-tests.init.gradle",
+        "-PcontinuumUiWidgetTests=true",
+        ":app:testDebugUnitTest",
+        "--tests",
+        "at.heinz.deviceai.avatar3d.AvatarFramingTest.cameraFlightWithTheExistingIdleDriftClearsTheDialogue",
+        "--tests",
+        "at.heinz.deviceai.avatar3d.AvatarCameraFramingTest"
+      ]
+    },
+    {
+      "label": "camera-final",
+      "baseCommit": "565f97fc0157357e488eb1b34ebf11d28582353e",
+      "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+      "startedUtc": "2026-11-06T02:53:41.520217+00:00",
+      "endedUtc": "2026-11-06T02:59:28.194170+00:00",
+      "exitCode": 1,
+      "sourceUnchangedDuringRun": true,
+      "allSourceManifestSha256": "0bb6d7e550ec2a4929ef40a101f142189ed8ce2250a78d6b7ce11dfddf0d86aa",
+      "sourceManifest": {
+        "app/src/main/assets/avatar3d/continuum-avatar.glb": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "1d21a84e49292f4b850fc7fa1865166f9537d8f80c8258b2e374bf6d3dda7a01",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraFraming.kt": "94f3cbccf652830d82f729fc88db9f3ef9f801961dd14051a46c761409ee249a",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraMotion.kt": "b46dde7eba334e651c68a1c9154781c62197d89bc2cb949099af978236ab6a6c",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "180aa7ae684feaf4c69d450b8ca1af6f73b44771d584f277b8edfb68610bacf3",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt": "23fce88c2ab3d4601cbabd05ba04a075a3c38229dd3a02f48cdfdaa4e4b5e96e",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraFramingTest.kt": "77c87475afcc5047ca32e1c94fb2433e39968584c1098934f975c80354d687a8",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraMotionTest.kt": "4fdd085c5c22d69b8b1b0601cfa24d8a7d4ff7d009c0ad6da74a7659b89e0ce9",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarFramingTest.kt": "f5d294ce79ac399221841fdcb5f1c7f2c50376d57cb4b46bd46355a2d587311d",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt": "22db996192ccede98a7ea8076cb6fa392fbcde318ae9c9fc5b65f81b9def012b",
+        "app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt": "f5262009151bfec9b934d5ae44bcd9341a555e220058632a6d1dc13cbda7cfe9"
+      },
+      "suites": [
+        {
+          "suite": "at.heinz.deviceai.ContinuumAuraLifecycleUiTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "465609f3aff2e632b0000dfb2aa292eadbf42cbeafc9d971cad23af1ffdf73fa"
+        },
+        {
+          "suite": "at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "1670da58d40fa641952545cbfbe5f21580c55114ecc9c786d0e08dc01fccaa6b"
+        },
+        {
+          "suite": "at.heinz.deviceai.ContinuumHologramMotionUiTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "3b57e0da9b586ccc6a4214d0d0bd838109609561d4bf9c99364b5f3e626432e0"
+        },
+        {
+          "suite": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+          "tests": 8,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "4dbab34be79e6eb84e00bb3e61340b560025885819be2c008409ca51d3593ae2",
+          "failedTests": [
+            {
+              "test": "cameraStopsImmediatelyAndDoesNotReplayAfterLifecycleBoundaries",
+              "message": "java.lang.AssertionError: Lost focus resets immediately expected:<0.0> but was:<1.0>"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.ContinuumWorkWindowScrollUiTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "5091fd29f420fa2675b500a68b417aadcff275ea094a1066a9f94f33c867dbb4"
+        },
+        {
+          "suite": "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "029d3d8f2d54aebbf3c55f02633ee2da8f1ecb5fc28ae3b09d4df1179b66fb2e"
+        },
+        {
+          "suite": "at.heinz.deviceai.JarvisWorkWindowUiTest",
+          "tests": 7,
+          "failures": 6,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "b3e1e91a856f32746075c2d8d0a26b6d811dc2f5b8245483008684979910c20f",
+          "failedTests": [
+            {
+              "test": "detachingReleasesFrameSubscription",
+              "message": "java.lang.NoSuchMethodException: at.heinz.deviceai.ui.JarvisWorkWindow.open(android.view.View,android.graphics.RectF,android.graphics.RectF,java.lang.String,java.util.List,kotlin.jvm.functions.Function0,kotlin.jvm.functions.Function0)"
+            },
+            {
+              "test": "reducedMotionSettlesBothDirectionsOnNextSuppliedFrame",
+              "message": "java.lang.NoSuchMethodException: at.heinz.deviceai.ui.JarvisWorkWindow.open(android.view.View,android.graphics.RectF,android.graphics.RectF,java.lang.String,java.util.List,kotlin.jvm.functions.Function0,kotlin.jvm.functions.Function0)"
+            },
+            {
+              "test": "protectedAreaRemainsTransparentDuringOpening",
+              "message": "java.lang.NoSuchMethodException: at.heinz.deviceai.ui.JarvisWorkWindow.open(android.view.View,android.graphics.RectF,android.graphics.RectF,java.lang.String,java.util.List,kotlin.jvm.functions.Function0,kotlin.jvm.functions.Function0)"
+            },
+            {
+              "test": "outsideAndProtectedTouchesReachCockpit",
+              "message": "java.lang.NoSuchMethodException: at.heinz.deviceai.ui.JarvisWorkWindow.open(android.view.View,android.graphics.RectF,android.graphics.RectF,java.lang.String,java.util.List,kotlin.jvm.functions.Function0,kotlin.jvm.functions.Function0)"
+            },
+            {
+              "test": "immediateCloseReleasesBodyAndCallbackExactlyOnce",
+              "message": "java.lang.NoSuchMethodException: at.heinz.deviceai.ui.JarvisWorkWindow.open(android.view.View,android.graphics.RectF,android.graphics.RectF,java.lang.String,java.util.List,kotlin.jvm.functions.Function0,kotlin.jvm.functions.Function0)"
+            },
+            {
+              "test": "suppliedFramesOpenExistingBodyAndKeepCloseOutsideScroll",
+              "message": "java.lang.NoSuchMethodException: at.heinz.deviceai.ui.JarvisWorkWindow.open(android.view.View,android.graphics.RectF,android.graphics.RectF,java.lang.String,java.util.List,kotlin.jvm.functions.Function0,kotlin.jvm.functions.Function0)"
+            }
+          ]
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "0c4dc0a08f0a5bfe9ec67db91df9df7b64433bb50cdd36c5d2e2f11acadfd503"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "5e552f789bb762b6444a589173e398c428cd74c8a0190f5e2a4a132c3532d094"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarAssetProvenanceTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "5ed5b89bec50a1e6d4490e24c9e7721a8d41a7d13e776b73f942f9940dafec8e"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarBlinkEasingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "b387cce38a028f95ada0650bef11afb3d8a54f78bc2a44c8204b463ed914fe27"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarCameraFramingTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "9a13cb2a32024564b19bebe1ac1389d2f222b72a4e3f18641396d7b2d01d3136"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarCameraMotionTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "06c182f54a8d0fe59a7d543c808e49a8e945a92e6ea3faa66d8edb5b79d3566b"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarFramingTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "d09607134585675e4e0ee5b8b96f2c9c63eb3c4b25345f78eaffe2e8548b7fe8"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarHeadFollowTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "7a18ca2352352c63619111fd0c269278eedf91a8bae2b0465165f9576efecc94"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "356dd43a7f501d70ec0f825c12a0baa7b039ea260d247283effc21b81fa401a6"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "2f2e500c1c2f53b9849081b0ed33e10d4ddc47da991d3dc3db2fb1104f3ea583"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "b2220df7d634944610b566c04daac7d719194035609e4b7206822083a477a305"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "60d0d7d36a8d016067d70aed867d82b4d865a3c79f6bfb1bfbdd4b64fc7ddfbc"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "fa22f3cdd225414567b64e4928966b702d68e0e24eac2bef9ef70c3ec0167c70"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarNaturalBlinkTimingTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "47aa940d71898b0bf094ce0d9817a19590dbd77d3a51b0462db0655b650f937f"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarNeckSplitTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "5321d9e3296beba1cb41db82cb9c1519d749b4d0f3fcc205bb708529d3d8b976"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarPortraitFramingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "1ac95dbd18e1e6c59ed4779cd624f92273b9e351273a4b4e54be72826d288066"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarSpeechAccentTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "fef2299b6a02a9e541cb71d75b6ffc028d65a68a28aed0a6563396399fdcb8b3"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.AvatarSpeechPipelineTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "e0ab4c84ea8d9c9a70772699e74b42cef30199fe474f227681bd7310c381277d"
+        },
+        {
+          "suite": "at.heinz.deviceai.avatar3d.OrthographicCockpitProbeTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "2eb194be44aa6b19fc8011d0040b72408055a6eaa523ad711b01170ed98684b4"
+        },
+        {
+          "suite": "at.heinz.deviceai.ui.JarvisDeckClearanceTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "89f8455d645d5004738443030de6369105fbbf991daff59d05bb3ce0ee873212"
+        },
+        {
+          "suite": "at.heinz.deviceai.ui.JarvisHeaderBrandFitTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "27ac7faff66703c9a746eec22e214f71880f88a3f7d97b8dd4538d3a68196344"
+        }
+      ],
+      "tests": 120,
+      "failures": 7,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 113,
+      "command": [
+        "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+        "--offline",
+        "--no-daemon",
+        "--max-workers=2",
+        "--console=plain",
+        "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-I",
+        "/workspace/scratch/faf5b489dd1c/build-env/observe-tests.init.gradle",
+        "-PcontinuumUiWidgetTests=true",
+        ":app:testDebugUnitTest",
+        "--tests",
+        "at.heinz.deviceai.avatar3d.*",
+        "--tests",
+        "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+        "--tests",
+        "at.heinz.deviceai.ContinuumAuraLifecycleUiTest",
+        "--tests",
+        "at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest",
+        "--tests",
+        "at.heinz.deviceai.ContinuumHologramMotionUiTest",
+        "--tests",
+        "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+        "--tests",
+        "at.heinz.deviceai.JarvisWorkWindowUiTest",
+        "--tests",
+        "at.heinz.deviceai.ContinuumWorkWindowScrollUiTest",
+        "--tests",
+        "at.heinz.deviceai.ui.JarvisHeaderBrandFitTest",
+        "--tests",
+        "at.heinz.deviceai.ui.JarvisDeckClearanceTest",
+        ":app:lintDebug"
+      ]
+    },
+    {
+      "label": "camera-fixture-fixes",
+      "baseCommit": "565f97fc0157357e488eb1b34ebf11d28582353e",
+      "environment": "HOST_GRADLE_ROBOLECTRIC_NOT_DEVICE",
+      "startedUtc": "2026-11-06T03:01:27.113808+00:00",
+      "endedUtc": "2026-11-06T03:03:20.326240+00:00",
+      "exitCode": 0,
+      "sourceUnchangedDuringRun": true,
+      "allSourceManifestSha256": "e732a754ada9c84410f0cc51236998edcdb2de078c0b4d58f4888c65f76d5922",
+      "sourceManifest": {
+        "app/src/main/assets/avatar3d/continuum-avatar.glb": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "1d21a84e49292f4b850fc7fa1865166f9537d8f80c8258b2e374bf6d3dda7a01",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraFraming.kt": "94f3cbccf652830d82f729fc88db9f3ef9f801961dd14051a46c761409ee249a",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarCameraMotion.kt": "b46dde7eba334e651c68a1c9154781c62197d89bc2cb949099af978236ab6a6c",
+        "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "180aa7ae684feaf4c69d450b8ca1af6f73b44771d584f277b8edfb68610bacf3",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt": "23fce88c2ab3d4601cbabd05ba04a075a3c38229dd3a02f48cdfdaa4e4b5e96e",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraFramingTest.kt": "77c87475afcc5047ca32e1c94fb2433e39968584c1098934f975c80354d687a8",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarCameraMotionTest.kt": "4fdd085c5c22d69b8b1b0601cfa24d8a7d4ff7d009c0ad6da74a7659b89e0ce9",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarFramingTest.kt": "f5d294ce79ac399221841fdcb5f1c7f2c50376d57cb4b46bd46355a2d587311d",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt": "72cdcc0b05917172a97aa2e8cff7a68148986051276bd01d107c015a490920b1",
+        "app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt": "8ce170922721cca197b582c7c37f0a759aa1ea5621d9fbafab3d2956d2269359"
+      },
+      "suites": [
+        {
+          "suite": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "1f2f317604cebd782a97dee84c2360335fba2aed2f82395052e01d37809f0595"
+        },
+        {
+          "suite": "at.heinz.deviceai.JarvisWorkWindowUiTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xmlSha256": "19eb2a7360607f26fef5ef95c124469aa6a28ac4e6069b4b80e58dd9e4dc538d"
+        }
+      ],
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 8,
+      "command": [
+        "/workspace/scratch/19c84cfe59f9/build-env/toolchain/gradle-8.11.1/bin/gradle",
+        "--offline",
+        "--no-daemon",
+        "--max-workers=2",
+        "--console=plain",
+        "-Dorg.gradle.jvmargs=-Xmx1800m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-I",
+        "/workspace/scratch/faf5b489dd1c/build-env/observe-tests.init.gradle",
+        "-PcontinuumUiWidgetTests=true",
+        ":app:testDebugUnitTest",
+        "--tests",
+        "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.cameraStopsImmediatelyAndDoesNotReplayAfterLifecycleBoundaries",
+        "--tests",
+        "at.heinz.deviceai.JarvisWorkWindowUiTest"
+      ]
+    }
+  ],
+  "limitations": [
+    "No physical Fold7 or native Filament execution.",
+    "The Activity projection test injects original GLB metadata; lifecycle tests use the host view.",
+    "Full NewApi gate not completed in the failed 120-test run."
+  ]
+}

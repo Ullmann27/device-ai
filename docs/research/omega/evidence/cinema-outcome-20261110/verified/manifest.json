@@ -1,0 +1,21 @@
+{
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "c2eb3e7a8b7fb7ae3f070fff127b08df70310870614a2e09c917827cc6643cf0",
+    "app/src/main/java/at/heinz/deviceai/chief/TurnLifecycle.kt": "2ae5be8a93c4ac1addbc3f1f7a2a224a4716c296dfd135ab0d2f1d7406eaed7a",
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggers.kt": "6821ffa369cc0d17b162b7eb10cc8bee2bb7cf37a7d155ffbebb83f1d437013b",
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+    "app/src/test/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggersTest.kt": "5ec2bc63f3df1e62ff78667a2b843e2d7440f7890f441913d3283bcdbbfb49db",
+    "app/src/uiTest/java/at/heinz/deviceai/LocalTurnOutcomeUiTest.kt": "44895a52bbaf936658eb44a722a62ed1255b0ee834202de0db76ff9a43917b5f",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitPresentation.kt": "540c623f95829b668e1dad78a2809525079cdf133c305549c43ec0bfd09a2eec",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt": "7fd8a5e9736005ba9a496ebc04c035225949dba02183b19c1e597afb49ddbdc0",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt": "e78b3b9331b03592bb6507d8222089f8d08fc7a788d93a296f5b1f75a59f6462",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt": "624cd79f8cbd35cbeccebde76b1526fa8b584eafc2deaa0cf506c1aece62335c",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceOutcomeUiTest.kt": "f09d641f00bcb894d0a0fec4c10c628fd70f617e6e90406748b0183041cf6640",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt": "430e07aad5a079494a529728d60aff8f5fab67fdbb2e97beee71bd9159477c68",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt": "73b14e8b5dd010d282b9d2a20ce5ac7838b05924fdd48843752f6e807fd2ff4e",
+    "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt": "bc58a1c96ce687f0e3a9e058e26500260506caee056b6bc3a251450a715878ea"
+  },
+  "appDependencySha256": "cd03ed3a98c63754ad6f02324c383e548ce479a56b210e77b9ca9f8bf9fc9fb2",
+  "dependencySourceCommit": "ca839c0555c121b248b843c4030c0e928603a535",
+  "mode": "source-exact scoped Android compilation with frozen app dependencies"
+}

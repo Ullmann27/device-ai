@@ -1,0 +1,5 @@
+{
+  "target": "main",
+  "blocked": true,
+  "message": "Invalid target branch main"
+}

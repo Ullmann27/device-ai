@@ -1,0 +1,19 @@
+{
+  "commit": "414ce4a2d4643727757f16b4dac9624a8ff8801d",
+  "status": "PASS",
+  "counts": {
+    "tests": 1169,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": 224,
+  "stale": false,
+  "errors": [],
+  "gradleExit": 0,
+  "nodeExit": 0,
+  "fullSuiteCommand": ":app:testDebugUnitTest (no --tests filter)",
+  "executedOnDevice": false,
+  "modelInferenceVerified": false,
+  "qualityImprovementProven": false
+}

@@ -1,0 +1,24 @@
+✔ a projected real PDF remains visible through periodic state and transcript updates (300.43151ms)
+✔ native file and source controls never start the original demonstration (99.974868ms)
+✔ real telemetry stops the hidden simulation and keeps unknown readings unknown (99.622395ms)
+✔ a command draft survives native rejection and clears only after its matching acceptance (100.936729ms)
+✔ a late acceptance does not delete a new draft or a different conversation (103.770447ms)
+✔ long real commands and input selections use the native session and UTF-8 budget (99.451697ms)
+✔ actual busy, listening and speaking transitions drive the original scene without demo timers (128.457013ms)
+✔ telemetry history advances only for new actual measurements and preserves unavailable gaps (103.92369ms)
+✔ empty native history and native-ready captions replace demo content while retaining button icons (64.142158ms)
+✔ late message and document callbacks cannot cross conversation boundaries (62.165948ms)
+✔ chunked transcripts preserve long model responses and user scroll nodes on status refresh (73.625736ms)
+✔ native restore does not overwrite a local draft and oversize commands keep their synchronized draft (70.26453ms)
+✔ selecting a stored conversation closes the existing mobile drawer without replacing its controls (62.263489ms)
+✔ the original composer slot supports exact multiline paste, submit and native restore (56.338527ms)
+✔ typing before Android is ready is synchronized as soon as the first native session arrives (73.930325ms)
+✔ native draft revisions cannot restore consumed text or reset a newer local selection (92.239308ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2220.05204

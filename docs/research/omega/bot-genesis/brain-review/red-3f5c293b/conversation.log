@@ -1,0 +1,118 @@
+FAIL selected-private-notes-and-history-exclude-other-bots-and-owner-facts: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$0(ConversationIndependentChecks.kt:57)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:54)
+FAIL owner-seed-genome-and-model-metadata-canaries-stay-out-of-bot-prompt: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$1(ConversationIndependentChecks.kt:79)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:70)
+FAIL rename-keeps-stable-history-without-new-authority: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$2(ConversationIndependentChecks.kt:88)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:87)
+FAIL switch-and-late-completion-cannot-corrupt-current-bot: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$3(ConversationIndependentChecks.kt:99)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:98)
+FAIL cancelled-old-frame-cannot-cancel-or-complete-new-turn: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$4(ConversationIndependentChecks.kt:109)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:108)
+FAIL model-digest-version-and-session-mismatch-reject-output: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$5(ConversationIndependentChecks.kt:122)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:116)
+FAIL rejected-terminal-releases-only-its-own-pending-correlation: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$6(ConversationIndependentChecks.kt:131)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:130)
+FAIL unselected-identity-cannot-be-requested-by-parameter: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$7(ConversationIndependentChecks.kt:142)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:139)
+FAIL controller-restart-does-not-reuse-old-ticket: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$8(ConversationIndependentChecks.kt:146)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:145)
+FAIL single-pending-slot-survives-concurrent-prepares: IllegalStateException: accepted=0 rejected=8
+java.lang.IllegalStateException: accepted=0 rejected=8
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$9(ConversationIndependentChecks.kt:162)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:152)
+FAIL failed-prepare-and-oversized-output-do-not-poison-state: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$10(ConversationIndependentChecks.kt:168)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:165)
+FAIL notes-withdrawal-invalidates-inflight-and-derived-history: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$11(ConversationIndependentChecks.kt:177)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:175)
+FAIL profile-edit-during-generation-rejects-old-frame: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$12(ConversationIndependentChecks.kt:188)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:187)
+FAIL reset-preserves-notes-and-excludes-old-conversation: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$13(ConversationIndependentChecks.kt:197)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:195)
+FAIL more-than-twenty-identities-do-not-imply-model-runs: IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn(ConversationIndependentChecks.kt:38)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks$Fixture.turn$default(ConversationIndependentChecks.kt:37)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main$lambda$14(ConversationIndependentChecks.kt:208)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.test(ConversationIndependentChecks.kt:42)
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:203)
+RESULT passed=0 failed=15; synthetic software routing only; local_model_inference=NOT_RUN
+Exception in thread "main" java.lang.IllegalStateException: Check failed.
+	at at.heinz.deviceai.chief.ConversationIndependentChecks.main(ConversationIndependentChecks.kt:215)

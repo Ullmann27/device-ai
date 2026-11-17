@@ -1,0 +1,11 @@
+✔ Qwen chat validates replies without unconditional 0.8 success (1.033602ms)
+✔ context is bounded, clearly untrusted, and never authorizes tools or factual memories (0.621653ms)
+✔ low cost evaluator refuses mechanical repeats but cannot claim truth (0.126309ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.666309

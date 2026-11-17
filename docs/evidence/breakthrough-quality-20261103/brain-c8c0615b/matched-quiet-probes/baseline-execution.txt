@@ -1,0 +1,8 @@
+.M2-METRIC warm_latency_ms n=819 p50=0.760 p95=1.213 max=7.185 correct=819/819
+
+Time: 2.258
+
+OK (1 test)
+
+
+EXIT=0

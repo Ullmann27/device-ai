@@ -1,0 +1,19 @@
+JUnit version 4.13.2
+.E..E
+Time: 0.02
+There were 2 failures:
+1) returnStartsFromFullyConstructedWorkColumns(at.heinz.deviceai.ui.JarvisResultVisibilityTest)
+java.lang.AssertionError: No result dimming for WORK_PROCESS expected:<1.0> but was:<0.9804847>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.ui.JarvisResultVisibilityTest.returnStartsFromFullyConstructedWorkColumns(JarvisResultVisibilityTest.kt:28)
+2) resultKeepsConstructedTextFullyVisible(at.heinz.deviceai.ui.JarvisResultVisibilityTest)
+java.lang.AssertionError: Result data at 0 expected:<1.0> but was:<0.843878>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.ui.JarvisResultVisibilityTest.resultKeepsConstructedTextFullyVisible(JarvisResultVisibilityTest.kt:15)
+
+FAILURES!!!
+Tests run: 3,  Failures: 2

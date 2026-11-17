@@ -1,0 +1,25 @@
+{
+  "schema": "independence-native-s01-freeze-v1",
+  "baseCommit": "94069cec547960b3f3e35d1f9c1f8545a0e71e4c",
+  "case": "independence-s01",
+  "serviceCandidateInspected": false,
+  "modelCallsBeforeFreeze": 0,
+  "files": {
+    "independent.test.mjs": {
+      "bytes": 1860,
+      "sha256": "87d59c6ba8fbea1e6becd1106fb3f12997d03671a1ed3c573848155915f71432"
+    },
+    "owner.test.mjs": {
+      "bytes": 1301,
+      "sha256": "3335512c9ebb7f7fa1aaab09f9813c13ead5374818d6ff515cf3e96b1fc335a9"
+    },
+    "subject.mjs": {
+      "bytes": 213,
+      "sha256": "6a7234f12a390636bca6ef61a981ffb78f6e1ea4d909472a1a3d2c079cb5333b"
+    },
+    "task.json": {
+      "bytes": 887,
+      "sha256": "300f012087953d03cb021ed00886b35623eedb4e1d0fb9ce6f539e2a85efaedb"
+    }
+  }
+}

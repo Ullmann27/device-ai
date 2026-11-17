@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "issue": 569,
+  "root_pr": 773,
+  "helper_prs": [
+    774,
+    775,
+    777
+  ],
+  "canonical_target_pr": 769,
+  "target_base": "c02930f104e106cd8cba4ff8f6ecc1ad9fcee04f",
+  "combined_source": "18e16d5ad5ca7005bba2b8bcfd494ccd1475a18d",
+  "combined_jvm": {
+    "tests": 94,
+    "pass": 94,
+    "fail": 0,
+    "skip": 0,
+    "exit_code": 0,
+    "source_head": "b1d7e7df90e56e0b4db2c131041fb9e6a7c16174",
+    "source_tree": "903bca2e718caabe2846bfa76493493cedf10dc3",
+    "source_changes_after_latest_target_merge": [],
+    "scope": "Actual changed production sources and neighbors; cached real dependencies; host JVM only"
+  },
+  "draw_probe": {
+    "scenarios": 72,
+    "max_sin_calls": 70,
+    "baseline_max_sin_calls": 1526,
+    "digest": "33f640d7a6108c7245cf355eeb3e62131ad327d8fb11944e9ad2d73dd82dccd7",
+    "baseline_digest_matches": true
+  },
+  "node": {
+    "tests": 34,
+    "pass": 34,
+    "fail": 0,
+    "skip": 0,
+    "exit_code": 0
+  },
+  "policies_relative_to_target": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt",
+      "unchanged": true,
+      "sha256": "db0a352d53fd93d84d74f3e816ad5190baea982b9ab4e667b1503d7a25a4a82a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisComputePhasePolicy.kt",
+      "unchanged": true,
+      "sha256": "e85ca0246e4c6f4d24cd190d0843d4c304c413b21e3702c85b6b752197991358"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/AvatarEssentialMotionPolicy.kt",
+      "unchanged": true,
+      "sha256": "32928855dd6b1980b69ac2ca257489a15e1ddc9d7f98a0f0d4aa646ff6992302"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt",
+      "unchanged": true,
+      "sha256": "c76dd4ac0ff091fac48824f12a2ce1950e1a025ae729e3a3e775c35be7322810"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt",
+      "unchanged": true,
+      "sha256": "94c59bb5d7105773ab7b4c8aa79f044bb9e435311e5fccce8ffca20bc6deddfc"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelGenerationPolicy.kt",
+      "unchanged": true,
+      "sha256": "8c45f4d6825662cbc101df11bc023b4e79ddb54a13f737cb0536fe109caaa131"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelThermalGuard.kt",
+      "unchanged": true,
+      "sha256": "7d8b16c4966d28255260bbc81f817a2df7982e0d118e2793ade2faf03553c7d5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "unchanged": true,
+      "sha256": "3cef9cc211471ee3ad99b211bc70dbff9d7d76db02893dbe207b5a9662401b1a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+      "unchanged": true,
+      "sha256": "a3a14e5777f3bccc0042f34116dda7521ef63d9d3b2e82367017aac326c08304"
+    }
+  ],
+  "independent_review": {
+    "reviewed_head": "b1d7e7df90e56e0b4db2c131041fb9e6a7c16174",
+    "reviewed_tree": "903bca2e718caabe2846bfa76493493cedf10dc3",
+    "production_files": 5,
+    "blocking_findings": 0
+  },
+  "android_gradle": {
+    "status": "RUNNING",
+    "tasks": [
+      ":app:testDebugUnitTest",
+      ":app:lintDebug"
+    ],
+    "source_head": "18e16d5ad5ca7005bba2b8bcfd494ccd1475a18d",
+    "lock": "/tmp/continuum-omega-gradle.lock"
+  },
+  "fold7": {
+    "thermal": "NOT_RUN",
+    "energy": "NOT_RUN",
+    "performance": "NOT_RUN",
+    "native_model": "NOT_RUN"
+  },
+  "apk": "NOT_BUILT",
+  "integration": "PUBLISHED_REPAIR_PR_PENDING_CANONICAL_MERGE"
+}

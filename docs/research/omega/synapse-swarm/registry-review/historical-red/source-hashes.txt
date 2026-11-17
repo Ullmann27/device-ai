@@ -1,0 +1,2 @@
+a520d3b835ba2b2b345582c4da71d34d21fc739e6e76e860c384df20b91fe993  /workspace/synapse-review-build/historical/ChiefDelegationCoordinator.kt
+009015ca63ae70d1c86ee49a9fe526964e4ffb979ac24ceea734e72f92bd0136  /workspace/synapse-registry-review/tools/synapse-registry-review/CoordinatorIndependentChecks.kt

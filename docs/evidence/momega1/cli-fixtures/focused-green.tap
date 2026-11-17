@@ -1,0 +1,40 @@
+✔ coding loopback uses bounded structured schema and accepts relevant larger context (20.720903ms)
+✔ coding output cannot add tools, duplicate paths, unknown files or blank hunks (1.881123ms)
+✔ coding CLI UTF-8 transport accommodates the character-bounded multilingual context (122.614649ms)
+✔ M2 model admission denies 01: no model (1.229247ms)
+✔ M2 model admission denies 02: empty model (0.144388ms)
+✔ M2 model admission denies 03: whitespace model (0.398011ms)
+✔ M2 model admission denies 04: NUL model (0.160062ms)
+✔ M2 model admission denies 05: linebreak model (0.137547ms)
+✔ M2 model admission denies 06: oversized name (0.078999ms)
+✔ M2 model admission denies 07: unspecified local fallback (0.111108ms)
+✔ M2 model admission denies 07a: implicit default alias (0.12582ms)
+✔ M2 model admission denies 07b: automatic model alias (0.247814ms)
+✔ M2 model admission denies 08: missing format (0.256368ms)
+✔ M2 model admission denies 09: unexpected format spelling (0.092961ms)
+✔ M2 model admission denies 10: selected original Gemma name (0.168214ms)
+✔ M2 model admission denies 11: original selected file (0.106661ms)
+✔ M2 model admission denies 12: selected native LiteRT format (0.182636ms)
+✔ M2 model admission denies 13: unsupported native runtime (0.104207ms)
+✔ M2 model admission denies 14: remote runtime (0.901343ms)
+✔ M2 model admission denies 15: omitted checkpoint digest (0.153933ms)
+✔ M2 model admission denies 16: malformed digest (0.171289ms)
+✔ M2 model admission denies 17: uppercase digest (0.102244ms)
+✔ M2 model admission denies 18: digest with junk (0.075013ms)
+✔ M2 model admission denies 19: Gemma original digest wrongly asserted as GGUF (0.068844ms)
+✔ M2 model admission denies 20: consent absent (0.113181ms)
+✔ M2 model admission denies 21: consent not explicit (0.063636ms)
+✔ M2 model admission denies 22: consent mismatched (0.105249ms)
+✔ explicit approved alternate GGUF is configuration ONLY, not inference proof (0.163697ms)
+✔ a Qwen name NEVER enters absent explicit consent and remains only configuration with consent (0.155986ms)
+✔ production coding CLI blocks missing pinned runtime before legacy Gemma configuration (64.126669ms)
+✔ production coding CLI blocks missing pinned runtime despite legacy unspecified-model credentials (57.84701ms)
+✔ harness coding CLI cannot bypass the selected Gemma format gate (58.944199ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 262.163131

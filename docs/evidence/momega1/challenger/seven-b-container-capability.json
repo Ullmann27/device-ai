@@ -1,0 +1,11 @@
+{
+  "classification": "CONTAINMENT_CAPABILITY_ONLY_NO_MODEL_RUN",
+  "daemon": {"version": "28.4.0", "cgroupDriver": "cgroupfs", "cgroupVersion": "2", "endpoint": "unix:///var/run/docker.sock"},
+  "existingImage": "continuum-momega1-empty:20261103",
+  "observedInsideContainer": {"uid": 1000, "selfCgroup": "0::/", "memoryMax": 8589934592, "memorySwapMax": 0, "cpuMax": "200000 100000", "pidsMax": 64, "cgroupWritable": false},
+  "outerFlags": ["--network=none", "--memory=8g", "--memory-swap=8g", "--cpus=2", "--pids-limit=64", "--read-only", "--cap-drop=ALL", "--user=1000:1000"],
+  "nestedBwrapDefaultDockerSeccomp": {"exit": 1, "error": "No permissions to create a new namespace"},
+  "nestedBwrapDiagnosticSeccompUnconfined": {"exit": 0, "command": "bwrap --unshare-all --ro-bind / / --die-with-parent --new-session /usr/bin/true", "scope": "Diagnostic only; author preparing explicit outer allowlist before model run"},
+  "nativeInference": "NOT_RUN",
+  "notes": "No image pull, install, Docker socket mount, host network, privileged container, model load or secret access. Final native sandbox seccomp still requires independent validation."
+}

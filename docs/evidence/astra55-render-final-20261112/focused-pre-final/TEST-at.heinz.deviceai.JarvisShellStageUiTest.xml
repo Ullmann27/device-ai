@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisShellStageUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:15:16" hostname="0f4ac18d136f" time="6.652">
+  <properties/>
+  <testcase name="tablet" classname="at.heinz.deviceai.JarvisShellStageUiTest" time="5.617"/>
+  <testcase name="phone" classname="at.heinz.deviceai.JarvisShellStageUiTest" time="0.436"/>
+  <testcase name="foldOpen" classname="at.heinz.deviceai.JarvisShellStageUiTest" time="0.598"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

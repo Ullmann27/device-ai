@@ -1,0 +1,76 @@
+{
+  "schema": "momega1-independent-reviewed-model-pair-v1",
+  "decision": "APPROVE_EXACT_PAIR_FOR_LOCAL_MODEL_HOST",
+  "scope": "Actual CPU inference provenance only; no repair correctness, learning, full loop, Android or release acceptance. Final branded provider/forgery verification remains pending after registry status change.",
+  "candidateSourceReviewed": "8425b119e1b6485527de285dd3375f233b27fdf5",
+  "model": {
+    "repository": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "revision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+    "filename": "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "bytes": 1117320768,
+    "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046"
+  },
+  "runtime": {
+    "repository": "ggml-org/llama.cpp",
+    "sourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+    "sourceTree": "42065e172024f95eb242763caa06812c09d363e7",
+    "target": "llama-completion",
+    "platform": "linux-x64",
+    "sha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "bytes": 12476968,
+    "independentRebuildByteIdentical": true,
+    "buildEvidenceSha256": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067"
+  },
+  "observedRun": {
+    "normalExit": 0,
+    "decodedTokens": 124,
+    "elapsedMs": 15484,
+    "rawOutputSha256": "3f2d6dfcd0b83f26db3d8e64c3bca7ece477aed6a7a375d9cabbf256f70e85c1",
+    "promptSha256": "08246cd9675338f0dd469a5077dc28e1efd89261c7cb50eac9a2aa63490437e2",
+    "boundedProposal": true,
+    "independentCorrectnessPass": 6,
+    "independentCorrectnessFail": 2,
+    "repairAccepted": false
+  },
+  "negativeChecks": [
+    {
+      "name": "real model active cancellation",
+      "elapsedMs": 4045,
+      "eventAtMs": 4002,
+      "errorCode": "CODING_CANCELLED",
+      "verifiedReceiptReturned": false
+    },
+    {
+      "name": "real model path replacement retains old FD but invalidates acceptance",
+      "elapsedMs": 13792,
+      "eventAtMs": 4001,
+      "errorCode": "LOCAL_RUNTIME_FILE_CHANGED",
+      "verifiedReceiptReturned": false
+    }
+  ],
+  "controls": {
+    "independentTestsPass": 40,
+    "fail": 0,
+    "skip": 0,
+    "candidateRegistryReturnedNull": true,
+    "syntheticKindOnlyRemainsNonGenuine": true
+  },
+  "device": "FOLD7_NOT_RUN",
+  "evidenceSha256": {
+    "independent-model-hash.json": "6b00d6ab15017681db15908e315fd578c8e9e5f38db267e75aa295c8b3167764",
+    "official-model-metadata.json": "d15402d134545bfefea1694200ab4d685b2280832390d6c3f091d5f4801b2fb7",
+    "official-runtime-metadata.json": "b16ba7265cc6ca5cb7436d65cf5acdf413ca99093c5b5bd46929a6036052328e",
+    "independent-source-provenance.json": "e20a921d4e977648f3814a02b4baaa1380de7cfa4224a16c2af8788392638bc1",
+    "independent-build-tools.json": "e5275135f14932dc55f459ac34ff4a27c02ad068fc7047fbbfd0897aa38a7268",
+    "independent-rebuild.json": "444ae21a6ab5408d92aa3d83b4e2ca03a1c985fc0f362aa810947a57e5d156f7",
+    "independent-author-binary.json": "1eb3b42d1d51b82e087f04bbce4806ca7e26a9b5b55802c8931e8f24d61955b9",
+    "independent-runtime-dependencies.json": "82d58af7bce7c6f0d5b4981db23296ae1ee615282f892bd49e8e3b115cad65de",
+    "actual-admission-candidate-tests.tap": "d99a03bbc37e12c3e3ccd173970796209899b2fd7d269a5f6ddec98c9a10135c",
+    "actual-native-compatible/native-receipt.json": "a21fdc0daa45060a86dde502d6acdab5eb5a386b7bea449bbbbaf592fb47cd8a",
+    "actual-native-compatible/native-stdout.txt": "3f2d6dfcd0b83f26db3d8e64c3bca7ece477aed6a7a375d9cabbf256f70e85c1",
+    "actual-native-compatible/native-stderr.txt": "57e19b67d9978d184e34fedf0c17914b9c1477c908fdf20b548dcc20086b2bee",
+    "actual-native-compatible/native-resources.json": "98b6106f88b89a488934e3a7deeb6adb9e9eb136464c2ab982474736eb20c44f",
+    "actual-native-compatible/independent-boundary-result.json": "750a238e335b65a5eb415d73d49f151a413666cd5a0af51cf2b7973eea9807f0",
+    "actual-native-compatible/negative-results.json": "6cdaea45a66eff563834691ce91ad7f43a870f443173493fd44496b4e28b8052"
+  }
+}

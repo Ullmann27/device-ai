@@ -1,0 +1,18 @@
+{
+  "id": "C054",
+  "question": "Wo steht Zylonane?",
+  "sources": [
+    {
+      "revision": 5,
+      "sha256": "569cbae563d12bb5a54a358746c4d30fec03c5d0d8243b257a4a5bf7b21b9627",
+      "sourceId": "bc:C054:s1",
+      "text": "Zylonane steht in Uvgigene."
+    },
+    {
+      "revision": 6,
+      "sha256": "ad59c230aa382dd446d9383532c6ac9e4ea4bde8f79462ef0fd1a8ef19ab9281",
+      "sourceId": "bc:C054:s2",
+      "text": "Zylonane liest ein Buch."
+    }
+  ]
+}

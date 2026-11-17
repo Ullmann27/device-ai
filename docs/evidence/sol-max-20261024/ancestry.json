@@ -1,0 +1,52 @@
+[
+  {
+    "component": "M4 integration",
+    "sha": "e4fd67c3e83314e3c32019e516ebd750a1433f2f",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "Sol M5 fixes",
+    "sha": "144ab574b4c06e9bed926f78158a7183e6dfb013",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "M5 retained-draft review",
+    "sha": "f382aeda2612723ae3eacdf0fe96e87fbf10e04c",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "GPT6 integration",
+    "sha": "ec4fa6db4e57d40d25a6e8ed1c794b4d96c046c2",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "existing signer integration",
+    "sha": "285639ba94d75cc427cb17b7421f12f48296ec1f",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "Astra reviewed UI",
+    "sha": "811803138c86a5c1a7a2a2b9cd196580a574a4a1",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "Opus M5 recreation",
+    "sha": "01cf6f8016e79634ea71e82c0cd3c2d1d0105795",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "Opus pin audit",
+    "sha": "0e51aff08d06fda7c91baa8476b3f91b28a2a506",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "Opus CTX guard",
+    "sha": "4f6cc98fd1a6e2f615cc3487e89d747b5b8c3515",
+    "ancestorOfCandidate": true
+  },
+  {
+    "component": "Opus start",
+    "sha": "d0f0892e156b9bcfa6a9a80d6fcd515173a62565",
+    "ancestorOfCandidate": true
+  }
+]

@@ -1,0 +1,18 @@
+#!/bin/bash
+# NF batch 2 (pre-registered order): NF-4, BPE reference G-M, NF-3, NF-1 stream, NF-2 recall. Waits for batch 1.
+S=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad
+J=$S/nf/nf-4220c410.jar
+R=/home/user/device-ai/.claude/worktrees/nf-lab
+while pgrep -f 'nf-e6d33527.jar' >/dev/null; do sleep 20; done
+run(){ name=$1; shift
+ { echo "JAR $(sha256sum $J | cut -c1-64) commit=4220c410 start=$(date -u +%FT%TZ) args=$*"
+   nice -n 10 java -Xmx6g -Dstdout.encoding=UTF-8 -cp $J at.heinz.deviceai.learning.nf.NfExperiment $R "$@" 2>&1 | grep --line-buffered -v JAVA_TOOL_OPTIONS
+   echo "exit=${PIPESTATUS[0]} end=$(date -u +%FT%TZ)"; } > $S/nf/$name.txt 2>&1; }
+run nf4-relu-l1-0 lm Gr-S seeds=1,2,3 epochs=6 threads=3 l1=0 store=$S/nf/ckpt
+run nf4-relu-l1-1e-3 lm Gr-S seeds=1,2,3 epochs=6 threads=3 l1=0.001 store=$S/nf/ckpt
+run nf3-bpe-gm lm G-M seeds=1,2,3 epochs=6 threads=3 store=$S/nf/ckpt
+run nf3-blt blt seeds=1,2,3 epochs=6 threads=3 meanPatch=3
+CK=$(grep -E '^RUN (G-S|D-S) seed=[123] epoch=6 ' $S/nf/nf2-lm-s.txt | sed 's/.*ckpt=/ckpt=/' | tr '\n' ' ')
+run nf1-stream stream $CK store=$S/nf/ckpt
+run nf2-recall recall D-S G-S T-S L-S G-M G-X seeds=1,2,3 steps=3000 threads=3
+echo done > $S/nf/chain2-finished.txt

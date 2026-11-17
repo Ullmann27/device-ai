@@ -1,0 +1,32 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=46359 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46359 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.FullStageMemoryReviewUiTest#actualActivityMemoryBusEnlargesAndReturnsTheOriginalOrb
+.
+Time: 5.948
+
+OK (1 test)
+
+CASE at.heinz.deviceai.FullStageMemoryReviewUiTest#falseSignalsAndAnEventFloodCannotInventOrExtendTheEpisode
+.
+Time: 1.469
+
+OK (1 test)
+
+CASE at.heinz.deviceai.FullStageMemoryReviewUiTest#realStopRejectsQueuedMemoryAndChatReparentingCannotReplay
+.
+Time: 0.644
+
+OK (1 test)
+
+CASE at.heinz.deviceai.FullStageMemoryReviewUiTest#actualWindowCloseAndSystemTapRemainUsableAboveTheScene
+.
+Time: 40.875
+
+OK (1 test)
+
+CASE at.heinz.deviceai.FullStageMemoryReviewUiTest#theEntireActualControlRectangleStaysOutsideTheCompositor
+.
+Time: 0.905
+
+OK (1 test)
+
+TOTAL tests=5 failures=0

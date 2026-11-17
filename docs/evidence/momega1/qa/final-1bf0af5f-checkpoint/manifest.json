@@ -1,0 +1,657 @@
+[
+  {
+    "path": "STATUS.json",
+    "sha256": "b9e56d5fa6447b0644aa295175f20d64c264eb5f046eb4a565f31ecfb187f92e",
+    "bytes": 932
+  },
+  {
+    "path": "competing-container-events.jsonl",
+    "sha256": "5bd8713f4a6d1cb60c88ac416a43869ae8c7171b80bd161bf3de5929fdefe492",
+    "bytes": 3873
+  },
+  {
+    "path": "final-gradle-1bf0af5f/app-source-equivalence.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "final-gradle-1bf0af5f/contrastive-parity/kotlin-candidate.swb1",
+    "sha256": "7ddb6959004cc6944206c740b57cbe23ebd5363cc80291464b33249f01bd288a",
+    "bytes": 32960
+  },
+  {
+    "path": "final-gradle-1bf0af5f/contrastive-parity/kotlin-metrics.tsv",
+    "sha256": "37e0d80224835ccd6c2e100ac924701f4a88e4df7ae75a1f332bac7762d21d9d",
+    "bytes": 384
+  },
+  {
+    "path": "final-gradle-1bf0af5f/contrastive-parity/kotlin-swb2.swb2",
+    "sha256": "2530545ba55acab64fa6a37822b468a17e85379df1c756b16176a727d9e64a54",
+    "bytes": 32960
+  },
+  {
+    "path": "final-gradle-1bf0af5f/contrastive-parity/node-candidate.swb1",
+    "sha256": "40b28cccd1932e24d465ed86a9909ee0534a220f67c7bc20fcf82e7ea62abb42",
+    "bytes": 32960
+  },
+  {
+    "path": "final-gradle-1bf0af5f/contrastive-parity/node-metrics.tsv",
+    "sha256": "37e0d80224835ccd6c2e100ac924701f4a88e4df7ae75a1f332bac7762d21d9d",
+    "bytes": 384
+  },
+  {
+    "path": "final-gradle-1bf0af5f/contrastive-parity/node-swb2.swb2",
+    "sha256": "2530545ba55acab64fa6a37822b468a17e85379df1c756b16176a727d9e64a54",
+    "bytes": 32960
+  },
+  {
+    "path": "final-gradle-1bf0af5f/cre1-parity/kotlin-scores.tsv",
+    "sha256": "63eb8a1e3472a3b282eb02e9530a7dfaafa3abbc4bf0c5b9bbd6c184336e37ea",
+    "bytes": 1166
+  },
+  {
+    "path": "final-gradle-1bf0af5f/cre1-parity/kotlin-sgd.cre1",
+    "sha256": "e89fce20debd648646787cb6ecca36ddfeb1f1aebe4f6a1da9e5f4fffd232b43",
+    "bytes": 4210736
+  },
+  {
+    "path": "final-gradle-1bf0af5f/cre1-parity/node-cre1.cre1",
+    "sha256": "2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6",
+    "bytes": 4210736
+  },
+  {
+    "path": "final-gradle-1bf0af5f/cre1-parity/node-features.tsv",
+    "sha256": "bd4862ff5af0385160d0e78adb021224747669e994526076acebb442614b3650",
+    "bytes": 11708
+  },
+  {
+    "path": "final-gradle-1bf0af5f/cre1-parity/node-scores.tsv",
+    "sha256": "9422263213574601ce2bbe0da8f4d16be6148c25e02dab5a9adbae75b725869e",
+    "bytes": 1188
+  },
+  {
+    "path": "final-gradle-1bf0af5f/cre1-parity/node-seed73.cre1",
+    "sha256": "57ddcc0b3eee6902ae6610719ca8237543e5d2576c2fed5cb4441331f7ff3031",
+    "bytes": 4210736
+  },
+  {
+    "path": "final-gradle-1bf0af5f/cre1-parity/node-sgd-losses.tsv",
+    "sha256": "f677fbcde02401c1dfaf793a09159b1d412cfb369efe69f01c9bf8caa2da0057",
+    "bytes": 60
+  },
+  {
+    "path": "final-gradle-1bf0af5f/cre1-parity/node-sgd.cre1",
+    "sha256": "2cfed4ff1d48401dc493941342823c0a27c8b8eff1002344a7094b8a16981a89",
+    "bytes": 4210736
+  },
+  {
+    "path": "final-gradle-1bf0af5f/gradle-cpu-affinity.txt",
+    "sha256": "8d66c089414bb76bc2ee5c11465c93257821752b4e08be4f1d70737b9fa10f0c",
+    "bytes": 4
+  },
+  {
+    "path": "final-gradle-1bf0af5f/gradle-full.txt",
+    "sha256": "b7b463c569f1665bfe94b4e640c6248e6a01ff9efab894a9bfb037ad66b0cdbe",
+    "bytes": 2606
+  },
+  {
+    "path": "final-gradle-1bf0af5f/harness-inputs.sha256",
+    "sha256": "c43b4d85ca01460e1b4436667d41798e7850452e424c3279ccc0bdbb4710df99",
+    "bytes": 363
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/fold-landscape-840x649-chat-orb-host.png",
+    "sha256": "cefaefabc27b31d782e29c39d06ab0be312eb5e21c0d47be5232f96360fdc6e9",
+    "bytes": 220119
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/fold-landscape-840x649-chat-orb-host.views.txt",
+    "sha256": "4c026150acf158de7c3f57d387600a8b2fcc35903cf68602e03f91ddca11c437",
+    "bytes": 6227
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/fold-landscape-840x649-home-orb-host.png",
+    "sha256": "90f73c0ccb3847f3abd6b582b4a99d88128332ca96a253d95fa8d9b7b61a4b48",
+    "bytes": 607206
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/fold-landscape-840x649-home-orb-host.views.txt",
+    "sha256": "49f2919f60912e6488a875f893566e6d003e72e1e14f862cd3aca537326d4c15",
+    "bytes": 5726
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/fold-portrait-840x1050-chat-orb-host.png",
+    "sha256": "2fa44d3a73eeb3139194a4fea0388c193d893b8486e9530eb6d23c05d6292960",
+    "bytes": 201447
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/fold-portrait-840x1050-chat-orb-host.views.txt",
+    "sha256": "249264d1c6258478f22f3cba04d5aa7702c8af401be3a033da45856f559bf471",
+    "bytes": 6042
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/fold-portrait-840x1050-home-orb-host.png",
+    "sha256": "78df7843c79dc76c939adea3a0be4ad4ead3ac84df11aee02b4f30a1280564e3",
+    "bytes": 863291
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/fold-portrait-840x1050-home-orb-host.views.txt",
+    "sha256": "2cefbd82d6d8d4a5d3cd4b82570ae54addf90ebf4b02df117b64f8d863846b00",
+    "bytes": 5528
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/phone-412x915-chat-orb-host.png",
+    "sha256": "16e6439010f8be392b2f64ee817fc0f35c39398979dec941e0f10f9de0187f26",
+    "bytes": 148658
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/phone-412x915-chat-orb-host.views.txt",
+    "sha256": "3e82c2d7168b0aed1132d4496b44d0077492f1143f1e59687a14120344ff4453",
+    "bytes": 5827
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/phone-412x915-home-orb-host.png",
+    "sha256": "4a7593eb272a9c0dc534826fd0535eea32f4de27906356c6454e73940c9e5474",
+    "bytes": 399806
+  },
+  {
+    "path": "final-gradle-1bf0af5f/layout-ui/phone-412x915-home-orb-host.views.txt",
+    "sha256": "ffdf92e0d1eb03bc462f6b9c645067280b59e5698f40467caaacdedc0fa669be",
+    "bytes": 5122
+  },
+  {
+    "path": "final-gradle-1bf0af5f/parity-prepare.exit",
+    "sha256": "82ed064bb912f27d47e2b842968752eb4cbdc9e9de26193b85db68e57cd9d9d8",
+    "bytes": 21
+  },
+  {
+    "path": "final-gradle-1bf0af5f/parity-prepare.txt",
+    "sha256": "57772f4a65ecbc88656231d46f41203d2ddbbdf7cb2e2c170877a125756731c5",
+    "bytes": 117
+  },
+  {
+    "path": "final-gradle-1bf0af5f/polish-ui/portrait-orb-hidden-control.png",
+    "sha256": "743a6dad9943c42b4e3c87e0b64db00fa111e900f6951e5c18ba885a21104b4b",
+    "bytes": 695357
+  },
+  {
+    "path": "final-gradle-1bf0af5f/polish-ui/portrait-orb-visible.png",
+    "sha256": "dc168295a53c2b38dd590e96e313e0e8159e8e45e1ad2fed741c18fafae3b0ad",
+    "bytes": 850908
+  },
+  {
+    "path": "final-gradle-1bf0af5f/source-environment.txt",
+    "sha256": "6d021d41b617af21eef32f14a0afc1f84226e89e0a064266777494e28c233a8f",
+    "bytes": 1029
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/action-disabled.png",
+    "sha256": "b8ddf1187cb14784152f7f2d438f927d4c7c8a0af90b0a9e634af61f9ffb0e88",
+    "bytes": 13776
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/action-normal.png",
+    "sha256": "07c9603c740d830267980eeff56ebed47715a720795a5c6cc27fe3e9f06a5f2e",
+    "bytes": 8839
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/action-pressed.png",
+    "sha256": "18cea3d475e8d4800045a9545b56700c2b0f804cb04cd517b4b8c9c89f83f38e",
+    "bytes": 14672
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/action-selected.png",
+    "sha256": "ae8907dfd6c3df69db2641c552dcbd4a29781628787f7ded3052905f3e1f6be2",
+    "bytes": 13357
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/head-410x291-closed.png",
+    "sha256": "93e8e9b81d946f945df82bfef6918783101278f5cd6ba815e14812ee21a0ff6e",
+    "bytes": 66599
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/head-410x291-speaking.png",
+    "sha256": "2901dad1fe41a1e3ef2b5bc6272cbf99956dcde554213c81db312e7350772702",
+    "bytes": 66819
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/head-410x291-stopped.png",
+    "sha256": "93e8e9b81d946f945df82bfef6918783101278f5cd6ba815e14812ee21a0ff6e",
+    "bytes": 66599
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/head-412x307-closed.png",
+    "sha256": "1f272710dcf7f91c4ad202f902a8e93a062cbcfe88954841f035f525b5e4d71e",
+    "bytes": 72271
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/head-412x307-speaking.png",
+    "sha256": "055bbf3c4eee8a1220a3c65f0f8f15953e5599f96f0f28de3d9d90dde147251c",
+    "bytes": 72620
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/head-412x307-stopped.png",
+    "sha256": "1f272710dcf7f91c4ad202f902a8e93a062cbcfe88954841f035f525b5e4d71e",
+    "bytes": 72271
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/orb-410x291-0.png",
+    "sha256": "38a87aabde344f4a642a3f95342e9ba289d4606712226c1d5f2804a22c703e66",
+    "bytes": 264187
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/orb-410x291-1.png",
+    "sha256": "cea6c15b7985d44f9d5902af8d2449b9a52109298638265a640fc6daf213f3e8",
+    "bytes": 137596
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/orb-410x291-2.png",
+    "sha256": "890db2875621a83d8bd0924a9c9fe8ced82cb7c5f7b7389e4be6a809aed9e5ec",
+    "bytes": 137470
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/orb-412x307-0.png",
+    "sha256": "d80f96857b48a07d93164b803999e69f61c12a19993e57c1d3eb9d93bad8b96d",
+    "bytes": 266416
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/orb-412x307-1.png",
+    "sha256": "6dc98404dd0cc4c4d9ef313443c4ac99f6f23dbe2e0f126c099c06b99ec2c6f3",
+    "bytes": 178885
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/orb-412x307-2.png",
+    "sha256": "ff207537ac388ef52b9c4d19cdbb789ffe5f69785370f448bb2bc50e0ea9a8e5",
+    "bytes": 179374
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/panel-320dp-font130.png",
+    "sha256": "e5a0cfb79394f16ff6173a2a1be6f1e9e5d17f417c98ddfdac4c94eb3f25ab3a",
+    "bytes": 226258
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/panel-720dp-font130.png",
+    "sha256": "01ba906f043e071fdb85153c6ec5cb23ff11f64daa08fc14c9688c1676e6d275",
+    "bytes": 332734
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-410-291-0-idle.png",
+    "sha256": "38a87aabde344f4a642a3f95342e9ba289d4606712226c1d5f2804a22c703e66",
+    "bytes": 264187
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-410-291-1-worker.png",
+    "sha256": "c400b10813b737bdbfb5fc1c5118320fdaadeb9a4f057a9a6a009459007bdad3",
+    "bytes": 267566
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-410-291-2-tool.png",
+    "sha256": "843eae1de82cfe5d4e52bef0ef429b6e7902306a38f726b7915addf8c2174567",
+    "bytes": 268304
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-410-291-3-read.png",
+    "sha256": "2415bda87ac65cb0a2059d1a2b26f8dd7bbd847045a90f6979b1a854e8e4e568",
+    "bytes": 267440
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-410-291-4-terminal.png",
+    "sha256": "9cac241cd809e5f0f6d688ae06dc502db93b5cda8023ae8c24cdb217f70031d9",
+    "bytes": 264505
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-410-291-5-expired.png",
+    "sha256": "36eac7c422b7bf0facc1dbd8c320bf18fbaa7d36864ce113b0b96a7f0cea731a",
+    "bytes": 263118
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-120-0-idle.png",
+    "sha256": "211bad5842a7c9178b8d02ae4317e7a0b6e26ba51138ee6d1437b7800ffdbf28",
+    "bytes": 53357
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-120-1-worker.png",
+    "sha256": "cd4f3acaabdb249ecc9b838735ac5efdecb846d29cbb0e29ef5b90f6dff10299",
+    "bytes": 58285
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-120-2-tool.png",
+    "sha256": "8011af5e2e20302688295bb12d2f9bbb5d823a50435393fb7b5a6c3a3d35520d",
+    "bytes": 61623
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-120-3-read.png",
+    "sha256": "75b5236810ba2b8277a694aafa15e1b9a72385a049524bcd6813d9642cbcc4ed",
+    "bytes": 61233
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-120-4-terminal.png",
+    "sha256": "4dd5955766340c5380e7222bae8e4d65a6156f8b3c0264413cbffcf5382c2b22",
+    "bytes": 57309
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-120-5-expired.png",
+    "sha256": "a287ae9eaa33caa6e4f8bf208b01f6860dbc0736ae0d1e0cc8803ab2d78cfa07",
+    "bytes": 53580
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-160-0-idle.png",
+    "sha256": "013c76a94f973d532f1c83dfc86f807f456b948947283a54e28ab8abad793409",
+    "bytes": 86954
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-160-1-worker.png",
+    "sha256": "b4fa86b1872b874b8f0eaf0ab0dae9961ad18fff90957df97062f2e53ebc51f8",
+    "bytes": 91665
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-160-2-tool.png",
+    "sha256": "b3ab596ec58c279a31bee4068ee7ac0d8e4e5ca012ae07e8583cbb629c0068da",
+    "bytes": 95153
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-160-3-read.png",
+    "sha256": "713e670997b7ef52d3aa2920dafe97a389e0abaeec65f2687eff17920d6d3a6d",
+    "bytes": 94825
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-160-4-terminal.png",
+    "sha256": "5669e7a27ee126cead0518aa4fce57d5490d74fb746e8049d4e0e9e3e23ebe6d",
+    "bytes": 90447
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-160-5-expired.png",
+    "sha256": "4649153a15555315462a537e7a7b02abd379343f97ac7b9a997f808e7d4af047",
+    "bytes": 86998
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-307-0-idle.png",
+    "sha256": "d80f96857b48a07d93164b803999e69f61c12a19993e57c1d3eb9d93bad8b96d",
+    "bytes": 266416
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-307-1-worker.png",
+    "sha256": "b23b3173de762979ddf75d3a579c7cacd175add0556dcc0e03e549a3b001a30f",
+    "bytes": 268837
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-307-2-tool.png",
+    "sha256": "d57f06c3180006bf50761a924ffdcf6a364926c4a7598b7f25837a8ac18658f4",
+    "bytes": 268913
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-307-3-read.png",
+    "sha256": "c130860d6ddc0e66ca8b329f5bb4d5d508a6b7f39b02005c0119d93bf4c30821",
+    "bytes": 269241
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-307-4-terminal.png",
+    "sha256": "8c3669a0f6bc060504828bf6614f84a5b92082f28979df7e13b3259ae9d57222",
+    "bytes": 266406
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-307-5-expired.png",
+    "sha256": "de1024dcc9015944426668fcaa8f135763c9d3e8f03d66a32725300ad47d5062",
+    "bytes": 267054
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-88-0-idle.png",
+    "sha256": "0702c9e9b18c2ae37b40a6f056da9ad6670f82e12dc22c265dfeccdf41bbe830",
+    "bytes": 31160
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-88-1-worker.png",
+    "sha256": "4ba29c3288003a9ea8b0873099898962435b1296bc4564c6fd87dbb2aa7bbc79",
+    "bytes": 35653
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-88-2-tool.png",
+    "sha256": "57bdc297e647e752c49352584ddd4f17b4acea3d1c47f4cacb9cb52427fb165f",
+    "bytes": 39057
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-88-3-read.png",
+    "sha256": "6003b7df403004c803f2936bf3d38e35dbb828eab33da05c74abe9d14a0d0bd3",
+    "bytes": 38325
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-88-4-terminal.png",
+    "sha256": "d239e99a3e3e27d9c60c9e08e5005ca5c52e4918d09357d2dc8a28205032a12e",
+    "bytes": 35005
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-412-88-5-expired.png",
+    "sha256": "49899d76435261e2664165951bdc09601c1db3b5ed8794a3b973a6b79355175b",
+    "bytes": 31282
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-720-200-0-idle.png",
+    "sha256": "4331ff0a710b33ebafdefcf4c76d1bf20569a5ea696d4f6c468429fd7852c098",
+    "bytes": 132212
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-720-200-1-worker.png",
+    "sha256": "8ae6f713d09bb22c827ca96c611a961870eae056af8a53c51870c2efc161cb06",
+    "bytes": 138912
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-720-200-2-tool.png",
+    "sha256": "d68ac37e6bde0c286123cc86530cd04fb89c713c7cfcd032726dcfe652416840",
+    "bytes": 143564
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-720-200-3-read.png",
+    "sha256": "5dd0cbfdda600d817535ed0d654b05504e2d4950eb0c439e7bdc107177c31e69",
+    "bytes": 142273
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-720-200-4-terminal.png",
+    "sha256": "5d4e1855f77c1a94107f190fd3ee76026d0194304c6cf243e081014c1f7e031d",
+    "bytes": 136777
+  },
+  {
+    "path": "final-gradle-1bf0af5f/ui/synthetic-task-720-200-5-expired.png",
+    "sha256": "6b731ab54c1169336a4985972695d05e82cdf4a3ba45ee32476cac3e70ad53ef",
+    "bytes": 131934
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/chief-cancel-observation.json",
+    "sha256": "8e6e0bedf069c30852fe3799ffb48af957cea7f69d83e141246b0510386317ad",
+    "bytes": 419
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/synthetic-fixture.json",
+    "sha256": "2f719acaa030cc02b36dc65bc010685211aa0bf09a65df5cc9292857cd35cf81",
+    "bytes": 1424
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/worker-alpha/.github/continuum/isolation.test.mjs",
+    "sha256": "6aec0b10165d02b9f8d33181da22291a7d78c0c307f11927d7d3933da630f5c9",
+    "bytes": 984
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/worker-alpha/worker-alpha.txt",
+    "sha256": "0eb373a59e439b638643103514dee0e9ec68ff12120f6397c0707e6484236a86",
+    "bytes": 12
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/worker-alpha-state/tasks/t-c30a918f723a14d5.jsonl",
+    "sha256": "827b585be8606c5871589f40880d9afa8b593bed72719d127fc7d1ce0ed6a3a4",
+    "bytes": 2715
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/worker-alpha-state/teamleader/development-backlog.json",
+    "sha256": "2af331d94165cd49722e1fc0a26ed7ea2171b2780333f86d68ee8f3cbee2570e",
+    "bytes": 1100
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/worker-beta/.github/continuum/isolation.test.mjs",
+    "sha256": "41442047bd8c0c0e7b489f7d3fe70b79a68f9349ca510c9381d98435577baa16",
+    "bytes": 981
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/worker-beta/worker-beta.txt",
+    "sha256": "b29218eddef859a9b0324c6e6964c4405f872231004670edbde345ad21db39bb",
+    "bytes": 11
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/cancel/worker-beta-state/tasks/t-b215677f9082b602.jsonl",
+    "sha256": "5a735ff7c76055cdfa5055c6a54d9b804cd73669df53379fe6c837af8a8fc217",
+    "bytes": 2715
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/chief-mailbox-observations.json",
+    "sha256": "363a99f627112dd2a5e39bbeca183a8ad260dd678bc59c6427015d76028b3bc6",
+    "bytes": 1093
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/junit/isolated-da17a70055659f77b485/TEST-0.xml",
+    "sha256": "0e8200019b73715fba59defaaf6f49d2f806892faa28dbffa29c8c3470be98dd",
+    "bytes": 366
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/junit/isolated-eb5872ca3b17aa60e925/TEST-0.xml",
+    "sha256": "5403933abb89dcfb10aa48eb6ee771a12ae49160b4238a8314f5dd6d38020102",
+    "bytes": 366
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/receipt-0.json",
+    "sha256": "3a43c936888805c6562a09407d1a1d63daa107c48a2a558032d0305da09705c3",
+    "bytes": 2200
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/receipt-1.json",
+    "sha256": "564711cf0e5d659488fa274f1a618367f41ca07e165e996a80eaa49ad4cd4853",
+    "bytes": 2199
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/synthetic-fixture.json",
+    "sha256": "c98502b692648f0e20428faee6277e6b403e71fb002f094e53eb055a1b8d3cd4",
+    "bytes": 1448
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/worker-alpha/.github/continuum/isolation.test.mjs",
+    "sha256": "6aec0b10165d02b9f8d33181da22291a7d78c0c307f11927d7d3933da630f5c9",
+    "bytes": 984
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/worker-alpha/worker-alpha.txt",
+    "sha256": "0eb373a59e439b638643103514dee0e9ec68ff12120f6397c0707e6484236a86",
+    "bytes": 12
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/worker-alpha-state/tasks/t-dfe3b93116467aaf.jsonl",
+    "sha256": "2cc39a3f1c285ce382f5175ecd489fd657dff2aceee364736af6f2640a98918b",
+    "bytes": 2715
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/worker-alpha-state/teamleader/development-backlog.json",
+    "sha256": "d5a8c84de6a59fdce9edb153a4eb1dd5925549a2feee07a71b192e43903823aa",
+    "bytes": 1100
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/worker-beta/.github/continuum/isolation.test.mjs",
+    "sha256": "41442047bd8c0c0e7b489f7d3fe70b79a68f9349ca510c9381d98435577baa16",
+    "bytes": 981
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/worker-beta/worker-beta.txt",
+    "sha256": "b29218eddef859a9b0324c6e6964c4405f872231004670edbde345ad21db39bb",
+    "bytes": 11
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/worker-beta-state/tasks/t-1195a8461cde5be8.jsonl",
+    "sha256": "ab643e5eafbbb05ef0461881aeb2252512b8c3c72c4bc9e7eaeec26c171c5c6e",
+    "bytes": 2715
+  },
+  {
+    "path": "final-gradle-1bf0af5f/workspace-host/pool-mailbox/worker-beta-state/teamleader/development-backlog.json",
+    "sha256": "31918facbf45f16f35e9448150cacbb6f8bd5eb6f22281ed68ca7c810b310ea2",
+    "bytes": 1100
+  },
+  {
+    "path": "final-independent-inputs-1bf0af5f.sha256",
+    "sha256": "517bbb725e01eb2e53829fa449d96433ef0efbdd7b31d09fe0ce2e0982ca81b9",
+    "bytes": 3322
+  },
+  {
+    "path": "final-node-1bf0af5f/container-test-files.txt",
+    "sha256": "65e06490907dd3cd60bfd9b885e0ae088c841d970f51a22596f27c7acd34695c",
+    "bytes": 43
+  },
+  {
+    "path": "final-node-1bf0af5f/cpu-affinity.txt",
+    "sha256": "35aa7c730f02c510f18ee96342a374749b80cf1c9f4c4ff57c159be4620b61d3",
+    "bytes": 4
+  },
+  {
+    "path": "final-node-1bf0af5f/harness.sha256",
+    "sha256": "aebb88e56adf1eed9673514280244de390d06a4a2272d7bb7e41029b083b8979",
+    "bytes": 432
+  },
+  {
+    "path": "final-node-1bf0af5f/host-test-files.txt",
+    "sha256": "cdc5e9ceef9f886103d7489c0285bab0efd8916fd2c8a4b1fc331e6a894bb7e2",
+    "bytes": 15488
+  },
+  {
+    "path": "final-node-1bf0af5f/node-full.tap",
+    "sha256": "2055608eeeeb992364f41292bf2b48a42d8bb0e0a96bec5798d3f85b4e414391",
+    "bytes": 138784
+  },
+  {
+    "path": "final-node-1bf0af5f/node-version.txt",
+    "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+    "bytes": 9
+  },
+  {
+    "path": "final-node-1bf0af5f/source-before.txt",
+    "sha256": "1f1650632d17276b5790d65c921ad717cf96e598a050cc74e6c7439c01238487",
+    "bytes": 188558
+  },
+  {
+    "path": "final-node-1bf0af5f/workspace-host/canonical-repair-receipt.json",
+    "sha256": "e7b591e342d1f1f8675be4080720aa021fa53eab64e16d1bcc4874c7cb9cb11b",
+    "bytes": 2379
+  },
+  {
+    "path": "final-node-1bf0af5f/workspace-host/canonical-repair-report.json",
+    "sha256": "37a7ed87f58ff748478f44ff3db885aba0cbf3a08eb58de7ba050b92df979ba2",
+    "bytes": 11236
+  },
+  {
+    "path": "final-node-1bf0af5f/workspace-host/inflight-revocation.json",
+    "sha256": "09a95ebf9707b30e06bab05e5f860faf2a50c35dbdd0abc2ca90db082c2692ee",
+    "bytes": 115
+  },
+  {
+    "path": "final-node-1bf0af5f/workspace-host/isolated-0584ecb0cb011b31dbbd/TEST-0.xml",
+    "sha256": "38f33dbde1dff0f591da66e5678192d4e450a1e604e1fe4b80cb7d7ad338a072",
+    "bytes": 391
+  },
+  {
+    "path": "final-node-1bf0af5f/workspace-host/isolated-4530f8918d0ddd7e8c3b/TEST-0.xml",
+    "sha256": "78bd7f09afe7660b96315d21a20b0d0d4c852aae89db8ace375e90aa58ec4537",
+    "bytes": 391
+  },
+  {
+    "path": "final-node-1bf0af5f/workspace-host/lease-timeout.json",
+    "sha256": "42b448547026f45ebfea84b01318edba5f0a7b70dfe949620e457112b7b5bf78",
+    "bytes": 140
+  },
+  {
+    "path": "final-node-1bf0af5f/workspace-host/worker-alpha-receipt.json",
+    "sha256": "0fe2dc68de06b8fa944d17d682d4c9317723645648989e31d60af4d11ad1d5f7",
+    "bytes": 2204
+  },
+  {
+    "path": "final-node-1bf0af5f/workspace-host/worker-beta-receipt.json",
+    "sha256": "10be38e09deb06388149b3dcfc4b924f0aab74a46fe527077679ca45536f1396",
+    "bytes": 2203
+  },
+  {
+    "path": "final-unfiltered-1bf0af5f.init.gradle",
+    "sha256": "8b5ea82879c01668030adacce3d98c58b806b0d262b5aa0a43a63f71a95fc555",
+    "bytes": 1992
+  }
+]

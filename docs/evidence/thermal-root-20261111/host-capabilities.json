@@ -1,0 +1,8 @@
+{
+  "python": "3.12.14",
+  "adb": false,
+  "apksigner": false,
+  "aapt": false,
+  "perfetto_host": false,
+  "device_connected": "NOT_CHECKED"
+}

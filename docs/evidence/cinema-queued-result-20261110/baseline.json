@@ -1,0 +1,387 @@
+{
+  "baseline_remote_sha": "5d36c5a57c031308c8de91049e19e9e8cb8365d5",
+  "baseline_local_sha": "47a86df300210de7298e7768959cd5bf0c96fb4f",
+  "baseline_git_tree": "970445b70dcd57d344f43ff95bfd58fd505f42ab",
+  "latest_remote_checked": "041abb081ae7dac637d3f0fabdae525f19acf117",
+  "latest_delta": "AGENTS.md only; app sources unchanged",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt": "b994ab2db43cc5a333737350ca9fb9011a8b80209c465c598a2adf73702929dd",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisCinemaReplayUiTest.kt": "0e97ea307b79d1fe1d026ef6b1fb993d0686b441d0a82b38f7147f1b0645e855"
+  },
+  "actual_recompiled_sources": [
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisCinemaReplayUiTest.kt"
+  ],
+  "dependency_source_local_sha": "409bf1118546165b228d4b33fb63330daaa5fad0",
+  "dependency_snapshot_note": "Existing compiled app dependencies and Android resources frozen in a separate scratch directory. Actual changed View and tests recompiled from the baseline source; no substitute View or copied state machine. All dependency JARs pinned below. This is a scoped host run, not a successful fresh full Android build.",
+  "dependency_jars": [
+    {
+      "name": "classes.jar",
+      "sha256": "956949bb0715960e9b8cc1762f92d55832485320ae2585cd0b2ab0dfdfe2750e",
+      "bytes": 18171072
+    },
+    {
+      "name": "robolectric-4.14.1.jar",
+      "sha256": "e0a73d45bceb94a5a0352b66e2120ad4a4b222fe406079130893b6c79d4441d1",
+      "bytes": 170182
+    },
+    {
+      "name": "junit-4.13.2.jar",
+      "sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+      "bytes": 384581
+    },
+    {
+      "name": "json-20240303.jar",
+      "sha256": "3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed",
+      "bytes": 78332
+    },
+    {
+      "name": "gltfio-android-1.56.0-runtime.jar",
+      "sha256": "f6c475c6e5e330f46c86eca4136bfb2d5aade053544dc3b094d3873521de27bf",
+      "bytes": 29962
+    },
+    {
+      "name": "filament-android-1.56.0-runtime.jar",
+      "sha256": "c0556c6d150516e2ac32d85f1cd8b9aaab98f62de50d2a10f4b0b8f6ea6b6469",
+      "bytes": 485013
+    },
+    {
+      "name": "provider-13.1.5-runtime.jar",
+      "sha256": "671904b9cfefb1808e31e952dbc3b345af7b851ad3b87a00e4b56fb23e636608",
+      "bytes": 12456
+    },
+    {
+      "name": "api-13.1.5-runtime.jar",
+      "sha256": "47965042cb1e53571e3b7638a807c3579ebc8ee760dc51d5c135e564359c8c20",
+      "bytes": 54854
+    },
+    {
+      "name": "shared-13.1.5-runtime.jar",
+      "sha256": "70221c0c847a1bafa5f9505aa0c006371cd154275a9236ce65d98d1e830d36fe",
+      "bytes": 3523
+    },
+    {
+      "name": "annotation-jvm-1.9.1.jar",
+      "sha256": "1e343917ebf27ba96fe4dc52b1cad7fd32b738fbc6355bb6cd5b3b305d7212d0",
+      "bytes": 60577
+    },
+    {
+      "name": "litertlm-android-0.18.0-runtime.jar",
+      "sha256": "f895c3eff5ac948ba436f0f2c309ff77ace68593803d331dfeee9f311c5938ba",
+      "bytes": 465649
+    },
+    {
+      "name": "kotlin-reflect-2.4.0.jar",
+      "sha256": "f0d8e8908624eb4478bb131e9f887366680d2e239741195e548fa5c906963b90",
+      "bytes": 3750099
+    },
+    {
+      "name": "kotlinx-coroutines-core-jvm-1.11.0.jar",
+      "sha256": "d1d75aa01dffbb4d1c520e67e4c4e7f5f6174718e7cb4632412503f2f0e604fa",
+      "bytes": 1577052
+    },
+    {
+      "name": "kotlinx-coroutines-android-1.11.0.jar",
+      "sha256": "c2cb206d27017c7d1bf5ff179787397543d13748dbabb0d7237e1585e0b29044",
+      "bytes": 17819
+    },
+    {
+      "name": "opencv-4.13.0-runtime.jar",
+      "sha256": "ed9b7d498116da7d88201d79f21daa4423bd257f5f58f23245a30c363bdb9738",
+      "bytes": 1136780
+    },
+    {
+      "name": "okhttp-4.12.0.jar",
+      "sha256": "b1050081b14bb7a3a7e55a4d3ef01b5dcfabc453b4573a4fc019767191d5f4e0",
+      "bytes": 789531
+    },
+    {
+      "name": "okio-jvm-3.6.0.jar",
+      "sha256": "67543f0736fc422ae927ed0e504b98bc5e269fda0d3500579337cb713da28412",
+      "bytes": 359580
+    },
+    {
+      "name": "kotlin-stdlib-jdk8-1.9.10.jar",
+      "sha256": "a4c74d94d64ce1abe53760fe0389dd941f6fc558d0dab35e47c085a11ec80f28",
+      "bytes": 965
+    },
+    {
+      "name": "kotlin-stdlib-jdk7-1.9.10.jar",
+      "sha256": "ac6361bf9ad1ed382c2103d9712c47cdec166232b4903ed596e8876b0681c9b7",
+      "bytes": 959
+    },
+    {
+      "name": "kotlin-stdlib-2.4.0.jar",
+      "sha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+      "bytes": 1841929
+    },
+    {
+      "name": "conscrypt-openjdk-uber-2.5.2.jar",
+      "sha256": "eaf537d98e033d0f0451cd1b8cc74e02d7b55ec882da63c88060d806ba89c348",
+      "bytes": 4534256
+    },
+    {
+      "name": "snakeyaml-2.3.jar",
+      "sha256": "63a76fe66b652360bd4c2c107e6f0258daa7d4bb492008ba8c26fcd230ff9146",
+      "bytes": 342152
+    },
+    {
+      "name": "espresso-idling-resource-3.6.1-runtime.jar",
+      "sha256": "4116203cc65797b1ec99f23b6be6d79d0aeb365f6692d585c8d0b6308971d30e",
+      "bytes": 8228
+    },
+    {
+      "name": "test-parameter-injector-1.18.jar",
+      "sha256": "e5a7c649c54c412049908247ca5e25fe6921d746849c6017a84dc6044237a4b4",
+      "bytes": 123774
+    },
+    {
+      "name": "junit-4.14.1.jar",
+      "sha256": "2cee817aadce3552706b09450ad1ea7ff5981924072d2adfe40ddad57d5fa123",
+      "bytes": 14367
+    },
+    {
+      "name": "shadows-framework-4.14.1.jar",
+      "sha256": "f3cf7785eecf9b2e80fbb4caac4c42f63eeea3506e289581c04696a56a494622",
+      "bytes": 4766936
+    },
+    {
+      "name": "resources-4.14.1.jar",
+      "sha256": "54eb274a47dec9e74cc9b45b9e4335bb5d83857c63b2a49dd8d1993e6321f2c5",
+      "bytes": 407614
+    },
+    {
+      "name": "sandbox-4.14.1.jar",
+      "sha256": "de361f3de8c08d4488cf156683830f2bd43db1da85a5b136ad6d065b868d3bab",
+      "bytes": 135838
+    },
+    {
+      "name": "nativeruntime-4.14.1.jar",
+      "sha256": "c07b66d315aec3272a7c64aa5f154b4194be2cc6030a733d16f2ee87330232a8",
+      "bytes": 53484
+    },
+    {
+      "name": "utils-reflector-4.14.1.jar",
+      "sha256": "eb8f52cdc24f59ae4cf13369c5bf990354c19c386e3e8f9f5d5cee04d836557b",
+      "bytes": 26578
+    },
+    {
+      "name": "plugins-maven-dependency-resolver-4.14.1.jar",
+      "sha256": "6c8dbc979db0780755e712acab9eeb9396811b2d4dc31a92a5b259f9876205ec",
+      "bytes": 15222
+    },
+    {
+      "name": "shadowapi-4.14.1.jar",
+      "sha256": "fd158863cee488475206ba1d23ff4c7d29be412eccd21b12d9416b0030aa582d",
+      "bytes": 15882
+    },
+    {
+      "name": "utils-4.14.1.jar",
+      "sha256": "6884eec32c9c9b23d74250e30a5ba9c5ece48784f808feba98f119b215ab59d8",
+      "bytes": 55492
+    },
+    {
+      "name": "pluginapi-4.14.1.jar",
+      "sha256": "ad8b74238d59bce6631e29190c105dd0c4701e836a2631060678407f621c7b7a",
+      "bytes": 10324
+    },
+    {
+      "name": "annotations-4.14.1.jar",
+      "sha256": "463a5ad1386c31010bc9af00bfe19a1b758d8c2dedd8c19e5c75d29ab8abb9ba",
+      "bytes": 51131
+    },
+    {
+      "name": "javax.inject-1.jar",
+      "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff",
+      "bytes": 2497
+    },
+    {
+      "name": "javax.annotation-api-1.3.2.jar",
+      "sha256": "e04ba5195bcd555dc95650f7cc614d151e4bcd52d29a10b8aa2197f3ab89ab9b",
+      "bytes": 26586
+    },
+    {
+      "name": "bcprov-jdk18on-1.78.1.jar",
+      "sha256": "add5915e6acfc6ab5836e1fd8a5e21c6488536a8c1f21f386eeb3bf280b702d7",
+      "bytes": 8324412
+    },
+    {
+      "name": "monitor-1.7.2-runtime.jar",
+      "sha256": "3641a1bd19fade3c43351d657bd5845f51f43ee2e2a40eaaee5d124d7af374b1",
+      "bytes": 230924
+    },
+    {
+      "name": "hamcrest-core-1.3.jar",
+      "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+      "bytes": 45024
+    },
+    {
+      "name": "annotations-23.0.0.jar",
+      "sha256": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05",
+      "bytes": 29371
+    },
+    {
+      "name": "aidl-13.1.5-runtime.jar",
+      "sha256": "3e81f44794c987ecc3ba03149747f22da0d5e7d9333729180e46b324bb72c179",
+      "bytes": 51356
+    },
+    {
+      "name": "gson-2.14.0.jar",
+      "sha256": "2cbd119bf1961c28788310963dc80ba65f58cdeec1dd139c8bdb1240faa2c36f",
+      "bytes": 313604
+    },
+    {
+      "name": "error_prone_annotation-2.34.0.jar",
+      "sha256": "99f8b53c75a50617d4f9bf45512eda82e7d8e9eb377471d822d3d4c4e034c510",
+      "bytes": 8275
+    },
+    {
+      "name": "guava-33.3.1-android.jar",
+      "sha256": "2c3e41d1b380f2044d257947a3aa82dabf3ae4b978622745254aa18b6cf89ab0",
+      "bytes": 2918070
+    },
+    {
+      "name": "auto-value-annotations-1.11.0.jar",
+      "sha256": "5a055ce4255333b3346e1a8703da5bf8ff049532286fdcd31712d624abe111dd",
+      "bytes": 7491
+    },
+    {
+      "name": "asm-commons-9.7.1.jar",
+      "sha256": "9a579b54d292ad9be171d4313fd4739c635592c2b5ac3a459bbd1049cddec6a0",
+      "bytes": 73459
+    },
+    {
+      "name": "asm-util-9.7.1.jar",
+      "sha256": "f885be71b5c90556f5f1ad1c4f9276b29b96057c497d46666fe4ddbec3cb43c6",
+      "bytes": 94519
+    },
+    {
+      "name": "asm-analysis-9.7.1.jar",
+      "sha256": "85b29371884ba31bb76edf22323c2c24e172c3267a67152eba3d1ccc2e041ef2",
+      "bytes": 35126
+    },
+    {
+      "name": "asm-tree-9.7.1.jar",
+      "sha256": "9929881f59eb6b840e86d54570c77b59ce721d104e6dfd7a40978991c2d3b41f",
+      "bytes": 51939
+    },
+    {
+      "name": "asm-9.7.1.jar",
+      "sha256": "8cadd43ac5eb6d09de05faecca38b917a040bb9139c7edeb4cc81c740b713281",
+      "bytes": 126093
+    },
+    {
+      "name": "sqlite4java-1.0.392.jar",
+      "sha256": "243a64470fda0e86a6fddeb0af4c7aa9426ce84e68cbfe18d75ee5da4b7e0b92",
+      "bytes": 132506
+    },
+    {
+      "name": "icu4j-75.1.jar",
+      "sha256": "543e43a91d1499e331c711a756f833d6fb8cc019f9c9913c0bdf4d53009932d5",
+      "bytes": 14312248
+    },
+    {
+      "name": "error_prone_annotations-2.48.0.jar",
+      "sha256": "b49c5c958316ed67a09c699dda9aa749caf434d51d863dea599ef36a49b9c855",
+      "bytes": 20255
+    },
+    {
+      "name": "failureaccess-1.0.2.jar",
+      "sha256": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064",
+      "bytes": 4740
+    },
+    {
+      "name": "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+      "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99",
+      "bytes": 2199
+    },
+    {
+      "name": "jsr305-3.0.2.jar",
+      "sha256": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7",
+      "bytes": 19936
+    },
+    {
+      "name": "checker-qual-3.43.0.jar",
+      "sha256": "3fbc2e98f05854c3df16df9abaa955b91b15b3ecac33623208ed6424640ef0f6",
+      "bytes": 231525
+    },
+    {
+      "name": "j2objc-annotations-3.0.0.jar",
+      "sha256": "88241573467ddca44ffd4d74aa04c2bbfd11bf7c17e0c342c94c9de7a70a7c64",
+      "bytes": 12467
+    },
+    {
+      "name": "nativeruntime-dist-compat-1.0.16.jar",
+      "sha256": "2f4e879b00eed634d0e43353ecff80db4d5ce24b3b213d1e6053cb21b0ced10f",
+      "bytes": 157996126
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "81e3f4c036306e74d6a8c19b58f11cd957cd091494cc3c493eecbeee57015a22",
+      "bytes": 14522
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "cad38e83e0226bd16f1e86385d7fd82b108258676949d7924b9c14a1eaa18c62",
+      "bytes": 232114
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "35aee86b938cb8d06b315c9d73c30f41ec7cfdc10009a5de83733bc5c4db5051",
+      "bytes": 6671
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "4315fcd853f487321548be5a997749fe43105fa29aaaa6f6e7a8cdc958a38357",
+      "bytes": 25678
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "8557b8c715d374f8da18e148ca5b971d1c7435e91447e6d4f7664403c7328760",
+      "bytes": 2130
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "0ff0098f64407752c115bf2569a7cd3005c894ecb934e7fdbcd744037f398ce8",
+      "bytes": 191250
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "9a5f8f1189ecb60b9ca18c4f1102c692badbdda809c69a602d1b10e1598abb05",
+      "bytes": 439073
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "fd8686b8b35f21486512971c690996ca8540773407d64ed7fd543cc6a8d74d83",
+      "bytes": 4923
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "d10797c3b5386a352f1601bc100cb3872d3841eda06a6216c7a5502479119206",
+      "bytes": 118577
+    },
+    {
+      "name": "classes.jar",
+      "sha256": "584945c98f21b0c4e3ccdb74b51528f89852174c30bb2a4786c43a8ca456e496",
+      "bytes": 25083
+    },
+    {
+      "name": "R.jar",
+      "sha256": "4f1fd3a0695ae2649359a37ab1643eac11407743ddfb138643726048c9082521",
+      "bytes": 9153
+    },
+    {
+      "name": "android.jar",
+      "sha256": "8729d23ac4a1b0174bf7e07da5a8da44b8f5ba1120c21e6f40a15c5e8590bb53",
+      "bytes": 5095364
+    }
+  ],
+  "tests": 8,
+  "failures": 2,
+  "red_cases": [
+    "queuedEarlyResultAdvancesAfterReturnAndConstruction",
+    "repeatedQueuedOrderKeepsItsEarlyResult"
+  ],
+  "scope": "JUnit 4.13.2, Robolectric API28, actual View and projection events; no model, GPU or Fold7",
+  "full_build_attempt": "Gradle daemon disappeared at compileDebugKotlin; no test execution in that invocation"
+}

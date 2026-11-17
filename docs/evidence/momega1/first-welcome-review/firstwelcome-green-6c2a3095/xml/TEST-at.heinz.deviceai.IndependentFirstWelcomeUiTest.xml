@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentFirstWelcomeUiTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:19:17" hostname="b354f2cb821b" time="1.071">
+  <properties/>
+  <testcase name="uninstalledOfflineFlagCannotProduceWelcomeOrTriggerDownload" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.15"/>
+  <testcase name="firstResumeWaitsForActualOfflineInitializationAndStartCallback" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.168"/>
+  <testcase name="pausedThenResumedWelcomeDoesNotRestartOnLateInitialization" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.115"/>
+  <testcase name="recreatedActivityKeepsIntroducedStateWithoutRepeatingWelcome" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.079"/>
+  <testcase name="networkVoiceCannotProduceOfflineWelcome" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.179"/>
+  <testcase name="initializationAfterDismissCannotSpeakAGenericFallback" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.067"/>
+  <testcase name="lateBackgroundInitializationCannotSpeak" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.083"/>
+  <testcase name="duplicateInitializationAndRepeatedResumeCannotReplayWelcome" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.129"/>
+  <testcase name="savedMuteAndFactsSurviveLateInitialization" classname="at.heinz.deviceai.IndependentFirstWelcomeUiTest" time="0.101"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

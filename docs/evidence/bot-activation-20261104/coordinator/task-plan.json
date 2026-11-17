@@ -1,0 +1,124 @@
+{
+  "schema": "continuum-owner-bot-work-plan",
+  "version": 1,
+  "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "recordedAt": "2026-11-04T18:40:51.539Z",
+  "delivery": "NOT_SUBMITTED",
+  "runtimeState": "BLOCKED_NO_REACHABLE_LIVE_RUNTIME",
+  "scope": "Concrete planning record using existing task schema, not a queue, grant, scheduler or live bot response.",
+  "serviceRoleBoundary": "Current owner service pins FORGE/LINT/ECHO. Kora/Link/Iris are domain profiles and do not gain live execution from this record.",
+  "items": [
+    {
+      "domain": "Reparatur",
+      "domainProfileId": "bot-kora",
+      "executionRoles": {
+        "builder": "bot-forge",
+        "verifier": "bot-lint",
+        "reporter": "bot-echo"
+      },
+      "task": {
+        "acceptance": [
+          "Doppelte Nachrichten lösen keine zweite Ausführung aus.",
+          "Widerrufene oder veraltete Aufträge erzeugen keine Erfolgsquittung.",
+          "Ein Ersteller darf seine eigene Reparatur nicht unabhängig bestätigen."
+        ],
+        "allowedPaths": [
+          "app/src/main/java/at/heinz/deviceai/chief/ChiefBotHandoff.kt"
+        ],
+        "chain": "android",
+        "goal": "Prüfe die bestehende Bot-Übergabe auf doppelte Aufträge, veraltete Quellen, widerrufene Freigaben und verspätete Ergebnisse. Repariere nur einen reproduzierten Fehler innerhalb der erlaubten Datei. Ohne reproduzierten Fehler keine Änderung erzwingen.",
+        "id": "owner-bot-repair-handoff-20261104",
+        "kind": "BUGFIX",
+        "limits": {
+          "maxContextChars": 8192,
+          "maxModelCalls": 1
+        },
+        "schema": "continuum-coding-task",
+        "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+        "version": 1
+      },
+      "taskFingerprint": "1b2e2e7c2e4436021256e8347806d7ee09940fe05b1743a2cb7f50438d94c054",
+      "status": "VALIDATED_NOT_SUBMITTED",
+      "ownerDataRead": false,
+      "modelCalls": 0,
+      "executionStarted": false
+    },
+    {
+      "domain": "Implementierung",
+      "domainProfileId": "bot-link",
+      "executionRoles": {
+        "builder": "bot-forge",
+        "verifier": "bot-lint",
+        "reporter": "bot-echo"
+      },
+      "task": {
+        "acceptance": [
+          "Ergebnis bleibt an Auftrag, Worker, Quelle und Request gebunden.",
+          "Eine volle Mailbox meldet eine fehlgeschlagene Zustellung.",
+          "Abbruch oder unbestätigtes Ressourcenende darf nicht als Erfolg erscheinen."
+        ],
+        "allowedPaths": [
+          "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkspaceWiring.kt"
+        ],
+        "chain": "android",
+        "goal": "Prüfe den vorhandenen Anschluss von Worker-Ergebnissen an die Chief-Mailbox. Verbinde nur eine konkret belegte fehlende Übergabe. Bewahre die kanonische Auftragsidentität; bloße Zustellung darf keine unabhängig geprüfte Reparatur behaupten.",
+        "id": "owner-bot-implementation-scope-20261104",
+        "kind": "BUGFIX",
+        "limits": {
+          "maxContextChars": 8192,
+          "maxModelCalls": 1
+        },
+        "schema": "continuum-coding-task",
+        "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+        "version": 1
+      },
+      "taskFingerprint": "e62b4aaf446f3f54af28dc45f49ff2b252f8bbada0b05cefe978ddf2e09e650d",
+      "status": "VALIDATED_NOT_SUBMITTED",
+      "ownerDataRead": false,
+      "modelCalls": 0,
+      "executionStarted": false
+    },
+    {
+      "domain": "Avatar",
+      "domainProfileId": "bot-iris",
+      "executionRoles": {
+        "builder": "bot-forge",
+        "verifier": "bot-lint",
+        "reporter": "bot-echo"
+      },
+      "task": {
+        "acceptance": [
+          "Sprachsignale eines beendeten oder fremden Utterance werden verworfen.",
+          "Nach Abbruch darf ein verspätetes Audiosignal die Mundanimation nicht neu starten.",
+          "Ungültige oder veraltete Blicksignale werden abgewiesen."
+        ],
+        "allowedPaths": [
+          "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt"
+        ],
+        "chain": "android",
+        "goal": "Prüfe die Avatar-Reaktion auf laufende Botarbeit, Sprachende und Abbruch. Prüfe verspätete Sprachsignale und ungültige Blicksignale. Repariere nur einen belegten Zustandsfehler; verwende den vorhandenen Avatar und seine Ereignisse.",
+        "id": "owner-bot-avatar-stop-20261104",
+        "kind": "BUGFIX",
+        "limits": {
+          "maxContextChars": 8192,
+          "maxModelCalls": 1
+        },
+        "schema": "continuum-coding-task",
+        "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+        "version": 1
+      },
+      "taskFingerprint": "1c184881ab6b1e3f44f0ea61e5a65c801cef7a472a2b09ddba81860fa721f529",
+      "status": "VALIDATED_NOT_SUBMITTED",
+      "ownerDataRead": false,
+      "modelCalls": 0,
+      "executionStarted": false
+    }
+  ],
+  "validation": {
+    "validTasks": 3,
+    "allSourcePathsExist": true,
+    "protectedOrchestratorRejected": true,
+    "testFileEditsRejected": true,
+    "mainManifestEditsRejected": true
+  }
+}

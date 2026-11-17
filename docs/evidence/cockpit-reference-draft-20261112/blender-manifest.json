@@ -1,0 +1,65 @@
+{
+  "evidenceClass": "HOST_ASSET_RENDER",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "stillsSamples": 8,
+  "sequenceSamples": 8,
+  "threads": 2,
+  "denoising": false,
+  "seed": 731,
+  "assets": {
+    "cockpit": "152669e9c7d8c5ea8627f09353fbd71bfca9ba93a6df6c751c7d44e2ea72de0d",
+    "avatar": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+  },
+  "lighting": "Fixed host inspection studio; not Filament photometric equivalence",
+  "avatarPose": "Original GLB neutral rest pose; runtime-hidden tooth nodes excluded",
+  "frames": [
+    {
+      "key": "fold-idle",
+      "image": "fold-idle-stage.png",
+      "imageSha256": "b6a32e7c8655f6ebeed3b57afb1f2cf0db2a636c8d72e4b3f1f161a4789ced30",
+      "samples": 8,
+      "projectionMaxErrorPixels": 0.00033553207396153084,
+      "projectedContentQuad": [
+        228.38320863246918,
+        279.26434993743896,
+        625.0691134929657,
+        279.6655797958374,
+        625.0691134929657,
+        419.340455532074,
+        228.38320863246918,
+        417.5263524055481
+      ]
+    },
+    {
+      "key": "fold-avatar-neutral",
+      "image": "fold-avatar.png",
+      "imageSha256": "c2238965c1306d474a2417745367fb3c6c65d3f84c3bc8cdac99fba3a4bb581a"
+    },
+    {
+      "key": "phone-idle",
+      "image": "phone-idle-stage.png",
+      "imageSha256": "f13fc387d2710e954212126906967cf99dfbe997bcd9be1872002b0cfcf9dd30",
+      "samples": 8,
+      "projectionMaxErrorPixels": 0.00023813629150026827,
+      "projectedContentQuad": [
+        20.96671424433589,
+        335.14358711242676,
+        367.63278740644455,
+        335.76723289489746,
+        367.63278740644455,
+        503.9712381362915,
+        20.96671424433589,
+        501.15148544311523
+      ]
+    },
+    {
+      "key": "phone-avatar-neutral",
+      "image": "phone-avatar.png",
+      "imageSha256": "5bd08c46eb38ac2dcd8e93c9c8651916a688ddb321155910929ad4d6b4a653fe"
+    }
+  ],
+  "Filament": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "deviceFps": "NOT_MEASURED",
+  "deviceThermal": "NOT_MEASURED"
+}

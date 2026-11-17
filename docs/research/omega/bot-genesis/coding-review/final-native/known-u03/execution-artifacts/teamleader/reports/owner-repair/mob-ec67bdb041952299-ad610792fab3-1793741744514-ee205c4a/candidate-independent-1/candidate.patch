@@ -1,0 +1,7 @@
+diff --git a/lib/subject.mjs b/lib/subject.mjs
+index 3e0120e..3845cc2 100644
+--- a/lib/subject.mjs
++++ b/lib/subject.mjs
+@@ -1 +1 @@
+-export const run = (setting,fallback) => setting || fallback;
++export const run = (setting, fallback) => setting === null || setting === undefined ? fallback : setting;

@@ -1,0 +1,31 @@
+19:15:31 | INFO: Data are loaded, start creating Blender stuff
+19:15:31 | INFO: Blender create Mesh node EyeballLeftMesh
+19:15:31 | INFO: Blender create Mesh node IrisLeftMesh
+19:15:31 | INFO: Blender create Mesh node PupilLeftMesh
+19:15:31 | INFO: Blender create Mesh node EyeballRightMesh
+19:15:31 | INFO: Blender create Mesh node IrisRightMesh
+19:15:31 | INFO: Blender create Mesh node PupilRightMesh
+19:15:31 | INFO: Blender create Mesh node MouthInteriorMesh
+19:15:31 | INFO: Blender create Mesh node ToothLower0Mesh
+19:15:31 | INFO: Blender create Mesh node ToothLower1Mesh
+19:15:31 | INFO: Blender create Mesh node ToothLower2Mesh
+19:15:31 | INFO: Blender create Mesh node ToothLower3Mesh
+19:15:31 | INFO: Blender create Mesh node ToothLower4Mesh
+19:15:31 | INFO: Blender create Mesh node ToothLower5Mesh
+19:15:31 | INFO: Blender create Mesh node ToothLower6Mesh
+19:15:31 | INFO: Blender create Mesh node ToothLower7Mesh
+19:15:31 | INFO: Blender create Mesh node ToothUpper0Mesh
+19:15:31 | INFO: Blender create Mesh node ToothUpper1Mesh
+19:15:31 | INFO: Blender create Mesh node ToothUpper2Mesh
+19:15:31 | INFO: Blender create Mesh node ToothUpper3Mesh
+19:15:31 | INFO: Blender create Mesh node ToothUpper4Mesh
+19:15:31 | INFO: Blender create Mesh node ToothUpper5Mesh
+19:15:31 | INFO: Blender create Mesh node ToothUpper6Mesh
+19:15:31 | INFO: Blender create Mesh node ToothUpper7Mesh
+19:15:31 | INFO: Blender create Mesh node FaceMesh
+19:15:31 | INFO: Blender create Mesh node NeuralThreadsMesh
+19:15:31 | INFO: glTF import finished in 0.16s
+CONTROLS [('BustSkin', 'ARMATURE', ['AvatarRoot', 'Neck', 'Head']), ('EyeLeft', 'EMPTY', None), ('EyeRight', 'EMPTY', None), ('Jaw', 'EMPTY', None)]
+Blender 4.3.2
+
+Blender quit

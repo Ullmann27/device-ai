@@ -1,0 +1,194 @@
+{
+  "schema": "synapse-fresh-location-controls-v1",
+  "seed": 20261102,
+  "independence": "Authored and frozen before inspecting candidate code/checkpoint/predictions in this follow-up; author previously inspected existing rule/reflex for M1. New synthetic control, not blind-C replacement or pooled benchmark.",
+  "cases": [
+    {
+      "id": "N01",
+      "category": "supported",
+      "question": "Wo wohnt Zucnzzfdob?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-1-0",
+          "revision": 3,
+          "sha256": "6c9bf98c9777c16b665a5ea4fa1b21f1b7593431879b57e84456dac64b633d5f",
+          "text": "Zucnzzfdob wohnt in Neuinccuargk."
+        }
+      ],
+      "expected": {
+        "text": "Neuinccuargk",
+        "sourceId": "fresh-20261102-1-0",
+        "revision": 3,
+        "sha256": "6c9bf98c9777c16b665a5ea4fa1b21f1b7593431879b57e84456dac64b633d5f",
+        "start": 20,
+        "endExclusive": 32
+      }
+    },
+    {
+      "id": "N02",
+      "category": "supported",
+      "question": "Wo lebt Zzgnsvpgvf?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-2-0",
+          "revision": 3,
+          "sha256": "248c72884cb1c94b48f6e2d0db5c67fa50806577bae66ad857f3d81541498f81",
+          "text": "Ztoupulgts lebt in Neucfaulvmuz. Zzgnsvpgvf lebt in Neulundnznha."
+        }
+      ],
+      "expected": {
+        "text": "Neulundnznha",
+        "sourceId": "fresh-20261102-2-0",
+        "revision": 3,
+        "sha256": "248c72884cb1c94b48f6e2d0db5c67fa50806577bae66ad857f3d81541498f81",
+        "start": 52,
+        "endExclusive": 64
+      }
+    },
+    {
+      "id": "N03",
+      "category": "supported",
+      "question": "Wo ist Zbzcdzcsta?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-3-0",
+          "revision": 3,
+          "sha256": "c46f13917325dbba8af85b9efd5bf7af24621e47d9f78f99ed505b36464d3654",
+          "text": "Zapmutcozv ist in Neudoskgguns."
+        },
+        {
+          "sourceId": "fresh-20261102-3-1",
+          "revision": 3,
+          "sha256": "22d4945f15ba49e2b66f1e30eb1b3d7aeca77b7028d798342b5698adbc2ca967",
+          "text": "Zbzcdzcsta ist in Neupminsgzlr."
+        }
+      ],
+      "expected": {
+        "text": "Neupminsgzlr",
+        "sourceId": "fresh-20261102-3-1",
+        "revision": 3,
+        "sha256": "22d4945f15ba49e2b66f1e30eb1b3d7aeca77b7028d798342b5698adbc2ca967",
+        "start": 18,
+        "endExclusive": 30
+      }
+    },
+    {
+      "id": "N04",
+      "category": "supported",
+      "question": "Wo steht Zdhsvdkust?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-4-0",
+          "revision": 3,
+          "sha256": "5fca61b2efdc1c28e677be39856eb4be5650500054c9b150c05f23000e3691d5",
+          "text": "Zdhsvdkust steht in Neuimzkkdkez."
+        }
+      ],
+      "expected": {
+        "text": "Neuimzkkdkez",
+        "sourceId": "fresh-20261102-4-0",
+        "revision": 3,
+        "sha256": "5fca61b2efdc1c28e677be39856eb4be5650500054c9b150c05f23000e3691d5",
+        "start": 20,
+        "endExclusive": 32
+      }
+    },
+    {
+      "id": "N05",
+      "category": "supported",
+      "question": "Wo wohnt Zodkzzufil?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-5-0",
+          "revision": 3,
+          "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+          "text": "Zdrarfmlso wohnt in Neumbmplvlro, Zodkzzufil wohnt in Neulhgdpfbpz.  "
+        }
+      ],
+      "expected": {
+        "text": "Neulhgdpfbpz",
+        "sourceId": "fresh-20261102-5-0",
+        "revision": 3,
+        "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+        "start": 54,
+        "endExclusive": 66
+      }
+    },
+    {
+      "id": "N06",
+      "category": "decline-relation",
+      "question": "Wo wohnt Zenchpoiia?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-6-0",
+          "revision": 3,
+          "sha256": "5997eedd0735a6014fbe070e90853beeec20d2cf95ffab3186b8851a8f326e81",
+          "text": "Zenchpoiia steht in Neubcatkfsfe."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "N07",
+      "category": "decline-pronoun-correction",
+      "question": "Wo lebt Zikcfieipr?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-7-0",
+          "revision": 3,
+          "sha256": "d4a969d7989c33be0b84f91bb945955b6540aafbaa75a6715cea724a268ec4dd",
+          "text": "Zikcfieipr lebt in Neutvlmpemkr. Sie lebt nicht mehr dort."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "N08",
+      "category": "decline-time-correction",
+      "question": "Wo ist Zsrccdvehf?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-8-0",
+          "revision": 3,
+          "sha256": "713d7793f2072eb5e3496500cac388d0bb13bcecdc24f6e221189b2d75246ff8",
+          "text": "Zsrccdvehf ist in Neupugnnoodo; seit gestern ist der Ort unbekannt."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "N09",
+      "category": "decline-conflict",
+      "question": "Wo wohnt Zflffpnbml?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-9-0",
+          "revision": 3,
+          "sha256": "9493ab7d7f7643f6f8b37e65240ba10f323049f4661f7d9469ecb3bf26012694",
+          "text": "Zflffpnbml wohnt in Neuckgottdsz."
+        },
+        {
+          "sourceId": "fresh-20261102-9-1",
+          "revision": 3,
+          "sha256": "b09d755d19223fdf58831867825c0a2a980b96fdbe1514cb3a215d70be64881a",
+          "text": "Zflffpnbml wohnt in Neuoefbovlea."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "N10",
+      "category": "decline-reported-claim",
+      "question": "Wo ist Zektoskrvo?",
+      "sources": [
+        {
+          "sourceId": "fresh-20261102-10-0",
+          "revision": 3,
+          "sha256": "b0516c994b221c379b6b48800b3b1293bbb86ecab5e5e4670ad8ca1350eb83e1",
+          "text": "Zmotrppbsb behauptet: „Zektoskrvo ist in Neumziiunogl.“"
+        }
+      ],
+      "expected": null
+    }
+  ]
+}

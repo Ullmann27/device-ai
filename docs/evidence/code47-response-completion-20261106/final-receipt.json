@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "test_count": 54,
+  "failure_count": 0,
+  "test_class_count": 10,
+  "sdk_dependency_source": "24547da95790ca43b0293ed06b4f2bd6e5a7814c",
+  "new_classes_first": true,
+  "android_activity_executed": false,
+  "device_or_model_executed": false,
+  "activity_integration": "separate coordinated patch",
+  "source_hashes": "final-source-sha256.json",
+  "compile_exit": 0,
+  "junit_exit": 0
+}

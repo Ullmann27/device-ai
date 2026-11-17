@@ -1,0 +1,189 @@
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (60.601727ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (27.474091ms)
+✔ malformed model name is rejected before invoking the local child (83.54185ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (18.34875ms)
+✖ same canonical job resumes its request budget without repeating evidence slots (80.12475ms)
+✖ request reservation is durable before inference and interrupted calls consume the budget (35.756979ms)
+✖ foreign or corrupt persisted requests block before another inference (96.786201ms)
+✔ failed independent patch check records a negative learning signal without fake success (2.756382ms)
+✔ independently verified patch keeps legitimate positive experience (1.567197ms)
+✔ unverified teamleader calls never create positive or negative learning labels (0.280423ms)
+✔ explicit independent rejection is negative, not an unknown outcome (2.692757ms)
+✔ non-verified sessions retain their original failure diagnoses (0.219972ms)
+✖ optional scoped task identity survives ledger serialization and rejects malformed bindings (2.502258ms)
+✔ unverified session cannot poison history through claimed failed alternatives (0.366694ms)
+✔ invalid syntax is retained as negative repair experience without fabricated test execution (0.332402ms)
+✔ syntax checker errors remain audit evidence without becoming failed-strategy labels (4.632576ms)
+✔ an edit too large for the ledger is recorded by digest, keeps the session record and is never replayed (9.921904ms)
+✔ owner worker refuses a supplied untrusted executor before claim or checks (21.327548ms)
+✔ scoped task identity and commit are checked before claiming the owner task (89.959423ms)
+✔ scoped revision receives actual failed diagnostics and bounded history then verifies independently (1027.977556ms)
+✔ repeated scoped patch is rejected without a second candidate check (408.161878ms)
+✖ same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again (982.451945ms)
+✔ durable scoped diagnostics never cross task authorization or source boundaries (1676.678954ms)
+✖ exhausted or corrupt durable model budgets retain explicit codes and stop revision retries (427.500781ms)
+✔ scoped proposals cannot edit outside task grants or change context commit (793.496561ms)
+✔ scoped pure numeric changes can cover two files on the host (766.754891ms)
+✔ general scoped source is blocked before executing candidate code without isolation (218.314843ms)
+✔ new coding and isolation control files stay protected by the critic (0.319553ms)
+✔ general scoped proposals cannot mutate test APIs or write their own reports (0.7153ms)
+✔ scoped successes remain owner-review evidence without automatic learning (0.868111ms)
+✔ scoped provider failures count against the fixed model-call budget (218.883823ms)
+✔ total scoped candidate limit bounds revisions even when model budget remains (449.546657ms)
+✔ local teamleader forwards the scoped provider through the canonical owner worker (719.780775ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 27
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8554.366829
+
+✖ failing tests:
+
+test at .github/continuum/coding-provider.test.mjs:110:1
+✖ same canonical job resumes its request budget without repeating evidence slots (80.12475ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "EEXIST: file already exists, open '/tmp/coding-resume-pXUogn/request-1.json'"
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:119:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: EEXIST: file already exists, open '/tmp/coding-resume-pXUogn/request-1.json'
+        at Object.openSync (node:fs:622:18)
+        at Object.writeFileSync (node:fs:2497:35)
+        at provider (file:///workspace/device-ai/.github/continuum/coding-provider.mjs:78:18)
+        at invoke (file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:116:25)
+        at file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:119:26
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:119:9)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-provider.test.mjs:127:1
+✖ request reservation is durable before inference and interrupted calls consume the budget (35.756979ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:140:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-provider.test.mjs:145:1
+✖ foreign or corrupt persisted requests block before another inference (96.786201ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /CODING_EVIDENCE_BINDING_MISMATCH/. Input:
+  
+  "Error: EEXIST: file already exists, open '/tmp/coding-foreign-evidence-eMCs3F/request-1.json'"
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:153:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: EEXIST: file already exists, open '/tmp/coding-foreign-evidence-eMCs3F/request-1.json'
+        at Object.openSync (node:fs:622:18)
+        at Object.writeFileSync (node:fs:2497:35)
+        at provider (file:///workspace/device-ai/.github/continuum/coding-provider.mjs:78:18)
+        at invoke (file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:151:25)
+        at file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:153:20
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-provider.test.mjs:153:9)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25),
+    expected: /CODING_EVIDENCE_BINDING_MISMATCH/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/repair-ledger-independent.test.mjs:87:1
+✖ optional scoped task identity survives ledger serialization and rejects malformed bindings (2.502258ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/repair-ledger-independent.test.mjs:93:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/scoped-repair-pipeline.test.mjs:86:1
+✖ same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again (982.451945ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/scoped-repair-pipeline.test.mjs:95:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/scoped-repair-pipeline.test.mjs:125:1
+✖ exhausted or corrupt durable model budgets retain explicit codes and stop revision retries (427.500781ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  3 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/scoped-repair-pipeline.test.mjs:130:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,4 @@
+sources=292 kotlinc_exit=1
+errors in files that need LiteRT-LM (Google Maven, unavailable here): 153
+KOTLIN_COMPILE_CHECK_FAILED: 1 error(s) outside the LiteRT-LM files
+app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt:351:66: error: unresolved reference 'text'.

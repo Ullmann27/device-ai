@@ -1,0 +1,7 @@
+{
+  "status": "FAILED",
+  "head": "2872f613728bc44cd21acda48256296e74ee1753",
+  "taskId": "mob-a66c995207b6bd10",
+  "reason": "NO_VERIFIED_REPAIR",
+  "report": "/workspace/momega1-build-env/real-model-benchmark/u08/task/private-synthetic-state/teamleader/reports/owner-repair/mob-a66c995207b6bd10-2872f613728b-1793737845228-8c10aaf5/report.json"
+}

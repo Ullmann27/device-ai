@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.BoundedAgentTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:18" hostname="b50d54a1ac03" time="0.07">
+  <properties/>
+  <testcase name="checkpointCodecIsAllowlistedAndResumeContinuesFromAValidatedState" classname="at.heinz.deviceai.cognitive.BoundedAgentTest" time="0.007"/>
+  <testcase name="toolPathUsesGateAndNeverExecutesRawShellProposal" classname="at.heinz.deviceai.cognitive.BoundedAgentTest" time="0.008"/>
+  <testcase name="modelCannotSelfApproveConfirmToolsAndExplicitApprovalIsRequired" classname="at.heinz.deviceai.cognitive.BoundedAgentTest" time="0.008"/>
+  <testcase name="reflectionIsOneBoundedRepairAndExhaustionReturnsBlocker" classname="at.heinz.deviceai.cognitive.BoundedAgentTest" time="0.008"/>
+  <testcase name="hardStepLimitStopsBeforeModelAndDoesNotStoreUnevaluatedExperience" classname="at.heinz.deviceai.cognitive.BoundedAgentTest" time="0.036"/>
+  <testcase name="happyPathUsesOrderedBoundedStatesAndStoresEvaluatedExperience" classname="at.heinz.deviceai.cognitive.BoundedAgentTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,26 @@
+{
+  "source": "713949a86e10fb4fe4cc22d03f1af1afdcdf51e8",
+  "command": [
+    "node",
+    "--import",
+    "./docs/research/omega/synapse-swarm/p0-audit/current-image-fixture.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    ".github/continuum/momega1-typed-workspace-host.test.mjs",
+    ".github/continuum/ccc1-workspace-lifecycle-host.test.mjs",
+    ".github/continuum/ccc1-workspace-host.test.mjs",
+    "tools/momega1-workspace-review/claim-adversarial.test.mjs"
+  ],
+  "env": {
+    "SYNAPSE_P0_TARGET": "/workspace/synapse-p0-audit",
+    "SYNAPSE_P0_IMAGE": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+    "WORKSPACE_REVIEW_TARGET": "/workspace/synapse-p0-audit",
+    "CONTINUUM_WORKSPACE_HOST_PROOF": "1",
+    "CONTINUUM_WORKSPACE_EVIDENCE_DIR": "/workspace/synapse-p0-audit/docs/research/omega/synapse-swarm/p0-audit/actual-workspaces"
+  },
+  "exit": 0,
+  "elapsedSeconds": 13.779934883117676,
+  "fixtureChange": "Only exact test-module image pin updated to newly built local scratch digest; no production/assertion changes",
+  "evidenceClass": "HOST_INTEGRATION; scripted/deterministic candidate, no neural inference"
+}

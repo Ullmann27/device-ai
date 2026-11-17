@@ -1,0 +1,44 @@
+✔ actual token CLI creates a private non-overwritable credential without printing it (162.615072ms)
+✔ actual owner CLI refuses permissive credential directories and undeclared flags (145.021454ms)
+✔ fixed canonical child reader sanitizes preload environment and reports no arbitrary error text (43.51608ms)
+✔ a real spawned read process has a timeout, and closed reader cannot start another process (3.897802ms)
+✔ real loopback HTTP lifecycle exposes exactly four read-only tools and fresh adapter state (59.602841ms)
+✔ missing/wrong/query credentials and hostile Origin/Host never read service state (17.392635ms)
+✔ write tools, path arguments, invalid pagination, batches and unsolicited responses rejected (30.469515ms)
+✔ pagination cursor is session and tool bound and canonical cursor is not disclosed (19.446554ms)
+✔ token rotation revokes existing sessions and previously valid token (8.721356ms)
+✔ a grant reader failure is redacted and digest mismatch cannot become evidence (9.657142ms)
+✔ no successful read after credential revocation during a pending call (9.586657ms)
+✔ timeouts, oversized results/body and per-session parallel reads fail closed (66.395556ms)
+✔ terminated, absent, uninitialized and unknown sessions cannot query service (18.944283ms)
+✔ MCP version negotiation and JSON content negotiation follow pinned protocol (10.670626ms)
+✖ unknown session is 404 for GET too, before optional stream rejection (2.578307ms)
+✔ credential files reject symlinks, permissive access, hard links and bot writable placement (5.777388ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 15
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 434.668489
+
+✖ failing tests:
+
+test at .github/continuum/coding-mcp.test.mjs:168:1
+✖ unknown session is 404 for GET too, before optional stream rejection (2.578307ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  405 !== 404
+  
+      at TestContext.<anonymous> (file:///workspace/independence-mcp/.github/continuum/coding-mcp.test.mjs:171:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 405,
+    expected: 404,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

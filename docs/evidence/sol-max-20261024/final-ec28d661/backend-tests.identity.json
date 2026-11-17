@@ -1,0 +1,27 @@
+{
+  "sourceHeadBefore": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "sourceHeadAfter": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "trackedSourceCleanAfter": true,
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-concurrency=2",
+    "/workspace/device-ai-sol-max/backend/test/android-web-tools.test.js",
+    "/workspace/device-ai-sol-max/backend/test/api-integration.test.js",
+    "/workspace/device-ai-sol-max/backend/test/brain-factory.test.js",
+    "/workspace/device-ai-sol-max/backend/test/continuum-daemon.test.js",
+    "/workspace/device-ai-sol-max/backend/test/continuum-knowledge.test.js",
+    "/workspace/device-ai-sol-max/backend/test/groq-mentor-browser.test.js",
+    "/workspace/device-ai-sol-max/backend/test/groq-mentor.test.js",
+    "/workspace/device-ai-sol-max/backend/test/hypothesis-tournament.test.js",
+    "/workspace/device-ai-sol-max/backend/test/mentor-answer-format.test.js",
+    "/workspace/device-ai-sol-max/backend/test/mentor-pairing.test.js",
+    "/workspace/device-ai-sol-max/backend/test/public-research-daemon.test.js",
+    "/workspace/device-ai-sol-max/backend/test/public-research.test.js"
+  ],
+  "cwd": "/workspace/device-ai-sol-max",
+  "startedUtc": "2026-10-24T08:46:39.092851+00:00",
+  "durationSeconds": 1.791,
+  "exitCode": 0
+}

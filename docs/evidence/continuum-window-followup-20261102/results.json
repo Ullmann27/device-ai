@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "CodeRabbit Agent",
+  "baseCommit": "4d50b9e57b58c3e8c142e6c5dfeceeb81fad28a1",
+  "workingTreeInputsSha256": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "99a1d9afdaa8dc7b34f39a8896a22bde0a09992266cdd87a0a83f79716fbdb11",
+    "app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt": "da304f49bb692ebac24f1e0a23112067e9c475062e42e84ec08cf219848832af",
+    "app/src/main/res/xml/continuum_screen_observation.xml": "4f8cbc33a3d61e8991ffb3a5a24245e2fcae256d9fdc6f88ca01e95e8ccef358",
+    "app/build.gradle.kts": "90eb3ea13034246b674d3266342631dfd969faab3e5f9d51a291877e3af17cdd",
+    "build.gradle.kts": "30b87bf76d9ec1604dfe579fdf5d71e1d722fe05b8a7043b9deed7ae6916e499",
+    "settings.gradle.kts": "eae2b268ce19144a26aeb6487bf1e43d0ff09b52e4d417e4451a9f4b12fe81be",
+    "gradle.properties": "949550ad13b20c9dbd693a5c4dd59896c55bc5c441f473b1e83ed1e5ccca6923"
+  },
+  "baselineServiceSha256": "9cce5b01af33fe339c4977e63b93dd502b7798e500a78b51f03b01ce2ec51a26",
+  "exactGradleCommandManifest": "../continuum-integration-20261102/commands.json#gradle",
+  "cwd": "/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai",
+  "environment": "Ubuntu 26.04.1 x64, Node 24.21.0, Temurin 17.0.21+9, Kotlin 2.4.0, Gradle 8.11.1, AGP 8.10.0, SDK 36r02, build-tools 35.0.0; synthetic Robolectric, no APK or device",
+  "runs": [
+    {
+      "id": "first-test-at-wrong-callback",
+      "exitCode": 1,
+      "status": "FAIL",
+      "detail": "Test injected before root acquisition and observed NO_ACTIVE_WINDOW; not the intended reproduction. Kept as raw output."
+    },
+    {
+      "id": "corrected-baseline",
+      "exitCode": 1,
+      "status": "FAIL",
+      "detail": "Six screen tests: four pass, two fail. Baseline returned stale read and retained an old foreground observation. Lint/compile included in command but build fails due test failures."
+    },
+    {
+      "id": "corrected-fix",
+      "exitCode": 0,
+      "status": "PASS",
+      "detail": "1663 cases: 1660 pass, 0 failures/errors, 3 skip; six screen tests pass. lintDebug zero issues; compileDebugKotlin succeeded."
+    }
+  ],
+  "limits": [
+    "Events delivered only after a read has completed cannot retroactively revoke its result; delayed or missing accessibility events and Fold7 remain unverified.",
+    "Package-agnostic content events can cancel reads when unrelated windows change; device impact and battery costs unmeasured.",
+    "No filtering, retries, ToolGate changes or signing changes were introduced."
+  ],
+  "evidenceSha256": {
+    "unknown-window-red.log": "b34f8363a8918b01da428172a41890491fd693b41fb9550e4408f5cbb9efa8f4",
+    "unknown-window-red2.log": "ecafd733cb66c576bdce174cf52227b96e5a3c9fe32622a94420aef4d4da4106",
+    "unknown-window-green.log": "a28b3f216b7040fd46a1211ce4781fbfe2106fce96a2491dbea3e675f2088f91",
+    "screen-red.xml": "629f43cfe71d2c1b13e9e09aff9c0ba42e5b6731156cf073205c8865d608f578",
+    "screen-green.xml": "dad3996606fa2731a819c35baa56f6546accda3a5fd9d2a858d9c733c20953e5",
+    "lint-green.xml": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809"
+  }
+}

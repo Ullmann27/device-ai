@@ -1,0 +1,3711 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "64b9c6d7ae0f968c1f7d34f0ee5941bdbe9cfe5e",
+  "workingTree": "?? tools/continuum-cognitive-pilots/__pycache__/",
+  "node": "v26.12.1",
+  "platform": "linux-x64",
+  "revisions": {
+    "broker": "d66f0c269ebb630f5c333a0966855f83d961232a0115068851ab452e27951cc7",
+    "kernel": "f4a6316c40235073f5e7879562e19e10ca5173a6f024416fe5f40743585d03cd",
+    "pilot": "246d053c3b35c0dca3e1f4ddc095e00bddc64015ff637e7f80d40bf5354173c3",
+    "protocol": "e065bea1141c73927a32f6ac66d76deb248b16b4f8ab8485a0509834cf9c9f93"
+  },
+  "protocol": {
+    "schemaVersion": 1,
+    "pairs": 6,
+    "warmupRequests": 64,
+    "heapMiB": 128,
+    "workloads": [
+      {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      }
+    ]
+  },
+  "summary": [
+    {
+      "workload": "repeated-expensive",
+      "arms": {
+        "direct": {
+          "medianWallNs": 207777034.5,
+          "medianCpuUs": 212089,
+          "kernelCalls": 1000,
+          "verifierCalls": 0,
+          "maxProcessRssKiB": 64204,
+          "retainedPayloadUtf8Bytes": 0
+        },
+        "reuse": {
+          "medianWallNs": 17728270.5,
+          "medianCpuUs": 25453.5,
+          "kernelCalls": 10,
+          "verifierCalls": 10,
+          "maxProcessRssKiB": 66424,
+          "retainedPayloadUtf8Bytes": 640
+        },
+        "no-reuse": {
+          "medianWallNs": 358631862.5,
+          "medianCpuUs": 373225.5,
+          "kernelCalls": 1000,
+          "verifierCalls": 1000,
+          "maxProcessRssKiB": 66336,
+          "retainedPayloadUtf8Bytes": 64000
+        }
+      },
+      "pairsImprovingBoth": 6,
+      "thresholdMet": true
+    },
+    {
+      "workload": "unique-expensive",
+      "arms": {
+        "direct": {
+          "medianWallNs": 207300722,
+          "medianCpuUs": 211500,
+          "kernelCalls": 1000,
+          "verifierCalls": 0,
+          "maxProcessRssKiB": 65084,
+          "retainedPayloadUtf8Bytes": 0
+        },
+        "reuse": {
+          "medianWallNs": 353751867,
+          "medianCpuUs": 372279,
+          "kernelCalls": 1000,
+          "verifierCalls": 1000,
+          "maxProcessRssKiB": 66264,
+          "retainedPayloadUtf8Bytes": 64000
+        },
+        "no-reuse": {
+          "medianWallNs": 355364476.5,
+          "medianCpuUs": 372882,
+          "kernelCalls": 1000,
+          "verifierCalls": 1000,
+          "maxProcessRssKiB": 66312,
+          "retainedPayloadUtf8Bytes": 64000
+        }
+      },
+      "pairsImprovingBoth": 0,
+      "thresholdMet": false
+    },
+    {
+      "workload": "repeated-cheap",
+      "arms": {
+        "direct": {
+          "medianWallNs": 5456871.5,
+          "medianCpuUs": 8688,
+          "kernelCalls": 1000,
+          "verifierCalls": 0,
+          "maxProcessRssKiB": 64056,
+          "retainedPayloadUtf8Bytes": 0
+        },
+        "reuse": {
+          "medianWallNs": 9434762.5,
+          "medianCpuUs": 14208.5,
+          "kernelCalls": 10,
+          "verifierCalls": 10,
+          "maxProcessRssKiB": 65944,
+          "retainedPayloadUtf8Bytes": 640
+        },
+        "no-reuse": {
+          "medianWallNs": 26526619,
+          "medianCpuUs": 37397.5,
+          "kernelCalls": 1000,
+          "verifierCalls": 1000,
+          "maxProcessRssKiB": 66836,
+          "retainedPayloadUtf8Bytes": 64000
+        }
+      },
+      "pairsImprovingBoth": 0,
+      "thresholdMet": false
+    },
+    {
+      "workload": "revision-churn",
+      "arms": {
+        "direct": {
+          "medianWallNs": 210503998,
+          "medianCpuUs": 215988,
+          "kernelCalls": 1000,
+          "verifierCalls": 0,
+          "maxProcessRssKiB": 65240,
+          "retainedPayloadUtf8Bytes": 0
+        },
+        "reuse": {
+          "medianWallNs": 192244413.5,
+          "medianCpuUs": 210855.5,
+          "kernelCalls": 500,
+          "verifierCalls": 500,
+          "maxProcessRssKiB": 65968,
+          "retainedPayloadUtf8Bytes": 32000
+        },
+        "no-reuse": {
+          "medianWallNs": 368844935.5,
+          "medianCpuUs": 386089,
+          "kernelCalls": 1000,
+          "verifierCalls": 1000,
+          "maxProcessRssKiB": 67156,
+          "retainedPayloadUtf8Bytes": 64000
+        }
+      },
+      "pairsImprovingBoth": 5,
+      "thresholdMet": false
+    }
+  ],
+  "runs": [
+    {
+      "pair": 0,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 222266727,
+      "cpuUs": 218859,
+      "auditWallNs": 138106665,
+      "auditCpuUs": 145218,
+      "memoryBefore": {
+        "rss": 62152704,
+        "heapTotal": 8785920,
+        "heapUsed": 6195768,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65036288,
+        "heapTotal": 11407360,
+        "heapUsed": 7932848,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64024,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 18484233,
+      "cpuUs": 28207,
+      "auditWallNs": 134022041,
+      "auditCpuUs": 145081,
+      "memoryBefore": {
+        "rss": 61775872,
+        "heapTotal": 8785920,
+        "heapUsed": 6635600,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66248704,
+        "heapTotal": 11145216,
+        "heapUsed": 6460032,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65976,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 369310672,
+      "cpuUs": 395286,
+      "auditWallNs": 129069688,
+      "auditCpuUs": 129873,
+      "memoryBefore": {
+        "rss": 64831488,
+        "heapTotal": 11145216,
+        "heapUsed": 6885216,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66859008,
+        "heapTotal": 11407360,
+        "heapUsed": 7098984,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65872,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 359894251,
+      "cpuUs": 373429,
+      "auditWallNs": 131130759,
+      "auditCpuUs": 128701,
+      "memoryBefore": {
+        "rss": 64774144,
+        "heapTotal": 11145216,
+        "heapUsed": 6671536,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67137536,
+        "heapTotal": 11931648,
+        "heapUsed": 7302488,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66200,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 28493068,
+      "cpuUs": 36505,
+      "auditWallNs": 135978636,
+      "auditCpuUs": 139781,
+      "memoryBefore": {
+        "rss": 62066688,
+        "heapTotal": 9310208,
+        "heapUsed": 6699848,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65843200,
+        "heapTotal": 11669504,
+        "heapUsed": 6527096,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64556,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 206842407,
+      "cpuUs": 211767,
+      "auditWallNs": 139035585,
+      "auditCpuUs": 145747,
+      "memoryBefore": {
+        "rss": 61878272,
+        "heapTotal": 8785920,
+        "heapUsed": 6277576,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64561152,
+        "heapTotal": 11145216,
+        "heapUsed": 5984912,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64004,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 206489773,
+      "cpuUs": 211334,
+      "auditWallNs": 139193394,
+      "auditCpuUs": 145831,
+      "memoryBefore": {
+        "rss": 62668800,
+        "heapTotal": 9572352,
+        "heapUsed": 7259376,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64765952,
+        "heapTotal": 11145216,
+        "heapUsed": 6817872,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64204,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 18050739,
+      "cpuUs": 25437,
+      "auditWallNs": 132894487,
+      "auditCpuUs": 140555,
+      "memoryBefore": {
+        "rss": 62066688,
+        "heapTotal": 9048064,
+        "heapUsed": 6645616,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66387968,
+        "heapTotal": 11145216,
+        "heapUsed": 6611648,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65728,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 358910471,
+      "cpuUs": 378042,
+      "auditWallNs": 127090240,
+      "auditCpuUs": 127776,
+      "memoryBefore": {
+        "rss": 65781760,
+        "heapTotal": 11145216,
+        "heapUsed": 6520688,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67211264,
+        "heapTotal": 11407360,
+        "heapUsed": 6993984,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66336,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 358353254,
+      "cpuUs": 373022,
+      "auditWallNs": 127696990,
+      "auditCpuUs": 128355,
+      "memoryBefore": {
+        "rss": 64454656,
+        "heapTotal": 11669504,
+        "heapUsed": 6573120,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66715648,
+        "heapTotal": 11931648,
+        "heapUsed": 7106704,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65760,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 14117279,
+      "cpuUs": 25470,
+      "auditWallNs": 131099502,
+      "auditCpuUs": 134002,
+      "memoryBefore": {
+        "rss": 62590976,
+        "heapTotal": 9048064,
+        "heapUsed": 6638856,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66203648,
+        "heapTotal": 11145216,
+        "heapUsed": 6454528,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64780,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 208640326,
+      "cpuUs": 213079,
+      "auditWallNs": 138360703,
+      "auditCpuUs": 144870,
+      "memoryBefore": {
+        "rss": 62251008,
+        "heapTotal": 8785920,
+        "heapUsed": 6205624,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65003520,
+        "heapTotal": 11145216,
+        "heapUsed": 7886032,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63992,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 207640602,
+      "cpuUs": 211434,
+      "auditWallNs": 136635902,
+      "auditCpuUs": 143343,
+      "memoryBefore": {
+        "rss": 62541824,
+        "heapTotal": 9048064,
+        "heapUsed": 6286960,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64638976,
+        "heapTotal": 11145216,
+        "heapUsed": 7962168,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63952,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 15702804,
+      "cpuUs": 25118,
+      "auditWallNs": 131732221,
+      "auditCpuUs": 139928,
+      "memoryBefore": {
+        "rss": 61882368,
+        "heapTotal": 9048064,
+        "heapUsed": 6651752,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66445312,
+        "heapTotal": 11669504,
+        "heapUsed": 6638544,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66424,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 355491334,
+      "cpuUs": 371517,
+      "auditWallNs": 127318969,
+      "auditCpuUs": 127688,
+      "memoryBefore": {
+        "rss": 64897024,
+        "heapTotal": 11145216,
+        "heapUsed": 6682864,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66936832,
+        "heapTotal": 11669504,
+        "heapUsed": 7151616,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66064,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 352676294,
+      "cpuUs": 370506,
+      "auditWallNs": 127190448,
+      "auditCpuUs": 127817,
+      "memoryBefore": {
+        "rss": 64581632,
+        "heapTotal": 11145216,
+        "heapUsed": 6655288,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65753088,
+        "heapTotal": 11407360,
+        "heapUsed": 6940096,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64892,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 17405802,
+      "cpuUs": 25064,
+      "auditWallNs": 132542114,
+      "auditCpuUs": 139659,
+      "memoryBefore": {
+        "rss": 61898752,
+        "heapTotal": 9048064,
+        "heapUsed": 6677040,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65978368,
+        "heapTotal": 11407360,
+        "heapUsed": 6592248,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65456,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-expensive",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 0,
+        "epochEvery": 0
+      },
+      "wallNs": 207913467,
+      "cpuUs": 212411,
+      "auditWallNs": 138029121,
+      "auditCpuUs": 143462,
+      "memoryBefore": {
+        "rss": 62418944,
+        "heapTotal": 8785920,
+        "heapUsed": 6282320,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64909312,
+        "heapTotal": 11145216,
+        "heapUsed": 7114240,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63708,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "83298eedf3f4272d0eda7f0f697048bff5166bfc8c8653522556ae1ab54007b6",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "direct",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 208922410,
+      "cpuUs": 211733,
+      "auditWallNs": 136900445,
+      "auditCpuUs": 142076,
+      "memoryBefore": {
+        "rss": 62410752,
+        "heapTotal": 9048064,
+        "heapUsed": 6250408,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65032192,
+        "heapTotal": 11145216,
+        "heapUsed": 7738832,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63952,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 360956378,
+      "cpuUs": 373754,
+      "auditWallNs": 127097089,
+      "auditCpuUs": 127668,
+      "memoryBefore": {
+        "rss": 64671744,
+        "heapTotal": 11145216,
+        "heapUsed": 6618160,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66117632,
+        "heapTotal": 11931648,
+        "heapUsed": 7041400,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65256,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 353177368,
+      "cpuUs": 371006,
+      "auditWallNs": 129433128,
+      "auditCpuUs": 130103,
+      "memoryBefore": {
+        "rss": 64708608,
+        "heapTotal": 11145216,
+        "heapUsed": 6579760,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67227648,
+        "heapTotal": 11931648,
+        "heapUsed": 6829232,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66264,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 357421941,
+      "cpuUs": 373009,
+      "auditWallNs": 127207543,
+      "auditCpuUs": 127851,
+      "memoryBefore": {
+        "rss": 65110016,
+        "heapTotal": 11145216,
+        "heapUsed": 6713096,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66666496,
+        "heapTotal": 11407360,
+        "heapUsed": 6992200,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65760,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 351088738,
+      "cpuUs": 370465,
+      "auditWallNs": 127540658,
+      "auditCpuUs": 128045,
+      "memoryBefore": {
+        "rss": 64827392,
+        "heapTotal": 11145216,
+        "heapUsed": 6525984,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67272704,
+        "heapTotal": 11407360,
+        "heapUsed": 6787536,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66252,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "direct",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 206388192,
+      "cpuUs": 211267,
+      "auditWallNs": 139910844,
+      "auditCpuUs": 146457,
+      "memoryBefore": {
+        "rss": 63107072,
+        "heapTotal": 9048064,
+        "heapUsed": 6277256,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65859584,
+        "heapTotal": 11145216,
+        "heapUsed": 5960696,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65084,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "direct",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 205378293,
+      "cpuUs": 210406,
+      "auditWallNs": 137050478,
+      "auditCpuUs": 142067,
+      "memoryBefore": {
+        "rss": 62394368,
+        "heapTotal": 8785920,
+        "heapUsed": 6278424,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65015808,
+        "heapTotal": 11145216,
+        "heapUsed": 5962736,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64064,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 354184695,
+      "cpuUs": 371969,
+      "auditWallNs": 126939696,
+      "auditCpuUs": 127504,
+      "memoryBefore": {
+        "rss": 64610304,
+        "heapTotal": 11145216,
+        "heapUsed": 6572416,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66850816,
+        "heapTotal": 11407360,
+        "heapUsed": 6939192,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65912,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 352448256,
+      "cpuUs": 370820,
+      "auditWallNs": 126915150,
+      "auditCpuUs": 127567,
+      "memoryBefore": {
+        "rss": 64888832,
+        "heapTotal": 11145216,
+        "heapUsed": 7117568,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67182592,
+        "heapTotal": 11669504,
+        "heapUsed": 7491088,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66312,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 355063951,
+      "cpuUs": 373073,
+      "auditWallNs": 127024592,
+      "auditCpuUs": 127689,
+      "memoryBefore": {
+        "rss": 65142784,
+        "heapTotal": 11145216,
+        "heapUsed": 6616144,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67289088,
+        "heapTotal": 11407360,
+        "heapUsed": 7194440,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66176,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 352924503,
+      "cpuUs": 372589,
+      "auditWallNs": 126645489,
+      "auditCpuUs": 127310,
+      "memoryBefore": {
+        "rss": 65138688,
+        "heapTotal": 11407360,
+        "heapUsed": 6716968,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67223552,
+        "heapTotal": 12455936,
+        "heapUsed": 7095408,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66172,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "direct",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 208213252,
+      "cpuUs": 211214,
+      "auditWallNs": 136128118,
+      "auditCpuUs": 142645,
+      "memoryBefore": {
+        "rss": 62529536,
+        "heapTotal": 9048064,
+        "heapUsed": 6310264,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 65019904,
+        "heapTotal": 11145216,
+        "heapUsed": 6022336,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64196,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "direct",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 205852858,
+      "cpuUs": 213798,
+      "auditWallNs": 136992992,
+      "auditCpuUs": 143414,
+      "memoryBefore": {
+        "rss": 63406080,
+        "heapTotal": 9048064,
+        "heapUsed": 6298688,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64602112,
+        "heapTotal": 11145216,
+        "heapUsed": 7123632,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63788,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 356707940,
+      "cpuUs": 374130,
+      "auditWallNs": 129339058,
+      "auditCpuUs": 129885,
+      "memoryBefore": {
+        "rss": 64782336,
+        "heapTotal": 11145216,
+        "heapUsed": 6905248,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66707456,
+        "heapTotal": 11407360,
+        "heapUsed": 7047840,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65824,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 355665002,
+      "cpuUs": 372755,
+      "auditWallNs": 130809361,
+      "auditCpuUs": 128665,
+      "memoryBefore": {
+        "rss": 64860160,
+        "heapTotal": 10883072,
+        "heapUsed": 6886472,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66846720,
+        "heapTotal": 11669504,
+        "heapUsed": 7292544,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65772,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 360347615,
+      "cpuUs": 375922,
+      "auditWallNs": 126391372,
+      "auditCpuUs": 127054,
+      "memoryBefore": {
+        "rss": 64823296,
+        "heapTotal": 11145216,
+        "heapUsed": 6624312,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67080192,
+        "heapTotal": 11407360,
+        "heapUsed": 7151104,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66248,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "reuse",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 353319039,
+      "cpuUs": 371064,
+      "auditWallNs": 127522842,
+      "auditCpuUs": 127790,
+      "memoryBefore": {
+        "rss": 64839680,
+        "heapTotal": 11145216,
+        "heapUsed": 7066712,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67076096,
+        "heapTotal": 11931648,
+        "heapUsed": 7372136,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66264,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "direct",
+      "workload": {
+        "name": "unique-expensive",
+        "requests": 1000,
+        "distinct": 1000,
+        "size": 32,
+        "seedOffset": 317,
+        "epochEvery": 0
+      },
+      "wallNs": 213144673,
+      "cpuUs": 215710,
+      "auditWallNs": 136723462,
+      "auditCpuUs": 143466,
+      "memoryBefore": {
+        "rss": 62541824,
+        "heapTotal": 9572352,
+        "heapUsed": 7262176,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64507904,
+        "heapTotal": 11145216,
+        "heapUsed": 6762512,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63508,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "b85e59132b85179a910af6db9ada872a6f4afc17fcb186847e2ff1758ba936cc",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 5267010,
+      "cpuUs": 8067,
+      "auditWallNs": 5583600,
+      "auditCpuUs": 10412,
+      "memoryBefore": {
+        "rss": 54734848,
+        "heapTotal": 8261632,
+        "heapUsed": 5749912,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 59244544,
+        "heapTotal": 9048064,
+        "heapUsed": 5994752,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63056,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 9797566,
+      "cpuUs": 13982,
+      "auditWallNs": 3997575,
+      "auditCpuUs": 7908,
+      "memoryBefore": {
+        "rss": 55128064,
+        "heapTotal": 8523776,
+        "heapUsed": 6045960,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 62382080,
+        "heapTotal": 10096640,
+        "heapUsed": 5949632,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65580,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 27239953,
+      "cpuUs": 33635,
+      "auditWallNs": 2883081,
+      "auditCpuUs": 4863,
+      "memoryBefore": {
+        "rss": 56455168,
+        "heapTotal": 9048064,
+        "heapUsed": 6193864,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66744320,
+        "heapTotal": 11407360,
+        "heapUsed": 7233632,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65564,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 22647504,
+      "cpuUs": 33480,
+      "auditWallNs": 2500933,
+      "auditCpuUs": 4124,
+      "memoryBefore": {
+        "rss": 56242176,
+        "heapTotal": 9048064,
+        "heapUsed": 6931440,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67514368,
+        "heapTotal": 11407360,
+        "heapUsed": 6561008,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66444,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 7404724,
+      "cpuUs": 12279,
+      "auditWallNs": 3862194,
+      "auditCpuUs": 7414,
+      "memoryBefore": {
+        "rss": 54898688,
+        "heapTotal": 8523776,
+        "heapUsed": 6023408,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 60911616,
+        "heapTotal": 10096640,
+        "heapUsed": 5961136,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 62732,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 4847156,
+      "cpuUs": 7798,
+      "auditWallNs": 4183201,
+      "auditCpuUs": 5357,
+      "memoryBefore": {
+        "rss": 54812672,
+        "heapTotal": 8261632,
+        "heapUsed": 5746024,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 57696256,
+        "heapTotal": 9048064,
+        "heapUsed": 5988480,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 57624,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 4842299,
+      "cpuUs": 7919,
+      "auditWallNs": 5625381,
+      "auditCpuUs": 10875,
+      "memoryBefore": {
+        "rss": 54620160,
+        "heapTotal": 8261632,
+        "heapUsed": 5752584,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 58867712,
+        "heapTotal": 9048064,
+        "heapUsed": 6000160,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64056,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 9002936,
+      "cpuUs": 14082,
+      "auditWallNs": 4135209,
+      "auditCpuUs": 5544,
+      "memoryBefore": {
+        "rss": 55062528,
+        "heapTotal": 8523776,
+        "heapUsed": 6030264,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 58994688,
+        "heapTotal": 10096640,
+        "heapUsed": 5941624,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 58892,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 25337899,
+      "cpuUs": 38838,
+      "auditWallNs": 2722342,
+      "auditCpuUs": 4481,
+      "memoryBefore": {
+        "rss": 56238080,
+        "heapTotal": 9048064,
+        "heapUsed": 6208824,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67448832,
+        "heapTotal": 11407360,
+        "heapUsed": 6538696,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66508,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 26956873,
+      "cpuUs": 36206,
+      "auditWallNs": 2999493,
+      "auditCpuUs": 5616,
+      "memoryBefore": {
+        "rss": 56299520,
+        "heapTotal": 9048064,
+        "heapUsed": 6183128,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 68165632,
+        "heapTotal": 11407360,
+        "heapUsed": 7617552,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66696,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 10002891,
+      "cpuUs": 14818,
+      "auditWallNs": 5350354,
+      "auditCpuUs": 10383,
+      "memoryBefore": {
+        "rss": 55013376,
+        "heapTotal": 8523776,
+        "heapUsed": 6030264,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 60633088,
+        "heapTotal": 9834496,
+        "heapUsed": 5987256,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64924,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 5853741,
+      "cpuUs": 9630,
+      "auditWallNs": 5330574,
+      "auditCpuUs": 6739,
+      "memoryBefore": {
+        "rss": 54812672,
+        "heapTotal": 8261632,
+        "heapUsed": 5743976,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 57827328,
+        "heapTotal": 9048064,
+        "heapUsed": 6007128,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 58008,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 5646733,
+      "cpuUs": 9309,
+      "auditWallNs": 4910150,
+      "auditCpuUs": 6864,
+      "memoryBefore": {
+        "rss": 54808576,
+        "heapTotal": 8261632,
+        "heapUsed": 5748496,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 57692160,
+        "heapTotal": 9048064,
+        "heapUsed": 6007296,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 58004,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 9071959,
+      "cpuUs": 14335,
+      "auditWallNs": 4848518,
+      "auditCpuUs": 9063,
+      "memoryBefore": {
+        "rss": 55074816,
+        "heapTotal": 8523776,
+        "heapUsed": 6028800,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 60239872,
+        "heapTotal": 10096640,
+        "heapUsed": 5996192,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64824,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 27372389,
+      "cpuUs": 38917,
+      "auditWallNs": 2834258,
+      "auditCpuUs": 4625,
+      "memoryBefore": {
+        "rss": 56381440,
+        "heapTotal": 9048064,
+        "heapUsed": 6237104,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67784704,
+        "heapTotal": 11407360,
+        "heapUsed": 8467696,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66836,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 26096365,
+      "cpuUs": 38589,
+      "auditWallNs": 3026073,
+      "auditCpuUs": 6137,
+      "memoryBefore": {
+        "rss": 56295424,
+        "heapTotal": 9048064,
+        "heapUsed": 6823696,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67633152,
+        "heapTotal": 11407360,
+        "heapUsed": 7884352,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66688,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "reuse",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 10864415,
+      "cpuUs": 15622,
+      "auditWallNs": 5614881,
+      "auditCpuUs": 11027,
+      "memoryBefore": {
+        "rss": 55074816,
+        "heapTotal": 8523776,
+        "heapUsed": 6030192,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 61218816,
+        "heapTotal": 10096640,
+        "heapUsed": 5947128,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65944,
+      "kernelCalls": 10,
+      "verifierCalls": 10,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 10,
+        "execute": 10,
+        "joined": 0,
+        "hit": 990,
+        "verified": 10,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 640,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "direct",
+      "workload": {
+        "name": "repeated-cheap",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 1,
+        "seedOffset": 1703,
+        "epochEvery": 0
+      },
+      "wallNs": 5931477,
+      "cpuUs": 10077,
+      "auditWallNs": 6591226,
+      "auditCpuUs": 11540,
+      "memoryBefore": {
+        "rss": 54886400,
+        "heapTotal": 8261632,
+        "heapUsed": 5749984,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 59133952,
+        "heapTotal": 9048064,
+        "heapUsed": 5985720,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63712,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3c0fdf4a02a427301234065165591f2edec684b7bcaa6906f2791bd4137e82e2",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "direct",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 210751140,
+      "cpuUs": 214375,
+      "auditWallNs": 140197450,
+      "auditCpuUs": 145090,
+      "memoryBefore": {
+        "rss": 62709760,
+        "heapTotal": 9310208,
+        "heapUsed": 7189696,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64806912,
+        "heapTotal": 11145216,
+        "heapUsed": 7073272,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64116,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 189558716,
+      "cpuUs": 204250,
+      "auditWallNs": 128778727,
+      "auditCpuUs": 129986,
+      "memoryBefore": {
+        "rss": 64929792,
+        "heapTotal": 11145216,
+        "heapUsed": 7662096,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66875392,
+        "heapTotal": 11407360,
+        "heapUsed": 7244232,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65968,
+      "kernelCalls": 500,
+      "verifierCalls": 500,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 500,
+        "execute": 500,
+        "joined": 0,
+        "hit": 500,
+        "verified": 500,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 32000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 0,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 401593642,
+      "cpuUs": 389581,
+      "auditWallNs": 147514548,
+      "auditCpuUs": 130830,
+      "memoryBefore": {
+        "rss": 65449984,
+        "heapTotal": 11145216,
+        "heapUsed": 6605240,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67317760,
+        "heapTotal": 11407360,
+        "heapUsed": 8455208,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66860,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 370410725,
+      "cpuUs": 382597,
+      "auditWallNs": 128818957,
+      "auditCpuUs": 128622,
+      "memoryBefore": {
+        "rss": 66105344,
+        "heapTotal": 11145216,
+        "heapUsed": 6816736,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67399680,
+        "heapTotal": 11669504,
+        "heapUsed": 8235240,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66488,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 182768464,
+      "cpuUs": 199684,
+      "auditWallNs": 127747916,
+      "auditCpuUs": 128506,
+      "memoryBefore": {
+        "rss": 65245184,
+        "heapTotal": 11145216,
+        "heapUsed": 7828304,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66662400,
+        "heapTotal": 11407360,
+        "heapUsed": 6760504,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65764,
+      "kernelCalls": 500,
+      "verifierCalls": 500,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 500,
+        "execute": 500,
+        "joined": 0,
+        "hit": 500,
+        "verified": 500,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 32000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 1,
+      "arm": "direct",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 208133564,
+      "cpuUs": 212673,
+      "auditWallNs": 137135174,
+      "auditCpuUs": 143415,
+      "memoryBefore": {
+        "rss": 62214144,
+        "heapTotal": 9048064,
+        "heapUsed": 6212536,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64835584,
+        "heapTotal": 11145216,
+        "heapUsed": 7931936,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 64016,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "direct",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 210256856,
+      "cpuUs": 218085,
+      "auditWallNs": 137269282,
+      "auditCpuUs": 144053,
+      "memoryBefore": {
+        "rss": 62722048,
+        "heapTotal": 8785920,
+        "heapUsed": 6334936,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64618496,
+        "heapTotal": 11145216,
+        "heapUsed": 6085664,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63872,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 184697438,
+      "cpuUs": 201466,
+      "auditWallNs": 127653055,
+      "auditCpuUs": 128909,
+      "memoryBefore": {
+        "rss": 64315392,
+        "heapTotal": 11145216,
+        "heapUsed": 7669712,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66568192,
+        "heapTotal": 11407360,
+        "heapUsed": 6687928,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65136,
+      "kernelCalls": 500,
+      "verifierCalls": 500,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 500,
+        "execute": 500,
+        "joined": 0,
+        "hit": 500,
+        "verified": 500,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 32000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 2,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 355014196,
+      "cpuUs": 371561,
+      "auditWallNs": 127423314,
+      "auditCpuUs": 127948,
+      "memoryBefore": {
+        "rss": 65314816,
+        "heapTotal": 11145216,
+        "heapUsed": 7119672,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67186688,
+        "heapTotal": 11669504,
+        "heapUsed": 7563384,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 66344,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 354230803,
+      "cpuUs": 372529,
+      "auditWallNs": 130095872,
+      "auditCpuUs": 129945,
+      "memoryBefore": {
+        "rss": 64753664,
+        "heapTotal": 11145216,
+        "heapUsed": 6684808,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66535424,
+        "heapTotal": 11669504,
+        "heapUsed": 7047264,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65668,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 194930111,
+      "cpuUs": 217461,
+      "auditWallNs": 129675688,
+      "auditCpuUs": 130850,
+      "memoryBefore": {
+        "rss": 65007616,
+        "heapTotal": 11145216,
+        "heapUsed": 7624968,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66355200,
+        "heapTotal": 11407360,
+        "heapUsed": 6415672,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65660,
+      "kernelCalls": 500,
+      "verifierCalls": 500,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 500,
+        "execute": 500,
+        "joined": 0,
+        "hit": 500,
+        "verified": 500,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 32000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 3,
+      "arm": "direct",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 210887543,
+      "cpuUs": 217601,
+      "auditWallNs": 142133635,
+      "auditCpuUs": 151219,
+      "memoryBefore": {
+        "rss": 63598592,
+        "heapTotal": 9310208,
+        "heapUsed": 6273848,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66088960,
+        "heapTotal": 11669504,
+        "heapUsed": 7961136,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65240,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "direct",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 215611336,
+      "cpuUs": 230798,
+      "auditWallNs": 142782257,
+      "auditCpuUs": 151589,
+      "memoryBefore": {
+        "rss": 61919232,
+        "heapTotal": 9048064,
+        "heapUsed": 6296416,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64745472,
+        "heapTotal": 11145216,
+        "heapUsed": 7945840,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63612,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 197602028,
+      "cpuUs": 219954,
+      "auditWallNs": 130663075,
+      "auditCpuUs": 133160,
+      "memoryBefore": {
+        "rss": 64688128,
+        "heapTotal": 11145216,
+        "heapUsed": 5977000,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66473984,
+        "heapTotal": 11669504,
+        "heapUsed": 6983088,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65476,
+      "kernelCalls": 500,
+      "verifierCalls": 500,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 500,
+        "execute": 500,
+        "joined": 0,
+        "hit": 500,
+        "verified": 500,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 32000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 4,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 369396710,
+      "cpuUs": 395334,
+      "auditWallNs": 129092643,
+      "auditCpuUs": 129703,
+      "memoryBefore": {
+        "rss": 66015232,
+        "heapTotal": 11145216,
+        "heapUsed": 6658456,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 68083712,
+        "heapTotal": 11931648,
+        "heapUsed": 6958752,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 67156,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "no-reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 368293161,
+      "cpuUs": 393816,
+      "auditWallNs": 129484595,
+      "auditCpuUs": 130430,
+      "memoryBefore": {
+        "rss": 65220608,
+        "heapTotal": 11145216,
+        "heapUsed": 6658456,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 67186688,
+        "heapTotal": 11407360,
+        "heapUsed": 6854792,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65612,
+      "kernelCalls": 1000,
+      "verifierCalls": 1000,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 1000,
+        "execute": 1000,
+        "joined": 0,
+        "hit": 0,
+        "verified": 1000,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 64000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "reuse",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 195815515,
+      "cpuUs": 217732,
+      "auditWallNs": 130083554,
+      "auditCpuUs": 132421,
+      "memoryBefore": {
+        "rss": 65736704,
+        "heapTotal": 11145216,
+        "heapUsed": 5856200,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 66666496,
+        "heapTotal": 11669504,
+        "heapUsed": 6702880,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 65860,
+      "kernelCalls": 500,
+      "verifierCalls": 500,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 500,
+        "execute": 500,
+        "joined": 0,
+        "hit": 500,
+        "verified": 500,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 32000,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    },
+    {
+      "pair": 5,
+      "arm": "direct",
+      "workload": {
+        "name": "revision-churn",
+        "requests": 1000,
+        "distinct": 10,
+        "size": 32,
+        "seedOffset": 2381,
+        "epochEvery": 20
+      },
+      "wallNs": 205975530,
+      "cpuUs": 211050,
+      "auditWallNs": 136508423,
+      "auditCpuUs": 143037,
+      "memoryBefore": {
+        "rss": 62869504,
+        "heapTotal": 8785920,
+        "heapUsed": 6242808,
+        "external": 2660459,
+        "arrayBuffers": 144083
+      },
+      "memoryAfter": {
+        "rss": 64880640,
+        "heapTotal": 11145216,
+        "heapUsed": 6045736,
+        "external": 2660515,
+        "arrayBuffers": 144099
+      },
+      "maxProcessRssKiB": 63804,
+      "kernelCalls": 1000,
+      "verifierCalls": 0,
+      "broker": {
+        "activeRequests": 0,
+        "inflightCalculations": 0,
+        "cachedResults": 0,
+        "execute": 0,
+        "joined": 0,
+        "hit": 0,
+        "verified": 0,
+        "rejected": 0,
+        "cancelled": 0,
+        "evicted": 0
+      },
+      "retainedPayloadUtf8Bytes": 0,
+      "exactResults": 1000,
+      "outputSha256": "3481d3c444eb85e9d7b58fea3cfb6f9347cea6f30d647a811b962176dba39bae",
+      "energyJoules": null
+    }
+  ],
+  "energyJoules": null,
+  "device": "HOST_ONLY"
+}

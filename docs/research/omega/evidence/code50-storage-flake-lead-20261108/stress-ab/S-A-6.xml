@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="minimalPatch yields the smallest unique whole-line span and refuses what the session could not apply" time="0.000992" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="read access excludes VCS internals, build output, secrets and owner data" time="0.000618" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="the agent loop inspects, edits, checks and tests, and the unchanged repair session verifies its proposal" time="1.169574" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="tools refuse escapes, secrets, foreign files and ambiguous edits without leaking content" time="0.101257" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="budgets, invalid replies, deadlines and task binding stop the loop with known session codes" time="0.128365" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="the chat brain is local by default, needs consent for remote endpoints and maps failures to session codes" time="0.000950" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="run_tests keeps the session execution policy: a general edit does not run on the host without isolation" time="0.724873" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="the orchestrator factory needs the local brain key, passes it on stdin only and records each step" time="0.098559" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="a real failing test after the first candidate reaches the next revision, which corrects it (simulated brain)" time="1.061517" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="an identical repeated patch is not executed again; the next distinct patch is verified" time="1.213540" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="instructions planted in repository files cannot widen what an obedient model may do" time="0.711114" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="one plain request: read-only survey proposes the scope, the owner grants it, the session verifies the repair" time="0.874065" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="the command line runs the same flow as a process (Termux usage) and refuses a survey that tries to edit" time="0.894649" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="interactive mode: plain requests line by line, confirmation on the next line, &quot;ende&quot; stops (as in Termux)" time="1.132352" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="the command tests inside its own loop: wrong patch, run_tests fails, in-loop correction, VERIFIED; general code stays blocked" time="1.531302" classname="test" file="/home/qa/repo-m/.github/continuum/coding-agent-loop.test.mjs"/>
+	<testcase name="AES-GCM envelope validates ciphertext digest, plaintext digest, key and auth tag" time="0.011185" classname="test" file="/home/qa/repo-m/.github/continuum/storage-fabric.test.mjs"/>
+	<testcase name="real two-process replication, corruption failover, repair, unavailable node, cache and restart" time="1.503199" classname="test" file="/home/qa/repo-m/.github/continuum/storage-fabric.test.mjs"/>
+	<testcase name="versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery" time="0.906998" classname="test" file="/home/qa/repo-m/.github/continuum/storage-fabric.test.mjs"/>
+	<testcase name="real HTTP rejects absent/wrong/scoped tokens, traversal, wrong namespace, malformed hash and oversized body" time="0.500865" classname="test" file="/home/qa/repo-m/.github/continuum/storage-fabric.test.mjs"/>
+	<testcase name="real disk/quota limits reject new writes without committing object or claiming synthetic capacity" time="0.467166" classname="test" file="/home/qa/repo-m/.github/continuum/storage-fabric.test.mjs"/>
+	<testcase name="root/block/cache symlinks and catalog HMAC tampering fail closed; untrusted bytes are data only" time="0.585663" classname="test" file="/home/qa/repo-m/.github/continuum/storage-fabric.test.mjs"/>
+	<testcase name="bounded encrypted cache evicts within quota and does not replace object/tombstone checks" time="0.512859" classname="test" file="/home/qa/repo-m/.github/continuum/storage-fabric.test.mjs"/>
+	<testcase name="a measured HTTP timeout withholds metadata and a queued healthy write still commits" time="0.542440" classname="test" file="/home/qa/repo-m/.github/continuum/storage-fabric.test.mjs"/>
+	<testcase name="signed-release claims remain explicitly unverified after successful unsigned QA" time="1.547076" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<testcase name="wrong commit, version or release-claim metadata cannot pass" time="0.005568" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<testcase name="missing test transcript and failed JUnit block the architectural receipt" time="0.099132" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<testcase name="a failed Gradle transcript never becomes a proof" time="0.019289" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<testcase name="rejects skipped required JUnit suite and spoofed test metadata" time="0.103724" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<testcase name="rejects fullname and forged error attributes" time="0.231801" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<testcase name="rejects red or skipped Node TAP even with present reports" time="0.021095" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<testcase name="actual backend QA command emits machine-readable TAP on modern Node" time="0.239988" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<testcase name="actual APK identity must match source receipt instead of trusting STATUS metadata" time="0.031061" classname="test" file="/home/qa/repo-m/scripts/continuum-architecture-proof.test.mjs"/>
+	<!-- tests 32 -->
+	<!-- suites 0 -->
+	<!-- pass 32 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 9866.747078 -->
+</testsuites>

@@ -1,0 +1,57 @@
+✔ gVisor requested but not registered: blocked before any container runs, no host fallback (171.156972ms)
+✖ gVisor run: runsc plus every existing hardening flag, confirmed runtime in the evidence, full teardown (278.422477ms)
+✖ a daemon that silently runs another runtime yields no gVisor evidence, and the container is still removed (290.243003ms)
+✔ runtime policy and evidence: unknown runtimes rejected, old receipts stay valid, runc is no gVisor evidence (0.907971ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 835.27372
+
+✖ failing tests:
+
+test at .github/continuum/isolated-executor-gvisor.test.mjs:56:1
+✖ gVisor run: runsc plus every existing hardening flag, confirmed runtime in the evidence, full teardown (278.422477ms)
+  Error: ISOLATION_OBSERVATION_FAILED
+      at Object.execute (file:///workspace/momega1-gvisor-fixture/.github/continuum/isolated-executor.mjs:202:69)
+      at TestContext.<anonymous> (file:///workspace/momega1-gvisor-fixture/.github/continuum/isolated-executor-gvisor.test.mjs:61:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at .github/continuum/isolated-executor-gvisor.test.mjs:76:1
+✖ a daemon that silently runs another runtime yields no gVisor evidence, and the container is still removed (290.243003ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /ISOLATION_RUNTIME_MISMATCH/. Input:
+  
+  'Error: ISOLATION_OBSERVATION_FAILED'
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-gvisor-fixture/.github/continuum/isolated-executor-gvisor.test.mjs:80:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: ISOLATION_OBSERVATION_FAILED
+        at Object.execute (file:///workspace/momega1-gvisor-fixture/.github/continuum/isolated-executor.mjs:202:69)
+        at file:///workspace/momega1-gvisor-fixture/.github/continuum/isolated-executor-gvisor.test.mjs:80:26
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/momega1-gvisor-fixture/.github/continuum/isolated-executor-gvisor.test.mjs:80:12)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    expected: /ISOLATION_RUNTIME_MISMATCH/,
+    operator: 'throws',
+    diff: 'simple'
+  }

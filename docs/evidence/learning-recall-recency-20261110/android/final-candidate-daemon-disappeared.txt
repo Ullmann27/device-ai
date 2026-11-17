@@ -1,0 +1,73 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin
+
+The message received from the daemon indicates that the daemon has disappeared.
+Build request sent: Build{id=9b7c39df-11da-4ebb-955d-39697d8d46e8, currentDir=/workspace/scratch/7366d957876c/brain-learning-integrator}
+Attempting to read last messages from the daemon log...
+Daemon pid: 43
+  log file: /workspace/scratch/5900afa6af29/qa-gradle-home/daemon/8.11.1/daemon-43.out.log
+----- Last 20 lines from daemon log file - daemon-43.out.log -----
+2026-11-10T21:58:41.073+0100 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 31: dispatching org.gradle.launcher.daemon.protocol.BuildStarted@64feac3e
+2026-11-10T21:58:41.074+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.EstablishBuildEnvironment] Configuring env variables: [PATH, NO_PROXY, CAAS_IMAGE_VERSION, ELECTRON_GET_USE_PROXY, PIP_CERT, ANDROID_HOME, XDG_CACHE_HOME, GH_PAGER, PLAYWRIGHT_NODEJS_PATH, COLORTERM, NODE_USE_ENV_PROXY, NPM_CONFIG_AUDIT, PWD, CAAS_PREFIX_TRANSFER_AUTH_TOKEN_FILE, NPM_CONFIG_HTTP_PROXY, FTP_PROXY, PAGER, CLOUD_AEON_OS_PERSONALIZATION_URL, CODEX_HOME, CODEX_NETWORK_PROXY_ACTIVE, ALL_PROXY, LC_ALL, BROWSER_USE_CHATGPT_ENVIRONMENT, npm_config_http_proxy, LC_CTYPE, CODEX_SESSION_ID, SHLVL, NPM_CONFIG_PROXY, CAAS_IMAGE_GIT_COMMIT_SHA, CODEX_FLORA_CCA_GATEWAY_RESOLUTION_HOST, JAVA_HOME, CODEX_NETWORK_ALLOW_LOCAL_BINDING, TERM, HTTP_PROXY, CODEX_FLORA_CCA_REUSE_EXECUTOR, CODEX_FLORA_CCA_WORKSPACE_CWD, CODEX_FLORA_CCA_BOOTSTRAP_ATTEMPT_ID, GRADLE_USER_HOME, CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS, HTTPS_PROXY, NODE_EXTRA_CA_CERTS, CODEX_THREAD_ID, _, no_proxy, SSL_CERT_FILE, OTEL_TRACES_SAMPLER_ARG, DOCKER_HTTP_PROXY, ENABLE_BROWSER_WEBMCP, CODEX_PRIMARY_RUNTIME_NODE, GRADLE_OPTS, YARN_HTTPS_PROXY, https_proxy, GIT_PAGER, BUNDLE_HTTP_PROXY, CODEX_PRIMARY_RUNTIME, CODEX_BROWSER_DEFER_ACTIVATION, XDG_STATE_HOME, WSS_PROXY, CODEX_PRIMARY_RUNTIME_ROOT, CODEX_PRIMARY_RUNTIME_BUNDLE_VERSION, YARN_HTTP_PROXY, DD_SERVICE, npm_config_https_proxy, wss_proxy, NETWORK, CODEX_SANDBOX_NETWORK_DISABLED, npm_config_noproxy, REQUESTS_CA_BUNDLE, NPM_CONFIG_PREFIX, TMPDIR, ENABLE_BROWSER_CREDENTIAL_CAPABILITIES, SITES_MANAGED_LINUX_CONTAINER, PIP_PROXY, NPM_CONFIG_FUND, DEBIAN_FRONTEND, CODEX_EXEC_SERVER_REMOTE_BASE_URL, BUNDLE_HTTPS_PROXY, CODEX_PRIMARY_RUNTIME_NODE_MODULES, CODEX_ENVIRONMENT_ID, LANG, NPM_CONFIG_NOPROXY, ftp_proxy, BUNDLE_NO_PROXY, all_proxy, NO_COLOR, NPM_CONFIG_HTTPS_PROXY, CODEX_FLORA_CCA_EXPECTED_EXECUTOR_PID, NODE_PATH, ws_proxy, BROWSER_USE_AUTOMATIC_OTP_ENABLED, CODEX_CI, http_proxy, DOCKER_HTTPS_PROXY, XDG_DATA_HOME, npm_config_proxy, CODEX_PRIMARY_RUNTIME_PYTHON, CODEX_TOOL_CALL_ID, ANDROID_SDK_ROOT, XDG_CONFIG_HOME, OTEL_TRACES_SAMPLER, CODEX_PROXY_CERT, BROWSER_MANAGEMENT_SOCKET_PATH, OTEL_RESOURCE_ATTRIBUTES, CODEX_FLORA_CCA_GATEWAY_HOST_ALIASES, CODEX_VERSION, XDG_RUNTIME_DIR, WS_PROXY, HOME, OPENAI_CLUSTER]
+2026-11-10T21:58:41.075+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon is running. Sleeping until state changes.
+2026-11-10T21:58:41.082+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.LogToClient] About to start relaying all logs to the client via the connection.
+2026-11-10T21:58:41.082+0100 [INFO] [org.gradle.launcher.daemon.server.exec.LogToClient] The client will now receive all logging from the daemon (pid: 43). The daemon log file: /workspace/scratch/5900afa6af29/qa-gradle-home/daemon/8.11.1/daemon-43.out.log
+2026-11-10T21:58:41.084+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.RequestStopIfSingleUsedDaemon] Requesting daemon stop after processing Build{id=9b7c39df-11da-4ebb-955d-39697d8d46e8, currentDir=/workspace/scratch/7366d957876c/brain-learning-integrator}
+2026-11-10T21:58:41.084+0100 [LIFECYCLE] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Daemon will be stopped at the end of the build 
+2026-11-10T21:58:41.084+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Stop as soon as idle requested. The daemon is busy
+2026-11-10T21:58:41.085+0100 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon stop has been requested. Sleeping until state changes.
+2026-11-10T21:58:41.085+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has started executing the build.
+2026-11-10T21:58:41.085+0100 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=df5a62a8-f1b0-4b71-8a93-5577cf98974d,javaHome=/workspace/scratch/5900afa6af29/qa-installed-tools/jdk,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=/workspace/scratch/5900afa6af29/qa-gradle-home/daemon,pid=43,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=512m,-Xmx3g,-Dfile.encoding=UTF-8,-Duser.country,-Duser.language=en,-Duser.variant]
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+----- End of the daemon log -----
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.

@@ -1,0 +1,9 @@
+{
+  "schema": "continuum-pr564-verification-v1",
+  "testedSource": "73296068af8012bf3b441e2113627e4808e08aca",
+  "environment": "cloud session, unprivileged user, GIT_CONFIG_NOSYSTEM=1, Temurin 17.0.20.1, SDK 36/BT 35.0.0, Gradle 8.11.1, Node 24.22.1; Maven Central via Google's official mirror in local QA config only (session IP rate-limited)",
+  "android": {"tasks": ":app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug", "flags": "-PcontinuumLocalStandaloneQa -PcontinuumUiWidgetTests -PcontinuumStandaloneVersionCode=44 -PcontinuumOwnerArm64=true --rerun-tasks", "exit": 0, "tests": 3274, "passed": 3255, "failed": 0, "skipped": 19, "lint": "No issues found"},
+  "node": {"status": "PASS", "total": 2424, "passed": 2387, "failed": 0, "skipped": 37, "sourceUnchanged": true},
+  "pr564New": {"ContinuumCockpitHandsFreeUiTest": "1/1", "VoiceTurnLatencyTraceTest": "4/4", "ApprovedSpeechChunkQueueTest": "4/4", "VerifiedHologramWorkGateTest": "4/4", "OrthographicCockpitProbeTest": "4/4", "CockpitConversationPresentationTest": "4/4", "AvatarHeadFollowTest": "5/5", "ccc1-local-model-core": "4/4 (Node)"},
+  "notRun": ["APK assembly", "signing", "publication", "Fold7 device acceptance", "real on-device model quality for CCC1 local-model core"]
+}

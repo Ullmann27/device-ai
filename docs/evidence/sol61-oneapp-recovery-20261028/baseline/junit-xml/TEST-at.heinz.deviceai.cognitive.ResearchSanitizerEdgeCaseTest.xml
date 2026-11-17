@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:22" hostname="b50d54a1ac03" time="0.041">
+  <properties/>
+  <testcase name="isolatedSurrogatesAreRenderedAsCompleteVisibleTokens" classname="at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest" time="0.0"/>
+  <testcase name="wordBoundariesDoNotRewriteEmbeddedRoleNames" classname="at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest" time="0.0"/>
+  <testcase name="asciiControlsAndUnicodeFormattingNeverRemainRaw" classname="at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest" time="0.001"/>
+  <testcase name="fixedAdversarialCorpusRespectsEverySmallOutputBudget" classname="at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest" time="0.04"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

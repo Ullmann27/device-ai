@@ -1,0 +1,44 @@
+{
+  "schema": "momega1-independent-actual-native-host-v1",
+  "evidenceClass": "ACTUAL_NATIVE_RUN_PENDING_REVIEW",
+  "approvedModelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+  "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+  "modelBytes": 1117320768,
+  "runtimeBytes": 12476968,
+  "promptSha256": "08246cd9675338f0dd469a5077dc28e1efd89261c7cb50eac9a2aa63490437e2",
+  "schemaSha256": "4bca94aa67402f6f5ed6def54e1eab3dfd8fae654e1875579665ef668020bb75",
+  "nativeOutputTokens": 124,
+  "stdoutSha256": "3f2d6dfcd0b83f26db3d8e64c3bca7ece477aed6a7a375d9cabbf256f70e85c1",
+  "stderrSha256": "57e19b67d9978d184e34fedf0c17914b9c1477c908fdf20b548dcc20086b2bee",
+  "elapsedMs": 15484,
+  "exitCode": 0,
+  "signal": null,
+  "refusal": null,
+  "peakRssKiB": 928,
+  "peakProcesses": 1,
+  "outputBytes": 2916,
+  "node": "v24.19.0",
+  "platform": "linux",
+  "arch": "x64",
+  "pinsStable": true,
+  "parsed": {
+    "mode": "LOCAL_CODING_PATCH_PROPOSAL_V1",
+    "trusted": false,
+    "autoApply": false,
+    "proposal": {
+      "plan": [
+        "Identify the issue with the current implementation",
+        "Propose a minimal change to fix the issue",
+        "Verify the fix"
+      ],
+      "hypothesis": "The current implementation incorrectly includes an empty trailing batch for some input lengths.",
+      "patches": [
+        {
+          "file": "lib/batches.mjs",
+          "oldText": "result.push(items.slice(offset, offset + width));",
+          "newText": "if (offset + width <= items.length) result.push(items.slice(offset, offset + width));"
+        }
+      ]
+    }
+  }
+}

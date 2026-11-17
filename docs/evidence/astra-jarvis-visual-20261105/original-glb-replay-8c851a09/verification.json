@@ -1,0 +1,371 @@
+{
+  "checkedAtUtc": "2026-11-05T17:11:51.121563+00:00",
+  "evidenceClass": "HOST_BLENDER_NOT_FILAMENT_DEVICE",
+  "sourceCommit": "8c851a09d7c641bdfc02d5e2d2c432cd3fda0e8c",
+  "sourceDirtyAtReplay": true,
+  "testReceiptHead": "7159aba8ca29d71d779e7b1b83efd00a3bee0b3f",
+  "testReceiptSourceUnchanged": true,
+  "sourceFileChecks": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": {
+      "expected": "da5a4f4259a7070b9ee05bee5abf4c6dfaec454f260a45f1271f7cc54a1dc86d",
+      "afterReplay": "da5a4f4259a7070b9ee05bee5abf4c6dfaec454f260a45f1271f7cc54a1dc86d",
+      "commitBlob": "da5a4f4259a7070b9ee05bee5abf4c6dfaec454f260a45f1271f7cc54a1dc86d",
+      "equal": true
+    },
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": {
+      "expected": "8d1aa4231c0e68f2d2362c18b70ef4e901e835cfd3d1b35550168ca870e76122",
+      "afterReplay": "8d1aa4231c0e68f2d2362c18b70ef4e901e835cfd3d1b35550168ca870e76122",
+      "commitBlob": "8d1aa4231c0e68f2d2362c18b70ef4e901e835cfd3d1b35550168ca870e76122",
+      "equal": true
+    },
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": {
+      "expected": "014182901958ba57d80c73cbc1778a658a23c1161ce87cbba88adbf11b657842",
+      "afterReplay": "014182901958ba57d80c73cbc1778a658a23c1161ce87cbba88adbf11b657842",
+      "commitBlob": "014182901958ba57d80c73cbc1778a658a23c1161ce87cbba88adbf11b657842",
+      "equal": true
+    },
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": {
+      "expected": "dbe2f23b9f07732ae5c799bafa972f0cf116f496d1b45188cd5ed68bc6caf462",
+      "afterReplay": "dbe2f23b9f07732ae5c799bafa972f0cf116f496d1b45188cd5ed68bc6caf462",
+      "commitBlob": "dbe2f23b9f07732ae5c799bafa972f0cf116f496d1b45188cd5ed68bc6caf462",
+      "equal": true
+    },
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarFraming.kt": {
+      "expected": "2a7f52251729e3cf0359997806b15e3d971eadd54e02a5a44de57865eda55ed2",
+      "afterReplay": "2a7f52251729e3cf0359997806b15e3d971eadd54e02a5a44de57865eda55ed2",
+      "commitBlob": "2a7f52251729e3cf0359997806b15e3d971eadd54e02a5a44de57865eda55ed2",
+      "equal": true
+    },
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": {
+      "expected": "fd9a803053f2b6ca4e9aa4e045d71ea95c363b6c006a7c8817684edc8edd850f",
+      "afterReplay": "fd9a803053f2b6ca4e9aa4e045d71ea95c363b6c006a7c8817684edc8edd850f",
+      "commitBlob": "fd9a803053f2b6ca4e9aa4e045d71ea95c363b6c006a7c8817684edc8edd850f",
+      "equal": true
+    },
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": {
+      "expected": "a00c36a5d3e1ad1bb83f8732153c7daa7ca7792498fceb4c6074992bba0580e9",
+      "afterReplay": "a00c36a5d3e1ad1bb83f8732153c7daa7ca7792498fceb4c6074992bba0580e9",
+      "commitBlob": "a00c36a5d3e1ad1bb83f8732153c7daa7ca7792498fceb4c6074992bba0580e9",
+      "equal": true
+    },
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt": {
+      "expected": "41fe6fc9ac47cf5d3f373da042753e5c3f1edd2732e8e1e0256b94689946d67c",
+      "afterReplay": "41fe6fc9ac47cf5d3f373da042753e5c3f1edd2732e8e1e0256b94689946d67c",
+      "commitBlob": "41fe6fc9ac47cf5d3f373da042753e5c3f1edd2732e8e1e0256b94689946d67c",
+      "equal": true
+    }
+  },
+  "inputBeforeAfterChecks": {
+    "assetPath": {
+      "path": "/workspace/scratch/76b7222771d5/continuum/app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "beforeReplay": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+      "afterReplay": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+      "equal": true
+    },
+    "timelinePath": {
+      "path": "/workspace/scratch/76b7222771d5/build-env/integrated-motion/avatar-motion-timeline.json",
+      "beforeReplay": "c73c222cc552104b826f2b662046290cb7cec02bfb36380fc372c8f7ecece56c",
+      "afterReplay": "c73c222cc552104b826f2b662046290cb7cec02bfb36380fc372c8f7ecece56c",
+      "equal": true
+    },
+    "testReportPath": {
+      "path": "/workspace/scratch/76b7222771d5/build-env/logs/integrated-lifecycle-green-attempt1-xml/TEST-at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest.xml",
+      "beforeReplay": "73b4b7544518084081e7fd5ea28bcba5edaeedf00cf1ea8144f4e62513a01d73",
+      "afterReplay": "73b4b7544518084081e7fd5ea28bcba5edaeedf00cf1ea8144f4e62513a01d73",
+      "equal": true
+    }
+  },
+  "renderManifestSha256": "8cf3cf6fc9b5ea577323b0be86735a2692740ac1ad0a49b7555409df1b77b335",
+  "sourceBindingSha256": "b47f9872536534a737486defad61616fb4feda6a74d8ad740fe044abfd243ecb",
+  "renderLogSha256": "c2f5aedbd45feb4afc4f3f6d011dc9e888adf012e5788e3f78c0484083f141c4",
+  "renderScriptSha256": "959bb822f6ce389d4fddefd45196a7cf2595fe8d71f4a970369c9dd3fb854d47",
+  "renderedPngCount": 9,
+  "pngHashesMatchManifest": true,
+  "oldReplayManifestSha256": "bf515bdb68cc39d35d1cf6019aa870d83e25c281d6f5d908d5e9be7b93740e17",
+  "oldReplayPngHashesMatchManifest": true,
+  "integratedXmlTotals": {
+    "tests": 196,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "testSuites": {
+    "at.heinz.deviceai.AvatarExplicitConfirmationUiTest": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.ContinuumAuraLifecycleUiTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.ContinuumAvatarFallbackUiTest": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.JarvisShellMotionUiTest": {
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.JarvisWorkWindowUiTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarDirectorTest": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarIntentLifecycleTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarNativeRegressionTest": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarObservedGazeTest": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarPortedPartsTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarSpeechClockTest": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest": {
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarSpeechReattachmentTest": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.AvatarTaskGestureTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.ContinuumAvatarLookPreviewUiTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.JarvisHoloAvatarUiTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar.JarvisShellWithAvatarPreviewUiTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.Avatar3dContractTest": {
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarAssetProvenanceTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarBlinkEasingTest": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarFramingTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarHeadFollowTest": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarNaturalBlinkTimingTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarNeckSplitTest": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarPortraitFramingTest": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.AvatarSpeechPipelineTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.avatar3d.OrthographicCockpitProbeTest": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.ui.JarvisHeadAuraSignalTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.ui.JarvisReferenceWindowLayoutTest": {
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.ui.JarvisTileAmbientNeonTest": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "at.heinz.deviceai.ui.JarvisTileEnergyTest": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "maxMatrixAbsoluteError": 3.252106921536324e-07,
+  "materialsUnchanged": true,
+  "visuallyInspectedPngs": [
+    "01-ruhe.png",
+    "02-zuhoeren.png",
+    "03-denken.png",
+    "04-fenster-augen-vor-kopf.png",
+    "05-fenster-kopf-folgt.png",
+    "06-bestaetigung-nicken.png",
+    "07-bestaetigung-ende.png",
+    "08-sprechen.png",
+    "09-stop.png"
+  ]
+}

@@ -1,0 +1,257 @@
+TAP version 13
+# Subtest: genuine RED→GREEN chain is VERIFIED from re-executed tests and bound to the receipt bytes
+ok 1 - genuine RED→GREEN chain is VERIFIED from re-executed tests and bound to the receipt bytes
+  ---
+  duration_ms: 345.640118
+  type: 'test'
+  ...
+# Subtest: forged receipts are rejected against the real repository
+ok 2 - forged receipts are rejected against the real repository
+  ---
+  duration_ms: 1043.892811
+  type: 'test'
+  ...
+# Subtest: a fix that edits the target test is rejected even if everything is green
+ok 3 - a fix that edits the target test is rejected even if everything is green
+  ---
+  duration_ms: 68.451847
+  type: 'test'
+  ...
+# Subtest: patch mode (CCC1 repair): base fails, base+patch passes, tampered patch is rejected
+ok 4 - patch mode (CCC1 repair): base fails, base+patch passes, tampered patch is rejected
+  ---
+  duration_ms: 395.417851
+  type: 'test'
+  ...
+# Subtest: JUnit parser maps node test files to stable ids and sees failures
+ok 5 - JUnit parser maps node test files to stable ids and sees failures
+  ---
+  duration_ms: 0.76011
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects missing in commit and patch modes
+ok 6 - executor coverage rejects missing in commit and patch modes
+  ---
+  duration_ms: 604.801045
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects renamed in commit and patch modes
+ok 7 - executor coverage rejects renamed in commit and patch modes
+  ---
+  duration_ms: 686.88617
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects skipped in commit and patch modes
+ok 8 - executor coverage rejects skipped in commit and patch modes
+  ---
+  duration_ms: 571.894805
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects todo in commit and patch modes
+ok 9 - executor coverage rejects todo in commit and patch modes
+  ---
+  duration_ms: 548.731014
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects suite in commit and patch modes
+ok 10 - executor coverage rejects suite in commit and patch modes
+  ---
+  duration_ms: 646.293015
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects duplicate in commit and patch modes
+ok 11 - executor coverage rejects duplicate in commit and patch modes
+  ---
+  duration_ms: 571.68761
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects reordered in commit and patch modes
+ok 12 - executor coverage rejects reordered in commit and patch modes
+  ---
+  duration_ms: 663.230274
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects skipType in commit and patch modes
+ok 13 - executor coverage rejects skipType in commit and patch modes
+  ---
+  duration_ms: 647.834286
+  type: 'test'
+  ...
+# Subtest: executor coverage accepts retain
+ok 14 - executor coverage accepts retain
+  ---
+  duration_ms: 631.505579
+  type: 'test'
+  ...
+# Subtest: executor coverage accepts extension
+ok 15 - executor coverage accepts extension
+  ---
+  duration_ms: 594.55475
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects interrupted execution and then verifies a fresh retry
+ok 16 - executor coverage rejects interrupted execution and then verifies a fresh retry
+  ---
+  duration_ms: 454.879719
+  type: 'test'
+  ...
+# Subtest: executor coverage rejects ambiguous repeated target claims before running
+ok 17 - executor coverage rejects ambiguous repeated target claims before running
+  ---
+  duration_ms: 45.180123
+  type: 'test'
+  ...
+# Subtest: public Delta findings reject contradictory receipt claims after genuine execution
+    # Subtest: D13-resolved-alias
+    ok 1 - D13-resolved-alias
+      ---
+      duration_ms: 273.415448
+      type: 'test'
+      ...
+    # Subtest: D16-red-exitCode
+    ok 2 - D16-red-exitCode
+      ---
+      duration_ms: 257.122389
+      type: 'test'
+      ...
+    # Subtest: D16-red-command
+    ok 3 - D16-red-command
+      ---
+      duration_ms: 277.278507
+      type: 'test'
+      ...
+    # Subtest: D16-red-timedOut
+    ok 4 - D16-red-timedOut
+      ---
+      duration_ms: 313.010928
+      type: 'test'
+      ...
+    # Subtest: D16-red-cancelled
+    ok 5 - D16-red-cancelled
+      ---
+      duration_ms: 506.47808
+      type: 'test'
+      ...
+    # Subtest: D16-red-skipped
+    ok 6 - D16-red-skipped
+      ---
+      duration_ms: 388.652857
+      type: 'test'
+      ...
+    # Subtest: D16-red-passedTargets
+    ok 7 - D16-red-passedTargets
+      ---
+      duration_ms: 534.898417
+      type: 'test'
+      ...
+    # Subtest: D16-green-exitCode
+    ok 8 - D16-green-exitCode
+      ---
+      duration_ms: 497.891713
+      type: 'test'
+      ...
+    # Subtest: D16-green-command
+    ok 9 - D16-green-command
+      ---
+      duration_ms: 566.047408
+      type: 'test'
+      ...
+    # Subtest: D16-green-timedOut
+    ok 10 - D16-green-timedOut
+      ---
+      duration_ms: 442.782375
+      type: 'test'
+      ...
+    # Subtest: D16-green-cancelled
+    ok 11 - D16-green-cancelled
+      ---
+      duration_ms: 447.096167
+      type: 'test'
+      ...
+    # Subtest: D16-green-skipped
+    ok 12 - D16-green-skipped
+      ---
+      duration_ms: 573.222233
+      type: 'test'
+      ...
+    # Subtest: D17-approvedForMerge
+    ok 13 - D17-approvedForMerge
+      ---
+      duration_ms: 5.719244
+      type: 'test'
+      ...
+    # Subtest: D17-installed
+    ok 14 - D17-installed
+      ---
+      duration_ms: 6.83511
+      type: 'test'
+      ...
+    # Subtest: D17-deviceVerified
+    ok 15 - D17-deviceVerified
+      ---
+      duration_ms: 15.177197
+      type: 'test'
+      ...
+    # Subtest: D17-schema
+    ok 16 - D17-schema
+      ---
+      duration_ms: 9.956748
+      type: 'test'
+      ...
+    # Subtest: D17-version
+    ok 17 - D17-version
+      ---
+      duration_ms: 21.827419
+      type: 'test'
+      ...
+    1..17
+ok 18 - public Delta findings reject contradictory receipt claims after genuine execution
+  ---
+  duration_ms: 5187.169448
+  type: 'test'
+  ...
+# Subtest: Delta follow-up preserves omitted optional legacy metadata and unique aliases
+ok 19 - Delta follow-up preserves omitted optional legacy metadata and unique aliases
+  ---
+  duration_ms: 1350.013133
+  type: 'test'
+  ...
+# Subtest: MΩ PR400 self-closing suite does not capture following actual Node cases
+ok 20 - MΩ PR400 self-closing suite does not capture following actual Node cases
+  ---
+  duration_ms: 294.419914
+  type: 'test'
+  ...
+# Subtest: MΩ PR400 actual Node identities survive a symlinked TMPDIR
+ok 21 - MΩ PR400 actual Node identities survive a symlinked TMPDIR
+  ---
+  duration_ms: 335.806453
+  type: 'test'
+  ...
+# Subtest: MΩ quality embedded patch receipt rejects patchSha256
+ok 22 - MΩ quality embedded patch receipt rejects patchSha256
+  ---
+  duration_ms: 46.319211
+  type: 'test'
+  ...
+# Subtest: MΩ quality embedded patch receipt rejects red.sha
+ok 23 - MΩ quality embedded patch receipt rejects red.sha
+  ---
+  duration_ms: 40.891329
+  type: 'test'
+  ...
+# Subtest: MΩ quality embedded patch receipt rejects green.sha
+ok 24 - MΩ quality embedded patch receipt rejects green.sha
+  ---
+  duration_ms: 35.615248
+  type: 'test'
+  ...
+1..24
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15166.486276

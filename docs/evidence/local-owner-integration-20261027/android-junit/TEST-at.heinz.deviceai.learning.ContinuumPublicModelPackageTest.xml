@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumPublicModelPackageTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:53" hostname="7b281259906f" time="0.012">
+  <properties/>
+  <testcase name="contradictoryHashFieldsAreRejected" classname="at.heinz.deviceai.learning.ContinuumPublicModelPackageTest" time="0.006"/>
+  <testcase name="unknownPrivacyAndOlderManifestAreRejected" classname="at.heinz.deviceai.learning.ContinuumPublicModelPackageTest" time="0.003"/>
+  <testcase name="matchingManifestAndBytesAreVerified" classname="at.heinz.deviceai.learning.ContinuumPublicModelPackageTest" time="0.001"/>
+  <testcase name="tamperedModelIsRejected" classname="at.heinz.deviceai.learning.ContinuumPublicModelPackageTest" time="0.001"/>
+  <testcase name="duplicatePrivacyKeyCannotSmuggleAPrivatePackage" classname="at.heinz.deviceai.learning.ContinuumPublicModelPackageTest" time="0.0"/>
+  <testcase name="githubManifestLayoutIsAccepted" classname="at.heinz.deviceai.learning.ContinuumPublicModelPackageTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

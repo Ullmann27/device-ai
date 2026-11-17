@@ -1,0 +1,27 @@
+{
+  "schema": "continuum-independent-service-mcp-check",
+  "version": 1,
+  "sourceCommit": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+  "environment": "HOST",
+  "deviceVerified": false,
+  "modelInference": "NOT_RUN",
+  "repair": "NOT_RUN",
+  "chatgptConnection": "NOT_CONFIGURED",
+  "node": "v24.19.0",
+  "checks": [
+    {
+      "name": "real Kotlin20 seed, stable rename, private context retained on new JVM",
+      "status": "FAIL",
+      "message": "Cannot read properties of undefined (reading 'slice')"
+    }
+  ],
+  "status": "FAIL",
+  "failure": "Cannot read properties of undefined (reading 'slice')",
+  "privateFixturePath": "/tmp/independent-service-U1sdW6",
+  "latencyMs": {
+    "samples": 0,
+    "p50": null,
+    "p95": null,
+    "scope": "sequential HTTP calls; child JVM startup included; no inference"
+  }
+}

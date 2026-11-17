@@ -1,0 +1,33 @@
+{
+  "schema": "continuum.host-evidence.v1",
+  "source_commit": "1f2276b141133aaf5ae9a54c1b51eab7c31445f8",
+  "note": "Measured on a sandbox host (not the Render QA host, no Android toolchain). Only the Node catalog and backend were executed. The later commit 9256f63 changes one Kotlin test file, so these runs are repeated on the final merge SHA before any acceptance statement.",
+  "runs": [
+    {"id": "contract-gate", "node": "26.12.1", "user": "root", "files": 4, "tests": 11, "pass": 11, "fail": 0},
+    {"id": "critical", "node": "24.22.2", "user": "non-root", "status": "PASS", "tests": 135, "pass": 135, "fail": 0,
+     "suites": {"process": 37, "storage-agent": 32, "android-source-contracts": 64, "host-checker": 2}, "sourceUnchanged": true},
+    {"id": "backend", "node": "26.12.1", "user": "root", "commands": ["npm ci --ignore-scripts", "npm run check", "npm test"], "tests": 64, "pass": 64, "fail": 0},
+    {"id": "full-node-unmodified-root-node26", "node": "26.12.1", "user": "root", "status": "FAIL", "total": 2430, "pass": 2376, "fail": 13, "skip": 41,
+     "failure_causes": {"UNSUPPORTED_NODE_LTS": 3, "ISOLATION_UNPRIVILEGED_UID_REQUIRED": 9, "GIT_CONFIG_ENV_OVERRIDE_core.fsmonitor": 1}},
+    {"id": "full-node-ci-parity-as-is", "node": "24.22.2", "user": "non-root", "status": "FAIL", "total": 2430, "executed": 2393, "pass": 2392, "fail": 1, "skip": 37,
+     "failure_causes": {"GIT_CONFIG_ENV_OVERRIDE_core.fsmonitor": 1}},
+    {"id": "full-node-ci-parity-fsmonitor-override-removed", "node": "24.22.2", "user": "non-root", "status": "PASS", "total": 2430, "executed": 2393, "pass": 2393, "fail": 0, "skip": 37,
+     "environment_change": "Only the sandbox-injected GIT_CONFIG entry core.fsmonitor=false was removed from the test child process; safe.bareRepository and credential.interactive entries stayed. No test, check or production file was modified.",
+     "skip_causes": {"HOST_ISOLATION_PROOF_NOT_RUN(bwrap)": 14, "opt-in CONTINUUM_WORKSPACE_HOST_PROOF": 12, "HOST_RESOURCE_PROOF_NOT_RUN(cgroup)": 3, "docker host proof": 2, "NOT_RUN(jars/SDK/JVM deps)": 6}}
+  ],
+  "git_config_forensics": {
+    "test": ".github/continuum/branch-discovery.test.mjs:176 preflight rejects fsmonitor hooks and partial clones before inspecting worktree state",
+    "injected_entries": ["safe.bareRepository", "credential.interactive", "core.fsmonitor=false"],
+    "effective_value_in_fixture_repo_with_sandbox_env": "false (scope: command line, wins over file:.git/config=/nonexistent/hook)",
+    "test_result_sandbox_env_as_is": "fail 1",
+    "test_result_only_core.fsmonitor_entry_removed": "pass 1"
+  },
+  "not_run": {
+    "gradle_compile": "UNAVAILABLE: dl.google.com unreachable, no Android SDK",
+    "junit_robolectric": "UNAVAILABLE",
+    "lint": "UNAVAILABLE",
+    "release_build_apk_identity": "UNAVAILABLE",
+    "signing": "NOT_RUN: no owner release approval variables, no original P12 host",
+    "fold7": "REAL_DEVICE_NOT_RUN"
+  }
+}

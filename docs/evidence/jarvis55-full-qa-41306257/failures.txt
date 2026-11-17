@@ -1,0 +1,130 @@
+2026-11-13T02:16:41.5738390Z source_sha=41306257ce03c1e22e998877bf769ce42b3a0486
+2026-11-13T02:16:41.5739670Z source_tree=3a16a64f4d831ba51d54f24cbb952d850e8d433e
+2026-11-13T02:16:41.5740240Z 
+2026-11-13T02:16:41.5741350Z at.heinz.deviceai.AndroidLiveNodePortTest floatingImeAllowsAndVerifiesTargetInsideRenderedViewport java.lang.AssertionError
+2026-11-13T02:16:41.5743041Z java.lang.AssertionError
+2026-11-13T02:16:41.5743600Z java.lang.AssertionError
+2026-11-13T02:16:41.5744031Z 	at org.junit.Assert.fail(Assert.java:87)
+2026-11-13T02:16:41.5744507Z 	at org.junit.Assert.assertTrue(Assert.java:42)
+2026-11-13T02:16:41.5745013Z 	at org.junit.Assert.assertTrue(Assert.java:53)
+2026-11-13T02:16:41.5746074Z 	at at.heinz.deviceai.AndroidLiveNodePortTest.floatingImeAllowsAndVerifiesTargetInsideRenderedViewport(AndroidLiveNodePortTest.kt:202)
+2026-11-13T02:16:41.5747504Z at.heinz.deviceai.AndroidLiveNodePortTest floatingImeExcludesVisibleNodeOutsideRenderedViewport org.junit.ComparisonFailure
+2026-11-13T02:16:41.5748805Z org.junit.ComparisonFailure: expected:<[TARGET_OUTSIDE_MONITOR_VIEWPORT]> but was:<[COMPUTER_RENDERED_OBSERVATION_MISMATCH]>
+2026-11-13T02:16:41.5749991Z org.junit.ComparisonFailure: expected:<[TARGET_OUTSIDE_MONITOR_VIEWPORT]> but was:<[COMPUTER_RENDERED_OBSERVATION_MISMATCH]>
+2026-11-13T02:16:41.5750837Z 	at org.junit.Assert.assertEquals(Assert.java:117)
+2026-11-13T02:16:41.5751359Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5752648Z 	at at.heinz.deviceai.AndroidLiveNodePortTest.floatingImeExcludesVisibleNodeOutsideRenderedViewport(AndroidLiveNodePortTest.kt:170)
+2026-11-13T02:16:41.5753782Z 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+2026-11-13T02:16:41.5754809Z at.heinz.deviceai.AndroidLiveNodePortTest floatingImeRejectsTargetPartlyOutsideRenderedViewport org.junit.ComparisonFailure
+2026-11-13T02:16:41.5755857Z org.junit.ComparisonFailure: expected:<[TARGET_OUTSIDE_MONITOR_VIEWPORT]> but was:<[COMPUTER_RENDERED_OBSERVATION_MISMATCH]>
+2026-11-13T02:16:41.5757325Z org.junit.ComparisonFailure: expected:<[TARGET_OUTSIDE_MONITOR_VIEWPORT]> but was:<[COMPUTER_RENDERED_OBSERVATION_MISMATCH]>
+2026-11-13T02:16:41.5758061Z 	at org.junit.Assert.assertEquals(Assert.java:117)
+2026-11-13T02:16:41.5758534Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5759393Z 	at at.heinz.deviceai.AndroidLiveNodePortTest.floatingImeRejectsTargetPartlyOutsideRenderedViewport(AndroidLiveNodePortTest.kt:185)
+2026-11-13T02:16:41.5760490Z 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+2026-11-13T02:16:41.5761466Z at.heinz.deviceai.AndroidLiveScrollTest sameContainerIndexMovementConfirmsExactlyOneDispatch java.lang.AssertionError
+2026-11-13T02:16:41.5762582Z java.lang.AssertionError: expected:<CONFIRMED> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5763251Z java.lang.AssertionError: expected:<CONFIRMED> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5763789Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5764215Z 	at org.junit.Assert.failNotEquals(Assert.java:835)
+2026-11-13T02:16:41.5764682Z 	at org.junit.Assert.assertEquals(Assert.java:120)
+2026-11-13T02:16:41.5765138Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5765805Z at.heinz.deviceai.AndroidLiveScrollTest wrongWindowCannotSupplyScrollEvidence java.lang.AssertionError
+2026-11-13T02:16:41.5766621Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5767349Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5767911Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5768325Z 	at org.junit.Assert.failNotEquals(Assert.java:835)
+2026-11-13T02:16:41.5768772Z 	at org.junit.Assert.assertEquals(Assert.java:120)
+2026-11-13T02:16:41.5769215Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5769901Z at.heinz.deviceai.AndroidLiveScrollTest queuedOldEventsCannotSupplyScrollEvidence java.lang.AssertionError
+2026-11-13T02:16:41.5770728Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5771448Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5772008Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5772555Z 	at org.junit.Assert.failNotEquals(Assert.java:835)
+2026-11-13T02:16:41.5773002Z 	at org.junit.Assert.assertEquals(Assert.java:120)
+2026-11-13T02:16:41.5773438Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5774068Z at.heinz.deviceai.AndroidLiveScrollTest unchangedPositionDoesNotConfirm java.lang.AssertionError
+2026-11-13T02:16:41.5774857Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5775582Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5776148Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5776604Z 	at org.junit.Assert.failNotEquals(Assert.java:835)
+2026-11-13T02:16:41.5777075Z 	at org.junit.Assert.assertEquals(Assert.java:120)
+2026-11-13T02:16:41.5777568Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5778251Z at.heinz.deviceai.AndroidLiveScrollTest movementOfDifferentContainerDoesNotConfirm java.lang.AssertionError
+2026-11-13T02:16:41.5779119Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5779878Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5780464Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5780901Z 	at org.junit.Assert.failNotEquals(Assert.java:835)
+2026-11-13T02:16:41.5781370Z 	at org.junit.Assert.assertEquals(Assert.java:120)
+2026-11-13T02:16:41.5781835Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5783052Z at.heinz.deviceai.AndroidLiveScrollTest badgeChangeWithoutScrollEventDoesNotConfirm java.lang.AssertionError
+2026-11-13T02:16:41.5784113Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5784913Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5785502Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5785939Z 	at org.junit.Assert.failNotEquals(Assert.java:835)
+2026-11-13T02:16:41.5786404Z 	at org.junit.Assert.assertEquals(Assert.java:120)
+2026-11-13T02:16:41.5786857Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5787617Z at.heinz.deviceai.AndroidLiveScrollTest futureDatedEventsCannotSupplyScrollEvidence java.lang.AssertionError
+2026-11-13T02:16:41.5788480Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5789217Z java.lang.AssertionError: expected:<UNCLEAR_EXPECTATION_NOT_MET> but was:<UNCLEAR_DISPATCH>
+2026-11-13T02:16:41.5789792Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5790228Z 	at org.junit.Assert.failNotEquals(Assert.java:835)
+2026-11-13T02:16:41.5790693Z 	at org.junit.Assert.assertEquals(Assert.java:120)
+2026-11-13T02:16:41.5791139Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.5791952Z at.heinz.deviceai.ContinuumReferenceCockpitUiTest foldPortraitCompactChooserRestoresExact2dGeometry java.lang.AssertionError
+2026-11-13T02:16:41.5793135Z java.lang.AssertionError: 840 x 1050, font=1.5 compact shortens actual content
+2026-11-13T02:16:41.5793788Z java.lang.AssertionError: 840 x 1050, font=1.5 compact shortens actual content
+2026-11-13T02:16:41.5794308Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5794724Z 	at org.junit.Assert.assertTrue(Assert.java:42)
+2026-11-13T02:16:41.5795577Z 	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.checkWideCompactPresentation$lambda$0(ContinuumReferenceCockpitUiTest.kt:1171)
+2026-11-13T02:16:41.5796669Z 	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.withActivity(ContinuumReferenceCockpitUiTest.kt:150)
+2026-11-13T02:16:41.5797727Z at.heinz.deviceai.ContinuumReferenceCockpitUiTest foldLandscapeCompactChooserRestoresExact2dGeometry java.lang.AssertionError
+2026-11-13T02:16:41.5798600Z java.lang.AssertionError: 840 x 649, font=1.5 compact shortens actual content
+2026-11-13T02:16:41.5799234Z java.lang.AssertionError: 840 x 649, font=1.5 compact shortens actual content
+2026-11-13T02:16:41.5799742Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5800163Z 	at org.junit.Assert.assertTrue(Assert.java:42)
+2026-11-13T02:16:41.5800993Z 	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.checkWideCompactPresentation$lambda$0(ContinuumReferenceCockpitUiTest.kt:1171)
+2026-11-13T02:16:41.5802067Z 	at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.withActivity(ContinuumReferenceCockpitUiTest.kt:150)
+2026-11-13T02:16:41.5803084Z at.heinz.deviceai.ContinuumVisualEvidenceUiTest fold7CoverAndPhone java.lang.AssertionError
+2026-11-13T02:16:41.5803781Z java.lang.AssertionError: Opening advances between endpoints: 0.0
+2026-11-13T02:16:41.5804344Z java.lang.AssertionError: Opening advances between endpoints: 0.0
+2026-11-13T02:16:41.5804818Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5805233Z 	at org.junit.Assert.assertTrue(Assert.java:42)
+2026-11-13T02:16:41.5805955Z 	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.systemStatusScenes(ContinuumVisualEvidenceUiTest.kt:189)
+2026-11-13T02:16:41.5806866Z 	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.scenes(ContinuumVisualEvidenceUiTest.kt:372)
+2026-11-13T02:16:41.5807704Z at.heinz.deviceai.ContinuumVisualEvidenceUiTest fold7InnerLargerFont java.lang.AssertionError
+2026-11-13T02:16:41.5808397Z java.lang.AssertionError: Opening advances between endpoints: 0.0
+2026-11-13T02:16:41.5808955Z java.lang.AssertionError: Opening advances between endpoints: 0.0
+2026-11-13T02:16:41.5809426Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5810008Z 	at org.junit.Assert.assertTrue(Assert.java:42)
+2026-11-13T02:16:41.5810829Z 	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.systemStatusScenes(ContinuumVisualEvidenceUiTest.kt:189)
+2026-11-13T02:16:41.5811755Z 	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.scenes(ContinuumVisualEvidenceUiTest.kt:372)
+2026-11-13T02:16:41.5812699Z at.heinz.deviceai.ContinuumVisualEvidenceUiTest referenceTablet java.lang.AssertionError
+2026-11-13T02:16:41.5813374Z java.lang.AssertionError: Opening advances between endpoints: 0.0
+2026-11-13T02:16:41.5813930Z java.lang.AssertionError: Opening advances between endpoints: 0.0
+2026-11-13T02:16:41.5814403Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.5814820Z 	at org.junit.Assert.assertTrue(Assert.java:42)
+2026-11-13T02:16:41.5815589Z 	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.systemStatusScenes(ContinuumVisualEvidenceUiTest.kt:189)
+2026-11-13T02:16:41.5816506Z 	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.scenes(ContinuumVisualEvidenceUiTest.kt:372)
+2026-11-13T02:16:41.6091317Z at.heinz.deviceai.ContinuumVisualEvidenceUiTest fold7Inner java.lang.AssertionError
+2026-11-13T02:16:41.6093175Z java.lang.AssertionError: Opening advances between endpoints: 0.0
+2026-11-13T02:16:41.6094430Z java.lang.AssertionError: Opening advances between endpoints: 0.0
+2026-11-13T02:16:41.6095465Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.6096062Z 	at org.junit.Assert.assertTrue(Assert.java:42)
+2026-11-13T02:16:41.6097106Z 	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.systemStatusScenes(ContinuumVisualEvidenceUiTest.kt:189)
+2026-11-13T02:16:41.6098454Z 	at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.scenes(ContinuumVisualEvidenceUiTest.kt:372)
+2026-11-13T02:16:41.6099993Z at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest actualProviderReadRendersAndExtractsSyntheticPdf java.lang.NoSuchMethodError
+2026-11-13T02:16:41.6101315Z java.lang.NoSuchMethodError: 'long java.io.FileDescriptor.getOwnerId$()'
+2026-11-13T02:16:41.6102233Z java.lang.NoSuchMethodError: 'long java.io.FileDescriptor.getOwnerId$()'
+2026-11-13T02:16:41.6103491Z 	at libcore.io.IoUtils.acquireRawFd(IoUtils.java:74)
+2026-11-13T02:16:41.6104158Z 	at android.os.ParcelFileDescriptor.acquireRawFd(ParcelFileDescriptor.java:1315)
+2026-11-13T02:16:41.6104889Z 	at android.os.ParcelFileDescriptor.detachFd(ParcelFileDescriptor.java:818)
+2026-11-13T02:16:41.6105588Z 	at android.os.ParcelFileDescriptor.detachFd(ParcelFileDescriptor.java:813)
+2026-11-13T02:16:41.6106517Z at.heinz.deviceai.ResearchChatApprovalUiTest staleActivitySpeechCallbackPreservesNewRecognition java.lang.AssertionError
+2026-11-13T02:16:41.6107370Z java.lang.AssertionError: expected:<false> but was:<true>
+2026-11-13T02:16:41.6107888Z java.lang.AssertionError: expected:<false> but was:<true>
+2026-11-13T02:16:41.6108345Z 	at org.junit.Assert.fail(Assert.java:89)
+2026-11-13T02:16:41.6108782Z 	at org.junit.Assert.failNotEquals(Assert.java:835)
+2026-11-13T02:16:41.6109246Z 	at org.junit.Assert.assertEquals(Assert.java:120)
+2026-11-13T02:16:41.6109712Z 	at org.junit.Assert.assertEquals(Assert.java:146)
+2026-11-13T02:16:41.6110128Z READ_ONLY_PRIOR_QA_RECEIPT_PASS

@@ -1,0 +1,10 @@
+Executed HEAD a408d8bc752a503a9c139ce06b5c6ba6802d08a5; production identical to a39b614bca7a9d93a943507d53c99aa43f96562c.
+ app/src/uiTest/java/at/heinz/deviceai/ContinuumReadinessGuideUiTest.kt | 2 ++
+ 1 file changed, 2 insertions(+)
+f21c4d17550cc2acd9278fdb2ceaf0d314788cc15a8790545817008c110cad81  /workspace/momega1-build-env/guide-caller-a408d8bc/source-before.txt
+100644 9a8d5d5d027f7df0743e795c2a0b4f82d3f810b1 0	app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+100644 df47adf71817d9c22290f957f5aa95b5201ad3ea 0	app/src/main/java/at/heinz/deviceai/AndroidAvatarCameraInput.kt
+100644 20f37fb59b60f9c00aa414c02df4fec782854492 0	app/src/main/java/at/heinz/deviceai/cognitive/AvatarCameraPolicy.kt
+100644 0a63d5f3ce899cc02002b1bdc85107c9b56a1a03 0	app/src/main/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuide.kt
+100644 9f6b5c10aac75278ea93c7306e06800b4b2883fc 0	app/src/uiTest/java/at/heinz/deviceai/ContinuumReadinessGuideUiTest.kt
+f21c4d17550cc2acd9278fdb2ceaf0d314788cc15a8790545817008c110cad81  /workspace/momega1-build-env/guide-caller-a408d8bc/source-after.txt

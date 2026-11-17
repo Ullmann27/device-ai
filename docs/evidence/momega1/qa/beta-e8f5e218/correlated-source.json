@@ -1,0 +1,54 @@
+{
+  "evidenceClass": "HOST_INTEGRATION",
+  "verifier": "/workspace/momega1-build-env/beta-e8f5e218/source/.github/continuum/ccc1-redgreen-verifier.mjs",
+  "verifierSha256": "8e9441e3ce63eb7ebcfa74e3cc8d60cb6503aca226bbc56e609fdb7ebfe8cd0e",
+  "harnessSha256": "c8446a1701a7c94e658cce64e4417416c213edd0a0f2a59892db7b1d5419f42e",
+  "node": "v24.19.0",
+  "results": [
+    {
+      "id": "green-sha-correlated-wrong-existing-commit",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "status": "REJECTED",
+      "reason": [
+        "COMMITS_NOT_DISTINCT"
+      ],
+      "callerPreserved": true,
+      "pass": true
+    },
+    {
+      "id": "green-sha-correlated-wrong-existing-commit",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "status": "VERIFIED",
+      "reason": [],
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "green-sha-correlated-nonexistent-commit",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "status": "REJECTED",
+      "reason": [
+        "COMMIT_NOT_IN_REPOSITORY"
+      ],
+      "callerPreserved": true,
+      "pass": true
+    },
+    {
+      "id": "green-sha-correlated-nonexistent-commit",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "status": "VERIFIED",
+      "reason": [],
+      "callerPreserved": true,
+      "pass": false
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "pass": 2,
+    "fail": 2
+  }
+}

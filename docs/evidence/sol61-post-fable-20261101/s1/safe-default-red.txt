@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+.E
+Time: 0.1
+There was 1 failure:
+1) noImplicitOnlineAuthorizationFromSavedResearch(at.heinz.deviceai.cognitive.OfflineDefaultRegression)
+java.lang.AssertionError: No access state was supplied: research must remain historical
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.OfflineDefaultRegression.noImplicitOnlineAuthorizationFromSavedResearch(OfflineDefaultRegression.kt:11)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+

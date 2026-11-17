@@ -1,0 +1,14 @@
+{
+  "taskId": "C1-INTEGRATE-001",
+  "phase": "RED_OLD_API_BEHAVIOR",
+  "source": "e19bf2768dc24b7c2ea1040538fdd661269a540c",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "/workspace/scratch/174c84456ee3/qa/probes/c1-negative-report.test.mjs"
+  ],
+  "startedAt": "2026-11-04T19:55:00.710493+00:00",
+  "exitCode": 1,
+  "finishedAt": "2026-11-04T19:55:01.813156+00:00"
+}

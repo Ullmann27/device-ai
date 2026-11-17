@@ -1,0 +1,18 @@
+{
+  "id": "C010",
+  "question": "Wo wohnt Zymokaca?",
+  "sources": [
+    {
+      "revision": 3,
+      "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+      "sourceId": "bc:C010:s1",
+      "text": "Qedunanu wohnt in Uvbimuse Uvdacabi. Zymokaca wohnt in Uvgemeta."
+    },
+    {
+      "revision": 4,
+      "sha256": "07c1a6be7d81210bfbb9786dc2261b3f4e75c71d2911ed3ad7cf51170b2b0c28",
+      "sourceId": "bc:C010:s2",
+      "text": "Qevokifu wohnt in Uvcaduve. Qefobuhu wohnt in Uvjoceto."
+    }
+  ]
+}

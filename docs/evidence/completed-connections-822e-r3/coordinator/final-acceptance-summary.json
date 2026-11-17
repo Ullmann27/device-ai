@@ -1,0 +1,491 @@
+{
+  "schemaVersion": 1,
+  "status": "ALL_REQUESTED_HOST_GATES_PASSED",
+  "sourceLocal": "191ee80fe2a916f2a8e4041df386bfa29a6a03b0",
+  "sourceRemote": "80c01939e8a1fdd04cfa9a818c352be494bc1719",
+  "fullTree": "2defed4632b02a78478f9ecc1e910557181343cf",
+  "android": {
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 279.00374460220337,
+    "sourceCommit": "191ee80fe2a916f2a8e4041df386bfa29a6a03b0",
+    "sourceTree": "2defed4632b02a78478f9ecc1e910557181343cf",
+    "sourceUnchanged": true,
+    "totals": {
+      "tests": 3051,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 19,
+      "passed": 3032
+    },
+    "staleXmlRejected": [],
+    "lintIssues": 0,
+    "lintRules": [
+      "NewApi"
+    ],
+    "lintRequested": true,
+    "uiEnabled": true,
+    "classFilters": [],
+    "canonicalQaMode": true,
+    "explicitQaVersionCode": 41,
+    "freeBytesBefore": 1125593088,
+    "freeBytesAfter": 1116311552,
+    "apkBuilt": false,
+    "deviceTested": false,
+    "modelInference": false
+  },
+  "suiteCount": 535,
+  "failures": [],
+  "skips": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s7_pending_agentMessagesUrgentWakesInfoWaits"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s4b_pending_profileDiarySharedLayers"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s8d_pending_limitGuardIsWiredBeforeWorkerStart"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s5b_pending_textFileSkillLibraryLoadedOnDemand"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s6_pending_routineReportsOnlyWhenSomethingIsNew"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "test": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "test": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "test": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt6b_lernen_hypotheseUndTagebuchEintrag"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "test": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "test": "actualNodeKotlinNodeTrainingParity"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "test": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "test": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores"
+    },
+    {
+      "class": "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+      "test": "failureBeforeAnyModelWasLoadedCanRetryWithoutUnload"
+    },
+    {
+      "class": "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+      "test": "failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload"
+    }
+  ],
+  "mandatorySuites": {
+    "at.heinz.deviceai.ToolExecutionStartLatchTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.ReadOnlyToolSizeRegressionTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.cognitive.LocalPromptFrameTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.ToolDurableOutcomeTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.localmodel.LocalToolContinuationTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.cognitive.JournalAvailabilityTest": {
+      "minimum": 1,
+      "actual": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.ShizukuBridgeLifecycleTest": {
+      "minimum": 14,
+      "actual": {
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.ShizukuConnectionDialogTest": {
+      "minimum": 2,
+      "actual": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.ui.ContinuumControlsTest": {
+      "minimum": 7,
+      "actual": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest": {
+      "minimum": 5,
+      "actual": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    },
+    "at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest": {
+      "minimum": 6,
+      "actual": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": true
+    }
+  },
+  "allMandatorySuitesPassed": true,
+  "androidInvocation": {
+    "command": [
+      "python3",
+      "/workspace/scratch/822e72396ed9/verification-r3/with_c1_build_locks.py",
+      "timeout",
+      "--kill-after=20s",
+      "600s",
+      "python3",
+      "/workspace/scratch/822e72396ed9/build-env/run_gradle.py",
+      "--offline",
+      "--no-build-cache",
+      "-Dorg.gradle.jvmargs=-Xmx1g -XX:ActiveProcessorCount=2 -XX:+UseSerialGC",
+      "--init-script",
+      "/workspace/scratch/822e72396ed9/verification-r3/observe-tests.init.gradle",
+      "-PcontinuumUiWidgetTests=true",
+      "-PdeviceAiMentorPreview=true",
+      "-PcontinuumLocalStandaloneQa=true",
+      "-PcontinuumStandaloneVersionCode=41",
+      ":app:testDebugUnitTest",
+      ":app:lintDebug"
+    ],
+    "startedAtEpoch": 1793833202.9303505,
+    "uiEnabled": true,
+    "classFilters": []
+  },
+  "node": {
+    "critical": {
+      "status": "PASS",
+      "sourceUnchanged": true,
+      "checks": [
+        {
+          "name": "process",
+          "status": "PASS",
+          "tests": {
+            "total": 37,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 37,
+            "passed": 37,
+            "evidenceComplete": true
+          }
+        },
+        {
+          "name": "storage-agent",
+          "status": "PASS",
+          "tests": {
+            "total": 32,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 32,
+            "passed": 32,
+            "evidenceComplete": true
+          }
+        },
+        {
+          "name": "android-source-contracts",
+          "status": "PASS",
+          "tests": {
+            "total": 64,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 64,
+            "passed": 64,
+            "evidenceComplete": true
+          }
+        },
+        {
+          "name": "host-checker",
+          "status": "PASS",
+          "tests": {
+            "total": 2,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 2,
+            "passed": 2,
+            "evidenceComplete": true
+          }
+        }
+      ]
+    },
+    "full-node": {
+      "status": "PASS",
+      "sourceUnchanged": true,
+      "checks": [
+        {
+          "name": "full-node",
+          "status": "PASS",
+          "tests": {
+            "total": 2393,
+            "failed": 0,
+            "skipped": 31,
+            "placeholders": 0,
+            "executed": 2362,
+            "passed": 2362,
+            "evidenceComplete": true
+          }
+        }
+      ]
+    }
+  },
+  "nodeInvocation": {
+    "sourceCommit": "191ee80fe2a916f2a8e4041df386bfa29a6a03b0",
+    "compilerLauncher": "/workspace/scratch/18845e31bc4a/regression-audit/real-kotlinc/bin/kotlinc",
+    "compilerLauncherSha256": "14a9263943ef37edff550a233abc2cc2af35543906437e6877f083e4c92fdfee",
+    "compilerVersionExitCode": 0,
+    "temporaryRoot": "/tmp/continuum-r3-node-kxae3mgf",
+    "profiles": [
+      {
+        "profile": "critical",
+        "command": [
+          "timeout",
+          "--kill-after=20s",
+          "900s",
+          "node",
+          "scripts/continuum-reliability-qa.mjs",
+          "critical",
+          "--out",
+          "/workspace/scratch/822e72396ed9/verification-r3/node-acceptance-final/critical"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 32.32606649398804,
+        "status": "PASS",
+        "sourceUnchanged": true
+      },
+      {
+        "profile": "full-node",
+        "command": [
+          "timeout",
+          "--kill-after=20s",
+          "900s",
+          "node",
+          "scripts/continuum-reliability-qa.mjs",
+          "full-node",
+          "--out",
+          "/workspace/scratch/822e72396ed9/verification-r3/node-acceptance-final/full-node"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 198.54902863502502,
+        "status": "PASS",
+        "sourceUnchanged": true
+      }
+    ]
+  },
+  "backend": {
+    "status": "PASS",
+    "exitCode": 0,
+    "sourceCommit": "191ee80fe2a916f2a8e4041df386bfa29a6a03b0",
+    "sourceTree": "2defed4632b02a78478f9ecc1e910557181343cf",
+    "sourceUnchanged": true,
+    "elapsedSeconds": 0.8031530380249023,
+    "totals": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 64
+    },
+    "liveApiInference": false,
+    "serverDeployed": false
+  },
+  "backendInvocation": {
+    "command": [
+      "timeout",
+      "--kill-after=10s",
+      "120s",
+      "node",
+      "--test",
+      "--test-reporter=junit",
+      "test/android-web-tools.test.js",
+      "test/api-integration.test.js",
+      "test/brain-factory.test.js",
+      "test/continuum-daemon.test.js",
+      "test/continuum-knowledge.test.js",
+      "test/groq-mentor-browser.test.js",
+      "test/groq-mentor.test.js",
+      "test/hypothesis-tournament.test.js",
+      "test/mentor-answer-format.test.js",
+      "test/mentor-pairing.test.js",
+      "test/openrouter-mentor.test.js",
+      "test/public-research-daemon.test.js",
+      "test/public-research.test.js"
+    ],
+    "cwd": "/workspace/scratch/822e72396ed9/continuum-attach-r2/backend",
+    "testFiles": 13,
+    "nodeVersion": "v24.22.1",
+    "dependencyVersions": {
+      "express": "5.3.0",
+      "express-rate-limit": "8.7.3",
+      "helmet": "8.3.0"
+    },
+    "lockfileSha256": "0c06a087af06afb5cf89a2749a7084524c93c9423c619806492fc18111837cc2"
+  },
+  "additionalEvidenceDirectories": [
+    "/workspace/scratch/822e72396ed9/verification-r3/final-acceptance-source-review"
+  ],
+  "countsOverlap": true,
+  "archive": {
+    "name": "final-acceptance-evidence.tar.xz",
+    "sha256": "ec890dc9c3a9118ca9b0710d8753c1dbb0e028c9fc1e1057a948c47f48b14304",
+    "bytes": 728864,
+    "files": 578
+  },
+  "release": {
+    "apkBuilt": false,
+    "deviceTested": false,
+    "modelInference": false
+  }
+}

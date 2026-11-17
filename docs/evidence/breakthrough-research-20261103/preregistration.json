@@ -1,0 +1,26 @@
+{
+  "experimentId": "EXP-06/R1-EXTRACTIVE-SOURCE-ADMISSION",
+  "status": "PREREGISTERED_UNVERIFIED",
+  "createdAt": "2026-11-03T18:26:14.688823+00:00",
+  "baselineCommit": "64ec06a73f50cae9ee49035c840710d87777d50f",
+  "branch": "codex/breakthrough-research-20261103",
+  "baseBranch": "codex/team-chief/omega-20261103",
+  "hypothesis": "Binding extractive claims to the actual supplying, hash-checked document prevents fabricated attribution/corroboration; sanitizing graph fields closes an existing raw prompt surface.",
+  "contract": "Only literal substrings of supplying document, after outer whitespace trim, are extractive claims. No semantic entailment or paraphrase inference. Source identity, provenance, validation state and validation evidence are assigned by engine, never trusted from extractor.",
+  "criteria": [
+    "All frozen positive literal excerpts admitted with unchanged text; existing ResearchEngine tests pass.",
+    "Zero false VERIFIED claims from forged cross-document references or extractor authority.",
+    "Unknown or nonliteral claims rejected; literal source content stays untrusted data.",
+    "Graph text and IDs have no raw role/tool/control markers tested by existing sanitizer contract.",
+    "Unknown QA cases independently held by quality agent; no tuning on holdout.",
+    "No semantic truth, LLM immunity, device performance or paper-score claims."
+  ],
+  "comparison": "Frozen development fixture runner on baseline and candidate; independent QA evaluates after source freeze.",
+  "limits": {
+    "paidModels": "NOT_USED",
+    "device": "NOT_RUN",
+    "realModel": "NOT_RUN",
+    "quota": "NOT_VISIBLE"
+  },
+  "rollback": "Revert isolated R1 code/test commit; no persistence format/weights changes."
+}

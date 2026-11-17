@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:27" hostname="0f4ac18d136f" time="0.028">
+  <properties/>
+  <testcase name="changedSourceAndAmbiguousSearchAreBlocked" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.004"/>
+  <testcase name="newSearchNeedsActualEditableRoleAndFreshRevision" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.007"/>
+  <testcase name="differingSearchHintUsesObservedUniqueIdAndExactQuery" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.003"/>
+  <testcase name="ambiguousNewSearchFieldsStopBeforeEnteringText" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.001"/>
+  <testcase name="downloadsRequireNewHeadingNotJustChangedPixels" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.0"/>
+  <testcase name="actualSearchClickThenSetTextWithFreshObservations" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.003"/>
+  <testcase name="uncertainTextIsNeverRepeatedOrReportedDone" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.0"/>
+  <testcase name="explicitSendStillCannotBypassExistingToolGate" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.001"/>
+  <testcase name="existingDraftIsNotOverwritten" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.001"/>
+  <testcase name="mismatchedChatNeverReceivesDraft" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.001"/>
+  <testcase name="draftChecksChatHeaderAndActualComposeText" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.001"/>
+  <testcase name="ambiguousContactsAreNotChosen" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.001"/>
+  <testcase name="existingQueryIsObservedWithoutRetyping" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.0"/>
+  <testcase name="revokeBeforeActionMakesNoInput" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.001"/>
+  <testcase name="stopDuringActionCancelsNextStepAndLateSuccess" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.0"/>
+  <testcase name="alreadyVisibleSearchDoesNotClickDecoratively" classname="at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

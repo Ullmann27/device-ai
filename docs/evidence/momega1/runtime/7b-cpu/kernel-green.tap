@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
+ok 1 - actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
+  ---
+  duration_ms: 5.755411
+  type: 'test'
+  ...
+# Subtest: legacy launcher CPU budget remains one CPU second per wall second and ignores env override
+ok 2 - legacy launcher CPU budget remains one CPU second per wall second and ignores env override
+  ---
+  duration_ms: 1.424942
+  type: 'test'
+  ...
+# Subtest: resource profile clone or arbitrary caller budget cannot reach spawn
+ok 3 - resource profile clone or arbitrary caller budget cannot reach spawn
+  ---
+  duration_ms: 1.424782
+  type: 'test'
+  ...
+# Subtest: two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
+ok 4 - two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
+  ---
+  duration_ms: 42.161708
+  type: 'test'
+  ...
+# Subtest: native termination returns bounded signal or numeric-exit code without output or inference receipt
+ok 5 - native termination returns bounded signal or numeric-exit code without output or inference receipt
+  ---
+  duration_ms: 4.031378
+  type: 'test'
+  ...
+# Subtest: fixed container CLI heap is bounded independently of model weights and native address space
+ok 6 - fixed container CLI heap is bounded independently of model weights and native address space
+  ---
+  duration_ms: 2.174905
+  type: 'test'
+  ...
+# Subtest: actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit
+ok 7 - actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit
+  ---
+  duration_ms: 47.908506
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 179.319237

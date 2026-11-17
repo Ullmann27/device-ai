@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.CinematicWorkstationLayoutTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:46" hostname="0f4ac18d136f" time="0.031">
+  <properties/>
+  <testcase name="formerDockFunctionsRemainReachable" classname="at.heinz.deviceai.ui.CinematicWorkstationLayoutTest" time="0.022"/>
+  <testcase name="resizingAndLargeTextKeepPositiveBoundsAndAllowScrolling" classname="at.heinz.deviceai.ui.CinematicWorkstationLayoutTest" time="0.006"/>
+  <testcase name="eightNativeDestinationsAreReadableOnPhoneAndFold" classname="at.heinz.deviceai.ui.CinematicWorkstationLayoutTest" time="0.002"/>
+  <testcase name="originalSphereSharesForeheadAxisBehindAvatar" classname="at.heinz.deviceai.ui.CinematicWorkstationLayoutTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

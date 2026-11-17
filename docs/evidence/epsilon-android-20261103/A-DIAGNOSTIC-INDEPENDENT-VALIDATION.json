@@ -1,0 +1,228 @@
+{
+  "sha256": "fc88957817f1296cc531fa25ed02575ed70ca8357f8cc7f8ff759a3304530b7f",
+  "bytes": 8696032,
+  "vertices": 42292,
+  "triangles": 57000,
+  "morph_primitives": 3,
+  "status": "FAIL",
+  "failures": [
+    {
+      "test": "mesh_2_0_FF_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_TH_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_DD_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_KK_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_CH_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_SS_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_NN_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_RR_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_AA_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_E_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_I_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_O_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_2_0_U_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_SIL_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_PP_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_FF_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_TH_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_DD_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_KK_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_CH_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_SS_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_NN_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_RR_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_AA_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_E_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_I_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_O_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_0_U_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_SIL_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_PP_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_FF_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_TH_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_DD_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_KK_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_CH_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_SS_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_NN_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_RR_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_AA_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_E_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_I_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_O_deformation",
+      "error": "Mouth deforms upper face"
+    },
+    {
+      "test": "mesh_6_1_U_deformation",
+      "error": "Mouth deforms upper face"
+    }
+  ],
+  "measurements": {
+    "eye_separation_m": 0.06102388724684715,
+    "mesh_2_0_bounds": [
+      [
+        -0.25803142786026,
+        0.25803142786026
+      ],
+      [
+        -2.887162224851636e-07,
+        0.39267638325691223
+      ],
+      [
+        -0.058718241751194,
+        0.16772781312465668
+      ]
+    ],
+    "mesh_6_0_bounds": [
+      [
+        -0.25840508937835693,
+        0.25866106152534485
+      ],
+      [
+        -0.0008531801286153495,
+        0.3934977948665619
+      ],
+      [
+        -0.05950663611292839,
+        0.16802126169204712
+      ]
+    ],
+    "mesh_6_1_bounds": [
+      [
+        -0.25840508937835693,
+        0.25866106152534485
+      ],
+      [
+        -0.0008531801286153495,
+        0.3934977948665619
+      ],
+      [
+        -0.05950663611292839,
+        0.16802126169204712
+      ]
+    ]
+  },
+  "limits": "Numerical geometry only; no likeness/phonetic/naturalness/device certification."
+}

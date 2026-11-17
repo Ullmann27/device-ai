@@ -1,0 +1,5 @@
+PASS actual-old-codec-v1-payload-recalls-and-rewrites-v2
+PASS v2-maximum-unicode-history-preserves-whole-turns
+PASS v2-malformed-utf8-and-untrusted-lengths-fail-closed
+PASS unknown-format-and-foreign-identity-remain-rejected
+RESULT passed=4 failed=0; codec software tests only

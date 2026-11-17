@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.MentorConceptNetworkTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:34" hostname="5c9e18abbd30" time="0.044">
+  <properties/>
+  <testcase name="sourceBoundSnapshotRoundTripsAndRejectsStaleOrForgedEntries" classname="at.heinz.deviceai.learning.MentorConceptNetworkTest" time="0.004"/>
+  <testcase name="limitsSizeAndPreservesSourceIndexes" classname="at.heinz.deviceai.learning.MentorConceptNetworkTest" time="0.004"/>
+  <testcase name="emptyUnknownAndToolRequestsNeverInventRelations" classname="at.heinz.deviceai.learning.MentorConceptNetworkTest" time="0.002"/>
+  <testcase name="buildsNewLocalAssociationsWithDistinctSourceEvidence" classname="at.heinz.deviceai.learning.MentorConceptNetworkTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

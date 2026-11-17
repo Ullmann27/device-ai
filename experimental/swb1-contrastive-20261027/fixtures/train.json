@@ -1,0 +1,631 @@
+{
+  "split": "train",
+  "intent": [
+    {
+      "id": "train-i0-0",
+      "text": "Einen freundlichen Morgen wünsche ich euch.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-1",
+      "text": "Seid herzlich gegrüßt miteinander.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-2",
+      "text": "Ich wünsche dir einen angenehmen Abend.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-3",
+      "text": "Ein herzliches Hallo in die Runde.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-4",
+      "text": "Guten Tag und willkommen bei mir.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-5",
+      "text": "Servus, schön dich wiederzusehen.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-6",
+      "text": "Viele Grüße aus meiner Werkstatt.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-7",
+      "text": "Moin und einen guten Start.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-8",
+      "text": "Ich grüße dich heute freundlich.",
+      "label": 0
+    },
+    {
+      "id": "train-i0-9",
+      "text": "Schön, dass du wieder da bist.",
+      "label": 0
+    },
+    {
+      "id": "train-i1-0",
+      "text": "Woran erkenne ich eine sichere Verbindung?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-1",
+      "text": "Wodurch wird elektrischer Strom begrenzt?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-2",
+      "text": "Weshalb hält dieser Zug hier an?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-3",
+      "text": "An welchem Ort liegt die Sicherungskopie?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-4",
+      "text": "Wie lässt sich eine offene Rechnung prüfen?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-5",
+      "text": "Kann der Behälter gefüllt werden?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-6",
+      "text": "Welche Messung fehlt in dem Bericht?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-7",
+      "text": "Wann wurde die Datei schreibgeschützt?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-8",
+      "text": "Wer hat das Rad ausgeliehen?",
+      "label": 1
+    },
+    {
+      "id": "train-i1-9",
+      "text": "Darf ein Paket ohne Beleg zugestellt werden?",
+      "label": 1
+    }
+  ],
+  "semantic": [
+    {
+      "id": "train-s0-0",
+      "left": "Mara unterstützt Levin.",
+      "right": "Levin erhält Unterstützung von Mara.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s0-1",
+      "left": "Mara unterstützt Levin nicht.",
+      "right": "Levin bekommt keine Hilfe von Mara.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s0-2",
+      "left": "Levin erhält Unterstützung von Mara.",
+      "right": "Mara hilft Levin.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s0-3",
+      "left": "Mara unterstützt Levin.",
+      "right": "Mara unterstützt Levin nicht.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s0-4",
+      "left": "Levin erhält Unterstützung von Mara.",
+      "right": "Levin bekommt keine Hilfe von Mara.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s0-5",
+      "left": "Mara unterstützt Levin.",
+      "right": "Levin unterstützt Mara.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s1-0",
+      "left": "Das Ventil ist geöffnet.",
+      "right": "Der Durchlass am Ventil ist offen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s1-1",
+      "left": "Das Ventil ist nicht geöffnet.",
+      "right": "Der Durchlass am Ventil ist geschlossen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s1-2",
+      "left": "Der Durchlass am Ventil ist offen.",
+      "right": "Durch das offene Ventil kann etwas hindurch.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s1-3",
+      "left": "Das Ventil ist geöffnet.",
+      "right": "Das Ventil ist nicht geöffnet.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s1-4",
+      "left": "Der Durchlass am Ventil ist offen.",
+      "right": "Der Durchlass am Ventil ist geschlossen.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s1-5",
+      "left": "Das Ventil ist geöffnet.",
+      "right": "Das Ventil ist zugesperrt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s2-0",
+      "left": "Die Sicherungskopie liegt auf Platte B.",
+      "right": "Auf Platte B befindet sich das Backup.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s2-1",
+      "left": "Die Sicherungskopie liegt nicht auf Platte B.",
+      "right": "Auf Platte B gibt es kein Backup.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s2-2",
+      "left": "Auf Platte B befindet sich das Backup.",
+      "right": "Das Backup wurde auf Platte B gespeichert.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s2-3",
+      "left": "Die Sicherungskopie liegt auf Platte B.",
+      "right": "Die Sicherungskopie liegt nicht auf Platte B.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s2-4",
+      "left": "Auf Platte B befindet sich das Backup.",
+      "right": "Auf Platte B gibt es kein Backup.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s2-5",
+      "left": "Die Sicherungskopie liegt auf Platte B.",
+      "right": "Die Sicherungskopie liegt nur auf Platte C.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s3-0",
+      "left": "Der Schalter leitet Strom.",
+      "right": "Elektrischer Strom fließt durch den Schalter.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s3-1",
+      "left": "Der Schalter leitet keinen Strom.",
+      "right": "Der elektrische Stromkreis ist am Schalter unterbrochen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s3-2",
+      "left": "Elektrischer Strom fließt durch den Schalter.",
+      "right": "Durch den Schalter geht elektrischer Strom.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s3-3",
+      "left": "Der Schalter leitet Strom.",
+      "right": "Der Schalter leitet keinen Strom.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s3-4",
+      "left": "Elektrischer Strom fließt durch den Schalter.",
+      "right": "Der elektrische Stromkreis ist am Schalter unterbrochen.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s3-5",
+      "left": "Der Schalter leitet Strom.",
+      "right": "Durch den Schalter fließt kein elektrischer Strom.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s4-0",
+      "left": "Der Behälter enthält Wasser.",
+      "right": "Im Behälter ist Wasser vorhanden.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s4-1",
+      "left": "Der Behälter enthält kein Wasser.",
+      "right": "Im Behälter fehlt Wasser.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s4-2",
+      "left": "Im Behälter ist Wasser vorhanden.",
+      "right": "Wasser befindet sich im Behälter.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s4-3",
+      "left": "Der Behälter enthält Wasser.",
+      "right": "Der Behälter enthält kein Wasser.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s4-4",
+      "left": "Im Behälter ist Wasser vorhanden.",
+      "right": "Im Behälter fehlt Wasser.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s4-5",
+      "left": "Der Behälter enthält Wasser.",
+      "right": "Der Behälter ist ohne Wasser.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s5-0",
+      "left": "Die Rechnung ist bereits bezahlt.",
+      "right": "Die offene Zahlung wurde beglichen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s5-1",
+      "left": "Die Rechnung ist noch nicht bezahlt.",
+      "right": "Die Zahlung wurde nicht beglichen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s5-2",
+      "left": "Die offene Zahlung wurde beglichen.",
+      "right": "Der Rechnungsbetrag wurde überwiesen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s5-3",
+      "left": "Die Rechnung ist bereits bezahlt.",
+      "right": "Die Rechnung ist noch nicht bezahlt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s5-4",
+      "left": "Die offene Zahlung wurde beglichen.",
+      "right": "Die Zahlung wurde nicht beglichen.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s5-5",
+      "left": "Die Rechnung ist bereits bezahlt.",
+      "right": "Der Betrag der Rechnung steht noch aus.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s6-0",
+      "left": "Der Zug hält in Feldkirch.",
+      "right": "Feldkirch ist ein Halt dieses Zuges.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s6-1",
+      "left": "Der Zug hält nicht in Feldkirch.",
+      "right": "Feldkirch wird ohne Halt durchfahren.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s6-2",
+      "left": "Feldkirch ist ein Halt dieses Zuges.",
+      "right": "Der Zug macht in Feldkirch Station.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s6-3",
+      "left": "Der Zug hält in Feldkirch.",
+      "right": "Der Zug hält nicht in Feldkirch.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s6-4",
+      "left": "Feldkirch ist ein Halt dieses Zuges.",
+      "right": "Feldkirch wird ohne Halt durchfahren.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s6-5",
+      "left": "Der Zug hält in Feldkirch.",
+      "right": "Der Zug fährt an Feldkirch ohne Stopp vorbei.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s7-0",
+      "left": "Die Datei ist schreibgeschützt.",
+      "right": "Diese Datei lässt sich nur lesen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s7-1",
+      "left": "Die Datei ist nicht schreibgeschützt.",
+      "right": "Für diese Datei sind Schreibzugriffe erlaubt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s7-2",
+      "left": "Diese Datei lässt sich nur lesen.",
+      "right": "In die geschützte Datei kann nicht geschrieben werden.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s7-3",
+      "left": "Die Datei ist schreibgeschützt.",
+      "right": "Die Datei ist nicht schreibgeschützt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s7-4",
+      "left": "Diese Datei lässt sich nur lesen.",
+      "right": "Für diese Datei sind Schreibzugriffe erlaubt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s7-5",
+      "left": "Die Datei ist schreibgeschützt.",
+      "right": "Diese Datei darf beschrieben werden.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s8-0",
+      "left": "Der Teig enthält Salz.",
+      "right": "Zum Teig wurde Salz gegeben.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s8-1",
+      "left": "Der Teig enthält kein Salz.",
+      "right": "Es wurde kein Salz in den Teig getan.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s8-2",
+      "left": "Zum Teig wurde Salz gegeben.",
+      "right": "Im Teig ist Salz vorhanden.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s8-3",
+      "left": "Der Teig enthält Salz.",
+      "right": "Der Teig enthält kein Salz.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s8-4",
+      "left": "Zum Teig wurde Salz gegeben.",
+      "right": "Es wurde kein Salz in den Teig getan.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s8-5",
+      "left": "Der Teig enthält Salz.",
+      "right": "Der Teig wurde ohne Salz zubereitet.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s9-0",
+      "left": "Eine Messung liegt vor.",
+      "right": "Es gibt ein gemessenes Ergebnis.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s9-1",
+      "left": "Eine Messung liegt nicht vor.",
+      "right": "Es gibt noch kein gemessenes Ergebnis.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s9-2",
+      "left": "Es gibt ein gemessenes Ergebnis.",
+      "right": "Das Ergebnis wurde tatsächlich gemessen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s9-3",
+      "left": "Eine Messung liegt vor.",
+      "right": "Eine Messung liegt nicht vor.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s9-4",
+      "left": "Es gibt ein gemessenes Ergebnis.",
+      "right": "Es gibt noch kein gemessenes Ergebnis.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s9-5",
+      "left": "Eine Messung liegt vor.",
+      "right": "Das Ergebnis wurde nur vermutet und nicht gemessen.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s10-0",
+      "left": "Rico leiht Jana ein Fahrrad.",
+      "right": "Jana bekommt ein Fahrrad von Rico geliehen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s10-1",
+      "left": "Rico leiht Jana kein Fahrrad.",
+      "right": "Jana erhält von Rico kein Leihrad.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s10-2",
+      "left": "Jana bekommt ein Fahrrad von Rico geliehen.",
+      "right": "Von Rico bekommt Jana vorübergehend ein Rad.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s10-3",
+      "left": "Rico leiht Jana ein Fahrrad.",
+      "right": "Rico leiht Jana kein Fahrrad.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s10-4",
+      "left": "Jana bekommt ein Fahrrad von Rico geliehen.",
+      "right": "Jana erhält von Rico kein Leihrad.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s10-5",
+      "left": "Rico leiht Jana ein Fahrrad.",
+      "right": "Jana leiht Rico ein Fahrrad.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s11-0",
+      "left": "Das Paket wurde zugestellt.",
+      "right": "Die Sendung ist beim Empfänger angekommen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s11-1",
+      "left": "Das Paket wurde nicht zugestellt.",
+      "right": "Die Sendung ist noch nicht beim Empfänger.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s11-2",
+      "left": "Die Sendung ist beim Empfänger angekommen.",
+      "right": "Der Empfänger hat das Paket erhalten.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s11-3",
+      "left": "Das Paket wurde zugestellt.",
+      "right": "Das Paket wurde nicht zugestellt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s11-4",
+      "left": "Die Sendung ist beim Empfänger angekommen.",
+      "right": "Die Sendung ist noch nicht beim Empfänger.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "train-s11-5",
+      "left": "Das Paket wurde zugestellt.",
+      "right": "Das Paket wartet noch im Versandlager.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    }
+  ],
+  "dialogue": [
+    {
+      "id": "train-d0",
+      "turns": [
+        "Nutzer: Die Farbe ist rot.",
+        "Nutzer: Korrektur, die Farbe ist blau."
+      ],
+      "claim": "Die aktuelle Farbe ist blau.",
+      "consistent": true
+    },
+    {
+      "id": "train-d1",
+      "turns": [
+        "Nutzer: Bitte speichere noch nichts.",
+        "Modell: Ich vermute eine rote Farbe."
+      ],
+      "claim": "Eine rote Farbe wurde vom Nutzer bestätigt.",
+      "consistent": false
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        maxParallelForks = 1
+        maxHeapSize = '768m'
+        jvmArgs '-XX:ActiveProcessorCount=2', '-XX:+UseSerialGC'
+        outputs.upToDateWhen { false }
+        afterTest { descriptor, result ->
+            println "TEST_DONE ${descriptor.className}.${descriptor.name} ${result.resultType} ${result.endTime - result.startTime}ms"
+        }
+        afterSuite { descriptor, result ->
+            if (!descriptor.parent) {
+                println "AUDIT_TESTS tests=${result.testCount} passed=${result.successfulTestCount} failed=${result.failedTestCount} skipped=${result.skippedTestCount}"
+            }
+        }
+    }
+}

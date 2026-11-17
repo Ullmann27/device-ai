@@ -1,0 +1,169 @@
+{
+  "source": "0e22bdb75124e46dce14f4d46977bedcb235751c",
+  "kind": "SOURCE_INSPECTION_NOT_DYNAMIC_CALL_GRAPH",
+  "modules": {
+    "ContinuumBrainBridge": [
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt"
+    ],
+    "ContinuumCognitiveRuntime": [
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt"
+    ],
+    "CognitiveDecisionBridge": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+    ],
+    "AiContextCompiler": [
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumComputeReuseResearch.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt"
+    ],
+    "HybridMemoryRetriever": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedConversationMemoryShadow.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparator.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt"
+    ],
+    "ContinuumLearningCore": [
+      "app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumIntelligenceOnDevice.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicCurriculum.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt"
+    ],
+    "ContinuumMemoryDialogue": [
+      "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Workspace.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbe.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1FrozenBenchmark.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt"
+    ],
+    "MemoryEcology": [],
+    "ExperienceCompiler": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedSkillReview.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+    ],
+    "MemoryGraph": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt"
+    ],
+    "ProofCarryingMemory": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt"
+    ],
+    "ContinuumDecoderBridge": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt"
+    ],
+    "NEURON": [
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+    ],
+    "Ewm1Brain": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+      "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Brain.kt"
+    ],
+    "SWB1": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedConversationMemoryShadow.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt",
+      "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumLanguageCoreSelection.kt",
+      "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Workspace.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt",
+      "app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardState.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1PromotionAudit.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumContrastiveViews.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/span/EntityRelationLocationShadowAdapter.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumIntelligenceOnDevice.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumBimodalConditioner.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumDualCoreAutoStudy.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1FrozenBenchmark.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1PromotionGate.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumSignedCre1Package.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1InferenceEncoder.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicModelPackage.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbe.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPairedEncoderBinding.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAtomicPairedBundleStore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Swb2ExperimentalEncoder.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumSwb2DecoderResearch.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1ResearchLab.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt"
+    ],
+    "CRE1": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedConversationMemoryShadow.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1PromotionAudit.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveTurnTrace.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1FrozenBenchmark.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1PromotionGate.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumSignedCre1Package.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "app/src/main/java/at/heinz/deviceai/research/neuro/TemporalNeuralShadow.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1InferenceEncoder.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/Cre1ResearchLab.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt"
+    ],
+    "CCC1": [
+      "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumM2Status.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt",
+      "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+      "app/src/main/java/at/heinz/deviceai/intelligence/maxultra/ContinuumCortexResearchPipeline.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumTypedCodingBridge.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt"
+    ],
+    "LocalModelHost": [
+      "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+    ],
+    "LocalModelRuntime": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
+      "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+      "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt"
+    ]
+  }
+}

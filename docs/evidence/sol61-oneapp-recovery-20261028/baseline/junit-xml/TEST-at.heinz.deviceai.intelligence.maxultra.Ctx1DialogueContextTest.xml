@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:23" hostname="b50d54a1ac03" time="0.105">
+  <properties/>
+  <testcase name="aShortFollowUpRetargetsTheLastQuestion" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.05"/>
+  <testcase name="corpusIsDeterministicGoldIsStoredAndTestVocabularyIsUnseen" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.044"/>
+  <testcase name="aCitationAfterAResolvedEntityNeverAddsAnotherMention" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.001"/>
+  <testcase name="typoRepairUsesOnlyTheReferentsWordsAndOnlyOneUnambiguousSlip" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.001"/>
+  <testcase name="aPronounGoesToTheMostRecentMatchingMentionAndAsksOnlyAboutItsFacts" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.002"/>
+  <testcase name="twoCandidatesFromTheSameTurnOrNoneAtAllNeedAQuestionBack" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.001"/>
+  <testcase name="classificationCountsAnyClaimWhereNothingOrAQuestionIsRightAsWrong" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.003"/>
+  <testcase name="aNameNobodyStoredIsUnknownAndSoIsAPronounThatMeansIt" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.001"/>
+  <testcase name="registryDerivesGenderFromDeterminersAndDiminutives" classname="at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

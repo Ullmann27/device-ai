@@ -1,0 +1,1054 @@
+/* Android-only binding. Source PR #850 HTML, CSS, JS and 3D assets stay unchanged. */
+(() => {
+  'use strict';
+  if (window.ContinuumNative) return;
+  const routes = new Set(['home','chat','chats','new-chat','files','research',
+    'agents','memory','device','settings','settings-voice','settings-model',
+    'settings-internet','settings-appearance','voice-input','voice-input-long-press','stop']);
+  const actions = Object.freeze({home:'home',settings:'settings',agents:'agents',
+    'settings-voice':'settings-voice','settings-model':'settings-model',
+    'settings-internet':'settings-internet','settings-appearance':'settings-appearance',
+    'new-chat':'new-chat','quick-files':'files','quick-memory':'memory',
+    'research-demo':'research','open-demo':'files',document:'files',
+    'local-file':'files','quick-source':'research','run-agents':'agents',
+    'run-computer':'device','stop-agents':'stop','stop-computer':'stop',
+    listen:'voice-input',cancel:'stop','memory-source':'memory'});
+  const layoutActions = new Set(['expand','toggle-chats','toggle-instruments','close-panels']);
+  const chatId = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
+  const DEFAULT_COMMAND_LIMIT = 11500, MAX_MESSAGE = 68096, MAX_DRAFT = 262144, HISTORY = 36;
+  const $ = selector => document.querySelector(selector);
+  // Keep the approved composer slot and attributes. A real textarea is required
+  // because HTML input.value silently removes line breaks during native restore.
+  const originalInput=$('#command-input');
+  if(originalInput?.tagName==='INPUT') {
+    const field=document.createElement('textarea');
+    for(const attribute of originalInput.attributes)
+      if(attribute.name!=='type')field.setAttribute(attribute.name,attribute.value);
+    field.rows=1;field.value=originalInput.value;field.setAttribute('aria-multiline','true');
+    originalInput.replaceWith(field);
+  }
+  let snapshot = null, session = '', lines = [], rendering = false, currentDocument = null;
+  let pendingCommand = null, requestNumber = 0, dirtyDraft = false, lastDraft = '';
+  let telemetryAt = null, lastScene = null, feedRevision = 0, latestDraftRevision = -1;
+  let page = '', view = '', viewRevision = -1, clientEditRevision = 0, sentEditRevision = -1;
+  let documentRevision = 0, micPress = null, suppressMicClick = false;
+  const sourceSets = new Map();
+  const computerStates = new Set(['NO_SOURCE','WAITING','LIVE','PAUSED','COVERED','ENDED']);
+  const visemes = new Set(['SIL','PP','FF','TH','DD','KK','CH','SS','NN','RR','AA','E','I','O','U']);
+  const speechSources = new Set(['PCM_ENVELOPE','WORD_RANGE_FALLBACK','TEXT_PACE_FALLBACK']);
+  const computerGate = {generation:0,sequence:-1,ended:false,binding:null};
+  const speechGate = {generation:0,sequence:-1,ended:false,utteranceId:null};
+  let currentComputer = null, computerVisible = false, displayedFrame = null, pendingFrame = null;
+  let visibilityCheck = 0, speechExpiry = 0, currentSpeech = null;
+  const readings = [], nativeMeters = new Map();
+  const feedVersions = new WeakMap();
+  function validScope(data) {
+    return data && typeof data.sessionId==='string' && typeof data.pageId==='string' &&
+      typeof data.viewId==='string' && chatId.test(data.sessionId) && chatId.test(data.pageId) && chatId.test(data.viewId) &&
+      Number.isSafeInteger(data.viewRevision) && data.viewRevision>=0;
+  }
+  function scope() {return {sessionId:session,pageId:page,viewId:view,viewRevision};}
+  function currentScope(data) {
+    return validScope(data) && data.sessionId===session && data.pageId===page &&
+      data.viewId===view && data.viewRevision===viewRevision;
+  }
+  function draftKey(text,start,end) {return JSON.stringify([text,start,end]);}
+  function editorDraft() {
+    const field=$('#command-input');
+    if(!field)return null;
+    const value=field.value;
+    const start=field.selectionStart ?? value.length, end=field.selectionEnd ?? start;
+    const key=draftKey(value,start,end);
+    if(key!==lastDraft) {
+      if(clientEditRevision>=Number.MAX_SAFE_INTEGER)return null;
+      clientEditRevision++;lastDraft=key;dirtyDraft=true;
+    }
+    if(value.length>MAX_DRAFT || new TextEncoder().encode(value).length>MAX_DRAFT) {
+      notice('Der Entwurf ist zu groß für die Übergabe. Bitte kürze ihn vor dem Ansichtswechsel.');
+      return null;
+    }
+    return {draftText:value,selectionStart:start,selectionEnd:end,clientEditRevision};
+  }
+  function send(kind,value,extra = {}) {
+    if (kind === 'route' && !routes.has(value)) return false;
+    if(!validScope(scope())) {
+      notice('Die Android-Verbindung startet. Dein Entwurf bleibt erhalten.');return false;
+    }
+    const command=['route','select-chat','command','open-source','document-draft'].includes(kind);
+    const fields={...scope(),...extra};
+    if(command) {
+      if(document.visibilityState!=='visible')return false;
+      const draft=editorDraft();
+      // Stop remains available even when a draft cannot be transported. Android
+      // still validates the exact scope and never treats omission as an empty edit.
+      if(!draft && !(kind==='route' && value==='stop'))return false;
+      if(draft) {Object.assign(fields,draft);sentEditRevision=clientEditRevision;}
+    }
+    const query = new URLSearchParams({value,...fields});
+    window.location.assign('continuum-native://action/' + kind +
+      '?' + query.toString());
+    return true;
+  }
+  function notice(text) {
+    const target = $('#toast');
+    if (target) {target.textContent=text;target.classList.add('show');}
+  }
+  function retainTransitionDraft(cause) {
+    const request=pendingCommand, field=$('#command-input');
+    if(!request || !field || !cause || cause.commandId!==request.id ||
+      cause.fromPageId!==request.pageId || cause.fromViewId!==request.viewId ||
+      cause.fromViewRevision!==request.viewRevision || cause.fromSessionId!==request.sessionId ||
+      !Number.isSafeInteger(cause.ackEditRevision) || cause.ackEditRevision<request.clientEditRevision ||
+      clientEditRevision<=cause.ackEditRevision || !field.value || field.value===request.draft)return;
+    const text=field.value, start=field.selectionStart, end=field.selectionEnd;
+    // This is a visible, ephemeral DOM recovery, never an edit for the destination
+    // view. Keeping each unresolved note also preserves successive transition races.
+    const note=document.createElement('aside');note.className='native-draft-recovery';
+    const title=document.createElement('p');
+    title.setAttribute('role','status');title.setAttribute('aria-live','polite');title.setAttribute('aria-atomic','true');
+    title.textContent='Nicht gesendeter Entwurf · '+String(snapshot?.viewLabel||'Vorheriger Dialog').slice(0,100);
+    const details=document.createElement('details'), summary=document.createElement('summary');
+    summary.textContent='Entwurf ansehen';
+    const content=document.createElement('pre');content.textContent=text;details.append(summary,content);
+    const buttons=document.createElement('div');buttons.className='action-row';
+    const dismiss=()=>{
+      note.remove();document.body.classList.toggle('native-has-draft-recovery',!!$('.native-draft-recovery'));
+    };
+    for(const [action,label] of [['restore','Zur Eingabe hinzufügen'],['discard','Verwerfen']]) {
+      const button=document.createElement('button');button.type='button';button.className='secondary-button';
+      button.dataset.nativeRecovery=action;button.textContent=label;
+      button.addEventListener('click',()=>{
+        if(action==='discard'){dismiss();return;}
+        if(!validScope(scope()) || document.visibilityState!=='visible')return;
+        const current=$('#command-input');if(!current)return;
+        const prefix=current.value && current.value!==text?current.value+'\n\n':'';
+        current.value=prefix+text;
+        current.setSelectionRange(prefix.length+start,prefix.length+end);
+        dirtyDraft=true;fitComposer();syncDraft();dismiss();
+        current.focus({preventScroll:true});
+      });
+      buttons.appendChild(button);
+    }
+    note.append(title,details,buttons);$('#command-form')?.before(note);
+    document.body.classList.add('native-has-draft-recovery');
+  }
+  function labelWithIcons(node,label) {
+    if(!node)return;
+    const texts=[...node.childNodes].filter(child=>child.nodeType===3 && child.textContent.trim());
+    if(texts.length) {
+      if(texts[0].textContent.trim()!==label)texts[0].textContent=' '+label+' ';
+      texts.slice(1).forEach(child=>{child.textContent='';});
+    } else node.appendChild(document.createTextNode(' '+label));
+  }
+  function mountSettingsControls() {
+    document.body.classList.add('native-hologram');
+    const settings=$('.header-tools>[data-action="settings"]');
+    if(settings) {
+      settings.classList.add('native-settings-entry');
+      settings.setAttribute('aria-label','Alle Einstellungen öffnen');
+      settings.setAttribute('title','Alle Einstellungen öffnen');
+      labelWithIcons(settings,'Einstellungen');
+    }
+    const nav=$('#main-nav'), entry=nav?.querySelector('[data-section="settings"]');
+    if(entry && nav.children[1]!==entry)nav.insertBefore(entry,nav.children[1]||null);
+    if(!$('.native-settings-shortcuts')) {
+      const row=document.createElement('nav');
+      row.className='native-settings-shortcuts';row.setAttribute('aria-label','Schnelleinstellungen');
+      const icons={voice:'<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>',
+        model:'<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v5m6-5v5M9 18v5m6-5v5M1 9h5m-5 6h5m12-6h5m-5 6h5"/>',
+        internet:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
+        appearance:'<path d="m12 3 9 5v8l-9 5-9-5V8zm0 0v18M3 8l9 5 9-5"/>'};
+      for(const [kind,label] of [['voice','Stimme'],['model','KI-Modell'],['internet','Internet'],['appearance','Hologramm']]) {
+        const button=document.createElement('button');button.type='button';
+        button.className='native-setting-shortcut';button.dataset.action='settings-'+kind;
+        button.setAttribute('aria-label',label+' einstellen');
+        button.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+icons[kind]+'</svg><span>'+label+'</span>';
+        row.appendChild(button);
+      }
+      $('.mobile-side-controls')?.after(row);
+    }
+    if(!$('.native-holo-field')) {
+      const field=document.createElement('div');field.className='native-holo-field';
+      field.setAttribute('aria-hidden','true');$('.presence-core')?.prepend(field);
+    }
+  }
+  function renderAppearance(value) {
+    const neon=Number.isFinite(value?.neon)?Math.max(0,Math.min(100,value.neon)):70;
+    const level=String(neon/100);
+    if(document.body.style.getPropertyValue('--native-neon')!==level)
+      document.body.style.setProperty('--native-neon',level);
+    const motion=value?.lightMotion===false?'off':'on';
+    if(document.body.dataset.nativeLightMotion!==motion)document.body.dataset.nativeLightMotion=motion;
+  }
+  function fitComposer() {
+    const field=$('#command-input');
+    if(!field)return;
+    const style=window.getComputedStyle(field);
+    const min=parseFloat(style.minHeight)||29, max=parseFloat(style.maxHeight)||116;
+    field.style.height='0px';
+    field.style.height=Math.max(min,Math.min(max,field.scrollHeight))+'px';
+    const height=$('#command-form')?.getBoundingClientRect().height;
+    if(height>0)document.body.style.setProperty('--native-composer-height',height+'px');
+  }
+  function commandLimits() {
+    return {
+      chars: Number.isInteger(snapshot?.maxCommandChars) && snapshot.maxCommandChars>0 ?
+        Math.min(DEFAULT_COMMAND_LIMIT,snapshot.maxCommandChars) : DEFAULT_COMMAND_LIMIT,
+      bytes: Number.isInteger(snapshot?.maxCommandBytes) && snapshot.maxCommandBytes>0 ?
+        Math.min(DEFAULT_COMMAND_LIMIT,snapshot.maxCommandBytes) : DEFAULT_COMMAND_LIMIT
+    };
+  }
+  function inputError(value) {
+    const limit = commandLimits();
+    if (value.length>limit.chars || new TextEncoder().encode(value).length>limit.bytes)
+      return 'Der Auftrag ist zu lang. Dein Entwurf bleibt erhalten.';
+    if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/.test(value))
+      return 'Der Text enthält ein nicht unterstütztes Steuerzeichen. Dein Entwurf bleibt erhalten.';
+    return '';
+  }
+  function syncDraft() {
+    if(!validScope(scope()))return;
+    const draft=editorDraft();
+    if(!draft || sentEditRevision===draft.clientEditRevision)return;
+    sentEditRevision=draft.clientEditRevision;
+    send('draft',draft.draftText,{clientEditRevision:draft.clientEditRevision,
+      selectionStart:draft.selectionStart,selectionEnd:draft.selectionEnd});
+  }
+  function commandResult(result) {
+    if (!currentScope(result) || !pendingCommand || result.id!==pendingCommand.id ||
+      result.clientEditRevision!==pendingCommand.clientEditRevision) return;
+    const request=pendingCommand;pendingCommand=null;
+    if (result.accepted===true) {
+      const field=$('#command-input');
+      if (field && field.value===request.draft && clientEditRevision===request.clientEditRevision) {
+        field.value='';dirtyDraft=false;fitComposer();
+        lastDraft=draftKey('',0,0);sentEditRevision=clientEditRevision;
+      }
+      clearDocument();
+      $('#toast')?.classList.remove('show');
+      return;
+    }
+    const reasons={busy:'Ein Auftrag läuft noch. Dein Entwurf bleibt erhalten.',
+      'stale-session':'Das Gespräch wurde gewechselt. Dein Entwurf wurde nicht gesendet.',
+      'stale-context':'Die Ansicht wurde gewechselt. Dein Entwurf wurde nicht gesendet.',
+      'stale-edit':'Der Entwurf wurde inzwischen geändert. Bitte prüfe ihn vor dem Senden.',
+      'too-long':'Der Auftrag ist zu lang. Dein Entwurf bleibt erhalten.',
+      'invalid-input':'Dieser Text konnte nicht übernommen werden. Dein Entwurf bleibt erhalten.',
+      unavailable:'Die Eingabe ist noch nicht bereit. Dein Entwurf bleibt erhalten.'};
+    notice(reasons[result.reason] || 'Der Auftrag wurde nicht übernommen. Dein Entwurf bleibt erhalten.');
+  }
+  function chatRow(row) {
+    const button = document.createElement('button');
+    button.className = 'chat-entry' + (row.id === session ? ' active' : '');
+    button.dataset.nativeChat = row.id;
+    button.setAttribute('aria-current', row.id === session ? 'page' : 'false');
+    const glyph = document.createElement('span');
+    glyph.className = 'native-history-glyph';
+    glyph.textContent = '◈';
+    const label = document.createElement('span');
+    label.textContent = row.title || 'Gespräch';
+    const sub = document.createElement('small');
+    sub.textContent = 'Gespeicherter Android-Chat';
+    label.appendChild(sub);
+    button.append(glyph,label);
+    return button;
+  }
+  function renderChats() {
+    const target = $('#chat-list');
+    if (!target || !snapshot || rendering) return;
+    const rows = (Array.isArray(snapshot.chats) ? snapshot.chats : []).filter(row =>
+      row && chatId.test(row.id) && typeof row.title === 'string').slice(0,100);
+    const current = [...target.querySelectorAll(':scope > button[data-native-chat]')];
+    if (current.length === rows.length && target.children.length === rows.length &&
+      current.every((node,i) => node.dataset.nativeChat === rows[i].id &&
+        node.classList.contains('active') === (rows[i].id === session) &&
+        node.querySelector('span:not(.native-history-glyph)')?.firstChild?.textContent === rows[i].title)) return;
+    rendering = true;
+    target.replaceChildren(...rows.map(chatRow));
+    rendering = false;
+  }
+  const chats = $('#chat-list');
+  if (chats) new MutationObserver(renderChats).observe(chats,{childList:true});
+
+  function meter(selector,label,percent,note) {
+    const host = $(selector);
+    if (!host || !snapshot) return;
+    let el = host.querySelector('.native-meter');
+    if (!el) {el = document.createElement('div');el.className='native-meter';host.appendChild(el);}
+    const actual = Number.isInteger(percent) && percent >= 0 && percent <= 100;
+    el.replaceChildren();
+    const caption=document.createElement('small');caption.textContent=label+' · LIVE';
+    const figure=document.createElement('strong');figure.textContent=actual?percent+' %':'—';
+    const track=document.createElement('div');track.className='native-meter-track';
+    const value=document.createElement('span');value.style.width=(actual?percent:0)+'%';
+    track.appendChild(value);
+    const bottom=document.createElement('small');
+    bottom.textContent=actual?note:'Messung nicht verfügbar';
+    el.append(caption,figure,track,bottom);
+  }
+  function stopDemoTelemetry() {
+    const telemetry=window.ContinuumTelemetry;
+    if (!telemetry?.getStatus().active) return;
+    for (const [channel,selector] of [['cpu','[data-telemetry-left]'],['ram','[data-telemetry-right]']]) {
+      const host=$(selector), panel=host?.querySelector('.ct-panel');
+      if (panel) nativeMeters.set(channel,{host,panel});
+    }
+    // The public lifecycle API also cancels its rAF sampler and long-task observer.
+    telemetry.destroy();
+    for (const [channel,{host,panel}] of nativeMeters) {
+      host.querySelector('.native-meter')?.remove();
+      panel.classList.add('native-telemetry-panel');
+      panel.querySelector('.ct-mode-toggle')?.remove();
+      panel.querySelector('h3').textContent=channel==='cpu'?'APP-CPU':'GERÄTE-RAM';
+      panel.querySelector('strong').textContent='—';
+      panel.querySelector('.ct-tag').textContent='ANDROID';
+      panel.querySelector('.ct-caption span').textContent='Messung startet …';
+      panel.querySelector('.ct-caption small').textContent='Noch kein Messwert';
+      panel.querySelector('.ct-trace')?.setAttribute('d','');
+      panel.querySelector('.ct-area')?.setAttribute('d','');
+      panel.querySelector('.ct-endpoint')?.setAttribute('visibility','hidden');
+      host.appendChild(panel);
+    }
+  }
+  function validPercent(value) {
+    return Number.isFinite(value) && value>=0 && value<=100 ? value : null;
+  }
+  function telemetryPath(channel) {
+    const first=readings[0]?.at, last=readings.at(-1)?.at;
+    let path='', previous=null;
+    for (const item of readings) {
+      const value=item[channel];
+      if (value===null) {previous=null;continue;}
+      const x=last===first?277:3+(item.at-first)/(last-first)*274;
+      const y=42-value*.39;
+      path+=(previous!==null && item.at-previous<=7500?' L':' M')+x.toFixed(2)+','+y.toFixed(2);
+      previous=item.at;
+    }
+    return path.trim();
+  }
+  function renderMeters() {
+    if (!snapshot) return;
+    stopDemoTelemetry();
+    const at=snapshot.telemetryAtElapsedMs;
+    if (Number.isFinite(at) && at>=0 && at!==telemetryAt) {
+      if (telemetryAt!==null && at<telemetryAt) readings.length=0;
+      telemetryAt=at;
+      readings.push({at,cpu:validPercent(snapshot.cpu),ram:validPercent(snapshot.ram)});
+      if (readings.length>HISTORY) readings.shift();
+    }
+    for (const [channel,label,note] of [['cpu','APP-CPU','Anteil dieser App'],['ram','GERÄTE-RAM','Belegt im Gerät']]) {
+      const view=nativeMeters.get(channel), percent=validPercent(snapshot[channel]);
+      if (!view) {
+        meter(channel==='cpu'?'[data-telemetry-left]':'[data-telemetry-right]',label,percent,note);
+        continue;
+      }
+      const {panel}=view;
+      const text=(selector,value)=>{const node=panel.querySelector(selector);if(node)node.textContent=value;};
+      panel.dataset.mode='android';panel.dataset.available=String(percent!==null);
+      panel.dataset.samples=String(readings.length);panel.dataset.paused='false';
+      text('h3',label);text('.ct-tag','ANDROID');text('strong',percent===null?'—':String(percent));
+      text('.ct-unit','%');text('.ct-caption span',note);
+      text('.ct-caption small',percent===null?'Nicht verfügbar':'Gemessen');
+      text('.ct-empty',readings.length?'':'Messverlauf startet …');
+      text('.ct-meta>span:first-child','Messverlauf');text('.ct-detail','0–100 % · Gerätedaten');
+      text('.ct-sr',label+': '+(percent===null?'Messung nicht verfügbar':percent+' Prozent')+'. '+note+'.');
+      panel.title=label+' · '+note+' · gemessene Werte';
+      panel.querySelector('.ct-trace')?.setAttribute('d',telemetryPath(channel));
+      panel.querySelector('.ct-area')?.setAttribute('d','');
+      panel.querySelector('.ct-endpoint')?.setAttribute('visibility','hidden');
+      panel.querySelector('.ct-plot')?.setAttribute('aria-label',label+' · echte Messwerte; Lücken bleiben leer');
+    }
+  }
+  function newerLivePacket(data, gate) {
+    return currentScope(data) && typeof data.active==='boolean' &&
+      Number.isSafeInteger(data.generation) && data.generation>0 &&
+      Number.isSafeInteger(data.sequence) && data.sequence>=0 &&
+      (data.generation>gate.generation || data.generation===gate.generation &&
+        !gate.ended && data.sequence>gate.sequence);
+  }
+  function acceptLivePacket(data, gate) {
+    gate.generation=data.generation;gate.sequence=data.sequence;gate.ended=!data.active;
+  }
+  function computerOpen() {return computerVisible && currentComputer?.active===true;}
+  function invalidateFrame(frame) {
+    if(!frame || frame.hiddenNotified)return;
+    frame.hiddenNotified=true;
+    const data=frame.data;
+    if(currentScope(data))send('frame-hidden','',{generation:String(data.generation),sequence:String(data.sequence)});
+  }
+  function disposeFrame(frame) {
+    if(!frame)return;
+    clearTimeout(frame.expiry);
+    for(const id of frame.paints)cancelAnimationFrame(id);
+    frame.paints=[];frame.image.onload=null;frame.image.onerror=null;
+    frame.image.removeAttribute('src');frame.image.remove();
+  }
+  function clearComputerFrames() {
+    for(const frame of new Set([displayedFrame,pendingFrame])) {
+      invalidateFrame(frame);disposeFrame(frame);
+    }
+    displayedFrame=null;pendingFrame=null;
+  }
+  function renderComputer() {
+    const workspace=$('#workspace');
+    if(!workspace)return;
+    workspace.classList.toggle('native-computer-active',!!computerOpen());
+    if(!currentComputer) {workspace.querySelector('#native-computer-panel')?.remove();return;}
+    let panel=workspace.querySelector('#native-computer-panel');
+    if(!panel) {
+      panel=document.createElement('section');panel.id='native-computer-panel';
+      panel.className='projected-computer native-computer-panel';
+      panel.setAttribute('aria-label','Projizierter Computer mit aktuellem Android-Gerätebild');
+      // The existing projected window and its original CSS own all framing and motion.
+      panel.innerHTML='<div class="projection-lens" aria-hidden="true"></div><div class="op-console-head"><div><span class="op-kicker">PROJIZIERTER COMPUTER</span><h2>Dein Gerätebild.</h2></div><span class="op-mode-label real"></span></div><div class="op-controls"><button type="button" class="secondary-button" data-action="stop-computer">Computer stoppen</button></div><div class="op-browser-frame"><div class="op-browser-chrome"><span class="op-window-id">CONTINUUM · ANDROID</span></div><div class="op-browser-body native-computer-viewport"><div class="op-waiting"><h3>Warte auf ein aktuelles Bild.</h3><p class="native-computer-waiting"></p></div></div><div class="op-browser-status"><span class="status-dot"></span><span class="native-computer-status" role="status"></span></div></div>';
+      workspace.appendChild(panel);
+    }
+    const fresh=displayedFrame && performance.now()<displayedFrame.expiresAt;
+    panel.querySelector('.op-mode-label').textContent=fresh?'GERÄTEBILD':'WARTET';
+    const reason=currentComputer.reason || 'Noch kein aktuelles Gerätebild verfügbar.';
+    panel.querySelector('.native-computer-status').textContent=reason;
+    panel.querySelector('.native-computer-waiting').textContent=reason;
+    panel.querySelector('.op-waiting').hidden=!!fresh;
+    if(computerOpen()) {
+      workspace.classList.remove('native-document-active','native-work-active');
+      if(fresh && displayedFrame.image.parentElement!==panel.querySelector('.native-computer-viewport'))
+        panel.querySelector('.native-computer-viewport').appendChild(displayedFrame.image);
+    }
+    nativeLabels();
+  }
+  function retireComputer() {
+    computerGate.ended=true;clearComputerFrames();currentComputer=null;computerVisible=false;
+    renderComputer();renderDocument();renderFeed();
+  }
+  function coverComputer() {
+    computerVisible=false;clearComputerFrames();renderComputer();
+  }
+  function currentDecodedFrame(frame) {
+    return frame===displayedFrame && currentComputer?.active===true &&
+      frame.data.sessionId===session && frame.data.generation===computerGate.generation &&
+      frame.data.sequence===computerGate.sequence && !computerGate.ended && performance.now()<frame.expiresAt;
+  }
+  function visibleFrame(frame) {
+    const image=frame.image;
+    if(!computerOpen() || document.visibilityState!=='visible' || !image.isConnected || !image.complete ||
+       image.naturalWidth!==frame.data.width || image.naturalHeight!==frame.data.height)return false;
+    for(let node=image;node instanceof Element;node=node.parentElement) {
+      const style=window.getComputedStyle(node);
+      if(node.hidden || node.inert || style.display==='none' || style.visibility==='hidden' ||
+        style.visibility==='collapse' || style.opacity!=='' && Number(style.opacity)<=.01)return false;
+    }
+    const rect=image.getBoundingClientRect();
+    const left=Math.max(0,rect.left),top=Math.max(0,rect.top);
+    const right=Math.min(window.innerWidth,rect.right),bottom=Math.min(window.innerHeight,rect.bottom);
+    if(right<=left || bottom<=top)return false;
+    if(typeof document.elementFromPoint==='function') {
+      const topmost=document.elementFromPoint((left+right)/2,(top+bottom)/2);
+      if(topmost!==image && !image.contains(topmost))return false;
+    }
+    return true;
+  }
+  function queueFrameAcknowledgement(frame) {
+    if(frame.acknowledged || frame.paintQueued || !currentDecodedFrame(frame))return;
+    frame.paintQueued=true;
+    const afterMotion=()=>{
+      if(!currentDecodedFrame(frame))return;
+      frame.paints.push(requestAnimationFrame(()=>{
+        if(!currentDecodedFrame(frame))return;
+        frame.paints.push(requestAnimationFrame(()=>{
+          frame.paintQueued=false;
+          if(!currentDecodedFrame(frame))return;
+          if(!visibleFrame(frame)) {invalidateFrame(frame);return;}
+          frame.acknowledged=true;frame.hiddenNotified=false;
+          const data=frame.data;
+          // This reports decoded, visible pixels only. Android still requires its
+          // own visual-state callback and subsequent onDraw before authorizing work.
+          if(currentScope(data))send('frame-presented','',{generation:String(data.generation),sequence:String(data.sequence)});
+        }));
+      }));
+    };
+    const motion=window.ContinuumWorkspaceMotion;
+    if(motion?.isAnimating())motion.whenSettled().then(afterMotion);
+    else afterMotion();
+  }
+  function checkComputerVisibility() {
+    visibilityCheck=0;
+    if(!displayedFrame)return;
+    if(!visibleFrame(displayedFrame)) {
+      if(displayedFrame.acknowledged || !window.ContinuumWorkspaceMotion?.isAnimating())invalidateFrame(displayedFrame);
+    } else queueFrameAcknowledgement(displayedFrame);
+  }
+  function scheduleVisibilityCheck() {
+    if(!visibilityCheck)visibilityCheck=requestAnimationFrame(checkComputerVisibility);
+  }
+  function validComputerFrame(data) {
+    return data.status==='LIVE' && typeof data.taskId==='string' && data.taskId.length>0 && data.taskId.length<=200 &&
+      typeof data.captureSession==='string' && data.captureSession.length>0 && data.captureSession.length<=200 &&
+      Number.isSafeInteger(data.sourceEpoch) && data.sourceEpoch>=0 &&
+      Number.isInteger(data.width) && data.width>0 && data.width<=640 &&
+      Number.isInteger(data.height) && data.height>0 && data.height<=640 &&
+      Number.isFinite(data.ageMs) && data.ageMs>=0 && Number.isFinite(data.staleAfterMs) &&
+      data.staleAfterMs>0 && data.staleAfterMs<=1500 && data.ageMs<data.staleAfterMs &&
+      typeof data.frameDataUri==='string' && data.frameDataUri.length<=174787 &&
+      /^data:image\/jpeg;base64,\/9j\/[A-Za-z0-9+/]*={0,2}$/.test(data.frameDataUri);
+  }
+  function computer(data) {
+    if(!newerLivePacket(data,computerGate) || !computerStates.has(data.status))return;
+    const hasFrame=data.frameDataUri!==undefined && data.frameDataUri!==null;
+    if(data.active && hasFrame && !validComputerFrame(data))return;
+    if(data.active && document.visibilityState!=='visible')return;
+    const nextGeneration=data.generation!==computerGate.generation;
+    const binding=hasFrame?JSON.stringify([data.taskId,data.captureSession,data.sourceEpoch]):null;
+    if(data.active && hasFrame && !nextGeneration && computerGate.binding!==null && computerGate.binding!==binding)return;
+    if(nextGeneration)computerGate.binding=null;
+    if(data.active && hasFrame)computerGate.binding=binding;
+    acceptLivePacket(data,computerGate);
+    if(!data.active) {retireComputer();return;}
+    if(nextGeneration) {clearComputerFrames();computerVisible=true;}
+    currentComputer={sessionId:data.sessionId,generation:data.generation,sequence:data.sequence,
+      active:true,status:data.status,reason:typeof data.reason==='string'?data.reason.slice(0,240):''};
+    const update=()=>renderComputer();
+    if(nextGeneration && typeof window.ContinuumWorkspaceMotion?.transition==='function')
+      window.ContinuumWorkspaceMotion.transition(update,{kind:'open',duration:950});
+    else update();
+    if(data.status!=='LIVE') {clearComputerFrames();renderComputer();return;}
+    if(!hasFrame)return; // Status-only packets never renew the previous image's lease.
+    disposeFrame(pendingFrame);
+    const image=document.createElement('img');image.className='native-computer-image';
+    image.alt='Aktuelles Bild der freigegebenen Android-Quelle';image.width=data.width;image.height=data.height;
+    image.dataset.generation=String(data.generation);image.dataset.sequence=String(data.sequence);
+    const frame={data,image,expiresAt:performance.now()+data.staleAfterMs-data.ageMs,
+      paints:[],expiry:0,paintQueued:false,acknowledged:false,hiddenNotified:false};
+    pendingFrame=frame;
+    const failed=reason=>{
+      if(pendingFrame!==frame && displayedFrame!==frame)return;
+      if(pendingFrame===frame) {
+        invalidateFrame(displayedFrame);disposeFrame(displayedFrame);displayedFrame=null;
+      }
+      invalidateFrame(frame);disposeFrame(frame);
+      if(pendingFrame===frame)pendingFrame=null;
+      if(displayedFrame===frame)displayedFrame=null;
+      if(currentComputer?.generation===data.generation && computerGate.sequence===data.sequence) {
+        currentComputer.reason=reason;
+      }
+      renderComputer();
+    };
+    frame.expiry=setTimeout(()=>failed('Bild nicht mehr aktuell. Warte auf ein neues Gerätebild.'),
+      data.staleAfterMs-data.ageMs);
+    const decoded=()=>{
+      if(pendingFrame!==frame || data.generation!==computerGate.generation || data.sequence!==computerGate.sequence ||
+        data.sessionId!==session || computerGate.ended || performance.now()>=frame.expiresAt)return;
+      if(image.naturalWidth!==data.width || image.naturalHeight!==data.height) {
+        failed('Das Gerätebild konnte nicht dargestellt werden.');return;
+      }
+      if(!computerOpen() || document.visibilityState!=='visible') {
+        failed('Gerätebild ist nicht sichtbar.');return;
+      }
+      invalidateFrame(displayedFrame);disposeFrame(displayedFrame);
+      displayedFrame=frame;pendingFrame=null;
+      image.onload=null;image.onerror=null;renderComputer();queueFrameAcknowledgement(frame);
+    };
+    image.onerror=()=>failed('Das Gerätebild konnte nicht dargestellt werden.');
+    if(typeof image.decode!=='function')image.onload=decoded;
+    image.src=data.frameDataUri;
+    if(typeof image.decode==='function')image.decode().then(decoded,()=>failed('Das Gerätebild konnte nicht dargestellt werden.'));
+  }
+  function clearNativeSpeech(retire=false) {
+    clearTimeout(speechExpiry);speechExpiry=0;currentSpeech=null;
+    if(retire)speechGate.ended=true;
+    window.ContinuumAvatar?.clearSpeech();
+    const avatar=$('.avatar-crop');
+    if(avatar) {avatar.dataset.speechActive='false';delete avatar.dataset.speechSource;}
+  }
+  function speech(data) {
+    if(!newerLivePacket(data,speechGate))return;
+    if(data.active && (!visemes.has(data.viseme) || !Number.isFinite(data.weight) || data.weight<0 || data.weight>1 ||
+      !Number.isFinite(data.jawOpen) || data.jawOpen<0 || data.jawOpen>1 || !Number.isFinite(data.durationMs) ||
+      data.durationMs<20 || data.durationMs>500 || data.source!=null && !speechSources.has(data.source) ||
+      typeof data.utteranceId!=='string' || !data.utteranceId.length || data.utteranceId.length>200))return;
+    if(data.active && data.generation===speechGate.generation && speechGate.utteranceId!==null &&
+      data.utteranceId!==speechGate.utteranceId)return;
+    if(data.active && document.visibilityState!=='visible')return;
+    const nextGeneration=data.generation!==speechGate.generation;
+    if(nextGeneration)speechGate.utteranceId=data.active?data.utteranceId:null;
+    acceptLivePacket(data,speechGate);
+    if(!data.active || document.visibilityState!=='visible') {clearNativeSpeech(true);return;}
+    if(nextGeneration)clearNativeSpeech();
+    currentSpeech=data;clearTimeout(speechExpiry);
+    window.ContinuumAvatar?.setSpeechFrame({viseme:data.viseme,weight:data.weight,jawOpen:data.jawOpen,durationMs:data.durationMs});
+    const avatar=$('.avatar-crop');
+    if(avatar) {avatar.dataset.speechActive='true';avatar.dataset.speechSource=data.source||'UNKNOWN';}
+    speechExpiry=setTimeout(()=>{if(currentSpeech===data)clearNativeSpeech();},data.durationMs);
+  }
+  function renderFeed() {
+    if (!snapshot) return;
+    const workspace=$('#workspace');
+    if (!workspace) return;
+    const show=lines.length>0 || sourceSets.size>0 || snapshot.busy===true ||
+      (Array.isArray(snapshot.workRows) && snapshot.workRows.length>0);
+    workspace.classList.toggle('native-work-active',show && !currentDocument && !computerOpen());
+    if (!show) {workspace.querySelector('#native-live-panel')?.remove();return;}
+    let panel=workspace.querySelector('#native-live-panel');
+    if (!panel) {
+      panel=document.createElement('section');
+      panel.id='native-live-panel';
+      panel.className='projected-computer native-live-panel';
+      panel.innerHTML='<div class="op-console-head"><div><span class="op-kicker">CONTINUUM · ANDROID</span><h2>Dein echter Arbeitsraum.</h2></div><span class="op-mode-label">LOKALE DATEN</span></div><div class="native-transcript" aria-live="polite"></div><div class="native-lane-state"></div>';
+      workspace.appendChild(panel);
+    }
+    panel.querySelector('h2').textContent=snapshot.viewKind==='BOT'?String(snapshot.viewLabel||'Helfer').slice(0,96):'Dein echter Arbeitsraum.';
+    const feed=panel.querySelector('.native-transcript');
+    const signature=feedRevision+'|'+JSON.stringify(snapshot.workRows);
+    if (feedVersions.get(feed)!==signature) {
+      const entries=lines.slice(-60).map(line=>{
+      const item=document.createElement('article');
+      item.className='native-chat-line '+(line.user?'native-owner':'native-assistant');
+      const label=document.createElement('small');label.textContent=line.user?'DU':
+        snapshot.viewKind==='BOT'?String(snapshot.viewLabel||'Helfer').slice(0,96):'CONTINUUM';
+      const content=document.createElement('p');content.textContent=boundedMessage(line.text);
+      item.append(label,content);
+      for(const set of sourceSets.values())if(set.anchor===line)item.appendChild(sourceCard(set));
+      return item;
+    });
+    for(const set of sourceSets.values())if(set.anchor===null)entries.push(sourceCard(set));
+    if (Array.isArray(snapshot.workRows)) snapshot.workRows.slice(0,20).forEach(row=>{
+      if(!row || typeof row.label !== 'string' || typeof row.value !== 'string')return;
+      const item=document.createElement('article');
+      item.className='native-chat-line native-computer-result';
+      const label=document.createElement('small');
+      label.textContent='ANDROID-COMPUTER · '+row.label.slice(0,100);
+      const content=document.createElement('p');
+      content.textContent=row.value.slice(0,500);
+      item.append(label,content);entries.push(item);
+    });
+      const pinned=feed.scrollHeight-feed.scrollTop-feed.clientHeight<40;
+      feed.replaceChildren(...entries);feedVersions.set(feed,signature);
+      if(pinned)feed.scrollTop=feed.scrollHeight;
+    }
+    panel.querySelector('.native-lane-state').textContent=snapshot.busy?
+      'AUFTRAG WIRD BEARBEITET · STATUS VON ANDROID':
+      (snapshot.status||'BEREIT · LOKALER GESPRÄCHSVERLAUF');
+    const caption=$('#workspace-footnote');
+    if(caption && !currentDocument && !computerOpen())caption.textContent='Dein Gespräch und deine Arbeitsschritte';
+  }
+
+  function sourceCard(set) {
+    const card=document.createElement('section');card.className='native-source-card';
+    const heading=document.createElement('small');heading.textContent='QUELLEN';card.appendChild(heading);
+    for(const item of set.items) {
+      const button=document.createElement('button');button.type='button';button.className='native-source-link';
+      button.dataset.nativeSource=item.id;
+      button.setAttribute('aria-label','Quelle öffnen: '+item.title);
+      const title=document.createElement('strong');title.textContent=item.title;
+      const url=document.createElement('span');url.textContent=item.url;
+      button.append(title,url);card.appendChild(button);
+    }
+    return card;
+  }
+  function sources(data) {
+    if(!currentScope(data) || !chatId.test(data.sourceSetId) || !Array.isArray(data.items))return;
+    const items=[];
+    for(const item of data.items.slice(0,8)) {
+      if(!item || !chatId.test(item.id) || typeof item.title!=='string' ||
+        typeof item.url!=='string' || item.url.length>4096 || items.some(row=>row.id===item.id))continue;
+      let parsed;try {parsed=new URL(item.url);}catch {continue;}
+      if(!['https:','http:'].includes(parsed.protocol) || parsed.username || parsed.password)continue;
+      items.push({id:item.id,title:item.title.slice(0,300)||parsed.hostname,url:item.url});
+    }
+    const previous=sourceSets.get(data.sourceSetId);
+    if(items.length)sourceSets.set(data.sourceSetId,{items,
+      anchor:previous?.anchor ?? [...lines].reverse().find(row=>!row.user) ?? null});
+    else sourceSets.delete(data.sourceSetId);
+    while(sourceSets.size>60)sourceSets.delete(sourceSets.keys().next().value);
+    feedRevision++;renderFeed();
+  }
+  function pruneSources() {
+    for(const [id,set] of sourceSets)if(set.anchor!==null && !lines.includes(set.anchor))sourceSets.delete(id);
+  }
+
+  /**
+   * Only the document already opened via Android's read-only picker is shown.
+   * All metadata/text are inserted using textContent, never trusted as HTML.
+   * There is no data transfer, filesystem access or preview-side PDF parser.
+   */
+  function renderDocument() {
+    const workspace=$('#workspace');
+    if (!workspace || !currentScope(currentDocument)) return;
+    if(computerOpen()) {workspace.classList.remove('native-document-active');return;}
+    let panel=workspace.querySelector('#native-document-panel');
+    if (!panel) {
+      panel=document.createElement('section');
+      panel.id='native-document-panel';
+      panel.className='projected-computer native-document-panel';
+      const top=document.createElement('div');
+      top.className='native-document-heading';
+      const label=document.createElement('small');label.textContent='ECHTES DOKUMENT · ANDROID-AUSWAHL';
+      const title=document.createElement('h2');
+      title.className='native-document-title';
+      top.append(label,title);
+      const buttons=document.createElement('div');
+      buttons.className='action-row';
+      for(const [id,text] of [['files','ANDERE PDF ÖFFNEN'],['draft','ENTWURF ERSTELLEN'],['close','DOKUMENT SCHLIESSEN']]) {
+        const b=document.createElement('button');
+        b.type='button';b.className='secondary-button';
+        b.dataset.nativePdf=id;b.textContent=text;buttons.appendChild(b);
+      }
+      const detail=document.createElement('div');detail.className='native-document-facts';
+      const image=document.createElement('img');
+      image.className='native-document-image';image.alt='Tatsächlich gerenderte erste PDF-Seite';
+      image.loading='eager';
+      const text=document.createElement('div');text.className='native-document-text';
+      detail.append(image,text);
+      const draftStatus=document.createElement('p');draftStatus.className='native-document-draft-status';
+      draftStatus.setAttribute('aria-live','polite');
+      panel.append(top,buttons,draftStatus,detail);
+      workspace.appendChild(panel);
+    }
+    const doc=currentDocument;
+    panel.querySelector('[data-native-pdf="draft"]').disabled=doc.canDraft!==true ||
+      snapshot?.busy===true || snapshot?.commandPending===true;
+    panel.querySelector('.native-document-draft-status').textContent=String(doc.draftStatus||'').slice(0,500);
+    panel.querySelector('.native-document-title').textContent=String(doc.name||'Dokument.pdf');
+    const img=panel.querySelector('.native-document-image');
+    if(typeof doc.previewDataUri==='string' &&
+        /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(doc.previewDataUri) &&
+        doc.previewDataUri.length <= 400000) {
+      if(img.src!==doc.previewDataUri)img.src=doc.previewDataUri;
+      img.hidden=false;
+    } else {
+      img.removeAttribute('src');img.hidden=true;
+    }
+    const text=panel.querySelector('.native-document-text');
+    text.replaceChildren();
+    const meta=document.createElement('small');
+    meta.textContent='SEITEN: '+(Number.isInteger(doc.pageCount)?doc.pageCount:'?')+
+      ' · DATEI VOM ANDROID-DOKUMENTPICKER';
+    const notice=document.createElement('p');
+    const actual=doc.textState==='EXTRACTED' && typeof doc.text==='string' && doc.text.length>0;
+    notice.textContent=actual ?
+      'Der folgende Text stammt aus der auf dem Gerät geöffneten PDF. Es ist keine KI-Zusammenfassung.' :
+      doc.textState==='NEEDS_ANDROID_15' ?
+        'Textauszug wird erst ab Android 15 unterstützt. Das Seitenbild ist echt.' :
+        'Kein auslesbarer Text vorhanden. Eine OCR wurde nicht durchgeführt.';
+    const body=document.createElement('pre');
+    body.className='native-document-excerpt';
+    body.textContent=actual?doc.text.slice(0,12000):'';
+    text.append(meta,notice,body);
+    workspace.classList.add('native-document-active');
+    workspace.classList.remove('native-work-active');
+    const foot=$('#workspace-footnote');
+    if(foot)foot.textContent='PDF · '+String(doc.name||'Dokument.pdf');
+  }
+  function clearDocument() {
+    documentRevision++;currentDocument=null;
+    const workspace=$('#workspace');
+    workspace?.querySelector('#native-document-panel')?.remove();
+    workspace?.classList.remove('native-document-active');
+    renderFeed();renderComputer();
+  }
+  function documentOpened(document) {
+    if(!snapshot || !currentScope(document) || !chatId.test(document.documentId)) return;
+    if(typeof document.name!=='string' || document.name.length>120 ||
+       !Number.isInteger(document.pageCount) || document.pageCount < 0) return;
+    const revision=++documentRevision;
+    if(currentDocument?.documentId===document.documentId) {
+      currentDocument=document;renderDocument();return;
+    }
+    const set = () => {
+      if(revision!==documentRevision || !currentScope(document))return;
+      coverComputer();
+      currentDocument=document;
+      renderDocument();
+    };
+    // Reuse the ORIGINAL 950ms interruptible flight/FLIP controller from PR #850.
+    // No second CSS animation or stale timer can overwrite a newer native document.
+    if (typeof window.ContinuumWorkspaceMotion?.transition === 'function') {
+      window.ContinuumWorkspaceMotion.transition(set,{kind:'open',duration:950});
+    } else set();
+  }
+
+  function nativeLabels() {
+    if(!snapshot)return;
+    for(const [action,label] of [['open-demo','PDF öffnen'],['research-demo','Recherche öffnen'],
+      ['local-file','Datei öffnen']]) {
+      document.querySelectorAll('[data-action="'+action+'"]').forEach(button=>{
+        if([...button.childNodes].some(node=>node.nodeType===3 && node.textContent.trim()))labelWithIcons(button,label);
+      });
+    }
+    const set=(selector,text)=>{const node=$(selector);if(node && node.textContent!==text)node.textContent=text;};
+    labelWithIcons($('.preview-badge'),'ANDROID · LOKAL');set('.sidebar-note small','Gespeicherte Gespräche auf deinem Gerät.');
+    set('.project-button small','Deine Gespräche');set('.input-hint','LOKAL');
+    set('#workspace-meta',computerOpen()?'COMPUTER':currentDocument?'PDF':snapshot.busy?'AUFTRAG AKTIV':'LOKAL');
+    set('#workspace-footnote',computerOpen()?(currentComputer.reason||'Gerätebild · Android'):
+      currentDocument?'PDF · '+currentDocument.name:
+      lines.length?'Dein Gespräch und deine Arbeitsschritte':'Bereit für deinen Auftrag');
+    const recipient=snapshot.viewKind==='BOT'?String(snapshot.viewLabel||'Helfer').slice(0,96):null;
+    $('#command-input')?.setAttribute('aria-label',recipient?'Nachricht an '+recipient:'Dein Auftrag');
+    $('#command-input')?.setAttribute('placeholder',recipient?'Nachricht an '+recipient+' …':'Schreibe deinen Auftrag …');
+    const mic=$('#listen-button'), voiceMode=snapshot.voiceMode;
+    const micLabel=voiceMode?.active===true?
+      (voiceMode.paused===true?'Gesprächsmodus pausiert. Antippen: weiter sprechen. Lange drücken: beenden.':
+        'Gesprächsmodus aktiv. Antippen: jetzt sprechen. Lange drücken: beenden.'):
+      'Spracheingabe starten. Lange drücken: still diktieren.';
+    mic?.setAttribute('aria-label',micLabel);mic?.setAttribute('title',micLabel);
+    mic?.setAttribute('aria-pressed',voiceMode?.active===true?'true':'false');
+    $('.send-button')?.setAttribute('aria-label','Auftrag senden');
+  }
+  const workspace=$('#workspace');
+  if(workspace)new MutationObserver(()=>{
+    if(snapshot && (lines.length || snapshot.busy || snapshot.workRows?.length) && !workspace.querySelector('#native-live-panel'))renderFeed();
+    if(currentDocument && !workspace.querySelector('#native-document-panel'))renderDocument();
+    if(currentComputer && !workspace.querySelector('#native-computer-panel'))renderComputer();
+    nativeLabels();
+  }).observe(workspace,{childList:true});
+  function receive(state) {
+    if(!validScope(state))return;
+    // The first native snapshot binds this document. A real WebView reload has
+    // a fresh JS context; an old page can never adopt a different page token.
+    if(page && state.pageId!==page)return;
+    // Match Android Stage.bind: any new revision requires a new view identity.
+    // An equal revision can only replay the same view and session.
+    const initial=!page;
+    const same=!initial && state.viewId===view && state.viewRevision===viewRevision &&
+      state.sessionId===session;
+    if(!initial && !same &&
+      (state.viewRevision<=viewRevision || state.viewId===view))return;
+    const changed=!same;
+    // Selection events may be queued after a snapshot. Observe the actual editor
+    // first, including an oversized edit that cannot be sent, before trusting its ACK.
+    if(!initial)editorDraft();
+    if(changed) {
+      if(!initial)retainTransitionDraft(state.transitionCause);
+      cancelMicPress();retireComputer();clearNativeSpeech(true);
+      Object.assign(computerGate,{generation:0,sequence:-1,ended:false,binding:null});
+      Object.assign(speechGate,{generation:0,sequence:-1,ended:false,utteranceId:null});
+      lines=[];sourceSets.clear();feedRevision++;clearDocument();pendingCommand=null;
+      lastDraft='';latestDraftRevision=-1;clientEditRevision=0;sentEditRevision=-1;lastScene=null;
+      if(!initial) {
+        dirtyDraft=false;
+        const field=$('#command-input');if(field) {field.value='';fitComposer();}
+      }
+      closePanels();
+    }
+    page=state.pageId;view=state.viewId;viewRevision=state.viewRevision;session=state.sessionId;snapshot=state;
+    const revision=Number.isSafeInteger(state.draftRevision) && state.draftRevision>=0?state.draftRevision:null;
+    const newerDraft=revision!==null && revision>latestDraftRevision;
+    // Observing a pending revision prevents its consumed text from returning
+    // after the command ACK. Native consumption publishes a later revision.
+    if(revision!==null)latestDraftRevision=Math.max(latestDraftRevision,revision);
+    const acknowledged=Number.isSafeInteger(state.ackEditRevision) && state.ackEditRevision===clientEditRevision;
+    const draft=state.draft, field=$('#command-input');
+    if(draft && typeof draft.text==='string' && acknowledged && !(initial && dirtyDraft) &&
+      !pendingCommand && state.commandPending!==true && newerDraft && field &&
+      draft.text.length<=MAX_DRAFT && new TextEncoder().encode(draft.text).length<=MAX_DRAFT &&
+      Number.isInteger(draft.selectionStart) && Number.isInteger(draft.selectionEnd) &&
+      draft.selectionStart>=0 && draft.selectionEnd>=draft.selectionStart && draft.selectionEnd<=draft.text.length) {
+      field.value=draft.text;field.setSelectionRange(draft.selectionStart,draft.selectionEnd);fitComposer();
+      dirtyDraft=false;lastDraft=draftKey(field.value,field.selectionStart,field.selectionEnd);
+      sentEditRevision=clientEditRevision;
+    } else if(initial && !dirtyDraft && field) {
+      lastDraft=draftKey(field.value,field.selectionStart,field.selectionEnd);sentEditRevision=clientEditRevision;
+    }
+    window.ContinuumOperations?.detach();
+    renderChats();renderMeters();renderFeed();renderDocument();nativeLabels();renderAppearance(state.appearance);
+    const scene=state.speaking===true?'speaking':state.listening===true?'listening':state.busy===true?'working':'idle';
+    if(scene!==lastScene) {
+      lastScene=scene;document.body.dataset.state=scene;
+      window.ContinuumScene?.setState(scene);
+      document.querySelectorAll('[data-scene]').forEach(button=>{
+        button.classList.toggle('active',button.dataset.scene===scene);
+        button.setAttribute('aria-current',button.dataset.scene===scene?'step':'false');
+        button.setAttribute('aria-disabled','true');
+      });
+    }
+    const orb=$('#orb-status');
+    if(orb)orb.textContent=state.speaking?'SPRICHT':state.listening?'HÖRT ZU':state.busy?'ARBEITET':'BEREIT';
+    const caption=$('#scene-caption');
+    if(caption)caption.textContent=state.status||'Bereit';
+    // Typing can precede the first Android snapshot. Bind that existing edit now
+    // so an immediate return to the classic view retains it without another key.
+    if(dirtyDraft)syncDraft();
+  }
+  function boundedMessage(value) {
+    const text=typeof value==='string'?value:'';
+    const bounded=text.slice(0,MAX_MESSAGE);
+    return /[\uD800-\uDBFF]$/.test(bounded)?bounded.slice(0,-1):bounded;
+  }
+  function transcript(data) {
+    if(!currentScope(data)||!Array.isArray(data.entries))return;
+    const rows=data.entries.filter(e=>e&&typeof e.user==='boolean'&&typeof e.text==='string')
+      .map(e=>({user:e.user,text:boundedMessage(e.text)}));
+    lines=(data.append===true?lines.concat(rows):rows).slice(-60);pruneSources();feedRevision++;
+    renderFeed();
+  }
+  function message(line) {
+    if(!currentScope(line)||typeof line.user!=='boolean'||typeof line.text!=='string')return;
+    lines.push({user:line.user,text:boundedMessage(line.text)});feedRevision++;
+    if(lines.length>60)lines.shift();pruneSources();
+    renderFeed();
+  }
+  function closePanels() {
+    document.body.classList.remove('chats-open','instruments-open');
+    document.querySelectorAll('[data-action="toggle-chats"],[data-action="toggle-instruments"]')
+      .forEach(button=>button.setAttribute('aria-expanded','false'));
+  }
+  function section(name,focusComposer=false) {
+    if(!routes.has(name))return;
+    if(name==='stop') {retireComputer();clearNativeSpeech(true);}
+    else if(name==='device' && currentComputer) {
+      computerVisible=true;renderComputer();scheduleVisibilityCheck();
+    } else if(computerOpen() && name!=='voice-input' && name!=='voice-input-long-press') {
+      coverComputer();renderDocument();renderFeed();
+    }
+    closePanels();
+    document.body.dataset.nativeSection=name;
+    const original=name==='home'||name==='chat'?'conversation':name==='device'?'computer':name;
+    if(document.querySelector('.nav-button[data-section="'+original+'"]'))
+      document.querySelectorAll('.nav-button[data-section]').forEach(button=>{
+        const selected=button.dataset.section===original;
+        button.classList.toggle('active',selected);button.setAttribute('aria-current',selected?'page':'false');
+      });
+    if(name==='chat' && focusComposer && document.visibilityState==='visible')
+      $('#command-input')?.focus({preventScroll:true});
+  }
+  function closeProjection() {
+    if(computerOpen()) {retireComputer();send('route','stop');}
+    else clearDocument();
+  }
+  function cancelMicPress(suppress=true) {
+    if(!micPress)return;
+    clearTimeout(micPress.timer);micPress=null;
+    if(suppress)suppressMicClick=true;
+  }
+  const micButton=$('#listen-button');
+  micButton?.addEventListener('pointerdown',e=>{
+    if(e.button!==0 || e.isPrimary===false)return;
+    cancelMicPress(false);suppressMicClick=false;
+    const press={pointerId:e.pointerId,x:e.clientX,y:e.clientY,context:scope(),fired:false,timer:0};
+    micPress=press;
+    const duration=Number.isInteger(snapshot?.longPressTimeoutMs)?
+      Math.max(200,Math.min(2000,snapshot.longPressTimeoutMs)):500;
+    press.timer=setTimeout(()=>{
+      if(micPress!==press || !currentScope(press.context) || document.visibilityState!=='visible')return;
+      press.fired=true;suppressMicClick=true;
+      send('route','voice-input-long-press');
+    },duration);
+  });
+  micButton?.addEventListener('pointermove',e=>{
+    if(micPress?.pointerId===e.pointerId &&
+      Math.hypot(e.clientX-micPress.x,e.clientY-micPress.y)>10)cancelMicPress();
+  });
+  micButton?.addEventListener('pointerup',e=>{
+    if(micPress?.pointerId!==e.pointerId)return;
+    const fired=micPress.fired;cancelMicPress(fired);
+    if(fired)e.preventDefault();
+  });
+  for(const event of ['pointercancel','pointerleave'])micButton?.addEventListener(event,()=>cancelMicPress());
+  micButton?.addEventListener('contextmenu',e=>e.preventDefault());
+  micButton?.addEventListener('keydown',e=>{
+    if(e.key!=='ContextMenu' && !(e.key==='F10' && e.shiftKey))return;
+    e.preventDefault();e.stopImmediatePropagation();cancelMicPress(false);
+    send('route','voice-input-long-press');
+  });
+  window.addEventListener('blur',()=>cancelMicPress());
+  window.ContinuumNative=Object.freeze({receive,transcript,message,
+    section:data=>{if(currentScope(data))section(data.name,data.focusComposer===true);},document:documentOpened,
+    clearDocument:data=>{if(currentScope(data))clearDocument();},commandResult,computer,speech,sources});
+  document.addEventListener('click',e=>{
+    if(e.target.closest('#listen-button') && suppressMicClick) {
+      suppressMicClick=false;e.preventDefault();e.stopImmediatePropagation();return;
+    }
+    const source=e.target.closest('[data-native-source]');
+    if(source) {
+      e.preventDefault();e.stopImmediatePropagation();
+      const id=source.dataset.nativeSource;
+      if([...sourceSets.values()].some(set=>set.items.some(item=>item.id===id)))send('open-source',id);
+      return;
+    }
+    const pdf=e.target.closest('[data-native-pdf]');
+    if(pdf){
+      e.preventDefault();e.stopImmediatePropagation();
+      if(pdf.dataset.nativePdf==='files')send('route','files');
+      else if(pdf.dataset.nativePdf==='close')clearDocument();
+      else if(pdf.dataset.nativePdf==='draft' && currentScope(currentDocument) &&
+        currentDocument.canDraft===true &&
+        snapshot?.busy!==true && snapshot?.commandPending!==true) {
+        send('document-draft',currentDocument.documentId);
+      }
+      return;
+    }
+    const own=e.target.closest('[data-native-chat]');
+    if(own) {
+      e.preventDefault();e.stopImmediatePropagation();
+      closePanels();
+      send('select-chat',own.dataset.nativeChat);return;
+    }
+    const fake=e.target.closest('[data-chat]');
+    if(fake) {
+      e.preventDefault();e.stopImmediatePropagation();
+      send('route','chats');return;
+    }
+    const nav=e.target.closest('button[data-section]');
+    if(nav) {
+      e.preventDefault();e.stopImmediatePropagation();
+      const value=nav.dataset.section==='conversation'?'chat':
+        nav.dataset.section==='computer'?'device':nav.dataset.section;
+      if(routes.has(value) && send('route',value))section(value,true);return;
+    }
+    const action=e.target.closest('[data-action]');
+    const value=action&&actions[action.dataset.action];
+    if(value) {
+      e.preventDefault();e.stopImmediatePropagation();
+      if(send('route',value))section(value,true);
+      return;
+    }
+    if(action && action.dataset.action==='close') {
+      e.preventDefault();e.stopImmediatePropagation();closeProjection();return;
+    }
+    if((action && !layoutActions.has(action.dataset.action)) ||
+      e.target.closest('[data-scene],[data-phase],[data-source],[data-op-action],[data-op-view],[data-op-source],[data-op-step],[data-op-paragraph]')) {
+      // Demo handlers are never allowed to fabricate a task, source or result in
+      // the Android session. Pure layout controls keep their original behavior.
+      e.preventDefault();e.stopImmediatePropagation();
+    }
+  },true);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape' && !document.body.classList.contains('chats-open') &&
+      !document.body.classList.contains('instruments-open')) {
+      e.preventDefault();e.stopImmediatePropagation();closeProjection();
+    }
+  },true);
+  $('#command-form')?.addEventListener('submit',e=>{
+    e.preventDefault();e.stopImmediatePropagation();
+    const field=$('#command-input'), text=field?.value?.trim()||'';
+    if(!text)return;
+    const error=inputError(text);
+    if(error){notice(error);return;}
+    if(!validScope(scope())){notice('Die Android-Verbindung startet. Dein Entwurf bleibt erhalten.');return;}
+    if(pendingCommand || snapshot?.commandPending===true){notice('Die Eingabe wird übernommen. Dein Entwurf bleibt erhalten.');return;}
+    const draft=editorDraft();if(!draft)return;
+    pendingCommand={id:'command-'+(++requestNumber),...scope(),draft:field.value,
+      clientEditRevision:draft.clientEditRevision};
+    if(!send('command',text,{id:pendingCommand.id}))pendingCommand=null;
+  },true);
+  const input=$('#command-input');
+  input?.addEventListener('input',()=>{dirtyDraft=true;fitComposer();syncDraft();});
+  for(const event of ['select','keyup','click','blur','change'])input?.addEventListener(event,syncDraft);
+  window.addEventListener('load',stopDemoTelemetry,{once:true});
+  window.addEventListener('load',mountSettingsControls,{once:true});
+  window.addEventListener('resize',fitComposer);
+  window.addEventListener('resize',scheduleVisibilityCheck);
+  document.addEventListener('scroll',scheduleVisibilityCheck,true);
+  window.addEventListener('scroll',scheduleVisibilityCheck);
+  document.addEventListener('visibilitychange',()=>{
+    document.body.classList.toggle('native-light-paused',document.visibilityState!=='visible');
+    if(document.visibilityState!=='visible') {cancelMicPress();retireComputer();clearNativeSpeech(true);}
+    else scheduleVisibilityCheck();
+  });
+  window.addEventListener('pagehide',()=>{cancelMicPress();retireComputer();clearNativeSpeech(true);});
+  new MutationObserver(scheduleVisibilityCheck).observe(document.body,{attributes:true,attributeFilter:['class','style']});
+  const badge=$('.preview-badge');
+  mountSettingsControls();
+  labelWithIcons(badge,'ANDROID · LOKAL');
+  const note=$('#workspace-footnote');
+  if(note)note.textContent='Verbindung wird hergestellt …';
+})();

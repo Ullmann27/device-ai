@@ -1,0 +1,140 @@
+{
+  "qa_source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "local_code_and_ui_test_head": "df88ddf012db71d5a6aba985737847a48e394588",
+  "main_tree": "9228dfb380983f59c96ac8d1fcd290b99624cd44",
+  "app_and_standard_unit_sources_unchanged_since_qa": true,
+  "unchanged_against_integration_baseline": [
+    "app/src/main/AndroidManifest.xml",
+    "app/build.gradle.kts",
+    "app/src/main/assets",
+    "app/src/main/res"
+  ],
+  "files": {
+    "BaselineJarvisPreview.kt": {
+      "bytes": 2422,
+      "sha256": "14e8edce013d97624201fb1bf1f0370104f1cea5db10a9c4c665770db53a5de3"
+    },
+    "CurrentJarvisPreview.kt": {
+      "bytes": 4413,
+      "sha256": "220e03e027c3743df987d212a739e9659099841b0a1f4ddf962340f052d9499e"
+    },
+    "README.md": {
+      "bytes": 6108,
+      "sha256": "5131948eb2c1641a50f51618fd10b867bacbcbd40a8de96a1dc2848070f12fc1"
+    },
+    "activity-timeout-threads.txt": {
+      "bytes": 30563,
+      "sha256": "722a02733e70efe871f1c63edf788ab172e7f591e9df2e23896ab6efc5a16ef4",
+      "original_capture_sha256": "779f3d9e923e1402d1f8c905cb599f63d304439bd0a750d36374c379d7f3e762",
+      "normalization": "Trailing whitespace and final empty lines only; outcomes and stack content unchanged."
+    },
+    "activity-timeout.txt": {
+      "bytes": 241,
+      "sha256": "850e6709f3c276da9f25cc0dcab22641af2e86850affbd8f534621599beb570a"
+    },
+    "assemble-gradle.txt": {
+      "bytes": 3219,
+      "sha256": "9b2c578950ceafc53a8fdd163672181b08e5e1d0d0537d5d02e549ac0bb58f72",
+      "original_capture_sha256": "95ef8b5ce14d38e5cc6fc27eff2dbf8e7d62e6d3f512b2770721fc6e3d121626",
+      "normalization": "Trailing whitespace and final empty lines only; outcomes and stack content unchanged."
+    },
+    "baseline-lint-summary.json": {
+      "bytes": 173,
+      "sha256": "b4ac0cc76fd7adfcf53f4a6d70c611fb7bb00b4e7a77e6b13152a2dcd75402db"
+    },
+    "baseline-provenance.json": {
+      "bytes": 1107,
+      "sha256": "639276c536e739bf77bf1d66457243b48341542c7075e56e4c4bff9ec08a778d"
+    },
+    "baseline-unit-summary.json": {
+      "bytes": 354,
+      "sha256": "2098a35cbe8a5f0e510dcfcfc1734c1c75f1c69bd2facb097ea0d6204678f4c5"
+    },
+    "caller-test-provenance.json": {
+      "bytes": 794,
+      "sha256": "17792674239d65611b2a614172eb56854f67d49168814803d05b99a209e2abd8"
+    },
+    "combined-apk-summary.json": {
+      "bytes": 409,
+      "sha256": "a65d44c9449760449cfb7785e8e0d152a44f7c6fac206e6acdd8adecf092f337"
+    },
+    "combined-lint-summary.json": {
+      "bytes": 313,
+      "sha256": "e99606e4b998451596acba40ce8b7cec970f0743de8689fd0e1442de782bc0ba"
+    },
+    "combined-unit-cases.json": {
+      "bytes": 609352,
+      "sha256": "1c7a5706097fdbb550cd9813f739661d054f80fa7169b2579e6b735ee2ef015c"
+    },
+    "combined-unit-summary.json": {
+      "bytes": 299,
+      "sha256": "87ede12fc44c50f2c280ed6d1d5abf64804b6959f068075b6ba2cb679b777e53"
+    },
+    "final-provenance.json": {
+      "bytes": 1432,
+      "sha256": "605c9caa2c8c9db7693dcea715eb97459375470fbdf3dd2bb2146cd87e2cd5fa"
+    },
+    "final-qa.json": {
+      "bytes": 7326,
+      "sha256": "74a54f2ebfbf2f38b8d9005a8266ce567ab37f7fef37da4030121e6b00d5f2da"
+    },
+    "final-render.log": {
+      "bytes": 258,
+      "sha256": "4ef08db235d873eb2bca9f8fa23140b94df01c18870f0feba6fa7634e2dddf02"
+    },
+    "final-visual-source-provenance.json": {
+      "bytes": 841,
+      "sha256": "dd783bfe316efbed57227973f1c4e691531bc0a207a39e72ade6604e4286fa63"
+    },
+    "jarvis-menu-avatar-41433ff0.png": {
+      "bytes": 1453904,
+      "sha256": "293a978812ba26a262f8fc22bd6e0285773a0d549825fba47f2942b6ef92da8d"
+    },
+    "jarvis-menu-avatar-baseline.png": {
+      "bytes": 939412,
+      "sha256": "1302218523befa81cdabe8765214827064b586c87a9a33a124acb8ece7cda083"
+    },
+    "lint-gradle.txt": {
+      "bytes": 2682,
+      "sha256": "54d3d55211e3b8810811211e60346dfe1930805efaeb760c356056d01089c73d",
+      "original_capture_sha256": "d889aedb009db062e49eb52a26ae181f4c3e0cff8587d410c0d8a3d3ab1472af",
+      "normalization": "Trailing whitespace and final empty lines only; outcomes and stack content unchanged."
+    },
+    "lint-results.xml": {
+      "bytes": 87,
+      "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809"
+    },
+    "pane-timeout-threads.txt": {
+      "bytes": 28712,
+      "sha256": "174d8dbf7210774dae77a57376cc4a4c7150beb81171e0be2c59443a53eaa041",
+      "original_capture_sha256": "3eae4ee78b447733075fbcfa78f2b5a1f141b378e36618724ba388eb716f137f",
+      "normalization": "Trailing whitespace and final empty lines only; outcomes and stack content unchanged."
+    },
+    "pane-timeout.txt": {
+      "bytes": 248,
+      "sha256": "2333ad1b3ae423e53275f94174d255f9be069bbad2fb78fb84870197a0a6e30c"
+    },
+    "shared-ui-source-provenance.json": {
+      "bytes": 5661,
+      "sha256": "403c8377668896b5a14d444bbc1b29880cbf3f7b72adaaebc9deae46cfae8373"
+    },
+    "ui-caller.txt": {
+      "bytes": 1639,
+      "sha256": "a604e78020bddc40e0d33a7bb8546d18822090729b307581c78d7a45b5174b70"
+    },
+    "ui-initial-attempt.json": {
+      "bytes": 2406,
+      "sha256": "fc9b96f09f34e31ea1dc99a0d794e9c0b3f726392fee22da611d5eda89336178"
+    },
+    "ui-views-and-dialog.txt": {
+      "bytes": 3333,
+      "sha256": "0748aac5ee96f00ddfba5b16a266f0921fa96d32b3008e824aa7f02c89a9487f"
+    },
+    "unit-gradle.txt": {
+      "bytes": 26230,
+      "sha256": "14aa1e417c8d1329d90cd830f5de13a36fff8419f3e2cc2a201cbedcaae0781d",
+      "original_capture_sha256": "320c51d014f411803df271ef328085fb42550afbf6c5640339cf1e992769f6f9",
+      "normalization": "Trailing whitespace and final empty lines only; outcomes and stack content unchanged."
+    }
+  }
+}

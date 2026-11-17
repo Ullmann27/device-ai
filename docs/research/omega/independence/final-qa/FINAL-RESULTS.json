@@ -1,0 +1,49 @@
+{
+  "productSource": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+  "environment": "HOST",
+  "modelInference": "NOT_RUN_BY_THIS_REVIEWER",
+  "deviceVerified": false,
+  "apkBuilt": false,
+  "chatgptConnected": false,
+  "checks": {
+    "canonicalAndNewModules": {
+      "passed": 299,
+      "failed": 0,
+      "skipped": 0
+    },
+    "independentService": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "harness": "ef0673ac410b5ee8845d8b685df581535b625ca5"
+    },
+    "independentMcp": {
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0
+    },
+    "independentActualIntegration": {
+      "passed": 10,
+      "failed": 0
+    },
+    "android": {
+      "total": 2241,
+      "passed": 2224,
+      "failed": 0,
+      "skipped": 17,
+      "reviewSubsetIncluded": 34,
+      "compile": "PASS",
+      "lintIssues": 0,
+      "lintScope": "repository NewApi-only"
+    }
+  },
+  "priorFailuresRetained": [
+    "service old-label assertion then barrier cascades:4PASS/9FAIL",
+    "own combined probe JDK PATH bootstrap:0PASS/1FAIL; no product activity"
+  ],
+  "cleanup": {
+    "source": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+    "matchingLiveProcesses": [],
+    "unresolvedExecutionBarrierPresent": false
+  }
+}

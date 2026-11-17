@@ -1,0 +1,137 @@
+name: Continuum Code55 - scoped QA and unsigned ARM64
+
+on:
+  push:
+    branches:
+      - integrate/code55-apk-fable-20261112
+    paths:
+      - .github/workflows/continuum-code55-owner-apk.yml
+      - app/**
+      - tools/code55-apk/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-code55-apk-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  scoped-android:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify immutable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Exact-source focused Kotlin and UI regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true -I tools/code55-apk/focused.init.gradle :app:testDebugUnitTest
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - name: Summarize actual focused JUnit results
+        if: always()
+        run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
+      - name: Preserve focused JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-focused-Android-JUnit
+          path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
+          retention-days: 14
+
+  unsigned-arm64:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/integrate/code55-apk-fable-20261112'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify source and original package
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+          test -f tools/code55-apk/validator.py
+          printf 'source=%s\ntree=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=55\nversionName=0.3.54\noriginalSigner=NOT_USED\nFold7=NOT_RUN\n'             "$GITHUB_SHA" "$(git rev-parse HEAD^{tree})" > "$RUNNER_TEMP/CODE55-SOURCE.txt"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Build Code55 ARM64 unsigned from exact source
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalRenderUnsigned=true             :app:assembleRelease
+          test -s app/build/outputs/apk/release/app-release-unsigned.apk
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - name: Verify APK against original assets, package and 16 KiB alignment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B tools/code55-apk/validator.py             app/build/outputs/apk/release/app-release-unsigned.apk             "$RUNNER_TEMP/code55-apk-audit"             --repo "$GITHUB_WORKSPACE"             --build-tools "$ANDROID_HOME/build-tools/35.0.0"             --java-home "$JAVA_HOME"             --expected-source "$GITHUB_SHA"             --expected-tree "$(git rev-parse HEAD^{tree})"
+      - name: Upload verified unsigned APK and exact SHA receipts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-UNSIGNED-NOT-INSTALLABLE
+          path: |
+            app/build/outputs/apk/release/app-release-unsigned.apk
+            ${{ runner.temp }}/CODE55-SOURCE.txt
+            ${{ runner.temp }}/code55-apk-audit/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve failed verification report, if any
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-unsigned-build-failure-evidence
+          path: |
+            ${{ runner.temp }}/CODE55-SOURCE.txt
+            ${{ runner.temp }}/code55-apk-audit/
+          if-no-files-found: warn
+          retention-days: 14

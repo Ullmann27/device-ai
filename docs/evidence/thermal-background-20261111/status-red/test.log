@@ -1,0 +1,25 @@
+JUnit version 4.13.2
+..E...E
+Time: 1.222
+There were 2 failures:
+1) ownerStateRemainsFreshWhileWeightsStayUnchanged(at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest)
+java.lang.AssertionError: expected same:<SubwordEvaluation(loss=0.6931840320832243, correct=4, total=8)> was not:<SubwordEvaluation(loss=0.6931840320832243, correct=4, total=8)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotSame(Assert.java:829)
+	at org.junit.Assert.assertSame(Assert.java:772)
+	at org.junit.Assert.assertSame(Assert.java:783)
+	at at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest.ownerStateRemainsFreshWhileWeightsStayUnchanged$lambda$0(ContinuumLearningStatusReuseTest.kt:30)
+	at at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest.withCore(ContinuumLearningStatusReuseTest.kt:11)
+	at at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest.ownerStateRemainsFreshWhileWeightsStayUnchanged(ContinuumLearningStatusReuseTest.kt:25)
+2) unchangedTelemetryReusesMeasuredHoldoutsAcrossCollectors(at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest)
+java.lang.AssertionError: Unchanged weights need no reevaluation expected same:<SubwordEvaluation(loss=0.6931840320832243, correct=4, total=8)> was not:<SubwordEvaluation(loss=0.6931840320832243, correct=4, total=8)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotSame(Assert.java:829)
+	at org.junit.Assert.assertSame(Assert.java:772)
+	at at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest.unchangedTelemetryReusesMeasuredHoldoutsAcrossCollectors$lambda$0(ContinuumLearningStatusReuseTest.kt:20)
+	at at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest.withCore(ContinuumLearningStatusReuseTest.kt:11)
+	at at.heinz.deviceai.learning.ContinuumLearningStatusReuseTest.unchangedTelemetryReusesMeasuredHoldoutsAcrossCollectors(ContinuumLearningStatusReuseTest.kt:15)
+
+FAILURES!!!
+Tests run: 5,  Failures: 2
+

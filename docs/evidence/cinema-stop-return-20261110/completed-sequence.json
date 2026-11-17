@@ -1,0 +1,28 @@
+{
+  "local_source": "0d71b82c06632ec10400d1384113e517a9b09387",
+  "remote_source": "3c8ab956c4b69caebcb475b7f8cc2482a8e48308",
+  "main_source_tree": "9a6d8d7c4d6de60d90c0b58ea6501ad51d7cac17",
+  "tests": 1,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "xml_sha256": "bffd229abda544c0431f1d3ded209ecd77a75da654174f5ef35cad967c48f533",
+  "frames": [
+    {
+      "file": "stop-32ms.png",
+      "sha256": "19acfb776266d575370580b1fdf2aa61c07cbff60e6c3b7f583e6f2c7ac6c65c"
+    },
+    {
+      "file": "stop-352ms.png",
+      "sha256": "714ebaec4bd38eb087b47827925fd25dce98d966d116a7b2740df0d0867d5aa5"
+    },
+    {
+      "file": "stop-returned.png",
+      "sha256": "62758946e7e06359a38bf4d7ce1a6fd36623a4ea1400f6a8471c0f0ca5bb6790"
+    }
+  ],
+  "note": "Same STOP case rerun after fixture-only worker completion; not an additional test count",
+  "Fold7": "NOT_RUN",
+  "model_inference": "NOT_RUN",
+  "GPU": "NOT_RUN"
+}

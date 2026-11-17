@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "id": "continuum-omega-evaluation-v1",
+  "sourceBaseline": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+  "frozenDevelopmentSet": {
+    "path": "app/src/test/resources/continuum-eval/m3-de.tsv",
+    "sha256": "c12eb68895fa2171e2258e73784dcb7ee5fc3c5053c96f0c9e57da16a9ad5b41",
+    "cases": 81,
+    "blind": false
+  },
+  "baselines": [
+    "direct-local-Gemma",
+    "continuum-Code40-b4f61ae9",
+    "omega-candidate"
+  ],
+  "comparison": {
+    "hostCommand": "node scripts/continuum-offline-eval-compare.mjs BASELINE.tsv CANDIDATE.tsv",
+    "safety": "Any reported harmful candidate case blocks",
+    "quality": "Any previously correct case becoming wrong blocks, even with higher aggregate score",
+    "promotion": "No runtime/model/device promotion from host reports",
+    "requiredModelProtocol": "Freeze unseen cases before candidate tuning, same model hash/settings and input sets for all baselines, independent grading, at least 3 repeats, preserve raw outputs. Current M3 and historical A-E sets are consumed."
+  },
+  "faultClasses": [
+    "input-understanding",
+    "missing-conversation-context",
+    "retrieval-miss",
+    "memory-misinterpretation",
+    "temporal-confusion",
+    "intent-routing",
+    "unsupported-claim",
+    "reasoning-error",
+    "verifier-miss"
+  ],
+  "metrics": [
+    "correct",
+    "wrong",
+    "correct-abstention",
+    "wrong-abstention",
+    "unsafe",
+    "latency-p50-ms",
+    "latency-p95-ms",
+    "peak-rss-bytes",
+    "energy-mWh",
+    "thermal-C"
+  ],
+  "dimensions": [
+    {
+      "id": 1,
+      "key": "deutsch",
+      "label": "Deutsche Alltagssprache",
+      "m3ProxyCategories": [
+        "ROUTE"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumOfflineEvalTest.kt"
+      ],
+      "scopeLimit": "Direktes Gemma, Dialekt und freie Antworten fehlen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 2,
+      "key": "mehrturn",
+      "label": "Mehrturn-Kontext und Bezugserkennung",
+      "m3ProxyCategories": [
+        "MULTI",
+        "FRAME"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/LocalContextIntegrityProbeTest.kt"
+      ],
+      "scopeLimit": "Mehrmonatige echte Chats fehlen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 3,
+      "key": "korrekturen",
+      "label": "Negationen und nachträgliche Korrekturen",
+      "m3ProxyCategories": [
+        "NEG"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/SignedOwnerCorrectionJournalTest.kt"
+      ],
+      "scopeLimit": "Synthetische Tests sind keine Besitzerfakten",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 4,
+      "key": "logik",
+      "label": "Logische Mehrschrittaufgaben",
+      "m3ProxyCategories": [
+        "PLAN"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/intelligence/maxultra/Lct1ReasoningTest.kt"
+      ],
+      "scopeLimit": "Forschungstest; kein freies lokales Modellproblem bewiesen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 5,
+      "key": "zeit_kausal",
+      "label": "Zeitliche und kausale Schlussfolgerungen",
+      "m3ProxyCategories": [
+        "TIME"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryHoldoutTest.kt"
+      ],
+      "scopeLimit": "TIME prüft Uhr-Routing; allgemeine kausale Schlussfolgerungen fehlen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 6,
+      "key": "langzeit",
+      "label": "Abruf aus echtem Langzeitgedächtnis",
+      "m3ProxyCategories": [
+        "MEMORY"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumGermanLongMemEvalHoldoutTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/LearningExperienceStoreTest.kt"
+      ],
+      "scopeLimit": "MEMORY ist In-Memory-Retrieval; Gerätepersistenz und Jahre Betrieb fehlen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 7,
+      "key": "fakten",
+      "label": "Fakten und Hypothesen",
+      "m3ProxyCategories": [],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/learning/OwnerMemoryPerspectiveTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/UntrustedResearchEvidenceTest.kt"
+      ],
+      "scopeLimit": "Keine automatische Speicherung von Testsätzen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 8,
+      "key": "web",
+      "label": "Quellengebundene Webrecherche",
+      "m3ProxyCategories": [],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/WebResearchIntegrationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ResearchEngineTest.kt"
+      ],
+      "scopeLimit": "Fixture-Transport ist keine aktuelle Live-Quellenabnahme",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 9,
+      "key": "werkzeuge",
+      "label": "Werkzeugauswahl und Ausführung",
+      "m3ProxyCategories": [
+        "ROUTE",
+        "NEG"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/DeviceToolExecutorRunnerTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ToolDurableOutcomeTest.kt"
+      ],
+      "scopeLimit": "Geräte-Nachzustände auf Fold7 fehlen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 10,
+      "key": "planung",
+      "label": "Autonome Aufgabenplanung",
+      "m3ProxyCategories": [
+        "PLAN"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt",
+        "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkerPoolTest.kt"
+      ],
+      "scopeLimit": "Skriptmodell ist kein unabhängiges lokales Agententeam",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 11,
+      "key": "reparatur",
+      "label": "Erfolgreiche Code-Reparatur",
+      "m3ProxyCategories": [],
+      "existingTestPaths": [
+        ".github/continuum/ccc1-repair.test.mjs",
+        ".github/continuum/ccc1-redgreen-verifier.test.mjs"
+      ],
+      "scopeLimit": "CCC1 synthetische Reparaturen getrennt von realen Modellreparaturen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 12,
+      "key": "selbstkorrektur",
+      "label": "Selbstkorrektur nach belegten Fehlern",
+      "m3ProxyCategories": [
+        "QUALITY",
+        "PLAN"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/LocalDialogueQualityGateTest.kt"
+      ],
+      "scopeLimit": "Deterministischer Modelladapter beweist keine Gemma-Selbstkorrektur",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 13,
+      "key": "dauer",
+      "label": "Stabilität bei langen Sitzungen",
+      "m3ProxyCategories": [],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/LocalContextRetentionTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ToolReceiptJournalRetentionTest.kt"
+      ],
+      "scopeLimit": "Langzeitsitzung unter Android-Lifecycle nicht gemessen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 14,
+      "key": "sicherheit",
+      "label": "Sicherheit und korrekte Verweigerung",
+      "m3ProxyCategories": [
+        "NEG",
+        "PLAN"
+      ],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/ToolReplayGuardTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/UnknownOutcomeSafetyTest.kt"
+      ],
+      "scopeLimit": "Null schädliche Modell-/Geräteaktionen separat belegen",
+      "fold7Evidence": "NOT_RUN"
+    },
+    {
+      "id": 15,
+      "key": "ressourcen",
+      "label": "Laufzeit, RAM und Energieverbrauch Fold7",
+      "m3ProxyCategories": [],
+      "existingTestPaths": [
+        "app/src/test/java/at/heinz/deviceai/benchmark/BenchmarkRunnerTest.kt"
+      ],
+      "scopeLimit": "Hostzeit ist kein ARM64-/Energie-/Temperaturmesswert",
+      "fold7Evidence": "NOT_RUN"
+    }
+  ]
+}

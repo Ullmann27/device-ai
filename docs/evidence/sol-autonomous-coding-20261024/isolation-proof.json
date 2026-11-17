@@ -1,0 +1,28 @@
+{
+  "schema": "continuum-real-isolation-proof-v1",
+  "policy": {
+    "schema": "continuum-isolation-v1",
+    "image": "sha256:f9cb3de7fe3810796e00cec72f29142e2d3a4beada075443c5614024efdca182",
+    "network": "none",
+    "user": "1000:1000",
+    "readOnly": true,
+    "noNewPrivileges": true,
+    "capabilities": [],
+    "memoryMb": 512,
+    "pids": 32,
+    "cpus": 1,
+    "timeoutMs": 30000
+  },
+  "node": {
+    "passed": true,
+    "tests": 4,
+    "sourceSha256": "7569b4034dd8a5bc74952b6bca044ad4aef09c7bbcf7b53131097fae4afcc73a"
+  },
+  "ownerUnchanged": true,
+  "kotlin": null,
+  "timeout": {
+    "passed": true,
+    "containerRemoved": true,
+    "elapsedMs": 1354
+  }
+}

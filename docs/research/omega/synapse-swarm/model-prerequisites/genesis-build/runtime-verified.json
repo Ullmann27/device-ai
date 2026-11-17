@@ -1,0 +1,10 @@
+{
+  "path": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+  "bytes": 12476968,
+  "sha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+  "expectedSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+  "expectedBytes": 12476968,
+  "sourceTrackedCleanAfterBuild": true,
+  "inferenceStatus": "NOT_RUN",
+  "exactReviewedPairBinaryMatch": true
+}

@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success
+ok 1 - S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success
+  ---
+  duration_ms: 6970.610709
+  type: 'test'
+  ...
+# Subtest: S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work
+ok 2 - S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work
+  ---
+  duration_ms: 6921.520071
+  type: 'test'
+  ...
+# Subtest: S02 supplement: per-UID admission excludes a second different project and state directory until verified stop
+ok 3 - S02 supplement: per-UID admission excludes a second different project and state directory until verified stop
+  ---
+  duration_ms: 5236.77525
+  type: 'test'
+  ...
+# Subtest: S10 supplement: per-UID admission retains a live orphan across different project and state directories
+ok 4 - S10 supplement: per-UID admission retains a live orphan across different project and state directories
+  ---
+  duration_ms: 8204.193724
+  type: 'test'
+  ...
+# Subtest: S10 critical supplement: unexpected worker death pauses a different queued task
+ok 5 - S10 critical supplement: unexpected worker death pauses a different queued task
+  ---
+  duration_ms: 8950.664127
+  type: 'test'
+  ...
+# Subtest: S01/S15: real idle daemon starts, stops and starts again without creating model work
+ok 6 - S01/S15: real idle daemon starts, stops and starts again without creating model work
+  ---
+  duration_ms: 4125.896788
+  type: 'test'
+  ...
+# Subtest: S02: concurrent actual starts leave exactly one daemon ownership
+ok 7 - S02: concurrent actual starts leave exactly one daemon ownership
+  ---
+  duration_ms: 2002.620084
+  type: 'test'
+  ...
+# Subtest: S04/S11: SIGKILL of an idle daemon cannot leave live status and can restart safely
+ok 8 - S04/S11: SIGKILL of an idle daemon cannot leave live status and can restart safely
+  ---
+  duration_ms: 3386.396656
+  type: 'test'
+  ...
+# Subtest: S03: stale descriptor pointing at an unrelated live process never authorizes killing it
+ok 9 - S03: stale descriptor pointing at an unrelated live process never authorizes killing it
+  ---
+  duration_ms: 2110.60589
+  type: 'test'
+  ...
+# Subtest: S05: last-slot admission is atomic across independent CLI processes
+ok 10 - S05: last-slot admission is atomic across independent CLI processes
+  ---
+  duration_ms: 5699.187274
+  type: 'test'
+  ...
+# Subtest: S06/S08: duplicate identity is durable; cancellation prevents resubmission and restart resurrection
+ok 11 - S06/S08: duplicate identity is durable; cancellation prevents resubmission and restart resurrection
+  ---
+  duration_ms: 6726.090877
+  type: 'test'
+  ...
+# Subtest: S07/S13: owner acceptance binds the exact task and source, not an arbitrary approve flag
+ok 12 - S07/S13: owner acceptance binds the exact task and source, not an arbitrary approve flag
+  ---
+  duration_ms: 2709.897544
+  type: 'test'
+  ...
+# Subtest: S14: corrupt delivery state is rejected rather than reset to a fresh accepting queue
+ok 13 - S14: corrupt delivery state is rejected rather than reset to a fresh accepting queue
+  ---
+  duration_ms: 1874.636656
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 65056.181667

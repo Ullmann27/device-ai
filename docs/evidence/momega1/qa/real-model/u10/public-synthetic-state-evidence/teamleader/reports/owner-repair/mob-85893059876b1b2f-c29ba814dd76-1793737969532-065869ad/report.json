@@ -1,0 +1,645 @@
+{
+  "schemaVersion": 1,
+  "base": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+  "chain": "node",
+  "startedAt": "2026-11-03T20:32:49.544Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "modelInvocations": 2,
+    "localRequests": 2,
+    "verifiedModelExecution": true,
+    "candidateStatus": "PROPOSED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "ef60f8582013fd03",
+        "outcome": "FAILED_TESTS",
+        "diagnostic": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\n-1 !== -2",
+        "hypothesis": "The issue is with the rounding function in the `run` function, which is not correctly handling ties away from zero."
+      },
+      {
+        "candidate": "0a12595ef42b98f4",
+        "outcome": "FAILED_TESTS",
+        "diagnostic": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\n-1.5 !== -2",
+        "hypothesis": "The issue is with the rounding function in the `run` function, which is not correctly handling ties away from zero."
+      }
+    ],
+    "rejections": [],
+    "reason": "Original local inference observations; candidate correctness requires separate verification"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 15000,
+          "runtime": "runc",
+          "sourceSha256": "f46c713aae57bbac24d74f3bf250585e9c1a45e30f819ec35a1dce6ad743f6b1",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-b58fd4359476cafd4d9fbf9f",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-53670851e156d6d7",
+            "requestMessageId": "3fad17dd-5ec5-43f1-8ce0-e809955d6bf4",
+            "requestHash": "cdd19122030275736347cf741f9d7c12b3d875d245288361adf5a0a15e311faa",
+            "sourceCommit": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+            "jobId": "c058f2ac-6e9f-418c-9635-cca1e817d657"
+          },
+          "observed": {
+            "containerId": "c95d82a31a747a650d07f8988f253c4e49936ee9ee345d8514243d6c2446de9f",
+            "runtime": "runc",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 1,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 0,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Integer cents rounding\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "1fd2567f5db89edd61e36c1c470e65c96f3bace6a4a088ca1fb9e9e101c85210"
+          ],
+          "executedCaseHashes": [
+            "f943edf17823b6313f15eb896b4610e9c04656435f9d1a227a4f460f0c44b323"
+          ]
+        },
+        "diagnostics": 1
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Integer cents rounding",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 5,
+        "col": 8,
+        "message": "Expected values to be strictly equal:\n\n-1 !== -2",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "03bdd8ad33da0847"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "ef60f8582013fd03",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "03bdd8ad33da0847",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "The issue is with the rounding function in the `run` function, which is not correctly handling ties away from zero.",
+      "plan": [
+        "Identify the issue in the code",
+        "Understand the requirements",
+        "Create a test case to reproduce the issue",
+        "Analyze the test case to identify the problem",
+        "Fix the issue",
+        "Verify the fix",
+        "Update the test case to ensure the fix works as expected"
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.253,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "lib/subject.mjs",
+          "oldText": "export const run = x => Math.round(x/1000);\n",
+          "newText": "export const run = x => Math.round((x + 500) / 1000);\n"
+        }
+      ],
+      "proposalSha256": "e2eba1af69ea5f532f1d26ebee6acca023fc98846a2efb3170ba4bccf330685d",
+      "modelObservation": {
+        "schema": "momega1-local-process-observation-v1",
+        "evidenceClass": "LOCAL_MODEL_HOST",
+        "verifiedModelExecution": true,
+        "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+        "reviewedModelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+        "reviewedRuntimeSourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+        "reviewedModelRevision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+        "reviewedBuildEvidenceSha256": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067",
+        "independentReviewEvidenceSha256": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+        "executionId": "05a9a9a01d1a278573b4aad612435460502da6a415c9abe1bb748d194a581892",
+        "taskId": "mob-85893059876b1b2f",
+        "sourceCommit": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+        "taskFingerprint": "313b0ac81398b0c4dd547829a75439efe06f36a054ab4df14ec40fff440d2941",
+        "requestIndex": 1,
+        "contextSha256": "5c208aa72348d985affc240836d5ea72b2ef18ab98dd1a62ca5505c1bf023646",
+        "promptSha256": "626063e5a2c436f81f312d531c5349a828f5e3f1b5ef8f8e21d67ef4f6651851",
+        "requestSha256": "e3b7141c661181900de5425b8de360b91f7ca328b2062b5b7a2740f26513ef09",
+        "runtimePromptSha256": "3d639f90e35603428ce77893a70e62ee802256ba9d657280eada6eb5252e225f",
+        "runtimeSchemaSha256": "98fe5b9bd97fa7deefb4981f38d465056cd2c316325597ddb71100cdd78ab844",
+        "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+        "outputSha256": "edc5b77a01a046ccb99a0df64d05fcc11b556532cf27fa3fa095768b5b2b80f9",
+        "proposalSha256": "e2eba1af69ea5f532f1d26ebee6acca023fc98846a2efb3170ba4bccf330685d",
+        "responseStatus": "PROPOSAL",
+        "outputTokens": 180,
+        "pid": 214929,
+        "exitCode": 0,
+        "isolation": "BWRAP_UNSHARE_ALL",
+        "elapsedMs": 24665
+      },
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "lib/subject.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 1,
+            "failed": 1,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 1,
+            "passed": 0,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Integer cents rounding\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "ab1cc1e2c359b1b23d3c2412b68ce96c483eb174948cc84d322614a181a6c290"
+            ],
+            "executedCaseHashes": [
+              "f943edf17823b6313f15eb896b4610e9c04656435f9d1a227a4f460f0c44b323"
+            ]
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 256,
+            "pids": 64,
+            "cpus": 1,
+            "timeoutMs": 15000,
+            "runtime": "runc",
+            "sourceSha256": "266a41fe5dfe80a0c52df80a62ced76764e64a3d5ff55b4dae131ab82b5e369b",
+            "profile": "node-continuum",
+            "untrustedReports": true,
+            "workspaceId": "continuum-3fe86a70016ebab5506b937f",
+            "workspaceBinding": {
+              "workerId": "typed-coding-worker",
+              "taskId": "t-53670851e156d6d7",
+              "requestMessageId": "3fad17dd-5ec5-43f1-8ce0-e809955d6bf4",
+              "requestHash": "cdd19122030275736347cf741f9d7c12b3d875d245288361adf5a0a15e311faa",
+              "sourceCommit": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+              "jobId": "c058f2ac-6e9f-418c-9635-cca1e817d657"
+            },
+            "observed": {
+              "containerId": "d542bac8ef30907e6b15e8a6d013d569b29e868ef841dade3465978cb3ee23c6",
+              "runtime": "runc",
+              "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+              "user": "1000:1000",
+              "network": "none",
+              "readOnly": true,
+              "memoryBytes": 268435456,
+              "memorySwapBytes": 268435456,
+              "nanoCpus": 1000000000,
+              "pids": 64,
+              "capDrop": [
+                "ALL"
+              ],
+              "securityOpt": [
+                "no-new-privileges:true"
+              ],
+              "writableHostMounts": 0
+            },
+            "teardownConfirmed": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.Integer cents rounding",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 5,
+          "col": 8,
+          "message": "Expected values to be strictly equal:\n\n-1 !== -2",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "03bdd8ad33da0847"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    },
+    {
+      "candidate": "0a12595ef42b98f4",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "03bdd8ad33da0847",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "The issue is with the rounding function in the `run` function, which is not correctly handling ties away from zero.",
+      "plan": [
+        "Identify the rounding function in the `run` function.",
+        "Check the rounding logic to ensure it correctly handles ties away from zero.",
+        "If the rounding logic is incorrect, fix it to ensure ties are handled correctly."
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.253,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "lib/subject.mjs",
+          "oldText": "export const run = x => Math.round(x/1000);\n",
+          "newText": "export const run = x => Math.round(x / 1000 + 0.5) - 0.5;\n"
+        }
+      ],
+      "proposalSha256": "cec30f985d8062dd86f26deee458b5227553c5b948ffd5ac024f6e3c2bf2af8c",
+      "modelObservation": {
+        "schema": "momega1-local-process-observation-v1",
+        "evidenceClass": "LOCAL_MODEL_HOST",
+        "verifiedModelExecution": true,
+        "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+        "reviewedModelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+        "reviewedRuntimeSourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+        "reviewedModelRevision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+        "reviewedBuildEvidenceSha256": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067",
+        "independentReviewEvidenceSha256": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+        "executionId": "41a6d86e50f084f7884e47c513eeb0651fa525b6feda383bf93b64d6a41087ea",
+        "taskId": "mob-85893059876b1b2f",
+        "sourceCommit": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+        "taskFingerprint": "313b0ac81398b0c4dd547829a75439efe06f36a054ab4df14ec40fff440d2941",
+        "requestIndex": 2,
+        "contextSha256": "5c208aa72348d985affc240836d5ea72b2ef18ab98dd1a62ca5505c1bf023646",
+        "promptSha256": "ad6c0249f8bbcbb0086c0ef318898b545713d20459524042bb5c15f91589e473",
+        "requestSha256": "bef24dfb8bcf1f16a9cd28c8614697c8746845895bba6e1a5ccc2926e8788928",
+        "runtimePromptSha256": "3e926541665efedd04d3a33e1f6b7d220e7782700eb68639349b9d85b8d2a973",
+        "runtimeSchemaSha256": "98fe5b9bd97fa7deefb4981f38d465056cd2c316325597ddb71100cdd78ab844",
+        "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+        "outputSha256": "6bf639261698c251fac65bd8b43a6a422e402a0a3afea540a4d9589552c44852",
+        "proposalSha256": "cec30f985d8062dd86f26deee458b5227553c5b948ffd5ac024f6e3c2bf2af8c",
+        "responseStatus": "PROPOSAL",
+        "outputTokens": 165,
+        "pid": 215118,
+        "exitCode": 0,
+        "isolation": "BWRAP_UNSHARE_ALL",
+        "elapsedMs": 27372
+      },
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "lib/subject.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 1,
+            "failed": 1,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 1,
+            "passed": 0,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Integer cents rounding\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "5dfa86b5796f41bfda8046a1e40fb4aede23778f633c42b799408feee2662d4b"
+            ],
+            "executedCaseHashes": [
+              "f943edf17823b6313f15eb896b4610e9c04656435f9d1a227a4f460f0c44b323"
+            ]
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 256,
+            "pids": 64,
+            "cpus": 1,
+            "timeoutMs": 15000,
+            "runtime": "runc",
+            "sourceSha256": "6135d94e63ef07867862f6600abfb3714ab580b86f26ca3d2b45a48dff52a215",
+            "profile": "node-continuum",
+            "untrustedReports": true,
+            "workspaceId": "continuum-8feeb127227dfde5ac5a0441",
+            "workspaceBinding": {
+              "workerId": "typed-coding-worker",
+              "taskId": "t-53670851e156d6d7",
+              "requestMessageId": "3fad17dd-5ec5-43f1-8ce0-e809955d6bf4",
+              "requestHash": "cdd19122030275736347cf741f9d7c12b3d875d245288361adf5a0a15e311faa",
+              "sourceCommit": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+              "jobId": "c058f2ac-6e9f-418c-9635-cca1e817d657"
+            },
+            "observed": {
+              "containerId": "fb6f27fdf3ec03aad5d88684bf06a07965d148d6569473929cea72d83ae59f5a",
+              "runtime": "runc",
+              "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+              "user": "1000:1000",
+              "network": "none",
+              "readOnly": true,
+              "memoryBytes": 268435456,
+              "memorySwapBytes": 268435456,
+              "nanoCpus": 1000000000,
+              "pids": 64,
+              "capDrop": [
+                "ALL"
+              ],
+              "securityOpt": [
+                "no-new-privileges:true"
+              ],
+              "writableHostMounts": 0
+            },
+            "teardownConfirmed": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.Integer cents rounding",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 5,
+          "col": 8,
+          "message": "Expected values to be strictly equal:\n\n-1.5 !== -2",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "2ba59bc90c89b891"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    }
+  ],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "progress": [
+    {
+      "phase": "CHECKING_BASELINE",
+      "at": "2026-11-03T20:32:49.544Z",
+      "attempt": 0
+    },
+    {
+      "phase": "BASELINE_FAILED",
+      "at": "2026-11-03T20:32:49.957Z",
+      "attempt": 0
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:32:49.966Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T20:33:14.717Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T20:33:14.718Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECKING_PATCH",
+      "at": "2026-11-03T20:33:14.746Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECK_FAILED",
+      "at": "2026-11-03T20:33:15.142Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CORRECTING",
+      "at": "2026-11-03T20:33:15.150Z",
+      "attempt": 1
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:33:15.151Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T20:33:42.603Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T20:33:42.606Z",
+      "attempt": 2
+    },
+    {
+      "phase": "CHECKING_PATCH",
+      "at": "2026-11-03T20:33:42.650Z",
+      "attempt": 2
+    },
+    {
+      "phase": "CHECK_FAILED",
+      "at": "2026-11-03T20:33:43.128Z",
+      "attempt": 2
+    }
+  ],
+  "coding": {
+    "taskId": "mob-85893059876b1b2f",
+    "taskFingerprint": "313b0ac81398b0c4dd547829a75439efe06f36a054ab4df14ec40fff440d2941",
+    "sourceCommit": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+    "allowedPaths": [
+      "lib/subject.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_TESTS_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_TESTS_FAILED"
+    ],
+    "candidateCount": 2,
+    "contextSha256": "5c208aa72348d985affc240836d5ea72b2ef18ab98dd1a62ca5505c1bf023646",
+    "plan": [
+      "Identify the rounding function in the `run` function.",
+      "Check the rounding logic to ensure it correctly handles ties away from zero.",
+      "If the rounding logic is incorrect, fix it to ensure ties are handled correctly."
+    ]
+  },
+  "finishedAt": "2026-11-03T20:33:43.137Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 1,
+        "proof": "e638aa0917974f8a5c26b0add711a48b928d069a9b646632afc59d1bd512886c"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "fd7e5ad25724a868",
+        "approved": true,
+        "proof": "a740fe8006292c2c781330771ed2cee3715f11f5158ee9e1a2bdd13b8ed678c5"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "fd7e5ad25724a868",
+        "editedFiles": 1,
+        "proof": "b346f38e977500016784a9b174be44c93038ffe92e9f15181fcaa1f4f6c199ed"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "fd7e5ad25724a868",
+        "passed": false,
+        "executed": true,
+        "profiles": 1,
+        "proof": "bed3c8511445b50363a7623f806f980662ee23ea46ea3fdabe40ba111e688f1e"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "3a3c7fe9b9e0314c",
+        "approved": true,
+        "proof": "85e33f45e631af30ddfd63d20d37789bca1ee122ecd540c4ac2431bcad9e1d1f"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "3a3c7fe9b9e0314c",
+        "editedFiles": 1,
+        "proof": "288341bcf471d7559ec1d35d6d9c9bb70f967b7e2c04589b556835d47ac42ec3"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "3a3c7fe9b9e0314c",
+        "passed": false,
+        "executed": true,
+        "profiles": 1,
+        "proof": "f2dd9d1407b4a5e8ac66e2e88e9bdfd40ed74b84e46d693911d91657d1c286a4"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "b3e6533050dd4c78d2e0c303e082e26b54d68d123ec06bde008c9fe3de57bff7"
+  }
+}

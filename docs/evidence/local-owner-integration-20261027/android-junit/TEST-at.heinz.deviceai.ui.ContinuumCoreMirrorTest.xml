@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumCoreMirrorTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:24:11" hostname="7b281259906f" time="0.046">
+  <properties/>
+  <testcase name="allSixControlsHaveEqualAndReflectedBounds" classname="at.heinz.deviceai.ui.ContinuumCoreMirrorTest" time="0.002"/>
+  <testcase name="onlyRightHandCardsReverseElementOrderNotLetters" classname="at.heinz.deviceai.ui.ContinuumCoreMirrorTest" time="0.043"/>
+  <testcase name="portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror" classname="at.heinz.deviceai.ui.ContinuumCoreMirrorTest" time="0.0"/>
+  <testcase name="foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows" classname="at.heinz.deviceai.ui.ContinuumCoreMirrorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

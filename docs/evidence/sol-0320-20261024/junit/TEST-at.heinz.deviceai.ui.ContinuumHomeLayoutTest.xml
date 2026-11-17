@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumHomeLayoutTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:57" hostname="5c9e18abbd30" time="0.044">
+  <properties/>
+  <testcase name="withoutAHeightTheWideLayoutIsTheScaledReference" classname="at.heinz.deviceai.ui.ContinuumHomeLayoutTest" time="0.042"/>
+  <testcase name="theRailWidthIsTheRailSlotOfTheScaledReference" classname="at.heinz.deviceai.ui.ContinuumHomeLayoutTest" time="0.001"/>
+  <testcase name="compositionFollowsTheWindowSize" classname="at.heinz.deviceai.ui.ContinuumHomeLayoutTest" time="0.0"/>
+  <testcase name="unfoldingTriggersActualWindowReflowWithoutChangingLearningState" classname="at.heinz.deviceai.ui.ContinuumHomeLayoutTest" time="0.0"/>
+  <testcase name="anUprightFoldIsFilledAndTheCardsKeepTheirShape" classname="at.heinz.deviceai.ui.ContinuumHomeLayoutTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

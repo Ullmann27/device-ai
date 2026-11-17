@@ -1,0 +1,2 @@
+classes=285 checks=4 junit: OK (1563 tests)
+KOTLIN_UNIT_TESTS_CHECKED: all JUnit classes and Checks programs pass (outside Gradle; not lint, not an APK, not a device)

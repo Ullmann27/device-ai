@@ -1,0 +1,18 @@
+{
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "method": "Equal scale only; no color/contrast retouching",
+  "comparison": "asset",
+  "productionMapperSource": [
+    "26555aa6c59fdd4dd2e190defcdf49b983305555",
+    "26555aa6c59fdd4dd2e190defcdf49b983305555"
+  ],
+  "sourceManifests": [
+    "/workspace/jarvis-reference-build/materials/replay-topology-soft/replay-manifest.json",
+    "/workspace/jarvis-reference-build/materials/replay-contour-emission/replay-manifest.json"
+  ],
+  "assetSha256": [
+    "03caa24f5c7b8db40a91f42a53538f2b6f43c1db02147b091ea6cb0685e2759e",
+    "c016237ab6d7be99dc0c0c0cc49a4de1b11f03896e8a03a4a8efaa20f6ff08f8"
+  ],
+  "sheetSha256": "8b83eaedbcbe7d80deb8f1675e43613a8a150c11c1676f323421c0d475328fd7"
+}

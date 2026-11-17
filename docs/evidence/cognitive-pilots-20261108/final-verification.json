@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "testedSourceCommit": "25b160a564d2dd72663f621ab72c8dfa2b2a5f7d",
+  "branch": "research/continuum-verified-reuse-pilot-20261108",
+  "hostOnly": true,
+  "tests": [
+    {
+      "suite": "context",
+      "command": "bash scripts/continuum-context-pilot.sh /tmp/h1-green",
+      "status": "PASS",
+      "tests": 20,
+      "skips": 0,
+      "log": "docs/evidence/cognitive-pilots-20261108/final-context.txt",
+      "sha256": "0f78515cbdaa461e96381aee54bfea5d4d6431ba83d4fa7cd47aa2bc309541c7"
+    },
+    {
+      "suite": "reasoning",
+      "command": "bash scripts/continuum-reasoning-pilot.sh /tmp/h2-green batch",
+      "status": "PASS",
+      "tests": 17,
+      "skips": 0,
+      "log": "docs/evidence/cognitive-pilots-20261108/final-reasoning.txt",
+      "sha256": "eb5c0734bbbc3e8c99295f638fb6ec25c7347060108cfb320e043f973e36ebbc"
+    },
+    {
+      "suite": "compute",
+      "command": "node --test tools/continuum-virtual-fabric/*.test.mjs tools/continuum-cognitive-pilots/verified-reuse-pilot.test.mjs",
+      "status": "PASS",
+      "tests": 55,
+      "skips": 0,
+      "log": "docs/evidence/cognitive-pilots-20261108/final-compute.txt",
+      "sha256": "d6f7feaba5d2addfc0a2b780dfd2d52f5b3095c785e8bdb43567d8b400abf3ae"
+    }
+  ],
+  "device": "SKIP: no attached device/runtime",
+  "androidGradle": "SKIP: unavailable local Android toolchain",
+  "energyJoules": null,
+  "modelInference": "SKIP: no local Gemma runtime in this trial",
+  "sourceBindingsVerified": 9
+}

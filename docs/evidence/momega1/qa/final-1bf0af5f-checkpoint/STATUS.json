@@ -1,0 +1,13 @@
+{
+  "capturedUtc": "2026-11-03T22:32:33.473356+00:00",
+  "source": "1bf0af5f0b80aa08b9163bb684dc493ca475f935",
+  "status": "IN_PROGRESS_AT_OWNER_STOP_NEW_WORK_CHECKPOINT",
+  "nodeSession": 17551,
+  "gradleSession": 44744,
+  "nodeShellPid": 328107,
+  "gradleShellPid": 340218,
+  "noFurtherJobsStarted": true,
+  "finalUnsignedBuild": "NOT_RUN; prior645 unsigned exists",
+  "nodePartialFailure": "ccc1-workspace-host line115 global named-container snapshot changed; exact interfering container34074f5c9838 is found in same Node run canonical-repair-report.json (sibling lifecycle test), NOT Android. Docker create/die/destroy history retained. Own-container teardown checks preceding line115 passed. Unchanged quiet rerun NOT_RUN per owner stop.",
+  "resume": "Inspect both running sessions/exits before any rerun. Preserve partial logs and final outputs. New runs require task continuation. Root requested no additional runs at2%."
+}

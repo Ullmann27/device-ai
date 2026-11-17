@@ -1,0 +1,10 @@
+{
+  "schema": "continuum-apk43-closeout-v1",
+  "testedSource": "0830ad68fc0625bd7cadf84214b77f329685c57c",
+  "environment": "Claude Code cloud session, unprivileged user, GIT_CONFIG_NOSYSTEM=1, Temurin 17.0.20.1, Android SDK 36 / build-tools 35.0.0, Gradle 8.11.1, Node 24.22.1; Maven Central rewritten to Google's official mirror (session IP rate-limited, HTTP 429) in local QA config only",
+  "android": {"tasks": ":app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug", "flags": "-PdeviceAiMentorPreview -PcontinuumUiWidgetTests -PcontinuumLocalStandaloneQa -PcontinuumStandaloneVersionCode=43 -PcontinuumOwnerArm64=true --rerun-tasks", "exit": 0, "tests": 3248, "passed": 3229, "failed": 0, "skipped": 19, "lint": "No issues found", "mandatoryOwnerSuites": "GREEN"},
+  "node": {"command": "node scripts/continuum-reliability-qa.mjs full-node", "status": "PASS", "total": 2413, "passed": 2376, "failed": 0, "skipped": 37, "sourceUnchanged": true},
+  "backend": {"source": "0830ad68 backend/", "expressRateLimit": "8.7.1", "tests": 64, "passed": 64, "failed": 0},
+  "notRun": ["unsigned assembleRelease/bundleRelease", "original signing", "publication", "Fold7 device acceptance"],
+  "published": {"versionCode": 42, "versionName": "0.3.41", "source": "8a903fbebe605716b6163da35e1c3b2129af40a4", "apkSha256": "a1d56eb87b9224df383cdf9368c0406302c28e36d43ce9b2c4e16a5283be0efe", "signer": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23"}
+}

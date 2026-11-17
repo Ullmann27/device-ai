@@ -1,0 +1,25 @@
+✔ both exact principals re-resolve and expose one shared immutable expiry (9.986741ms)
+✔ expiry boundary blocks both stages rather than renewing execution time (1.544633ms)
+✔ mutating original task after authorization invalidates binding (0.511559ms)
+✔ same fields in clone or prototype wrapper cannot reconstruct origin (0.469756ms)
+✔ removing verifier blocks builder before next profile checkpoint (1.130289ms)
+✔ decreasing verifier lifetime invalidates both stages without changing old expiry (1.640366ms)
+✔ increasing a profile cap cannot extend the admitted assignment (1.614658ms)
+✔ reader replacement cannot revive a removed principal (1.77907ms)
+✔ invalid current budget values fail closed (3.7806ms)
+✔ pending deterministic report hashes actual bytes, repeats and never mutates journal (85.058107ms)
+✔ canonical grant substitution during reporting is rechecked before returning (40.350571ms)
+✔ uncommitted source mutation during reporting is rechecked before returning (33.847938ms)
+✔ initial dirty source is rejected (27.545763ms)
+✔ reporter removal invalidates report without changing canonical state (26.796611ms)
+✔ assignment expiry cannot produce a report (33.897162ms)
+✔ tampered report cannot be accepted by deterministic regeneration (50.183756ms)
+✔ symlink evidence directory never receives report bytes (27.825619ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 519.922956

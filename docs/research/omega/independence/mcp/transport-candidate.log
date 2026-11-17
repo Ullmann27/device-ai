@@ -1,0 +1,19 @@
+✔ real loopback HTTP lifecycle exposes exactly four read-only tools and fresh adapter state (56.62588ms)
+✔ missing/wrong/query credentials and hostile Origin/Host never read service state (22.375353ms)
+✔ write tools, path arguments, invalid pagination, batches and unsolicited responses rejected (27.847029ms)
+✔ pagination cursor is session and tool bound and canonical cursor is not disclosed (17.727945ms)
+✔ token rotation revokes existing sessions and previously valid token (8.690526ms)
+✔ a grant reader failure is redacted and digest mismatch cannot become evidence (8.807523ms)
+✔ no successful read after credential revocation during a pending call (7.344592ms)
+✔ timeouts, oversized results/body and per-session parallel reads fail closed (50.428912ms)
+✔ terminated, absent, uninitialized and unknown sessions cannot query service (16.582792ms)
+✔ MCP version negotiation and JSON content negotiation follow pinned protocol (12.344581ms)
+✔ credential files reject symlinks, permissive access, hard links and bot writable placement (4.878255ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 357.732586

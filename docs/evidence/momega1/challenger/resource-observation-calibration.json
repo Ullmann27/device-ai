@@ -1,0 +1,9 @@
+{
+  "classification": "SYNTHETIC_MEASUREMENT_CALIBRATION",
+  "allocatedBytes": 67108864,
+  "bwrapChildExit": 0,
+  "parentTreeSampler": "UNDERCOUNTS_INNER_PROCESS",
+  "rusageChildren": {"maxRssKiB": 8448, "validForNativeModel": false},
+  "executableInodeSampler": {"matchedProcesses": 1, "peakRssKiB": 66100, "sampleIntervalMs": 50, "validForSampledNativeRSS": true},
+  "limits": "Sampling is not guaranteed peak coverage. Other process command lines/environment not inspected."
+}

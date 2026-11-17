@@ -1,0 +1,80 @@
+{
+  "source_head": "f88d7d1936b9c0d53c176a0af31108fb863199e6",
+  "status": "FOCUSED_HOST_ONLY",
+  "compiled_dependencies": "/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt": "9f3d0b53d4c68581332be7ceb75bf9be0d7ebc41e3ae41a21ce21a2d7ae5164d",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSceneFills.kt": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt": "3fc823a4a0da91632902dfe60386214016ecfa19176fd93110ea34ea2d3513b5",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisEnergyFlows.kt": "cd9d78e5ac2cd04c78e89c2be63e0603e749b9669cdc562744a6de0c77ed465c",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisLightStreamReuseTest.kt": "c92259c037e05d1336fef9239b7cf5651c47ada1ddce13b44517818dce85999e",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisLivingSceneTest.kt": "dcdb3fe03c8f5a8cccea52575393aeb749f3d914f445a16db6b0544519783445",
+    "tools/thermal-render/FlowWorkProbe.kt": "e908c8f63c11c7c89e3127e5dbfd1dfcefbec7901623efc0c647f3ae3aa67424"
+  },
+  "dependency_sha256": {
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar": "c2b25e8c1c93ec416ba4327f5e31eaec0f0c8847241b9353e294b8db9dce564f",
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar": "196e8ecbf63daf477e34e67c2f871ee232ae7bf8b377432d876d1bbf9d273de3",
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/2.4.0/532cc727c0960d12f4c9acb6a6c2c4a3e08187b/kotlin-reflect-2.4.0.jar": "f0d8e8908624eb4478bb131e9f887366680d2e239741195e548fa5c906963b90",
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05",
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+  },
+  "device_thermal": "NOT_RUN",
+  "compile": {
+    "command": [
+      "java",
+      "-Xmx512m",
+      "-XX:ActiveProcessorCount=1",
+      "-cp",
+      "/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/2.4.0/532cc727c0960d12f4c9acb6a6c2c4a3e08187b/kotlin-reflect-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar",
+      "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+      "-no-stdlib",
+      "-no-reflect",
+      "-jvm-target",
+      "17",
+      "-Xfriend-paths=/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug",
+      "-classpath",
+      "/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/2.4.0/532cc727c0960d12f4c9acb6a6c2c4a3e08187b/kotlin-reflect-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar",
+      "-d",
+      "/workspace/scratch/524e6ad8c911/render-qa/red/classes",
+      "/workspace/scratch/524e6ad8c911/thermal-render/app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+      "/workspace/scratch/524e6ad8c911/thermal-render/app/src/main/java/at/heinz/deviceai/ui/JarvisSceneFills.kt",
+      "/workspace/scratch/524e6ad8c911/thermal-render/app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt",
+      "/workspace/scratch/524e6ad8c911/thermal-render/app/src/main/java/at/heinz/deviceai/ui/JarvisEnergyFlows.kt",
+      "/workspace/scratch/524e6ad8c911/thermal-render/app/src/test/java/at/heinz/deviceai/ui/JarvisLightStreamReuseTest.kt",
+      "/workspace/scratch/524e6ad8c911/thermal-render/app/src/test/java/at/heinz/deviceai/ui/JarvisLivingSceneTest.kt",
+      "/workspace/scratch/524e6ad8c911/thermal-render/tools/thermal-render/FlowWorkProbe.kt"
+    ],
+    "exit_code": 0
+  },
+  "junit": {
+    "command": [
+      "java",
+      "-Xmx256m",
+      "-XX:ActiveProcessorCount=1",
+      "-cp",
+      "/workspace/scratch/524e6ad8c911/render-qa/red/classes:/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/2.4.0/532cc727c0960d12f4c9acb6a6c2c4a3e08187b/kotlin-reflect-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar",
+      "org.junit.runner.JUnitCore",
+      "at.heinz.deviceai.ui.JarvisLightStreamReuseTest",
+      "at.heinz.deviceai.ui.JarvisLivingSceneTest"
+    ],
+    "exit_code": 1
+  },
+  "work": {
+    "command": [
+      "java",
+      "-Xmx256m",
+      "-XX:ActiveProcessorCount=1",
+      "-cp",
+      "/workspace/scratch/524e6ad8c911/render-qa/red/classes:/workspace/scratch/6139925ecf70/device-ai/app/build/tmp/kotlin-classes/debug:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/2.4.0/532cc727c0960d12f4c9acb6a6c2c4a3e08187b/kotlin-reflect-2.4.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/scratch/c9f74e2967e3/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar",
+      "thermal.render.FlowWorkProbeKt",
+      "/workspace/scratch/524e6ad8c911/render-qa/red/classes",
+      "70"
+    ],
+    "exit_code": 1
+  },
+  "draw_command_sha256": "33f640d7a6108c7245cf355eeb3e62131ad327d8fb11944e9ad2d73dd82dccd7",
+  "matches_expected_commands": true
+}

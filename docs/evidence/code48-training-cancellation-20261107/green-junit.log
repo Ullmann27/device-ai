@@ -1,0 +1,23 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=42155 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42155 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest#expiredBudgetBeforeCdxStartIsDeferredWithoutFailure
+.Intent = Intent { act=android.intent.action.BATTERY_CHANGED (has extras) }; Matching wrappers: []
+
+Time: 2.004
+
+OK (1 test)
+
+CASE at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest#ownerPauseBeforeCdxStartIsInterruptedWithoutFailure
+.Intent = Intent { act=android.intent.action.BATTERY_CHANGED (has extras) }; Matching wrappers: []
+
+Time: 0.075
+
+OK (1 test)
+
+CASE at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest#realStorageFailureRemainsFailedAndRetryable
+.Intent = Intent { act=android.intent.action.BATTERY_CHANGED (has extras) }; Matching wrappers: []
+
+Time: 0.107
+
+OK (1 test)
+
+TOTAL tests=3 failures=0

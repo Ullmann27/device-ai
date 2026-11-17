@@ -1,0 +1,253 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt b/app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt
+index 98e19b678a48b448738009db1d1322efd1e49440..42f4714c72ee057566be54171f01703f39d48aaf 100644
+--- a/app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt
++++ b/app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt
+@@ -42,8 +42,9 @@ class MemoryEventMapper(
+     private val postDelayed: (Long, Runnable) -> Unit,
+ ) : MemoryEventSink {
+     private val document = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.DocumentLearned?>()
++    // The latest write and its coalesced count must be replaced/consumed together. Separate
++    // atomics let a producer place the next write between the flush's two reads and lose a count.
+     private val stored = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.MemoryStored?>()
+-    private val storedCount = java.util.concurrent.atomic.AtomicInteger()
+     private val recall = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.RecallHits?>()
+     private val scheduled = java.util.concurrent.atomic.AtomicBoolean()
+     private val detached = java.util.concurrent.atomic.AtomicBoolean()
+@@ -59,8 +60,13 @@ class MemoryEventMapper(
+ 
+     override fun memoryStored(entryId: String, status: String, atEpochMs: Long) {
+         if (entryId.isBlank()) return
+-        stored.set(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status))
+-        storedCount.incrementAndGet()
++        while (true) {
++            val previous = stored.get()
++            val count = previous?.count ?: 0
++            val next = CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status,
++                count = if (count == Int.MAX_VALUE) count else count + 1)
++            if (stored.compareAndSet(previous, next)) break
++        }
+         schedule()
+     }
+ 
+@@ -79,9 +85,14 @@ class MemoryEventMapper(
+     private fun flush() {
+         scheduled.set(false)
+         if (detached.get()) return
+-        document.getAndSet(null)?.let(bus::emit)
+-        val writes = storedCount.getAndSet(0)
+-        stored.getAndSet(null)?.let { bus.emit(it.copy(count = writes.coerceAtLeast(1))) }
+-        recall.getAndSet(null)?.let(bus::emit)
++        emitIfAttached(document.getAndSet(null))
++        emitIfAttached(stored.getAndSet(null))
++        emitIfAttached(recall.getAndSet(null))
++    }
++
++    private fun emitIfAttached(event: CockpitAnimationEvent?) {
++        // A renderer can synchronously detach this mapper while handling the preceding kind.
++        // Never hold a mapper lock across bus callbacks: cleanup may wait for a hub producer.
++        if (event != null && !detached.get()) bus.emit(event)
+     }
+ }
+diff --git a/app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt b/app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt
+new file mode 100644
+index 0000000000000000000000000000000000000000..b8803c074ad56c6b51d1b587818ae4bc5e1003dd
+--- /dev/null
++++ b/app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt
+@@ -0,0 +1,197 @@
++package at.heinz.deviceai.cockpit
++
++import java.util.concurrent.ConcurrentLinkedQueue
++import java.util.concurrent.CountDownLatch
++import java.util.concurrent.TimeUnit
++import java.util.concurrent.atomic.AtomicBoolean
++import java.util.concurrent.atomic.AtomicInteger
++import java.util.concurrent.atomic.AtomicLong
++import java.util.concurrent.atomic.AtomicReference
++import org.junit.Assert.assertEquals
++import org.junit.Assert.assertFalse
++import org.junit.Assert.assertNull
++import org.junit.Assert.assertTrue
++import org.junit.Test
++
++/** Actual mapper/bus regressions; these tests do not replace either production implementation. */
++class MemoryEventMapperLifecycleRegressionTest {
++    @Test fun detachingInTheDocumentCallbackDropsTheRemainingKindsInThatFlush() {
++        val bus = CockpitAnimationBus()
++        val posted = ConcurrentLinkedQueue<Runnable>()
++        val mapper = MemoryEventMapper(bus) { _, runnable -> posted.add(runnable) }
++        val seen = mutableListOf<CockpitAnimationEvent>()
++        val renderer = bus.subscribe { event ->
++            seen += event
++            if (event is CockpitAnimationEvent.DocumentLearned) mapper.detach()
++        }
++        try {
++            mapper.documentLearned("document-1", "ARCHIVE_IMPORT", 2, 1L)
++            mapper.memoryStored("entry-1", "CONFIRMED", 2L)
++            mapper.recallHits("a".repeat(64), 1, 0.8f, 3L)
++            assertEquals(1, posted.size)
++
++            checkNotNull(posted.poll()).run()
++
++            assertEquals("No later event may start after the first callback detaches the mapper", 1, seen.size)
++            assertTrue(seen.single() is CockpitAnimationEvent.DocumentLearned)
++            assertTrue(posted.isEmpty())
++        } finally {
++            mapper.detach()
++            renderer.close()
++        }
++    }
++
++    @Test fun detachingInTheStorageCallbackDropsThePendingRecall() {
++        val bus = CockpitAnimationBus()
++        val posted = ConcurrentLinkedQueue<Runnable>()
++        val mapper = MemoryEventMapper(bus) { _, runnable -> posted.add(runnable) }
++        val seen = mutableListOf<CockpitAnimationEvent>()
++        val renderer = bus.subscribe { event ->
++            seen += event
++            if (event is CockpitAnimationEvent.MemoryStored) mapper.detach()
++        }
++        try {
++            mapper.memoryStored("entry-1", "CONFIRMED", 1L)
++            mapper.recallHits("b".repeat(64), 1, 0.6f, 2L)
++
++            checkNotNull(posted.poll()).run()
++
++            assertEquals("A detach during the storage callback must suppress the same flush's recall", 1, seen.size)
++            assertTrue(seen.single() is CockpitAnimationEvent.MemoryStored)
++            assertTrue(posted.isEmpty())
++        } finally {
++            mapper.detach()
++            renderer.close()
++        }
++    }
++
++    @Test fun aRendererCanWaitForAnotherProducerWithoutHoldingAMapperLock() {
++        val bus = CockpitAnimationBus()
++        val posted = ConcurrentLinkedQueue<Runnable>()
++        val mapper = MemoryEventMapper(bus) { _, runnable -> posted.add(runnable) }
++        val produced = CountDownLatch(1)
++        val observedInsideCallback = AtomicBoolean()
++        val failure = AtomicReference<Throwable?>()
++        val seen = mutableListOf<CockpitAnimationEvent.MemoryStored>()
++        val producer = Thread({
++            try {
++                mapper.memoryStored("second", "UNCONFIRMED", 2L)
++            } catch (error: Throwable) {
++                failure.compareAndSet(null, error)
++            } finally {
++                produced.countDown()
++            }
++        }, "memory-mapper-callback-producer").apply { isDaemon = true }
++        val renderer = bus.subscribe { event ->
++            if (event is CockpitAnimationEvent.MemoryStored) {
++                seen += event
++                if (event.entryId == "first") {
++                    producer.start()
++                    observedInsideCallback.set(produced.await(5, TimeUnit.SECONDS))
++                }
++            }
++        }
++        try {
++            mapper.memoryStored("first", "CONFIRMED", 1L)
++            checkNotNull(posted.poll()).run()
++            producer.join(5_000L)
++            assertFalse("The callback's producer must terminate", producer.isAlive)
++            assertNull(failure.get())
++            assertTrue("No mapper lock may be held while calling the renderer", observedInsideCallback.get())
++            drain(posted)
++            assertEquals(listOf("first", "second"), seen.map { it.entryId })
++            assertEquals(listOf(1, 1), seen.map { it.count })
++        } finally {
++            producer.interrupt()
++            producer.join(2_000L)
++            mapper.detach()
++            renderer.close()
++        }
++    }
++
++    /**
++     * A fixed concurrent workload, not a timing assertion. The old split atomics admit count loss
++     * or double counting; whether the particular baseline run hits that window must be recorded.
++     */
++    @Test fun concurrentProducerAndFlushAccountForEveryWriteExactlyOnce() {
++        val bus = CockpitAnimationBus()
++        val posted = ConcurrentLinkedQueue<Runnable>()
++        val mapper = MemoryEventMapper(bus) { _, runnable -> posted.add(runnable) }
++        val start = CountDownLatch(1)
++        val producerFinished = CountDownLatch(1)
++        val stop = AtomicBoolean()
++        val failure = AtomicReference<Throwable?>()
++        val accountedWrites = AtomicLong()
++        val emittedBatches = AtomicInteger()
++        val lastEntry = AtomicReference<String?>()
++        val renderer = bus.subscribe { event ->
++            if (event is CockpitAnimationEvent.MemoryStored) {
++                accountedWrites.addAndGet(event.count.toLong())
++                emittedBatches.incrementAndGet()
++                lastEntry.set(event.entryId)
++            }
++        }
++        val producer = Thread({
++            try {
++                check(start.await(5, TimeUnit.SECONDS))
++                for (index in 0 until WRITES) {
++                    check(!stop.get() && !Thread.currentThread().isInterrupted)
++                    mapper.memoryStored("entry-$index", "CONFIRMED", index.toLong())
++                }
++            } catch (error: Throwable) {
++                failure.compareAndSet(null, error)
++            } finally {
++                producerFinished.countDown()
++            }
++        }, "memory-mapper-write-producer").apply { isDaemon = true }
++        val flusher = Thread({
++            try {
++                check(start.await(5, TimeUnit.SECONDS))
++                val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10L)
++                while (producerFinished.count > 0L || posted.isNotEmpty()) {
++                    check(!stop.get() && !Thread.currentThread().isInterrupted)
++                    check(System.nanoTime() < deadline) { "Concurrent mapper drain exceeded its bounded deadline" }
++                    val next = posted.poll()
++                    if (next == null) Thread.yield() else next.run()
++                }
++            } catch (error: Throwable) {
++                failure.compareAndSet(null, error)
++            }
++        }, "memory-mapper-single-flusher").apply { isDaemon = true }
++        try {
++            producer.start()
++            flusher.start()
++            start.countDown()
++            producer.join(12_000L)
++            flusher.join(12_000L)
++            assertFalse("The actual producer must terminate", producer.isAlive)
++            assertFalse("The single flush thread must terminate", flusher.isAlive)
++            assertNull("Worker exceptions must not be hidden by the bus", failure.get())
++            assertTrue("The drain must consume every scheduled flush", posted.isEmpty())
++            assertTrue("The real mapper must emit at least one batch", emittedBatches.get() > 0)
++            assertEquals("Coalescing may change batch size, but must neither lose nor invent writes",
++                WRITES.toLong(), accountedWrites.get())
++            assertEquals("entry-${WRITES - 1}", lastEntry.get())
++        } finally {
++            stop.set(true)
++            start.countDown()
++            producer.interrupt()
++            flusher.interrupt()
++            producer.join(2_000L)
++            flusher.join(2_000L)
++            mapper.detach()
++            renderer.close()
++        }
++    }
++
++    private fun drain(posted: ConcurrentLinkedQueue<Runnable>) {
++        while (true) {
++            val next = posted.poll() ?: return
++            next.run()
++        }
++    }
++
++    private companion object {
++        const val WRITES = 80_000
++    }
++}

@@ -1,0 +1,136 @@
+{
+  "scope": "ASR result binding to the pending research request at microphone start",
+  "status": "GREEN",
+  "tested_parent_commit": "ec3095fdaa39328458acea635c66ec80bcf73eeb",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "51f0f80799f6c8f605b34247e5f6839a374295de6ede91c6afe2fce95eaf99c1",
+    "app/src/uiTest/java/at/heinz/deviceai/ResearchChatApprovalUiTest.kt": "27e34f1d8ad3914da2ddf6e0de9ed43962d712aebb02d60bfb9221aa63f43d88"
+  },
+  "red": {
+    "status": "RED",
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "failure": "java.lang.AssertionError: Old recognition must not approve replacement",
+    "runtime_sha256": "34412431e10754be37992274378519d5c68fbf716a238335d19bc5a93312e3ef",
+    "test_sha256": "5411e022df1ff2c5104bce7d90dce8614b2fc04ee47a1cb81e1f0d3ca26959b6",
+    "note": "Same-ticket actual adapter control passed before replacement-ticket assertion failed. Simulated recognizer text, no real audio/network."
+  },
+  "green": {
+    "totals": {
+      "tests": 91,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suites": [
+      {
+        "name": "at.heinz.deviceai.AndroidOnDeviceSpeechRetryUiTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.ConsequentialActionApprovalTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.ResearchChatApprovalUiTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.ContinuousConversationModeTest",
+        "tests": 16,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.ContinuousConversationRecoveryTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.LocalSpeechSessionTest",
+        "tests": 19,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.ResearchConsentReplyTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.SpeechTurnRecoveryTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "elapsed": "1m10s",
+    "log": "/workspace/scratch/5900afa6af29/dialog-asr-identity-green/run.log"
+  },
+  "fixture_setup_attempt": {
+    "status": "BLOCKED_BEFORE_ASR",
+    "reason": "Robolectric 4.14.1 lacks PowerManager.addThermalStatusListener(Executor, listener) shadow; a test-local overload delegates to existing shadow bookkeeping. Production thermal code unchanged."
+  },
+  "toolchain": {
+    "sdk": "Cached android-all-instrumented/15-robolectric-12650502-i7",
+    "gradle": "8.11.1",
+    "task": ":app:testDebugUnitTest",
+    "properties": [
+      "deviceAiMentorPreview=true",
+      "continuumOwnerLocalQa=true",
+      "continuumOwnerLocalVersionCode=52",
+      "continuumUiWidgetTests=true"
+    ],
+    "workers": 1
+  },
+  "verified": [
+    "Same-ticket result through actual Activity, AndroidOnDeviceSpeechInput and LocalSpeechSession grants the displayed request",
+    "Delayed recognizer result cannot approve a replacement ticket; a fresh gesture can approve the replacement",
+    "Injected stale Activity callback cannot end a newer recognition generation; new recognition still completes",
+    "Existing expiry/session/foreground/cancel/mode and non-web overlap checks pass"
+  ],
+  "limits": [
+    "Synthetic recognizer text at Android callback boundary; no microphone recording or physical-device recognition",
+    "Recording completion callbacks; no network dispatch",
+    "No Fold7 runtime, signing, APK installation or release",
+    "No automatic microphone enabling; existing hands-free and dictation gesture rules remain"
+  ]
+}

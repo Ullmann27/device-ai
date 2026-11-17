@@ -1,0 +1,111 @@
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:643:16: warning: 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+        window.statusBarColor = BG
+               ^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:644:16: warning: 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+        window.navigationBarColor = BG
+               ^^^^^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:646:60: warning: 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1188:20: warning: 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+            window.setDecorFitsSystemWindows(false)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1638:67: warning: 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+            level.toDouble(), android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW.toDouble())
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3959:18: warning: this declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+    override fun onBackPressed() {
+                 ^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4517:61: warning: unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+        val proof = ready && m2DirectProofModelSha == loaded?.sha256
+                                                            ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5111:40: warning: condition is always 'true'.
+        val status = if (faceActive && face != null && state != null) {
+                                       ^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5111:56: warning: condition is always 'true'.
+        val status = if (faceActive && face != null && state != null) {
+                                                       ^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7479:128: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+                    NeuralCommandKind.RESET -> { save = true; measurement = "Neuronales Experiment zurückgesetzt."; measurement!! }
+                                                                                                                               ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7494:36: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+                        measurement!!
+                                   ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7523:36: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+                        measurement!!
+                                   ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10321:89: warning: unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+                val canResume=shouldResume && savedPlan?.question==question && savedPlan?.mode==mode
+                                                                                        ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10994:58: warning: this call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+                        frame?.let {screenFrames.add(it);screenGrant.compareAndSet(null,grant)}
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10994:89: warning: this call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+                        frame?.let {screenFrames.add(it);screenGrant.compareAndSet(null,grant)}
+                                                                                        ^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11419:25: warning: condition is always 'true'.
+                    if (botTask == null && codingPlanning == null && sessionId == localSessionId &&
+                        ^^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11419:44: warning: condition is always 'true'.
+                    if (botTask == null && codingPlanning == null && sessionId == localSessionId &&
+                                           ^^^^^^^^^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11481:58: warning: condition is always 'true'.
+                        successful && botTask == null && codingPlanning == null &&
+                                                         ^^^^^^^^^^^^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11484:53: warning: unnecessary safe call on a non-null receiver of type 'LocalGroundedRecall'.
+                        run.response, groundedRecall?.stateTelegram
+                                                    ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:12418:74: warning: unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+                                    runCatching { streamCandidateObserver?.invoke(candidate, elapsed) }
+                                                                         ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:12464:70: warning: unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+                                runCatching { streamCandidateObserver?.invoke(candidate, elapsedMillis()) }
+                                                                     ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:187:80: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                verdict = ActionEffectVerifier.verify(before.stamp, true, after!!.stamp,
+                                                                               ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:188:26: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                    after!!.nodes.count { !it.password && request.matchesExpected(it) } == 1)
+                         ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:190:22: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                after!!
+                     ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt:175:107: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'ActionNode'.
+                    scrollWatch = ScreenObservationBus.beginScroll(access, request, original.stamp, target!!, node)
+                                                                                                          ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt:65:32: warning: this class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+    private val lock=java.lang.Object();private var service:ContinuumScreenObservationService?=null
+                               ^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt:163:42: warning: unnecessary safe call on a non-null receiver of type 'CockpitWorkEvent'.
+        val target = requireNotNull(event?.target)
+                                         ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:322:38: warning: unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.MORPH_UPLOADED) ?: 0
+                                     ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:330:38: warning: unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.JOINTS_UPLOADED) ?: 0
+                                     ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:333:38: warning: unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_BEGIN) ?: 0
+                                     ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:336:42: warning: unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+            receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_RENDERED) ?: 0
+                                         ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:387:56: warning: 'fun toneMapping(p0: ColorGrading.ToneMapping!): ColorGrading.Builder!' is deprecated. Deprecated in Java.
+            worldColorGrading = ColorGrading.Builder().toneMapping(ColorGrading.ToneMapping.LINEAR)
+                                                       ^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:387:81: warning: 'enum class ToneMapping : Enum<ColorGrading.ToneMapping!>' is deprecated. Deprecated in Java.
+            worldColorGrading = ColorGrading.Builder().toneMapping(ColorGrading.ToneMapping.LINEAR)
+                                                                                ^^^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt:1207:22: warning: 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+                info.isChecked = isSelected
+                     ^^^^^^^^^
+wt-reference/app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt:136:35: warning: unnecessary safe call on a non-null receiver of type 'JarvisShellRenderer.GlassBackend'.
+            if (nativeDepth) glass?.endDepth()
+                                  ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt:314:35: warning: unnecessary safe call on a non-null receiver of type 'JarvisShellRenderer.GlassBackend'.
+            if (depthNative) glass?.endDepth()
+                                  ^^
+wt-reference/app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt:21:53: warning: 'field scaledDensity: Float' is deprecated. Deprecated in Java.
+        textSize = 12.5f * resources.displayMetrics.scaledDensity
+                                                    ^^^^^^^^^^^^^

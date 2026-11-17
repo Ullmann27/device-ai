@@ -1,0 +1,12 @@
+✔ 7B exact owner pin admits a bounded manifest without inference promotion (13.759291ms)
+✔ resource profile is frozen and restricted to every exact pin field plus runtime hash (0.340094ms)
+✔ 7B uses the fixed Qwen ChatML serialization, unknown model does not (0.522559ms)
+✔ 7B total-job memory check is real and cannot accept the shared16GiB host group (0.730423ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 101.203802

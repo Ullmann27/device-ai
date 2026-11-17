@@ -1,0 +1,23 @@
+{
+  "schema": "continuum-owned-project",
+  "version": 2,
+  "recipe": {
+    "id": "m4-counter",
+    "packageName": "at.heinz.continuum.m4counter",
+    "versionCode": 1,
+    "versionName": "0.1.0"
+  },
+  "planSha256": "96b616463a68d53fd08769e8cfe44b226b1f3410351c4ade979a53f9dc5fd89a",
+  "files": {
+    "settings.gradle.kts": "f20e3ee9593601dc0f7765f325d984ade9f47682b2b31074bbd8f6172a97293f",
+    "build.gradle.kts": "30b87bf76d9ec1604dfe579fdf5d71e1d722fe05b8a7043b9deed7ae6916e499",
+    "gradle.properties": "fb298af7d84d0e20523e7172625a8d975a11efa043c573ca97f8997a0e84fb5f",
+    "app/build.gradle.kts": "02d80f1e37b595eb897515daf7eaceed85ea38e70ef06f6e34cb817e84e58ea6",
+    "app/src/main/AndroidManifest.xml": "42c69522eef364b2a75044c93fb2b7d625d01458bcf915af1ca6eb2b2458d3ef",
+    "README.md": "f094e20c92f7caaf197a3924ceba30703caf2290613c859b9fed480d98e09e18",
+    "app/src/main/java/at/heinz/continuum/m4counter/CounterPolicy.kt": "2f41936256cc984636cbfffa9aa14b8cd7f15c6df1fa23db71caad8c68ccb811",
+    "app/src/main/java/at/heinz/continuum/m4counter/MainActivity.kt": "411df8fbb12be25b658910be5a883bba591e4819f15db1fb28a0ff1ea7b6f346",
+    "app/src/test/java/at/heinz/continuum/m4counter/CounterPolicyTest.kt": "8f2ff1c8b3a72b5a5b3a0e5912ac939f1e9705c1da6e68ec0031e8a85f62c4f0",
+    "continuum-project-plan.json": "4ce48e9063f36739c72f081375274e4ff9ef3bde3c6da2fb7a8de45609bb208d"
+  }
+}

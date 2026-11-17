@@ -1,0 +1,1459 @@
+{
+  "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "pathCount": 29,
+  "uniqueOriginalBlobs": 29,
+  "textSourcesStaticallyReviewed": 25,
+  "generatedBytecodeClassifiedByPathAndHeader": 4,
+  "categoryCounts": {
+    "DOCUMENTATION": 1,
+    "GENERATED_BYTECODE": 4,
+    "ANALYTICAL_RESEARCH": 2,
+    "HOST_STORAGE_BENCHMARK": 1,
+    "RESEARCH_UNIT_TEST": 1,
+    "HISTORICAL_EXPERIMENT_HARNESS": 3,
+    "EXPERIMENT_CAPTURE_HOOK": 1,
+    "HOST_QA_HARNESS": 13,
+    "EXTERNAL_RESEARCH_WORKER": 1,
+    "CRE1_RESEARCH_TRAINING_WRAPPER": 1,
+    "EXTERNAL_SERVICE_INSTALLER": 1
+  },
+  "rows": [
+    {
+      "path": "scripts/argon4/README.md",
+      "primaryOrigin": {
+        "branch": "integration/continuum-brain-system-20261029",
+        "sha": "7924ba0793963dd84eef61517359a743071829bf",
+        "pr": 242
+      },
+      "blob": "94f87ef957eedbb209cf55a8aee83e6fc476c035",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/README.md/94f87ef957eedbb209cf55a8aee83e6fc476c035.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-coding-agent-loop-kxrxy2",
+          "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-gvisor-executor-kxrxy2",
+          "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+          "pr": 264
+        },
+        {
+          "branch": "integration/continuum-brain-system-20261029",
+          "sha": "7924ba0793963dd84eef61517359a743071829bf",
+          "pr": 242
+        },
+        {
+          "branch": "opus/continuum-m1-m8-20261030",
+          "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+          "pr": 244
+        },
+        {
+          "branch": "opus/continuum-m9-m16-20261030",
+          "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+          "pr": 245
+        },
+        {
+          "branch": "opus/jarvis-voice1-fix-20261030",
+          "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+          "pr": 252
+        },
+        {
+          "branch": "research/continuum-cloud-gpu-admission-20261030",
+          "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+          "pr": 268
+        },
+        {
+          "branch": "research/continuum-counterexample-acceptance-20261029",
+          "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+          "pr": 243
+        },
+        {
+          "branch": "research/continuum-mastercode-bounded-search-20261030",
+          "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+          "pr": 248
+        },
+        {
+          "branch": "research/continuum-nvidia-claim-readback-20261031",
+          "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+          "pr": 271
+        },
+        {
+          "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+          "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+          "pr": 273
+        },
+        {
+          "branch": "research/continuum-nvidia-single-use-claim-20261031",
+          "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+          "pr": 270
+        },
+        {
+          "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+          "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+          "pr": 251
+        },
+        {
+          "branch": "research/continuum-self-evolution-shadow-20261030",
+          "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+          "pr": 249
+        },
+        {
+          "branch": "research/exp20-p2-context-contract-20261030",
+          "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+          "pr": 255
+        },
+        {
+          "branch": "research/exp20-p2-opus-project-brief-20261030",
+          "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+          "pr": 254
+        },
+        {
+          "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+          "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+          "pr": 250
+        },
+        {
+          "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+          "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+          "pr": 253
+        },
+        {
+          "branch": "research/jpi1-presence-initiative-shadow-20261030",
+          "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+          "pr": 247
+        },
+        {
+          "branch": "research/jpi1-presence-shadow-20261030",
+          "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+          "pr": 246
+        }
+      ],
+      "category": "DOCUMENTATION",
+      "function": "Dokumentiert ARGON F2 als Offline-Forschung ohne Runtime-/Kapazitätsschalter.",
+      "originalCaller": "Dokumentationsreferenzen auf Python-CLI und Unittest; kein ausführender Caller.",
+      "currentSuccessorOrEquivalent": "Keine fehlende APK-Funktion. Die früher geprüften ARGON-Android-Prototypen waren ebenfalls überwiegend Shadows.",
+      "missingConnectionOrDisposition": "Archiv-/Forschungsdokument. Vor Nutzung korrigieren: Der behauptete bestehende Eingabefile stimmt nicht mit stream_bench.py überein; dessen Code erzeugt temporäre Daten."
+    },
+    {
+      "path": "scripts/argon4/__pycache__/bandwidth_model.cpython-313.pyc",
+      "primaryOrigin": {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      "blob": "020079f11083fd4ff8c9a45a3711d9bcb7c3cc53",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/bandwidth_model.cpython-313.pyc/020079f11083fd4ff8c9a45a3711d9bcb7c3cc53.pyc",
+      "allOrigins": [
+        {
+          "branch": "opus/argon4-research-20261029",
+          "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+          "pr": 240
+        }
+      ],
+      "category": "GENERATED_BYTECODE",
+      "function": "Erzeugtes CPython-3.13-Bytecodeartefakt zur gleichnamigen Python-Datei; Originalbytes/Header gesichert, Inhalt nicht geladen oder ausgeführt.",
+      "originalCaller": "Python-Importcache; kein eigenständiger App-Einstieg.",
+      "currentSuccessorOrEquivalent": "Kein Feature-Nachfolger nötig; die bearbeitbare Originalquelle wurde separat geprüft.",
+      "missingConnectionOrDisposition": "Nicht in die APK oder aktuelle Source übernehmen. Bei bewusst gewählter späterer Forschung aus geprüftem Quelltext neu erzeugbarer Cache."
+    },
+    {
+      "path": "scripts/argon4/__pycache__/expert_cache_sim.cpython-313.pyc",
+      "primaryOrigin": {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      "blob": "db0dec72c9427c6287e92d6673d236a4e118c2db",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/expert_cache_sim.cpython-313.pyc/db0dec72c9427c6287e92d6673d236a4e118c2db.pyc",
+      "allOrigins": [
+        {
+          "branch": "opus/argon4-research-20261029",
+          "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+          "pr": 240
+        }
+      ],
+      "category": "GENERATED_BYTECODE",
+      "function": "Erzeugtes CPython-3.13-Bytecodeartefakt zur gleichnamigen Python-Datei; Originalbytes/Header gesichert, Inhalt nicht geladen oder ausgeführt.",
+      "originalCaller": "Python-Importcache; kein eigenständiger App-Einstieg.",
+      "currentSuccessorOrEquivalent": "Kein Feature-Nachfolger nötig; die bearbeitbare Originalquelle wurde separat geprüft.",
+      "missingConnectionOrDisposition": "Nicht in die APK oder aktuelle Source übernehmen. Bei bewusst gewählter späterer Forschung aus geprüftem Quelltext neu erzeugbarer Cache."
+    },
+    {
+      "path": "scripts/argon4/__pycache__/stream_bench.cpython-313.pyc",
+      "primaryOrigin": {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      "blob": "1361814cf80eb61597f2b1eb2747b9bada79b79f",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/stream_bench.cpython-313.pyc/1361814cf80eb61597f2b1eb2747b9bada79b79f.pyc",
+      "allOrigins": [
+        {
+          "branch": "opus/argon4-research-20261029",
+          "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+          "pr": 240
+        }
+      ],
+      "category": "GENERATED_BYTECODE",
+      "function": "Erzeugtes CPython-3.13-Bytecodeartefakt zur gleichnamigen Python-Datei; Originalbytes/Header gesichert, Inhalt nicht geladen oder ausgeführt.",
+      "originalCaller": "Python-Importcache; kein eigenständiger App-Einstieg.",
+      "currentSuccessorOrEquivalent": "Kein Feature-Nachfolger nötig; die bearbeitbare Originalquelle wurde separat geprüft.",
+      "missingConnectionOrDisposition": "Nicht in die APK oder aktuelle Source übernehmen. Bei bewusst gewählter späterer Forschung aus geprüftem Quelltext neu erzeugbarer Cache."
+    },
+    {
+      "path": "scripts/argon4/__pycache__/test_argon4_f2.cpython-313.pyc",
+      "primaryOrigin": {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      "blob": "c3286c6eb827ea7ef97d10cbc69108671796f0d7",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/test_argon4_f2.cpython-313.pyc/c3286c6eb827ea7ef97d10cbc69108671796f0d7.pyc",
+      "allOrigins": [
+        {
+          "branch": "opus/argon4-research-20261029",
+          "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+          "pr": 240
+        }
+      ],
+      "category": "GENERATED_BYTECODE",
+      "function": "Erzeugtes CPython-3.13-Bytecodeartefakt zur gleichnamigen Python-Datei; Originalbytes/Header gesichert, Inhalt nicht geladen oder ausgeführt.",
+      "originalCaller": "Python-Importcache; kein eigenständiger App-Einstieg.",
+      "currentSuccessorOrEquivalent": "Kein Feature-Nachfolger nötig; die bearbeitbare Originalquelle wurde separat geprüft.",
+      "missingConnectionOrDisposition": "Nicht in die APK oder aktuelle Source übernehmen. Bei bewusst gewählter späterer Forschung aus geprüftem Quelltext neu erzeugbarer Cache."
+    },
+    {
+      "path": "scripts/argon4/bandwidth_model.py",
+      "primaryOrigin": {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      "blob": "b466859b79697b2c5444bbe53a92822d4ebff3b8",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/bandwidth_model.py/b466859b79697b2c5444bbe53a92822d4ebff3b8.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-coding-agent-loop-kxrxy2",
+          "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-gvisor-executor-kxrxy2",
+          "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+          "pr": 264
+        },
+        {
+          "branch": "integration/continuum-brain-system-20261029",
+          "sha": "7924ba0793963dd84eef61517359a743071829bf",
+          "pr": 242
+        },
+        {
+          "branch": "opus/argon4-research-20261029",
+          "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+          "pr": 240
+        },
+        {
+          "branch": "opus/continuum-m1-m8-20261030",
+          "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+          "pr": 244
+        },
+        {
+          "branch": "opus/continuum-m9-m16-20261030",
+          "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+          "pr": 245
+        },
+        {
+          "branch": "opus/jarvis-voice1-fix-20261030",
+          "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+          "pr": 252
+        },
+        {
+          "branch": "research/continuum-cloud-gpu-admission-20261030",
+          "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+          "pr": 268
+        },
+        {
+          "branch": "research/continuum-counterexample-acceptance-20261029",
+          "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+          "pr": 243
+        },
+        {
+          "branch": "research/continuum-mastercode-bounded-search-20261030",
+          "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+          "pr": 248
+        },
+        {
+          "branch": "research/continuum-nvidia-claim-readback-20261031",
+          "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+          "pr": 271
+        },
+        {
+          "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+          "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+          "pr": 273
+        },
+        {
+          "branch": "research/continuum-nvidia-single-use-claim-20261031",
+          "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+          "pr": 270
+        },
+        {
+          "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+          "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+          "pr": 251
+        },
+        {
+          "branch": "research/continuum-self-evolution-shadow-20261030",
+          "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+          "pr": 249
+        },
+        {
+          "branch": "research/exp20-p2-context-contract-20261030",
+          "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+          "pr": 255
+        },
+        {
+          "branch": "research/exp20-p2-opus-project-brief-20261030",
+          "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+          "pr": 254
+        },
+        {
+          "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+          "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+          "pr": 250
+        },
+        {
+          "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+          "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+          "pr": 253
+        },
+        {
+          "branch": "research/jpi1-presence-initiative-shadow-20261030",
+          "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+          "pr": 247
+        },
+        {
+          "branch": "research/jpi1-presence-shadow-20261030",
+          "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+          "pr": 246
+        }
+      ],
+      "category": "ANALYTICAL_RESEARCH",
+      "function": "Berechnet Bandbreiten-/RAM-/Tokenzeit-Untergrenzen und hypothetische Phone/PC-MoE-Aufteilung aus Annahmen.",
+      "originalCaller": "Eigenes CLI-main und test_argon4_f2.py importieren die Formeln.",
+      "currentSuccessorOrEquivalent": "Kein produktiver Cache, Backend oder GPU-/NPU-Anschluss. Zahlen sind Annahmen, keine Fold7-Messungen.",
+      "missingConnectionOrDisposition": "Nur Forschungsplanung. Reale Geräteparameter und Implementierung wären nötig; kein kleiner Anschluss, der Speicher oder Modellkapazität erweitert."
+    },
+    {
+      "path": "scripts/argon4/expert_cache_sim.py",
+      "primaryOrigin": {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      "blob": "6d186fcca7681925e5c8192e5e1e091c980a5258",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/expert_cache_sim.py/6d186fcca7681925e5c8192e5e1e091c980a5258.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-coding-agent-loop-kxrxy2",
+          "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-gvisor-executor-kxrxy2",
+          "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+          "pr": 264
+        },
+        {
+          "branch": "integration/continuum-brain-system-20261029",
+          "sha": "7924ba0793963dd84eef61517359a743071829bf",
+          "pr": 242
+        },
+        {
+          "branch": "opus/argon4-research-20261029",
+          "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+          "pr": 240
+        },
+        {
+          "branch": "opus/continuum-m1-m8-20261030",
+          "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+          "pr": 244
+        },
+        {
+          "branch": "opus/continuum-m9-m16-20261030",
+          "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+          "pr": 245
+        },
+        {
+          "branch": "opus/jarvis-voice1-fix-20261030",
+          "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+          "pr": 252
+        },
+        {
+          "branch": "research/continuum-cloud-gpu-admission-20261030",
+          "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+          "pr": 268
+        },
+        {
+          "branch": "research/continuum-counterexample-acceptance-20261029",
+          "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+          "pr": 243
+        },
+        {
+          "branch": "research/continuum-mastercode-bounded-search-20261030",
+          "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+          "pr": 248
+        },
+        {
+          "branch": "research/continuum-nvidia-claim-readback-20261031",
+          "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+          "pr": 271
+        },
+        {
+          "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+          "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+          "pr": 273
+        },
+        {
+          "branch": "research/continuum-nvidia-single-use-claim-20261031",
+          "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+          "pr": 270
+        },
+        {
+          "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+          "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+          "pr": 251
+        },
+        {
+          "branch": "research/continuum-self-evolution-shadow-20261030",
+          "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+          "pr": 249
+        },
+        {
+          "branch": "research/exp20-p2-context-contract-20261030",
+          "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+          "pr": 255
+        },
+        {
+          "branch": "research/exp20-p2-opus-project-brief-20261030",
+          "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+          "pr": 254
+        },
+        {
+          "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+          "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+          "pr": 250
+        },
+        {
+          "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+          "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+          "pr": 253
+        },
+        {
+          "branch": "research/jpi1-presence-initiative-shadow-20261030",
+          "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+          "pr": 247
+        },
+        {
+          "branch": "research/jpi1-presence-shadow-20261030",
+          "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+          "pr": 246
+        }
+      ],
+      "category": "ANALYTICAL_RESEARCH",
+      "function": "Vergleicht LRU, LFU, Markov-Prefetch und Belady anhand synthetischer Experten-Routingtraces.",
+      "originalCaller": "Eigenes CLI-main und ARGON-Unittest; keine Modellinferenz.",
+      "currentSuccessorOrEquivalent": "Kein aktueller Laufzeitcache wird dadurch ersetzt oder aktiviert.",
+      "missingConnectionOrDisposition": "Erst reale Routertraces und gemessener Backend-/Cache-Prototyp würden einen Produktnutzen belegen. Simulation nicht als thermischen Fix anschließen."
+    },
+    {
+      "path": "scripts/argon4/stream_bench.py",
+      "primaryOrigin": {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      "blob": "86398f6eab11e9a7618415509932acf6d1459bf9",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/stream_bench.py/86398f6eab11e9a7618415509932acf6d1459bf9.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-coding-agent-loop-kxrxy2",
+          "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-gvisor-executor-kxrxy2",
+          "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+          "pr": 264
+        },
+        {
+          "branch": "integration/continuum-brain-system-20261029",
+          "sha": "7924ba0793963dd84eef61517359a743071829bf",
+          "pr": 242
+        },
+        {
+          "branch": "opus/argon4-research-20261029",
+          "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+          "pr": 240
+        },
+        {
+          "branch": "opus/continuum-m1-m8-20261030",
+          "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+          "pr": 244
+        },
+        {
+          "branch": "opus/continuum-m9-m16-20261030",
+          "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+          "pr": 245
+        },
+        {
+          "branch": "opus/jarvis-voice1-fix-20261030",
+          "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+          "pr": 252
+        },
+        {
+          "branch": "research/continuum-cloud-gpu-admission-20261030",
+          "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+          "pr": 268
+        },
+        {
+          "branch": "research/continuum-counterexample-acceptance-20261029",
+          "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+          "pr": 243
+        },
+        {
+          "branch": "research/continuum-mastercode-bounded-search-20261030",
+          "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+          "pr": 248
+        },
+        {
+          "branch": "research/continuum-nvidia-claim-readback-20261031",
+          "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+          "pr": 271
+        },
+        {
+          "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+          "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+          "pr": 273
+        },
+        {
+          "branch": "research/continuum-nvidia-single-use-claim-20261031",
+          "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+          "pr": 270
+        },
+        {
+          "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+          "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+          "pr": 251
+        },
+        {
+          "branch": "research/continuum-self-evolution-shadow-20261030",
+          "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+          "pr": 249
+        },
+        {
+          "branch": "research/exp20-p2-context-contract-20261030",
+          "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+          "pr": 255
+        },
+        {
+          "branch": "research/exp20-p2-opus-project-brief-20261030",
+          "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+          "pr": 254
+        },
+        {
+          "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+          "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+          "pr": 250
+        },
+        {
+          "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+          "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+          "pr": 253
+        },
+        {
+          "branch": "research/jpi1-presence-initiative-shadow-20261030",
+          "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+          "pr": 247
+        },
+        {
+          "branch": "research/jpi1-presence-shadow-20261030",
+          "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+          "pr": 246
+        }
+      ],
+      "category": "HOST_STORAGE_BENCHMARK",
+      "function": "Misst sequenzielle, zufällige und mmap-Lesewege mit Warmcache-Kontrolle; erzeugt eine temporäre Zufallsdatei, Default 2048 MiB.",
+      "originalCaller": "Eigenes CLI-main; ARGON-Test ruft bench(size_mib=64).",
+      "currentSuccessorOrEquivalent": "Kein APK-Caller. Host-I/O-Messung ist keine Smartphone-/Modell-/Energieabnahme.",
+      "missingConnectionOrDisposition": "Nur bewusst ausgewählte spätere Gerätediagnostik, nicht Appstart oder Hintergrundtraining. README-Widerspruch und reale I/O-/Speicherlast vorher klären."
+    },
+    {
+      "path": "scripts/argon4/test_argon4_f2.py",
+      "primaryOrigin": {
+        "branch": "opus/argon4-research-20261029",
+        "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+        "pr": 240
+      },
+      "blob": "6e51b9188ccd9a6fa13d67839e41ba992d0e495c",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/test_argon4_f2.py/6e51b9188ccd9a6fa13d67839e41ba992d0e495c.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-coding-agent-loop-kxrxy2",
+          "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-gvisor-executor-kxrxy2",
+          "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+          "pr": 264
+        },
+        {
+          "branch": "integration/continuum-brain-system-20261029",
+          "sha": "7924ba0793963dd84eef61517359a743071829bf",
+          "pr": 242
+        },
+        {
+          "branch": "opus/argon4-research-20261029",
+          "sha": "a2600c0ed3131b3a9f9e3cc5cf4314fce842cfa9",
+          "pr": 240
+        },
+        {
+          "branch": "opus/continuum-m1-m8-20261030",
+          "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+          "pr": 244
+        },
+        {
+          "branch": "opus/continuum-m9-m16-20261030",
+          "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+          "pr": 245
+        },
+        {
+          "branch": "opus/jarvis-voice1-fix-20261030",
+          "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+          "pr": 252
+        },
+        {
+          "branch": "research/continuum-cloud-gpu-admission-20261030",
+          "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+          "pr": 268
+        },
+        {
+          "branch": "research/continuum-counterexample-acceptance-20261029",
+          "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+          "pr": 243
+        },
+        {
+          "branch": "research/continuum-mastercode-bounded-search-20261030",
+          "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+          "pr": 248
+        },
+        {
+          "branch": "research/continuum-nvidia-claim-readback-20261031",
+          "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+          "pr": 271
+        },
+        {
+          "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+          "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+          "pr": 273
+        },
+        {
+          "branch": "research/continuum-nvidia-single-use-claim-20261031",
+          "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+          "pr": 270
+        },
+        {
+          "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+          "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+          "pr": 251
+        },
+        {
+          "branch": "research/continuum-self-evolution-shadow-20261030",
+          "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+          "pr": 249
+        },
+        {
+          "branch": "research/exp20-p2-context-contract-20261030",
+          "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+          "pr": 255
+        },
+        {
+          "branch": "research/exp20-p2-opus-project-brief-20261030",
+          "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+          "pr": 254
+        },
+        {
+          "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+          "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+          "pr": 250
+        },
+        {
+          "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+          "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+          "pr": 253
+        },
+        {
+          "branch": "research/jpi1-presence-initiative-shadow-20261030",
+          "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+          "pr": 247
+        },
+        {
+          "branch": "research/jpi1-presence-shadow-20261030",
+          "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+          "pr": 246
+        }
+      ],
+      "category": "RESEARCH_UNIT_TEST",
+      "function": "Testet analytische Formeln, deterministische Cache-Simulation und einen echten 64-MiB-Dateibenchmark.",
+      "originalCaller": "Unittest-CLI importiert alle drei ARGON-Python-Dateien.",
+      "currentSuccessorOrEquivalent": "Kein fehlender Lernalgorithmus; prüft Forschungshelfer, keine Android-Produktionsintegration.",
+      "missingConnectionOrDisposition": "Mit Originalforschung archivieren. Eventuelle Wiederaufnahme als getrennte Host-QA; hier kein Test gestartet und kein historisches PASS als aktueller Beleg übernommen."
+    },
+    {
+      "path": "scripts/continuum-autonomous-experiment.mjs",
+      "primaryOrigin": {
+        "branch": "astra/continuum-autonomous-cycle-20261027",
+        "sha": "9f2ebecc5c0de175d9268306bbe99d5e8c56a012",
+        "pr": 189
+      },
+      "blob": "442e0e1eef283257f375012ce585cc7fba4830ec",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-autonomous-experiment.mjs/442e0e1eef283257f375012ce585cc7fba4830ec.txt",
+      "allOrigins": [
+        {
+          "branch": "astra/continuum-autonomous-cycle-20261027",
+          "sha": "9f2ebecc5c0de175d9268306bbe99d5e8c56a012",
+          "pr": 189
+        }
+      ],
+      "category": "HISTORICAL_EXPERIMENT_HARNESS",
+      "function": "prepare/run/verify für ein festes Coding-Experiment: externe Arbeitskopie, eingefrorene Tests/Holdout, Modellkandidat und frische Patchprüfung.",
+      "originalCaller": "CLI ruft bestehende prepareCodingTask/runCodingTask, CodingProvider, IsolatedExecutor und runChain; lädt den Capture-Hook.",
+      "currentSuccessorOrEquivalent": "Die importierten CCC1-/Coding-/Isolationsmodule bestehen in 5d. Das feste experimental/autonomous-cycle-20261027-Paket fehlt; heutiger Agentbenchmark bietet verwandte, andere Prüfungen.",
+      "missingConnectionOrDisposition": "Zusätzliche reproduzierbare Experimenthülle, kein neuer Agentenkern. Für Wiederholung vollständige alte Fixtures plus aktuelle Isolation-/Source-/Receipt-Verträge prüfen; kein automatischer APK-Anschluss."
+    },
+    {
+      "path": "scripts/continuum-autonomous-model-capture.mjs",
+      "primaryOrigin": {
+        "branch": "astra/continuum-autonomous-cycle-20261027",
+        "sha": "9f2ebecc5c0de175d9268306bbe99d5e8c56a012",
+        "pr": 189
+      },
+      "blob": "b93b1da9399ffe590b98a652a040377899cc4419",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-autonomous-model-capture.mjs/b93b1da9399ffe590b98a652a040377899cc4419.txt",
+      "allOrigins": [
+        {
+          "branch": "astra/continuum-autonomous-cycle-20261027",
+          "sha": "9f2ebecc5c0de175d9268306bbe99d5e8c56a012",
+          "pr": 189
+        }
+      ],
+      "category": "EXPERIMENT_CAPTURE_HOOK",
+      "function": "Beobachter für unveränderte lokale HTTP-Antworten, maximal 65536 Bytes; überschreibt fetch im gestarteten Experimentprozess.",
+      "originalCaller": "Wird ausschließlich vom alten Experimentrunner per --import hinzugefügt; nur 127.0.0.1:8089/v1/chat/completions erlaubt.",
+      "currentSuccessorOrEquivalent": "Keine aktuellen Script-Namenscaller außerhalb Dokumentation. Kein Inferenz-/Trainingsmotor.",
+      "missingConnectionOrDisposition": "Optionaler Experimentbeleg für freigegebene synthetische Eingaben. Keinen globalen Produkt-Hook oder automatischen Mitschnitt daraus machen."
+    },
+    {
+      "path": "scripts/continuum-counterexample-local-check.sh",
+      "primaryOrigin": {
+        "branch": "research/continuum-counterexample-acceptance-20261029",
+        "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+        "pr": 243
+      },
+      "blob": "8168eb614a9394a338d16a4feb93d566507c8a59",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-counterexample-local-check.sh/8168eb614a9394a338d16a4feb93d566507c8a59.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "chatgpt/continuum-m8-benchmark-coverage-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "chatgpt/continuum-m8-gvisor-mcp-offline-20261030",
+          "sha": "228afa4ac485929711269196f202fc84c6ec60e2",
+          "pr": 259
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-coding-agent-loop-kxrxy2",
+          "sha": "29d7f76d97d1ca8288572bb26689b1cfa32568ef",
+          "pr": null
+        },
+        {
+          "branch": "claude/m8-gvisor-executor-kxrxy2",
+          "sha": "e022249f94c89a1fffe58494dbb38ddbb9f8a706",
+          "pr": 264
+        },
+        {
+          "branch": "opus/continuum-m1-m8-20261030",
+          "sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+          "pr": 244
+        },
+        {
+          "branch": "opus/continuum-m9-m16-20261030",
+          "sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+          "pr": 245
+        },
+        {
+          "branch": "opus/jarvis-voice1-fix-20261030",
+          "sha": "2747f1a0600cba386defeb1a4641338fe8519d18",
+          "pr": 252
+        },
+        {
+          "branch": "research/continuum-counterexample-acceptance-20261029",
+          "sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+          "pr": 243
+        },
+        {
+          "branch": "research/continuum-mastercode-bounded-search-20261030",
+          "sha": "2e33dad91a9a393f00996084c5538955bf14ca92",
+          "pr": 248
+        },
+        {
+          "branch": "research/continuum-owner-resilient-jarvis-charter-20261030",
+          "sha": "397b25ecd23a004ab203e0e476d9df3425a67f33",
+          "pr": 251
+        },
+        {
+          "branch": "research/continuum-self-evolution-shadow-20261030",
+          "sha": "d6a666322db225586b03ddc51f5285c10f39dfe3",
+          "pr": 249
+        },
+        {
+          "branch": "research/exp20-p2-context-contract-20261030",
+          "sha": "411e2d98bdcaf0f336d95c5d9cad222ce0bb8059",
+          "pr": 255
+        },
+        {
+          "branch": "research/exp20-p2-opus-project-brief-20261030",
+          "sha": "5698ed590f30c44caed35a6f470fb3cb18b82421",
+          "pr": 254
+        },
+        {
+          "branch": "research/jarvis-voice-conversation-owner-gated-20261030",
+          "sha": "2e21bdaac8797a83e46e06d1b40244a616946fd6",
+          "pr": 250
+        },
+        {
+          "branch": "research/jarvis-voice1-stale-recognizer-session-20261030",
+          "sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+          "pr": 253
+        },
+        {
+          "branch": "research/jpi1-presence-initiative-shadow-20261030",
+          "sha": "f3a5e3081428d223fc346174cd81493e8e03929a",
+          "pr": 247
+        },
+        {
+          "branch": "research/jpi1-presence-shadow-20261030",
+          "sha": "94fdee1b8d1c92801ff537ebdea36276a5d3b925",
+          "pr": 246
+        }
+      ],
+      "category": "HISTORICAL_EXPERIMENT_HARNESS",
+      "function": "Source-/Clean-/Output-Gates, Tests und einmaliger Shadow-Versuch des alten CCC1-Gegenbeispiellabors.",
+      "originalCaller": "CLI ruft experimental/ccc1-counterexample-lab/run.mjs und bestimmte Tests.",
+      "currentSuccessorOrEquivalent": "Das Laborpaket fehlt in 5d; vorhandener Coding-Orchestrator und Agentbenchmark ersetzen nicht exakt diese Versuchsarme.",
+      "missingConnectionOrDisposition": "Bei Forschungsbedarf vollständiges Labor und Belege wiederherstellen. Skript allein liefert keine zusätzliche Appfähigkeit und erklärt Ergebnisse ausdrücklich als nicht Release-QA."
+    },
+    {
+      "path": "scripts/continuum-dialogue-routing-smoke.sh",
+      "primaryOrigin": {
+        "branch": "review/continuum-brain-safety-continuation-20261026",
+        "sha": "95e6ad4f4a80d51a5a3293dbb914cdb9288d8c29",
+        "pr": 157
+      },
+      "blob": "c9e5ff2f3c3770a0fbe32263a739bf808ab89940",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-dialogue-routing-smoke.sh/c9e5ff2f3c3770a0fbe32263a739bf808ab89940.txt",
+      "allOrigins": [
+        {
+          "branch": "review/continuum-brain-safety-continuation-20261026",
+          "sha": "95e6ad4f4a80d51a5a3293dbb914cdb9288d8c29",
+          "pr": 157
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Kompiliert reale LocalFirstPolicy gegen exakt erwartetes LocalModelState-Enum und Routing-Smokeprobe.",
+      "originalCaller": "Manuelles Shell-CLI; prüft nur Route ohne Modellinferenz.",
+      "currentSuccessorOrEquivalent": "LocalFirstPolicy ist vorhanden; scripts/verification/ContinuumDialogueRoutingSmoke.kt fehlt. Aktuelle Androidtests/Hostharnesses existieren, identische Smokeabdeckung ist hier nicht behauptet.",
+      "missingConnectionOrDisposition": "Optionaler gezielter QA-Runner nach Wiederherstellung der Probe und Prüfung des Enum-/API-Vertrags. Kein fehlender Produkt-Router."
+    },
+    {
+      "path": "scripts/continuum-ewm-jvm.sh",
+      "primaryOrigin": {
+        "branch": "opus/continuum-brain-research-20261029",
+        "sha": "d49fbfea587ac18bead8f5ad30f244ca4250d796",
+        "pr": 224
+      },
+      "blob": "4c3dbc23b22776ae63efe7247afd0e3160b297d6",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-ewm-jvm.sh/4c3dbc23b22776ae63efe7247afd0e3160b297d6.txt",
+      "allOrigins": [
+        {
+          "branch": "opus/continuum-brain-research-20261029",
+          "sha": "d49fbfea587ac18bead8f5ad30f244ca4250d796",
+          "pr": 224
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "EWM1/EWM2-JVM-Labor: build/unit/run/dev, Mutationslauf und historische H7-Auswertung.",
+      "originalCaller": "CLI baut Testklassen im alten intelligence/ewm1-Paket; mutants ändert und restauriert Testquellen.",
+      "currentSuccessorOrEquivalent": "Aktuelle Produktion/Tests verwenden intelligence/ewm. Generischer android-kotlin-unit-check und heutige EWM-Tests sind vorhanden, alte Experimentklassen/-Dateien fehlen.",
+      "missingConnectionOrDisposition": "Veralteter Forschungsrunner, kein einfacher Produktanschluss. Sourceclosure/Paket/Daten prüfen; Mutationsmodus nicht in laufender Abnahme oder eingefrorener Quelle verwenden."
+    },
+    {
+      "path": "scripts/continuum-ewm-v2-holdout-integrity.mjs",
+      "primaryOrigin": {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      "blob": "78466b2d9053705b4d05c1718b22992b396391e3",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-ewm-v2-holdout-integrity.mjs/78466b2d9053705b4d05c1718b22992b396391e3.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Prüft exakten Git-Blob, Schema, eindeutige IDs und 80/80/80-Verteilung des eingefrorenen 240-Fall-Korpus.",
+      "originalCaller": "Eigenes CLI und continuum-m6-foreign-eval.sh.",
+      "currentSuccessorOrEquivalent": "Der feste m6-independent-Korpus fehlt. EWM-Quellen existieren; eine Corpusintegritätsprüfung ist kein Modellresultat.",
+      "missingConnectionOrDisposition": "Nützlicher späterer QA-Baustein nur mit unverändertem Corpus/Provenienz. Kein App- oder Trainingsanschluss erforderlich."
+    },
+    {
+      "path": "scripts/continuum-ewm-v2-holdout-score.mjs",
+      "primaryOrigin": {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      "blob": "2406713e748d356b921fdaf8b1c3e8435ca2717e",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-ewm-v2-holdout-score.mjs/2406713e748d356b921fdaf8b1c3e8435ca2717e.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Prüft 240 Source-gebundene Receipts, Graphzustände und Konfusionsmatrix; Gates: Vollständigkeit, positive Precision >=0.95, andere Fakten erhalten.",
+      "originalCaller": "CLI, JVM-Runner und Foreign-Eval; exportiert scoreHoldout/Parser.",
+      "currentSuccessorOrEquivalent": "EWM-Implementation vorhanden; genau dieser Corpus-/Receiptscorer fehlt. Recall und drei Subtypen sind nur Diagnostik, keine zusätzlichen Bestehensbedingungen.",
+      "missingConnectionOrDisposition": "Zusätzliche unabhängige QA, kein semantischer Lerner. Ursprüngliche Kriterien ehrlich erhalten; Ergebnis nicht als allgemeine Gedächtnisqualität ausgeben."
+    },
+    {
+      "path": "scripts/continuum-ewm-v2-metamorphic.sh",
+      "primaryOrigin": {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      "blob": "b9695b00e606a7f8d25e4384bd7d4ca5265e7955",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-ewm-v2-metamorphic.sh/b9695b00e606a7f8d25e4384bd7d4ca5265e7955.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Kompiliert gepinnte reale EWM-Dateien mit Metamorphieprobe; verweigert geänderte Blobs oder fehlende alte Ancestry.",
+      "originalCaller": "Eigenes Shell-CLI, kotlinc/JVM.",
+      "currentSuccessorOrEquivalent": "Beide gepinnten Produktionsblobs sind in 5d bytegleich: Lexicon 8c1e6acd…, EvidenceWorkspace cb19581a…. M6MetamorphicInvariantProbe fehlt.",
+      "missingConnectionOrDisposition": "Konkreter späterer QA-Kandidat: originale Probe und überprüfte Sourcebindung ergänzen, nicht blind Pins lockern. Keine neue Appfähigkeit."
+    },
+    {
+      "path": "scripts/continuum-ewm-v2-run-jvm.mjs",
+      "primaryOrigin": {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      "blob": "58e6a3ea9aeee762860403ccfbbc80868200e929",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-ewm-v2-run-jvm.mjs/58e6a3ea9aeee762860403ccfbbc80868200e929.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Führt gepinnte reale EWM-Quellen über eine JVM-Probe aus und bindet Beobachtungen an Score-Receipts; Goldlabels gelangen nicht in den Kotlinprozess.",
+      "originalCaller": "Eigenes CLI; importiert holdout-score und startet kotlinc/JVM.",
+      "currentSuccessorOrEquivalent": "Gepinnte EWM-Produktionsblobs identisch vorhanden; M6ForeignEwmProbe und Korpus fehlen. Aktueller Graph liefert nur Replacement ja/nein, keinen Event-/State-Subtyp.",
+      "missingConnectionOrDisposition": "Zusätzlicher unabhängiger Messadapter nach vollständigem Corpus-/Probeanschluss. Subtypbegrenzung erhalten; hier keine Inferenz/Probe ausgeführt."
+    },
+    {
+      "path": "scripts/continuum-grounding-independent-eval.mjs",
+      "primaryOrigin": {
+        "branch": "review/continuum-brain-safety-continuation-20261026",
+        "sha": "95e6ad4f4a80d51a5a3293dbb914cdb9288d8c29",
+        "pr": 157
+      },
+      "blob": "63412349dbb5ade03e56b7d34794f2f22cde0550",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-grounding-independent-eval.mjs/63412349dbb5ade03e56b7d34794f2f22cde0550.txt",
+      "allOrigins": [
+        {
+          "branch": "review/continuum-brain-safety-continuation-20261026",
+          "sha": "95e6ad4f4a80d51a5a3293dbb914cdb9288d8c29",
+          "pr": 157
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Vergleicht eingefrorenen 60-Fall-Holdout gegen zwei exakt benannte alte dialogue-retrieval-Gitobjekte.",
+      "originalCaller": "CLI lädt die historischen Module und ruft rankMemories/sourceTermEvidence.",
+      "currentSuccessorOrEquivalent": "Aktuelles dialogue-retrieval plus 60-Fall-Fixture und historische Berichte sind vorhanden. Die damaligen Baseline-/Candidate-SHAs sind keine aktuelle 5d-Abnahme.",
+      "missingConnectionOrDisposition": "Reproduktionshilfe alter Forschung; für einen aktuellen Vergleich neue klar gebundene Auswertung nötig. Kein fehlender Retrievalmotor."
+    },
+    {
+      "path": "scripts/continuum-interactive-lab.sh",
+      "primaryOrigin": {
+        "branch": "research/continuum-interactive-intelligence-lab-20261026",
+        "sha": "fe838399ce31f266594d331886f1b2fab0ea3925",
+        "pr": 174
+      },
+      "blob": "190d00a3cf2e0826ca8d6ef2d95435823f3d50c0",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-interactive-lab.sh/190d00a3cf2e0826ca8d6ef2d95435823f3d50c0.txt",
+      "allOrigins": [
+        {
+          "branch": "research/continuum-interactive-intelligence-lab-20261026",
+          "sha": "fe838399ce31f266594d331886f1b2fab0ea3925",
+          "pr": 174
+        }
+      ],
+      "category": "HISTORICAL_EXPERIMENT_HARNESS",
+      "function": "Versiegelt train/dev/holdout-Fixtures und baut reale ausgewählte Kotlinquellen für Baseline/Evaluation/Suite des interaktiven Labors.",
+      "originalCaller": "CLI ruft LabBaseline/LabEvaluation/LabSuite und Labtests.",
+      "currentSuccessorOrEquivalent": "experimental/interactive-intelligence fehlt; heutige Memory-/Feedback-/Agentenquellen und continuum-dialogue-jvm.sh bestehen. Keine Gleichheit der alten Experimente behauptet.",
+      "missingConnectionOrDisposition": "Vollständiges Labor/Fixtures und aktualisierte echte Abhängigkeiten nötig. Nicht als zweiten Agenten-/Trainingsloop anschließen."
+    },
+    {
+      "path": "scripts/continuum-m6-foreign-eval.sh",
+      "primaryOrigin": {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      "blob": "0911f2af9f6d2fe2ab03d08ae610b17b6d91436a",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-m6-foreign-eval.sh/0911f2af9f6d2fe2ab03d08ae610b17b6d91436a.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Orchestriert Corpusintegrität, exakt benannten Android-JUnit-Receipt-Export und den 240-Fall-Scorer.",
+      "originalCaller": "CLI ruft Holdouthelfer und Ewm2Foreign240ReceiptTest per Gradle.",
+      "currentSuccessorOrEquivalent": "Test, Dataset und Helfer fehlen; EWM-Produktionsblobs sind vorhanden. Script ist kein Androidproduktfeature.",
+      "missingConnectionOrDisposition": "Optionales späteres Testpaket mit Source-/Receiptbindung und unverändertem Holdout. Nicht parallel zur aktuellen Vollabnahme starten."
+    },
+    {
+      "path": "scripts/continuum-m6-shortcut-audit.mjs",
+      "primaryOrigin": {
+        "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+        "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+        "pr": 258
+      },
+      "blob": "82166a2fe237e45467a4cc59f13e85154d871641",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-m6-shortcut-audit.mjs/82166a2fe237e45467a4cc59f13e85154d871641.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Misst ausschließlich Schlüsselwortheuristik im after-Text auf dem eingefrorenen Korpus; perfekte Treffer lösen Warn-/Fehlerstatus aus.",
+      "originalCaller": "Eigenes CLI/exportiertes auditShortcut, kein Modell-/Produktaufruf.",
+      "currentSuccessorOrEquivalent": "Kein identischer Audit in 5d gefunden; der feste 240-Fall-Korpus fehlt. Aktuelle EWM-Funktion ist dadurch nicht abwesend.",
+      "missingConnectionOrDisposition": "Nützlicher QA-Kandidat gegen scheinbare Generalisierung. Unveränderten Korpus prüfen; keine Aussage zum tatsächlichen Ergebnis ohne Lauf, keine Labels auf Testdaten nachoptimieren."
+    },
+    {
+      "path": "scripts/continuum-neuro-agent.mjs",
+      "primaryOrigin": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "blob": "8c7eabfdab39433bbe2d12d662b0a8a0499aa992",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/continuum-neuro-agent.mjs/8c7eabfdab39433bbe2d12d662b0a8a0499aa992.txt",
+      "allOrigins": [
+        {
+          "branch": "research/continuum-cloud-gpu-admission-20261030",
+          "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+          "pr": 268
+        },
+        {
+          "branch": "research/continuum-nvidia-claim-readback-20261031",
+          "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+          "pr": 271
+        },
+        {
+          "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+          "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+          "pr": 273
+        },
+        {
+          "branch": "research/continuum-nvidia-single-use-claim-20261031",
+          "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+          "pr": 270
+        }
+      ],
+      "category": "EXTERNAL_RESEARCH_WORKER",
+      "function": "Externer persistenter Node-Worker für begrenzte NVIDIA-Forschungsvorschläge; Quoten, Cooldown, Reservierungsledger, optional lokale Belegcommits.",
+      "originalCaller": "Eigenes --once/--loop-CLI; Installer startet es. Importiert buildUltraResearchPacket/runUltraMasterReview aus fehlendem NVIDIA-Reviewer.",
+      "currentSuccessorOrEquivalent": "Gleicher Workerblob in #268/#270/#271/#273; Abhängigkeiten/Consent-Verträge des jeweiligen Branches müssen separat stimmen. Aktuelle CRE1-Researchmodule sind andere Funktionen, kein identischer Daemon.",
+      "missingConnectionOrDisposition": "Echte zusätzliche externe Betriebsfunktion, keine APK-Trainingserweiterung. Benötigt vollständigen Reviewer, passenden freigegebenen Host/Source/Consent, Zustand und Betriebskonzept. Kein kleiner Anschluss an die eingefrorene App; nicht gestartet."
+    },
+    {
+      "path": "scripts/exp20-ewm-host-regression.sh",
+      "primaryOrigin": {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      "blob": "a976e148ff663046023e9a9a16e9f3d7f222049c",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/exp20-ewm-host-regression.sh/a976e148ff663046023e9a9a16e9f3d7f222049c.txt",
+      "allOrigins": [
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Kompiliert historische eingefrorene Android-freie Source-/Testlisten mit Risk-Shim und startet JUnit.",
+      "originalCaller": "Manuelles Shell-CLI; Listen unter docs/evidence/exp20-m6-20261031/ewm-fix.",
+      "currentSuccessorOrEquivalent": "Historische Listen fehlen; aktuelle EWM-Owner-/Produktäquivalenztests und reguläre Suite sind vorhanden.",
+      "missingConnectionOrDisposition": "Veraltete Reproduktionshülle. Heutige vollständige Gatequelle verwenden; bei Wiederholung alte Listen und Compiler-/Abhängigkeitsidentität offenlegen."
+    },
+    {
+      "path": "scripts/exp20-m5-cre1-real-gate.sh",
+      "primaryOrigin": {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      "blob": "07349adca4e47a101bd131f51a711192a729fd87",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/exp20-m5-cre1-real-gate.sh/07349adca4e47a101bd131f51a711192a729fd87.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Führt alten query-blind CRE1-VAL-Gate aus, mit zwei festen Daten-/Checkpoint-SHA256 und realer Kotlin-Closure; öffnet keinen SEALED-Split.",
+      "originalCaller": "CLI ruft vorhandenes cre-parity, alten exp20-p2-host-run und M5-Forschungs-/Selbsttestklassen.",
+      "currentSuccessorOrEquivalent": "cre-parity/CRE1-Engine bestehen; EXP20-/ARGON-Researchklassen, Daten und Runner fehlen.",
+      "missingConnectionOrDisposition": "Nur vollständige alte Versuchsserie reproduzierbar machen. Kein neuer Trainingsmotor; feste Validierungsdaten und historische Ergebnisse nicht zur aktuellen Appabnahme umdeuten."
+    },
+    {
+      "path": "scripts/exp20-m5-runner-selftest.sh",
+      "primaryOrigin": {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      "blob": "12fc0a1cd092be72b516a747378cd0269617956c",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/exp20-m5-runner-selftest.sh/12fc0a1cd092be72b516a747378cd0269617956c.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Drei negative Runnerkontrollen: falscher Checkpointhash, Output im Repository, fehlender Compiler; verwendet bewusst Fake-Node.",
+      "originalCaller": "CLI testet ausschließlich exp20-m5-cre1-real-gate.sh; kein echtes Modell.",
+      "currentSuccessorOrEquivalent": "Der Zielrunner fehlt; generische aktuelle Gates sind andere Prüfungen.",
+      "missingConnectionOrDisposition": "Testhilfe nur zusammen mit dem Forschungsrunner übernehmen. Liefert weder Trainings- noch Modellleistungsbeleg."
+    },
+    {
+      "path": "scripts/exp20-m5b-train-cre1.mjs",
+      "primaryOrigin": {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      "blob": "98e1338a6e2acc1240f0f6282539827ef29a462e",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/exp20-m5b-train-cre1.mjs/98e1338a6e2acc1240f0f6282539827ef29a462e.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        }
+      ],
+      "category": "CRE1_RESEARCH_TRAINING_WRAPPER",
+      "function": "Echter CRE1-Trainingsaufruf mit festen Hyperparametern auf TRAIN-Zeilen; lädt Paritycheckpoint und schreibt separates Ergebnis laut Aufrufargument.",
+      "originalCaller": "Eigenes CLI importiert vorhandene RelationalEncoder/train aus .github/continuum/cre-encoder.mjs.",
+      "currentSuccessorOrEquivalent": "Trainingsengine, Paritätswerkzeuge und aktueller Android-Caller AgentActivity → ContinuumLearningCore.trainExperimentalCre1 → Cre1ResearchLab bestehen bereits. Node-Research-Learning/Blacklab existieren ebenfalls.",
+      "missingConnectionOrDisposition": "Zusätzliche alte Experiment-CLI, kein fehlender Trainingsmotor. Code prüft TRAIN-Spalte, aber weder festes Checkpointhash noch Output-/Assetgrenze oder Holdout; Schreibpfad darf vorhandene Datei ersetzen. Nur mit isolierten Daten, Output- und Auditgates später nutzbar. Kein Beleg zum Handyfehler."
+    },
+    {
+      "path": "scripts/exp20-p2-host-run.sh",
+      "primaryOrigin": {
+        "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+        "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+        "pr": 256
+      },
+      "blob": "9771b5e262341c7bc2397e23fd78e254b2eaf7b0",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/exp20-p2-host-run.sh/9771b5e262341c7bc2397e23fd78e254b2eaf7b0.txt",
+      "allOrigins": [
+        {
+          "branch": "chatgpt/continuum-m6-independent-holdout-20261030",
+          "sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+          "pr": 258
+        },
+        {
+          "branch": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+          "sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+          "pr": 256
+        },
+        {
+          "branch": "claude/ewm-owner-subject-fix-kxrxy2",
+          "sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+          "pr": null
+        }
+      ],
+      "category": "HOST_QA_HARNESS",
+      "function": "Baut historische EXP20/ARGON-Kotlin-Sourceclosure mit Hostshim und führt JUnit oder benannte Lab-Mainklasse aus.",
+      "originalCaller": "Eigenes CLI und exp20-m5-cre1-real-gate.sh.",
+      "currentSuccessorOrEquivalent": "ARGON-/EXP20-Forschungsclosure fehlt teilweise; produktive Komponenten wurden in der früheren Android-Matrix separat zugeordnet. Aktuelle Host-/Android-Gates bestehen.",
+      "missingConnectionOrDisposition": "Reproduktionsrunner nach Closureprüfung, kein APK-Baustein. Keine alten fehlenden Prototypen nur für diesen Runner in die App zurückkopieren."
+    },
+    {
+      "path": "scripts/setup-continuum-neuro-agent.sh",
+      "primaryOrigin": {
+        "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+        "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+        "pr": 273
+      },
+      "blob": "849aab0d2893c72244de07c9ad79ac28672b335e",
+      "originalSnapshot": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/originals/setup-continuum-neuro-agent.sh/849aab0d2893c72244de07c9ad79ac28672b335e.txt",
+      "allOrigins": [
+        {
+          "branch": "research/continuum-cloud-gpu-admission-20261030",
+          "sha": "fd2e5de1acf678ae4d6222bb433762ea8bb3d57f",
+          "pr": 268
+        },
+        {
+          "branch": "research/continuum-nvidia-claim-readback-20261031",
+          "sha": "22d6b27a959831d87ce9707eb6296f34c293af38",
+          "pr": 271
+        },
+        {
+          "branch": "research/continuum-nvidia-explicit-owner-consent-20261031",
+          "sha": "80aed831fb5578138b0b77c4bd3c3d2a5114f158",
+          "pr": 273
+        },
+        {
+          "branch": "research/continuum-nvidia-single-use-claim-20261031",
+          "sha": "f852a4cfe0338a0ed5746eb5bfc8dc89b3035954",
+          "pr": 270
+        }
+      ],
+      "category": "EXTERNAL_SERVICE_INSTALLER",
+      "function": "Installiert und startet systemd-Userdienst für den Neuro-Worker; führt vorab dessen Tests aus und richtet geschützte externe Konfiguration ein.",
+      "originalCaller": "Manuelles --install/--check-CLI, ExecStart ruft Neuro-Agent --loop.",
+      "currentSuccessorOrEquivalent": "Kein Android-Caller oder aktueller gleichnamiger Dienst. Worker/Reviewer/Testdateien fehlen in 5d.",
+      "missingConnectionOrDisposition": "Externe Installation/Betriebsänderung, kein Featuremerge. Vollständige passende Source und explizite betriebliche Auswahl erforderlich. Nicht ausgeführt; keine Secretdatei gelesen oder angelegt."
+    }
+  ],
+  "scopeLimits": [
+    "No project scripts, tests, builds, models, providers or installer executed. No candidate/source/ref/config writes.",
+    "No secrets read. Analysis files and static Git-blob snapshots only under inspection/nonandroid-learning.",
+    "Historical caller facts are based on direct imports, explicit CLI entrypoints and cross-script calls, not an exhaustive scan of all historical branches.",
+    "Current name search in app/src, scripts, .github, tools and docs found only 159 documentation/inventory references.",
+    "Original M6 tests and historical report claims were not run or adopted as new PASS results.",
+    "Real phone training-failure cause remains unknown without monitor code or phase."
+  ],
+  "priorReviewsUsed": [
+    "/workspace/scratch/3d1967be6193/inspection/learning-branch-audit/matrix.md",
+    "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/matrix.md",
+    "/workspace/scratch/3d1967be6193/inspection/remaining-android-paths/matrix.md"
+  ]
+}

@@ -1,0 +1,13 @@
+✔ gVisor requested but not registered: blocked before any container runs, no host fallback (181.90056ms)
+✔ gVisor run: runsc plus every existing hardening flag, confirmed runtime in the evidence, full teardown (311.206373ms)
+✔ a daemon that silently runs another runtime yields no gVisor evidence, and the container is still removed (277.575805ms)
+✔ malformed or unsafe synthetic inspect observations fail closed and still tear down (876.199213ms)
+✔ runtime policy and evidence: unknown runtimes rejected, old receipts stay valid, runc is no gVisor evidence (0.870254ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1735.209643

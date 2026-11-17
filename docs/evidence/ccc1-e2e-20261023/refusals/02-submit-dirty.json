@@ -1,0 +1,10 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-submit-repair",
+  "status": "BLOCKED_PREFLIGHT",
+  "failure": {
+    "code": "CCC1_PREFLIGHT_BLOCKED",
+    "message": "CCC1_PREFLIGHT_BLOCKED: CCC1_WORKTREE_NOT_CLEAN"
+  }
+}

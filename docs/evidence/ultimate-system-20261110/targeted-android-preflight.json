@@ -1,0 +1,64 @@
+{
+  "source": "7f329d2efac51de903b6f15b2b1c5280f113d545",
+  "tree": "94bd65e9ac877cd790e7fc49322d48329327b48c",
+  "phase": "test-integration-2",
+  "command": [
+    "/tmp/continuum-toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerLocalQa=true",
+    "-PcontinuumOwnerLocalVersionCode=53",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumUiEvidenceDir=/workspace/scratch/c9f74e2967e3/qa/test-integration-2",
+    "-Dorg.gradle.jvmargs=-Xmx512m -XX:MaxMetaspaceSize=512m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -Dfile.encoding=UTF-8",
+    "-I",
+    "/workspace/scratch/c9f74e2967e3/tests-memory.gradle",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.SystemIntelligenceUiTest",
+    "--tests",
+    "at.heinz.deviceai.ResearchChatApprovalUiTest",
+    "--tests",
+    "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+    "--tests",
+    "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+    "--tests",
+    "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+    "--tests",
+    "at.heinz.deviceai.avatar.AvatarDirectorTest",
+    "--tests",
+    "at.heinz.deviceai.avatar.CinemaWindowGazeBridgeTest"
+  ],
+  "started": 1794350187.4916487,
+  "Fold7": "NOT_RUN",
+  "exitCode": 1,
+  "completed": 1794350986.5002592,
+  "sourceUnchanged": true,
+  "counts": {
+    "tests": 81,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failures": [
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "test": "lookupCancellationClosesWorkWindowAndLateStatusCannotReopenIt",
+      "message": "java.lang.NoSuchFieldException: workWindowHost"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "test": "cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries",
+      "message": "java.lang.AssertionError: STOP finishes the camera return expected:<0.0> but was:<1.4543533E-5>"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "test": "speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds",
+      "message": "java.lang.AssertionError: nothing replays the camera afterwards expected:<0.0> but was:<1.4543533E-5>"
+    }
+  ]
+}

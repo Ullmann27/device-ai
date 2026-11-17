@@ -1,0 +1,67 @@
+✔ diagnostic cap cannot truncate executed coverage or hide disappearing failed tests (9.225321ms)
+✔ oversized XML cannot be silently treated as complete executed evidence (5.950108ms)
+✔ parity rejects explicitly incomplete coverage even if identities and counts match (0.500883ms)
+✖ JUnit directory cannot silently omit an oversized or linked report (45.238528ms)
+✖ incomplete failing report cannot become negative strategy training evidence (2.395894ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 3
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 180.237193
+
+✖ failing tests:
+
+test at .github/continuum/ccc1-native-evidence-integrity.test.mjs:36:1
+✖ JUnit directory cannot silently omit an oversized or linked report (45.238528ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - false
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/ccc1-native-evidence-integrity.test.mjs:41:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/ccc1-native-evidence-integrity.test.mjs:49:1
+✖ incomplete failing report cannot become negative strategy training evidence (2.395894ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   {
+  +     failures: 1,
+  +     kind: 'TEST_FAILURE|REFERENCE_REPAIR',
+  +     successes: 0
+  +   }
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/ccc1-native-evidence-integrity.test.mjs:55:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { kind: 'TEST_FAILURE|REFERENCE_REPAIR', successes: 0, failures: 1 } ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

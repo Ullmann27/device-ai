@@ -1,0 +1,30 @@
+allprojects {
+ afterEvaluate { p ->
+  if (p.name == 'app') {
+   p.android.sourceSets.getByName('test').java.srcDir('docs/evidence/momega1/android/planning/independent-snapshots')
+   p.android.sourceSets.getByName('test').java.srcDir('docs/evidence/momega1/android/independent-snapshots')
+  }
+ }
+ tasks.withType(Test).configureEach {
+  executable = '/usr/bin/java'
+  filter {
+   includeTestsMatching 'at.heinz.deviceai.ContinuumCodingPlanningTest'
+   includeTestsMatching 'at.heinz.deviceai.ContinuumCodingPlanningUiTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentCodingPlanningTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentCodingPlanningIntakeUiTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentTypedAuthorizationUiTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentTypedCancellationUiTest'
+   includeTestsMatching 'at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest'
+   includeTestsMatching 'at.heinz.deviceai.ContinuumTypedSnapshotBindingTest'
+   includeTestsMatching 'at.heinz.deviceai.ContinuumTypedCodingBridgeTest'
+   includeTestsMatching 'at.heinz.deviceai.ContinuumBuilderLifecycleUiTest'
+   includeTestsMatching 'at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest'
+   includeTestsMatching 'at.heinz.deviceai.ContinuumOwnedBuilderUiTest'
+   includeTestsMatching 'at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest'
+   includeTestsMatching 'at.heinz.deviceai.cognitive.BoundedAgentTest'
+   includeTestsMatching 'at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest'
+   includeTestsMatching 'at.heinz.deviceai.localmodel.LocalTurnModelBindingTest'
+  }
+ }
+}

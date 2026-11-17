@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:05:05" hostname="6e2f8005d77e" time="0.674">
+  <properties/>
+  <testcase name="listeningSpeechAndStopClearWindowIntentWithoutInventingAudio" classname="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" time="0.002"/>
+  <testcase name="conversationSceneDrivesEyesHeadMouthAndStopsCleanly" classname="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" time="0.667"/>
+  <testcase name="windowIntentExpiresAndClearRejectsQueuedReplay" classname="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" time="0.001"/>
+  <testcase name="windowIntentLeadsWithEyesAndRestoresCurrentCameraGaze" classname="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" time="0.0"/>
+  <testcase name="explicitConfirmationMakesOneBoundedNodWithCooldown" classname="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" time="0.001"/>
+  <testcase name="thinkingHasSubtleMotionWithoutOpeningMouth" classname="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" time="0.003"/>
+  <testcase name="confirmationRespectsFramingBoundsAndReducedMotion" classname="at.heinz.deviceai.avatar3d.AvatarMotionEvidenceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

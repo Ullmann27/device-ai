@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "reviewedSourceLocal": "a6fac1f8be82bdef9c34aff726d20ebc949e575b",
+  "reviewedSourceRemote": "ca80459a3f6695c8fecff4a217fbe93318452121",
+  "reviews": [
+    {
+      "reviewer": "connect_r3_bots",
+      "scope": "Avatar lifecycle delta a3f46349ad66db8362fee35a87338334c1838e83",
+      "finding": "NO_CONFIRMED_NEW_DEFECT",
+      "checked": [
+        "Foreign live-surface parent rejected before attach or detach",
+        "Named stale callbacks removed on detach",
+        "Window attachment and current registration checked",
+        "Reattach schedules a new attempt",
+        "Original direct ownership require preserved",
+        "Three new UI tests retain negative and positive cases"
+      ],
+      "kind": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "reviewers": [
+        "connect_r3_memory",
+        "connect_r3_avatar"
+      ],
+      "scope": "Eight remaining ReferenceCockpit failures",
+      "finding": "FIXTURE_SELECTS_HIDDEN_PRE_SHELL_CONTROLS_AND_OLD_RAIL",
+      "checked": [
+        "Activity enables current Jarvis Shell",
+        "Legacy ElementViews are GONE and not laid out",
+        "Current rail has eleven destinations",
+        "START hides the separate conversation rail"
+      ],
+      "kind": "SOURCE_DIAGNOSIS_ONLY"
+    },
+    {
+      "reviewer": "connect_r3_bots",
+      "scope": "All 531 XML reports in second canonical Android run",
+      "finding": "ELEVEN_REQUIRED_SUITES_AND_FIVE_MINIMUM_COUNTS_MET",
+      "kind": "READ_ONLY_EVIDENCE_REVIEW"
+    }
+  ],
+  "limits": [
+    "Static review does not establish arbitrary thread scheduling or native GPU behavior",
+    "New fixture assertions still require actual Android execution"
+  ]
+}

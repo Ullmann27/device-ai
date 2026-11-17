@@ -1,0 +1,49 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=33119 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=33119 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.OwnerAppActionWorkSceneUiTest#chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult
+.E
+Time: 8.613
+There was 1 failure:
+1) chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult(at.heinz.deviceai.OwnerAppActionWorkSceneUiTest)
+java.lang.AssertionError: expected:<CHAT> but was:<START>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult$lambda$0(OwnerAppActionWorkSceneUiTest.kt:181)
+	at at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.withActivity(OwnerAppActionWorkSceneUiTest.kt:127)
+	at at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult(OwnerAppActionWorkSceneUiTest.kt:163)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+CASE at.heinz.deviceai.OwnerAppActionWorkSceneUiTest#stopBeforePostedBackendStartCannotReopenScene
+.
+Time: 1.61
+
+OK (1 test)
+
+CASE at.heinz.deviceai.OwnerAppActionWorkSceneUiTest#foregroundLaunchKeepsActualResultForReturn
+.
+Time: 2.946
+
+OK (1 test)
+
+CASE at.heinz.deviceai.OwnerAppActionWorkSceneUiTest#missingAppAndPermissionNeverBecomeSuccessText
+.E
+Time: 6.606
+There was 1 failure:
+1) missingAppAndPermissionNeverBecomeSuccessText(at.heinz.deviceai.OwnerAppActionWorkSceneUiTest)
+java.lang.AssertionError: Confirmation was not dispatched: busy=true, foreground=true, flow=at.heinz.deviceai.cognitive.OwnerAppActionFlow@76704eb3, status=SUCCEEDED · App anhand Name suchen · {"schema":"CONTINUUM_APP_DISCOVERY_V1","readOnly":true,"visibility":"VISIBLE_LAUNCHER_ACTIVITIES_ONLY","exactLabelMatch"
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.approve(OwnerAppActionWorkSceneUiTest.kt:155)
+	at at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.missingAppAndPermissionNeverBecomeSuccessText$lambda$0(OwnerAppActionWorkSceneUiTest.kt:219)
+	at at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.withActivity(OwnerAppActionWorkSceneUiTest.kt:127)
+	at at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.missingAppAndPermissionNeverBecomeSuccessText(OwnerAppActionWorkSceneUiTest.kt:213)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=4 failures=2

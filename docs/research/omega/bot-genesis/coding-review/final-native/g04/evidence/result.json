@@ -1,0 +1,120 @@
+{
+  "schema": "continuum-coding-task-result",
+  "version": 1,
+  "id": "genesis-g04",
+  "ccc1TaskId": "t-38bb5b6fffe0c09c",
+  "taskFingerprint": "a7e2eba21f0424251768536022b5c482314e4ef002e79875a814f1d1473d5b1d",
+  "sourceCommit": "b7e9596addc9807cd5d04d835d83acf1e3fdb43a",
+  "chain": "node",
+  "status": "ABSTAINED",
+  "receiptJobs": [
+    "3851b756-138e-4a87-ba89-0ace078828b4"
+  ],
+  "receipts": [
+    {
+      "schema": "continuum-mobile-coding-receipt",
+      "version": 1,
+      "job": "3851b756-138e-4a87-ba89-0ace078828b4",
+      "operation": "code-repair",
+      "taskId": "mob-400ba87d88cdcada",
+      "commit": "b7e9596addc9807cd5d04d835d83acf1e3fdb43a",
+      "toolchain": {
+        "node": "v24.19.0",
+        "platform": "linux",
+        "arch": "x64",
+        "git": "git version 2.52.0"
+      },
+      "order": {
+        "chain": "node"
+      },
+      "status": "FAILED_REPAIR",
+      "teamleaderOutcome": "NO_VERIFIED_REPAIR",
+      "patch": null,
+      "evidence": null,
+      "commands": [
+        {
+          "phase": "baseline",
+          "exitCode": 1,
+          "passed": false,
+          "executed": 10,
+          "failed": 8,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        }
+      ],
+      "failure": {
+        "code": "NO_VERIFIED_REPAIR",
+        "message": "Repair ended NO_VERIFIED_REPAIR"
+      },
+      "backlog": {
+        "state": "READY",
+        "attempts": 1,
+        "maxAttempts": 3,
+        "error": {
+          "code": "NO_VERIFIED_REPAIR",
+          "message": "NO_VERIFIED_REPAIR"
+        }
+      },
+      "approvedForMerge": false,
+      "apk": null,
+      "installed": false,
+      "deviceVerified": false,
+      "createdAt": "2026-11-03T21:34:23.185Z",
+      "repair": {
+        "outcome": "NO_VERIFIED_REPAIR",
+        "strategy": null,
+        "files": [],
+        "diagnostics": 8,
+        "attempts": 1
+      }
+    }
+  ],
+  "technicalExperienceStatus": "NOT_RECORDED",
+  "technicalRecallCount": 0,
+  "botAssignment": {
+    "sha256": "3ff2411fa20de85329de127c55eb1ad57fa314c9242576e4ebaa2f6ab36161b3",
+    "builder": {
+      "agentId": "bot-forge",
+      "persistentWorkspaceId": "workspace-bot-forge",
+      "maxModelCalls": 1,
+      "deadlineMillis": 120000
+    },
+    "verifier": {
+      "agentId": "bot-lint",
+      "persistentWorkspaceId": "workspace-bot-lint",
+      "maxModelCalls": 1,
+      "deadlineMillis": 120000
+    },
+    "reporter": {
+      "agentId": "bot-echo",
+      "persistentWorkspaceId": "workspace-bot-echo",
+      "maxModelCalls": 1,
+      "deadlineMillis": 120000
+    },
+    "status": "ASSIGNED_IDENTITIES_ONLY",
+    "executionEvidence": "FIXED_PROFILE_OBSERVATIONS"
+  },
+  "modelExecution": {
+    "verifiedCalls": 1,
+    "acceptedProposals": 1,
+    "rejectedResponses": 0,
+    "identity": {
+      "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+      "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+    }
+  },
+  "approvedForMerge": false,
+  "deviceVerified": false,
+  "neuralTraining": false,
+  "botReport": {
+    "reporterId": "bot-echo",
+    "operation": "DETERMINISTIC_CANONICAL_REPORT",
+    "path": "/workspace/genesis-g04-experiment/runs/g04/evidence/private-synthetic-state/coding-evidence/genesis-g04/bot-report-3ff2411fa20de85329de127c55eb1ad57fa314c9242576e4ebaa2f6ab36161b3.json",
+    "sha256": "ce69b21054432fd0877a2ed870e1f3263a227bca33809bd0c0771cc144877ec1",
+    "status": "ABSTAINED",
+    "journalHead": "a44e027fe253c8b86d6784d1a6a0a87d415111e314b33737329cc66f905375c0",
+    "modelCalls": 0,
+    "deviceVerified": false
+  }
+}

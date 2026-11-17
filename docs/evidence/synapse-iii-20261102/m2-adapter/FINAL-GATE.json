@@ -1,0 +1,21 @@
+{
+  "stage1": "REJECTED_OLD_C_REGRESSION_DESPITE_D_PASS",
+  "fullTrainingOldC": {
+    "RAW": "5/5 supported +15/25 abstentions; ten unsupported positives",
+    "VERIFIED": "24/25 abstentions; C027 false positive"
+  },
+  "stage2": "FROZEN_BACKBONE_SHADOW_PASS_NOT_PROMOTED",
+  "trainableParameters": 2,
+  "frozenParameters": 11,
+  "seeds": [
+    17,
+    29
+  ],
+  "oldCAllModes": "55/55 per seed",
+  "freshEAllModes": "55/55 per seed",
+  "newEPairedRawGain": 10,
+  "newEPairedRawRegressions": 0,
+  "holdoutESha256": "894d2c61e1df9f21f67e9c6de7d3476bee4095d12af29091ac5bc77cae9dcab4",
+  "device": "NOT_RUN",
+  "productivePromotion": false
+}

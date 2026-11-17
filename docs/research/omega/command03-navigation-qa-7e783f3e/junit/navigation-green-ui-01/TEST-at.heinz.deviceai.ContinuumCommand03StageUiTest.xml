@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCommand03StageUiTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-16T06:04:36" hostname="731a0110a54f" time="1.887">
+  <properties/>
+  <testcase name="oversizedMalformedAndSubframeSubmissionsNeverReachTheNativeHandler" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="1.759"/>
+  <testcase name="aPendingAcknowledgementIsDeliveredWhenTheLocalPageBecomesReady" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.046"/>
+  <testcase name="multilineSubmissionIsAcknowledgedAndRepeatedIdentityExecutesOnlyOnce" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.044"/>
+  <testcase name="transcriptQueuedBeforeReadinessAndLongLiveResponseKeepTheirCompleteText" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.038"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

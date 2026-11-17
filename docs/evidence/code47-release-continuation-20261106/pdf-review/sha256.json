@@ -1,0 +1,9 @@
+{
+  "run-pdf-review.py": "afc38f9e8ddc90897b3ee987377fabf4cbea3a75cac402eff1ef54a668fd4fa0",
+  "red/receipt.json": "b7c43249233cb44b16ad61fc167bf3c3a536e80d5431ca9aa9afc0f9f0acc994",
+  "red/junit.log": "76c02d4d4286bc584cd9011ed1ae9bbcc420a7d365aca79edfbabe5d0a8735c0",
+  "red/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "green/receipt.json": "f469e57c82600eeb94ed7d946f12c0547a77f0b54a71f3b709389578c2bbd1f3",
+  "green/junit.log": "c7b317d7b3b686672b6539e6b2a007de9ca0ad367c1f2bee5d4c930513f7be8b",
+  "green/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

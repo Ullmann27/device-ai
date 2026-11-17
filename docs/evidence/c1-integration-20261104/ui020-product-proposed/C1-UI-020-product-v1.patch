@@ -1,0 +1,210 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt b/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+--- a/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
++++ b/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+@@ -53,6 +53,9 @@
+     private val avatarRenderer = ContinuumAvatarRenderer()
+     private val avatarPose = AvatarPoseReducer()
+     private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
++    private val cockpitPresentationPrefs = context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
++    /** Existing host refreshes its current layout after an explicit owner appearance choice. */
++    var onAppearanceChanged: (() -> Unit)? = null
+     private val hasSavedAppearance = appearancePrefs.contains("native-head") || appearancePrefs.contains("native-head-3d")
+     // New installations use the requested 3D cockpit. An existing explicit orb
+     // or 2D choice is preserved; this never requests camera/audio permissions.
+@@ -359,9 +362,18 @@
+     }
+ 
+     fun showAppearanceChooser() {
++        val compact = cockpitPresentationPrefs.getBoolean("compact", false)
++        val selected = if (compact) 3 else if (head3dEnabled) 2 else if (headEnabled) 1 else 0
+         AlertDialog.Builder(context).setTitle("Continuum · Darstellung")
+-            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau"), if (head3dEnabled) 2 else if (headEnabled) 1 else 0) { dialog, item ->
++            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau",
++                "Kompakt · Kugel"), selected) { dialog, item ->
++                val presentation = cockpitPresentationPrefs.edit().putBoolean("compact", item == 3)
++                // Keep the existing legacy return preference in the same store, including an explicit 2D choice.
++                if (headEnabled) presentation.putBoolean("avatar-3d", head3dEnabled)
++                if (item == 1 || item == 2) presentation.putBoolean("avatar-3d", item == 2)
+                 if (item == 2) setNative3dEnabled(true) else setNativeHeadEnabled(item == 1)
++                presentation.apply()
++                onAppearanceChanged?.invoke()
+                 dialog.dismiss()
+             }
+             .setNeutralButton("Bewegung prüfen") { _, _ ->
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt b/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt
+--- a/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt
+@@ -49,6 +49,14 @@
+         views.values.forEach { it.refresh() }
+         views[slot]?.requestFocus()
+     }
++    /** Reuse the existing owner preference after any entry into the same appearance chooser. */
++    fun refreshPresentation() {
++        compactPresentation = presentationPrefs.getBoolean("compact", false)
++        configure(configuredWidth, configuredWide, offset, configuredNavigation, configuredHeight, externalBottomBarHeightDp)
++        views.values.forEach { it.refresh() }
++        requestLayout()
++    }
++
+     private val views = linkedMapOf<Slot, ElementView>()
+     private val backgroundPainter = AndroidContinuumPainter(context.assets)
+     private val sciFiEffects = ContinuumSciFiEffects(density)
+@@ -332,6 +340,7 @@
+         this.externalBottomBarHeightDp = externalBottomBarHeightDp
+         configuredWide = wide
+         configuredNavigation = includeNavigation
++        jarvisShell.compactPresentation = compactPresentation
+         val spec = ContinuumReferenceLayout.create(windowWidthDp, if (wide) windowHeightDp else 0f,
+             wide, textScale, compactPresentation)
+         if (spec == layoutSpec && offset == railOffset && views.isNotEmpty() && !bottomChanged) return
+@@ -443,7 +452,7 @@
+         jarvisShell.viewportHeightDp = viewport.coerceAtLeast(160f)
+         val h = if (jarvisShellStage && width / density >= 240f)
+             (JarvisShellLayout.forContent(width / density, jarvisShell.viewportHeightDp,
+-                resources.configuration.fontScale, jarvisShell.foldRail, offset).height * density).toInt()
++                resources.configuration.fontScale, jarvisShell.foldRail, offset, compactPresentation = compactPresentation).height * density).toInt()
+             else maxOf(contentHeight, suggestedMinimumHeight)
+         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+         shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+@@ -503,7 +512,7 @@
+         val viewport = jarvisShell.viewportHeightDp.takeIf { it >= 160f } ?: (heightPx / density)
+         if (w < 240f || viewport < 160f) return null
+         return JarvisShellLayout.forContent(w, viewport, resources.configuration.fontScale, jarvisShell.foldRail,
+-            externalRailWidthDp = offset)
++            externalRailWidthDp = offset, compactPresentation = compactPresentation)
+     }
+ 
+     private data class ShellActionSpec(val key: String, val target: String, val label: String,
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
+--- a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt
+@@ -31,6 +31,14 @@
+     private var layoutRail: JarvisShellLayout.Rail? = null
+     private var layoutInset = Float.NaN
+     private var layoutViewport = Float.NaN
++    private var layoutCompact = false
++    /** Explicit compact-avatar choice; ordinary phone/reference geometry keeps its existing default. */
++    var compactPresentation = false
++        set(value) {
++            if (field == value) return
++            field = value
++            invalidate()
++        }
+     /** Stable visible height, independent of this View's larger scrolling content height. */
+     var viewportHeightDp = 0f
+         set(value) {
+@@ -70,9 +78,12 @@
+         if (w < 240f || h < 160f) return
+         val font = resources.configuration.fontScale
+         val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
+-        val s = shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp }
+-            ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp).also {
++        val s = shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail &&
++            layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
++            ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
++                compactPresentation = compactPresentation).also {
+                 shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport
++                layoutCompact = compactPresentation
+             }
+         val scale = animatorScale()
+         val now = SystemClock.uptimeMillis()
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt
+--- a/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt
+@@ -100,11 +100,11 @@
+      */
+     fun forContent(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
+                    externalRailWidthDp: Float = 0f, externalBottomBarHeightDp: Float = 0f,
+-                   includeBottomNavigation: Boolean = false): Shell {
++                   includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
+         require(externalRailWidthDp.isFinite() && externalRailWidthDp >= 0f)
+         require(externalBottomBarHeightDp.isFinite() && externalBottomBarHeightDp >= 0f && externalBottomBarHeightDp < heightDp)
+         val viewport = heightDp - externalBottomBarHeightDp
+-        val full = create(widthDp + externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation)
++        val full = create(widthDp + externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
+         if (externalRailWidthDp == 0f) return full
+         fun shift(box: Box): Box = Box(maxOf(0f, box.left - externalRailWidthDp), box.top,
+             maxOf(0f, box.right - externalRailWidthDp), box.bottom)
+@@ -120,11 +120,11 @@
+     }
+ 
+     fun create(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
+-               includeBottomNavigation: Boolean = false): Shell {
++               includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
+         require(widthDp.isFinite() && widthDp >= 240f && heightDp.isFinite() && heightDp >= 160f)
+         val profile = JarvisWindowProfile.resolve(widthDp, heightDp, fontScale, foldRail)
+-        return if (profile.referenceComposition) reference(widthDp, heightDp, profile, foldRail)
+-            else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation)
++        return if (profile.referenceComposition && !compactPresentation) reference(widthDp, heightDp, profile, foldRail)
++            else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation)
+     }
+ 
+     private fun reference(w: Float, h: Float, profile: JarvisWindowProfile, rail: Rail): Shell {
+@@ -149,7 +149,7 @@
+ 
+     /** Readable vertical composition; there is no aspect-ratio container and nothing is squeezed to fit height. */
+     private fun reflow(w: Float, viewport: Float, p: JarvisWindowProfile, rail: Rail,
+-                       includeBottomNavigation: Boolean): Shell {
++                       includeBottomNavigation: Boolean, compactPresentation: Boolean): Shell {
+         val b = linkedMapOf<Slot, Box>()
+         val gap = 10f
+         val margin = 12f
+@@ -163,7 +163,18 @@
+         var y = top + gap
+         val head: Box
+         val orb: Box
+-        if (compact) {
++        if (compactPresentation) {
++            // Opt-in only: the same original orb uses a shorter live surface; later controls move upward.
++            // Keep disjoint head/orb regions for the existing renderer contract even while the head is disabled.
++            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
++            y = b.getValue(Slot.CONTINUUM_HEADER).bottom + gap
++            val split = left + room * .5f
++            head = Box(left, y, split - gap / 2f, y + 120f)
++            orb = Box(split + gap / 2f, y, right, y + 120f)
++            y = orb.bottom + gap
++            b[Slot.DIALOG] = Box(left, y, right, y + 128f * font)
++            y = b.getValue(Slot.DIALOG).bottom + gap
++        } else if (compact) {
+             val headH = maxOf(300f, minOf(room * 1.08f, 440f))
+             head = Box(left, y, right, y + headH)
+             y = head.bottom + gap
+@@ -212,7 +223,8 @@
+         if (!compact) b[Slot.NAV_RAIL] = Box(margin, top + gap, p.railWidthDp, b.getValue(Slot.STATUS).top - gap)
+         return Shell(formFactor(w, viewport), w, maxOf(viewport, y), b, p.tileColumns, rows,
+             if (compact) null else rail,
+-            if (compact) setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER)
++            if (compactPresentation) emptySet()
++                else if (compact) setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER)
+                 else setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER),
+             viewportHeight = viewport, profile = p, tileGap = gap, headBounds = head, orbBounds = orb)
+     }
+diff --git a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -712,6 +712,7 @@
+     override fun onDestroy() {
+         ownerRecoveryReview?.close()
+         ownerRecoveryReview = null
++        hologramView?.onAppearanceChanged = null
+         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+         cockpitSubscriptions.forEach { runCatching { it.close() } }
+         cockpitSubscriptions = emptyList()
+@@ -1025,6 +1026,9 @@
+         home.setJarvisShellStage(true)
+         home.setForegroundActive(foregroundLearningActive)
+         homeView = home
++        liveHologram.onAppearanceChanged = {
++            if (!isFinishing && !isDestroyed) homeView?.refreshPresentation()
++        }
+         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
+         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
+         cockpitSubscriptions.forEach { runCatching { it.close() } }
+@@ -2861,6 +2865,7 @@
+         "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
+         learningIoStatus { systemCenterStatus() },
+         listOf(
++            CenterAction("MEHR · ARBEITSBEREICHE") { showMoreWorkAreas() },
+             CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
+             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
+             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },

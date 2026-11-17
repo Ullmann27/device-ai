@@ -1,0 +1,31 @@
+{
+  "schema": "cinema-render-coverage-validation-v1",
+  "audited_source": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+  "python": "3.12.14",
+  "checks": {
+    "python_compile": "PASS",
+    "runner_help_exit": 0,
+    "pure_configuration_rejections": {
+      "passed": 7,
+      "total": 7
+    },
+    "relative_document_links": "PASS",
+    "png_headers_read": 126,
+    "unique_png_hashes": 122,
+    "declared_png_hashes_verified": 50,
+    "original_glb_hash": "MATCH",
+    "blender_input_hashes_matched": 7,
+    "embedded_edge_shader_hash": "MATCH"
+  },
+  "execution": {
+    "new_runner_gradle": "NOT_RUN",
+    "new_render": "NOT_RUN",
+    "new_dependencies": "NONE",
+    "APK_signing_installation": "NOT_RUN",
+    "two_phase_gradle": "NOT_RUN"
+  },
+  "limitations": [
+    "Read-only current-session inventory, not all historical archives",
+    "Existing failures preserved; no rendering quality pass inferred"
+  ]
+}

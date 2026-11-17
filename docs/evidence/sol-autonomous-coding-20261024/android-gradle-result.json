@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-24T19:48:59.474904+00:00",
+  "command": "source /workspace/scratch/toolchains/android-gradle-env.sh; gradle --project-dir /workspace/scratch/android-gradle-snapshot --no-daemon --max-workers 2 --console plain -Dorg.gradle.jvmargs=\"-Xmx2g -Dfile.encoding=UTF-8\" -Pkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest :app:lintDebug",
+  "exit_code": 0,
+  "gradle_build": "BUILD SUCCESSFUL in 5m 13s",
+  "tasks_executed": 35,
+  "tests": {
+    "classes": 191,
+    "tests": 964,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "lint_issues": [],
+  "source_manifest": "/workspace/scratch/android-gradle-source-manifest.json",
+  "source_mismatches_since_snapshot": [],
+  "log": "/workspace/scratch/android-gradle-verify.log",
+  "limitations": [
+    "JVM unit tests and configured NewApi lint only",
+    "No APK assemble, signing, installation or device verification"
+  ],
+  "toolchain_manifest": "/workspace/scratch/toolchains/manifest.json"
+}

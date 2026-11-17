@@ -1,0 +1,306 @@
+{
+  "android-reference-focus/build-locks.json": {
+    "sha256": "95116684696c58a786e4befe4d8964c439eb948db26219b7f92d13653d795a7e",
+    "bytes": 946
+  },
+  "android-reference-focus/gradle.txt": {
+    "sha256": "a2f679dea48e1c9deddfd263794c6d303312e19708033da008c46615c61d9cd0",
+    "bytes": 2041
+  },
+  "android-reference-focus/invocation.json": {
+    "sha256": "016ea1cfafc9becb303366a98e04beb577c1b1d5c7765481818f482a266ac6bf",
+    "bytes": 867
+  },
+  "android-reference-focus/observe-tests.init.gradle": {
+    "sha256": "49095b00e2b0f0910add947a8d08c9f41b19e6b204de17a979ebb4c2af2fd335",
+    "bytes": 798
+  },
+  "android-reference-focus/result.json": {
+    "sha256": "0608c006b26eae0d07f43c5066edd009ef7c149939f1a82e7a4e45998cebd613",
+    "bytes": 37342
+  },
+  "android-reference-focus/run_android_gate.py": {
+    "sha256": "ed64ee317239b47bbbe6c75114fbf2e2c4679af0d5f446da744b77c705583231",
+    "bytes": 6001
+  },
+  "android-reference-focus/source-after.json": {
+    "sha256": "9ec7c2fa233393ed0b6f82e3aab7ab265662bae6db9b7caa7667be97fbc80714",
+    "bytes": 296319
+  },
+  "android-reference-focus/source-before.json": {
+    "sha256": "9ec7c2fa233393ed0b6f82e3aab7ab265662bae6db9b7caa7667be97fbc80714",
+    "bytes": 296319
+  },
+  "android-reference-focus/wrapper.log": {
+    "sha256": "b47fc475e4d316d194bab927dec97eb3174fb5273185a351c9fb32c3f81518f2",
+    "bytes": 2825
+  },
+  "android-reference-focus-02/startup-rejection.json": {
+    "sha256": "31f8eb3381b20edac44087e1d17bdafc4c7ce684c062a79e41548fd24f677df5",
+    "bytes": 303
+  },
+  "android-reference-focus-03/result.json": {
+    "sha256": "f8d7f3e0e2c96ee9c56aafca5dc7a6a16a4105bf215d43bb15014256030c13ce",
+    "bytes": 144
+  },
+  "android-reference-focus-03/source-before.json": {
+    "sha256": "c2880a71c523cb3933467c6e0096923ec537ea80f1e01e8cb6e0a77b1b77d4dc",
+    "bytes": 296319
+  },
+  "android-reference-focus-04/build-locks.json": {
+    "sha256": "fab5409fb233f77f4cae68c54d7b1ba9aa4f70d6c1a60051807065d5ddd70834",
+    "bytes": 1006
+  },
+  "android-reference-focus-04/invocation.json": {
+    "sha256": "d3e9b234bbdb643b961f1c9f21608b6cc19f1f8904adfa197b7564876fcb039f",
+    "bytes": 880
+  },
+  "android-reference-focus-04/observe-tests.init.gradle": {
+    "sha256": "722066be63c02a1bb004ead79ba06ed02fd528c5a13710448851ee2c2155de55",
+    "bytes": 1013
+  },
+  "android-reference-focus-04/result.json": {
+    "sha256": "612507512fdd4133bf89217f308f82b4e245a804d340544371c14b6926b4bbcc",
+    "bytes": 37343
+  },
+  "android-reference-focus-04/run_android_gate.py": {
+    "sha256": "0487d8312dd9f60eacb89f5f1c5413c0bd3292c7129e3a1ae853da234de4ed9a",
+    "bytes": 6136
+  },
+  "android-reference-focus-04/source-after.json": {
+    "sha256": "c2880a71c523cb3933467c6e0096923ec537ea80f1e01e8cb6e0a77b1b77d4dc",
+    "bytes": 296319
+  },
+  "android-reference-focus-04/source-before.json": {
+    "sha256": "c2880a71c523cb3933467c6e0096923ec537ea80f1e01e8cb6e0a77b1b77d4dc",
+    "bytes": 296319
+  },
+  "android-reference-focus-04/wrapper.log": {
+    "sha256": "93f60af76b24a1eb75eb36a4278b48d4aaa1cbfc7e26966212a3ef5e410f47d8",
+    "bytes": 908
+  },
+  "android-reference-focus-05/build-locks.json": {
+    "sha256": "2fb87410ee54567380edeaff0555ac5c8350499d837f72a094473f1ceb1f4263",
+    "bytes": 958
+  },
+  "android-reference-focus-05/gradle.txt": {
+    "sha256": "a1841a2e76e4aed2d7c85286ae62959832648acd40fd1ef9eb49f76988640f77",
+    "bytes": 4250
+  },
+  "android-reference-focus-05/invocation.json": {
+    "sha256": "314ee1f4e56f00a1bff23f7d588506c10974a4dfde9d3d1345e5095452d24a34",
+    "bytes": 880
+  },
+  "android-reference-focus-05/observe-tests.init.gradle": {
+    "sha256": "722066be63c02a1bb004ead79ba06ed02fd528c5a13710448851ee2c2155de55",
+    "bytes": 1013
+  },
+  "android-reference-focus-05/result.json": {
+    "sha256": "4a6161a175ab1670ef38d4d977416189ead6cc0f429d2cb73a2c2991bf371055",
+    "bytes": 930
+  },
+  "android-reference-focus-05/run_android_gate.py": {
+    "sha256": "3862f72d142664577be5724c9789d5756e221a328a4f89826acd441fe25f35c2",
+    "bytes": 6237
+  },
+  "android-reference-focus-05/source-after.json": {
+    "sha256": "c2880a71c523cb3933467c6e0096923ec537ea80f1e01e8cb6e0a77b1b77d4dc",
+    "bytes": 296319
+  },
+  "android-reference-focus-05/source-before.json": {
+    "sha256": "c2880a71c523cb3933467c6e0096923ec537ea80f1e01e8cb6e0a77b1b77d4dc",
+    "bytes": 296319
+  },
+  "android-reference-focus-05/test-progress.json": {
+    "sha256": "6bee718bd5e5c44d06e5071c77fa752fe53235d04506c41ccfcc8a9d6e9c4299",
+    "bytes": 186
+  },
+  "android-reference-focus-05/with_c1_build_locks.py": {
+    "sha256": "9537f7122c765cbb23a6bd09bd14b4f6ea5b11e264dad582f2648d2270c92509",
+    "bytes": 2532
+  },
+  "android-reference-focus-05/wrapper.log": {
+    "sha256": "60e4a8ce1056d1f1f93f8e7dd40b798fd97769c15f67a592015e8156b5c2946a",
+    "bytes": 5049
+  },
+  "android-reference-focus-05/xml/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml": {
+    "sha256": "67789f83f179b1ce9207593d97e4b370c09e806cf37b2f5166c1f2130282180f",
+    "bytes": 11012
+  },
+  "android-reference-focus-06/build-locks.json": {
+    "sha256": "99ce439039a1c530c64310b8d6c37a95a24c5acd411707b44b0bbfd083605e84",
+    "bytes": 958
+  },
+  "android-reference-focus-06/gradle.txt": {
+    "sha256": "79ca0062286b5b771bc44c89ea67a2ba72c2e9d96481bd9c83efcb29348d4f16",
+    "bytes": 4233
+  },
+  "android-reference-focus-06/invocation.json": {
+    "sha256": "97e979f3f5d96e623a37babd8a3711cd7e2dad94bdd3572f15792bc1b53f99f9",
+    "bytes": 880
+  },
+  "android-reference-focus-06/observe-tests.init.gradle": {
+    "sha256": "722066be63c02a1bb004ead79ba06ed02fd528c5a13710448851ee2c2155de55",
+    "bytes": 1013
+  },
+  "android-reference-focus-06/result.json": {
+    "sha256": "41ed4387d8e6a70a97dbcbd80cbae560503456bde9913d1be2f185277469114f",
+    "bytes": 929
+  },
+  "android-reference-focus-06/run_android_gate.py": {
+    "sha256": "3862f72d142664577be5724c9789d5756e221a328a4f89826acd441fe25f35c2",
+    "bytes": 6237
+  },
+  "android-reference-focus-06/source-after.json": {
+    "sha256": "3d05e727e99b25e020455a34acbec3b8d1e76b91dbf3bada0e65c3d51cf728e4",
+    "bytes": 296319
+  },
+  "android-reference-focus-06/source-before.json": {
+    "sha256": "3d05e727e99b25e020455a34acbec3b8d1e76b91dbf3bada0e65c3d51cf728e4",
+    "bytes": 296319
+  },
+  "android-reference-focus-06/test-progress.json": {
+    "sha256": "1f45d7ce9329013e3ce5a80d4e47a9f6b7e033262f32c0ce80ffd57c03b7d3a9",
+    "bytes": 186
+  },
+  "android-reference-focus-06/with_c1_build_locks.py": {
+    "sha256": "9537f7122c765cbb23a6bd09bd14b4f6ea5b11e264dad582f2648d2270c92509",
+    "bytes": 2532
+  },
+  "android-reference-focus-06/wrapper.log": {
+    "sha256": "139145ceb72f82701cf329aa3f43ddffc8e7f8c917ea3097f30157235906edef",
+    "bytes": 5033
+  },
+  "android-reference-focus-06/xml/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml": {
+    "sha256": "74fa2d3b2e068113b85af6a6184f800858000376f9e9db5d53a2f2b6f83c0496",
+    "bytes": 9466
+  },
+  "android-reference-focus-07/startup-rejection.json": {
+    "sha256": "0c4c1dcf775bccbe35bb8808c561ba9156bb0de747971c9435c3e91fbc20b156",
+    "bytes": 293
+  },
+  "android-reference-focus-08/build-locks.json": {
+    "sha256": "ea97dcf8ae9623ba2d1d935668ad2b7dd5fceab657735bb2972ac3a44e8c4b43",
+    "bytes": 958
+  },
+  "android-reference-focus-08/gradle.txt": {
+    "sha256": "92054ac4158020c98560d8e50f1a72b75b6d23caa4b5616cdf4e052ebdbc57ed",
+    "bytes": 3359
+  },
+  "android-reference-focus-08/invocation.json": {
+    "sha256": "d160233811ae1cb9fc2f03eb2e680ffdfab998ab658dcd806572704643e3f016",
+    "bytes": 879
+  },
+  "android-reference-focus-08/observe-tests.init.gradle": {
+    "sha256": "722066be63c02a1bb004ead79ba06ed02fd528c5a13710448851ee2c2155de55",
+    "bytes": 1013
+  },
+  "android-reference-focus-08/result.json": {
+    "sha256": "1e00ed06724b1556deebc4a408451487f397d4a81769e5f0f8931f7e9a3d8c3e",
+    "bytes": 916
+  },
+  "android-reference-focus-08/run_android_gate.py": {
+    "sha256": "3862f72d142664577be5724c9789d5756e221a328a4f89826acd441fe25f35c2",
+    "bytes": 6237
+  },
+  "android-reference-focus-08/source-after.json": {
+    "sha256": "ea4a76cf0a84f03173f5ae1a41baf870b587ebbcd20d86e0c8a1bae78b1c07ef",
+    "bytes": 296319
+  },
+  "android-reference-focus-08/source-before.json": {
+    "sha256": "ea4a76cf0a84f03173f5ae1a41baf870b587ebbcd20d86e0c8a1bae78b1c07ef",
+    "bytes": 296319
+  },
+  "android-reference-focus-08/test-progress.json": {
+    "sha256": "1f1d17a7cfbe9770d62fc5be4f5180d47e9a42dd8bd6b64c0260f7fafb8882a1",
+    "bytes": 186
+  },
+  "android-reference-focus-08/with_c1_build_locks.py": {
+    "sha256": "9537f7122c765cbb23a6bd09bd14b4f6ea5b11e264dad582f2648d2270c92509",
+    "bytes": 2532
+  },
+  "android-reference-focus-08/wrapper.log": {
+    "sha256": "0c966e413fc2c192f77e59ecbaec30c65f47d5aefaba75ae431629dfcebcf346",
+    "bytes": 4159
+  },
+  "android-reference-focus-08/xml/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml": {
+    "sha256": "d2ae8bbd09956bbabee714e7c06a89f8ce23985200b1f11dade6f85a70e4cc65",
+    "bytes": 5861
+  },
+  "android-overlap-diagnostic/build-locks.json": {
+    "sha256": "577e5f4ba067a778ca6bf7a39c639b276132b3a8b4c9d9702792cf4ed5d5006e",
+    "bytes": 1015
+  },
+  "android-overlap-diagnostic/gradle.txt": {
+    "sha256": "3472bc07ab333f2bc6a9f74fbbd7af4d68cf2b78b378ee0e3da0553019716567",
+    "bytes": 3962
+  },
+  "android-overlap-diagnostic/invocation.json": {
+    "sha256": "a49443650da84b65db904cf5c4699e438f1d7b234f0e7616a7c8ae892c7c3ee6",
+    "bytes": 986
+  },
+  "android-overlap-diagnostic/observe-tests.init.gradle": {
+    "sha256": "722066be63c02a1bb004ead79ba06ed02fd528c5a13710448851ee2c2155de55",
+    "bytes": 1013
+  },
+  "android-overlap-diagnostic/result.json": {
+    "sha256": "796f41a210e0c44503a65087353d8565d7478a43f9d68dbe50aeedbdad90e7d9",
+    "bytes": 982
+  },
+  "android-overlap-diagnostic/run_android_gate.py": {
+    "sha256": "3862f72d142664577be5724c9789d5756e221a328a4f89826acd441fe25f35c2",
+    "bytes": 6237
+  },
+  "android-overlap-diagnostic/source-after.json": {
+    "sha256": "e76fef683476a4036233413fc93c32f1b80194a5622300ca0b3c98074822dc19",
+    "bytes": 296319
+  },
+  "android-overlap-diagnostic/source-before.json": {
+    "sha256": "e76fef683476a4036233413fc93c32f1b80194a5622300ca0b3c98074822dc19",
+    "bytes": 296319
+  },
+  "android-overlap-diagnostic/test-progress.json": {
+    "sha256": "85524762d556a4dfb3e466ab40e902dad6b9be2b5a3356c50de0af1ad5ad087a",
+    "bytes": 187
+  },
+  "android-overlap-diagnostic/with_c1_build_locks.py": {
+    "sha256": "9537f7122c765cbb23a6bd09bd14b4f6ea5b11e264dad582f2648d2270c92509",
+    "bytes": 2532
+  },
+  "android-overlap-diagnostic/wrapper.log": {
+    "sha256": "434b2e9721c6631d2c66b9a3dbc9a95ea5ae0e600c9d1eb3a2015ca9b57414bf",
+    "bytes": 4818
+  },
+  "android-overlap-diagnostic/xml/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml": {
+    "sha256": "b0daf0b1a52904c8fa6136e7e10437ae38b9752fdab7c02ee030309e4e63893d",
+    "bytes": 3495
+  },
+  "backend-final/invocation.json": {
+    "sha256": "4006489614adcdedc1b98295f185a862b4122d24538fe775dc701b1a7a9862c8",
+    "bytes": 940
+  },
+  "backend-final/junit.xml": {
+    "sha256": "da067bc79facc2393f7d43b385d65fecec8059743201bb064077f2431439e15b",
+    "bytes": 14116
+  },
+  "backend-final/result.json": {
+    "sha256": "f92674f91e2480ff2ddebeb9f7040989f1667cd7757fb9f45e93d8acbcf50e6e",
+    "bytes": 392
+  },
+  "backend-final/run_backend_gate.py": {
+    "sha256": "be28b1c700e743a6f56e616ef0f9ceb6bbb3afabde94155bb0276dc513b5bb9f",
+    "bytes": 3305
+  },
+  "backend-final/source-after.json": {
+    "sha256": "018ea9671809273c7e3d5549b387b75ac62deb2a78afe37e423397e605e68739",
+    "bytes": 3794
+  },
+  "backend-final/source-before.json": {
+    "sha256": "018ea9671809273c7e3d5549b387b75ac62deb2a78afe37e423397e605e68739",
+    "bytes": 3794
+  },
+  "backend-final/stderr.txt": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+}

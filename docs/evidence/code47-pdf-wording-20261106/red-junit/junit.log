@@ -1,0 +1,22 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=41301 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=41301 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+JUnit version 4.13.2
+...E.E..
+Time: 0.03
+There were 2 failures:
+1) politeObjectFirstRequestsReachDocumentIntake(at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest)
+java.lang.AssertionError: Kannst du mir bitte die PDF öffnen? expected:<Request(wantsDraft=false, reuse=false)> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest.politeObjectFirstRequestsReachDocumentIntake(OwnerDocumentPoliteIntentTest.kt:17)
+2) politeReuseKeepsTheExistingGrantCheck(at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest)
+java.lang.AssertionError: expected:<Request(wantsDraft=false, reuse=true)> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest.politeReuseKeepsTheExistingGrantCheck(OwnerDocumentPoliteIntentTest.kt:22)
+
+FAILURES!!!
+Tests run: 6,  Failures: 2
+

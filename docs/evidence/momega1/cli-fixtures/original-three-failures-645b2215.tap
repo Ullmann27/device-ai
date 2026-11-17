@@ -1,0 +1,84 @@
+# Subtest: coding CLI UTF-8 transport accommodates the character-bounded multilingual context
+not ok 1475 - coding CLI UTF-8 transport accommodates the character-bounded multilingual context
+  ---
+  duration_ms: 62.971238
+  type: 'test'
+  location: '/workspace/momega1-build-env/final-source-645b2215/scripts/continuum-coding-brain.test.mjs:23:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /LOCAL_AUTH_REQUIRED/. Input:
+    
+    'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-build-env/final-source-645b2215/scripts/continuum-coding-brain.test.mjs:30:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: production coding CLI fails closed before asking the unavailable model
+not ok 1767 - production coding CLI fails closed before asking the unavailable model
+  ---
+  duration_ms: 54.149513
+  type: 'test'
+  location: '/workspace/momega1-build-env/final-source-645b2215/scripts/continuum-m2-model-preflight.test.mjs:77:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /GEMMA_LITERTLM_NOT_GGUF/. Input:
+    
+    'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-build-env/final-source-645b2215/scripts/continuum-m2-model-preflight.test.mjs:89:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: production coding CLI refuses silent unspecified-model fallback even with otherwise valid credentials
+not ok 1768 - production coding CLI refuses silent unspecified-model fallback even with otherwise valid credentials
+  ---
+  duration_ms: 61.762022
+  type: 'test'
+  location: '/workspace/momega1-build-env/final-source-645b2215/scripts/continuum-m2-model-preflight.test.mjs:94:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /MODEL_ID_UNSPECIFIED/. Input:
+    
+    'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-build-env/final-source-645b2215/scripts/continuum-m2-model-preflight.test.mjs:105:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...

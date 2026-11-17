@@ -1,0 +1,52 @@
+{
+  "schema": "OMEGA_BREAKTHROUGH_QA_FREEZE_V1",
+  "baseline": "64ec06a73f50cae9ee49035c840710d87777d50f",
+  "frozenAtUtc": "2026-11-03T18:31:52.169001+00:00",
+  "selection": "Independent synthetic challenge cases; author-provided domains/schemas and status metadata seen, candidate source/tests/outputs not inspected; no user records. Not external blind population data.",
+  "artifacts": [
+    {
+      "file": "neural-corpus.json",
+      "sha256": "006d9eab5ce46efca382b421d1289f6ae045ebb8a81acd8ec78160b2254711e1",
+      "bytes": 40604
+    },
+    {
+      "file": "neural-transport.json",
+      "sha256": "0145f560bca673049d560749544e56126058c22745e8b613d22ebba74e9348d8",
+      "bytes": 6181
+    },
+    {
+      "file": "cognition-cases.json",
+      "sha256": "633a5edaa8cf576312591662f54c7e870910ba504223dba4430f0cdfc300b571",
+      "bytes": 8336
+    },
+    {
+      "file": "memory-cases.json",
+      "sha256": "72e388828c64b41a8167e0bce2687dd7be44df644a5e5e60efc8264086284fc7",
+      "bytes": 9055
+    },
+    {
+      "file": "research-cases.json",
+      "sha256": "1d3fadb7c3a6fdbb9a31f440f7c756161847280f74eaf031d50cc4d95d9f848c",
+      "bytes": 8514
+    },
+    {
+      "file": "autonomy-cases.json",
+      "sha256": "05e0a45a94b71b3d5542643ab801cefd7e8a631a1113ca133d934b269b50a16b",
+      "bytes": 3836
+    }
+  ],
+  "counts": {
+    "neural": 64,
+    "neural_transport": 12,
+    "cognition": 24,
+    "memory_programs": 16,
+    "research_programs": 16,
+    "autonomy_programs": 12
+  },
+  "scopeLimits": [
+    "Neural static German location extraction is in-domain; correction/revocation cases are explicit stress/OOD groups.",
+    "No holdout feedback to authors before source freeze.",
+    "No cases/labels retuned to candidate results; invalid oracle corrections require disclosed version change.",
+    "No production memory, model weights, release or device actions."
+  ]
+}

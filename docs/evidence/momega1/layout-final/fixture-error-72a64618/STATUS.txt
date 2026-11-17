@@ -1,0 +1,1 @@
+FIXTURE_COMPILE_ERROR: nullable CharSequence serialization. No product tests executed. Prior XML, if any, is not evidence for this attempt.

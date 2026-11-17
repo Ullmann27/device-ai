@@ -1,0 +1,102 @@
+{
+  "schema": "independence-s01-failure-audit-v1",
+  "source": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+  "taskId": "independence-s01",
+  "canonicalTaskId": "t-af864ab6f02c7dec",
+  "taskFingerprint": "22fdddc463c1a0a2c4886b36891cd916fceffaac01be8905501eef1ce94b1e37",
+  "canonicalState": "ABSTAINED",
+  "journalVerified": true,
+  "journalEntries": 7,
+  "verdict": "REFUTED",
+  "receiptSha256": "7d37f169f514f4acc643c67162e4106201304fe2e32f0779685ba024ee920fc3",
+  "modelRequest": {
+    "schema": "continuum-coding-model-request",
+    "version": 1,
+    "taskId": "mob-3f33361469bfe324",
+    "taskFingerprint": "1d29b3b5c2343c4bc45d4337f43bc06acaf88a3b23e08120584f1b546a8341f4",
+    "sourceCommit": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+    "request": 1,
+    "startedAt": "2026-11-03T22:23:05.876Z",
+    "elapsedMs": 32520,
+    "configuredModel": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "verifiedModelExecution": false,
+    "contextSha256": "99b5e9fd1c1ab6b21e97362a4c4dc61a0832c74e83416142e5b95453c5aa902b",
+    "promptSha256": "6837d6de41bad6aa4424024a5da645bdc99400d933653ec9395b0f34d71ae66e",
+    "modelTimeoutMs": 60000,
+    "exitCode": 1,
+    "status": "FAILED",
+    "failureKind": "CHILD_EXIT_NONZERO",
+    "responseSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "responseBytes": 0,
+    "rawContentStored": false
+  },
+  "reservedCalls": 1,
+  "admittedGenuineCalls": 0,
+  "sampledNativeProcesses": 1,
+  "observedRoles": [
+    "bot-forge"
+  ],
+  "observations": [
+    {
+      "schema": "continuum-isolation-v1",
+      "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+      "network": "none",
+      "user": "1000:1000",
+      "readOnly": true,
+      "noNewPrivileges": true,
+      "capabilities": [],
+      "memoryMb": 256,
+      "pids": 64,
+      "cpus": 1,
+      "timeoutMs": 10000,
+      "runtime": "runc",
+      "sourceSha256": "beedf222e901498cf4e1780f05d588f0e156ce5fb023a3051e6cb4e6cfa5ad42",
+      "profile": "node-continuum",
+      "untrustedReports": true,
+      "workspaceId": "continuum-a2b498e90f2658aeb2751ae5",
+      "workspaceBinding": {
+        "workerId": "bot-forge",
+        "taskId": "t-af864ab6f02c7dec",
+        "requestMessageId": "f5030412-5f39-47eb-854a-d384b7404db4",
+        "requestHash": "071ad0d950ef50a0d576facec2024b831b04eca10091443be2c5d537c3c19f57",
+        "sourceCommit": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+        "jobId": "c69e8ced-cd5e-419c-bc24-0c4cc4cdd2eb"
+      },
+      "observed": {
+        "containerId": "fb99306e09d267665bad87a1d20514cef635d4cbd86f50792315df6f033341ad",
+        "runtime": "runc",
+        "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+        "user": "1000:1000",
+        "network": "none",
+        "readOnly": true,
+        "memoryBytes": 268435456,
+        "memorySwapBytes": 268435456,
+        "nanoCpus": 1000000000,
+        "pids": 64,
+        "capDrop": [
+          "ALL"
+        ],
+        "securityOpt": [
+          "no-new-privileges:true"
+        ],
+        "writableHostMounts": 0
+      },
+      "teardownConfirmed": true
+    }
+  ],
+  "lint": "NOT_RUN",
+  "echo": "NOT_RUN",
+  "technicalExperience": "NOT_RECORDED",
+  "freshProcessRecall": {
+    "schema": "momega1-technical-recall",
+    "version": 1,
+    "status": "OK",
+    "items": [],
+    "text": ""
+  },
+  "extraIndependentTests": "NOT_RUN_NO_CANDIDATE",
+  "sourceAndTestsUnchanged": true,
+  "failureCause": "CHILD_EXIT_NONZERO; exact child signal/code unavailable in retained typed trace",
+  "deviceVerified": false,
+  "retryAllowed": false
+}

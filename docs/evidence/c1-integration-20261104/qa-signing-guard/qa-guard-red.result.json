@@ -1,0 +1,19 @@
+{
+  "taskId": "C1-QA-GUARD-008",
+  "phase": "RED",
+  "baseLocal": "1666b3c9fa9fa9fe360f0983213f3413de7d0218",
+  "baseRemote": "6ac2e1506071c5782bc06e83d043f3c2e082fb23",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "scripts/continuum-owner-continuous-qa-preflight.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/174c84456ee3/continuum-c1",
+  "startedAt": "2026-11-04T20:28:54.858192+00:00",
+  "finishedAt": "2026-11-04T20:28:56.399307+00:00",
+  "exitCode": 1,
+  "productionSha256": "9673936c27c789c66ba2cd55a9fbd95479d66c5a24b6c1e0c4e6d2ce7fe3d2e3",
+  "scope": "Synthetic signing canaries and local fake curl only; no key access, download, build or signing."
+}

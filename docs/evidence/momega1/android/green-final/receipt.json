@@ -1,0 +1,12 @@
+{
+  "sourceHead": "037370f0544d3ed2ee7686082c41c78046daa64d",
+  "beforeAfterIdentical": true,
+  "beforeSha256": "bee0df8bdd680d2d50702d37936d992fe098f56950f19eda05a33b8f620c905a",
+  "afterSha256": "bee0df8bdd680d2d50702d37936d992fe098f56950f19eda05a33b8f620c905a",
+  "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/android-037370f0/source-before.txt",
+  "exit": 0,
+  "tests": 45,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0
+}

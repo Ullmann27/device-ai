@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "review": "M1_SMALL_DIFF_INDEPENDENT_SOURCE_REVIEW",
+  "observed_at_utc": "2026-11-01T19:34:18.473259+00:00",
+  "worktree_head": "c09a9d38363c477b0e8f180e3e2b80b18f6f90cd",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "b42a60ce1986ba2c0219dc22668499a14679ed0eee50b175f446a6e0884c5879",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt": "eefc9b82a67dda7477c9d97bc0a595c4c8ce87331739d029bc71d9d92947658a",
+    "app/src/test/java/at/heinz/deviceai/cognitive/SessionEvidenceIntegrityTest.kt": "ff92dbd2c2512b3f31cbe492e88416ece3fb99c2bacdf73e853e64de7a7b9cca"
+  },
+  "scope": "Only original-source retention/session filter/trim changes and six regressions; no Activity route changes reviewed. Source snapshots included.",
+  "execution": {
+    "build": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "device": "NOT_RUN"
+  },
+  "verdict": "NO_NEW_BLOCKING_DEFECT_FOUND_IN_THIS_NARROW_DIFF; residual pre-existing invalidator gaps must not be claimed fixed",
+  "positive_findings": [
+    "Full original <=1000-character user literal is retained separately from unchanged300/350 prompt preview. String immutability preserves source bytes and Kotlin string offsets.",
+    "Context-level oversized owner marker blocks all session proof candidates until leaving the bounded four-turn window; older pre-marker assertion necessarily exits before that marker, so no delayed resurrection within this window.",
+    "recordResearch stores no owner literal and explicitly marks a non-owner turn; priorUserTurns now excludes both generated research questions and assistant responses.",
+    "CertifiedLocationReflex no longer trims original session/confirmed-fact text before proof; source SHA and offsets therefore use the same literal. Controls remain fail-closed in downstream probe/verifier.",
+    "Call-site trace: runLocal is called only with original request as text; resolvedQuestion remains separate. Successful same-session capture records text, not run.response or synthesized question.",
+    "No network, persistent owner store, tool authorization, cookie/permission or model-promotion writes added. Owner wording denotes provenance of input, not independently established world truth."
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "P1_RESIDUAL_PRE_EXISTING",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+      "line": 49,
+      "summary": "Subject filter hides unnamed/pronominal corrections before verifier",
+      "source_derived_scenario": "context.record(s,'Emma ist in Berg.',...); context.record(s,'Nein, sie ist nicht dort.',...); answerFromSession('Wo ist Emma?',context.priorUserTurns(s)) retains only first turn because second lacks explicit Emma.",
+      "impact": "Original-literal retention alone does not prove conservative handling of all negation/correction turns. The verifier would reject these markers if they reached it.",
+      "recommendation": "For M1 continuation, fail closed on unresolvable correction/pronoun turns in eligible owner context, or preserve them as blockers; keep unrelated benign conversation from granting proof. Add actual integration regression.",
+      "executed": false
+    },
+    {
+      "id": "R2",
+      "severity": "P2_RESIDUAL_PRE_EXISTING",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+      "line": 49,
+      "summary": "Direct answerFromSession still silently drops oversized correction sources",
+      "source_derived_scenario": "answerFromSession('Wo ist Emma?', listOf('Emma ist in Berg.', paddingOver1000+'Emma ist nicht in Berg.')) drops second source.",
+      "impact": "The new Context guard closes the current Android seam, but the helper itself remains safe only when caller enforces that guard. Current tests correctly target Context seam, not universal helper safety.",
+      "recommendation": "Document caller precondition or reject relevant uninspectable candidates inside helper; avoid broad all-callers claim.",
+      "executed": false
+    },
+    {
+      "id": "R3",
+      "severity": "P2_RESIDUAL_PRE_EXISTING",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+      "line": 79,
+      "summary": "Confirmed-fact path still drops oversized or no-in correction facts",
+      "impact": "Removing trim fixes hash/text consistency only. Full-ledger claim must remain narrow: filtering may remove a newer unresolvable correction before structural verification. OwnerAttributeEvidenceScope offers separate gates but does not make this helper universally closed.",
+      "recommendation": "Preserve as future fact-scope audit; do not claim this patch resolves unsupported owner fact invalidators.",
+      "executed": false
+    }
+  ],
+  "tests_reviewed": {
+    "file": "SessionEvidenceIntegrityTest.kt",
+    "count": 6,
+    "assessment": "Covers real context-to-reflex seam: role swapping/original whitespace+snapshot hash, negation and time after300, oversized source blocker, research-question/model-reply exclusion, session reset. Root owns actual RED/GREEN execution.",
+    "optional_missing_regression": "Confirmed-fact leading/trailing whitespace path changed too; test its proof source hash/offsets directly before claiming that behavior tested."
+  },
+  "next_step": "Root may continue to explicit terminal clarification routing. Preserve independently frozen source+revision+offset verification and keep learned SHADOW unpromoted."
+}

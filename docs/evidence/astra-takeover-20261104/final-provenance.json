@@ -1,0 +1,27 @@
+{
+  "source_commit": "41433ff0eafebde1240d09dacec2eea3f9db5100",
+  "kind": "Java2D production component preview; not Activity or GPU capture",
+  "viewport_dp": [
+    884,
+    760
+  ],
+  "density": 2,
+  "image_pixels": [
+    1768,
+    1520
+  ],
+  "state": "Static idle: no user/task/network/model measurements injected; unknown values and offline status are explicit",
+  "rail": "One real outer JarvisMenuRailElement, pixel-rounded to 130dp; shell uses forContent with externalRailWidthDp",
+  "avatar": "Original production Canvas head fallback with committed fiber refinement and ref5 portrait framing at 41433ff0; original brain orb and static Continuum header. No Filament execution, no fabricated brain events.",
+  "excluded": "Android-only Glass palette cannot be rendered by the Java2D painter; actual native GPU rendering and running Activity are not captured.",
+  "sources_compiled": [
+    "direct-tests/combined-ui-e19/provenance.json",
+    "direct-tests/combined-visual-414/provenance.json"
+  ],
+  "evidence": "37 pure UI tests passed against e19; functional Activity/native UI gates separate",
+  "sha256": {
+    "jarvis-menu-avatar-41433ff0.png": "293a978812ba26a262f8fc22bd6e0285773a0d549825fba47f2942b6ef92da8d",
+    "CurrentJarvisPreview.kt": "220e03e027c3743df987d212a739e9659099841b0a1f4ddf962340f052d9499e"
+  },
+  "driver": "screenshots/combined-e19/CurrentJarvisPreview.kt (same production Home/onDraw geometry)"
+}

@@ -1,0 +1,159 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+QA_HEARTBEAT 2026-11-11T13:54:55.523377+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   34.3 104604', '46 java            Ssl   187 338272']
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+WARNING: platform-tools package is not installed.
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+QA_HEARTBEAT 2026-11-11T13:55:25.617567+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   24.7 105248', '46 java            Ssl   185 559724']
+> Task :app:compileDebugUnitTestKotlin
+QA_HEARTBEAT 2026-11-11T13:55:55.661333+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   21.6 105280', '46 java            Ssl   184 709108']
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+PDF_QA_JOURNAL core e7ae7a92-67fb-47f5-91e3-266206fce1f2 /workspace/scratch/6139925ecf70/qa-core-a8482e2f/junit-progress.ndjson
+
+PdfIntakeNativeDecodeProbeUiTest > actualProviderReadRendersAndExtractsSyntheticPdf STARTED
+
+PdfIntakeNativeDecodeProbeUiTest > actualProviderReadRendersAndExtractsSyntheticPdf STANDARD_ERROR
+    java.lang.NoSuchMethodError: 'long java.io.FileDescriptor.getOwnerId$()'
+    	at libcore.io.IoUtils.acquireRawFd(IoUtils.java:74)
+    	at android.os.ParcelFileDescriptor.acquireRawFd(ParcelFileDescriptor.java:1315)
+    	at android.os.ParcelFileDescriptor.detachFd(ParcelFileDescriptor.java:818)
+    	at android.os.ParcelFileDescriptor.detachFd(ParcelFileDescriptor.java:813)
+    	at android.graphics.pdf.PdfProcessor.create(PdfProcessor.java:112)
+    	at android.graphics.pdf.PdfRenderer.__constructor__(PdfRenderer.java:193)
+    	at android.graphics.pdf.PdfRenderer.<init>(PdfRenderer.java:187)
+    	at at.heinz.deviceai.PdfDocumentIntake.read(PdfDocumentIntake.kt:46)
+    	at at.heinz.deviceai.PdfDocumentIntake.read$default(PdfDocumentIntake.kt:36)
+    	at at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest.actualProviderReadRendersAndExtractsSyntheticPdf(PdfIntakeNativeDecodeProbeUiTest.kt:42)
+    	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+    	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+    	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+    	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+    	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+    	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+    	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+    	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+    	at java.base/java.lang.Thread.run(Thread.java:1583)
+PDF_QA_TEST core at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest#actualProviderReadRendersAndExtractsSyntheticPdf SKIPPED 17906ms
+
+PdfIntakeNativeDecodeProbeUiTest > actualProviderReadRendersAndExtractsSyntheticPdf SKIPPED
+
+ContinuumDocumentFlowUiTest > stopBeforeResultArrivalSuppressesItsPersonalOffer STARTED
+QA_HEARTBEAT 2026-11-11T13:56:25.787480+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   17.7 105532', '46 java            Ssl   158 796028', '158 java            Sl    201 430608']
+QA_HEARTBEAT 2026-11-11T13:56:55.819249+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   17.5 105560', '46 java            Ssl   130 796088', '158 java            Sl    225 667468']
+QA_HEARTBEAT 2026-11-11T13:57:25.869827+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   18.8 105424', '46 java            Ssl   119 795636', '158 java            Sl    193 684784']
+QA_HEARTBEAT 2026-11-11T13:57:55.901242+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   16.8 105416', '46 java            Ssl   104 795628', '158 java            Sl    174 699732']
+QA_HEARTBEAT 2026-11-11T13:58:25.917056+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   16.6 105436', '46 java            Ssl  96.0 795632', '158 java            Sl    164 717320']
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#stopBeforeResultArrivalSuppressesItsPersonalOffer SUCCESS 145198ms
+
+ContinuumDocumentFlowUiTest > stopBeforeResultArrivalSuppressesItsPersonalOffer PASSED
+
+ContinuumDocumentFlowUiTest > anObservedPdfFailureWaitsInBackgroundWithoutRepeatingTheRead STARTED
+QA_HEARTBEAT 2026-11-11T13:58:55.938808+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   15.1 105516', '46 java            Ssl  86.2 795708', '158 java            Sl    156 765984']
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#anObservedPdfFailureWaitsInBackgroundWithoutRepeatingTheRead SUCCESS 18035ms
+
+ContinuumDocumentFlowUiTest > anObservedPdfFailureWaitsInBackgroundWithoutRepeatingTheRead PASSED
+
+ContinuumDocumentFlowUiTest > anEmptyDecisionQueryClearsThePreviousFocus STARTED
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#anEmptyDecisionQueryClearsThePreviousFocus SUCCESS 4378ms
+
+ContinuumDocumentFlowUiTest > anEmptyDecisionQueryClearsThePreviousFocus PASSED
+
+ContinuumDocumentFlowUiTest > aNormalPauseKeepsQueuedPdfFailureVisible STARTED
+QA_HEARTBEAT 2026-11-11T13:59:26.644185+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   14.8 105588', '46 java            Ssl  80.1 795780', '158 java            Sl    154 789208']
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#aNormalPauseKeepsQueuedPdfFailureVisible SUCCESS 16150ms
+
+ContinuumDocumentFlowUiTest > aNormalPauseKeepsQueuedPdfFailureVisible PASSED
+
+ContinuumDocumentFlowUiTest > stopRejectsAQueuedPdfFailureAndItsPicker STARTED
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#stopRejectsAQueuedPdfFailureAndItsPicker SUCCESS 13340ms
+
+ContinuumDocumentFlowUiTest > stopRejectsAQueuedPdfFailureAndItsPicker PASSED
+
+ContinuumDocumentFlowUiTest > pauseCancelsAQueuedRememberedPdfLookupBeforeItCanStartARead STARTED
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#pauseCancelsAQueuedRememberedPdfLookupBeforeItCanStartARead SUCCESS 10556ms
+
+ContinuumDocumentFlowUiTest > pauseCancelsAQueuedRememberedPdfLookupBeforeItCanStartARead PASSED
+
+ContinuumDocumentFlowUiTest > stopRejectsAnAlreadyObservedPdfFailure STARTED
+QA_HEARTBEAT 2026-11-11T13:59:56.677124+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   14.7 105636', '46 java            Ssl  74.7 795876', '158 java            Sl    153 848076']
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#stopRejectsAnAlreadyObservedPdfFailure SUCCESS 6183ms
+
+ContinuumDocumentFlowUiTest > stopRejectsAnAlreadyObservedPdfFailure PASSED
+
+ContinuumDocumentFlowUiTest > aNewOwnerMessageKeepsQueuedDecisionRecall STARTED
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#aNewOwnerMessageKeepsQueuedDecisionRecall SUCCESS 6760ms
+
+ContinuumDocumentFlowUiTest > aNewOwnerMessageKeepsQueuedDecisionRecall PASSED
+
+ContinuumDocumentFlowUiTest > personalOfferWaitsForResultArrivalAndSpeaksOnce STARTED
+QA_HEARTBEAT 2026-11-11T14:00:27.323804+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   14.0 105668', '46 java            Ssl  69.3 795908', '158 java            Sl    149 889476']
+QA_HEARTBEAT 2026-11-11T14:00:57.337745+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   14.0 105684', '46 java            Ssl  65.2 795928', '158 java            Sl    145 909068']
+QA_HEARTBEAT 2026-11-11T14:01:27.561621+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   13.4 105700', '46 java            Ssl  61.4 795984', '158 java            Sl    142 918036']
+QA_HEARTBEAT 2026-11-11T14:01:57.597722+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   13.3 105712', '46 java            Ssl  59.1 795992', '158 java            Sl    139 918624']
+QA_HEARTBEAT 2026-11-11T14:02:27.696915+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   13.1 105732', '46 java            Ssl  56.4 796008', '158 java            Sl    136 919288']
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#personalOfferWaitsForResultArrivalAndSpeaksOnce SUCCESS 149659ms
+
+ContinuumDocumentFlowUiTest > personalOfferWaitsForResultArrivalAndSpeaksOnce PASSED
+
+ContinuumDocumentFlowUiTest > stoppedScreenReadRemainsEphemeral STARTED
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#stoppedScreenReadRemainsEphemeral SUCCESS 9673ms
+
+ContinuumDocumentFlowUiTest > stoppedScreenReadRemainsEphemeral PASSED
+
+ContinuumDocumentFlowUiTest > aNewPickerRejectsAnAlreadyObservedPdfFailure STARTED
+PDF_QA_TEST core at.heinz.deviceai.ContinuumDocumentFlowUiTest#aNewPickerRejectsAnAlreadyObservedPdfFailure SUCCESS 10692ms
+
+ContinuumDocumentFlowUiTest > aNewPickerRejectsAnAlreadyObservedPdfFailure PASSED
+
+ContinuumDocumentFlowUiTest > anotherStartedTaskRejectsAnAlreadyObservedPdfFailure STARTED
+QA_HEARTBEAT 2026-11-11T14:02:59.162133+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   12.9 105824', '46 java            Ssl  54.2 796112', '158 java            Sl    136 995032']

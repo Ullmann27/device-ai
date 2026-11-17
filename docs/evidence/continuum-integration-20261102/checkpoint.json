@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "0b7010461ccb510ed3e3885a7349fdc4e4fa89da",
+  "environment": {
+    "node": "24.21.0",
+    "os": "Ubuntu26.04.1 x64",
+    "java": "Temurin17.0.21+9",
+    "kotlin": "2.1.21"
+  },
+  "inputSha256": {
+    ".github/continuum/android-always-on-wiring.test.mjs": "0dfd685dba32f12bc44709306f061555a0bbfbb8e71be9379a5236cce11cdfc3",
+    ".github/continuum/android-integration-wiring.test.mjs": "3804dc95ae9deb7d6cef04ec2b1f419fe3564b408ba1a8783500a3d70da166bb",
+    ".github/continuum/autonomous-topic-frontier.test.mjs": "6b7ea4e061463b13df1dab9d0f6a2387f74370f871bd857d9152dbe7ace6c1b9",
+    ".github/continuum/coding-agent-speech-wiring.test.mjs": "618d7361f03340e7f5def2a83aa090d7ebe01052a7deb98d5a1395d886fd1fcc",
+    ".github/continuum/gemma-reopen-lifecycle.test.mjs": "d98737a0f0eb5e3a3755ecff332b9533f0af234ccd79a6915dd275e7f780eac2",
+    ".github/continuum/groq-mentor-ui-wiring.test.mjs": "282d31982078933452688d115fbd6e74ebc0499a56d29f6c307336c3f8d62df2",
+    ".github/continuum/model-import-identity.test.mjs": "77bf7a81d6048bca359a8d28da355061aace9c89fe72be5419faedc7299ffa32",
+    ".github/continuum/nexus-beginner-ui.test.mjs": "c30d53a833f852b4c12911e19524b9fb8d24c257890d5d31c4edd2bb10efd477",
+    ".github/continuum/research-job-permission.test.mjs": "246fb5fa1b1c4aed939fa23ac76508e229c63dc61511f0528ebf095250ad89a6",
+    ".github/continuum/step-watchdog-reliability.test.mjs": "55324e14bc6d6d3bee8d5de3019de1e27de3c669c585523094b5cd2bb1871926",
+    ".github/continuum/step-watchdog.mjs": "d4d3a17f17d569799276eae1e4a238e0a6e460c39642536c732f3428718114f7",
+    "scripts/android-kotlin-compile-check.sh": "a95c478b176790a09aaf66d47272cc48e7012c6e28d44006a13fbbaed7b050e8",
+    "scripts/android-kotlin-compile-check.test.mjs": "4ab1294217d48e1df9097024d7643515a1dd2ba227533aaea20230bdeb6591e8"
+  },
+  "evidenceSha256": {
+    "node-contract-baseline.log": "457648e9b42b9f4c6df934759c1c9bb795cc931e61a165cd22c42595fa106554",
+    "node-contract-after.log": "fe93666e1d7f6402279bff6125bab0270b9b46da1ae5a4059a7c6f0df501aae0",
+    "compile-classifier-red.log": "20fbee48abe85e7bd293cc811ce861c73d2817c588fac28819324ebe1f9555a6",
+    "compile-classifier-green.log": "ac651a1600bd31a042b2f7a71cdc0b4941fc157b3755338459d5e15a040ee844",
+    "completion-io-red.log": "afeb22b96cb0e9c6c7c9812642eb4a11cb455da3998099b4b16a788b7e10a1f8",
+    "process-green.log": "c12d9b69bdfd6c4e92fb951160e578532449d50304c0108ebdd51ae550e8dbe6"
+  },
+  "status": "M1_CHECKPOINT_FULL_SUITE_RUNNING",
+  "checks": {
+    "sourceContracts": {
+      "before": {
+        "passed": 53,
+        "failed": 11,
+        "exitCode": 1
+      },
+      "after": {
+        "passed": 64,
+        "failed": 0,
+        "exitCode": 0
+      }
+    },
+    "processConsumers": {
+      "passed": 37,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "compilerClassifier": {
+      "passed": 2,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "gradle": "NOT_RUN",
+    "fold7": "NOT_RUN"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "source_commit": "b00ff926dc5f0fe66a8fd75ecd5d110053cb1e7c",
+  "renderer": "Robolectric API28 native Canvas; original Cinema; existing 2D avatar fallback",
+  "inputs": "explicit synthetic numeric fixture, NOT device data",
+  "Fold7": "NOT_RUN",
+  "Filament": "NOT_RUN"
+}

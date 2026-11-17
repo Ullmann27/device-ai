@@ -1,0 +1,29 @@
+tools/continuum-span-research/SpanResourceExperiment.kt:21:90: warning: 'val id: Long' is deprecated. Deprecated in Java.
+        val allocatedBefore = allocation?.getThreadAllocatedBytes(Thread.currentThread().id)
+                                                                                         ^^
+tools/continuum-span-research/SpanResourceExperiment.kt:29:89: warning: 'val id: Long' is deprecated. Deprecated in Java.
+        val allocatedAfter = allocation?.getThreadAllocatedBytes(Thread.currentThread().id)
+                                                                                        ^^
+JUnit version 4.13.2
+...PASS residual gradient checks=38 maximumError=1.5443709852624998E-10
+PASS missing/ambiguous gold targets rejected without updates
+PASS checked synthetic counterfactual and negative leakage guards
+PASS checkpoint roundtrip, exact size and SHA-256 corruption gates
+PASS cancellation and preflight fail-before-first-update
+MEASURED synthetic DEV accuracy: 2/5 -> 3/5
+MEASURED training: 300 steps, loss 1.2136851176488221 -> 0.6067638047117935, interrupted=false
+CASE expected=Salzburg, predicted=Salzburg
+CASE expected=XZ-902, predicted=XZ-902
+CASE expected=Zange, predicted=Zange
+CASE expected=ABSTAIN, predicted=Salzburg
+CASE expected=ABSTAIN, predicted=XZ-902
+PASS executable JVM test finished; public dev cases are not a blind holdout.
+........................
+Time: 1.556
+
+OK (27 tests)
+
+{"naturalBinding":false,"checkpointBytes":32932,"trainNllAfter":0.01675266448586247,"dev":[{"evidence":"Eva ist in Bern. Otto ist in Kiel.","question":"Wo ist Eva?","expected":"Bern","prediction":"Bern"},{"evidence":"Eva ist in Bern. Otto ist in Kiel.","question":"Wo ist Otto?","expected":"Kiel","prediction":null},{"evidence":"Otto ist in Bern. Eva ist in Kiel.","question":"Wo ist Eva?","expected":"Kiel","prediction":"Kiel"},{"evidence":"Eva ist nicht in Bern.","question":"Wo ist Eva?","expected":null,"prediction":null},{"evidence":"Eva ist in Bern.","question":"Wo ist Otto?","expected":null,"prediction":null}],"trainingItems":64,"trainNllBefore":1.4555404591981465,"steps":3200,"elapsedMs":858.754131}
+{"naturalBinding":true,"checkpointBytes":32932,"trainNllAfter":0.009566268307629768,"dev":[{"evidence":"Eva ist in Bern. Otto ist in Kiel.","question":"Wo ist Eva?","expected":"Bern","prediction":"Bern"},{"evidence":"Eva ist in Bern. Otto ist in Kiel.","question":"Wo ist Otto?","expected":"Kiel","prediction":"Kiel"},{"evidence":"Otto ist in Bern. Eva ist in Kiel.","question":"Wo ist Eva?","expected":"Kiel","prediction":"Kiel"},{"evidence":"Eva ist nicht in Bern.","question":"Wo ist Eva?","expected":null,"prediction":null},{"evidence":"Eva ist in Bern.","question":"Wo ist Otto?","expected":null,"prediction":null}],"trainingItems":64,"trainNllBefore":1.4555404591981465,"steps":3200,"elapsedMs":768.864103}
+{"total":5,"before":5.550288889725416,"after":0.5812410896434919,"steps":2520,"freeCorrect":2}
+{"threadAllocatedBytesPerCompare":462708,"heapUsedBefore":4071432,"osArch":"amd64","maxMs":26.026501,"energyTemperatureAndroidNativeMemory":"UNAVAILABLE_NO_CONNECTED_FOLD7","qualityBenchmark":false,"heapUsedAfter":18668776,"samples":200,"checkpointBytes":32932,"p50Ms":1.911617,"java":"21.0.12.1","distinctInputs":5,"scope":"HOST_ONLY, consumed DEV, explicit lab compare incl snapshot/model restore/verification","p95Ms":3.77693,"warmup":25,"parameters":4110}

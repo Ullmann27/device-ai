@@ -1,0 +1,194 @@
+{
+  "source_commit": "64609f65c319a97dacacd7608d541fbc196c0265",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "sha256": "cb82998f8f755e58e8242745836f23b9c3a452139234e7ffd3aef7f6c5eff3a8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+      "sha256": "0dd2e9a54dc901035b31407f95dc3fcc5727cdd7c1f3b369e86ac5fec2b3a5a9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "sha256": "0579714bdeefc9517dca538235af844772af7bf1bcf82fecb2ee9e7b8d3dd1a6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+      "sha256": "88e638b80697abede637fe6010f55b6802ee34c80f9858c7e16273f3d92f78a1"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGridContent.kt",
+      "sha256": "f44ddf7f7a694f3b92f80689e198af2b8a46c70b573b71583c22fbc2b15da960"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt",
+      "sha256": "2c991ddca5442860bf5ee14013734ae0962920031c7e292873cb00d03aac4cc3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+      "sha256": "0404d8b8b8cbf1dba1b551fb56f162d1c08d004e8577985c387eafd39d209443"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisHeadAura.kt",
+      "sha256": "3fc823a4a0da91632902dfe60386214016ecfa19176fd93110ea34ea2d3513b5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisLiveTabs.kt",
+      "sha256": "0bcf1be434bc4b15c03a8a27363d0408c3f07092fab0d2a822ede5150aefa763"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMemoryActivityPanel.kt",
+      "sha256": "5c2539f555a6cb5955ebf41c304b38e7ed1e8c074ef072ae938296b65ba06301"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisRailIcons.kt",
+      "sha256": "6568efa347e1256280c61ec14e511f62f8cd048a9c7a98d5ed0289f25d632a51"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisReferenceHud.kt",
+      "sha256": "58dec8e67c086e9b8f54c6017f2fb1fdfc8798f1fe727ec26fb7497e970380c6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSceneFills.kt",
+      "sha256": "2c2f4fc578d6af6a6494e99fa0e2f710f63cd1ab2acf7048cef03da51fc1c887"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "sha256": "93c86e1bcf230a48ba7aacb4e3d1ee3af03c337e18713b3c51cfbd722330fdc2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+      "sha256": "d372d31df6c5c4dd06e267a702b89491275053ccb5b1346a27a505170fce0093"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+      "sha256": "7decfadf8f5852670ef231a38cff1ba629feab655f9395b95da55d484a2d4ca4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt",
+      "sha256": "465f6edd27056221f551d8c8f056bd7d8b0748d5ea034ac8e17dd9e6867d81f6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt",
+      "sha256": "7a31a7298a7dabc156ab17fc85dca63bddd67ae341f8013bdce946c3ae9e583e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+      "sha256": "251ada4d83f1174a855b10fc5269049c929fe402b3412de3a469dea3e217d6bf"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/LocalModelStatusPresentation.kt",
+      "sha256": "5d318a50becf48138fea877cc480b2ab2959b70e788533757f35d7279061b8f9"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarFramingTest.kt",
+      "sha256": "708a7362133ff78a453c2f6bfcae1da89b4267c18ecd0bff0f219299508b0f70"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisCockpitGridTest.kt",
+      "sha256": "2aa790cdc558b280f3c4f51fd8fdf1849888d26be211f9f9e3cd5adf53e0f019"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisExternalRailLayoutTest.kt",
+      "sha256": "8054d80370968e45e3778aece32fc591d82ec3da4f194744030d6bb357281ab9"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisHeaderBrandFitTest.kt",
+      "sha256": "36eef136d2048305a9e9ce5e5a8b8c817cef60e8b1b3736dd045629cc38e14fa"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLivePanelsRegressionTest.kt",
+      "sha256": "b267c2e3bb8690485ac2fe7b2447f048bd4365dc283c33f3b4fc3b5df805f368"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisLivingSceneTest.kt",
+      "sha256": "4054dbdbb450fe60c8a7595d5b5bf1285543f0769a3807006e18add1abb8aa11"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisMenuNavigationTest.kt",
+      "sha256": "fe65797fd0b6b1e49d7cf916076035b82e3358aa4540eee6ce36361471cc7156"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceDialogReadabilityTest.kt",
+      "sha256": "4df839c9e3032ffb8d7eada543085334274b38cca072c123aa27724f9200ca54"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceSurfaceTest.kt",
+      "sha256": "d325797a17c8d42189c647fb374c28939d6983857103d1eb6d7e8a5c1b369f34"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisReferenceWindowLayoutTest.kt",
+      "sha256": "494e2855f3a8d7eb33a1a8cc3f99a778e9393aaada7117471619c2b3bb1a0f0e"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisShellContentTest.kt",
+      "sha256": "1c5028ecd946b2e6fd2c2c890daa62a34ebebdfb4dfe11bf7987b108dc30c809"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt",
+      "sha256": "20f5ddc76a048d8929a6a1b62f802fc4709a40fcb8c40593a03a78539a8c398a"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentSceneUiTest.kt",
+      "sha256": "97827f5e5eb6d744bc2cebd7b11f07595c15cb4607df5e21730e99666d699e24"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+      "sha256": "3bdba5498e698835a2c5e4cfbd78dcfc3cbc4b3a60a44985b9b0ca97ffa26217"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt",
+      "sha256": "79e5db5cb3eeab5f144001f1951b6d9f1db52955aaf7e3a3d50f042f1265a337"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt",
+      "sha256": "f23730695a5b129013d64a8f8c2f289f0cfbbe18297aeec8ce4346dbc6950099"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumWorkWindowScrollUiTest.kt",
+      "sha256": "83a12af152e18d477f30d8eb572a6861d250515fbae3bd00f332c9661f47c40b"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/FullStageMemoryReviewUiTest.kt",
+      "sha256": "52349a6c147fb7509653825d0d74e7ff4c296ae997773746ad8f16e36164ab29"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisDeterministicCaptureUiTest.kt",
+      "sha256": "27f089837e4e90cba8893ddf94843f0cc2e32ef5c2aacd68b1fc16bd18c5efd2"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt",
+      "sha256": "e914fc7cbc1d10f9ce2476ddb3b26859f71572e74c212de1d8609d3d4386416d"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisLiveTabsUiTest.kt",
+      "sha256": "b06d64142d74100a17ae6734e3061c161e1bbe3c0f651dcf361941b4d8c2a4ea"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisReferenceHitTargetsUiTest.kt",
+      "sha256": "658bb4508a2fbe472a44ea920cadc02f3d1fad4ad1fcc7ed17603e7b4faee3cc"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowHostViewportUiTest.kt",
+      "sha256": "aa7eaf0ce77bf2e19cb2aa983d103ab376640672336495243d21d98546e2bbb8"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt",
+      "sha256": "a0e4278a9814e6b3e830199fb3ed97d9293b6923cf355dbe11e2e8ffe9c67798"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/OwnerAppPlanningContextUiTest.kt",
+      "sha256": "877934f5c80c3fee88b3cdb16df6212d4bf66db4323706ad6e8f8267c571b1a1"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisFeatureCardReadabilityUiTest.kt",
+      "sha256": "a92bada672af9c86c11fb7f883d949d37fff03cbf165433ed9d997bd1641522e"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisRailLabelReadabilityUiTest.kt",
+      "sha256": "eb7303b6f2841d896885b7efb9101704c2d13300dfe3befbb4b217f215dde6ac"
+    }
+  ],
+  "application_source_commit": "60ec75e3fc468b6cf96237a338f3f6388e6bcaf0"
+}

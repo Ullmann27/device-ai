@@ -1,0 +1,45 @@
+{
+  "base": "ad68e9a8cdfba50e31e99906a4eca37f6130b155",
+  "test_results": [
+    {
+      "name": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.ContinuumReferenceCockpitLayoutTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "sha256": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "21ce92233ea1c212b83048d26832b618e13ff10f77810eb0d6c492981bcaaed3",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt": "6a48c8c37e8413953f4ad5d49ffd9320ee1c8d0fb9259f89e8482fe96ba176c2",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt": "a20899724d8ad9a80dd25e08975470971e969c2e38b28c74661b2174bd4752ac",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "c30883cc4c3636fd70a489554048b2c1974dc4cea9cb36da6377827b2949ba64",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceElements.kt": "feba8d9bb9916e14fc3d692058a68e605b2fd644d69bd7ff385af5830c0a05e9",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt": "f94f1cb6dfc4bdf033f5805750e4674294b78add07b60a3a78dbac98720bcda7",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumReferenceCockpitLayoutTest.kt": "47f07747e3c1ea49b4b6318f6b8250c103cea00ad6b6733641108022ef7f58ee",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumAdaptiveAvatarNavigationUiTest.kt": "3fa85fa30a911d649bb0e088fda56beab8842ad8e43e647814f647ceb1d08a6d",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumAdaptiveCockpitUiTest.kt": "e88d47e3184718090df38d9f3ffec3bb6268a319735a1ff7a0c8479eec10c5d5",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt": "e0daf16c4c81a7e397621661636d7bf7fcbf388c276528730f7240322612446b"
+  }
+}

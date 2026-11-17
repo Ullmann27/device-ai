@@ -1,0 +1,9 @@
+{
+  "executionSha": "806f50bd",
+  "featureSourceBaseline": "ca93fb4f",
+  "node": {"total":2191,"pass":2178,"fail":0,"skip":13,"exit":0,"command":"node --test --test-reporter=tap --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs tools/continuum-virtual-fabric/*.test.mjs"},
+  "backend": {"total":64,"pass":64,"fail":0,"skip":0,"exit":0,"command":"node --test --test-reporter=tap --test-concurrency=2 backend/test/*.test.js"},
+  "meaning":"HOST_INTEGRATION; no inference, no Android or device acceptance inherited",
+  "localModel":"BLOCKED_LOCAL_MODEL_UNAVAILABLE",
+  "fold7":"NOT_RUN"
+}

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="positive shift moves the last element to the front" time="0.002321" classname="test" file="/work/.github/continuum/owner.test.mjs" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;+   'b',&#10;+   'c',&#10;    'd',&#10;    'a',&#10;-   'b',&#10;-   'c'&#10;  ]&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;+   'b',&#10;+   'c',&#10;    'd',&#10;    'a',&#10;-   'b',&#10;-   'c'&#10;  ]">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   'b',
++   'c',
+    'd',
+    'a',
+-   'b',
+-   'c'
+  ]
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'b',
+  +   'c',
+      'd',
+      'a',
+  -   'b',
+  -   'c'
+    ]
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/owner.test.mjs:6:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'b', 'c', 'd', 'a' ],
+    expected: [ 'd', 'a', 'b', 'c' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="large shifts wrap around the array length" time="0.000346" classname="test" file="/work/.github/continuum/owner.test.mjs" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;+   30,&#10;    40,&#10;    50,&#10;    10,&#10;    20,&#10;-   30&#10;  ]&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;+   30,&#10;    40,&#10;    50,&#10;    10,&#10;    20,&#10;-   30&#10;  ]">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   30,
+    40,
+    50,
+    10,
+    20,
+-   30
+  ]
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   30,
+      40,
+      50,
+      10,
+      20,
+  -   30
+    ]
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/owner.test.mjs:9:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 30, 40, 50, 10, 20 ],
+    expected: [ 40, 50, 10, 20, 30 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="a negative right shift rotates left" time="0.001050" classname="test" file="/work/.github/continuum/owner.test.mjs" failure="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;+   4,&#10;+   1,&#10;    2,&#10;    3,&#10;-   4,&#10;-   1&#10;  ]&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;+   4,&#10;+   1,&#10;    2,&#10;    3,&#10;-   4,&#10;-   1&#10;  ]">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   4,
++   1,
+    2,
+    3,
+-   4,
+-   1
+  ]
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   4,
+  +   1,
+      2,
+      3,
+  -   4,
+  -   1
+    ]
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/owner.test.mjs:12:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 4, 1, 2, 3 ],
+    expected: [ 2, 3, 4, 1 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="zero and full rotations return a new array" time="0.001185" classname="test" file="/work/.github/continuum/owner.test.mjs"/>
+	<testcase name="empty and one-element arrays are supported" time="0.000193" classname="test" file="/work/.github/continuum/owner.test.mjs"/>
+	<testcase name="input and element references are preserved" time="0.000467" classname="test" file="/work/.github/continuum/owner.test.mjs" failure="Expected &amp;quot;actual&amp;quot; to be reference-equal to &amp;quot;expected&amp;quot;:&#10;+ actual - expected&#10;&#10;  {&#10;+   id: 'b'&#10;-   id: 'c'&#10;  }&#10;">
+		<failure type="testCodeFailure" message="Expected &amp;quot;actual&amp;quot; to be reference-equal to &amp;quot;expected&amp;quot;:&#10;+ actual - expected&#10;&#10;  {&#10;+   id: 'b'&#10;-   id: 'c'&#10;  }">
+[Error [ERR_TEST_FAILURE]: Expected "actual" to be reference-equal to "expected":
++ actual - expected
+
+  {
++   id: 'b'
+-   id: 'c'
+  }
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  
+    {
+  +   id: 'b'
+  -   id: 'c'
+    }
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/owner.test.mjs:31:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { id: 'b' },
+    expected: { id: 'c' },
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<!-- tests 6 -->
+	<!-- suites 0 -->
+	<!-- pass 2 -->
+	<!-- fail 4 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 89.381269 -->
+</testsuites>

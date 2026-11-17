@@ -1,0 +1,48 @@
+{
+  "gate": "android",
+  "startedAt": "2026-11-07T05:39:18.797803+00:00",
+  "startedEpochMillis": 1794029958797,
+  "finishedAt": "2026-11-07T05:50:49.119719+00:00",
+  "sourceBefore": {
+    "commit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+    "tree": "5206abd91b3740838661aa0e27e6702b3891591b",
+    "branch": "codex/continuum-code48-fullstage-cinema-20261107",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "3ff83387af64bf9f99f4440f657f3d27937ca777",
+    "tree": "5206abd91b3740838661aa0e27e6702b3891591b",
+    "branch": "codex/continuum-code48-fullstage-cinema-20261107",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "gradle",
+        "--no-daemon",
+        "--max-workers=2",
+        "--console=plain",
+        "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-PdeviceAiMentorPreview=true",
+        "-PcontinuumStandaloneVersionCode=48",
+        "--rerun-tasks",
+        "-PcontinuumUiWidgetTests=true",
+        "-PcontinuumLocalStandaloneQa=true",
+        ":app:compileDebugKotlin",
+        ":app:testDebugUnitTest",
+        ":app:lintDebug"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate",
+      "exitCode": 1
+    }
+  ],
+  "logSha256": "8a1c5c191dcebd0e07a35185289cb090d962f77d5abe06cd9286a232788167b1",
+  "logBytes": 48483,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "FAIL"
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "momega1-workspaces-host-v1",
+  "simultaneous": [
+    "082196828b52",
+    "63e903597b13"
+  ],
+  "containerIds": [
+    "082196828b52e20ec274cfe6dba6bd0361e9be1045ff51559e148d6ba5bdcd1b",
+    "63e903597b133939e502f8b722d3729cfc321c9bbdd7cf10461f427afada1ac5"
+  ],
+  "fixedProfile": "node-continuum",
+  "runtime": "runc",
+  "actualModelInference": false,
+  "deviceVerified": false,
+  "interruptedReplayBlocked": true,
+  "timeoutEnforced": {
+    "limitMs": 1000,
+    "elapsedMs": 1113,
+    "teardownConfirmed": true
+  }
+}

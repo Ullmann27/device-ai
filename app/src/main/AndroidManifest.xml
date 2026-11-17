@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <!-- Microphone is requested only after an explicit on-device speech gesture. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Optional foreground face-position input; runtime permission and owner opt-in remain required. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- CAMERA must not imply a mandatory rear camera or autofocus at distribution. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <!-- Required on Android 14+ to schedule JobScheduler network-constrained tasks. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <!-- Inventory includes packages without launchers.
+         See docs/release/CODE59-PACKAGE-VISIBILITY-20261114.md. -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <uses-permission android:name="com.termux.permission.RUN_COMMAND" />
 
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_device_ai"
-        android:label="Device AI"
+        android:label="${appLabel}"
         android:supportsRtl="true"
         android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
+
+        <service android:name=".ContinuumLiveProjectionService"
+            android:exported="false" android:foregroundServiceType="mediaProjection"
+            tools:targetApi="34" />
+
+        <!-- Explicit Android accessibility opt-in and per-task grants. -->
+        <service android:name=".ContinuumScreenObservationService"
+            android:exported="true" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter><action android:name="android.accessibilityservice.AccessibilityService" /></intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/continuum_screen_observation" />
+        </service>
 
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
@@ -21,13 +51,90 @@
             android:multiprocess="false"
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
+        <service
+            android:name=".learning.NeuralPracticeJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".learning.ContinuumPublicStudyJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".learning.ContinuumAutonomousJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".learning.ContinuumDeviceTeamleaderJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".routines.OwnerRoutineJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".learning.MentorStudyJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- Android launcher widget uses only persisted real training evidence. -->
+        <receiver
+            android:name=".ContinuumTrainingWidget"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/continuum_training_widget_info" />
+        </receiver>
+
+        <!-- Termux result PendingIntent callback: explicit and never exported. -->
+        <receiver
+            android:name=".ContinuumMobileBuildResultReceiver"
+            android:enabled="${mobileBuilderEnabled}"
+            android:exported="false" />
+
+        <!-- EXP-00/08: Builder is a tool screen, not a second home-screen app.
+             Exported only for explicit allowlisted navigation from an installed
+             Device AI main package; disabled in non-preview builds. -->
+        <activity android:name=".ContinuumM5LabActivity" android:exported="false" android:enabled="${mobileBuilderEnabled}" />
+        <activity
+            android:name=".ContinuumMobileBuilderActivity"
+            android:exported="true"
+            android:enabled="${mobileBuilderEnabled}"
+            android:label="Continuum Builder" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false" />
 
         <activity
+            android:name=".ContinuumTrainingMonitorActivity"
+            android:exported="false" />
+
+        <!-- Read-only JARVIS-inspired cockpit reuses existing on-device telemetry. -->
+        <activity
+            android:name=".ContinuumJarvisMissionControlActivity"
+            android:exported="false" />
+
+        <!-- Owner update UX is private and only opened from Continuum Lokal. -->
+        <activity
+            android:name=".ContinuumOwnerUpdateActivity"
+            android:exported="false" />
+        <receiver
+            android:name=".ContinuumOwnerUpdateReceiver"
+            android:exported="false" />
+
+        <activity
             android:name=".AgentActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

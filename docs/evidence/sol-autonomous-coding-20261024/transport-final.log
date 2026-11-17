@@ -1,0 +1,12 @@
+✔ typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source (702.098597ms)
+✔ coding loopback uses bounded structured schema and accepts relevant larger context (24.563105ms)
+✔ coding output cannot add tools, duplicate paths, unknown files or blank hunks (1.795878ms)
+✔ coding CLI UTF-8 transport accommodates the character-bounded multilingual context (40.661253ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 924.3781

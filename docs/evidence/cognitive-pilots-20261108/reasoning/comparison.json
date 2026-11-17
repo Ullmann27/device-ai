@@ -1,0 +1,548 @@
+{
+  "schemaVersion": 2,
+  "pilot": "reasoning",
+  "platform": "Linux-6.12.8+-x86_64-with-glibc2.39",
+  "measurementUnit": "complete 768-permutation trial",
+  "fixtureSha256": "fae68c1a01910372644456f40c01bdd2402815b10317a1ae2271a8bc709af42a",
+  "jarSha256": {
+    "baseline": "eeb439950368be8e579c33ebd542a8b3dad1de1857387b4abea012c90d2c4dbc",
+    "candidate": "22b7d9927ff90be4e17c819f60749d4daae8f28b2df371e531611f5136edc1fa"
+  },
+  "energyJoules": null,
+  "device": "HOST_ONLY",
+  "limits": "Includes JVM/JIT/GC. RSS units are KiB on Linux. No model inference.",
+  "summary": {
+    "baseline": {
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.25,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.5357142857142857,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 0,
+          "maxError": 0.5833333333333334,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "medianMeasuredWallNs": 97710584.5,
+      "medianMeasuredCpuNs": 69529524.5,
+      "maxProcessRssKiB": 77968
+    },
+    "candidate": {
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 0.0,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 1.2772423896301177e-08,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 720,
+          "maxError": 4.967053740534411e-09,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "medianMeasuredWallNs": 103275154.0,
+      "medianMeasuredCpuNs": 72300752.5,
+      "maxProcessRssKiB": 76636
+    }
+  },
+  "runs": [
+    {
+      "pair": 0,
+      "arm": "baseline",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.25,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.5357142857142857,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 0,
+          "maxError": 0.5833333333333334,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 219461718,
+      "processCpuSeconds": 0.35640399999999994,
+      "maxRssKiB": 66616,
+      "routingSamples": [
+        [
+          95136187,
+          60472034
+        ]
+      ]
+    },
+    {
+      "pair": 0,
+      "arm": "candidate",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 0.0,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 1.2772423896301177e-08,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 720,
+          "maxError": 4.967053740534411e-09,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 247330294,
+      "processCpuSeconds": 0.392305,
+      "maxRssKiB": 69436,
+      "routingSamples": [
+        [
+          100272489,
+          70443544
+        ]
+      ]
+    },
+    {
+      "pair": 1,
+      "arm": "candidate",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 0.0,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 1.2772423896301177e-08,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 720,
+          "maxError": 4.967053740534411e-09,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 237316842,
+      "processCpuSeconds": 0.38434,
+      "maxRssKiB": 74972,
+      "routingSamples": [
+        [
+          101614596,
+          90635259
+        ]
+      ]
+    },
+    {
+      "pair": 1,
+      "arm": "baseline",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.25,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.5357142857142857,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 0,
+          "maxError": 0.5833333333333334,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 229064891,
+      "processCpuSeconds": 0.383833,
+      "maxRssKiB": 74148,
+      "routingSamples": [
+        [
+          104392966,
+          67264990
+        ]
+      ]
+    },
+    {
+      "pair": 2,
+      "arm": "baseline",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.25,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.5357142857142857,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 0,
+          "maxError": 0.5833333333333334,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 214175935,
+      "processCpuSeconds": 0.35897199999999996,
+      "maxRssKiB": 63420,
+      "routingSamples": [
+        [
+          93279866,
+          59211326
+        ]
+      ]
+    },
+    {
+      "pair": 2,
+      "arm": "candidate",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 0.0,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 1.2772423896301177e-08,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 720,
+          "maxError": 4.967053740534411e-09,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 234359631,
+      "processCpuSeconds": 0.38185399999999997,
+      "maxRssKiB": 75192,
+      "routingSamples": [
+        [
+          104935712,
+          66435797
+        ]
+      ]
+    },
+    {
+      "pair": 3,
+      "arm": "candidate",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 0.0,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 1.2772423896301177e-08,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 720,
+          "maxError": 4.967053740534411e-09,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 206958934,
+      "processCpuSeconds": 0.35107299999999997,
+      "maxRssKiB": 68888,
+      "routingSamples": [
+        [
+          92404181,
+          87543318
+        ]
+      ]
+    },
+    {
+      "pair": 3,
+      "arm": "baseline",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.25,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.5357142857142857,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 0,
+          "maxError": 0.5833333333333334,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 201572974,
+      "processCpuSeconds": 0.334665,
+      "maxRssKiB": 72848,
+      "routingSamples": [
+        [
+          81887538,
+          74908096
+        ]
+      ]
+    },
+    {
+      "pair": 4,
+      "arm": "baseline",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.25,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.5357142857142857,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 0,
+          "maxError": 0.5833333333333334,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 229336964,
+      "processCpuSeconds": 0.379582,
+      "maxRssKiB": 77968,
+      "routingSamples": [
+        [
+          112879962,
+          71794059
+        ]
+      ]
+    },
+    {
+      "pair": 4,
+      "arm": "candidate",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 0.0,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 1.2772423896301177e-08,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 720,
+          "maxError": 4.967053740534411e-09,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 252645570,
+      "processCpuSeconds": 0.405004,
+      "maxRssKiB": 67484,
+      "routingSamples": [
+        [
+          112811500,
+          69685254
+        ]
+      ]
+    },
+    {
+      "pair": 5,
+      "arm": "candidate",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 0.0,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 24,
+          "maxError": 1.2772423896301177e-08,
+          "probeVariants": 1,
+          "diagnoses": 96,
+          "abstentions": 0
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 720,
+          "maxError": 4.967053740534411e-09,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 239461366,
+      "processCpuSeconds": 0.40601,
+      "maxRssKiB": 76636,
+      "routingSamples": [
+        [
+          119521017,
+          74157961
+        ]
+      ]
+    },
+    {
+      "pair": 5,
+      "arm": "baseline",
+      "quality": {
+        "DEV-equal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.25,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-unequal4": {
+          "permutations": 24,
+          "correctPriors": 0,
+          "maxError": 0.5357142857142857,
+          "probeVariants": 4,
+          "diagnoses": 48,
+          "abstentions": 48
+        },
+        "HOLDOUT-equal6": {
+          "permutations": 720,
+          "correctPriors": 0,
+          "maxError": 0.5833333333333334,
+          "probeVariants": 0,
+          "diagnoses": 0,
+          "abstentions": 0
+        }
+      },
+      "processWallNs": 229227972,
+      "processCpuSeconds": 0.36963999999999997,
+      "maxRssKiB": 73308,
+      "routingSamples": [
+        [
+          100284982,
+          81690756
+        ]
+      ]
+    }
+  ]
+}

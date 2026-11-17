@@ -1,0 +1,14 @@
+[
+  "node",
+  "/workspace/independence-final-qa/tools/independence-final-qa/integrated-check.mjs",
+  "--source",
+  "/workspace/independence-final-source",
+  "--classpath-file",
+  "/workspace/independence-profile-aa52e7e6/runtime-classpath.txt",
+  "--runtime-env",
+  "/workspace/synapse-local-model/runtime-env.json",
+  "--isolation-config",
+  "/workspace/genesis-a0-experiment/isolation.json",
+  "--output",
+  "/workspace/independence-final-host-8fd-resume/integrated-actual.json"
+]

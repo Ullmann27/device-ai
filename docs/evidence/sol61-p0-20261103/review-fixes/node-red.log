@@ -1,0 +1,81 @@
+✔ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (3.238309ms)
+✔ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (2.337271ms)
+✔ background consolidation records failure without losing interrupted source trials (0.158329ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (0.21184ms)
+✔ activity request codes are unique and every one has a result handler (5.333596ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.302907ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (7.173618ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (1.753833ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (0.269205ms)
+✔ startup bootstrap training stops with the activity and is retried later (0.257118ms)
+✖ startup I/O off the UI thread and shell commands stop with their activity (5.187766ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (0.849921ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (2.545024ms)
+✔ Teamleader Android UI reports status without false success (0.128053ms)
+✔ live model status does not revert the beginner cockpit to English (2.453766ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (0.435496ms)
+✔ new visual start screen is local, accessible and honest about capabilities (0.680175ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (0.15937ms)
+✔ Wikipedia article research uses bounded authentic extracts and original citations (0.223797ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (0.380644ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (0.533073ms)
+✔ a ready loaded model receives the original greeting or capability request before bootstrap fallback (1.175491ms)
+✔ storage remains a fresh read-only native probe even with a model loaded (0.174283ms)
+✔ system center opens a visible connection screen and Activity forwards live status (0.755888ms)
+✔ rendering a conversation updates the selected navigation destination (0.545111ms)
+✖ oversized local replies show the existing user guidance in the conversation (4.524046ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 24
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 391.953039
+
+✖ failing tests:
+
+test at .github/continuum/android-integration-wiring.test.mjs:246:1
+✖ startup I/O off the UI thread and shell commands stop with their activity (5.187766ms)
+  AssertionError [ERR_ASSERTION]: Disconnected or unsupported code path: stopped bridge drops its shell
+      at ensure (file:///workspace/device-ai/.github/continuum/android-integration-wiring.test.mjs:16:34)
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/android-integration-wiring.test.mjs:255:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-owner-local-routing.test.mjs:37:1
+✖ oversized local replies show the existing user guidance in the conversation (4.524046ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT/. Input:
+  
+  ' !ephemeralScreenRun.get() && sessionId == localSessionId\n' +
+    '                    addAssistantMessage(if (requiredContextOverflow)\n' +
+    '                        "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."\n' +
+    '                    else groundedRecall?.failureAnswer() ?:\n' +
+    '                        "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)\n' +
+    '                    '
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/scripts/continuum-owner-local-routing.test.mjs:39:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: ' !ephemeralScreenRun.get() && sessionId == localSessionId\n                    addAssistantMessage(if (requiredContextOverflow)\n                        "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."\n                    else groundedRecall?.failureAnswer() ?:\n                        "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)\n                    ',
+    expected: /LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT/,
+    operator: 'match',
+    diff: 'simple'
+  }

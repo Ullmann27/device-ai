@@ -1,0 +1,37 @@
+{
+  "taskId": "C1-QA-GUARD-008",
+  "baseLocal": "1666b3c9fa9fa9fe360f0983213f3413de7d0218",
+  "baseRemote": "6ac2e1506071c5782bc06e83d043f3c2e082fb23",
+  "baseTree": "5a314dc09d2b623a0097819856a1e33c8e883f1e",
+  "productionUpstreamPr": 505,
+  "productionUpstreamCommit": "84cd8cfc05dedef5d4feb28ecfa103530e95f7ff",
+  "productionBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+  "directGithubBlobVerifiedByC1": true,
+  "testSource": "PR517 completed archive46e5fa6",
+  "patchSha256": "d0872ef956695a6009cb4e42f6e76f5b0c3079a78e76c85414e27440d86bc9d1",
+  "changedPaths": [
+    "scripts/render-continuum-owner-continuous-qa.sh",
+    "scripts/continuum-owner-continuous-qa-preflight.test.mjs"
+  ],
+  "red": {
+    "tests": 43,
+    "pass": 41,
+    "fail": 2,
+    "skip": 0,
+    "exitCode": 1
+  },
+  "green": {
+    "tests": 43,
+    "pass": 43,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0
+  },
+  "independentReview": {
+    "agent": "/root/repair_review",
+    "status": "STATIC_APPROVED",
+    "executedTests": false
+  },
+  "limits": "Synthetic canaries and local fake curl only. No signing key read, actual download, build, signing, deployment or owner update.",
+  "rollback": "Revert only this two-file guard/test slice; preserve original negative evidence."
+}

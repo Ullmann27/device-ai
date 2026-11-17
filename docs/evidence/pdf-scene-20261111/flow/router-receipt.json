@@ -1,0 +1,59 @@
+{
+  "scope": "HOST_KOTLIN_JUNIT",
+  "baseline_commit": "4e4840a01b7954c416722b048a6e4f1ec85b5a43",
+  "router_local_commit": "e42cb304e8954c57242fe038b2cf7707199ac732",
+  "router_remote_commit": "265d01f75fa941d64158255ffb2cb1a5bb72af78",
+  "baseline_sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDocumentIntent.kt": "21a35e395f19d5b868ef0a2aebce71c4a46068a9c9edfe65aeb60a17513e2826",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt": "9468f4a714a4e32f7da5da9234c2f7095260db578601a8d605f7181f9d5bcfd9",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt": "a81c7a218124a4c38a82678739b35b7d9b9ba27f54e973462bf9f224991e9e78",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt": "1320ea3e28a0ce0e5c8b17af794b5755f89a1d1d194dd39c5372b3d7e203d730"
+  },
+  "green_sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDocumentIntent.kt": "48054a34122126a0f2dc6555215617286d73253a10974713b47c09c124b00c6a",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt": "9468f4a714a4e32f7da5da9234c2f7095260db578601a8d605f7181f9d5bcfd9",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt": "a81c7a218124a4c38a82678739b35b7d9b9ba27f54e973462bf9f224991e9e78",
+    "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt": "1320ea3e28a0ce0e5c8b17af794b5755f89a1d1d194dd39c5372b3d7e203d730",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentPresentationIntentTest.kt": "85429f74e63d56df390582459eeabd06743118e3b64bdb3930466e89504d982f",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentIntentTest.kt": "bab70441398ea2a9046acc070a4b36ade6d6096022957f0edc558f3823a14abd",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentPoliteIntentTest.kt": "8f3bfef87dfacd8e6cb9cea72db4e35f34d40bce8ec4a6abf0606c1062e28636",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentAddressTest.kt": "7874f4b68dc0c824b064f94e2bb0b1acdc47dcf18a24b6a1d384a04c755e07e2"
+  },
+  "compiler_version": "2.2.21-release-469",
+  "junit_sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+  "results": {
+    "red": {
+      "tests": 13,
+      "failed": 2,
+      "compiled_parser_has_presentation_tail": false,
+      "jar_sha256": "685ef0017d3c99e52f28344eeb7cc73bbf242a7bfb512ac4458426e6c922f147",
+      "stdout_sha256": "56737c0c47d34b048a0aec6345b2343bddc631dcd243ff122d445bc42d14d95e"
+    },
+    "green": {
+      "tests": 13,
+      "failed": 0,
+      "compiled_parser_has_presentation_tail": true,
+      "jar_sha256": "982645458a3e5bd741882626741046f8f80206f26da1fbd39722dbe98369626f",
+      "stdout_sha256": "a111b24353bb5d2e39f8d890c6e71d18d5df8f427d181170e0325ab75defb4c6"
+    }
+  },
+  "limits": [
+    "JVM parser only",
+    "Android Activity callback tests pending with independent QA",
+    "No physical Fold7, live model/audio, PDF native render or GPU assertion"
+  ],
+  "reproduce": {
+    "compile_sources": [
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDocumentIntent.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt",
+      "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt",
+      "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentPresentationIntentTest.kt",
+      "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentIntentTest.kt",
+      "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentPoliteIntentTest.kt",
+      "app/src/test/java/at/heinz/deviceai/cognitive/OwnerDocumentAddressTest.kt"
+    ],
+    "compiler": "kotlinc -J-Xmx320m <compile_sources> -cp <junit-4.13.2.jar> -include-runtime -d router.jar",
+    "run": "java -cp router.jar:<junit-4.13.2.jar>:<hamcrest-core-1.3.jar> org.junit.runner.JUnitCore at.heinz.deviceai.cognitive.OwnerDocumentPresentationIntentTest at.heinz.deviceai.cognitive.OwnerDocumentIntentTest at.heinz.deviceai.cognitive.OwnerDocumentPoliteIntentTest at.heinz.deviceai.cognitive.OwnerDocumentAddressTest"
+  }
+}

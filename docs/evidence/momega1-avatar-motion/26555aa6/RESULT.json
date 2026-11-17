@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+  "evidenceClass": "HOST_INTEGRATION",
+  "independent": false,
+  "kotlinJUnit": {
+    "pass": 34,
+    "fail": 0,
+    "skip": 0
+  },
+  "nodeSourceContracts": {
+    "pass": 5,
+    "fail": 0,
+    "skip": 0
+  },
+  "pythonGeometryContracts": {
+    "pass": 8,
+    "fail": 0,
+    "skip": 0
+  },
+  "androidSdk36Filament156ApiCompile": "PASS",
+  "packagedGlbSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "experimentalMaterialGeometrySha256": "15573963f9c3f862a73c5c963b00c3a8106f1090c1bc03c8e7ed4b9a271937f5",
+  "rawLogsSha256": {
+    "contracts.txt": "75fce4b3db9040c792f0bfbb80ba2f98bb07c46681f4d38dacc5e7603cc2f8d2",
+    "android-api.txt": "db7dae1e5191e99fb1ff8a3ac319d01d89bd59175de88764f8dd68c74d7299e9",
+    "node.txt": "34eda8be3e7ab768329af7b183c2c4be718a05a458f075d5dad7359a82608b2d",
+    "python.txt": "01db1e3b123fbf6b9484bba95ff79cbfecfdfcd82a48d92a72adaa4770aafe03",
+    "candidate-geometry.txt": "4539da6874d5ad659d99e2e6e3236d2e399c0aa27ec8a493136b451631182385"
+  },
+  "fold7": "NOT_RUN",
+  "actualCamera": "NOT_RUN",
+  "appearance": "NOT_ACCEPTED",
+  "fullAppQa": "NOT_RUN_BY_THIS_LANE",
+  "note": "Independent26-test countercheck is maintained in the separate PR434 review lane; no self-acceptance."
+}

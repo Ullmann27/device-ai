@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "sourceLocal": "e5ab8a838c86897a830270f499f8488d901e2ab8",
+  "testedCandidateLocal": "f3e70a45469a03df7032ce6d71c91a7525b91eb2",
+  "laterDiff": "documentation only",
+  "reviews": [
+    {
+      "reviewer": "connect_r3_memory",
+      "scope": "Practice conversation, codec, parent Activity hunks and two new UI history tests",
+      "reviewedLocal": "7afcfd848ad9440b7eba205043261776af19c782",
+      "finding": "NO_CONFIRMED_BLOCKER",
+      "checked": [
+        "No direct solution in first exercise prompt",
+        "Same-exercise history withheld on repeat",
+        "Feedback only after accepted completed persistence",
+        "Private bot/model/session/profile binding",
+        "V1/V2/V3 reader and ordinary V2 writer",
+        "Existing READY/tool/cancellation gates"
+      ],
+      "limits": "Static review. No inference or Android execution. Other conversation entries may provide indirect hints."
+    },
+    {
+      "reviewer": "connect_r3_memory",
+      "scope": "Branch discovery, bounded CLI, sourcePreflight, repair critic, Termux probes",
+      "finding": "NO_CONFIRMED_BLOCKER",
+      "checked": [
+        "Discovery only proposes BRANCH_REVIEW",
+        "No automatic CLI startup",
+        "Finite explicit loop",
+        "Source preflight awaited throughout persisted stateFile path",
+        "Existing BacklogStore, lock and budget",
+        "Three version probes use resolved Termux env"
+      ],
+      "limits": "Static review. No arbitrary filesystem interleaving or device execution proved. General loop calls without stateFile do not use this preflight."
+    },
+    {
+      "reviewer": "connect_r3_avatar",
+      "scope": "Merged compiler privacy/byte counter and MemoryEventMapper lifecycle",
+      "finding": "NO_CONFIRMED_BLOCKER",
+      "checked": [
+        "Shared source identity and privacy resolution",
+        "Forbidden or ambiguous content twins withheld",
+        "Untrusted complete notes",
+        "Accepted redacted UTF-8 sections alone consume budget",
+        "Own recall observer retained",
+        "Atomic latest event/count and reentrant detach",
+        "Activity main looper and detach-before-close"
+      ],
+      "limits": "Static review and original tests read. No arbitrary thread-interleaving proof or test rerun by reviewer."
+    }
+  ]
+}

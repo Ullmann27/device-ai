@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumNexusHomeSpecTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:01" hostname="5c9e18abbd30" time="0.008">
+  <properties/>
+  <testcase name="beginnerLabelsCommunicateRealFunctions" classname="at.heinz.deviceai.ContinuumNexusHomeSpecTest" time="0.007"/>
+  <testcase name="beginnerNavigationHasDistinctDestinations" classname="at.heinz.deviceai.ContinuumNexusHomeSpecTest" time="0.0"/>
+  <testcase name="narrowAndEnlargedTextLayoutsStayReadable" classname="at.heinz.deviceai.ContinuumNexusHomeSpecTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

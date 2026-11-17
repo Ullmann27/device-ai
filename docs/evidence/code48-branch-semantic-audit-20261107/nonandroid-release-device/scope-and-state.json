@@ -1,0 +1,18 @@
+{
+  "source": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "status": "",
+  "readOnlyProjectInspection": true,
+  "projectProgramsExecuted": false,
+  "testsExecuted": false,
+  "buildsExecuted": false,
+  "providerInvocations": false,
+  "sourceRefConfigMutations": false,
+  "originalPathCount": 18,
+  "originalDistinctBlobCount": 20,
+  "historicalCallerVariantSearches": 20,
+  "historicalCallerSearchesWithUnavailableBlobs": 18,
+  "gitLazyFetchingDisabledForCallerAudit": true,
+  "completedAtUtc": "2026-11-07T06:48:51.132654+00:00",
+  "caveat": "Historical caller search is incomplete for unavailable local objects; no negative whole-history caller claims. Source files themselves are all available. No remote deployment configuration was inspected."
+}

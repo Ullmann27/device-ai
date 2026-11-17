@@ -1,0 +1,1 @@
+actual fixed condition exit=0; expected0; same input

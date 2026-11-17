@@ -1,0 +1,16 @@
+#!/bin/bash
+# NF-7 (pre-registered 948d42c6, amendment 8f-A 524c1afc): G-M independent, G-M residual (cross-fitted KN-7 targets),
+# G-M residual with in-sample targets (reported arm), then the mixture evaluation of all epoch-6 checkpoints on NFC2 VALIDATION.
+S=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad
+J=$S/intel/nf7b.jar
+R=/home/user/device-ai/.claude/worktrees/intel-next
+run(){ name=$1; shift
+ { echo "JAR $(sha256sum $J | cut -c1-64) commit=524c1afc start=$(date -u +%FT%TZ) args=$*"
+   java -Xmx6g -Dstdout.encoding=UTF-8 -cp $J at.heinz.deviceai.learning.nf.NfExperiment $R "$@" 2>&1 | grep --line-buffered -v JAVA_TOOL_OPTIONS
+   echo "exit=${PIPESTATUS[0]} end=$(date -u +%FT%TZ)"; } > $S/nf7/$name.txt 2>&1; }
+run nf7-independent lm G-M seeds=1,2,3 epochs=6 threads=4 vocab=258 corpus=nfc2 store=$S/nf7/ckpt
+run nf7-residual lm G-M seeds=1,2,3 epochs=6 threads=4 vocab=258 corpus=nfc2 residual=0.5 store=$S/nf7/ckpt
+run nf7-residual-insample lm G-M seeds=1,2,3 epochs=6 threads=4 vocab=258 corpus=nfc2 residual=0.5 residualQ=insample store=$S/nf7/ckpt
+CK=$(cat $S/nf7/nf7-independent.txt $S/nf7/nf7-residual.txt $S/nf7/nf7-residual-insample.txt | grep -E '^RUN G-M(-res|-resin)? seed=[123] epoch=6 ' | sed 's/.*ckpt=/ckpt=/' | tr '\n' ' ')
+run nf7-hybrid hybrid vocab=258 corpus=nfc2 $CK store=$S/nf7/ckpt
+echo done > $S/nf7/chain-finished.txt

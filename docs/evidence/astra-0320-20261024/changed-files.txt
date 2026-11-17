@@ -1,0 +1,11 @@
+M	.github/continuum/learning-wave-animation.test.mjs
+A	.github/continuum/model-import-identity.test.mjs
+M	app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+M	app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+M	app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt
+M	app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt
+M	app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt
+M	app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt
+M	app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt
+M	app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt
+A	app/src/uiTest/java/at/heinz/deviceai/ContinuumTelemetryMotionUiTest.kt

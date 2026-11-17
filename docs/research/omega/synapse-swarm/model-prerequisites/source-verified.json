@@ -1,0 +1,13 @@
+{
+  "observedUtc": "2026-11-03T20:22:03.447764+00:00",
+  "sourceUrl": "https://github.com/ggml-org/llama.cpp",
+  "path": "/workspace/synapse-local-model/llama.cpp",
+  "commit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+  "tree": "42065e172024f95eb242763caa06812c09d363e7",
+  "trackedStatus": "",
+  "license": "MIT",
+  "licenseSha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d",
+  "configureStatus": "NOT_RUN",
+  "buildStatus": "NOT_RUN",
+  "inferenceStatus": "NOT_RUN"
+}

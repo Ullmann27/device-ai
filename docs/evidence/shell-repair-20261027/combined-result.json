@@ -1,0 +1,13 @@
+{
+  "sourceSha": "a4fee812d5d3b99e3504f599432fe8f39d0b3051",
+  "description": "Two disjoint file inventories: existing worker .github/continuum plus scripts/*.test.mjs. Native JUnit counts are nested, not added to Node totals.",
+  "tests": 1431,
+  "pass": 1430,
+  "failed": 1,
+  "skipped": 0,
+  "remainingFailure": "Unchanged owner-v25 source approval freeze",
+  "workerReceiptId": "2026-10-27T06-04-20-104Z-b7f5b170-c984-43c4-8294-86da1c923d95",
+  "workerSourceUnchanged": true,
+  "workerLeaseHeld": true,
+  "scriptsSourceUnchanged": true
+}

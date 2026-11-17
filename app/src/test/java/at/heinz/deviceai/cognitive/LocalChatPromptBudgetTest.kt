@@ -1,0 +1,80 @@
+package at.heinz.deviceai.cognitive
+
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class LocalChatPromptBudgetTest {
+    private fun budget(
+        task: String,
+        memories: Boolean = false,
+        conversation: Boolean = false,
+        evidence: Boolean = false,
+        observations: Boolean = false,
+        reflection: Boolean = false
+    ) = LocalChatPromptBudget.limit(
+        task, memories, conversation, evidence, observations, reflection
+    )
+
+    @Test fun ordinaryFirstTurnUsesBoundedCpuPrompt() {
+        for (question in listOf(
+            "Wie würdest du mich bei einem kleinen Coding-Projekt unterstützen?",
+            "Erkläre mir in zwei Sätzen, wie du mir beim Programmieren einer Android-App helfen kannst.",
+            "Was kannst du?",
+            "Wie kann ich einen Unit-Test schreiben?"
+        )) {
+            assertEquals(question, LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS,
+                budget(question))
+        }
+    }
+
+    @Test fun memoryEvidenceAndContinuationsKeepFullPrompt() {
+        val question = "Wie würdest du mich bei einem kleinen Coding-Projekt unterstützen?"
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(question, memories = true))
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(question, conversation = true))
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(question, evidence = true))
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(question, observations = true))
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(question, reflection = true))
+    }
+
+    @Test fun toolResearchVerificationAndLongRequestsKeepFullPrompt() {
+        for (question in listOf(
+            "Prüfe die installierte App und zeige mir ihren Status.",
+            "Recherchiere die aktuellen Android-Sicherheitsupdates.",
+            "Kontrolliere diesen Patch und prüfe die gemessenen Ergebnisse.",
+            "Erkläre die Architektur im Detail. " + "Quelle und Test. ".repeat(40)
+        )) {
+            assertEquals(question, LocalChatPromptBudget.FULL_CHARACTERS, budget(question))
+        }
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(" "))
+    }
+    @Test fun multipleConditionsAndStrategyReceiveFullReasoningBudget() {
+        val query = "Vergleiche mehrere Bedingungen und entwickle eine ausführliche Strategie"
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget(query))
+    }
+
+    @Test fun shortRequestsForDetailNeverUseThreeSentenceBudget() {
+        for (question in listOf(
+            "Erkläre das ausführlich.",
+            "Ich möchte eine detaillierte Erklärung.",
+            "Erkläre bitte Schritt für Schritt.",
+            "Beschreibe den Ablauf im Detail.",
+            "Gib mir eine lange Antwort.",
+            "Beschreibe den Ablauf vollständig."
+        )) assertEquals(question, LocalChatPromptBudget.FULL_CHARACTERS, budget(question))
+    }
+
+    @Test fun lengthBoundaryKeeps240BriefAnd241Full() {
+        assertEquals(LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS, budget("a".repeat(240)))
+        assertEquals(LocalChatPromptBudget.FULL_CHARACTERS, budget("a".repeat(241)))
+    }
+
+
+    @Test fun extendedFold7OwnerRequestKeepsAllWordsBeyondOld7900Boundary() {
+        val request = "Bitte analysiere diese vollständige Fragestellung: " + "Einzelheit ".repeat(850)
+        assertTrue("This request is deliberately larger than the old 7900 character limit", request.length > 7900)
+        assertTrue("An extended full question must not be rejected before native admission",
+            LocalChatPromptBudget.acceptsCompleteTask(request))
+    }
+
+}

@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "evidence_class": "ACTUAL_KOTLIN_MAPPER_SYNTHETIC_INPUT_NOT_DEVICE",
+  "baseline_source_commit": "3d206db052300a3d0c9f14851052dc3b8e28fba5",
+  "candidate_source_commit": "74892201d766d4d5c756079893642ed1547c95b8",
+  "baseline_export_sha256": "43bd470a09c29d616d693be316cca85b3b3157187295a243e89caaacf52fad5e",
+  "candidate_export_sha256": "c07f36746f6b0eb8ac61917165a51766e9b6a20825d28770f02e1e0a0ab18aa9",
+  "asset_sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "frames_compared": 64,
+  "unchanged_channels": [
+    "inputs",
+    "weights",
+    "head",
+    "neck",
+    "jaw",
+    "camera focus",
+    "hidden nodes"
+  ],
+  "changed_runtime_sources": [
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt"
+  ],
+  "sequences": [
+    {
+      "name": "idle-to-thinking",
+      "frames": 26,
+      "baseline": {
+        "zero_elapsed_step_degrees": {
+          "eyeYaw": -4.267573237419128,
+          "eyePitch": -1.3521031439304352
+        },
+        "largest_step_degrees": {
+          "eyeYaw": 4.267573237419128,
+          "eyePitch": 1.3521031439304352
+        }
+      },
+      "candidate": {
+        "zero_elapsed_step_degrees": {
+          "eyeYaw": 0.0,
+          "eyePitch": 0.0
+        },
+        "largest_step_degrees": {
+          "eyeYaw": 0.1693924069404602,
+          "eyePitch": 0.05204802751541138
+        }
+      }
+    },
+    {
+      "name": "thinking-to-idle",
+      "frames": 26,
+      "baseline": {
+        "zero_elapsed_step_degrees": {
+          "eyeYaw": 1.574610412120819,
+          "eyePitch": -0.274380162358284
+        },
+        "largest_step_degrees": {
+          "eyeYaw": 1.574610412120819,
+          "eyePitch": 0.274380162358284
+        }
+      },
+      "candidate": {
+        "zero_elapsed_step_degrees": {
+          "eyeYaw": 0.0,
+          "eyePitch": 0.0
+        },
+        "largest_step_degrees": {
+          "eyeYaw": 0.03805947303771973,
+          "eyePitch": 0.06835116446018219
+        }
+      }
+    }
+  ],
+  "limits": [
+    "Synthetic fixed-gaze silent state transitions",
+    "No Filament, device, actual speech or camera validation"
+  ]
+}

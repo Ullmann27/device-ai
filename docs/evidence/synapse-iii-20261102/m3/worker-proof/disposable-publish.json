@@ -1,0 +1,7 @@
+{
+  "branch": "continuum-agent/repair-fd02e2d0a1-0cb7d1ec",
+  "commit": "cf1c33da8a7b07c23ac08cbf94fd4fb79876a344",
+  "base": "fd02e2d0a1b46c85484eb868d4c7774715751139",
+  "targetBranch": "synapse-m3-fixture",
+  "pullRequest": null
+}

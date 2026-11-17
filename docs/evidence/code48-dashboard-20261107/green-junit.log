@@ -1,0 +1,26 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=33967 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=33967 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ContinuumDashboardVisibilityUiTest#hiddenCockpitDoesNotQueueTelemetryReads
+.
+Time: 3.5
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDashboardVisibilityUiTest#returningToCockpitRefreshesImmediatelyAndCoalesces
+.
+Time: 0.278
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDashboardVisibilityUiTest#visibleSystemDialogStillRefreshesFromChat
+.
+Time: 0.307
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDashboardVisibilityUiTest#detachedOrPausedDashboardDoesNotQueueTelemetryReads
+.
+Time: 0.166
+
+OK (1 test)
+
+TOTAL tests=4 failures=0

@@ -1,0 +1,1626 @@
+{
+  "base": "821df5d1acf68f0caf10369298352a3589f56a97",
+  "refs": [
+    {
+      "ref": "origin",
+      "sha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+      "uniqueToRef": 24,
+      "uniqueToIntegration": 2232,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/artifacts/sol61-preview-20261019",
+      "sha": "eb62a2fb40590968847baa6e8d21cd87e60babf5",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 1258,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-0320-visual-integration-20261024",
+      "sha": "f43785aadd07ab7849abd7a739502c327c56971a",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 123,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/continuum-always-on-web-20261018",
+      "sha": "4e27e4658649fd6040581e2fc7848654d0aba49f",
+      "uniqueToRef": 10,
+      "uniqueToIntegration": 1274,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-atomic-paired-checkpoints-20261021",
+      "sha": "b85f9adccf440392473c37b20940b90bee8aca56",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 799,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/continuum-blacklab-20261019",
+      "sha": "ef38dbe98864b8857d0726d40c6db3a3dd2b4a96",
+      "uniqueToRef": 52,
+      "uniqueToIntegration": 1274,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-dna-guardian-20261018",
+      "sha": "92ce6a35edf946abcf6387e10c940e329b835e21",
+      "uniqueToRef": 6,
+      "uniqueToIntegration": 1274,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-dual-core-binding-20261021",
+      "sha": "91291cb201d140bc301bcb341b49a674d8d08165",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 806,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/continuum-experiment-charter-20261019",
+      "sha": "06a41709ac1eba32b3081e0aee63e450fce3b3dc",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 770,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/continuum-holographic-ui-20261019",
+      "sha": "f5b88ad052e1f237053319822fbcee248d685045",
+      "uniqueToRef": 62,
+      "uniqueToIntegration": 1274,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-integrated-apk-20261019",
+      "sha": "95add3691e0c5472511eb266873f7a77512a8408",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1230,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/continuum-live-hologram-20261023",
+      "sha": "c60addce1ecfb2557d46af7198e476c005f39afb",
+      "uniqueToRef": 5,
+      "uniqueToIntegration": 458,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-local-coding-milestone-20261021",
+      "sha": "377bc05b8a8d96494f4cee7be8665fde3317f1e7",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 697,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/continuum-offline-public-research-20261018",
+      "sha": "93b2d9f9009e9c2695085a31201a6cf6c35ea899",
+      "uniqueToRef": 23,
+      "uniqueToIntegration": 1274,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-optional-groq-mentor-20261019",
+      "sha": "564057812b3b5ee32c42a2dab31c992cc4e4669d",
+      "uniqueToRef": 9,
+      "uniqueToIntegration": 1194,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-research-bridge-20261019",
+      "sha": "b73ba61ce5d798090232f377f3d04e24aba55e72",
+      "uniqueToRef": 35,
+      "uniqueToIntegration": 1274,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-research-learning-gate-20261019",
+      "sha": "68ee7cc74086b472ac6ca209b6bf2379c99eedb6",
+      "uniqueToRef": 34,
+      "uniqueToIntegration": 1274,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/continuum-research-verification-20261021",
+      "sha": "79727b3b474bb28dce7e9c35d96f7aa904892b4b",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 766,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/continuum-samsung-research-hotfix-20261019",
+      "sha": "d82d7dcfa4543b9c312e978dbd15b0c9f0c8ba77",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1222,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/continuum-visual-engineering-20261023",
+      "sha": "66b7580111f39dd9abe65964c08b303f2a6185cf",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 531,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/astra/render-mentor-apk-builder-20261019",
+      "sha": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 146,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/astra/runner-isolation-diagnostic-20261019",
+      "sha": "a1ba1cf88eaa64bca4010ed412efb695b694e7a7",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 1194,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/backup/continuum-day-close-20261017-f04f7235",
+      "sha": "f04f7235bd1fb6dfa335b325ee7ca6e78e1a1d4d",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1463,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-main-20261017-190f5eab",
+      "sha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+      "uniqueToRef": 24,
+      "uniqueToIntegration": 2232,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/backup/continuum-pr19-20261017-ec4b4cae",
+      "sha": "ec4b4caecd64835e56af924dae1f7ad825059bfc",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1508,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-20261017-4c4b3fd8",
+      "sha": "4c4b3fd8b9cdb5f67dd79b799026b9002197ff05",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1499,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-autonomous-evidence-gate-20261018-2e06c432",
+      "sha": "2e06c432871888054ae9030ac1ee0075a72f7e8b",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1386,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-cefr-prospective-benchmark-20261018-5944aec1",
+      "sha": "5944aec1b2f99051201afade438e29407fe02022",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1374,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-cefr-research-20261018-084c083f",
+      "sha": "084c083f3329b89854c3498712a827d2bd96ea41",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1422,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-cegis-handoff-20261018-762cb80a",
+      "sha": "762cb80a4100c7187035fb9b06d509f31d50a9e4",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1451,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-evidence-ledger-cefr-shadow-20261018-7387ae9c",
+      "sha": "7387ae9c3c2782a2e5428aeff0f20f19bfe394ff",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1389,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-four-powers-cefr-20261018-b544bb57",
+      "sha": "b544bb57e479ae6a6e13eca5c7fb4236fa4f9d09",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1401,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-acceptance-20261017-e9150e5",
+      "sha": "e9150e508e671d983d3570b6796c593c858559df",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1478,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-closed-loop-gate-20261017-f7308898",
+      "sha": "f7308898a16eb3fa387bcc9984ec457f3d88b0d9",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1454,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-junit-node22-20261017-70a9db83",
+      "sha": "70a9db83380872e1eb2dac206480ed148b0ec2c7",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1468,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-junit-single-read-20261018-33b9c4cb",
+      "sha": "33b9c4cb0a77cbb8fd77631ff2294dc3832fd90e",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1443,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-real-e2e-proof-20261017-87313052",
+      "sha": "8731305228e07107918811e53e0a6633c7d70881",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1474,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-required-e2e-20261017-62fa6cf0",
+      "sha": "62fa6cf0890e8c81037dddcb00e2c8159260c152",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1456,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-verified-tests-20261017-b9e056cb",
+      "sha": "b9e056cb27d7b119a11ca885918384b7260cba9e",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1495,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-worker-failclosed-20261017-67de0069",
+      "sha": "67de00698fe5167507490f75bbe162a9f5959e67",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1493,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-m4-xml-proof-hardening-20261018-c1249ae2",
+      "sha": "c1249ae2e5efaaf9fe4fc55b0c02d0c5a474a41e",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1434,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-repair-critic-control-boundary-20261018-7c075c56",
+      "sha": "7c075c567db8411a0103c9c36b8a562c0c3e320b",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1449,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-repair-recursion-report-20261017-eb089bb3",
+      "sha": "eb089bb3c27789f6fc977f94f190e469f2d267c3",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1484,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-secured-20261017-0d62d0aa",
+      "sha": "0d62d0aaf9c24a1bd3aae88df7f5664a1fb1645b",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1498,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/continuum-pr28-worker-heartbeat-20261017-5d92eb11",
+      "sha": "5d92eb1199b40b2bb2994829cf3d28a66c848db3",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1488,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/mentor-apk-before-pr50-update-20261021",
+      "sha": "305122e867052878d96b6c3dec9e63c82eb94fd0",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 699,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/render-apk-before-astra-integration-20261021",
+      "sha": "a68ef96e307921b2305349349d4724ca050ad588",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1101,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/render-mentor-before-pr42-delivery-20261020",
+      "sha": "23a954ecf9f1c926f480b3601120bfbcd2ce67bf",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1121,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/backup/render-mentor-service-before-pr42-20261020",
+      "sha": "7eba4e7e09f03c253d69b743b16ca0d9439caee3",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1119,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-0320-v21-release-review-20261024",
+      "sha": "aa8780a8489e9e972e9a35a5af9e22866a0ea6e2",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 85,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-0321-fold7-orb-runtime-diagnostics-20261024",
+      "sha": "ccf2ea9884c98f9e45691294c7323e5b8d679bc9",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 111,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-0321-local-dialogue-quality-20261024",
+      "sha": "7b30d63110807cc44972afb34345d769a3991c6e",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 102,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-apk-preview-20261021",
+      "sha": "18d6c064d4a49b85bc1f2a4032b0fbe7d147ef92",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 672,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-app-navigation-completion-20261022",
+      "sha": "e2453ee26e151322c1ae84ba8d8698ca77c67c5b",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 624,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-argon-qf2-source-proof-20261022",
+      "sha": "b21bf20f635a2cc768a07ae34c67eaedada68a61",
+      "uniqueToRef": 27,
+      "uniqueToIntegration": 616,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-autonomous-dialogue-research-20261024",
+      "sha": "9794761067e6bd1f8f2188426288f8134de53e4e",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 135,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-bundled-quality-qf2-20261022",
+      "sha": "13e67c958e626aca56659579efa158b82c056de3",
+      "uniqueToRef": 22,
+      "uniqueToIntegration": 616,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-cdx1-postrun-audit-20261024",
+      "sha": "06e102e78155d6d4d76943f0425eacf8c5028535",
+      "uniqueToRef": 3,
+      "uniqueToIntegration": 127,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-coding-invalid-feedback-20261024",
+      "sha": "c5f3575fd1839696f8c6b643fe6cac34a94fc52b",
+      "uniqueToRef": 10,
+      "uniqueToIntegration": 78,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-coding-rejection-feedback-20261024",
+      "sha": "364c6aea766e395bc7026cc6fca7b24f7e5bf45b",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 72,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-core-mirror-20261024",
+      "sha": "691456865177cf9d6c6d4eb0191d69ae43330b73",
+      "uniqueToRef": 5,
+      "uniqueToIntegration": 127,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-csx1-research-gate-20261022",
+      "sha": "5a1926e57794faabd8b5de8634b4a1ad73e77ebf",
+      "uniqueToRef": 15,
+      "uniqueToIntegration": 638,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-hologram-context-recovery-20261024",
+      "sha": "5be8b5c9521e97e6e482e35574bae1fb80928fa7",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 153,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-i1-model-binding-20261022",
+      "sha": "07b66f40d098aed5b038c94ac872011065277f7d",
+      "uniqueToRef": 35,
+      "uniqueToIntegration": 638,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-intelligence-lab-readonly-20261022",
+      "sha": "1259375d243f4a1ba8b29b2b95d11c5fd075cb46",
+      "uniqueToRef": 12,
+      "uniqueToIntegration": 638,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-layout-pixel-alignment-20261023",
+      "sha": "b7a1e1e02358df9216fc61dd667634d96977b9db",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 530,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-live-hologram-device-fix-20261024",
+      "sha": "5be8b5c9521e97e6e482e35574bae1fb80928fa7",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 153,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-llama-recovery-20261021",
+      "sha": "73c32158f0e7a0a726abfe08fe9cb8b24e7ff887",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 678,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-m5-draft-approval-guard-20261024",
+      "sha": "f382aeda2612723ae3eacdf0fe96e87fbf10e04c",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 234,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-m6-run-binding-preflight-20261025",
+      "sha": "efadbc1ac65ccc4a0943d4b47f4290de9be9797e",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 40,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-master-integration-v19-20261024",
+      "sha": "ec4fa6db4e57d40d25a6e8ed1c794b4d96c046c2",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 207,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-memory-retrieval-no-false-evidence-20261022",
+      "sha": "ffb2ba01b6d2d9aaaef2a499e0e7147dca1ec598",
+      "uniqueToRef": 14,
+      "uniqueToIntegration": 616,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-mentor-update-20261021",
+      "sha": "410beab44b4ed9f912cb382cb6d21b2aa05742c1",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 667,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-navigation-signed-delivery-20261022",
+      "sha": "619ebeb2831c8184a91e3c08e165ed4f4794f969",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 616,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-opus-android-coding-ui-20261022",
+      "sha": "76b98b2230073a6aa8c122a00e1c00e183751ad2",
+      "uniqueToRef": 13,
+      "uniqueToIntegration": 695,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-owner-0.3.19-hologram-20261024",
+      "sha": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 146,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-release-integration-audit-20261022",
+      "sha": "8be5d8f08d593fdde4639c7d80cf067098789a5b",
+      "uniqueToRef": 5,
+      "uniqueToIntegration": 616,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-render-delivery-audit-20261022",
+      "sha": "5865735d17a1e60b9bdb92e143a1304b78f86197",
+      "uniqueToRef": 3,
+      "uniqueToIntegration": 638,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-residual-pointer-built-20261022",
+      "sha": "21365a4e2cf1e0a8fa101e069fa4e019d36143a6",
+      "uniqueToRef": 21,
+      "uniqueToIntegration": 638,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/chatgpt/continuum-typed-android-coding-bridge-20261024",
+      "sha": "8ff3dbf04522e9667a3d875ab74a86e4557f3b58",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 55,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/chatgpt/continuum-typed-coding-isolation-recovery-20261025",
+      "sha": "9f14139b9b4f7b1c02de2c5bc2a568f75c30714c",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 48,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/continuum-agent-state",
+      "sha": "536caa87f7b02237f0125e741eab72c276febe3a",
+      "uniqueToRef": 66,
+      "uniqueToIntegration": 2266,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum-agent/activate-hourly-developer-agent",
+      "sha": "408300c8f16beb875ead3895c1a103bd312f951e",
+      "uniqueToRef": 23,
+      "uniqueToIntegration": 2232,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum-agent/demo/38696111909/fault-kt-historical-escaped-newline-48bd150",
+      "sha": "20d33bd1427eb86227e3fb148d1e955346ab62ff",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 1940,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum-agent/demo/38696111909/repair-kt-historical-escaped-newline-48bd150",
+      "sha": "e63a513dbdad2c6cbe3b73cf2662e43f6ab71313",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 1940,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum-agent/repair-0bf848a1be-ad28fd1d",
+      "sha": "d3ec70aadb1294df991fda5f5ec131b16ddd825e",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 1904,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum-agent/repair-22582016d3-e2cd043b",
+      "sha": "3db71056a3c586ac587ec965ab2ecaecf3c36b21",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 1940,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum-agent/repair-9e1412ed3f-2f132248",
+      "sha": "5c746823d7a5a90a77fb56fe49e904b8d7744416",
+      "uniqueToRef": 12,
+      "uniqueToIntegration": 1883,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum-agent/repair-ec14c4b94e-a82e4caf",
+      "sha": "d0bfe7bc637df88d38aade44173b0123eb35001d",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 1833,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum-state",
+      "sha": "230cfb88732349f25530640c720cb6cf36513a88",
+      "uniqueToRef": 31,
+      "uniqueToIntegration": 2266,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/continuum/argon-safety-review-20261017",
+      "sha": "ab2365aeafa12140cc1ecc07f8f674a6ca424346",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1274,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/continuum/backlog-agent-v2-20261015",
+      "sha": "899217952173686fe69dcc01fad71f01ec00a6f5",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1934,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/continuum/contrastive-recovery-20261015",
+      "sha": "d669db7ef5e964b7678819943b7dc2efaf0d6e89",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1924,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/add-benchmark-measurement-harness",
+      "sha": "a4087693ab61eee8810654b4761e792481d9a3b0",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 2163,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/add-deterministic-jvm-unit-tests",
+      "sha": "262ed0ded56cfb8aaf5d9031c36e52f5c0a3d511",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 2163,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/continuum-agent-repair-demo",
+      "sha": "22582016d3b8d0a215793d3c5a11a69812c100c0",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 1940,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/continuum-android-integration-20261015",
+      "sha": "983a162bf66e97ee415e57dfb46a8b13b2595ef8",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1897,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/continuum-argon-source-review-20261015",
+      "sha": "4678a98f62e9b339cc723497e58839e6216b1c8f",
+      "uniqueToRef": 32,
+      "uniqueToIntegration": 1883,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/continuum-atlas-provenance-gate-20261020",
+      "sha": "19685ba946e6484786900c5ede65fceddd90c322",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1018,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/continuum-contrastive-recovery-20261015",
+      "sha": "91d64be88886b956a5d22e34fa36018dffe9dbd1",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1908,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/continuum-feedback-ledger-20261015",
+      "sha": "890163335db1aa1faf50a784342bef76e3c73e59",
+      "uniqueToRef": 7,
+      "uniqueToIntegration": 1883,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/continuum-owner-answer-corrections-20261015",
+      "sha": "251518aabd6cec964252c0acb3812c1883e85fe0",
+      "uniqueToRef": 25,
+      "uniqueToIntegration": 1883,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/continuum-phase1-direct",
+      "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2163,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/continuum-phase1-runtime",
+      "sha": "9eaa591239b54dc486ecc9d94457621963e34a91",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 2189,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/continuum-phase2-adaptive",
+      "sha": "3d7608023b3f7ebbdf09ecb29aef48816685b594",
+      "uniqueToRef": 4,
+      "uniqueToIntegration": 2163,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/continuum-phase2-intelligence-direct",
+      "sha": "917aafcfc6c2cf5e88c286c479bc04cba111fa65",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2156,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/continuum-selective-correction-revocation-20261015",
+      "sha": "c3b77c0093cfddbc7193f805730dd6ba2eae7823",
+      "uniqueToRef": 28,
+      "uniqueToIntegration": 1883,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/copilotcontinuum-phase2-intelligence-direct",
+      "sha": "d533bcd226535ac98fcff4be2bb024cf91964123",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2149,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/deepresearch-p0-durable-agent-memory",
+      "sha": "3923aac7c3949f47ebb09aa54e4f491e0c98c1a4",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2190,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/fix-64243701-1415878393-f443f816-2b3d-4c73-8097-d7df0cb722ca",
+      "sha": "7b229dd001416fdaa5a0b7dcb5e7ebdfd89cfce8",
+      "uniqueToRef": 7,
+      "uniqueToIntegration": 2163,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/inspect-extend-compute-distributed-task-code",
+      "sha": "fcdc3a3700c3f6f5b67fdeeaef404ad3549cf96c",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 2163,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/copilot/main-task-review",
+      "sha": "7cea7553b2e50bcbf18fed0b8fe338264106e8ca",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2233,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/part3-memory-model-ecology",
+      "sha": "7c274a5240321142b31aa1d9da0ef74301e42137",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2229,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/part4-agent-research",
+      "sha": "463953edea61cbc9059933451430ae949bf84db8",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2209,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/copilot/pr-12-working-first-vertical-slice",
+      "sha": "ec4b4caecd64835e56af924dae1f7ad825059bfc",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 1508,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/deepresearch/p0-durable-agent-memory",
+      "sha": "57b3fe21a854e5ab7e74db91b445d34975cb59d1",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2201,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/development/continuum-backlog-20261015",
+      "sha": "cd860569ba0a2596bf3270873e0dccd98770c201",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 1934,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/docs/device-ai-open-source-reference-pack",
+      "sha": "e068eb36247c727303eec384805caeb86d6501af",
+      "uniqueToRef": 18,
+      "uniqueToIntegration": 2231,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/experiment/continuum-synapse-zero-20261022",
+      "sha": "2b58ed17861de986d97c756be4205993e1233f32",
+      "uniqueToRef": 6,
+      "uniqueToIntegration": 616,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/feature/continuum-measured-neon-wave-20261022",
+      "sha": "fe869f079c4d88085b0dc2476e1ae02a6fac40f2",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 538,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/fix/continuum-fold-live-responsive-20261023",
+      "sha": "3dec7a86cf87bda8c200493143bc1bf64c4b9f30",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 466,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/fix/continuum-fold-motion-regression-gates-20261023",
+      "sha": "ad995a0c05ee6ef8ea83894fc0930db9d10306e6",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 463,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/fix/continuum-owner-v18-shallow-attestation-20261023",
+      "sha": "8902d8ce88c5a10905a60d11080f6da9c24ab2ea",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 359,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/fix/continuum-signed-archive-missing-release-20261023",
+      "sha": "9fc4cd08e9299a6a9b737fc981ab8fa97ccb40b5",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 459,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/fix/continuum-signed-rollback-metadata-20261023",
+      "sha": "08213b994b441e25ff8002ba2a0d5c28b0826923",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 461,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/fix/continuum-v18-cache-safe-git-gate-20261023",
+      "sha": "c00e40a4e38751e8e05ec64ce6e8bd9c6d5f88a5",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 357,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/fix/continuum-v18-render-detached-head-20261023",
+      "sha": "f30f03e3a3e52be84b5b08b10b4c4ad6a8b4ae65",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 361,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/fix/continuum-v18-render-dirty-audit-20261023",
+      "sha": "c35b39a11cec00917598b81e42f9c5853668ae8a",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 356,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/gpt6/continuum-0.3.18-release-preflight-20261023",
+      "sha": "0afd4ca0e44d7222affb7ea89de2cf940376e4c3",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 316,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/gpt6/continuum-m4-first-owned-app-20261023",
+      "sha": "b842d471183fcf181f392d522a0d0a8f5936a649",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 268,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/handoff/sol61-continuum-20261019",
+      "sha": "752bee2c0a3f597c3c5181afba319e892c1976e8",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 1258,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/integration/continuum-0320-all-connected-20261024",
+      "sha": "cc453facbaf02cf03ab263f96a0116d4de0548ef",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 99,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-0320-core-cdx-20261024",
+      "sha": "23fe69162fc7e1e1fc727f9cb225854af579a7f2",
+      "uniqueToRef": 6,
+      "uniqueToIntegration": 127,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/integration/continuum-aaa-bento-cockpits-20261022",
+      "sha": "77f517a1556cb8a60390b3696f97503018946b49",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 542,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-aaa-lm1-ccc1-preview-20261023",
+      "sha": "f23934e2b38c3e473e06ce4421020e79d8b9158a",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 488,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-all-current-20261023",
+      "sha": "4f712d61ef39bc9699472cd7483cceee6a637859",
+      "uniqueToRef": 5,
+      "uniqueToIntegration": 457,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/integration/continuum-astra-20261021",
+      "sha": "dfd876c23e2e88faa2ff7ee2f7f75138b416929a",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 702,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-composer-reflow-fix-20261023",
+      "sha": "8ae9463e715dadcd2d1704cd013d7de9e09ffe66",
+      "uniqueToRef": 4,
+      "uniqueToIntegration": 430,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/integration/continuum-current-review-20261023",
+      "sha": "811803138c86a5c1a7a2a2b9cd196580a574a4a1",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 412,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-full-feature-candidate-20261022",
+      "sha": "29f70b9729060609b385aae35a1e39a12d98eae0",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 573,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-gguf-context-recovery-20261023",
+      "sha": "adee374c59cb02031537e95a92eaa0f9cb2bc4f5",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 457,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/integration/continuum-m6-all-verified-20261025",
+      "sha": "821df5d1acf68f0caf10369298352a3589f56a97",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 0,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-owner-apk-v18-candidate-20261023",
+      "sha": "4c0b62beae6badc54794351d3012dc1a4dd477a3",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 363,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-premium-ui-preservation-20261023",
+      "sha": "2a5a614fff7724f4836071e3aa1a94c479964571",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 406,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/integration/continuum-premium-ui-preview-20261022",
+      "sha": "2b2da964df368457be666192054346238deb1e79",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 596,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-ui-freeze-ccc1-20261023",
+      "sha": "eb32f297e889c4f794a82b73d2a12fd448193ee0",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 407,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-ui-opus-gguf-20261023",
+      "sha": "0499e2a0d95187edcb3f0b8736339154bc563edb",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 449,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/integration/continuum-verifier-first-spine-20261023",
+      "sha": "83f01067155a0f89777a4a1aad801d89a6170056",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 419,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/main",
+      "sha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+      "uniqueToRef": 24,
+      "uniqueToIntegration": 2232,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/ccc1-e2e-20261023",
+      "sha": "8f88cc445b2239861e75a34b6e132cf21f6e1290",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 375,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-0.3.18-candidate-20261023",
+      "sha": "421a96b7eca1f66df67630434044c4ee73feb0dc",
+      "uniqueToRef": 5,
+      "uniqueToIntegration": 268,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-aaa-ui-20261022",
+      "sha": "c717a28255f243d7da33b88a70e7fd4c1ee724ca",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 522,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/opus/continuum-app-navigation-20261022",
+      "sha": "1a96ac1d908d7bd5778b687af5dc5bbf4792bc34",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 637,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/opus/continuum-app-navigation-wip-archive-20261022",
+      "sha": "68a819c0b27769b49b70a3ec4ad1a23c2742b8c9",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 637,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-csx1-abstention-20261022",
+      "sha": "4ef5717f1fb3ce4c36e2343bc53062b78b0d879d",
+      "uniqueToRef": 32,
+      "uniqueToIntegration": 638,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-i2-selective-risk-20261022",
+      "sha": "1c72f8a28bd2a33f6aeb069fc1e4856d1cb802d1",
+      "uniqueToRef": 38,
+      "uniqueToIntegration": 638,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-intelligence-next-20261023",
+      "sha": "efcf4e3a5bbf55b7987a131b0d507ad32b753fbf",
+      "uniqueToRef": 15,
+      "uniqueToIntegration": 457,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-language-core-20261022",
+      "sha": "6919264d91aa9f80c88c93ec8f6398f3448a99fb",
+      "uniqueToRef": 23,
+      "uniqueToIntegration": 695,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-mobile-coding-e2e-20261022",
+      "sha": "1d92db03b87558c0b330dc584fd1f4c025a93c82",
+      "uniqueToRef": 6,
+      "uniqueToIntegration": 695,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-neural-frontier-lab-20261022",
+      "sha": "14702b0da94f2dd901c1dbad63c382b616b2c66a",
+      "uniqueToRef": 31,
+      "uniqueToIntegration": 695,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-next-20261023",
+      "sha": "ef3832ec451e07f2f2685df9802fa848376c66f7",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 251,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/continuum-premium-ui-20261022",
+      "sha": "a9882c6966e4b7aea884d703792d55a5da8e2e47",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 605,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/opus/continuum-sol-handoff-20261024",
+      "sha": "d0f0892e156b9bcfa6a9a80d6fcd515173a62565",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 202,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/opus/continuum-synapse-v2-20261022",
+      "sha": "79a3079efb1de80e0fd648e2192882bc3d4c1ed4",
+      "uniqueToRef": 14,
+      "uniqueToIntegration": 616,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/lm1-checkpoints-20261022",
+      "sha": "d2304a7658e1256b160c8012e1bac28268ff64a5",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 2266,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/opus/nf-checkpoints-20261022",
+      "sha": "fab239d38f2e820b93eb3f869e20ada895d7e4dc",
+      "uniqueToRef": 3,
+      "uniqueToIntegration": 2266,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/release/continuum-owner-0321-20261024",
+      "sha": "aa8780a8489e9e972e9a35a5af9e22866a0ea6e2",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 85,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/research/continuum-omega-vhsr-20261025",
+      "sha": "4b9ead538514680427f3330ef6b6e1938f9123d5",
+      "uniqueToRef": 2,
+      "uniqueToIntegration": 0,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/review/render-first-portable-build-20261022",
+      "sha": "3ee306eaababa8ac63dfbed3852a59faac4eef89",
+      "uniqueToRef": 3,
+      "uniqueToIntegration": 638,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/sol/continuum-0320-integration-20261024",
+      "sha": "3d7326d047ee91a91105f6f3e352ada613b6ff87",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 127,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/sol/continuum-autonomous-coding-20261024",
+      "sha": "c46ad26bbb7982f8c602ac8fc528658f56f3747e",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 78,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/sol/continuum-hologram-intelligence-20261024",
+      "sha": "9291d2bb3bb05d85698e6e7b812d4623fd32b5cb",
+      "uniqueToRef": 1,
+      "uniqueToIntegration": 195,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/sol/continuum-isolated-research-20261021",
+      "sha": "8897fd6630800b297fbda8f8638c7b615cf2b172",
+      "uniqueToRef": 4,
+      "uniqueToIntegration": 695,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/sol/continuum-m5-context-coding-experiments-20261024",
+      "sha": "144ab574b4c06e9bed926f78158a7183e6dfb013",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 239,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/sol/continuum-master-m4-research-integration-20261023",
+      "sha": "e4fd67c3e83314e3c32019e516ebd750a1433f2f",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 261,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/sol/continuum-max-20261024",
+      "sha": "f65181fe87244071ddb3286eccd6f11a23da2e52",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 195,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/sol/continuum-quality-20261021",
+      "sha": "5dc7c1c09d2a68cb766689a4fa4f80d31952a140",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 843,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/v0.2-redesign",
+      "sha": "91268b67ab0163dd37e8ff509e3dcbb64e2b3144",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2237,
+      "ancestor": true
+    },
+    {
+      "ref": "origin/v0.3-agent",
+      "sha": "a56143ec9efc9da4aae5da87d032e768ede53efe",
+      "uniqueToRef": 17,
+      "uniqueToIntegration": 2236,
+      "ancestor": false
+    },
+    {
+      "ref": "origin/work/continuum-phase1-direct",
+      "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af",
+      "uniqueToRef": 0,
+      "uniqueToIntegration": 2163,
+      "ancestor": true
+    }
+  ],
+  "selectedBlobComparisons": [
+    {
+      "ref": "origin/opus/continuum-synapse-v2-20261022",
+      "sha": "79a3079efb1de80e0fd648e2192882bc3d4c1ed4",
+      "codeFiles": 610,
+      "identical": 536,
+      "missingInIntegration": [
+        "app/src/main/java/at/heinz/deviceai/learning/synapse/ContinuumSynapseZeroShadow.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveRoleProbe.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseV2Reasoner.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/synapse/ContinuumSynapseZeroShadowTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveRoleProbeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveShadowBenchmark.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseV1ReviewDiagnostics.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseV2Bench.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseV2Experiment.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseV2ReasonerTest.kt"
+      ],
+      "differentInIntegration": [
+        ".github/continuum/android-holographic-home.test.mjs",
+        ".github/continuum/android-home-widget.test.mjs",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/app-navigation-wiring.test.mjs",
+        ".github/continuum/autonomous-teamleader.mjs",
+        ".github/continuum/autonomous-topic-frontier.test.mjs",
+        ".github/continuum/backlog-repair-worker.mjs",
+        ".github/continuum/backlog-repair-worker.test.mjs",
+        ".github/continuum/coding-agent-speech-wiring.test.mjs",
+        ".github/continuum/dialogue-retrieval.mjs",
+        ".github/continuum/mentor-update-continuity.test.mjs",
+        ".github/continuum/mobile-builder-android-wiring.test.mjs",
+        ".github/continuum/mobile-builder-existing-integration.test.mjs",
+        ".github/continuum/mobile-builder-result-wiring.test.mjs",
+        ".github/continuum/nexus-beginner-ui.test.mjs",
+        ".github/continuum/own-coding-agent-integration.test.mjs",
+        ".github/continuum/owner-contract-worker.mjs",
+        ".github/continuum/public-curriculum-lab.test.mjs",
+        ".github/continuum/public-research-failure-safety.test.mjs",
+        ".github/continuum/repair-critic.mjs",
+        ".github/continuum/repair-ledger-independent.test.mjs",
+        ".github/continuum/repair-ledger.mjs",
+        ".github/continuum/repair-loop.mjs",
+        ".github/continuum/repair-loop.test.mjs",
+        ".github/continuum/repair-strategies.mjs",
+        ".github/continuum/shared-build-lease.mjs",
+        ".github/continuum/shared-build-lease.test.mjs",
+        ".github/continuum/teamleader-cli.mjs",
+        ".github/continuum/teamleader-termux.test.mjs",
+        ".github/continuum/training-monitor-wiring.test.mjs",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+        "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumMobileBuildPlanTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridgeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculumTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumMemoryDialogueTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/TinyContextDecoderTest.kt",
+        "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt",
+        "scripts/continuum-isolated-node.sh",
+        "scripts/continuum-isolated-node.test.mjs",
+        "scripts/continuum-local-brain-cli.mjs",
+        "scripts/continuum-local-brain.mjs",
+        "scripts/continuum-mobile-builder.mjs",
+        "scripts/continuum-teamleader-termux.sh",
+        "scripts/render-mentor-preview.sh"
+      ]
+    },
+    {
+      "ref": "origin/opus/continuum-intelligence-next-20261023",
+      "sha": "efcf4e3a5bbf55b7987a131b0d507ad32b753fbf",
+      "codeFiles": 709,
+      "identical": 631,
+      "missingInIntegration": [],
+      "differentInIntegration": [
+        ".github/continuum/aaa-cockpit-and-effects.test.mjs",
+        ".github/continuum/android-holographic-home.test.mjs",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/autonomous-teamleader.mjs",
+        ".github/continuum/autonomous-topic-frontier.test.mjs",
+        ".github/continuum/backlog-repair-worker.mjs",
+        ".github/continuum/backlog-repair-worker.test.mjs",
+        ".github/continuum/ccc1-cli.mjs",
+        ".github/continuum/ccc1-envelope.mjs",
+        ".github/continuum/ccc1-experience.mjs",
+        ".github/continuum/ccc1-gate.mjs",
+        ".github/continuum/ccc1-interpreter.mjs",
+        ".github/continuum/ccc1-orchestrator.mjs",
+        ".github/continuum/ccc1-verifier.mjs",
+        ".github/continuum/ccc1-worker.mjs",
+        ".github/continuum/ccc1-worker.test.mjs",
+        ".github/continuum/coding-agent-speech-wiring.test.mjs",
+        ".github/continuum/fold-responsive-reflow.test.mjs",
+        ".github/continuum/learning-wave-animation.test.mjs",
+        ".github/continuum/mobile-builder-android-wiring.test.mjs",
+        ".github/continuum/mobile-builder-result-wiring.test.mjs",
+        ".github/continuum/mobile-coding-android-wiring.test.mjs",
+        ".github/continuum/own-coding-agent-integration.test.mjs",
+        ".github/continuum/public-research-failure-safety.test.mjs",
+        ".github/continuum/repair-critic.mjs",
+        ".github/continuum/repair-ledger-independent.test.mjs",
+        ".github/continuum/repair-ledger.mjs",
+        ".github/continuum/repair-loop.mjs",
+        ".github/continuum/repair-loop.test.mjs",
+        ".github/continuum/repair-strategies.mjs",
+        ".github/continuum/teamleader-termux.test.mjs",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/AndroidContinuumPainter.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumBentoCockpit.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardState.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumSurfaces.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt",
+        "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumMobileBuildPlanTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridgeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculumTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/TinyContextDecoderTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/nf/NfExperiment.kt",
+        "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/ContinuumHologramPlexusTest.kt",
+        "scripts/continuum-isolated-node.sh",
+        "scripts/continuum-isolated-node.test.mjs",
+        "scripts/continuum-local-brain-cli.mjs",
+        "scripts/continuum-local-brain.mjs",
+        "scripts/continuum-mobile-builder.mjs",
+        "scripts/continuum-mobile-coding.mjs",
+        "scripts/continuum-teamleader-termux.sh",
+        "scripts/render-mentor-preview.sh"
+      ]
+    },
+    {
+      "ref": "origin/opus/continuum-mobile-coding-e2e-20261022",
+      "sha": "1d92db03b87558c0b330dc584fd1f4c025a93c82",
+      "codeFiles": 605,
+      "identical": 540,
+      "missingInIntegration": [],
+      "differentInIntegration": [
+        ".github/continuum/android-holographic-home.test.mjs",
+        ".github/continuum/android-home-widget.test.mjs",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/autonomous-teamleader.mjs",
+        ".github/continuum/autonomous-topic-frontier.test.mjs",
+        ".github/continuum/backlog-repair-worker.mjs",
+        ".github/continuum/backlog-repair-worker.test.mjs",
+        ".github/continuum/coding-agent-speech-wiring.test.mjs",
+        ".github/continuum/developer-agent.mjs",
+        ".github/continuum/dialogue-retrieval.mjs",
+        ".github/continuum/local-brain-repair.mjs",
+        ".github/continuum/local-teamleader-loop.test.mjs",
+        ".github/continuum/mobile-builder-android-wiring.test.mjs",
+        ".github/continuum/mobile-builder-existing-integration.test.mjs",
+        ".github/continuum/mobile-builder-result-wiring.test.mjs",
+        ".github/continuum/nexus-beginner-ui.test.mjs",
+        ".github/continuum/own-coding-agent-integration.test.mjs",
+        ".github/continuum/public-curriculum-lab.test.mjs",
+        ".github/continuum/public-research-failure-safety.test.mjs",
+        ".github/continuum/repair-critic.mjs",
+        ".github/continuum/repair-ledger-independent.test.mjs",
+        ".github/continuum/repair-ledger.mjs",
+        ".github/continuum/repair-loop.mjs",
+        ".github/continuum/repair-loop.test.mjs",
+        ".github/continuum/repair-publish.mjs",
+        ".github/continuum/repair-strategies.mjs",
+        ".github/continuum/shared-build-lease.mjs",
+        ".github/continuum/shared-build-lease.test.mjs",
+        ".github/continuum/teamleader-cli.mjs",
+        ".github/continuum/teamleader-termux.test.mjs",
+        ".github/continuum/training-monitor-wiring.test.mjs",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+        "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumMobileBuildPlanTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridgeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculumTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumMemoryDialogueTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/TinyContextDecoderTest.kt",
+        "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt",
+        "scripts/continuum-local-brain-cli.mjs",
+        "scripts/continuum-local-brain.mjs",
+        "scripts/continuum-local-brain.test.mjs",
+        "scripts/continuum-mobile-builder.mjs",
+        "scripts/continuum-mobile-coding.mjs",
+        "scripts/continuum-teamleader-termux.sh",
+        "scripts/render-mentor-preview.sh"
+      ]
+    },
+    {
+      "ref": "origin/chatgpt/continuum-core-mirror-20261024",
+      "sha": "691456865177cf9d6c6d4eb0191d69ae43330b73",
+      "codeFiles": 862,
+      "identical": 833,
+      "missingInIntegration": [],
+      "differentInIntegration": [
+        ".github/continuum/autonomous-teamleader.mjs",
+        ".github/continuum/backlog-repair-worker.mjs",
+        ".github/continuum/continuum-owner-mainapp-quality.test.mjs",
+        ".github/continuum/continuum-owner-v18-release.test.mjs",
+        ".github/continuum/learning-wave-animation.test.mjs",
+        ".github/continuum/repair-critic.mjs",
+        ".github/continuum/repair-ledger.mjs",
+        ".github/continuum/repair-loop.mjs",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumCodingConversationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculumTest.kt",
+        "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/ContinuumCoreMirrorTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt",
+        "scripts/continuum-isolated-node.test.mjs",
+        "scripts/continuum-local-brain-cli.mjs",
+        "scripts/continuum-local-brain.mjs",
+        "scripts/continuum-owner-v19-release.test.mjs",
+        "scripts/render-mentor-preview.sh"
+      ]
+    },
+    {
+      "ref": "origin/sol/continuum-max-20261024",
+      "sha": "f65181fe87244071ddb3286eccd6f11a23da2e52",
+      "codeFiles": 849,
+      "identical": 805,
+      "missingInIntegration": [],
+      "differentInIntegration": [
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/autonomous-teamleader.mjs",
+        ".github/continuum/backlog-repair-worker.mjs",
+        ".github/continuum/continuum-owner-mainapp-quality.test.mjs",
+        ".github/continuum/continuum-owner-v18-release.test.mjs",
+        ".github/continuum/learning-wave-animation.test.mjs",
+        ".github/continuum/repair-critic.mjs",
+        ".github/continuum/repair-ledger.mjs",
+        ".github/continuum/repair-loop.mjs",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumSurfaces.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumCodingConversationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridgeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculumTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt",
+        "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/ContinuumOrbitalRingTest.kt",
+        "scripts/continuum-isolated-node.test.mjs",
+        "scripts/continuum-local-brain-cli.mjs",
+        "scripts/continuum-local-brain.mjs",
+        "scripts/continuum-owner-v19-release.test.mjs",
+        "scripts/continuum-v19-pin-audit.mjs",
+        "scripts/continuum-v19-pin-audit.test.mjs",
+        "scripts/render-mentor-owner-update-v19.sh",
+        "scripts/render-mentor-preview-dispatch.test.mjs",
+        "scripts/render-mentor-preview.sh"
+      ]
+    },
+    {
+      "ref": "origin/main",
+      "sha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+      "codeFiles": 31,
+      "identical": 17,
+      "missingInIntegration": [],
+      "differentInIntegration": [
+        ".github/continuum/baby-core.mjs",
+        ".github/continuum/baby-core.test.mjs",
+        ".github/continuum/public-web.mjs",
+        ".github/continuum/zero-cost-core.mjs",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt",
+        "app/src/main/java/at/heinz/deviceai/MainActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/SecureTokenStore.kt",
+        "app/src/main/java/at/heinz/deviceai/ShizukuBridge.kt",
+        "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveCore.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "backend/package.json",
+        "backend/src/server.js"
+      ]
+    }
+  ]
+}

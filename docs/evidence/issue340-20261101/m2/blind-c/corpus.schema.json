@@ -1,0 +1,143 @@
+{
+  "$comment": "Cross-field identity, digest, span, uniqueness and split counts validated by generator; expected offsets are UTF-16 code units.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cases": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "SUPPORTED",
+              "MISSING",
+              "NEGATION",
+              "CONFLICT",
+              "TIME",
+              "ROLE",
+              "RELATION",
+              "SAME_NAME_SOURCE_BOUNDARY"
+            ]
+          },
+          "expected": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "endExclusive": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "revision": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "sourceId": {
+                    "pattern": "^[a-zA-Z0-9._:-]{1,96}$",
+                    "type": "string"
+                  },
+                  "start": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "text": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "text",
+                  "sourceId",
+                  "revision",
+                  "sha256",
+                  "start",
+                  "endExclusive"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "id": {
+            "pattern": "^C[0-9]{3}$",
+            "type": "string"
+          },
+          "question": {
+            "maxLength": 159,
+            "minLength": 1,
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "revision": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "sha256": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "sourceId": {
+                  "pattern": "^[a-zA-Z0-9._:-]{1,96}$",
+                  "type": "string"
+                },
+                "text": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "text",
+                "sourceId",
+                "revision",
+                "sha256"
+              ],
+              "type": "object"
+            },
+            "maxItems": 4,
+            "minItems": 1,
+            "type": "array"
+          },
+          "split": {
+            "enum": [
+              "PRIMARY",
+              "ADVERSARIAL"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "split",
+          "category",
+          "question",
+          "sources",
+          "expected"
+        ],
+        "type": "object"
+      },
+      "maxItems": 55,
+      "minItems": 55,
+      "type": "array"
+    },
+    "schema": {
+      "const": "ISSUE340_BLIND_C_V1"
+    },
+    "seed": {
+      "const": 34020261101
+    }
+  },
+  "required": [
+    "schema",
+    "seed",
+    "cases"
+  ],
+  "type": "object"
+}

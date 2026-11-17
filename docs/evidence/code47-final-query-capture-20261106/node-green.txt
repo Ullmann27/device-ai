@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: stream preview does not force focus to bottom or make live draft selectable
+ok 1 - stream preview does not force focus to bottom or make live draft selectable
+  ---
+  duration_ms: 1.325595
+  type: 'test'
+  ...
+# Subtest: owner scrolling pauses auto-follow while a native response streams
+ok 2 - owner scrolling pauses auto-follow while a native response streams
+  ---
+  duration_ms: 0.674802
+  type: 'test'
+  ...
+# Subtest: time deadline is based on progress, not fixed wall clock
+ok 3 - time deadline is based on progress, not fixed wall clock
+  ---
+  duration_ms: 0.64204
+  type: 'test'
+  ...
+# Subtest: existing cancellation and unverified-draft protections remain in place
+ok 4 - existing cancellation and unverified-draft protections remain in place
+  ---
+  duration_ms: 0.690255
+  type: 'test'
+  ...
+# Subtest: watchdog and terminal contracts reject disconnected source copies
+ok 5 - watchdog and terminal contracts reject disconnected source copies
+  ---
+  duration_ms: 16.585821
+  type: 'test'
+  ...
+# Subtest: native delta preview is throttled, bounded and tied to the active request
+ok 6 - native delta preview is throttled, bounded and tied to the active request
+  ---
+  duration_ms: 1.863426
+  type: 'test'
+  ...
+# Subtest: stream completion removes only its own transient row
+ok 7 - stream completion removes only its own transient row
+  ---
+  duration_ms: 0.367868
+  type: 'test'
+  ...
+# Subtest: Stop clears preview synchronously and queued rendering checks cancellation state
+ok 8 - Stop clears preview synchronously and queued rendering checks cancellation state
+  ---
+  duration_ms: 0.496336
+  type: 'test'
+  ...
+# Subtest: native text deltas preserve standalone whitespace while ignoring empty chunks
+ok 9 - native text deltas preserve standalone whitespace while ignoring empty chunks
+  ---
+  duration_ms: 0.238038
+  type: 'test'
+  ...
+# Subtest: invocation time consumes the same generation budget and safe profile reaches existing status
+ok 10 - invocation time consumes the same generation budget and safe profile reaches existing status
+  ---
+  duration_ms: 1.701175
+  type: 'test'
+  ...
+# Subtest: capture preview and budget contracts reject disconnected source copies
+ok 11 - capture preview and budget contracts reject disconnected source copies
+  ---
+  duration_ms: 16.704033
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 129.538459

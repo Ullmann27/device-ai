@@ -1,0 +1,56 @@
+{
+  "sourceCommit": "8ab7b6811ec3713bc8b0ce16e48394e9c27fe928",
+  "initialCandidate": "799dd763e5a20de29d78fdd1dd26f7a5a5f0b0b0",
+  "freezeCommit": "e12c9dc8",
+  "firstAssessmentCommit": "b1bca66f54f80ef627ab17201e29335ee3210f86",
+  "assessmentKind": "consumed frozen cases, follow-up regression; not a new blind assessment",
+  "node": "v24.19.0",
+  "verifierSha256": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+  "frozenHarnessSha256": "79c1dea750cc704049d0a5cea91af54d80932a56a49a0e965a409cba68c50cdb",
+  "compatibilityTestPath": ".github/continuum/ccc1-redgreen-verifier.test.mjs",
+  "compatibilityTestSha256": "810d9a9eed5767a7fabbc816c0e147929a0c66e7e5e1e6a02d7d76fc045dbd82",
+  "kotlinReceiptPath": "app/src/main/java/at/heinz/deviceai/Ccc1PatchReceipt.kt",
+  "kotlinReceiptSha256": "d442ca7541a709a026cd563f4a42f9746b353957b640a4f9392afaa09cf01327",
+  "summary": {
+    "total": 46,
+    "pass": 44,
+    "fail": 2
+  },
+  "actual": {
+    "total": 42,
+    "pass": 42
+  },
+  "callerPreservation": {
+    "total": 41,
+    "pass": 41
+  },
+  "remaining": [
+    {
+      "id": "D18-truncated",
+      "mode": "parser-only",
+      "expected": "NO_USABLE_CASES_OR_THROW",
+      "actual": "1_CASES",
+      "pass": false
+    },
+    {
+      "id": "D18-unclosed",
+      "mode": "parser-only",
+      "expected": "NO_USABLE_CASES_OR_THROW",
+      "actual": "1_CASES",
+      "pass": false
+    }
+  ],
+  "compatibility": {
+    "selectedTests": 11,
+    "pass": 11,
+    "fail": 0,
+    "skipped": 0,
+    "command": "node --test --test-name-pattern='Delta follow-up preserves|genuine RED|patch mode' .github/continuum/ccc1-redgreen-verifier.test.mjs",
+    "note": "pattern also selects eight coverage tests whose titles contain patch modes"
+  },
+  "artifactSha256": {
+    "followup-results.json": "3b070ebf58762d9925946d81912bd8230eecda7271f434f50cec941740707d82",
+    "followup.log": "539107cf74254219723bf01d94be705c476b9632277cbe17bd8143d6f6829e95",
+    "followup-legacy.log": "48c9fcfab471bcefb64093ab0d25388ce97522fd39af60576cc03f4139db7f2a"
+  }
+}

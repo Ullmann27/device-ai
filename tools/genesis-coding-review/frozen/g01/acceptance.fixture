@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { prefixCodePoints } from '../../lib/subject.mjs';
+const cases = [
+  ['', 4, ''], ['abc', 0, ''], ['abc', 2, 'ab'], ['abc', 9, 'abc'],
+  ['😀a', 1, '😀'], ['a😀b', 2, 'a😀'], ['🛰️x', 2, '🛰️'],
+  ['e\u0301x', 1, 'e'], ['e\u0301x', 2, 'e\u0301'], ['😀🚀x', 2, '😀🚀'],
+];
+for (let i = 0; i < cases.length; i++) test(`frozen code point boundary ${i}`, () => {
+  const [text, count, expected] = cases[i];
+  assert.equal(prefixCodePoints(text, count), expected);
+});

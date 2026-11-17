@@ -1,0 +1,9 @@
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:16:73: error: unresolved reference 'checkedDirectoryListingCommand'.
+            val fixed=BoundedShellProcess.execute(ShellExecutionRequest(checkedDirectoryListingCommand(path),1000))
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:20:72: error: unresolved reference 'checkedDirectoryListingCommand'.
+            val good=BoundedShellProcess.execute(ShellExecutionRequest(checkedDirectoryListingCommand(dir.absolutePath),1000))
+                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:23:72: error: unresolved reference 'checkedDirectoryListingCommand'.
+            val safe=BoundedShellProcess.execute(ShellExecutionRequest(checkedDirectoryListingCommand(quoted.absolutePath),1000))
+                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

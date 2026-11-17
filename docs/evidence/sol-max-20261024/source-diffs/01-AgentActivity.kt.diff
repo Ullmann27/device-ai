@@ -1,0 +1,137 @@
+# app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+# old approved blob c151ade5d88d7434f818a5ed5c1b27e3eddc7aa5
+# reviewed candidate blob aa8f21fc11f9b41860030ee98f1f95fd8e4195da
+# OWNER APPROVAL STILL REQUIRED
+diff --git a/c151ade5d88d7434f818a5ed5c1b27e3eddc7aa5 b/aa8f21fc11f9b41860030ee98f1f95fd8e4195da
+index c151ade5..aa8f21fc 100644
+--- a/c151ade5d88d7434f818a5ed5c1b27e3eddc7aa5
++++ b/aa8f21fc11f9b41860030ee98f1f95fd8e4195da
+@@ -284,6 +284,7 @@ class AgentActivity : Activity() {
+     private val modeButtons = linkedMapOf<AssistantMode, Button>()
+     private var mode = AssistantMode.AUTO
+     private var sessionId = UUID.randomUUID().toString()
++    private val sessionResetLifetime = java.util.concurrent.atomic.AtomicBoolean(true)
+     private var busy = false
+     private var activeLocalRequest = false
+     private val internetConsent = at.heinz.deviceai.cognitive.InternetConsentPolicy()
+@@ -340,6 +341,9 @@ class AgentActivity : Activity() {
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
++        savedInstanceState?.getString("ctx3_chat_id_v1")?.takeIf {
++            Regex("[a-f0-9-]{36}").matches(it)
++        }?.let { sessionId = it }
+ 
+         window.statusBarColor = BG
+         window.navigationBarColor = BG
+@@ -467,10 +471,12 @@ class AgentActivity : Activity() {
+             WORK_AREA_STATE_KEY,
+             if (conversationActive) ContinuumWorkArea.CHAT.name else ContinuumWorkArea.START.name
+         )
++        outState.putString("ctx3_chat_id_v1",sessionId)
+         super.onSaveInstanceState(outState)
+     }
+ 
+     override fun onDestroy() {
++        sessionResetLifetime.set(false)
+         foregroundLearningActive = false
+         mainHandler.removeCallbacks(foregroundLearningCheck)
+         clearLifecycleTimeout()
+@@ -1435,6 +1441,31 @@ class AgentActivity : Activity() {
+         )
+     )
+ 
++    /** M5 review is local and tool-free; external previews expose only their existing Builder. */
++    private fun openM5ProjectPlan(initialDraft: String? = null) {
++        val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
++        if (destination.externalPackage) {
++            addAssistantMessage(
++                "M5 · Projektplan: Öffne im vorhandenen Handy-Builder den Bereich " +
++                    "'M5 · Gespräch zu Projektplan (Forschung)'. " +
++                    "Es wird noch nichts erzeugt, gebaut oder installiert."
++            )
++            openMobileBuilder()
++            return
++        }
++        try {
++            val planIntent = Intent(this, ContinuumM5LabActivity::class.java)
++            initialDraft?.takeIf { it.length in 1..400 && it.none { char -> char.code < 0x20 } }
++                ?.let { planIntent.putExtra("m5_initial_draft_v1", it) }
++            startActivity(planIntent)
++        } catch (_: ActivityNotFoundException) {
++            addAssistantMessage("Das M5-Labor ist in dieser App-Version nicht erreichbar. Kein Auftrag gestartet.")
++            openMobileBuilder()
++        } catch (_: SecurityException) {
++            addAssistantMessage("Android hat den M5-Projektplan blockiert. Kein Auftrag gestartet.")
++        }
++    }
++
+     private fun openMobileBuilder() {
+         val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
+         val intent = Intent().setClassName(destination.packageName, destination.className)
+@@ -2020,7 +2051,7 @@ class AgentActivity : Activity() {
+                 ContinuumWorkerChatCommand.Help -> addAssistantMessage(
+                     "Continuum Baumeister · lokale Werkstatt.\n" +
+                         "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt', " +
+-                        "'Worker Builder', 'Worker: <deine App-Idee>' oder " +
++                        "'Worker Builder', 'Worker Projektplan', 'Worker: <deine App-Idee>' oder " +
+                         "'Baumeister programmiere ...' per Sprache.\n" +
+                         "Der Android-Teamleiter prüft den Backlog. Der mobile Termux-Builder " +
+                         "kann mit echten lokalen Werkzeugen auf dem Handy bauen, " +
+@@ -2030,6 +2061,8 @@ class AgentActivity : Activity() {
+                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
+                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
+                 ContinuumWorkerChatCommand.MobileBuilder -> openMobileBuilder()
++                ContinuumWorkerChatCommand.ProjectPlan -> openM5ProjectPlan()
++                is ContinuumWorkerChatCommand.ProjectPlanDraft -> openM5ProjectPlan(baumeister.request)
+                 ContinuumWorkerChatCommand.M4Notes -> {
+                     addAssistantMessage(
+                         "M4 · Eigene Notiz-App: Der geprüfte Projektgenerator ist im Android-Builder " +
+@@ -2334,7 +2367,7 @@ class AgentActivity : Activity() {
+                     !it.contradictory && it.text.length in 20..400 && it.sourceUrl.length in 10..400
+                 }.map { at.heinz.deviceai.learning.ReviewedWebObservation(it.text,it.sourceUrl,it.sourceHash) })
+                 val decision=at.heinz.deviceai.cognitive.CognitiveDecisionBridge(
+-                    at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core),
++                    at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId),
+                     // Confirmed facts retain their exact deterministic meaning. Lexical
+                     // anchors cannot prove that a model paraphrase is entailed.
+                     null
+@@ -4102,7 +4135,7 @@ class AgentActivity : Activity() {
+                 val last=runCatching { core.dialogueHistory().lastOrNull() }.getOrNull()
+                 val resolved=if(last!=null && !last.grounded)
+                     runCatching {
+-                        at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core)
++                        at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId)
+                             .reply(last.input)
+                     }.getOrNull()
+                     else null
+@@ -6357,13 +6390,22 @@ class AgentActivity : Activity() {
+             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
+             return
+         }
+-        sessionId = UUID.randomUUID().toString()
+-        agentLoops = 0
+-        planCard.visibility = View.GONE
+-        chatContainer.removeAllViews()
+-        showHomeDashboard()
+-        addHomeGreeting("Neue Sitzung gestartet. Was soll ich tun?")
+-        addToolActivity("Neue Sitzung")
++        val closingSession = sessionId
++        setBusy(true)
++        onLearningIo({ ContinuumLearningCore(filesDir).resetDialogueConversation(closingSession) { sessionResetLifetime.get() } }) { result ->
++            setBusy(false)
++            if (result.getOrNull() != true) {
++                Toast.makeText(this, "Der bisherige Gesprächskontext konnte nicht zurückgesetzt werden. Bitte erneut versuchen.", Toast.LENGTH_LONG).show()
++                return@onLearningIo
++            }
++            sessionId = UUID.randomUUID().toString()
++            agentLoops = 0
++            planCard.visibility = View.GONE
++            chatContainer.removeAllViews()
++            showHomeDashboard()
++            addHomeGreeting("Neue Sitzung gestartet. Was soll ich tun?")
++            addToolActivity("Neue Sitzung")
++        }
+     }
+ 
+     private fun addUserMessage(value: String) {

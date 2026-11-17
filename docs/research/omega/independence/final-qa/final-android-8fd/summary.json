@@ -1,0 +1,22 @@
+{
+  "tests": 2241,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 17,
+  "source": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+  "gradleExit": 0,
+  "elapsedSeconds": 231.9829461749996,
+  "suites": 404,
+  "sourceAndReviewInputsUnchanged": true,
+  "environment": "HOST",
+  "deviceVerified": false,
+  "apkBuilt": false,
+  "lintScope": "repository NewApi-only configuration",
+  "passed": 2224,
+  "reviewSubsetIncluded": {
+    "tests": 34,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

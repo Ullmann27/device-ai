@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+...........E....
+Time: 0.125
+There was 1 failure:
+1) failedReplacementCannotReviveTheRejectedFocus(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.failedReplacementCannotReviveTheRejectedFocus(Ctx3OrderedCorrectionTest.kt:66)
+
+FAILURES!!!
+Tests run: 15,  Failures: 1
+

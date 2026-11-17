@@ -1,0 +1,44 @@
+JUnit version 4.13.2
+.E.E..E.E.E.E.................
+Time: 0.412
+There were 6 failures:
+1) dataAndOutputBudgetsFailWithoutPartialPersistence(at.heinz.deviceai.chief.ChiefBotConversationTest)
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.dataAndOutputBudgetsFailWithoutPartialPersistence$lambda$0(ChiefBotConversationTest.kt:94)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.fixture(ChiefBotConversationTest.kt:28)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.dataAndOutputBudgetsFailWithoutPartialPersistence(ChiefBotConversationTest.kt:91)
+2) unsafeInjectedCompilerIsRejectedAndScopeDoesNotComeFromText(at.heinz.deviceai.chief.ChiefBotConversationTest)
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.unsafeInjectedCompilerIsRejectedAndScopeDoesNotComeFromText$lambda$0(ChiefBotConversationTest.kt:106)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.fixture(ChiefBotConversationTest.kt:28)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.unsafeInjectedCompilerIsRejectedAndScopeDoesNotComeFromText(ChiefBotConversationTest.kt:101)
+3) selectionCancelResetModelAndSessionChangesRejectLateCompletion(at.heinz.deviceai.chief.ChiefBotConversationTest)
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.selectionCancelResetModelAndSessionChangesRejectLateCompletion$lambda$0(ChiefBotConversationTest.kt:77)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.fixture(ChiefBotConversationTest.kt:28)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.selectionCancelResetModelAndSessionChangesRejectLateCompletion(ChiefBotConversationTest.kt:75)
+4) privateHistoryUsesOneSelectedIdentityAndExistingCompilerWithoutOwnerData(at.heinz.deviceai.chief.ChiefBotConversationTest)
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.privateHistoryUsesOneSelectedIdentityAndExistingCompilerWithoutOwnerData$lambda$0(ChiefBotConversationTest.kt:36)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.fixture(ChiefBotConversationTest.kt:28)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.privateHistoryUsesOneSelectedIdentityAndExistingCompilerWithoutOwnerData(ChiefBotConversationTest.kt:32)
+5) restartRenameAndHistoryPreserveBinding(at.heinz.deviceai.chief.ChiefBotConversationTest)
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.restartRenameAndHistoryPreserveBinding$lambda$0(ChiefBotConversationTest.kt:53)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.fixture(ChiefBotConversationTest.kt:28)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.restartRenameAndHistoryPreserveBinding(ChiefBotConversationTest.kt:51)
+6) noteWithdrawalDropsDerivedConversationAndLateAnswers(at.heinz.deviceai.chief.ChiefBotConversationTest)
+java.lang.IllegalStateException: BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.chief.ChiefBotConversation.prepare(ChiefBotConversation.kt:169)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.noteWithdrawalDropsDerivedConversationAndLateAnswers$lambda$0(ChiefBotConversationTest.kt:66)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.fixture(ChiefBotConversationTest.kt:28)
+	at at.heinz.deviceai.chief.ChiefBotConversationTest.noteWithdrawalDropsDerivedConversationAndLateAnswers(ChiefBotConversationTest.kt:63)
+
+FAILURES!!!
+Tests run: 24,  Failures: 6
+

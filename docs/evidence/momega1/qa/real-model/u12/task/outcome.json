@@ -1,0 +1,9 @@
+{
+  "status": "OBSERVED_RESULT",
+  "resultStatus": "PATCH_PENDING_OWNER_REVIEW",
+  "technicalExperienceStatus": "RECORDED_TECHNICAL_REVIEW_ONLY",
+  "technicalRecallCount": 0,
+  "solved": "REQUIRES_INDEPENDENT_EVIDENCE_REVIEW",
+  "modelCallsReserved": 1,
+  "sourceIdentityStable": true
+}

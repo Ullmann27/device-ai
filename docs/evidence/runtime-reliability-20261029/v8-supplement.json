@@ -1,0 +1,186 @@
+{
+  "codeHead": "8df582444d169df52ef5351c927146a40fce7571",
+  "execution": "functions.exec V8: two exact production pure functions, no FS/process/Node stubs",
+  "functionSourceUnchangedSince218": true,
+  "checks": [
+    {
+      "name": "green",
+      "input": {
+        "exitCode": 0,
+        "stdout": "# tests 2\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n"
+      },
+      "expected": "ALL_EXECUTED_PASS",
+      "actual": "ALL_EXECUTED_PASS",
+      "status": "PASS"
+    },
+    {
+      "name": "fail",
+      "input": {
+        "exitCode": 1,
+        "stdout": "# tests 2\n# pass 1\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n"
+      },
+      "expected": "FAILED",
+      "actual": "FAILED",
+      "status": "PASS"
+    },
+    {
+      "name": "skip",
+      "input": {
+        "exitCode": 0,
+        "stdout": "# tests 2\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 1\n# todo 0\n"
+      },
+      "expected": "PASS_WITH_UNEXECUTED_CASES",
+      "actual": "PASS_WITH_UNEXECUTED_CASES",
+      "status": "PASS"
+    },
+    {
+      "name": "todo",
+      "input": {
+        "exitCode": 0,
+        "stdout": "# tests 2\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 1\n"
+      },
+      "expected": "PASS_WITH_UNEXECUTED_CASES",
+      "actual": "PASS_WITH_UNEXECUTED_CASES",
+      "status": "PASS"
+    },
+    {
+      "name": "cancelled",
+      "input": {
+        "exitCode": 0,
+        "stdout": "# tests 2\n# pass 1\n# fail 0\n# cancelled 1\n# skipped 0\n# todo 0\n"
+      },
+      "expected": "FAILED",
+      "actual": "FAILED",
+      "status": "PASS"
+    },
+    {
+      "name": "empty",
+      "input": {
+        "exitCode": 0,
+        "stdout": ""
+      },
+      "expected": "FAILED",
+      "actual": "FAILED",
+      "status": "PASS"
+    },
+    {
+      "name": "zero",
+      "input": {
+        "exitCode": 0,
+        "stdout": "# tests 0\n# pass 0\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n"
+      },
+      "expected": "FAILED",
+      "actual": "FAILED",
+      "status": "PASS"
+    },
+    {
+      "name": "duplicate",
+      "input": {
+        "exitCode": 0,
+        "stdout": "# tests 2\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# pass 2\n"
+      },
+      "expected": "FAILED",
+      "actual": "FAILED",
+      "status": "PASS"
+    },
+    {
+      "name": "inconsistent",
+      "input": {
+        "exitCode": 0,
+        "stdout": "# tests 3\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n"
+      },
+      "expected": "FAILED",
+      "actual": "FAILED",
+      "status": "PASS"
+    },
+    {
+      "name": "timeout",
+      "input": {
+        "exitCode": 0,
+        "stdout": "# tests 2\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n",
+        "error": "TIMEOUT"
+      },
+      "expected": "FAILED",
+      "actual": "FAILED",
+      "status": "PASS"
+    },
+    {
+      "name": "checkout clean",
+      "input": {
+        "branch": "sol/feature",
+        "dirty": false,
+        "tests": [
+          "z.test.mjs",
+          "a.test.mjs"
+        ]
+      },
+      "rejected": false,
+      "status": "PASS"
+    },
+    {
+      "name": "checkout main",
+      "input": {
+        "branch": "main",
+        "dirty": false,
+        "tests": [
+          "a.test.mjs"
+        ]
+      },
+      "rejected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "checkout dirty",
+      "input": {
+        "branch": "sol/feature",
+        "dirty": true,
+        "tests": [
+          "a.test.mjs"
+        ]
+      },
+      "rejected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "checkout traversal",
+      "input": {
+        "branch": "sol/feature",
+        "dirty": false,
+        "tests": [
+          "../a.test.mjs"
+        ]
+      },
+      "rejected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "checkout duplicate",
+      "input": {
+        "branch": "sol/feature",
+        "dirty": false,
+        "tests": [
+          "a.test.mjs",
+          "a.test.mjs"
+        ]
+      },
+      "rejected": true,
+      "status": "PASS"
+    },
+    {
+      "name": "checkout empty",
+      "input": {
+        "branch": "sol/feature",
+        "dirty": false,
+        "tests": []
+      },
+      "rejected": true,
+      "status": "PASS"
+    }
+  ],
+  "NOT_RUN": [
+    "Node test runner",
+    "ADB/process/lease filesystem regressions",
+    "Kotlin/JUnit/Android/Lint",
+    "Fold7 runtime/native inference"
+  ]
+}

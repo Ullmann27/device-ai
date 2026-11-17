@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
+ok 1 - typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
+  ---
+  duration_ms: 1922.037795
+  type: 'test'
+  ...
+# Subtest: infrastructure timeout stops after one call; repeating a prompt is not correction
+ok 2 - infrastructure timeout stops after one call; repeating a prompt is not correction
+  ---
+  duration_ms: 219.807194
+  type: 'test'
+  ...
+# Subtest: progress checkpoint retains real failed checks before an interruption
+ok 3 - progress checkpoint retains real failed checks before an interruption
+  ---
+  duration_ms: 395.501857
+  type: 'test'
+  ...
+# Subtest: invalid model output carries SHA-256 only, not discarded raw source
+ok 4 - invalid model output carries SHA-256 only, not discarded raw source
+  ---
+  duration_ms: 27.185654
+  type: 'test'
+  ...
+# Subtest: provider transports recognized rejection fingerprint without raw stderr
+ok 5 - provider transports recognized rejection fingerprint without raw stderr
+  ---
+  duration_ms: 40.434697
+  type: 'test'
+  ...
+# Subtest: rejection diagnostics and fingerprint reach the next model revision
+ok 6 - rejection diagnostics and fingerprint reach the next model revision
+  ---
+  duration_ms: 449.322088
+  type: 'test'
+  ...
+# Subtest: identical invalid model response stops after second rejection without running candidate checks
+ok 7 - identical invalid model response stops after second rejection without running candidate checks
+  ---
+  duration_ms: 234.468866
+  type: 'test'
+  ...
+# Subtest: unknown provider errors never leak their message to the durable report
+ok 8 - unknown provider errors never leak their message to the durable report
+  ---
+  duration_ms: 267.789583
+  type: 'test'
+  ...
+# Subtest: no-op coding response is distinct from malformed model JSON, both with redacted digest
+ok 9 - no-op coding response is distinct from malformed model JSON, both with redacted digest
+  ---
+  duration_ms: 2.606076
+  type: 'test'
+  ...
+# Subtest: no-op fingerprint crosses fixed local CLI only, never arbitrary stderr
+ok 10 - no-op fingerprint crosses fixed local CLI only, never arbitrary stderr
+  ---
+  duration_ms: 31.906931
+  type: 'test'
+  ...
+# Subtest: no-op model rejection is used in second candidate without raw output or host writes
+ok 11 - no-op model rejection is used in second candidate without raw output or host writes
+  ---
+  duration_ms: 383.360813
+  type: 'test'
+  ...
+# Subtest: an unmatched oldText gives exact-baseline diagnostics and then repairs safely
+ok 12 - an unmatched oldText gives exact-baseline diagnostics and then repairs safely
+  ---
+  duration_ms: 338.134574
+  type: 'test'
+  ...
+# Subtest: MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
+ok 13 - MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
+  ---
+  duration_ms: 383.260311
+  type: 'test'
+  ...
+# Subtest: MΩ canonical fresh verifier rejects removal of a baseline identity
+ok 14 - MΩ canonical fresh verifier rejects removal of a baseline identity
+  ---
+  duration_ms: 354.420168
+  type: 'test'
+  ...
+# Subtest: MΩ independent counterexample revises inside the same canonical task and model-call budget
+ok 15 - MΩ independent counterexample revises inside the same canonical task and model-call budget
+  ---
+  duration_ms: 2423.547383
+  type: 'test'
+  ...
+# Subtest: MΩ strict execution blocks before provider or missing journal when isolation is absent
+ok 16 - MΩ strict execution blocks before provider or missing journal when isolation is absent
+  ---
+  duration_ms: 0.550852
+  type: 'test'
+  ...
+# Subtest: MΩ model-observation gate rejects self-certified task-bound JSON
+ok 17 - MΩ model-observation gate rejects self-certified task-bound JSON
+  ---
+  duration_ms: 0.444321
+  type: 'test'
+  ...
+# Subtest: MΩ recall ablation accepts only a trusted Boolean option before any state access
+ok 18 - MΩ recall ablation accepts only a trusted Boolean option before any state access
+  ---
+  duration_ms: 0.229126
+  type: 'test'
+  ...
+# Subtest: MΩ rejected response cannot self-certify a genuine inference or manufacture call counts
+ok 19 - MΩ rejected response cannot self-certify a genuine inference or manufacture call counts
+  ---
+  duration_ms: 0.620177
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3311.429897

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:27" hostname="5c9e18abbd30" time="0.201">
+  <properties/>
+  <testcase name="rejectsAuditLeakageAndKeepsStateUnchanged" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.004"/>
+  <testcase name="symlinkedBindingIsNeverTrustedOrOverwritten" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.001"/>
+  <testcase name="orphanedLegacyEncoderBindingIsNotMistakenForNeverTrainedModel" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.0"/>
+  <testcase name="pairedTrainingObservesIndividualEvidenceConditions" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.024"/>
+  <testcase name="emptyBridgeDoesNotExposeChatOrClaimTraining" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.006"/>
+  <testcase name="oldCheckpointBackupIsReadableOnlyAndNeverSilentlyPromoted" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.003"/>
+  <testcase name="unreadableLegacyWeightsAreReportedCorruptAndCannotBeReinitialized" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.0"/>
+  <testcase name="cdx1EncoderPinSurvivesIndependentSwb1Training" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.072"/>
+  <testcase name="readOnlyStorageInventoryDoesNotRewriteOrRestoreAnyCheckpoint" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.007"/>
+  <testcase name="pairedPrefixContainsEvidenceAndQueryBeforeFirstTargetByte" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.0"/>
+  <testcase name="cancellationNeverPromotesCandidate" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.008"/>
+  <testcase name="damagedOrMismatchedPinBlocksCdx1WithoutChangingWeights" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.025"/>
+  <testcase name="pairedBridgeRejectsInputLeakageAndNeverClaimsChatApproval" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.046"/>
+  <testcase name="historicalUnboundCheckpointRemainsResearchOnly" classname="at.heinz.deviceai.learning.ContinuumDecoderBridgeTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

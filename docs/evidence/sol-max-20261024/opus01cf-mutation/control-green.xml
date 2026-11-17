@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="Opus01cfMutation.control-green" tests="1" failures="0" errors="0" skipped="0"><testcase classname="at.heinz.deviceai.ContinuumOwnedBuilderUiTest" name="anM5HandoffSelectsItsProjectOnceAndARecreationKeepsTheOwnersLaterSwitch" /><system-out>Generated from the actual standalone real-SDK/Robolectric JUnit method runner output. Source/test hashes in manifest.json.
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+Tests=1 failures=0 ignored=0
+</system-out></testsuite>

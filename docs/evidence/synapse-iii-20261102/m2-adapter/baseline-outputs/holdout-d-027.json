@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-027:s1",
+    "decision": "SPAN",
+    "sha256": "8271286ad632033ebaecd4171c718be930ea984cb593f99f8a2befc008dd0804",
+    "endExclusive": 56,
+    "start": 47,
+    "text": "EDavomadi",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-027:s1",
+    "decision": "SPAN",
+    "sha256": "8271286ad632033ebaecd4171c718be930ea984cb593f99f8a2befc008dd0804",
+    "endExclusive": 56,
+    "start": 47,
+    "text": "EDavomadi",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-027:s1",
+    "decision": "SPAN",
+    "sha256": "8271286ad632033ebaecd4171c718be930ea984cb593f99f8a2befc008dd0804",
+    "endExclusive": 56,
+    "start": 47,
+    "text": "EDavomadi",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 74.018928
+}

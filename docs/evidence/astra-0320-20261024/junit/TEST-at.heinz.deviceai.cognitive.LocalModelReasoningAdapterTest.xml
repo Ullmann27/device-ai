@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:06" hostname="5c9e18abbd30" time="0.069">
+  <properties/>
+  <testcase name="outputOverflowIsRejected" classname="at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest" time="0.001"/>
+  <testcase name="returnsTextFromRuntime" classname="at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest" time="0.0"/>
+  <testcase name="oversizedPromptIsNotClipped" classname="at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest" time="0.001"/>
+  <testcase name="deadlineExpiryCancelsRuntime" classname="at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest" time="0.061"/>
+  <testcase name="missingModelFailsWithoutFallback" classname="at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest" time="0.001"/>
+  <testcase name="toolProposalFailsClosedAndCancels" classname="at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

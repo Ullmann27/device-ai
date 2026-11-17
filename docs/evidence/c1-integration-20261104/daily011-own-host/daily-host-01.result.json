@@ -1,0 +1,26 @@
+{
+  "taskId": "C1-COMBINED-GATES-001",
+  "label": "daily-host-01",
+  "source": {
+    "commit": "ce5bcf6d7c7e87e630b33df86d021dfd4bd52ccd",
+    "tree": "d27f253b1b922c98c72acb8fc4bdf3b8bdf27e41",
+    "dirty": ""
+  },
+  "command": [
+    "bash",
+    "tools/temporal-cue-host-check/run.sh",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib"
+  ],
+  "requestedAt": "2026-11-04T20:53:53.299671+00:00",
+  "locks": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+    "/workspace/scratch/d663e8444310/qa/gradle.lock"
+  ],
+  "exitCode": 0,
+  "status": "PASS",
+  "freeBytesAtStart": 1567977472,
+  "startedAt": "2026-11-04T20:53:53.299970+00:00",
+  "finishedAt": "2026-11-04T20:54:02.494262+00:00",
+  "sourceUnchanged": true,
+  "recordedAt": "2026-11-04T20:54:02.528586+00:00"
+}

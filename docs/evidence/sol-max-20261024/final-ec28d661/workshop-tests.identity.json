@@ -1,0 +1,20 @@
+{
+  "sourceHeadBefore": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "sourceHeadAfter": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "trackedSourceCleanAfter": true,
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/continuum-workshop.test.mjs",
+    ".github/continuum/worker-academy.test.mjs",
+    ".github/continuum/worker-atlas.test.mjs",
+    ".github/continuum/worker-atlas-epistemic-graph.test.mjs",
+    ".github/continuum/workshop-specialist-orchestrator.test.mjs",
+    ".github/continuum/continuum-hyper-lab.test.mjs"
+  ],
+  "cwd": "/workspace/device-ai-sol-max",
+  "startedUtc": "2026-10-24T08:46:42.971927+00:00",
+  "durationSeconds": 3.018,
+  "exitCode": 0
+}

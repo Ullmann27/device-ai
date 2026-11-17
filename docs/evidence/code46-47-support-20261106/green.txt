@@ -1,0 +1,3 @@
+confidential-active-conflict: PASS | actual_empty=true | stale_monday=false
+overlong-active-conflict: PASS | actual_empty=true | stale_monday=false
+CASES=2 FAILED=0

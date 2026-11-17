@@ -1,0 +1,11 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        timeout = java.time.Duration.ofMinutes(15)
+        beforeTest { descriptor ->
+            logger.lifecycle("QA_TEST_START ${descriptor.className}.${descriptor.name}")
+        }
+        afterTest { descriptor, result ->
+            logger.lifecycle("QA_TEST_END ${descriptor.className}.${descriptor.name} ${result.resultType}")
+        }
+    }
+}

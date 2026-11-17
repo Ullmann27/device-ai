@@ -1,0 +1,10 @@
+{
+  "label": "POSTHOC_DIAGNOSTIC_NOT_SELECTION_METRIC",
+  "basedOnIndependentExpectedOutcomes": true,
+  "counts": {
+    "BOTH_CORRECT": 16,
+    "BOTH_INCORRECT": 57,
+    "WORSENING": 99,
+    "IMPROVEMENT": 26
+  }
+}

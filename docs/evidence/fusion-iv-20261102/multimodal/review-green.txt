@@ -1,0 +1,25 @@
+JUnit version 4.13.2
+..........................E.E.E.E.E.E
+Time: 0.229
+There were 6 failures:
+1) interruptRestoresFlagAndDoesNotBecomeSuccess(at.heinz.deviceai.DeviceToolExecutorRunnerTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.DeviceToolExecutorRunner.<init>(kotlin.jvm.functions.Function2, long)'
+	at at.heinz.deviceai.DeviceToolExecutorRunnerTest.interruptRestoresFlagAndDoesNotBecomeSuccess(DeviceToolExecutorRunnerTest.kt:68)
+2) failedCallbackCannotBecomeSuccessfulOutput(at.heinz.deviceai.DeviceToolExecutorRunnerTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.DeviceToolExecutorRunner.<init>(kotlin.jvm.functions.Function2, long)'
+	at at.heinz.deviceai.DeviceToolExecutorRunnerTest.failedCallbackCannotBecomeSuccessfulOutput(DeviceToolExecutorRunnerTest.kt:20)
+3) repeatedCallbacksKeepTheFirstResultOnly(at.heinz.deviceai.DeviceToolExecutorRunnerTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.DeviceToolExecutorRunner.<init>(kotlin.jvm.functions.Function2, long)'
+	at at.heinz.deviceai.DeviceToolExecutorRunnerTest.repeatedCallbacksKeepTheFirstResultOnly(DeviceToolExecutorRunnerTest.kt:54)
+4) missingCallbackTimesOutWithoutUnboundedWait(at.heinz.deviceai.DeviceToolExecutorRunnerTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.DeviceToolExecutorRunner.<init>(kotlin.jvm.functions.Function2, long)'
+	at at.heinz.deviceai.DeviceToolExecutorRunnerTest.missingCallbackTimesOutWithoutUnboundedWait(DeviceToolExecutorRunnerTest.kt:30)
+5) successfulCallbackReturnsOnlyItsActualValue(at.heinz.deviceai.DeviceToolExecutorRunnerTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.DeviceToolExecutorRunner.<init>(kotlin.jvm.functions.Function2, long)'
+	at at.heinz.deviceai.DeviceToolExecutorRunnerTest.successfulCallbackReturnsOnlyItsActualValue(DeviceToolExecutorRunnerTest.kt:13)
+6) lateSuccessCannotChangeAnAlreadyReportedTimeout(at.heinz.deviceai.DeviceToolExecutorRunnerTest)
+java.lang.NoSuchMethodError: 'void at.heinz.deviceai.DeviceToolExecutorRunner.<init>(kotlin.jvm.functions.Function2, long)'
+	at at.heinz.deviceai.DeviceToolExecutorRunnerTest.lateSuccessCannotChangeAnAlreadyReportedTimeout(DeviceToolExecutorRunnerTest.kt:42)
+
+FAILURES!!!
+Tests run: 31,  Failures: 6

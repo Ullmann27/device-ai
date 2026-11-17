@@ -1,0 +1,13 @@
+#!/bin/bash
+# NF-6b-lite (pre-registered 84cf8e2a): byte models G-S-b, G-M-b, then the mixture evaluation.
+S=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad
+J=$S/nf/nf-8f175ab1.jar
+R=/home/user/device-ai/.claude/worktrees/nf-lab
+run(){ name=$1; shift
+ { echo "JAR $(sha256sum $J | cut -c1-64) commit=8f175ab1 start=$(date -u +%FT%TZ) args=$*"
+   java -Xmx6g -Dstdout.encoding=UTF-8 -cp $J at.heinz.deviceai.learning.nf.NfExperiment $R "$@" 2>&1 | grep --line-buffered -v JAVA_TOOL_OPTIONS
+   echo "exit=${PIPESTATUS[0]} end=$(date -u +%FT%TZ)"; } > $S/nf/$name.txt 2>&1; }
+run nf6b-byte-models lm G-S G-M seeds=1,2,3 epochs=6 threads=4 vocab=258 store=$S/nf/ckpt
+CK=$(grep -E '^RUN (G-S|G-M) seed=[123] epoch=6 ' $S/nf/nf6b-byte-models.txt | sed 's/.*ckpt=/ckpt=/' | tr '\n' ' ')
+run nf6b-hybrid hybrid vocab=258 $CK store=$S/nf/ckpt
+echo done > $S/nf/chain3-finished.txt

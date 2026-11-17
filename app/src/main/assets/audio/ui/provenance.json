@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "provider": "ElevenLabs",
+  "model": "eleven_text_to_sound_v2",
+  "created": "2026-11-11",
+  "format": {
+    "encoding": "signed PCM16 little-endian",
+    "sample_rate_hz": 16000,
+    "channels": 1,
+    "header": false
+  },
+  "preparation": {
+    "decode": "ffmpeg to 16000 Hz mono float PCM",
+    "trim": "first bounded samples; no time stretching",
+    "dc": "subtract retained sample mean",
+    "attack_samples": 48,
+    "release_samples": 240,
+    "peak_limit": 1200,
+    "endpoints": 0
+  },
+  "assets": [
+    {
+      "cue": "button",
+      "file": "continuum-button.pcm",
+      "generation_id": "fvfJyFPIso2Y1kdSWrJs",
+      "source_sha256": "697cce2aff849adb98d738bb5a4e3cde6cf2cafdf9586c4a09601dfb8227cf2f",
+      "source_bytes": 25946,
+      "sha256": "8d6dd464327d9a701b2411b03f629b76c451c012e448fc43238e41b1ab965d4e",
+      "bytes": 5120,
+      "samples": 2560,
+      "duration_ms": 160.0,
+      "peak": 1200,
+      "rms": 167.46,
+      "first": 0,
+      "last": 0
+    },
+    {
+      "cue": "task-started",
+      "file": "continuum-task-started.pcm",
+      "generation_id": "Zix0EgBXuPDrNaLzDoG4",
+      "source_sha256": "de9d339c817f44aba363372c3dbeb36b799b6cf1910707e03c7dee0a05412f24",
+      "source_bytes": 25946,
+      "sha256": "067ac28e4d29867197c066816f89f8b65ddce73c384d3634ceedfcd41f6860da",
+      "bytes": 13440,
+      "samples": 6720,
+      "duration_ms": 420.0,
+      "peak": 1200,
+      "rms": 424.32,
+      "first": 0,
+      "last": 0
+    }
+  ],
+  "usage": "Existing local BUTTON and TASK_STARTED cues; existing mute, voice, microphone and foreground policy applies."
+}

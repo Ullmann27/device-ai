@@ -1,0 +1,17 @@
+✔ workspace binding is bounded correlation, never a shell or grant (0.954871ms)
+✔ lookalike executors and self-named journals cannot bind a workspace (0.563321ms)
+✔ canonical recovery preserves pending identity and rejects corrupt/torn journal (39.735829ms)
+✔ bound workspace evidence requires observation and teardown for the exact resource policy (0.625905ms)
+✔ untrusted executor objects cannot grant execution rights (1.619014ms)
+✔ mutable images and unbounded resource policies are rejected before daemon access (0.532935ms)
+✔ receipts with network, privilege, missing limits or missing snapshot are invalid (0.442257ms)
+✔ configuration cannot supply shell commands or symlinked owner data (0.97995ms)
+✔ broad model reports never become learned success even with a true independent flag (1.965317ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 151.642031

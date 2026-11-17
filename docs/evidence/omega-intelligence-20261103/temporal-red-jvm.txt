@@ -1,0 +1,49 @@
+source_commit=5346e76910bb19e2da859556852724c2c2fe3c59
+source_status:
+ M app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryTest.kt
+?? docs/evidence/omega-intelligence-20261103/run-temporal-jvm.sh
+?? docs/evidence/omega-intelligence-20261103/temporal-red-jvm.txt
+?? docs/evidence/omega-intelligence-20261103/verified-5346e769.txt
+9ab4f8daaa714db3d3e43ea6b3dc11d7801e15359a19136b72dbbe2252a0facf  app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt
+0b21f902674e705e8651c528409bb2b8092fef6d40580e2f414b76a37f9cea15  app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt
+5e52c556b39d556907db2fb7eb7a8f8b9badf42dc6a9f99c545ae06e7bee11d5  app/src/main/java/at/heinz/deviceai/learning/OwnerStatementModality.kt
+aee0953c667286c3155ea64c0d56522eb78785e5b9a458b8fda63bc73e1a1257  app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Lexicon.kt
+2f2af21601bf233092672c0725fabb7d72d64c51e8ca590085823f8289b206ca  app/src/main/java/at/heinz/deviceai/cognitive/TemporalRoleEvidenceLedger.kt
+308ef23e5bc6bba89ce9d240b044e93ff3286f38ca3bc9f6f319555a1ff9b1bd  app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryTest.kt
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:345:55: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart && inYearEnd -> " (${date(from!!)}–${date(to!!)})"
+                                                      ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:345:69: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart && inYearEnd -> " (${date(from!!)}–${date(to!!)})"
+                                                                    ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:346:45: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart -> " (ab ${date(from!!)})"
+                                            ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:347:42: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearEnd -> " (bis ${date(to!!)})"
+                                         ^^
+JUnit version 4.13.2
+.E.......E...........
+Time: 0.901
+There were 2 failures:
+1) bareOwnerResignationRequiresClarificationForCurrentEmployer(at.heinz.deviceai.learning.ContinuumTemporalMemoryTest)
+java.lang.AssertionError: expected:<CLARIFY> but was:<ANSWER>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.ContinuumTemporalMemoryTest.bareOwnerResignationRequiresClarificationForCurrentEmployer(ContinuumTemporalMemoryTest.kt:99)
+2) workingResignationIsSessionScopedAndNeverRewritesLedger(at.heinz.deviceai.learning.ContinuumTemporalMemoryTest)
+java.lang.AssertionError: expected:<CLARIFY> but was:<ANSWER>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.ContinuumTemporalMemoryTest.workingResignationIsSessionScopedAndNeverRewritesLedger(ContinuumTemporalMemoryTest.kt:118)
+
+FAILURES!!!
+Tests run: 19,  Failures: 2
+

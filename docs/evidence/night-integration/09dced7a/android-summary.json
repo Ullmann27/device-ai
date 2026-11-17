@@ -1,0 +1,57 @@
+{
+  "sourceCommit": "09dced7ae77e51ae8d49e4e6d838064e3beeb834",
+  "appTree": "54434e2f978be5f242f0d941e862071a254398d6",
+  "appSourceUnchanged": true,
+  "counts": {
+    "tests": 2501,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 17
+  },
+  "regressions": {
+    "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest": {
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    "at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest": {
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    "at.heinz.deviceai.ContinuumBotStatusRoutingUiTest": {
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    "at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest": {
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  },
+  "skips": [
+    "at.heinz.deviceai.chief.ChiefPatternE2ETest.s7_pending_agentMessagesUrgentWakesInfoWaits",
+    "at.heinz.deviceai.chief.ChiefPatternE2ETest.s4b_pending_profileDiarySharedLayers",
+    "at.heinz.deviceai.chief.ChiefPatternE2ETest.s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+    "at.heinz.deviceai.chief.ChiefPatternE2ETest.s5b_pending_textFileSkillLibraryLoadedOnDemand",
+    "at.heinz.deviceai.chief.ChiefPatternE2ETest.s6_pending_routineReportsOnlyWhenSomethingIsNew",
+    "at.heinz.deviceai.chief.ChiefPatternE2ETest.s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+    "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+    "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+    "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+    "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+    "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+    "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt6b_lernen_hypotheseUndTagebuchEintrag",
+    "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+    "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+    "at.heinz.deviceai.learning.ContinuumContrastiveParityTest.actualNodeKotlinNodeTrainingParity",
+    "at.heinz.deviceai.learning.ContinuumContrastiveParityTest.actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+    "at.heinz.deviceai.learning.Cre1InferenceEncoderTest.trainedNodeCheckpointMatchesKotlinFeaturesAndScores"
+  ],
+  "lintIssues": 0
+}

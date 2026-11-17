@@ -1,0 +1,45 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "sourceRemoteCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+  "sourceLocalCommit": "2f20c19b7e37197a6accac0c226b5401e25f1f99",
+  "sourceCompilerRemoteBlob": "a2d41ffb0cff834764e4ee6180929905f04784a6",
+  "baselineCommit": "8873030fdfe23bdd4153f96004b786bff2cddecf",
+  "startingCommit": "3510c26110098b42d46bb3b7788027fa7aed59e4",
+  "baselineCompilerSha256": "b2fb053666fc6a056ce8d5351ed01f76cc8514ca59a231b2667c1ecec116711a",
+  "files": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": {
+      "sourceGitBlob": "a2d41ffb0cff834764e4ee6180929905f04784a6",
+      "sourceSha256": "2100c6d1b4ecd0e2398ef4039266d9456cc33a69b4ea3700b5e4b79b9c7a5a13",
+      "candidatePath": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "candidateSha256": "6adf073f1e9b06c45c847ca46c379f295f5be0598ba7fd028b63993da30de02a"
+    },
+    "app/src/test/java/at/heinz/deviceai/cognitive/AiContextByteBudgetTest.kt": {
+      "sourceGitBlob": "c52bd925bb93976fdd34a426856bf60bb64f00ae",
+      "sourceSha256": "093b3fd5bd554f3420b547c880085ee62e5752f69403bc5c9d85b828bd5d7e40",
+      "candidatePath": "app/src/test/java/at/heinz/deviceai/cognitive/AiContextByteBudgetTest.kt",
+      "candidateSha256": "093b3fd5bd554f3420b547c880085ee62e5752f69403bc5c9d85b828bd5d7e40"
+    },
+    "tools/tuning-memory-20261104/ContextCompilerParity.kt": {
+      "sourceGitBlob": "9c1824638879d25c4f374e3d8170b0a43ee4dcb5",
+      "sourceSha256": "b76a4fe0587291757af85be833cf6ed2a67815cd7f7765229194a89c542eb269",
+      "candidatePath": "docs/evidence/completed-connections-822e-r2/context/ContextCompilerParity.kt",
+      "candidateSha256": "b76a4fe0587291757af85be833cf6ed2a67815cd7f7765229194a89c542eb269"
+    },
+    "tools/tuning-memory-20261104/run.py": {
+      "sourceGitBlob": "4cfeb058f929b7d6620725accda7f49393c8ce6f",
+      "sourceSha256": "8a92b3b48e93fd61499990262999c245afa678f208510421e59ac64a928a6a22",
+      "candidatePath": "docs/evidence/completed-connections-822e-r2/context/run.py",
+      "candidateSha256": "086bb9d137b6e0408df78d6a224d30e429b43e1bdca05b79785e905d6237ca04"
+    },
+    "tools/tuning-memory-20261104/sources.txt": {
+      "sourceGitBlob": "9e1de2aa46090d6c73ec9598749328b46653e656",
+      "sourceSha256": "4951f371334ec8ba4b87732ac5d26c269e5cf6598286c01809cae71be903b80d",
+      "candidatePath": "docs/evidence/completed-connections-822e-r2/context/sources.txt",
+      "candidateSha256": "7e1af52be8b2103ec95ab2a3dc8d96697df58c6f92d7a179bfb6e9b675578216"
+    }
+  },
+  "wholeCompilerUnchangedOutsideAcceptedByteAccounting": true,
+  "existingFourTestAndFixtureFilesUnchangedFromSource": true,
+  "actualActivityAndChiefCallersUnchangedFromC1": true,
+  "verificationExitCode": 0
+}

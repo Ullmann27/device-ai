@@ -1,0 +1,10 @@
+{
+  "source_commit": "2a967b3af73260acdd37edb5b2297deb45c41750",
+  "source_tree": "887fe39cded774876e1eaa1a9709406ee992806b",
+  "exit_code": 1,
+  "main_compile": "PASS",
+  "test_sources_compile": "PASS",
+  "test_execution": "NOT_STARTED",
+  "failure": "JUnit journal: No such property: fd for class: java.io.FileOutputStream",
+  "log_sha256": "5a30611521895476b244ff307644a744cde659ac3bfc276ccb1e802bc4368d67"
+}

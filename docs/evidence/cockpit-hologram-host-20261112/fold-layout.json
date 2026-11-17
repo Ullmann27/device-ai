@@ -1,0 +1,36 @@
+{
+  "head": {
+    "top": 68,
+    "left": 92.67999,
+    "bottom": 356,
+    "right": 791.32
+  },
+  "avatarWindow": {
+    "cameraCenterY": 0.26108207226883884,
+    "left": -0.39000187948393744,
+    "halfHeight": 0.16077026642668726,
+    "right": 0.39000187948393744
+  },
+  "avatarFocus": {
+    "centerZ": 0.06414049118757248,
+    "centerX": -3.228597342967987E-4,
+    "azimuthDegrees": 0
+  },
+  "name": "fold",
+  "width": 884,
+  "avatarOpacity": 0.62,
+  "orb": {
+    "top": 78.08,
+    "left": 329.68,
+    "bottom": 302.71997,
+    "right": 554.32
+  },
+  "height": 760,
+  "contentHeight": 760,
+  "scene": {
+    "top": 68,
+    "left": 16,
+    "bottom": 548,
+    "right": 868
+  }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerDeviceClockReplyTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:27" hostname="0f4ac18d136f" time="0.024">
+  <properties/>
+  <testcase name="clockReplyNeverSwallowsAnAdditionalOwnerAction" classname="at.heinz.deviceai.cognitive.OwnerDeviceClockReplyTest" time="0.006"/>
+  <testcase name="daylightSavingTransitionUsesDeviceZoneRules" classname="at.heinz.deviceai.cognitive.OwnerDeviceClockReplyTest" time="0.016"/>
+  <testcase name="dateUsesActualLocalDay" classname="at.heinz.deviceai.cognitive.OwnerDeviceClockReplyTest" time="0.001"/>
+  <testcase name="midnightUsesTheSuppliedDeviceDateRatherThanUtcDate" classname="at.heinz.deviceai.cognitive.OwnerDeviceClockReplyTest" time="0.0"/>
+  <testcase name="timeUsesDeviceZone" classname="at.heinz.deviceai.cognitive.OwnerDeviceClockReplyTest" time="0.0"/>
+  <testcase name="otherTimesAndCompoundActionsStayOutside" classname="at.heinz.deviceai.cognitive.OwnerDeviceClockReplyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,41 @@
+JUnit version 4.13.2
+.E...E..E..E..E
+Time: 0.225
+There were 5 failures:
+1) reducedMotionAndThermalFloorKeepPressureStatic(at.heinz.deviceai.ui.LuxuryHoloButtonRendererTest)
+java.lang.AssertionError: expected:<2> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ui.LuxuryHoloButtonRendererTest.reducedMotionAndThermalFloorKeepPressureStatic(LuxuryHoloButtonRendererTest.kt:109)
+2) shellRoutesPressureToOnlyTheActualDockControl(at.heinz.deviceai.ui.LuxuryHoloButtonRendererTest)
+java.lang.AssertionError: expected:<2> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ui.LuxuryHoloButtonRendererTest.shellRoutesPressureToOnlyTheActualDockControl(LuxuryHoloButtonRendererTest.kt:88)
+3) heldMaterialClockDoesNotAdvanceFrozenBackground(at.heinz.deviceai.ui.LuxuryHoloButtonRendererTest)
+java.lang.AssertionError: expected:<2> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ui.LuxuryHoloButtonRendererTest.heldMaterialClockDoesNotAdvanceFrozenBackground(LuxuryHoloButtonRendererTest.kt:130)
+4) actualShellContactRemainsStaticAcrossHardFloorsAndPhases(at.heinz.deviceai.ui.JarvisThermalVisualContractTest)
+java.lang.AssertionError: Contact remains visible expected:<2> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.JarvisThermalVisualContractTest.actualShellContactRemainsStaticAcrossHardFloorsAndPhases(JarvisThermalVisualContractTest.kt:47)
+5) warmWorkRetainsConstructionBeforeHardStopSettlesEveryWindow(at.heinz.deviceai.ui.JarvisThermalVisualContractTest)
+java.lang.AssertionError: Values should be different. Actual: []
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.ui.JarvisThermalVisualContractTest.warmWorkRetainsConstructionBeforeHardStopSettlesEveryWindow(JarvisThermalVisualContractTest.kt:62)
+
+FAILURES!!!
+Tests run: 10,  Failures: 5

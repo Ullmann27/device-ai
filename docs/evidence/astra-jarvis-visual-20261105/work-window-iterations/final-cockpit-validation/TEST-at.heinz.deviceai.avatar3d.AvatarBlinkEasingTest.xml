@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar3d.AvatarBlinkEasingTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:32:39" hostname="6e2f8005d77e" time="0.058">
+  <properties/>
+  <testcase name="existingClosureContractAndWindowAreKept" classname="at.heinz.deviceai.avatar3d.AvatarBlinkEasingTest" time="0.0"/>
+  <testcase name="everyBlinkStartsClosesAndReopensWithoutAVelocityKink" classname="at.heinz.deviceai.avatar3d.AvatarBlinkEasingTest" time="0.058"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

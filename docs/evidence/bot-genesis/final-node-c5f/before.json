@@ -1,0 +1,24 @@
+{
+  "source": "c5f9b06b02fbe8b80f9472a17784fb000812398c",
+  "status": "",
+  "tests": {
+    ".github/continuum/ccc1-bot-assignment.test.mjs": "0ecaae8accfa4551c0c3b8b86f6cdfc0a2f939b77706d9c0a424ba642a6d43e8",
+    ".github/continuum/ccc1-bot-report.test.mjs": "5937fe85ad755a2ec19cbd0a3a3e34228ff1b846218cf03750a371beb7e12625",
+    ".github/continuum/ccc1-workspace.test.mjs": "78780f04a5e15f37614e011a50131e7203d65f03eb98322958c01a1d57662159",
+    ".github/continuum/ccc1-technical-recall.test.mjs": "2f871f4465b2445d6c998bb2dbc5c5a17c7e7a2b002810344c6a269a224ba71c",
+    ".github/continuum/ccc1-experience-durability.test.mjs": "72047810a525fcf901ca16533d5d18147dcf67fa188feaf4416e124085159b78",
+    ".github/continuum/coding-orchestrator.test.mjs": "d09f93eb012f864b475f005b7487d6d355f3487c93184f390c2dc6c9eb258e0a",
+    ".github/continuum/autonomous-teamleader.test.mjs": "a691d41bc261651c00ba06f29d1d66f332a7d5ca5e7aedd6f1e5d1d2c8fb61ed",
+    ".github/continuum/backlog-repair-worker.test.mjs": "e79e5a859cd9f976bc3c8011efa58feb1834c69dc8f9332e2e31d674f2ea644a",
+    ".github/continuum/ccc1-native-evidence-integrity.test.mjs": "e244a6f236080479de908cc0b6ab0accda935547fa5f18f679c39084c7d159fc",
+    ".github/continuum/ccc1-redgreen-verifier.test.mjs": "810d9a9eed5767a7fabbc816c0e147929a0c66e7e5e1e6a02d7d76fc045dbd82",
+    ".github/continuum/ccc1-independent-verifier.test.mjs": "63696231af8f88fd53f27c90b9a2cf9ed046d308071646353c099d732f722988",
+    ".github/continuum/ccc1-checkout-binding.test.mjs": "90f6eb3387ab446968534463ab7388baabbd5bcf1e9d5b0803bb022740769b2e",
+    ".github/continuum/ccc1-path-policy.test.mjs": "a4ac60cf8562c9139386069a084bfaca425621109f9d0866c243fb0244c5b38b",
+    ".github/continuum/ccc1-worker.test.mjs": "70ce5bfb7995c62f737efea5b33ada84c28970a2550ecefa5ba195b433712156",
+    ".github/continuum/ccc1-bridge.test.mjs": "6d7d88f52368f3406fd3c740c062175d30ca854d776f7aed5ab026feb5b594cd",
+    ".github/continuum/ccc1-repair.test.mjs": "56577d55647c2545df10ae61e67b7adb18702f4e195a1fea6450730882672ed1",
+    ".github/continuum/ccc1.test.mjs": "c826f87c1b3e11c284c333d1fdbdb48aeb8fcfbab740cd622ada2c975cdb0227",
+    ".github/continuum/isolated-executor.test.mjs": "df7f1b9adb325ba4bd11a1e8e9a9a413c083d3541d0cab90786cd8c21e46af29"
+  }
+}

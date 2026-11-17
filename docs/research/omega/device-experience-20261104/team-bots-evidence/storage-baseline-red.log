@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+..........E
+Time: 0.232
+There was 1 failure:
+1) systemParentAliasKeepsRosterDurable(at.heinz.deviceai.chief.ChiefBotProfileStoreTest)
+java.lang.IllegalArgumentException: BOT_STORE_SYMLINK_REJECTED
+	at at.heinz.deviceai.chief.ChiefBotProfileStore.safeDirectory(ChiefBotProfileStore.kt:401)
+	at at.heinz.deviceai.chief.ChiefBotProfileStore.locked(ChiefBotProfileStore.kt:383)
+	at at.heinz.deviceai.chief.ChiefBotProfileStore.seedDefaults(ChiefBotProfileStore.kt:126)
+	at at.heinz.deviceai.chief.ChiefBotProfileStoreTest.systemParentAliasKeepsRosterDurable(ChiefBotProfileStoreTest.kt:63)
+
+FAILURES!!!
+Tests run: 10,  Failures: 1
+

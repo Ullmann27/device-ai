@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: owner version advances to 0.3.18/19 without a new application ID
+ok 1 - owner version advances to 0.3.18/19 without a new application ID
+  ---
+  duration_ms: 0.846949
+  type: 'test'
+  ...
+# Subtest: release uses existing signer, pinned source, and refuses dirty or unapproved code
+ok 2 - release uses existing signer, pinned source, and refuses dirty or unapproved code
+  ---
+  duration_ms: 0.204504
+  type: 'test'
+  ...
+# Subtest: release never replaces the old APK without byte-checked 0.3.17 rollback
+ok 3 - release never replaces the old APK without byte-checked 0.3.17 rollback
+  ---
+  duration_ms: 0.863043
+  type: 'test'
+  ...
+# Subtest: relevant UI and CCC1 source blobs are explicitly attested
+ok 4 - relevant UI and CCC1 source blobs are explicitly attested
+  ---
+  duration_ms: 0.137444
+  type: 'test'
+  ...
+# Subtest: owner release executes the optional Android widget and lifecycle test source set
+ok 5 - owner release executes the optional Android widget and lifecycle test source set
+  ---
+  duration_ms: 0.28245
+  type: 'test'
+  ...
+# Subtest: unchanged 22 source pins pass
+ok 6 - unchanged 22 source pins pass
+  ---
+  duration_ms: 277.181414
+  type: 'test'
+  ...
+# Subtest: changed protected source fails closed
+ok 7 - changed protected source fails closed
+  ---
+  duration_ms: 214.401509
+  type: 'test'
+  ...
+# Subtest: report-only does not turn a mismatch into approval
+ok 8 - report-only does not turn a mismatch into approval
+  ---
+  duration_ms: 206.62603
+  type: 'test'
+  ...
+# Subtest: symlink is never accepted as an attested regular source
+ok 9 - symlink is never accepted as an attested regular source
+  ---
+  duration_ms: 215.425242
+  type: 'test'
+  ...
+# Subtest: duplicate release pins fail before reporting
+ok 10 - duplicate release pins fail before reporting
+  ---
+  duration_ms: 167.52633
+  type: 'test'
+  ...
+# Subtest: symlinked ancestor cannot launder an unchanged file hash into a trusted path
+ok 11 - symlinked ancestor cannot launder an unchanged file hash into a trusted path
+  ---
+  duration_ms: 367.732155
+  type: 'test'
+  ...
+# Subtest: the report names why each attested source changed, its review role and unattested new APK sources
+ok 12 - the report names why each attested source changed, its review role and unattested new APK sources
+  ---
+  duration_ms: 452.345645
+  type: 'test'
+  ...
+# Subtest: release commands preserve every continued test file, Android task and build option
+ok 13 - release commands preserve every continued test file, Android task and build option
+  ---
+  duration_ms: 392.988599
+  type: 'test'
+  ...
+# Subtest: default signing entrypoint retains v18
+ok 14 - default signing entrypoint retains v18
+  ---
+  duration_ms: 61.387044
+  type: 'test'
+  ...
+# Subtest: explicit v19 requires owner-approved pinned exact commit
+ok 15 - explicit v19 requires owner-approved pinned exact commit
+  ---
+  duration_ms: 40.588247
+  type: 'test'
+  ...
+# Subtest: unknown release version always fails closed
+ok 16 - unknown release version always fails closed
+  ---
+  duration_ms: 55.137017
+  type: 'test'
+  ...
+# Subtest: non-code values cannot override the source pin guard
+ok 17 - non-code values cannot override the source pin guard
+  ---
+  duration_ms: 21.629857
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2803.856437

@@ -1,0 +1,27 @@
+{
+  "schema": "jarvis-independent-native-mapper-baseline",
+  "version": 1,
+  "source": "7caef9b624beebdb78c8c081a17f4978461ae496",
+  "testFreeze": "8c43f017575faec126c141e1f0377976d74c60d9",
+  "evidenceClass": "CONTRACT_TEST",
+  "command": "bash tools/jarvis-reference-review/run-mapper-challenge.sh /workspace/jarvis-reference-3d-baseline 7caef9b624beebdb78c8c081a17f4978461ae496 /workspace/jarvis-reference-review-results/baseline",
+  "actualJunit": {
+    "executed": 12,
+    "pass": 10,
+    "fail": 2,
+    "skip": 0,
+    "exit": 1
+  },
+  "failures": [
+    "Idle gaze never changes",
+    "Idle head never moves"
+  ],
+  "limits": "Actual Kotlin production mapper/reducer, not Filament rendering, model inference, camera gaze or device acceptance.",
+  "sha256": {
+    "docs/evidence/momega1/reference-review/mapper-baseline-junit.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/evidence/momega1/reference-review/mapper-baseline-junit.txt": "3386cf57fcc34ec2d2f99b2d156d744ea2893641025ed59b47fde83dea86918d",
+    "docs/evidence/momega1/reference-review/mapper-baseline-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tools/jarvis-reference-review/MapperMotionChallengeTest.kt": "144671f1b1705f5ba505edea75753a81ccbac8c9b1d3456a8c8ffcbab19fb7f3",
+    "tools/jarvis-reference-review/run-mapper-challenge.sh": "0f37ba4264071f866b9a63f66dd6cb4bf8c65f79521e7835e7776af5f36a5f7e"
+  }
+}

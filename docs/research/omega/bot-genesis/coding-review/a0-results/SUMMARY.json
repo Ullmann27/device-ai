@@ -1,0 +1,146 @@
+{
+  "schema": "genesis-a0-summary-v1",
+  "source": "fd743adce297c0958aadce1576b80580817837f0",
+  "cases": [
+    {
+      "case": "g01",
+      "status": "ABSTAINED",
+      "typedTaskId": "genesis-g01",
+      "ccc1TaskId": "t-eceda5e10fb49bf4",
+      "fixtureSourceCommit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+      "taskFingerprint": "8a5cd4f4d20bac723d9270dbc9fbe5de7032d2ea82cac7ca53f25c319be36046",
+      "jobs": [
+        "fafab142-6add-47a1-a076-c6ced1eb20b0"
+      ],
+      "elapsedMs": 58766,
+      "reservedCalls": 2,
+      "admittedGenuineCalls": 1,
+      "nativeProcessesObserved": 2,
+      "peakSampledRssKiB": 2079004,
+      "sampledNativeCpuSeconds": 106.30000000000001,
+      "modelElapsedMs": [
+        25010,
+        32361
+      ],
+      "admittedOutputTokens": [
+        136
+      ],
+      "proposalAcceptedByShapeCount": 1,
+      "verifiedRepairs": 0,
+      "baselineFailures": 4,
+      "testsPerRun": 10,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallCount": 0,
+      "failures": [
+        {
+          "outcome": "FAILED_TESTS",
+          "code": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:"
+        },
+        {
+          "outcome": "REJECTED_MODEL_OUTPUT",
+          "code": "CODING_MODEL_UNAVAILABLE"
+        }
+      ]
+    },
+    {
+      "case": "g02",
+      "status": "ABSTAINED",
+      "typedTaskId": "genesis-g02",
+      "ccc1TaskId": "t-97fc547899c8c2ff",
+      "fixtureSourceCommit": "cd31ff6e828438dc1e8b96201707cee0eee94335",
+      "taskFingerprint": "b93ce198e4b753373941fb1c81adce73998b27e56edb52d0b7870223ea5eb264",
+      "jobs": [
+        "61663ae4-ff2b-41fb-8626-d68b8c5e6440"
+      ],
+      "elapsedMs": 55733,
+      "reservedCalls": 2,
+      "admittedGenuineCalls": 2,
+      "nativeProcessesObserved": 2,
+      "peakSampledRssKiB": 2079204,
+      "sampledNativeCpuSeconds": 97.91,
+      "modelElapsedMs": [
+        28240,
+        26079
+      ],
+      "admittedOutputTokens": [
+        154,
+        141
+      ],
+      "proposalAcceptedByShapeCount": 2,
+      "verifiedRepairs": 0,
+      "baselineFailures": 5,
+      "testsPerRun": 10,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallCount": 0,
+      "failures": [
+        {
+          "outcome": "FAILED_TESTS",
+          "code": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:"
+        },
+        {
+          "outcome": "REJECTED_MODEL_OUTPUT",
+          "code": "CODING_REPEATED_PATCH"
+        }
+      ]
+    },
+    {
+      "case": "g03",
+      "status": "ABSTAINED",
+      "typedTaskId": "genesis-g03",
+      "ccc1TaskId": "t-d88c0e52462154b6",
+      "fixtureSourceCommit": "d5b2d2c3d62f07cda18b531f2532da0bdb634121",
+      "taskFingerprint": "d0a8dbed514f8f08fe3775972fd519290d86ee26f5aa8427c66fd3bea2e2bd2c",
+      "jobs": [
+        "e31747a9-edb8-488b-b343-8d439b2cc129"
+      ],
+      "elapsedMs": 65251,
+      "reservedCalls": 2,
+      "admittedGenuineCalls": 2,
+      "nativeProcessesObserved": 2,
+      "peakSampledRssKiB": 2078908,
+      "sampledNativeCpuSeconds": 115.78999999999999,
+      "modelElapsedMs": [
+        30420,
+        32882
+      ],
+      "admittedOutputTokens": [
+        231,
+        235
+      ],
+      "proposalAcceptedByShapeCount": 2,
+      "verifiedRepairs": 0,
+      "baselineFailures": 3,
+      "testsPerRun": 10,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallCount": 0,
+      "failures": [
+        {
+          "outcome": "FAILED_TESTS",
+          "code": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:"
+        },
+        {
+          "outcome": "FAILED_TESTS",
+          "code": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "tasks": 3,
+    "verifiedRepairs": 0,
+    "abstentions": 3,
+    "falseSuccessClaims": 0,
+    "reservedCalls": 6,
+    "admittedGenuineCalls": 5,
+    "nativeProcessesObserved": 6,
+    "elapsedMs": 179750,
+    "taskLatencyP50Ms": 58766,
+    "taskLatencyP95Ms": 65251,
+    "quantileMethod": "nearest rank; only three tasks, descriptive not a performance comparison",
+    "peakSampledRssKiB": 2079204,
+    "sampledNativeCpuSeconds": 320.0,
+    "newVerifiedTechnicalExperiences": 0,
+    "restartRecalls": 0
+  },
+  "limits": "Host-only CPU. No Gemma, Fold7, Android runtime, device energy or learning-gain claim. Raw native process observations include one nonzero/rejected run; only five observations admitted by producer. Original twelve-case suite remains separate."
+}

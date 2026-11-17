@@ -1,0 +1,215 @@
+{
+  "head": "2f65132f8443e4cbed468cd27180c4ada3713472",
+  "testHashes": {
+    ".github/continuum/android-integration-wiring.test.mjs": "7f117b21af0dbff82e8953b87411aba308da094ef4a684eceb4b1d82cb5d49d7",
+    ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs": "5b6d1c7a32ecebe4a1b0138d8a9596d9cb35bbe10e6b0afa081a9119f08ab96a",
+    ".github/continuum/m2-owner-brain-contract.test.mjs": "bc90d3c09a2b460b2ce6da33580e5a83e80fc043ea960c6b36c48d5be74f9ff4",
+    ".github/continuum/m5-voice-duplex-wiring.test.mjs": "aa9a5a200045562ce4d8b198d11739c441c81104f2493944739b966d75996ae9"
+  },
+  "runs": [
+    {
+      "name": "positive-control",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        ".github/continuum/m2-owner-brain-contract.test.mjs",
+        ".github/continuum/m5-voice-duplex-wiring.test.mjs"
+      ],
+      "exit": 0,
+      "expectedFailure": false,
+      "counts": {
+        "tests": 65,
+        "pass": 65,
+        "fail": 0,
+        "skipped": 0
+      },
+      "intendedAssertionFailure": false
+    },
+    {
+      "name": "owner-turn-binding",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        ".github/continuum/m2-owner-brain-contract.test.mjs",
+        ".github/continuum/m5-voice-duplex-wiring.test.mjs"
+      ],
+      "source": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "before": "createToolGate(ownerTurn = text,",
+      "after": "createToolGate(ownerTurn = agentTask,",
+      "originalSha256": "53d287b26228235c9e5a1398a34568e09117f2480840783256b095c1ad6223df",
+      "mutatedSha256": "4b1fec76e7cb5f9b96d5f8db6d3b20e7747421b33ac9bcd63e479c028bd4380c",
+      "exit": 1,
+      "expectedFailure": true,
+      "counts": {
+        "tests": 65,
+        "pass": 64,
+        "fail": 1,
+        "skipped": 0
+      },
+      "intendedAssertionFailure": true
+    },
+    {
+      "name": "complete-task-budget",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        ".github/continuum/m2-owner-brain-contract.test.mjs",
+        ".github/continuum/m5-voice-duplex-wiring.test.mjs"
+      ],
+      "source": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "before": "at.heinz.deviceai.cognitive.LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)",
+      "after": "true",
+      "originalSha256": "53d287b26228235c9e5a1398a34568e09117f2480840783256b095c1ad6223df",
+      "mutatedSha256": "b0162db3f370af029a749dd95d693bd8bf335dbd936edd05a9fefa28486ebe05",
+      "exit": 1,
+      "expectedFailure": true,
+      "counts": {
+        "tests": 65,
+        "pass": 64,
+        "fail": 1,
+        "skipped": 0
+      },
+      "intendedAssertionFailure": true
+    },
+    {
+      "name": "camera-permission-auto-start",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        ".github/continuum/m2-owner-brain-contract.test.mjs",
+        ".github/continuum/m5-voice-duplex-wiring.test.mjs"
+      ],
+      "source": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "before": "// Permission is not a new start gesture; a late callback never opens either sensor.\n            refreshReadinessGuide()",
+      "after": "// Mutation: a permission callback opens the camera without a new owner gesture.\n            readinessCameraInput().start(true, foregroundLearningActive, 0)\n            refreshReadinessGuide()",
+      "originalSha256": "53d287b26228235c9e5a1398a34568e09117f2480840783256b095c1ad6223df",
+      "mutatedSha256": "0d218926ea3e36d66c5fa104267465241ea89d46bc09b257c7275d5c0a9c2cb7",
+      "exit": 1,
+      "expectedFailure": true,
+      "counts": {
+        "tests": 65,
+        "pass": 64,
+        "fail": 1,
+        "skipped": 0
+      },
+      "intendedAssertionFailure": true
+    },
+    {
+      "name": "motion-foreground",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        ".github/continuum/m2-owner-brain-contract.test.mjs",
+        ".github/continuum/m5-voice-duplex-wiring.test.mjs"
+      ],
+      "source": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "before": "foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE",
+      "after": "motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE",
+      "originalSha256": "7eba7cc8b795c625b75c5268d944193630485bf1077e9147fc4710f06df9cb6d",
+      "mutatedSha256": "2b89417a473feca97fabad3b3f1805b21533dcbefd727ccba0afa923bc840e84",
+      "exit": 1,
+      "expectedFailure": true,
+      "counts": {
+        "tests": 65,
+        "pass": 64,
+        "fail": 1,
+        "skipped": 0
+      },
+      "intendedAssertionFailure": true
+    },
+    {
+      "name": "planning-private-memory",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        ".github/continuum/m2-owner-brain-contract.test.mjs",
+        ".github/continuum/m5-voice-duplex-wiring.test.mjs"
+      ],
+      "source": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "before": "memories = { if(codingPlanning == null) memoryStore.all() + ownerFactMemories() else emptyList() }",
+      "after": "memories = { memoryStore.all() + ownerFactMemories() }",
+      "originalSha256": "53d287b26228235c9e5a1398a34568e09117f2480840783256b095c1ad6223df",
+      "mutatedSha256": "880e98136172f5d2a880142b0ad6197aabb6af5a60190115cfced69ad5c8cd34",
+      "exit": 1,
+      "expectedFailure": true,
+      "counts": {
+        "tests": 65,
+        "pass": 64,
+        "fail": 1,
+        "skipped": 0
+      },
+      "intendedAssertionFailure": true
+    },
+    {
+      "name": "planning-tool-authority",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        ".github/continuum/m2-owner-brain-contract.test.mjs",
+        ".github/continuum/m5-voice-duplex-wiring.test.mjs"
+      ],
+      "source": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "before": "AgentLimits(maxToolCalls=0,maxRetries=0)",
+      "after": "AgentLimits(maxToolCalls=1,maxRetries=0)",
+      "originalSha256": "53d287b26228235c9e5a1398a34568e09117f2480840783256b095c1ad6223df",
+      "mutatedSha256": "b97fe627514c63acc76924bcce1be37d82f9b89fd1ecc5446c10aff09d248662",
+      "exit": 1,
+      "expectedFailure": true,
+      "counts": {
+        "tests": 65,
+        "pass": 64,
+        "fail": 1,
+        "skipped": 0
+      },
+      "intendedAssertionFailure": true
+    },
+    {
+      "name": "model-binding",
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".github/continuum/android-integration-wiring.test.mjs",
+        ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        ".github/continuum/m2-owner-brain-contract.test.mjs",
+        ".github/continuum/m5-voice-duplex-wiring.test.mjs"
+      ],
+      "source": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "before": "check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }",
+      "after": "check(true) { LocalTurnModelBinding.CHANGED }",
+      "originalSha256": "53d287b26228235c9e5a1398a34568e09117f2480840783256b095c1ad6223df",
+      "mutatedSha256": "69660ec81a913f172450b4a329c0c9d83c9866a14e8460e8126f306c0477ea51",
+      "exit": 1,
+      "expectedFailure": true,
+      "counts": {
+        "tests": 65,
+        "pass": 64,
+        "fail": 1,
+        "skipped": 0
+      },
+      "intendedAssertionFailure": true
+    }
+  ],
+  "note": "Raw Node spec reporter text, despite original temporary .tap suffix; retained as .txt. Source overrides only in test-process fs reads, no production files changed."
+}

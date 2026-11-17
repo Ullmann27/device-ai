@@ -1,0 +1,181 @@
+{
+  "sourceBaseline": "e23506188fdb6454c244847083c60ae42189ee05",
+  "scope": "Runtime connection audit; source presence, host QA and physical acceptance are separate",
+  "rows": [
+    {
+      "component": "Cinema budget",
+      "caller": "ContinuumHologramView.renderBudget → JarvisRenderQuality.adaptiveAnimation",
+      "activation": "ACTIVE",
+      "testedEffect": "9 JVM tests PASS; 2 regressions RED before fix",
+      "visibleResult": "Cool inference retains illumination; frame and particle caps remain",
+      "remainingGap": "Hardware visual acceptance NOT_RUN",
+      "present": true,
+      "regressionFiles": [
+        "app/src/test/java/at/heinz/deviceai/ui/JarvisRenderQualityTest.kt"
+      ],
+      "deviceAcceptance": "NOT_RUN",
+      "hostQualification": "PENDING_SOURCE_BOUND_CI"
+    },
+    {
+      "component": "Renderer",
+      "caller": "AgentActivity.buildConversationPane → ContinuumHomeView.setJarvisShellStage(true); ContinuumHologramView.update3d → FilamentAvatarRenderer.create",
+      "activation": "PREFERENCE_AND_SURFACE_GATED",
+      "testedEffect": "Prior source tests only",
+      "visibleResult": "Filament when surface succeeds; labelled 2D fallback otherwise",
+      "remainingGap": "Live Filament/Fold7 NOT_RUN",
+      "present": true,
+      "regressionFiles": [
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatarAppearanceUpgradeUiTest.kt"
+      ],
+      "deviceAcceptance": "NOT_RUN",
+      "hostQualification": "PENDING_SOURCE_BOUND_CI"
+    },
+    {
+      "component": "Dialogue",
+      "caller": "AgentActivity.sendCurrentInput → runLocal → LocalConversationContext",
+      "activation": "ACTIVE",
+      "testedEffect": "Prior #740 host evidence; no new end-to-end run",
+      "visibleResult": "Existing answer and speech path",
+      "remainingGap": "Real model NOT_RUN",
+      "present": true,
+      "regressionFiles": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpIntegrationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModelTest.kt"
+      ],
+      "deviceAcceptance": "NOT_RUN",
+      "hostQualification": "PENDING_SOURCE_BOUND_CI"
+    },
+    {
+      "component": "Memory and learning",
+      "caller": "AgentActivity.runLocal -> BoundedAgent.runFrom -> HybridMemoryRetriever + AgentExperienceRecall.hints -> model context; checkpointContinuumAsync -> ContinuumRuntimeStore; openContinuum restores archive",
+      "activation": "QUALIFIED_PATH_ONLY",
+      "testedEffect": "Prior #740 receipt/restart evidence",
+      "visibleResult": "Confirmed owner facts plus explicitly UNVERIFIED prior-run hints; no historical tool authority",
+      "remainingGap": "Real-model response transfer NOT_RUN; experimental learning remains gated",
+      "present": true,
+      "regressionFiles": [
+        "app/src/test/java/at/heinz/deviceai/cognitive/AgentExperienceRecallTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/MemoryRecallActivityUiTest.kt"
+      ],
+      "deviceAcceptance": "NOT_RUN",
+      "hostQualification": "PENDING_SOURCE_BOUND_CI"
+    },
+    {
+      "component": "System tools",
+      "caller": "dispatchSystemTool → createToolGate → DeviceToolExecutor",
+      "activation": "OWNER_SCOPED",
+      "testedEffect": "Prior #740 host tests",
+      "visibleResult": "System report and cockpit events",
+      "remainingGap": "Real Shizuku NOT_RUN",
+      "present": true,
+      "regressionFiles": [
+        "app/src/uiTest/java/at/heinz/deviceai/SystemIntelligenceUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt"
+      ],
+      "deviceAcceptance": "NOT_RUN",
+      "hostQualification": "PENDING_SOURCE_BOUND_CI"
+    },
+    {
+      "component": "Documents and web",
+      "caller": "AgentActivity document flow / runResearch → scoped approval",
+      "activation": "PERMISSION_GATED",
+      "testedEffect": "Prior #740 host tests",
+      "visibleResult": "Document and research windows",
+      "remainingGap": "Live external providers NOT_RUN",
+      "present": true,
+      "regressionFiles": [
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ResearchChatApprovalUiTest.kt"
+      ],
+      "deviceAcceptance": "NOT_RUN",
+      "hostQualification": "PENDING_SOURCE_BOUND_CI"
+    },
+    {
+      "component": "Speech and avatar",
+      "caller": "AgentActivity.speakBootstrap -> speakReply -> ApprovedSpeechChunkQueue -> speakNextChunk -> Android TTS or optional MayaSpeech -> shared utterance listener -> TtsHologramSignal + AvatarDirector",
+      "activation": "OWNER_OPT_IN_KEY_AND_CENTRAL_INTERNET_GATED",
+      "testedEffect": "11 host JVM tests PASS; Android provider/storage classes compiled against API36; full Android/UI tests pending",
+      "visibleResult": "Listening, speaking and work pose",
+      "remainingGap": "Public Maya selected. Encrypted key entry and runtime adapter connected. Live credentials, pronunciation, playback and lip-sync Fold7 NOT_RUN. Per-chunk buffered playback, no phoneme timestamps.",
+      "present": true,
+      "regressionFiles": [
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumLongReplySpeechUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt",
+        "app/src/test/java/at/heinz/deviceai/MayaSpeechTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/MayaVoiceSettingsUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ElevenLabsPcmRequestUiTest.kt"
+      ],
+      "deviceAcceptance": "NOT_RUN",
+      "hostQualification": "PARTIAL_HOST_ONLY"
+    },
+    {
+      "component": "STOP and recovery",
+      "caller": "Existing cancellation tokens, generations, ToolGate.cancel and turn lifecycle",
+      "activation": "ACTIVE",
+      "testedEffect": "Prior #740 STOP tests",
+      "visibleResult": "Controlled window return; stale callbacks rejected",
+      "remainingGap": "Hardware interruption/restart NOT_RUN",
+      "present": true,
+      "regressionFiles": [
+        "app/src/uiTest/java/at/heinz/deviceai/CinemaStopReturnUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt"
+      ],
+      "deviceAcceptance": "NOT_RUN",
+      "hostQualification": "PENDING_SOURCE_BOUND_CI"
+    },
+    {
+      "component": "Sustained orb energy",
+      "present": true,
+      "caller": "JarvisWorkWindowHost.plan/open/refit -> setEnergySource; workStarted/showStatus/workEnded -> HollywoodFuiStageOverlay -> JarvisFluidLight.workingSample/drawTransfer",
+      "activation": "REAL_WORK_AND_EXISTING_RENDER_BUDGET_GATED",
+      "testedEffect": "19 isolated Kotlin/JUnit energy+quality tests PASS; Android pixels pending",
+      "visibleResult": "Flow continues after construction while real work is active; ends at result/STOP; follows orb refit",
+      "remainingGap": "Native Canvas QA pending; physical displays NOT_RUN",
+      "regressionFiles": [
+        "app/src/test/java/at/heinz/deviceai/ui/JarvisFluidLightTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ui/HollywoodFuiWindowUiTest.kt"
+      ],
+      "hostQualification": "PARTIAL_HOST_ONLY",
+      "deviceAcceptance": "NOT_RUN"
+    },
+    {
+      "component": "Existing glass thickness",
+      "present": true,
+      "caller": "JarvisWorkWindow.dispatchDraw -> GlassPanel.drawSurface -> JarvisReferenceHud.surface; children retain clipToOutline",
+      "activation": "EXISTING_WINDOW_PRESENTATION",
+      "testedEffect": "Native Canvas exposed-strip and protected-face regression added; execution pending",
+      "visibleResult": "Existing rear plate, bottom/right thickness and shadow escape content clipping",
+      "remainingGap": "Native Canvas and hardware validation pending",
+      "regressionFiles": [
+        "app/src/uiTest/java/at/heinz/deviceai/ui/HollywoodFuiWindowUiTest.kt"
+      ],
+      "hostQualification": "PENDING_SOURCE_BOUND_CI",
+      "deviceAcceptance": "NOT_RUN"
+    },
+    {
+      "component": "Agent coordination",
+      "present": true,
+      "caller": "AgentActivity bot task routing -> existing ChiefBot task/team/turn lifecycle -> runLocal -> existing ToolGate and report callbacks",
+      "activation": "OWNER_TASK_AND_RUNTIME_AVAILABILITY_GATED",
+      "testedEffect": "Existing task routing, cancellation and tool UI regressions scheduled in full Android suite",
+      "visibleResult": "Task status and actual reports; unavailable runtime remains unavailable",
+      "remainingGap": "Full on-device model/tool coordination NOT_RUN",
+      "regressionFiles": [
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumBotTaskRoutingUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumBotToolTaskUiTest.kt"
+      ],
+      "hostQualification": "PENDING_SOURCE_BOUND_CI",
+      "deviceAcceptance": "NOT_RUN"
+    }
+  ],
+  "rejectedExperiments": "OMEGA721 and weights728 not activated; CTX3 OFF/shadow",
+  "donors": {
+    "715": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
+    "739": "a980a19ed3ab44323009ae27eb299d322ff11679",
+    "746": "67bf048a7d50a78b027da27a6b9814cbd2457372",
+    "claude/cinema2-depth-light-20261111": "e23506188fdb6454c244847083c60ae42189ee05"
+  },
+  "auditedRuntimeSource": "c57c6c2253bbcaa4a28deffec74fe689ab9ceab2",
+  "fullQualification": "PENDING_SOURCE_BOUND_CI",
+  "voiceRuntimeSource": "57d262c8df99399452252ba58bfbd8afe3b3d6a9 plus current follow-up patch"
+}

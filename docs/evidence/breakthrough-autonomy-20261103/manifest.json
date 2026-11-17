@@ -1,0 +1,39 @@
+{
+  "schema": "continuum-experiment-artifact-manifest",
+  "version": 1,
+  "utc": "2026-11-03T18:30:50.496065+00:00",
+  "baseCommit": "64ec06a73f50cae9ee49035c840710d87777d50f",
+  "preregisteredCommit": "5dd58b7c1414f596a640b5f26ebfd42c54401933",
+  "redEvidenceCommit": "34e6dbcd488e5eb2c5e11343f6f9710f61ca62f8",
+  "candidateCommit": "799dd763e5a20de29d78fdd1dd26f7a5a5f0b0b0",
+  "sourceSha256": {
+    ".github/continuum/ccc1-redgreen-verifier.mjs": "c2995353ec6a5f82dec94717699daec9792a755a028bfdac8897f87136eec53d",
+    ".github/continuum/ccc1-redgreen-verifier.test.mjs": "4852c349645581aa5c6022fb0dddae72d6c8bb2fb1c02f0a23d129d23d37feb3"
+  },
+  "node": "v24.19.0",
+  "git": "git version 2.52.0",
+  "files": {
+    "ccc1-regression.tap": "04253a06393abb2a5965e5915fabac3097842c2572a571acf84b500776138254",
+    "coverage-green.tap": "ae3d8e6f8a1c2ff84e55be56c586b65a0c535616df36e510cc90d756af0531d4",
+    "coverage-red.tap": "40acf5b6c81901154cf5caf7079569c39bf3dee214e95fde3a89dc9c46e884e7",
+    "green/duplicate.json": "7e743d6ee4444cd2a9fc45a1979427267041b37276be7593e0cda7868ba63a85",
+    "green/missing.json": "f6392b64ce7f0a3745ff6dcbae8ff4c1b2dbc0bc203fbb47b32f1555b3f4579e",
+    "green/renamed.json": "7085a5befd054cd644309d7279e41e3d62d763c0f0197ff7458cb8908573ed3c",
+    "green/reordered.json": "14d3c391386384a3a8f6825a81ba343c2fa23e4b53d698a9bff78dfc54bcb1c7",
+    "green/skipType.json": "b0e7df83c5b8414dea80ae4a9f7bf7da5c2c839a3179f72f526a9af40477e4a7",
+    "green/skipped.json": "63b18b61e516e68956a84982e37402fe50a98fdd0dfe3dd327cfe6b88a6ff0d6",
+    "green/suite.json": "90014a4fa7027c151bd002edc27b69665b517d5872792993493ae647aef8989d",
+    "green/todo.json": "44bf39f8cd7438af2aada554a7d5350606c23be01e9eb0e5e14e28d69e15946f",
+    "preregistration.md": "635452b1ab75ea8ac98bdffd206a425ec90297835eb3f1c25962f459678a61b0",
+    "red/duplicate.json": "b4b1e9acf5c174c054379e965a46d2bd982b8316794833a70148637d88b11eff",
+    "red/missing.json": "b31735dc67f28b440ad1fd9faabfc8d230d554cf0226a80d1e59dd7e097ea7b5",
+    "red/renamed.json": "15cf0deee85d485c0bb3571c518fcf643243cd26ab55961ebdbd3ae9e972674a",
+    "red/reordered.json": "0f5c207bbb1be2cadc61806f4651b6952d966fe6bb247dcc922ebc6f9b1d3c3c",
+    "red/skipType.json": "bb229c3bef3fc20ff5c4d2e9e5c870d2e70a8e8d1a8635d4f391a90a9634f82b",
+    "red/skipped.json": "e7948a47a1d4775d8ebdf2785d558f33f39e6e80ba6fb96192ffe93613e1a173",
+    "red/suite.json": "10dd4c0fd891d3e5463fbe64245ddc42c33b2e0cf018cf02c10040cb0f52dffe",
+    "red/todo.json": "426b8fe758c2cd937701fbdcc82e8bd5243f67648ef7c83ad2c85993b5ac3166"
+  },
+  "scope": "host synthetic fixed Node profile; no model inference or device acceptance",
+  "authentication": "SHA-256 integrity and source binding only; not independent attestation"
+}

@@ -1,0 +1,20 @@
+{
+  "head": "64368dd3f48285a6512c6902ea978b8b2a9f05d1",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/GermanNumberWords.kt": "8a8f528bb43a43b50dffaeea8c3f05627577a47ae0d07915eadeda730ed52e30",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedger.kt": "b64d6addf0d5ffad1906ca82566951198e718566bc605b6e02a3ca74d4a9a6b2",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "332643aac7d0c5087253a00e63671fb8b1006a44fce85cddc6edb18a63cb8f1f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt": "1a6df4ba2890c13397b4f0224ef5fa2030010371dd4e5bb1b40e0d3beb3d068d",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt": "e9ea2481c5471cc3369de76281e046d10b05efc29c04d8ed54f8616b28a237d2",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalContextRetentionPolicy.kt": "e5cae6c83dea571193b02c926e0ed2834d6977abf041e3c83a409da93d517b7e",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerTest.kt": "f10d312f9c09240c7258bbb96cd58270291ac58b41de42c272b1ce6e2a4ab361",
+    "app/src/test/java/at/heinz/deviceai/cognitive/OwnerObjectStateLedgerSafetyTest.kt": "d80901578e75c32b356a2f5838356f59c6b5efff9d7a37ed5223566a0d701cfc",
+    "app/src/test/java/at/heinz/deviceai/cognitive/HybridMemoryRetrieverTest.kt": "be50c2ee8442e3f1406fc3c241faf85c8f77ca7bd8a816674e77a501bba2bcb3",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicyTest.kt": "a85c455588dae74c52d60898cfbac5ab748fdbae24339068c0248013c4b2107f",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalContextRetentionTest.kt": "7b2620cfb451d1516dd1e844a2d1b7730020948255246d6968962445484dc1fb",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalDialogueRetentionTest.kt": "ade0f91e955662805bf10782b3b1271a01a1a89dd568a91a9a0c597c935aedca",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpIntegrationTest.kt": "b7320cf22aff36da16c7df29619cf64c3299f46aa77ead81e4eb2b0321ba5ffe",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalFollowUpTaskFrameTest.kt": "fa96f6172fafc06457dddcc92aa9f54502125d909c56b8a2c0974bcf8d1e899d"
+  },
+  "kind": "focused Kotlin/JUnit; existing compiled dependencies, not full Android"
+}

@@ -1,0 +1,10 @@
+BASELINES unigram=5.0631 kn2=3.9547 kn3=3.0723 kn4=2.3847 kn5=2.0736 kn6=1.9859 kn7=1.9628
+CDX1 best epoch 3: 4.5408 ± 0.0383 (seeds 3)
+LM1-TS-v512: params=49632 bestEpoch=8 valBPB=3.1570 ± 0.0097 seeds=[1, 2, 3] msPerToken=0.059 ckpts=d9fb46a90f46,a71cc53eaff6,7ff83ca309b9
+LM1-GS-v512: params=41504 bestEpoch=8 valBPB=2.7085 ± 0.0119 seeds=[1, 2, 3] msPerToken=0.058 ckpts=8af271e1095f,e450b50ce731,f7d2929dbac1
+LM1-TM-v512: params=148416 bestEpoch=8 valBPB=2.9007 ± 0.0081 seeds=[1, 2, 3] msPerToken=0.174 ckpts=e77c39a02da8,3ff091fab9a8,5abe24160e11
+LM1-GM-v512: params=132160 bestEpoch=8 valBPB=2.2251 ± 0.0073 seeds=[1, 2, 3] msPerToken=0.139 ckpts=7a0af1e99554,ad117ed5901a,44c4d4f30fac
+LM1-TM-v258: params=132160 bestEpoch=8 valBPB=3.6483 ± 0.0000 seeds=[1] msPerToken=0.151 ckpts=2d24a2e8565a
+LM1-GM-v258: params=115904 bestEpoch=8 valBPB=2.2459 ± 0.0000 seeds=[1] msPerToken=0.098 ckpts=0018bda14a5a
+LM1-TM-v1024: params=181184 bestEpoch=8 valBPB=2.6038 ± 0.0000 seeds=[1] msPerToken=0.173 ckpts=02ec98c655e1
+LM1-GM-v1024: params=164928 bestEpoch=8 valBPB=2.1717 ± 0.0000 seeds=[1] msPerToken=0.153 ckpts=e95dac50a3ff

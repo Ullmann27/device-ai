@@ -1,0 +1,50 @@
+{
+  "command03-unit": {
+    "mode": "unit-tests",
+    "tests": [
+      "at.heinz.deviceai.ui.CinematicWorkstationLayoutTest",
+      "at.heinz.deviceai.avatar3d.CockpitOrbMotionTest",
+      "at.heinz.deviceai.avatar3d.CockpitWorldTransformsTest",
+      "at.heinz.deviceai.avatar3d.CockpitCameraFlightTest",
+      "at.heinz.deviceai.ui.CommandWorkstationInstrumentsTest",
+      "at.heinz.deviceai.ui.ContinuumVisualStyleContractTest",
+      "at.heinz.deviceai.ui.ContinuumChatHistoryTest",
+      "at.heinz.deviceai.ui.JarvisShellContentTest",
+      "at.heinz.deviceai.ui.JarvisCockpitFidelityTest",
+      "at.heinz.deviceai.ui.JarvisReferenceWindowLayoutTest",
+      "at.heinz.deviceai.ui.JarvisCockpitUxArchitectTest"
+    ],
+    "helpers": [
+      "app/src/test/java/at/heinz/deviceai/avatar3d/GlbSkinningRig.kt",
+      "app/src/test/java/at/heinz/deviceai/avatar3d/GlbOrbGeometry.kt",
+      "app/src/test/java/at/heinz/deviceai/ui/JarvisPresentationRecordingPainter.kt"
+    ]
+  },
+  "command03-ui": {
+    "mode": "ui-tests",
+    "tests": [
+      "at.heinz.deviceai.ContinuumCommandNavigationUiTest",
+      "at.heinz.deviceai.ContinuumReferenceCockpitUiTest.composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+      "at.heinz.deviceai.ContinuumVisibleAvatarUiTest.repeatedKeyboardChangesResizeWithoutDuplicatingAvatar",
+      "at.heinz.deviceai.ui.JarvisRailLabelReadabilityUiTest",
+      "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest",
+      "at.heinz.deviceai.ContinuumCompactComposerUiTest",
+      "at.heinz.deviceai.JarvisReferenceHitTargetsUiTest"
+    ],
+    "helpers": [
+      "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt",
+      "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt"
+    ]
+  },
+  "command03-capture": {
+    "mode": "ui-tests",
+    "tests": [
+      "at.heinz.deviceai.JarvisDeterministicCaptureUiTest.commandPhone392",
+      "at.heinz.deviceai.JarvisDeterministicCaptureUiTest.commandFold904",
+      "at.heinz.deviceai.JarvisDeterministicCaptureUiTest.commandComputer904"
+    ],
+    "helpers": [
+      "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt"
+    ]
+  }
+}

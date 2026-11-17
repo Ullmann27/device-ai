@@ -1,0 +1,18 @@
+{
+  "id": "C043",
+  "question": "Wo lebt Qedaresi?",
+  "sources": [
+    {
+      "revision": 1,
+      "sha256": "665b69a834b5f9d06e69937aebb822e0b2997d44985ea07b06f609ded2ae0e6c",
+      "sourceId": "bc:C043:s1",
+      "text": "Zycovira lebt in Uvtocula Uvlidaca Uvlujoja."
+    },
+    {
+      "revision": 2,
+      "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+      "sourceId": "bc:C043:s2",
+      "text": "Qedaresi lebt in Uvvomeki."
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+✔ live inventory is explicitly NOT owner release approval (1.850239ms)
+✔ without owner consent the signed-release inventory gate fails closed (30.443868ms)
+✔ partial, wrong or stale source and manifest approval fails closed (166.631582ms)
+✖ synthetic exact approval exercises inventory verifier but authorizes NO release (51.181486ms)
+✔ live signing recipe is syntactically valid but does not self-authorize an APK (3.048526ms)
+✖ live signer refuses even a matching branch and dummy keystore without owner approvals (8.772159ms)
+✖ even with synthetic exact builder approval, missing owner source/manifest blocks signing (9.83766ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 4
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 331.819046
+
+✖ failing tests:
+
+test at scripts/continuum-0324-live-source-gate.test.mjs:61:1
+✖ synthetic exact approval exercises inventory verifier but authorizes NO release (51.181486ms)
+  AssertionError [ERR_ASSERTION]: OWNER_0324_LIVE_BLOCKED: Altered approved source .github/continuum/android-always-on-wiring.test.mjs
+  
+  
+  69 !== 0
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-0324-live-source-gate.test.mjs:65:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 69,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-0324-live-source-gate.test.mjs:82:1
+✖ live signer refuses even a matching branch and dummy keystore without owner approvals (8.772159ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Unapproved live code25 builder SHA/. Input:
+  
+  'OWNER_0324_LIVE_BLOCKED: Unexpected release branch\n'
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-0324-live-source-gate.test.mjs:98:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'OWNER_0324_LIVE_BLOCKED: Unexpected release branch\n',
+    expected: /Unapproved live code25 builder SHA/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-0324-live-source-gate.test.mjs:101:1
+✖ even with synthetic exact builder approval, missing owner source/manifest blocks signing (9.83766ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Live source inventory or exact owner authorization failed/. Input:
+  
+  'OWNER_0324_LIVE_BLOCKED: Unexpected release branch\n'
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-0324-live-source-gate.test.mjs:115:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'OWNER_0324_LIVE_BLOCKED: Unexpected release branch\n',
+    expected: /Live source inventory or exact owner authorization failed/,
+    operator: 'match',
+    diff: 'simple'
+  }

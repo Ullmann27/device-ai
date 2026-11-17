@@ -1,0 +1,31 @@
+{
+  "baseline": "38917560671b13795bf85d5a68d329658ba4eb7d",
+  "source": "f3e70a45469a03df7032ce6d71c91a7525b91eb2",
+  "checks": [
+    {
+      "path": "app/build.gradle.kts",
+      "unchanged": true,
+      "sha256": "d375fabbc1633da9c440039e03fed28e3e2e38a14beed0743e64d9dc57f9588c"
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "unchanged": true,
+      "sha256": "2fe747922fe352e3f2f4a52ad196198d784ad4f0e3a7b27c3684584f5bdef5c0"
+    },
+    {
+      "path": "settings.gradle.kts",
+      "unchanged": true,
+      "sha256": "eae2b268ce19144a26aeb6487bf1e43d0ff09b52e4d417e4451a9f4b12fe81be"
+    },
+    {
+      "path": "build.gradle.kts",
+      "unchanged": true,
+      "sha256": "30b87bf76d9ec1604dfe579fdf5d71e1d722fe05b8a7043b9deed7ae6916e499"
+    },
+    {
+      "path": "gradle.properties",
+      "unchanged": true,
+      "sha256": "949550ad13b20c9dbd693a5c4dd59896c55bc5c441f473b1e83ed1e5ccca6923"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "status": "EXPERIMENT_NOT_ACCEPTED",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "controlledChange": "Narrower object-space contour emission and actual-eye-centred emission suppression; same soft03 geometry, old mapper, rig and camera/lights",
+  "observed": "Facial volume and natural closed lids restored; contour emission remains too faint against the reference",
+  "nextHypothesis": "Standard KHR_materials_emissive_strength, supported in pinned Filament1.56 AssetLoader.cpp",
+  "nativeFilamentAppearance": "NOT_RUN",
+  "device": "FOLD7_NOT_RUN"
+}

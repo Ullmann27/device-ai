@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: external mentor has an explicit per-request consent UI
+ok 1 - external mentor has an explicit per-request consent UI
+  ---
+  duration_ms: 1.194335
+  type: 'test'
+  ...
+# Subtest: Android only sends bounded question text to the private backend
+ok 2 - Android only sends bounded question text to the private backend
+  ---
+  duration_ms: 0.325473
+  type: 'test'
+  ...
+# Subtest: server never accepts mentor request without owner grant and bearer authentication
+ok 3 - server never accepts mentor request without owner grant and bearer authentication
+  ---
+  duration_ms: 1.207825
+  type: 'test'
+  ...
+# Subtest: external reply is labelled unverified and cannot write memory or perform tools
+ok 4 - external reply is labelled unverified and cannot write memory or perform tools
+  ---
+  duration_ms: 0.37627
+  type: 'test'
+  ...
+# Subtest: mentor is opt-in disabled and never invokes external fetch without key
+ok 5 - mentor is opt-in disabled and never invokes external fetch without key
+  ---
+  duration_ms: 8.220507
+  type: 'test'
+  ...
+# Subtest: one authorized message is bounded and contains no tools, memory or device context
+ok 6 - one authorized message is bounded and contains no tools, memory or device context
+  ---
+  duration_ms: 99.095009
+  type: 'test'
+  ...
+# Subtest: input length validation happens before network and before quota consumption
+ok 7 - input length validation happens before network and before quota consumption
+  ---
+  duration_ms: 0.842001
+  type: 'test'
+  ...
+# Subtest: daily quota is isolated by UTC day and refuses concurrent calls
+ok 8 - daily quota is isolated by UTC day and refuses concurrent calls
+  ---
+  duration_ms: 1.323567
+  type: 'test'
+  ...
+# Subtest: upstream errors do not expose API response contents or key
+ok 9 - upstream errors do not expose API response contents or key
+  ---
+  duration_ms: 0.532372
+  type: 'test'
+  ...
+# Subtest: Groq throttling and malformed output are non-tool error responses
+ok 10 - Groq throttling and malformed output are non-tool error responses
+  ---
+  duration_ms: 1.0699
+  type: 'test'
+  ...
+# Subtest: oversized responses are rejected without parsing or logging private contents
+ok 11 - oversized responses are rejected without parsing or logging private contents
+  ---
+  duration_ms: 1.190479
+  type: 'test'
+  ...
+# Subtest: mentor ignores whitespace around environment key and never follows a redirect
+ok 12 - mentor ignores whitespace around environment key and never follows a redirect
+  ---
+  duration_ms: 1.775509
+  type: 'test'
+  ...
+# Subtest: provider rejects unknown models and invalid requests without exposing response bodies
+ok 13 - provider rejects unknown models and invalid requests without exposing response bodies
+  ---
+  duration_ms: 2.596579
+  type: 'test'
+  ...
+# Subtest: exhausted reasoning-only response retries same consented question once
+ok 14 - exhausted reasoning-only response retries same consented question once
+  ---
+  duration_ms: 7.652222
+  type: 'test'
+  ...
+# Subtest: empty response after a bounded retry has a specific reason, no reasoning text leaks
+ok 15 - empty response after a bounded retry has a specific reason, no reasoning text leaks
+  ---
+  duration_ms: 0.607062
+  type: 'test'
+  ...
+# Subtest: other model names do not get unsupported gpt-oss reasoning options
+ok 16 - other model names do not get unsupported gpt-oss reasoning options
+  ---
+  duration_ms: 0.461196
+  type: 'test'
+  ...
+# Subtest: long Groq answers are preserved beyond old 1800 character limit
+ok 17 - long Groq answers are preserved beyond old 1800 character limit
+  ---
+  duration_ms: 84.171511
+  type: 'test'
+  ...
+# Subtest: table markdown becomes plain, legible text without losing values
+ok 18 - table markdown becomes plain, legible text without losing values
+  ---
+  duration_ms: 0.403099
+  type: 'test'
+  ...
+# Subtest: oversized answers end at a boundary and explicitly signal shortening
+ok 19 - oversized answers end at a boundary and explicitly signal shortening
+  ---
+  duration_ms: 0.279575
+  type: 'test'
+  ...
+# Subtest: provider token-limit completion is explicitly marked as incomplete
+ok 20 - provider token-limit completion is explicitly marked as incomplete
+  ---
+  duration_ms: 4.68321
+  type: 'test'
+  ...
+# Subtest: unverified mentor has no current device or repo state
+ok 21 - unverified mentor has no current device or repo state
+  ---
+  duration_ms: 0.525671
+  type: 'test'
+  ...
+# Subtest: unapproved device cannot redeem; no credentials are exposed
+ok 22 - unapproved device cannot redeem; no credentials are exposed
+  ---
+  duration_ms: 7.400127
+  type: 'test'
+  ...
+# Subtest: owner-approved device receives only revocable mentor token
+ok 23 - owner-approved device receives only revocable mentor token
+  ---
+  duration_ms: 1.712876
+  type: 'test'
+  ...
+# Subtest: expired, forged, tampered, and replayable altered challenges are rejected
+ok 24 - expired, forged, tampered, and replayable altered challenges are rejected
+  ---
+  duration_ms: 35.250653
+  type: 'test'
+  ...
+# Subtest: wrong elliptic curve and missing owner token fail closed
+ok 25 - wrong elliptic curve and missing owner token fail closed
+  ---
+  duration_ms: 2.147541
+  type: 'test'
+  ...
+# Subtest: rotated backend token is recovered only by fresh signed owner-approved pairing
+ok 26 - rotated backend token is recovered only by fresh signed owner-approved pairing
+  ---
+  duration_ms: 7.8733
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 927.771609

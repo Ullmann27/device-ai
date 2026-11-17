@@ -1,0 +1,17 @@
+✔ Echo executes deterministic canonical report without extra model call, journal mutation or owner text (1533.52891ms)
+✔ reporter must still exist; rename preserves stable identity (16.919639ms)
+✔ current prepared grant fingerprint cannot be replaced (3.039311ms)
+✔ changed source is blocked before a success report (9.179123ms)
+✔ tampered canonical journal MAC cannot be summarized (6.725244ms)
+✔ owner abort cannot be promoted to confirmed success (9.053204ms)
+✔ missing or modified execution receipt invalidates confirmed result (19.767201ms)
+✔ modified report artifact is rejected rather than silently overwritten (34.309543ms)
+✔ assignment expiry blocks reporter with no additional inference (0.664008ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1811.253556

@@ -1,0 +1,6 @@
+base=687b3a56c4c4b15802033d72d3704c3aab51a595
+regression=98f1408248e4a3fa575c75faf81979bfb1488303 branch=ccc1-proof-20261023
+98f1408248e4a3fa575c75faf81979bfb1488303 refactor(console): simplify the owner check (regression injected for the CCC1 proof; local only, never pushed)
+
+ .github/continuum/console-policy.mjs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)

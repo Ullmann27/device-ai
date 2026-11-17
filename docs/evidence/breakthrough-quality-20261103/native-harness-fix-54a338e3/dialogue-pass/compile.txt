@@ -1,0 +1,18 @@
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:293:31: warning: unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+                (semanticTrain?.steps ?: 0),trainIntentBefore,trainIntentAfter,
+                              ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:403:37: warning: unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+                trainI.steps+(trainS?.steps ?: 0),
+                                    ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:55: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart && inYearEnd -> " (${date(from!!)}–${date(to!!)})"
+                                                      ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:349:69: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart && inYearEnd -> " (${date(from!!)}–${date(to!!)})"
+                                                                    ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:350:45: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearStart -> " (ab ${date(from!!)})"
+                                            ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt:351:42: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'Long'.
+            inYearEnd -> " (bis ${date(to!!)})"
+                                         ^^

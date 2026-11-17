@@ -1,0 +1,22 @@
+[
+  {
+    "name": "alce-paper",
+    "url": "https://aclanthology.org/2023.emnlp-main.398/",
+    "fetchedAt": "2026-11-03T18:27:00.089756+00:00",
+    "status": 200,
+    "sha256": "acb2b18f0aa6beaa0a45f2f382cc1479cd5f63ad4e23012ce1c8bfdc26cd6885",
+    "bytes": 43012,
+    "title": " Enabling Large Language Models to Generate Text with Citations - ACL Anthology ACL Anthology About Announcements Communication channels Related work Copyright Credits Volunteer Development Feedback U",
+    "license": "CC-BY-4.0 per ACL Anthology post-2016 materials notice"
+  },
+  {
+    "name": "annotation-standard",
+    "url": "https://www.w3.org/TR/annotation-model/#text-quote-selector",
+    "fetchedAt": "2026-11-03T18:27:00.239961+00:00",
+    "status": 200,
+    "sha256": "a7513e022f56c0a6f4e99ac11aec03f3451d1ff1ce14054780b3ccfb38fa7980",
+    "bytes": 284185,
+    "title": " /* github.com style (c) Vasily Polovnyov */ .hljs { display: block; overflow-x: auto; padding: 0.5em; color: #333; background: #f8f8f8; } .hljs-comment, .hljs-quote { color: #998; font-style: italic;",
+    "license": "W3C document use rules (copyright notice on specification); no specification text vendored"
+  }
+]

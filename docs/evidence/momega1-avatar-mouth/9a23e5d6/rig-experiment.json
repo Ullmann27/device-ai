@@ -1,0 +1,26 @@
+{
+  "status": "EXPERIMENT_NOT_ACCEPTED",
+  "sourceSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "candidateSha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+  "rigChange": "Raise Jaw hinge and inversely rebase rigid child translations",
+  "raiseMetres": 0.04,
+  "rebasedChildren": [
+    "MouthInterior",
+    "ToothLower0",
+    "ToothLower1",
+    "ToothLower2",
+    "ToothLower3",
+    "ToothLower4",
+    "ToothLower5",
+    "ToothLower6",
+    "ToothLower7"
+  ],
+  "unchangedBinaryChunkSha256": "cef29d1df3b621cf26dd37a648f40f2433870a5d353bac6e82774dbdb870608c",
+  "meshMorphMaterialBytesUnchanged": true,
+  "maximumNeutralRestTransformErrorMetres": 0.0,
+  "poseSource": "Actual production mapper 26555aa6; unchanged mouth weights and jaw angle",
+  "limitations": [
+    "Hypothesis pending independent intersection and visual checks",
+    "Not a device result"
+  ]
+}

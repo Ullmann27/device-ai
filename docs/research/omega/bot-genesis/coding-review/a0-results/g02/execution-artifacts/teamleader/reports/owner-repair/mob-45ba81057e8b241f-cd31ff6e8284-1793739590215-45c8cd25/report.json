@@ -1,0 +1,608 @@
+{
+  "schemaVersion": 1,
+  "base": "cd31ff6e828438dc1e8b96201707cee0eee94335",
+  "chain": "node",
+  "startedAt": "2026-11-03T20:59:50.229Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "modelInvocations": 2,
+    "localRequests": 2,
+    "verifiedModelExecution": true,
+    "candidateStatus": "REPEATED_PATCH_REJECTED",
+    "repeatedCandidates": 1,
+    "history": [
+      {
+        "candidate": "32e0ceeba4d4f3c9",
+        "outcome": "FAILED_TESTS",
+        "diagnostic": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\ntrue !== false\nTEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\ntrue !== false",
+        "hypothesis": "The bug in the overlaps function is due to incorrect comparison of the endpoints of the intervals."
+      },
+      {
+        "candidate": "8c64bfc3cacf8d58",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_REPEATED_PATCH",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_REPEATED_PATCH",
+        "repeated": false,
+        "responseSha256": "8c64bfc3cacf8d588c6e6451910a285bed001df4b9e3d214b204937fffd21ee3"
+      }
+    ],
+    "reason": "Original local inference observations; candidate correctness requires separate verification",
+    "lastRejectCode": "CODING_REPEATED_PATCH"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 10000,
+          "runtime": "runc",
+          "sourceSha256": "b42767f663e9bb375f79681cd3f3d3094b72ede321fd63b5bc3853e1bb0192bb",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-be8f284b095bb4397ad4518e",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-97fc547899c8c2ff",
+            "requestMessageId": "5f044263-eb25-4561-9c7b-29fcabc312b7",
+            "requestHash": "a2b0d0810ff838c961a438e7d04b9b15d7e245942975683404ae2e2d4872c27c",
+            "sourceCommit": "cd31ff6e828438dc1e8b96201707cee0eee94335",
+            "jobId": "61663ae4-ff2b-41fb-8626-d68b8c5e6440"
+          },
+          "observed": {
+            "containerId": "ee7d9391e943a4469994807ebc2bfa30982b7fd243d13da4e1b71eb76b1119cc",
+            "runtime": "runc",
+            "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 10,
+          "failed": 5,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 10,
+          "passed": 5,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 0\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 1\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 2\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 3\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 4\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 5\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 6\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 7\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 8\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 9\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "2e5fe59f8e8a1966352d1b6959078a889e2b698c85cb65b28f73bdd41fd7d95c"
+          ],
+          "executedCaseHashes": [
+            "04c91c1e7a1e7a9ae7a32bb305517e01fabaeebe7f62f3daec32ed476350d384",
+            "1a844205b23a5d268f931a217428774ee0a738f4543f4605961629ebb7186434",
+            "1ec072d1bd38c4a2ae2b557d3f20afa652b2970bbecd137ce8a31c42fc30d71f",
+            "294d02b7fdebd128c962588292d2f918f6774f70be686e50cf86c69fb74a1e37",
+            "580dea0880c2ca3f2fa07ba0aca7684f67805600c3eba0d15312445d97fc9f51",
+            "6f9038b9272481b211cf54ff8d9e458eb470773a7309713397ad9a5d3ff4d17b",
+            "84d950bafa3f9259a0a6ad24babfd41318fac651892012c25b285c513f2c029a",
+            "8f049ae26a5b0afac6263706dafb7dc3a50d8c6a5e8a1a05ff9e7d832576cb12",
+            "9bb28981ee6682a5dd1704e47e2d15b545f9c663b9ecdd446cd916cf2915aaca",
+            "e2eaf2cfbe2dc67072178e48032a27e0204993371863054e08c59ea2ddebfe56"
+          ]
+        },
+        "diagnostics": 5
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen half-open interval 1",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 12,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\ntrue !== false",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "5fb89a0dca238555"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen half-open interval 2",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 12,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\ntrue !== false",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "5fb89a0dca238555"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen half-open interval 6",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 12,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\ntrue !== false",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "5fb89a0dca238555"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen half-open interval 7",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 12,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\ntrue !== false",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "5fb89a0dca238555"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen half-open interval 8",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 12,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\ntrue !== false",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "5fb89a0dca238555"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "32e0ceeba4d4f3c9",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "5fb89a0dca238555",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "The bug in the overlaps function is due to incorrect comparison of the endpoints of the intervals.",
+      "plan": [
+        "Identify the bug in the overlaps function",
+        "Analyze the test failures to understand the issue",
+        "Locate the problematic code in the overlaps function",
+        "Modify the overlaps function to fix the bug",
+        "Test the fixed overlaps function to ensure it works as expected"
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.253,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "lib/subject.mjs",
+          "oldText": "export function overlaps(a, b) {\n  return a.start <= b.end && b.start <= a.end;\n}\n",
+          "newText": "export function overlaps(a, b) {\n  return a.start < b.end && b.start < a.end;\n}\n"
+        }
+      ],
+      "proposalSha256": "13943d7c9f6b62c4f537b511bdc973f21223149240c4a04f1694616d125947b1",
+      "modelObservation": {
+        "schema": "momega1-local-process-observation-v1",
+        "evidenceClass": "LOCAL_MODEL_HOST",
+        "verifiedModelExecution": true,
+        "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+        "reviewedModelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+        "reviewedRuntimeSourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+        "reviewedModelRevision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+        "reviewedBuildEvidenceSha256": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067",
+        "independentReviewEvidenceSha256": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+        "executionId": "d8d02643fac5836fb9acfcc461413f2f4a2e8c5d34c4520a954b45a26e9fd3c2",
+        "taskId": "mob-45ba81057e8b241f",
+        "sourceCommit": "cd31ff6e828438dc1e8b96201707cee0eee94335",
+        "taskFingerprint": "f842489f14ec9667d16055466217318a2bf5b2e2dd2b50dcb5cbfcd1d956b044",
+        "requestIndex": 1,
+        "contextSha256": "18ed29334b2186c931f42148e6741a75e66911bc5b42f796b5c2a1cf72ffc067",
+        "promptSha256": "836a6fca875401bf0f126eee886a6c961577f28260c99642991231c55493810f",
+        "requestSha256": "158d48c8ff9fd7157cd05d2a3466bfa746c18f9f424719a49717b4540c80291d",
+        "runtimePromptSha256": "0242b087237bce1935edd8bbc9786bde31a7b5f65cec87581899f7213c4bce36",
+        "runtimeSchemaSha256": "98fe5b9bd97fa7deefb4981f38d465056cd2c316325597ddb71100cdd78ab844",
+        "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+        "outputSha256": "fa82a95a5ee478cff0a4351e15d5a43937a42edf678b13b089c0ef658561c9b1",
+        "proposalSha256": "13943d7c9f6b62c4f537b511bdc973f21223149240c4a04f1694616d125947b1",
+        "responseStatus": "PROPOSAL",
+        "outputTokens": 154,
+        "pid": 279978,
+        "exitCode": 0,
+        "isolation": "BWRAP_UNSHARE_ALL",
+        "elapsedMs": 28184
+      },
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "lib/subject.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 10,
+            "failed": 2,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 10,
+            "passed": 8,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 0\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 1\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 2\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 3\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 4\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 5\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 6\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 7\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 8\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen half-open interval 9\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "37c86aab87dd5a702211ca39731ac28ae4b89d194750e53ec61f476ee9abcfde"
+            ],
+            "executedCaseHashes": [
+              "04c91c1e7a1e7a9ae7a32bb305517e01fabaeebe7f62f3daec32ed476350d384",
+              "1a844205b23a5d268f931a217428774ee0a738f4543f4605961629ebb7186434",
+              "1ec072d1bd38c4a2ae2b557d3f20afa652b2970bbecd137ce8a31c42fc30d71f",
+              "294d02b7fdebd128c962588292d2f918f6774f70be686e50cf86c69fb74a1e37",
+              "580dea0880c2ca3f2fa07ba0aca7684f67805600c3eba0d15312445d97fc9f51",
+              "6f9038b9272481b211cf54ff8d9e458eb470773a7309713397ad9a5d3ff4d17b",
+              "84d950bafa3f9259a0a6ad24babfd41318fac651892012c25b285c513f2c029a",
+              "8f049ae26a5b0afac6263706dafb7dc3a50d8c6a5e8a1a05ff9e7d832576cb12",
+              "9bb28981ee6682a5dd1704e47e2d15b545f9c663b9ecdd446cd916cf2915aaca",
+              "e2eaf2cfbe2dc67072178e48032a27e0204993371863054e08c59ea2ddebfe56"
+            ]
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 256,
+            "pids": 64,
+            "cpus": 1,
+            "timeoutMs": 10000,
+            "runtime": "runc",
+            "sourceSha256": "131b1f2a44555d43006e8d676923c732e618e86d3387384f8dc7dde7877c07e1",
+            "profile": "node-continuum",
+            "untrustedReports": true,
+            "workspaceId": "continuum-cf16b668dfe56e41fa75e05c",
+            "workspaceBinding": {
+              "workerId": "typed-coding-worker",
+              "taskId": "t-97fc547899c8c2ff",
+              "requestMessageId": "5f044263-eb25-4561-9c7b-29fcabc312b7",
+              "requestHash": "a2b0d0810ff838c961a438e7d04b9b15d7e245942975683404ae2e2d4872c27c",
+              "sourceCommit": "cd31ff6e828438dc1e8b96201707cee0eee94335",
+              "jobId": "61663ae4-ff2b-41fb-8626-d68b8c5e6440"
+            },
+            "observed": {
+              "containerId": "2b70210d8ef38507c2a54c7b0981127bb417de0e1f803b6deaba25599cd40607",
+              "runtime": "runc",
+              "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+              "user": "1000:1000",
+              "network": "none",
+              "readOnly": true,
+              "memoryBytes": 268435456,
+              "memorySwapBytes": 268435456,
+              "nanoCpus": 1000000000,
+              "pids": 64,
+              "capDrop": [
+                "ALL"
+              ],
+              "securityOpt": [
+                "no-new-privileges:true"
+              ],
+              "writableHostMounts": 0
+            },
+            "teardownConfirmed": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen half-open interval 6",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 12,
+          "col": 10,
+          "message": "Expected values to be strictly equal:\n\ntrue !== false",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "5fb89a0dca238555"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen half-open interval 7",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 12,
+          "col": 10,
+          "message": "Expected values to be strictly equal:\n\ntrue !== false",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "5fb89a0dca238555"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    }
+  ],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "progress": [
+    {
+      "phase": "CHECKING_BASELINE",
+      "at": "2026-11-03T20:59:50.229Z",
+      "attempt": 0
+    },
+    {
+      "phase": "BASELINE_FAILED",
+      "at": "2026-11-03T20:59:50.675Z",
+      "attempt": 0
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:59:50.685Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T21:00:18.945Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T21:00:18.946Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECKING_PATCH",
+      "at": "2026-11-03T21:00:18.984Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECK_FAILED",
+      "at": "2026-11-03T21:00:19.422Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CORRECTING",
+      "at": "2026-11-03T21:00:19.431Z",
+      "attempt": 1
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T21:00:19.433Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T21:00:45.530Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T21:00:45.531Z",
+      "attempt": 2
+    }
+  ],
+  "coding": {
+    "taskId": "mob-45ba81057e8b241f",
+    "taskFingerprint": "f842489f14ec9667d16055466217318a2bf5b2e2dd2b50dcb5cbfcd1d956b044",
+    "sourceCommit": "cd31ff6e828438dc1e8b96201707cee0eee94335",
+    "allowedPaths": [
+      "lib/subject.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_TESTS_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED"
+    ],
+    "candidateCount": 1,
+    "contextSha256": "18ed29334b2186c931f42148e6741a75e66911bc5b42f796b5c2a1cf72ffc067",
+    "plan": [
+      "Identify the bug in the overlaps function",
+      "Analyze the code to find the issue",
+      "Fix the bug by ensuring the correct comparison of endpoints",
+      "Test the fix to ensure it works as expected"
+    ]
+  },
+  "finishedAt": "2026-11-03T21:00:45.538Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "cd31ff6e828438dc1e8b96201707cee0eee94335",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 5,
+        "proof": "ce952d2d36a985ffce29d58d3bde4ec9fa4a04fa2ed8ae3f3b3e2b7d63a4bff1"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "57bda8dae7df5cfc",
+        "approved": true,
+        "proof": "3fbb2b2aef64199182ea7f9ebbb2ad023ec62c074b8ae06e48fd89c72dafc21d"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "57bda8dae7df5cfc",
+        "editedFiles": 1,
+        "proof": "a26ff4c6e77f0f997babf97ef748f7e5fd50ae39a018fe974013bef282f10797"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "57bda8dae7df5cfc",
+        "passed": false,
+        "executed": true,
+        "profiles": 1,
+        "proof": "ea73c119fba1f5a63d3732f7b194482e410f884dfe840ac045d15b7d79b8cd23"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "46a493cb9eff6154fb8dd8c73f1a36d838154e4982788b9c60094a39cde31568"
+  }
+}

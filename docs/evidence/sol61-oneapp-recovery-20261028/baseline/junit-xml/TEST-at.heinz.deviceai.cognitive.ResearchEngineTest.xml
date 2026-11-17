@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ResearchEngineTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:22" hostname="b50d54a1ac03" time="0.192">
+  <properties/>
+  <testcase name="canonicalUrlsDropTrackingAndDeduplicateBeforeFetch" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.016"/>
+  <testcase name="cancellationIsBoundedAndProducesPartialDossierWithoutFetching" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.016"/>
+  <testcase name="onlyExplicitlyRequestedVerifiedIndependentClaimsCanEnterLongTermMemory" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.001"/>
+  <testcase name="oversizedFollowUpPageDoesNotDiscardCompletedResearch" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.05"/>
+  <testcase name="dossierAndCheckpointRoundTripAndRejectTampering" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.007"/>
+  <testcase name="modeBudgetsAreHardBoundedAndDeepPlanIncludesCounterEvidence" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.001"/>
+  <testcase name="resumeSkipsCompletedImmutableSourceUrls" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.018"/>
+  <testcase name="modelFreeSynthesisRefusesUnrelatedDictionaryEvidence" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.0"/>
+  <testcase name="deepResearchFlagsGermanNegationAsContradictionAcrossIndependentDomains" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.008"/>
+  <testcase name="promptBoundaryTreatsPageTextAsUntrustedAndNoSearchIsHonest" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.006"/>
+  <testcase name="sourceTrustRankingDistinguishesEvaluatedSignalsFromUnknownDefaults" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.007"/>
+  <testcase name="mirrorContentDoesNotCountAsIndependentCorroboration" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.049"/>
+  <testcase name="researchIsNotImplicitlyEnabledWithoutExplicitUiOptIn" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.001"/>
+  <testcase name="unsupportedFirstWaveRunsBoundedFollowUpAndPreservesContradictions" classname="at.heinz.deviceai.cognitive.ResearchEngineTest" time="0.01"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,20 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {"decision": "NOANSWER"},
+  "RULE": {
+    "sourceId": "fresh-20261102-8-0",
+    "decision": "SPAN",
+    "sha256": "713d7793f2072eb5e3496500cac388d0bb13bcecdc24f6e221189b2d75246ff8",
+    "endExclusive": 30,
+    "start": 18,
+    "text": "Neupugnnoodo",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 280.177001
+}

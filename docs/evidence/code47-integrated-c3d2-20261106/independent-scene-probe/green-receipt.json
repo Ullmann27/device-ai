@@ -1,0 +1,27 @@
+{
+  "timeUtc": "2026-11-06T20:42:45.711166+00:00",
+  "productionSourcePath": "/workspace/scratch/b31a9d731016/wiring-visual/app/src/main/java/at/heinz/deviceai/ui/ToolWorkSceneLease.kt",
+  "productionSha256": "bb573b9afedaeef947d3a257f7d130cf6068500b00fd9fb9b0c413dbd83929ef",
+  "compileCommand": [
+    "/workspace/scratch/b31a9d731016/build-env/kotlinc/bin/kotlinc",
+    "-J-Xmx256m",
+    "-jvm-target",
+    "17",
+    "-cp",
+    "/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug",
+    "-Xfriend-paths=/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug",
+    "/workspace/scratch/b31a9d731016/review-probes/scene-lease/ToolWorkSceneLease-green.kt",
+    "/workspace/scratch/b31a9d731016/review-probes/scene-lease/Probe.kt",
+    "-include-runtime",
+    "-d",
+    "/workspace/scratch/b31a9d731016/review-probes/scene-lease/probe-green.jar"
+  ],
+  "compileExit": 0,
+  "runCommand": [
+    "/workspace/scratch/b31a9d731016/build-env/jdk17-pinned/bin/java",
+    "-cp",
+    "/workspace/scratch/b31a9d731016/review-probes/scene-lease/probe-green.jar:/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug",
+    "at.heinz.deviceai.ui.ProbeKt"
+  ],
+  "runExit": 0
+}

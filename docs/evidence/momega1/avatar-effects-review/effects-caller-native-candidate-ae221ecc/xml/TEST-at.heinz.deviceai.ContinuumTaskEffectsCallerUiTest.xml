@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T22:08:06" hostname="b354f2cb821b" time="5.26">
+  <properties/>
+  <testcase name="deniedToolHasNoBackendAndNoArrival" classname="at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest" time="4.562"/>
+  <testcase name="authorizedRealRunnerEntryAndExitReachTheVisibleSurface" classname="at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest" time="0.113"/>
+  <testcase name="actualActionButtonUsesBoundedFeedbackAndPendingSpeechMutesIt" classname="at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest" time="0.394"/>
+  <testcase name="busyProposalAloneNeverAnimatesAnActualWorker" classname="at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest" time="0.07"/>
+  <testcase name="actualChiefStatusWorkerProducesAWorkerArrival" classname="at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest" time="0.12"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

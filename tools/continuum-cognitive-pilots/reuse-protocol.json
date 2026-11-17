@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "pairs": 6,
+  "warmupRequests": 64,
+  "heapMiB": 128,
+  "workloads": [
+    {"name": "repeated-expensive", "requests": 1000, "distinct": 10, "size": 32, "seedOffset": 0, "epochEvery": 0},
+    {"name": "unique-expensive", "requests": 1000, "distinct": 1000, "size": 32, "seedOffset": 317, "epochEvery": 0},
+    {"name": "repeated-cheap", "requests": 1000, "distinct": 10, "size": 1, "seedOffset": 1703, "epochEvery": 0},
+    {"name": "revision-churn", "requests": 1000, "distinct": 10, "size": 32, "seedOffset": 2381, "epochEvery": 20}
+  ]
+}

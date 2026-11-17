@@ -1,0 +1,10 @@
+INSTRUMENTATION_RESULT: evidence_type=Android native PDF renderer and extraction; synthetic fixture
+INSTRUMENTATION_RESULT: page_count=1
+INSTRUMENTATION_RESULT: provider_opens=1
+INSTRUMENTATION_RESULT: provider_queries=1
+INSTRUMENTATION_RESULT: rendered_ink_pixels=506
+INSTRUMENTATION_RESULT: sdk=35
+INSTRUMENTATION_RESULT: status=ok
+INSTRUMENTATION_RESULT: stream=Native PDF provider, render and text extraction passed.
+INSTRUMENTATION_CODE: -1
+NATIVE_PDF_EMULATOR_PASS

@@ -1,0 +1,40 @@
+{
+  "baseSourceCommit": "d8234479beaa775226f540781e39d81e6b5fdf3d",
+  "evidenceClass": "CONTRACT_TEST",
+  "author7BInferenceRun": false,
+  "cpuBudgetChange": "7B only: 2 * ceil(remainingWallMs / 1000); legacy unchanged",
+  "sourceSha256": {
+    ".github/continuum/coding-provider.mjs": "15b59137c396fe1544ba36336c1e9925fb35700b585e4eb2d15344af646a80e8",
+    "scripts/continuum-local-model-pins.mjs": "67365f513e7ac0fcc0b776aec3f21c665f55d1f639f285cb56ecf3e832666991",
+    "scripts/continuum-local-model-observation.mjs": "1e9222b80220efbed50a75a07467dc27c20238c39ed340283a0c93381e0e9cf5",
+    "scripts/continuum-local-model-job.mjs": "b288e6a945e673a9608c730211e1121c6ecfa55ddc236b13763d4b8ab8f65ae0",
+    "scripts/continuum-local-model-cpu.test.mjs": "04ff5720eab6450746a8d1dc927b0e52b582ca4476eef8810b91baf82882224a"
+  },
+  "filesSha256": {
+    "candidate-green-expanded.tap": "0ef07d7fadda138c8c466a1eed3f9536e35449c8fb16edadb2bc250f12a7d106",
+    "baseline-red.tap": "fd8bd5e9a4e561f22357a53359785ea86cfdf7d4d93d20fc817568d436736dec",
+    "candidate-green-heap.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "baseline-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "candidate-green-heap.tap": "3a855653cceddd4aa3f6d75f7d47aead94f0094f3fd1cb188bda6d14d5fb065e",
+    "regression.tap": "5f52a8c8e8a62a020b39c959d1e567be3e0e37cfaddeb3f0627748dd0ce56ec7",
+    "kernel-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "kernel-green.tap": "3ee5cac146d7f2235457e0ea90f745779f1b9164fa4ff7908dc7cb66ec5bd5f2",
+    "candidate-green.tap": "10626fc4fd81fbb47c47de1b769c6982855fb576ff02023df329aac53726eb0c",
+    "run-cpu-tests.sh": "87e8c71400f8faeea4b8c93758301eba815d653eb881397af3c681dac8e29bcf",
+    "candidate-green-expanded.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "candidate-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "testedSourceCommit": "a135a9ae72e1494676d709ae496cf74048310537",
+  "testedSourceHashesMatch": true,
+  "exactSourceResults": {
+    "a135-regression": {
+      "exit": 0,
+      "sha256": "4624d545e515240d6c63ec8fd789ee2bb10b86a8ef69a7f36fb8e229a465254b"
+    },
+    "a135-cpu": {
+      "exit": 0,
+      "sha256": "725f2bc26aec99496abed5836f0e09ccf3ddf8c2e23ada06fffffdf2c5cc21de"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-status",
+  "status": "BLOCKED_STATE_PATH",
+  "failure": {
+    "code": "CCC1_STATE_PATH",
+    "message": "State directory inside checkout"
+  }
+}

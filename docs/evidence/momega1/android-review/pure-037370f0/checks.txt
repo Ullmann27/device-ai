@@ -1,0 +1,32 @@
+PASS valid complete bounded authorization
+PASS maximal complete execution review
+PASS snapshot field mutation 0 with old digest
+PASS snapshot field mutation 1 with old digest
+PASS snapshot field mutation 2 with old digest
+PASS snapshot field mutation 3 with old digest
+PASS snapshot field mutation 4 with old digest
+PASS snapshot field mutation 5 with old digest
+PASS snapshot field mutation 6 with old digest
+PASS snapshot field mutation 7 with old digest
+PASS chain mutation with old digest
+PASS missing JSON
+PASS missing hash
+PASS missing ID
+PASS missing source
+PASS wrong ID
+PASS wrong source
+PASS noncanonical identical data rejected
+PASS model count numeric overflow rejected
+PASS fixed prepare command carries exact canonical bytes
+PASS valid callback returns bound CCC1 target only
+PASS wrong task
+PASS wrong source
+PASS wrong digest
+PASS wrong operation
+PASS malformed journal
+PASS claims device verification
+PASS duplicate key
+PASS nonzero exit cannot prepare
+PASS missing Termux success cannot prepare
+PASS missing/truncated callback cannot prepare
+TOTAL cases=31 passed=31 failed=0 skipped=0

@@ -1,0 +1,31 @@
+tools/continuum-span-research/SpanResourceExperiment.kt:21:90: warning: 'val id: Long' is deprecated. Deprecated in Java.
+        val allocatedBefore = allocation?.getThreadAllocatedBytes(Thread.currentThread().id)
+                                                                                         ^^
+tools/continuum-span-research/SpanResourceExperiment.kt:29:89: warning: 'val id: Long' is deprecated. Deprecated in Java.
+        val allocatedAfter = allocation?.getThreadAllocatedBytes(Thread.currentThread().id)
+                                                                                        ^^
+JUnit version 4.13.2
+...PASS residual gradient checks=38 maximumError=1.5443709852624998E-10
+PASS missing/ambiguous gold targets rejected without updates
+PASS checked synthetic counterfactual and negative leakage guards
+PASS checkpoint roundtrip, exact size and SHA-256 corruption gates
+PASS cancellation and preflight fail-before-first-update
+MEASURED synthetic DEV accuracy: 2/5 -> 3/5
+MEASURED training: 300 steps, loss 1.2136851176488221 -> 0.6067638047117935, interrupted=false
+CASE expected=Salzburg, predicted=Salzburg
+CASE expected=XZ-902, predicted=XZ-902
+CASE expected=Zange, predicted=Zange
+CASE expected=ABSTAIN, predicted=Salzburg
+CASE expected=ABSTAIN, predicted=XZ-902
+PASS executable JVM test finished; public dev cases are not a blind holdout.
+...............................
+Time: 2.322
+
+OK (34 tests)
+
+buckets=75/75 symmetricDifference=0
+conditionLeft=[0.0012212901139988703, 0.0020474126729913673, -0.0046357793713425, -0.0028823378558353466, 0.007503944694330724, -0.0033103783116465338, -0.0014629440135550348, -0.0028870810765530388, 0.005521768264290077, -0.007655689918769768, -0.0036933046738669858, -0.0032554881735826413, 0.00826471556450368, 0.004169619552050925, -0.003085419096383114, -0.006058547876332223] conditionRight=[0.0012212901139988688, 0.0020474126729913673, -0.0046357793713425, -0.0028823378558353457, 0.007503944694330724, -0.003310378311646535, -0.001462944013555035, -0.0028870810765530405, 0.005521768264290079, -0.007655689918769768, -0.003693304673866986, -0.003255488173582641, 0.008264715564503679, 0.004169619552050925, -0.0030854190963831144, -0.0060585478763322195]
+conditionL2=5.494241979483279E-18
+directContext=[110, 116, 119, 111, 114, 116, 58, 32] probabilityMaxDifference=0.0
+SHADOW_GREEN: Anna/ist/Perg -> Anna/ist/Berg
+No legacy checkpoint change, decoder repair or normal-chat promotion

@@ -1,0 +1,30 @@
+{
+  "taskId": "C1-APK-AUDIT-001",
+  "appSourceTree": "471dccb8844a9aba34de5fa33b7f7ffc619ee163",
+  "namespace": "at.heinz.deviceai",
+  "ownerPackage": "at.heinz.deviceai.continuumlocal",
+  "qaPackage": "at.heinz.deviceai.continuumlocal.qa",
+  "versionCode": "Required explicit canonical integer26..9999; no release number chosen",
+  "versionNameFormula": "0.3.(versionCode-1)",
+  "signerAlias": "continuum-local",
+  "signerStoreType": "PKCS12",
+  "unsignedTransportSigningConfig": null,
+  "qaTasks": [
+    "compileDebugKotlin",
+    "testDebugUnitTest",
+    "lintDebug"
+  ],
+  "lintScope": [
+    "NewApi"
+  ],
+  "currentChannel": "UNVERIFIED_TOOL_CANNOT_ACCESS_URL",
+  "historicalOnly": {
+    "pr": 475,
+    "versionName": "0.3.40",
+    "versionCode": 41,
+    "sourceCommit": "a8e58ae09f6f1a8f43bd0a6f3b30b7e81bb79be6",
+    "signerSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23"
+  },
+  "apkBuild": "NOT_RUN",
+  "releaseOrDeviceInstallation": "SEPARATE_FINAL_OWNER_APPROVAL_REQUIRED"
+}

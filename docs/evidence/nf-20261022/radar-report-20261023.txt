@@ -1,0 +1,14 @@
+9	FEASIBLE	arxiv:2406.05955	TurboSparse-LLM: Accelerating Mixtral and Mistral Inference via dReLU Sparsity
+7	FEASIBLE	arxiv:2505.06461	Optimised CPU inference of small language models on mobile devices
+6	INTERESTING	arxiv:2310.04564	ReLU Strikes Back: Exploiting Activation Sparsity in Large Language Models
+6	INTERESTING	arxiv:2402.13516	ProSparse: Introducing and Enhancing Intrinsic Activation Sparsity within Large Language Models
+5.35	INTERESTING	arxiv:2602.22479	TRC2: continual learning as a property of the decoder backbone
+5	UNSUITABLE	arxiv:2401.17377	Infini-gram: Scaling Unbounded n-gram Language Models to a Trillion Tokens
+4.52	INTERESTING	title:31182bd31116caf17f821ff1	Gated DeltaNet-2: Decoupling Erase and Write in Linear Attention
+4.28	INTERESTING	arxiv:2603.06642	SR-TTT: Surprisal-Aware Residual Test-Time Training
+4	INTERESTING	arxiv:2412.06464	Gated Delta Networks: Improving Mamba2 with Delta Rule
+3.44	FEASIBLE	arxiv:2604.21100	Preconditioned DeltaNet: Curvature-aware Sequence Modeling for Linear Recurrences
+3	INTERESTING	title:f9a0eefb1dade38def298176	Execution-Guided Within-Prompt Search for Programming-by-Example
+2.52	INTERESTING	arxiv:2605.15334	From I/O to Code with Discovery Agent
+2.19	INTERESTING	arxiv:2601.12906	Gated Differentiable Working Memory
+0.28	INTERESTING	arxiv:2602.05085	Locas: low-rank parametric memories mergeable into model weights

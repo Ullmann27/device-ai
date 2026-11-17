@@ -1,0 +1,27 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-compile-repair",
+  "status": "OK",
+  "result": {
+    "schema": "continuum-ccc1-compiled-goal",
+    "version": 1,
+    "kind": "REPAIR",
+    "chain": "node",
+    "status": "READY",
+    "question": null,
+    "preflight": {
+      "result": "READY_TO_REQUEST_OWNER_REVIEW",
+      "sourceCommit": "297497917398328d8f8cfbb1645ef50bafd7e89e",
+      "checkedBranch": "ccc1-work",
+      "findings": []
+    },
+    "plan": [
+      "Testkette node am Commit 297497917398 im isolierten Worktree ausführen",
+      "bei echtem Fehler: deterministische Reparaturkandidaten der bestehenden Pipeline prüfen",
+      "Patch in zweitem unabhängigem Worktree wiederholen",
+      "Quittung durch den CCC1-Verifier prüfen",
+      "Patch nur zur Prüfung anbieten; kein Merge, keine Installation"
+    ]
+  }
+}

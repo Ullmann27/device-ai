@@ -1,0 +1,107 @@
+✖ independent adjacent repeated special characters (1.338884ms)
+✖ unicode, line breaks and slashes are preserved (0.295245ms)
+✖ raw numeric and named entity-like strings are escaped independently (0.215074ms)
+✖ escaping respects concatenation across many boundaries (0.215274ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.057143
+
+✖ failing tests:
+
+test at tools/independence-native-review/frozen/s02/independent.test.mjs:5:1
+✖ independent adjacent repeated special characters (1.338884ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + `&amp;&&lt;<&gt;>&quot;"&#39;'`
+  - '&amp;&amp;&lt;&lt;&gt;&gt;&quot;&quot;&#39;&#39;'
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s02/independent.test.mjs:6:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `&amp;&&lt;<&gt;>&quot;"&#39;'`,
+    expected: '&amp;&amp;&lt;&lt;&gt;&gt;&quot;&quot;&#39;&#39;',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s02/independent.test.mjs:8:1
+✖ unicode, line breaks and slashes are preserved (0.295245ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '🧠\nA/B\\C\t&amp;lt;Ω&gt; &'
+  - '🧠\nA/B\\C\t&lt;Ω&gt; &amp;'
+                  ^
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s02/independent.test.mjs:9:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '🧠\nA/B\\C\t&amp;lt;Ω&gt; &',
+    expected: '🧠\nA/B\\C\t&lt;Ω&gt; &amp;',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s02/independent.test.mjs:11:1
+✖ raw numeric and named entity-like strings are escaped independently (0.215074ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '&amp;#39; &amp; &unknown;'
+  - '&amp;#39; &amp;amp; &amp;unknown;'
+                    ^
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s02/independent.test.mjs:12:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '&amp;#39; &amp; &unknown;',
+    expected: '&amp;#39; &amp;amp; &amp;unknown;',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s02/independent.test.mjs:14:1
+✖ escaping respects concatenation across many boundaries (0.215274ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '&amp;&'
+  - '&amp;&amp;'
+           ^
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s02/independent.test.mjs:17:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '&amp;&',
+    expected: '&amp;&amp;',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

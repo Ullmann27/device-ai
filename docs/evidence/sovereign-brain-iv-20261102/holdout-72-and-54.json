@@ -1,0 +1,682 @@
+{
+  "status": "HOST_VERIFIED_REANALYSIS_OF_RESEARCH_SHADOW",
+  "corpusSha256": "c29f57dca626901ca65cbba36027b22897794cc73d4e6a35e252da5dd442e3cf",
+  "holdoutChanged": false,
+  "newInferencePerformed": false,
+  "allRows": {
+    "count": 72,
+    "parentCorrect": 48,
+    "candidateCorrect": 72,
+    "improved": 24,
+    "regressed": 0,
+    "unchanged": 48,
+    "parentWrongAnswers": 24,
+    "candidateWrongAnswers": 0,
+    "candidateCorrectNegativeAbstentions": 24
+  },
+  "uniqueCases": {
+    "count": 54,
+    "parentCorrect": 36,
+    "candidateCorrect": 54,
+    "improved": 18,
+    "regressed": 0,
+    "unchanged": 36,
+    "parentWrongAnswers": 18,
+    "candidateWrongAnswers": 0,
+    "candidateCorrectNegativeAbstentions": 18
+  },
+  "deduplicationKey": [
+    "kind",
+    "question",
+    "content",
+    "maxBytes",
+    "expected"
+  ],
+  "duplicates": [
+    [
+      "113-1-short",
+      "227-0-short"
+    ],
+    [
+      "113-1-late-negation",
+      "227-0-late-negation"
+    ],
+    [
+      "113-1-budget-edge",
+      "227-0-budget-edge"
+    ],
+    [
+      "113-2-short",
+      "227-2-short",
+      "409-6-short"
+    ],
+    [
+      "113-2-late-negation",
+      "227-2-late-negation",
+      "409-6-late-negation"
+    ],
+    [
+      "113-2-budget-edge",
+      "227-2-budget-edge",
+      "409-6-budget-edge"
+    ],
+    [
+      "113-4-short",
+      "227-4-short"
+    ],
+    [
+      "113-4-late-negation",
+      "227-4-late-negation"
+    ],
+    [
+      "113-4-budget-edge",
+      "227-4-budget-edge"
+    ],
+    [
+      "227-1-short",
+      "409-4-short"
+    ],
+    [
+      "227-1-late-negation",
+      "409-4-late-negation"
+    ],
+    [
+      "227-1-budget-edge",
+      "409-4-budget-edge"
+    ],
+    [
+      "227-5-short",
+      "409-1-short"
+    ],
+    [
+      "227-5-late-negation",
+      "409-1-late-negation"
+    ],
+    [
+      "227-5-budget-edge",
+      "409-1-budget-edge"
+    ]
+  ],
+  "limitations": [
+    "Existing synthetic compiler/verifier predictions only; no new CDX/Gemma/device result.",
+    "The original72 rows and original reports are unchanged."
+  ],
+  "rows": [
+    {
+      "id": "113-0-short",
+      "expected": "Ústí",
+      "parentActual": "Ústí",
+      "candidateActual": "Ústí",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-0-late-negation",
+      "expected": null,
+      "parentActual": "Ústí",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-0-budget-edge",
+      "expected": "Ústí",
+      "parentActual": "Ústí",
+      "candidateActual": "Ústí",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-1-short",
+      "expected": "Ålesund",
+      "parentActual": "Ålesund",
+      "candidateActual": "Ålesund",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-1-late-negation",
+      "expected": null,
+      "parentActual": "Ålesund",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-1-budget-edge",
+      "expected": "Ålesund",
+      "parentActual": "Ålesund",
+      "candidateActual": "Ålesund",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-2-short",
+      "expected": "Tórshavn",
+      "parentActual": "Tórshavn",
+      "candidateActual": "Tórshavn",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-2-late-negation",
+      "expected": null,
+      "parentActual": "Tórshavn",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-2-budget-edge",
+      "expected": "Tórshavn",
+      "parentActual": "Tórshavn",
+      "candidateActual": "Tórshavn",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-3-short",
+      "expected": "Žilina",
+      "parentActual": "Žilina",
+      "candidateActual": "Žilina",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-3-late-negation",
+      "expected": null,
+      "parentActual": "Žilina",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-3-budget-edge",
+      "expected": "Žilina",
+      "parentActual": "Žilina",
+      "candidateActual": "Žilina",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-4-short",
+      "expected": "Bad Ischl",
+      "parentActual": "Bad Ischl",
+      "candidateActual": "Bad Ischl",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-4-late-negation",
+      "expected": null,
+      "parentActual": "Bad Ischl",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-4-budget-edge",
+      "expected": "Bad Ischl",
+      "parentActual": "Bad Ischl",
+      "candidateActual": "Bad Ischl",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-5-short",
+      "expected": "Brüggen",
+      "parentActual": "Brüggen",
+      "candidateActual": "Brüggen",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-5-late-negation",
+      "expected": null,
+      "parentActual": "Brüggen",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-5-budget-edge",
+      "expected": "Brüggen",
+      "parentActual": "Brüggen",
+      "candidateActual": "Brüggen",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-6-short",
+      "expected": "Stendal",
+      "parentActual": "Stendal",
+      "candidateActual": "Stendal",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-6-late-negation",
+      "expected": null,
+      "parentActual": "Stendal",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-6-budget-edge",
+      "expected": "Stendal",
+      "parentActual": "Stendal",
+      "candidateActual": "Stendal",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-7-short",
+      "expected": "Quedlinburg",
+      "parentActual": "Quedlinburg",
+      "candidateActual": "Quedlinburg",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-7-late-negation",
+      "expected": null,
+      "parentActual": "Quedlinburg",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "113-7-budget-edge",
+      "expected": "Quedlinburg",
+      "parentActual": "Quedlinburg",
+      "candidateActual": "Quedlinburg",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-0-short",
+      "expected": "Ålesund",
+      "parentActual": "Ålesund",
+      "candidateActual": "Ålesund",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-0-late-negation",
+      "expected": null,
+      "parentActual": "Ålesund",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-0-budget-edge",
+      "expected": "Ålesund",
+      "parentActual": "Ålesund",
+      "candidateActual": "Ålesund",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-1-short",
+      "expected": "Stendal",
+      "parentActual": "Stendal",
+      "candidateActual": "Stendal",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-1-late-negation",
+      "expected": null,
+      "parentActual": "Stendal",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-1-budget-edge",
+      "expected": "Stendal",
+      "parentActual": "Stendal",
+      "candidateActual": "Stendal",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-2-short",
+      "expected": "Tórshavn",
+      "parentActual": "Tórshavn",
+      "candidateActual": "Tórshavn",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-2-late-negation",
+      "expected": null,
+      "parentActual": "Tórshavn",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-2-budget-edge",
+      "expected": "Tórshavn",
+      "parentActual": "Tórshavn",
+      "candidateActual": "Tórshavn",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-3-short",
+      "expected": "Žilina",
+      "parentActual": "Žilina",
+      "candidateActual": "Žilina",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-3-late-negation",
+      "expected": null,
+      "parentActual": "Žilina",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-3-budget-edge",
+      "expected": "Žilina",
+      "parentActual": "Žilina",
+      "candidateActual": "Žilina",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-4-short",
+      "expected": "Bad Ischl",
+      "parentActual": "Bad Ischl",
+      "candidateActual": "Bad Ischl",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-4-late-negation",
+      "expected": null,
+      "parentActual": "Bad Ischl",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-4-budget-edge",
+      "expected": "Bad Ischl",
+      "parentActual": "Bad Ischl",
+      "candidateActual": "Bad Ischl",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-5-short",
+      "expected": "Brüggen",
+      "parentActual": "Brüggen",
+      "candidateActual": "Brüggen",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-5-late-negation",
+      "expected": null,
+      "parentActual": "Brüggen",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-5-budget-edge",
+      "expected": "Brüggen",
+      "parentActual": "Brüggen",
+      "candidateActual": "Brüggen",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-6-short",
+      "expected": "Quedlinburg",
+      "parentActual": "Quedlinburg",
+      "candidateActual": "Quedlinburg",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-6-late-negation",
+      "expected": null,
+      "parentActual": "Quedlinburg",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-6-budget-edge",
+      "expected": "Quedlinburg",
+      "parentActual": "Quedlinburg",
+      "candidateActual": "Quedlinburg",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-7-short",
+      "expected": "Ústí",
+      "parentActual": "Ústí",
+      "candidateActual": "Ústí",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-7-late-negation",
+      "expected": null,
+      "parentActual": "Ústí",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "227-7-budget-edge",
+      "expected": "Ústí",
+      "parentActual": "Ústí",
+      "candidateActual": "Ústí",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-0-short",
+      "expected": "Žilina",
+      "parentActual": "Žilina",
+      "candidateActual": "Žilina",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-0-late-negation",
+      "expected": null,
+      "parentActual": "Žilina",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-0-budget-edge",
+      "expected": "Žilina",
+      "parentActual": "Žilina",
+      "candidateActual": "Žilina",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-1-short",
+      "expected": "Brüggen",
+      "parentActual": "Brüggen",
+      "candidateActual": "Brüggen",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-1-late-negation",
+      "expected": null,
+      "parentActual": "Brüggen",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-1-budget-edge",
+      "expected": "Brüggen",
+      "parentActual": "Brüggen",
+      "candidateActual": "Brüggen",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-2-short",
+      "expected": "Bad Ischl",
+      "parentActual": "Bad Ischl",
+      "candidateActual": "Bad Ischl",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-2-late-negation",
+      "expected": null,
+      "parentActual": "Bad Ischl",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-2-budget-edge",
+      "expected": "Bad Ischl",
+      "parentActual": "Bad Ischl",
+      "candidateActual": "Bad Ischl",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-3-short",
+      "expected": "Ústí",
+      "parentActual": "Ústí",
+      "candidateActual": "Ústí",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-3-late-negation",
+      "expected": null,
+      "parentActual": "Ústí",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-3-budget-edge",
+      "expected": "Ústí",
+      "parentActual": "Ústí",
+      "candidateActual": "Ústí",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-4-short",
+      "expected": "Stendal",
+      "parentActual": "Stendal",
+      "candidateActual": "Stendal",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-4-late-negation",
+      "expected": null,
+      "parentActual": "Stendal",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-4-budget-edge",
+      "expected": "Stendal",
+      "parentActual": "Stendal",
+      "candidateActual": "Stendal",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-5-short",
+      "expected": "Quedlinburg",
+      "parentActual": "Quedlinburg",
+      "candidateActual": "Quedlinburg",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-5-late-negation",
+      "expected": null,
+      "parentActual": "Quedlinburg",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-5-budget-edge",
+      "expected": "Quedlinburg",
+      "parentActual": "Quedlinburg",
+      "candidateActual": "Quedlinburg",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-6-short",
+      "expected": "Tórshavn",
+      "parentActual": "Tórshavn",
+      "candidateActual": "Tórshavn",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-6-late-negation",
+      "expected": null,
+      "parentActual": "Tórshavn",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-6-budget-edge",
+      "expected": "Tórshavn",
+      "parentActual": "Tórshavn",
+      "candidateActual": "Tórshavn",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-7-short",
+      "expected": "Ålesund",
+      "parentActual": "Ålesund",
+      "candidateActual": "Ålesund",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-7-late-negation",
+      "expected": null,
+      "parentActual": "Ålesund",
+      "candidateActual": null,
+      "parentCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "409-7-budget-edge",
+      "expected": "Ålesund",
+      "parentActual": "Ålesund",
+      "candidateActual": "Ålesund",
+      "parentCorrect": true,
+      "candidateCorrect": true
+    }
+  ]
+}

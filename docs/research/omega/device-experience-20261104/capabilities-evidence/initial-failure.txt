@@ -1,0 +1,42 @@
+JUnit version 4.13.2
+...E..E...E.E...E............................
+Time: 0.091
+There were 5 failures:
+1) replacementDuringOldCancellationWinsOverOuterStart(at.heinz.deviceai.cognitive.LocalSpeechSessionTest)
+java.lang.AssertionError: one original and one replacement, no third revived turn expected:<2> but was:<3>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.LocalSpeechSessionTest.replacementDuringOldCancellationWinsOverOuterStart(LocalSpeechSessionTest.kt:134)
+2) recognizedTextDeliveredExactlyOnceAndResourcesReleased(at.heinz.deviceai.cognitive.LocalSpeechSessionTest)
+java.lang.AssertionError: expected:<[Hallo  Heinz]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LocalSpeechSessionTest.recognizedTextDeliveredExactlyOnceAndResourcesReleased(LocalSpeechSessionTest.kt:43)
+3) replacementInsideTerminalStateCallbackPreventsOldResultDelivery(at.heinz.deviceai.cognitive.LocalSpeechSessionTest)
+java.lang.AssertionError: expected:<2> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LocalSpeechSessionTest.replacementInsideTerminalStateCallbackPreventsOldResultDelivery(LocalSpeechSessionTest.kt:127)
+4) emptyResultIsActionableNoMatch(at.heinz.deviceai.cognitive.LocalSpeechSessionTest)
+java.lang.AssertionError: expected:<[Keine verständlichen Wörter erkannt. Bitte erneut auf das Mikrofon tippen und deutlich sprechen.]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LocalSpeechSessionTest.emptyResultIsActionableNoMatch(LocalSpeechSessionTest.kt:65)
+5) replacedTurnIgnoresOldErrorsResultsAndTimerWithoutDestroyingNewRecognizer(at.heinz.deviceai.cognitive.LocalSpeechSessionTest)
+java.lang.AssertionError: expected:<[current]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.LocalSpeechSessionTest.replacedTurnIgnoresOldErrorsResultsAndTimerWithoutDestroyingNewRecognizer(LocalSpeechSessionTest.kt:61)
+
+FAILURES!!!
+Tests run: 40,  Failures: 5
+

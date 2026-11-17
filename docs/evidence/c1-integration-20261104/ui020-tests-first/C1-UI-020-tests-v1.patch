@@ -1,0 +1,527 @@
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+--- a/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+@@ -58,13 +58,12 @@
+         }
+     }
+ 
+-    private val actionNames = listOf(
+-        "LABEL_THINKING", "ACTION_MEMORY", "LABEL_ANALYSING", "LABEL_DEVELOPING",
+-        "ACTION_AGENTS", "ACTION_BOTS", "ACTION_TASK", "LABEL_LEARNING", "ACTION_DEVICE", "LABEL_CONNECTED"
++    private val tileTargets = listOf(
++        "chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system"
+     )
+-    private val targetNames = actionNames + listOf(
+-        "COMPOSER", "LABEL_EVOLVING", "SEARCH", "NOTIFICATIONS", "PROFILE",
+-        "VIEW_AVATAR", "VIEW_ORB", "VIEW_COMPACT"
++    private val railTargets = listOf("home") + tileTargets
++    private val appearanceChoices = listOf(
++        "Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau", "Kompakt · Kugel"
+     )
+ 
+     private fun field(activity: AgentActivity, name: String): Any? = AgentActivity::class.java
+@@ -120,35 +119,169 @@
+         }
+     }
+ 
+-    private fun slot(home: ContinuumHomeView, name: String): ContinuumHomeView.ElementView {
+-        val view = (0 until home.childCount).map { home.getChildAt(it) }
+-            .filterIsInstance<ContinuumHomeView.ElementView>().singleOrNull { it.slot.name == name }
+-        assertNotNull("The actual Activity must expose $name", view)
+-        return requireNotNull(view)
+-    }
+-
+-    private fun assertRealTargets(home: ContinuumHomeView) {
+-        val density = home.resources.displayMetrics.density
+-        val targets = targetNames.map { name -> slot(home, name).also { view ->
++    private fun currentHome(activity: AgentActivity): ContinuumHomeView {
++        val home = field(activity, "homeView") as ContinuumHomeView
++        assertTrue("Inspect the currently attached Activity home", home.isAttachedToWindow)
++        assertTrue("The actual Activity enables the current shell", home.jarvisShellStage)
++        assertTrue("HOME must be visibly owned by the current window", home.isShown)
++        assertTrue(descendants(activity.window.decorView).any { it === home })
++        return home
++    }
++
++    private fun tagged(root: View, tag: String): View {
++        val matches = descendants(root).filter { it.tag == tag }
++        assertEquals("Exactly one current native control for $tag", 1, matches.size)
++        return matches.single().also {
++            assertTrue("$tag belongs to the attached visible hierarchy", it.isAttachedToWindow && it.isShown)
++        }
++    }
++
++    private fun shellControl(activity: AgentActivity, tag: String): View = tagged(currentHome(activity), tag)
++
++    private fun shellControls(root: View): List<View> = descendants(root).filter { view ->
++        val tag = view.tag as? String ?: return@filter false
++        listOf("jarvis-tile:", "jarvis-dialog:", "jarvis-input:", "jarvis-camera:", "jarvis-panel:",
++            "jarvis-header:", "jarvis-bottom:", "jarvis-rail:").any(tag::startsWith) && view.isShown
++    }
++
++    private fun assertMinimumTarget(view: View, name: String) {
++        val density = view.resources.displayMetrics.density
++        assertTrue("$name actual width ${view.width / density}dp", view.width / density >= 48f)
++        assertTrue("$name actual height ${view.height / density}dp", view.height / density >= 48f)
++    }
++
++    private fun assertVisibleShellControlsDoNotOverlap(root: View) {
++        val visible = shellControls(root).mapNotNull { view ->
++            val rect = Rect()
++            if (view.getGlobalVisibleRect(rect)) view to rect else null
++        }
++        for (i in visible.indices) for (j in i + 1 until visible.size) {
++            assertFalse("Actual visible touch bounds overlap: ${visible[i].first.tag}/${visible[j].first.tag}",
++                Rect.intersects(visible[i].second, visible[j].second))
++        }
++    }
++
++    private fun assertRealTargets(activity: AgentActivity) {
++        val home = currentHome(activity)
++        val targets = shellControls(home)
++        assertEquals("All ten current destinations must exist", tileTargets.toSet(),
++            targets.mapNotNull { (it.tag as? String)?.takeIf { tag -> tag.startsWith("jarvis-tile:") }
++                ?.removePrefix("jarvis-tile:") }.toSet())
++        for (tag in listOf("jarvis-dialog:conversation", "jarvis-dialog:voice-input", "jarvis-dialog:camera-settings",
++            "jarvis-dialog:avatar-appearance", "jarvis-header:notifications", "jarvis-header:settings",
++            "jarvis-panel:ROW_AGENTS", "jarvis-panel:ROW_TASKS", "jarvis-panel:ROW_MEMORY", "jarvis-panel:ROW_MODEL")) {
++            tagged(home, tag)
++        }
++        for (target in tileTargets) tagged(home, "jarvis-tile:$target")
++        targets.forEach { view ->
++            val name = view.tag.toString()
+             assertTrue("$name must be a real clickable, focusable control", view.isClickable && view.isFocusable)
+             assertTrue("$name needs an accessible description", !view.contentDescription.isNullOrBlank())
+-            assertTrue("$name actual width ${view.width / density}dp", view.width / density >= 48f)
+-            assertTrue("$name actual height ${view.height / density}dp", view.height / density >= 48f)
+-            assertTrue("$name is outside the content width", view.left >= 0 && view.right <= home.width)
+-            assertTrue("$name is outside scrollable content", view.top >= 0 && view.bottom <= home.height)
+-        } }
++            assertMinimumTarget(view, name)
++            val parent = view.parent as View
++            assertTrue("$name stays inside its actual content width", view.left >= 0 && view.right <= parent.width)
++            assertTrue("$name stays inside its actual scrollable content", view.top >= 0 && view.bottom <= parent.height)
++        }
++        // Compare content siblings before scrolling, then compare all clipped window coordinates after every real tap.
+         for (i in targets.indices) for (j in i + 1 until targets.size) {
+-            val first = targets[i]
+-            val second = targets[j]
+-            assertFalse("Actual touch bounds overlap: ${first.slot}/${second.slot}",
+-                first.left < second.right && second.left < first.right &&
+-                    first.top < second.bottom && second.top < first.bottom)
+-        }
++            val first = targets[i]; val second = targets[j]
++            if (first.parent === second.parent) {
++                assertFalse("Actual sibling touch bounds overlap: ${first.tag}/${second.tag}",
++                    first.left < second.right && second.left < first.right &&
++                        first.top < second.bottom && second.top < first.bottom)
++            }
++        }
++        assertVisibleShellControlsDoNotOverlap(activity.window.decorView)
++    }
++
++    private fun tapDialogItem(dialog: AlertDialog, label: String) {
++        val root = requireNotNull(dialog.window).decorView
++        val list = dialog.listView
++        if (list != null) {
++            val positions = (0 until list.adapter.count).filter { list.adapter.getItem(it).toString() == label }
++            assertEquals("The native dialog must expose exactly one $label", 1, positions.size)
++            val position = positions.single()
++            list.setSelection(position)
++            settle()
++            val row = list.getChildAt(position - list.firstVisiblePosition)
++            assertNotNull("The selected native list row must be laid out", row)
++            tap(root, requireNotNull(row))
++        } else {
++            val actions = descendants(root).filterIsInstance<TextView>()
++                .filter { it.isClickable && it.isShown && it.text.toString() == label }
++            assertEquals("The visible destination must expose exactly one $label", 1, actions.size)
++            tap(root, actions.single())
++        }
++    }
++
++    private fun closeDialogThroughDecor(dialog: AlertDialog) {
++        val root = requireNotNull(dialog.window).decorView
++        val close = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.takeIf { it.isShown }
++            ?: descendants(root).filterIsInstance<TextView>().firstOrNull {
++                it.isShown && it.isClickable && it.text.toString().uppercase() in listOf("SCHLIESSEN", "ABBRECHEN", "ZURÜCK")
++            }
++        assertNotNull("The opened destination needs a visible close/back control", close)
++        tap(root, requireNotNull(close))
++        assertFalse("The real close control must dismiss its dialog", dialog.isShowing)
++    }
++
++    private fun openMoreThroughDecor(activity: AgentActivity): AlertDialog {
++        val root = activity.window.decorView
++        val direct = descendants(root).firstOrNull {
++            it.isShown && it.isClickable && (it.tag == "jarvis-header:more" || it.tag == ContinuumWorkArea.MEHR)
++        }
++        if (direct != null) tap(root, direct) else {
++            // Wide reflow has no category dock or spare header cell; reuse the existing System centre.
++            tap(root, shellControl(activity, "jarvis-tile:system"))
++            tapDialogItem(assertDialog("Systemstatus"), "MEHR · ARBEITSBEREICHE")
++        }
++        return assertDialog("Mehr")
++    }
++
++    private fun openCodingDraftThroughDecor(activity: AgentActivity): AlertDialog {
++        tapDialogItem(openMoreThroughDecor(activity), "Entwicklerwerkzeuge")
++        tapDialogItem(assertDialog("Entwicklungszentrum"), "CODING-AUFTRAG ENTWERFEN")
++        assertFalse("Navigation to a draft grants no execution authority", field(activity, "busy") as Boolean)
++        return assertDialog("CODING-AUFTRAG ENTWERFEN")
++    }
++
++    private fun appearanceDialog(activity: AgentActivity): AlertDialog {
++        tap(activity.window.decorView, shellControl(activity, "jarvis-dialog:avatar-appearance"))
++        val dialog = assertDialog("Continuum · Darstellung")
++        val adapter = requireNotNull(dialog.listView).adapter
++        assertEquals("Retain all original choices and add the explicit compact choice", appearanceChoices,
++            (0 until adapter.count).map { adapter.getItem(it).toString() })
++        assertEquals("Bewegung prüfen", dialog.getButton(AlertDialog.BUTTON_NEUTRAL).text.toString())
++        assertEquals("Schließen", dialog.getButton(AlertDialog.BUTTON_NEGATIVE).text.toString())
++        return dialog
++    }
++
++    private fun chooseAppearance(activity: AgentActivity, label: String) {
++        tapDialogItem(appearanceDialog(activity), label)
++        settle()
++        val root = activity.window.decorView
++        measure(root, root.width, root.height)
++        settle()
++        measure(root, root.width, root.height)
++    }
++
++    private fun returnHomeThroughDecor(activity: AgentActivity) {
++        val root = activity.window.decorView
++        val back = descendants(root).firstOrNull {
++            it.isShown && it.isClickable && (it.tag == ContinuumWorkArea.START || it.tag == "home" ||
++                it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen")
++        }
++        assertNotNull("Chat needs a real reachable route back to the cockpit", back)
++        tap(root, requireNotNull(back))
++        measure(root, root.width, root.height)
++        assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
++        currentHome(activity)
+     }
+ 
+     /** Scroll the actual ancestor, then dispatch through the decor tree so a
+      * foreground overlay or wrong hit target cannot be hidden by performClick. */
+     private fun tap(root: View, target: View) {
++        assertMinimumTarget(target, target.contentDescription?.toString() ?: target.tag.toString())
+         var parent = target.parent
+         while (parent is View) {
+             if (parent is ScrollView) {
+@@ -163,6 +296,7 @@
+         val visible = Rect()
+         assertTrue("Target must be visibly scroll reachable: ${target.contentDescription}", target.getGlobalVisibleRect(visible))
+         assertTrue("Target must not be a clipped sliver", visible.width() >= target.width - 1 && visible.height() >= target.height - 1)
++        assertVisibleShellControlsDoNotOverlap(root)
+         val rootPosition = IntArray(2).also { root.getLocationOnScreen(it) }
+         val x = visible.exactCenterX() - rootPosition[0]
+         val y = visible.exactCenterY() - rootPosition[1]
+@@ -216,29 +350,40 @@
+     private fun checkProfile(label: String, width: Int, height: Int) {
+         for (font in listOf(1f, 1.5f, 2f)) withActivity(width, height, font) { activity, root, _ ->
+             val tag = "$label-font${(font * 100).toInt()}"
+-            val home = field(activity, "homeView") as ContinuumHomeView
++            val home = currentHome(activity)
+             val avatar = field(activity, "hologramView") as ContinuumHologramView
+-            // 2026-11-04 (Kreativdirektor, "ein Kopf"): in the landscape cockpit the ONE avatar slot is held by the
+-            // docked JarvisAvatarRenderer or its named placeholder; elsewhere the real home avatar stays visible.
+-            if (home.ownsAvatarSlot) assertTrue("The avatar slot must be held", home.avatarSlotShown)
+-            else assertTrue("The real home avatar must be visible", avatar.isShown)
+-            assertRealTargets(home)
++            assertTrue("The existing avatar slot must be held", home.avatarSlotShown)
++            assertEquals(1, descendants(root).count { it is ContinuumHologramView })
++            assertRealTargets(activity)
+             capture(root, "$tag-home", width, height)
+ 
+-            for ((name, title) in listOf(
+-                "ACTION_MEMORY" to "Gedächtniszentrum",
+-                "ACTION_AGENTS" to "Team · Bots",
+-                "ACTION_BOTS" to "Team · Bots",
+-                "ACTION_TASK" to "CODING-AUFTRAG ENTWERFEN",
+-                "ACTION_DEVICE" to "Systemstatus"
++            for ((target, title) in listOf(
++                "jarvis-tile:memory" to "Gedächtniszentrum",
++                "jarvis-tile:agents" to "Team · Bots",
++                "jarvis-panel:ROW_AGENTS" to "Team · Bots",
++                "jarvis-tile:tasks" to "Entwicklungsaufgaben",
++                "jarvis-tile:device" to "Systemstatus"
+             )) {
+-                tap(root, slot(home, name))
+-                assertDialog(title).dismiss()
+-                settle()
++                tap(activity.window.decorView, shellControl(activity, target))
++                closeDialogThroughDecor(assertDialog(title))
+                 assertFalse("Opening a destination must not start a model task", field(activity, "busy") as Boolean)
+             }
++            // Preserve the old development/draft requirement independently of today's Tasks backlog destination.
++            closeDialogThroughDecor(openCodingDraftThroughDecor(activity))
++            tap(root, shellControl(activity, "jarvis-header:settings"))
++            closeDialogThroughDecor(assertDialog("Deine KI personalisieren"))
++            tap(root, shellControl(activity, "jarvis-tile:learning"))
++            val learning = assertDialog("Lernzentrum")
++            val details = descendants(requireNotNull(learning.window).decorView).filterIsInstance<TextView>()
++                .single { it.isClickable && it.text.toString() == "LERNKERN · DETAILS" }
++            assertTrue("The previous evolving destination remains a real focusable action", details.isFocusable)
++            assertMinimumTarget(details, "LERNKERN · DETAILS")
++            tapDialogItem(learning, "WISSENSARCHIV · QUELLEN SUCHEN")
++            closeDialogThroughDecor(assertDialog("Continuum · lokales Wissensarchiv"))
++            assertFalse(field(activity, "busy") as Boolean)
+             capture(root, "$tag-actions", width, height)
+-            tap(root, slot(home, "COMPOSER"))
++
++            tap(root, shellControl(activity, "jarvis-dialog:conversation"))
+             measure(root, width, height)
+             val input = field(activity, "input") as EditText
+             assertTrue("Composer must reach the real visible editor", input.isShown && input.hasFocus())
+@@ -253,8 +398,7 @@
+             assertTrue("Editor must have usable width", input.width / density >= 120f)
+             for (description in listOf("Neue Chat-Sitzung", "Spracheingabe starten", "Nachricht senden")) {
+                 val control = descendants(root).single { it.contentDescription?.toString() == description }
+-                assertTrue("$description touch width", control.width / density >= 48f)
+-                assertTrue("$description touch height", control.height / density >= 48f)
++                assertMinimumTarget(control, description)
+                 val rect = Rect()
+                 assertTrue("$description visible", control.getGlobalVisibleRect(rect))
+                 assertEquals("$description fully on screen", control.height, rect.height())
+@@ -262,56 +406,93 @@
+             }
+             capture(root, "$tag-chat", width, height)
+ 
+-            val back = descendants(root).firstOrNull {
+-                it.tag == ContinuumWorkArea.START && it.isShown && it.isClickable
+-            } ?: descendants(root).firstOrNull {
+-                it.isShown && it.isClickable && it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen"
+-            }
+-            assertNotNull("Chat needs a reachable route back to the cockpit", back)
+-            tap(root, requireNotNull(back))
+-            measure(root, width, height)
+-            assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
+-            assertSame(home, avatar.parent)
+-            assertEquals("Navigation must preserve an unsent draft", draft, input.text.toString())
+-            assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+-            assertRealTargets(home)
++            returnHomeThroughDecor(activity)
++            assertSame("Return to the current home keeps the same live avatar", currentHome(activity), avatar.parent)
++            assertEquals("Navigation must preserve an unsent draft", draft, (field(activity, "input") as EditText).text.toString())
++            assertEquals(1, descendants(activity.window.decorView).count { it is ContinuumHologramView })
++            assertFalse(field(activity, "busy") as Boolean)
++            assertRealTargets(activity)
+         }
+     }
+ 
+     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
+-    fun presentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withActivity(412, 915, 1f) { activity, root, _ ->
+-        val home = field(activity, "homeView") as ContinuumHomeView
++    fun presentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withActivity(412, 915, 1f) { activity, root, controller ->
++        val home = currentHome(activity)
+         val avatar = field(activity, "hologramView") as ContinuumHologramView
+         val originalHeight = avatar.height
++        val originalContentHeight = home.height
++        val originalConversationTop = shellControl(activity, "jarvis-dialog:conversation").top
+         assertTrue(avatar.isNativeHeadEnabled())
+         assertFalse(avatar.isNative3dEnabled())
+-        tap(root, slot(home, "VIEW_ORB"))
+-        measure(root, 412, 915)
++        chooseAppearance(activity, "Kugel · Original")
+         assertFalse("Orb selection must render the preserved original orb", avatar.isNativeHeadEnabled())
+-        assertTrue(slot(home, "VIEW_ORB").isSelected)
++        assertEquals("Normal orb selection keeps the original hero geometry", originalHeight, avatar.height)
++        appearanceDialog(activity).also {
++            assertEquals(0, it.listView.checkedItemPosition)
++            closeDialogThroughDecor(it)
++        }
+         capture(root, "phone-412x915-original-orb", 412, 915)
+-        tap(root, slot(home, "VIEW_COMPACT"))
+-        measure(root, 412, 915)
++        chooseAppearance(activity, "Kompakt · Kugel")
++        assertFalse(avatar.isNativeHeadEnabled())
+         assertTrue("Compact frees vertical room for conversation", avatar.height < originalHeight)
+-        assertTrue(slot(home, "VIEW_COMPACT").isSelected)
++        assertTrue("The active shell must move conversation upward", shellControl(activity, "jarvis-dialog:conversation").top < originalConversationTop)
++        assertTrue("Compact reduces actual scrollable content", currentHome(activity).height < originalContentHeight)
++        assertEquals("The renderer follows the same smaller slot", avatar.height, currentHome(activity).avatarSlotRect.height())
+         assertTrue(activity.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+             .getBoolean("compact", false))
++        appearanceDialog(activity).also {
++            assertEquals("The real native chooser exposes the saved compact selection", 3, it.listView.checkedItemPosition)
++            closeDialogThroughDecor(it)
++        }
++        assertRealTargets(activity)
+         capture(root, "phone-412x915-compact", 412, 915)
+-        tap(root, slot(home, "VIEW_AVATAR"))
+-        measure(root, 412, 915)
++        chooseAppearance(activity, "Kopf · Native 2D-Vorschau")
+         assertTrue(avatar.isNativeHeadEnabled())
+         assertFalse("Restore the owner's 2D fallback preference", avatar.isNative3dEnabled())
+         assertEquals(originalHeight, avatar.height)
+-        assertTrue(slot(home, "VIEW_AVATAR").isSelected)
++        assertEquals(originalContentHeight, currentHome(activity).height)
++        assertEquals(originalConversationTop, shellControl(activity, "jarvis-dialog:conversation").top)
++        assertFalse(activity.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
++            .getBoolean("compact", true))
++        appearanceDialog(activity).also {
++            assertEquals(1, it.listView.checkedItemPosition)
++            closeDialogThroughDecor(it)
++        }
+         assertSame(avatar, field(activity, "hologramView"))
+-        assertSame(home, avatar.parent)
++        assertSame(currentHome(activity), avatar.parent)
+         assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+         assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
++
++        chooseAppearance(activity, "Kompakt · Kugel")
++        controller.recreate()
++        advanceFrames(16)
++        assertTrue(controller.get().window.decorView.isAttachedToWindow)
++        controller.windowFocusChanged(true)
++        val resumed = controller.get()
++        val resumedRoot = resumed.window.decorView
++        val resumedAvatar = field(resumed, "hologramView") as ContinuumHologramView
++        resumedAvatar.setAnimationsEnabled(false)
++        (field(resumed, "homeView") as ContinuumHomeView).setForegroundActive(false)
++        settle(); measure(resumedRoot, 412, 915); settle(); measure(resumedRoot, 412, 915)
++        assertFalse("Restored compact preference keeps the original orb", resumedAvatar.isNativeHeadEnabled())
++        assertTrue("A recreated active shell retains the smaller avatar", resumedAvatar.height < originalHeight)
++        assertTrue(resumed.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).getBoolean("compact", false))
++        appearanceDialog(resumed).also {
++            assertEquals(3, it.listView.checkedItemPosition)
++            closeDialogThroughDecor(it)
++        }
++        chooseAppearance(resumed, "Kopf · Native 2D-Vorschau")
++        assertEquals(originalHeight, resumedAvatar.height)
++        assertTrue(resumedAvatar.isNativeHeadEnabled())
++        assertFalse(resumedAvatar.isNative3dEnabled())
++        assertSame(resumedAvatar, field(resumed, "hologramView"))
++        assertEquals(1, descendants(resumedRoot).count { it is ContinuumHologramView })
++        assertFalse(field(resumed, "busy") as Boolean)
+     }
+ 
+     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
+     fun composerDraftSurvivesActualWindowReflowAndActivityRecreation() = withActivity(412, 915, 1f) { activity, root, controller ->
+-        tap(root, slot(field(activity, "homeView") as ContinuumHomeView, "COMPOSER"))
++        tap(root, shellControl(activity, "jarvis-dialog:conversation"))
+         val draft = "Nicht gesendeter Entwurf\nZweite Zeile bleibt erhalten."
+         val input = field(activity, "input") as EditText
+         input.setText(draft)
+@@ -340,7 +521,7 @@
+ 
+     @Test @Config(qualifiers = "w280dp-h720dp-mdpi")
+     fun narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor() = withActivity(280, 720, 2f) { activity, root, _ ->
+-        tap(root, slot(field(activity, "homeView") as ContinuumHomeView, "COMPOSER"))
++        tap(root, shellControl(activity, "jarvis-dialog:conversation"))
+         val input = field(activity, "input") as EditText
+         input.setText("Was kannst du?")
+         measure(root, 280, 720)
+@@ -371,29 +552,91 @@
+     @Test @Config(qualifiers = "w840dp-h1050dp-port-mdpi")
+     fun foldPortraitHasRealDestinationsAndReadableLargeType() = checkProfile("fold-portrait-840x1050", 840, 1050)
+ 
++    private fun assertRailGeometry(controls: List<View>, expectedTags: List<String>) {
++        assertEquals("Every current rail destination is retained", expectedTags, controls.map { it.tag.toString() })
++        for (target in controls) {
++            assertTrue("Rail targets remain real clickable/focusable controls", target.isClickable && target.isFocusable)
++            assertMinimumTarget(target, target.tag.toString())
++            val parent = target.parent as View
++            assertTrue("Rail child stays inside content width", target.left >= 0 && target.right <= parent.width)
++            assertTrue("Rail child stays inside scrollable content", target.top >= 0 && target.bottom <= parent.height)
++        }
++        for (i in 1 until controls.size) assertTrue("Rail targets cannot overlap", controls[i - 1].bottom <= controls[i].top)
++        var parent = controls.last().parent
++        var canScroll = false
++        while (parent is View) {
++            if (parent is ScrollView && parent.childCount == 1) {
++                canScroll = canScroll || parent.getChildAt(0).height > parent.height
++            }
++            parent = parent.parent
++        }
++        assertTrue("A short window must scroll in its actual ancestor instead of shrinking targets", canScroll)
++    }
++
++    private fun assertRailDestination(target: String): AlertDialog {
++        if (target != "research") return assertDialog(requireNotNull(mapOf(
++            "memory" to "Gedächtniszentrum", "logic" to "Logik und Planung", "agents" to "Team · Bots",
++            "tasks" to "Entwicklungsaufgaben", "web" to "Web und Quellen", "learning" to "Lernzentrum",
++            "device" to "Systemstatus", "system" to "Systemstatus"
++        )[target]))
++        val dialog = ShadowAlertDialog.getLatestAlertDialog()
++        assertNotNull("Research must open the existing gated destination", dialog)
++        requireNotNull(dialog)
++        assertTrue(dialog.isShowing)
++        val labels = descendants(requireNotNull(dialog.window).decorView).filterIsInstance<TextView>().map { it.text.toString() }
++        assertTrue("Research keeps the existing consent boundary", "Internet ist ausgeschaltet" in labels || "WEB RECHERCHE" in labels)
++        return dialog
++    }
++
+     @Test @Config(qualifiers = "w840dp-h649dp-land-mdpi")
+     fun shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable() = withActivity(840, 649, 2f) { activity, root, _ ->
+         val avatar = field(activity, "hologramView") as ContinuumHologramView
++        activity.window.setLayout(840, 320)
++        measure(root, 840, 320)
++        settle()
++        measure(root, 840, 320)
++        assertSame("A height-only window change must not rebuild the avatar", avatar, field(activity, "hologramView"))
++        val shellRail = descendants(currentHome(activity)).filter { (it.tag as? String)?.startsWith("jarvis-rail:") == true }
++        assertRailGeometry(shellRail, railTargets.map { "jarvis-rail:$it" })
++        for (target in railTargets) {
++            tap(activity.window.decorView, shellControl(activity, "jarvis-rail:$target"))
++            when (target) {
++                "home" -> assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
++                "chat" -> {
++                    assertEquals(ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
++                    returnHomeThroughDecor(activity)
++                }
++                else -> closeDialogThroughDecor(assertRailDestination(target))
++            }
++            assertFalse("A rail destination must not submit a task", field(activity, "busy") as Boolean)
++            assertSame(avatar, field(activity, "hologramView"))
++        }
++        // Two real taps reach More even without a wide header entry; then enter an actual work area and return.
++        closeDialogThroughDecor(openCodingDraftThroughDecor(activity))
++        assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
++        assertSame(currentHome(activity), avatar.parent)
++
++        tap(activity.window.decorView, shellControl(activity, "jarvis-rail:chat"))
++        val draft = "Kurzes Fenster: ungesendeter Entwurf bleibt erhalten."
++        (field(activity, "input") as EditText).setText(draft)
++        measure(activity.window.decorView, 840, 320)
+         val rail = field(activity, "railView") as View
++        assertTrue("Conversation owns its separate visible rail", rail.isShown)
+         val frame = rail.parent as ViewGroup
+-        val scroll = frame.parent as ScrollView
+-        measure(root, 840, 320)
+-        settle()
+-        measure(root, 840, 320)
+-        assertSame("A height-only IME change must not rebuild the avatar", avatar, field(activity, "hologramView"))
+         val controls = (0 until frame.childCount).map { frame.getChildAt(it) }.filter { it.isClickable }
+-        assertEquals("No rail destination may disappear under the IME", 8, controls.size)
+-        val density = root.resources.displayMetrics.density
+-        controls.forEach { target ->
+-            assertTrue("Actual rail touch width", target.width / density >= 48f)
+-            assertTrue("Actual rail touch height", target.height / density >= 48f)
+-            assertTrue("Rail child stays inside its content", target.top >= 0 && target.bottom <= frame.height)
+-        }
+-        for (i in 1 until controls.size) assertTrue("Rail targets cannot overlap", controls[i - 1].bottom <= controls[i].top)
+-        assertTrue("Short window must scroll instead of shrinking targets", frame.height > scroll.height)
+-        val more = controls.single { it.contentDescription?.toString() == "Mehr" }
+-        tap(root, more)
+-        assertDialog("Weitere Arbeitsbereiche").dismiss()
+-        capture(root, "fold-short-840x320-font200-rail", 840, 320)
++        assertRailGeometry(controls, railTargets)
++        val system = controls.single { it.tag == "system" }
++        tap(activity.window.decorView, system)
++        tapDialogItem(assertDialog("Systemstatus"), "MEHR · ARBEITSBEREICHE")
++        tapDialogItem(assertDialog("Mehr"), "Entwicklerwerkzeuge")
++        closeDialogThroughDecor(assertDialog("Entwicklungszentrum"))
++        assertEquals(ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
++        returnHomeThroughDecor(activity)
++        assertEquals(draft, (field(activity, "input") as EditText).text.toString())
++        assertSame(avatar, field(activity, "hologramView"))
++        assertSame(currentHome(activity), avatar.parent)
++        assertEquals(1, descendants(activity.window.decorView).count { it is ContinuumHologramView })
++        assertFalse(field(activity, "busy") as Boolean)
++        capture(activity.window.decorView, "fold-short-840x320-font200-rail", 840, 320)
+     }
+ }

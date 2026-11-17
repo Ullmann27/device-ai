@@ -1,0 +1,263 @@
+{
+  "taskId": "C1-AVATAR-009",
+  "baseLocal": "f976d81c4f38258143c82de56766aee4a073ee02",
+  "baseRemote": "0e3d181ed36d2ffa4e77fda3aa8b72133fbb8cb0",
+  "baseTree": "9e2b708925daa824b235cdb30a8cef50667560ba",
+  "upstream": {
+    "repository": "/workspace/scratch/18845e31bc4a/continuum-finalization",
+    "commit": "f17ee62f8cfda8914ed217fe2ed88882ba1fa8a4",
+    "tree": "e996a49cabf181e67156400f51df2a10c85e5a13"
+  },
+  "patch": {
+    "path": "C1-AVATAR-009.patch",
+    "sha256": "3b0fcaa1a9d093bc26aa7e02fb7b262fcfaf7351f2a616761f223e139e350289",
+    "bytes": 24874,
+    "production_paths": 1,
+    "ui_test_paths": 3,
+    "requires_original_base_bytes": true
+  },
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "mode": "100644",
+      "base_blob": "8181cd16e241481837d6489d3fe35acac7ad6c7c",
+      "target_blob": "020c388468ce2ad5017579f7ba1551b5c17fbcf6",
+      "base_sha256": "98d8a643d10ea0ce192757165a12c0f148fa5457a237f7e61be52a09eac3ee9c",
+      "target_sha256": "75f53008759b2e1212f4df64e29682cb3cfac2ae28cf534145eb3941d83dc9ec",
+      "base_bytes": 33104,
+      "target_bytes": 33052
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt",
+      "mode": "100644",
+      "base_blob": "3d5be8271a9e831a1f0d1f7d8c7e5f2c601fbfc6",
+      "target_blob": "0623ef7a4a7c47ae8eb9991153e006c64637f7f0",
+      "base_sha256": "1d14e1456f63f6b0d82cb6066fd4679d1a0b2e6402bbfb41d3a01b7363c6a073",
+      "target_sha256": "54731cfdf36eb88b9bb4663c9b77643c5167d5c3c2581d9cb4a8dd982b63471d",
+      "base_bytes": 8172,
+      "target_bytes": 9677
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatarNativeUiTest.kt",
+      "mode": "100644",
+      "base_blob": "af387b01d47226fb57b2879599663c2f652637c8",
+      "target_blob": "e344a4e4c17abcdffa4c1cef2cf39c5c9e358933",
+      "base_sha256": "8194c725c2b376bc3be1c6a8b5e4523b8058848551cb58c11243b89b71212174",
+      "target_sha256": "61d88966597aa22743c755488d217f37ac29d33a91a5619717f8f227d630be60",
+      "base_bytes": 7001,
+      "target_bytes": 8733
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt",
+      "mode": "100644",
+      "base_blob": "e8929a78617218bc689e23748f6461bf3f88a31b",
+      "target_blob": "df6529bc0fb5fb98352fbdbb4dc064efd0484bcd",
+      "base_sha256": "66c0422cf9ab673283f5636f78c8c9cc445a781629360a287e02393473c72c66",
+      "target_sha256": "d6c848d71074828286444bb7aaa5bf2d9e9c131644f4f6aeeed30bbe87fcb7b3",
+      "base_bytes": 11343,
+      "target_bytes": 12042
+    }
+  ],
+  "sourceReview": "C1 and independent repair_review: source and target blobs verified; exactly four files;13 original test methods and78original assertions retained,22assertions added",
+  "ownExecution": "PENDING_FRESH_THREE_CLASS_ANDROID_FOCUS",
+  "upstreamEvidence": "53 focused PASS at f17ee62, including13avatar; separate full gate Exit143ReferenceCockpit timeout; not a C1 PASS",
+  "redBoundary": "92f421 externalRED already contained production fallback; not a C1 baseline RED",
+  "archive": {
+    "name": "avatar009-reviewed-intake.tar.xz",
+    "bytes": 97068,
+    "sha256": "0d71e04e20a28b1b1c283ef1f4dd95739fa80e8c9a347f5f29f3c546895acba3",
+    "members": [
+      {
+        "path": "C1-AVATAR-009.patch",
+        "bytes": 24874,
+        "sha256": "3b0fcaa1a9d093bc26aa7e02fb7b262fcfaf7351f2a616761f223e139e350289"
+      },
+      {
+        "path": "REVIEW.md",
+        "bytes": 7015,
+        "sha256": "d0575ec81e2f54e76760c2f4a2eced50c0f2085a5b6db0b0198d3766004c7416"
+      },
+      {
+        "path": "SHA256SUMS",
+        "bytes": 4493,
+        "sha256": "651ef9ccb13502445d282273b3f9b9c2cbd26811799e0c1ccbd57facdd7476dd"
+      },
+      {
+        "path": "assertion-review.json",
+        "bytes": 3104,
+        "sha256": "231a182f00103772de5ab1517417454ba353e529a708dcb3320004aeed6f5e7d"
+      },
+      {
+        "path": "base/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "bytes": 33104,
+        "sha256": "98d8a643d10ea0ce192757165a12c0f148fa5457a237f7e61be52a09eac3ee9c"
+      },
+      {
+        "path": "base/app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt",
+        "bytes": 8172,
+        "sha256": "1d14e1456f63f6b0d82cb6066fd4679d1a0b2e6402bbfb41d3a01b7363c6a073"
+      },
+      {
+        "path": "base/app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatarNativeUiTest.kt",
+        "bytes": 7001,
+        "sha256": "8194c725c2b376bc3be1c6a8b5e4523b8058848551cb58c11243b89b71212174"
+      },
+      {
+        "path": "base/app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt",
+        "bytes": 11343,
+        "sha256": "66c0422cf9ab673283f5636f78c8c9cc445a781629360a287e02393473c72c66"
+      },
+      {
+        "path": "evidence/full-gate-aborted/full-f17ee62f8cfd.log",
+        "bytes": 122624,
+        "sha256": "c8694748f607f27a015aad5f70712bbf12454d3de2f1032defccb6276f27c2ad"
+      },
+      {
+        "path": "evidence/full-gate-aborted/full-f17ee62f8cfd.result.json",
+        "bytes": 2298,
+        "sha256": "10d6276e455866b113fe16cfc5288b745d93b464d5d2ab98af3bd2e3a682f3a8"
+      },
+      {
+        "path": "evidence/full-gate-aborted/full-f17ee62f8cfd.started.json",
+        "bytes": 1412,
+        "sha256": "9188df00fb4e42850492a4111dbc80d42e6d7f88aaa0c61e373febbbc8c176e0"
+      },
+      {
+        "path": "evidence/full-gate-aborted/full-f17ee62f8cfd.summary.json",
+        "bytes": 1269,
+        "sha256": "8f36062032cb216b5b4ded3d4001372cf7fb291099eeac9bb89003301cb582f9"
+      },
+      {
+        "path": "evidence/green/targeted-f17ee62f8cfd.log",
+        "bytes": 17979,
+        "sha256": "5d4bebb96d9ecc6e06f2ccb707059666d66990a41a2f01e45151e5a07fe1eb3d"
+      },
+      {
+        "path": "evidence/green/targeted-f17ee62f8cfd.reports.zip",
+        "bytes": 4357,
+        "sha256": "06678301cb9ab66a55b924b01419adc36100c7760f9a0cb63c0ccc099fdc3a0f"
+      },
+      {
+        "path": "evidence/green/targeted-f17ee62f8cfd.result.json",
+        "bytes": 2663,
+        "sha256": "9a2a64160cedd6b37617d336346baca87a206f3e1639ac3a51c0ee5e22132363"
+      },
+      {
+        "path": "evidence/green/targeted-f17ee62f8cfd.sources.after.json",
+        "bytes": 156587,
+        "sha256": "a5f2e403437a69085c1613872435514f8393d0f305d1202efa44512be0f198c1"
+      },
+      {
+        "path": "evidence/green/targeted-f17ee62f8cfd.sources.before.json",
+        "bytes": 156587,
+        "sha256": "a5f2e403437a69085c1613872435514f8393d0f305d1202efa44512be0f198c1"
+      },
+      {
+        "path": "evidence/green/targeted-f17ee62f8cfd.started.json",
+        "bytes": 2105,
+        "sha256": "361c2798b3f9038f54f7e6c4b517096ac4172c7d4b7f49472da9169e3aab0269"
+      },
+      {
+        "path": "evidence/green/targeted-f17ee62f8cfd.summary.json",
+        "bytes": 3467,
+        "sha256": "0521604662a75561a26e3cdf5b9c5674dd0319c92711d113b84397c7046f4091"
+      },
+      {
+        "path": "evidence/green/xml/TEST-at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.xml",
+        "bytes": 953,
+        "sha256": "5a47954ab5086239c191d14fd9d83af300bc7c8573329cce84729f147ce11f9b"
+      },
+      {
+        "path": "evidence/green/xml/TEST-at.heinz.deviceai.ContinuumAvatarNativeUiTest.xml",
+        "bytes": 781,
+        "sha256": "be0b455c9e7b6423f95b50abd4a07bc3995317e26d605f491d8244dfda6f48d0"
+      },
+      {
+        "path": "evidence/green/xml/TEST-at.heinz.deviceai.ContinuumHologramMotionUiTest.xml",
+        "bytes": 1220,
+        "sha256": "4b809daabdb8ec8b6a11fc59be7885a1248df870f5f166ded73285a822dc5e4e"
+      },
+      {
+        "path": "evidence/red/targeted-92f421fa81c5.log",
+        "bytes": 21689,
+        "sha256": "794a8a969dc60ae31d6214757ea26388252df0c7d64281949d1610bd496b45dd"
+      },
+      {
+        "path": "evidence/red/targeted-92f421fa81c5.reports.zip",
+        "bytes": 6307,
+        "sha256": "7675687ac8b4661c1bf298d61bed6da096cd0e39c6c43d08f78a863bbcbdb7f1"
+      },
+      {
+        "path": "evidence/red/targeted-92f421fa81c5.result.json",
+        "bytes": 2660,
+        "sha256": "af0023c86aa8fff1377dc79a961703283e4cdb535533942290d7dcbdeec3c0a8"
+      },
+      {
+        "path": "evidence/red/targeted-92f421fa81c5.sources.after.json",
+        "bytes": 156587,
+        "sha256": "eb9de8dcff0a4af1fdb92efe0d8e7257d156ed9d61b1fda6c3e1fe272dc18afd"
+      },
+      {
+        "path": "evidence/red/targeted-92f421fa81c5.sources.before.json",
+        "bytes": 156587,
+        "sha256": "eb9de8dcff0a4af1fdb92efe0d8e7257d156ed9d61b1fda6c3e1fe272dc18afd"
+      },
+      {
+        "path": "evidence/red/targeted-92f421fa81c5.started.json",
+        "bytes": 2105,
+        "sha256": "f367a81a91eaa9335b713afca8898616b29fe1e308a4a74e8a5bea11336cc2b4"
+      },
+      {
+        "path": "evidence/red/targeted-92f421fa81c5.summary.json",
+        "bytes": 18636,
+        "sha256": "81e7747a811dca7c22f3a5954092c9e2ddfecb28a8fdb5239578448030a60d94"
+      },
+      {
+        "path": "evidence/red/xml/TEST-at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.xml",
+        "bytes": 2835,
+        "sha256": "44bbccf8b7a300aeb17270ad3740d0c16a2cdddd25534f3921b15b9621f7139e"
+      },
+      {
+        "path": "evidence/red/xml/TEST-at.heinz.deviceai.ContinuumAvatarNativeUiTest.xml",
+        "bytes": 4871,
+        "sha256": "89329b66f02c38e53661894fff5cb8c005dfd4e252032b47b28b1c3a3260c747"
+      },
+      {
+        "path": "evidence/red/xml/TEST-at.heinz.deviceai.ContinuumHologramMotionUiTest.xml",
+        "bytes": 8862,
+        "sha256": "b2c0027934e9486522757ee362fafdf9bb07e9b01d691b946e6d96fdee18c8b7"
+      },
+      {
+        "path": "manifest.json",
+        "bytes": 15286,
+        "sha256": "f5f85f3b1f6163373479dfe661a59e64465de52ebddfd76fed0a41849bdb3e6a"
+      },
+      {
+        "path": "static-validation.json",
+        "bytes": 1916,
+        "sha256": "e0c71ad60ea9a33ec3015e592cd4134a1f949a84d037a25d0e744be127ab1ff5"
+      },
+      {
+        "path": "target/app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "bytes": 33052,
+        "sha256": "75f53008759b2e1212f4df64e29682cb3cfac2ae28cf534145eb3941d83dc9ec"
+      },
+      {
+        "path": "target/app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt",
+        "bytes": 9677,
+        "sha256": "54731cfdf36eb88b9bb4663c9b77643c5167d5c3c2581d9cb4a8dd982b63471d"
+      },
+      {
+        "path": "target/app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatarNativeUiTest.kt",
+        "bytes": 8733,
+        "sha256": "61d88966597aa22743c755488d217f37ac29d33a91a5619717f8f227d630be60"
+      },
+      {
+        "path": "target/app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt",
+        "bytes": 12042,
+        "sha256": "d6c848d71074828286444bb7aaa5bf2d9e9c131644f4f6aeeed30bbe87fcb7b3"
+      }
+    ]
+  },
+  "rollback": "Revert only the four named app paths; keep reviewed sources and negative evidence. Previous tested routing source165fc9/401a5d remains available."
+}

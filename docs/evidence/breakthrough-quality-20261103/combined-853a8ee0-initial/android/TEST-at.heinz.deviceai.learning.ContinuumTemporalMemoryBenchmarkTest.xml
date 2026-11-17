@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:28:03" hostname="5268aff5350a" time="9.065">
+  <properties/>
+  <testcase name="specialistLatencyBudgetOnTenYearHistory" classname="at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest" time="2.98"/>
+  <testcase name="tenYearOwnerHistoryIsAnsweredCorrectlyAndHypotheticalsNeverLeak" classname="at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest" time="4.349"/>
+  <testcase name="protectedLedgerMigratesPastTheMeasuredLegacyLimit" classname="at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest" time="1.736"/>
+  <system-out><![CDATA[M2-METRIC warm_latency_ms n=819 p50=1.022 p95=1.617 max=26.562 correct=819/819
+M2-METRIC statements_written=220
+M2-METRIC ledger_records=220 ledger_bytes=46294
+M2-METRIC hypothetical_statements=25 leaked_into_confirmed=0
+M2-METRIC questions=273 specialist_correct=273 baseline_correct=67
+M2-METRIC category=current n=21 specialist=21 baseline=13
+M2-METRIC category=original n=21 specialist=21 baseline=0
+M2-METRIC category=year n=231 specialist=231 baseline=54
+M2-METRIC trap_city_in_answer specialist=0 baseline=0
+M2-METRIC latency_ms specialist_p50=1.15 specialist_p95=2.00 baseline_p50=7.79 baseline_p95=28.10
+M2-METRIC write_ms p50=3.83 p95=13.70
+M2-METRIC owner_fact_capacity=300 failure=null
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

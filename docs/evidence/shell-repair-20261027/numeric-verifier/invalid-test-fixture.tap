@@ -1,0 +1,61 @@
+TAP version 13
+# Subtest: independent examples and metamorphic relations reject constant pseudo-repairs
+ok 1 - independent examples and metamorphic relations reject constant pseudo-repairs
+  ---
+  duration_ms: 64.986668
+  type: 'test'
+  ...
+# Subtest: a bounded exact distance passes all four frozen checks reproducibly
+ok 2 - a bounded exact distance passes all four frozen checks reproducibly
+  ---
+  duration_ms: 109.811421
+  type: 'test'
+  ...
+# Subtest: maximum frozen suite completes all 512 checks within the existing subprocess budget
+not ok 3 - maximum frozen suite completes all 512 checks within the existing subprocess budget
+  ---
+  duration_ms: 0.559942
+  type: 'test'
+  location: '/workspace/device-ai-autonomy-integration/experimental/omega/repair/numeric-verifier.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: 'OMEGA_SUITE_INVALID'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    invalid (file:///workspace/device-ai-autonomy-integration/experimental/omega/repair/numeric-suite.mjs:10:27)
+    numericSuite (file:///workspace/device-ai-autonomy-integration/experimental/omega/repair/numeric-suite.mjs:17:112)
+    createNumericVerifier (file:///workspace/device-ai-autonomy-integration/experimental/omega/repair/numeric-verifier.mjs:7:14)
+    check (file:///workspace/device-ai-autonomy-integration/experimental/omega/repair/numeric-verifier.test.mjs:11:79)
+    TestContext.<anonymous> (file:///workspace/device-ai-autonomy-integration/experimental/omega/repair/numeric-verifier.test.mjs:26:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+  ...
+# Subtest: metamorphic failure supplies the distinguishing pair
+ok 4 - metamorphic failure supplies the distinguishing pair
+  ---
+  duration_ms: 49.737571
+  type: 'test'
+  ...
+# Subtest: non-finite values, foreign exports and capability-bearing code never pass
+ok 5 - non-finite values, foreign exports and capability-bearing code never pass
+  ---
+  duration_ms: 184.331085
+  type: 'test'
+  ...
+# Subtest: suite mutation, malformed cases, unbounded inputs and empty verification are rejected
+ok 6 - suite mutation, malformed cases, unbounded inputs and empty verification are rejected
+  ---
+  duration_ms: 50.093021
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 544.773845

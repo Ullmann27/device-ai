@@ -1,0 +1,119 @@
+[
+  {
+    "scenario": "Gespr\u00e4chskontext und schnelle Anschlussfragen",
+    "classes": [
+      "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+      "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+      "at.heinz.deviceai.cognitive.ConversationSpeechIntegrationRegressionTest"
+    ],
+    "counts": {
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "scenario": "Ged\u00e4chtnisabruf, Zeitbezug und Cockpitereignisse",
+    "classes": [
+      "at.heinz.deviceai.cognitive.AgentExperienceRecallTest",
+      "at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest",
+      "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest"
+    ],
+    "counts": {
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "scenario": "Lokaler Modelllebenszyklus mit Fake-Runtime",
+    "classes": [
+      "at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest"
+    ],
+    "counts": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "scenario": "Nat\u00fcrlicher Diagnoseauftrag und Freigaben",
+    "classes": [
+      "at.heinz.deviceai.SystemIntelligenceUiTest",
+      "at.heinz.deviceai.ConsequentialActionApprovalTest"
+    ],
+    "counts": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "scenario": "Dokumentablauf und PDF-Text",
+    "classes": [
+      "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "at.heinz.deviceai.PdfDocumentIntakeTextTest"
+    ],
+    "counts": {
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "scenario": "Recherchefreigabe im echten Activity-Pfad",
+    "classes": [
+      "at.heinz.deviceai.ResearchChatApprovalUiTest"
+    ],
+    "counts": {
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "scenario": "STOP und versp\u00e4tete R\u00fcckmeldungen",
+    "classes": [
+      "at.heinz.deviceai.CinemaStopReturnUiTest"
+    ],
+    "counts": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "scenario": "Avatar und Sprache, simulierte TTS-Ereignisse",
+    "classes": [
+      "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "at.heinz.deviceai.AvatarRangeFrameConnectionUiTest",
+      "at.heinz.deviceai.avatar.AvatarWindowWorkReadingTest"
+    ],
+    "counts": {
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "scenario": "Echter Werkzeugaufruf mit injiziertem Ger\u00e4tezugriff",
+    "classes": [
+      "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest"
+    ],
+    "counts": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  }
+]

@@ -1,0 +1,4 @@
+candidate=6a354bec10c2b7960ffc059dac96f4538aebee92
+692e9951cd475d730e1928e14d2578acb1958d3dd5bde38937da7a25b041226b  /tmp/tmp.3Bttm814SI/AndroidAvatarCameraInput.kt
+d7174f72709901a7f3976ed8fc925c457d3e7d9a42b5dcaa505c3522c7484993  /tmp/tmp.3Bttm814SI/AvatarCameraPolicy.kt
+dfd47d33a47f116c58ad6f928b43206a9f64f1eec4e3343db19a62ed2481f2fb  /tmp/tmp.3Bttm814SI/ContinuumReadinessGuide.kt

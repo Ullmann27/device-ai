@@ -1,0 +1,48 @@
+{
+ "kind": "wide",
+ "scaleToReference": 0.77,
+ "offsetPx": [
+  80,
+  40
+ ],
+ "edgeCorrelation": 0.344,
+ "meanAbsDiff": 27.1,
+ "slots": {
+  "RAIL": {
+   "meanAbsDiff": 19.4,
+   "edgeCorrelation": 0.171
+  },
+  "BRAND": {
+   "meanAbsDiff": 33.5,
+   "edgeCorrelation": 0.202
+  },
+  "HERO": {
+   "meanAbsDiff": 44.3,
+   "edgeCorrelation": 0.064
+  },
+  "SYSTEM_STATUS": {
+   "meanAbsDiff": 20.5,
+   "edgeCorrelation": 0.202
+  },
+  "MODEL": {
+   "meanAbsDiff": 20.4,
+   "edgeCorrelation": 0.24
+  },
+  "LEARNING": {
+   "meanAbsDiff": 24.7,
+   "edgeCorrelation": 0.239
+  },
+  "STORAGE": {
+   "meanAbsDiff": 27.2,
+   "edgeCorrelation": 0.197
+  },
+  "DEVELOPMENT": {
+   "meanAbsDiff": 22.6,
+   "edgeCorrelation": 0.186
+  },
+  "SYSTEM_ACTIVITY": {
+   "meanAbsDiff": 32.4,
+   "edgeCorrelation": 0.081
+  }
+ }
+}

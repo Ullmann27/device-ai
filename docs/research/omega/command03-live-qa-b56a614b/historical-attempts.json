@@ -1,0 +1,290 @@
+[
+  {
+    "label": "live-media-classic-compile-01",
+    "source": "406997761ac42ec8e5f42a4097d7e2e5555b4333",
+    "mode": "ui-compile",
+    "status": "PASS_LOCAL_TEST_COMPILATION_ONLY",
+    "gradle_exit": 0,
+    "elapsed_seconds": 18.173,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-classic-ui-01",
+    "source": "406997761ac42ec8e5f42a4097d7e2e5555b4333",
+    "mode": "ui-tests",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 29.453,
+    "junit": {
+      "fresh_files": 0,
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-compile-01",
+    "source": "32f6d04e88a9e7373147a83499ca8a984d10756c",
+    "mode": "compile",
+    "status": "PASS_LOCAL",
+    "gradle_exit": 0,
+    "elapsed_seconds": 30.881,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-compile-02",
+    "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "mode": "compile",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 29.184,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-compile-03",
+    "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "mode": "compile",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 168.807,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-compile-04",
+    "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "mode": "compile",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 396.118,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-compile-05",
+    "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "mode": "compile",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 58.948,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-01",
+    "source": "32f6d04e88a9e7373147a83499ca8a984d10756c",
+    "mode": "ui-tests",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 32.795,
+    "junit": {
+      "fresh_files": 0,
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-02",
+    "source": "32f6d04e88a9e7373147a83499ca8a984d10756c",
+    "mode": "ui-tests",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 15.823,
+    "junit": {
+      "fresh_files": 3,
+      "tests": 22,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-03",
+    "source": "49f5d50f69e2afb6a340d91bd742aa6d9cc30202",
+    "mode": "ui-tests",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 15.681,
+    "junit": {
+      "fresh_files": 3,
+      "tests": 22,
+      "failures": 4,
+      "errors": 0,
+      "skipped": 0
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-04",
+    "source": "2deeb075bf02bc8d6923b94aef032c7ef9d7949f",
+    "mode": "ui-tests",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 14.764,
+    "junit": {
+      "fresh_files": 3,
+      "tests": 22,
+      "failures": 4,
+      "errors": 0,
+      "skipped": 0
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-05",
+    "source": "406997761ac42ec8e5f42a4097d7e2e5555b4333",
+    "mode": "ui-tests",
+    "status": "PASS_LOCAL",
+    "gradle_exit": 0,
+    "elapsed_seconds": 17.731,
+    "junit": {
+      "fresh_files": 3,
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-06",
+    "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "mode": "ui-tests",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 8.414,
+    "junit": {
+      "fresh_files": 0,
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-compile-01",
+    "source": "49f5d50f69e2afb6a340d91bd742aa6d9cc30202",
+    "mode": "ui-compile",
+    "status": "PASS_LOCAL_TEST_COMPILATION_ONLY",
+    "gradle_exit": 0,
+    "elapsed_seconds": 22.2,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-compile-02",
+    "source": "2deeb075bf02bc8d6923b94aef032c7ef9d7949f",
+    "mode": "ui-compile",
+    "status": "PASS_LOCAL_TEST_COMPILATION_ONLY",
+    "gradle_exit": 0,
+    "elapsed_seconds": 15.67,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-ui-compile-03",
+    "source": "406997761ac42ec8e5f42a4097d7e2e5555b4333",
+    "mode": "ui-compile",
+    "status": "PASS_LOCAL_TEST_COMPILATION_ONLY",
+    "gradle_exit": 0,
+    "elapsed_seconds": 15.566,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-unit-01",
+    "source": "406997761ac42ec8e5f42a4097d7e2e5555b4333",
+    "mode": "unit-tests",
+    "status": "PASS_LOCAL",
+    "gradle_exit": 0,
+    "elapsed_seconds": 16.126,
+    "junit": {
+      "fresh_files": 8,
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "counted_as_final_pass": false
+  },
+  {
+    "label": "live-media-unsigned-01",
+    "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "mode": "unsigned",
+    "status": "FAILED_OR_SOURCE_CHANGED",
+    "gradle_exit": 1,
+    "elapsed_seconds": 70.689,
+    "junit": {
+      "fresh_files": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null
+    },
+    "counted_as_final_pass": false
+  }
+]

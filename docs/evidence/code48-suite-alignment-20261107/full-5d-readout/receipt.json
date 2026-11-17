@@ -1,0 +1,38 @@
+{
+  "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "archiveZipSha256": "95b51e1f4de5e5ec2b049d478dbc9035114f5c92fe876576a529de6beacbcc8d",
+  "xmlCount": 664,
+  "allXmlHashesMatchArchiveManifest": true,
+  "counts": {
+    "tests": 3776,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 20,
+    "passed": 3754
+  },
+  "targetSuites": {
+    "at.heinz.deviceai.FullStageMemoryReviewUiTest": {
+      "tests": 6,
+      "failed": 0,
+      "skipped": 0,
+      "xmlSha256": "a8f692362e9d1080d52f4ac59ab2e3d3aab8150912466465c0cd75b154548019"
+    },
+    "at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest": {
+      "tests": 4,
+      "failed": 0,
+      "skipped": 0,
+      "xmlSha256": "3b8c458a52e1c2e729e2ff750558fdb97a6919e1a73f91c8879d34818e342eb7"
+    }
+  },
+  "skipGroups": {
+    "OPTIONAL_MOTION_EXPORT": 1,
+    "EXPLICIT_PENDING_SPEC": 12,
+    "OPT_IN_HOST_WORKSPACE": 2,
+    "EXTERNAL_PARITY_FIXTURES": 3,
+    "HOST_JDK21_REQUIRED": 2
+  },
+  "readoutSha256": "4820dd34b1480148adcbd326dd80cc0809f911a5d2f0d5de26bc988b5082d6ae",
+  "jsonSha256": "87bee115c43ab6ba985a2ec6d3bf91c5e0bb79187a5648350455f4e2a8d11cd5",
+  "originalCodeExecution": false,
+  "sourceMutation": false
+}

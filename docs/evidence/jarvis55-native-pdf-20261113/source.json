@@ -1,0 +1,33 @@
+{
+  "source_sha": "41306257ce03c1e22e998877bf769ce42b3a0486",
+  "source_tree": "3a16a64f4d831ba51d54f24cbb952d850e8d433e",
+  "workflow_run_id": 43344572298,
+  "job_id": 131620674180,
+  "workflow_run_url": "https://github.com/Ullmann27/device-ai/actions/runs/43344572298",
+  "evidence_type": "Actual Android API35 full-app instrumentation with synthetic PDF provider",
+  "result": {
+    "status": "ok",
+    "sdk": 35,
+    "provider_queries": 1,
+    "provider_opens": 1,
+    "page_count": 1,
+    "rendered_ink_pixels": 506,
+    "instrumentation_code": -1
+  },
+  "source_blobs": {
+    "app/src/androidTest/java/at/heinz/deviceai/ContinuumNativePdfProbe.kt": "2f6295e05b2b2d2af25a703231143b47a8196717",
+    "app/src/androidTest/java/at/heinz/deviceai/ContinuumNativePdfProbeProvider.java": "061cdb5dc3ee5d3f4a437165fec29a325c830787",
+    "tools/code55-apk/native-pdf-emulator.sh": "a5f488a751e29e0d4a733138a4939a574c4dce8d",
+    "app/src/test/java/at/heinz/deviceai/PdfDocumentIntakeTextTest.kt": "e211794b59434736c8a1a7e9b1de73c9ed405db7",
+    "app/src/uiTest/java/at/heinz/deviceai/PdfIntakeCancellationUiTest.kt": "703ade50503a3b048829c66eb8fd73d07a6b3db9"
+  },
+  "retired_host_probe": {
+    "path": "app/src/uiTest/java/at/heinz/deviceai/PdfIntakeNativeDecodeProbeUiTest.kt",
+    "sha": "edd4c1c09021e31d033d54dea340e7b0408fe5d6",
+    "case_count": 1,
+    "reason": "Robolectric lacks Android FileDescriptor.getOwnerId$ native PDF bridge"
+  },
+  "migration_validation": "Native probe unchanged from observed pass; combined migrated source must be rerun",
+  "device_installation": "Fold7 NOT_RUN",
+  "signing": "Original signer NOT_USED"
+}

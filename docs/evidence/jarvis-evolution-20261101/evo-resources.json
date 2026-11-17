@@ -1,0 +1,18 @@
+{
+  "threadAllocatedBytesPerCompare": 457310,
+  "heapUsedBefore": 3054584,
+  "osArch": "amd64",
+  "maxMs": 33.314795,
+  "energyTemperatureAndroidNativeMemory": "UNAVAILABLE_NO_CONNECTED_FOLD7",
+  "qualityBenchmark": false,
+  "heapUsedAfter": 16569472,
+  "samples": 200,
+  "checkpointBytes": 32932,
+  "p50Ms": 1.522332,
+  "java": "21.0.12.1",
+  "distinctInputs": 5,
+  "scope": "HOST_ONLY, consumed DEV, explicit lab compare incl snapshot/model restore/verification",
+  "p95Ms": 5.457437,
+  "warmup": 25,
+  "parameters": 4110
+}

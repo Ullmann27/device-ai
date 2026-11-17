@@ -1,0 +1,130 @@
+name: Continuum 0.3.20 - GitHub APK safety build
+
+on:
+  push:
+    branches:
+      - "chatgpt/continuum-0320-v21-release-review-20261024"
+    paths:
+      - "app/**"
+      - "backend/**"
+      - "scripts/**"
+      - ".github/continuum/**"
+      - ".github/workflows/continuum-v21-github-apk.yml"
+      - "docs/evidence/astra-0320-20261024/v21-source-proposal.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-v21-github-apk-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  independent-qa-apk:
+    if: github.ref == 'refs/heads/chatgpt/continuum-0320-v21-release-review-20261024'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      CONTINUUM_OWNER_V21_APPROVED_SOURCE_SHA: d7429145ad5dff64364ed47f9ceb0c07a5a8ed85
+      CONTINUUM_OWNER_V21_APPROVED_MANIFEST_SHA256: 134e847b8f2fad2f8131cdf3e962679eb1630ed12801973ad0f6cbb0799e177d
+    steps:
+      - name: Checkout exact Git commit, never main
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Prepare Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Prepare Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Prepare Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Check immutable Android inputs from approved inventory
+        run: |
+          set -euo pipefail
+          node scripts/continuum-v21-source-gate.mjs
+          bash -n scripts/render-mentor-owner-update-v21.sh
+          bash -n scripts/render-mentor-preview.sh
+
+      - name: Verify owner release denies missing authorization and different keys
+        run: node --test .github/continuum/continuum-v21-owner-release.test.mjs
+
+      - name: Install backend dependencies
+        run: npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+
+      - name: Run all portable Node and backend regression tests
+        run: |
+          node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
+          node --test --test-concurrency=2 backend/test/*.test.js
+
+      - name: Prepare Android SDK 36
+        run: |
+          set -euo pipefail
+          yes | "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+
+      - name: Run full Android unit tests, Robolectric graphics and lint
+        run: |
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs="-Xmx1600m -XX:MaxMetaspaceSize=512m" \
+            -PcontinuumUiWidgetTests=true \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            :app:testDebugUnitTest :app:lintDebug --stacktrace
+
+      - name: Compile separate, non-overwriting QA APK
+        run: |
+          gradle --no-daemon --max-workers=2 --console=plain \
+            -Dorg.gradle.jvmargs="-Xmx1600m -XX:MaxMetaspaceSize=512m" \
+            -PdeviceAiPreview=true \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            :app:assembleDebug --stacktrace
+
+      - name: Verify isolated QA package and attach actual compiled APK
+        run: |
+          set -euo pipefail
+          apk="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" \
+            | grep -F "package: name='at.heinz.deviceai.preview'"
+          mkdir -p continuum-0320-qa
+          cp "$apk" continuum-0320-qa/Continuum-0320-QA-SEPARATE-APP.apk
+          sha256sum continuum-0320-qa/Continuum-0320-QA-SEPARATE-APP.apk > continuum-0320-qa/SHA256SUMS.txt
+          {
+            echo "commit=${GITHUB_SHA}"
+            echo "release_source=d7429145ad5dff64364ed47f9ceb0c07a5a8ed85"
+            echo "package=at.heinz.deviceai.preview"
+            echo "owner_signed=false"
+            echo "overwrites_owner_app=false"
+            echo "status=QA_ONLY_NOT_OWNER_UPDATE"
+          } > continuum-0320-qa/BUILD-INFO.txt
+
+      - name: Publish verified QA APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-0320-Verified-Isolated-QA-APK
+          path: continuum-0320-qa/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Preserve test reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-0320-GitHub-QA-Failure-Evidence
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/lint-results-debug.html
+            app/build/outputs/apk/
+          if-no-files-found: ignore

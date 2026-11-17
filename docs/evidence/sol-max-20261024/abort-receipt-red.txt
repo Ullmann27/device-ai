@@ -1,0 +1,95 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:348:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:349:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:351:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:569:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2670:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2685:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2714:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2734:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4691:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:288:31 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:398:37 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+
+ContinuumCcc1AbortReceiptUiTest > aWrongTargetReceiptCannotConfirmOrClearTheExpectedTask FAILED
+    java.lang.AssertionError at ContinuumCcc1AbortReceiptUiTest.kt:47
+
+ContinuumCcc1AbortReceiptUiTest > aMatchingAbortStillClosesOnlyItsOwnTaskAndSlot FAILED
+    java.lang.AssertionError at ContinuumCcc1AbortReceiptUiTest.kt:60
+
+ContinuumCcc1AbortReceiptUiTest > aLateAbortReceiptCannotEraseANewerTasksCancelIdentity FAILED
+    java.lang.AssertionError at ContinuumCcc1AbortReceiptUiTest.kt:42
+
+ContinuumCcc1AbortReceiptUiTest > anOlderPendingSlotWithoutATargetCannotClearTaskState FAILED
+    java.lang.AssertionError at ContinuumCcc1AbortReceiptUiTest.kt:53
+
+10 tests completed, 4 failed
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///workspace/device-ai-sol-max/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/device-ai-sol-max/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 39s
+30 actionable tasks: 5 executed, 25 up-to-date

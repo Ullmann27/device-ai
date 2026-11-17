@@ -1,0 +1,9 @@
+{
+  "source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "task": ":app:assembleDebug",
+  "exit_code": 0,
+  "apk_path": "/workspace/scratch/b3170a7ae924/device-ai-qa-f14/app/build/outputs/apk/debug/app-debug.apk",
+  "bytes": 88255113,
+  "sha256": "47b3e17e0293d3b48f7f439b292f0143e13f07cb06f4a588dbecf23cfbf6eb75",
+  "kind": "Local debug QA build, not an owner release; not installed or published"
+}

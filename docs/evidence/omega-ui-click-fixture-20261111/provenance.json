@@ -1,0 +1,26 @@
+{
+  "base_commit": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+  "run_id": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+  "original_journal": "/workspace/scratch/2d62a799e417/qa/android-ui-recheck-c163641b/junit-progress.ndjson",
+  "original_journal_sha256": "605ae8d6c9f0e5a142d5dc4d93fdf130a26c542926e88fff5fe7f7601f525a58",
+  "selected_failure_records": 10,
+  "selected_records_sha256": "1e4a83e424c730e3a12ad8b6652c85a00fa183f20359072278695675af8ed2a5",
+  "base_source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "d588466bb1b02e57725bfdf206f37f3e51b0b4d333c91d25d791ad26d12845ff",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "ff3971d0626a4a01c562c7098e1b9d9d475256c4f842d126c7378ab76b06873d",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisMenu.kt": "7272de9c4f5bb4d91cd3dcf847b31a366439dd5f0116ee944bf3163e601d8e35",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellContent.kt": "21549d78538d0c9f412b98221bae09043b55261db3902b149039c8f1713f04aa",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumBentoCockpit.kt": "09dfc20ba2982123fb48ce7906e12a35b7ecfbbee57b8ea0eb320e68c8db6fb6",
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppClarification.kt": "c5398ae4d0392b96ddc635f3fecc19281c6bbadc767add0eccb7a63efc4b8603",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt": "85ddef985fa295b9ff3d4448f481a294c81bc8a7416d13508809ad071a90fd5d",
+    "app/src/uiTest/java/at/heinz/deviceai/OwnerAppPlanningContextUiTest.kt": "15274895d8e4a755bd80e0b753877318823150af3a37b4f83a4c6e29de91624d",
+    "app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt": "9ec460be07d324f7c509f5fcc35e7bf1d0f99aac7eab3df0907ab76928f4445d"
+  },
+  "candidate_test_sha256": {
+    "app/src/uiTest/java/at/heinz/deviceai/OwnerAppPlanningContextUiTest.kt": "f11e2056f674b40e5b619bb8b1104d77fe6e936a070f550ff1e7ec7ea56195c0",
+    "app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt": "8e8f5b78125bdeb242df151aa6568bd24fa292b040b866f8d5f178346b8eb790"
+  },
+  "production_changes": [],
+  "rerun": "NOT_RUN",
+  "scope": "Test fixtures only; no production, timeout, or domain assertion relaxation"
+}

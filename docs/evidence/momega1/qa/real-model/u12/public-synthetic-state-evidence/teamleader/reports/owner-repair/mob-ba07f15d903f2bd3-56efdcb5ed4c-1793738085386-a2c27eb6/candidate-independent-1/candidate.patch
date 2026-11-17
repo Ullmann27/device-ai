@@ -1,0 +1,7 @@
+diff --git a/lib/subject.mjs b/lib/subject.mjs
+index a86fc00..a5ca4b2 100644
+--- a/lib/subject.mjs
++++ b/lib/subject.mjs
+@@ -1 +1 @@
+-export const run = (entry,now) => now-entry.insertedAt <= entry.ttl;
++export const run = (entry,now) => now-entry.insertedAt < entry.ttl;

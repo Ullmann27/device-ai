@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.NeuralTransferExperimentTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:35" hostname="5c9e18abbd30" time="0.108">
+  <properties/>
+  <testcase name="structuralFeaturesAreDeterministicAndCanShareSignalsAcrossUnknownWords" classname="at.heinz.deviceai.learning.NeuralTransferExperimentTest" time="0.001"/>
+  <testcase name="cancellationOfExperimentalWeightsDoesNotWriteAnyModel" classname="at.heinz.deviceai.learning.NeuralTransferExperimentTest" time="0.007"/>
+  <testcase name="learningExperimentMeasuresTwoDifferentHoldoutsWithoutSavingWeights" classname="at.heinz.deviceai.learning.NeuralTransferExperimentTest" time="0.1"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

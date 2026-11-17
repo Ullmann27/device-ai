@@ -1,0 +1,44 @@
+{
+  "source": "babba3326475521bfc8d03807ee1ad8873e01b91",
+  "requiredPrAncestors": [
+    {
+      "pr": 335,
+      "sha": "b06889f586ed54f074d2b2d36535a0b5a820ed61",
+      "ancestorOfThisBranch": true,
+      "exit": 0
+    },
+    {
+      "pr": 342,
+      "sha": "7327367851df147fef6226233fc86a22efcfe2fc",
+      "ancestorOfThisBranch": true,
+      "exit": 0
+    },
+    {
+      "pr": 343,
+      "sha": "2eb2095992641019a3af0dd62caab39239803ae4",
+      "ancestorOfThisBranch": true,
+      "exit": 0
+    },
+    {
+      "pr": 344,
+      "sha": "cee7d2c974ae9e01ec41edfc03ee41b2b582c7bb",
+      "ancestorOfThisBranch": true,
+      "exit": 0
+    },
+    {
+      "pr": 349,
+      "sha": "df3b6930695abe6ddffc1388c941aaba6122be5e",
+      "ancestorOfThisBranch": true,
+      "exit": 0
+    },
+    {
+      "pr": 354,
+      "sha": "6fc252ecc05d49508023efe2835a983c14299074",
+      "ancestorOfThisBranch": true,
+      "exit": 0
+    }
+  ],
+  "protectedPathsChanged": [],
+  "excludedParallelHead": "d85810508744ce61a9092a1ac531fc4fdf5e843c",
+  "note": "PR354 advanced to c3697ecf after initial pin; no merge/rebase or parallel branch mutation."
+}

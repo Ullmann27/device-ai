@@ -1,0 +1,71 @@
+✖ IDENTITY/CORRELATION explicit forged execution receipt rejected: boolean-only (37.192745ms)
+✖ IDENTITY/CORRELATION explicit forged execution receipt rejected: hash-and-id (27.462298ms)
+✖ IDENTITY/CORRELATION explicit forged execution receipt rejected: wrong-request (27.80492ms)
+✔ AUTHORITY shadow result cannot become trusted or verified (29.570276ms)
+✔ REPLAY consumed failed call survives provider restart (27.52295ms)
+✔ TIMEOUT expired task invokes no child (13.317317ms)
+✔ BUDGET source mismatch invokes no child (13.877222ms)
+✔ AUTHORITY candidate cannot introduce tool authority (24.935514ms)
+✔ NETWORK child environment excludes ambient secret and proxy (35.018082ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 6
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 330.450319
+
+✖ failing tests:
+
+test at tools/momega1-challenger/provider-contract.test.mjs:26:3
+✖ IDENTITY/CORRELATION explicit forged execution receipt rejected: boolean-only (37.192745ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: unbound claimed execution must not be accepted
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/provider-contract.test.mjs:28:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tools/momega1-challenger/provider-contract.test.mjs:26:3
+✖ IDENTITY/CORRELATION explicit forged execution receipt rejected: hash-and-id (27.462298ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: unbound claimed execution must not be accepted
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/provider-contract.test.mjs:28:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tools/momega1-challenger/provider-contract.test.mjs:26:3
+✖ IDENTITY/CORRELATION explicit forged execution receipt rejected: wrong-request (27.80492ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: unbound claimed execution must not be accepted
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/provider-contract.test.mjs:28:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

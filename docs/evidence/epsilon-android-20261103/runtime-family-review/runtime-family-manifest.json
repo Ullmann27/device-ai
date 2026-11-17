@@ -1,0 +1,44 @@
+{
+  "assetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "sourceCommit": "853a8ee0",
+  "mapperFileSha256": "d12224172eb34e96fb198454f7329b42858bf0504616bbcf4b43a5d1eaddb394",
+  "records": [
+    {
+      "file": "AA1-JawOpen0_0-Jaw0_0.png",
+      "AA": 1.0,
+      "JawOpen": 0.0,
+      "jawPitchDegrees": 0.0,
+      "headYawPitchDegrees": [
+        0,
+        0
+      ],
+      "otherMorphs": 0,
+      "pngSha256": "78a95c8293093c8bdc359937d95dc1720ecb029008394cc52b2304ed6f1a090f"
+    },
+    {
+      "file": "AA1-JawOpen0_5-Jaw6_0.png",
+      "AA": 1.0,
+      "JawOpen": 0.5,
+      "jawPitchDegrees": 6.0,
+      "headYawPitchDegrees": [
+        0,
+        0
+      ],
+      "otherMorphs": 0,
+      "pngSha256": "833a7c038c675cbec27eaafcc5fb06f3b7a92409f2f44e90c87330f97c18380a"
+    },
+    {
+      "file": "AA1-JawOpen1_0-Jaw12_0.png",
+      "AA": 1.0,
+      "JawOpen": 1.0,
+      "jawPitchDegrees": 12.0,
+      "headYawPitchDegrees": [
+        0,
+        0
+      ],
+      "otherMorphs": 0,
+      "pngSha256": "2418e3fd7ee68a30f2e6b678e3b9c70757eca3b85a582f6febf3a7bd2783d6a8"
+    }
+  ],
+  "scope": "Exact mapper geometry controls in Blender; no Android GPU validation"
+}

@@ -1,0 +1,6 @@
+Source commit: 68e8cc6 (full SHA recorded in result report)
+133c4d7fc876b2ffd0c2e3e689ddb7d5debc86daa1ba943c07e31c3138767ba9  app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+d10a136c8f496523e760fda09d080427c7a933535708cca979ddd4147496a2e0  app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+f163479b8bc18d69d14337a126b098eb4701eb06289ca8d15af20a5b88119a01  app/src/uiTest/java/at/heinz/deviceai/ContinuumLiveCapabilitiesUiTest.kt
+3fa85fa30a911d649bb0e088fda56beab8842ad8e43e647814f647ceb1d08a6d  app/src/uiTest/java/at/heinz/deviceai/ContinuumAdaptiveAvatarNavigationUiTest.kt
+ac39a5b2f330a230aead40c723a872f2fd4fc15245deed27fa5e411b33cd79ed  app/src/uiTest/java/at/heinz/deviceai/ContinuumBotStatusRoutingUiTest.kt

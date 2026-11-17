@@ -1,0 +1,10 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-run-once",
+  "status": "OK",
+  "result": {
+    "outcome": "IDLE",
+    "detail": "CCC1: no open task"
+  }
+}

@@ -1,0 +1,220 @@
+✖ unchanged complete frozen reports disclose actual counts and limits (4.776024ms)
+✖ improved reported case is visible without pretending to run Gemma (3.238322ms)
+✖ aggregate gain cannot conceal a newly wrong case (6.805147ms)
+✖ any reported harmful output blocks even unchanged parity (0.473403ms)
+✖ changed expected answer is rejected (0.574294ms)
+✖ changed category is rejected (18.183965ms)
+✖ missing and duplicate case coverage is rejected (4.485228ms)
+✖ unknown identifiers and invalid statuses are rejected (0.351589ms)
+✖ modified frozen input invalidates both reports (0.267432ms)
+✖ empty or malformed reports fail closed (0.243176ms)
+✖ result binds all input bytes and preserves per-category deltas (0.180492ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 0
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 255.258549
+
+✖ failing tests:
+
+test at scripts/continuum-offline-eval-compare.test.mjs:20:1
+✖ unchanged complete frozen reports disclose actual counts and limits (4.776024ms)
+  TypeError: Cannot read properties of undefined (reading 'candidate')
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:23:29)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at scripts/continuum-offline-eval-compare.test.mjs:28:1
+✖ improved reported case is visible without pretending to run Gemma (3.238322ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - [
+  -   'R01'
+  - ]
+  
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:31:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: [ 'R01' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:34:1
+✖ aggregate gain cannot conceal a newly wrong case (6.805147ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'NO_REGRESSION_REPORTED'
+  - 'REGRESSION'
+  
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:36:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'NO_REGRESSION_REPORTED',
+    expected: 'REGRESSION',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:40:1
+✖ any reported harmful output blocks even unchanged parity (0.473403ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'NO_REGRESSION_REPORTED'
+  - 'UNSAFE'
+  
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:42:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'NO_REGRESSION_REPORTED',
+    expected: 'UNSAFE',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:44:1
+✖ changed expected answer is rejected (0.574294ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:45:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /metadata/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:47:1
+✖ changed category is rejected (18.183965ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:48:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /metadata/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:50:1
+✖ missing and duplicate case coverage is rejected (4.485228ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:52:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /coverage/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:55:1
+✖ unknown identifiers and invalid statuses are rejected (0.351589ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:56:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unknown/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:59:1
+✖ modified frozen input invalidates both reports (0.267432ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:60:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /fixture/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:62:1
+✖ empty or malformed reports fail closed (0.243176ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:63:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /header/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-offline-eval-compare.test.mjs:67:1
+✖ result binds all input bytes and preserves per-category deltas (0.180492ms)
+  TypeError: Cannot read properties of undefined (reading 'fixture')
+      at TestContext.<anonymous> (file:///workspace/continuum-chief/scripts/continuum-offline-eval-compare.test.mjs:69:31)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

@@ -1,0 +1,65 @@
+✔ fresh required suites prove actual execution and exact counts (392.782824ms)
+✔ required Android proof rejects missing (297.224733ms)
+✔ required Android proof rejects empty (328.823808ms)
+✔ required Android proof rejects skipped (378.282902ms)
+✔ required Android proof rejects wrong-class (370.746512ms)
+✔ required Android proof rejects wrong-count (310.859827ms)
+✔ required Android proof rejects malformed (314.493252ms)
+✔ required Android proof rejects stale (281.126649ms)
+✔ required Android proof rejects future (282.603855ms)
+✔ required Android proof rejects symlink (358.883503ms)
+✔ Node receipt requires exact current-source completed executed tests (3.321595ms)
+✖ extra malformed XML cannot inflate the complete Android result (592.645975ms)
+✖ a symlinked report-directory ancestor cannot supply Android evidence (520.489992ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 11
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4608.711765
+
+✖ failing tests:
+
+test at scripts/continuum-qa-evidence.test.mjs:63:1
+✖ extra malformed XML cannot inflate the complete Android result (592.645975ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'PASS' !== 'FAIL'
+  
+      at TestContext.<anonymous> (file:///workspace/continuum-jarvis/scripts/continuum-qa-evidence.test.mjs:67:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'PASS',
+    expected: 'FAIL',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-qa-evidence.test.mjs:70:1
+✖ a symlinked report-directory ancestor cannot supply Android evidence (520.489992ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'PASS' !== 'FAIL'
+  
+      at TestContext.<anonymous> (file:///workspace/continuum-jarvis/scripts/continuum-qa-evidence.test.mjs:73:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'PASS',
+    expected: 'FAIL',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

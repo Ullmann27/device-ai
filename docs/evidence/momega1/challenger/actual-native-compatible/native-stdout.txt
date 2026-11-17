@@ -1,0 +1,17 @@
+{
+  "plan": [
+    "Identify the issue with the current implementation",
+    "Propose a minimal change to fix the issue",
+    "Verify the fix"
+  ],
+  "hypothesis": "The current implementation incorrectly includes an empty trailing batch for some input lengths.",
+  "patches": [
+    {
+      "file": "lib/batches.mjs",
+      "oldText": "result.push(items.slice(offset, offset + width));",
+      "newText": "if (offset + width <= items.length) result.push(items.slice(offset, offset + width));"
+    }
+  ]
+} [end of text]
+
+

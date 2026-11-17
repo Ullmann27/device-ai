@@ -1,0 +1,40 @@
+JUnit version 4.13.2
+.E.E.E.E.E.
+Time: 0.439
+There were 5 failures:
+1) sourceLiteralRemainsBoundWhileOnlyPromptRepresentationChanges(at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest.sourceLiteralRemainsBoundWhileOnlyPromptRepresentationChanges(ResearchPromptControlTokenTest.kt:55)
+2) commonControlTokensAreQuotedInAllUntrustedPromptSurfaces(at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest)
+java.lang.AssertionError: raw control [INST]
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest.commonControlTokensAreQuotedInAllUntrustedPromptSurfaces(ResearchPromptControlTokenTest.kt:32)
+3) appSourceNumbersRemainDistinctFromQuotedSourceImitations(at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest.appSourceNumbersRemainDistinctFromQuotedSourceImitations(ResearchPromptControlTokenTest.kt:63)
+4) knownQaInstGraphIdCannotRemainARawDelimiter(at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest.knownQaInstGraphIdCannotRemainARawDelimiter(ResearchPromptControlTokenTest.kt:24)
+5) ordinaryBracketedMathUnitsAndQuotesStayReadable(at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest)
+org.junit.ComparisonFailure: expected:<Range [［0, 10］ ［°C］; A［i］ = 3; quoted '［manual］]' and ⟦unchanged⟧.> but was:<Range [[0, 10] [°C]; A[i] = 3; quoted '[manual]]' and ⟦unchanged⟧.>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest.ordinaryBracketedMathUnitsAndQuotesStayReadable(ResearchPromptControlTokenTest.kt:38)
+
+FAILURES!!!
+Tests run: 6,  Failures: 5
+

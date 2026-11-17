@@ -1,0 +1,288 @@
+{
+  "generatedBy": "CodeRabbit Agent",
+  "schemaVersion": 1,
+  "sourceCommit": "40915a079463aabf26db4ba48b7ffcf191835409",
+  "basis": "source callers + native/Node checks; no device attestation",
+  "rows": [
+    {
+      "module": "Deutsche Spracheingabe",
+      "callPath": "AgentActivity.startVoiceInput → AndroidOnDeviceSpeechInput.start → applyLocalSpeechText",
+      "status": "INTEGRATED; TESTED policy/lifecycle only",
+      "tests": "LocalSpeechInputPolicyTest; EphemeralSpeechTurn; Node speech contracts",
+      "missingConnection": "de-AT quality, noise, permission revocation and Barge-in on Fold7 NOT_RUN",
+      "expectedBenefit": "Offline speech without executing recognition text",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "Korrektur und Mehrturnkontext",
+      "callPath": "AgentActivity.sendCurrentInput → LocalConversationContext.inspectRequest → BrainBridge.forget/resetDialogueConversation; runLocal → render",
+      "status": "INTEGRATED; TESTED; FIXED",
+      "tests": "ResearchDialogueHandoffTest; ConversationControlTest; SessionEvidenceIntegrityTest",
+      "missingConnection": "Real Gemma correction quality and Activity lifecycle/device NOT_RUN",
+      "expectedBenefit": "Remove demonstrably stale research after explicit scope correction",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "ContinuumBrain / EWM2",
+      "callPath": "AgentActivity.runContinuumDialogue → ContinuumBrainBridge.decide → Ewm1Brain; OFF/SHADOW preserve baseline",
+      "status": "INTEGRATED (conditional)",
+      "tests": "ContinuumBrainBridgeTest",
+      "missingConnection": "No automatic promotion; current owner mode/device snapshot unobserved",
+      "expectedBenefit": "One reviewed decision bridge over existing baseline",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "ContinuumCognitiveRuntime / CRE1",
+      "callPath": "runContinuumDialogue → CognitiveDecisionBridge(ContinuumCognitiveRuntime).respond → core.replyWithEvidenceInConversation; CRE1 promotion gate",
+      "status": "INTEGRATED; TESTED",
+      "tests": "ContinuumCognitiveRuntimeTest; CRE1 Node gates",
+      "missingConnection": "Qualified checkpoint/holdout on actual model unknown; do not enable by class existence",
+      "expectedBenefit": "Preserve SWB1-authorized candidates and abstention",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "CognitiveDecisionBridge",
+      "callPath": "AgentActivity.runContinuumDialogue → respond → verified finalAnswer/localModelPrompt",
+      "status": "INTEGRATED; TESTED",
+      "tests": "CognitiveDecisionBridgeTest",
+      "missingConnection": "Verified quotation is not automatically a verified inference",
+      "expectedBenefit": "Separate grounded answers from model synthesis",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "AiContextCompiler",
+      "callPath": "AgentActivity.runLocal / AgentModel → contextCompiler.compile(AiContextInput)",
+      "status": "INTEGRATED; TESTED",
+      "tests": "AiContextCompilerTest; context/privacy tests",
+      "missingConnection": "Actual model token/memory latency benchmark NOT_RUN",
+      "expectedBenefit": "Bound bytes, provenance, contradictions and current request",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "ContinuumLearningCore / SWB1",
+      "callPath": "runContinuumDialogue → core.replyWithEvidenceInConversation; rememberOwnerFact → confirmOwnerFact",
+      "status": "INTEGRATED; TESTED",
+      "tests": "LearningCore; owner-revocation; conversation-binding JVM tests",
+      "missingConnection": "No private owner dataset read or modified; device persistence NOT_RUN",
+      "expectedBenefit": "Existing authoritative owner-memory path",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "ContinuumMemoryDialogue / CTX3",
+      "callPath": "ContinuumLearningCore.private dialogue → scoped conversation reply/reset; Activity newSession/reset",
+      "status": "INTEGRATED; TESTED",
+      "tests": "ContinuumDialogueConversationBindingTest; conversation revision tests",
+      "missingConnection": "Android process restart and parallel callback device stress NOT_RUN",
+      "expectedBenefit": "Keep session state separate from persistent owner facts",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "HybridMemoryRetriever",
+      "callPath": "AiContextCompiler.compile → HybridMemoryRetriever.retrieve; research gate uses same retriever",
+      "status": "INTEGRATED; TESTED",
+      "tests": "HybridMemoryRetrieverTest; MemoryRetrievalResearchGate tests",
+      "missingConnection": "Semantic callback capability exists; do not imply a measured active on-device embedding model",
+      "expectedBenefit": "Reuse lexical/entity/temporal/provenance ranking",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "MemoryEcology schema",
+      "callPath": "AiContextCompiler/AgentActivity MemoryStore/MemoryRecord → context/render/persistence",
+      "status": "INTEGRATED; TESTED",
+      "tests": "MemoryEcologyTest; context and persistence tests",
+      "missingConnection": "No replacement memory database introduced",
+      "expectedBenefit": "Typed validation, privacy and source metadata",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "MemoryGraph",
+      "callPath": "cognitive/MemoryEcology.kt:MemoryGraph; no external main-source construction found",
+      "status": "IMPLEMENTED; TESTED module",
+      "tests": "MemoryEcologyTest",
+      "missingConnection": "No demonstrated graph traversal in live chat path; retain research module",
+      "expectedBenefit": "Potential linked evidence retrieval; benefit unmeasured",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "SelfModel / AdaptiveIdentity",
+      "callPath": "IdentityState.seeded → SelfModel.uncertain; CognitivePersistence.restore; AdaptiveIdentity.withEvidence",
+      "status": "IMPLEMENTED; TESTED; persistence connected",
+      "tests": "IdentityStateTest; AdaptiveIdentityTest",
+      "missingConnection": "No Activity/orchestrator call to adaptive self-model update found in this audit",
+      "expectedBenefit": "Calibrated capabilities if independently verified experience is later connected",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "ExperienceCompiler",
+      "callPath": "BoundedAgentOrchestrator → experienceStore; Activity.showExperimentIntegrationReview → ExperienceCompiler.compile",
+      "status": "INTEGRATED for read-only review; TESTED",
+      "tests": "ExperienceEvidenceRegressionTest; AgentExperience tests",
+      "missingConnection": "VerifiedSkillReview has no external main-source caller found; no automatic skill activation",
+      "expectedBenefit": "Propose strategies from bounded verified experiences with owner review",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "ProofCarryingMemory / MemoryMutationLedger",
+      "callPath": "cognitive/ProofCarryingMemory.kt types/ledger; no external main-source ledger caller found",
+      "status": "IMPLEMENTED; TESTED module",
+      "tests": "ContinuumIntelligencePhase2Test",
+      "missingConnection": "Not the authoritative owner fact store; no new write path authorized",
+      "expectedBenefit": "Signed mutation provenance remains research, not an authorization grant",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "ContinuumDecoderBridge / CDX1/CDX2",
+      "callPath": "LearningCore pairedDecoderStatus/trainPairedExperiment/experimentalPairedContinuation → DecoderBridge; UI laboratory",
+      "status": "INTEGRATED research only; TESTED",
+      "tests": "ContinuumDecoderBridgeTest; ContinuumDecoderCoreIntegrationTest",
+      "missingConnection": "No production chat promotion or measured real-device coding quality",
+      "expectedBenefit": "Preserve reversible shadow experiments without changing weights",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "SWB2 / sparse / temporal / 3000 logical experts",
+      "callPath": "Existing research labs / experiment registry / compute-reuse probes; distinct synthetic controls",
+      "status": "IMPLEMENTED research; TESTED synthetic",
+      "tests": "Node sparse/temporal/compute gates; native Checks",
+      "missingConnection": "No measured extra physical compute or Fold7 throughput; new continual-learning trials NOT_RUN",
+      "expectedBenefit": "Retain research without inventing production acceleration",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "Public research / temporal evidence",
+      "callPath": "Activity.runWebResearch → LegalRisEvidenceProvider(WikipediaExtractResearchProvider(provider)); ResearchDialogueHandoff → LocalConversationContext",
+      "status": "INTEGRATED; TESTED",
+      "tests": "ResearchDialogueHandoffTest; legal/Wikipedia JVM tests; Node wiring",
+      "missingConnection": "Network/device/model synthesis quality NOT_RUN; public data never owner facts or grants",
+      "expectedBenefit": "Citations, retrieval dates and current-turn consent",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "App discovery / verified launch",
+      "callPath": "ToolRegistry → DeviceToolExecutor → AndroidDeviceAppActions → VerifiedForegroundLaunch → ScreenObservationBus",
+      "status": "INTEGRATED; TESTED pure postconditions",
+      "tests": "VerifiedForegroundLaunchTest; owned-app Node tests",
+      "missingConnection": "Actual Settings foreground verification on Fold7 NOT_RUN",
+      "expectedBenefit": "Confirmed observed launch rather than intent dispatch success",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "Bounded screen observation",
+      "callPath": "AndroidDeviceAppActions.read_app_screen → ScreenObservationBus.read → BoundedScreenReader → ScreenObservationPrompt",
+      "status": "INTEGRATED; TESTED; FIXED event invalidation",
+      "tests": "BoundedScreenReaderTest; ScreenObservationPromptTest; ScreenExperiencePrivacyTest; ScreenObservationRevisionTest (Robolectric4/4 after2 red failures)",
+      "missingConnection": "Delivered content events now invalidate an in-flight read without producing foreground-launch evidence. Queued/missing Android events and Fold7 behavior remain unverified; no atomic UI snapshot or tap authority claimed.",
+      "expectedBenefit": "Ephemeral redacted source-bound screen text; no owner memory writes",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "Tap / scroll / back / battery E2E",
+      "callPath": "No complete approved observed-state UI action path verified in existing AndroidDeviceAppActions (only launch_app/read_app_screen)",
+      "status": "NOT_RUN / NOT_IMPLEMENTED end-to-end",
+      "tests": "Existing launch/read controls only",
+      "missingConnection": "Need owner-approved node-bound actions, fresh state and negative controls; no arbitrary model touch commands",
+      "expectedBenefit": "Required Settings → battery → observed explanation acceptance",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "ToolGate / permissions / cancellation",
+      "callPath": "Existing ToolRegistry → BoundedAgentOrchestrator → owner approval → DeviceToolExecutor → verified receipt",
+      "status": "INTEGRATED; TESTED; UNCHANGED",
+      "tests": "ToolGate/ToolRegistry; cancellation/ephemeral screen tests",
+      "missingConnection": "Fold7 permission/lifecycle test NOT_RUN; no new authority added",
+      "expectedBenefit": "Preserve owner control and fail-closed actions",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "CCC1 / CEGIS / M8 host developer",
+      "callPath": "coding-agent-loop → coding-orchestrator → repair-loop → step-watchdog → runOwnedCommand → independent verifier",
+      "status": "INTEGRATED; TESTED; FIXED",
+      "tests": "Process37; storage/coding/architecture32; full Node evidence",
+      "missingConnection": "Not a hostile-code sandbox; current review gate and original termination uncertainty remain blocking",
+      "expectedBenefit": "Real isolated repair, preserved command outcome, bounded cleanup",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "Android developer / scheduler",
+      "callPath": "Activity development dialog → DevelopmentCoordinator(LocalModelReasoningAdapter); DeviceTeamleader scheduler/backlog/locks",
+      "status": "INTEGRATED; TESTED host/pure",
+      "tests": "ContinuumWorkerChatRouterTest; DeviceTeamleader; CCC1 integration",
+      "missingConnection": "Actual cyclic authorized local hardware run/restart on Fold7 NOT_RUN",
+      "expectedBenefit": "One bounded existing development route rather than second worker",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "LocalModelRuntime / Gemma / LiteRT-LM",
+      "callPath": "Process LocalModelHost → catalog/SHA → LiteRtLmLocalModelRuntime; LocalModelReasoningAdapter in ChatReasoningRouter/development",
+      "status": "INTEGRATED; TESTED contracts; real inference NOT_RUN",
+      "tests": "ImportCoordinator/stream/progress; restore/runtime policy tests",
+      "missingConnection": "No model weights accessed; RAM/KV-cache/latency and German answer quality NOT_RUN",
+      "expectedBenefit": "Existing local engine reused; no mandatory external API",
+      "priority": "P1",
+      "deviceVerified": false
+    },
+    {
+      "module": "TTS / dashboard / orb",
+      "callPath": "Activity voice callbacks → voiceSignal → TtsHologramSignal/ContinuumHologramView; runtime status band",
+      "status": "INTEGRATED source; TESTED policy/signal",
+      "tests": "Hologram/voice/dashboard JVM/Node tests",
+      "missingConnection": "Fold7 audio sync, lifecycle and reduced-motion device measurements NOT_RUN",
+      "expectedBenefit": "Represent actual activity without fake progress",
+      "priority": "P2",
+      "deviceVerified": false
+    },
+    {
+      "module": "Quantumflow 3D avatar / camera",
+      "callPath": "PR350 evidence/provenance branch; not ancestor of current integration HEAD",
+      "status": "NOT_INTEGRATED; audit only",
+      "tests": "No runtime mesh/blendshape/device tests here",
+      "missingConnection": "Eight upstream snapshots not a working avatar; asset/model licenses and GPU/biometric boundaries still require review",
+      "expectedBenefit": "Optional future rendering independent of brain stability",
+      "priority": "P2",
+      "deviceVerified": false
+    },
+    {
+      "module": "Node storage fabric",
+      "callPath": "Host fabric transaction queue → replica acknowledgements → HMAC catalog; tombstone-before-delete",
+      "status": "INTEGRATED host; TESTED; runtime unchanged",
+      "tests": "storage-fabric tests; real HTTP timeout/queued write/restart regression",
+      "missingConnection": "Original historical FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED cause unproven; fsync/power-loss/hardware durability NOT_RUN",
+      "expectedBenefit": "No acknowledged success before required replication; no private owner data",
+      "priority": "P0",
+      "deviceVerified": false
+    },
+    {
+      "module": "Local QA entry point",
+      "callPath": "scripts/continuum-reliability-qa.mjs → existing runOwnedCommand + parseJUnit",
+      "status": "IMPLEMENTED; TESTED; CLI integrated",
+      "tests": "QA unit4; critical135; full-node reports actual remaining release-fixture failures",
+      "missingConnection": "No CodeRabbit/Autofix service integration; no signing/device work",
+      "expectedBenefit": "Repeatable fixed-scope fail-closed reports without API accounts",
+      "priority": "P1",
+      "deviceVerified": false
+    }
+  ]
+}

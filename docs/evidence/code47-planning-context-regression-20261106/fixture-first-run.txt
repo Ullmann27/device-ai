@@ -1,0 +1,55 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=33183 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=33183 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+JUnit version 4.13.2
+.E.E.E.E.E.E
+Time: 5.514
+There were 6 failures:
+1) planningClarificationKeepsTheCompleteOriginalOnce(at.heinz.deviceai.OwnerAppPlanningContextUiTest)
+java.lang.NullPointerException
+	at com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)
+	at org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:103)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningClarificationKeepsTheCompleteOriginalOnce(OwnerAppPlanningContextUiTest.kt:167)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+2) unavailableModelKeepsTheCompletePlanOnce(at.heinz.deviceai.OwnerAppPlanningContextUiTest)
+java.lang.NullPointerException
+	at com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)
+	at org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:103)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.unavailableModelKeepsTheCompletePlanOnce(OwnerAppPlanningContextUiTest.kt:171)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+3) completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript(at.heinz.deviceai.OwnerAppPlanningContextUiTest)
+java.lang.NullPointerException
+	at com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)
+	at org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:103)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript(OwnerAppPlanningContextUiTest.kt:147)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+4) missingLoadedIdentityKeepsTheCompletePlanOnce(at.heinz.deviceai.OwnerAppPlanningContextUiTest)
+java.lang.NullPointerException
+	at com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)
+	at org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:103)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.missingLoadedIdentityKeepsTheCompletePlanOnce(OwnerAppPlanningContextUiTest.kt:176)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+5) planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory(at.heinz.deviceai.OwnerAppPlanningContextUiTest)
+java.lang.NullPointerException
+	at com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)
+	at org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:103)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory(OwnerAppPlanningContextUiTest.kt:130)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+6) plainAppClarificationKeepsTheOriginalOnce(at.heinz.deviceai.OwnerAppPlanningContextUiTest)
+java.lang.NullPointerException
+	at com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)
+	at org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:103)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.plainAppClarificationKeepsTheOriginalOnce(OwnerAppPlanningContextUiTest.kt:180)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 6,  Failures: 6
+

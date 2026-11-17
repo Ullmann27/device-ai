@@ -1,0 +1,127 @@
+name: "Code56 voice repair - focused QA and unsigned ARM64 candidate"
+on:
+  push:
+    branches:
+      - fix/code56-offline-voice-locale-20261113
+
+permissions:
+  contents: read
+
+jobs:
+  voice-regression:
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Exact source
+        run: |
+          set -Eeuo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Android SDK
+        run: |
+          set -Eeuo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Compile and run exact voice cases
+        run: |
+          set -Eeuo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=57 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I .github/continuum/code56-voice-hotfix-tests.init.gradle \
+            :app:testDebugUnitTest
+      - name: Require real voice regression results
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          import xml.etree.ElementTree as ET
+          xmls = sorted(pathlib.Path('app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))
+          cases = [c for x in xmls for c in ET.parse(x).getroot().iter('testcase')]
+          assert cases, 'No JUnit cases'
+          assert not any(c.find(n) is not None for c in cases for n in ('failure','error','skipped'))
+          expected = ('GermanOnDeviceSpeechLocaleTest', 'ContinuousConversationModeTest',
+                      'ContinuousConversationRecoveryTest', 'LocalSpeechSessionTest',
+                      'SpeechTurnRecoveryTest', 'ConversationSpeechIntegrationRegressionTest',
+                      'AndroidSpeechFailureTest')
+          actual = {c.get('classname','').split('.')[-1] for c in cases}
+          assert all(name in actual for name in expected), f'Missing classes: {set(expected) - actual}'
+          assert len([c for c in cases if c.get('classname','').endswith('GermanOnDeviceSpeechLocaleTest')]) == 4
+          print(f'VOICE_HOTFIX_JUNIT_PASS={len(cases)} FAILED=0 SKIPPED=0')
+          PY
+      - name: Save test receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code56-voice-hotfix-JUnit
+          path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
+          retention-days: 14
+
+  unsigned-arm64:
+    needs: voice-regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Android SDK
+        run: |
+          set -Eeuo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Build unsigned hotfix candidate
+        run: |
+          set -Eeuo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=57 \
+            -PcontinuumLocalRenderUnsigned=true :app:assembleRelease
+      - name: Verify package and unsigned APK
+        run: |
+          set -Eeuo pipefail
+          apk=app/build/outputs/apk/release/app-release-unsigned.apk
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          test -s "$apk"
+          "$tools/aapt2" dump badging "$apk" > /tmp/badging.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='57' versionName='0.3.56'" /tmp/badging.txt
+          grep -Fxq "native-code: 'arm64-v8a'" /tmp/badging.txt
+          "$tools/zipalign" -c -P 16 -v 4 "$apk" > /dev/null
+          if "$tools/apksigner" verify "$apk" >/dev/null 2>&1; then
+            echo "Unexpectedly signed" >&2
+            exit 1
+          fi
+          mkdir -p code56-voice-candidate
+          cp "$apk" code56-voice-candidate/Continuum-Voice-57-UNSIGNED-NOT-INSTALLABLE.apk
+          sha256sum code56-voice-candidate/*.apk > code56-voice-candidate/SHA256SUMS.txt
+          printf 'source=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=57\nstatus=UNSIGNED_NOT_INSTALLABLE\nfold7_test=NOT_RUN\n' "$GITHUB_SHA" > code56-voice-candidate/BUILD-INFO.txt
+      - name: Preserve unsigned candidate
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code56-voice-hotfix-57-UNSIGNED
+          path: code56-voice-candidate/
+          if-no-files-found: error
+          retention-days: 14

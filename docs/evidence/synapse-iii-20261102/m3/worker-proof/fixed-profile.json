@@ -1,0 +1,20 @@
+{
+  "chain": "node",
+  "profiles": [
+    "node-continuum"
+  ],
+  "command": {
+    "cmd": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "args": [
+      "--test",
+      "--test-reporter=junit",
+      "--test-reporter-destination=/workspace/continuum-checks/synapse-iii/worker-proof/node-junit.xml",
+      ".github/continuum/math.test.mjs"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-nCIP5Z/fixture",
+    "junitFiles": [
+      "/workspace/continuum-checks/synapse-iii/worker-proof/node-junit.xml"
+    ],
+    "timeoutMs": 300000
+  }
+}

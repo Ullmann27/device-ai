@@ -1,0 +1,34 @@
+JUnit version 4.13.2
+.............E.....E.....E..........E.....E..
+Time: 0.422
+There were 5 failures:
+1) exactRemainingBudgetDoesNotOpenUnverifiableCandidate(at.heinz.deviceai.systemintelligence.StorageContentAnalysisTest)
+java.lang.AssertionError: expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.systemintelligence.StorageContentAnalysisTest.exactRemainingBudgetDoesNotOpenUnverifiableCandidate(StorageContentAnalysisTest.kt:165)
+2) evictedPendingRestoreCanBeRecreatedWithoutOverwrite(at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest)
+org.junit.ComparisonFailure: expected:<[RESTORED]> but was:<[UNDO_UNAVAILABLE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest.evictedPendingRestoreCanBeRecreatedWithoutOverwrite(OwnDiagnosticCacheTest.kt:323)
+3) failedIndexRetryPreservesChangedTarget(at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest)
+org.junit.ComparisonFailure: expected:<[RESTORE_PENDING_CHANGED]> but was:<[UNDO_UNAVAILABLE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest.failedIndexRetryPreservesChangedTarget(OwnDiagnosticCacheTest.kt:296)
+4) failedRestoreIndexKeepsBackupAndRetriesOwnership(at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest)
+org.junit.ComparisonFailure: expected:<[RESTORED]> but was:<[UNDO_UNAVAILABLE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest.failedRestoreIndexKeepsBackupAndRetriesOwnership(OwnDiagnosticCacheTest.kt:281)
+5) failedIndexRetryRejectsSameContentReplacementInode(at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest)
+org.junit.ComparisonFailure: expected:<[RESTORE_PENDING_CHANGED]> but was:<[UNDO_UNAVAILABLE]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.systemintelligence.OwnDiagnosticCacheTest.failedIndexRetryRejectsSameContentReplacementInode(OwnDiagnosticCacheTest.kt:311)
+
+FAILURES!!!
+Tests run: 40,  Failures: 5

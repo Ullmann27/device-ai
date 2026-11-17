@@ -1,0 +1,12 @@
+request=Continuum, prüfe bitte den freien Speicher.
+callId=native-storage-e2e-1
+state=SUCCEEDED
+sha256=3059c5691d1a9a64ad162ce7dbd85ea10f806772455cde0d71d81a9d3995d745
+experience=agent-b55cb96cce781a8815a109577f0b5bae-1793733517467-0
+outcome=SUCCESS
+source=tool-call:native-storage-e2e-1:sha256:3059c5691d1a9a64ad162ce7dbd85ea10f806772455cde0d71d81a9d3995d745
+stateRoot=27e34ffede960dbc31c3d9247053c2e2c68b20eaf62ebc247e4a5c90cec5925d
+executions=1
+persistedAfterRestart=true
+ownerFactsUnchanged=true
+weightsUpdated=false

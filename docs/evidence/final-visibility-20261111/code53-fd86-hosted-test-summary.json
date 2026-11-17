@@ -1,0 +1,197 @@
+{
+  "runId": 42977884118,
+  "jobId": 130381258271,
+  "workflowSha": "23146e7f817b825e48a2b086f73da5cf28e0a274",
+  "sourceSha": "fd86f11a4a822ee4805f4c462791baeb1d741db4",
+  "sourceTree": "21e5603d2a3f20c840bc3c2ba7836be408dbb5ad",
+  "basis": "completed hosted job logs; XML artifact not downloaded",
+  "reportedTotals": [
+    "2026-11-11T08:03:34.8911890Z 4668 tests completed, 1 failed, 17 skipped"
+  ],
+  "parsedTestResultCounts": {
+    "PASSED": 4650,
+    "FAILED": 1,
+    "SKIPPED": 17
+  },
+  "requiredClassCount": 29,
+  "requiredClasses": {
+    "LuxuryHoloButtonRendererTest": {
+      "PASSED": 7,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "PerimeterWingChoreographerTest": {
+      "PASSED": 2,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "SpatialWindowLightTest": {
+      "PASSED": 8,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "HollywoodFuiWorkActivityTest": {
+      "PASSED": 5,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "JarvisRenderQualityTest": {
+      "PASSED": 9,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "JarvisRenderQualityAdaptiveTest": {
+      "PASSED": 5,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "TtsHologramSignalTest": {
+      "PASSED": 11,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "JarvisFluidLightTest": {
+      "PASSED": 10,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "HollywoodFuiWindowUiTest": {
+      "PASSED": 9,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "CinemaNativeSequenceUiTest": {
+      "PASSED": 2,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "MayaSpeechTest": {
+      "PASSED": 10,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "MayaPcmPlayerUiTest": {
+      "PASSED": 1,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "MayaVoiceSettingsUiTest": {
+      "PASSED": 1,
+      "FAILED": 1,
+      "SKIPPED": 0
+    },
+    "ElevenLabsPcmRequestUiTest": {
+      "PASSED": 6,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "ContinuumOfflineVoiceRecoveryUiTest": {
+      "PASSED": 4,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "MayaConversationInterruptionTest": {
+      "PASSED": 2,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "CloudSpeechTurnConstraintTest": {
+      "PASSED": 7,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "ContinuumAvatar3dLifecycleUiTest": {
+      "PASSED": 4,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "AvatarTtsLiveConnectionUiTest": {
+      "PASSED": 7,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "AvatarSpeechReattachmentUiTest": {
+      "PASSED": 2,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "MayaSpeechAlignmentTest": {
+      "PASSED": 5,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "MayaSpeechTimingTest": {
+      "PASSED": 3,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "MayaAvatarTimingIntegrationTest": {
+      "PASSED": 3,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "UiFeedbackPcmTest": {
+      "PASSED": 6,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "ContinuumUiFeedbackTest": {
+      "PASSED": 4,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "ContinuumTaskEffectsCallerUiTest": {
+      "PASSED": 5,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "ContinuousConversationModeTest": {
+      "PASSED": 16,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "ConversationSpeechIntegrationRegressionTest": {
+      "PASSED": 3,
+      "FAILED": 0,
+      "SKIPPED": 0
+    },
+    "JarvisLiveAvatarWiringUiTest": {
+      "PASSED": 10,
+      "FAILED": 0,
+      "SKIPPED": 0
+    }
+  },
+  "failedTests": [
+    {
+      "className": "MayaVoiceSettingsUiTest",
+      "test": "mayaSetupIsReachableWithoutAndroidTtsAndNeverAutoGeneratesASample"
+    }
+  ],
+  "apk": "NOT_BUILT",
+  "lint": "NOT_CONFIRMED",
+  "artifactMetadata": [
+    {
+      "id": 13839285568,
+      "name": "Code53-fd86f11a-QA-Evidence",
+      "sizeInBytes": 426536310,
+      "digest": "sha256:93276da1c35fb9e9e211efb9efbfb61a4e409fce73ae49256378350babbc58ea",
+      "workflowSha": "23146e7f817b825e48a2b086f73da5cf28e0a274",
+      "downloaded": false,
+      "locallyHashVerified": false
+    }
+  ],
+  "requiredClassResults": {
+    "present": 29,
+    "allPassing": 28,
+    "withFailure": 1,
+    "passed": 167,
+    "failed": 1,
+    "skipped": 0
+  },
+  "nativePngInventory": "NOT_EXTRACTED",
+  "sourceAndIcuEvidence": [
+    "2026-11-11T07:14:16.3054367Z {\"status\": \"PASS\", \"patterns\": 22, \"negative_control_icu_error\": 66315, \"icu\": \"libicui18n.so.74\", \"source_sha256\": \"c552f6156e59bbbe261049b1066de0ae5c9673822a88eed5551cc4cf4f0766fe\"}",
+    "2026-11-11T07:17:31.2124925Z code53-critical EXACT_SOURCE_PASS",
+    "2026-11-11T07:17:31.2256024Z code53-full-node EXACT_SOURCE_PASS"
+  ]
+}

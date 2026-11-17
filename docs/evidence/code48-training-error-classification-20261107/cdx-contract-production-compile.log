@@ -1,0 +1,7 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=35911 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=35911 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:125:15: warning: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+        check(parent.exists()||parent.mkdirs())
+              ^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:125:32: warning: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+        check(parent.exists()||parent.mkdirs())
+                               ^^^^^^

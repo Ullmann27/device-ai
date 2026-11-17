@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.lm.LmStep7Test" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:23" hostname="5c9e18abbd30" time="0.17">
+  <properties/>
+  <testcase name="greedyWordPredictionNeedsTheWholeWordAndItsEnd" classname="at.heinz.deviceai.learning.lm.LmStep7Test" time="0.113"/>
+  <testcase name="instructionPairsAreFixedBalancedAndContrastive" classname="at.heinz.deviceai.learning.lm.LmStep7Test" time="0.006"/>
+  <testcase name="nextByteProbabilitiesAreADistributionThatMatchesSegmentBits" classname="at.heinz.deviceai.learning.lm.LmStep7Test" time="0.037"/>
+  <testcase name="positionsStartAfterOneSpaceWithContextAndPromptsEndBeforeASpace" classname="at.heinz.deviceai.learning.lm.LmStep7Test" time="0.001"/>
+  <testcase name="overlapFilterDropsCopiedAndRepeatedSegmentsOnly" classname="at.heinz.deviceai.learning.lm.LmStep7Test" time="0.001"/>
+  <testcase name="pairCountingSeparatesInstructionUseFromBlindness" classname="at.heinz.deviceai.learning.lm.LmStep7Test" time="0.009"/>
+  <testcase name="statisticsMatchExactValues" classname="at.heinz.deviceai.learning.lm.LmStep7Test" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

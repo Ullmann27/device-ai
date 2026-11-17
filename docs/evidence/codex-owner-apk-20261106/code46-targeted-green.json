@@ -1,0 +1,99 @@
+{
+  "category": "HOST_ANDROID_TARGETED_REGRESSION",
+  "source_local_commit": "d57a8ce093efe4c37491116bb954abe0a0bfa434",
+  "source_tree": "80d277b21dc8a175b3756957681c81088ab17661",
+  "working_tree_clean": true,
+  "versionCode": 46,
+  "versionName": "0.3.45",
+  "tests": 83,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 83,
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "8c81b2765f9e875712c5dec36a90551f19b6985475ed52c665b9aab1575ca6cc"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDraftSaveBindingUiTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "46636cd4db6d6d163581d8e07a589c0344d70c3e543e3122dd7959fc9ce427ea"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "8432653ea2655c72ff01923cff64a78f19ae6fe47755b2430556081c522fd02c"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ConnectedConversationCatalogTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "7b2e6e0a63a727af722dfe5cbf2e2ce1a9b3ba17c616f3d7418a7e460d61ec82"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.JarvisVoiceSelectionTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "3966995c1bc7f3a4c0ed33d956f62e41144f29ce015aa36fd2cd04cc01523944"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "d7c03777ac61d4b89e0886ef95e74b9e1c99ef2a123101a6f9a7bd0bc0dab947"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.WorkDecisionRecallTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "e78f386e9d9586f7744418f5d0aafe808c616ad7fbd1e6adac33b63f2a8fc08c"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.WorkRecallTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "b05ebfd7fdaf95d5c61b85da991cf840225bd2634ca0dcbb7e55ac9fcc5bc20d"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.JarvisSequenceProtectionTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "7517b9f6d452b95599e8870ed94219bc7fa6ad3b9841ece2f05f236ca8b5a192"
+    }
+  ],
+  "compileDebugKotlin": "PASS",
+  "lintDebug": {
+    "status": "PASS",
+    "scope": [
+      "NewApi"
+    ],
+    "issues": 0
+  },
+  "full_android_suite": "PENDING_FINAL_PUBLISHER",
+  "real_device": "NOT_RUN",
+  "real_model": "NOT_RUN",
+  "real_audio": "NOT_RUN"
+}

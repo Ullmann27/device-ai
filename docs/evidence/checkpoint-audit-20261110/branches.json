@@ -1,0 +1,107 @@
+{
+  "checked_at_utc": "2026-11-10T20:45:13.574702+00:00",
+  "scope": "Twelve existing owned worktree checkpoints; active branches continue after this snapshot",
+  "method": "Published commits fetched; exact full Git trees compared",
+  "branches": [
+    {
+      "branch": "cinema/fluid-light-stage-20261110",
+      "local_checkpoint": "409bf1118546165b228d4b33fb63330daaa5fad0",
+      "published_checkpoint": "041abb081ae7dac637d3f0fabdae525f19acf117",
+      "tree": "dc17f550b84cf368c997975134e80a12bdbdb2c2",
+      "equal": true,
+      "status": "ACTIVE"
+    },
+    {
+      "branch": "fix/avatar-speech-timeline-20261110",
+      "local_checkpoint": "6d29411e2b96b5fcc1514a86728d9ad4455c1006",
+      "published_checkpoint": "ca55a8076bcc02d72c1e373b157ab64362a97a96",
+      "tree": "461cb64cea2bb2f9757d39f3d840a2bc9893d414",
+      "equal": true,
+      "status": "INTEGRATED"
+    },
+    {
+      "branch": "cinema/avatar-window-light-20261110",
+      "local_checkpoint": "28fb3958be413eeedc9836d802c03f99898cc3d2",
+      "published_checkpoint": "f440dc985cf89b0c93f5c200b24540c652e27875",
+      "tree": "a955d7a573cec8f1fbb3ef7f9de9aaa57c47ae94",
+      "equal": true,
+      "status": "ARCHIVED_INTERMEDIATE"
+    },
+    {
+      "branch": "research/continuum-cognitive-budget-20261110",
+      "local_checkpoint": "a7a4c2592731e30fe4ef1cc3b1f91cc621b89058",
+      "published_checkpoint": "4ee9f9c05a1f4623427b41735733ab633f291c6b",
+      "tree": "0bc0148057fd5117735c1df0d4cb46ad6005e726",
+      "equal": true,
+      "status": "RESEARCH_ONLY"
+    },
+    {
+      "branch": "qa/continuum-cognitive-memory-20261110",
+      "local_checkpoint": "25766f72cd511f247950c7d558fe323be6be2d4c",
+      "published_checkpoint": "ce17806f7a4a774a2727d1f09d3fe85d6111e1ac",
+      "tree": "c15f1ab11e0777fac53f0d6a6b77b282bebe9016",
+      "equal": true,
+      "status": "QA_ONLY_NOT_INTEGRATION_CANDIDATE"
+    },
+    {
+      "branch": "research/continuum-context-cinema-20261110",
+      "local_checkpoint": "1d71e4dfe4a801157bcc73a0a40f7e1bac90d008",
+      "published_checkpoint": "00cf15d925d2c114d8ce57ee23dac473a89e6e0f",
+      "tree": "13445d2b227e561c06bcada82eb6584fe3bbb6a0",
+      "equal": true,
+      "status": "RESEARCH_ONLY"
+    },
+    {
+      "branch": "research/brain-lab-controlled-20261110",
+      "local_checkpoint": "16fbd38c8de2bc1cb6a11386b3a608f528a88ca6",
+      "published_checkpoint": "401f94602ea5622e7dbcc513787eba3c91107488",
+      "tree": "13a56b112ab7f857871c9fe8a99c913dbb02a89a",
+      "equal": true,
+      "status": "REJECT_PROMOTION"
+    },
+    {
+      "branch": "cinema/viscous-edge-20261110",
+      "local_checkpoint": "728719320291852b7c62cb3b0157574398678ff9",
+      "published_checkpoint": "712d51e4c2fe02009e2a20adb748d8dd03b957dd",
+      "tree": "5e87592cc63bee2ac4ba62217c7a57c92e54e044",
+      "equal": true,
+      "status": "INTEGRATED"
+    },
+    {
+      "branch": "fix/dialog-context-reference-20261110",
+      "local_checkpoint": "a2c8e7cf827bb2f9651520b20d49980f8ffdbcac",
+      "published_checkpoint": "e99530750f4b471d54dc397b7a7b7f8b2977f6d1",
+      "tree": "d2380771bffe595f7371963a283b0a882c8974e3",
+      "equal": true,
+      "status": "ACTIVE_CHECKPOINT_BEFORE_CONTINUATION"
+    },
+    {
+      "branch": "research/continuum-memory-skills-20261110",
+      "local_checkpoint": "30aa7ba6446739e5b3b30b596e255bf12bf153fd",
+      "published_checkpoint": "dafb3187faf2580d0a060a66fb7e82915f8fc6fc",
+      "tree": "7fbcba8edc5fc0df9b230b4da023b6bfac0a92ba",
+      "equal": true,
+      "status": "RESEARCH_ONLY"
+    },
+    {
+      "branch": "review/cinema-perf-measurement-20261110",
+      "local_checkpoint": "d30e561bcff48e9b72ee6e9b48a98c552dba744b",
+      "published_checkpoint": "92070dca0a15d8319fd5d8ed360bda0c5d734cda",
+      "tree": "3a96625c552776481e09ea3711cd8f859aa068ae",
+      "equal": true,
+      "status": "INTEGRATED"
+    },
+    {
+      "branch": "cinema/fluid-edge-shader-20261110",
+      "local_checkpoint": "cfbe792c22c83921d746a617a7b4c0838aceabeb",
+      "published_checkpoint": "04a89b8c25ce46baf5074f85d1277f96c71ff474",
+      "tree": "e79dbdd26fa7248575239bf10a369bc5f5cf4dca",
+      "equal": true,
+      "status": "ARCHIVED_INTERMEDIATE"
+    }
+  ],
+  "protected_release": "17491f4d8103f0e55836369333fab07e80e6e9c2",
+  "main_merge": false,
+  "deleted_branches": [],
+  "closed_pull_requests": []
+}

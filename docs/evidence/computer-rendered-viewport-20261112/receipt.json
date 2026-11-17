@@ -1,0 +1,47 @@
+{
+  "baseline_commit": "7fec32a6f5b679597ff535b9b0566037a9b9f01f",
+  "tested_change_commit": "b22e641bbe2e39eaec791b3498e70bd6bdbf899b",
+  "combined_wiring_dependency": "ab42bf6e7d03de1880c4b6bf37e558bdb8d910ca",
+  "red": {
+    "tests": 11,
+    "failures": 1,
+    "assertion": "Off-viewport input reached Android expected:<0> but was:<1>",
+    "source_hashes": {
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt": "62f37d8606352caeb053bc00e495e720bf212b045b5d606aed642bc5d5198347",
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt": "0fedbdc5cddbbd87db0ea38dbee8942dd48cff41c1bb205a00b985274a503fad",
+      "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "d6111a8d7ce07f69e181e514b3e516673ca81f14326c1bdb282041644f7d4afa",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComposeSemantics.kt": "5314801dfc221383b35383f243fac290046cf20272a1fd359c8a9d3da2ab543c",
+      "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "f87adcad148e8cfb177403ac4d45c3005ad923fd076c086bec49de67184a30ea",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowSafety.kt": "510f17c80bd109687fbb77c172dae3a56db21555f571a62d6d516a32de4c41a7",
+      "app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt": "bb39aa741efb44644f7efdfd21a2de58aed3ae459b8825920665d5f3e4d4885b",
+      "app/src/uiTest/java/at/heinz/deviceai/AndroidLiveNodePortTest.kt": "4093a45b4d9ab3bf9fa1b8dfa79451a5894cac4b27606278968c74b6208fce41"
+    }
+  },
+  "green": {
+    "tests": 21,
+    "failures": 0,
+    "source_hashes": {
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt": "0883773573cf37a5a725e443da8543356b8363c5b2886376fae24cee3ad73c3b",
+      "app/src/main/java/at/heinz/deviceai/AndroidLiveWindow.kt": "0fedbdc5cddbbd87db0ea38dbee8942dd48cff41c1bb205a00b985274a503fad",
+      "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "d6111a8d7ce07f69e181e514b3e516673ca81f14326c1bdb282041644f7d4afa",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComposeSemantics.kt": "5314801dfc221383b35383f243fac290046cf20272a1fd359c8a9d3da2ab543c",
+      "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "f87adcad148e8cfb177403ac4d45c3005ad923fd076c086bec49de67184a30ea",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveWindowSafety.kt": "510f17c80bd109687fbb77c172dae3a56db21555f571a62d6d516a32de4c41a7",
+      "app/src/main/java/at/heinz/deviceai/cognitive/ProjectionCropGeometry.kt": "bb39aa741efb44644f7efdfd21a2de58aed3ae459b8825920665d5f3e4d4885b",
+      "app/src/uiTest/java/at/heinz/deviceai/AndroidLiveNodePortTest.kt": "adea4addedaf81417c2f509276b859b5a66b5dc2962394e4e102af6087169efe",
+      "app/src/uiTest/java/at/heinz/deviceai/AndroidLiveScrollTest.kt": "5d5aef3279bc8cde75222c03fa4fa070f2024f907863c9341789f29c126f4717"
+    },
+    "committed_source_hashes_match": true
+  },
+  "base_jar_sha256": "6f5f1cfee967e825b11537f8b9abf05686378def648b7fd8edfbe8aea925e952",
+  "resource_apk_sha256": "58c27c3f01ebd7f97350a9b2628abb274a447f4fdfc5c0decac54d7f7be4f3cd",
+  "manifest_sha256": "11bf3ed0976505a54ce863ea75295b83121a3b8ac7ddd511dde43035151b2bfc",
+  "scope": "Fresh NodePort/window/service/action Kotlin sources plus AndroidLiveNodePortTest and AndroidLiveScrollTest; Robolectric SDK28.",
+  "limits": "Synthetic metadata receipt; no HardwareBuffer, GPU or physical device proof. AndroidLiveComputer.port wiring requires the combined root compile with the submission dependency."
+}

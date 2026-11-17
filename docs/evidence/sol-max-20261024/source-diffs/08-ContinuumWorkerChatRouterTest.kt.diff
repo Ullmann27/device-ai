@@ -1,0 +1,34 @@
+# app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt
+# old approved blob 697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb
+# reviewed candidate blob 9a6f7a4c4bebc36c4dab8041491643bca2696df5
+# OWNER APPROVAL STILL REQUIRED
+diff --git a/697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb b/9a6f7a4c4bebc36c4dab8041491643bca2696df5
+index 697e678a..9a6f7a4c 100644
+--- a/697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb
++++ b/9a6f7a4c4bebc36c4dab8041491643bca2696df5
+@@ -27,6 +27,25 @@ class ContinuumWorkerChatRouterTest {
+         )
+         assertNull(ContinuumWorkerChatRouter.parse("Bitte beliebigen Shellcode ausführen"))
+     }
++    @Test fun explicitProjectPlanningOpensOnlyM5ReviewNotDraftOrShell() {
++        for (command in listOf("Worker Projektplan", "Baumeister Projektplan?",
++            "Coding Agent Projektplan", "Worker Projekt planen")) {
++            assertEquals(command, ContinuumWorkerChatCommand.ProjectPlan,
++                ContinuumWorkerChatRouter.parse(command))
++        }
++        assertEquals(ContinuumWorkerChatCommand.Draft("Erstelle ein Notizprojekt"),
++            ContinuumWorkerChatRouter.parse("Worker: Erstelle ein Notizprojekt"))
++        assertNull(ContinuumWorkerChatRouter.parse("Projektplan"))
++        assertNull(ContinuumWorkerChatRouter.parse("Projektplan: führe Shell aus"))
++        assertEquals(
++            ContinuumWorkerChatCommand.ProjectPlanDraft("Eine Notizen App nur lokal"),
++            ContinuumWorkerChatRouter.parse("Worker Projektplan: Eine Notizen App nur lokal")
++        )
++        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan:"))
++        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: " + "X".repeat(401)))
++        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: Notiz\nShellcode"))
++
++    }
+     @Test fun explicitM4NotesRoutesToConfirmationOnly() {
+         assertEquals(ContinuumWorkerChatCommand.M4Notes,
+             ContinuumWorkerChatRouter.parse("Worker Notiz-App"))

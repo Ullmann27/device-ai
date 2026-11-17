@@ -1,0 +1,41 @@
+JUnit version 4.13.2
+......E...E.E.E
+Time: 0.133
+There were 4 failures:
+1) incompleteDraftIsEvaluatedButCannotBecomeSuccessfulLearning(at.heinz.deviceai.cognitive.OwnerDialogueOutputTest)
+java.lang.AssertionError: expected:<OUTPUT_LIMIT> but was:<COMPLETE>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.OwnerDialogueOutputTest.incompleteDraftIsEvaluatedButCannotBecomeSuccessfulLearning(OwnerDialogueOutputTest.kt:48)
+2) partialInternalPromptLeakStillFailsTheRealQualityGate(at.heinz.deviceai.cognitive.OwnerDialogueOutputTest)
+java.lang.AssertionError: expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.OwnerDialogueOutputTest.partialInternalPromptLeakStillFailsTheRealQualityGate(OwnerDialogueOutputTest.kt:69)
+3) partialAfterARealToolReceiptCannotConfirmTheOutcome(at.heinz.deviceai.cognitive.OwnerDialogueOutputTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.OwnerDialogueOutputTest.partialAfterARealToolReceiptCannotConfirmTheOutcome(OwnerDialogueOutputTest.kt:88)
+4) completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd(at.heinz.deviceai.cognitive.OwnerDialogueOutputTest)
+java.lang.IllegalArgumentException: LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT
+	at at.heinz.deviceai.cognitive.AgentModelOutput.<init>(BoundedAgent.kt:48)
+	at at.heinz.deviceai.cognitive.AgentModelOutput.<init>(BoundedAgent.kt)
+	at at.heinz.deviceai.cognitive.AgentModelOutput$Companion.ownerDialogue(BoundedAgent.kt:57)
+	at at.heinz.deviceai.cognitive.AgentModelOutput$Companion.ownerDialogue$default(BoundedAgent.kt:55)
+	at at.heinz.deviceai.cognitive.OwnerDialogueOutputTest.completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd$lambda$0(OwnerDialogueOutputTest.kt:16)
+	at at.heinz.deviceai.cognitive.OwnerDialogueOutputTest$Fixture.agent$lambda$0(OwnerDialogueOutputTest.kt:122)
+	at at.heinz.deviceai.cognitive.BoundedAgentOrchestrator.runFrom(BoundedAgent.kt:353)
+	at at.heinz.deviceai.cognitive.BoundedAgentOrchestrator.run(BoundedAgent.kt:235)
+	at at.heinz.deviceai.cognitive.OwnerDialogueOutputTest.completeOwnerResponsePassesTheSameQualityGateWithoutLosingItsEnd(OwnerDialogueOutputTest.kt:17)
+
+FAILURES!!!
+Tests run: 11,  Failures: 4
+
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=43735 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=43735 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts

@@ -1,0 +1,7 @@
+JUnit version 4.13.2
+......................................................
+Time: 0.298
+
+OK (54 tests)
+
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=39969 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=39969 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts

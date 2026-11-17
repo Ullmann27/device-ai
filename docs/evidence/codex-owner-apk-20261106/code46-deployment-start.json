@@ -1,0 +1,16 @@
+{
+  "service_id": "srv-dbf1tr2vcj2c73ehpfog",
+  "workspace_id": "tea-d7qe6dosfn5c73e2rnag",
+  "deploy_id": "dep-dbn0gj5s25qs73a1vrv0",
+  "created_at_utc": "2026-11-06T17:03:09.783024Z",
+  "source_commit": "756bc68d0fb7f8522da8900fd889fd2eae2e8caf",
+  "source_tree": "2161fc5f7dd2b45bba1ac42a59c00746d7611746",
+  "versionCode": 46,
+  "versionName": "0.3.45",
+  "status_at_recording": "queued",
+  "trigger": "api_env_merge",
+  "branch": "research/continuum-m8-render-signed-release-20261031",
+  "previous_deploy": "dep-dbn06r8u01pc73fpcgt0",
+  "original_package": "at.heinz.deviceai.continuumlocal",
+  "original_certificate_sha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23"
+}

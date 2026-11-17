@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C018:s1",
+    "decision": "SPAN",
+    "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+    "endExclusive": 44,
+    "start": 18,
+    "text": "Uvrosabo Uvsogosu Uvpaveza",
+    "offsetEncoding": "UTF-16",
+    "revision": 4
+  },
+  "RULE": {
+    "sourceId": "bc:C018:s1",
+    "decision": "SPAN",
+    "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+    "endExclusive": 44,
+    "start": 18,
+    "text": "Uvrosabo Uvsogosu Uvpaveza",
+    "offsetEncoding": "UTF-16",
+    "revision": 4
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C018:s1",
+    "decision": "SPAN",
+    "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+    "endExclusive": 44,
+    "start": 18,
+    "text": "Uvrosabo Uvsogosu Uvpaveza",
+    "offsetEncoding": "UTF-16",
+    "revision": 4
+  },
+  "rawMillis": 53.718486
+}

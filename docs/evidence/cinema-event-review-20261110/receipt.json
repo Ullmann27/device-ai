@@ -1,0 +1,34 @@
+{
+  "kind": "CONTROLLED_HOST_REGRESSION",
+  "source_commit": "d4d7971545d11ee5697f4175c6ea39444e3b9a6b",
+  "source_tree": "f00393b840750f85d12639e23f5cd5d7a539f072",
+  "remote_equivalent": "73c4b7eed8712abe1683197028d64bd0fb1e7c12",
+  "baseline_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+  "baseline_sampler_tests": {
+    "run": 12,
+    "passed": 8,
+    "failed": 4
+  },
+  "candidate_sampler_tests": {
+    "run": 12,
+    "passed": 12,
+    "failed": 0
+  },
+  "presenter_ui_tests": {
+    "prepared": 11,
+    "status": "NOT_RUN"
+  },
+  "dependency_classes": {
+    "source_commit": "25766f72cd511f247950c7d558fe323be6be2d4c",
+    "note": "Actual previously compiled Android QA classes; no stubs. Selected dependency hashes are in source.txt."
+  },
+  "model_inference": "NOT_RUN",
+  "device_validation": "NOT_RUN",
+  "integration_owner": "root / PR715",
+  "files_sha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt": "a4242bdb3f0f70d961e94820e71d9924783bd07a11d6a808722337fb5f138ecf",
+    "app/src/main/java/at/heinz/deviceai/ui/WindowProjectedMotionSampler.kt": "fdd0b742f1f7c291d66e346022a871b0092c8c6249cc4d431670ca8f9464633d",
+    "app/src/test/java/at/heinz/deviceai/ui/WindowProjectedMotionSamplerTest.kt": "6815e0f3318163a990104783f54a26e7264f09ae5f466a1d7e4213c5a8cdc6c6",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitAnimationPresenterTurnUiTest.kt": "fd5e665d6a792746b94b3ceb7d4834ca94d8dcb82b5261975a4675a984e31b91"
+  }
+}

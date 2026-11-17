@@ -1,0 +1,74 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+
+> Task :app:compileDebugUnitTestKotlin FAILED
+e: file:///workspace/scratch/76b7222771d5/continuum/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt:183:36 Unresolved reference 'observeMotionFrames'.
+e: file:///workspace/scratch/76b7222771d5/continuum/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt:183:58 Cannot infer type for value parameter 'now'. Specify it explicitly.
+e: file:///workspace/scratch/76b7222771d5/continuum/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt:183:63 Cannot infer type for value parameter 'scale'. Specify it explicitly.
+e: file:///workspace/scratch/76b7222771d5/continuum/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt:184:30 'operator' modifier is required on 'fun <T> Comparable<T>.compareTo(other: T): Int'.
+e: file:///workspace/scratch/76b7222771d5/continuum/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt:186:17 'operator' modifier is required on 'fun <T> Comparable<T>.compareTo(other: T): Int'.
+e: file:///workspace/scratch/76b7222771d5/continuum/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt:200:36 Unresolved reference 'observeMotionFrames'.
+e: file:///workspace/scratch/76b7222771d5/continuum/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt:200:58 Cannot infer type for implicit value parameter 'it'. Specify it explicitly.
+e: file:///workspace/scratch/76b7222771d5/continuum/app/src/uiTest/java/at/heinz/deviceai/JarvisShellMotionUiTest.kt:200:61 Cannot infer type for value parameter 'scale'. Specify it explicitly.
+[Incubating] Problems report is available at: file:///workspace/scratch/76b7222771d5/continuum/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugUnitTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 17s
+29 actionable tasks: 1 executed, 28 up-to-date

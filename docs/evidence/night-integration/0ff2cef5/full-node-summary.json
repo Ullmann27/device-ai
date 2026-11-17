@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "CodeRabbit Agent",
+  "generator": "scripts/continuum-reliability-qa.mjs",
+  "profile": "full-node",
+  "startedAt": "2026-11-03T23:30:45.704Z",
+  "environment": {
+    "node": "24.22.1",
+    "platform": "linux",
+    "arch": "x64",
+    "release": "6.18.57"
+  },
+  "status": "PASS",
+  "sourceUnchanged": true,
+  "cancelled": false,
+  "finishedAt": "2026-11-03T23:33:16.345Z",
+  "source": {
+    "commit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+    "branch": "release/continuum-night-integration-20261103",
+    "treeDigest": "3691bfda273d37d41fccda705b8a88982fada49330434197bd08fb761bf59f14"
+  },
+  "originalReport": {
+    "buildEnvPath": "full-node-0ff2cef5/report.json",
+    "sha256": "9890141c85c1ba068c1659865d2f1513569e083d95e4600bfee3f6435b493407",
+    "bytes": 2159849
+  },
+  "omittedFields": [
+    "source.inputsSha256",
+    "checks[].tests.executedCaseHashes",
+    "checks[].tests.skippedCaseHashes"
+  ],
+  "commands": "commands.json",
+  "checks": [
+    {
+      "id": "full-node",
+      "severity": "P0",
+      "cwd": "/workspace/scratch/391c0f6de827/device-ai/",
+      "status": "PASS",
+      "reason": null,
+      "code": 0,
+      "exitSignal": null,
+      "error": null,
+      "terminationConfirmed": true,
+      "junitSha256": "e22345a323d9f94d962138a0474bb83fc5a94050f14f22a7fd2c79b55ddba333",
+      "regressionFingerprint": "1753ef676795d96fb6bfb163bf751fb89272d7c7a9268ee17c044fc70402958c",
+      "tests": {
+        "total": 2306,
+        "failed": 0,
+        "skipped": 37,
+        "placeholders": 0,
+        "executed": 2269,
+        "passed": 2269,
+        "diagnostics": [],
+        "evidenceComplete": true
+      }
+    },
+    {
+      "id": "gradle",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "lint",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "apk",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "fold7",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    },
+    {
+      "id": "model-inference",
+      "severity": "P0",
+      "status": "NOT_RUN",
+      "reason": "OUTSIDE_SELECTED_HOST_SCOPE"
+    }
+  ]
+}

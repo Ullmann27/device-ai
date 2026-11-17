@@ -1,0 +1,39 @@
+{
+  "schema": "SYNAPSE_III_SHADOW_REPLAY_V1",
+  "sourceCommit": "c3c805f12df763e7693162e621a918c68dcc831a",
+  "sourceHashes": {
+    "tools/continuum-span-research/Cdx2CounterfactualShadowChecks.kt": "e0a3845dcee4d00e46fe0a5f4c690f3b8906d16c35484311fe358022c92334e0",
+    "tools/continuum-span-research/Cdx2PointerCandidate.kt": "9c7d33b64d7fb1b13e3ceb22f2b538f3e4e62608d477f7e9868ce1f3b79c5f2e",
+    "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt": "7b29fbef554c3771c1d8ed735aa683429952f4dddabc2662fbca13d0e5d87a4a",
+    "tools/continuum-span-research/Cdx2CounterfactualShadow.kt": "e1d0ceb97197725412a0c2346661d3ae78d5ed7407762f09a5c4c7f8590f45c3"
+  },
+  "holdoutSha256": "ab5b6f363b04f7461f432d9a8150c1b891584f9580c6d1a07461d57fc69fb4c8",
+  "promotion": "FORBIDDEN_RESEARCH_ONLY",
+  "selection": "fixed60epochs/0.05/seeds17,29; no test-based tuning",
+  "gates": {
+    "seed17": {
+      "status": "REJECTED",
+      "pairedRawImprovements": 20,
+      "pairedRawRegressions": 0,
+      "oldCRegressionGate": "FAIL"
+    },
+    "seed29": {
+      "status": "REJECTED",
+      "pairedRawImprovements": 20,
+      "pairedRawRegressions": 0,
+      "oldCRegressionGate": "FAIL"
+    },
+    "ablation17": {
+      "status": "REJECTED",
+      "pairedRawImprovements": 0,
+      "pairedRawRegressions": 0
+    },
+    "ablation29": {
+      "status": "REJECTED",
+      "pairedRawImprovements": 20,
+      "pairedRawRegressions": 30
+    }
+  },
+  "device": "NOT_RUN",
+  "latencyComparison": "NOT_COMPARABLE: cold per-case baseline vs warm batch candidate; no speedup claim"
+}

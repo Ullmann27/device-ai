@@ -1,0 +1,19 @@
+JUnit version 4.13.2
+.E............E..............
+Time: 0.092
+There were 2 failures:
+1) InnerJawRotationAgreesWithTheComposedOuterOpening(at.heinz.deviceai.referencecheck.MapperMotionV2ChallengeTest)
+java.lang.AssertionError: Uncoupled inner/outer jaw for FF jaw=0.0 cue=0.45 expected:<0.40499997> but was:<0.0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.referencecheck.MapperMotionV2ChallengeTest.InnerJawRotationAgreesWithTheComposedOuterOpening(MapperMotionV2ChallengeTest.kt:106)
+2) sharedAnatomicalOpeningIsNotCountedTwiceAndVisemeShapeSurvives(at.heinz.deviceai.referencecheck.MapperMotionV2ChallengeTest)
+java.lang.AssertionError: FF jaw=0.25 cue=0.4 shared opening=0.224 exceeds anatomical budget=0.2
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.referencecheck.MapperMotionV2ChallengeTest.sharedAnatomicalOpeningIsNotCountedTwiceAndVisemeShapeSurvives(MapperMotionV2ChallengeTest.kt:95)
+
+FAILURES!!!
+Tests run: 27,  Failures: 2
+

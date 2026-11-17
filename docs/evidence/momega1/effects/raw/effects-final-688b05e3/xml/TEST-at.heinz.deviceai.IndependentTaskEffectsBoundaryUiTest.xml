@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:47:55" hostname="b354f2cb821b" time="0.262">
+  <properties/>
+  <testcase name="pauseBoundaryCannotReplayCapturedArrivalEvenWhenCallerReappliesScope" classname="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" time="0.048"/>
+  <testcase name="hiddenBoundaryCannotReplayCapturedArrivalAfterBecomingVisible" classname="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" time="0.045"/>
+  <testcase name="productionOverlayIsAboveOpaqueChildAndScopeEndRestoresExactPixels" classname="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" time="0.13"/>
+  <testcase name="explicitScopeEndCannotAcceptAnOlderTimestampWhenSameScopeReturns" classname="at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest" time="0.038"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

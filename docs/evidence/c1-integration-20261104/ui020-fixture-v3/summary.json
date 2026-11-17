@@ -1,0 +1,13 @@
+{
+  "taskId": "C1-UI-020",
+  "phase": "FIXTURE_V3_FROZEN_BEFORE_PRODUCT",
+  "status": "OWN_ANDROID_RED_PENDING",
+  "baseLocal": "6f7ca725261eb4df502ee868e94babc4e12afc15",
+  "baseRemote": "4d74de6c5ca04582ff455356440046e9148acbb0",
+  "baseBlob": "315f42d32518f0c8de4a73cb46c349bd8dbb04d6",
+  "targetBlob": "5059be0cd5f3d4e850eaac6d08faca357e1429fd",
+  "patchSha256": "aa9433cd051d077eac9371f4f75d7c966b88b1dc0125cd22abd5f646fe92709c",
+  "hypothesis": "Keep actual ActivityController.recreate including configuration-change flags and retained instances; one async onActivityResumed Handler pulse advances paused VSync16ms after makeVisible and before native focus. Guards and finally callback cleanup. Fix null tag label and measure newly visible chat rail without changing48dp or navigation assertions.",
+  "appliedProductChanges": [],
+  "rejectedV2": "Manual savedstate destroy/new lost production-significant isChangingConfigurations. Not applied."
+}

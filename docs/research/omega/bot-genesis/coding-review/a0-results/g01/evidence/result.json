@@ -1,0 +1,87 @@
+{
+  "schema": "continuum-coding-task-result",
+  "version": 1,
+  "id": "genesis-g01",
+  "ccc1TaskId": "t-eceda5e10fb49bf4",
+  "taskFingerprint": "8a5cd4f4d20bac723d9270dbc9fbe5de7032d2ea82cac7ca53f25c319be36046",
+  "sourceCommit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+  "chain": "node",
+  "status": "ABSTAINED",
+  "receiptJobs": [
+    "fafab142-6add-47a1-a076-c6ced1eb20b0"
+  ],
+  "receipts": [
+    {
+      "schema": "continuum-mobile-coding-receipt",
+      "version": 1,
+      "job": "fafab142-6add-47a1-a076-c6ced1eb20b0",
+      "operation": "code-repair",
+      "taskId": "mob-468359ddce50f765",
+      "commit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+      "toolchain": {
+        "node": "v24.19.0",
+        "platform": "linux",
+        "arch": "x64",
+        "git": "git version 2.52.0"
+      },
+      "order": {
+        "chain": "node"
+      },
+      "status": "FAILED_REPAIR",
+      "teamleaderOutcome": "NO_VERIFIED_REPAIR",
+      "patch": null,
+      "evidence": null,
+      "commands": [
+        {
+          "phase": "baseline",
+          "exitCode": 1,
+          "passed": false,
+          "executed": 10,
+          "failed": 4,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        }
+      ],
+      "failure": {
+        "code": "NO_VERIFIED_REPAIR",
+        "message": "Repair ended NO_VERIFIED_REPAIR"
+      },
+      "backlog": {
+        "state": "READY",
+        "attempts": 1,
+        "maxAttempts": 3,
+        "error": {
+          "code": "NO_VERIFIED_REPAIR",
+          "message": "NO_VERIFIED_REPAIR"
+        }
+      },
+      "approvedForMerge": false,
+      "apk": null,
+      "installed": false,
+      "deviceVerified": false,
+      "createdAt": "2026-11-03T20:58:35.700Z",
+      "repair": {
+        "outcome": "NO_VERIFIED_REPAIR",
+        "strategy": null,
+        "files": [],
+        "diagnostics": 4,
+        "attempts": 1
+      }
+    }
+  ],
+  "technicalExperienceStatus": "NOT_RECORDED",
+  "technicalRecallCount": 0,
+  "modelExecution": {
+    "verifiedCalls": 1,
+    "acceptedProposals": 1,
+    "rejectedResponses": 0,
+    "identity": {
+      "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+      "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+    }
+  },
+  "approvedForMerge": false,
+  "deviceVerified": false,
+  "neuralTraining": false
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" tests="24" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:12:53" hostname="5268aff5350a" time="0.017">
+  <properties/>
+  <testcase name="morningNounIsNotAFutureMarker" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.004"/>
+  <testcase name="negationBeforeEntityCannotBecomeCurrentState" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="uncertainQuantityClaimCannotRetainItsCount" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="withdrawnAmbiguousQuantityReferenceAbstainsWithoutChoosingAnEntity" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="numberFreeDenialInEarlierTurnRemainsEffectiveOnLaterQuestion" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="numberFreeQuantityDenialCannotResurrectEarlierCount" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="numberFreeUncertaintyCannotConfirmEarlierCount" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="suffixNegationCannotReplaceEarlierQuantityWithDeniedValue" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="separateNoSaveInstructionDoesNotInvalidatePlainCorrection" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="futureIsSeparatedAndMixedFutureFailsClosed" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="fieldTestT2AndT3KeepOriginalAndCurrentValues" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="questionsDoNotAssertAndConflictsFailClosed" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="newScenarioResetsAndBoundsAreEnforced" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.002"/>
+  <testcase name="quantityClaimAboutUnknownEntityOrUnitKeepsKnownCount" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="negationHedgeAlternativeAndConditionalNeverBecomeState" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="withdrawalOfKnownQuantityClaimCannotRetainItsCount" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="numberFreeQuestionsHypotheticalsQuotesAndDoubleNegationsKeepQuantity" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="nonAssertionsAboutQuantityClaimsKeepKnownCount" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="withdrawnOldCountIsNotPromotedToANewEntityOrCurrentFact" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="worksForOtherDomainsAndCorrectionPhrasings" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="unrelatedEntitiesPropertiesUnitsAndNoSaveInstructionsKeepQuantity" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="suffixUncertaintyCannotBecomeCurrentState" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <testcase name="numberFreeDenialInSameOwnerTurnCannotLeaveItsEarlierCount" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.001"/>
+  <testcase name="lateQualifierBeyondExtractionWindowCannotBecomeAffirmativeState" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

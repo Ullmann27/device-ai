@@ -1,0 +1,14 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+JUnit version 4.13.2
+.E..
+Time: 0.255
+There was 1 failure:
+1) explicitNewSessionDropsOldTopicWithoutChangingOwnerFactsOrWeights(at.heinz.deviceai.ContinuumDialogueSessionResetTest)
+org.junit.ComparisonFailure: expected:<[]und wie?> but was:<[Wo wohnt Max? ]und wie?>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ContinuumDialogueSessionResetTest.explicitNewSessionDropsOldTopicWithoutChangingOwnerFactsOrWeights(ContinuumDialogueSessionResetTest.kt:28)
+
+FAILURES!!!
+Tests run: 3,  Failures: 1
+

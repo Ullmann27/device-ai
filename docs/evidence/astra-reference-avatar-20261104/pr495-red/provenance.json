@@ -1,0 +1,33 @@
+{
+  "source_commit": "d38508a78e0afd9ccbd9616445b9dd73c9f9259a",
+  "baseline_application_commit": "ad2fa70bd84988c79b9bd13319cf1a178f99ab3b",
+  "files": [
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+      "sha256": "a4f85ebb9af7d260e2f963a12f4d193d575db2f944fccda3541f1918e352ffd6",
+      "original_sha256": "a4f85ebb9af7d260e2f963a12f4d193d575db2f944fccda3541f1918e352ffd6"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "sha256": "770be6647a49d0c1a65f87b7d5e8690986aa5aeff7b4aaa4be1039419b1f33d1",
+      "original_sha256": "770be6647a49d0c1a65f87b7d5e8690986aa5aeff7b4aaa4be1039419b1f33d1"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/JarvisAvatarDispatchRegressionTest.kt",
+      "sha256": "a0ce879f34f301f0a18fb95b82a42cb5799c021bb215a7b6192df39f21ed6b14",
+      "original_sha256": "a0ce879f34f301f0a18fb95b82a42cb5799c021bb215a7b6192df39f21ed6b14"
+    }
+  ],
+  "graphics_override": null,
+  "classpath_prefix": [
+    "/workspace/scratch/b3170a7ae924/device-ai-qa-f14/app/build/tmp/kotlin-classes/debug"
+  ],
+  "junit_exit": 1,
+  "runtime_application_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "runtime_classpath_file": "/workspace/scratch/b3170a7ae924/combined-worker-unit-classpath.txt",
+  "selections": [
+    "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest",
+    "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+    "at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest"
+  ]
+}

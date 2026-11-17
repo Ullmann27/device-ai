@@ -1,0 +1,23 @@
+JUnit version 4.13.2
+...................
+Time: 0.215
+
+OK (19 tests)
+
+✔ actual registry snapshot constrains the existing planner without granting authority (3.007547ms)
+✔ self-enrolled model offer outside registry cannot create a route (0.702144ms)
+✔ task hash, ID, output, deadline and actual input size stay bound (1.408774ms)
+✔ insufficient RAM/runtime/output and unsupported task/backend exclude node (1.733441ms)
+✔ explicit assignment cannot be replaced with another enrolled node (0.663158ms)
+✔ expired or future snapshot fails closed; duplicated and malformed nodes rejected (2.825164ms)
+✔ remote consent and private-context rules still belong to existing planner (1.165066ms)
+✔ resource snapshot is not permission and cannot attest model bytes or locality (0.448497ms)
+✔ native JVM export feeds Node byte-for-byte when cross-language runner is configured (0.820701ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 95.382694

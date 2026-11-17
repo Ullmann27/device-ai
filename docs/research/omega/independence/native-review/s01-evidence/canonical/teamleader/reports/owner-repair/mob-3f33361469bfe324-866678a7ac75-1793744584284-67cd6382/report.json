@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 1,
+  "base": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+  "chain": "node",
+  "startedAt": "2026-11-03T22:23:04.299Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": null,
+    "modelInvocations": null,
+    "localRequests": 1,
+    "verifiedModelExecution": false,
+    "candidateStatus": "UNAVAILABLE_OR_REJECTED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "provider-rejection",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_MODEL_UNAVAILABLE",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_MODEL_UNAVAILABLE",
+        "repeated": false
+      }
+    ],
+    "reason": "Provider calls do not independently establish model execution",
+    "lastRejectCode": "CODING_MODEL_UNAVAILABLE"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 10000,
+          "runtime": "runc",
+          "sourceSha256": "beedf222e901498cf4e1780f05d588f0e156ce5fb023a3051e6cb4e6cfa5ad42",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-a2b498e90f2658aeb2751ae5",
+          "workspaceBinding": {
+            "workerId": "bot-forge",
+            "taskId": "t-af864ab6f02c7dec",
+            "requestMessageId": "f5030412-5f39-47eb-854a-d384b7404db4",
+            "requestHash": "071ad0d950ef50a0d576facec2024b831b04eca10091443be2c5d537c3c19f57",
+            "sourceCommit": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+            "jobId": "c69e8ced-cd5e-419c-bc24-0c4cc4cdd2eb"
+          },
+          "observed": {
+            "containerId": "fb99306e09d267665bad87a1d20514cef635d4cbd86f50792315df6f033341ad",
+            "runtime": "runc",
+            "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 6,
+          "failed": 4,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 6,
+          "passed": 2,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/owner.test.mjs\",[],\"positive shift moves the last element to the front\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/owner.test.mjs\",[],\"large shifts wrap around the array length\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/owner.test.mjs\",[],\"a negative right shift rotates left\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/owner.test.mjs\",[],\"zero and full rotations return a new array\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/owner.test.mjs\",[],\"empty and one-element arrays are supported\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/owner.test.mjs\",[],\"input and element references are preserved\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "6c7f9efa709400fdbbcc44817f9aeb7fad4877e3102e0106864549710e70f19b"
+          ],
+          "executedCaseHashes": [
+            "22d0a5b90133ac3811e55609931efedeed830a3172a867d4a61505e76e1bf98a",
+            "6afc43299ad7f62bc0f20f685b2e5da38546988f0e92a8d6411b014e98254507",
+            "8dface0427a64cc712c4de64e546cebadb4c374488101832216732606496382f",
+            "92e9153c7981be5db734e9606d81881a857da15a751eac32ba11ec2d5fd90ef1",
+            "c6e9cc2198b510dfe530bc76c450edbcf8359ee90d2e1f9cc4786f6d839b90c5",
+            "cfc6dc876d5d2629a38d28b688a7be74fe45386a65552d64c58e9494a1e3f7b8"
+          ]
+        },
+        "diagnostics": 4
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.positive shift moves the last element to the front",
+        "file": ".github/continuum/owner.test.mjs",
+        "line": 6,
+        "col": 10,
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'b',\n+   'c',\n    'd',\n    'a',\n-   'b',\n-   'c'\n  ]",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "c2d9307b25973563"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.large shifts wrap around the array length",
+        "file": ".github/continuum/owner.test.mjs",
+        "line": 9,
+        "col": 10,
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   30,\n    40,\n    50,\n    10,\n    20,\n-   30\n  ]",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "29c8b121eb578c2f"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.a negative right shift rotates left",
+        "file": ".github/continuum/owner.test.mjs",
+        "line": 12,
+        "col": 10,
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   4,\n+   1,\n    2,\n    3,\n-   4,\n-   1\n  ]",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "d4d6587ca983cf37"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.input and element references are preserved",
+        "file": ".github/continuum/owner.test.mjs",
+        "line": 31,
+        "col": 10,
+        "message": "Expected &quot;actual&quot; to be reference-equal to &quot;expected&quot;:\n+ actual - expected\n\n  {\n+   id: 'b'\n-   id: 'c'\n  }",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "75b3602a22a88fcd"
+      }
+    ]
+  },
+  "attempts": [],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "progress": [
+    {
+      "phase": "CHECKING_BASELINE",
+      "at": "2026-11-03T22:23:04.299Z",
+      "attempt": 0
+    },
+    {
+      "phase": "BASELINE_FAILED",
+      "at": "2026-11-03T22:23:05.853Z",
+      "attempt": 0
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T22:23:05.862Z",
+      "attempt": 1
+    },
+    {
+      "phase": "BLOCKED",
+      "at": "2026-11-03T22:23:38.398Z",
+      "attempt": 1
+    }
+  ],
+  "coding": {
+    "taskId": "mob-3f33361469bfe324",
+    "taskFingerprint": "1d29b3b5c2343c4bc45d4337f43bc06acaf88a3b23e08120584f1b546a8341f4",
+    "sourceCommit": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+    "allowedPaths": [
+      "lib/subject.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED"
+    ],
+    "candidateCount": 0,
+    "contextSha256": null
+  },
+  "finishedAt": "2026-11-03T22:23:38.406Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 4,
+        "proof": "14d7c2e4437d74cf4fd1b779bcaf601d5c7e76cecebc6247a14f538f826bcc38"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "878012444d93492e7be1f597239e8fb3b023376b50256312ab829d61e3b02228"
+  }
+}

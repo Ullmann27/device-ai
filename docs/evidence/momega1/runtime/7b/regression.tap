@@ -1,0 +1,364 @@
+TAP version 13
+# Subtest: real full GGUF admission: exact bytes -> identity receipt, no runtime authority
+ok 1 - real full GGUF admission: exact bytes -> identity receipt, no runtime authority
+  ---
+  duration_ms: 154.998693
+  type: 'test'
+  ...
+# Subtest: real full admission rejects modified tensor bytes under unchanged pin
+ok 2 - real full admission rejects modified tensor bytes under unchanged pin
+  ---
+  duration_ms: 147.988097
+  type: 'test'
+  ...
+# Subtest: malformed GGUF with self-consistent SHA is rejected structurally
+ok 3 - malformed GGUF with self-consistent SHA is rejected structurally
+  ---
+  duration_ms: 56.944704
+  type: 'test'
+  ...
+# Subtest: altered manifest size and missing manifest do not admit
+ok 4 - altered manifest size and missing manifest do not admit
+  ---
+  duration_ms: 152.145089
+  type: 'test'
+  ...
+# Subtest: simulated Termux actually executes preflight before touching even server --help
+ok 5 - simulated Termux actually executes preflight before touching even server --help
+  ---
+  duration_ms: 164.121142
+  type: 'test'
+  ...
+# Subtest: valid canonical owner pin is read without persistence or mutation
+ok 6 - valid canonical owner pin is read without persistence or mutation
+  ---
+  duration_ms: 59.67726
+  type: 'test'
+  ...
+# Subtest: manifest missing, symlinked, hardlinked or group-writable fails closed
+ok 7 - manifest missing, symlinked, hardlinked or group-writable fails closed
+  ---
+  duration_ms: 8.144798
+  type: 'test'
+  ...
+# Subtest: oversize, malformed JSON and all invalid manifest fields refuse
+ok 8 - oversize, malformed JSON and all invalid manifest fields refuse
+  ---
+  duration_ms: 29.684603
+  type: 'test'
+  ...
+# Subtest: no pin or file-name mismatch never calls admission
+ok 9 - no pin or file-name mismatch never calls admission
+  ---
+  duration_ms: 6.229125
+  type: 'test'
+  ...
+# Subtest: admission must independently confirm bytes, identity and disabled execution
+ok 10 - admission must independently confirm bytes, identity and disabled execution
+  ---
+  duration_ms: 10.832597
+  type: 'test'
+  ...
+# Subtest: rejected model admission propagates and prints no false success receipt
+ok 11 - rejected model admission propagates and prints no false success receipt
+  ---
+  duration_ms: 7.074382
+  type: 'test'
+  ...
+# Subtest: Termux launcher rejects missing pinned manifest before running even server --help
+ok 12 - Termux launcher rejects missing pinned manifest before running even server --help
+  ---
+  duration_ms: 26.134612
+  type: 'test'
+  ...
+# Subtest: parses real GGUF v2/v3 structure and bounded tensor bytes
+ok 13 - parses real GGUF v2/v3 structure and bounded tensor bytes
+  ---
+  duration_ms: 6.55615
+  type: 'test'
+  ...
+# Subtest: rejects magic, endian and unsupported versions
+ok 14 - rejects magic, endian and unsupported versions
+  ---
+  duration_ms: 0.861311
+  type: 'test'
+  ...
+# Subtest: rejects truncation and oversized counts before iteration or allocation
+ok 15 - rejects truncation and oversized counts before iteration or allocation
+  ---
+  duration_ms: 0.422358
+  type: 'test'
+  ...
+# Subtest: rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
+ok 16 - rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
+  ---
+  duration_ms: 1.592535
+  type: 'test'
+  ...
+# Subtest: skips tokenizer arrays without retaining tokens or evaluating templates
+ok 17 - skips tokenizer arrays without retaining tokens or evaluating templates
+  ---
+  duration_ms: 0.918887
+  type: 'test'
+  ...
+# Subtest: rejects nested arrays, enormous array/string lengths and invalid alignment
+ok 18 - rejects nested arrays, enormous array/string lengths and invalid alignment
+  ---
+  duration_ms: 0.990345
+  type: 'test'
+  ...
+# Subtest: rejects wrong metadata scalar types, non-finite floats and booleans
+ok 19 - rejects wrong metadata scalar types, non-finite floats and booleans
+  ---
+  duration_ms: 0.381796
+  type: 'test'
+  ...
+# Subtest: rejects tensor overflow, out-of-file ranges, overlap and misalignment
+ok 20 - rejects tensor overflow, out-of-file ranges, overlap and misalignment
+  ---
+  duration_ms: 17.529228
+  type: 'test'
+  ...
+# Subtest: rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
+ok 21 - rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
+  ---
+  duration_ms: 0.725045
+  type: 'test'
+  ...
+# Subtest: computes quantized row storage from audited block sizes
+ok 22 - computes quantized row storage from audited block sizes
+  ---
+  duration_ms: 0.448667
+  type: 'test'
+  ...
+# Subtest: rejects bounded header exhaustion and missing/unsafe architecture metadata
+ok 23 - rejects bounded header exhaustion and missing/unsafe architecture metadata
+  ---
+  duration_ms: 2.186902
+  type: 'test'
+  ...
+# Subtest: file admission hashes actual bytes and records identity without model trust
+ok 24 - file admission hashes actual bytes and records identity without model trust
+  ---
+  duration_ms: 41.696155
+  type: 'test'
+  ...
+# Subtest: admission rejects links, writable files, directories and malformed provenance
+ok 25 - admission rejects links, writable files, directories and malformed provenance
+  ---
+  duration_ms: 4.140032
+  type: 'test'
+  ...
+# Subtest: file admission enforces caller resource and cancellation bounds
+ok 26 - file admission enforces caller resource and cancellation bounds
+  ---
+  duration_ms: 2.518974
+  type: 'test'
+  ...
+# Subtest: 7B exact owner pin admits a bounded manifest without inference promotion
+ok 27 - 7B exact owner pin admits a bounded manifest without inference promotion
+  ---
+  duration_ms: 47.541016
+  type: 'test'
+  ...
+# Subtest: resource profile is frozen and restricted to every exact pin field plus runtime hash
+ok 28 - resource profile is frozen and restricted to every exact pin field plus runtime hash
+  ---
+  duration_ms: 0.487125
+  type: 'test'
+  ...
+# Subtest: 7B uses the fixed Qwen ChatML serialization, unknown model does not
+ok 29 - 7B uses the fixed Qwen ChatML serialization, unknown model does not
+  ---
+  duration_ms: 0.300924
+  type: 'test'
+  ...
+# Subtest: 7B total-job memory check is real and cannot accept the shared16GiB host group
+ok 30 - 7B total-job memory check is real and cannot accept the shared16GiB host group
+  ---
+  duration_ms: 1.690723
+  type: 'test'
+  ...
+# Subtest: large header requires exact complete provenance, no caller file-size bypass
+ok 31 - large header requires exact complete provenance, no caller file-size bypass
+  ---
+  duration_ms: 2.963666
+  type: 'test'
+  ...
+# Subtest: native pinned completion counters preserve actual timestamped format
+ok 32 - native pinned completion counters preserve actual timestamped format
+  ---
+  duration_ms: 1.257279
+  type: 'test'
+  ...
+# Subtest: only known native completion trailer is removed; raw hash input is unchanged
+ok 33 - only known native completion trailer is removed; raw hash input is unchanged
+  ---
+  duration_ms: 0.449569
+  type: 'test'
+  ...
+# Subtest: official Qwen bytes select ChatML, with schema constraint supplied as inert data
+ok 34 - official Qwen bytes select ChatML, with schema constraint supplied as inert data
+  ---
+  duration_ms: 0.910244
+  type: 'test'
+  ...
+# Subtest: normal caller cannot certify a serialized runtime observation
+ok 35 - normal caller cannot certify a serialized runtime observation
+  ---
+  duration_ms: 1.276919
+  type: 'test'
+  ...
+# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
+ok 36 - coding CLI blocks endpoint-only configuration before any network/model call
+  ---
+  duration_ms: 92.378327
+  type: 'test'
+  ...
+# Subtest: unapproved or absent local weights never produce runtime observations
+ok 37 - unapproved or absent local weights never produce runtime observations
+  ---
+  duration_ms: 1.482298
+  type: 'test'
+  ...
+# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
+ok 38 - actual namespace binds admitted descriptors and fixture output; never inference evidence
+  ---
+  duration_ms: 83.069412
+  type: 'test'
+  ...
+# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
+ok 39 - altered model/runtime, unsafe executable and mismatched request cannot execute
+  ---
+  duration_ms: 52.424559
+  type: 'test'
+  ...
+# Subtest: deadline cancels actual isolated process with bounded return
+ok 40 - deadline cancels actual isolated process with bounded return
+  ---
+  duration_ms: 311.415495
+  type: 'test'
+  ...
+# Subtest: STOP cancels actual isolated process and leaves no trusted observation
+ok 41 - STOP cancels actual isolated process and leaves no trusted observation
+  ---
+  duration_ms: 203.592242
+  type: 'test'
+  ...
+# Subtest: malformed/oversized output and missing generation counters are rejected
+ok 42 - malformed/oversized output and missing generation counters are rejected
+  ---
+  duration_ms: 180.632919
+  type: 'test'
+  ...
+# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
+ok 43 - sandbox exposes no checkout, HOME, network, secret or configurable shell
+  ---
+  duration_ms: 1.290209
+  type: 'test'
+  ...
+# Subtest: actual FD mount retains selected inode across model path replacement
+ok 44 - actual FD mount retains selected inode across model path replacement
+  ---
+  duration_ms: 65.189193
+  type: 'test'
+  ...
+# Subtest: prompt evaluation counter alone cannot masquerade as output generation
+ok 45 - prompt evaluation counter alone cannot masquerade as output generation
+  ---
+  duration_ms: 60.813106
+  type: 'test'
+  ...
+# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
+ok 46 - inference sandbox denies host files, external interfaces, secrets and writable model
+  ---
+  duration_ms: 68.784061
+  type: 'test'
+  ...
+# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
+ok 47 - seccomp denies fork and rlimits bound native memory/descriptor budgets
+  ---
+  duration_ms: 58.158171
+  type: 'test'
+  ...
+# Subtest: changing model during actual execution invalidates otherwise valid output
+ok 48 - changing model during actual execution invalidates otherwise valid output
+  ---
+  duration_ms: 259.833114
+  type: 'test'
+  ...
+# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
+ok 49 - production provider rejects synthetic fixture receipt even when transport MAC is valid
+  ---
+  duration_ms: 156.697016
+  type: 'test'
+  ...
+# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
+ok 50 - self-asserted inference flag is rejected instead of upgraded or accepted
+  ---
+  duration_ms: 75.175833
+  type: 'test'
+  ...
+# Subtest: native worker threads remain permitted while process creation stays denied
+ok 51 - native worker threads remain permitted while process creation stays denied
+  ---
+  duration_ms: 72.108641
+  type: 'test'
+  ...
+# Subtest: unavailable isolation launcher fails closed and creates no observation
+ok 52 - unavailable isolation launcher fails closed and creates no observation
+  ---
+  duration_ms: 43.019238
+  type: 'test'
+  ...
+# Subtest: integration strict observation option rejects injected unobserved provider replies
+ok 53 - integration strict observation option rejects injected unobserved provider replies
+  ---
+  duration_ms: 71.824142
+  type: 'test'
+  ...
+# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
+ok 54 - integration technical recall enters prompt as bounded untrusted data within context budget
+  ---
+  duration_ms: 68.165628
+  type: 'test'
+  ...
+# Subtest: integration malformed recall and strict remote selection fail before transport
+ok 55 - integration malformed recall and strict remote selection fail before transport
+  ---
+  duration_ms: 61.775874
+  type: 'test'
+  ...
+# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+ok 56 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+  ---
+  duration_ms: 229.258948
+  type: 'test'
+  ...
+# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
+ok 57 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
+  ---
+  duration_ms: 0.903414
+  type: 'test'
+  ...
+# Subtest: invalid model JSON retains authenticated process observation without a candidate
+ok 58 - invalid model JSON retains authenticated process observation without a candidate
+  ---
+  duration_ms: 69.59073
+  type: 'test'
+  ...
+# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
+ok 59 - provider retains authenticated rejected-response observation and consumed durable budget
+  ---
+  duration_ms: 202.371158
+  type: 'test'
+  ...
+1..59
+# tests 59
+# suites 0
+# pass 59
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3079.874804

@@ -1,0 +1,4 @@
+853a8ee08359ce41375ddb9334ac8ae9c2e2c59e
+9b1b780287bc2b90b281b67ae1ffc5d0bfdc5e97
+v24.19.0
+CONTINUUM_FABRIC_JVM_DEPS=/workspace/continuum-build-env/native-graph-deps

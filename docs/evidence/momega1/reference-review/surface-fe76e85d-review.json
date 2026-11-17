@@ -1,0 +1,17 @@
+{
+  "schema": "independent-surface-variant-review",
+  "version": 1,
+  "candidateSha256": "fe76e85d8396c24543ae14d7fe31cc2c952d383ab30606393f0deb18204f9e8a",
+  "baselineSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "originalBinaryDataPrefixIdentical": true,
+  "originalNodeSkinAccessorBufferViewBindingsIdentical": true,
+  "primaryGeometryAttributesAndMorphBindingsIdentical": true,
+  "appearanceStatus": "NOT_ACCEPTED",
+  "observations": [
+    "Finer lines are more numerous but form a cylindrical horizontal/diagonal cage instead of following facial contours.",
+    "Uniform fine grid and possible front/back overlays obscure nose/lip readability.",
+    "Eye emission is less bright than the first material variant, but natural opening/closure remains to inspect through actual mapper poses.",
+    "Manual front comparison suggests wider/shorter projected silhouette than the reference; not reconstructed 3D ground truth."
+  ],
+  "limits": "Independent binary/binding comparison and actual host images, not full geometry collision proof or Filament/device appearance."
+}

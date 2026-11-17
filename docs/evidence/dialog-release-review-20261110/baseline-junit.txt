@@ -1,0 +1,15 @@
+[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/66 because it is locked by another process (errno = 11)
+JUnit version 4.13.2
+.....E.
+Time: 0.078
+There was 1 failure:
+1) temporalBackReferencesAreNotConcreteCorrectedScopes(at.heinz.deviceai.cognitive.ConversationControlTest)
+java.lang.AssertionError: Nein, ich meinte den vorigen. expected:<CLARIFY_SCOPE> but was:<SCOPE_UPDATED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.ConversationControlTest.temporalBackReferencesAreNotConcreteCorrectedScopes(ConversationControlTest.kt:54)
+
+FAILURES!!!
+Tests run: 6,  Failures: 1
+

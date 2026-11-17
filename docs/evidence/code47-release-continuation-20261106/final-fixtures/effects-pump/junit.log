@@ -1,0 +1,18 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=36219 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=36219 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest#authorizedRealRunnerEntryAndExitReachTheVisibleSurface
+.E
+Time: 5.463
+There was 1 failure:
+1) authorizedRealRunnerEntryAndExitReachTheVisibleSurface(at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest)
+java.lang.AssertionError: Actual runner exit has no departure
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest.authorizedRealRunnerEntryAndExitReachTheVisibleSurface$lambda$0(ContinuumTaskEffectsCallerUiTest.kt:132)
+	at at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest.withFixture(ContinuumTaskEffectsCallerUiTest.kt:100)
+	at at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest.authorizedRealRunnerEntryAndExitReachTheVisibleSurface(ContinuumTaskEffectsCallerUiTest.kt:113)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=1 failures=1

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-16T06:06:27" hostname="731a0110a54f" time="6.069">
+  <properties/>
+  <testcase name="composerDraftSurvivesActualWindowReflowAndActivityRecreation" classname="at.heinz.deviceai.ContinuumReferenceCockpitUiTest" time="6.069"/>
+  <system-out><![CDATA[REFLOW_OBSERVATION old=280 current=280 measured=280.0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

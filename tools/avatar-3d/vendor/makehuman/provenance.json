@@ -1,0 +1,456 @@
+{
+  "upstream": "https://github.com/makehumancommunity/makehuman",
+  "revision": "a8bc2d54ff0ac92e78ff71431b1023eda42bf482",
+  "license": "CC0-1.0",
+  "sourceCodeImported": false,
+  "files": [
+    {
+      "upstreamPath": "LICENSE.md",
+      "localPath": "tools/avatar-3d/vendor/makehuman/LICENSE.md",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.md",
+      "sha256": "edd99571ca62698f78c943fd4fffb159a413c315fa0d4819d3cec5cadaf8b4f1",
+      "bytes": 3598
+    },
+    {
+      "upstreamPath": "LICENSE.ASSETS.md",
+      "localPath": "tools/avatar-3d/vendor/makehuman/LICENSE.ASSETS.md",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/LICENSE.ASSETS.md",
+      "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c",
+      "bytes": 6962
+    },
+    {
+      "upstreamPath": "makehuman/data/3dobjs/base.obj",
+      "localPath": "tools/avatar-3d/vendor/makehuman/base.obj",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/3dobjs/base.obj",
+      "sha256": "8e761e6624b8f54536409135d1636da63b32486a90d4897f84e121d144f6fb4c",
+      "bytes": 1749303
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eye-left-closure.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eye-left-closure.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eye-left-closure.target",
+      "sha256": "e38cb77fd888de3d0d944efe6f3511bf3ca4076b0397fa7c840d8368f08205c2",
+      "bytes": 3946
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eye-left-opened-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eye-left-opened-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eye-left-opened-up.target",
+      "sha256": "c379cbc9106315180fc5646ff8fd063268f47d2f564598606559d82a589c1310",
+      "bytes": 3967
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eye-left-slit.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eye-left-slit.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eye-left-slit.target",
+      "sha256": "f2724e8d865211ded6022ba886ece6a47ca9bbb4d279f302f93329d3fa624d10",
+      "bytes": 5136
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eye-right-closure.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eye-right-closure.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eye-right-closure.target",
+      "sha256": "58faf2c199272bfd87478ea122cdaa4b4b8669505be0d75f777c5471527b2b15",
+      "bytes": 3776
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eye-right-opened-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eye-right-opened-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eye-right-opened-up.target",
+      "sha256": "1e342b3b0731d5cdbd5e223817303c0364782f0de52887cc3e414fdb451c184f",
+      "bytes": 3801
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eye-right-slit.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eye-right-slit.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eye-right-slit.target",
+      "sha256": "713283452d24f0b68d9026e26fb3b3ee2e479dd33b31021926f94bf4e593d368",
+      "bytes": 5118
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eyebrows-left-down.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eyebrows-left-down.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eyebrows-left-down.target",
+      "sha256": "89999e77f486dda420fde6d67ca7e32e885d80e816111e776ff292efe41b209d",
+      "bytes": 1629
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eyebrows-left-extern-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eyebrows-left-extern-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eyebrows-left-extern-up.target",
+      "sha256": "ea63558d1e7fce6004cc4f7cd912d7058791134a00b113fb9f2a757a0bb96b2f",
+      "bytes": 1977
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eyebrows-left-inner-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eyebrows-left-inner-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eyebrows-left-inner-up.target",
+      "sha256": "2fa94d522d54bb33078c72ac111da75005b5b2bf495d647c6e9fd5b41245b287",
+      "bytes": 1321
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eyebrows-left-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eyebrows-left-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eyebrows-left-up.target",
+      "sha256": "4f770b7281ed9502c2e164850e41265310a445d0534bbc9a8faa949c05677775",
+      "bytes": 1381
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eyebrows-right-down.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eyebrows-right-down.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eyebrows-right-down.target",
+      "sha256": "86f0d1440944fa4754d24c128f7d105f6a93dbd6ce9204be972bcb2ad5be4cec",
+      "bytes": 1579
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eyebrows-right-extern-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eyebrows-right-extern-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eyebrows-right-extern-up.target",
+      "sha256": "80675b2f74ba16b8d86ab1cf95a5660cf5b02e603bdd6396d85a7d18a84ee3fa",
+      "bytes": 2194
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eyebrows-right-inner-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eyebrows-right-inner-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eyebrows-right-inner-up.target",
+      "sha256": "c97c24303a308d042f353e00038f35bc15b0d253cbdc9213dbe50fb01809893c",
+      "bytes": 1256
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/eyebrows-right-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/eyebrows-right-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/eyebrows-right-up.target",
+      "sha256": "496a446cb77aad463dfd952a8a648e758ee0954c64a96a4e4412f9a042391881",
+      "bytes": 1486
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-compression.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-compression.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-compression.target",
+      "sha256": "b7abd0826708d7e4344559583edd0fc80e098b08b91f3e6d67d83b1eed20ccbe",
+      "bytes": 13039
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-corner-puller.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-corner-puller.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-corner-puller.target",
+      "sha256": "75ec1f2356c381aa44065f2b812daafae85c5a918843b978d04cf6d8bc79dbe4",
+      "bytes": 15163
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-depression-retraction.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-depression-retraction.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-depression-retraction.target",
+      "sha256": "0ebefb40c4374e628c9595a74f5222bff6323474c87d2d93d1249593806bdc23",
+      "bytes": 10224
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-depression.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-depression.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-depression.target",
+      "sha256": "906a614c24a63a126abeb28b2adbc84efb5f08b49d76fe8ce79fbd0ca9732f9f",
+      "bytes": 12263
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-elevation.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-elevation.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-elevation.target",
+      "sha256": "0b306cea4b0bb372d408b69a55332b8ddb252b3f2d4bfdd6b9d5c34da0f90e32",
+      "bytes": 11104
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-eversion.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-eversion.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-eversion.target",
+      "sha256": "80ab01c962f5ed9d70492e2fe5802bd5106867c21969bb71ddb19e66c5d6ae9b",
+      "bytes": 8071
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-open.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-open.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-open.target",
+      "sha256": "07377ba3a3eb1b92b00029908f896ea1f8cc50356789f54268d897f2e89c2843",
+      "bytes": 26815
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-parling.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-parling.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-parling.target",
+      "sha256": "2da1d3143b3fcf4193629fc5c26b015b8c505cc3258dc41ecd3e20d598b65ccb",
+      "bytes": 4095
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-part-later.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-part-later.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-part-later.target",
+      "sha256": "5128d051612b61a4cf15b664c3c5439e10718b98cc3411be5cad363cae5b4b02",
+      "bytes": 17879
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-protusion.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-protusion.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-protusion.target",
+      "sha256": "012c571c381c3dee06591132110d7d64fb2abd49d883afc619f6bc6c0000d2f4",
+      "bytes": 14207
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-pursing.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-pursing.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-pursing.target",
+      "sha256": "02b08ad99c2345e83cbd4c77819fadef2af8c7fc3111211fc169459eb7f37d10",
+      "bytes": 16023
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-retraction.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-retraction.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-retraction.target",
+      "sha256": "245fe1fa08e91091a2f236b88f4117e78157a4c17cff0a125e819e2a237e0048",
+      "bytes": 13698
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/mouth-upward-retraction.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/mouth-upward-retraction.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/mouth-upward-retraction.target",
+      "sha256": "aaaed4ee0c13401352b4b6dc8d0bccb61bfda0996ed2718a456a0c32e5f32d0a",
+      "bytes": 15436
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/neck-platysma.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/neck-platysma.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/neck-platysma.target",
+      "sha256": "3f0fba349a5724eef7a9c9473acdbb43a9e8e77b4864e69d743f0b3676e44769",
+      "bytes": 17628
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/nose-compression.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/nose-compression.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/nose-compression.target",
+      "sha256": "b676ac07df061d30b770889675b08368082bb9b4b97e22057b854b4c49618df2",
+      "bytes": 1491
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/nose-depression.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/nose-depression.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/nose-depression.target",
+      "sha256": "545f4e4e9f59637f3a80c3d1a0367f7b08a3317fd487c096b0531bac096e1bca",
+      "bytes": 4618
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/nose-left-dilatation.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/nose-left-dilatation.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/nose-left-dilatation.target",
+      "sha256": "a4964a35efe3c7b8a7209702d5533147f93c3b7f093c459c2e460da4991da6c9",
+      "bytes": 1841
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/nose-left-elevation.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/nose-left-elevation.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/nose-left-elevation.target",
+      "sha256": "5a63b622bfb21bd0cf530f64a66eb8ebfe01e81e1edbfc706161ca8472b3656e",
+      "bytes": 3681
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/nose-right-dilatation.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/nose-right-dilatation.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/nose-right-dilatation.target",
+      "sha256": "e7b0721836584890f4a4bc9df4c028ef87e72868f336154f66cae6ac42e89734",
+      "bytes": 1839
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/expression/units/caucasian/nose-right-elevation.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/nose-right-elevation.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/expression/units/caucasian/nose-right-elevation.target",
+      "sha256": "4ebad1433573bc5b9577dc5808537752e93c68e59f4422472b2e753b53a260f0",
+      "bytes": 3639
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-age-decr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-age-decr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-age-decr.target",
+      "sha256": "dce4ba0fcd18e7a4e5bc86d98785452ac5ca6d33b993d7c37ffdb339e50ff568",
+      "bytes": 75981
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-age-incr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-age-incr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-age-incr.target",
+      "sha256": "ff677345bd81e3f439bdf75496bbee620ca3c3f029955a546837afd283abf73a",
+      "bytes": 59255
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-angle-in.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-angle-in.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-angle-in.target",
+      "sha256": "953fe91e2b7db350c1c932637e48b12d719528bdfdd077b44fc1cf7546a3e0fd",
+      "bytes": 68747
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-angle-out.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-angle-out.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-angle-out.target",
+      "sha256": "c0e5eb1f4919d72784d79eeb54082af46061b050bb1c0df29569a752b0ad5e8b",
+      "bytes": 72434
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-back-scale-depth-decr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-back-scale-depth-decr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-back-scale-depth-decr.target",
+      "sha256": "9f61e5de3594409e491f8ddcf47862b6f81ae54406e277534de23e669853914c",
+      "bytes": 8977
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-back-scale-depth-incr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-back-scale-depth-incr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-back-scale-depth-incr.target",
+      "sha256": "fccca38488e1f4c431943a8fafc55b0501e820ba1233f7f380507c4d444b8d01",
+      "bytes": 9220
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-diamond.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-diamond.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-diamond.target",
+      "sha256": "7072c718c8476ca38d6758fb7531fd945612d51acdca6555da8a8f770284c41d",
+      "bytes": 11876
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-fat-decr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-fat-decr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-fat-decr.target",
+      "sha256": "00473b6069f9cf6c05a2f1fd0c0bae20bb4ec45e9552bb5695f1d1533f3cc119",
+      "bytes": 14347
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-fat-incr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-fat-incr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-fat-incr.target",
+      "sha256": "075d18cdfea9e781ae0152132bfea97ea9b901ffdece8d5e6866cb1744f10056",
+      "bytes": 14473
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-invertedtriangular.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-invertedtriangular.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-invertedtriangular.target",
+      "sha256": "d236302afe23f2f2d6d753e4b73f91c1220d17dca24417931fe477a232f18116",
+      "bytes": 32815
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-oval.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-oval.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-oval.target",
+      "sha256": "a17cd3a600588a344babe520fbd4d4edcb096db3328051fe692dfb997a1a678d",
+      "bytes": 36452
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-rectangular.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-rectangular.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-rectangular.target",
+      "sha256": "bbfcbd4d6334df18515e73abb707b8a948adb74e0aba88a728c8e146dd5f4e4b",
+      "bytes": 10633
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-round.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-round.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-round.target",
+      "sha256": "bd96b745b19432ac838f15438aa87e9002f597e59353861721e12e6da0f2c625",
+      "bytes": 32961
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-scale-depth-decr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-scale-depth-decr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-scale-depth-decr.target",
+      "sha256": "3989a6a769fd4ee5b69179f3b8f3281deb882d943e071ef4b808e5faa4040663",
+      "bytes": 73849
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-scale-depth-incr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-scale-depth-incr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-scale-depth-incr.target",
+      "sha256": "b31ac0344498d2563d216b568a98eb941f6ebcfd07e034a2b8d1958ccb0b9dec",
+      "bytes": 69299
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-scale-horiz-decr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-scale-horiz-decr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-scale-horiz-decr.target",
+      "sha256": "cadb55b340cb94e96131860beb68b2e46204fccc7ee8f963f66cc9d22b03af0c",
+      "bytes": 81690
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-scale-horiz-incr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-scale-horiz-incr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-scale-horiz-incr.target",
+      "sha256": "31830f645c194c9451cb5f59cffb8e1d2a1c8fb215afb0c2ab36028b2c24570d",
+      "bytes": 83156
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-scale-vert-decr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-scale-vert-decr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-scale-vert-decr.target",
+      "sha256": "928f8900b8955ec72659156e3153c00cdd2e55ba23eaaab7f8eeee7a5e64f528",
+      "bytes": 77948
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-scale-vert-incr.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-scale-vert-incr.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-scale-vert-incr.target",
+      "sha256": "d9560ee80b9125da34cc95ece61192a295ab53c50a314c0084ddb3b0f38cc7d6",
+      "bytes": 78317
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-square.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-square.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-square.target",
+      "sha256": "001d0d135d964daf4ad99ba46a0f77c5bc2378f04e53c2b5a20242ab19cbf265",
+      "bytes": 12618
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-trans-backward.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-trans-backward.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-trans-backward.target",
+      "sha256": "32bc8a9c7a7c49331cd6516e7503134deb0ff17a0cc3b36b474723a8b2e8dbb4",
+      "bytes": 74770
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-trans-down.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-trans-down.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-trans-down.target",
+      "sha256": "1690236b7705f76ea1ff9555c82066158d05278953efbc98df7290147691de5b",
+      "bytes": 76202
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-trans-forward.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-trans-forward.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-trans-forward.target",
+      "sha256": "ccf934993718025cc1086ce6981c92bdc9a2ed4f7ea67d6ed74640cd2a8799c3",
+      "bytes": 69655
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-trans-in.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-trans-in.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-trans-in.target",
+      "sha256": "587950df2c45ba0dff23ab14a00b4cebd1883d7e216144558326c1f08e84a4af",
+      "bytes": 75186
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-trans-out.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-trans-out.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-trans-out.target",
+      "sha256": "da3a8333abfd73e5a28510b3ad44537d867a9c4c8185cf8b538327840cc0a778",
+      "bytes": 69677
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-trans-up.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-trans-up.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-trans-up.target",
+      "sha256": "48060973dba8d8ffa87d7ce4748dd62e54671d602c1e1a084367312636fb8b75",
+      "bytes": 69100
+    },
+    {
+      "upstreamPath": "makehuman/data/targets/head/head-triangular.target",
+      "localPath": "tools/avatar-3d/vendor/makehuman/head-triangular.target",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/a8bc2d54ff0ac92e78ff71431b1023eda42bf482/makehuman/data/targets/head/head-triangular.target",
+      "sha256": "09f898db574e636a35b6d39f455e04bfa0bc0248c89d32ad3c959cdb65b8fd1f",
+      "bytes": 12676
+    }
+  ]
+}

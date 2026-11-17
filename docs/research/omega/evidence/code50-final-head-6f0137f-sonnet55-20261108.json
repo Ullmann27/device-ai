@@ -1,0 +1,66 @@
+{
+  "schema": "continuum.exact-sha-evidence.v1",
+  "source_commit": "6f0137f25ef21749c360af865495fd4ee2924917",
+  "note": "Re-confirmation of the Node/backend gates on the exact docs-only HEAD of the Code 50 QA staging line, run after 6f0137f was pushed. Code-bearing commit remains 8bc695fd0d0fcc10ef0aa88684da8b57acc928f4; the git tree hashes of app/, backend/, scripts/, .github/ and gradle/ are identical between 8bc695f and 6f0137f (only 7 docs/evidence files differ). Host sandbox evidence, not the official Android gate. This file was added in a later docs-only commit, so it describes 6f0137f rather than its own commit.",
+  "host_sandbox": {
+    "environment": "Node 24.22.2 linux/x64, non-root user, fresh scratch clone checked out detached at the exact SHA (git tree 749e9a4de8a91d14891d916f5451aa71f843ae03 equals the tree of 6f0137f in the working repository), status clean. Only the sandbox-injected core.fsmonitor=false GIT_CONFIG entry was removed from the child environment (2 of 3 entries kept; root cause documented in handoff section 4, 'Git-Overlay'). No test or production file was modified.",
+    "runs": [
+      {
+        "id": "critical",
+        "status": "PASS",
+        "tests": 135,
+        "pass": 135,
+        "fail": 0,
+        "skip": 0,
+        "suites": { "process": "37/0/0", "storage-agent": "32/0/0", "android-source-contracts": "64/0/0", "host-checker": "2/0/0" },
+        "startedAt": "2026-11-08T12:51:44.280Z",
+        "finishedAt": "2026-11-08T12:52:11.515Z",
+        "sourceUnchanged": true,
+        "harness_treeDigest": "2e80f1055dd421260468f017b5fe9500699abf00d33c087792258cffa1ef481d",
+        "report_json_sha256_not_committed": "1dc379111ffdf13cfede77aaf6fb99e5a2efaa19f3249273a74c6140a54bbe03",
+        "attempt": "first and only run on this SHA"
+      },
+      {
+        "id": "full-node",
+        "status": "PASS",
+        "total": 2430,
+        "pass": 2393,
+        "fail": 0,
+        "skip": 37,
+        "startedAt": "2026-11-08T12:52:16.176Z",
+        "finishedAt": "2026-11-08T12:54:56.261Z",
+        "sourceUnchanged": true,
+        "harness_treeDigest": "2e80f1055dd421260468f017b5fe9500699abf00d33c087792258cffa1ef481d",
+        "report_json_sha256_not_committed": "614d0661d16e5caafea7c9b5cb0bb2d3e0d049645b839966427a4394aaadec3e",
+        "attempt": "first and only run on this SHA"
+      },
+      {
+        "id": "backend ci + check + test",
+        "status": "PASS",
+        "tests": 64,
+        "pass": 64,
+        "fail": 0,
+        "skip": 0,
+        "cancelled": 0
+      }
+    ],
+    "treeDigest_note": "The harness treeDigest differs from the 8bc695f runs because it hashes the whole source tree including docs/; the code-bearing subtrees are identical (see note)."
+  },
+  "code_subtree_hashes_identical_between_8bc695f_and_6f0137f": {
+    "app": "b440b7e9cfb35ec73ff44cbd920a7c49d2292a1b",
+    "backend": "f4bc00c1ba8afb0f115b26450757fd322843fd0c",
+    "scripts": "01e9af0088fc2ab967830c2a17ed03cf9005311f",
+    ".github": "e85d53ff42ecb1d1a631e6ac5c3643b88e591d84",
+    "gradle": "4167f4ea961fcf6b4ae64c287eee7d16241e967e"
+  },
+  "unchanged_from_the_8bc695f_evidence": {
+    "github_actions_diagnostic": "Run 42478725998 on 8bc695f remains the only Android diagnostic (4032 tests, 0 failures, 20 skips, lint clean, unsigned QA build). Docs-only commits were pushed with [skip ci], so no Android run exists for 6f0137f; the identical code trees make the 8bc695f diagnostic applicable, but it is diagnostic only.",
+    "not_run": {
+      "official_android_gate": "NOT_RUN: Android SDK / Render QA host not reachable from the sandbox (dl.google.com blocked, RENDER_* unset)",
+      "signed_release_build": "NOT_RUN",
+      "signature_match_with_installed_app": "NOT_RUN",
+      "signed_apk_sha256_and_download_link": "NOT_AVAILABLE: no signed artifact exists",
+      "fold7": "REAL_DEVICE_NOT_RUN"
+    }
+  }
+}

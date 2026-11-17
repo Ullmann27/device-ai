@@ -1,0 +1,61 @@
+✔ minimalPatch yields the smallest unique whole-line span and refuses what the session could not apply (5.450155ms)
+✔ read access excludes VCS internals, build output, secrets and owner data (3.346435ms)
+✔ the agent loop inspects, edits, checks and tests, and the unchanged repair session verifies its proposal (2737.228048ms)
+✔ tools refuse escapes, secrets, foreign files and ambiguous edits without leaking content (242.918163ms)
+✔ budgets, invalid replies, deadlines and task binding stop the loop with known session codes (235.338019ms)
+✔ the chat brain is local by default, needs consent for remote endpoints and maps failures to session codes (17.331315ms)
+✔ run_tests keeps the session execution policy: a general edit does not run on the host without isolation (1884.005204ms)
+✔ the orchestrator factory needs the local brain key, passes it on stdin only and records each step (208.016389ms)
+✖ a real failing test after the first candidate reaches the next revision, which corrects it (simulated brain) (1989.597365ms)
+✔ an identical repeated patch is not executed again; the next distinct patch is verified (1825.402611ms)
+✔ instructions planted in repository files cannot widen what an obedient model may do (963.950409ms)
+✔ one plain request: read-only survey proposes the scope, the owner grants it, the session verifies the repair (1095.116282ms)
+✔ the command line runs the same flow as a process (Termux usage) and refuses a survey that tries to edit (1388.299351ms)
+✔ interactive mode: plain requests line by line, confirmation on the next line, "ende" stops (as in Termux) (2042.340708ms)
+✔ the command tests inside its own loop: wrong patch, run_tests fails, in-loop correction, VERIFIED; general code stays blocked (3091.442626ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 14
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18498.834381
+
+✖ failing tests:
+
+test at .github/continuum/coding-agent-loop.test.mjs:207:1
+✖ a real failing test after the first candidate reaches the next revision, which corrects it (simulated brain) (1989.597365ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Current failing checks:\n- TEST_FAILURE \.github\/continuum\/geometry\.test\.mjs 3 Expected values to be strictly equal:-5 !== 5/. Input:
+  
+  'Task agent-distance (BUGFIX) at commit 7774cdb93a78: distance(a,b) must be the non-negative distance for any order of a and b\n' +
+    '\n' +
+    'Acceptance criteria:\n' +
+    '- distance(3,8) equals 5\n' +
+    '\n' +
+    'Allowed files (only these may change): lib/geometry.mjs. Test chain: node.\n' +
+    '\n' +
+    'Current failing checks:\n' +
+    '- TEST_FAILURE .github/continuum/geometry.test.mjs 3 Expected values to be strictly equal:\n' +
+    '\n' +
+    '-5 !== 5\n' +
+    '\n' +
+    'Earlier attempts on this task (all failed or were rejected):\n' +
+    '- FAILED_TESTS: TEST_FAILURE .github/continuum/geometry.test.mjs Expected values to be strictly equal:\n' +
+    '\n' +
+    '-5 !== 5'
+  
+      at TestContext.<anonymous> (file:///workspace/continuum-grand-challenge/.github/continuum/coding-agent-loop.test.mjs:216:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Task agent-distance (BUGFIX) at commit 7774cdb93a78: distance(a,b) must be the non-negative distance for any order of a and b\n\nAcceptance criteria:\n- distance(3,8) equals 5\n\nAllowed files (only these may change): lib/geometry.mjs. Test chain: node.\n\nCurrent failing checks:\n- TEST_FAILURE .github/continuum/geometry.test.mjs 3 Expected values to be strictly equal:\n\n-5 !== 5\n\nEarlier attempts on this task (all failed or were rejected):\n- FAILED_TESTS: TEST_FAILURE .github/continuum/geometry.test.mjs Expected values to be strictly equal:\n\n-5 !== 5',
+    expected: /Current failing checks:\n- TEST_FAILURE \.github\/continuum\/geometry\.test\.mjs 3 Expected values to be strictly equal:-5 !== 5/,
+    operator: 'match',
+    diff: 'simple'
+  }

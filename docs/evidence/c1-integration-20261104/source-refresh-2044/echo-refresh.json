@@ -1,0 +1,29 @@
+{
+  "sources": [
+    {
+      "path": ".github/continuum/coding-orchestrator.mjs",
+      "head": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+      "blob": "31f7a598d4d560e0374b9e8656446b30c512e611",
+      "sameAsC1Slice": true
+    },
+    {
+      "path": ".github/continuum/coding-service-worker.mjs",
+      "head": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+      "blob": "0d3097bd2b9422993849fb6882868e1d431b65b6",
+      "sameAsC1Slice": true
+    },
+    {
+      "path": ".github/continuum/coding-service-reader.mjs",
+      "head": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+      "blob": "eef34b205f791e1b8e82871020635400addfbde4",
+      "sameAsC1Slice": true
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+      "head": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+      "blob": "8ebcc0900571c78fdf279038a40fff7706a491be",
+      "sameAsC1Slice": true
+    }
+  ],
+  "scope": "Only four previously integrated ECHO blobs; no review or admission of other newer PR515 work."
+}

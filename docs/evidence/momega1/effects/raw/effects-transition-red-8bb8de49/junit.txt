@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+......E..
+Time: 0.101
+There was 1 failure:
+1) compactReadReplacesOnlyItsOwnObsoleteToolMarker(at.heinz.deviceai.ui.ContinuumTaskEffectsTest)
+java.lang.AssertionError: Read must supersede its own tool badge at compact height 88.0 expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.ContinuumTaskEffectsTest.compactReadReplacesOnlyItsOwnObsoleteToolMarker(ContinuumTaskEffectsTest.kt:120)
+
+FAILURES!!!
+Tests run: 8,  Failures: 1
+

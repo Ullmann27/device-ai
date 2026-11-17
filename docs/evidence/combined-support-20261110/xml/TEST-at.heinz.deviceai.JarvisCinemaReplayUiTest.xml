@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisCinemaReplayUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:23:57" hostname="1a6f5c6cf9c0" time="1.514">
+  <properties/>
+  <testcase name="replacedQueuedOrderDoesNotInheritAnEarlierResult" classname="at.heinz.deviceai.JarvisCinemaReplayUiTest" time="1.214"/>
+  <testcase name="endedQueuedOrderCannotTransferItsResultToTheNextOrder" classname="at.heinz.deviceai.JarvisCinemaReplayUiTest" time="0.043"/>
+  <testcase name="earlyResultWaitsForConstructionAndStopCancelsIt" classname="at.heinz.deviceai.JarvisCinemaReplayUiTest" time="0.022"/>
+  <testcase name="queuedEarlyResultAdvancesAfterReturnAndConstruction" classname="at.heinz.deviceai.JarvisCinemaReplayUiTest" time="0.059"/>
+  <testcase name="oldTurnResultCannotAdvanceTheQueuedOrder" classname="at.heinz.deviceai.JarvisCinemaReplayUiTest" time="0.052"/>
+  <testcase name="endedPendingOrderCannotRestartAfterReturn" classname="at.heinz.deviceai.JarvisCinemaReplayUiTest" time="0.019"/>
+  <testcase name="newOrderWaitsForTheCurrentReturn" classname="at.heinz.deviceai.JarvisCinemaReplayUiTest" time="0.024"/>
+  <testcase name="repeatedQueuedOrderKeepsItsEarlyResult" classname="at.heinz.deviceai.JarvisCinemaReplayUiTest" time="0.079"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

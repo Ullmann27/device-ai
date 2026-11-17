@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: independent examples and metamorphic relations reject constant pseudo-repairs
+ok 1 - independent examples and metamorphic relations reject constant pseudo-repairs
+  ---
+  duration_ms: 60.546021
+  type: 'test'
+  ...
+# Subtest: a bounded exact distance passes all four frozen checks reproducibly
+ok 2 - a bounded exact distance passes all four frozen checks reproducibly
+  ---
+  duration_ms: 98.404688
+  type: 'test'
+  ...
+# Subtest: maximum frozen suite completes all 384 checks within the existing subprocess budget
+ok 3 - maximum frozen suite completes all 384 checks within the existing subprocess budget
+  ---
+  duration_ms: 196.08568
+  type: 'test'
+  ...
+# Subtest: metamorphic failure supplies the distinguishing pair
+ok 4 - metamorphic failure supplies the distinguishing pair
+  ---
+  duration_ms: 49.506957
+  type: 'test'
+  ...
+# Subtest: non-finite values, foreign exports and capability-bearing code never pass
+ok 5 - non-finite values, foreign exports and capability-bearing code never pass
+  ---
+  duration_ms: 206.087383
+  type: 'test'
+  ...
+# Subtest: suite mutation, malformed cases, unbounded inputs and empty verification are rejected
+ok 6 - suite mutation, malformed cases, unbounded inputs and empty verification are rejected
+  ---
+  duration_ms: 50.430675
+  type: 'test'
+  ...
+# Subtest: controlled replay measures actual accepted patch in separate scoring worktree
+ok 7 - controlled replay measures actual accepted patch in separate scoring worktree
+  ---
+  duration_ms: 1833.881565
+  type: 'test'
+  ...
+# Subtest: benchmark repetition count is bounded
+ok 8 - benchmark repetition count is bounded
+  ---
+  duration_ms: 0.419254
+  type: 'test'
+  ...
+# Subtest: model patches cannot rewrite OMEGA evaluators or benchmark definitions
+ok 9 - model patches cannot rewrite OMEGA evaluators or benchmark definitions
+  ---
+  duration_ms: 0.500212
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2596.331361

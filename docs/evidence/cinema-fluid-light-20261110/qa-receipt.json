@@ -1,0 +1,95 @@
+{
+  "format": 1,
+  "recorded_utc": "2026-11-10T19:31:34.799255+00:00",
+  "validated_source": {
+    "commit": "e2fb22d71464415ac4438fea7f53558a25a6558f",
+    "tree": "88888ff449a420a4c39bab4b85fbc065efca37b5",
+    "app_tree": "1a516b2c1d059d24663d6cb5ff279edfd975de07",
+    "app_and_node_sources_unchanged_at_receipt": true,
+    "remote_mapping_reported_by_publishing_agent": {
+      "pr": 715,
+      "commit": "5d98a14273a5372f4502eeb4b37fa075918582ec",
+      "tree": "88888ff449a420a4c39bab4b85fbc065efca37b5"
+    }
+  },
+  "android_compile": {
+    "status": "PASS",
+    "task": ":app:compileDebugKotlin",
+    "elapsed": "2m 18s",
+    "scope": "Full production Kotlin on Android SDK 36; no APK",
+    "tasks": 17,
+    "executed": 2,
+    "up_to_date": 15
+  },
+  "gradle_selected_tests": {
+    "status": "PASS",
+    "tests": 56,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "junit_cases": 53,
+    "robolectric_sdk28_cases": 3,
+    "detail": "gradle-selected-tests.json",
+    "original_enclosing_invocation": "FAILED after successful tests at lintAnalyzeDebug: Gradle daemon disappeared"
+  },
+  "lint": {
+    "status": "PASS",
+    "task": ":app:lintDebug",
+    "checks": [
+      "NewApi"
+    ],
+    "issues": 0,
+    "elapsed": "2m 10s",
+    "standalone_retry": true,
+    "gradle_heap": "1100m",
+    "lint_heap": "1400m",
+    "workers": 1,
+    "report": "newapi-lint.xml"
+  },
+  "additional_checks": {
+    "host_junit": {
+      "status": "PASS",
+      "tests": 33,
+      "overlaps_gradle_selection": true
+    },
+    "node_contracts": {
+      "status": "PASS",
+      "tests": 18
+    },
+    "sdk_native_source_compile": {
+      "status": "PASS",
+      "scope": "Real AGSL bridge, Android painter and stage overlay; compile only"
+    }
+  },
+  "independent_research": {
+    "commit": "d97026b86e7f47cae160d0cb14bfc9c49936cda6",
+    "status": "PASS",
+    "tests": 106,
+    "separate_branch": true,
+    "command": "scripts/continuum-context-cinema-check.sh"
+  },
+  "not_run": [
+    "Full test suite",
+    "GPU rendering validation",
+    "Filament runtime validation",
+    "Fold7 device test",
+    "Device frame-time/CPU/GPU/thermal measurement",
+    "APK packaging",
+    "Protected signing"
+  ],
+  "assets_and_build_script_unchanged_against_code52": true,
+  "log_sha256": {
+    "android-compile-final.log": "c768f17649aeec1b4530b952dadc9ab76ca7e3fc14fbee41c48dcb1b2e47c832",
+    "android-tests-lint-final.log": "f92e729ca180864ec06f37c31ea84930ce8747eb61ac989628b8f6f3b987ec42",
+    "android-lint-standalone-final.log": "f39566b982ae4b5603661a02458e9ecaed4f58eb0df27c59447d4bd5b2f2de41",
+    "cinema-tests-final.log": "44d5a83e55be28008ee3e4ddc1728ffedc33ef18caa7cf1baed741bbb46aee30",
+    "native-cinema-final-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node-cinema-final.log": "f037234752d46ed81ce81a776c5d4aa1a12d2eb7036260746a387678dca4769c"
+  },
+  "notes": [
+    "The original combined test+lint command was not green; tests passed before its lint phase failed. The separate lint-only retry passed.",
+    "Toolchain and cache relocation off RAM-backed /tmp reduced memory pressure; no product-source workaround was applied.",
+    "Software preview playback frame rate is not a measured device frame rate.",
+    "No claims of full lint coverage: the repository enables NewApi only."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "category": "HOST_ANDROID_FULL_SUITE",
+  "source_local_commit": "80b7443da40da447c667a8ac402b9026dbcd2f8d",
+  "status": "CANCELLED",
+  "exit_code": 130,
+  "reason": "New verified review defects require a newer source; full Android verification will run on the final source in the original publisher before signing.",
+  "partial_ui_evidence": "Host layouts rendered; no complete JUnit count claimed.",
+  "compileDebugKotlin": "PASS_UP_TO_DATE",
+  "testDebugUnitTest": "CANCELLED",
+  "lintDebug": "NOT_RUN"
+}

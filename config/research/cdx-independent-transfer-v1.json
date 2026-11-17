@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "cdx-independent-transfer-20261025-v1",
+  "purpose": "Bounded authored synthetic transfer and abstention check; no general-intelligence claim.",
+  "frozenProtocol": {
+    "decoderSeed": 91,
+    "encoderResource": "app/src/test/resources/continuum-neural-swb1.base64",
+    "cumulativeTrainingUpdates": [
+      0,
+      120,
+      600,
+      6000
+    ],
+    "generationMaxBytes": 48,
+    "trainingAndDevInputsExcluded": true,
+    "trainingPolicy": "Only the four app-authored pairs fixed by root; no probe labels, probe text, model output or dev labels used for gradients.",
+    "evaluationPolicy": "Fixture authored and SHA-frozen before any prediction is inspected; compare requested baseline and repeated-context stop with identical stage weights."
+  },
+  "scoring": {
+    "normalization": "NFC; trim surrounding whitespace; strip trailing . ! ? then trim; lowercase de-DE; collapse whitespace runs. No substring or prefix matching.",
+    "strictReferenceAccuracy": "Normalized generation equals normalized reference; report separately on all 16 and on 12 supported.",
+    "acceptedAnswerAccuracy": "Normalized generation equals one of the row acceptedAnswers, all frozen before evaluation. Report separately from strict-reference accuracy.",
+    "unsupportedCases": "Only explicit UNBEKANNT counts as successful abstention. Empty or whitespace-only output fails. Any other nonempty answer is an unsupported response.",
+    "generationDiagnostics": "Report ended, bytesGenerated and deterministic stop reason separately; empty output and loop prevention are not answer-quality successes.",
+    "formatLimitation": "Natural questions do not dictate output format. Strict-reference accuracy is format sensitive; acceptedAnswerAccuracy admits the declared short/full semantic equivalents."
+  },
+  "coverage": {
+    "supported": 12,
+    "unsupported": 4,
+    "canonicalFullSentence": 6,
+    "canonicalShort": 6
+  },
+  "probes": [
+    {
+      "id": "xfer-01",
+      "evidence": "Elin wohnt in Bregenz.",
+      "question": "Wo wohnt Elin?",
+      "reference": "Elin wohnt in Bregenz.",
+      "acceptedAnswers": [
+        "Elin wohnt in Bregenz.",
+        "Bregenz"
+      ],
+      "supported": true,
+      "answerFormat": "full_sentence",
+      "challenge": "new_subject_location"
+    },
+    {
+      "id": "xfer-02",
+      "evidence": "Oskar lebt in Steyr.",
+      "question": "Wo lebt Oskar?",
+      "reference": "Oskar lebt in Steyr.",
+      "acceptedAnswers": [
+        "Oskar lebt in Steyr.",
+        "Steyr"
+      ],
+      "supported": true,
+      "answerFormat": "full_sentence",
+      "challenge": "location_paraphrase"
+    },
+    {
+      "id": "xfer-03",
+      "evidence": "Zora ist Botanikerin.",
+      "question": "Was arbeitet Zora?",
+      "reference": "Zora ist Botanikerin.",
+      "acceptedAnswers": [
+        "Zora ist Botanikerin.",
+        "Botanikerin"
+      ],
+      "supported": true,
+      "answerFormat": "full_sentence",
+      "challenge": "new_subject_profession"
+    },
+    {
+      "id": "xfer-04",
+      "evidence": "Bruno trägt eine Weste.",
+      "question": "Was trägt Bruno?",
+      "reference": "Bruno trägt eine Weste.",
+      "acceptedAnswers": [
+        "Bruno trägt eine Weste.",
+        "eine Weste",
+        "Weste"
+      ],
+      "supported": true,
+      "answerFormat": "full_sentence",
+      "challenge": "new_subject_clothing"
+    },
+    {
+      "id": "xfer-05",
+      "evidence": "Rika wohnt in Villach.",
+      "question": "Welche Stadt ist Rikas Wohnort?",
+      "reference": "Villach",
+      "acceptedAnswers": [
+        "Villach",
+        "Rika wohnt in Villach."
+      ],
+      "supported": true,
+      "answerFormat": "short",
+      "challenge": "location_question_paraphrase"
+    },
+    {
+      "id": "xfer-06",
+      "evidence": "Tarek ist Geologe.",
+      "question": "Welchen Beruf hat Tarek?",
+      "reference": "Geologe",
+      "acceptedAnswers": [
+        "Geologe",
+        "Tarek ist Geologe."
+      ],
+      "supported": true,
+      "answerFormat": "short",
+      "challenge": "profession_question_paraphrase"
+    },
+    {
+      "id": "xfer-07",
+      "evidence": "Drohne Q26 hat eine silberne Hülle.",
+      "question": "Welche Farbe hat die Hülle von Q26?",
+      "reference": "silber",
+      "acceptedAnswers": [
+        "silber",
+        "Die Hülle von Q26 ist silber."
+      ],
+      "supported": true,
+      "answerFormat": "short",
+      "challenge": "unfamiliar_code_adjective_inflection"
+    },
+    {
+      "id": "xfer-08",
+      "evidence": "Roboter C48 nutzt Akkustrom.",
+      "question": "Womit wird C48 betrieben?",
+      "reference": "Akkustrom",
+      "acceptedAnswers": [
+        "Akkustrom",
+        "C48 nutzt Akkustrom."
+      ],
+      "supported": true,
+      "answerFormat": "short",
+      "challenge": "unfamiliar_code_energy"
+    },
+    {
+      "id": "xfer-09",
+      "evidence": "In der Liste steht: U54 befindet sich in Leoben.",
+      "question": "Wo befindet sich U54?",
+      "reference": "U54 befindet sich in Leoben.",
+      "acceptedAnswers": [
+        "U54 befindet sich in Leoben.",
+        "Leoben"
+      ],
+      "supported": true,
+      "answerFormat": "full_sentence",
+      "challenge": "unfamiliar_code_prefixed_evidence"
+    },
+    {
+      "id": "xfer-10",
+      "evidence": "Kian hält einen Pinsel.",
+      "question": "Welches Werkzeug hält Kian?",
+      "reference": "Pinsel",
+      "acceptedAnswers": [
+        "Pinsel",
+        "einen Pinsel",
+        "Kian hält einen Pinsel."
+      ],
+      "supported": true,
+      "answerFormat": "short",
+      "challenge": "new_subject_tool"
+    },
+    {
+      "id": "xfer-11",
+      "evidence": "Ayo wohnt in Melk. Nela wohnt in Krems.",
+      "question": "Wo wohnt Nela?",
+      "reference": "Nela wohnt in Krems.",
+      "acceptedAnswers": [
+        "Nela wohnt in Krems.",
+        "Krems"
+      ],
+      "supported": true,
+      "answerFormat": "full_sentence",
+      "challenge": "second_subject_selection"
+    },
+    {
+      "id": "xfer-12",
+      "evidence": "Einheit H35 trägt keinen Helm, sondern eine Kappe.",
+      "question": "Was trägt H35?",
+      "reference": "Kappe",
+      "acceptedAnswers": [
+        "Kappe",
+        "eine Kappe",
+        "H35 trägt eine Kappe."
+      ],
+      "supported": true,
+      "answerFormat": "short",
+      "challenge": "negation_contrast"
+    },
+    {
+      "id": "xfer-13",
+      "evidence": "Nur Fenna wohnt in Tulln.",
+      "question": "Wo wohnt Jaro?",
+      "reference": "UNBEKANNT",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "supported": false,
+      "answerFormat": "explicit_abstention",
+      "challenge": "unknown_subject"
+    },
+    {
+      "id": "xfer-14",
+      "evidence": "Roboter M36 ist orange.",
+      "question": "Welche Energiequelle nutzt M36?",
+      "reference": "UNBEKANNT",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "supported": false,
+      "answerFormat": "explicit_abstention",
+      "challenge": "unsupported_attribute"
+    },
+    {
+      "id": "xfer-15",
+      "evidence": "Die Farbe von Riko ist nicht angegeben.",
+      "question": "Welche Farbe hat Riko?",
+      "reference": "UNBEKANNT",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "supported": false,
+      "answerFormat": "explicit_abstention",
+      "challenge": "explicit_absence"
+    },
+    {
+      "id": "xfer-16",
+      "evidence": "Edda trägt einen Schal.",
+      "question": "Wie alt ist Edda?",
+      "reference": "UNBEKANNT",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "supported": false,
+      "answerFormat": "explicit_abstention",
+      "challenge": "unsupported_question"
+    }
+  ]
+}

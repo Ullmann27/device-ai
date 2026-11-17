@@ -1,0 +1,77 @@
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -3014,6 +3014,8 @@
+     }
+ 
+     private fun buildComposer(): View {
++        val stackedComposer = resources.configuration.screenWidthDp < 360 ||
++            resources.configuration.fontScale > 1.3f
+         val shell = LinearLayout(this).apply {
+             orientation = LinearLayout.VERTICAL
+             background = roundedGradient(
+@@ -3032,7 +3034,7 @@
+             textSize = 23f
+             setOnClickListener { newSession() }
+         }
+-        inputRow.addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
++        if (!stackedComposer) inputRow.addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
+         input = EditText(this).apply {
+             hint = "Schreibe eine Nachricht …"
+             setOnTouchListener { _, event ->
+@@ -3047,7 +3049,7 @@
+             setTextColor(TEXT)
+             textSize = 14f
+             minLines = 1
+-            maxLines = 7
++            maxLines = if (stackedComposer) 2 else 7
+             gravity = Gravity.TOP or Gravity.START
+             setHorizontallyScrolling(false)
+             isVerticalScrollBarEnabled = true
+@@ -3062,13 +3064,13 @@
+         }
+         inputRow.addView(input, LinearLayout.LayoutParams(0,
+             LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+-            marginStart = dp(7)
++            marginStart = if (stackedComposer) 0 else dp(7)
+         })
+         val mic = actionButton("🎙", compact = true).apply {
+             contentDescription = "Spracheingabe starten"
+             setOnClickListener { startVoiceInput() }
+         }
+-        inputRow.addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply {
++        if (!stackedComposer) inputRow.addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply {
+             marginStart = dp(6)
+         })
+         shell.addView(inputRow, matchWidth())
+@@ -3131,7 +3133,30 @@
+         actions.addView(sendButton,
+             LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .85f).apply { marginStart = dp(4) }
+         )
+-        shell.addView(actions, matchWidth(top = 8))
++        if (stackedComposer) {
++            // Keep editing and sending reachable at narrow widths and large system text.
++            actions.removeView(sendButton)
++            val primary = LinearLayout(this).apply {
++                orientation = LinearLayout.HORIZONTAL
++                gravity = Gravity.CENTER_VERTICAL
++                addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
++                addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginStart = dp(6) })
++                addView(View(this@AgentActivity), LinearLayout.LayoutParams(0, 1, 1f))
++                addView(sendButton, LinearLayout.LayoutParams(dp(56), dp(48)))
++            }
++            shell.addView(primary, matchWidth(top = 6))
++            for (index in 0 until actions.childCount) {
++                actions.getChildAt(index).layoutParams = LinearLayout.LayoutParams(
++                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
++                ).apply { if (index > 0) marginStart = dp(6) }
++            }
++            shell.addView(android.widget.HorizontalScrollView(this).apply {
++                isHorizontalScrollBarEnabled = true
++                addView(actions, android.widget.FrameLayout.LayoutParams(
++                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
++                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT))
++            }, matchWidth(top = 6))
++        } else shell.addView(actions, matchWidth(top = 8))
+         return shell
+     }
+ 

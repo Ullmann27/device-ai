@@ -1,0 +1,10 @@
+diff --git a/.github/continuum/text-utils.mjs b/.github/continuum/text-utils.mjs
+index fcb34f8..d0a78f7 100644
+--- a/.github/continuum/text-utils.mjs
++++ b/.github/continuum/text-utils.mjs
+@@ -1,4 +1,4 @@
+ /** Slug of a title for file names. */
+ export function slug(title){
+-  return title.trim().toUpperCase().replace(/\s+/g,"-");
++  return title.trim().toLowerCase().replace(/\s+/g,"-");
+ }

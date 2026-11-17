@@ -1,0 +1,174 @@
+{
+  "schema": "CODE50_HOST_ACCEPTANCE_V1",
+  "repository": "Ullmann27/device-ai",
+  "pull_request": 627,
+  "tested_source_commit": "5ba76afcd306db11273dae1e0fe83dd467a34ea0",
+  "integration_base": "0c59dcc7b249d7eb6bfc9fb21d2306f814105ed6",
+  "recorded_at_utc": "2026-11-08T08:28:07.847963+00:00",
+  "toolchain": {
+    "java": "Temurin 17.0.21+9",
+    "gradle": "8.11.1",
+    "android_compile_sdk": 36,
+    "android_build_tools": "35.0.0",
+    "node": "24.22.1"
+  },
+  "ordinary_unit": {
+    "status": "PASS_WITH_EXISTING_SKIPS",
+    "tests": 3488,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 19,
+    "passed": 3469,
+    "suites": 618,
+    "ui_source_set_enabled": false,
+    "skipped_cases": [
+      "at.heinz.deviceai.chief.ChiefPatternE2ETest.s7_pending_agentMessagesUrgentWakesInfoWaits",
+      "at.heinz.deviceai.chief.ChiefPatternE2ETest.s4b_pending_profileDiarySharedLayers",
+      "at.heinz.deviceai.chief.ChiefPatternE2ETest.s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+      "at.heinz.deviceai.chief.ChiefPatternE2ETest.s5b_pending_textFileSkillLibraryLoadedOnDemand",
+      "at.heinz.deviceai.chief.ChiefPatternE2ETest.s6_pending_routineReportsOnlyWhenSomethingIsNew",
+      "at.heinz.deviceai.chief.ChiefPatternE2ETest.s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+      "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+      "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+      "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+      "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+      "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+      "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt6b_lernen_hypotheseUndTagebuchEintrag",
+      "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+      "at.heinz.deviceai.chief.FirstThinkingRunE2ETest.schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+      "at.heinz.deviceai.learning.ContinuumContrastiveParityTest.actualNodeKotlinNodeTrainingParity",
+      "at.heinz.deviceai.learning.ContinuumContrastiveParityTest.actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+      "at.heinz.deviceai.learning.Cre1InferenceEncoderTest.trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+      "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.failureBeforeAnyModelWasLoadedCanRetryWithoutUnload",
+      "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload"
+    ]
+  },
+  "lint": {
+    "status": "PASS",
+    "task": ":app:lintDebug",
+    "enabled_checks": [
+      "NewApi"
+    ],
+    "issues": 0
+  },
+  "node": {
+    "status": "PASS",
+    "tests": 33,
+    "passed": 33,
+    "failed": 0,
+    "skipped": 0,
+    "files": [
+      ".github/continuum/android-cockpit-shortcuts.test.mjs",
+      ".github/continuum/aaa-cockpit-and-effects.test.mjs",
+      ".github/continuum/fold7-dialogue-continuity.test.mjs",
+      ".github/continuum/fold7-portrait-reference.test.mjs",
+      ".github/continuum/continuum-fold7-hologram-live-diagnostics.test.mjs",
+      ".github/continuum/coding-agent-speech-wiring.test.mjs",
+      ".github/continuum/owner-cockpit-voice-original-orb.test.mjs",
+      ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+      "scripts/continuum-fold7-stream-scroll.test.mjs"
+    ]
+  },
+  "focused_host": {
+    "status": "PASS",
+    "tests": 35,
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "class": "at.heinz.deviceai.Airbus2100CockpitAndCountdownTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.AndroidOnDeviceSpeechRetryUiTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.Argon4CockpitAndBudgetRegressionTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.LocalReasoningWorkSceneUiTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.OwnerAppActionWorkSceneUiTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.avatar3d.AvatarMorphMapperComparisonTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "at.heinz.deviceai.cognitive.OwnerAppActionFlowTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "full_optional_ui": {
+    "status": "NOT_COMPLETED",
+    "completed_diagnostic_cases": 267,
+    "diagnostic_failures_observed": 0,
+    "last_started_case": "at.heinz.deviceai.ContinuumDocumentFlowUiTest.aLateAnswerAfterStopChangesNothingAndALaterFailureKeepsItsCause",
+    "isolated_case_status": "PASS",
+    "isolated_case_tests": 1,
+    "isolated_case_failures": 0,
+    "watchdog_triggered": false
+  },
+  "device": {
+    "adb_devices_observed": 0,
+    "ten_real_voice_sentences": "NOT_RUN",
+    "avatar_15_second_live_proof": "NOT_RUN",
+    "four_page_pdf_fui_and_thermal": "NOT_RUN"
+  },
+  "apk": {
+    "assembled": false,
+    "original_signed": false,
+    "installed": false
+  },
+  "reproduction": {
+    "ordinary": "./gradlew --no-daemon --max-workers=1 --console=plain -I docs/research/omega/evidence/code50-test-progress-20261108.init.gradle -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=50 --continue :app:testDebugUnitTest :app:lintDebug",
+    "focused": "./gradlew --no-daemon --max-workers=1 --console=plain -I docs/research/omega/evidence/code50-test-progress-20261108.init.gradle -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=50 -I scripts/continuum-code50-focused.init.gradle -I docs/research/omega/evidence/code50-ui-scope-20261108.init.gradle -PcontinuumUiWidgetTests=true :app:testDebugUnitTest",
+    "node": "node --test --test-concurrency=2 --test-reporter=tap .github/continuum/android-cockpit-shortcuts.test.mjs .github/continuum/aaa-cockpit-and-effects.test.mjs .github/continuum/fold7-dialogue-continuity.test.mjs .github/continuum/fold7-portrait-reference.test.mjs .github/continuum/continuum-fold7-hologram-live-diagnostics.test.mjs .github/continuum/coding-agent-speech-wiring.test.mjs .github/continuum/owner-cockpit-voice-original-orb.test.mjs .github/continuum/continuum-local-dialogue-quality-wiring.test.mjs scripts/continuum-fold7-stream-scroll.test.mjs"
+  },
+  "log_sha256": {
+    "gradle-unit-lint-5ba76af.log": "c55ea5436018c18cff55b112f4fa7b89583f65d0a50f5993ff890c0cc0d625a0",
+    "gradle-focused-ui-5ba76af.log": "cd6ed04209eb8b933d4a401e454df2d62cdd74129d0dede0b7530fd6b5d0755b",
+    "node-5ba76af.tap": "73155168cc9924c15738390499d59f9b2116910323a4e7bd697caea7761c88b3",
+    "gradle-late-answer-5ba76af.log": "d1626a03906e8602f8b5318be44e8640b9482c22e2c870c01a261f06c5337948"
+  },
+  "limits": [
+    "Controlled host inputs are not microphone/device/model-quality proof.",
+    "No original signing credentials or GitHub Actions were used.",
+    "Existing skipped checks remain unverified."
+  ]
+}

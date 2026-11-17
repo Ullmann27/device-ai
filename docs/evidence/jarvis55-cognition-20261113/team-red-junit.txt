@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+.....E..................................
+Time: 1.994
+There was 1 failure:
+1) stopCancelsBeforeStorageFailureAndRevokesQueuedAdmission(at.heinz.deviceai.chief.ChiefBotTeamTest)
+java.lang.AssertionError: expected java.util.concurrent.CancellationException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.chief.ChiefBotTeamTest.stopCancelsBeforeStorageFailureAndRevokesQueuedAdmission(ChiefBotTeamTest.kt:166)
+
+FAILURES!!!
+Tests run: 39,  Failures: 1
+

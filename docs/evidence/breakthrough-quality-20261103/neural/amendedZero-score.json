@@ -1,0 +1,2321 @@
+{
+  "schema": "CDX2_BLIND_SCORE_V1",
+  "cases": 64,
+  "splits": {
+    "PRIMARY": {
+      "RAW": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      },
+      "VERIFIED": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      },
+      "RULE": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      }
+    },
+    "ADVERSARIAL": {
+      "RAW": {
+        "supported": 22,
+        "exactSupported": 10,
+        "missing": 17,
+        "correctAbstentions": 17,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 12,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.2692029418081373,
+          0.6534020467926458
+        ],
+        "abstainWilson95": [
+          0.8156818649911564,
+          1
+        ],
+        "primaryGate": false
+      },
+      "VERIFIED": {
+        "supported": 22,
+        "exactSupported": 10,
+        "missing": 17,
+        "correctAbstentions": 17,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 12,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.2692029418081373,
+          0.6534020467926458
+        ],
+        "abstainWilson95": [
+          0.8156818649911564,
+          1
+        ],
+        "primaryGate": false
+      },
+      "RULE": {
+        "supported": 22,
+        "exactSupported": 10,
+        "missing": 17,
+        "correctAbstentions": 17,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 12,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.2692029418081373,
+          0.6534020467926458
+        ],
+        "abstainWilson95": [
+          0.8156818649911564,
+          1
+        ],
+        "primaryGate": false
+      }
+    }
+  },
+  "records": [
+    {
+      "id": "QB-N-001",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-001-source-1",
+        "revision": 3,
+        "sha256": "b65de4c68cdca4761dbb1898095949d50ab3674bacfe18929a57d5ff49371544",
+        "text": "Qukamube",
+        "start": 16,
+        "endExclusive": 24
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-001-source-1",
+          "decision": "SPAN",
+          "sha256": "b65de4c68cdca4761dbb1898095949d50ab3674bacfe18929a57d5ff49371544",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qukamube",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-001-source-1",
+          "decision": "SPAN",
+          "sha256": "b65de4c68cdca4761dbb1898095949d50ab3674bacfe18929a57d5ff49371544",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qukamube",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-001-source-1",
+          "decision": "SPAN",
+          "sha256": "b65de4c68cdca4761dbb1898095949d50ab3674bacfe18929a57d5ff49371544",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qukamube",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-002",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-002-source-1",
+        "revision": 3,
+        "sha256": "1aa16d31f2ea11e9b8172519e75f9b163c1d8eeae2346506476fc82996781ae9",
+        "text": "Qumesalu",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-002-source-1",
+          "decision": "SPAN",
+          "sha256": "1aa16d31f2ea11e9b8172519e75f9b163c1d8eeae2346506476fc82996781ae9",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qumesalu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-002-source-1",
+          "decision": "SPAN",
+          "sha256": "1aa16d31f2ea11e9b8172519e75f9b163c1d8eeae2346506476fc82996781ae9",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qumesalu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-002-source-1",
+          "decision": "SPAN",
+          "sha256": "1aa16d31f2ea11e9b8172519e75f9b163c1d8eeae2346506476fc82996781ae9",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qumesalu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-003",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-003-source-1",
+        "revision": 3,
+        "sha256": "70b51ae021eb65191933c0a8beeb02433f037834ad0dd4c852b2fa2333213511",
+        "text": "Qucibete",
+        "start": 17,
+        "endExclusive": 25
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-003-source-1",
+          "decision": "SPAN",
+          "sha256": "70b51ae021eb65191933c0a8beeb02433f037834ad0dd4c852b2fa2333213511",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Qucibete",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-003-source-1",
+          "decision": "SPAN",
+          "sha256": "70b51ae021eb65191933c0a8beeb02433f037834ad0dd4c852b2fa2333213511",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Qucibete",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-003-source-1",
+          "decision": "SPAN",
+          "sha256": "70b51ae021eb65191933c0a8beeb02433f037834ad0dd4c852b2fa2333213511",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Qucibete",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-004",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-004-source-1",
+        "revision": 3,
+        "sha256": "ebde11bdad52b03e877d04ea4219791b3a0c21cb63abb0e416106aa77c16f00d",
+        "text": "Qufoniva",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-004-source-1",
+          "decision": "SPAN",
+          "sha256": "ebde11bdad52b03e877d04ea4219791b3a0c21cb63abb0e416106aa77c16f00d",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qufoniva",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-004-source-1",
+          "decision": "SPAN",
+          "sha256": "ebde11bdad52b03e877d04ea4219791b3a0c21cb63abb0e416106aa77c16f00d",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qufoniva",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-004-source-1",
+          "decision": "SPAN",
+          "sha256": "ebde11bdad52b03e877d04ea4219791b3a0c21cb63abb0e416106aa77c16f00d",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qufoniva",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-005",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-005-source-1",
+        "revision": 3,
+        "sha256": "9981c416b3e99483c83bf6f7d4c89a9416341a055ccb09b1fcc643100b8c13e2",
+        "text": "Qurenage",
+        "start": 16,
+        "endExclusive": 24
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-005-source-1",
+          "decision": "SPAN",
+          "sha256": "9981c416b3e99483c83bf6f7d4c89a9416341a055ccb09b1fcc643100b8c13e2",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qurenage",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-005-source-1",
+          "decision": "SPAN",
+          "sha256": "9981c416b3e99483c83bf6f7d4c89a9416341a055ccb09b1fcc643100b8c13e2",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qurenage",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-005-source-1",
+          "decision": "SPAN",
+          "sha256": "9981c416b3e99483c83bf6f7d4c89a9416341a055ccb09b1fcc643100b8c13e2",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qurenage",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-006",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-006-source-1",
+        "revision": 3,
+        "sha256": "992c977eb3a40a97920a46f12f4a227068d3b46247fd81e5e251980152c2f18b",
+        "text": "Qupenima",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-006-source-1",
+          "decision": "SPAN",
+          "sha256": "992c977eb3a40a97920a46f12f4a227068d3b46247fd81e5e251980152c2f18b",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qupenima",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-006-source-1",
+          "decision": "SPAN",
+          "sha256": "992c977eb3a40a97920a46f12f4a227068d3b46247fd81e5e251980152c2f18b",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qupenima",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-006-source-1",
+          "decision": "SPAN",
+          "sha256": "992c977eb3a40a97920a46f12f4a227068d3b46247fd81e5e251980152c2f18b",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qupenima",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-007",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-007-source-1",
+        "revision": 3,
+        "sha256": "22cbbf2d6ed4c497e48d7bdf91f1d6e2ec8aece8fe020ddb139d40192e4b114b",
+        "text": "Quwopebe",
+        "start": 17,
+        "endExclusive": 25
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-007-source-1",
+          "decision": "SPAN",
+          "sha256": "22cbbf2d6ed4c497e48d7bdf91f1d6e2ec8aece8fe020ddb139d40192e4b114b",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quwopebe",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-007-source-1",
+          "decision": "SPAN",
+          "sha256": "22cbbf2d6ed4c497e48d7bdf91f1d6e2ec8aece8fe020ddb139d40192e4b114b",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quwopebe",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-007-source-1",
+          "decision": "SPAN",
+          "sha256": "22cbbf2d6ed4c497e48d7bdf91f1d6e2ec8aece8fe020ddb139d40192e4b114b",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quwopebe",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-008",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-008-source-1",
+        "revision": 3,
+        "sha256": "50572f4294331dc8343fe34bbff1b9632e5c172728e062c1ddc95492dcc4d606",
+        "text": "Qufiliti",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-008-source-1",
+          "decision": "SPAN",
+          "sha256": "50572f4294331dc8343fe34bbff1b9632e5c172728e062c1ddc95492dcc4d606",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qufiliti",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-008-source-1",
+          "decision": "SPAN",
+          "sha256": "50572f4294331dc8343fe34bbff1b9632e5c172728e062c1ddc95492dcc4d606",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qufiliti",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-008-source-1",
+          "decision": "SPAN",
+          "sha256": "50572f4294331dc8343fe34bbff1b9632e5c172728e062c1ddc95492dcc4d606",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qufiliti",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-009",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-009-source-1",
+        "revision": 3,
+        "sha256": "e84b02c9fd4b6cf94ccde2d97da8a9d398058266af34f0fa702fd57d0747ff49",
+        "text": "Qunudebi",
+        "start": 16,
+        "endExclusive": 24
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-009-source-1",
+          "decision": "SPAN",
+          "sha256": "e84b02c9fd4b6cf94ccde2d97da8a9d398058266af34f0fa702fd57d0747ff49",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qunudebi",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-009-source-1",
+          "decision": "SPAN",
+          "sha256": "e84b02c9fd4b6cf94ccde2d97da8a9d398058266af34f0fa702fd57d0747ff49",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qunudebi",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-009-source-1",
+          "decision": "SPAN",
+          "sha256": "e84b02c9fd4b6cf94ccde2d97da8a9d398058266af34f0fa702fd57d0747ff49",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qunudebi",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-010",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-010-source-1",
+        "revision": 3,
+        "sha256": "e7e01502538de3b750adf2749449c3c48f542cfeadf4d6a8fa23480932c8872e",
+        "text": "Quceboci",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-010-source-1",
+          "decision": "SPAN",
+          "sha256": "e7e01502538de3b750adf2749449c3c48f542cfeadf4d6a8fa23480932c8872e",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Quceboci",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-010-source-1",
+          "decision": "SPAN",
+          "sha256": "e7e01502538de3b750adf2749449c3c48f542cfeadf4d6a8fa23480932c8872e",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Quceboci",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-010-source-1",
+          "decision": "SPAN",
+          "sha256": "e7e01502538de3b750adf2749449c3c48f542cfeadf4d6a8fa23480932c8872e",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Quceboci",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-011",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-011-source-1",
+        "revision": 3,
+        "sha256": "773057da71509c2b1f3ce3ec6fa93633ba3f9ec77ceaa556d3fc191a49d34746",
+        "text": "Quwosuka",
+        "start": 17,
+        "endExclusive": 25
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-011-source-1",
+          "decision": "SPAN",
+          "sha256": "773057da71509c2b1f3ce3ec6fa93633ba3f9ec77ceaa556d3fc191a49d34746",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quwosuka",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-011-source-1",
+          "decision": "SPAN",
+          "sha256": "773057da71509c2b1f3ce3ec6fa93633ba3f9ec77ceaa556d3fc191a49d34746",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quwosuka",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-011-source-1",
+          "decision": "SPAN",
+          "sha256": "773057da71509c2b1f3ce3ec6fa93633ba3f9ec77ceaa556d3fc191a49d34746",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quwosuka",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-012",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-012-source-1",
+        "revision": 3,
+        "sha256": "5b2bf5123db229d6f9157e72e3c309d4389edd2dda868cbae1ad4d2789cec239",
+        "text": "Qucedica",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-012-source-1",
+          "decision": "SPAN",
+          "sha256": "5b2bf5123db229d6f9157e72e3c309d4389edd2dda868cbae1ad4d2789cec239",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qucedica",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-012-source-1",
+          "decision": "SPAN",
+          "sha256": "5b2bf5123db229d6f9157e72e3c309d4389edd2dda868cbae1ad4d2789cec239",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qucedica",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-012-source-1",
+          "decision": "SPAN",
+          "sha256": "5b2bf5123db229d6f9157e72e3c309d4389edd2dda868cbae1ad4d2789cec239",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qucedica",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-013",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-013-source-1",
+        "revision": 3,
+        "sha256": "e73a00e22d41ea87227b61b9ca76dd9388d7c5e5428c45dc57b0d1b9efd4aba5",
+        "text": "Qukarole",
+        "start": 16,
+        "endExclusive": 24
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-013-source-1",
+          "decision": "SPAN",
+          "sha256": "e73a00e22d41ea87227b61b9ca76dd9388d7c5e5428c45dc57b0d1b9efd4aba5",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qukarole",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-013-source-1",
+          "decision": "SPAN",
+          "sha256": "e73a00e22d41ea87227b61b9ca76dd9388d7c5e5428c45dc57b0d1b9efd4aba5",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qukarole",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-013-source-1",
+          "decision": "SPAN",
+          "sha256": "e73a00e22d41ea87227b61b9ca76dd9388d7c5e5428c45dc57b0d1b9efd4aba5",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qukarole",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-014",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-014-source-1",
+        "revision": 3,
+        "sha256": "fc78792f57b18fbf943030d2e08797e2682b64cbc3423da63a2b153bd3819a2b",
+        "text": "Qukesavu",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-014-source-1",
+          "decision": "SPAN",
+          "sha256": "fc78792f57b18fbf943030d2e08797e2682b64cbc3423da63a2b153bd3819a2b",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qukesavu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-014-source-1",
+          "decision": "SPAN",
+          "sha256": "fc78792f57b18fbf943030d2e08797e2682b64cbc3423da63a2b153bd3819a2b",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qukesavu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-014-source-1",
+          "decision": "SPAN",
+          "sha256": "fc78792f57b18fbf943030d2e08797e2682b64cbc3423da63a2b153bd3819a2b",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qukesavu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-015",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-015-source-1",
+        "revision": 3,
+        "sha256": "27d3044fbb36a5a15fdd4064e2a33b89f55accfaf5d7d9bc474a8513e2a3385d",
+        "text": "Qumasale",
+        "start": 17,
+        "endExclusive": 25
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-015-source-1",
+          "decision": "SPAN",
+          "sha256": "27d3044fbb36a5a15fdd4064e2a33b89f55accfaf5d7d9bc474a8513e2a3385d",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Qumasale",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-015-source-1",
+          "decision": "SPAN",
+          "sha256": "27d3044fbb36a5a15fdd4064e2a33b89f55accfaf5d7d9bc474a8513e2a3385d",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Qumasale",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-015-source-1",
+          "decision": "SPAN",
+          "sha256": "27d3044fbb36a5a15fdd4064e2a33b89f55accfaf5d7d9bc474a8513e2a3385d",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Qumasale",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-016",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-016-source-1",
+        "revision": 3,
+        "sha256": "7c3728600901030d6fa5a9934c5662ec27496282fafd1e8dcceee613b91c8a51",
+        "text": "Qugiciku",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-016-source-1",
+          "decision": "SPAN",
+          "sha256": "7c3728600901030d6fa5a9934c5662ec27496282fafd1e8dcceee613b91c8a51",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qugiciku",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-016-source-1",
+          "decision": "SPAN",
+          "sha256": "7c3728600901030d6fa5a9934c5662ec27496282fafd1e8dcceee613b91c8a51",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qugiciku",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-016-source-1",
+          "decision": "SPAN",
+          "sha256": "7c3728600901030d6fa5a9934c5662ec27496282fafd1e8dcceee613b91c8a51",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qugiciku",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-017",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-017-source-1",
+        "revision": 3,
+        "sha256": "b0c79370a69a95ad9b506eecccb058073d71323779325ac12300b1982f0d241e",
+        "text": "Qucanoru",
+        "start": 16,
+        "endExclusive": 24
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-017-source-1",
+          "decision": "SPAN",
+          "sha256": "b0c79370a69a95ad9b506eecccb058073d71323779325ac12300b1982f0d241e",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qucanoru",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-017-source-1",
+          "decision": "SPAN",
+          "sha256": "b0c79370a69a95ad9b506eecccb058073d71323779325ac12300b1982f0d241e",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qucanoru",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-017-source-1",
+          "decision": "SPAN",
+          "sha256": "b0c79370a69a95ad9b506eecccb058073d71323779325ac12300b1982f0d241e",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Qucanoru",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-018",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-018-source-1",
+        "revision": 3,
+        "sha256": "b1ef0581447915ec78ece58327588fcd29ef29d76e192640c0f7a012717424ab",
+        "text": "Qucotela",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-018-source-1",
+          "decision": "SPAN",
+          "sha256": "b1ef0581447915ec78ece58327588fcd29ef29d76e192640c0f7a012717424ab",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qucotela",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-018-source-1",
+          "decision": "SPAN",
+          "sha256": "b1ef0581447915ec78ece58327588fcd29ef29d76e192640c0f7a012717424ab",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qucotela",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-018-source-1",
+          "decision": "SPAN",
+          "sha256": "b1ef0581447915ec78ece58327588fcd29ef29d76e192640c0f7a012717424ab",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qucotela",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-019",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-019-source-1",
+        "revision": 3,
+        "sha256": "51d4d65a154ce5a1c19889e23ca4c91b2a9c3cdc5ed664f380a5da07893f941a",
+        "text": "Quvibace",
+        "start": 17,
+        "endExclusive": 25
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-019-source-1",
+          "decision": "SPAN",
+          "sha256": "51d4d65a154ce5a1c19889e23ca4c91b2a9c3cdc5ed664f380a5da07893f941a",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quvibace",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-019-source-1",
+          "decision": "SPAN",
+          "sha256": "51d4d65a154ce5a1c19889e23ca4c91b2a9c3cdc5ed664f380a5da07893f941a",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quvibace",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-019-source-1",
+          "decision": "SPAN",
+          "sha256": "51d4d65a154ce5a1c19889e23ca4c91b2a9c3cdc5ed664f380a5da07893f941a",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Quvibace",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-020",
+      "split": "PRIMARY",
+      "expected": {
+        "sourceId": "qa-neural-020-source-1",
+        "revision": 3,
+        "sha256": "22e8621b168da8c31294b72f866448a09215b8950955d32bce7d06ef2db6583c",
+        "text": "Qukucufo",
+        "start": 18,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-020-source-1",
+          "decision": "SPAN",
+          "sha256": "22e8621b168da8c31294b72f866448a09215b8950955d32bce7d06ef2db6583c",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qukucufo",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-020-source-1",
+          "decision": "SPAN",
+          "sha256": "22e8621b168da8c31294b72f866448a09215b8950955d32bce7d06ef2db6583c",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qukucufo",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-020-source-1",
+          "decision": "SPAN",
+          "sha256": "22e8621b168da8c31294b72f866448a09215b8950955d32bce7d06ef2db6583c",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Qukucufo",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-021",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-022",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-023",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-024",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-025",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-026",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-026-source-1",
+        "revision": 3,
+        "sha256": "e76fafd289ebb3157b4b4520640ba468431c684fbbb9ed1ef1789706d0f37f8b",
+        "text": "Qutocone",
+        "start": 46,
+        "endExclusive": 54
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-026-source-1",
+          "decision": "SPAN",
+          "sha256": "e76fafd289ebb3157b4b4520640ba468431c684fbbb9ed1ef1789706d0f37f8b",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qutocone",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-026-source-1",
+          "decision": "SPAN",
+          "sha256": "e76fafd289ebb3157b4b4520640ba468431c684fbbb9ed1ef1789706d0f37f8b",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qutocone",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-026-source-1",
+          "decision": "SPAN",
+          "sha256": "e76fafd289ebb3157b4b4520640ba468431c684fbbb9ed1ef1789706d0f37f8b",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qutocone",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-027",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-027-source-1",
+        "revision": 3,
+        "sha256": "b473800a249a2eefbe8a44bb4fdb0213c21aad2592f8e17580e4e57976d46ad0",
+        "text": "Quwudiso",
+        "start": 44,
+        "endExclusive": 52
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-027-source-1",
+          "decision": "SPAN",
+          "sha256": "b473800a249a2eefbe8a44bb4fdb0213c21aad2592f8e17580e4e57976d46ad0",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Quwudiso",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-027-source-1",
+          "decision": "SPAN",
+          "sha256": "b473800a249a2eefbe8a44bb4fdb0213c21aad2592f8e17580e4e57976d46ad0",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Quwudiso",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-027-source-1",
+          "decision": "SPAN",
+          "sha256": "b473800a249a2eefbe8a44bb4fdb0213c21aad2592f8e17580e4e57976d46ad0",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Quwudiso",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-028",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-028-source-1",
+        "revision": 3,
+        "sha256": "3d03e2948eea9ef002b5f1696a4e1b50a030eb73c4ec3fdcc8ee484fce3d43a9",
+        "text": "Quvacefi",
+        "start": 46,
+        "endExclusive": 54
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-028-source-1",
+          "decision": "SPAN",
+          "sha256": "3d03e2948eea9ef002b5f1696a4e1b50a030eb73c4ec3fdcc8ee484fce3d43a9",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Quvacefi",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-028-source-1",
+          "decision": "SPAN",
+          "sha256": "3d03e2948eea9ef002b5f1696a4e1b50a030eb73c4ec3fdcc8ee484fce3d43a9",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Quvacefi",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-028-source-1",
+          "decision": "SPAN",
+          "sha256": "3d03e2948eea9ef002b5f1696a4e1b50a030eb73c4ec3fdcc8ee484fce3d43a9",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Quvacefi",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-029",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-029-source-1",
+        "revision": 3,
+        "sha256": "f70954ac816659fd2ef3702aa042aaaf26c090d7efa7f7f7107ef4c553198068",
+        "text": "Qucivego",
+        "start": 42,
+        "endExclusive": 50
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-029-source-1",
+          "decision": "SPAN",
+          "sha256": "f70954ac816659fd2ef3702aa042aaaf26c090d7efa7f7f7107ef4c553198068",
+          "endExclusive": 50,
+          "start": 42,
+          "text": "Qucivego",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-029-source-1",
+          "decision": "SPAN",
+          "sha256": "f70954ac816659fd2ef3702aa042aaaf26c090d7efa7f7f7107ef4c553198068",
+          "endExclusive": 50,
+          "start": 42,
+          "text": "Qucivego",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-029-source-1",
+          "decision": "SPAN",
+          "sha256": "f70954ac816659fd2ef3702aa042aaaf26c090d7efa7f7f7107ef4c553198068",
+          "endExclusive": 50,
+          "start": 42,
+          "text": "Qucivego",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-030",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-030-source-1",
+        "revision": 3,
+        "sha256": "07fc4ddabab5393cc433cd8e605f026bbd66cdf683c7c3c182d279af437fd9d4",
+        "text": "Qumuvuni",
+        "start": 46,
+        "endExclusive": 54
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-030-source-1",
+          "decision": "SPAN",
+          "sha256": "07fc4ddabab5393cc433cd8e605f026bbd66cdf683c7c3c182d279af437fd9d4",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qumuvuni",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-030-source-1",
+          "decision": "SPAN",
+          "sha256": "07fc4ddabab5393cc433cd8e605f026bbd66cdf683c7c3c182d279af437fd9d4",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qumuvuni",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-030-source-1",
+          "decision": "SPAN",
+          "sha256": "07fc4ddabab5393cc433cd8e605f026bbd66cdf683c7c3c182d279af437fd9d4",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qumuvuni",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-031",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-031-source-1",
+        "revision": 3,
+        "sha256": "e6b11d7581b61544429c01f44b2f1a4f3b65a45608a2dd76598e406b3b5513c5",
+        "text": "Qulifelu",
+        "start": 44,
+        "endExclusive": 52
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-031-source-1",
+          "decision": "SPAN",
+          "sha256": "e6b11d7581b61544429c01f44b2f1a4f3b65a45608a2dd76598e406b3b5513c5",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Qulifelu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-031-source-1",
+          "decision": "SPAN",
+          "sha256": "e6b11d7581b61544429c01f44b2f1a4f3b65a45608a2dd76598e406b3b5513c5",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Qulifelu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-031-source-1",
+          "decision": "SPAN",
+          "sha256": "e6b11d7581b61544429c01f44b2f1a4f3b65a45608a2dd76598e406b3b5513c5",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Qulifelu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-032",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-032-source-1",
+        "revision": 3,
+        "sha256": "8470df82956620f26dc48eeac2dc4293437b3e5697ae22e60da5dcfffde2b1ce",
+        "text": "Qudawola",
+        "start": 46,
+        "endExclusive": 54
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-032-source-1",
+          "decision": "SPAN",
+          "sha256": "8470df82956620f26dc48eeac2dc4293437b3e5697ae22e60da5dcfffde2b1ce",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qudawola",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-032-source-1",
+          "decision": "SPAN",
+          "sha256": "8470df82956620f26dc48eeac2dc4293437b3e5697ae22e60da5dcfffde2b1ce",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qudawola",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-032-source-1",
+          "decision": "SPAN",
+          "sha256": "8470df82956620f26dc48eeac2dc4293437b3e5697ae22e60da5dcfffde2b1ce",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Qudawola",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-033",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-033-source-1",
+        "revision": 3,
+        "sha256": "02c6efc462cd11cc932879de4f9489966012598a7f37fb4c87e0de3af94daa98",
+        "text": "Qufecaki",
+        "start": 42,
+        "endExclusive": 50
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-033-source-1",
+          "decision": "SPAN",
+          "sha256": "02c6efc462cd11cc932879de4f9489966012598a7f37fb4c87e0de3af94daa98",
+          "endExclusive": 50,
+          "start": 42,
+          "text": "Qufecaki",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-033-source-1",
+          "decision": "SPAN",
+          "sha256": "02c6efc462cd11cc932879de4f9489966012598a7f37fb4c87e0de3af94daa98",
+          "endExclusive": 50,
+          "start": 42,
+          "text": "Qufecaki",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-033-source-1",
+          "decision": "SPAN",
+          "sha256": "02c6efc462cd11cc932879de4f9489966012598a7f37fb4c87e0de3af94daa98",
+          "endExclusive": 50,
+          "start": 42,
+          "text": "Qufecaki",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-034",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-034-source-1",
+        "revision": 3,
+        "sha256": "269724f0a87f14fe899e6affad0b74eafe953a09d3f52a8d7c0cb8f0cabd10c8",
+        "text": "Quvowupu",
+        "start": 46,
+        "endExclusive": 54
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-034-source-1",
+          "decision": "SPAN",
+          "sha256": "269724f0a87f14fe899e6affad0b74eafe953a09d3f52a8d7c0cb8f0cabd10c8",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Quvowupu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-034-source-1",
+          "decision": "SPAN",
+          "sha256": "269724f0a87f14fe899e6affad0b74eafe953a09d3f52a8d7c0cb8f0cabd10c8",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Quvowupu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-034-source-1",
+          "decision": "SPAN",
+          "sha256": "269724f0a87f14fe899e6affad0b74eafe953a09d3f52a8d7c0cb8f0cabd10c8",
+          "endExclusive": 54,
+          "start": 46,
+          "text": "Quvowupu",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-035",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-035-source-1",
+        "revision": 3,
+        "sha256": "8e47093b46e7cccdf8b6bdc54f428609a4ca57ec518854c879e527215763d93a",
+        "text": "Qupereki",
+        "start": 44,
+        "endExclusive": 52
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "qa-neural-035-source-1",
+          "decision": "SPAN",
+          "sha256": "8e47093b46e7cccdf8b6bdc54f428609a4ca57ec518854c879e527215763d93a",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Qupereki",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "qa-neural-035-source-1",
+          "decision": "SPAN",
+          "sha256": "8e47093b46e7cccdf8b6bdc54f428609a4ca57ec518854c879e527215763d93a",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Qupereki",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "qa-neural-035-source-1",
+          "decision": "SPAN",
+          "sha256": "8e47093b46e7cccdf8b6bdc54f428609a4ca57ec518854c879e527215763d93a",
+          "endExclusive": 52,
+          "start": 44,
+          "text": "Qupereki",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-036",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-037",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-038",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-039",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-040",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-041",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-042",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-043",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-044",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-045",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-046",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-047",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-048",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-048-source-1",
+        "revision": 3,
+        "sha256": "01a0f4463360ddf4a5b89a9ff169e4fc17eee49221e11e62979b57c8ab67862a",
+        "text": "Qupelufo",
+        "start": 63,
+        "endExclusive": 71
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-049",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-049-source-1",
+        "revision": 3,
+        "sha256": "cc5c36a165fa4e5be0ecf60e34b9bb01762e63f83c67d8457b0baf748c7ca43c",
+        "text": "Qusinora",
+        "start": 59,
+        "endExclusive": 67
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-050",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-050-source-1",
+        "revision": 3,
+        "sha256": "eee3f04c54bb9680049ec885990da04d03dcd7658ab1fbb72199f9283459dc52",
+        "text": "Qupifofo",
+        "start": 63,
+        "endExclusive": 71
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-051",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-051-source-1",
+        "revision": 3,
+        "sha256": "791d814898bd6b21eb33611f6bf30754c320cf0a51e33753c56d4380e21c8862",
+        "text": "Qusafivo",
+        "start": 61,
+        "endExclusive": 69
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-052",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-052-source-1",
+        "revision": 3,
+        "sha256": "7027f30d8933fe100b00aa41228df8b92cbf8b329e100a1070e1acb238942bfc",
+        "text": "Quketice",
+        "start": 63,
+        "endExclusive": 71
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-053",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-054",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-055",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-056",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-057",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "QB-N-058",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-058-source-2",
+        "revision": 4,
+        "sha256": "bba74e7d87b6d9e882a9dce663926f5cbf41ca257cdfe8efc914dcfc1b913477",
+        "text": "Quwefilo",
+        "start": 37,
+        "endExclusive": 45
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-059",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-059-source-2",
+        "revision": 4,
+        "sha256": "d52bba39aaebac3584a72d59aa3c66aceb4b9930b81cdd64837a8fb929902e56",
+        "text": "Qutafawe",
+        "start": 36,
+        "endExclusive": 44
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-060",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-060-source-2",
+        "revision": 4,
+        "sha256": "f6643cfca4726bfcc0a1c76e78e51f5f0ffc27c0cdf1efc2e25abf2a8bbf7c48",
+        "text": "Quruvera",
+        "start": 37,
+        "endExclusive": 45
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-061",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-061-source-2",
+        "revision": 4,
+        "sha256": "6f12640e5ee2021b9d1ffe62e6333b4521642057abb4cc50e8129248ce7dffae",
+        "text": "Qulabogi",
+        "start": 35,
+        "endExclusive": 43
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-062",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-062-source-2",
+        "revision": 4,
+        "sha256": "d4a9fc31819c98b2f158e5dce02709bbd588ecb899742d6d2b6f4c907df6d75d",
+        "text": "Qucepemu",
+        "start": 37,
+        "endExclusive": 45
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-063",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-063-source-2",
+        "revision": 4,
+        "sha256": "20c0ad4549674c18a1ec34d3b1198504726e4329b63c007056ae1866e1bee180",
+        "text": "Qurebulu",
+        "start": 36,
+        "endExclusive": 44
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "QB-N-064",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "qa-neural-064-source-2",
+        "revision": 4,
+        "sha256": "8572406cf353b4704d89d9d5571ffc745156a68a4cb4e1a9ead7d0dc4293c7a3",
+        "text": "Qubedepu",
+        "start": 37,
+        "endExclusive": 45
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    }
+  ],
+  "corpusSha256": "006d9eab5ce46efca382b421d1289f6ae045ebb8a81acd8ec78160b2254711e1",
+  "predictionsSha256": "1d427a17aefa0d585ad5bcd19b3e5e8034ef66997ebb583ca6cf10c00effaf9d",
+  "promotion": "FORBIDDEN_RESEARCH_ONLY"
+}

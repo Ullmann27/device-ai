@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "base": "4e85e8fe91e3b4d816815b712a0a6e8ce8c6f598",
+  "chain": "node",
+  "startedAt": "2026-10-27T09:17:10.642Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": null,
+    "modelInvocations": null,
+    "localRequests": 3,
+    "verifiedModelExecution": false,
+    "candidateStatus": "UNAVAILABLE_OR_REJECTED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "0c5da0b08474dac0",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_NOOP_PATCH",
+        "hypothesis": ""
+      },
+      {
+        "candidate": "829c9f5b2d41e14a",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_NOOP_PATCH",
+        "hypothesis": ""
+      },
+      {
+        "candidate": "a392791107a72639",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_NOOP_PATCH",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_NOOP_PATCH",
+        "repeated": false,
+        "responseSha256": "0c5da0b08474dac06e4b141c82dd06140ad758b5572c61fe7cfbd555009b1abb"
+      },
+      {
+        "code": "CODING_NOOP_PATCH",
+        "repeated": false,
+        "responseSha256": "829c9f5b2d41e14a0b8d70a1f63cd2e45a7e3c6b020b00d9d6120822b30d0f86"
+      },
+      {
+        "code": "CODING_NOOP_PATCH",
+        "repeated": false,
+        "responseSha256": "a392791107a72639c5abc9ef93da897e18dcf5d3fc8131a0b901d7708461abee"
+      }
+    ],
+    "reason": "Provider calls do not independently establish model execution",
+    "lastRejectCode": "CODING_NOOP_PATCH"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:695fb07716de18118c92d0e613fe8b7413f86c27dc2b5fd5faa4e8fca51d29f8",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "f8f1d67d6c5828bc343bac297bbab0aebf15f93ff15e70f460c2346a57671c66",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 12,
+          "failed": 4,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 12,
+          "passed": 8,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "1de59c9032bbe19f490ab36dd1150f52d359aadafa0765cc72b5ec122aba45af",
+            "21f2ccc21fe0308fdd7e5eed9a817e7994da6c9983072c909652218548ccaeb4",
+            "323882cb9f43726ad027d139908c18967009794881be20d91d28eeeb28b26729",
+            "405ff7ee9fd969f448cf203588fe287880dfd49eb94e08998da6249797d1e7aa",
+            "6704f19ae487e824f0c3936a5a188c95ac5e18d17ad3d2b555b6db4b283e1a32",
+            "69fe729c9433946e864490720ec241ae304330e79c178f18ee2ec40d57497c4f",
+            "8672a1c7a040be67470889b8cbeec83f1005dcaf6a4bf44825e1be0a7a35ee0d",
+            "c1b183a42387d6a1742d7a5713751e378257a74ec34898429f04e4db7a19ce54",
+            "cd0fdf9ba9db1a70d5fde8918d506be1e2b342bb1b31f0f835b99700b1290935",
+            "d1ba0f401413fee65899baf0d2c7bb06dc1e46715739f248d1f7ccf71e831794",
+            "e8f49c8ebdd0acea81ba77c432da181e24c2aee445a2e661ead5cc018edc4159",
+            "f25424422aed1bf62e7be0e25c17416a191176028ce9f79b1c335f94e34f4caa"
+          ]
+        },
+        "diagnostics": 4
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.pages 1/7",
+        "file": ".github/continuum/pagination.test.mjs",
+        "line": 5,
+        "col": 42,
+        "message": "Expected values to be strictly equal:\n\n0 !== 1",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "265e68bebb91087c"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.pages 8/7",
+        "file": ".github/continuum/pagination.test.mjs",
+        "line": 5,
+        "col": 42,
+        "message": "Expected values to be strictly equal:\n\n1 !== 2",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "265e68bebb91087c"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.pages 401/23",
+        "file": ".github/continuum/pagination.test.mjs",
+        "line": 5,
+        "col": 42,
+        "message": "Expected values to be strictly equal:\n\n17 !== 18",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "265e68bebb91087c"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.pages 1024/100",
+        "file": ".github/continuum/pagination.test.mjs",
+        "line": 5,
+        "col": 42,
+        "message": "Expected values to be strictly equal:\n\n10 !== 11",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "265e68bebb91087c"
+      }
+    ]
+  },
+  "attempts": [],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "coding": {
+    "taskId": "mob-ee8bad03bdcf4c62",
+    "taskFingerprint": "490b24ac6811ea1f7c46f707aa7d5dd74292994035a5a74d15736926805fb6e8",
+    "sourceCommit": "4e85e8fe91e3b4d816815b712a0a6e8ce8c6f598",
+    "allowedPaths": [
+      "lib/pagination.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED"
+    ],
+    "candidateCount": 0,
+    "contextSha256": null
+  },
+  "finishedAt": "2026-10-27T09:18:01.871Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "4e85e8fe91e3b4d816815b712a0a6e8ce8c6f598",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 4,
+        "proof": "14d7c2e4437d74cf4fd1b779bcaf601d5c7e76cecebc6247a14f538f826bcc38"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "d7fa46b3b359b732aff1e41162ce67067d56e6285ab644365178798a65a2089d"
+  }
+}

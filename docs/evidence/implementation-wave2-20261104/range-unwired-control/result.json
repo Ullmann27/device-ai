@@ -1,0 +1,22 @@
+{
+  "source": "6c6fbfb3abed6afeccfb2eadcd24ce4754e7a349",
+  "tree": "d12064587a108dafe3ca8049d46c658d3dbfdfe0",
+  "dirty": "",
+  "checkout": "/workspace/scratch/d663e8444310/continuum-anschluss",
+  "args": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    ":app:testDebugUnitTest",
+    "-PcontinuumUiWidgetTests=true",
+    "--tests",
+    "*AvatarRangeFrameConnectionUiTest"
+  ],
+  "started_at": "2026-11-04T19:23:07.919638+00:00",
+  "exit_code": 1,
+  "source_unchanged": true,
+  "finished_at": "2026-11-04T19:24:03.281932+00:00"
+}

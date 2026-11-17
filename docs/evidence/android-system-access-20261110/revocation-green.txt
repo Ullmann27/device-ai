@@ -1,0 +1,10 @@
+WARNING: No manifest file found at ./AndroidManifest.xml.
+Falling back to the Android OS resources only.
+To remove this warning, annotate your test class with @Config(manifest=Config.NONE).
+If you're using Android Gradle Plugin, add testOptions.unitTests.includeAndroidResources = true to your build.gradle
+revokedPermissionImmediatelyRemovesReadiness: run=1 failures=0
+permissionRevokedBeforeBindCallbackCannotAttachShell: run=1 failures=0
+revokedPermissionCannotDispatchCheckedCommand: run=1 failures=0
+permissionRevokedDuringShellExecutionSuppressesSuccess: run=1 failures=0
+observedRevocationInvalidatesBindingBeforeReapproval: run=1 failures=0
+TOTAL tests=5 failures=0

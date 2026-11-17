@@ -1,0 +1,26 @@
+{
+  "taskId": "C1-UI-CONTRACT-007",
+  "baseLocal": "0dac310728a84bd1adc296377ed7d124bc09692a",
+  "baseRemote": "a54583816df92bcd0cdf4e75f06cdefffb5dafcc",
+  "sourcePatchSha256": "c78066e2a6f0b3f1ff42add03eabcb26361ad10f33e1e49352d44bba8da49b50",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    ".github/continuum/app-navigation-wiring.test.mjs",
+    ".github/continuum/android-holographic-home.test.mjs",
+    ".github/continuum/fold-responsive-reflow.test.mjs",
+    ".github/continuum/fold7-portrait-reference.test.mjs",
+    ".github/continuum/continuum-fold7-hologram-live-diagnostics.test.mjs",
+    ".github/continuum/mobile-builder-existing-integration.test.mjs",
+    ".github/continuum/nexus-beginner-ui.test.mjs",
+    ".github/continuum/premium-phone-viewport-wiring.test.mjs",
+    "scripts/continuum-ui-routing.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/174c84456ee3/continuum-c1",
+  "startedAt": "2026-11-04T20:26:00.879181+00:00",
+  "finishedAt": "2026-11-04T20:26:02.199803+00:00",
+  "exitCode": 0,
+  "scope": "Nine existing source-contract files only; all resulting bytes verified; no Android or device execution."
+}

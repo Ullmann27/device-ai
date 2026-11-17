@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -9246,7 +9246,7 @@
+         val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(
+             text, resolvedQuestion, if (botTask == null && codingPlanning == null)
+                 localConversationContext.sessionEvidence(localSessionId) else null)
+-        val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
++        val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: resolvedQuestion
+         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
+         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
+         var submittedToolObservationCount = 0

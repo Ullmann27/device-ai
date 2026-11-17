@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.NeuralSnapshotCasTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:21" hostname="b50d54a1ac03" time="0.0">
+  <properties/>
+  <testcase name="savesOnlyOverTheStateTheRunStartedFrom" classname="at.heinz.deviceai.NeuralSnapshotCasTest" time="0.0"/>
+  <testcase name="aSnapshotWrittenMeanwhileIsNeverOverwritten" classname="at.heinz.deviceai.NeuralSnapshotCasTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

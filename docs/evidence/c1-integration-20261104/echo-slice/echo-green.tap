@@ -1,0 +1,322 @@
+TAP version 13
+# Subtest: existing profile port selects distinct immutable identities without changing task budget
+ok 1 - existing profile port selects distinct immutable identities without changing task budget
+  ---
+  duration_ms: 19.522945
+  type: 'test'
+  ...
+# Subtest: copied JSON and unregistered identities cannot acquire assignment origin
+ok 2 - copied JSON and unregistered identities cannot acquire assignment origin
+  ---
+  duration_ms: 1.217609
+  type: 'test'
+  ...
+# Subtest: same builder/verifier and unsupported stage are rejected
+ok 3 - same builder/verifier and unsupported stage are rejected
+  ---
+  duration_ms: 1.143017
+  type: 'test'
+  ...
+# Subtest: prepared task fingerprint and canonical task cannot be exchanged
+ok 4 - prepared task fingerprint and canonical task cannot be exchanged
+  ---
+  duration_ms: 4.052667
+  type: 'test'
+  ...
+# Subtest: rename retains identity; removal and workspace change invalidate current association
+ok 5 - rename retains identity; removal and workspace change invalidate current association
+  ---
+  duration_ms: 1.905272
+  type: 'test'
+  ...
+# Subtest: replacing the external store method cannot substitute the admitted reader
+ok 6 - replacing the external store method cannot substitute the admitted reader
+  ---
+  duration_ms: 0.853352
+  type: 'test'
+  ...
+# Subtest: profile model cap restricts task and a later budget reduction revokes the association
+ok 7 - profile model cap restricts task and a later budget reduction revokes the association
+  ---
+  duration_ms: 0.929807
+  type: 'test'
+  ...
+# Subtest: bot execution requires actual admitted isolation before reading journals or invoking provider
+ok 8 - bot execution requires actual admitted isolation before reading journals or invoking provider
+  ---
+  duration_ms: 5.889146
+  type: 'test'
+  ...
+# Subtest: Echo executes deterministic canonical report without extra model call, journal mutation or owner text
+ok 9 - Echo executes deterministic canonical report without extra model call, journal mutation or owner text
+  ---
+  duration_ms: 4495.479034
+  type: 'test'
+  ...
+# Subtest: reporter must still exist; rename preserves stable identity
+ok 10 - reporter must still exist; rename preserves stable identity
+  ---
+  duration_ms: 77.989546
+  type: 'test'
+  ...
+# Subtest: current prepared grant fingerprint cannot be replaced
+ok 11 - current prepared grant fingerprint cannot be replaced
+  ---
+  duration_ms: 3.813608
+  type: 'test'
+  ...
+# Subtest: changed source is blocked before a success report
+ok 12 - changed source is blocked before a success report
+  ---
+  duration_ms: 17.271653
+  type: 'test'
+  ...
+# Subtest: tampered canonical journal MAC cannot be summarized
+ok 13 - tampered canonical journal MAC cannot be summarized
+  ---
+  duration_ms: 10.49214
+  type: 'test'
+  ...
+# Subtest: owner abort cannot be promoted to confirmed success
+ok 14 - owner abort cannot be promoted to confirmed success
+  ---
+  duration_ms: 13.857064
+  type: 'test'
+  ...
+# Subtest: missing or modified execution receipt invalidates confirmed result
+ok 15 - missing or modified execution receipt invalidates confirmed result
+  ---
+  duration_ms: 34.747374
+  type: 'test'
+  ...
+# Subtest: modified report artifact is rejected rather than silently overwritten
+ok 16 - modified report artifact is rejected rather than silently overwritten
+  ---
+  duration_ms: 74.075597
+  type: 'test'
+  ...
+# Subtest: assignment expiry blocks reporter with no additional inference
+ok 17 - assignment expiry blocks reporter with no additional inference
+  ---
+  duration_ms: 14.601778
+  type: 'test'
+  ...
+# Subtest: strict observation failure exposes the canonical negative Echo report without learning
+ok 18 - strict observation failure exposes the canonical negative Echo report without learning
+  ---
+  duration_ms: 633.64609
+  type: 'test'
+  ...
+# Subtest: resuming a negative task reuses its report without inference, execution or journal changes
+ok 19 - resuming a negative task reuses its report without inference, execution or journal changes
+  ---
+  duration_ms: 766.031167
+  type: 'test'
+  ...
+# Subtest: a reporter removed during a failed attempt cannot receive a canonical report
+ok 20 - a reporter removed during a failed attempt cannot receive a canonical report
+  ---
+  duration_ms: 456.61254
+  type: 'test'
+  ...
+# Subtest: strict replay of an older completed repair cannot publish success without a current model observation
+ok 21 - strict replay of an older completed repair cannot publish success without a current model observation
+  ---
+  duration_ms: 3145.697157
+  type: 'test'
+  ...
+# Subtest: a competing writer cannot turn a strict observation failure into an older success report
+ok 22 - a competing writer cannot turn a strict observation failure into an older success report
+  ---
+  duration_ms: 2667.091683
+  type: 'test'
+  ...
+# Subtest: service attempt persists the canonical negative report for owner lookup while rejecting
+ok 23 - service attempt persists the canonical negative report for owner lookup while rejecting
+  ---
+  duration_ms: 333.684538
+  type: 'test'
+  ...
+# Subtest: provider-shaped and JSON-copied errors cannot acquire canonical failure evidence
+ok 24 - provider-shaped and JSON-copied errors cannot acquire canonical failure evidence
+  ---
+  duration_ms: 359.052144
+  type: 'test'
+  ...
+# Subtest: failure evidence persistence cannot replace the model error or overwrite a prior record
+ok 25 - failure evidence persistence cannot replace the model error or overwrite a prior record
+  ---
+  duration_ms: 443.864252
+  type: 'test'
+  ...
+# Subtest: owner lookup offers only the checked negative report for an unknown delivery
+ok 26 - owner lookup offers only the checked negative report for an unknown delivery
+  ---
+  duration_ms: 1970.29714
+  type: 'test'
+  ...
+# Subtest: typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
+ok 27 - typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
+  ---
+  duration_ms: 3538.238191
+  type: 'test'
+  ...
+# Subtest: timeout is a durable FAILED/TIMEOUT, never a successful model response or a free retry
+ok 28 - timeout is a durable FAILED/TIMEOUT, never a successful model response or a free retry
+  ---
+  duration_ms: 117.01194
+  type: 'test'
+  ...
+# Subtest: typed no-op rejection is recorded, not a repair success
+ok 29 - typed no-op rejection is recorded, not a repair success
+  ---
+  duration_ms: 84.028872
+  type: 'test'
+  ...
+# Subtest: valid exit but broken JSON is INVALID_OUTPUT, not RESPONDED
+ok 30 - valid exit but broken JSON is INVALID_OUTPUT, not RESPONDED
+  ---
+  duration_ms: 34.665219
+  type: 'test'
+  ...
+# Subtest: validated model proposal is RESPONDED, never claimed verified repair
+ok 31 - validated model proposal is RESPONDED, never claimed verified repair
+  ---
+  duration_ms: 59.216643
+  type: 'test'
+  ...
+# Subtest: abrupt child exception retains RESERVED as UNKNOWN; no unearned second call
+ok 32 - abrupt child exception retains RESERVED as UNKNOWN; no unearned second call
+  ---
+  duration_ms: 54.563827
+  type: 'test'
+  ...
+# Subtest: infrastructure timeout stops after one call; repeating a prompt is not correction
+ok 33 - infrastructure timeout stops after one call; repeating a prompt is not correction
+  ---
+  duration_ms: 576.699765
+  type: 'test'
+  ...
+# Subtest: progress checkpoint retains real failed checks before an interruption
+ok 34 - progress checkpoint retains real failed checks before an interruption
+  ---
+  duration_ms: 1228.003901
+  type: 'test'
+  ...
+# Subtest: invalid model output carries SHA-256 only, not discarded raw source
+ok 35 - invalid model output carries SHA-256 only, not discarded raw source
+  ---
+  duration_ms: 14.035532
+  type: 'test'
+  ...
+# Subtest: provider transports recognized rejection fingerprint without raw stderr
+ok 36 - provider transports recognized rejection fingerprint without raw stderr
+  ---
+  duration_ms: 79.114344
+  type: 'test'
+  ...
+# Subtest: rejection diagnostics and fingerprint reach the next model revision
+ok 37 - rejection diagnostics and fingerprint reach the next model revision
+  ---
+  duration_ms: 1089.298985
+  type: 'test'
+  ...
+# Subtest: identical invalid model response stops after second rejection without running candidate checks
+ok 38 - identical invalid model response stops after second rejection without running candidate checks
+  ---
+  duration_ms: 556.691138
+  type: 'test'
+  ...
+# Subtest: unknown provider errors never leak their message to the durable report
+ok 39 - unknown provider errors never leak their message to the durable report
+  ---
+  duration_ms: 640.2853
+  type: 'test'
+  ...
+# Subtest: no-op coding response is distinct from malformed model JSON, both with redacted digest
+ok 40 - no-op coding response is distinct from malformed model JSON, both with redacted digest
+  ---
+  duration_ms: 7.986199
+  type: 'test'
+  ...
+# Subtest: no-op fingerprint crosses fixed local CLI only, never arbitrary stderr
+ok 41 - no-op fingerprint crosses fixed local CLI only, never arbitrary stderr
+  ---
+  duration_ms: 90.636334
+  type: 'test'
+  ...
+# Subtest: no-op model rejection is used in second candidate without raw output or host writes
+ok 42 - no-op model rejection is used in second candidate without raw output or host writes
+  ---
+  duration_ms: 1042.758874
+  type: 'test'
+  ...
+# Subtest: an unmatched oldText gives exact-baseline diagnostics and then repairs safely
+ok 43 - an unmatched oldText gives exact-baseline diagnostics and then repairs safely
+  ---
+  duration_ms: 1036.34499
+  type: 'test'
+  ...
+# Subtest: private durable config keeps service, project, model and profile identities separate
+ok 44 - private durable config keeps service, project, model and profile identities separate
+  ---
+  duration_ms: 34.662846
+  type: 'test'
+  ...
+# Subtest: read-only status leaves unstarted state byte-identical and cannot create canonical keys
+ok 45 - read-only status leaves unstarted state byte-identical and cannot create canonical keys
+  ---
+  duration_ms: 10.79109
+  type: 'test'
+  ...
+# Subtest: public permissions, symlinks, hardlinks and oversized private files fail closed
+ok 46 - public permissions, symlinks, hardlinks and oversized private files fail closed
+  ---
+  duration_ms: 4.816515
+  type: 'test'
+  ...
+# Subtest: runtime configuration rejects unknown cloud controls and nonreviewed model hashes
+ok 47 - runtime configuration rejects unknown cloud controls and nonreviewed model hashes
+  ---
+  duration_ms: 1.273272
+  type: 'test'
+  ...
+# Subtest: bounded inbox rejects duplicate identities, unknown delivery states and excess records
+ok 48 - bounded inbox rejects duplicate identities, unknown delivery states and excess records
+  ---
+  duration_ms: 17.227367
+  type: 'test'
+  ...
+# Subtest: profile bridge code change invalidates its pinned artifact
+ok 49 - profile bridge code change invalidates its pinned artifact
+  ---
+  duration_ms: 9.730251
+  type: 'test'
+  ...
+# Subtest: source/profile overlap and artificial unbounded queue limits are rejected
+ok 50 - source/profile overlap and artificial unbounded queue limits are rejected
+  ---
+  duration_ms: 15.160312
+  type: 'test'
+  ...
+# Subtest: inherited cloud flags and Node injection never reach the worker environment
+ok 51 - inherited cloud flags and Node injection never reach the worker environment
+  ---
+  duration_ms: 9.31364
+  type: 'test'
+  ...
+# Subtest: process identity binds boot and kernel start ticks, never a PID alone
+ok 52 - process identity binds boot and kernel start ticks, never a PID alone
+  ---
+  duration_ms: 8.539196
+  type: 'test'
+  ...
+1..52
+# tests 52
+# suites 0
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28620.74948

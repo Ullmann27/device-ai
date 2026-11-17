@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="continuum_screen_observation_description">Optionaler virtueller Computer für Continuum. Zeigt nach ausdrücklichem Start das ausgewählte App-Fenster live im Cockpit. Führt beauftragte Suche, Navigation und Texteingabe mit Ergebnisprüfung aus. Keine gespeicherten Bildschirmaufnahmen, keine Passworteingabe, kein automatischer Versand. Aktivierung und Widerruf ausschließlich hier durch den Besitzer.</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-04T06:15:08" hostname="8c129114cae4" time="14.458">
+  <properties/>
+  <testcase name="renderPhoneFoldAndTabletAtNormalAndLargeFonts" classname="at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest" time="13.854"/>
+  <testcase name="largeTypeAndRealLongValuesStayInsideEachCardWithoutTextCollisions" classname="at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest" time="0.529"/>
+  <testcase name="enlargedActionLabelsLeaveSpaceBelowTheirIcons" classname="at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest" time="0.075"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

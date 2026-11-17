@@ -1,0 +1,4 @@
+CONTINUUM_HTTPS=READ_VERIFIED
+repository=Ullmann27/device-ai
+mode=doctor
+remote_transport=HTTPS

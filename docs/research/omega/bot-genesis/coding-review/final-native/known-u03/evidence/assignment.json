@@ -1,0 +1,28 @@
+{
+  "schema": "continuum-bot-assignment",
+  "version": 1,
+  "taskId": "genesis-known-u03",
+  "ccc1TaskId": "t-101718f341e89f76",
+  "taskFingerprint": "d654600e32812708fd6e65a991abc93eb8ce483107560f51b1779ebbcfa36fff",
+  "sourceCommit": "ad610792fab3960df1a4c8946a895eb833dc7e76",
+  "builder": {
+    "agentId": "bot-forge",
+    "persistentWorkspaceId": "workspace-bot-forge",
+    "maxModelCalls": 1,
+    "deadlineMillis": 120000
+  },
+  "verifier": {
+    "agentId": "bot-lint",
+    "persistentWorkspaceId": "workspace-bot-lint",
+    "maxModelCalls": 1,
+    "deadlineMillis": 120000
+  },
+  "reporter": {
+    "agentId": "bot-echo",
+    "persistentWorkspaceId": "workspace-bot-echo",
+    "maxModelCalls": 1,
+    "deadlineMillis": 120000
+  },
+  "expiresAt": 1793741861368,
+  "sha256": "d306bcfc2eba945acdb080dd5214c51e4052583431f2cb3082f3e1ca8f3622af"
+}

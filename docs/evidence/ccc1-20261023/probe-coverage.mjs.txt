@@ -1,0 +1,25 @@
+// Coverage of the probe sandbox on a real repository snapshot: which exports can be run at all (v1: read access to the
+// module's directory; v2: read access to the repository plus network/signal guards). Same exports, same inputs.
+// usage: node coverage.mjs <probe-module-path> <repo> <label>
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+const [probePath,repo,label]=process.argv.slice(2);
+const {observeOutputs}=await import(pathToFileURL(probePath).href);
+const {indexExports}=await import(pathToFileURL(path.join(repo,'.github/continuum/ccc1-interpreter.mjs')).href);
+const {POOL_1,fingerprintArity}=await import(pathToFileURL(path.join(repo,'.github/continuum/code-index.mjs')).href);
+const all=indexExports(repo).filter(c=>fingerprintArity(c)===1);
+const t0=Date.now();
+const obs=observeOutputs({root:repo,candidates:all,inputs:POOL_1.map(v=>[v]),timeoutMs:5000});
+const reasons=new Map();let runnable=0;
+const rows=[];
+for(const c of all){
+ const o=obs.get(c.module+'#'+c.export);
+ let r;
+ if(!Array.isArray(o))r='skipped: '+(o?.skipped??'not probed');
+ else if(o.every(x=>x.error===o[0].error)&&(o[0].unloadable||/^ERR_(MODULE_NOT_FOUND|ACCESS_DENIED|PROBE_NETWORK|PROBE_SIGNAL)$/.test(o[0].error??'')))r='not runnable: '+o[0].error;
+ else {r='runnable';runnable++;}
+ reasons.set(r,(reasons.get(r)??0)+1);
+ rows.push(c.module.replace('.github/continuum/','')+'#'+c.export+'\t'+r);
+}
+console.log(JSON.stringify({label,arity1Exports:all.length,runnable,seconds:(Date.now()-t0)/1000,reasons:Object.fromEntries([...reasons].sort((a,b)=>b[1]-a[1]))}));
+for(const r of rows.sort())console.log(r);

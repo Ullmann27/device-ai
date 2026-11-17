@@ -1,0 +1,28 @@
+{
+  "source": {
+    "commit": "a8482e2f01b2326130500f187c0f62a451d2b61d",
+    "tree": "f680fde68c31588a156d7447e96478644f00b6ae",
+    "status": ""
+  },
+  "after": {
+    "commit": "a8482e2f01b2326130500f187c0f62a451d2b61d",
+    "tree": "f680fde68c31588a156d7447e96478644f00b6ae",
+    "status": ""
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=spec",
+    ".github/continuum/code52-document-lifecycle-contract.test.mjs",
+    ".github/continuum/code52-document-question-grounding.test.mjs",
+    ".github/continuum/code52-cinema-source-contract.test.mjs",
+    ".github/continuum/code52-cinema-prism-contract.test.mjs",
+    ".github/continuum/code52-final-swarm-avatar-cinema-merge.test.mjs"
+  ],
+  "node": "v24.22.1",
+  "started": "2026-11-11T13:56:18.542970+00:00",
+  "finished": "2026-11-11T13:56:20.506433+00:00",
+  "exit_code": 0,
+  "log_sha256": "8c0e246772a53d8a3234f49ab8a3eb2ad35139793c747ec5f1249b68bdff6246"
+}

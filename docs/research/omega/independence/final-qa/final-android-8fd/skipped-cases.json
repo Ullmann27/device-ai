@@ -1,0 +1,70 @@
+[
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s7_pending_agentMessagesUrgentWakesInfoWaits"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s4b_pending_profileDiarySharedLayers"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s8d_pending_limitGuardIsWiredBeforeWorkerStart"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s5b_pending_textFileSkillLibraryLoadedOnDemand"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s6_pending_routineReportsOnlyWhenSomethingIsNew"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+    "name": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+    "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+    "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt6b_lernen_hypotheseUndTagebuchEintrag"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch"
+  },
+  {
+    "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+    "name": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen"
+  },
+  {
+    "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+    "name": "actualNodeKotlinNodeTrainingParity"
+  },
+  {
+    "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+    "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds"
+  },
+  {
+    "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+    "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores"
+  }
+]

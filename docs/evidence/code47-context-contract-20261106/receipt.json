@@ -1,0 +1,83 @@
+{
+  "recorded_at": "2026-11-06T21:06:00.432666+00:00",
+  "source": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "node": "v24.22.1",
+  "production_changed": false,
+  "activity_sha256": "3cc35d1b991af864d1cc3c8b18b764562a7373bf811cdd5fc4619ed97a01318c",
+  "original_test_sha256": {
+    ".github/continuum/android-integration-wiring.test.mjs": "b1afa91145e92794983276ca8e3a593733225615396723630d24709b64a3c187",
+    ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs": "0004b992da936ce558d7ad5edc14b9e52d2ec6536d303e19e13d83bb10274f42",
+    ".github/continuum/grounded-recall-android-wiring.test.mjs": "be782fb9478dcbaba48b6be8b4e2d1a0debdd6c0a8c72c97ffeca42029df3112",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumChatPersistenceUiTest.kt": "798b540b1bb40ebb060f4793dda6c8abcf3377972095bb931cb9adce11bb414a"
+  },
+  "repaired_test_sha256": "893365331c60263bbb85d2404c17822ae2e823e397632306f0714631be31fe04",
+  "focused_red": {
+    "tests": 21,
+    "failed": 1,
+    "passed": 20,
+    "failure": "cognitive runtime owns the single chat path, privacy boundaries and background diagnostics"
+  },
+  "focused_green": {
+    "tests": 21,
+    "failed": 0
+  },
+  "exact_original_gate_green": {
+    "tests": 64,
+    "failed": 0,
+    "command": "group-green.json"
+  },
+  "mutations": {
+    "count": 8,
+    "expected_assertion_failures": 8,
+    "unexpected_passes": 0,
+    "manifest": "mutations.json"
+  },
+  "boundary": "Node checks are source contracts; the separate4-case Robolectric run uses the real Activity, persisted files and Android resources. No actual device/model run.",
+  "changed_test_sha256": {
+    ".github/continuum/android-integration-wiring.test.mjs": "893365331c60263bbb85d2404c17822ae2e823e397632306f0714631be31fe04",
+    ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs": "283ee64afb5d5bb466f728636b6485ccc84a89016713a53317d9c11f0c70dd4c",
+    ".github/continuum/grounded-recall-android-wiring.test.mjs": "2a3f12b1cd4c0a2da7092ffbbd7581519c63f0486ad06cb0a87c6e0703b81ef6",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumChatPersistenceUiTest.kt": "6e99ea5b5778a09f901263a52257ba301a8df0c3f90688551e9bad20718e1be0"
+  },
+  "additional_node_red": {
+    "tests": 4,
+    "failed": 2
+  },
+  "all_changed_node_files_green": {
+    "tests": 25,
+    "failed": 0
+  },
+  "additional_mutations": {
+    "count": 8,
+    "expected_assertion_failures": 8,
+    "unexpected_passes": 0,
+    "manifest": "additional-mutations.json"
+  },
+  "ui": {
+    "runner": "Robolectric4.14.1; real AgentActivity, resources, recorder and JSONL filesystem",
+    "sdk": 28,
+    "red": {
+      "tests": 4,
+      "failures": 2,
+      "cause": "NoSuchMethodException: rememberContextTurn"
+    },
+    "green": {
+      "tests": 4,
+      "failures": 0,
+      "compile_exit": 0,
+      "junit_exit": 0
+    },
+    "runtime_classpath_entries": 77,
+    "runtime_classpath_sha256": "fb0a492dc6ccb1d1b5505c277075fcef06b23fc18a28836883a58e7741d4c321",
+    "application_source": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "production_recompiled": false,
+    "production_stubs": false,
+    "gradle_executed": false,
+    "baseline_class_sha256": {
+      "/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/AgentActivity.class": "bbac2649da724c5d46f336db9ffd2013228dbc2696899f8cf11fb2f3a43c3840",
+      "/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/cognitive/LocalConversationContext.class": "ae5d3bbd49a8d6f2496f2b552ffeef2e2714fba6887d7fb9ac4dcbd21f215f57",
+      "/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/cognitive/LocalChatTranscriptStore.class": "acbebe75ab226a6c11a91fb2468ffc1585580f16db8caba250c2e205b84266b0",
+      "/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debugUnitTest/at/heinz/deviceai/ContinuumChatPersistenceUiTest.class": "02ad6a3d2a5c5b8d29816b336d6bb8b0601d6c2ed3271181ad02f5b28bdc829e"
+    }
+  }
+}

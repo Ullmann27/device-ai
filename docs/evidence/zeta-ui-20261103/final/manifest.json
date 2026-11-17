@@ -1,0 +1,31 @@
+{
+  "sourceCommit": "de86cff67b1b028645d7bf77f5fee171d66530a0",
+  "baselineSourceCommit": "04b4292d796bc151c40ab18405226cd9faef01cf",
+  "weeklyQuota": "NOT_VISIBLE",
+  "hostOnly": true,
+  "files": {
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt": "03b44d71ddb40ffe9f370719f10b44150ab263155a9f9a45917618d7cbb8ae60",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt": "b8272fd3eff98575b00f450eed46169f7ae8020de36da307eb083b5a7018b497",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt": "e936aa0e510949843f3a0a116082404c75666acf03c5e5ed9fef3f08aef2a74b",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": "e8d8f6f393b8507d21c24922cd4f6751bdc244c600a0bf93605a13f26bf94598",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitElements.kt": "481f18e8e92b3ce4c8f3832b5854dcdfe30936de36eda6964de57804e6af009c",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumAdaptiveCockpitUiTest.kt": "0ee9d772ab91e8e7c91df1ca3ab666a90f0bf5a95483876dcdefa91850e6b1c0",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumAdaptiveCockpitLayoutTest.kt": "3c1ffca8ed0238de34c2a059a854694b1955aa14de2c8ce36770e126d0559e5e",
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumHomeLayoutTest.kt": "191513a434f872a77033c3776739365c55ba67a2bad914ed495c4550e2e31400"
+  },
+  "nativeCanvas": "Robolectric 4.14.1 / SDK28 / software host",
+  "snapshotCases": 15,
+  "nativeTests": {
+    "passed": 2,
+    "failed": 0
+  },
+  "geometryTests": {
+    "passed": 9,
+    "failed": 0
+  },
+  "nativeBaselineRuntimeSha256": "f6fa784b7d812038ef4c1fbc32061c23d4c1ea8ccee095053ce1a1441f720417",
+  "screenTests": {
+    "passed": 3,
+    "failed": 0
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "momega1-independent-final-source-acceptance-v1",
+  "decision": "ACCEPT_EXACT_7B_PROMOTED_SOURCE",
+  "sourceCommit": "fb0f8152cfe4e85b778c2f2ef17034b2ef6333be",
+  "authorDocsHead": "5333a10d796ab9bb386922f68d9bb7786279971d",
+  "actualNativeWitnessSource": "a135a9ae72e1494676d709ae496cf74048310537",
+  "certificateSha256": "29a14463a22b722eb948bb1afaa4ba8683d40b929955b725fa8fe3837a5b60ec",
+  "certificateReferencesVerified": 20,
+  "productionDelta": [
+    "7B.status: CANDIDATE_LOCAL_MODEL_HOST -> REVIEWED_LOCAL_MODEL_HOST",
+    "7B.independentReviewEvidenceSha256: null -> approved certificate SHA256"
+  ],
+  "unchanged": [
+    "1.5B exact reviewed tuple",
+    "native helper and fixed CLI transport",
+    "provider authentication/branding logic",
+    "resource profile and CPU/memory/wall budgets",
+    "prompt/schema/model/runtime bytes"
+  ],
+  "independentVerification": {
+    "hostPass": 89,
+    "hostFail": 0,
+    "hostCgroupOnlySkipped": 5,
+    "realContainerPass": 21,
+    "realContainerFail": 0,
+    "exactPairWrongModelOrRuntimeRejected": true,
+    "injectedCorrectMacRejected": true,
+    "forgedTrueAndJsonCloneBrandRejected": true,
+    "cpuResourceBindingMutationsRejected": true,
+    "additionalInferenceRun": false
+  },
+  "actualWitness": {
+    "normalExit": 0,
+    "decodedTokens": 156,
+    "elapsedMs": 104746,
+    "reviewWallMs": 180000,
+    "originalQaWallMsUnchanged": 60000,
+    "summedSampledJobRssKiB": 5412020,
+    "actualResidentNativeCancellation": "PASS",
+    "scope": "Witness remains the original canonical a135 run with candidatefalse; final source was independently verified as status/certificate-only. No new final-source inference or unknown benchmark score asserted."
+  },
+  "memoryCaveat": "Summed native/container/caller RSS is distinct from leaf cgroup charge; cached weights may be charged to an ancestor. Sampling may miss transients.",
+  "device": "FOLD7_NOT_RUN",
+  "scope": "Exact Linux-x64 host pair/source admission; no full merged-chief integration, general repair score, learning, Android or release acceptance.",
+  "evidenceSha256": {
+    "seven-b-final-production.diff": "56541abb21b34f1923ac2e88870407c3b20a789ad51382060b0869cfcc4c142b",
+    "seven-b-final-host-controls.tap": "adbd2fdc8c2f8e283cec445be0ab17914e11da30545385bea1459e9b592f9747",
+    "seven-b-final-container-controls.tap": "0afc9f9112d996821fce8feebd2d07cc7f8e34d8fab9214ace48fcdfc82cf076",
+    "seven-b-final-container-boundaries.json": "7a45dd1d35ba464208bc39d7270184a193296aa7c8a780260cf459e77541b8aa"
+  }
+}

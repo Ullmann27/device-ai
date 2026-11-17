@@ -1,0 +1,449 @@
+{
+ "schema": "continuum-research-radar",
+ "version": 1,
+ "lastRun": null,
+ "records": {
+  "arxiv:2412.06464": {
+   "arxiv": "2412.06464",
+   "version": 3,
+   "title": "Gated Delta Networks: Improving Mamba2 with Delta Rule",
+   "summary": "ICLR 2025. Combines gating (fast forgetting) with the delta rule (targeted memory edits); the authors report gains over Mamba2 and DeltaNet on language modelling, reasoning and retrieval and propose hybrids with sliding-window attention.",
+   "authors": [],
+   "published": "2024-12-09",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/abs/2412.06464v3",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "Gated DeltaNet small language model delta rule 2026 arXiv",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2412.06464",
+   "topics": [
+    "nf2-fast-weights"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "title:31182bd31116caf17f821ff1": {
+   "version": 1,
+   "title": "Gated DeltaNet-2: Decoupling Erase and Write in Linear Attention",
+   "summary": "Replaces the single scalar gate by separate channel-wise erase and write gates; the authors report the best overall results among the compared 1.3B models trained on 100B tokens, largest gains on long-context retrieval.",
+   "authors": [],
+   "published": "2026-05-01",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://research.nvidia.com/index.php/publication/2026-05_gated-deltanet-2-decoupling-erase-and-write-linear-attention",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "Gated DeltaNet small language model delta rule 2026 arXiv",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": "search result lists arXiv 2605.22791; authorship differs between listings and was not verified"
+    }
+   ],
+   "key": "title:31182bd31116caf17f821ff1",
+   "topics": [
+    "nf2-fast-weights"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2604.21100": {
+   "arxiv": "2604.21100",
+   "version": 1,
+   "title": "Preconditioned DeltaNet: Curvature-aware Sequence Modeling for Linear Recurrences",
+   "summary": "Applies a preconditioned delta rule to DeltaNet, Gated DeltaNet and KDA; the authors report consistent gains at 340M and 1B parameter scale.",
+   "authors": [],
+   "published": "2026-04-01",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/abs/2604.21100",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "Gated DeltaNet small language model delta rule 2026 arXiv",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2604.21100",
+   "topics": [
+    "nf2-fast-weights"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2603.06642": {
+   "arxiv": "2603.06642",
+   "version": 1,
+   "title": "SR-TTT: Surprisal-Aware Residual Test-Time Training",
+   "summary": "Adds a loss-gated sparse memory to test-time-training language models: highly surprising tokens go to an exact-attention residual cache instead of being overwritten by fast-weight updates; code and weights are open source according to the authors.",
+   "authors": [],
+   "published": "2026-02-01",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/abs/2603.06642",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "test-time memory continual learning language model surprise gated 2026 arXiv",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2603.06642",
+   "topics": [
+    "nf1-memory"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2602.22479": {
+   "arxiv": "2602.22479",
+   "version": 1,
+   "title": "TRC2: continual learning as a property of the decoder backbone",
+   "summary": "Decoder-only architecture with delayed surprise-based writing and replay-driven consolidation through a hippocampal pathway; the authors report reduced cumulative forgetting on C4, WikiText-103 and GSM8K.",
+   "authors": [],
+   "published": "2026-03-01",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/html/2602.22479",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "test-time memory continual learning language model surprise gated 2026 arXiv",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2602.22479",
+   "topics": [
+    "nf1-memory"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2601.12906": {
+   "arxiv": "2601.12906",
+   "version": 1,
+   "title": "Gated Differentiable Working Memory",
+   "summary": "Targets long-context modelling and inference-time adaptation; the authors report comparable or better results with four times fewer gradient steps than uniform baselines on ZeroSCROLLS and LongBench v2.",
+   "authors": [],
+   "published": "2026-01-01",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/abs/2601.12906v1",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "test-time memory continual learning language model surprise gated 2026 arXiv",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2601.12906",
+   "topics": [
+    "nf1-memory"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2602.05085": {
+   "arxiv": "2602.05085",
+   "version": 1,
+   "title": "Locas: low-rank parametric memories mergeable into model weights",
+   "summary": "Proposes low-rank, FFN-style parametric memories that can be merged into the model weights, evaluated on PG-19 and LoCoMo according to the authors.",
+   "authors": [],
+   "published": "2026-02-01",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/pdf/2602.05085",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "test-time memory continual learning language model surprise gated 2026 arXiv",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2602.05085",
+   "topics": [
+    "nf1-memory"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2310.04564": {
+   "arxiv": "2310.04564",
+   "version": 1,
+   "title": "ReLU Strikes Back: Exploiting Activation Sparsity in Large Language Models",
+   "summary": "Argues for reinstating ReLU in language models: activation choice barely changes accuracy after fine-tuning, and the resulting sparsity cuts inference compute of OPT models by about 32 percent per token according to the authors.",
+   "authors": [],
+   "published": "2023-10-06",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/abs/2310.04564",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "activation sparsity ReLU CPU inference speedup small language model 2026",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2310.04564",
+   "topics": [
+    "nf4-sparse-events"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": true
+  },
+  "arxiv:2402.13516": {
+   "arxiv": "2402.13516",
+   "version": 3,
+   "title": "ProSparse: Introducing and Enhancing Intrinsic Activation Sparsity within Large Language Models",
+   "summary": "Replaces the activation by ReLU with a progressive sparsity regulariser; the authors report 87.89 percent sparsity for MiniCPM-1B and up to 4.52 times faster inference.",
+   "authors": [],
+   "published": "2024-02-21",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/html/2402.13516v3",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "activation sparsity ReLU CPU inference speedup small language model 2026",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2402.13516",
+   "topics": [
+    "nf4-sparse-events"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2406.05955": {
+   "arxiv": "2406.05955",
+   "version": 1,
+   "title": "TurboSparse-LLM: Accelerating Mixtral and Mistral Inference via dReLU Sparsity",
+   "summary": "Argues that plain ReLU is not sparse enough and proposes dReLU plus data mixing; speed is evaluated for pure CPU, hybrid GPU-CPU and phone inference according to the authors.",
+   "authors": [],
+   "published": "2024-06-10",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/html/2406.05955v1",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "activation sparsity ReLU CPU inference speedup small language model 2026",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2406.05955",
+   "topics": [
+    "nf4-sparse-events"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": true
+  },
+  "title:f9a0eefb1dade38def298176": {
+   "version": 1,
+   "title": "Execution-Guided Within-Prompt Search for Programming-by-Example",
+   "summary": "ICLR 2025: the language model writes code line by line, every line is executed on the examples and annotated with its results, so the search is guided by execution inside one prompt; reported to work well at low token budgets.",
+   "authors": [],
+   "published": "2025-04-24",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://iclr.cc/virtual/2025/poster/29749",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "programming by example LLM agent execution-based candidate filtering verification 2026",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "title:f9a0eefb1dade38def298176",
+   "topics": [
+    "nf5-verified-coding"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2605.15334": {
+   "arxiv": "2605.15334",
+   "version": 1,
+   "title": "From I/O to Code with Discovery Agent",
+   "summary": "2026 preprint on programming by example with language models beyond strings, lists and tables, towards algorithmic and spatial reasoning; only the related-work section was seen in the search.",
+   "authors": [],
+   "published": "2026-05-01",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/pdf/2605.15334",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "programming by example LLM agent execution-based candidate filtering verification 2026",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2605.15334",
+   "topics": [
+    "nf5-verified-coding"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2401.17377": {
+   "arxiv": "2401.17377",
+   "version": 3,
+   "title": "Infini-gram: Scaling Unbounded n-gram Language Models to a Trillion Tokens",
+   "summary": "Unbounded n-gram (infinity-gram) with backoff on a suffix array with millisecond latency; the authors report 47 percent next-token accuracy and that it complements neural language models, greatly reducing their perplexity.",
+   "authors": [],
+   "published": "2024-01-30",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/abs/2401.17377v3",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "neural language model interpolation with n-gram infini-gram small data 2025 2026",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2401.17377",
+   "topics": [
+    "nf6-hybrid"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": false
+  },
+  "arxiv:2505.06461": {
+   "arxiv": "2505.06461",
+   "version": 1,
+   "title": "Optimised CPU inference of small language models on mobile devices",
+   "summary": "Reports that GPU memory transfer overhead and CPU thread optimisation decide on-device speed and argues for the untapped potential of optimised CPU inference on mobile devices.",
+   "authors": [],
+   "published": "2025-05-10",
+   "updated": null,
+   "doi": null,
+   "categories": [],
+   "url": "https://arxiv.org/abs/2505.06461v1",
+   "provenance": [
+    {
+     "method": "websearch",
+     "query": "on-device small language model ARM CPU efficient recurrent minGRU 2026",
+     "retrievedAt": "2026-10-23T02:05:00Z",
+     "note": null
+    }
+   ],
+   "key": "arxiv:2505.06461",
+   "topics": [
+    "cpu-efficiency"
+   ],
+   "firstSeen": "2026-10-23T01:48:33.794Z",
+   "lastSeen": "2026-10-23T01:48:33.794Z",
+   "codeLicence": "unknown",
+   "proposed": true
+  }
+ },
+ "runs": [
+  {
+   "at": "2026-10-23T01:48:33.794Z",
+   "import": "websearch",
+   "retrievedAt": "2026-10-23T02:05:00Z",
+   "topics": [
+    {
+     "id": "nf2-fast-weights",
+     "imported": 3,
+     "added": 3,
+     "updated": 0,
+     "duplicates": 0
+    },
+    {
+     "id": "nf1-memory",
+     "imported": 4,
+     "added": 4,
+     "updated": 0,
+     "duplicates": 0
+    },
+    {
+     "id": "nf4-sparse-events",
+     "imported": 3,
+     "added": 3,
+     "updated": 0,
+     "duplicates": 0
+    },
+    {
+     "id": "nf5-verified-coding",
+     "imported": 2,
+     "added": 2,
+     "updated": 0,
+     "duplicates": 0
+    },
+    {
+     "id": "nf6-hybrid",
+     "imported": 1,
+     "added": 1,
+     "updated": 0,
+     "duplicates": 0
+    },
+    {
+     "id": "cpu-efficiency",
+     "imported": 1,
+     "added": 1,
+     "updated": 0,
+     "duplicates": 0
+    }
+   ],
+   "rejected": []
+  }
+ ]
+}

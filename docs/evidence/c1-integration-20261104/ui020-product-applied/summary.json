@@ -1,0 +1,77 @@
+{
+  "taskId": "C1-UI-020",
+  "status": "PRODUCT_APPLIED_OWN_FOCUS_PENDING",
+  "baseLocal": "5fec06d587dcceded3d066bf3eeded888255fd2f",
+  "baseRemote": "08370482c609537b5b8d0d8370d2b4a933d4e35d",
+  "productV1PatchSha256": "fb3799bfc0b9045d72563dd03ac9e24c0ea262c9920b42bbd02af2f5965ff12d",
+  "statusPatchSha256": "d01d4f47a68f4a5951cae28262847f6eec119ebd1153ac249b31c5588a337f53",
+  "statusIntakeArchiveSha256": "5502457ebd7360b184b0bcdffdc8920653ef5a0fd9d81674259e62f2e1389538",
+  "appliedSerially": [
+    {
+      "step": "five-file compact and More connection",
+      "checkExit": 0,
+      "applyExit": 0,
+      "files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+          "mode": "100644",
+          "baseBlob": "020c388468ce2ad5017579f7ba1551b5c17fbcf6",
+          "targetBlob": "0b3a53ad6e777330ad5104b165de90059fe3ed82",
+          "baseSha256": "75f53008759b2e1212f4df64e29682cb3cfac2ae28cf534145eb3941d83dc9ec",
+          "targetSha256": "c096632532563b649406b8153b326b30d315b81f546062b46da98f41c850947c"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+          "mode": "100644",
+          "baseBlob": "0052c24095dee7a11b498254bfc426294cc198b3",
+          "targetBlob": "977f50f5304677aaaf32f48b4cd0e96794948e8a",
+          "baseSha256": "2952a1a322c6a085aae4ebc396a05fc6b8543a18b0f7477bcc81be74b9b47f1b",
+          "targetSha256": "da5aca2d991f571933d1b927f438ff2598cf907ae4fd5acc13b9265c3b10bee7"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+          "mode": "100644",
+          "baseBlob": "891319e0cbb4a59225702e41083f5bf3925df1ec",
+          "targetBlob": "5e637a17a26bf7f7706ae1f67d8f9fc14d3157f6",
+          "baseSha256": "cdfa74b5fcd86d4a1dc5b5a9a0fe9558ee2870e54e6359cf6609e6ce8f84e472",
+          "targetSha256": "8e2bb2585b38f389591967d24cbda94eaaa28b35eca1a247d8b67de982bf4cb5"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+          "mode": "100644",
+          "baseBlob": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+          "targetBlob": "796bc098d11d166d0ff530228a35dbb19b39b843",
+          "baseSha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302",
+          "targetSha256": "312f66288074e6b044b88b399ff09b36cda0707ff12b14a171a38dca10aeb8c5"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "mode": "100644",
+          "baseBlob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+          "targetBlob": "26cbaa9362171b012f2285f85fc671f95c19510a",
+          "baseSha256": "c01049c44c18db04b8f1ccb71b3a8fef77c64353728c78ada17fc5bc1e3a32b7",
+          "targetSha256": "d550292350c061cc74b7a4596b1c852988a22e944fe03369fefe77d7c3fd92b0"
+        }
+      ]
+    },
+    {
+      "step": "STATUS native48dp minimum preserving painted geometry",
+      "checkExit": 0,
+      "applyExit": 0,
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "baseBlob": "977f50f5304677aaaf32f48b4cd0e96794948e8a",
+      "resultBlob": "8d643cff16d37c69ca93618cb464b4c94e0ae691"
+    }
+  ],
+  "unchangedFrozenTestBlob": "5059be0cd5f3d4e850eaac6d08faca357e1429fd",
+  "openKnownRed": [
+    "Native focus asynchronous completion assertion",
+    "Short-wide chat rail Home width0",
+    "Phone Developer destination tap remains More"
+  ],
+  "limits": [
+    "No actual product acceptance yet",
+    "Compact overall height reduction is claimed only for phone; reference-wide compact uses reflow and can need more scroll",
+    "No model, nativeGPU, physicaldevice or release"
+  ]
+}

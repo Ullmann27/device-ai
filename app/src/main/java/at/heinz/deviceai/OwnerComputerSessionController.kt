@@ -1,0 +1,309 @@
+package at.heinz.deviceai
+
+import android.app.Activity
+import android.content.Intent
+import android.os.Handler
+import android.os.Looper
+import android.os.SystemClock
+import at.heinz.deviceai.avatar.AvatarDirector
+import at.heinz.deviceai.avatar.ComputerWorkAvatarBridge
+import at.heinz.deviceai.avatar.ComputerWorkCuePlayer
+import at.heinz.deviceai.cockpit.CockpitAnimationBus
+import at.heinz.deviceai.cognitive.*
+import java.util.UUID
+import java.util.concurrent.Executor
+
+/** One visible, explicitly approved app task. */
+internal class OwnerComputerSessionController(
+    private val activity: Activity,
+    private val bus: CockpitAnimationBus,
+    director: AvatarDirector,
+    private val worker: Executor,
+    private val setFeed: (LiveMonitorFeed<AndroidLiveFrame>?) -> Unit,
+    private val setBusy: (Boolean) -> Unit,
+    private val visible: () -> Boolean,
+    playClick: () -> Unit,
+    stopClick: () -> Unit,
+    private val setPanels: (at.heinz.deviceai.ui.ComputerPanelState?) -> Unit = {},
+    projectGaze: (CockpitWorkEvent) -> at.heinz.deviceai.avatar.GazeTarget? = { null }
+) : AutoCloseable {
+    private data class Plan(val taskId: String, val packageName: String, val intent: OwnerComputerIntent,
+                            val approvedAt: Long,
+                            val reply: (OwnerComputerWorkflow.Result, Long?, Boolean) -> Unit)
+    private val main = Handler(Looper.getMainLooper())
+    private val bridge = ComputerWorkAvatarBridge(director,
+        ComputerWorkCuePlayer(post = { main.post(it) }, playClick = playClick, stopClick = stopClick),
+        projectGaze = projectGaze, onWorkState = ::workStateChanged)
+    private val subscription = bus.subscribe(bridge)
+    @Volatile private var plan: Plan? = null
+    @Volatile private var grant: OwnerComputerTaskGrant? = null
+    @Volatile private var workflow: OwnerComputerWorkflow? = null
+    private var pendingConsent = false
+    private val consentRequests = ComputerCaptureConsent()
+    private data class ConsentResult(val plan: Plan, val code: Int, val data: Intent)
+    private var deferredConsent: ConsentResult? = null
+    private var closed = false
+    private var captureSession: Long? = null
+    private var retainedPanel: at.heinz.deviceai.ui.ComputerPanelState? = null
+    val active: Boolean get() = plan != null
+    val awaitingConsent: Boolean get() = pendingConsent || deferredConsent != null
+
+    fun begin(packageName: String, intent: OwnerComputerIntent, approvedAt: Long,
+              reply: (OwnerComputerWorkflow.Result, Long?, Boolean) -> Unit) {
+        stop()
+        if (closed || SystemClock.elapsedRealtime() - approvedAt !in 0..180_000) {
+            reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
+                "Die App-Freigabe ist abgelaufen. Bitte starte den Auftrag erneut."), null, true)
+            return
+        }
+        val next = Plan("computer-" + UUID.randomUUID(), packageName, intent, approvedAt, reply)
+        LiveCaptureDiagnostics.prepareConsent()
+        plan = next
+        setBusy(true)
+        val consent = if (activity.isInMultiWindowMode) AndroidLiveComputer.createProjectionConsentIntent(activity) else null
+        if (consent != null) {
+            pendingConsent = true
+            LiveCaptureDiagnostics.recordPending(LiveCaptureDiagnostics.Event.PROJECTION_CONSENT_REQUESTED)
+            try {
+                val request = consentRequests.begin(next.taskId)
+                activity.startActivityForResult(consent, request.requestCode)
+                return
+            } catch (_: RuntimeException) {
+                consentRequests.cancel()
+                stop()
+                next.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.FAILED,
+                    "Die Android-Bildschirmfreigabe konnte nicht geöffnet werden. Auftrag gestoppt."), null, true)
+                return
+            }
+        }
+        start(next, null, Activity.RESULT_CANCELED)
+    }
+
+    fun projectionResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val taskId = consentRequests.accept(requestCode) ?: return
+        pendingConsent = false
+        val current = plan?.takeIf { it.taskId == taskId } ?: return
+        LiveCaptureDiagnostics.recordPending(if (resultCode == Activity.RESULT_OK && data != null)
+            LiveCaptureDiagnostics.Event.PROJECTION_CONSENT_ACCEPTED else LiveCaptureDiagnostics.Event.PROJECTION_CONSENT_DENIED)
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            stop()
+            current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.CANCELLED,
+                "Bildschirmfreigabe abgebrochen. Der Computer-Auftrag wurde gestoppt."), null, true)
+            return
+        }
+        deferredConsent = ConsentResult(current, resultCode, data)
+    }
+
+    fun resumed() {
+        val deferred = deferredConsent
+        if (deferred != null && visible()) {
+            deferredConsent = null
+            if (plan === deferred.plan) start(deferred.plan, deferred.data, deferred.code)
+        }
+        restoreFeed()
+    }
+
+    private fun start(current: Plan, data: Intent?, resultCode: Int) {
+        if (closed || plan !== current || !visible() || SystemClock.elapsedRealtime() - current.approvedAt !in 0..180_000) {
+            stop()
+            return
+        }
+        val started = if (resultCode == Activity.RESULT_OK && data != null)
+            AndroidLiveComputer.startProjectionCapture(activity, current.taskId, current.packageName,
+                resultCode, data, ownerConfirmed = true)
+        else AndroidLiveComputer.startWindowCapture(activity, current.taskId, current.packageName, ownerConfirmed = true)
+        if (!started.started || started.sessionId == null || started.observationEpoch == null) {
+            stop()
+            current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.FAILED,
+                "Das Live-Bild konnte nicht gestartet werden: ${started.reason}. " +
+                    "Öffne Continuum und die Ziel-App nebeneinander und prüfe die Android-Bildschirmfreigabe.",
+                diagnostics = LiveCaptureDiagnostics.summary()), null, true)
+            return
+        }
+        val permission = checkNotNull(OwnerComputerTaskGrant.fromOwnerDecision(current.taskId, current.packageName,
+            started.observationEpoch, current.intent, true, SystemClock::elapsedRealtime))
+        grant = permission
+        captureSession = started.sessionId
+        val emitter = CockpitWorkEmitter(current.taskId, started.sessionId, bus)
+        bridge.bind(current.taskId, started.sessionId)
+        val runner = OwnerComputerWorkflow(current.taskId, current.packageName, started.observationEpoch, emitter)
+        workflow = runner
+        setFeed(AndroidLiveComputer.feed)
+        try { worker.execute {
+            var firstObservation = true
+            val result = try { runner.run(current.intent, object : OwnerComputerWorkflow.Port {
+                override fun checkActive() {
+                    check(plan === current && grant === permission && visible()) { "COMPUTER_TASK_CHANGED_OR_HIDDEN" }
+                    permission.checkActive()
+                    AndroidLiveComputer.checkActive(current.taskId)
+                }
+                private fun checkDispatchActive() {
+                    checkActive()
+                    LiveComputerDispatchGuard.checkLive(AndroidLiveComputer.feed, current.taskId,
+                        started.sessionId, System.nanoTime())
+                }
+                override fun observe(): NodeActionFrame {
+                    checkActive()
+                    if (firstObservation) {
+                        val deadline = SystemClock.elapsedRealtime() + 5_000
+                        while (true) {
+                            checkActive()
+                            val state = AndroidLiveComputer.feed.status(System.nanoTime())
+                            if (LiveComputerDispatchGuard.isReady(AndroidLiveComputer.feed,
+                                    current.taskId, started.sessionId, System.nanoTime())) break
+                            check(SystemClock.elapsedRealtime() < deadline && state.state != LiveMonitorState.ENDED) {
+                                "NO_FRESH_MONITOR_FRAME"
+                            }
+                            Thread.sleep(40)
+                        }
+                        firstObservation = false
+                    }
+                    return AndroidLiveComputer.observe(current.taskId)
+                }
+                override fun perform(request: NodeActionRequest, events: LiveActionEventSink): NodeActionResult {
+                    checkActive()
+                    permission.authorize(request, observe())
+                    return AndroidLiveComputer.perform(request, events, permissionCheck = ::checkDispatchActive)
+                }
+                override fun click(before: NodeActionFrame, label: String, expectedLabel: String,
+                                   expectedEditable: Boolean, expectedHeading: Boolean, expectedSearchField: Boolean,
+                                   expectedComposeField: Boolean,
+                                   onDispatched: (LiveTargetBounds?, Long) -> Unit): NodeActionFrame {
+                    checkActive()
+                    permission.authorizeClick(before, label, expectedLabel, expectedEditable, expectedHeading,
+                        expectedSearchField, expectedComposeField)
+                    return AndroidLiveComputer.click(current.taskId,
+                        ClickRequest(current.packageName, before.stamp.epoch, before.stamp.revision,
+                            label, expectedLabel, expectedEditable, expectedHeading, expectedSearchField,
+                            expectedComposeField), ownerConfirmed = true,
+                        onDispatched = onDispatched, permissionCheck = ::checkDispatchActive)
+                }
+            }) } finally { permission.revoke() }
+            main.post {
+                if (closed || plan !== current) return@post
+                if (!visible()) {
+                    stopForVisibilityLoss()
+                    return@post
+                }
+                if (!sourceActive(current, started.sessionId)) {
+                    stop()
+                    current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.PAUSED,
+                        "Das Live-Bild oder seine Freigabe wurde beendet. Die letzte Wirkung ist nicht bestätigt; bitte prüfe die App.",
+                        diagnostics = LiveCaptureDiagnostics.summary()), null, true)
+                    return@post
+                }
+                workflow = null
+                val finalPanel = at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
+                    started.sessionId, current.intent, bridge.reducer.snapshot(System.nanoTime()), result)
+                if (result.status == OwnerComputerWorkflow.Status.VERIFIED) {
+                    // The confirmed result stays live briefly, then capture ends on its own (Code56 field fix:
+                    // MediaProjection must never outlive the task indefinitely).
+                    publishPanels(finalPanel)
+                    setBusy(false)
+                    main.postDelayed({ if (!closed && plan === current && workflow == null) stop() },
+                        RESULT_RETENTION_MILLIS)
+                } else {
+                    // Failed, paused, cancelled or waiting for the owner: release MediaProjection, the capture
+                    // service and the observation grant at once; only the result page stays.
+                    stop()
+                    publishPanels(finalPanel)
+                }
+                val reported = if (result.status == OwnerComputerWorkflow.Status.FAILED ||
+                    result.status == OwnerComputerWorkflow.Status.PAUSED)
+                    result.copy(diagnostics = LiveCaptureDiagnostics.summary()) else result
+                current.reply(reported, started.observationEpoch, true)
+            }
+        } } catch (_: java.util.concurrent.RejectedExecutionException) {
+            stop()
+            current.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.FAILED,
+                "Die App-Arbeit konnte nicht gestartet werden. Es wurde keine weitere Eingabe ausgeführt."), null, true)
+        }
+    }
+
+    private fun workStateChanged(snapshot: CockpitWorkReducer.Snapshot) {
+        val current = plan ?: return
+        val sourceSession = snapshot.sessionId ?: return
+        if (snapshot.taskId != current.taskId) return
+        main.post {
+            if (!closed && plan === current) {
+                val panel = if (sourceActive(current, sourceSession))
+                    at.heinz.deviceai.ui.ComputerPanelState.from(current.taskId,
+                        sourceSession, current.intent, snapshot) else null
+                publishPanels(panel)
+            }
+        }
+    }
+
+    fun refreshGaze() = bridge.refreshProjection()
+
+    fun restoreFeed() {
+        val current = plan
+        val sourceSession = captureSession
+        if (closed || current == null || pendingConsent || sourceSession == null) return
+        if (!sourceActive(current, sourceSession)) {
+            publishPanels(null)
+            setFeed(null)
+            return
+        }
+        setFeed(AndroidLiveComputer.feed)
+        publishPanels(retainedPanel?.takeIf {
+            it.taskId == current.taskId && it.sessionId == sourceSession
+        })
+    }
+
+    private fun sourceActive(current: Plan, sourceSession: Long): Boolean {
+        if (closed || plan !== current || captureSession != sourceSession ||
+            runCatching { AndroidLiveComputer.checkActive(current.taskId) }.isFailure) return false
+        return at.heinz.deviceai.ui.ComputerPanelState.sourceMatches(current.taskId,
+            current.packageName, sourceSession, AndroidLiveComputer.feed.status(System.nanoTime()))
+    }
+
+    private fun publishPanels(panel: at.heinz.deviceai.ui.ComputerPanelState?) {
+        retainedPanel = panel
+        setPanels(panel)
+    }
+
+    fun stopForVisibilityLoss() {
+        if (awaitingConsent) return
+        // A result page retained after capture ended is cleared with the cockpit's visibility as well.
+        val previous = plan ?: run { if (retainedPanel != null) publishPanels(null); return }
+        val interrupted = workflow != null
+        stop()
+        if (!interrupted) return
+        previous.reply(OwnerComputerWorkflow.Result(OwnerComputerWorkflow.Status.CANCELLED,
+            "Computer-Auftrag und Live-Bild wurden gestoppt, weil Continuum nicht mehr sichtbar ist. " +
+                "Öffne Continuum und die Ziel-App im geteilten Bildschirm und starte den Auftrag erneut. " +
+                "Prüfe zuvor, was die Ziel-App bereits übernommen hat."), null, false)
+    }
+
+    fun stop() {
+        val previous = plan
+        plan = null
+        captureSession = null
+        pendingConsent = false
+        deferredConsent = null
+        consentRequests.cancel()
+        grant?.revoke()
+        grant = null
+        workflow?.cancel()
+        workflow = null
+        AndroidLiveComputer.stop()
+        setFeed(null)
+        publishPanels(null)
+        if (previous != null) setBusy(false)
+    }
+
+    companion object {
+        /** How long a verified result stays live on the monitor before capture ends by itself. */
+        const val RESULT_RETENTION_MILLIS = 8_000L
+    }
+
+    override fun close() {
+        if (closed) return
+        stop()
+        closed = true
+        subscription.close()
+        bridge.close()
+    }
+
+}

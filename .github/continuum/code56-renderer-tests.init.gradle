@@ -1,0 +1,16 @@
+// Isolated quick regression job only. The full-android job does NOT load this filter.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app project')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching {
+        it.name == 'testDebugUnitTest'
+    }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.avatar3d.CockpitMonitorPresentationTest'
+            includeTestsMatching 'at.heinz.deviceai.avatar3d.CockpitCameraFlightTest'
+            includeTestsMatching 'at.heinz.deviceai.avatar3d.CockpitStageFrameTest'
+            includeTestsMatching 'at.heinz.deviceai.avatar3d.MonitorRearDetailsAssetTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}

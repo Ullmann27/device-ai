@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCommand03StageUiTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-16T06:35:24" hostname="731a0110a54f" time="0.183">
+  <properties/>
+  <testcase name="oversizedMalformedAndSubframeSubmissionsNeverReachTheNativeHandler" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.042"/>
+  <testcase name="rejectedDraftCannotTriggerANativeRouteButScopedStopStaysAvailable" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.02"/>
+  <testcase name="staleViewMessagesDocumentsSourcesAndCommandsCannotReenterAfterReturningToTheSameSession" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.018"/>
+  <testcase name="pageReloadRevokesOldActionsAndQueuedPresentationBeforeTheNewPageIsBound" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.016"/>
+  <testcase name="aPendingAcknowledgementIsDeliveredWhenTheLocalPageBecomesReady" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.018"/>
+  <testcase name="multilineSubmissionIsAcknowledgedAndRepeatedIdentityExecutesOnlyOnce" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.051"/>
+  <testcase name="transcriptQueuedBeforeReadinessAndLongLiveResponseKeepTheirCompleteText" classname="at.heinz.deviceai.ContinuumCommand03StageUiTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

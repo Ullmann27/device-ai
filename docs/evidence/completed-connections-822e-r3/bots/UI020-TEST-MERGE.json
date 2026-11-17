@@ -1,0 +1,93 @@
+{
+  "status": "TEST_ONLY",
+  "integrationGate": "REQUIRES_C1_COMPACT_MORE_PRODUCTION",
+  "baseCommit": "f274f7daf920cb34b0241881f343b85732f58ee1",
+  "baseTestBlob": "9dbe2fff9dfefd886ed026c098b871017b0fcd22",
+  "frozenC1LocalCommit": "f31855138d77ecb5e05e7a17a620b1fd6e9d28c5",
+  "frozenC1RemoteCommit": "c65604c85855a8dfb2e17617feafe83b7d560115",
+  "frozenC1TestBlob": "315f42d32518f0c8de4a73cb46c349bd8dbb04d6",
+  "remoteTestBlobPreviouslyReadBack": true,
+  "mergedTestPath": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+  "mergedTestBlob": "07b79e361630319912ddf34df7bcc386946b2fd8",
+  "mergedTestSha256": "1e4c88649e7f6b4fd41bb67de669f91fa3025a4b004868fa29882e6026726245",
+  "referenceTestMethods": [
+    "legacyReferencePresentationControlsReuseTheLiveAvatarAndPersistCompactChoice",
+    "shellAppearanceChooserReusesTheLiveAvatarAndPersistsTheChoice",
+    "presentationControlsReuseTheLiveAvatarAndPersistCompactChoice",
+    "composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+    "narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor",
+    "narrowPhoneHasRealDestinationsAndReadableLargeType",
+    "phoneHasRealDestinationsAndReadableLargeType",
+    "foldLandscapeHasRealDestinationsAndReadableLargeType",
+    "foldPortraitHasRealDestinationsAndReadableLargeType",
+    "shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable",
+    "foldLandscapeCompactChooserRestoresExact2dGeometry",
+    "foldPortraitCompactChooserRestoresExact2dGeometry"
+  ],
+  "frozenC1MethodsRetained": [
+    "presentationControlsReuseTheLiveAvatarAndPersistCompactChoice",
+    "composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+    "narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor",
+    "narrowPhoneHasRealDestinationsAndReadableLargeType",
+    "phoneHasRealDestinationsAndReadableLargeType",
+    "foldLandscapeHasRealDestinationsAndReadableLargeType",
+    "foldPortraitHasRealDestinationsAndReadableLargeType",
+    "shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable"
+  ],
+  "savedStateRestoreScenarios": 2,
+  "frozenLabeledAssertionMessagesPreserved": 79,
+  "legacyCaseUsesExplicitPresentation": true,
+  "nativeListViewDelayPreservedInBothCallers": true,
+  "minimumTouchTargetDp": 48,
+  "clippedGlobalAndRailViewportChecksPreserved": true,
+  "unchangedAvatarLifecycleTest": {
+    "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatarSlotLifecycleUiTest.kt",
+    "blob": "939ad7e7bd246a547be5c6c2e81eadcdd14939f8",
+    "methodCount": 3
+  },
+  "productFilesChanged": 0,
+  "androidCompilation": "NOT_RUN",
+  "androidTests": "NOT_RUN",
+  "gradleInvocations": 0,
+  "structuralChecks": "PASS; twelve unique Reference methods, existing ten byte-unchanged, two new broad-profile cases with three font scales each. Source inspection only, not Android/JUnit execution.",
+  "sourceInputs": "Only git objects at the listed commits; no foreign working-tree files copied.",
+  "railViewportCoordinateSpace": "Both rectangles use getGlobalVisibleRect directly; no local-to-parent conversion.",
+  "coordinateCorrectionSource": "Parent measured animated-home coordinate mismatch on source 681b6f1; actual global rectangles retain a 4px gap. No runtime execution in this worker.",
+  "wideCompactExtension": {
+    "testMergeParentCommit": "b3b791ae6f1f8482bbcca4ce2b46bfb9ad2f79eb",
+    "motivatingProductCommit": "7e33883543389e487e30aa3c7d83c2afa028df92",
+    "productSourceReadOnly": true,
+    "newMethods": [
+      "foldLandscapeCompactChooserRestoresExact2dGeometry",
+      "foldPortraitCompactChooserRestoresExact2dGeometry"
+    ],
+    "profiles": [
+      {
+        "width": 840,
+        "height": 649,
+        "orientation": "landscape"
+      },
+      {
+        "width": 840,
+        "height": 1050,
+        "orientation": "portrait"
+      }
+    ],
+    "fontScales": [
+      1.0,
+      1.5,
+      2.0
+    ],
+    "declaredProfileCombinations": 6,
+    "existingTenMethodsByteUnchanged": true,
+    "checks": [
+      "Native fourth chooser item through existing decor-touch helper",
+      "Same visible avatar surface and one-surface count",
+      "Smaller actual avatar slot, higher conversation and shorter content",
+      "Full 48dp, bounds, clipped global intersections and rail viewport checks in normal, compact and restored states",
+      "Exact restoration of 2D avatar, renderer slot, conversation and content geometry",
+      "No task start"
+    ],
+    "runtimeStatus": "NOT_RUN"
+  }
+}

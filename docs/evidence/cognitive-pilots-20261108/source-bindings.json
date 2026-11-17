@@ -1,0 +1,56 @@
+[
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt",
+    "sourceCommit": "f93b661ff2652b0783ab6224810edd85b8c368ff",
+    "sha256": "e9ea2481c5471cc3369de76281e046d10b05efc29c04d8ed54f8616b28a237d2",
+    "byteIdentical": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/HypothesisWorkspace.kt",
+    "sourceCommit": "9b8bf1d947323cecc75d6dd7dd2c1da8e73870b3",
+    "sha256": "7f5853f3435d1e0bdd401bd7f92ee9ff6823148d47c67328ebff9d2eb024ab05",
+    "byteIdentical": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LightweightJtmsEngine.kt",
+    "sourceCommit": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+    "sha256": "ac3bd220a7d4f13a07fd6be6dd34dc6d2468274494fef76734ba2f0608ef561f",
+    "byteIdentical": true
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/CounterfactualWorldOverlay.kt",
+    "sourceCommit": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+    "sha256": "ccbe44ce50e2cd91dc7eb7113f2c263fccfaf9074ecc68c5bd4c64eb389bd48b",
+    "byteIdentical": true
+  },
+  {
+    "path": "tools/continuum-virtual-fabric/reuse-broker.mjs",
+    "sourceCommit": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+    "sha256": "d66f0c269ebb630f5c333a0966855f83d961232a0115068851ab452e27951cc7",
+    "byteIdentical": true
+  },
+  {
+    "path": "tools/continuum-virtual-fabric/reuse-experiment.mjs",
+    "sourceCommit": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+    "sha256": "f4a6316c40235073f5e7879562e19e10ca5173a6f024416fe5f40743585d03cd",
+    "byteIdentical": true
+  },
+  {
+    "path": "tools/continuum-cognitive-pilots/verified-reuse-pilot.mjs",
+    "sourceCommit": "64b9c6d7ae0f968c1f7d34f0ee5941bdbe9cfe5e",
+    "sha256": "246d053c3b35c0dca3e1f4ddc095e00bddc64015ff637e7f80d40bf5354173c3",
+    "byteIdentical": true
+  },
+  {
+    "path": "tools/continuum-cognitive-pilots/context-cases.tsv",
+    "sourceCommit": "d237523bc65988e6dd1110562c19227799783562",
+    "sha256": "6ef65216c243b3d82a1fefc1e4be76a38c9403cd51597212be23949924702946",
+    "byteIdentical": true
+  },
+  {
+    "path": "tools/continuum-cognitive-pilots/reuse-protocol.json",
+    "sourceCommit": "90e3afdd0f39fd7cc800d1e22f0ca07d839c4c3a",
+    "sha256": "e065bea1141c73927a32f6ac66d76deb248b16b4f8ab8485a0509834cf9c9f93",
+    "byteIdentical": true
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "baseProductionSource": "ebefd45ab7eef88a47cf8f66872885da6ab20382",
+  "fixtureCommit": "0dcdea9167da14a9a717527bd8346dd5df2aa76c",
+  "fixturePath": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt",
+  "fixtureBlob": "0f9d03084aa7ed92f14c58e4d2d0e9b7889077db",
+  "composedSource": "28bd19782a899eeebf9900888af1213131b4e5df",
+  "changedPaths": [
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt"
+  ],
+  "productionTreeByteIdentical": true
+}

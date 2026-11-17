@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:18:29" hostname="0f4ac18d136f" time="0.038">
+  <properties/>
+  <testcase name="replacementWithDifferentUnitDoesNotChangeAnotherObject" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.001"/>
+  <testcase name="anotherPersonsSameNamedObjectNeverOverwritesTheOwnerObject" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.002"/>
+  <testcase name="queryValuesDoNotTurnIntoNegativeQuestionAnswers" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.001"/>
+  <testcase name="objectAndRevisionLimitsFailClosed" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.001"/>
+  <testcase name="contrastBetweenTwoSameNamedObjectsNeverBecomesAColorCorrection" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.002"/>
+  <testcase name="sameNounForAnotherObjectRequiresClarification" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.001"/>
+  <testcase name="boundedHistoryNeverMislabelsTheOldestRetainedValueAsTheFirst" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.004"/>
+  <testcase name="unrelatedNumbersAndColorWordsDoNotBindByBeingTheOnlySlot" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.003"/>
+  <testcase name="actualSessionExitForgetsTheObjectState" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.012"/>
+  <testcase name="punctuationFreeQuestionsDoNotAssertTheirSuggestedValues" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.002"/>
+  <testcase name="anUnparsedRelevantChangeNeverResurrectsThePriorLocation" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.0"/>
+  <testcase name="hypotheticalOrQuotedInstructionsDoNotBecomeOwnerObjectState" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.002"/>
+  <testcase name="sourceAttributionDoesNotDenyIndependentPersistentStorage" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.002"/>
+  <testcase name="tentativeQuestionsAndConditionalPronounsKeepTheLastAssertion" classname="at.heinz.deviceai.cognitive.OwnerObjectStateLedgerSafetyTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

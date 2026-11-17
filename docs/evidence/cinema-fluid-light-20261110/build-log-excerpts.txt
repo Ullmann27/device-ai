@@ -1,0 +1,33 @@
+SOURCE e2fb22d71464415ac4438fea7f53558a25a6558f
+APP TREE 1a516b2c1d059d24663d6cb5ff279edfd975de07
+
+android-compile-final.log:
+> Task :app:compileDebugKotlin
+BUILD SUCCESSFUL in 2m 18s
+17 actionable tasks: 2 executed, 15 up-to-date
+
+android-tests-lint-final.log:
+> Task :app:testDebugUnitTest
+> Task :app:lintAnalyzeDebug
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+XML assessment: 56 tests; 0 failures; 0 errors; 0 skipped.
+Combined command exit: failed after the completed test task.
+
+android-lint-standalone-final.log:
+> Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintReportDebug
+> Task :app:lintDebug
+BUILD SUCCESSFUL in 2m 10s
+30 actionable tasks: 5 executed, 25 up-to-date
+XML assessment: 0 issues; configured check: NewApi only.
+
+cinema-tests-final.log:
+OK (33 tests)
+
+node-cinema-final.log:
+tests 18; pass 18; fail 0; cancelled 0; skipped 0
+
+native-cinema-final-compile.log:
+Empty compiler output; successful exit; native-cinema-final.jar produced.

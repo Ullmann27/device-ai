@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AndroidLiveScrollTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:14:22" hostname="0f4ac18d136f" time="3.761">
+  <properties/>
+  <testcase name="sameContainerIndexMovementConfirmsExactlyOneDispatch" classname="at.heinz.deviceai.AndroidLiveScrollTest" time="0.068"/>
+  <testcase name="wrongWindowCannotSupplyScrollEvidence" classname="at.heinz.deviceai.AndroidLiveScrollTest" time="0.739"/>
+  <testcase name="queuedOldEventsCannotSupplyScrollEvidence" classname="at.heinz.deviceai.AndroidLiveScrollTest" time="0.731"/>
+  <testcase name="revokedGrantPreventsScrollDispatch" classname="at.heinz.deviceai.AndroidLiveScrollTest" time="0.025"/>
+  <testcase name="unchangedPositionDoesNotConfirm" classname="at.heinz.deviceai.AndroidLiveScrollTest" time="0.728"/>
+  <testcase name="movementOfDifferentContainerDoesNotConfirm" classname="at.heinz.deviceai.AndroidLiveScrollTest" time="0.739"/>
+  <testcase name="badgeChangeWithoutScrollEventDoesNotConfirm" classname="at.heinz.deviceai.AndroidLiveScrollTest" time="0.73"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

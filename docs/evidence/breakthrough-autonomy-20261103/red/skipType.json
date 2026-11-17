@@ -1,0 +1,99 @@
+{
+  "mode": "skipType",
+  "fixture": {
+    "repo": "/tmp/rg-coverage-nvsOxc",
+    "base": "5ba09d5376113b46ca84b728b2b91d1ef68d7312",
+    "red": "249087b0832efceb051c5284784c565550fb370c",
+    "green": "ccf6bb31b0b9200d16f2bf08ebcfcb00d1762369",
+    "testPath": "tests/sum.test.mjs",
+    "testSha256": "7a0150ce05101b4e94382229e5b4dd851b4d8ae1d9507bab3e23c9fdf7d32cee",
+    "tests": "import test from 'node:test';import assert from 'node:assert';import {describe} from 'node:test';import {sum,fixed} from '../src/sum.mjs';test('adds_two',()=>assert.equal(sum(1,1),2));test('retained',fixed?{todo:true}:{skip:true},()=>assert.ok(1));\n"
+  },
+  "patchSha256": "37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce",
+  "patch": "diff --git a/src/sum.mjs b/src/sum.mjs\nindex 43eb509e29fee1527d39593b11751080175f44ca..f514135312235e2d5b38b76f050e4cf9aa0f6f53 100644\n--- a/src/sum.mjs\n+++ b/src/sum.mjs\n@@ -1 +1 @@\n-export const fixed=false; export const sum=(a,b)=>a-b;\n+export const fixed=true; export const sum=(a,b)=>a+b;\n",
+  "receipt": {
+    "schema": "continuum-ccc1-patch-receipt",
+    "version": 1,
+    "repo": "Ullmann27/device-ai",
+    "baseSha": "5ba09d5376113b46ca84b728b2b91d1ef68d7312",
+    "redSha": "249087b0832efceb051c5284784c565550fb370c",
+    "greenSha": "ccf6bb31b0b9200d16f2bf08ebcfcb00d1762369",
+    "patchSha256": "37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce",
+    "targetTests": [
+      "sum.adds_two"
+    ],
+    "red": {
+      "sha": "249087b0832efceb051c5284784c565550fb370c",
+      "command": "node-redgreen",
+      "executed": 1,
+      "failed": 1,
+      "skipped": 1,
+      "failingTests": [
+        "sum.adds_two"
+      ],
+      "passedTargets": [],
+      "exitCode": 1,
+      "timedOut": false,
+      "cancelled": false
+    },
+    "green": {
+      "sha": "ccf6bb31b0b9200d16f2bf08ebcfcb00d1762369",
+      "command": "node-redgreen",
+      "executed": 1,
+      "failed": 0,
+      "skipped": 1,
+      "failingTests": [],
+      "passedTargets": [
+        "sum.adds_two"
+      ],
+      "exitCode": 0,
+      "timedOut": false,
+      "cancelled": false
+    },
+    "approvedForMerge": false,
+    "installed": false,
+    "deviceVerified": false
+  },
+  "commitResult": {
+    "schema": "continuum-ccc1-redgreen-attestation",
+    "version": 1,
+    "receiptSha256": "7371091a02c5d905391265c9e22da390c122e30cd9d9bc80fe27f54d13ae899f",
+    "verdict": "VERIFIED",
+    "reasons": [],
+    "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+    "patchSha256": "37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce",
+    "red": {
+      "xmlSha256": "11d1ce0734ac2a60552327cbacc9fe315d2ee965858483c3e5acfec4568db631",
+      "exitCode": 1,
+      "executed": 1,
+      "failed": 1
+    },
+    "green": {
+      "xmlSha256": "70ab293160b0ea33ddca10cd874a7898622ab2b6aa34644c3124fb5be9b1658a",
+      "exitCode": 0,
+      "executed": 1,
+      "failed": 0
+    }
+  },
+  "patchResult": {
+    "schema": "continuum-ccc1-redgreen-attestation",
+    "version": 1,
+    "receiptSha256": "7371091a02c5d905391265c9e22da390c122e30cd9d9bc80fe27f54d13ae899f",
+    "verdict": "VERIFIED",
+    "reasons": [],
+    "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+    "patchSha256": "37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce",
+    "red": {
+      "xmlSha256": "c00a67823b0f742b58b83ff146e195f32664a15795935dd4331965eddaa22b5d",
+      "exitCode": 1,
+      "executed": 1,
+      "failed": 1
+    },
+    "green": {
+      "xmlSha256": "e3d542af493ea124a6de2987beb4b2bf5e9e58308266003153f4233df51f05a5",
+      "exitCode": 0,
+      "executed": 1,
+      "failed": 0
+    }
+  }
+}

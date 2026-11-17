@@ -1,0 +1,7 @@
+[0.003s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/7 because it is locked by another process (errno = 11)
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:301:31: warning: unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+                (semanticTrain?.steps ?: 0),trainIntentBefore,trainIntentAfter,
+                              ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:411:37: warning: unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+                trainI.steps+(trainS?.steps ?: 0),
+                                    ^^

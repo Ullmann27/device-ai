@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:27" hostname="b50d54a1ac03" time="0.056">
+  <properties/>
+  <testcase name="unsafeZipNamesAreRejectedWithoutWritingAnyRecords" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.04"/>
+  <testcase name="legalArchiveIsNotMisreportedAsLegalValidity" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.002"/>
+  <testcase name="unsafeLaterZipNameCannotCommitEarlierValidatedSources" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.002"/>
+  <testcase name="directArchiveQuestionNeedsAnExplicitSourceTitleTopic" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.002"/>
+  <testcase name="indexedOfflineArchiveStoresCitationsAndRevisions" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.002"/>
+  <testcase name="existingDamagedCollisionBlocksImportWithoutAddingEarlierRecords" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.003"/>
+  <testcase name="invalidDomainsAndUnsafeReferencesAreRejected" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.001"/>
+  <testcase name="zipRoundTripPersistsAndVerifiesOriginalCitationRecords" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.001"/>
+  <testcase name="genericWikipediaTitleWordCannotHijackMarsFollowUp" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.001"/>
+  <testcase name="corruptedLaterZipRecordCannotPartiallyMigrateAnEarlierValidSource" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

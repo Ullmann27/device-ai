@@ -1,0 +1,117 @@
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:12:21: error: unresolved reference 'CognitiveTurnTrace'.
+        val trace = CognitiveTurnTrace("private-session-name", nowNanos = { clock })
+                    ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:13:25: error: unresolved reference 'TraceStage'.
+        trace.reference(TraceStage.MEMORY_REF, "private-memory-secret")
+                        ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:14:21: error: unresolved reference 'TraceStage'.
+        trace.event(TraceStage.MEMORY_EXACT)
+                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:16:35: error: unresolved reference 'TraceOutcome'.
+        val result = trace.finish(TraceOutcome.MEMORY_EXACT)
+                                  ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:17:19: error: unresolved reference 'CognitiveTraceCodec'.
+        val row = CognitiveTraceCodec.encode(result)
+                  ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:21:30: error: unresolved reference 'CognitiveTraceCodec'.
+        assertEquals(result, CognitiveTraceCodec.decode(row))
+                             ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:25:21: error: unresolved reference 'CognitiveTurnTrace'.
+        val trace = CognitiveTurnTrace("session")
+                    ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:26:21: error: unresolved reference 'TraceStage'.
+        trace.event(TraceStage.ROUTER_ADVISORY)
+                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:27:21: error: unresolved reference 'TraceStage'.
+        trace.event(TraceStage.MODEL_ADVISORY_INVOKED)
+                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:28:21: error: unresolved reference 'TraceStage'.
+        trace.event(TraceStage.MODEL_FAILED)
+                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:29:21: error: unresolved reference 'TraceStage'.
+        trace.event(TraceStage.MODEL_PRIMARY_INVOKED)
+                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:30:21: error: unresolved reference 'TraceStage'.
+        trace.event(TraceStage.MODEL_COMPLETED)
+                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:31:21: error: unresolved reference 'TraceStage'.
+        trace.event(TraceStage.TOOL_EXECUTED, ToolExecutionStatus.REJECTED)
+                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:32:35: error: unresolved reference 'TraceOutcome'.
+        val result = trace.finish(TraceOutcome.MODEL_INTERPRETATION)
+                                  ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:33:21: error: unresolved reference 'TraceStage'.
+        trace.event(TraceStage.MODEL_COMPLETED)
+                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:37:43: error: unresolved reference 'TraceOutcome'.
+        assertEquals(result, trace.finish(TraceOutcome.ACTION_VERIFIED))
+                                          ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:38:22: error: unresolved reference 'TraceOutcome'.
+        assertEquals(TraceOutcome.MODEL_INTERPRETATION, result.outcome)
+                     ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:44:25: error: unresolved reference 'CognitiveTurnTrace'.
+            val trace = CognitiveTurnTrace("local-session")
+                        ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:45:25: error: unresolved reference 'TraceStage'.
+            trace.event(TraceStage.MODEL_NOT_READY)
+                        ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:46:41: error: unresolved reference 'TraceOutcome'.
+            val original = trace.finish(TraceOutcome.BLOCKED)
+                                        ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:47:47: error: unresolved reference 'recordTrace'.
+            ContinuumRuntimeEventJournal(dir).recordTrace(original)
+                                              ^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:49:46: error: unresolved reference 'traces'.
+            assertEquals(original, restarted.traces().single())
+                                             ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:50:34: error: unresolved reference 'reviewTrace'.
+            assertTrue(restarted.reviewTrace(original.id, TraceFeedback.CORRECTED))
+                                 ^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:50:59: error: unresolved reference 'TraceFeedback'.
+            assertTrue(restarted.reviewTrace(original.id, TraceFeedback.CORRECTED))
+                                                          ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:51:38: error: unresolved reference 'traces'.
+            val reviewed = restarted.traces().single()
+                                     ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:52:52: error: unresolved reference 'events'.
+            assertEquals(original.events, reviewed.events)
+                                                   ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:53:53: error: unresolved reference 'outcome'.
+            assertEquals(original.outcome, reviewed.outcome)
+                                                    ^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:54:26: error: unresolved reference 'TraceFeedback'.
+            assertEquals(TraceFeedback.CORRECTED, reviewed.feedback)
+                         ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:54:60: error: unresolved reference 'feedback'.
+            assertEquals(TraceFeedback.CORRECTED, reviewed.feedback)
+                                                           ^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:55:35: error: unresolved reference 'reviewTrace'.
+            assertFalse(restarted.reviewTrace("00000000-0000-0000-0000-000000000000", TraceFeedback.CONFIRMED))
+                                  ^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:55:87: error: unresolved reference 'TraceFeedback'.
+            assertFalse(restarted.reviewTrace("00000000-0000-0000-0000-000000000000", TraceFeedback.CONFIRMED))
+                                                                                      ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:56:36: error: unresolved reference 'recordTrace'.
+            repeat(40) { restarted.recordTrace(CognitiveTurnTrace("same").finish(TraceOutcome.BLOCKED)) }
+                                   ^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:56:48: error: unresolved reference 'CognitiveTurnTrace'.
+            repeat(40) { restarted.recordTrace(CognitiveTurnTrace("same").finish(TraceOutcome.BLOCKED)) }
+                                               ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:56:82: error: unresolved reference 'TraceOutcome'.
+            repeat(40) { restarted.recordTrace(CognitiveTurnTrace("same").finish(TraceOutcome.BLOCKED)) }
+                                                                                 ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:57:40: error: unresolved reference 'traces'.
+            assertEquals(32, restarted.traces().size)
+                                       ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:62:21: error: unresolved reference 'CognitiveTurnTrace'.
+        val trace = CognitiveTurnTrace("session")
+                    ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:63:35: error: unresolved reference 'TraceStage'.
+        repeat(100) { trace.event(TraceStage.MEMORY_LOOKUP) }
+                                  ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:64:35: error: unresolved reference 'TraceOutcome'.
+        val result = trace.finish(TraceOutcome.BLOCKED)
+                                  ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/CognitiveTurnTraceTest.kt:67:62: error: unresolved reference 'CognitiveTraceCodec'.
+        assertThrows(IllegalArgumentException::class.java) { CognitiveTraceCodec.decode("user-text\twhatever") }
+                                                             ^^^^^^^^^^^^^^^^^^^

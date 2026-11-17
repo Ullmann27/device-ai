@@ -1,0 +1,240 @@
+[
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppActionWorkSceneUiTest",
+    "name": "stopAndIndependentNavigationInvalidateAppNameQuestions",
+    "result": "FAILURE",
+    "start": 1794420056469,
+    "end": 1794420058877,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": null,
+        "stackTrace": "java.lang.AssertionError\n\tat org.junit.Assert.fail(Assert.java:87)\n\tat org.junit.Assert.assertTrue(Assert.java:42)\n\tat org.junit.Assert.assertFalse(Assert.java:65)\n\tat org.junit.Assert.assertFalse(Assert.java:75)\n\tat at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.stopAndIndependentNavigationInvalidateAppNameQuestions$lambda$0(OwnerAppActionWorkSceneUiTest.kt:217)\n\tat at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.withActivity(OwnerAppActionWorkSceneUiTest.kt:126)\n\tat at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.stopAndIndependentNavigationInvalidateAppNameQuestions(OwnerAppActionWorkSceneUiTest.kt:201)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "planningClarificationKeepsTheCompleteOriginalOnce",
+    "result": "FAILURE",
+    "start": 1794420129164,
+    "end": 1794420129454,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.assertUnanswered(OwnerAppPlanningContextUiTest.kt:252)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningClarificationKeepsTheCompleteOriginalOnce$lambda$0(OwnerAppPlanningContextUiTest.kt:234)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningClarificationKeepsTheCompleteOriginalOnce(OwnerAppPlanningContextUiTest.kt:233)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "unavailableModelKeepsTheCompletePlanOnce",
+    "result": "FAILURE",
+    "start": 1794420129454,
+    "end": 1794420130388,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.assertUnanswered(OwnerAppPlanningContextUiTest.kt:252)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.unavailableModelKeepsTheCompletePlanOnce$lambda$0(OwnerAppPlanningContextUiTest.kt:238)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.unavailableModelKeepsTheCompletePlanOnce(OwnerAppPlanningContextUiTest.kt:237)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript",
+    "result": "FAILURE",
+    "start": 1794420130388,
+    "end": 1794420130680,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript$lambda$0(OwnerAppPlanningContextUiTest.kt:215)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript(OwnerAppPlanningContextUiTest.kt:213)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "missingLoadedIdentityKeepsTheCompletePlanOnce",
+    "result": "FAILURE",
+    "start": 1794420130680,
+    "end": 1794420131288,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.assertUnanswered(OwnerAppPlanningContextUiTest.kt:252)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.missingLoadedIdentityKeepsTheCompletePlanOnce$lambda$0(OwnerAppPlanningContextUiTest.kt:243)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.missingLoadedIdentityKeepsTheCompletePlanOnce(OwnerAppPlanningContextUiTest.kt:242)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "unmatchedVerbFinalReturnsToConversationWithoutArmingNameReply",
+    "result": "FAILURE",
+    "start": 1794420131288,
+    "end": 1794420131544,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.unmatchedVerbFinalReturnsToConversationWithoutArmingNameReply$lambda$0(OwnerAppPlanningContextUiTest.kt:150)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.unmatchedVerbFinalReturnsToConversationWithoutArmingNameReply(OwnerAppPlanningContextUiTest.kt:148)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "roleHeadersCannotReachReadyInferenceOrTheCorrectionShortcut",
+    "result": "FAILURE",
+    "start": 1794420131544,
+    "end": 1794420131920,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.roleHeadersCannotReachReadyInferenceOrTheCorrectionShortcut$lambda$0(OwnerAppPlanningContextUiTest.kt:176)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.roleHeadersCannotReachReadyInferenceOrTheCorrectionShortcut(OwnerAppPlanningContextUiTest.kt:167)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory",
+    "result": "FAILURE",
+    "start": 1794420131920,
+    "end": 1794420132199,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory$lambda$0(OwnerAppPlanningContextUiTest.kt:198)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory(OwnerAppPlanningContextUiTest.kt:196)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "plainAppClarificationKeepsTheOriginalOnce",
+    "result": "FAILURE",
+    "start": 1794420132199,
+    "end": 1794420132615,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.assertUnanswered(OwnerAppPlanningContextUiTest.kt:252)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.plainAppClarificationKeepsTheOriginalOnce$lambda$0(OwnerAppPlanningContextUiTest.kt:247)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.plainAppClarificationKeepsTheOriginalOnce(OwnerAppPlanningContextUiTest.kt:246)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "pluralStatementsReachConversationWithoutAppLookup",
+    "result": "FAILURE",
+    "start": 1794420132615,
+    "end": 1794420132855,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:124)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.pluralStatementsReachConversationWithoutAppLookup$lambda$0(OwnerAppPlanningContextUiTest.kt:138)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.pluralStatementsReachConversationWithoutAppLookup(OwnerAppPlanningContextUiTest.kt:135)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "name": "ordinaryRelatedTaskReachesModelWithBoundedCurrentState",
+    "result": "FAILURE",
+    "start": 1794420132876,
+    "end": 1794420133766,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.submit(OwnerObjectStateConversationUiTest.kt:130)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.modelTurn(OwnerObjectStateConversationUiTest.kt:145)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.ordinaryRelatedTaskReachesModelWithBoundedCurrentState$lambda$0(OwnerObjectStateConversationUiTest.kt:212)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity(OwnerObjectStateConversationUiTest.kt:115)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity$default(OwnerObjectStateConversationUiTest.kt:105)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.ordinaryRelatedTaskReachesModelWithBoundedCurrentState(OwnerObjectStateConversationUiTest.kt:196)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "name": "actualNewSessionClearsThePreviousOwnerObjectState",
+    "result": "FAILURE",
+    "start": 1794420133766,
+    "end": 1794420134136,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.submit(OwnerObjectStateConversationUiTest.kt:130)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.modelTurn(OwnerObjectStateConversationUiTest.kt:145)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.actualNewSessionClearsThePreviousOwnerObjectState$lambda$0(OwnerObjectStateConversationUiTest.kt:253)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity(OwnerObjectStateConversationUiTest.kt:115)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity$default(OwnerObjectStateConversationUiTest.kt:105)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.actualNewSessionClearsThePreviousOwnerObjectState(OwnerObjectStateConversationUiTest.kt:252)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "name": "fiveStepCorrectionUsesActualOfflineEntryAndOwnerPerspective",
+    "result": "FAILURE",
+    "start": 1794420134136,
+    "end": 1794420134467,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.submit(OwnerObjectStateConversationUiTest.kt:130)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.modelTurn(OwnerObjectStateConversationUiTest.kt:145)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.fiveStepCorrectionUsesActualOfflineEntryAndOwnerPerspective$lambda$0(OwnerObjectStateConversationUiTest.kt:167)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity(OwnerObjectStateConversationUiTest.kt:115)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity$default(OwnerObjectStateConversationUiTest.kt:105)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.fiveStepCorrectionUsesActualOfflineEntryAndOwnerPerspective(OwnerObjectStateConversationUiTest.kt:163)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "1b8747f8-3a67-44c1-9be3-1f920a79c520",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "name": "historicalChangeRequestsReachModelWithRetainedHistory",
+    "result": "FAILURE",
+    "start": 1794420134467,
+    "end": 1794420134723,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Chat selected expected:<CHAT> but was:<START>",
+        "stackTrace": "java.lang.AssertionError: Chat selected expected:<CHAT> but was:<START>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:120)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.submit(OwnerObjectStateConversationUiTest.kt:130)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.modelTurn(OwnerObjectStateConversationUiTest.kt:145)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.historicalChangeRequestsReachModelWithRetainedHistory$lambda$0(OwnerObjectStateConversationUiTest.kt:242)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity(OwnerObjectStateConversationUiTest.kt:115)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity$default(OwnerObjectStateConversationUiTest.kt:105)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.historicalChangeRequestsReachModelWithRetainedHistory(OwnerObjectStateConversationUiTest.kt:226)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n"
+      }
+    ]
+  }
+]

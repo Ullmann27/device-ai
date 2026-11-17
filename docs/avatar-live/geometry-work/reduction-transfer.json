@@ -1,0 +1,8 @@
+{
+  "method": "symmetric neutral decimation + barycentric displacement transfer",
+  "ratio": 0.65,
+  "sourceVertices": 20006,
+  "outputVertices": 12980,
+  "maxNeutralSurfaceDistanceMetres": 0.0002818653010763228,
+  "morphCount": 21
+}

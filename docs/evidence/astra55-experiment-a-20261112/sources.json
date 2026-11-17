@@ -1,0 +1,70 @@
+{
+  "retrieved_utc": "2026-11-12",
+  "research_before_source_change": true,
+  "sources": [
+    {
+      "id": "android-mediaprojection",
+      "url": "https://developer.android.com/media/grow/media-projection",
+      "publisher": "Android Developers",
+      "page_updated_utc": "2025-01-24",
+      "claims": [
+        "MediaProjection sends captured screen or app-window content to a VirtualDisplay backed by an app-provided Surface.",
+        "Android14 requires fresh user consent for each projection session and a token permits one createVirtualDisplay call.",
+        "onCapturedContentResize supplies dimensions; both VirtualDisplay and output Surface must be resized to avoid letterboxing.",
+        "onStop invalidates the session and requires resource release."
+      ]
+    },
+    {
+      "id": "android-imagereader",
+      "url": "https://developer.android.com/reference/android/media/ImageReader",
+      "publisher": "Android Developers",
+      "claims": [
+        "acquireLatestImage drops older queued images and is intended for realtime consumption.",
+        "Dropping older images requires maxImages-currentAcquiredImages >=2; unreleased images can exhaust the queue.",
+        "ImageReader.close invalidates its images and previously acquired pixel buffers."
+      ]
+    },
+    {
+      "id": "android-image",
+      "url": "https://developer.android.com/reference/android/media/Image",
+      "publisher": "Android Developers",
+      "claims": [
+        "The HardwareBuffer returned by Image.getHardwareBuffer must not be used after Image.close.",
+        "Image timestamps are in nanoseconds, but sources can use different timebases."
+      ]
+    },
+    {
+      "id": "android-hardwarebuffer",
+      "url": "https://developer.android.com/reference/android/hardware/HardwareBuffer",
+      "publisher": "Android Developers",
+      "claims": [
+        "USAGE_GPU_SAMPLED_IMAGE declares GPU reads.",
+        "HardwareBuffer.close releases native resources and forbids further use."
+      ]
+    },
+    {
+      "id": "android-surface",
+      "url": "https://developer.android.com/reference/android/view/Surface",
+      "publisher": "Android Developers",
+      "claims": [
+        "A Surface is a producer handle tied to a buffer consumer.",
+        "A Surface alone does not retain its SurfaceTexture/consumer; its local reference must be released."
+      ]
+    },
+    {
+      "id": "filament-stream-current",
+      "url": "https://github.com/google/filament/blob/main/android/filament-android/src/main/java/com/google/android/filament/Stream.java",
+      "publisher": "Google Filament repository",
+      "claims": [
+        "Stream attaches external video frames to a Texture.",
+        "ACQUIRED streams accept Android hardware buffers, synchronize with the scene and release through callbacks.",
+        "NATIVE streams have no synchronization guarantee."
+      ],
+      "scope": "Current upstream documentation; project stays on1.56.0. Tag-page retrieval failed; no assertion of tag-level source verification."
+    }
+  ],
+  "unavailable": [
+    "Exact v1.56.0 Stream.java and MaterialInstance.java pages: web DisabledError",
+    "Current issue41 page: web DisabledError; local experiment contract/register read"
+  ]
+}

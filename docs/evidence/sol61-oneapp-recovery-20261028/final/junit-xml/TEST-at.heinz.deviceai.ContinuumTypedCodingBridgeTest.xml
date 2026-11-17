@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumTypedCodingBridgeTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:21" hostname="b50d54a1ac03" time="0.025">
+  <properties/>
+  <testcase name="foreignGitCommitCannotBecomeApprovedCodingEvidence" classname="at.heinz.deviceai.ContinuumTypedCodingBridgeTest" time="0.01"/>
+  <testcase name="runReceiptIsNotInstallationAndNeverPromotesUnverifiedEvidence" classname="at.heinz.deviceai.ContinuumTypedCodingBridgeTest" time="0.003"/>
+  <testcase name="approvedCommandCannotBecomeShellTextOrSecondApp" classname="at.heinz.deviceai.ContinuumTypedCodingBridgeTest" time="0.002"/>
+  <testcase name="canonicalTaskIsRequiredAndCanNeverBeReboundToChangedFields" classname="at.heinz.deviceai.ContinuumTypedCodingBridgeTest" time="0.006"/>
+  <testcase name="preparationRequiresUntruncatedCommittedTermuxCallbackAndOriginalHash" classname="at.heinz.deviceai.ContinuumTypedCodingBridgeTest" time="0.002"/>
+  <testcase name="blockedFailureIsNotAConfirmedPatch" classname="at.heinz.deviceai.ContinuumTypedCodingBridgeTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

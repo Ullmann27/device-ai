@@ -1,0 +1,16 @@
+{
+  "schema": "continuum-final-fixture-reconciliation",
+  "sourceCommit": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+  "reason": "Harness expected legacy ORPHAN_WORKER label before revised resource-barrier cleanup",
+  "stateDir": "/tmp/continuum-service-review-9cDwhU/service",
+  "taskId": "active-crash-order",
+  "instanceId": "8578800ff8027c87335a58be218bfdc3",
+  "workerPid": 361048,
+  "ownerPid": 360678,
+  "workerDead": true,
+  "ownerDead": true,
+  "privateRuntimeMissingBeforeSubmission": true,
+  "noCanonicalTestRequestOrReceipt": true,
+  "onlyMatchingSyntheticBarrierRemoved": true,
+  "productionAutomaticRecovery": false
+}

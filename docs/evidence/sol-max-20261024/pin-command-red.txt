@@ -1,0 +1,90 @@
+TAP version 13
+# Subtest: unchanged 22 source pins pass
+ok 1 - unchanged 22 source pins pass
+  ---
+  duration_ms: 138.941809
+  type: 'test'
+  ...
+# Subtest: changed protected source fails closed
+ok 2 - changed protected source fails closed
+  ---
+  duration_ms: 146.495174
+  type: 'test'
+  ...
+# Subtest: report-only does not turn a mismatch into approval
+ok 3 - report-only does not turn a mismatch into approval
+  ---
+  duration_ms: 136.571175
+  type: 'test'
+  ...
+# Subtest: symlink is never accepted as an attested regular source
+ok 4 - symlink is never accepted as an attested regular source
+  ---
+  duration_ms: 132.638872
+  type: 'test'
+  ...
+# Subtest: duplicate release pins fail before reporting
+ok 5 - duplicate release pins fail before reporting
+  ---
+  duration_ms: 86.908209
+  type: 'test'
+  ...
+# Subtest: symlinked ancestor cannot launder an unchanged file hash into a trusted path
+ok 6 - symlinked ancestor cannot launder an unchanged file hash into a trusted path
+  ---
+  duration_ms: 140.355911
+  type: 'test'
+  ...
+# Subtest: the report names why each attested source changed, its review role and unattested new APK sources
+ok 7 - the report names why each attested source changed, its review role and unattested new APK sources
+  ---
+  duration_ms: 150.350985
+  type: 'test'
+  ...
+# Subtest: release commands preserve every continued test file, Android task and build option
+not ok 8 - release commands preserve every continued test file, Android task and build option
+  ---
+  duration_ms: 133.410027
+  type: 'test'
+  location: '/workspace/device-ai-sol-max/scripts/continuum-v19-pin-audit.test.mjs:66:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'no_signing_env node --test',
+    +   'gradle --no-daemon --max-workers=2'
+    -   'no_signing_env node --test .github/continuum/autogenesis-safe-wiring.test.mjs scripts/continuum-owned-app.test.mjs',
+    -   'gradle --no-daemon --max-workers=2 -PcontinuumUiWidgetTests=true :app:testDebugUnitTest :app:lintDebug :app:assembleDebug -PdeviceAiMentorPreview=true --stacktrace'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'no_signing_env node --test .github/continuum/autogenesis-safe-wiring.test.mjs scripts/continuum-owned-app.test.mjs'
+    1: 'gradle --no-daemon --max-workers=2 -PcontinuumUiWidgetTests=true :app:testDebugUnitTest :app:lintDebug :app:assembleDebug -PdeviceAiMentorPreview=true --stacktrace'
+  actual:
+    0: 'no_signing_env node --test'
+    1: 'gradle --no-daemon --max-workers=2'
+  operator: 'deepStrictEqual'
+  stack: |-
+    file:///workspace/device-ai-sol-max/scripts/continuum-v19-pin-audit.test.mjs:73:10
+    fixture (file:///workspace/device-ai-sol-max/scripts/continuum-v19-pin-audit.test.mjs:22:3)
+    TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-v19-pin-audit.test.mjs:66:95)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1129.260616

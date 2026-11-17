@@ -1,0 +1,112 @@
+{
+  "schema": "continuum-coding-task-result",
+  "version": 1,
+  "id": "momega1-u03",
+  "ccc1TaskId": "t-db3a63717dd2931a",
+  "taskFingerprint": "909961b97ecaea9886765314266d15d64a5c6fcc548b98a7f69e7a75c513f42b",
+  "sourceCommit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+  "chain": "node",
+  "status": "PATCH_PENDING_OWNER_REVIEW",
+  "receiptJobs": [
+    "cdbd5dbb-de5c-48bb-8c45-93905c20b126"
+  ],
+  "receipts": [
+    {
+      "schema": "continuum-mobile-coding-receipt",
+      "version": 1,
+      "job": "cdbd5dbb-de5c-48bb-8c45-93905c20b126",
+      "operation": "code-repair",
+      "taskId": "mob-948a6b9daa238a70",
+      "commit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+      "toolchain": {
+        "node": "v24.19.0",
+        "platform": "linux",
+        "arch": "x64",
+        "git": "git version 2.52.0"
+      },
+      "order": {
+        "chain": "node"
+      },
+      "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+      "teamleaderOutcome": "VERIFIED_PATCH_PENDING_REVIEW",
+      "patch": {
+        "sha256": "4b8763e68af48f12f8189391931dad880c6b8c6e5a37f642453a6f3e7fb28397",
+        "path": "/workspace/momega1-build-env/real-model-memory-fix/diagnostic-u03/task/private-synthetic-state/teamleader/reports/owner-repair/mob-948a6b9daa238a70-4ef01cb0f869-1793738333565-07825ce9/repair.patch",
+        "bytes": 303
+      },
+      "evidence": {
+        "verificationSha256": "2f7cb406ca4bee85f0d558f27824202587f6627c1fd2be063a14ece4f5e230e6",
+        "baselineFailed": 1,
+        "baselineExecuted": 1,
+        "candidateExecuted": 1,
+        "independentExecuted": 1,
+        "evidenceSufficient": true
+      },
+      "commands": [
+        {
+          "phase": "baseline",
+          "exitCode": 1,
+          "passed": false,
+          "executed": 1,
+          "failed": 1,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        },
+        {
+          "phase": "candidate",
+          "exitCode": 0,
+          "passed": true,
+          "executed": 1,
+          "failed": 0,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        },
+        {
+          "phase": "independent",
+          "exitCode": 0,
+          "passed": true,
+          "executed": 1,
+          "failed": 0,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        }
+      ],
+      "failure": null,
+      "backlog": {
+        "state": "DONE",
+        "attempts": 1,
+        "maxAttempts": 3,
+        "error": null
+      },
+      "approvedForMerge": false,
+      "apk": null,
+      "installed": false,
+      "deviceVerified": false,
+      "createdAt": "2026-11-03T20:38:53.509Z",
+      "repair": {
+        "outcome": "VERIFIED",
+        "strategy": "LOCAL_SCOPED_PATCH",
+        "files": [
+          "lib/subject.mjs"
+        ],
+        "diagnostics": 1,
+        "attempts": 1
+      }
+    }
+  ],
+  "technicalExperienceStatus": "RECORDED_TECHNICAL_REVIEW_ONLY",
+  "technicalRecallCount": 0,
+  "modelExecution": {
+    "verifiedCalls": 1,
+    "acceptedProposals": 1,
+    "rejectedResponses": 0,
+    "identity": {
+      "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+      "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+    }
+  },
+  "approvedForMerge": false,
+  "deviceVerified": false,
+  "neuralTraining": false
+}

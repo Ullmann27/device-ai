@@ -1,0 +1,10 @@
+#!/bin/bash
+# LM1 step 7, single pre-registered run (section 7b, commit 6494699a).
+S=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad
+J=$S/lm7/lm7-6494699a.jar
+R=/home/user/device-ai/.claude/worktrees/lm-core
+{ echo "JAR $(sha256sum $J | cut -c1-64) code=6494699a start=$(date -u +%FT%TZ)"
+  java -Xmx6g -Dstdout.encoding=UTF-8 -cp $J at.heinz.deviceai.learning.lm.LmStep7 $R run threads=4 store=$S/lm/ckpt \
+    gm=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd,ad117ed5901a991941c220482cc486bf4e4dfdf9173e7f66f9cff320ec814eea,44c4d4f30fac9428117837a86b9ddec97994e277aef802342c762acb0bc3507e \
+    tm=e77c39a02da8e24da6a6456c36789a73ee6c96a7863adc20d072018422a0e450,3ff091fab9a8c8305117b2fb740d8115ee03cc73e41f17f42b24afd0daed8f9b,5abe24160e1180b69f7f154ecc0acea44607d6fbc6b42e2a18902bfd21e54854 2>&1 | grep --line-buffered -v JAVA_TOOL_OPTIONS
+  echo "exit=${PIPESTATUS[0]} end=$(date -u +%FT%TZ)"; } > $S/lm7/step7-run.txt 2>&1

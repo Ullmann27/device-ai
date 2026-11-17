@@ -1,0 +1,88 @@
+{
+  "checkoutBase": "3510c26110098b42d46bb3b7788027fa7aed59e4",
+  "sourceCommit": "2f20c19b7e37197a6accac0c226b5401e25f1f99",
+  "publishedSourceCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
+  "javaVersion": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "app/src/test/java/at/heinz/deviceai/learning/lm/LmSamplingTest.kt": "d3f5ea036aa9169cd187d0d46aecf2557e871509ef25754cc852539214302895"
+  },
+  "sourceBlob": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "bc1176e2b230439c3fa36d6be996444eaab8efbd",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "a81eb0256ad6c59584df78ee589d4c7490545e29",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "f583da534acc9e0e71ee0ead39256243a0e2894f",
+    "app/src/test/java/at/heinz/deviceai/learning/lm/LmSamplingTest.kt": "58505c9dfef9ef167f1dbb4bf52c0b0778218190"
+  },
+  "commands": {
+    "compile": [
+      "java",
+      "-Xmx384m",
+      "-cp",
+      "/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.4.0/1ecabef3a8ba6a8e25654573d54edb7e4136e903/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+      "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+      "-no-stdlib",
+      "-no-reflect",
+      "-jvm-target",
+      "17",
+      "-classpath",
+      "/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/lm/LmSamplingTest.kt",
+      "-d",
+      "/workspace/scratch/822e72396ed9/r2-lm-verification/lm-sampling-tests.jar"
+    ],
+    "test": [
+      "java",
+      "-Xmx256m",
+      "-cp",
+      "/workspace/scratch/822e72396ed9/r2-lm-verification/lm-sampling-tests.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+      "org.junit.runner.JUnitCore",
+      "at.heinz.deviceai.learning.lm.LmSamplingTest"
+    ]
+  },
+  "results": {
+    "compile": {
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrBytes": 0,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "test": {
+      "exitCode": 0,
+      "stdoutBytes": 54,
+      "stdoutSha256": "bc2078b41d237f5bf1db42aa7f40cb30659737f3f31bba918403489f7279c754",
+      "stderrBytes": 0,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "excluded": [
+    "Gradle",
+    "Android/device",
+    "timing benchmarks",
+    "training",
+    "R2 weights candidate"
+  ],
+  "status": "LOCAL_JVM_VERIFIED_NOT_PUSHED",
+  "compilerVersion": "2.4.0",
+  "junitVersion": "4.13.2",
+  "junitMethods": 5,
+  "frozenReferenceEqualsC1BaseSample": true,
+  "gitDiffCheckExitCode": 0,
+  "outputEncoding": {
+    "file": "junit.json",
+    "key": "stdout",
+    "encoding": "UTF-8; JSON-decoded string equals captured stdout"
+  },
+  "initialStagedDiffCheck": {
+    "exitCode": 2,
+    "diagnostic": "junit.txt:6: new blank line at EOF.",
+    "resolution": "Preserve exact stdout as a JSON string in junit.json"
+  },
+  "finalStagedDiffCheckExitCode": 0,
+  "finalBaseDiffCheckExitCode": 0
+}

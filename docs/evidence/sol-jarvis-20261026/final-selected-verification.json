@@ -1,0 +1,33 @@
+{
+  "source": "d1a5a215f42d6e7dbf08bc92eb8837653c1d119c",
+  "node": "v24.19.0",
+  "java": "21.0.12.1",
+  "kotlinCli": "2.2.0",
+  "jvmTarget": 17,
+  "jvmCommand": "CONTINUUM_FABRIC_JVM_DEPS=/workspace/toolchains/kotlin bash scripts/continuum-fabric-jvm-check.sh /workspace/kotlin-tests/fabric-final",
+  "jvmExitCode": 0,
+  "jvmTests": 15,
+  "nodeCrossLanguageTests": 9,
+  "nodeCrossLanguageSkipped": 0,
+  "proofCommand": "node scripts/continuum-bottleneck-local-proof.mjs --owner-approved-development-fixtures /workspace/continuum-local-state/isolation.json /workspace/continuum-local-state/abc-proof-final",
+  "proofExitCode": 0,
+  "proofIsolationConfig": {
+    "image": "sha256:695fb07716de18118c92d0e613fe8b7413f86c27dc2b5fd5faa4e8fca51d29f8",
+    "nodeHome": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node",
+    "timeoutMs": 30000,
+    "memoryMb": 512,
+    "pids": 128,
+    "cpus": 1
+  },
+  "developmentFixtures": 2,
+  "referenceDualRunsPassed": 2,
+  "forcedOperatorDualRunsPassed": 2,
+  "untrainedNeuralDualRunsPassed": 1,
+  "neuralNotApplicable": 1,
+  "eachExecutedRunCaseCount": 4,
+  "sealedHoldout": false,
+  "modelUpdates": 0,
+  "realLanguageModelInference": false,
+  "androidGradleOrDevice": "NOT_RUN",
+  "evidenceAuthenticated": false
+}

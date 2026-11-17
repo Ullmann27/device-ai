@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="web tools are exact bounded Android function proposals, never hosted browsing" time="0.001351" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/android-web-tools.test.js"/>
+	<testcase name="disabled discovery advertises no web capability; new calls do not share mutable schemas" time="0.000149" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/android-web-tools.test.js"/>
+	<testcase name="actual server advertises Android proposals and removes hosted web-search bypass" time="0.000416" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/android-web-tools.test.js"/>
+	<testcase name="health reports disabled hosted research without exposing credentials" time="0.355947" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="continuum status enforces bearer authentication" time="0.008096" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="unauthorized or invalid agent turns never call upstream" time="0.027281" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="agent turn maps mock Responses API to Android reply contract" time="0.033211" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="tool-result continuation reuses session and limits the forwarded result count" time="0.008053" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="oversized payload is rejected before upstream forwarding" time="0.004455" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="upstream HTTP and JSON failures are bounded and do not leak secrets" time="0.010708" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="dataset prioritizes gaps, low coverage and uncertain observations" time="0.021428" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="dataset includes recent failed cycles as recovery benchmarks" time="0.000940" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="immutable governance cannot be mutated by challenger" time="0.003352" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="brain registry is checksummed and recovers last-known-good" time="0.008549" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="factory promotes only objectively better grounded safe challenger" time="0.003899" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="factory refuses promotion when safety or grounding regress" time="0.005712" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="state persists with integrity and last-known-good recovery" time="0.008837" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="observation requires citations and creates research gaps without authority" time="0.016598" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="planner prioritizes unresolved gap and changes query strategy after failures" time="0.014745" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="daemon learns cited observation, persists gaps and respects interval budget" time="0.018282" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="failed research is recorded and alternative strategy becomes available" time="0.012095" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="public memory retrieval respects query, citations and epistemic boundaries" time="0.002688" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/continuum-knowledge.test.js"/>
+	<testcase name="unverified research is never silently promoted to trusted memory" time="0.000413" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/continuum-knowledge.test.js"/>
+	<testcase name="oversized queries and limits are rejected" time="0.000543" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/continuum-knowledge.test.js"/>
+	<testcase name="Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts" time="0.000877" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor-browser.test.js"/>
+	<testcase name="every real model request requires a new owner checkbox consent" time="0.000173" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor-browser.test.js"/>
+	<testcase name="render only serves local UI assets; mentor POST keeps auth and owner consent" time="0.000158" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor-browser.test.js"/>
+	<testcase name="mentor is opt-in disabled and never invokes external fetch without key" time="0.003197" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="one authorized message is bounded and contains no tools, memory or device context" time="0.007507" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="input length validation happens before network and before quota consumption" time="0.000902" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="daily quota is isolated by UTC day and refuses concurrent calls" time="0.001039" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="upstream errors do not expose API response contents or key" time="0.000496" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="Groq throttling and malformed output are non-tool error responses" time="0.001007" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="oversized responses are rejected without parsing or logging private contents" time="0.002188" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="mentor ignores whitespace around environment key and never follows a redirect" time="0.001515" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="provider rejects unknown models and invalid requests without exposing response bodies" time="0.001196" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="exhausted reasoning-only response retries same consented question once" time="0.002067" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="empty response after a bounded retry has a specific reason, no reasoning text leaks" time="0.000964" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="other model names do not get unsupported gpt-oss reasoning options" time="0.000514" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="hypotheses are explicitly non-authoritative" time="0.005836" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="invented evidence references cannot enter a tournament" time="0.003055" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="tournament store is integrity checked with LKG recovery" time="0.004786" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="generation reflection Elo tournament evolution and research questions form a closed loop" time="0.004831" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="daily tournament budget prevents runaway agent loops" time="0.011271" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="long Groq answers are preserved beyond old 1800 character limit" time="0.025863" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="table markdown becomes plain, legible text without losing values" time="0.000515" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="oversized answers end at a boundary and explicitly signal shortening" time="0.000266" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="provider token-limit completion is explicitly marked as incomplete" time="0.000743" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="unverified mentor has no current device or repo state" time="0.000459" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="unapproved device cannot redeem; no credentials are exposed" time="0.006181" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="owner-approved device receives only revocable mentor token" time="0.002668" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="expired, forged, tampered, and replayable altered challenges are rejected" time="0.003488" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="wrong elliptic curve and missing owner token fail closed" time="0.001748" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="rotated backend token is recovered only by fresh signed owner-approved pairing" time="0.010286" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="OpenRouter stays off without secret or explicit enablement" time="0.002221" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/openrouter-mentor.test.js"/>
+	<testcase name="OpenRouter uses its pinned HTTPS endpoint, a bounded one-off prompt and returns no tools" time="0.005110" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/openrouter-mentor.test.js"/>
+	<testcase name="OpenRouter errors never expose upstream key or private payload" time="0.000480" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/openrouter-mentor.test.js"/>
+	<testcase name="OpenRouter rejects too-long prompts without calling provider" time="0.000146" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/openrouter-mentor.test.js"/>
+	<testcase name="zero-cost autonomous daemon persists public source observations across restarts" time="0.033922" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/public-research-daemon.test.js"/>
+	<testcase name="free research collects deduplicated cited metadata without a paid API" time="0.012107" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="one unavailable source does not stop other public sources" time="0.001316" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="empty results never become made-up observations" time="0.001549" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="unsafe citation URLs and oversized metadata responses are rejected" time="0.004478" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="query/output bounds and timeout input validation stay enforced" time="0.003181" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/backend/test/public-research.test.js"/>
+	<!-- tests 64 -->
+	<!-- suites 0 -->
+	<!-- pass 64 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 655.431482 -->
+</testsuites>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.AvatarTaskGestureTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:32:35" hostname="6e2f8005d77e" time="0.002">
+  <properties/>
+  <testcase name="confirmationNodHasFiniteMotionWithoutSpeechOrFalseSuccess" classname="at.heinz.deviceai.avatar.AvatarTaskGestureTest" time="0.001"/>
+  <testcase name="interruptedSpeechClearsGestureAndRejectsOldCue" classname="at.heinz.deviceai.avatar.AvatarTaskGestureTest" time="0.0"/>
+  <testcase name="thinkingGestureIsNotShownAfterSpeechStateBegins" classname="at.heinz.deviceai.avatar.AvatarTaskGestureTest" time="0.0"/>
+  <testcase name="longWorkKeepsSubtleBoundedMotionWithoutTalking" classname="at.heinz.deviceai.avatar.AvatarTaskGestureTest" time="0.001"/>
+  <testcase name="gestureHonoursReducedMotionAndIdleJaw" classname="at.heinz.deviceai.avatar.AvatarTaskGestureTest" time="0.0"/>
+  <testcase name="windowGazeExpiresAndNeverSpoofsCameraObservation" classname="at.heinz.deviceai.avatar.AvatarTaskGestureTest" time="0.0"/>
+  <testcase name="realCameraObservationsStillWinOverWindowGaze" classname="at.heinz.deviceai.avatar.AvatarTaskGestureTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

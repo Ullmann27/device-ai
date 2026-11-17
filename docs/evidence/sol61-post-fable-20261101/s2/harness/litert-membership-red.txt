@@ -1,0 +1,1 @@
+actual pre-fix condition exit=1; expected0; early-match+pipefail180010byte regression

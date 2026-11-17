@@ -1,0 +1,7 @@
+{
+  "head": "6c835307cb840461ad22ebee33e7be6649cd5de0",
+  "exitCode": 69,
+  "status": "BLOCKED_ORIGINAL_KEY_UNAVAILABLE",
+  "stdout": "",
+  "stderr": "CONTINUUM_LOCAL_OWNER_BLOCKED: Original owner P12 key missing\n"
+}

@@ -1,0 +1,54 @@
+{
+  "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+  "remote_commit": "2eca96cf50df2a4f4538f61cac911aa90563a93d",
+  "tree": "a122c871d92dcb32f995f62a438077166a28634e",
+  "tests": [
+    {
+      "name": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "2d6033d5920ed84f33abd59cf42f018d05fabfe98fc90cf9c1230bb579066f25"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisFluidLightTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "0e86082b72e46bc2245628e7f8fcd9f08c1391dace441b349d16c6bf695c6233"
+    },
+    {
+      "name": "at.heinz.deviceai.CinemaNativeSequenceUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "9773910e9c666149c9ae57a87a0285e21922d2f4e08d63bf977535b369ab0fdd"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarTextPaceFallbackTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "cbd0aec708c437d3f7d44123ac1dafefb89a1c852bd4b5b89c7c85249cf68207"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisCinemaReplayUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "4cfd4a8605a2ac457091ec8bec776f906674644f3d9abc18c2fd292e172a7938"
+    }
+  ],
+  "frames": 18,
+  "android_source_compile": "PASS",
+  "Fold7": "NOT_RUN",
+  "GPU": "NOT_RUN",
+  "model_inference": "NOT_RUN",
+  "audio_sync": "NOT_RUN",
+  "performance": "NOT_RUN"
+}

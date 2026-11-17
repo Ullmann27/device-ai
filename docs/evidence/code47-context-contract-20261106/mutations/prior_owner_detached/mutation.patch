@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -9245,7 +9245,7 @@
+         // session. Owner-write/tool authorization still uses only 'text'.
+         val followUpFrame = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.composeFrame(
+             text, resolvedQuestion, if (botTask == null && codingPlanning == null)
+-                localConversationContext.sessionEvidence(localSessionId) else null)
++                null else null)
+         val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
+         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
+         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)

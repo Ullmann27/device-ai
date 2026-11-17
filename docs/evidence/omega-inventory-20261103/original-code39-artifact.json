@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-03T18:11:06.072227+00:00",
+  "artifact": "Downloaded public original owner catalog APK only",
+  "sha256": "b22ac165abb1532eb893afd3f8fbe4d135bacaf2d094de9cbe6d38b81a4dbad9",
+  "byteLength": 54673371,
+  "packageBadging": "package: name='at.heinz.deviceai.continuumlocal' versionCode='39' versionName='0.3.38' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+  "certificateSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+  "signatureVerification": [
+    "Verifies",
+    "Verified using v1 scheme (JAR signing): false",
+    "Verified using v2 scheme (APK Signature Scheme v2): true",
+    "Verified using v3 scheme (APK Signature Scheme v3): false",
+    "Verified using v3.1 scheme (APK Signature Scheme v3.1): false",
+    "Verified using v4 scheme (APK Signature Scheme v4): false",
+    "Number of signers: 1"
+  ],
+  "installedDeviceVerified": false,
+  "noInstallOrPublisherMutation": true
+}

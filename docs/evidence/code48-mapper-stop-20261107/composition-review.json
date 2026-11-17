@@ -1,0 +1,24 @@
+{
+  "method": "Native Robolectric Android Canvas with actual ContinuumHomeView and accepted work-window host",
+  "clock": "Held until actual event delivery, then sampled at 800ms and 1200ms",
+  "findings": [
+    "document/folder burst visible",
+    "perspective file tunnel visible",
+    "work window stays in front",
+    "STOP clears glyphs"
+  ],
+  "limits": [
+    "synthetic task data",
+    "fallback head, not Filament GPU",
+    "not full reference-video acceptance",
+    "no physical Fold7"
+  ],
+  "frameSha256": {
+    "native-cockpit-stopped.png": "8548fc04274236340ad01d677cd62f1558be78caa27b667cbf07c7684f088a7f",
+    "native-cockpit-tunnel.png": "d4b8197573577287342310a5c5e0413332264ed76de3181164d27bf2132d6a69",
+    "native-cockpit-burst.png": "d59cf340951ee3556be79df024246e5ebe941f3430c7bd72b2ef1a25836466f0",
+    "native-work-window-burst.png": "001acf13595d613f17732833b5bd9e12720322496aa7b36c0456b85448482340",
+    "native-work-window-tunnel.png": "c06c944ff66f5dc761e482433288cfc247310c39591186b8ff06a7a7b925fe2d",
+    "native-cockpit-idle.png": "323f0dd3a5014e07b9b7936b77b7d6ea3f743c75570f63d1ef9e51ff47afe53e"
+  }
+}

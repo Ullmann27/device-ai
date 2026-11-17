@@ -1,0 +1,25 @@
+✔ exactly five owner-visible work areas remain in fixed order (1.273125ms)
+✔ phone bottom navigation stays outside conversation pane and above system bar (0.429302ms)
+✔ all navigation taps route to existing trusted screens (0.552093ms)
+✔ home work areas are reachable without expert-only controls (1.226556ms)
+✔ Fold rail offers every current destination without a second bottom bar (1.20858ms)
+✔ existing chat, learning monitoring and owner permission boundaries remain (0.676656ms)
+✔ Fold rail and start screen reach all actions at short heights (0.245581ms)
+✔ start screen adapts to large fonts, rotated compact screens and the unfolded Fold (1.893227ms)
+✔ recreated activity preserves chat selection and draft without persistent More selection (0.4073ms)
+✔ design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics (0.564711ms)
+✔ unfold reflows from actual laid out root window width, not stale screenWidthDp (1.246875ms)
+✔ reflow preserves the active agent, user draft, conversation views and dashboard telemetry (1.035244ms)
+✔ Fold rail and phone navigation are mutually exclusive after a reflow (0.881297ms)
+✔ keyboard-only height change does not recreate the Fold dashboard (0.809873ms)
+✔ phone root fills the viewport, with an explicitly bottom-anchored navigation rail (1.363447ms)
+✔ home dashboard remains in a scrolling viewport, not hidden behind the navigation (0.566734ms)
+✔ keyboard hides phone navigation and frees the same reserved space (0.224821ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110.755621

@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: signed-release claims remain explicitly unverified after successful unsigned QA
+ok 1 - signed-release claims remain explicitly unverified after successful unsigned QA
+  ---
+  duration_ms: 943.278118
+  type: 'test'
+  ...
+# Subtest: wrong commit, version or release-claim metadata cannot pass
+ok 2 - wrong commit, version or release-claim metadata cannot pass
+  ---
+  duration_ms: 41.518264
+  type: 'test'
+  ...
+# Subtest: missing test transcript and failed JUnit block the architectural receipt
+ok 3 - missing test transcript and failed JUnit block the architectural receipt
+  ---
+  duration_ms: 139.063813
+  type: 'test'
+  ...
+# Subtest: a failed Gradle transcript never becomes a proof
+ok 4 - a failed Gradle transcript never becomes a proof
+  ---
+  duration_ms: 3.708161
+  type: 'test'
+  ...
+# Subtest: rejects skipped required JUnit suite and spoofed test metadata
+ok 5 - rejects skipped required JUnit suite and spoofed test metadata
+  ---
+  duration_ms: 112.549012
+  type: 'test'
+  ...
+# Subtest: rejects fullname and forged error attributes
+ok 6 - rejects fullname and forged error attributes
+  ---
+  duration_ms: 345.539953
+  type: 'test'
+  ...
+# Subtest: rejects red or skipped Node TAP even with present reports
+ok 7 - rejects red or skipped Node TAP even with present reports
+  ---
+  duration_ms: 14.981636
+  type: 'test'
+  ...
+# Subtest: actual backend QA command emits machine-readable TAP on modern Node
+ok 8 - actual backend QA command emits machine-readable TAP on modern Node
+  ---
+  duration_ms: 320.216191
+  type: 'test'
+  ...
+# Subtest: actual APK identity must match source receipt instead of trusting STATUS metadata
+ok 9 - actual APK identity must match source receipt instead of trusting STATUS metadata
+  ---
+  duration_ms: 24.451085
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2255.50499

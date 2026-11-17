@@ -1,0 +1,69 @@
+{
+  "source_sha256": "e0afbdd199f619e0e8ee4ed791c8f930d34dd7769c3f0a9b154ccbfbb80749de",
+  "source": "docs/design-screenshots/jarvis-master-20261104.jpg",
+  "authorization": "Owner-supplied image; explicit extraction instruction in Master Directive IV",
+  "contains_full_dashboard": false,
+  "contains_runtime_status": false,
+  "assets": [
+    {
+      "asset": "jarvis-reference/device-ai-mark.png",
+      "source_box": [
+        189,
+        8,
+        267,
+        83
+      ],
+      "kind": "brand",
+      "dimensions": [
+        78,
+        75
+      ],
+      "sha256": "5e663f030e25c1026178d1b1191f34657f478f7bf92f2eb2f5292c236b4d7274"
+    },
+    {
+      "asset": "jarvis-reference/rail-energy.png",
+      "source_box": [
+        18,
+        737,
+        239,
+        891
+      ],
+      "kind": "rail",
+      "dimensions": [
+        221,
+        154
+      ],
+      "sha256": "18a610c4b9a24dcfc43577f09f06e99dc9205fc20000af9420969410fc6c0ea6"
+    },
+    {
+      "asset": "jarvis-reference/tile-cyan-energy.png",
+      "source_box": [
+        258,
+        504,
+        508,
+        591
+      ],
+      "kind": "tile",
+      "dimensions": [
+        250,
+        87
+      ],
+      "sha256": "c1cb975f73e899457c5897faf5e247a06d1007ed6071897c55beedb77f9b40b4"
+    },
+    {
+      "asset": "jarvis-reference/tile-violet-energy.png",
+      "source_box": [
+        520,
+        504,
+        758,
+        591
+      ],
+      "kind": "tile",
+      "dimensions": [
+        238,
+        87
+      ],
+      "sha256": "7bd893567fa30e410d58fa90205c7504f4f73f7e126fdfdec4d50d3a78d6aca6"
+    }
+  ]
+}

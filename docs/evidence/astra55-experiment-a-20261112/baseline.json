@@ -1,0 +1,15 @@
+{
+  "source_commit": "5f87bdc610944b93d3173a83c5beeea315abeb66",
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "3ad786ce3b1bdce96d80fb4b32b37f7646bb04ff43cef2b0fb3549db08188731",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "5910fda1223e42f54c97973a05ff619fd58ad49b72ecddaa853e8a6f5b451d86",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "13723d111bc2248aa8e7ffa677e00cffb28eb10cd6e52948da828ef177988e88",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "89ac810d7795f14733424b0f7d908d8edd83f08bdb26033e338f14bab104d239"
+  },
+  "initially_requested_commit": "140c59ee535b369e939bb9f8d14877abdb15ee86"
+}

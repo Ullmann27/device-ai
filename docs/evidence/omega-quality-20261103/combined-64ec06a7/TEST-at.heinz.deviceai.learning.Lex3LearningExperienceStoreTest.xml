@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-11-03T18:20:03" hostname="5268aff5350a" time="4.349">
+  <properties/>
+  <testcase name="invalidLegacyPrimaryCannotMigrateOrOverwriteBackup" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.016"/>
+  <testcase name="oversizedPrimaryIsRejectedBeforeWholeFileAllocation" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.0"/>
+  <testcase name="seededHoldoutInterleavesRestartDuplicateStatusAndReplay" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.796"/>
+  <testcase name="independentProcessesCannotLoseConcurrentAppendsOrRevocation" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.645"/>
+  <testcase name="symlinksForSegmentDirectoryFilesAndLockAreRejected" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.019"/>
+  <testcase name="migrationDoesNotResurrectRevokedRecordWhenOldInputIsReappended" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.03"/>
+  <testcase name="interruptedLaterWriteCannotUndoCommittedRevocation" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.051"/>
+  <testcase name="missingOrCorruptCommittedSegmentsNeverFallBackToLegacy" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.049"/>
+  <testcase name="hardCapacityRefusesOverflowWithoutChangingAnyCommittedRecord" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.279"/>
+  <testcase name="cachedFingerprintStillDetectsSameLengthSegmentTampering" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.014"/>
+  <testcase name="unknownManifestVersionWithValidChecksumIsRejected" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.009"/>
+  <testcase name="protected257thRecordSurvivesRestartWithoutLosingLegacyBytes" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.032"/>
+  <testcase name="missingOrDamagedManifestCannotReopenOriginalSnapshot" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.017"/>
+  <testcase name="rootDirectorySymlinkIsRejected" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.001"/>
+  <testcase name="restartAfterInterruptedMigrationKeepsOriginalThenSafelyRetries" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.042"/>
+  <testcase name="terminatedWriterBeforeManifestCommitLeavesOldCompleteState" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.284"/>
+  <testcase name="largeUnicodeRecordsMigrateBeforeLegacyByteLimitWithoutTruncation" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.066"/>
+  <testcase name="thousandDaysAtFourRecordsPerDayRetainEveryRecordAndRevocation" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="1.321"/>
+  <testcase name="uncertainFailureAfterCommitLeavesCompleteNewStateAndIdempotentRetry" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.034"/>
+  <testcase name="byteAndBatchLimitsRefuseBeforeChangingCommittedState" classname="at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest" time="0.64"/>
+  <system-out><![CDATA[LEX3_METRIC synthetic_days=1000 records=4000 append_ms=21.069756 read_p50_ms=69.385657 read_max_ms=91.23311 disk_bytes=829186 replay_limit=128
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

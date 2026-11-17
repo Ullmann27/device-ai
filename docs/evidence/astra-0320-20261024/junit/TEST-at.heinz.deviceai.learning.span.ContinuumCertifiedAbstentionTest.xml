@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:25" hostname="5c9e18abbd30" time="2.622">
+  <properties/>
+  <testcase name="certifiedThresholdCannotBeReusedAfterWeightsChangeOrOnOtherModel" classname="at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest" time="0.042"/>
+  <testcase name="guaranteeHoldsInSimulation" classname="at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest" time="0.715"/>
+  <testcase name="tooFewCalibrationQuestionsMeansAlwaysAbstain" classname="at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest" time="0.0"/>
+  <testcase name="binomialCdfIsExact" classname="at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest" time="1.864"/>
+  <testcase name="fixedSequenceStopsAtTheFirstFailureAndNeverSkipsAhead" classname="at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

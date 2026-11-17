@@ -1,0 +1,25 @@
+JUnit version 4.13.2
+...E..E
+Time: 0.809
+There were 2 failures:
+1) loadSourceHashesCompleteModelExactlyOnce(at.heinz.deviceai.localmodel.LocalModelLoadSourceTest)
+java.lang.AssertionError: Complete model byte scans expected:<[262144]> but was:<[262144, 262144]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.localmodel.LocalModelLoadSourceTest.loadSourceHashesCompleteModelExactlyOnce$lambda$0(LocalModelLoadSourceTest.kt:28)
+	at at.heinz.deviceai.localmodel.LocalModelLoadSourceTest.fixture(LocalModelLoadSourceTest.kt:69)
+	at at.heinz.deviceai.localmodel.LocalModelLoadSourceTest.loadSourceHashesCompleteModelExactlyOnce(LocalModelLoadSourceTest.kt:22)
+2) laterLoadsStillVerifyEveryModelByte(at.heinz.deviceai.localmodel.LocalModelLoadSourceTest)
+java.lang.AssertionError: expected:<[262144, 262144]> but was:<[262144, 262144, 262144, 262144]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.localmodel.LocalModelLoadSourceTest.laterLoadsStillVerifyEveryModelByte$lambda$0(LocalModelLoadSourceTest.kt:36)
+	at at.heinz.deviceai.localmodel.LocalModelLoadSourceTest.fixture(LocalModelLoadSourceTest.kt:69)
+	at at.heinz.deviceai.localmodel.LocalModelLoadSourceTest.laterLoadsStillVerifyEveryModelByte(LocalModelLoadSourceTest.kt:32)
+
+FAILURES!!!
+Tests run: 5,  Failures: 2
+

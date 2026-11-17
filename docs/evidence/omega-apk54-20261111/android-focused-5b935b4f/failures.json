@@ -1,0 +1,121 @@
+[
+  {
+    "schema": 1,
+    "runId": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppActionWorkSceneUiTest",
+    "name": "stopAndIndependentNavigationInvalidateAppNameQuestions",
+    "result": "FAILURE",
+    "start": 1794417611913,
+    "end": 1794417616204,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Unrelated turn invalidates the question expected:<0> but was:<1>",
+        "stackTrace": "java.lang.AssertionError: Unrelated turn invalidates the question expected:<0> but was:<1>\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.failNotEquals(Assert.java:835)\n\tat org.junit.Assert.assertEquals(Assert.java:647)\n\tat at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.stopAndIndependentNavigationInvalidateAppNameQuestions$lambda$0(OwnerAppActionWorkSceneUiTest.kt:210)\n\tat at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.withActivity(OwnerAppActionWorkSceneUiTest.kt:126)\n\tat at.heinz.deviceai.OwnerAppActionWorkSceneUiTest.stopAndIndependentNavigationInvalidateAppNameQuestions(OwnerAppActionWorkSceneUiTest.kt:201)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "roleHeadersCannotReachReadyInferenceOrTheCorrectionShortcut",
+    "result": "FAILURE",
+    "start": 1794417732389,
+    "end": 1794417732751,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "The root receives jarvis-bottom:chat",
+        "stackTrace": "java.lang.AssertionError: The root receives jarvis-bottom:chat\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.assertTrue(Assert.java:42)\n\tat at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:156)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.submit(OwnerAppPlanningContextUiTest.kt:121)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.roleHeadersCannotReachReadyInferenceOrTheCorrectionShortcut$lambda$0(OwnerAppPlanningContextUiTest.kt:172)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.roleHeadersCannotReachReadyInferenceOrTheCorrectionShortcut(OwnerAppPlanningContextUiTest.kt:163)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+    "name": "pluralStatementsReachConversationWithoutAppLookup",
+    "result": "FAILURE",
+    "start": 1794417733598,
+    "end": 1794417744028,
+    "exceptions": [
+      {
+        "type": "java.lang.AssertionError",
+        "message": "Ordinary statement reaches inference",
+        "stackTrace": "java.lang.AssertionError: Ordinary statement reaches inference\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.assertTrue(Assert.java:42)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.until(OwnerAppPlanningContextUiTest.kt:97)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.pluralStatementsReachConversationWithoutAppLookup$lambda$0(OwnerAppPlanningContextUiTest.kt:135)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)\n\tat at.heinz.deviceai.OwnerAppPlanningContextUiTest.pluralStatementsReachConversationWithoutAppLookup(OwnerAppPlanningContextUiTest.kt:131)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "name": "ordinaryRelatedTaskReachesModelWithBoundedCurrentState",
+    "result": "FAILURE",
+    "start": 1794417744052,
+    "end": 1794417754895,
+    "exceptions": [
+      {
+        "type": "java.util.NoSuchElementException",
+        "message": "List contains no element matching the predicate.",
+        "stackTrace": "java.util.NoSuchElementException: List contains no element matching the predicate.\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.visibleReply(OwnerObjectStateConversationUiTest.kt:273)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.modelTurn(OwnerObjectStateConversationUiTest.kt:141)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.ordinaryRelatedTaskReachesModelWithBoundedCurrentState$lambda$0(OwnerObjectStateConversationUiTest.kt:204)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity(OwnerObjectStateConversationUiTest.kt:114)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity$default(OwnerObjectStateConversationUiTest.kt:104)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.ordinaryRelatedTaskReachesModelWithBoundedCurrentState(OwnerObjectStateConversationUiTest.kt:188)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "name": "actualNewSessionClearsThePreviousOwnerObjectState",
+    "result": "FAILURE",
+    "start": 1794417754895,
+    "end": 1794417755510,
+    "exceptions": [
+      {
+        "type": "java.util.NoSuchElementException",
+        "message": "List contains no element matching the predicate.",
+        "stackTrace": "java.util.NoSuchElementException: List contains no element matching the predicate.\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.visibleReply(OwnerObjectStateConversationUiTest.kt:273)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.modelTurn(OwnerObjectStateConversationUiTest.kt:141)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.actualNewSessionClearsThePreviousOwnerObjectState$lambda$0(OwnerObjectStateConversationUiTest.kt:245)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity(OwnerObjectStateConversationUiTest.kt:114)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity$default(OwnerObjectStateConversationUiTest.kt:104)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.actualNewSessionClearsThePreviousOwnerObjectState(OwnerObjectStateConversationUiTest.kt:244)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "name": "fiveStepCorrectionUsesActualOfflineEntryAndOwnerPerspective",
+    "result": "FAILURE",
+    "start": 1794417755510,
+    "end": 1794417756031,
+    "exceptions": [
+      {
+        "type": "java.util.NoSuchElementException",
+        "message": "List contains no element matching the predicate.",
+        "stackTrace": "java.util.NoSuchElementException: List contains no element matching the predicate.\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.visibleReply(OwnerObjectStateConversationUiTest.kt:273)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.modelTurn(OwnerObjectStateConversationUiTest.kt:141)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.fiveStepCorrectionUsesActualOfflineEntryAndOwnerPerspective$lambda$0(OwnerObjectStateConversationUiTest.kt:159)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity(OwnerObjectStateConversationUiTest.kt:114)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity$default(OwnerObjectStateConversationUiTest.kt:104)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.fiveStepCorrectionUsesActualOfflineEntryAndOwnerPerspective(OwnerObjectStateConversationUiTest.kt:155)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "runId": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+    "type": "test_result",
+    "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+    "name": "historicalChangeRequestsReachModelWithRetainedHistory",
+    "result": "FAILURE",
+    "start": 1794417756031,
+    "end": 1794417766697,
+    "exceptions": [
+      {
+        "type": "java.util.NoSuchElementException",
+        "message": "List contains no element matching the predicate.",
+        "stackTrace": "java.util.NoSuchElementException: List contains no element matching the predicate.\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.visibleReply(OwnerObjectStateConversationUiTest.kt:273)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.modelTurn(OwnerObjectStateConversationUiTest.kt:141)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.historicalChangeRequestsReachModelWithRetainedHistory$lambda$0(OwnerObjectStateConversationUiTest.kt:234)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity(OwnerObjectStateConversationUiTest.kt:114)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.withActivity$default(OwnerObjectStateConversationUiTest.kt:104)\n\tat at.heinz.deviceai.OwnerObjectStateConversationUiTest.historicalChangeRequestsReachModelWithRetainedHistory(OwnerObjectStateConversationUiTest.kt:218)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)\n\tat java.base/java.lang.Thread.run(Thread.java:1583)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ]
+  }
+]

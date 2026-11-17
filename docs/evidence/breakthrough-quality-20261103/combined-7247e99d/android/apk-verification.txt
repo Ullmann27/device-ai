@@ -1,0 +1,32 @@
+{
+  "apk": "/workspace/continuum-breakthrough-quality/app/build/outputs/apk/release/app-release-unsigned.apk",
+  "bytes": 84178957,
+  "sha256": "e98e8177d069b474f43fdce82701aa2e20a178ee6118d5796f58359edd5a1b1b",
+  "expected_glb_sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "badging_exit": 0,
+  "package_line": "package: name='at.heinz.deviceai.continuumlocal' versionCode='40' versionName='0.3.39' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+  "unsigned-verify_exit": 1,
+  "zipalign-16k_exit": 0,
+  "glb_bytes": 8690400,
+  "glb_sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "glb_match": true,
+  "asset_notices": [
+    "assets/avatar3d/LICENSE.ASSETS.md",
+    "assets/avatar3d/NOTICE.json"
+  ],
+  "v1_signature_entries": [],
+  "apk_signing_block_present": false,
+  "arm64_all_elf_16k": true,
+  "unsigned_expected": true,
+  "package_expected": true
+}
+lib/arm64-v8a/libfilament-jni.so ELF16K True ZIP16K True compressed 0
+lib/arm64-v8a/libgltfio-jni.so ELF16K True ZIP16K True compressed 0
+lib/arm64-v8a/liblitertlm_jni.so ELF16K True ZIP16K True compressed 0
+lib/armeabi-v7a/libfilament-jni.so ELF16K True ZIP16K True compressed 0
+lib/armeabi-v7a/libgltfio-jni.so ELF16K True ZIP16K True compressed 0
+lib/x86/libfilament-jni.so ELF16K True ZIP16K True compressed 0
+lib/x86/libgltfio-jni.so ELF16K True ZIP16K True compressed 0
+lib/x86_64/libfilament-jni.so ELF16K True ZIP16K True compressed 0
+lib/x86_64/libgltfio-jni.so ELF16K True ZIP16K True compressed 0
+lib/x86_64/liblitertlm_jni.so ELF16K True ZIP16K True compressed 0

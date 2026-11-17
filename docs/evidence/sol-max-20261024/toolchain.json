@@ -1,0 +1,22 @@
+{
+  "platform": "linux",
+  "arch": "x64",
+  "node": "v24.19.0",
+  "java": "Temurin JDK 17.0.21+9",
+  "gradle": "8.11.1",
+  "kotlin": "2.4.0",
+  "agp": "8.10.0",
+  "androidPlatform": 36,
+  "buildTools": [
+    "35.0.0",
+    "36.0.0"
+  ],
+  "archiveSha256": {
+    "android-commandline.zip": "7ec965280a073311c339e571cd5de778b9975026cfcbe79f2b1cdcb1e15317ee",
+    "gradle.zip": "f397b287023acdba1e9f6fc5ea72d22dd63669d59ed4a289a29b1a76eee151c6",
+    "kotlin.zip": "ba1b9e6eb6ddc3275079224f2e9ea4a2b02eef7d59ce2d38404f04b22613c20a",
+    "jdk17.tar.gz": "8b9b611d917e3dfd8419d3566b5949226f69b052fed7e109c1368add1dfe8711"
+  },
+  "ownerSigningKeyAccessed": false,
+  "compileStubsUsed": false
+}

@@ -1,0 +1,124 @@
+/**
+ * Independent, bounded second-worktree execution proof for the CEFR learner.
+ * This function executes code from a checked-out repository; a Git worktree is
+ * NOT an OS security sandbox. Run only under the trusted local worker account.
+ * Never call on a production branch or from a model-controlled tool request.
+ */
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {createWorktree,removeWorktree,resetWorktree,boundedWorktreeFile,git,runChain,evidenceSufficient,
+ CHAINS,TEST_PROFILES} from './repair-loop.mjs';
+import {critique} from './repair-critic.mjs';
+import {applyEdits} from './repair-strategies.mjs';
+import {validateVerifiedReport} from './repair-publish.mjs';
+
+const sha256=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+const SHA=/^[0-9a-f]{40}$/;
+
+export function verifyIndependentCefrPatch({root,report,patchText,deadline}={}){
+ if(typeof root!=='string'||!path.isAbsolute(root)||!SHA.test(report?.base??'')||
+    typeof patchText!=='string'||patchText.length<20||patchText.length>262144||
+    !Number.isSafeInteger(deadline)||deadline<=Date.now()||
+    deadline>Date.now()+30*60*1000)
+  throw Error('INVALID_CEFR_EXECUTION_REQUEST');
+ const repository=fs.realpathSync(root);
+ const current=git(repository,['rev-parse','HEAD']).stdout.trim();
+ if(current!==report.base)throw Error('CEFR_BASE_HEAD_MISMATCH');
+ if(git(repository,['status','--porcelain','--untracked-files=all']).stdout.trim())
+  throw Error('CEFR_DIRTY_WORKTREE');
+ validateVerifiedReport(report,patchText);
+ const profiles=CHAINS[report.chain];
+ if(!profiles?.length)throw Error('UNSUPPORTED_CEFR_TEST_CHAIN');
+ if(!Array.isArray(report.baseline?.results)||
+    !report.baseline.results.some(x=>x?.testProfile&&x?.tests?.executed>0))
+  throw Error('MISSING_CEFR_BASELINE_EVIDENCE');
+ const touched=[...new Set(report.verified.files)];
+ if(touched.length===0||touched.length>3||touched.some(x=>typeof x!=='string'))
+  throw Error('INVALID_CEFR_PATCH_FILES');
+ const expected=new Set(touched);
+ let worktree=null;
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-cefr-proof-'));
+ try{
+  // Reproduce the failure in the new independent worktree before testing a fix.
+  // Never compare against fabricated or stale counters in a self-reported baseline.
+  worktree=createWorktree(repository,report.base);
+  const baselineOut=path.join(temp,'baseline');
+  fs.mkdirSync(baselineOut,{mode:0o700});
+  const reproduced=runChain(report.chain,worktree,baselineOut,{deadline});
+  if(reproduced.passed||report.baseline.passed!==false)
+   throw Error('CEFR_BASELINE_FAILURE_NOT_REPRODUCED');
+  // Failed candidates can teach CRE1 only if they fail real tests here too.
+  // Critic-rejected, syntax-only and self-reported failures carry no label.
+  const positives=(report.attempts??[]).find(a=>
+   a.candidate===report.verified.candidate&&a.outcome==='VERIFIED');
+  const negatives=(report.attempts??[]).filter(a=>
+   a.diagnostic===positives?.diagnostic&&a.outcome==='FAILED_TESTS'&&
+   Array.isArray(a.edits)&&a.edits.length>=1&&a.edits.length<=3).slice(0,3);
+  const verifiedNegatives=[];
+  for(const [i,a] of negatives.entries()){
+   if(Date.now()>=deadline)throw Error('CEFR_NEGATIVE_REPLAY_DEADLINE_EXHAUSTED');
+   if(!critique(a).approved)continue;
+   resetWorktree(worktree,report.base);
+   try{
+    const files=[...applyEdits(relative=>fs.readFileSync(
+     boundedWorktreeFile(worktree,relative),'utf8'),a.edits)];
+    const resolved=files.map(([relative,content])=>
+     [boundedWorktreeFile(worktree,relative),content]);
+    for(const [file,content] of resolved)fs.writeFileSync(file,content);
+    const negOut=path.join(temp,'negative-'+i);
+    fs.mkdirSync(negOut,{mode:0o700});
+    const checkedNegative=runChain(report.chain,worktree,negOut,{deadline});
+    const realFailed=checkedNegative.results.some(r=>r.testProfile&&
+     Number.isSafeInteger(r.tests.executed)&&r.tests.executed>0&&r.tests.failed>0);
+    if(!checkedNegative.passed&&realFailed&&
+       typeof a.candidate==='string'&&!verifiedNegatives.includes(a.candidate))
+     verifiedNegatives.push(a.candidate);
+   }catch(error){
+    if(Date.now()>=deadline)throw error;
+    // Inapplicable candidates are not verified negative training labels.
+   }
+  }
+  resetWorktree(worktree,report.base);
+  const patchFile=path.join(temp,'candidate.patch');
+  fs.writeFileSync(patchFile,patchText,{flag:'wx',mode:0o600});
+  if(git(worktree,['apply','--check','--binary',patchFile],{allowFailure:true}).status!==0)
+   throw Error('CEFR_PATCH_APPLY_CHECK_FAILED');
+  git(worktree,['apply','--binary',patchFile]);
+  // A patch cannot silently introduce, remove, or change unreviewed files.
+  const status=git(worktree,['status','--porcelain','-z','--untracked-files=all']).stdout;
+  const entries=status.split('\0').filter(Boolean);
+  if(entries.length!==expected.size||
+     entries.some(e=>!e.startsWith(' M ')||!expected.has(e.slice(3))))
+   throw Error('CEFR_PATCH_FILE_SET_CHANGED');
+  const out=path.join(temp,'tests');
+  fs.mkdirSync(out,{mode:0o700});
+  const checked=runChain(report.chain,worktree,out,{deadline});
+  const evidence=evidenceSufficient(reproduced.results,checked.results);
+  const resultProfiles=checked.results.map(r=>({
+   profile:r.profile,passed:r.passed,failed:r.tests.failed,
+   skipped:r.tests.skipped,executed:r.tests.executed
+  }));
+  const actual=profiles.every((name,i)=>resultProfiles[i]?.profile===name&&
+   resultProfiles[i].passed&&resultProfiles[i].failed===0&&
+   (!TEST_PROFILES.includes(name)||resultProfiles[i].executed>0));
+  const passed=Boolean(checked.passed&&evidence.sufficient&&actual&&
+   resultProfiles.length===profiles.length);
+  const proof={schemaVersion:1,passed,base:report.base,chain:report.chain,
+   patchSha256:sha256(patchText),profiles:resultProfiles,
+   evidenceSufficient:evidence.sufficient,
+   verifiedNegatives,
+   reason:passed?null:'INDEPENDENT_CHECK_OR_EVIDENCE_FAILED'};
+  // Return fresh primitive evidence from actual runChain results, NOT fields
+  // copied from the self-reported successful repair attempt.
+  return proof;
+ }finally{
+  let cleanupError=null;
+  if(worktree)try{removeWorktree(repository,worktree);}
+    catch(error){cleanupError=error;}
+  try{fs.rmSync(temp,{recursive:true,force:true});}
+  catch(error){cleanupError??=error;}
+  if(cleanupError)throw cleanupError;
+ }
+}

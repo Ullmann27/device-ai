@@ -1,0 +1,24 @@
+JUnit version 4.13.2
+........E.E
+Time: 0.421
+There were 2 failures:
+1) unnamedRetractionMustNotBeFilteredOutBeforeVerification(at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest)
+java.lang.AssertionError: Nein, sie ist nicht dort. expected null, but was:<Answer(text=Du hast in dieser Sitzung gesagt: Berg
+Quelle: deine eigene frühere Nachricht (session-turn-1), keine bestätigte Erinnerung und kein geprüfter Weltfakt.
+Belegsnapshot SHA-256: 93bd0b6a524158cc866534971b2f2034573c9ba8de1a81ac764e9a446d592fbf, sourceHash=93bd0b6a524158cc866534971b2f2034573c9ba8de1a81ac764e9a446d592fbf, spanStart=12, spanEnd=16)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.unnamedRetractionMustNotBeFilteredOutBeforeVerification(SessionEvidenceIntegrityTest.kt:69)
+2) directHelperCannotIgnoreOversizedCorrection(at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest)
+java.lang.AssertionError: expected null, but was:<Answer(text=Du hast in dieser Sitzung gesagt: Berg
+Quelle: deine eigene frühere Nachricht (session-turn-1), keine bestätigte Erinnerung und kein geprüfter Weltfakt.
+Belegsnapshot SHA-256: 93bd0b6a524158cc866534971b2f2034573c9ba8de1a81ac764e9a446d592fbf, sourceHash=93bd0b6a524158cc866534971b2f2034573c9ba8de1a81ac764e9a446d592fbf, spanStart=12, spanEnd=16)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.directHelperCannotIgnoreOversizedCorrection(SessionEvidenceIntegrityTest.kt:74)
+
+FAILURES!!!
+Tests run: 9,  Failures: 2

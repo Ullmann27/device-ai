@@ -1,0 +1,6 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        executable = '/usr/bin/java'
+        doFirst { logger.lifecycle('OMEGA_TEST_EXECUTABLE=' + executable) }
+    }
+}

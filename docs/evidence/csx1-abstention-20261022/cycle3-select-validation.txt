@@ -1,0 +1,186 @@
+TRAIN binding curriculum=false trainSha=5743baa51a2f2702fb46abcbfb2b052a3c77cab951452642ca57353dc2380ddd
+DATASET train=246 validation=170 (unseen 36) validationSha=73c1c7ad3cdf67cd3ac66f0ff4a5c0a04ce4396b0dfd4a24eeacabf34b44a600
+== V2 legacy features (PR61) seed=1 steps=7380 loss 1.4605->0.1618 checkpoint=935128d2d2c21d29 argmax (VALIDATION)
+  ALL      answerable 64/79 correct, wrong span 6, false abstain 9 | unanswerable 85/91 abstained, unsupported answers 6 | traps 10/135
+  SEEN     answerable 59/59 correct, wrong span 0, false abstain 0 | unanswerable 70/75 abstained, unsupported answers 5 | traps 3/107
+  UNSEEN   answerable 5/20 correct, wrong span 6, false abstain 9 | unanswerable 15/16 abstained, unsupported answers 1 | traps 7/28
+  ANSWER               answerable 28/35 correct, wrong span 0, false abstain 7 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 4/4 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  TEMPORAL             answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 32/35 abstained, unsupported answers 3 | traps 3/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 18/21 abstained, unsupported answers 3 | traps 1/21
+== V2 legacy features (PR61) seed=1 steps=7380 loss 1.4605->0.1618 checkpoint=935128d2d2c21d29 threshold=0.55 from VALIDATION (VALIDATION)
+  ALL      answerable 60/79 correct, wrong span 2, false abstain 17 | unanswerable 88/91 abstained, unsupported answers 3 | traps 4/135
+  SEEN     answerable 56/59 correct, wrong span 0, false abstain 3 | unanswerable 72/75 abstained, unsupported answers 3 | traps 2/107
+  UNSEEN   answerable 4/20 correct, wrong span 2, false abstain 14 | unanswerable 16/16 abstained, unsupported answers 0 | traps 2/28
+  ANSWER               answerable 28/35 correct, wrong span 0, false abstain 7 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 12/14 correct, wrong span 0, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 2/6 correct, wrong span 1, false abstain 3 | unanswerable 0/0 abstained, unsupported answers 0 | traps 1/6
+  TEMPORAL             answerable 1/6 correct, wrong span 1, false abstain 4 | unanswerable 0/0 abstained, unsupported answers 0 | traps 1/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 34/35 abstained, unsupported answers 1 | traps 1/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 19/21 abstained, unsupported answers 2 | traps 1/21
+    ERR ANSWER location: 'Baden ist der Standort von Einheit JL32.' | 'Wo ist JL32 stationiert?' expected=Baden got=ABSTAIN
+    ERR ANSWER location: 'Standort von Einheit MM26 ist Amstetten.' | 'Wo steht MM26?' expected=Amstetten got=ABSTAIN
+    ERR ANSWER tool: 'Eine Spachtel geh?rt zur Ausstattung von Roboter KJ60.' | 'Welches Werkzeug setzt KJ60 ein?' expected=Spachtel got=ABSTAIN
+    ERR ANSWER module: 'In Ger?t KM17 steckt das Modul MJ-418.' | 'Welches Modul besitzt KM17?' expected=MJ-418 got=ABSTAIN
+    ERR ANSWER color: 'Die Farbe von Station JK85 ist grau.' | 'Wie ist JK85 gef?rbt?' expected=grau got=ABSTAIN
+    ERR ANSWER port: '?ber Port 5153 erreicht man Dienst JK61.' | '?ber welchen Port erreicht man JK61?' expected=5153 got=ABSTAIN
+    ERR ANSWER library: 'Paket MK32 h?ngt von der Bibliothek kanquao ab.' | 'Von welcher Bibliothek h?ngt MK32 ab?' expected=kanquao got=ABSTAIN
+    ERR OTHER_RELATION developer: 'Entwickelt wurde Modell LK42 von Katrin.' | 'Welches Modul verwendet LK42?' expected=ABSTAIN got=Katrin
+    ERR SAME_CLAUSE_ENTITIES tool: 'Roboter LJ43 nutzt eine Spachtel, Roboter LJ97 nutzt eine L?tkolben.' | 'Mit welchem Werkzeug arbeitet LJ43?' expected=Spachtel got=L?tkolben
+    ERR SAME_CLAUSE_ENTITIES tool: 'Roboter MK10 nutzt eine Raspel, Roboter JL35 nutzt eine Hobel.' | 'Mit welchem Werkzeug arbeitet MK10?' expected=Raspel got=Hobel
+    ERR SAME_CLAUSE_ENTITIES tool: 'Roboter MK91 nutzt eine Raspel, Roboter KM30 nutzt eine Ahle.' | 'Welches Werkzeug nutzt KM30?' expected=Ahle got=ABSTAIN
+    ERR SAME_CLAUSE_ENTITIES tool: 'Roboter LM68 nutzt eine Pinzette, Roboter LM37 nutzt eine Ahle.' | 'Mit welchem Werkzeug arbeitet LM68?' expected=Pinzette got=Ahle
+    ERR TEMPORAL tool: 'Heute nutzt Roboter LL60 eine Spachtel, fr?her nutzte Roboter LL60 eine L?tkolben.' | 'Welches Werkzeug nutzt LL60 heute?' expected=Spachtel got=L?tkolben
+    ERR TEMPORAL tool: 'Heute nutzt Roboter MM27 eine Raspel, fr?her nutzte Roboter MM27 eine Hobel.' | 'Welches Werkzeug nutzt MM27 heute?' expected=Raspel got=Hobel
+    ERR TEMPORAL tool: 'Fr?her nutzte Roboter JL78 eine Raspel, heute nutzt Roboter JL78 eine Ahle.' | 'Welches Werkzeug nutzt JL78 heute?' expected=Ahle got=ABSTAIN
+    ERR TEMPORAL tool: 'Heute nutzt Roboter MM52 eine Pinzette, fr?her nutzte Roboter MM52 eine Ahle.' | 'Welches Werkzeug nutzt MM52 heute?' expected=Pinzette got=Ahle
+== V2 legacy features (PR61) seed=2 steps=7380 loss 1.4605->0.1626 checkpoint=1c0c7e338fafd2b6 argmax (VALIDATION)
+  ALL      answerable 64/79 correct, wrong span 6, false abstain 9 | unanswerable 85/91 abstained, unsupported answers 6 | traps 10/135
+  SEEN     answerable 59/59 correct, wrong span 0, false abstain 0 | unanswerable 70/75 abstained, unsupported answers 5 | traps 3/107
+  UNSEEN   answerable 5/20 correct, wrong span 6, false abstain 9 | unanswerable 15/16 abstained, unsupported answers 1 | traps 7/28
+  ANSWER               answerable 28/35 correct, wrong span 0, false abstain 7 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 4/4 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  TEMPORAL             answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 32/35 abstained, unsupported answers 3 | traps 3/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 18/21 abstained, unsupported answers 3 | traps 1/21
+== V2 legacy features (PR61) seed=2 steps=7380 loss 1.4605->0.1626 checkpoint=1c0c7e338fafd2b6 threshold=0.55 from VALIDATION (VALIDATION)
+  ALL      answerable 60/79 correct, wrong span 2, false abstain 17 | unanswerable 88/91 abstained, unsupported answers 3 | traps 4/135
+  SEEN     answerable 56/59 correct, wrong span 0, false abstain 3 | unanswerable 72/75 abstained, unsupported answers 3 | traps 2/107
+  UNSEEN   answerable 4/20 correct, wrong span 2, false abstain 14 | unanswerable 16/16 abstained, unsupported answers 0 | traps 2/28
+  ANSWER               answerable 28/35 correct, wrong span 0, false abstain 7 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 12/14 correct, wrong span 0, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 2/6 correct, wrong span 1, false abstain 3 | unanswerable 0/0 abstained, unsupported answers 0 | traps 1/6
+  TEMPORAL             answerable 1/6 correct, wrong span 1, false abstain 4 | unanswerable 0/0 abstained, unsupported answers 0 | traps 1/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 34/35 abstained, unsupported answers 1 | traps 1/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 19/21 abstained, unsupported answers 2 | traps 1/21
+== V2 legacy features (PR61) seed=3 steps=7380 loss 1.4605->0.1619 checkpoint=49d68a56de1af631 argmax (VALIDATION)
+  ALL      answerable 64/79 correct, wrong span 6, false abstain 9 | unanswerable 85/91 abstained, unsupported answers 6 | traps 10/135
+  SEEN     answerable 59/59 correct, wrong span 0, false abstain 0 | unanswerable 70/75 abstained, unsupported answers 5 | traps 3/107
+  UNSEEN   answerable 5/20 correct, wrong span 6, false abstain 9 | unanswerable 15/16 abstained, unsupported answers 1 | traps 7/28
+  ANSWER               answerable 28/35 correct, wrong span 0, false abstain 7 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 4/4 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  TEMPORAL             answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 32/35 abstained, unsupported answers 3 | traps 3/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 18/21 abstained, unsupported answers 3 | traps 1/21
+== V2 legacy features (PR61) seed=3 steps=7380 loss 1.4605->0.1619 checkpoint=49d68a56de1af631 threshold=0.55 from VALIDATION (VALIDATION)
+  ALL      answerable 60/79 correct, wrong span 2, false abstain 17 | unanswerable 88/91 abstained, unsupported answers 3 | traps 4/135
+  SEEN     answerable 56/59 correct, wrong span 0, false abstain 3 | unanswerable 72/75 abstained, unsupported answers 3 | traps 2/107
+  UNSEEN   answerable 4/20 correct, wrong span 2, false abstain 14 | unanswerable 16/16 abstained, unsupported answers 0 | traps 2/28
+  ANSWER               answerable 28/35 correct, wrong span 0, false abstain 7 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 12/14 correct, wrong span 0, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 2/6 correct, wrong span 1, false abstain 3 | unanswerable 0/0 abstained, unsupported answers 0 | traps 1/6
+  TEMPORAL             answerable 1/6 correct, wrong span 1, false abstain 4 | unanswerable 0/0 abstained, unsupported answers 0 | traps 1/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 34/35 abstained, unsupported answers 1 | traps 1/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 19/21 abstained, unsupported answers 2 | traps 1/21
+== V6 entity proximity seed=1 steps=7380 loss 1.4605->0.1745 checkpoint=46ced3c72d69a38b argmax (VALIDATION)
+  ALL      answerable 66/79 correct, wrong span 3, false abstain 10 | unanswerable 85/91 abstained, unsupported answers 6 | traps 5/135
+  SEEN     answerable 58/59 correct, wrong span 0, false abstain 1 | unanswerable 69/75 abstained, unsupported answers 6 | traps 2/107
+  UNSEEN   answerable 8/20 correct, wrong span 3, false abstain 9 | unanswerable 16/16 abstained, unsupported answers 0 | traps 3/28
+  ANSWER               answerable 29/35 correct, wrong span 0, false abstain 6 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 4/6 correct, wrong span 0, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 34/35 abstained, unsupported answers 1 | traps 0/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 16/21 abstained, unsupported answers 5 | traps 2/21
+== V6 entity proximity seed=1 steps=7380 loss 1.4605->0.1745 checkpoint=46ced3c72d69a38b threshold=0.60 from VALIDATION (VALIDATION)
+  ALL      answerable 55/79 correct, wrong span 0, false abstain 24 | unanswerable 91/91 abstained, unsupported answers 0 | traps 0/135
+  SEEN     answerable 53/59 correct, wrong span 0, false abstain 6 | unanswerable 75/75 abstained, unsupported answers 0 | traps 0/107
+  UNSEEN   answerable 2/20 correct, wrong span 0, false abstain 18 | unanswerable 16/16 abstained, unsupported answers 0 | traps 0/28
+  ANSWER               answerable 27/35 correct, wrong span 0, false abstain 8 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 10/14 correct, wrong span 0, false abstain 4 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 0/6 correct, wrong span 0, false abstain 6 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 1/6 correct, wrong span 0, false abstain 5 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 21/21 abstained, unsupported answers 0 | traps 0/21
+    ERR ANSWER location: 'Standort von Einheit MM26 ist Amstetten.' | 'Wo steht MM26?' expected=Amstetten got=ABSTAIN
+    ERR ANSWER tool: 'Eine Spachtel geh?rt zur Ausstattung von Roboter KJ60.' | 'Welches Werkzeug setzt KJ60 ein?' expected=Spachtel got=ABSTAIN
+    ERR ANSWER module: 'In Ger?t KM17 steckt das Modul MJ-418.' | 'Welches Modul besitzt KM17?' expected=MJ-418 got=ABSTAIN
+    ERR ANSWER color: 'Die Farbe von Station JK85 ist grau.' | 'Wie ist JK85 gef?rbt?' expected=grau got=ABSTAIN
+    ERR ANSWER port: '?ber Port 5153 erreicht man Dienst JK61.' | '?ber welchen Port erreicht man JK61?' expected=5153 got=ABSTAIN
+    ERR ANSWER library: 'Paket MK32 h?ngt von der Bibliothek kanquao ab.' | 'Von welcher Bibliothek h?ngt MK32 ab?' expected=kanquao got=ABSTAIN
+    ERR SAME_CLAUSE_ENTITIES tool: 'Roboter MK91 nutzt eine Raspel, Roboter KM30 nutzt eine Ahle.' | 'Welches Werkzeug nutzt KM30?' expected=Ahle got=ABSTAIN
+    ERR SAME_CLAUSE_ENTITIES tool: 'Roboter LM68 nutzt eine Pinzette, Roboter LM37 nutzt eine Ahle.' | 'Mit welchem Werkzeug arbeitet LM68?' expected=Pinzette got=ABSTAIN
+    ERR TEMPORAL tool: 'Heute nutzt Roboter LL60 eine Spachtel, fr?her nutzte Roboter LL60 eine L?tkolben.' | 'Welches Werkzeug nutzt LL60 heute?' expected=Spachtel got=L?tkolben
+    ERR TEMPORAL tool: 'Heute nutzt Roboter MM27 eine Raspel, fr?her nutzte Roboter MM27 eine Hobel.' | 'Welches Werkzeug nutzt MM27 heute?' expected=Raspel got=Hobel
+    ERR TEMPORAL tool: 'Fr?her nutzte Roboter JL78 eine Raspel, heute nutzt Roboter JL78 eine Ahle.' | 'Welches Werkzeug nutzt JL78 heute?' expected=Ahle got=ABSTAIN
+    ERR TEMPORAL tool: 'Heute nutzt Roboter MM52 eine Pinzette, fr?her nutzte Roboter MM52 eine Ahle.' | 'Welches Werkzeug nutzt MM52 heute?' expected=Pinzette got=Ahle
+== V6 entity proximity seed=2 steps=7380 loss 1.4605->0.1735 checkpoint=f4787f84f561254c argmax (VALIDATION)
+  ALL      answerable 66/79 correct, wrong span 3, false abstain 10 | unanswerable 86/91 abstained, unsupported answers 5 | traps 5/135
+  SEEN     answerable 58/59 correct, wrong span 0, false abstain 1 | unanswerable 70/75 abstained, unsupported answers 5 | traps 2/107
+  UNSEEN   answerable 8/20 correct, wrong span 3, false abstain 9 | unanswerable 16/16 abstained, unsupported answers 0 | traps 3/28
+  ANSWER               answerable 29/35 correct, wrong span 0, false abstain 6 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 4/6 correct, wrong span 0, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 34/35 abstained, unsupported answers 1 | traps 0/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 17/21 abstained, unsupported answers 4 | traps 2/21
+== V6 entity proximity seed=2 steps=7380 loss 1.4605->0.1735 checkpoint=f4787f84f561254c threshold=0.50 from VALIDATION (VALIDATION)
+  ALL      answerable 61/79 correct, wrong span 1, false abstain 17 | unanswerable 89/91 abstained, unsupported answers 2 | traps 1/135
+  SEEN     answerable 56/59 correct, wrong span 0, false abstain 3 | unanswerable 73/75 abstained, unsupported answers 2 | traps 0/107
+  UNSEEN   answerable 5/20 correct, wrong span 1, false abstain 14 | unanswerable 16/16 abstained, unsupported answers 0 | traps 1/28
+  ANSWER               answerable 29/35 correct, wrong span 0, false abstain 6 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 12/14 correct, wrong span 0, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 2/6 correct, wrong span 0, false abstain 4 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 1/6 correct, wrong span 1, false abstain 4 | unanswerable 0/0 abstained, unsupported answers 0 | traps 1/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 34/35 abstained, unsupported answers 1 | traps 0/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 20/21 abstained, unsupported answers 1 | traps 0/21
+== V6 entity proximity seed=3 steps=7380 loss 1.4605->0.1723 checkpoint=d4a3be9bba77e825 argmax (VALIDATION)
+  ALL      answerable 66/79 correct, wrong span 3, false abstain 10 | unanswerable 86/91 abstained, unsupported answers 5 | traps 5/135
+  SEEN     answerable 58/59 correct, wrong span 0, false abstain 1 | unanswerable 70/75 abstained, unsupported answers 5 | traps 2/107
+  UNSEEN   answerable 8/20 correct, wrong span 3, false abstain 9 | unanswerable 16/16 abstained, unsupported answers 0 | traps 3/28
+  ANSWER               answerable 29/35 correct, wrong span 0, false abstain 6 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 4/6 correct, wrong span 0, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 2/6 correct, wrong span 3, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 3/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 34/35 abstained, unsupported answers 1 | traps 0/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 17/21 abstained, unsupported answers 4 | traps 2/21
+== V6 entity proximity seed=3 steps=7380 loss 1.4605->0.1723 checkpoint=d4a3be9bba77e825 threshold=0.60 from VALIDATION (VALIDATION)
+  ALL      answerable 54/79 correct, wrong span 0, false abstain 25 | unanswerable 91/91 abstained, unsupported answers 0 | traps 0/135
+  SEEN     answerable 53/59 correct, wrong span 0, false abstain 6 | unanswerable 75/75 abstained, unsupported answers 0 | traps 0/107
+  UNSEEN   answerable 1/20 correct, wrong span 0, false abstain 19 | unanswerable 16/16 abstained, unsupported answers 0 | traps 0/28
+  ANSWER               answerable 27/35 correct, wrong span 0, false abstain 8 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 10/14 correct, wrong span 0, false abstain 4 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  CONTRAST             answerable 3/4 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/4
+  MULTI_ENTITY         answerable 14/14 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/14
+  SAME_CLAUSE_ENTITIES answerable 0/6 correct, wrong span 0, false abstain 6 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 0/6 correct, wrong span 0, false abstain 6 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 35/35 abstained, unsupported answers 0 | traps 0/35
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 21/21 abstained, unsupported answers 0 | traps 0/21

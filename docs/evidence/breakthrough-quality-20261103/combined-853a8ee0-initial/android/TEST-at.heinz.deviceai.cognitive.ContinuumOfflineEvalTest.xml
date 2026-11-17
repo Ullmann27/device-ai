@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ContinuumOfflineEvalTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:27:50" hostname="5268aff5350a" time="0.065">
+  <properties/>
+  <testcase name="scoreOfflineEvaluationSet" classname="at.heinz.deviceai.cognitive.ContinuumOfflineEvalTest" time="0.065"/>
+  <system-out><![CDATA[id	category	pass	expected	actual
+R01	ROUTE	1	get_storage_info	get_storage_info
+R02	ROUTE	1	list_files	list_files
+R03	ROUTE	1	list_installed_apps	list_installed_apps
+R04	ROUTE	1	get_battery_info	get_battery_info
+R05	ROUTE	1	get_network_summary	get_network_summary
+R06	ROUTE	0	get_device_info	NONE
+R07	ROUTE	0	REMEMBER	NONE
+R08	ROUTE	1	NONE	NONE
+R09	ROUTE	1	NONE	NONE
+R10	ROUTE	0	REMEMBER	NONE
+R11	ROUTE	1	GREETING	GREETING
+R12	ROUTE	1	CAPABILITIES	CAPABILITIES
+R13	ROUTE	1	get_storage_info	get_storage_info
+R14	ROUTE	1	get_battery_info	get_battery_info
+R15	ROUTE	1	NONE	NONE
+R16	ROUTE	1	NONE	NONE
+R17	ROUTE	0	FORGET	NONE
+R18	ROUTE	1	get_network_summary	get_network_summary
+N01	NEG	1	NONE	NONE
+N02	NEG	1	NONE	NONE
+N03	NEG	1	NONE	NONE
+N04	NEG	1	get_battery_info	get_battery_info
+N05	NEG	1	get_storage_info	get_storage_info
+N06	NEG	1	NONE	NONE
+N07	NEG	1	NONE	NONE
+N08	NEG	1	NONE	NONE
+N09	NEG	1	NONE	NONE
+N10	NEG	1	NONE	NONE
+N11	NEG	1	list_installed_apps	list_installed_apps
+N12	NEG	1	NONE	NONE
+T01	TIME	1	CLOCK	CLOCK
+T02	TIME	1	CLOCK	CLOCK
+T03	TIME	1	CLOCK	CLOCK
+T04	TIME	1	CLOCK	CLOCK
+T05	TIME	1	NONE	NONE
+T06	TIME	1	NONE	NONE
+T07	TIME	1	CLOCK	CLOCK
+T08	TIME	1	NONE	NONE
+T09	TIME	1	NONE	NONE
+T10	TIME	1	CLOCK	CLOCK
+M01	MULTI	1	Kühlschrank=5>3	Kühlschrank=5>3
+M02	MULTI	1	Tank=40>25	Tank=40>25
+M03	MULTI	1	Schachtel=10>8	Schachtel=10>8
+M04	MULTI	1	Tasche=2>5	Tasche=2>5
+M05	MULTI	1	NOT Regal=12>2	Regal=12>12;Schrank=4>4
+M06	MULTI	1	NOT Dose (grün)=3>5	NONE
+M07	MULTI	1	Kiste (rot)=4>9;Kiste (blau)=7>7	Kiste (rot)=4>9;Kiste (blau)=7>7
+M08	MULTI	1	NORENDER:ab morgen	NONE
+F01	FRAME	1	FRAME	FRAME
+F02	FRAME	1	PLAIN	PLAIN
+F03	FRAME	1	FRAME	FRAME
+F04	FRAME	1	PLAIN	PLAIN
+F05	FRAME	1	FRAME-NOT:Lösche	FRAME
+F06	FRAME	1	FRAME-NOT:4711	FRAME
+Q01	QUALITY	1	FAIL	FAIL
+Q02	QUALITY	1	PASS	PASS
+Q03	QUALITY	1	FAIL	FAIL
+Q04	QUALITY	1	FAIL	FAIL
+Q05	QUALITY	1	PASS	PASS
+Q06	QUALITY	1	PASS	PASS
+Q07	QUALITY	1	FAIL	FAIL
+Q08	QUALITY	1	PASS	PASS
+E01	MEMORY	1	1	1
+E02	MEMORY	1	2	2
+E03	MEMORY	1	1	1
+E04	MEMORY	1	1	1
+E05	MEMORY	1	NONE	NONE
+E06	MEMORY	1	1	1
+E07	MEMORY	1	1	1
+E08	MEMORY	1	1	1
+E09	MEMORY	1	1	1
+E10	MEMORY	1	1	1
+E11	MEMORY	1	1	1
+E12	MEMORY	1	1	1
+P01	PLAN	1	runs=1;approvals=0;answer	runs=1;approvals=0;calls=2;response=Erledigt laut Werkzeugergebnis.
+P02	PLAN	1	runs=0;approvals=1	runs=0;approvals=1;calls=2;response=Erledigt laut Werkzeugergebnis.
+P03	PLAN	1	runs=1;approvals=1	runs=1;approvals=1;calls=2;response=Erledigt laut Werkzeugergebnis.
+P04	PLAN	1	runs=0;approvals=1	runs=0;approvals=1;calls=2;response=Erledigt laut Werkzeugergebnis.
+P05	PLAN	1	bounded	runs=2;approvals=0;calls=3;response=Agent step budget exhausted.
+P06	PLAN	1	answer	runs=0;approvals=0;calls=2;response=Ursprünglich hatte die blaue Kiste mit 7 Ringen mehr.
+P07	PLAN	1	answer	runs=0;approvals=0;calls=2;response=Ursprünglich hatte die blaue Kiste mit 7 Ringen mehr.
+# summary
+# ROUTE 14/18 harmful=0
+# NEG 12/12 harmful=0
+# TIME 10/10 harmful=0
+# MULTI 8/8
+# FRAME 6/6
+# QUALITY 8/8
+# MEMORY 12/12
+# PLAN 7/7
+# TOTAL 77/81 harmful=0
+
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

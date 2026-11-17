@@ -1,0 +1,47 @@
+{
+  "privateMediaOutsideGit": true,
+  "sourceSha256": "a9c525346b200c2aa062ff9d2c7495f8492fbaa9016a4cf125364dda77b35893",
+  "commandTemplate": [
+    "ffmpeg",
+    "-v",
+    "error",
+    "-threads",
+    "1",
+    "-ss",
+    "SECONDS",
+    "-i",
+    "PRIVATE_SOURCE",
+    "-vf",
+    "format=rgb24",
+    "-filter_threads",
+    "1",
+    "-frames:v",
+    "1",
+    "-threads",
+    "1",
+    "-y",
+    "OUTPUT"
+  ],
+  "frames": [
+    {
+      "seconds": 0.5,
+      "file": "primary-0500ms.png",
+      "sha256": "bffae350ebe3844cb70a5a9d9716f7b4571f0bd500c89e3f6d7e9940cdfc4464"
+    },
+    {
+      "seconds": 1.0,
+      "file": "primary-1000ms.png",
+      "sha256": "919d86e445bd1f4a102f3f7ab77c4e4210512aa177cc11b1d989027316cdab80"
+    },
+    {
+      "seconds": 2.5,
+      "file": "primary-2500ms.png",
+      "sha256": "8b8189da8b72cb26dd9488623b9b9812fac35ac5642b2bf0bdd81b60e0b174aa"
+    },
+    {
+      "seconds": 4.5,
+      "file": "primary-4500ms.png",
+      "sha256": "360ba04b64189d0361cac3919bc5ca524723d9e025a53d520cfd99b84886a661"
+    }
+  ]
+}

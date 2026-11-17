@@ -1,0 +1,42 @@
+JUnit version 4.13.2
+.E.E.E.E........E.
+Time: 0.278
+There were 5 failures:
+1) cancellationInsideObserverCannotBeClearedToStartBackend(at.heinz.deviceai.cognitive.SovereignReviewRegressionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.SovereignReviewRegressionTest.cancellationInsideObserverCannotBeClearedToStartBackend(SovereignReviewRegressionTest.kt:66)
+2) completeUngroundedContextIsNeverClippedForInternalAdvisoryPasses(at.heinz.deviceai.cognitive.SovereignReviewRegressionTest)
+java.lang.AssertionError: expected null, but was:<hint>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.SovereignReviewRegressionTest.completeUngroundedContextIsNeverClippedForInternalAdvisoryPasses(SovereignReviewRegressionTest.kt:22)
+3) observerConsumingInterruptionCannotStartBackendAfterTimeout(at.heinz.deviceai.cognitive.SovereignReviewRegressionTest)
+java.lang.AssertionError: Terminal timeout must prevent a later backend start
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.SovereignReviewRegressionTest.observerConsumingInterruptionCannotStartBackendAfterTimeout(SovereignReviewRegressionTest.kt:56)
+4) overBudgetTaskIsNotShortenedForAnAdvisory(at.heinz.deviceai.cognitive.SovereignReviewRegressionTest)
+java.lang.AssertionError: expected null, but was:<hint>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.SovereignReviewRegressionTest.overBudgetTaskIsNotShortenedForAnAdvisory(SovereignReviewRegressionTest.kt:31)
+5) secretRedactionCannotConsumeTheResearchClosingBoundary(at.heinz.deviceai.cognitive.AiContextIntegrityTest)
+java.lang.AssertionError: expected:<2> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.AiContextIntegrityTest.secretRedactionCannotConsumeTheResearchClosingBoundary(AiContextIntegrityTest.kt:94)
+
+FAILURES!!!
+Tests run: 13,  Failures: 5
+

@@ -1,0 +1,69 @@
+{
+  "source": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "sourceUnchanged": true,
+  "counts": {
+    "total": 2498,
+    "passed": 2456,
+    "failed": 5,
+    "skipped": 37,
+    "executed": 2461,
+    "evidenceComplete": true
+  },
+  "failures": [
+    {
+      "name": "idle scheduler retains the lease and STOP cancels its wait",
+      "time": "5.435341",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs",
+      "failure": "\n[Error [ERR_TEST_FAILURE]: condition timeout] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: Error: condition timeout\n      at waitFor (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs:19:108)\n      at async TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs:52:3)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n}\n\t\t",
+      "attributes": {
+        "type": "testCodeFailure",
+        "message": "condition timeout"
+      }
+    },
+    {
+      "name": "finite scheduler returns zero only when its single full cycle passed",
+      "time": "4.544390",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs",
+      "failure": "\n[Error [ERR_TEST_FAILURE]: \n{\n  \"schema\": \"continuum-local-worker-v2\",\n  \"id\": \"2026-11-11T16-27-43-231Z-30af0210-594f-451d-b690-bda34cf08e17\",\n  \"branch\": \"test/worker\",\n  \"sourceSha\": \"14f7ff3b58d63949a5581668bdb134738fda2c1e\",\n  \"sourceTree\": \"7e5a2b539ae2dd5cc7f10b3f3b2da8b894c4af36\",\n  \"inventoryHash\": \"9478fec4920996d3209304f30ba0dc15458a81d5b3616676ed0e68a0c2b019e8\",\n  \"inventoryCount\": 1,\n  \"started\": \"2026-11-11T16:27:43.232Z\",\n  \"completed\": \"2026-11-11T16:27:45.070Z\",\n  \"sourceUnchanged\": true,\n  \"leaseHeld\": true,\n  \"status\": \"FAILED\",\n  \"tests\": null,\n  \"pass\": null,\n  \"failed\": null,\n  \"cancelled\": null,\n  \"skipped\": null,\n  \"todo\": null,\n  \"exitCode\": 1,\n  \"error\": \"TIMEOUT\",\n  \"stderrTail\": \"\",\n  \"signal\": null,\n  \"stdoutHash\": \"4b5aa7c0b27f96291ce49f522d32c6d75f490c7b83b747c02125bb80057211f9\",\n  \"stderrHash\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n  \"limits\": {\n    \"timeoutMs\": 1000,\n    \"heapMb\": 256,\n    \"testConcurrency\": 2,\n    \"maxEvidenceMb\": 64,\n    \"intervalMs\": 100,\n    \"maxCycles\": 1\n  },\n  \"recoveredLease\": false,\n  \"candidatePromoted\": false,\n  \"patchApplied\": false,\n  \"weightsUpdated\": false,\n  \"ownerReviewRequired\": true\n}\n\n\n1 !== 0\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: \n  {\n    \"schema\": \"continuum-local-worker-v2\",\n    \"id\": \"2026-11-11T16-27-43-231Z-30af0210-594f-451d-b690-bda34cf08e17\",\n    \"branch\": \"test/worker\",\n    \"sourceSha\": \"14f7ff3b58d63949a5581668bdb134738fda2c1e\",\n    \"sourceTree\": \"7e5a2b539ae2dd5cc7f10b3f3b2da8b894c4af36\",\n    \"inventoryHash\": \"9478fec4920996d3209304f30ba0dc15458a81d5b3616676ed0e68a0c2b019e8\",\n    \"inventoryCount\": 1,\n    \"started\": \"2026-11-11T16:27:43.232Z\",\n    \"completed\": \"2026-11-11T16:27:45.070Z\",\n    \"sourceUnchanged\": true,\n    \"leaseHeld\": true,\n    \"status\": \"FAILED\",\n    \"tests\": null,\n    \"pass\": null,\n    \"failed\": null,\n    \"cancelled\": null,\n    \"skipped\": null,\n    \"todo\": null,\n    \"exitCode\": 1,\n    \"error\": \"TIMEOUT\",\n    \"stderrTail\": \"\",\n    \"signal\": null,\n    \"stdoutHash\": \"4b5aa7c0b27f96291ce49f522d32c6d75f490c7b83b747c02125bb80057211f9\",\n    \"stderrHash\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n    \"limits\": {\n      \"timeoutMs\": 1000,\n      \"heapMb\": 256,\n      \"testConcurrency\": 2,\n      \"maxEvidenceMb\": 64,\n      \"intervalMs\": 100,\n      \"maxCycles\": 1\n    },\n    \"recoveredLease\": false,\n    \"candidatePromoted\": false,\n    \"patchApplied\": false,\n    \"weightsUpdated\": false,\n    \"ownerReviewRequired\": true\n  }\n  \n  \n  1 !== 0\n  \n      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs:102:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: 1,\n    expected: 0,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t",
+      "attributes": {
+        "type": "testCodeFailure",
+        "message": "{\n  \"schema\": \"continuum-local-worker-v2\",\n  \"id\": \"2026-11-11T16-27-43-231Z-30af0210-594f-451d-b690-bda34cf08e17\",\n  \"branch\": \"test/worker\",\n  \"sourceSha\": \"14f7ff3b58d63949a5581668bdb134738fda2c1e\",\n  \"sourceTree\": \"7e5a2b539ae2dd5cc7f10b3f3b2da8b894c4af36\",\n  \"inventoryHash\": \"9478fec4920996d3209304f30ba0dc15458a81d5b3616676ed0e68a0c2b019e8\",\n  \"inventoryCount\": 1,\n  \"started\": \"2026-11-11T16:27:43.232Z\",\n  \"completed\": \"2026-11-11T16:27:45.070Z\",\n  \"sourceUnchanged\": true,\n  \"leaseHeld\": true,\n  \"status\": \"FAILED\",\n  \"tests\": null,\n  \"pass\": null,\n  \"failed\": null,\n  \"cancelled\": null,\n  \"skipped\": null,\n  \"todo\": null,\n  \"exitCode\": 1,\n  \"error\": \"TIMEOUT\",\n  \"stderrTail\": \"\",\n  \"signal\": null,\n  \"stdoutHash\": \"4b5aa7c0b27f96291ce49f522d32c6d75f490c7b83b747c02125bb80057211f9\",\n  \"stderrHash\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n  \"limits\": {\n    \"timeoutMs\": 1000,\n    \"heapMb\": 256,\n    \"testConcurrency\": 2,\n    \"maxEvidenceMb\": 64,\n    \"intervalMs\": 100,\n    \"maxCycles\": 1\n  },\n  \"recoveredLease\": false,\n  \"candidatePromoted\": false,\n  \"patchApplied\": false,\n  \"weightsUpdated\": false,\n  \"ownerReviewRequired\": true\n}\n\n\n1 !== 0"
+      }
+    },
+    {
+      "name": "SIGTERM removes a descendant that ignores SIGTERM before restart",
+      "time": "29.580477",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs",
+      "failure": "\n[Error [ERR_TEST_FAILURE]: a new cycle may start after the old descendant stopped\n\n1 !== 0\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: a new cycle may start after the old descendant stopped\n  \n  1 !== 0\n  \n      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs:149:10)\n      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: 1,\n    expected: 0,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t",
+      "attributes": {
+        "type": "testCodeFailure",
+        "message": "a new cycle may start after the old descendant stopped\n\n1 !== 0"
+      }
+    },
+    {
+      "name": "TIMEOUT removes a descendant that ignores SIGTERM before restart",
+      "time": "5.184292",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs",
+      "failure": "\n[Error [ERR_TEST_FAILURE]: condition timeout] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: Error: condition timeout\n      at waitFor (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs:19:108)\n      at async TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/.github/continuum/local-worker-process.test.mjs:139:3)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)\n}\n\t\t",
+      "attributes": {
+        "type": "testCodeFailure",
+        "message": "condition timeout"
+      }
+    },
+    {
+      "name": "an unreadable process younger than the run blocks a confirmed cleanup",
+      "time": "15.056654",
+      "classname": "test",
+      "file": "/workspace/scratch/2d62a799e417/device-ai/scripts/continuum-owned-process.test.mjs",
+      "failure": "\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'TIMEOUT'\n- 'TERMINATION_UNCONFIRMED'\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'TIMEOUT'\n  - 'TERMINATION_UNCONFIRMED'\n  \n      at TestContext.<anonymous> (file:///workspace/scratch/2d62a799e417/device-ai/scripts/continuum-owned-process.test.mjs:97:10)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'TIMEOUT',\n    expected: 'TERMINATION_UNCONFIRMED',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t",
+      "attributes": {
+        "type": "testCodeFailure",
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'TIMEOUT'\n- 'TERMINATION_UNCONFIRMED'"
+      }
+    }
+  ]
+}

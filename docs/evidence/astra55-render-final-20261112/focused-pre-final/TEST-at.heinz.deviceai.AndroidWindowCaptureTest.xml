@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AndroidWindowCaptureTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:14:27" hostname="0f4ac18d136f" time="4.113">
+  <properties/>
+  <testcase name="latePreviousSessionCannotPublishOrPauseReplacement" classname="at.heinz.deviceai.AndroidWindowCaptureTest" time="3.964"/>
+  <testcase name="stopReleasesLateScreenshotInsteadOfRevivingLive" classname="at.heinz.deviceai.AndroidWindowCaptureTest" time="0.04"/>
+  <testcase name="newerTreeRevisionRejectsCapturedPixels" classname="at.heinz.deviceai.AndroidWindowCaptureTest" time="0.041"/>
+  <testcase name="callbackKeepsOriginalRevisionAndActualCaptureTime" classname="at.heinz.deviceai.AndroidWindowCaptureTest" time="0.068"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

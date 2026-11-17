@@ -1,0 +1,9 @@
+app/src/test/java/at/heinz/deviceai/learning/ContinuumDialogueConversationBindingTest.kt:19:35: error: unresolved reference 'resetsGroundedContext'.
+            assertTrue(correction.resetsGroundedContext)
+                                  ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/ContinuumDialogueConversationBindingTest.kt:29:95: error: unresolved reference 'resetsGroundedContext'.
+            assertFalse(context.inspectRequest("same-chat","Merke dir diese Entscheidung.")!!.resetsGroundedContext)
+                                                                                              ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/ContinuumDialogueConversationBindingTest.kt:32:103: error: unresolved reference 'resetsGroundedContext'.
+            assertTrue(context.inspectRequest("same-chat","Nein, ich meinte nicht Projekt Kobalt.")!!.resetsGroundedContext)
+                                                                                                      ^^^^^^^^^^^^^^^^^^^^^

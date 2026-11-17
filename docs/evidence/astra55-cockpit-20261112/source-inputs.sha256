@@ -1,0 +1,10 @@
+311bef3070a55c8decc6cefa842b423460900ffdf86ede2b1208821bd439fa1c  app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt
+01befd33ec60e15ff7df37480823da3a477e135e671ec3a46149eeac646fb19a  app/src/main/java/at/heinz/deviceai/ui/CockpitGlassButtons.kt
+965d1cc425b1e5886a415b25e3b659341e6dfaa43afb7f4a59eedd234b7e8946  app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt
+fbdddaf2ee32ca3f3c016f4290cb29b0f11db6c2b892cfa92d44a6dac05074ca  app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorPainter.kt
+bfd1b853e23c64da19825d5c725f1dedb5ea8810b04177ee7e4e5270cc45d8b9  app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt
+d31f824f633e2e24676f1fa05b409f1bc8b8dd101c4a24c8df631c6b53a584e6  app/src/main/java/at/heinz/deviceai/avatar3d/AvatarFraming.kt
+1353f90416e9991a79d39318a0fe47ba46f4a5d6c695dcf7aa4d630be7411223  app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt
+0dd2e9a54dc901035b31407f95dc3fcc5727cdd7c1f3b369e86ac5fec2b3a5a9  app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt
+c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a  app/src/main/assets/avatar3d/continuum-avatar.glb
+563d4ab95ce98d603bd48d68c48abf2d709748a604eea7cf8bfd9a43d06b2193  app/src/main/assets/cinema3d/cockpit-workstation.glb

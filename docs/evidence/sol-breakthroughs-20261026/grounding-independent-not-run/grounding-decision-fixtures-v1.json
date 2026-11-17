@@ -1,0 +1,2228 @@
+{
+  "schema": "CONTINUUM_INDEPENDENT_GROUNDING_DECISIONS_V1",
+  "fixtureId": "grounding-subject-relation-de-v1-20261026",
+  "authoredAtUtc": "2026-10-26T02:51:09Z",
+  "baselineSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+  "candidateSha": "4bf74b1b827aab56bbe03e032c21c03c508484c8",
+  "state": "FROZEN_BEFORE_CANDIDATE_IMPLEMENTATION_INSPECTION",
+  "syntheticOnly": true,
+  "authoredWithout": [
+    "candidate implementation",
+    "candidate predictions",
+    "model inference",
+    "private owner data"
+  ],
+  "inputContract": "rankMemories(query, memories, {semantic:null, limit:allInputRecords}); memory fields id,kind,text; no semantic model or learned weights.",
+  "decisionContract": [
+    "Judge the sorted SET of returned record IDs, not ranking order or generated answers.",
+    "For in-scope location/work questions a qualified record must positively state the requested subject AND requested relation. Residence and work are separate relations.",
+    "Identifiers are exact whole identifiers: added prefixes/suffixes and changed hyphen/underscore spelling identify different subjects. Mixed letter case is preserved in both query and matching evidence; no case-only distinction is tested.",
+    "All explicitly requested identifiers must appear in the same qualified record. Matching one requested identifier across separate records is insufficient.",
+    "Negation-only location/work statements do not positively establish the requested location and therefore do not qualify. An unrelated negated clause must not suppress a positive requested relation.",
+    "Multiple records that each qualify must all be returned; use a limit at least the number of input records.",
+    "USER_FACT cases are synthetic already-authorized owner assertions. SOURCE_TEXT cases are untrusted factual evidence with no tool authority. This benchmark does not test authorization or ownership validation.",
+    "Definition, pronoun and multihop/negation-entailment controls are separately labeled challenge and excluded from the in-scope headline. Publish their complete predictions and failures anyway.",
+    "Direct sourceTermEvidence is evaluated as a separate per-record diagnostic, not substituted for rankMemories.",
+    "Capture full hit objects and scores for both revisions. Compare raw objects on predeclared legacyPositiveControl cases; report disagreements without tuning fixtures or candidate."
+  ],
+  "scoring": {
+    "exact": "JSON string equality of sorted unique expectedIds and sorted returned IDs, with no semantic credit or hidden discarded cases.",
+    "falseHit": "Each returned ID outside expectedIds; report total and per case.",
+    "missedPositive": "Each expected ID absent from returned IDs; report total and per case.",
+    "positiveRetention": "For each revision, expected IDs returned / all expected IDs; also report candidate retention of baseline true-positive IDs.",
+    "errors": "Capture exceptions as ERROR, preserve them in total-case denominator and do not convert them into empty predictions.",
+    "split": "Publish in_scope and challenge separately, plus kind/category/polarity breakdowns and complete raw predictions."
+  },
+  "cases": [
+    {
+      "id": "UF-01-named-home",
+      "scope": "in_scope",
+      "category": "same_subject_relation",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo wohnt Lethra?",
+      "memories": [
+        {
+          "id": "UF-01-home",
+          "kind": "USER_FACT",
+          "text": "Lethra wohnt in Norenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-01-work",
+          "kind": "USER_FACT",
+          "text": "Lethra arbeitet in Farnwinkel.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-01-other",
+          "kind": "USER_FACT",
+          "text": "Kovrin wohnt in Schilfdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-01-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-01-home": true,
+        "UF-01-work": false,
+        "UF-01-other": false
+      },
+      "legacyPositiveControl": true
+    },
+    {
+      "id": "ST-01-named-home",
+      "scope": "in_scope",
+      "category": "same_subject_relation",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo wohnt Lethra?",
+      "memories": [
+        {
+          "id": "ST-01-home",
+          "kind": "SOURCE_TEXT",
+          "text": "Lethra wohnt in Norenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-01-work",
+          "kind": "SOURCE_TEXT",
+          "text": "Lethra arbeitet in Farnwinkel.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-01-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Kovrin wohnt in Schilfdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-01-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-01-home": true,
+        "ST-01-work": false,
+        "ST-01-other": false
+      },
+      "legacyPositiveControl": true
+    },
+    {
+      "id": "UF-02-inverted-home",
+      "scope": "in_scope",
+      "category": "inverted_positive",
+      "kind": "USER_FACT",
+      "polarity": "positive",
+      "query": "Wo wohnt Kovrin?",
+      "memories": [
+        {
+          "id": "UF-02-home",
+          "kind": "USER_FACT",
+          "text": "In Farnwinkel wohnt Kovrin.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-02-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-02-home": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-02-inverted-home",
+      "scope": "in_scope",
+      "category": "inverted_positive",
+      "kind": "SOURCE_TEXT",
+      "polarity": "positive",
+      "query": "Wo wohnt Kovrin?",
+      "memories": [
+        {
+          "id": "ST-02-home",
+          "kind": "SOURCE_TEXT",
+          "text": "In Farnwinkel wohnt Kovrin.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-02-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-02-home": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-03-lives-synonym",
+      "scope": "in_scope",
+      "category": "paraphrased_positive",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo lebt Nelvo?",
+      "memories": [
+        {
+          "id": "UF-03-home",
+          "kind": "USER_FACT",
+          "text": "Nelvo wohnt in Seidenhof.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-03-work",
+          "kind": "USER_FACT",
+          "text": "Nelvo arbeitet in Mohnried.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-03-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-03-home": true,
+        "UF-03-work": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-03-lives-synonym",
+      "scope": "in_scope",
+      "category": "paraphrased_positive",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo lebt Nelvo?",
+      "memories": [
+        {
+          "id": "ST-03-home",
+          "kind": "SOURCE_TEXT",
+          "text": "Nelvo wohnt in Seidenhof.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-03-work",
+          "kind": "SOURCE_TEXT",
+          "text": "Nelvo arbeitet in Mohnried.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-03-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-03-home": true,
+        "ST-03-work": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-04-named-work",
+      "scope": "in_scope",
+      "category": "same_subject_relation",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo arbeitet Marzel?",
+      "memories": [
+        {
+          "id": "UF-04-work",
+          "kind": "USER_FACT",
+          "text": "Marzel arbeitet in Weidenfels.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-04-home",
+          "kind": "USER_FACT",
+          "text": "Marzel wohnt in Halmstedt.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-04-other",
+          "kind": "USER_FACT",
+          "text": "Zudra arbeitet in Schilfdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-04-work"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-04-work": true,
+        "UF-04-home": false,
+        "UF-04-other": false
+      },
+      "legacyPositiveControl": true
+    },
+    {
+      "id": "ST-04-named-work",
+      "scope": "in_scope",
+      "category": "same_subject_relation",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo arbeitet Marzel?",
+      "memories": [
+        {
+          "id": "ST-04-work",
+          "kind": "SOURCE_TEXT",
+          "text": "Marzel arbeitet in Weidenfels.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-04-home",
+          "kind": "SOURCE_TEXT",
+          "text": "Marzel wohnt in Halmstedt.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-04-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Zudra arbeitet in Schilfdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-04-work"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-04-work": true,
+        "ST-04-home": false,
+        "ST-04-other": false
+      },
+      "legacyPositiveControl": true
+    },
+    {
+      "id": "UF-05-inverted-work",
+      "scope": "in_scope",
+      "category": "inverted_positive",
+      "kind": "USER_FACT",
+      "polarity": "positive",
+      "query": "Wo arbeitet Besrin?",
+      "memories": [
+        {
+          "id": "UF-05-work",
+          "kind": "USER_FACT",
+          "text": "In Wiesenkranz arbeitet Besrin.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-05-work"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-05-work": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-05-inverted-work",
+      "scope": "in_scope",
+      "category": "inverted_positive",
+      "kind": "SOURCE_TEXT",
+      "polarity": "positive",
+      "query": "Wo arbeitet Besrin?",
+      "memories": [
+        {
+          "id": "ST-05-work",
+          "kind": "SOURCE_TEXT",
+          "text": "In Wiesenkranz arbeitet Besrin.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-05-work"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-05-work": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-06-work-adverb",
+      "scope": "in_scope",
+      "category": "paraphrased_positive",
+      "kind": "USER_FACT",
+      "polarity": "positive",
+      "query": "Wo arbeitet Sordel?",
+      "memories": [
+        {
+          "id": "UF-06-work",
+          "kind": "USER_FACT",
+          "text": "Sordel arbeitet beruflich in Rohrmark.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-06-work"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-06-work": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-06-work-adverb",
+      "scope": "in_scope",
+      "category": "paraphrased_positive",
+      "kind": "SOURCE_TEXT",
+      "polarity": "positive",
+      "query": "Wo arbeitet Sordel?",
+      "memories": [
+        {
+          "id": "ST-06-work",
+          "kind": "SOURCE_TEXT",
+          "text": "Sordel arbeitet beruflich in Rohrmark.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-06-work"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-06-work": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-07-unknown-name",
+      "scope": "in_scope",
+      "category": "unknown_subject",
+      "kind": "USER_FACT",
+      "polarity": "negative",
+      "query": "Wo wohnt Derpin?",
+      "memories": [
+        {
+          "id": "UF-07-other",
+          "kind": "USER_FACT",
+          "text": "Welsin wohnt in Hauchdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-07-work",
+          "kind": "USER_FACT",
+          "text": "Derpin arbeitet in Silbertor.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "UF-07-other": false,
+        "UF-07-work": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-07-unknown-name",
+      "scope": "in_scope",
+      "category": "unknown_subject",
+      "kind": "SOURCE_TEXT",
+      "polarity": "negative",
+      "query": "Wo wohnt Derpin?",
+      "memories": [
+        {
+          "id": "ST-07-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Welsin wohnt in Hauchdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-07-work",
+          "kind": "SOURCE_TEXT",
+          "text": "Derpin arbeitet in Silbertor.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "ST-07-other": false,
+        "ST-07-work": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-08-short-id-prefix",
+      "scope": "in_scope",
+      "category": "short_identifier",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo wohnt Q7?",
+      "memories": [
+        {
+          "id": "UF-08-exact",
+          "kind": "USER_FACT",
+          "text": "Q7 wohnt in Tannhafen.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-08-suffix",
+          "kind": "USER_FACT",
+          "text": "Q70 wohnt in Sandwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-08-prefix",
+          "kind": "USER_FACT",
+          "text": "AQ7 wohnt in Halmstedt.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-08-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-08-exact": true,
+        "UF-08-suffix": false,
+        "UF-08-prefix": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-08-short-id-prefix",
+      "scope": "in_scope",
+      "category": "short_identifier",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo wohnt Q7?",
+      "memories": [
+        {
+          "id": "ST-08-exact",
+          "kind": "SOURCE_TEXT",
+          "text": "Q7 wohnt in Tannhafen.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-08-suffix",
+          "kind": "SOURCE_TEXT",
+          "text": "Q70 wohnt in Sandwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-08-prefix",
+          "kind": "SOURCE_TEXT",
+          "text": "AQ7 wohnt in Halmstedt.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-08-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-08-exact": true,
+        "ST-08-suffix": false,
+        "ST-08-prefix": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-09-hyphen-id",
+      "scope": "in_scope",
+      "category": "hyphen_identifier",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo wohnt NEX-58?",
+      "memories": [
+        {
+          "id": "UF-09-exact",
+          "kind": "USER_FACT",
+          "text": "NEX-58 wohnt in Kieselort.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-09-collapsed",
+          "kind": "USER_FACT",
+          "text": "NEX58 wohnt in Blattheim.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-09-underscore",
+          "kind": "USER_FACT",
+          "text": "NEX_58 wohnt in Mohnried.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-09-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-09-exact": true,
+        "UF-09-collapsed": false,
+        "UF-09-underscore": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-09-hyphen-id",
+      "scope": "in_scope",
+      "category": "hyphen_identifier",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo wohnt NEX-58?",
+      "memories": [
+        {
+          "id": "ST-09-exact",
+          "kind": "SOURCE_TEXT",
+          "text": "NEX-58 wohnt in Kieselort.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-09-collapsed",
+          "kind": "SOURCE_TEXT",
+          "text": "NEX58 wohnt in Blattheim.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-09-underscore",
+          "kind": "SOURCE_TEXT",
+          "text": "NEX_58 wohnt in Mohnried.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-09-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-09-exact": true,
+        "ST-09-collapsed": false,
+        "ST-09-underscore": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-10-underscore-id",
+      "scope": "in_scope",
+      "category": "underscore_identifier",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo arbeitet TAL_93?",
+      "memories": [
+        {
+          "id": "UF-10-exact",
+          "kind": "USER_FACT",
+          "text": "TAL_93 arbeitet in Erlenwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-10-collapsed",
+          "kind": "USER_FACT",
+          "text": "TAL93 arbeitet in Hauchdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-10-hyphen",
+          "kind": "USER_FACT",
+          "text": "TAL-93 arbeitet in Kieselort.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-10-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-10-exact": true,
+        "UF-10-collapsed": false,
+        "UF-10-hyphen": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-10-underscore-id",
+      "scope": "in_scope",
+      "category": "underscore_identifier",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo arbeitet TAL_93?",
+      "memories": [
+        {
+          "id": "ST-10-exact",
+          "kind": "SOURCE_TEXT",
+          "text": "TAL_93 arbeitet in Erlenwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-10-collapsed",
+          "kind": "SOURCE_TEXT",
+          "text": "TAL93 arbeitet in Hauchdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-10-hyphen",
+          "kind": "SOURCE_TEXT",
+          "text": "TAL-93 arbeitet in Kieselort.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-10-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-10-exact": true,
+        "ST-10-collapsed": false,
+        "ST-10-hyphen": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-11-mixed-id",
+      "scope": "in_scope",
+      "category": "mixed_identifier",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo wohnt rU6x?",
+      "memories": [
+        {
+          "id": "UF-11-exact",
+          "kind": "USER_FACT",
+          "text": "rU6x wohnt in Flockenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-11-confusable",
+          "kind": "USER_FACT",
+          "text": "rU6y wohnt in Tannhafen.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-11-suffix",
+          "kind": "USER_FACT",
+          "text": "rU6x9 wohnt in Sandwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-11-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-11-exact": true,
+        "UF-11-confusable": false,
+        "UF-11-suffix": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-11-mixed-id",
+      "scope": "in_scope",
+      "category": "mixed_identifier",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo wohnt rU6x?",
+      "memories": [
+        {
+          "id": "ST-11-exact",
+          "kind": "SOURCE_TEXT",
+          "text": "rU6x wohnt in Flockenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-11-confusable",
+          "kind": "SOURCE_TEXT",
+          "text": "rU6y wohnt in Tannhafen.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-11-suffix",
+          "kind": "SOURCE_TEXT",
+          "text": "rU6x9 wohnt in Sandwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-11-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-11-exact": true,
+        "ST-11-confusable": false,
+        "ST-11-suffix": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-12-single-letter",
+      "scope": "in_scope",
+      "category": "short_identifier",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo wohnt J?",
+      "memories": [
+        {
+          "id": "UF-12-exact",
+          "kind": "USER_FACT",
+          "text": "J wohnt in Dornwiese.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-12-suffix",
+          "kind": "USER_FACT",
+          "text": "JK wohnt in Schilfdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-12-prefix",
+          "kind": "USER_FACT",
+          "text": "AJ wohnt in Mohnried.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-12-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-12-exact": true,
+        "UF-12-suffix": false,
+        "UF-12-prefix": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-12-single-letter",
+      "scope": "in_scope",
+      "category": "short_identifier",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo wohnt J?",
+      "memories": [
+        {
+          "id": "ST-12-exact",
+          "kind": "SOURCE_TEXT",
+          "text": "J wohnt in Dornwiese.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-12-suffix",
+          "kind": "SOURCE_TEXT",
+          "text": "JK wohnt in Schilfdorf.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-12-prefix",
+          "kind": "SOURCE_TEXT",
+          "text": "AJ wohnt in Mohnried.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-12-exact"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-12-exact": true,
+        "ST-12-suffix": false,
+        "ST-12-prefix": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-13-two-identifiers",
+      "scope": "in_scope",
+      "category": "all_explicit_identifiers",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo wohnt ADEL-74 im Vorgang BLATT_96?",
+      "memories": [
+        {
+          "id": "UF-13-both",
+          "kind": "USER_FACT",
+          "text": "ADEL-74 wohnt in Hauchdorf. Dies gilt für den Vorgang BLATT_96.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-13-wrong-context",
+          "kind": "USER_FACT",
+          "text": "ADEL-74 wohnt in Kieselort. Dies gilt für den Vorgang BLATT_97.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-13-wrong-subject",
+          "kind": "USER_FACT",
+          "text": "ADEL-75 wohnt in Erlenwacht. Dies gilt für den Vorgang BLATT_96.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-13-both"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-13-both": true,
+        "UF-13-wrong-context": false,
+        "UF-13-wrong-subject": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-13-two-identifiers",
+      "scope": "in_scope",
+      "category": "all_explicit_identifiers",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo wohnt ADEL-74 im Vorgang BLATT_96?",
+      "memories": [
+        {
+          "id": "ST-13-both",
+          "kind": "SOURCE_TEXT",
+          "text": "ADEL-74 wohnt in Hauchdorf. Dies gilt für den Vorgang BLATT_96.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-13-wrong-context",
+          "kind": "SOURCE_TEXT",
+          "text": "ADEL-74 wohnt in Kieselort. Dies gilt für den Vorgang BLATT_97.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-13-wrong-subject",
+          "kind": "SOURCE_TEXT",
+          "text": "ADEL-75 wohnt in Erlenwacht. Dies gilt für den Vorgang BLATT_96.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-13-both"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-13-both": true,
+        "ST-13-wrong-context": false,
+        "ST-13-wrong-subject": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-14-split-identifiers",
+      "scope": "in_scope",
+      "category": "all_explicit_identifiers",
+      "kind": "USER_FACT",
+      "polarity": "negative",
+      "query": "Wo arbeitet VEX-17 im Auftrag STROM_61?",
+      "memories": [
+        {
+          "id": "UF-14-subject-only",
+          "kind": "USER_FACT",
+          "text": "VEX-17 arbeitet in Moosfeld. Dies gilt für den Auftrag STROM_60.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-14-context-only",
+          "kind": "USER_FACT",
+          "text": "VEX-18 arbeitet in Dornwiese. Dies gilt für den Auftrag STROM_61.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "UF-14-subject-only": false,
+        "UF-14-context-only": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-14-split-identifiers",
+      "scope": "in_scope",
+      "category": "all_explicit_identifiers",
+      "kind": "SOURCE_TEXT",
+      "polarity": "negative",
+      "query": "Wo arbeitet VEX-17 im Auftrag STROM_61?",
+      "memories": [
+        {
+          "id": "ST-14-subject-only",
+          "kind": "SOURCE_TEXT",
+          "text": "VEX-17 arbeitet in Moosfeld. Dies gilt für den Auftrag STROM_60.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-14-context-only",
+          "kind": "SOURCE_TEXT",
+          "text": "VEX-18 arbeitet in Dornwiese. Dies gilt für den Auftrag STROM_61.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "ST-14-subject-only": false,
+        "ST-14-context-only": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-15-negation-only",
+      "scope": "in_scope",
+      "category": "negated_relation",
+      "kind": "USER_FACT",
+      "polarity": "negative",
+      "query": "Wo wohnt Ulven?",
+      "memories": [
+        {
+          "id": "UF-15-negative",
+          "kind": "USER_FACT",
+          "text": "Ulven wohnt nicht in Lerchenort.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "UF-15-negative": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-15-negation-only",
+      "scope": "in_scope",
+      "category": "negated_relation",
+      "kind": "SOURCE_TEXT",
+      "polarity": "negative",
+      "query": "Wo wohnt Ulven?",
+      "memories": [
+        {
+          "id": "ST-15-negative",
+          "kind": "SOURCE_TEXT",
+          "text": "Ulven wohnt nicht in Lerchenort.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "ST-15-negative": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-16-negated-with-distractors",
+      "scope": "in_scope",
+      "category": "negated_relation",
+      "kind": "USER_FACT",
+      "polarity": "negative",
+      "query": "Wo wohnt Q5?",
+      "memories": [
+        {
+          "id": "UF-16-negative",
+          "kind": "USER_FACT",
+          "text": "Q5 wohnt nicht in Seidenhof.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-16-other",
+          "kind": "USER_FACT",
+          "text": "Q6 wohnt in Rohrmark.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-16-wrong-relation",
+          "kind": "USER_FACT",
+          "text": "Q5 arbeitet in Silbertor.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "UF-16-negative": false,
+        "UF-16-other": false,
+        "UF-16-wrong-relation": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-16-negated-with-distractors",
+      "scope": "in_scope",
+      "category": "negated_relation",
+      "kind": "SOURCE_TEXT",
+      "polarity": "negative",
+      "query": "Wo wohnt Q5?",
+      "memories": [
+        {
+          "id": "ST-16-negative",
+          "kind": "SOURCE_TEXT",
+          "text": "Q5 wohnt nicht in Seidenhof.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-16-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Q6 wohnt in Rohrmark.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-16-wrong-relation",
+          "kind": "SOURCE_TEXT",
+          "text": "Q5 arbeitet in Silbertor.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "ST-16-negative": false,
+        "ST-16-other": false,
+        "ST-16-wrong-relation": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-17-positive-and-negative",
+      "scope": "in_scope",
+      "category": "negation_distractor",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo wohnt Felra?",
+      "memories": [
+        {
+          "id": "UF-17-positive",
+          "kind": "USER_FACT",
+          "text": "Felra wohnt in Talgruen.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-17-negative",
+          "kind": "USER_FACT",
+          "text": "Felra wohnt nicht in Rosenanger.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-17-other",
+          "kind": "USER_FACT",
+          "text": "Selvin wohnt in Rosenanger.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-17-positive"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-17-positive": true,
+        "UF-17-negative": false,
+        "UF-17-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-17-positive-and-negative",
+      "scope": "in_scope",
+      "category": "negation_distractor",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo wohnt Felra?",
+      "memories": [
+        {
+          "id": "ST-17-positive",
+          "kind": "SOURCE_TEXT",
+          "text": "Felra wohnt in Talgruen.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-17-negative",
+          "kind": "SOURCE_TEXT",
+          "text": "Felra wohnt nicht in Rosenanger.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-17-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Selvin wohnt in Rosenanger.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-17-positive"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-17-positive": true,
+        "ST-17-negative": false,
+        "ST-17-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-18-home-does-not-prove-work",
+      "scope": "in_scope",
+      "category": "relation_mismatch",
+      "kind": "USER_FACT",
+      "polarity": "negative",
+      "query": "Wo arbeitet Torven?",
+      "memories": [
+        {
+          "id": "UF-18-home",
+          "kind": "USER_FACT",
+          "text": "Torven wohnt in Reetwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-18-other",
+          "kind": "USER_FACT",
+          "text": "Velnik arbeitet in Reetwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "UF-18-home": false,
+        "UF-18-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-18-home-does-not-prove-work",
+      "scope": "in_scope",
+      "category": "relation_mismatch",
+      "kind": "SOURCE_TEXT",
+      "polarity": "negative",
+      "query": "Wo arbeitet Torven?",
+      "memories": [
+        {
+          "id": "ST-18-home",
+          "kind": "SOURCE_TEXT",
+          "text": "Torven wohnt in Reetwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-18-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Velnik arbeitet in Reetwacht.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "ST-18-home": false,
+        "ST-18-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-19-work-does-not-prove-home",
+      "scope": "in_scope",
+      "category": "relation_mismatch",
+      "kind": "USER_FACT",
+      "polarity": "negative",
+      "query": "Wo wohnt Veldra?",
+      "memories": [
+        {
+          "id": "UF-19-work",
+          "kind": "USER_FACT",
+          "text": "Veldra arbeitet in Flockenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-19-other",
+          "kind": "USER_FACT",
+          "text": "Kenril wohnt in Flockenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "UF-19-work": false,
+        "UF-19-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-19-work-does-not-prove-home",
+      "scope": "in_scope",
+      "category": "relation_mismatch",
+      "kind": "SOURCE_TEXT",
+      "polarity": "negative",
+      "query": "Wo wohnt Veldra?",
+      "memories": [
+        {
+          "id": "ST-19-work",
+          "kind": "SOURCE_TEXT",
+          "text": "Veldra arbeitet in Flockenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-19-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Kenril wohnt in Flockenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "ST-19-work": false,
+        "ST-19-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-20-same-record-wrong-binding",
+      "scope": "in_scope",
+      "category": "subject_relation_binding",
+      "kind": "USER_FACT",
+      "polarity": "negative",
+      "query": "Wo wohnt C8?",
+      "memories": [
+        {
+          "id": "UF-20-wrong-binding",
+          "kind": "USER_FACT",
+          "text": "D4 wohnt in Sommerborn. C8 arbeitet in Sommerborn.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-20-other",
+          "kind": "USER_FACT",
+          "text": "C80 wohnt in Norenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "UF-20-wrong-binding": false,
+        "UF-20-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-20-same-record-wrong-binding",
+      "scope": "in_scope",
+      "category": "subject_relation_binding",
+      "kind": "SOURCE_TEXT",
+      "polarity": "negative",
+      "query": "Wo wohnt C8?",
+      "memories": [
+        {
+          "id": "ST-20-wrong-binding",
+          "kind": "SOURCE_TEXT",
+          "text": "D4 wohnt in Sommerborn. C8 arbeitet in Sommerborn.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-20-other",
+          "kind": "SOURCE_TEXT",
+          "text": "C80 wohnt in Norenau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "ST-20-wrong-binding": false,
+        "ST-20-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-21-two-qualified-hits",
+      "scope": "in_scope",
+      "category": "multiple_positive_records",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo lebt Nedrin?",
+      "memories": [
+        {
+          "id": "UF-21-direct",
+          "kind": "USER_FACT",
+          "text": "Nedrin lebt in Silbertor.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-21-inverted",
+          "kind": "USER_FACT",
+          "text": "In Silbertor wohnt Nedrin.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-21-other",
+          "kind": "USER_FACT",
+          "text": "Nedron lebt in Blattheim.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-21-direct",
+        "UF-21-inverted"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-21-direct": true,
+        "UF-21-inverted": true,
+        "UF-21-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-21-two-qualified-hits",
+      "scope": "in_scope",
+      "category": "multiple_positive_records",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo lebt Nedrin?",
+      "memories": [
+        {
+          "id": "ST-21-direct",
+          "kind": "SOURCE_TEXT",
+          "text": "Nedrin lebt in Silbertor.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-21-inverted",
+          "kind": "SOURCE_TEXT",
+          "text": "In Silbertor wohnt Nedrin.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-21-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Nedron lebt in Blattheim.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-21-direct",
+        "ST-21-inverted"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-21-direct": true,
+        "ST-21-inverted": true,
+        "ST-21-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-22-three-identifiers",
+      "scope": "in_scope",
+      "category": "all_explicit_identifiers",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo arbeitet KEL-29 im Projekt HAFEN_84 fuer die Phase P6?",
+      "memories": [
+        {
+          "id": "UF-22-all",
+          "kind": "USER_FACT",
+          "text": "KEL-29 arbeitet in Grauweide. Projekt HAFEN_84, Phase P6.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-22-wrong-phase",
+          "kind": "USER_FACT",
+          "text": "KEL-29 arbeitet in Grauweide. Projekt HAFEN_84, Phase P60.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-22-wrong-project",
+          "kind": "USER_FACT",
+          "text": "KEL-29 arbeitet in Grauweide. Projekt HAFEN_840, Phase P6.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-22-all"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-22-all": true,
+        "UF-22-wrong-phase": false,
+        "UF-22-wrong-project": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-22-three-identifiers",
+      "scope": "in_scope",
+      "category": "all_explicit_identifiers",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo arbeitet KEL-29 im Projekt HAFEN_84 fuer die Phase P6?",
+      "memories": [
+        {
+          "id": "ST-22-all",
+          "kind": "SOURCE_TEXT",
+          "text": "KEL-29 arbeitet in Grauweide. Projekt HAFEN_84, Phase P6.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-22-wrong-phase",
+          "kind": "SOURCE_TEXT",
+          "text": "KEL-29 arbeitet in Grauweide. Projekt HAFEN_84, Phase P60.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-22-wrong-project",
+          "kind": "SOURCE_TEXT",
+          "text": "KEL-29 arbeitet in Grauweide. Projekt HAFEN_840, Phase P6.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-22-all"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-22-all": true,
+        "ST-22-wrong-phase": false,
+        "ST-22-wrong-project": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-23-home-wohnhaft",
+      "scope": "in_scope",
+      "category": "paraphrased_positive",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo lebt NF_48?",
+      "memories": [
+        {
+          "id": "UF-23-home",
+          "kind": "USER_FACT",
+          "text": "NF_48 ist in Windanger wohnhaft.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-23-other",
+          "kind": "USER_FACT",
+          "text": "NF_480 ist in Blattheim wohnhaft.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-23-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-23-home": true,
+        "UF-23-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-23-home-wohnhaft",
+      "scope": "in_scope",
+      "category": "paraphrased_positive",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo lebt NF_48?",
+      "memories": [
+        {
+          "id": "ST-23-home",
+          "kind": "SOURCE_TEXT",
+          "text": "NF_48 ist in Windanger wohnhaft.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-23-other",
+          "kind": "SOURCE_TEXT",
+          "text": "NF_480 ist in Blattheim wohnhaft.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-23-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-23-home": true,
+        "ST-23-other": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-24-work-negated-other-clause",
+      "scope": "in_scope",
+      "category": "negation_distractor",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Wo arbeitet Felsin?",
+      "memories": [
+        {
+          "id": "UF-24-positive",
+          "kind": "USER_FACT",
+          "text": "Felsin arbeitet in Blauheide. Felsin wohnt nicht in Blauheide.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-24-negative",
+          "kind": "USER_FACT",
+          "text": "Felsin arbeitet nicht in Mondhafen.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-24-positive"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-24-positive": true,
+        "UF-24-negative": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-24-work-negated-other-clause",
+      "scope": "in_scope",
+      "category": "negation_distractor",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Wo arbeitet Felsin?",
+      "memories": [
+        {
+          "id": "ST-24-positive",
+          "kind": "SOURCE_TEXT",
+          "text": "Felsin arbeitet in Blauheide. Felsin wohnt nicht in Blauheide.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-24-negative",
+          "kind": "SOURCE_TEXT",
+          "text": "Felsin arbeitet nicht in Mondhafen.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-24-positive"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-24-positive": true,
+        "ST-24-negative": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-25-definition",
+      "scope": "challenge",
+      "category": "definition_challenge",
+      "kind": "USER_FACT",
+      "polarity": "mixed",
+      "query": "Was bedeutet Eldritbogen?",
+      "memories": [
+        {
+          "id": "UF-25-definition",
+          "kind": "USER_FACT",
+          "text": "Ein Eldritbogen ist ein erfundenes Messgeraet fuer Blattwinkel.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "UF-25-other",
+          "kind": "USER_FACT",
+          "text": "Ein Nebelrad ist ein erfundenes Transportgeraet.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-25-definition"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-25-definition": true,
+        "UF-25-other": false
+      },
+      "legacyPositiveControl": true
+    },
+    {
+      "id": "ST-25-definition",
+      "scope": "challenge",
+      "category": "definition_challenge",
+      "kind": "SOURCE_TEXT",
+      "polarity": "mixed",
+      "query": "Was bedeutet Eldritbogen?",
+      "memories": [
+        {
+          "id": "ST-25-definition",
+          "kind": "SOURCE_TEXT",
+          "text": "Ein Eldritbogen ist ein erfundenes Messgeraet fuer Blattwinkel.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        },
+        {
+          "id": "ST-25-other",
+          "kind": "SOURCE_TEXT",
+          "text": "Ein Nebelrad ist ein erfundenes Transportgeraet.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-25-definition"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-25-definition": true,
+        "ST-25-other": false
+      },
+      "legacyPositiveControl": true
+    },
+    {
+      "id": "UF-26-unresolved-pronoun",
+      "scope": "challenge",
+      "category": "pronoun_challenge",
+      "kind": "USER_FACT",
+      "polarity": "negative",
+      "query": "Wo wohnt sie?",
+      "memories": [
+        {
+          "id": "UF-26-unbound",
+          "kind": "USER_FACT",
+          "text": "Telsa wohnt in Glimmerau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "UF-26-unbound": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-26-unresolved-pronoun",
+      "scope": "challenge",
+      "category": "pronoun_challenge",
+      "kind": "SOURCE_TEXT",
+      "polarity": "negative",
+      "query": "Wo wohnt sie?",
+      "memories": [
+        {
+          "id": "ST-26-unbound",
+          "kind": "SOURCE_TEXT",
+          "text": "Telsa wohnt in Glimmerau.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [],
+      "expectedSourceTermEvidenceById": {
+        "ST-26-unbound": false
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-27-resolved-pronoun",
+      "scope": "challenge",
+      "category": "pronoun_challenge",
+      "kind": "USER_FACT",
+      "polarity": "positive",
+      "query": "Gemeint ist Ruvin. Wo wohnt sie?",
+      "memories": [
+        {
+          "id": "UF-27-home",
+          "kind": "USER_FACT",
+          "text": "Ruvin wohnt in Tauwinkel.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-27-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-27-home": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-27-resolved-pronoun",
+      "scope": "challenge",
+      "category": "pronoun_challenge",
+      "kind": "SOURCE_TEXT",
+      "polarity": "positive",
+      "query": "Gemeint ist Ruvin. Wo wohnt sie?",
+      "memories": [
+        {
+          "id": "ST-27-home",
+          "kind": "SOURCE_TEXT",
+          "text": "Ruvin wohnt in Tauwinkel.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-27-home"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-27-home": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-28-house-chain",
+      "scope": "challenge",
+      "category": "multihop_challenge",
+      "kind": "USER_FACT",
+      "polarity": "positive",
+      "query": "In welchem Ort steht das Haus, das Wurdel besitzt?",
+      "memories": [
+        {
+          "id": "UF-28-chain",
+          "kind": "USER_FACT",
+          "text": "Wurdel besitzt das Haus FAR_71. Das Haus FAR_71 steht in Windklee.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-28-chain"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-28-chain": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-28-house-chain",
+      "scope": "challenge",
+      "category": "multihop_challenge",
+      "kind": "SOURCE_TEXT",
+      "polarity": "positive",
+      "query": "In welchem Ort steht das Haus, das Wurdel besitzt?",
+      "memories": [
+        {
+          "id": "ST-28-chain",
+          "kind": "SOURCE_TEXT",
+          "text": "Wurdel besitzt das Haus FAR_71. Das Haus FAR_71 steht in Windklee.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-28-chain"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-28-chain": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-29-alias-chain",
+      "scope": "challenge",
+      "category": "multihop_challenge",
+      "kind": "USER_FACT",
+      "polarity": "positive",
+      "query": "Wo wohnt der Bote?",
+      "memories": [
+        {
+          "id": "UF-29-chain",
+          "kind": "USER_FACT",
+          "text": "Der Bote heisst Zirlek. Zirlek wohnt in Uferkamm.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-29-chain"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-29-chain": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-29-alias-chain",
+      "scope": "challenge",
+      "category": "multihop_challenge",
+      "kind": "SOURCE_TEXT",
+      "polarity": "positive",
+      "query": "Wo wohnt der Bote?",
+      "memories": [
+        {
+          "id": "ST-29-chain",
+          "kind": "SOURCE_TEXT",
+          "text": "Der Bote heisst Zirlek. Zirlek wohnt in Uferkamm.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-29-chain"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-29-chain": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "UF-30-elimination",
+      "scope": "challenge",
+      "category": "negation_entailment_challenge",
+      "kind": "USER_FACT",
+      "polarity": "positive",
+      "query": "Wo wohnt Omril?",
+      "memories": [
+        {
+          "id": "UF-30-elimination",
+          "kind": "USER_FACT",
+          "text": "Omril wohnt entweder in Lerchental oder in Taumoos, aber nicht in Lerchental.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "UF-30-elimination"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "UF-30-elimination": true
+      },
+      "legacyPositiveControl": false
+    },
+    {
+      "id": "ST-30-elimination",
+      "scope": "challenge",
+      "category": "negation_entailment_challenge",
+      "kind": "SOURCE_TEXT",
+      "polarity": "positive",
+      "query": "Wo wohnt Omril?",
+      "memories": [
+        {
+          "id": "ST-30-elimination",
+          "kind": "SOURCE_TEXT",
+          "text": "Omril wohnt entweder in Lerchental oder in Taumoos, aber nicht in Lerchental.",
+          "provenance": {
+            "synthetic": true,
+            "fixtureVersion": 1
+          }
+        }
+      ],
+      "expectedIds": [
+        "ST-30-elimination"
+      ],
+      "expectedSourceTermEvidenceById": {
+        "ST-30-elimination": true
+      },
+      "legacyPositiveControl": false
+    }
+  ]
+}

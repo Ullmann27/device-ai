@@ -1,0 +1,1 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34051 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34051 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts

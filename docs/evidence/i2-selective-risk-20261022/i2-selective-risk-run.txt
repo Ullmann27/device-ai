@@ -1,0 +1,105 @@
+SIMULATION alpha=0.05 delta=0.1 runs=2000 n=3000 oracleThreshold=0.2929 oracleCoverage=0.5657
+  holm (I2 certificate)    violationRate=0.0005 certifiedRate=1.0000 meanThreshold=0.4240 meanTrueCoverage=0.4608
+  bonferroni               violationRate=0.0000 certifiedRate=1.0000 meanThreshold=0.4357 meanTrueCoverage=0.4515
+  sgr binary search        violationRate=0.0095 certifiedRate=1.0000 meanThreshold=0.3914 meanTrueCoverage=0.4869
+  uncorrected p<=delta     violationRate=0.0765 certifiedRate=1.0000 meanThreshold=0.3510 meanTrueCoverage=0.5192
+  naive empirical<=alpha   violationRate=0.4930 certifiedRate=1.0000 meanThreshold=0.2972 meanTrueCoverage=0.5623
+SIMULATION alpha=0.02 delta=0.1 runs=2000 n=3000 oracleThreshold=0.5528 oracleCoverage=0.3578
+  holm (I2 certificate)    violationRate=0.0000 certifiedRate=0.6560 meanThreshold=0.7423 meanTrueCoverage=0.2062
+  bonferroni               violationRate=0.0000 certifiedRate=0.6560 meanThreshold=0.7438 meanTrueCoverage=0.2049
+  sgr binary search        violationRate=0.0065 certifiedRate=0.8570 meanThreshold=0.6971 meanTrueCoverage=0.2423
+  uncorrected p<=delta     violationRate=0.0820 certifiedRate=1.0000 meanThreshold=0.6354 meanTrueCoverage=0.2917
+  naive empirical<=alpha   violationRate=0.5060 certifiedRate=1.0000 meanThreshold=0.5561 meanTrueCoverage=0.3551
+CALIBRATION SIZE (minimal answered n so that P(Bin(n, alpha) <= floor(rate n)) <= delta/101)
+  alpha=0.1  observed=0.0000 n>=66  observed=0.0250 n>=108  observed=0.0500 n>=277
+  alpha=0.05  observed=0.0000 n>=135  observed=0.0125 n>=221  observed=0.0250 n>=590
+  alpha=0.02  observed=0.0000 n>=343  observed=0.0050 n>=558  observed=0.0100 n>=1486
+  alpha=0.01  observed=0.0000 n>=689  observed=0.0025 n>=1120  observed=0.0050 n>=2979
+MODEL V8 entity proximity + cue words excluded seed=1 steps=7380 checkpointSha256=1786fa9e58d2a1262c461bd2d9563cddf5478260ac62da88f160e868c3c3b7ef
+CALIBRATION n=1700 sha=d1f85560e6b99b6091ea223ec2b6b1d380157e065ae0ad32bf6689d7d38f385b
+HOLDOUT     n=1700 sha=6bfc22aa44ec8a32028aa42bd2a920a4ed5e0c5275a4758bc3064c556a2160d3
+RESPLITS    draws 20..59, n=6800, 200 random 20/20 splits of whole draws
+TEST        n=264 sha=974e4ba3c405005a7773c479282f4abc03e2a23530def4da69471a27799b0ba8 (known frozen set, not a new blind test)
+I1 REFERENCE alpha=0.1 threshold=0.00 answered=734/1700 errors=80 calibrationSelectiveError=0.1090
+I1 REFERENCE alpha=0.05 threshold=0.40 answered=708/1700 errors=70 calibrationSelectiveError=0.0989
+I1 REFERENCE alpha=0.02 threshold=0.64 answered=576/1700 errors=26 calibrationSelectiveError=0.0451
+CERTIFICATE selective a_s=0.1 delta=0.1 -> threshold=0.57 answered=609/1700 coverage=0.3582 errors=38 selectiveError=0.0624 p=0.000678 holmLevel=0.00159 bonferroniUpper=0.0986 marginalError=0.0224
+CERTIFICATE selective a_s=0.05 delta=0.1 -> threshold=0.74 answered=513/1700 coverage=0.3018 errors=11 selectiveError=0.0214 p=0.000769 holmLevel=0.00105 bonferroniUpper=0.0492 marginalError=0.0065
+CERTIFICATE selective a_s=0.02 delta=0.1 -> NONE (always abstain)
+CERTIFICATE selective a_s=0.01 delta=0.1 -> NONE (always abstain)
+CERTIFICATE joint a_m=0.05 a_s=0.1 delta=0.1 -> threshold=0.57 answered=609/1700 coverage=0.3582 errors=38 selectiveError=0.0624 p=0.000678 holmLevel=0.00159 bonferroniUpper=0.0986 marginalError=0.0224
+CERTIFICATE joint a_m=0.02 a_s=0.05 delta=0.1 -> threshold=0.74 answered=513/1700 coverage=0.3018 errors=11 selectiveError=0.0214 p=0.000769 holmLevel=0.00105 bonferroniUpper=0.0492 marginalError=0.0065
+CERTIFICATE joint a_m=0.02 a_s=0.02 delta=0.1 -> NONE (always abstain)
+RULES ON CALIBRATION a_s=0.1  bonferroni=0.57 sgr=0.54 uncorrected=0.47 naive=0.4
+RULES ON CALIBRATION a_s=0.05  bonferroni=0.74 sgr=0.72 uncorrected=0.69 naive=0.61
+RULES ON CALIBRATION a_s=0.02  bonferroni=null sgr=null uncorrected=null naive=0.81
+RULES ON CALIBRATION a_s=0.01  bonferroni=null sgr=null uncorrected=null naive=0.92
+RESPLIT selective a_s=0.1        violations=0/200 (0.0000) noCertificate=0 meanHoldoutSelectiveError=0.0745 meanHoldoutCoverage=0.3775
+RESPLIT selective a_s=0.05       violations=0/200 (0.0000) noCertificate=0 meanHoldoutSelectiveError=0.0289 meanHoldoutCoverage=0.2748
+RESPLIT selective a_s=0.02       violations=0/200 (0.0000) noCertificate=94 meanHoldoutSelectiveError=0.0055 meanHoldoutCoverage=0.1510
+RESPLIT selective a_s=0.01       violations=0/200 (0.0000) noCertificate=200 meanHoldoutSelectiveError=0.0000 meanHoldoutCoverage=0.0000
+RESPLIT joint a_m=0.05 a_s=0.1   violations=0/200 (0.0000) noCertificate=0 meanHoldoutSelectiveError=0.0745 meanHoldoutCoverage=0.3775
+RESPLIT joint a_m=0.02 a_s=0.05  violations=0/200 (0.0000) noCertificate=0 meanHoldoutSelectiveError=0.0289 meanHoldoutCoverage=0.2748
+RESPLIT joint a_m=0.02 a_s=0.02  violations=0/200 (0.0000) noCertificate=94 meanHoldoutSelectiveError=0.0055 meanHoldoutCoverage=0.1510
+RESPLIT RULE a_s=0.1 bonferroni   violations=0/200 (0.0000) noCertificate=0
+RESPLIT RULE a_s=0.1 sgr          violations=0/200 (0.0000) noCertificate=0
+RESPLIT RULE a_s=0.1 uncorrected  violations=4/200 (0.0200) noCertificate=0
+RESPLIT RULE a_s=0.1 naive        violations=75/200 (0.3750) noCertificate=0
+RESPLIT RULE a_s=0.05 bonferroni   violations=0/200 (0.0000) noCertificate=0
+RESPLIT RULE a_s=0.05 sgr          violations=0/200 (0.0000) noCertificate=0
+RESPLIT RULE a_s=0.05 uncorrected  violations=14/200 (0.0700) noCertificate=0
+RESPLIT RULE a_s=0.05 naive        violations=106/200 (0.5300) noCertificate=0
+RESPLIT RULE a_s=0.02 bonferroni   violations=0/200 (0.0000) noCertificate=94
+RESPLIT RULE a_s=0.02 sgr          violations=0/200 (0.0000) noCertificate=3
+RESPLIT RULE a_s=0.02 uncorrected  violations=2/200 (0.0100) noCertificate=0
+RESPLIT RULE a_s=0.02 naive        violations=57/200 (0.2850) noCertificate=0
+RESPLIT RULE a_s=0.01 bonferroni   violations=0/200 (0.0000) noCertificate=200
+RESPLIT RULE a_s=0.01 sgr          violations=0/200 (0.0000) noCertificate=199
+RESPLIT RULE a_s=0.01 uncorrected  violations=1/200 (0.0050) noCertificate=0
+RESPLIT RULE a_s=0.01 naive        violations=52/200 (0.2600) noCertificate=0
+DEPENDENCE selective a_s=0.1        extraDraws answered=2448 errors=155 rate=0.0633 phi=0.4474 designEffectAdjusted n=609 k=38 stillCertified=true
+DEPENDENCE selective a_s=0.05       extraDraws answered=2076 errors=72 rate=0.0347 phi=0.4376 designEffectAdjusted n=513 k=11 stillCertified=true
+DEPENDENCE joint a_m=0.05 a_s=0.1   extraDraws answered=2448 errors=155 rate=0.0633 phi=0.4474 designEffectAdjusted n=609 k=38 stillCertified=true
+DEPENDENCE joint a_m=0.02 a_s=0.05  extraDraws answered=2076 errors=72 rate=0.0347 phi=0.4376 designEffectAdjusted n=513 k=11 stillCertified=true
+== selective a_s=0.1 threshold=0.57
+  HOLDOUT       n=1700 answered=603 coverage=0.3547 correct=567 errors=36 selectiveError=0.0597 [0.0434, 0.0815] marginalError=0.0212
+  TEST ALL      n=264 answered=90 coverage=0.3409 correct=86 errors=4 selectiveError=0.0444 [0.0174, 0.1088] marginalError=0.0152
+  TEST SEEN     n=196 answered=85 coverage=0.4337 correct=82 errors=3 selectiveError=0.0353 [0.0121, 0.0987] marginalError=0.0153
+  TEST UNSEEN   n=68 answered=5 coverage=0.0735 correct=4 errors=1 selectiveError=0.2000 [0.0362, 0.6245] marginalError=0.0147
+  TEST          answerable 86/124 correct, wrong span 1, false abstain 37 | unanswerable 137/140 abstained, unsupported answers 3 | traps 2/202
+== selective a_s=0.05 threshold=0.74
+  HOLDOUT       n=1700 answered=523 coverage=0.3076 correct=506 errors=17 selectiveError=0.0325 [0.0204, 0.0514] marginalError=0.0100
+  TEST ALL      n=264 answered=73 coverage=0.2765 correct=71 errors=2 selectiveError=0.0274 [0.0075, 0.0945] marginalError=0.0076
+  TEST SEEN     n=196 answered=73 coverage=0.3724 correct=71 errors=2 selectiveError=0.0274 [0.0075, 0.0945] marginalError=0.0102
+  TEST UNSEEN   n=68 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST          answerable 71/124 correct, wrong span 0, false abstain 53 | unanswerable 138/140 abstained, unsupported answers 2 | traps 1/202
+== selective a_s=0.02 (no certificate: always abstain)
+  HOLDOUT       n=1700 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST ALL      n=264 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST SEEN     n=196 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST UNSEEN   n=68 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST          answerable 0/124 correct, wrong span 0, false abstain 124 | unanswerable 140/140 abstained, unsupported answers 0 | traps 0/202
+== selective a_s=0.01 (no certificate: always abstain)
+  HOLDOUT       n=1700 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST ALL      n=264 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST SEEN     n=196 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST UNSEEN   n=68 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST          answerable 0/124 correct, wrong span 0, false abstain 124 | unanswerable 140/140 abstained, unsupported answers 0 | traps 0/202
+== joint a_m=0.05 a_s=0.1 threshold=0.57
+  HOLDOUT       n=1700 answered=603 coverage=0.3547 correct=567 errors=36 selectiveError=0.0597 [0.0434, 0.0815] marginalError=0.0212
+  TEST ALL      n=264 answered=90 coverage=0.3409 correct=86 errors=4 selectiveError=0.0444 [0.0174, 0.1088] marginalError=0.0152
+  TEST SEEN     n=196 answered=85 coverage=0.4337 correct=82 errors=3 selectiveError=0.0353 [0.0121, 0.0987] marginalError=0.0153
+  TEST UNSEEN   n=68 answered=5 coverage=0.0735 correct=4 errors=1 selectiveError=0.2000 [0.0362, 0.6245] marginalError=0.0147
+  TEST          answerable 86/124 correct, wrong span 1, false abstain 37 | unanswerable 137/140 abstained, unsupported answers 3 | traps 2/202
+== joint a_m=0.02 a_s=0.05 threshold=0.74
+  HOLDOUT       n=1700 answered=523 coverage=0.3076 correct=506 errors=17 selectiveError=0.0325 [0.0204, 0.0514] marginalError=0.0100
+  TEST ALL      n=264 answered=73 coverage=0.2765 correct=71 errors=2 selectiveError=0.0274 [0.0075, 0.0945] marginalError=0.0076
+  TEST SEEN     n=196 answered=73 coverage=0.3724 correct=71 errors=2 selectiveError=0.0274 [0.0075, 0.0945] marginalError=0.0102
+  TEST UNSEEN   n=68 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST          answerable 71/124 correct, wrong span 0, false abstain 53 | unanswerable 138/140 abstained, unsupported answers 2 | traps 1/202
+== joint a_m=0.02 a_s=0.02 (no certificate: always abstain)
+  HOLDOUT       n=1700 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST ALL      n=264 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST SEEN     n=196 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST UNSEEN   n=68 answered=0 coverage=0.0000 correct=0 errors=0 selectiveError=- [0.0000, 1.0000] marginalError=0.0000
+  TEST          answerable 0/124 correct, wrong span 0, false abstain 124 | unanswerable 140/140 abstained, unsupported answers 0 | traps 0/202

@@ -1,0 +1,24 @@
+TAP version 13
+# Subtest: Android source routes bootstrap actions through the existing cognitive agent (source wiring only)
+ok 1 - Android source routes bootstrap actions through the existing cognitive agent (source wiring only)
+  ---
+  duration_ms: 3.458205
+  type: 'test'
+  ...
+# Subtest: native natural request → actual tool → receipt → persisted episode, with negative regressions
+ok 2 - native natural request → actual tool → receipt → persisted episode, with negative regressions
+  ---
+  duration_ms: 33691.301792
+  type: 'test'
+  ...
+# JUnit version 4.13.2 ........................................................... Time: 0.611  OK (59 tests)
+# request=Continuum, prüfe bitte den freien Speicher. | callId=native-storage-e2e-1 | state=SUCCEEDED | sha256=639bd409aa8b2f8bbb6d5b58215714229f42dd18a1f0af18d5e786561710f8b2 | experience=agent-909585d5fbf97b81-1793074449815-0 | outcome=SUCCESS | source=tool-call:native-storage-e2e-1:sha256:639bd409aa8b2f8bbb6d5b58215714229f42dd18a1f0af18d5e786561710f8b2 | stateRoot=859c457f93f6087ab54b88291d19cd4a21cdab375b11586a5d7f449be73221cc | executions=1 | persistedAfterRestart=true | ownerFactsUnchanged=true | weightsUpdated=false
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 33769.00381

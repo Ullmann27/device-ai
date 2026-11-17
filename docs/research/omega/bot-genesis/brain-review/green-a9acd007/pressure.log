@@ -1,0 +1,7 @@
+PASS zero-profile-model-budget-blocks-preparation-without-poisoning-slot
+PASS expired-profile-deadline-rejects-current-and-completion
+PASS accepted-output-becomes-stale-after-note-withdrawal
+PASS valid-unicode-history-stays-within-actual-serialization-budget
+OBSERVATION committedBeforeFull=90 retainedConversationBytes=4175692 resetClearedPointer=true oldObjectsRetained=true
+PASS real-object-budget-saturation-preserves-last-commit-and-withdrawal
+RESULT passed=5 failed=0

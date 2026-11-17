@@ -1,0 +1,25 @@
+✔ EXP14 uses hardware-only single-pass stroke, never a full-window postprocess (3.479338ms)
+✔ EXP14 respects original avatar/dialog protected bounds and owner opt-in (0.797722ms)
+✔ original frame timeline and safe keep-out remain canonical (1.611256ms)
+✔ text-safe 0.09 raster never controls structural rim and scan (1.221141ms)
+✔ EXP01 slices glass and brackets into different Z planes, not native text (0.53534ms)
+✔ only an honest completed tool result may trigger a current-window pulse (0.463811ms)
+✔ cinema uses the owner-controlled existing window and frame budget (4.282003ms)
+✔ EXP11 orb glow is tied to a real accepted window with a bounded time course (1.483254ms)
+✔ EXP14 shader rim uses pixel space after leaving dp scaled glass canvas (0.38036ms)
+✔ no fake external-send or new native frame timers introduced (3.666636ms)
+✔ verbal completion cannot erase an in-flight document draft (1.506782ms)
+✔ memory and cancelled turns cannot create false document world (0.699859ms)
+✔ document questions render from real event text, not invented selectable answers (1.296895ms)
+✔ real future answer-pills remain gated by typed, explicitly authorized actions (0.56806ms)
+✔ original avatar bridge survives cinema branch integration (14.26234ms)
+✔ real PCM anticipation and existing Filament light remain wired (3.384225ms)
+✔ thermal and document protections must survive visual branch merges (1.38389ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1249.487018

@@ -1,0 +1,36 @@
+import groovy.json.JsonSlurper
+import org.gradle.api.tasks.testing.Test
+
+// The existing repository uses this Test.filter API as well. No raw task-local
+// --tests arguments are passed through the early QA task-name allowlist.
+def path = System.getProperty('continuum.native.testSelection')
+if (!path) throw new GradleException('Explicit local test selection is required')
+def selected = new JsonSlurper().parse(new File(path))
+if (!(selected instanceof List) || selected.isEmpty() || selected.size() > 30 ||
+        !selected.every { it instanceof String && it.matches('[A-Za-z0-9_.*$]+') }) {
+    throw new GradleException('Invalid local test selection')
+}
+if (gradle.startParameter.taskNames != [':app:testDebugUnitTest']) {
+    throw new GradleException('Local selection accepts only :app:testDebugUnitTest')
+}
+def isolateClasses = System.getProperty('continuum.native.isolateTestClasses')
+if (isolateClasses != null && isolateClasses != 'true') {
+    throw new GradleException('Test-class isolation accepts only explicit true or an absent option')
+}
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    app.tasks.withType(Test).matching { it.name == 'testDebugUnitTest' }.configureEach {
+        // Each explicitly requested selection must produce fresh JUnit evidence.
+        // Compilation dependencies retain their normal incremental behavior.
+        outputs.upToDateWhen { false }
+        if (isolateClasses == 'true') {
+            forkEvery = 1L
+            maxParallelForks = 1
+        }
+        filter {
+            selected.each { includeTestsMatching(it) }
+            failOnNoMatchingTests = true
+        }
+    }
+}

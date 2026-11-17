@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "origin": {
+    "test-memory.gradle": "Code53 frozen QA harness: commit 67bf048a7d50a78b027da27a6b9814cbd2457372, blob c88000f50c5fff16025229d651f426f3bc7a49f5",
+    "journal": "Adapted existing tools/pdf-scene-review/focused.init.gradle; full run has no class filters; focused scope lists 27 classes. Source identity before and after is journaled even on failure.",
+    "full-node-serial.mjs": "Same 354-file inventory and order as complete c362 full-node run; existing process supervision/outcome evaluator and unchanged 30-minute timeout. Only outer test-file concurrency changes from 2 to 1; prior failures remain recorded.",
+    "omega-ui-recheck.init.gradle": "Same source-bound journal and resource controls; exact three previously failing Activity classes, no cases filtered inside them. Follows complete205-case RED and configured lint PASS.",
+    "run-android-phase.py": "Reviewed exact-source UI recheck/full Android runner. Full PASS additionally requires the actual native PDF probe SUCCESS exactly once; SKIPPED cannot satisfy this gate even if a JVM allowance is inherited. Source, journal, existing Code52 XML gate, and driver stability remain mandatory."
+  },
+  "hashes": {
+    "omega-focused.init.gradle": "bfe81b6ad15ae2ea1e2c976311602e68c842ec4f466bd8665e20988c07a53006",
+    "full-journal.init.gradle": "c3b915a79acd5cbb8e99323de59e37c229637e544298484cb35c8ad5a2d967c4",
+    "test-memory.gradle": "9541dfeedd3520e03317d8ef37461062a00432d4d1e7d9c064eebde1795d90c5",
+    "full-node-serial.mjs": "c08996dcc8bc891cdd25f61ad78ba06dd113216c5cf5c205d141e686cc70b193",
+    "omega-ui-recheck.init.gradle": "1ee0bd3b475e456f0ee332cc745d466ba0aad9bbf6cc5c7467c49d104a502858",
+    "run-android-phase.py": "0625970c4ee24fd88b26b547e8895093e08955084e19e10a012244ef0832fa11"
+  },
+  "strict_pdf_allowance": "NOT_SET",
+  "assertion_changes": false
+}

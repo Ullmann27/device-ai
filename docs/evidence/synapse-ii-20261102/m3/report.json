@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "base": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+  "chain": "node",
+  "startedAt": "2026-11-02T02:22:20.113Z",
+  "inference": {
+    "mode": "DETERMINISTIC_ONLY",
+    "modelId": null,
+    "modelInvocations": 0,
+    "reason": "No generative model is invoked by this repair pipeline"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 384,
+        "tests": {
+          "total": 4,
+          "failed": 3,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 4,
+          "passed": 1,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "57544a5af111e2d8b78386fdbdc1801c0c5c0e58b8764667197b22dcb56abc54",
+            "922ade163be2934fdb7c2f2cab2c31ca5b71afaf45a0e8a94226f2c424870bbb",
+            "fdd0044f3c6607507ea2e77b8cd5443f74bc5fa9a0fed677f8665dbe0b3c9c31",
+            "fea5c28aec4c27e1e43fe524261682186dc8453de46c39e81a373e5f1c14bb0a"
+          ]
+        },
+        "diagnostics": 3
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.quad positive regression",
+        "file": ".github/continuum/math.mjs",
+        "line": 2,
+        "col": 25,
+        "message": "sqare is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "sqare",
+        "fingerprint": "0cb7d1ec3490bbb4"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.quad zero regression",
+        "file": ".github/continuum/math.mjs",
+        "line": 2,
+        "col": 25,
+        "message": "sqare is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "sqare",
+        "fingerprint": "0cb7d1ec3490bbb4"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.quad negative regression",
+        "file": ".github/continuum/math.mjs",
+        "line": 2,
+        "col": 25,
+        "message": "sqare is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "sqare",
+        "fingerprint": "0cb7d1ec3490bbb4"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "ce0d5a49e0655634",
+      "strategy": "JS_TYPO_REFERENCE",
+      "diagnostic": "0cb7d1ec3490bbb4",
+      "diagnosticKind": "REFERENCE_ERROR",
+      "description": "Replace unresolved 'sqare' with nearby name 'square'",
+      "score": 0.56,
+      "critic": {
+        "approved": true,
+        "risk": 0.117,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": false
+      },
+      "edits": [
+        {
+          "file": ".github/continuum/math.mjs",
+          "oldText": "export function quad(x){return sqare(square(x));}",
+          "newText": "export function quad(x){return square(square(x));}",
+          "line": 2
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          ".github/continuum/math.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": true,
+          "testProfile": true,
+          "exitCode": 0,
+          "ms": 458,
+          "tests": {
+            "total": 4,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 4,
+            "passed": 4,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "57544a5af111e2d8b78386fdbdc1801c0c5c0e58b8764667197b22dcb56abc54",
+              "922ade163be2934fdb7c2f2cab2c31ca5b71afaf45a0e8a94226f2c424870bbb",
+              "fdd0044f3c6607507ea2e77b8cd5443f74bc5fa9a0fed677f8665dbe0b3c9c31",
+              "fea5c28aec4c27e1e43fe524261682186dc8453de46c39e81a373e5f1c14bb0a"
+            ]
+          }
+        }
+      ],
+      "remainingDiagnostics": [],
+      "evidence": {
+        "sufficient": true,
+        "reasons": []
+      },
+      "outcome": "VERIFIED"
+    }
+  ],
+  "verified": {
+    "candidate": "ce0d5a49e0655634",
+    "strategy": "JS_TYPO_REFERENCE",
+    "description": "Replace unresolved 'sqare' with nearby name 'square'",
+    "patch": "diff --git a/.github/continuum/math.mjs b/.github/continuum/math.mjs\nindex 442ece9..ddb1d3a 100644\n--- a/.github/continuum/math.mjs\n+++ b/.github/continuum/math.mjs\n@@ -1,2 +1,2 @@\n export function square(x){return x*x;}\n-export function quad(x){return sqare(square(x));}\n+export function quad(x){return square(square(x));}\n",
+    "patchSha256": "da5c8bbf0e3a012d3cab4d8877c73f9c21ad6beec04df3411f169c2dd52a5a43",
+    "files": [
+      ".github/continuum/math.mjs"
+    ],
+    "tests": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "exitCode": 0,
+        "ms": 458,
+        "tests": {
+          "total": 4,
+          "failed": 0,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 4,
+          "passed": 4,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "57544a5af111e2d8b78386fdbdc1801c0c5c0e58b8764667197b22dcb56abc54",
+            "922ade163be2934fdb7c2f2cab2c31ca5b71afaf45a0e8a94226f2c424870bbb",
+            "fdd0044f3c6607507ea2e77b8cd5443f74bc5fa9a0fed677f8665dbe0b3c9c31",
+            "fea5c28aec4c27e1e43fe524261682186dc8453de46c39e81a373e5f1c14bb0a"
+          ]
+        }
+      }
+    ],
+    "reviewRequired": false,
+    "confidence": 0.56
+  },
+  "outcome": "VERIFIED",
+  "execution": {
+    "mode": "HOST_LEGACY",
+    "cancellation": "STEP_WATCHDOG"
+  },
+  "finishedAt": "2026-11-02T02:22:21.340Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+    "chain": "node",
+    "conclusion": "VERIFIED",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 3,
+        "proof": "aa929b76652303ac004b749ea6586f4c1d37d298906c647f6b2aea373814ae51"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "053b74ba45bbeb87",
+        "approved": true,
+        "proof": "7722829c89eaa3beed428a4e3649f958244e5ebd5000d4b8b02ce437ca941749"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "053b74ba45bbeb87",
+        "editedFiles": 1,
+        "proof": "e2f582ac2673ab7a7b364bcd0ad50727e497edbfaee0214ef53515ee2fbe462c"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "053b74ba45bbeb87",
+        "passed": true,
+        "executed": true,
+        "profiles": 1,
+        "proof": "fa566c76d776dffd8ab881fd6c25f0a3ada851740481cce28d7950732b72a5b6"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "PATCH_PENDING_REVIEW",
+        "patchSha256": "da5c8bbf0e3a012d3cab4d8877c73f9c21ad6beec04df3411f169c2dd52a5a43",
+        "approvedForMerge": false,
+        "proof": "6f74a19b8c96f1b61ffcb6f07e43c7840177464d971bf82fe07a7e39ea36f2be"
+      }
+    ],
+    "integrity": "16efa165cdb03c6c9cf47c09ffcc437b56887edd4cb504c38cbaf6367d98dcdc"
+  },
+  "independent": {
+    "passed": true,
+    "profiles": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "executed": 4,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "evidenceSufficient": true,
+    "reasons": []
+  }
+}

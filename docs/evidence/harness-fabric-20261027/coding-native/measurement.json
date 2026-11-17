@@ -1,0 +1,15 @@
+{
+  "modelLoadSeconds": 1.8682231903076172,
+  "elapsedSeconds": 110.86538767814636,
+  "serverResources": [
+    "VmHWM:\t 1986204 kB",
+    "VmRSS:\t 1986204 kB",
+    "Threads:\t8"
+  ],
+  "proofExitCode": 1,
+  "computeNodes": 1,
+  "distributedInference": false,
+  "wireBytes": "NOT_MEASURED",
+  "seed": 20261027,
+  "modelWeightBytes": 1117320768
+}

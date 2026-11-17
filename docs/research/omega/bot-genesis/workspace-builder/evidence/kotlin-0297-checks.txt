@@ -1,0 +1,9 @@
+PASS mailbox transports immutable references and consumes current authority
+PASS mailbox rejection does not claim budget or imply delivery
+PASS transport spoof cannot replace typed sender or recipient
+PASS task-authorized sender required even for another registered profile
+PASS profile budget and exact fixed profile restrict dispatch
+PASS canonical atomic claim rejects duplicate across adapter restart
+PASS concurrent adapters share one authority budget instead of multiplying it
+PASS late revoked result does not become successful report
+HOST_SOFTWARE_CONTRACTS=8; authorities and workspace observations are explicit test doubles; no OS/model/device acceptance

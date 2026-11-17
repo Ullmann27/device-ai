@@ -1,0 +1,226 @@
+TAP version 13
+# Subtest: same Android order cannot bind another checkout even with identical commit bytes
+ok 1 - same Android order cannot bind another checkout even with identical commit bytes
+  ---
+  duration_ms: 167.066635
+  type: 'test'
+  ...
+# Subtest: new order cannot deduplicate an open goal belonging to another checkout
+ok 2 - new order cannot deduplicate an open goal belonging to another checkout
+  ---
+  duration_ms: 185.370393
+  type: 'test'
+  ...
+# Subtest: stale source supplied to a new order is refused before a task exists
+ok 3 - stale source supplied to a new order is refused before a task exists
+  ---
+  duration_ms: 63.966381
+  type: 'test'
+  ...
+# Subtest: same checkout/order is idempotent after module restart and canonical symlink
+ok 4 - same checkout/order is idempotent after module restart and canonical symlink
+  ---
+  duration_ms: 155.008577
+  type: 'test'
+  ...
+# Subtest: bound worker cycle refuses a different checkout before indexing or execution
+ok 5 - bound worker cycle refuses a different checkout before indexing or execution
+  ---
+  duration_ms: 105.424625
+  type: 'test'
+  ...
+# Subtest: retry cannot relabel an old task with a newer checkout HEAD
+ok 6 - retry cannot relabel an old task with a newer checkout HEAD
+  ---
+  duration_ms: 130.360695
+  type: 'test'
+  ...
+# Subtest: missing legacy binding requires owner review, never automatic state adoption
+ok 7 - missing legacy binding requires owner review, never automatic state adoption
+  ---
+  duration_ms: 124.475431
+  type: 'test'
+  ...
+# Subtest: actual host classifier preserves membership under pipefail and an early grep match
+ok 8 - actual host classifier preserves membership under pipefail and an early grep match
+  ---
+  duration_ms: 92.37186
+  type: 'test'
+  ...
+# Subtest: Exact UTF16 offsets and SHA bound source
+ok 9 - Exact UTF16 offsets and SHA bound source
+  ---
+  duration_ms: 10.192253
+  type: 'test'
+  ...
+# Subtest: Wrong source is an unsupported claim and false assignment
+ok 10 - Wrong source is an unsupported claim and false assignment
+  ---
+  duration_ms: 1.063423
+  type: 'test'
+  ...
+# Subtest: Wrong Unicode offset is detected
+ok 11 - Wrong Unicode offset is detected
+  ---
+  duration_ms: 2.442533
+  type: 'test'
+  ...
+# Subtest: False abstention is not counted correct
+ok 12 - False abstention is not counted correct
+  ---
+  duration_ms: 19.795041
+  type: 'test'
+  ...
+# Subtest: Missing predictions are rejected even with plausible aggregate score
+ok 13 - Missing predictions are rejected even with plausible aggregate score
+  ---
+  duration_ms: 7.079578
+  type: 'test'
+  ...
+# Subtest: Duplicate or unexpected ids reject entire result
+ok 14 - Duplicate or unexpected ids reject entire result
+  ---
+  duration_ms: 0.437275
+  type: 'test'
+  ...
+# Subtest: Malformed empty replies never become safe abstentions
+ok 15 - Malformed empty replies never become safe abstentions
+  ---
+  duration_ms: 0.506638
+  type: 'test'
+  ...
+# Subtest: Mutating frozen original invalidates whole run
+ok 16 - Mutating frozen original invalidates whole run
+  ---
+  duration_ms: 0.365675
+  type: 'test'
+  ...
+# Subtest: Source range cannot exceed original string
+ok 17 - Source range cannot exceed original string
+  ---
+  duration_ms: 0.511523
+  type: 'test'
+  ...
+# Subtest: Confidence intervals are finite and no primary promotion for toy sample
+ok 18 - Confidence intervals are finite and no primary promotion for toy sample
+  ---
+  duration_ms: 0.515557
+  type: 'test'
+  ...
+# Subtest: One hundred deterministic tuple mutations never pass as source-bound evidence
+ok 19 - One hundred deterministic tuple mutations never pass as source-bound evidence
+  ---
+  duration_ms: 90.690243
+  type: 'test'
+  ...
+# Subtest: signed-release claims remain explicitly unverified after successful unsigned QA
+ok 20 - signed-release claims remain explicitly unverified after successful unsigned QA
+  ---
+  duration_ms: 2965.856766
+  type: 'test'
+  ...
+# Subtest: wrong commit, version or release-claim metadata cannot pass
+ok 21 - wrong commit, version or release-claim metadata cannot pass
+  ---
+  duration_ms: 24.023803
+  type: 'test'
+  ...
+# Subtest: missing test transcript and failed JUnit block the architectural receipt
+ok 22 - missing test transcript and failed JUnit block the architectural receipt
+  ---
+  duration_ms: 142.999411
+  type: 'test'
+  ...
+# Subtest: a failed Gradle transcript never becomes a proof
+ok 23 - a failed Gradle transcript never becomes a proof
+  ---
+  duration_ms: 9.235305
+  type: 'test'
+  ...
+# Subtest: rejects skipped required JUnit suite and spoofed test metadata
+ok 24 - rejects skipped required JUnit suite and spoofed test metadata
+  ---
+  duration_ms: 72.651471
+  type: 'test'
+  ...
+# Subtest: rejects fullname and forged error attributes
+ok 25 - rejects fullname and forged error attributes
+  ---
+  duration_ms: 292.769925
+  type: 'test'
+  ...
+# Subtest: rejects red or skipped Node TAP even with present reports
+ok 26 - rejects red or skipped Node TAP even with present reports
+  ---
+  duration_ms: 8.635026
+  type: 'test'
+  ...
+# Subtest: actual backend QA command emits machine-readable TAP on modern Node
+ok 27 - actual backend QA command emits machine-readable TAP on modern Node
+  ---
+  duration_ms: 878.216416
+  type: 'test'
+  ...
+# Subtest: actual APK identity must match source receipt instead of trusting STATUS metadata
+ok 28 - actual APK identity must match source receipt instead of trusting STATUS metadata
+  ---
+  duration_ms: 45.884879
+  type: 'test'
+  ...
+# Subtest: Empty repo is never misreported as connected
+ok 29 - Empty repo is never misreported as connected
+  ---
+  duration_ms: 1.83593
+  type: 'test'
+  ...
+# Subtest: Presence alone does not qualify as a real caller
+ok 30 - Presence alone does not qualify as a real caller
+  ---
+  duration_ms: 2.224622
+  type: 'test'
+  ...
+# Subtest: One specific edge is found but all other missing edges still block gate
+ok 31 - One specific edge is found but all other missing edges still block gate
+  ---
+  duration_ms: 10.092967
+  type: 'test'
+  ...
+# Subtest: stream preview does not force focus to bottom or make live draft selectable
+ok 32 - stream preview does not force focus to bottom or make live draft selectable
+  ---
+  duration_ms: 1.407277
+  type: 'test'
+  ...
+# Subtest: owner scrolling pauses auto-follow while a native response streams
+ok 33 - owner scrolling pauses auto-follow while a native response streams
+  ---
+  duration_ms: 0.712988
+  type: 'test'
+  ...
+# Subtest: time deadline is based on progress, not fixed wall clock
+ok 34 - time deadline is based on progress, not fixed wall clock
+  ---
+  duration_ms: 1.388661
+  type: 'test'
+  ...
+# Subtest: existing cancellation and unverified-draft protections remain in place
+ok 35 - existing cancellation and unverified-draft protections remain in place
+  ---
+  duration_ms: 0.831101
+  type: 'test'
+  ...
+# Subtest: actual Android input routes unsafe evidence to a terminal reply before model/web fallback
+ok 36 - actual Android input routes unsafe evidence to a terminal reply before model/web fallback
+  ---
+  duration_ms: 6.569406
+  type: 'test'
+  ...
+1..36
+# tests 36
+# suites 0
+# pass 36
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7435.596654

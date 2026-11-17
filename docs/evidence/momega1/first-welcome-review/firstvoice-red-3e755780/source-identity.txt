@@ -1,0 +1,6 @@
+a57c4fb4ca964bf0e0c1c487508284683a392d4d253930bc0848da016dcb8d6c  /workspace/momega1-build-env/firstvoice-red-3e755780/source-before.txt
+3e755780053d1725d98c864db7a4a5e43616a520
+100644 75f89e741e3f300a80234c98a1e4fae04237744c 0	app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+100644 b095456f27d6266514b0ebfaaf04c9e095dbdae1 0	app/src/main/java/at/heinz/deviceai/BootstrapMemoryStore.kt
+100644 ee10ae93b9ae54e59e92b5fe3e1878c27ddc91bf 0	app/src/uiTest/java/at/heinz/deviceai/ContinuumFirstVoiceUiTest.kt
+a57c4fb4ca964bf0e0c1c487508284683a392d4d253930bc0848da016dcb8d6c  /workspace/momega1-build-env/firstvoice-red-3e755780/source-after.txt

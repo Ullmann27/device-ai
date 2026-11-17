@@ -1,0 +1,676 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+ContinuumSystemStatusWorkWindowUiTest > speakingInsideAnOpenWindowKeepsTheCameraAndStopEndsBothAtOnce STARTED
+
+ContinuumSystemStatusWorkWindowUiTest > speakingInsideAnOpenWindowKeepsTheCameraAndStopEndsBothAtOnce PASSED
+
+ContinuumSystemStatusWorkWindowUiTest > cameraStopsImmediatelyAndDoesNotReplayAfterLifecycleBoundaries STARTED
+
+ContinuumSystemStatusWorkWindowUiTest > cameraStopsImmediatelyAndDoesNotReplayAfterLifecycleBoundaries PASSED
+
+SystemIntelligenceUiTest > nativeDeviceInformationDoesNotRequireShizuku STARTED
+
+SystemIntelligenceUiTest > nativeDeviceInformationDoesNotRequireShizuku PASSED
+
+SystemIntelligenceUiTest > mutationsCannotDispatchWithoutBothApprovals STARTED
+
+SystemIntelligenceUiTest > mutationsCannotDispatchWithoutBothApprovals PASSED
+
+SystemIntelligenceUiTest > diagnosisActuallyReachesNormalAndroidProbe STARTED
+
+SystemIntelligenceUiTest > diagnosisActuallyReachesNormalAndroidProbe PASSED
+
+SystemIntelligenceUiTest > pluggedButNotChargingRemainsFalse STARTED
+
+SystemIntelligenceUiTest > pluggedButNotChargingRemainsFalse PASSED
+
+SystemIntelligenceUiTest > cloudEnvelopeContainsNoAutomaticDeviceMetadata STARTED
+
+SystemIntelligenceUiTest > cloudEnvelopeContainsNoAutomaticDeviceMetadata PASSED
+
+SystemIntelligenceUiTest > existingCinemaPresentsMeasuredAndUnknownStates STARTED
+
+SystemIntelligenceUiTest > existingCinemaPresentsMeasuredAndUnknownStates PASSED
+
+SystemIntelligenceUiTest > compactCinemaPresentsMeasuredAndUnknownStates STARTED
+
+SystemIntelligenceUiTest > compactCinemaPresentsMeasuredAndUnknownStates PASSED
+
+AgentToolLayerTest > sideEffectingRegisteredToolsRequireConfirmationRisk STARTED
+
+AgentToolLayerTest > sideEffectingRegisteredToolsRequireConfirmationRisk PASSED
+
+AgentToolLayerTest > proposalsOnlyAddressRegisteredToolsAndStructuredArguments STARTED
+
+AgentToolLayerTest > proposalsOnlyAddressRegisteredToolsAndStructuredArguments PASSED
+
+AgentToolLayerTest > gateEnforcesCallBudgetTimeoutCancellationOutputAndRedaction STARTED
+
+AgentToolLayerTest > gateEnforcesCallBudgetTimeoutCancellationOutputAndRedaction PASSED
+
+AgentToolLayerTest > skillGraphRejectsMissingCyclesAndDuplicateVersionsAndRequiresDependencies STARTED
+
+AgentToolLayerTest > skillGraphRejectsMissingCyclesAndDuplicateVersionsAndRequiresDependencies PASSED
+
+AgentToolLayerTest > toolTurnGuardRejectsProposalsAcrossSeparateEvents STARTED
+
+AgentToolLayerTest > toolTurnGuardRejectsProposalsAcrossSeparateEvents PASSED
+
+AgentToolLayerTest > gateRequiresPolicyAndConfirmationByRisk STARTED
+
+AgentToolLayerTest > gateRequiresPolicyAndConfirmationByRisk PASSED
+
+AgentToolLayerTest > deviceStatusSkillComposesRegisteredReadOnlyTools STARTED
+
+AgentToolLayerTest > deviceStatusSkillComposesRegisteredReadOnlyTools PASSED
+
+CinemaStopReturnUiTest > stopCancelsImmediatelyButReturnsVisibleWindow STARTED
+
+CinemaStopReturnUiTest > stopCancelsImmediatelyButReturnsVisibleWindow PASSED
+
+DeviceBatteryProbeTest > chargingUnknownDoesNotInventAChargingState STARTED
+
+DeviceBatteryProbeTest > chargingUnknownDoesNotInventAChargingState PASSED
+
+DeviceBatteryProbeTest > batteryTemperatureKeepsTenthsAndNegativeSign STARTED
+
+DeviceBatteryProbeTest > batteryTemperatureKeepsTenthsAndNegativeSign PASSED
+
+DeviceBatteryProbeTest > missingOrInvalidAndroidReadingsFailClosed STARTED
+
+DeviceBatteryProbeTest > missingOrInvalidAndroidReadingsFailClosed PASSED
+
+DeviceBatteryProbeTest > measuredFold7ValuesAreConciseAndUseBatteryNotCpuTemperature STARTED
+
+DeviceBatteryProbeTest > measuredFold7ValuesAreConciseAndUseBatteryNotCpuTemperature PASSED
+
+DeviceBatteryProbeTest > fractionalPercentIsCalculatedFromRealLevelAndScale STARTED
+
+DeviceBatteryProbeTest > fractionalPercentIsCalculatedFromRealLevelAndScale PASSED
+
+DeviceToolExecutorRunnerTest > interruptRestoresFlagAndDoesNotBecomeSuccess STARTED
+
+DeviceToolExecutorRunnerTest > interruptRestoresFlagAndDoesNotBecomeSuccess PASSED
+
+DeviceToolExecutorRunnerTest > failedCallbackCannotBecomeSuccessfulOutput STARTED
+
+DeviceToolExecutorRunnerTest > failedCallbackCannotBecomeSuccessfulOutput PASSED
+
+DeviceToolExecutorRunnerTest > repeatedCallbacksKeepTheFirstResultOnly STARTED
+
+DeviceToolExecutorRunnerTest > repeatedCallbacksKeepTheFirstResultOnly PASSED
+
+DeviceToolExecutorRunnerTest > missingCallbackTimesOutWithoutUnboundedWait STARTED
+
+DeviceToolExecutorRunnerTest > missingCallbackTimesOutWithoutUnboundedWait PASSED
+
+DeviceToolExecutorRunnerTest > successfulCallbackReturnsOnlyItsActualValue STARTED
+
+DeviceToolExecutorRunnerTest > successfulCallbackReturnsOnlyItsActualValue PASSED
+
+DeviceToolExecutorRunnerTest > lateSuccessCannotChangeAnAlreadyReportedTimeout STARTED
+
+DeviceToolExecutorRunnerTest > lateSuccessCannotChangeAnAlreadyReportedTimeout PASSED
+
+ScreenObservationRevisionTest > unrelatedThenTargetUpdateStillInvalidates STARTED
+
+ScreenObservationRevisionTest > unrelatedThenTargetUpdateStillInvalidates PASSED
+
+ScreenObservationRevisionTest > contentEventInvalidatesRevisionWithoutInventingFreshLaunchEvidence STARTED
+
+ScreenObservationRevisionTest > contentEventInvalidatesRevisionWithoutInventingFreshLaunchEvidence PASSED
+
+ScreenObservationRevisionTest > disconnectAndInterruptInvalidateEvenWithUnrelatedEvents STARTED
+
+ScreenObservationRevisionTest > disconnectAndInterruptInvalidateEvenWithUnrelatedEvents PASSED
+
+ScreenObservationRevisionTest > unknownOrMalformedPackageCannotBeIgnored STARTED
+
+ScreenObservationRevisionTest > unknownOrMalformedPackageCannotBeIgnored PASSED
+
+ScreenObservationRevisionTest > abortedReadClearsTargetInFinally STARTED
+
+ScreenObservationRevisionTest > abortedReadClearsTargetInFinally PASSED
+
+ScreenObservationRevisionTest > oldServiceAndNullEventsCannotInvalidateCurrentService STARTED
+
+ScreenObservationRevisionTest > oldServiceAndNullEventsCannotInvalidateCurrentService PASSED
+
+ScreenObservationRevisionTest > stableReadRetainsBoundedObservedText STARTED
+
+ScreenObservationRevisionTest > stableReadRetainsBoundedObservedText PASSED
+
+ScreenObservationRevisionTest > unknownWindowDuringReadInvalidatesSnapshotAndLaunchEvidence STARTED
+
+ScreenObservationRevisionTest > unknownWindowDuringReadInvalidatesSnapshotAndLaunchEvidence PASSED
+
+ScreenObservationRevisionTest > unrelatedPackageUpdatesDoNotAbortStableTargetRead STARTED
+
+ScreenObservationRevisionTest > unrelatedPackageUpdatesDoNotAbortStableTargetRead PASSED
+
+ScreenObservationRevisionTest > concurrentReaderIsRejectedWithoutCorruptingOriginalRead STARTED
+
+ScreenObservationRevisionTest > concurrentReaderIsRejectedWithoutCorruptingOriginalRead PASSED
+
+ScreenObservationRevisionTest > contentChangeDuringReadFailsClosedInsteadOfReleasingStaleText STARTED
+
+ScreenObservationRevisionTest > contentChangeDuringReadFailsClosedInsteadOfReleasingStaleText PASSED
+
+ScreenObservationRevisionTest > unknownWindowCannotLeaveOldForegroundConfirmation STARTED
+
+ScreenObservationRevisionTest > unknownWindowCannotLeaveOldForegroundConfirmation PASSED
+
+ShizukuBridgeLifecycleTest > pendingPermissionDoesNotOpenRepeatedDialogs STARTED
+
+ShizukuBridgeLifecycleTest > pendingPermissionDoesNotOpenRepeatedDialogs PASSED
+
+ShizukuBridgeLifecycleTest > permissionCallbackCannotClaimARealPermissionThatIsNotGranted STARTED
+
+ShizukuBridgeLifecycleTest > permissionCallbackCannotClaimARealPermissionThatIsNotGranted PASSED
+
+ShizukuBridgeLifecycleTest > observedRevocationInvalidatesBindingBeforeReapproval STARTED
+
+ShizukuBridgeLifecycleTest > observedRevocationInvalidatesBindingBeforeReapproval PASSED
+
+ShizukuBridgeLifecycleTest > lateDenialReplacesTheExpiredPermissionTimeoutDiagnosis STARTED
+
+ShizukuBridgeLifecycleTest > lateDenialReplacesTheExpiredPermissionTimeoutDiagnosis PASSED
+
+ShizukuBridgeLifecycleTest > permissionGrantedAfterWatchdogTimeoutStillConnectsWhenActuallyGranted STARTED
+
+ShizukuBridgeLifecycleTest > permissionGrantedAfterWatchdogTimeoutStillConnectsWhenActuallyGranted PASSED
+
+ShizukuBridgeLifecycleTest > permissionGrantedWhileCallbackMissingCanBindOnRefresh STARTED
+
+ShizukuBridgeLifecycleTest > permissionGrantedWhileCallbackMissingCanBindOnRefresh PASSED
+
+ShizukuBridgeLifecycleTest > destroyedBindingDoesNotLetLateShellCallbackResurrectAccess STARTED
+
+ShizukuBridgeLifecycleTest > destroyedBindingDoesNotLetLateShellCallbackResurrectAccess PASSED
+
+ShizukuBridgeLifecycleTest > revokedPermissionCannotDispatchCheckedCommand STARTED
+
+ShizukuBridgeLifecycleTest > revokedPermissionCannotDispatchCheckedCommand PASSED
+
+ShizukuBridgeLifecycleTest > timedOutBindingCanRetryAndLateCallbackCannotReplaceNewSession STARTED
+
+ShizukuBridgeLifecycleTest > timedOutBindingCanRetryAndLateCallbackCannotReplaceNewSession PASSED
+
+ShizukuBridgeLifecycleTest > repeatedRefreshAndTapKeepOnePendingBinding STARTED
+
+ShizukuBridgeLifecycleTest > repeatedRefreshAndTapKeepOnePendingBinding PASSED
+
+ShizukuBridgeLifecycleTest > refreshKeepsAConnectingBindingAndShowsSpecificStatus STARTED
+
+ShizukuBridgeLifecycleTest > refreshKeepsAConnectingBindingAndShowsSpecificStatus PASSED
+
+ShizukuBridgeLifecycleTest > rootServerDoesNotEnableRegularCommands STARTED
+
+ShizukuBridgeLifecycleTest > rootServerDoesNotEnableRegularCommands PASSED
+
+ShizukuBridgeLifecycleTest > callbackAfterStopCannotResurrectTheShell STARTED
+
+ShizukuBridgeLifecycleTest > callbackAfterStopCannotResurrectTheShell PASSED
+
+ShizukuBridgeLifecycleTest > nullBindingIsVisibleAndAllowsRetry STARTED
+
+ShizukuBridgeLifecycleTest > nullBindingIsVisibleAndAllowsRetry PASSED
+
+ShizukuBridgeLifecycleTest > permissionRevokedDuringShellExecutionSuppressesSuccess STARTED
+
+ShizukuBridgeLifecycleTest > permissionRevokedDuringShellExecutionSuppressesSuccess PASSED
+
+ShizukuBridgeLifecycleTest > fixedProbeVerifiesRealUserServiceIdentity STARTED
+
+ShizukuBridgeLifecycleTest > fixedProbeVerifiesRealUserServiceIdentity PASSED
+
+ShizukuBridgeLifecycleTest > stoppedServerReportsMissingWithoutRequestingPermissionOrBinding STARTED
+
+ShizukuBridgeLifecycleTest > stoppedServerReportsMissingWithoutRequestingPermissionOrBinding PASSED
+
+ShizukuBridgeLifecycleTest > permissionRevokedBeforeBindCallbackCannotAttachShell STARTED
+
+ShizukuBridgeLifecycleTest > permissionRevokedBeforeBindCallbackCannotAttachShell PASSED
+
+ShizukuBridgeLifecycleTest > permissionRequestTimeoutDoesNotLockOutFutureOwnerRetry STARTED
+
+ShizukuBridgeLifecycleTest > permissionRequestTimeoutDoesNotLockOutFutureOwnerRetry PASSED
+
+ShizukuBridgeLifecycleTest > serverDisappearingWithoutDeadCallbackNeverRemainsReady STARTED
+
+ShizukuBridgeLifecycleTest > serverDisappearingWithoutDeadCallbackNeverRemainsReady PASSED
+
+ShizukuBridgeLifecycleTest > revokedPermissionImmediatelyRemovesReadiness STARTED
+
+ShizukuBridgeLifecycleTest > revokedPermissionImmediatelyRemovesReadiness PASSED
+
+ShizukuCapabilitiesTest > unknownUidNeverInheritsShellCapabilities STARTED
+
+ShizukuCapabilitiesTest > unknownUidNeverInheritsShellCapabilities PASSED
+
+ShizukuCapabilitiesTest > shellIdentityDoesNotClaimRootOrActionPermissions STARTED
+
+ShizukuCapabilitiesTest > shellIdentityDoesNotClaimRootOrActionPermissions PASSED
+
+ShizukuCapabilitiesTest > unknownServerVersionIsRejected STARTED
+
+ShizukuCapabilitiesTest > unknownServerVersionIsRejected PASSED
+
+ShizukuCapabilitiesTest > malformedMissingExtraAndDuplicateFieldsAreRejected STARTED
+
+ShizukuCapabilitiesTest > malformedMissingExtraAndDuplicateFieldsAreRejected PASSED
+
+ShizukuCapabilitiesTest > androidVersionMismatchIsRejected STARTED
+
+ShizukuCapabilitiesTest > androidVersionMismatchIsRejected PASSED
+
+ShizukuCapabilitiesTest > serverAndUserServiceMismatchIsRejected STARTED
+
+ShizukuCapabilitiesTest > serverAndUserServiceMismatchIsRejected PASSED
+
+ShizukuCapabilitiesTest > missingExecutablesRemainUnavailable STARTED
+
+ShizukuCapabilitiesTest > missingExecutablesRemainUnavailable PASSED
+
+ShizukuCapabilitiesTest > rootDetectionDoesNotEnableRootExpertMode STARTED
+
+ShizukuCapabilitiesTest > rootDetectionDoesNotEnableRootExpertMode PASSED
+
+ShizukuConnectionDialogTest > connectKeepsStatusVisibleAndReportsTimeoutInTheSameDialog STARTED
+
+ShizukuConnectionDialogTest > connectKeepsStatusVisibleAndReportsTimeoutInTheSameDialog PASSED
+
+ShizukuConnectionDialogTest > missingManagerReportsActionableErrorWithoutClosingTheScreen STARTED
+
+ShizukuConnectionDialogTest > missingManagerReportsActionableErrorWithoutClosingTheScreen PASSED
+
+ToolRegistryTest > validationRejectsUnknownTools STARTED
+
+ToolRegistryTest > validationRejectsUnknownTools PASSED
+
+ToolRegistryTest > validationRequiresArguments STARTED
+
+ToolRegistryTest > validationRequiresArguments PASSED
+
+ToolRegistryTest > installsNeedConfirmation STARTED
+
+ToolRegistryTest > installsNeedConfirmation PASSED
+
+ToolRegistryTest > destructiveToolsStayDestructive STARTED
+
+ToolRegistryTest > destructiveToolsStayDestructive PASSED
+
+ScreenObservationPromptTest > permissionEpochCannotBeRescuedByReenableOrOtherSession STARTED
+
+ScreenObservationPromptTest > permissionEpochCannotBeRescuedByReenableOrOtherSession PASSED
+
+ScreenObservationPromptTest > expiredRevokedMalformedAndHashTamperedSnapshotsReleaseNoText STARTED
+
+ScreenObservationPromptTest > expiredRevokedMalformedAndHashTamperedSnapshotsReleaseNoText PASSED
+
+ScreenObservationPromptTest > externalInstructionsStayQuotedDataAndCannotOpenNewCapabilities STARTED
+
+ScreenObservationPromptTest > externalInstructionsStayQuotedDataAndCannotOpenNewCapabilities PASSED
+
+OwnDiagnosticCacheTest > evictedPendingRestoreCanBeRecreatedWithoutOverwrite STARTED
+
+OwnDiagnosticCacheTest > evictedPendingRestoreCanBeRecreatedWithoutOverwrite PASSED
+
+OwnDiagnosticCacheTest > androidCacheEvictionDoesNotPermanentlyFillHistory STARTED
+
+OwnDiagnosticCacheTest > androidCacheEvictionDoesNotPermanentlyFillHistory PASSED
+
+OwnDiagnosticCacheTest > stopWhileWaitingForMonitorCannotRetainSnapshot STARTED
+
+OwnDiagnosticCacheTest > stopWhileWaitingForMonitorCannotRetainSnapshot PASSED
+
+OwnDiagnosticCacheTest > newDiagnosisInvalidatesOldPreview STARTED
+
+OwnDiagnosticCacheTest > newDiagnosisInvalidatesOldPreview PASSED
+
+OwnDiagnosticCacheTest > independentInstanceRecoversOwnershipWithoutBroadClassification STARTED
+
+OwnDiagnosticCacheTest > independentInstanceRecoversOwnershipWithoutBroadClassification PASSED
+
+OwnDiagnosticCacheTest > failedIndexRetryPreservesChangedTarget STARTED
+
+OwnDiagnosticCacheTest > failedIndexRetryPreservesChangedTarget PASSED
+
+OwnDiagnosticCacheTest > sameContentReplacementIsNotOldPreview STARTED
+
+OwnDiagnosticCacheTest > sameContentReplacementIsNotOldPreview PASSED
+
+OwnDiagnosticCacheTest > previewExpiresWithoutDeletingHistory STARTED
+
+OwnDiagnosticCacheTest > previewExpiresWithoutDeletingHistory PASSED
+
+OwnDiagnosticCacheTest > cancellationPreservesAllFiles STARTED
+
+OwnDiagnosticCacheTest > cancellationPreservesAllFiles PASSED
+
+OwnDiagnosticCacheTest > partialRestorePreservesRemainingUndo STARTED
+
+OwnDiagnosticCacheTest > partialRestorePreservesRemainingUndo PASSED
+
+OwnDiagnosticCacheTest > exactPreviewIsOneUseAndForgeryConsumesIt STARTED
+
+OwnDiagnosticCacheTest > exactPreviewIsOneUseAndForgeryConsumesIt PASSED
+
+OwnDiagnosticCacheTest > sameLengthTamperRejectsWholePlan STARTED
+
+OwnDiagnosticCacheTest > sameLengthTamperRejectsWholePlan PASSED
+
+OwnDiagnosticCacheTest > emptyCacheDoesNotInventSavings STARTED
+
+OwnDiagnosticCacheTest > emptyCacheDoesNotInventSavings PASSED
+
+OwnDiagnosticCacheTest > unownedFileWithPerfectSchemaIsProtected STARTED
+
+OwnDiagnosticCacheTest > unownedFileWithPerfectSchemaIsProtected PASSED
+
+OwnDiagnosticCacheTest > changedFileBlocksUndoWithoutOverwriting STARTED
+
+OwnDiagnosticCacheTest > changedFileBlocksUndoWithoutOverwriting PASSED
+
+OwnDiagnosticCacheTest > failedRestoreIndexKeepsBackupAndRetriesOwnership STARTED
+
+OwnDiagnosticCacheTest > failedRestoreIndexKeepsBackupAndRetriesOwnership PASSED
+
+OwnDiagnosticCacheTest > directorySymlinkCannotBecomeCleanupRoot STARTED
+
+OwnDiagnosticCacheTest > directorySymlinkCannotBecomeCleanupRoot PASSED
+
+OwnDiagnosticCacheTest > stopWhileWaitingForMonitorCannotRestoreSnapshot STARTED
+
+OwnDiagnosticCacheTest > stopWhileWaitingForMonitorCannotRestoreSnapshot PASSED
+
+OwnDiagnosticCacheTest > historyGrowthIsBoundedAndNoAutomaticEviction STARTED
+
+OwnDiagnosticCacheTest > historyGrowthIsBoundedAndNoAutomaticEviction PASSED
+
+OwnDiagnosticCacheTest > invalidMetricsCannotBecomeCacheContent STARTED
+
+OwnDiagnosticCacheTest > invalidMetricsCannotBecomeCacheContent PASSED
+
+OwnDiagnosticCacheTest > failedIndexRetryRejectsSameContentReplacementInode STARTED
+
+OwnDiagnosticCacheTest > failedIndexRetryRejectsSameContentReplacementInode PASSED
+
+OwnDiagnosticCacheTest > onlyActualOwnedNumericHistoryIsRemovedAndRestorable STARTED
+
+OwnDiagnosticCacheTest > onlyActualOwnedNumericHistoryIsRemovedAndRestorable PASSED
+
+OwnDiagnosticCacheTest > symlinkReplacementNeverTouchesTarget STARTED
+
+OwnDiagnosticCacheTest > symlinkReplacementNeverTouchesTarget PASSED
+
+StorageAnalysisPreviewTest > largeSelectionsHaveBoundedLocalPresentation STARTED
+
+StorageAnalysisPreviewTest > largeSelectionsHaveBoundedLocalPresentation PASSED
+
+StorageAnalysisPreviewTest > localNamesNeverEnterToolSummary STARTED
+
+StorageAnalysisPreviewTest > localNamesNeverEnterToolSummary PASSED
+
+StorageAnalysisPreviewTest > onlyVerifiedGroupsProducePotentialSavings STARTED
+
+StorageAnalysisPreviewTest > onlyVerifiedGroupsProducePotentialSavings PASSED
+
+StorageAnalysisPreviewTest > untrustedProviderNamesCannotInjectLinesOrDirection STARTED
+
+StorageAnalysisPreviewTest > untrustedProviderNamesCannotInjectLinesOrDirection PASSED
+
+StorageContentAnalysisTest > shortAndGrowingContentNeverProduceDuplicates STARTED
+
+StorageContentAnalysisTest > shortAndGrowingContentNeverProduceDuplicates PASSED
+
+StorageContentAnalysisTest > deadlineAndClockRollbackStopWork STARTED
+
+StorageContentAnalysisTest > deadlineAndClockRollbackStopWork PASSED
+
+StorageContentAnalysisTest > deadlineAfterFinalMetadataRejectsLateHash STARTED
+
+StorageContentAnalysisTest > deadlineAfterFinalMetadataRejectsLateHash PASSED
+
+StorageContentAnalysisTest > cyclesAndEntryCapsStayBounded STARTED
+
+StorageContentAnalysisTest > cyclesAndEntryCapsStayBounded PASSED
+
+StorageContentAnalysisTest > toolSummaryOmitsNamesUrisAndDigests STARTED
+
+StorageContentAnalysisTest > toolSummaryOmitsNamesUrisAndDigests PASSED
+
+StorageContentAnalysisTest > duplicateRequiresCompleteIdenticalContent STARTED
+
+StorageContentAnalysisTest > duplicateRequiresCompleteIdenticalContent PASSED
+
+StorageContentAnalysisTest > eofReserveAllowsCompleteCandidateWithoutSpendingPhantomBytes STARTED
+
+StorageContentAnalysisTest > eofReserveAllowsCompleteCandidateWithoutSpendingPhantomBytes PASSED
+
+StorageContentAnalysisTest > aliasesOfOneDocumentAreNotDuplicates STARTED
+
+StorageContentAnalysisTest > aliasesOfOneDocumentAreNotDuplicates PASSED
+
+StorageContentAnalysisTest > changedMetadataInvalidatesFullHash STARTED
+
+StorageContentAnalysisTest > changedMetadataInvalidatesFullHash PASSED
+
+StorageContentAnalysisTest > noHashWorkForUniqueSizes STARTED
+
+StorageContentAnalysisTest > noHashWorkForUniqueSizes PASSED
+
+StorageContentAnalysisTest > cancelledScanDoesNotReadContent STARTED
+
+StorageContentAnalysisTest > cancelledScanDoesNotReadContent PASSED
+
+StorageContentAnalysisTest > virtualDocumentsAreNotOpened STARTED
+
+StorageContentAnalysisTest > virtualDocumentsAreNotOpened PASSED
+
+StorageContentAnalysisTest > exactRemainingBudgetDoesNotOpenUnverifiableCandidate STARTED
+
+StorageContentAnalysisTest > exactRemainingBudgetDoesNotOpenUnverifiableCandidate PASSED
+
+StorageContentAnalysisTest > hashBudgetNeverReadsBeyondCap STARTED
+
+StorageContentAnalysisTest > hashBudgetNeverReadsBeyondCap PASSED
+
+StorageScanLaneTest > cancelledAdmissionDoesNotRunProvider STARTED
+
+StorageScanLaneTest > cancelledAdmissionDoesNotRunProvider PASSED
+
+StorageScanLaneTest > stuckProviderTimesOutWithoutReplacementWorkers STARTED
+
+StorageScanLaneTest > stuckProviderTimesOutWithoutReplacementWorkers PASSED
+
+StorageScanLaneTest > stopReturnsWhileProviderIgnoresInterruption STARTED
+
+StorageScanLaneTest > stopReturnsWhileProviderIgnoresInterruption PASSED
+
+SystemDiagnosisTest > cloudCannotReadAnyDeviceTool STARTED
+
+SystemDiagnosisTest > cloudCannotReadAnyDeviceTool PASSED
+
+SystemDiagnosisTest > measuredHeatPressureAndStorageLeadToBoundedAdvice STARTED
+
+SystemDiagnosisTest > measuredHeatPressureAndStorageLeadToBoundedAdvice PASSED
+
+SystemDiagnosisTest > normalRamIsNotBoosterRecommendation STARTED
+
+SystemDiagnosisTest > normalRamIsNotBoosterRecommendation PASSED
+
+SystemDiagnosisTest > unknownMetricsDoNotBecomeHealthyZero STARTED
+
+SystemDiagnosisTest > unknownMetricsDoNotBecomeHealthyZero PASSED
+
+SystemDiagnosisTest > explicitCommandsOnly STARTED
+
+SystemDiagnosisTest > explicitCommandsOnly PASSED
+
+SystemDiagnosisTest > negationQuotesAndConditionalCannotDispatch STARTED
+
+SystemDiagnosisTest > negationQuotesAndConditionalCannotDispatch PASSED
+
+SystemPerformanceTest > failedSamplesCannotBeHiddenByFastSuccesses STARTED
+
+SystemPerformanceTest > failedSamplesCannotBeHiddenByFastSuccesses PASSED
+
+SystemPerformanceTest > medianAvoidsOverflow STARTED
+
+SystemPerformanceTest > medianAvoidsOverflow PASSED
+
+SystemPerformanceTest > reorderedOrSameCaptureRejects STARTED
+
+SystemPerformanceTest > reorderedOrSameCaptureRejects PASSED
+
+SystemPerformanceTest > batteryChargingTemperatureAndBackgroundReject STARTED
+
+SystemPerformanceTest > batteryChargingTemperatureAndBackgroundReject PASSED
+
+SystemPerformanceTest > missingIsNotZero STARTED
+
+SystemPerformanceTest > missingIsNotZero PASSED
+
+SystemPerformanceTest > missingIdentityRejects STARTED
+
+SystemPerformanceTest > missingIdentityRejects PASSED
+
+SystemPerformanceTest > benchmarkAdapterDropsFailedZeroLatency STARTED
+
+SystemPerformanceTest > benchmarkAdapterDropsFailedZeroLatency PASSED
+
+SystemPerformanceTest > benchmarkAdapterRejectsCancelledMissingAndDuplicates STARTED
+
+SystemPerformanceTest > benchmarkAdapterRejectsCancelledMissingAndDuplicates PASSED
+
+SystemPerformanceTest > absenceInOneArmIsNotZero STARTED
+
+SystemPerformanceTest > absenceInOneArmIsNotZero PASSED
+
+SystemPerformanceTest > observedGainIsOnlyExploratory STARTED
+
+SystemPerformanceTest > observedGainIsOnlyExploratory PASSED
+
+SystemPerformanceTest > negativeEffectsOverrideImprovements STARTED
+
+SystemPerformanceTest > negativeEffectsOverrideImprovements PASSED
+
+SystemPerformanceTest > rejectsInvalidNumbersAndUnboundedSeries STARTED
+
+SystemPerformanceTest > rejectsInvalidNumbersAndUnboundedSeries PASSED
+
+SystemPerformanceTest > noiseDoesNotCreateRecommendation STARTED
+
+SystemPerformanceTest > noiseDoesNotCreateRecommendation PASSED
+
+SystemPerformanceTest > toleranceBoundariesAreInclusive STARTED
+
+SystemPerformanceTest > toleranceBoundariesAreInclusive PASSED
+
+SystemPerformanceTest > warmAndColdNotCompared STARTED
+
+SystemPerformanceTest > warmAndColdNotCompared PASSED
+
+SystemPerformanceTest > medianAndNearestRankTail STARTED
+
+SystemPerformanceTest > medianAndNearestRankTail PASSED
+
+SystemPerformanceTest > benchmarkAdapterScopesSystemAndTasks STARTED
+
+SystemPerformanceTest > benchmarkAdapterScopesSystemAndTasks PASSED
+
+SystemPerformanceTest > unavailableReasonSurvivesNumericalSamples STARTED
+
+SystemPerformanceTest > unavailableReasonSurvivesNumericalSamples PASSED
+
+SystemPerformanceTest > keepsMultiSecondStalls STARTED
+
+SystemPerformanceTest > keepsMultiSecondStalls PASSED
+
+SystemPerformanceTest > insufficientSamplesNeverClaimSpeedup STARTED
+
+SystemPerformanceTest > insufficientSamplesNeverClaimSpeedup PASSED
+
+SystemPerformanceTest > allIdentityMismatchesReject STARTED
+
+SystemPerformanceTest > allIdentityMismatchesReject PASSED
+
+SystemPerformanceTest > thermalMismatchRetainsDescriptiveDelta STARTED
+
+SystemPerformanceTest > thermalMismatchRetainsDescriptiveDelta PASSED
+
+SystemPerformanceTest > ordinarySnapshotCannotClaimImprovement STARTED
+
+SystemPerformanceTest > ordinarySnapshotCannotClaimImprovement PASSED
+
+SystemPerformanceTest > tailRegressionOverridesMedianGain STARTED
+
+SystemPerformanceTest > tailRegressionOverridesMedianGain PASSED
+
+JarvisActionScenesTest > workspaceFootprintsMatchAirbusDeckIntent STARTED
+
+JarvisActionScenesTest > workspaceFootprintsMatchAirbusDeckIntent PASSED
+
+JarvisActionScenesTest > centresEmergeFromTheTouchedTileOrBesideTheFace STARTED
+
+JarvisActionScenesTest > centresEmergeFromTheTouchedTileOrBesideTheFace PASSED
+
+JarvisActionScenesTest > everyRealToolHasAScene STARTED
+
+JarvisActionScenesTest > everyRealToolHasAScene PASSED
+[Incubating] Problems report is available at: file:///workspace/scratch/cc2ab95db73d/device-ai-system/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 3m 50s
+31 actionable tasks: 3 executed, 28 up-to-date

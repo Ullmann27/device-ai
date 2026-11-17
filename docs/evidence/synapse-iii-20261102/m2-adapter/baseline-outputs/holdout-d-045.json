@@ -1,0 +1,20 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-045:s1",
+    "decision": "SPAN",
+    "sha256": "78de890388ceb91913cb429a9349961fd952d3f8717232c298d1b038c0e1f539",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDakakudu",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {"decision": "NOANSWER"},
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 189.750617
+}

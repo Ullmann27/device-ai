@@ -1,0 +1,25 @@
+{
+  "officialGoogleMavenMetadata": "https://dl.google.com/dl/android/maven2/com/google/ai/edge/litertlm/litertlm-android/maven-metadata.xml",
+  "releaseNotes": "https://github.com/google-ai-edge/LiteRT-LM/releases/tag/v0.18.1",
+  "releaseCompare": "https://github.com/google-ai-edge/LiteRT-LM/compare/v0.18.0...v0.18.1",
+  "base": "b2f686e2ed4718fb84ec398a61dd59ca0f0aff27",
+  "head": "bda624851d74be34d4e1f7fac1fc4155939539c7",
+  "changedKotlinApiFiles": [],
+  "changedNativeConstraintProviders": [
+    "prebuilt/android_arm64/libGemmaModelConstraintProvider.so",
+    "prebuilt/android_x86_64/libGemmaModelConstraintProvider.so",
+    "prebuilt/ios_arm64/libGemmaModelConstraintProvider.dylib",
+    "prebuilt/ios_sim_arm64/libGemmaModelConstraintProvider.dylib",
+    "prebuilt/linux_arm64/libGemmaModelConstraintProvider.so",
+    "prebuilt/linux_x86_64/libGemmaModelConstraintProvider.so",
+    "prebuilt/macos_arm64/libGemmaModelConstraintProvider.dylib",
+    "prebuilt/windows_x86_64/libGemmaModelConstraintProvider.dll"
+  ],
+  "publishedPatchPurpose": "EmbeddingGemma2 ABI source-build fix; not a claimed Gemma4-specific repair",
+  "androidRuntimeRetained": "0.18.0",
+  "hostCompatibility": "Actual selected Gemma bytes generated20cases on both versions; not Android ARM64/Fold7 acceptance",
+  "pomSha256": {
+    "0.18.0": "3c631cd8e04fe4289818d41675c0f6b1f26a7a37db63606699a51e2c95695a54",
+    "0.18.1": "3d6ea70f41bc6305c5985a52c5f5d00da97402d6531c9a395f3145cb5c1a89a5"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "copiedFrom": "/workspace/scratch/18845e31bc4a/continuum-finalization/backend/node_modules",
+  "copiedTo": "/workspace/scratch/174c84456ee3/continuum-c1/backend/node_modules",
+  "packageLockSha256": "0c06a087af06afb5cf89a2749a7084524c93c9423c619806492fc18111837cc2",
+  "files": 633,
+  "inventoryDigestSha256": "9c5c28666d2fab64c704f30e653becbfd5b9fcbfe428560c6dd2930fdcfb1bbb",
+  "sourceAndCopyByteIdentical": true,
+  "gitIgnored": true,
+  "networkInstallRun": false
+}

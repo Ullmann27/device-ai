@@ -1,0 +1,12 @@
+{
+  "schema": "genesis-three-role-prospective-v1",
+  "case": "g04",
+  "createdBefore": "Any reviewer inspection of bot adapter implementation or model invocation",
+  "maximumModelCalls": 2,
+  "execution": "NOT_RUN; requires independently reviewed adapter, integrated SHA, separate Chief CPU gate",
+  "files": {
+    "acceptance.fixture": "3af62b92c318d3a5881dfd537fe44488c8021fb38873832115cd1ce9725abab7",
+    "subject.source": "445023759358b653ba156ad6012035a548b28998579a9d9bd1b71ef52e0d3feb",
+    "task.json": "3743c384e4c8a962e3e032ccdc1657ce56e2bbf481e904aa18c1914d182f5fc1"
+  }
+}

@@ -1,0 +1,13 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt b/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt
+index f42f526..43cdb71 100644
+--- a/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt
++++ b/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt
+@@ -87,0 +88 @@ class AiContextCompiler(
++        var usedBytes = 0
+@@ -99 +100,2 @@ class AiContextCompiler(
+-            if (utf8Size(candidate) <= policy.maxBytes - utf8Size(buffer.toString())) {
++            val candidateBytes = utf8Size(candidate)
++            if (candidateBytes <= policy.maxBytes - usedBytes) {
+@@ -100,0 +103,2 @@ class AiContextCompiler(
++                // ASCII section separators prevent surrogate pairs across appends.
++                usedBytes += candidateBytes

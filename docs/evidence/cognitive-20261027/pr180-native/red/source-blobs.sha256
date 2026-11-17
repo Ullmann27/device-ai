@@ -1,0 +1,13 @@
+7fc81e6a2a8496b635a8cae49079f477f84834b7421177f5489f3a6049179a9a  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt
+9ff74bec3ceeb0245c328e1bc1a9ce359f6b0349698ae4e322bec5ac97453cd7  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/ToolRegistry.kt
+f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/AgentProtocol.kt
+472b7bc6b9e9b5d7ed3c8a46be606d67c3a73b01cf63ccbcea07b1852ba0c340  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt
+74c48a28e1db7cfa3f39fe547a15295c566d00c7784f65b1c69651f19731e851  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt
+293fe60c004ac1b79fb96c3faaf51558610982800ab6f75838efd464f265e330  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/DeviceStorageProbe.kt
+348b6b5d2a6da195b26a864ecf77b9ee0448a7581bea568e0a37db6f0ea8b1c7  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/ShellExecution.kt
+87bd5450eada710af8b9cdc3582ff5a1355a7c16c88c235e79da76268bcabbc1  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/BoundedShellProcess.kt
+b65b50855288dff53be767cc462741d2684472cba217669d7d207d6f5555bd2e  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt
+2b01e49b1de721d31c1803c17916b81bf9a2ef63f586a4c08cf68a939bf507c4  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt
+28fcf6797b3534742bc54ee4a00e9edb649abdb8db0225112a23d478f4d2c6d4  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/ShizukuBridge.kt
+1300dfe48d3537ac87ce4ce7a86a742fbe22fee47baeecd178f0791b745f87d1  /workspace/device-ai-cognitive/app/src/main/java/at/heinz/deviceai/ShellUserService.kt
+aed055b9c7a7f94c0dff83b0527018bb60674bd005856d7e096653793bfff1b4  /workspace/device-ai-cognitive/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java

@@ -1,0 +1,50 @@
+material {
+    name : "monitor-live-pixels",
+    shadingModel : unlit,
+    blending : opaque,
+    doubleSided : false,
+    requires : [ uv0 ],
+    parameters : [
+        { type : samplerExternal, name : videoTexture },
+        { type : float4, name : sourceUv },
+        { type : float2, name : contentScale },
+        { type : bool, name : frameAvailable },
+        { type : bool, name : pointerAvailable },
+        { type : float2, name : pointerUv },
+        { type : float, name : pointerPhase }
+    ]
+}
+fragment {
+    float3 decodeSrgb(float3 value) {
+        float3 low = value / 12.92;
+        float3 high = pow((value + 0.055) / 1.055, float3(2.4));
+        return mix(high, low, lessThanEqual(value, float3(0.04045)));
+    }
+
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+        float2 scale = clamp(materialParams.contentScale, float2(0.0001), float2(1.0));
+        float2 uv = (getUV0() - float2(0.5)) / scale + float2(0.5);
+        float3 color = float3(0.001, 0.002, 0.004);
+        bool inside = all(greaterThanEqual(uv, float2(0.0))) && all(lessThanEqual(uv, float2(1.0)));
+        if (materialParams.frameAvailable && inside) {
+            float2 source = mix(materialParams.sourceUv.xy, materialParams.sourceUv.zw, uv);
+            color = decodeSrgb(clamp(texture(materialParams_videoTexture, source).rgb, 0.0, 1.0));
+            if (materialParams.pointerAvailable) {
+                float2 dx = dFdx(uv);
+                float2 dy = dFdy(uv);
+                float determinant = dx.x * dy.y - dy.x * dx.y;
+                if (abs(determinant) > 0.0000000001) {
+                    float2 delta = uv - materialParams.pointerUv;
+                    float2 pixels = float2(dy.y * delta.x - dy.x * delta.y,
+                        -dx.y * delta.x + dx.x * delta.y) / determinant;
+                    float phase = clamp(materialParams.pointerPhase, 0.0, 1.0);
+                    float distanceToRing = abs(length(pixels) - mix(5.0, 14.0, phase));
+                    float ring = (1.0 - smoothstep(0.8, 1.8, distanceToRing)) * (1.0 - phase);
+                    color = mix(color, decodeSrgb(float3(0.0, 0.8980392, 1.0)), ring);
+                }
+            }
+        }
+        material.baseColor = float4(color, 1.0);
+    }
+}

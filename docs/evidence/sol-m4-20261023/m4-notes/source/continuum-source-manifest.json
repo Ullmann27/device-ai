@@ -1,0 +1,23 @@
+{
+  "schema": "continuum-owned-project",
+  "version": 2,
+  "recipe": {
+    "id": "m4-notes",
+    "packageName": "at.heinz.continuum.m4notes",
+    "versionCode": 1,
+    "versionName": "0.1.0"
+  },
+  "planSha256": "dd0bd6218c8e54ca5c8ff44129aabbf92273ca30206c9fadd9daf18e853faf20",
+  "files": {
+    "settings.gradle.kts": "33748c18647e8fe08f1fde0281b4502d4a4e4947143ba85d8aba3f3247b024ea",
+    "build.gradle.kts": "30b87bf76d9ec1604dfe579fdf5d71e1d722fe05b8a7043b9deed7ae6916e499",
+    "gradle.properties": "fb298af7d84d0e20523e7172625a8d975a11efa043c573ca97f8997a0e84fb5f",
+    "app/build.gradle.kts": "77c829d16aa53129682cd51a829345e827ffc8054c9a03bc3eab262cb8551afa",
+    "app/src/main/AndroidManifest.xml": "840fefedab1e517e1623ab54457dc05f0c2aa90726884e18ca476835a896f6e9",
+    "app/src/main/java/at/heinz/continuum/m4notes/NotePolicy.kt": "d09e5b8ce9e6b132a4a216ce53c9f28743fce470789d56ffe066e115ef1c7c96",
+    "app/src/main/java/at/heinz/continuum/m4notes/MainActivity.kt": "dfd7d973a6c39ae8993656a5d717cee359040f4f9bd15a8072effff186b3113b",
+    "app/src/test/java/at/heinz/continuum/m4notes/NotePolicyTest.kt": "fdf59c7e52b00fd4a7e82ef900dbdde0a78adb7b6a69ade9a7d8e6c573e94dc6",
+    "README.md": "9bbec153fc26d5a10f3f9bb66a0e15929811eaa3205b089fc6e336c5ec9e78d3",
+    "continuum-project-plan.json": "973b91b9e62aa856ef72f151e016e292195c720df6e260e9f67753352a2fad8e"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C042:s1",
+    "decision": "SPAN",
+    "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+    "endExclusive": 44,
+    "start": 18,
+    "text": "Uvjogiju Uvmukedo Uvcudumu",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "RULE": {
+    "sourceId": "bc:C042:s1",
+    "decision": "SPAN",
+    "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+    "endExclusive": 44,
+    "start": 18,
+    "text": "Uvjogiju Uvmukedo Uvcudumu",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C042:s1",
+    "decision": "SPAN",
+    "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+    "endExclusive": 44,
+    "start": 18,
+    "text": "Uvjogiju Uvmukedo Uvcudumu",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "rawMillis": 81.612409
+}

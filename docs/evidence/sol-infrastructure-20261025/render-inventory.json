@@ -1,0 +1,293 @@
+{
+  "schema": "CONTINUUM_RENDER_READ_ONLY_AUDIT_V1",
+  "workspaceId": "tea-d7qe6dosfn5c73e2rnag",
+  "observedAt": "2026-10-25",
+  "totalServices": 24,
+  "scope": "Only official Device AI repository / Continuum resources retained; no environment variables, keys or deploy hooks read",
+  "services": [
+    {
+      "id": "srv-dbf4da8n74is73bgprv0",
+      "name": "continuum-soul-infra-qa-20261025",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-soul-infrastructure-20261025",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-soul-infra-qa-20261025.onrender.com",
+      "updatedAt": "2026-10-25T18:18:24.539517Z"
+    },
+    {
+      "id": "srv-dbf3hkgae00c73el2tc0",
+      "name": "continuum-native-corpus-qa-20261025",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "research/continuum-native-foundation-20261025",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-native-corpus-qa-20261025.onrender.com",
+      "updatedAt": "2026-10-25T17:15:24.002666Z"
+    },
+    {
+      "id": "srv-dbf36a0n74is73bck3u0",
+      "name": "continuum-experiment-activation-qa-20261025",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-experiment-activation-20261025",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-experiment-activation-qa.onrender.com",
+      "updatedAt": "2026-10-25T16:59:15.102676Z"
+    },
+    {
+      "id": "srv-dbf1tr2vcj2c73ehpfog",
+      "name": "continuum-owner-v23-release-preflight",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "release/continuum-owner-v23-candidate-20261025",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-owner-v23-release-preflight.onrender.com",
+      "updatedAt": "2026-10-25T15:41:32.5219Z"
+    },
+    {
+      "id": "srv-dbf1jhg473hc73bhhod0",
+      "name": "continuum-owner-v23-release-gate",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "release/continuum-owner-v23-candidate-20261025",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-owner-v23-release-gate.onrender.com",
+      "updatedAt": "2026-10-25T15:01:55.28098Z"
+    },
+    {
+      "id": "srv-dbf1b4rrjlhs7397dag0",
+      "name": "continuum-owner-v23-jarvis-qa",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-owner-v23-jarvis-20261025",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-owner-v23-jarvis-qa.onrender.com",
+      "updatedAt": "2026-10-25T14:57:27.577946Z"
+    },
+    {
+      "id": "srv-dbehb5gm7kps73dt3lsg",
+      "name": "continuum-typed-android-qa-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "chatgpt/continuum-typed-android-coding-bridge-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-typed-android-qa-20261024.onrender.com",
+      "updatedAt": "2026-10-24T20:43:09.397436Z"
+    },
+    {
+      "id": "srv-dbeh8doae00c73d5542g",
+      "name": "continuum-typed-coding-bridge-node-qa-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "chatgpt/continuum-typed-android-coding-bridge-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-typed-coding-bridge-node-qa.onrender.com",
+      "updatedAt": "2026-10-24T20:48:48.564203Z"
+    },
+    {
+      "id": "srv-dbeh1rnb9u1s739mkpog",
+      "name": "continuum-coding-nonrelease-regression-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "chatgpt/continuum-coding-invalid-feedback-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-coding-nonrelease-regression.onrender.com",
+      "updatedAt": "2026-10-24T20:13:15.125763Z"
+    },
+    {
+      "id": "srv-dbeh1ofb9u1s739mkfvg",
+      "name": "continuum-coding-rejection-qa-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "chatgpt/continuum-coding-rejection-feedback-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-coding-rejection-qa-20261024.onrender.com",
+      "updatedAt": "2026-10-24T20:11:30.730194Z"
+    },
+    {
+      "id": "srv-dbegu8gm7kps73drusbg",
+      "name": "continuum-coding-feedback-qa-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "chatgpt/continuum-coding-invalid-feedback-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-coding-feedback-qa-20261024.onrender.com",
+      "updatedAt": "2026-10-24T20:07:02.274987Z"
+    },
+    {
+      "id": "srv-dbef49a9lscs73av8mi0",
+      "name": "continuum-owner-v22-full-qa-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "release/continuum-owner-0321-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-owner-v22-full-qa-20261024.onrender.com",
+      "updatedAt": "2026-10-24T18:14:30.127545Z"
+    },
+    {
+      "id": "srv-dbef3q2vcj2c73cormqg",
+      "name": "continuum-owner-0321-release-gate-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "release/continuum-owner-0321-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-owner-0321-release-gate.onrender.com",
+      "updatedAt": "2026-10-24T18:07:42.743388Z"
+    },
+    {
+      "id": "srv-dbeeobivcj2c73cnpcdg",
+      "name": "continuum-0320-all-connected-qa-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-0320-all-connected-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-0320-all-connected-qa-20261024.onrender.com",
+      "updatedAt": "2026-10-24T17:41:36.042958Z"
+    },
+    {
+      "id": "srv-dbeekp67bikc73870lk0",
+      "name": "continuum-0320-core-cdx-qa-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-0320-core-cdx-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-0320-core-cdx-qa-20261024.onrender.com",
+      "updatedAt": "2026-10-24T17:37:31.229643Z"
+    },
+    {
+      "id": "srv-dbe96t3ncjis73dfisug",
+      "name": "continuum-v19-integrated-qa-20261024",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "chatgpt/continuum-hologram-context-recovery-20261024",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://continuum-v19-integrated-qa-20261024.onrender.com",
+      "updatedAt": "2026-10-24T12:10:25.358379Z"
+    },
+    {
+      "id": "srv-dbdmr0navr4c73akn1m0",
+      "name": "continuum-ccc1-premium-apk-20261023",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-owner-apk-v18-candidate-20261023",
+      "autoDeploy": "yes",
+      "suspended": "not_suspended",
+      "url": "https://continuum-ccc1-premium-apk-20261023.onrender.com",
+      "updatedAt": "2026-10-23T15:20:06.571156Z"
+    },
+    {
+      "id": "srv-dbddtk8ae00c73frkrhg",
+      "name": "device-ai-continuum-full-preview-20261023",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-aaa-lm1-ccc1-preview-20261023",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://device-ai-continuum-full-preview-20261023.onrender.com",
+      "updatedAt": "2026-10-23T04:18:42.167431Z"
+    },
+    {
+      "id": "srv-dbd5nb8473hc73dgl5tg",
+      "name": "device-ai-continuum-aaa-cockpit-preview",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-aaa-bento-cockpits-20261022",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://device-ai-continuum-aaa-cockpit-preview.onrender.com",
+      "updatedAt": "2026-10-22T19:27:11.10265Z"
+    },
+    {
+      "id": "srv-dbd4m6oae00c73clqk20",
+      "name": "device-ai-continuum-feature-preview",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "integration/continuum-full-feature-candidate-20261022",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://device-ai-continuum-feature-preview.onrender.com",
+      "updatedAt": "2026-10-22T18:25:48.819114Z"
+    },
+    {
+      "id": "srv-dbcfkb6ktt5c73fa7m7g",
+      "name": "device-ai-continuum-pr50-preview",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "chatgpt/continuum-apk-preview-20261021",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://device-ai-continuum-pr50-preview.onrender.com",
+      "updatedAt": "2026-10-21T18:04:31.41263Z"
+    },
+    {
+      "id": "srv-dbaue53bc2fs73crkop0",
+      "name": "device-ai-mentor-apk-preview",
+      "type": "static_site",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "release/continuum-owner-v23-candidate-20261025",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "url": "https://device-ai-mentor-apk-preview.onrender.com",
+      "updatedAt": "2026-10-25T15:48:46.4448Z"
+    },
+    {
+      "id": "srv-dbat422jnfac7391t7sg",
+      "name": "device-ai-continuum-mentor",
+      "type": "web_service",
+      "repo": "https://github.com/Ullmann27/device-ai",
+      "branch": "astra/continuum-optional-groq-mentor-20261019",
+      "autoDeploy": "yes",
+      "suspended": "not_suspended",
+      "plan": "free",
+      "url": "https://device-ai-continuum-mentor.onrender.com",
+      "updatedAt": "2026-10-20T14:14:47.950016Z"
+    }
+  ],
+  "latestSelectedDeploys": [
+    {
+      "name": "soul",
+      "serviceId": "srv-dbf4da8n74is73bgprv0",
+      "deployId": "dep-dbf4fo3rjlhs73ffarig",
+      "status": "live",
+      "commit": "52c4fdadf9aa97cd7683a30be005da9b67db1311"
+    },
+    {
+      "name": "owner-v23-qa",
+      "serviceId": "srv-dbf1b4rrjlhs7397dag0",
+      "deployId": "dep-dbf1epnb9u1s73b9ktig",
+      "status": "live",
+      "commit": "d368220596912a2b3d0766b0bb3f324db60ec658"
+    },
+    {
+      "name": "owner-apk-source",
+      "serviceId": "srv-dbaue53bc2fs73crkop0",
+      "deployId": "dep-dbf26i0n74is73b9n91g",
+      "status": "live",
+      "commit": "015e1bf53f40c223a0fb2d52b557618c4a544572"
+    },
+    {
+      "name": "experiment-qa",
+      "serviceId": "srv-dbf36a0n74is73bck3u0",
+      "deployId": "dep-dbf37ubrjlhs739dclf0",
+      "status": "live",
+      "commit": "413fa3c2a49f9c589b1f92d62525a621c8b9eeda"
+    }
+  ]
+}

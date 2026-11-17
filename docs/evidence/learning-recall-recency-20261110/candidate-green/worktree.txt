@@ -1,0 +1,1 @@
+ M app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt

@@ -1,0 +1,24 @@
+{
+  "source_commit": "09757b938734d7bf12347c3e5f69115f11c5621b",
+  "source_tree": "4ff6d6a764fcca3fa1f07ba1af6a3f6021bfc3da",
+  "remote_commit": "0bab50e3f114c04a87e372344f42ad7a5e530217",
+  "recorded_at_utc": "2026-11-11T12:56:22.212764+00:00",
+  "status": "CANCELLED_NO_RESULT",
+  "reason": "No completed test or compilation result after prolonged wait; stopped deliberately before integrating the visibility correction. Retried targeted Android scope sequentially with offline dependency resolution, detailed progress and process heartbeat.",
+  "runs": [
+    {
+      "name": "full-node",
+      "exit_code": 130,
+      "evidence": "qa-node-09757b93/full-node.xml",
+      "completed_report": false
+    },
+    {
+      "name": "compileDebugKotlin",
+      "exit_code": 130,
+      "evidence": "qa-android-compile-09757b93.log",
+      "last_observed_task": ":app:compileDebugKotlin"
+    }
+  ],
+  "application_failure_proven": false,
+  "tests_passed_claimed": 0
+}

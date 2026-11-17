@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "source": "c36258a853bbc6dacd8fbfa0dbae64f0f95a0d14",
+  "tree": "3f6bbca28a7e41aa67316c818af0e5a58cd45677",
+  "profile": "full-node",
+  "status": "FAIL",
+  "sourceUnchanged": true,
+  "cancelled": false,
+  "startedAt": "2026-11-11T16:22:56.895Z",
+  "finishedAt": "2026-11-11T16:32:42.556Z",
+  "testFiles": 354,
+  "counts": {
+    "total": 2498,
+    "passed": 2456,
+    "failed": 5,
+    "skipped": 37,
+    "executed": 2461,
+    "placeholders": 0,
+    "evidenceComplete": true
+  },
+  "diagnostics": [
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.idle scheduler retains the lease and STOP cancels its wait",
+      "file": ".github/continuum/local-worker-process.test.mjs",
+      "line": 19,
+      "col": 108,
+      "message": "condition timeout",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "6d9b0674d8e7f128"
+    },
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.finite scheduler returns zero only when its single full cycle passed",
+      "file": ".github/continuum/local-worker-process.test.mjs",
+      "line": 102,
+      "col": 10,
+      "message": "{\n  \"schema\": \"continuum-local-worker-v2\",\n  \"id\": \"2026-11-11T16-27-43-231Z-30af0210-594f-451d-b690-bda34cf08e17\",\n  \"branch\": \"test/worker\",\n  \"sourceSha\": \"14f7ff3b58d63949a5581668bdb134738fda2c1e\",\n  \"sourceTree\": \"7e5a2b539ae2dd5cc7f10b3f3b2da8b894c4af36\",\n  \"inventoryHash\": \"9478fec4920996d3209304f30ba0dc15458a81d5b3616676ed0e68a0c2b019e8\",\n  \"inventoryCount\": 1,\n  \"started\": \"2026-11-11T16:",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "865e9c7dc177d6f8"
+    },
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.SIGTERM removes a descendant that ignores SIGTERM before restart",
+      "file": ".github/continuum/local-worker-process.test.mjs",
+      "line": 149,
+      "col": 10,
+      "message": "a new cycle may start after the old descendant stopped\n\n1 !== 0",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "9715294d60bd829a"
+    },
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.TIMEOUT removes a descendant that ignores SIGTERM before restart",
+      "file": ".github/continuum/local-worker-process.test.mjs",
+      "line": 19,
+      "col": 108,
+      "message": "condition timeout",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "6d9b0674d8e7f128"
+    },
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.an unreadable process younger than the run blocks a confirmed cleanup",
+      "file": "scripts/continuum-owned-process.test.mjs",
+      "line": 97,
+      "col": 10,
+      "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'TIMEOUT'\n- 'TERMINATION_UNCONFIRMED'",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "d4421fef317c892e"
+    }
+  ],
+  "terminationConfirmed": true,
+  "scopeDifference": "Includes scripts/*.test.mjs as well as .github/continuum/*.test.mjs. Prior inherited Node baseline covered only .github/continuum. Counts/skips are not directly comparable.",
+  "classification": "Five failures in two existing process fixture files; finite scheduler receipt explicitly reports TIMEOUT at 1000ms. Other exact causes remain unproven. No assertions or timeouts changed.",
+  "next": "Run the two affected files unchanged in isolation under the shared lock; retain result before deciding final full-run resource configuration."
+}

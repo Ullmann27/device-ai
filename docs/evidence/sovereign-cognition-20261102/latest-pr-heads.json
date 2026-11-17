@@ -1,0 +1,29 @@
+[
+  {
+    "pr": 354,
+    "head": "c3697ecfc5dd800bddba816cab937e11bdfd8269",
+    "base": "86032c31a36547888536446c765a719cd6ee5c5c",
+    "branch": "coderabbit/continuum-brain-integration-20261102",
+    "draft": true,
+    "mergeable": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/354"
+  },
+  {
+    "pr": 356,
+    "head": "d85810508744ce61a9092a1ac531fc4fdf5e843c",
+    "base": "41e1897b9099b911286d312a53c8c19307a49484",
+    "branch": "research/continuum-sovereign-gguf-admission-20261102",
+    "draft": true,
+    "mergeable": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/356"
+  },
+  {
+    "pr": 357,
+    "head": "aabd8ea7dcd09863fb5fe214ed027cd145ce2fb0",
+    "base": "c3697ecfc5dd800bddba816cab937e11bdfd8269",
+    "branch": "research/continuum-sovereign-cognition-20261102",
+    "draft": true,
+    "mergeable": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/357"
+  }
+]

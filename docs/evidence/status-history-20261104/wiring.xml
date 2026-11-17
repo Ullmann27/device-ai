@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="no new Flutter dependency and existing native layout remains authoritative" time="0.001452" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/aaa-cockpit-and-effects.test.mjs"/>
+	<testcase name="scanline effect runs in draw pass, never as an input-intercepting view" time="0.000441" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/aaa-cockpit-and-effects.test.mjs"/>
+	<testcase name="background glows behind live cards, do not obscure labels or inflate telemetry" time="0.000283" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/aaa-cockpit-and-effects.test.mjs"/>
+	<testcase name="all existing cockpit destinations remain connected to owner callbacks" time="0.000506" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/aaa-cockpit-and-effects.test.mjs"/>
+	<testcase name="system gauges show only measured values and explain unknown GPU" time="0.000237" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/aaa-cockpit-and-effects.test.mjs"/>
+	<testcase name="device storage legend does not present unidentified data as measured system bytes" time="0.000147" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/aaa-cockpit-and-effects.test.mjs"/>
+	<testcase name="positive measured event deltas use green in both form factors" time="0.000291" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/aaa-cockpit-and-effects.test.mjs"/>
+	<testcase name="both phone and Fold storage cards show compact legend without losing measured category names" time="0.000462" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/aaa-cockpit-and-effects.test.mjs"/>
+	<testcase name="learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android" time="0.268631" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="cognitive runtime owns the single chat path, privacy boundaries and background diagnostics" time="0.476952" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="background consolidation records failure without losing interrupted source trials" time="0.000270" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="experimental module is inspectable and not on any automatic model promotion path" time="0.000245" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="activity request codes are unique and every one has a result handler" time="0.203536" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="scheduled offline job names the JobService declared in the manifest" time="0.000493" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="user-visible texts contain line breaks, not a literal backslash-n" time="0.006757" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="learning-core and research store I/O stays off the UI thread in dialogs and chat input" time="0.724043" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="neural weights are saved by compare-and-swap and foreground practice can be stopped" time="0.043612" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="startup bootstrap training stops with the activity and is retried later" time="0.089088" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="startup I/O off the UI thread and shell commands stop with their activity" time="0.201491" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="local language model path is reachable: model center, loading, chat escalation and reasoning chain" time="0.381898" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="every area has a center reachable from the start screen; no demo buttons; experiments marked" time="0.188744" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="Teamleader Android UI reports status without false success" time="0.041569" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="live model status does not revert the beginner cockpit to English" time="0.041758" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="model setup stays usable for beginners while preserving SHA-256 integrity" time="0.144492" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="new visual start screen is local, accessible and honest about capabilities" time="0.116937" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="neural training failures expose bounded diagnostics without claiming saved weights" time="0.062207" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="Wikipedia article research uses bounded authentic extracts and original citations" time="0.000702" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="Android-first Teamleader is scheduled, observable and serialized across background and chat" time="0.000527" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<testcase name="explicit M5 project planning command reaches reviewed builder without bypassing approval" time="0.000602" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/.github/continuum/android-integration-wiring.test.mjs"/>
+	<!-- tests 29 -->
+	<!-- suites 0 -->
+	<!-- pass 29 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 3136.276089 -->
+</testsuites>

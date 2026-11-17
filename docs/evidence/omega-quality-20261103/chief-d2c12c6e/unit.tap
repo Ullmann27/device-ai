@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: unchanged complete frozen reports disclose actual counts and limits
+ok 1 - unchanged complete frozen reports disclose actual counts and limits
+  ---
+  duration_ms: 11.658493
+  type: 'test'
+  ...
+# Subtest: improved reported case is visible without pretending to run Gemma
+ok 2 - improved reported case is visible without pretending to run Gemma
+  ---
+  duration_ms: 5.763787
+  type: 'test'
+  ...
+# Subtest: aggregate gain cannot conceal a newly wrong case
+ok 3 - aggregate gain cannot conceal a newly wrong case
+  ---
+  duration_ms: 1.112934
+  type: 'test'
+  ...
+# Subtest: any reported harmful output blocks even unchanged parity
+ok 4 - any reported harmful output blocks even unchanged parity
+  ---
+  duration_ms: 0.882037
+  type: 'test'
+  ...
+# Subtest: changed expected answer is rejected
+ok 5 - changed expected answer is rejected
+  ---
+  duration_ms: 5.318938
+  type: 'test'
+  ...
+# Subtest: changed category is rejected
+ok 6 - changed category is rejected
+  ---
+  duration_ms: 0.963019
+  type: 'test'
+  ...
+# Subtest: missing and duplicate case coverage is rejected
+ok 7 - missing and duplicate case coverage is rejected
+  ---
+  duration_ms: 6.746245
+  type: 'test'
+  ...
+# Subtest: unknown identifiers and invalid statuses are rejected
+ok 8 - unknown identifiers and invalid statuses are rejected
+  ---
+  duration_ms: 0.952853
+  type: 'test'
+  ...
+# Subtest: modified frozen input invalidates both reports
+ok 9 - modified frozen input invalidates both reports
+  ---
+  duration_ms: 0.377698
+  type: 'test'
+  ...
+# Subtest: empty or malformed reports fail closed
+ok 10 - empty or malformed reports fail closed
+  ---
+  duration_ms: 1.118582
+  type: 'test'
+  ...
+# Subtest: result binds all input bytes and preserves per-category deltas
+ok 11 - result binds all input bytes and preserves per-category deltas
+  ---
+  duration_ms: 5.429425
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 371.557978

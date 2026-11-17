@@ -1,0 +1,4 @@
+bb15ea5c286f066d1d19ae674489355ad96f45ff8fafaef740955ef276434ee2  app/src/main/java/at/heinz/deviceai/cognitive/ConversationSituationModel.kt
+e53b1590628a74964b0fe49f047f9c5a6960197bd2996a53cf60c8b11ef9a519  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationSituationTracker.kt
+e9ea2481c5471cc3369de76281e046d10b05efc29c04d8ed54f8616b28a237d2  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt
+d9e910517669ac03c7be7132dfa25cc3883cbd674bbe1aac3419d3e9b2139f94  docs/evidence/omega-architecture-audit-20261110/AuditProbe.kt

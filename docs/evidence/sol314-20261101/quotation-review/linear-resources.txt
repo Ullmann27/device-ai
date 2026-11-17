@@ -1,0 +1,4 @@
+scenario=dense-one sourceChars=5995 runs=21 warmups=4 p50Ms=2.928339 p95Ms=6.721287
+scenario=dense-24 sourceChars=6000 runs=21 warmups=4 p50Ms=2.224382 p95Ms=4.050083
+scenario=sparse-tail sourceChars=5433 runs=21 warmups=4 p50Ms=1.420917 p95Ms=1.793995
+scenario=no-overlap sourceChars=5400 runs=21 warmups=4 p50Ms=1.297023 p95Ms=2.09705

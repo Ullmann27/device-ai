@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" tests="24" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:18" hostname="5c9e18abbd30" time="0.128">
+  <properties/>
+  <testcase name="excessiveDriftRejected" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.02"/>
+  <testcase name="forbiddenCapabilityFlagsImpossible" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.001"/>
+  <testcase name="tamperedCandidateRejected" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.001"/>
+  <testcase name="invalidBoundsRejected" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.0"/>
+  <testcase name="identityMismatchAndBrokenAncestryRejected" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.003"/>
+  <testcase name="repeatedUpdatesNeverLeaveBounds" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.025"/>
+  <testcase name="rejectedProposalDoesNotChangeState" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.004"/>
+  <testcase name="evidenceMustMatchTrait" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.0"/>
+  <testcase name="boundsAreEnforced" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.001"/>
+  <testcase name="repeatedOverconfidenceLowersConfidence" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.001"/>
+  <testcase name="genomeMismatchRejected" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.001"/>
+  <testcase name="nanAndInfinityRejected" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.038"/>
+  <testcase name="behaviorHistoryRecordsChangeAndGenerationsStayIntact" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.0"/>
+  <testcase name="generationIncrementsOnlyOnAcceptedChange" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.006"/>
+  <testcase name="validSmallUpdateAccepted" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.001"/>
+  <testcase name="evidenceDirectionMustMatchProposal" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.001"/>
+  <testcase name="driftIsDeterministicAndIgnoresVolatileData" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.003"/>
+  <testcase name="oneExperienceCannotMakeExtremeChange" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.002"/>
+  <testcase name="neutralInitialProfile" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.0"/>
+  <testcase name="evidenceUpdatesGradually" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.002"/>
+  <testcase name="invalidCapabilityEvidenceRejected" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.007"/>
+  <testcase name="selfModelStartsUncertain" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.0"/>
+  <testcase name="outOfBoundsCandidateRejectedByValidator" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.007"/>
+  <testcase name="updateIsDeterministic" classname="at.heinz.deviceai.cognitive.AdaptiveIdentityTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

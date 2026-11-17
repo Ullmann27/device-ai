@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumOrthographyProbeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:37" hostname="b50d54a1ac03" time="0.002">
+  <properties/>
+  <testcase name="repairsOnlyUnambiguousSingleTypo" classname="at.heinz.deviceai.learning.ContinuumOrthographyProbeTest" time="0.001"/>
+  <testcase name="unchangedMessageIsNotFalselyNormalized" classname="at.heinz.deviceai.learning.ContinuumOrthographyProbeTest" time="0.0"/>
+  <testcase name="preservesUnknownTechnicalTokensAndRejectsLongText" classname="at.heinz.deviceai.learning.ContinuumOrthographyProbeTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

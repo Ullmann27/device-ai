@@ -1,0 +1,14 @@
+{
+  "status": "EXPERIMENT_NOT_ACCEPTED",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "derivationAndRenderToolSource": "7eb05f3d",
+  "assetSha256": "c016237ab6d7be99dc0c0c0cc49a4de1b11f03896e8a03a4a8efaa20f6ff08f8",
+  "controlAssetSha256": "03caa24f5c7b8db40a91f42a53538f2b6f43c1db02147b091ea6cb0685e2759e",
+  "mapperSourceSha": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+  "controlledChange": "Only standard embedded glTF emissive texture; identical geometry, rig, teeth, camera, lighting and actual mapper poses",
+  "observed": "Cyan/violet silhouette more visible, broad midface emission flattens nose/cheek/lip volume and produces a bright closed-lid ring",
+  "nextHypothesis": "Narrow contour emission, lower midface emission and eye-rig-centred emission suppression; retain original shading",
+  "device": "FOLD7_NOT_RUN",
+  "nativeFilamentAppearance": "NOT_RUN",
+  "sourceMedia": "Only local CC0-derived rendered asset images, no private reference frames"
+}

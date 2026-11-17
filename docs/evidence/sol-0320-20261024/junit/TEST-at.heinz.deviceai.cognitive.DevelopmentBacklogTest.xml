@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:20" hostname="5c9e18abbd30" time="1.214">
+  <properties/>
+  <testcase name="revisionConflictWritesNothing" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.012"/>
+  <testcase name="taskViewsExposeStateForTheUi" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.004"/>
+  <testcase name="unknownFieldsSurviveOperationsAndRewrites" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.045"/>
+  <testcase name="plannerBacklogV1IsMigratedExactlyLikeNode" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.019"/>
+  <testcase name="corruptFileIsRecoveredFromBackupAndQuarantinedNeverDeleted" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.011"/>
+  <testcase name="fixtureDocumentsRoundTripByteIdentically" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.028"/>
+  <testcase name="invalidDocumentsAreRejectedWithTheSharedCodes" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.049"/>
+  <testcase name="corruptFileWithoutValidBackupFailsClosedAndTouchesNothing" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.002"/>
+  <testcase name="stabilityBackendEvidenceRequiresExecutedTestsLikeNode" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.0"/>
+  <testcase name="writesAtomicallyKeepsBackupAndVerifiesWhatItWrote" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.003"/>
+  <testcase name="futureSchemaVersionIsNeverOverwrittenOrRecoveredAway" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.001"/>
+  <testcase name="interruptedWriteLeftoversAreCleanedAndNeverRead" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.002"/>
+  <testcase name="plannerV1FileIsMigratedOnFirstWriteAndOriginalKept" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.009"/>
+  <testcase name="concurrentWritersInSeparateStoresLoseNoUpdate" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.295"/>
+  <testcase name="canonicalJsonMatchesJavaScriptEscapingAndOrdering" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.001"/>
+  <testcase name="failingOperationBatchIsAllOrNothingOrReportedPerOperation" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.007"/>
+  <testcase name="conformanceVectorsMatchTheNodeImplementation" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.491"/>
+  <testcase name="freshLockTimesOutAndStaleLockIsBroken" classname="at.heinz.deviceai.cognitive.DevelopmentBacklogTest" time="0.235"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,5 @@
+{
+  "exit": 0,
+  "stdout": "{\"classification\":\"ACTUAL_NATIVE_CANCEL_CONTROL_NOT_SUCCESSFUL_INFERENCE\",\"minimumObservedNativeRssKiB\":4194304,\"observedPinnedRuntimePids\":[\"20\"],\"cancelAfterMs\":4028,\"elapsedMs\":4045,\"errorCode\":\"CODING_CANCELLED\",\"resultReturned\":false,\"remainingPinnedRuntimePids\":[]}\n",
+  "stderr": ""
+}

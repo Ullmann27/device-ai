@@ -1,0 +1,175 @@
+{
+  "status": "PASS",
+  "check": "Selected source snapshots match pinned GitHub recursive-tree Git blob SHA-1 and size",
+  "filesChecked": 15,
+  "upstreamRuntimeTests": "NOT_RUN",
+  "androidBuildAndDevice": "NOT_RUN",
+  "dependenciesInstalled": false,
+  "sources": [
+    {
+      "repository": "tokenarc/open-jarvis",
+      "commit": "04873998933830ce582018fe4664ebce5ec64d2f",
+      "path": "LICENSE",
+      "gitBlobSha1": "bb57ccb04c4d88189828562387f5b760810c8838",
+      "sha256": "dd4786eb815e19ff6fa380653373c5f21462d0ac7bbf16e05c99f9620710334c",
+      "bytes": 1064,
+      "fetchedTextSha256": "a7754b6a598a7b810e7d075f915c98673e3226530e8baba7247c02b6aa401a65",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "tokenarc/open-jarvis",
+      "commit": "04873998933830ce582018fe4664ebce5ec64d2f",
+      "path": "app/build.gradle",
+      "gitBlobSha1": "acf1accb68a7bff75ef2e1d87a040a7d91c74ac0",
+      "sha256": "dc88809c73a61063fcd09e0c2057006a43cccd542ffee0270e0a96bc0af2c11f",
+      "bytes": 3052,
+      "fetchedTextSha256": "76cdbce3b4471cf043ceb701a2df6e54365c2fa927aa78d80caa636596d090b8",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "tokenarc/open-jarvis",
+      "commit": "04873998933830ce582018fe4664ebce5ec64d2f",
+      "path": "app/src/main/AndroidManifest.xml",
+      "gitBlobSha1": "59e4085285f831031b69a689da21da0838fbe548",
+      "sha256": "5228957f8bc7fd8ab3281c3611236cb7c260ec2f08ec890ffecd39659c4906a6",
+      "bytes": 2790,
+      "fetchedTextSha256": "7e46319af53dfd36c2c9d13c8f69c0d94b67e37f9709db4c48908424559fbd50",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "tokenarc/open-jarvis",
+      "commit": "04873998933830ce582018fe4664ebce5ec64d2f",
+      "path": "app/src/main/java/com/openjarvis/accessibility/ScreenReader.kt",
+      "gitBlobSha1": "93b98aaae9ac6665f31efa13ad0c806b9e5a775e",
+      "sha256": "7497fcd9a35601ddd7140df997fde8d1f95b9dc9ba3295c3d47f56925463acf4",
+      "bytes": 3508,
+      "fetchedTextSha256": "0d5c87f6f005152f1f03a3a74d8899d68c03bc8c99b32d4bf5a6e895b4b39255",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "tokenarc/open-jarvis",
+      "commit": "04873998933830ce582018fe4664ebce5ec64d2f",
+      "path": "app/src/main/java/com/openjarvis/accessibility/ActionExecutor.kt",
+      "gitBlobSha1": "5a2667ab099ac5ee9fc42b689698880ed2d4f3a8",
+      "sha256": "285c2418c395a966984ca5913ff6d06ca27f2a4992d5ecfd6d91ab34a98d96f4",
+      "bytes": 3654,
+      "fetchedTextSha256": "bba6971b71279952661cedd51567b2e6d1d794fe78b41c60f7b873f2f8f8d8ac",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "tokenarc/open-jarvis",
+      "commit": "04873998933830ce582018fe4664ebce5ec64d2f",
+      "path": "app/src/main/java/com/openjarvis/accessibility/JarvisAccessibilityService.kt",
+      "gitBlobSha1": "ad8800b7afab54594e4bfac4af685cf86085fded",
+      "sha256": "93a5674f1448f74135c8bea8a48592bd17a2db96289334827ed261f5775934b0",
+      "bytes": 4447,
+      "fetchedTextSha256": "01632f5106c9dc3386cfd5b4270fd891ca8717c02fa730789c149b0c2cc3cc9b",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "tokenarc/open-jarvis",
+      "commit": "04873998933830ce582018fe4664ebce5ec64d2f",
+      "path": "app/src/main/java/com/openjarvis/agent/AgentCore.kt",
+      "gitBlobSha1": "df8fadb1f0b77fbce00ae44d92181250c7f68a06",
+      "sha256": "976cb8e60a591b73a694fc6136358027352bfe1a9d5b0cede71bb024c82e0086",
+      "bytes": 13657,
+      "fetchedTextSha256": "cc604b2c33c38c4850da01a99dcccfa918a042df4e330518a2b0f7d21ec5421d",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "open-jarvis/OpenJarvis",
+      "commit": "45504acbb49459993d60e19d5b37c85fbc0c35ed",
+      "path": "LICENSE",
+      "gitBlobSha1": "7d8b094eda9393e9ac5fcaa34fe276ee947f61bd",
+      "sha256": "ac617ecddb7ffeb27a239c6c9c8145212306baa90e23ee694849bf3cefb10743",
+      "bytes": 10773,
+      "fetchedTextSha256": "2208652f5c15855e466f2786166cb2b572cd8fd63926fd63354a6af3df05846f",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "open-jarvis/OpenJarvis",
+      "commit": "45504acbb49459993d60e19d5b37c85fbc0c35ed",
+      "path": "pyproject.toml",
+      "gitBlobSha1": "8f48a5ea46b1217bf2a56af11a356b8949b15557",
+      "sha256": "33bd8d57776e33f93820329c0cf54280226406cb8d74cdcba79169ebfba66879",
+      "bytes": 12180,
+      "fetchedTextSha256": "c521127450144889901a61c0ec35b0641cbbfcbef982a7083628aa0ce8c550ac",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "open-jarvis/OpenJarvis",
+      "commit": "45504acbb49459993d60e19d5b37c85fbc0c35ed",
+      "path": "src/openjarvis/agents/loop_guard.py",
+      "gitBlobSha1": "f7e92cfea63ec93acb03db091adecb6c364b5bf9",
+      "sha256": "7da5ec256535d9687c2668e93e4f54a148119e10b073924ca4275612f027d60b",
+      "bytes": 9424,
+      "fetchedTextSha256": "ce763f15f55de8ac871fdb291478689f9317d820355831229f7c250c249f9bae",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "Dix01/JARVIS",
+      "commit": "dff115ca4f30b74240fc6199b55b4770474e7ac8",
+      "path": "LICENSE",
+      "gitBlobSha1": "b2006100277902747d09dd9c1e03a157ba0e6fda",
+      "sha256": "843779d00a3fbc93308fb8939843a1e7b65b6fa72fcef5c83296f78efc9f8f3f",
+      "bytes": 1062,
+      "fetchedTextSha256": "eb64621fb064fb3157fc314e01edf32c6e791b1b6be52888cee99ce6a60ddde5",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "Dix01/JARVIS",
+      "commit": "dff115ca4f30b74240fc6199b55b4770474e7ac8",
+      "path": "requirements.txt",
+      "gitBlobSha1": "46388f6d32615fe66bbedd83ebda7ce4b4352763",
+      "sha256": "dce1efbbfab7241a08a4a22aa603965ebd2ffddd2552ba0b0d35d189153822be",
+      "bytes": 1981,
+      "fetchedTextSha256": "9b36cc9087941d4320753de3a1c540613d7f71a0c29c7c605637fb21917628ac",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "Dix01/JARVIS",
+      "commit": "dff115ca4f30b74240fc6199b55b4770474e7ac8",
+      "path": "web/package.json",
+      "gitBlobSha1": "699cbe4a346a12ebeb34834ad3a572b8032d66d6",
+      "sha256": "f349ff3338d92706163247f77dc0f26fbd25aadac4a2c847b213b47159574b55",
+      "bytes": 811,
+      "fetchedTextSha256": "cb0515f249369249bcea7e3448473f5cea1c58aa3135a2b4a7c80cdf3bb0b694",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "Dix01/JARVIS",
+      "commit": "dff115ca4f30b74240fc6199b55b4770474e7ac8",
+      "path": "web/src/lib/wakeWord.ts",
+      "gitBlobSha1": "ac8815d78f293412dce136deecd1f15a4651660f",
+      "sha256": "d12e905fed0cdff0b063ac457eaa37291a664a798703829755458c508ef84f03",
+      "bytes": 4410,
+      "fetchedTextSha256": "8368d422c1a5473852d47174e006c180d6aba6bd8a71c8546345438262fbf0ee",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    },
+    {
+      "repository": "Dix01/JARVIS",
+      "commit": "dff115ca4f30b74240fc6199b55b4770474e7ac8",
+      "path": "jarvis/core/permissions.py",
+      "gitBlobSha1": "2b0c664af2586a02a51bb715234035fd5ea7ab70",
+      "sha256": "6cbfe1748f20b7e3a4679c342fd2625a4af03c5423093577ee3b29000d3a05bc",
+      "bytes": 2953,
+      "fetchedTextSha256": "86215a03b6fe10e0437c6ae95172f494c90c1331d480202a0204709b7f7e726f",
+      "normalization": "remove_one_acquisition_added_final_LF",
+      "status": "PINNED_BLOB_MATCH"
+    }
+  ]
+}

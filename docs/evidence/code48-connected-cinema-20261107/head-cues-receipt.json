@@ -1,0 +1,30 @@
+{
+  "status": "FOCUSED_HOST_PASS",
+  "red": {
+    "tests": 1,
+    "failures": 1,
+    "assertion": "Cockpit entry must draw the recovered head icons"
+  },
+  "green": {
+    "tests": 3,
+    "failures": 0
+  },
+  "profile": "Real Android View/Canvas via Robolectric; frozen compiled baseline plus SDK-compiled changed classes",
+  "tests": [
+    "actualPresenterMakesHeadIconsVisibleAboveTheLiveSurface",
+    "backgroundDropsHeadIconsWithoutResumeReplay",
+    "reducedMotionNeverQueuesAHeadBurst"
+  ],
+  "physicalFold7": "NOT_RUN",
+  "fullCombinedSource": "PENDING",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt": "939ca205c55fa20699fbaed6cb782cce2d4e77dd7ecc9b3e73ff002b3890af86",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarIconBurst.kt": "281633a50029b24b7410158122a8696a38d1cd5189f4f45a9aa0c35a2eac5a99",
+    "app/src/main/java/at/heinz/deviceai/avatar/ContinuumAvatarRenderer.kt": "c09d7de2100d55eb4912dff47ed95678280621c3b27534276c13b2375d4b5fc2",
+    "app/src/main/java/at/heinz/deviceai/avatar/JarvisHoloAvatar.kt": "141b29e826f0829dbc27e6c324da94583220593d455acd8ad8f7fd4e16f3d687",
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt": "5c82a0ae738a0ff69de44727e2b9a162fe2e92afa1975e66c505ceaf22c602ad",
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt": "07d289ec2ced55d0887eacbebfe25a52ea830d3ddf920e748f168cb39da5b9bb",
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt": "b4fc44ea55e0e38fbb28d7743d9c2f286c268455c18dce4c33377092d380b2ec",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/CockpitCinematicCueUiTest.kt": "ec26728df8c0779c707d64284d1f74d0e166f824ced5726214f0103eb4670d3e"
+  }
+}

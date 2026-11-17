@@ -1,0 +1,9 @@
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            maxHeapSize = '768m'
+            maxParallelForks = 1
+            jvmArgs '-XX:+UseSerialGC', '-XX:ActiveProcessorCount=2'
+        }
+    }
+}

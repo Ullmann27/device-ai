@@ -1,0 +1,57 @@
+// Fold7 context capacity and long-answer tests, real Android source in debug QA mode.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching { it.name == 'testDebugUnitTest' }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelContextWindowTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalNativePromptBudgetTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelResponseBoundaryTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelHostMemoryUiTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalChatPromptBudgetTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalPromptFrameTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.AiContextCompilerTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalTextOnlyInferenceRouteTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.DocumentDraftPromptTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalDecisionPromptFrameTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerObjectScopeCorrectionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerSessionObjectUtteranceTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDocumentIntentTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumHologramMotionUiTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.AiContextByteBudgetTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalContextRoundTripTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalDialoguePromptHistoryTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalGenerationCaptureTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalGenerationFailureTruthTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDialogueOutputTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalChatTranscriptStoreTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerComputerClarificationTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerComputerTaskGrantTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest'
+            includeTestsMatching 'at.heinz.deviceai.LocalContextBudgetUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerAppActionWorkSceneUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerFactRevocationUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerFallbackIdentityUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest'
+            includeTestsMatching 'at.heinz.deviceai.LocalTurnOutcomeUiTest'
+            includeTestsMatching 'at.heinz.deviceai.OwnerObjectStateConversationUiTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalLongAnswerFlowTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalFollowUpFrameAdmissionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LongOwnerTaskAdmissionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalDialogueRetentionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalConversationContinuationChainTest'
+            includeTestsMatching 'at.heinz.deviceai.BootstrapLongDialogueRegressionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalChatTranscriptIntegrityTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalFollowUpTaskFrameTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.SessionRevisionRoutingTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumDocumentFlowUiTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}

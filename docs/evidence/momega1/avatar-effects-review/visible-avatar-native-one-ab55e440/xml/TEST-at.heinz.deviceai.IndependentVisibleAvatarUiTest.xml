@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentVisibleAvatarUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:56:50" hostname="b354f2cb821b" time="5.067">
+  <properties/>
+  <testcase name="movedHeadHasNoHiddenCopyAndBackgroundStopsExistingClock" classname="at.heinz.deviceai.IndependentVisibleAvatarUiTest" time="5.067"/>
+  <system-out><![CDATA[HOST_DIAGNOSTIC before-chat hostFinishing=false hostFocus=false host=DecorView: shown=true attached=true window=0 visibility=0 pane=LinearLayout: shown=true attached=true window=0 visibility=0 home=ContinuumHomeView: shown=true attached=true window=0 visibility=0 chat=LinearLayout: shown=false attached=true window=0 visibility=8 head=ContinuumHologramView: shown=true attached=true window=0 visibility=0
+HOST_DIAGNOSTIC after-reparent hostFinishing=false hostFocus=false host=DecorView: shown=true attached=true window=0 visibility=0 pane=LinearLayout: shown=true attached=true window=0 visibility=0 home=ContinuumHomeView: shown=false attached=true window=0 visibility=0 chat=LinearLayout: shown=true attached=true window=0 visibility=0 head=ContinuumHologramView: shown=true attached=true window=0 visibility=0
+HOST_DIAGNOSTIC after-idle hostFinishing=false hostFocus=false host=DecorView: shown=true attached=true window=0 visibility=0 pane=LinearLayout: shown=true attached=true window=0 visibility=0 home=ContinuumHomeView: shown=false attached=true window=0 visibility=0 chat=LinearLayout: shown=true attached=true window=0 visibility=0 head=ContinuumHologramView: shown=true attached=true window=0 visibility=0
+VISIBILITY_DIAGNOSTIC shown=true attached=true window=0 motion=MotionSample(callbackCount=21, drawCount=0, phase=0.473728, reason=Avatar: LIVE · Callbacks 21 · Canvas 0 · Phase 0.47) pending=true foreground=true allowed=true
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

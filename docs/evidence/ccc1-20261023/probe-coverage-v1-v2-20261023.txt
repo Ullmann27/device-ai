@@ -1,0 +1,525 @@
+# Probe sandbox coverage on the real repository (clone of opus/continuum-intelligence-next-20261023 at d0bd336a), 23.10.2026
+# Same 258 one-argument exports, same 29 pool inputs. v1 = behaviour-probe at 73958363 (read access: the module's directory), v2 = at d0bd336a (read access: repository; network/signal guards).
+# Script: probe-coverage.mjs.txt; per export: module#export<TAB>result
+## v1
+{"label":"v1","arity1Exports":258,"runnable":132,"seconds":20.396,"reasons":{"runnable":132,"skipped: imports a network or process module":66,"not runnable: ERR_ACCESS_DENIED":58,"skipped: timeout":2}}
+ansk-baseline-triage.mjs#summarizeAnskBaselineFailure	runnable
+ansk-import-lab.mjs#ensureCleanSource	not runnable: ERR_ACCESS_DENIED
+ansk-import-lab.mjs#runAnskImportLab	not runnable: ERR_ACCESS_DENIED
+ansk-import-lab.mjs#stateRoot	not runnable: ERR_ACCESS_DENIED
+ansk-lab-contract.mjs#measureAnskChain	runnable
+ansk-lab-contract.mjs#verifyAnskExperiment	runnable
+ansk-lab-contract.mjs#verifyAnskRecipeReceipt	runnable
+ansk-lab-contract.mjs#verifyAnskTransferArm	runnable
+ansk-recipe-replay.mjs#planAnskShadowReplay	runnable
+ansk-transfer-lab.mjs#parseAnskTransferArgs	not runnable: ERR_ACCESS_DENIED
+ansk-transfer-lab.mjs#runAnskTransferLab	not runnable: ERR_ACCESS_DENIED
+assoc-language-core.mjs#identifierParts	not runnable: ERR_ACCESS_DENIED
+autonomous-teamleader.mjs#decodeLeaderState	not runnable: ERR_ACCESS_DENIED
+autonomous-teamleader.mjs#publicTeamleaderRepairReport	not runnable: ERR_ACCESS_DENIED
+autonomous-teamleader.mjs#runTeamleaderCycle	not runnable: ERR_ACCESS_DENIED
+autonomous-teamleader.mjs#summarizeTeamleaderProgress	not runnable: ERR_ACCESS_DENIED
+baby-core.mjs#analyzeInstruction	runnable
+baby-core.mjs#babyStatus	runnable
+baby-core.mjs#buildDeepResearchPlan	runnable
+baby-core.mjs#createBabyState	runnable
+baby-core.mjs#evaluateMemoryRetrieval	runnable
+baby-core.mjs#ingestEvidence	runnable
+baby-core.mjs#migrateBabyState	runnable
+baby-core.mjs#recordOutcome	runnable
+baby-core.mjs#refreshSkillCurriculum	runnable
+baby-core.mjs#selectGoal	runnable
+backlog-cli.mjs#formatBacklog	not runnable: ERR_ACCESS_DENIED
+backlog-fixtures.mjs#roundtripPrepare	runnable
+backlog-fixtures.mjs#roundtripSimulateKotlin	runnable
+backlog-fixtures.mjs#roundtripVerify	runnable
+backlog-fixtures.mjs#runCase	runnable
+backlog-investigator.mjs#chooseReadyInvestigation	not runnable: ERR_ACCESS_DENIED
+backlog-investigator.mjs#executeInvestigation	not runnable: ERR_ACCESS_DENIED
+backlog-investigator.mjs#investigationChecksPassed	not runnable: ERR_ACCESS_DENIED
+backlog-repair-worker.mjs#executeOwnerRepairTask	not runnable: ERR_ACCESS_DENIED
+backlog-repair-worker.mjs#resolveOutputDestination	not runnable: ERR_ACCESS_DENIED
+behaviour-probe.mjs#ambiguityQuestion	skipped: imports a network or process module
+behaviour-probe.mjs#findAmbiguity	skipped: imports a network or process module
+behaviour-probe.mjs#observeOutputs	skipped: imports a network or process module
+behaviour-probe.mjs#probeCandidates	skipped: imports a network or process module
+behaviour-probe.mjs#probeInputs	skipped: imports a network or process module
+behaviour-probe.mjs#unrunnable	skipped: imports a network or process module
+candidate-kotlin-syntax.mjs#checkCandidateKotlinSyntax	runnable
+ccc1-cli.mjs#main	not runnable: ERR_ACCESS_DENIED
+ccc1-cli.mjs#parseArgs	not runnable: ERR_ACCESS_DENIED
+ccc1-envelope.mjs#canonical	not runnable: ERR_ACCESS_DENIED
+ccc1-envelope.mjs#envelope	not runnable: ERR_ACCESS_DENIED
+ccc1-envelope.mjs#envelopeProblems	not runnable: ERR_ACCESS_DENIED
+ccc1-envelope.mjs#sha256	not runnable: ERR_ACCESS_DENIED
+ccc1-envelope.mjs#validCase	not runnable: ERR_ACCESS_DENIED
+ccc1-gate.mjs#effectivePermissions	not runnable: ERR_ACCESS_DENIED
+ccc1-gate.mjs#permissionFor	not runnable: ERR_ACCESS_DENIED
+ccc1-interpreter.mjs#indexExports	not runnable: ERR_ACCESS_DENIED
+ccc1-interpreter.mjs#interpretGoal	not runnable: ERR_ACCESS_DENIED
+ccc1-interpreter.mjs#parseExamples	not runnable: ERR_ACCESS_DENIED
+ccc1-interpreter.mjs#tokens	not runnable: ERR_ACCESS_DENIED
+ccc1-journal.mjs#runtimeKey	not runnable: ERR_ACCESS_DENIED
+ccc1-orchestrator.mjs#crashPoint	skipped: imports a network or process module
+ccc1-orchestrator.mjs#ownerAction	skipped: imports a network or process module
+ccc1-orchestrator.mjs#runTask	skipped: imports a network or process module
+ccc1-orchestrator.mjs#startTask	skipped: imports a network or process module
+ccc1-orchestrator.mjs#taskState	skipped: imports a network or process module
+ccc1-recovery.mjs#builderStateOf	skipped: imports a network or process module
+ccc1-recovery.mjs#pendingRequest	skipped: imports a network or process module
+ccc1-recovery.mjs#recover	skipped: imports a network or process module
+ccc1-recovery.mjs#teamleaderStateOf	skipped: imports a network or process module
+ccc1-worker.mjs#compileGoal	not runnable: ERR_ACCESS_DENIED
+ccc1-worker.mjs#listTasks	not runnable: ERR_ACCESS_DENIED
+ccc1-worker.mjs#runCcc1Cycle	not runnable: ERR_ACCESS_DENIED
+ccc1-worker.mjs#submitGoal	not runnable: ERR_ACCESS_DENIED
+cefr-dev-checkpoint.mjs#loadCefrCheckpoint	not runnable: ERR_ACCESS_DENIED
+cefr-dev-checkpoint.mjs#promoteCefrCheckpoint	not runnable: ERR_ACCESS_DENIED
+cefr-dev-checkpoint.mjs#restoreCefrLastKnownGood	not runnable: ERR_ACCESS_DENIED
+cefr-independent-verifier.mjs#verifyIndependentCefrPatch	not runnable: ERR_ACCESS_DENIED
+cefr-repair-ranker.mjs#formatCandidateTarget	not runnable: ERR_ACCESS_DENIED
+cefr-repair-ranker.mjs#formatDiagnosticQuery	not runnable: ERR_ACCESS_DENIED
+cefr-repair-ranker.mjs#observeCefrCandidates	not runnable: ERR_ACCESS_DENIED
+cefr-repair-ranker.mjs#trainCefrCandidateFromVerifiedReport	not runnable: ERR_ACCESS_DENIED
+cefr-repair-ranker.mjs#validateCefrHoldout	not runnable: ERR_ACCESS_DENIED
+cefr-research-cycle.mjs#runCefrResearchCycle	not runnable: ERR_ACCESS_DENIED
+cefr-shadow-benchmark.mjs#auditCefrShadowWinner	runnable
+cefr-shadow-benchmark.mjs#summarizeCefrShadowAudits	runnable
+cefr-shadow-report.mjs#collectCefrShadowReports	runnable
+cefr-shadow-report.mjs#parseCefrShadowReportArgs	runnable
+code-analyzer.mjs#analyzeRepository	runnable
+code-analyzer.mjs#analyzeSources	runnable
+code-analyzer.mjs#buildIndex	runnable
+code-analyzer.mjs#collectKotlin	runnable
+code-analyzer.mjs#indexFile	runnable
+code-analyzer.mjs#integrationFindings	runnable
+code-index.mjs#buildCodeIndex	not runnable: ERR_ACCESS_DENIED
+code-index.mjs#fingerprintArity	not runnable: ERR_ACCESS_DENIED
+code-index.mjs#main	not runnable: ERR_ACCESS_DENIED
+code-index.mjs#standardInputs	not runnable: ERR_ACCESS_DENIED
+continuum-hyper-lab.mjs#experimentCayleyRotation	runnable
+continuum-hyper-lab.mjs#invertMatrix	runnable
+continuum-hyper-lab.mjs#planProofConsolidation	runnable
+continuum-hyper-lab.mjs#proposeLogicMutants	runnable
+continuum-workshop.mjs#diagnoseWorkshop	skipped: imports a network or process module
+continuum-workshop.mjs#executeWorkshop	skipped: imports a network or process module
+continuum-workshop.mjs#identifyWorkshops	skipped: imports a network or process module
+continuum-workshop.mjs#parseWorkshopArgs	skipped: imports a network or process module
+continuum-workshop.mjs#readWorkshopStatus	skipped: imports a network or process module
+cre-encoder.mjs#bucket	runnable
+cre-encoder.mjs#features	runnable
+cre-encoder.mjs#relationOf	runnable
+cre-encoder.mjs#sha256	runnable
+cre-encoder.mjs#subjectOf	runnable
+cre-encoder.mjs#tokens	runnable
+cre-hybrid-research.mjs#fitAndSelect	skipped: timeout
+cre-order-shadow.mjs#orderShadowFeatures	runnable
+cre-parity.mjs#prepare	runnable
+cre-parity.mjs#verify	runnable
+cre-sgd-parity.mjs#trainParityRounds	runnable
+cre1-blacklab-optimizer.mjs#canaryVariants	runnable
+cre1-blacklab-optimizer.mjs#gramDeviation	runnable
+developer-agent.mjs#command	runnable
+developer-agent.mjs#summarize	runnable
+developer-agent.mjs#triageRun	runnable
+development-backlog.mjs#canonical	runnable
+development-backlog.mjs#decodeDocument	runnable
+development-backlog.mjs#encodeDocument	runnable
+development-backlog.mjs#findingTask	runnable
+development-backlog.mjs#integrityOf	runnable
+development-backlog.mjs#nextEligible	runnable
+development-backlog.mjs#parseStrict	runnable
+development-backlog.mjs#repoPath	runnable
+development-backlog.mjs#sha256Hex	runnable
+development-backlog.mjs#validateDocument	runnable
+development-backlog.mjs#validateEvidence	runnable
+development-planner.mjs#planBacklog	runnable
+development-planner.mjs#prioritizeFindings	runnable
+development-planner.mjs#repairTaskId	runnable
+dialogue-retrieval.mjs#contentWords	runnable
+dialogue-retrieval.mjs#idfOf	runnable
+dialogue-retrieval.mjs#wordGrams	runnable
+dialogue-retrieval.mjs#words	runnable
+hypothesis-reasoner.mjs#indexExports	not runnable: ERR_ACCESS_DENIED
+hypothesis-reasoner.mjs#lexicalScorer	not runnable: ERR_ACCESS_DENIED
+hypothesis-reasoner.mjs#parseExamples	not runnable: ERR_ACCESS_DENIED
+hypothesis-reasoner.mjs#tokens	not runnable: ERR_ACCESS_DENIED
+kotlin-delegate-acceptance.mjs#assessKotlinDelegate	skipped: imports a network or process module
+kotlin-delegate-acceptance.mjs#parseKotlinIntCases	skipped: imports a network or process module
+kotlin-delegate-synthesizer.mjs#proposeKotlinDelegate	runnable
+kotlin-delegate-synthesizer.mjs#proposeKotlinDelegateWithOracle	runnable
+kotlin-tokenizer.mjs#isKeyword	runnable
+kotlin-tokenizer.mjs#tokenize	runnable
+local-brain-repair.mjs#createLocalBrainCandidateProvider	skipped: imports a network or process module
+local-integration-status.mjs#readLocalIntegrationStatus	runnable
+local-numeric-patch.mjs#isLocalNumericPatch	runnable
+local-teamleader-loop.mjs#isFailedCycleOutcome	skipped: imports a network or process module
+local-teamleader-loop.mjs#runTeamleaderLoop	skipped: imports a network or process module
+local-teamleader-loop.mjs#validateLoopOptions	skipped: imports a network or process module
+local-teamleader-loop.mjs#validateWorkerHeartbeat	skipped: imports a network or process module
+m4-junit-evidence.mjs#structuralJUnitMarkup	runnable
+m4-junit-evidence.mjs#verifyJUnitReport	runnable
+m4-junit-evidence.mjs#verifyJUnitXml	runnable
+m4-local-gate.mjs#parseGateArgs	skipped: imports a network or process module
+m4-local-gate.mjs#runAndroidParityStage	skipped: imports a network or process module
+m4-local-gate.mjs#runM4Gate	skipped: imports a network or process module
+m4-local-gate.mjs#sha256ApkFile	skipped: imports a network or process module
+m4-local-gate.mjs#verifyGateReport	skipped: imports a network or process module
+m4-local-gate.mjs#verifyReleaseProofFile	skipped: imports a network or process module
+m4-repair-e2e.mjs#validRepairE2eRecordShape	skipped: imports a network or process module
+neural-core.mjs#exportWeights	runnable
+neural-core.mjs#formatNeuralStatus	runnable
+neural-core.mjs#neuralStatus	runnable
+neural-core.mjs#restoreNeuralState	runnable
+neural-core.mjs#selectNeuralResearchTarget	runnable
+neural-core.mjs#trainRound	runnable
+node-contract-synthesizer.mjs#proposeNodeContractTest	runnable
+owner-contract-worker.mjs#executeOwnerContractTestTask	skipped: imports a network or process module
+owner-kotlin-preview.mjs#previewOwnerKotlinImplement	not runnable: ERR_ACCESS_DENIED
+portable-subword.mjs#buckets	runnable
+portable-subword.mjs#sha256	runnable
+portable-subword.mjs#weightedBuckets	runnable
+progress-watcher.mjs#captureProgressSample	runnable
+progress-watcher.mjs#progressTrend	runnable
+public-web.mjs#assertPublicHttpUrl	skipped: imports a network or process module
+public-web.mjs#crawlPublicWeb	skipped: imports a network or process module
+public-web.mjs#fetchPublicPage	skipped: imports a network or process module
+public-web.mjs#isBlockedAddress	skipped: imports a network or process module
+public-web.mjs#searchGitHubRepositories	skipped: imports a network or process module
+reasoner-dialog.mjs#canonical	skipped: imports a network or process module
+reasoner-dialog.mjs#dialogKey	skipped: imports a network or process module
+reasoner-dialog.mjs#dialogState	skipped: imports a network or process module
+reasoner-dialog.mjs#runDialog	skipped: imports a network or process module
+reasoner-dialog.mjs#validCase	skipped: imports a network or process module
+relational-memory-data.mjs#fingerprint	runnable
+relational-retrieval-audit.mjs#audit	skipped: timeout
+repair-benchmark.mjs#runBenchmark	not runnable: ERR_ACCESS_DENIED
+repair-critic.mjs#critique	runnable
+repair-cycle-safety.mjs#strictRepairDepth	runnable
+repair-cycle-safety.mjs#validateTriplePhaseSample	runnable
+repair-diagnostics.mjs#classifyKotlin	runnable
+repair-diagnostics.mjs#fingerprint	runnable
+repair-diagnostics.mjs#sha256	runnable
+repair-engine.mjs#knownFixes	runnable
+repair-experience.mjs#loadExperienceFile	runnable
+repair-experience.mjs#mergeExperiences	runnable
+repair-experience.mjs#summarizeExperiences	runnable
+repair-experience.mjs#summarizeRepairTransfer	runnable
+repair-experience.mjs#verifyExperienceFile	runnable
+repair-ledger.mjs#loadLedger	runnable
+repair-ledger.mjs#verifyLedger	runnable
+repair-loop.mjs#parseUnifiedZeroHunks	skipped: imports a network or process module
+repair-loop.mjs#rankCandidates	skipped: imports a network or process module
+repair-loop.mjs#repairCandidateRiskTier	skipped: imports a network or process module
+repair-loop.mjs#repairSession	skipped: imports a network or process module
+repair-publish.mjs#assertProposalBranch	skipped: imports a network or process module
+repair-publish.mjs#loadBacklogFromBranch	skipped: imports a network or process module
+repair-publish.mjs#openDraftPullRequest	skipped: imports a network or process module
+repair-publish.mjs#publishBenchmarkDemo	skipped: imports a network or process module
+repair-publish.mjs#publishRepair	skipped: imports a network or process module
+repair-strategies.mjs#exportedNames	runnable
+repair-strategies.mjs#planInverseKotlinImportMutation	runnable
+repair-strategies.mjs#unescapeCodeNewlines	runnable
+research-learning-cycle.mjs#buildExtractiveContrastiveSet	skipped: imports a network or process module
+research-learning-cycle.mjs#createSignedCre1Package	skipped: imports a network or process module
+research-learning-cycle.mjs#runResearchLearningCycle	skipped: imports a network or process module
+research-learning-cycle.mjs#splitVerifiedClaimsByHash	skipped: imports a network or process module
+research-learning-cycle.mjs#validateExtractiveSpans	skipped: imports a network or process module
+research-learning-cycle.mjs#verifySignedCre1Package	skipped: imports a network or process module
+research-radar.mjs#classify	runnable
+research-radar.mjs#largestModel	runnable
+research-radar.mjs#normalizeTitle	runnable
+research-radar.mjs#parseArxivAtom	runnable
+research-radar.mjs#proposals	runnable
+research-radar.mjs#recordKey	runnable
+research-radar.mjs#report	runnable
+research-radar.mjs#scan	runnable
+research-shadow-worker.mjs#runPostResearchShadowCycle	runnable
+shared-build-lease.mjs#acquireContinuumBuildLease	runnable
+shared-build-lease.mjs#releaseDeadContinuumBuildLease	runnable
+teamleader-cli.mjs#defaultTeamleaderStateDir	not runnable: ERR_ACCESS_DENIED
+teamleader-cli.mjs#parseTeamleaderArgs	not runnable: ERR_ACCESS_DENIED
+teamleader-cli.mjs#teamleaderExitCode	not runnable: ERR_ACCESS_DENIED
+teamleader-cli.mjs#teamleaderMain	not runnable: ERR_ACCESS_DENIED
+teamleader-handoffs.mjs#summarizeRepairHandoffs	runnable
+teamleader-handoffs.mjs#verifyRepairHandoffs	runnable
+teamleader-review-handoff.mjs#buildTeamleaderHandoff	runnable
+trainable-context-decoder.mjs#tokenizeForDecoder	runnable
+worker-academy.mjs#academyCliArgs	skipped: imports a network or process module
+worker-academy.mjs#academyStatus	skipped: imports a network or process module
+worker-academy.mjs#practiceLesson	skipped: imports a network or process module
+worker-atlas-epistemic-graph.mjs#classifyAtlasSource	runnable
+worker-atlas-epistemic-graph.mjs#createEmptyAtlasGraph	runnable
+worker-atlas-epistemic-graph.mjs#planAtlasQuestions	runnable
+worker-atlas.mjs#atlasFind	skipped: imports a network or process module
+worker-atlas.mjs#atlasStatus	skipped: imports a network or process module
+worker-atlas.mjs#researchAtlasOnce	skipped: imports a network or process module
+workshop-specialist-orchestrator.mjs#runSpecialistWorkshop	runnable
+workshop-specialist-orchestrator.mjs#selectSpecialistRoster	runnable
+world-model.mjs#createWorldModel	runnable
+world-model.mjs#migrateWorldModel	runnable
+world-model.mjs#proposeHypothesis	runnable
+world-model.mjs#selectHypothesisTest	runnable
+world-model.mjs#worldModelStatus	runnable
+exit=0
+## v2
+{"label":"v2","arity1Exports":258,"runnable":189,"seconds":26.839,"reasons":{"runnable":189,"skipped: imports a network or process module":66,"skipped: timeout":2,"not runnable: ERR_ACCESS_DENIED":1}}
+ansk-baseline-triage.mjs#summarizeAnskBaselineFailure	runnable
+ansk-import-lab.mjs#ensureCleanSource	runnable
+ansk-import-lab.mjs#runAnskImportLab	runnable
+ansk-import-lab.mjs#stateRoot	not runnable: ERR_ACCESS_DENIED
+ansk-lab-contract.mjs#measureAnskChain	runnable
+ansk-lab-contract.mjs#verifyAnskExperiment	runnable
+ansk-lab-contract.mjs#verifyAnskRecipeReceipt	runnable
+ansk-lab-contract.mjs#verifyAnskTransferArm	runnable
+ansk-recipe-replay.mjs#planAnskShadowReplay	runnable
+ansk-transfer-lab.mjs#parseAnskTransferArgs	runnable
+ansk-transfer-lab.mjs#runAnskTransferLab	runnable
+assoc-language-core.mjs#identifierParts	runnable
+autonomous-teamleader.mjs#decodeLeaderState	runnable
+autonomous-teamleader.mjs#publicTeamleaderRepairReport	runnable
+autonomous-teamleader.mjs#runTeamleaderCycle	runnable
+autonomous-teamleader.mjs#summarizeTeamleaderProgress	runnable
+baby-core.mjs#analyzeInstruction	runnable
+baby-core.mjs#babyStatus	runnable
+baby-core.mjs#buildDeepResearchPlan	runnable
+baby-core.mjs#createBabyState	runnable
+baby-core.mjs#evaluateMemoryRetrieval	runnable
+baby-core.mjs#ingestEvidence	runnable
+baby-core.mjs#migrateBabyState	runnable
+baby-core.mjs#recordOutcome	runnable
+baby-core.mjs#refreshSkillCurriculum	runnable
+baby-core.mjs#selectGoal	runnable
+backlog-cli.mjs#formatBacklog	runnable
+backlog-fixtures.mjs#roundtripPrepare	runnable
+backlog-fixtures.mjs#roundtripSimulateKotlin	runnable
+backlog-fixtures.mjs#roundtripVerify	runnable
+backlog-fixtures.mjs#runCase	runnable
+backlog-investigator.mjs#chooseReadyInvestigation	runnable
+backlog-investigator.mjs#executeInvestigation	runnable
+backlog-investigator.mjs#investigationChecksPassed	runnable
+backlog-repair-worker.mjs#executeOwnerRepairTask	runnable
+backlog-repair-worker.mjs#resolveOutputDestination	runnable
+behaviour-probe.mjs#ambiguityQuestion	skipped: imports a network or process module
+behaviour-probe.mjs#findAmbiguity	skipped: imports a network or process module
+behaviour-probe.mjs#observeOutputs	skipped: imports a network or process module
+behaviour-probe.mjs#probeCandidates	skipped: imports a network or process module
+behaviour-probe.mjs#probeInputs	skipped: imports a network or process module
+behaviour-probe.mjs#unrunnable	skipped: imports a network or process module
+candidate-kotlin-syntax.mjs#checkCandidateKotlinSyntax	runnable
+ccc1-cli.mjs#main	runnable
+ccc1-cli.mjs#parseArgs	runnable
+ccc1-envelope.mjs#canonical	runnable
+ccc1-envelope.mjs#envelope	runnable
+ccc1-envelope.mjs#envelopeProblems	runnable
+ccc1-envelope.mjs#sha256	runnable
+ccc1-envelope.mjs#validCase	runnable
+ccc1-gate.mjs#effectivePermissions	runnable
+ccc1-gate.mjs#permissionFor	runnable
+ccc1-interpreter.mjs#indexExports	runnable
+ccc1-interpreter.mjs#interpretGoal	runnable
+ccc1-interpreter.mjs#parseExamples	runnable
+ccc1-interpreter.mjs#tokens	runnable
+ccc1-journal.mjs#runtimeKey	runnable
+ccc1-orchestrator.mjs#crashPoint	skipped: imports a network or process module
+ccc1-orchestrator.mjs#ownerAction	skipped: imports a network or process module
+ccc1-orchestrator.mjs#runTask	skipped: imports a network or process module
+ccc1-orchestrator.mjs#startTask	skipped: imports a network or process module
+ccc1-orchestrator.mjs#taskState	skipped: imports a network or process module
+ccc1-recovery.mjs#builderStateOf	skipped: imports a network or process module
+ccc1-recovery.mjs#pendingRequest	skipped: imports a network or process module
+ccc1-recovery.mjs#recover	skipped: imports a network or process module
+ccc1-recovery.mjs#teamleaderStateOf	skipped: imports a network or process module
+ccc1-worker.mjs#compileGoal	runnable
+ccc1-worker.mjs#listTasks	runnable
+ccc1-worker.mjs#runCcc1Cycle	runnable
+ccc1-worker.mjs#submitGoal	runnable
+cefr-dev-checkpoint.mjs#loadCefrCheckpoint	runnable
+cefr-dev-checkpoint.mjs#promoteCefrCheckpoint	runnable
+cefr-dev-checkpoint.mjs#restoreCefrLastKnownGood	runnable
+cefr-independent-verifier.mjs#verifyIndependentCefrPatch	runnable
+cefr-repair-ranker.mjs#formatCandidateTarget	runnable
+cefr-repair-ranker.mjs#formatDiagnosticQuery	runnable
+cefr-repair-ranker.mjs#observeCefrCandidates	runnable
+cefr-repair-ranker.mjs#trainCefrCandidateFromVerifiedReport	runnable
+cefr-repair-ranker.mjs#validateCefrHoldout	runnable
+cefr-research-cycle.mjs#runCefrResearchCycle	runnable
+cefr-shadow-benchmark.mjs#auditCefrShadowWinner	runnable
+cefr-shadow-benchmark.mjs#summarizeCefrShadowAudits	runnable
+cefr-shadow-report.mjs#collectCefrShadowReports	runnable
+cefr-shadow-report.mjs#parseCefrShadowReportArgs	runnable
+code-analyzer.mjs#analyzeRepository	runnable
+code-analyzer.mjs#analyzeSources	runnable
+code-analyzer.mjs#buildIndex	runnable
+code-analyzer.mjs#collectKotlin	runnable
+code-analyzer.mjs#indexFile	runnable
+code-analyzer.mjs#integrationFindings	runnable
+code-index.mjs#buildCodeIndex	runnable
+code-index.mjs#fingerprintArity	runnable
+code-index.mjs#main	runnable
+code-index.mjs#standardInputs	runnable
+continuum-hyper-lab.mjs#experimentCayleyRotation	runnable
+continuum-hyper-lab.mjs#invertMatrix	runnable
+continuum-hyper-lab.mjs#planProofConsolidation	runnable
+continuum-hyper-lab.mjs#proposeLogicMutants	runnable
+continuum-workshop.mjs#diagnoseWorkshop	skipped: imports a network or process module
+continuum-workshop.mjs#executeWorkshop	skipped: imports a network or process module
+continuum-workshop.mjs#identifyWorkshops	skipped: imports a network or process module
+continuum-workshop.mjs#parseWorkshopArgs	skipped: imports a network or process module
+continuum-workshop.mjs#readWorkshopStatus	skipped: imports a network or process module
+cre-encoder.mjs#bucket	runnable
+cre-encoder.mjs#features	runnable
+cre-encoder.mjs#relationOf	runnable
+cre-encoder.mjs#sha256	runnable
+cre-encoder.mjs#subjectOf	runnable
+cre-encoder.mjs#tokens	runnable
+cre-hybrid-research.mjs#fitAndSelect	skipped: timeout
+cre-order-shadow.mjs#orderShadowFeatures	runnable
+cre-parity.mjs#prepare	runnable
+cre-parity.mjs#verify	runnable
+cre-sgd-parity.mjs#trainParityRounds	runnable
+cre1-blacklab-optimizer.mjs#canaryVariants	runnable
+cre1-blacklab-optimizer.mjs#gramDeviation	runnable
+developer-agent.mjs#command	runnable
+developer-agent.mjs#summarize	runnable
+developer-agent.mjs#triageRun	runnable
+development-backlog.mjs#canonical	runnable
+development-backlog.mjs#decodeDocument	runnable
+development-backlog.mjs#encodeDocument	runnable
+development-backlog.mjs#findingTask	runnable
+development-backlog.mjs#integrityOf	runnable
+development-backlog.mjs#nextEligible	runnable
+development-backlog.mjs#parseStrict	runnable
+development-backlog.mjs#repoPath	runnable
+development-backlog.mjs#sha256Hex	runnable
+development-backlog.mjs#validateDocument	runnable
+development-backlog.mjs#validateEvidence	runnable
+development-planner.mjs#planBacklog	runnable
+development-planner.mjs#prioritizeFindings	runnable
+development-planner.mjs#repairTaskId	runnable
+dialogue-retrieval.mjs#contentWords	runnable
+dialogue-retrieval.mjs#idfOf	runnable
+dialogue-retrieval.mjs#wordGrams	runnable
+dialogue-retrieval.mjs#words	runnable
+hypothesis-reasoner.mjs#indexExports	runnable
+hypothesis-reasoner.mjs#lexicalScorer	runnable
+hypothesis-reasoner.mjs#parseExamples	runnable
+hypothesis-reasoner.mjs#tokens	runnable
+kotlin-delegate-acceptance.mjs#assessKotlinDelegate	skipped: imports a network or process module
+kotlin-delegate-acceptance.mjs#parseKotlinIntCases	skipped: imports a network or process module
+kotlin-delegate-synthesizer.mjs#proposeKotlinDelegate	runnable
+kotlin-delegate-synthesizer.mjs#proposeKotlinDelegateWithOracle	runnable
+kotlin-tokenizer.mjs#isKeyword	runnable
+kotlin-tokenizer.mjs#tokenize	runnable
+local-brain-repair.mjs#createLocalBrainCandidateProvider	skipped: imports a network or process module
+local-integration-status.mjs#readLocalIntegrationStatus	runnable
+local-numeric-patch.mjs#isLocalNumericPatch	runnable
+local-teamleader-loop.mjs#isFailedCycleOutcome	skipped: imports a network or process module
+local-teamleader-loop.mjs#runTeamleaderLoop	skipped: imports a network or process module
+local-teamleader-loop.mjs#validateLoopOptions	skipped: imports a network or process module
+local-teamleader-loop.mjs#validateWorkerHeartbeat	skipped: imports a network or process module
+m4-junit-evidence.mjs#structuralJUnitMarkup	runnable
+m4-junit-evidence.mjs#verifyJUnitReport	runnable
+m4-junit-evidence.mjs#verifyJUnitXml	runnable
+m4-local-gate.mjs#parseGateArgs	skipped: imports a network or process module
+m4-local-gate.mjs#runAndroidParityStage	skipped: imports a network or process module
+m4-local-gate.mjs#runM4Gate	skipped: imports a network or process module
+m4-local-gate.mjs#sha256ApkFile	skipped: imports a network or process module
+m4-local-gate.mjs#verifyGateReport	skipped: imports a network or process module
+m4-local-gate.mjs#verifyReleaseProofFile	skipped: imports a network or process module
+m4-repair-e2e.mjs#validRepairE2eRecordShape	skipped: imports a network or process module
+neural-core.mjs#exportWeights	runnable
+neural-core.mjs#formatNeuralStatus	runnable
+neural-core.mjs#neuralStatus	runnable
+neural-core.mjs#restoreNeuralState	runnable
+neural-core.mjs#selectNeuralResearchTarget	runnable
+neural-core.mjs#trainRound	runnable
+node-contract-synthesizer.mjs#proposeNodeContractTest	runnable
+owner-contract-worker.mjs#executeOwnerContractTestTask	skipped: imports a network or process module
+owner-kotlin-preview.mjs#previewOwnerKotlinImplement	runnable
+portable-subword.mjs#buckets	runnable
+portable-subword.mjs#sha256	runnable
+portable-subword.mjs#weightedBuckets	runnable
+progress-watcher.mjs#captureProgressSample	runnable
+progress-watcher.mjs#progressTrend	runnable
+public-web.mjs#assertPublicHttpUrl	skipped: imports a network or process module
+public-web.mjs#crawlPublicWeb	skipped: imports a network or process module
+public-web.mjs#fetchPublicPage	skipped: imports a network or process module
+public-web.mjs#isBlockedAddress	skipped: imports a network or process module
+public-web.mjs#searchGitHubRepositories	skipped: imports a network or process module
+reasoner-dialog.mjs#canonical	skipped: imports a network or process module
+reasoner-dialog.mjs#dialogKey	skipped: imports a network or process module
+reasoner-dialog.mjs#dialogState	skipped: imports a network or process module
+reasoner-dialog.mjs#runDialog	skipped: imports a network or process module
+reasoner-dialog.mjs#validCase	skipped: imports a network or process module
+relational-memory-data.mjs#fingerprint	runnable
+relational-retrieval-audit.mjs#audit	skipped: timeout
+repair-benchmark.mjs#runBenchmark	runnable
+repair-critic.mjs#critique	runnable
+repair-cycle-safety.mjs#strictRepairDepth	runnable
+repair-cycle-safety.mjs#validateTriplePhaseSample	runnable
+repair-diagnostics.mjs#classifyKotlin	runnable
+repair-diagnostics.mjs#fingerprint	runnable
+repair-diagnostics.mjs#sha256	runnable
+repair-engine.mjs#knownFixes	runnable
+repair-experience.mjs#loadExperienceFile	runnable
+repair-experience.mjs#mergeExperiences	runnable
+repair-experience.mjs#summarizeExperiences	runnable
+repair-experience.mjs#summarizeRepairTransfer	runnable
+repair-experience.mjs#verifyExperienceFile	runnable
+repair-ledger.mjs#loadLedger	runnable
+repair-ledger.mjs#verifyLedger	runnable
+repair-loop.mjs#parseUnifiedZeroHunks	skipped: imports a network or process module
+repair-loop.mjs#rankCandidates	skipped: imports a network or process module
+repair-loop.mjs#repairCandidateRiskTier	skipped: imports a network or process module
+repair-loop.mjs#repairSession	skipped: imports a network or process module
+repair-publish.mjs#assertProposalBranch	skipped: imports a network or process module
+repair-publish.mjs#loadBacklogFromBranch	skipped: imports a network or process module
+repair-publish.mjs#openDraftPullRequest	skipped: imports a network or process module
+repair-publish.mjs#publishBenchmarkDemo	skipped: imports a network or process module
+repair-publish.mjs#publishRepair	skipped: imports a network or process module
+repair-strategies.mjs#exportedNames	runnable
+repair-strategies.mjs#planInverseKotlinImportMutation	runnable
+repair-strategies.mjs#unescapeCodeNewlines	runnable
+research-learning-cycle.mjs#buildExtractiveContrastiveSet	skipped: imports a network or process module
+research-learning-cycle.mjs#createSignedCre1Package	skipped: imports a network or process module
+research-learning-cycle.mjs#runResearchLearningCycle	skipped: imports a network or process module
+research-learning-cycle.mjs#splitVerifiedClaimsByHash	skipped: imports a network or process module
+research-learning-cycle.mjs#validateExtractiveSpans	skipped: imports a network or process module
+research-learning-cycle.mjs#verifySignedCre1Package	skipped: imports a network or process module
+research-radar.mjs#classify	runnable
+research-radar.mjs#largestModel	runnable
+research-radar.mjs#normalizeTitle	runnable
+research-radar.mjs#parseArxivAtom	runnable
+research-radar.mjs#proposals	runnable
+research-radar.mjs#recordKey	runnable
+research-radar.mjs#report	runnable
+research-radar.mjs#scan	runnable
+research-shadow-worker.mjs#runPostResearchShadowCycle	runnable
+shared-build-lease.mjs#acquireContinuumBuildLease	runnable
+shared-build-lease.mjs#releaseDeadContinuumBuildLease	runnable
+teamleader-cli.mjs#defaultTeamleaderStateDir	runnable
+teamleader-cli.mjs#parseTeamleaderArgs	runnable
+teamleader-cli.mjs#teamleaderExitCode	runnable
+teamleader-cli.mjs#teamleaderMain	runnable
+teamleader-handoffs.mjs#summarizeRepairHandoffs	runnable
+teamleader-handoffs.mjs#verifyRepairHandoffs	runnable
+teamleader-review-handoff.mjs#buildTeamleaderHandoff	runnable
+trainable-context-decoder.mjs#tokenizeForDecoder	runnable
+worker-academy.mjs#academyCliArgs	skipped: imports a network or process module
+worker-academy.mjs#academyStatus	skipped: imports a network or process module
+worker-academy.mjs#practiceLesson	skipped: imports a network or process module
+worker-atlas-epistemic-graph.mjs#classifyAtlasSource	runnable
+worker-atlas-epistemic-graph.mjs#createEmptyAtlasGraph	runnable
+worker-atlas-epistemic-graph.mjs#planAtlasQuestions	runnable
+worker-atlas.mjs#atlasFind	skipped: imports a network or process module
+worker-atlas.mjs#atlasStatus	skipped: imports a network or process module
+worker-atlas.mjs#researchAtlasOnce	skipped: imports a network or process module
+workshop-specialist-orchestrator.mjs#runSpecialistWorkshop	runnable
+workshop-specialist-orchestrator.mjs#selectSpecialistRoster	runnable
+world-model.mjs#createWorldModel	runnable
+world-model.mjs#migrateWorldModel	runnable
+world-model.mjs#proposeHypothesis	runnable
+world-model.mjs#selectHypothesisTest	runnable
+world-model.mjs#worldModelStatus	runnable
+exit=0

@@ -1,0 +1,128 @@
+{
+  "classification": "CONTRACT_TEST",
+  "nativeInference": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "baseline": "ca93fb4f7a17ff7a2a13debd93197ba485594f06",
+  "candidate": "037370f0544d3ed2ee7686082c41c78046daa64d",
+  "runs": [
+    {
+      "path": "red-snapshot",
+      "sourceHead": "d43c043afde46bfb8dab667749f9d1c4da19f72a",
+      "beforeAfterIdentical": true,
+      "beforeSha256": "9cde46a66ba0f59eb43e51437eac15dd341d99e1aa1bf9185af1d70bfe6d853a",
+      "afterSha256": "9cde46a66ba0f59eb43e51437eac15dd341d99e1aa1bf9185af1d70bfe6d853a",
+      "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/delta-red-corrected/source.txt",
+      "exit": 1,
+      "tests": 7,
+      "failures": 6,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "red-cancel-target",
+      "sourceHead": "c10ab9d30a50dd910e76947671e4290a9828686f",
+      "beforeAfterIdentical": true,
+      "beforeSha256": "786899dc7737797d96bd4474b02ccefb16a401cbaf9ec08d7f2ea8eabd2da5b6",
+      "afterSha256": "786899dc7737797d96bd4474b02ccefb16a401cbaf9ec08d7f2ea8eabd2da5b6",
+      "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/delta-c10ab9d3/source-before.txt",
+      "exit": 1,
+      "tests": 9,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "red-cancel-association",
+      "sourceHead": "5c9c31c0c443904a03be4253be51269bec43622c",
+      "beforeAfterIdentical": true,
+      "beforeSha256": "8b6f0c141858bd14fbdc0dce2d02977cc222e8d31d43d4d34cfba5d3d75b8231",
+      "afterSha256": "8b6f0c141858bd14fbdc0dce2d02977cc222e8d31d43d4d34cfba5d3d75b8231",
+      "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/delta-5c9c31c0/source-before.txt",
+      "exit": 1,
+      "tests": 12,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "green-b95858c1",
+      "sourceHead": "b95858c103243ec921c1de9c8fb9ae8da0e88c29",
+      "beforeAfterIdentical": true,
+      "beforeSha256": "386a6dce1354f43056462fe60aa83b5e2e1b17fbd71673539195035f812884a9",
+      "afterSha256": "386a6dce1354f43056462fe60aa83b5e2e1b17fbd71673539195035f812884a9",
+      "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/delta-b95858c1/source-before.txt",
+      "exit": 0,
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "red-independent-revocation",
+      "sourceHead": "b95858c103243ec921c1de9c8fb9ae8da0e88c29",
+      "beforeAfterIdentical": true,
+      "beforeSha256": "4fb16b2b018fa8af2a6d9f42c2b3a3c44b51ad532a1e3b649750119cf8d9f67f",
+      "afterSha256": "4fb16b2b018fa8af2a6d9f42c2b3a3c44b51ad532a1e3b649750119cf8d9f67f",
+      "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/android-independent-snapshot/source-before.txt",
+      "exit": 1,
+      "tests": 9,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "green-final",
+      "sourceHead": "037370f0544d3ed2ee7686082c41c78046daa64d",
+      "beforeAfterIdentical": true,
+      "beforeSha256": "bee0df8bdd680d2d50702d37936d992fe098f56950f19eda05a33b8f620c905a",
+      "afterSha256": "bee0df8bdd680d2d50702d37936d992fe098f56950f19eda05a33b8f620c905a",
+      "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/android-037370f0/source-before.txt",
+      "exit": 0,
+      "tests": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "independent": {
+    "author": "/root/momega1_android_review",
+    "frozenCasesCommit": "4556be48",
+    "originalTestCommit": "a3e257a1",
+    "additionalCancellationTestsCommit": "efa03299",
+    "testHashes": {
+      "IndependentTypedCancellationUiTest.kt": "89c88476a3abe6b829e6e5c22177a3b9c86c2c003de82c2f8c1974a4953a71eb",
+      "IndependentTypedAuthorizationUiTest.kt": "76cb675c6bedb1cd2caf93b484f0120a43f700f85b77947bc3b87399c8577e62"
+    },
+    "verdict": "ACCEPT_SCOPED_SOURCE",
+    "reviewPr": "https://github.com/Ullmann27/device-ai/pull/419",
+    "publishedReviewCommit": "f747661a338ad844e6f8b8efb889c1d8fd11fb92"
+  },
+  "node": [
+    {
+      "command": "node --test scripts/continuum-typed-coding-bridge.test.mjs",
+      "tests": 15,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test .github/continuum/mobile-builder-android-wiring.test.mjs .github/continuum/mobile-builder-result-wiring.test.mjs .github/continuum/mobile-coding-android-wiring.test.mjs .github/continuum/mobile-builder-existing-integration.test.mjs scripts/continuum-mobile-builder.test.mjs scripts/continuum-mobile-coding.test.mjs",
+      "tests": 65,
+      "failures": 0,
+      "skipped": 0
+    }
+  ],
+  "candidateFiles": {
+    ".github/continuum/typed-android-coding-wiring.test.mjs": "a599c03ecfa137ed7c669920f0d42b1b7c948a4b0298b2544aef61ce098ffe63",
+    "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt": "f1e350348a9c9acd3736cc7dbc386e736e335ff0bd869e266583704d67326821",
+    "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt": "d4e282f0bae4ecfc35815f31dba80955b9a6c3985eb6bfe3db21af2210c9068b",
+    "app/src/main/java/at/heinz/deviceai/ContinuumTypedCodingBridge.kt": "70eeee6a87a56d9727376c8e3012dc2b1c5ce090bb395daf87acd7613a518faa",
+    "app/src/test/java/at/heinz/deviceai/ContinuumTypedSnapshotBindingTest.kt": "13088ac2001e835ca38f1ccceb8faffb94707e2667a9bad0b5a6ae599cae75b2",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumTypedExecutionReviewUiTest.kt": "71bcd61d1305352547c53139f7c996f9e51faafde5df74d734e3cefab52d8c29"
+  },
+  "publication": {
+    "sourceCommit": "037370f0544d3ed2ee7686082c41c78046daa64d",
+    "sourceUrl": "https://github.com/Ullmann27/device-ai/commit/037370f0544d3ed2ee7686082c41c78046daa64d",
+    "draftPr": "https://github.com/Ullmann27/device-ai/pull/414",
+    "method": "normal authenticated git push; temporary expired-token block resolved"
+  }
+}

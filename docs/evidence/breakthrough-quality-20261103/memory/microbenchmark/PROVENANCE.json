@@ -1,0 +1,18 @@
+{
+  "baseline": "64ec06a73f50cae9ee49035c840710d87777d50f",
+  "candidate": "a6007442768b24f5aa700c61dae7c46049c1911a",
+  "mainClassArtifacts": "Exact compiled store classes from paired memory/receipt.json source extraction; no subsequent compilation/source change",
+  "runnerSha256": "4c5d94f405fe2c506531341a776750330cb77e96837157bbae1ac869ea05db12",
+  "javaFlags": [
+    "-Xms64m",
+    "-Xmx256m",
+    "-XX:ActiveProcessorCount=2"
+  ],
+  "warmupsPerWorkload": 4,
+  "samplesPerWorkload": 21,
+  "executionOrder": [
+    "baseline",
+    "candidate"
+  ],
+  "limits": "Host single fork per source; no randomization/device/end-to-end latency claim"
+}

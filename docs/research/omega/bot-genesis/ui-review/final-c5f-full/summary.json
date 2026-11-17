@@ -1,0 +1,126 @@
+{
+  "source": "c5f9b06b02fbe8b80f9472a17784fb000812398c",
+  "tests": 2241,
+  "failures": 1,
+  "errors": 0,
+  "skipped": 17,
+  "suiteCount": 404,
+  "gradleExit": 1,
+  "compilation": "PASS from same-source scoped run, up-to-date in full run",
+  "lint": "NOT_RUN: stopped after unit failure",
+  "sourceAndTestsUnchanged": true,
+  "failedAssertions": [
+    {
+      "class": "at.heinz.deviceai.ContinuumAvatarNativeUiTest",
+      "name": "actualActivityStopClosesAvatarBeforeAnyAsynchronousTtsCallback",
+      "message": "java.lang.NoSuchMethodException: at.heinz.deviceai.AgentActivity.stopVoiceAnimation()"
+    }
+  ],
+  "skippedCases": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s4b_pending_profileDiarySharedLayers",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "name": "actualNodeKotlinNodeTrainingParity",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+      "message": null,
+      "text": null
+    },
+    {
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+      "message": null,
+      "text": null
+    }
+  ],
+  "rawJUnitArchiveSha256": "bba11119ed9edfdf1cbd96175f375cd373df9ba170c716262631123ad7d8d490",
+  "filter": "No reviewer test-filter properties supplied",
+  "passed": 2223
+}

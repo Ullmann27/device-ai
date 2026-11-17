@@ -1,0 +1,162 @@
+[
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        3408,
+        3419
+      ],
+      [
+        7631,
+        7666
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/app__src__main__java__at__heinz__deviceai__AgentActivity.kt.txt",
+    "blob": "de358ac1f50614465144e5e9878acacb1f624dec"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        817,
+        834
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/app__src__main__java__at__heinz__deviceai__learning__ContinuumLearningCore.kt.txt",
+    "blob": "2477653cf478bf379d8181c2c4c16e6cafc62066"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/learning/Cre1ResearchLab.kt",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        38,
+        92
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/app__src__main__java__at__heinz__deviceai__learning__Cre1ResearchLab.kt.txt",
+    "blob": "fa6b8ce525fca56f815255cec6ba959e4fb33c43"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        200,
+        234
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/app__src__main__java__at__heinz__deviceai__learning__ContinuumBrain.kt.txt",
+    "blob": "796a73e278f4a3264f7e896739d10d187396d0c7"
+  },
+  {
+    "path": "app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        120,
+        145
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/app__src__main__java__at__heinz__deviceai__learning__OwnerAttributeEvidenceScope.kt.txt",
+    "blob": "386946824a611ce26798388acdc219485ae914d2"
+  },
+  {
+    "path": ".github/continuum/coding-orchestrator.mjs",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        88,
+        105
+      ],
+      [
+        201,
+        219
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/.github__continuum__coding-orchestrator.mjs.txt",
+    "blob": "31f7a598d4d560e0374b9e8656446b30c512e611"
+  },
+  {
+    "path": ".github/continuum/research-learning-cycle.mjs",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        1,
+        18
+      ],
+      [
+        135,
+        173
+      ],
+      [
+        240,
+        272
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/.github__continuum__research-learning-cycle.mjs.txt",
+    "blob": "6652babe73d5a5641608814eb404ccda397bf62c"
+  },
+  {
+    "path": ".github/continuum/research-shadow-worker.mjs",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        1,
+        16
+      ],
+      [
+        57,
+        76
+      ],
+      [
+        97,
+        112
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/.github__continuum__research-shadow-worker.mjs.txt",
+    "blob": "af123c5a8b8bf1dfb6ba92aa4279e73c200c7825"
+  },
+  {
+    "path": ".github/continuum/dialogue-retrieval.mjs",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        85,
+        117
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/.github__continuum__dialogue-retrieval.mjs.txt",
+    "blob": "77a7dd6708c7469ac712269586e083067594f360"
+  },
+  {
+    "path": "scripts/continuum-agent-benchmark.mjs",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        1,
+        26
+      ],
+      [
+        68,
+        102
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/scripts__continuum-agent-benchmark.mjs.txt",
+    "blob": "8e352186883a4d15e1245c2774c6fa0ba7aae95d"
+  },
+  {
+    "path": "scripts/continuum-dialogue-jvm.sh",
+    "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "ranges": [
+      [
+        1,
+        23
+      ]
+    ],
+    "excerpt": "/workspace/scratch/3d1967be6193/inspection/nonandroid-learning/current-excerpts/scripts__continuum-dialogue-jvm.sh.txt",
+    "blob": "9524349a30a26e6c647ec03a75f94d5e21b1bc37"
+  }
+]

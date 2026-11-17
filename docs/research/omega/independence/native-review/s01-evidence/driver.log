@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/workspace/independence-native-review/tools/independence-native-review/run-service-client.py", line 106, in <module>
+    result = cli('evidence-result', 'evidence', '--task-id', typed['id'], '--evidence-id', 'result')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/independence-native-review/tools/independence-native-review/run-service-client.py", line 56, in cli
+    return execute(label, ['node', str(cli_path), operation, '--config', str(config), *map(str, flags)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/independence-native-review/tools/independence-native-review/run-service-client.py", line 49, in execute
+    assert result.returncode == expect, f'{label} exit={result.returncode}; inspect {stem}'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: evidence-result exit=1; inspect /workspace/independence-s01-experiment/run/070-evidence-result
+{"resourceReport": "/workspace/independence-s01-experiment/native-resources.json", "exit": 1, "nativeProcesses": 1, "samples": 112}

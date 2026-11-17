@@ -1,0 +1,63 @@
+{
+  "checked_at_utc": "2026-11-16T05:16:42.601712+00:00",
+  "source_commit": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "source_main_tree": "8ead90327b0a99898ac75632b8f83621d4f77d0a",
+  "source_unchanged": true,
+  "native_wire": {
+    "path": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/evidence/live-media-ui-07/native-computer-wire.json",
+    "sha256": "86aca35b3e7955ed9b8adb5f1b6fe7c656b06a5258b3c5854236d68fdda36f60",
+    "bytes": 1427,
+    "provenance": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/evidence/live-media-ui-07/native-computer-wire-provenance.json"
+  },
+  "counts": {
+    "tests": 28,
+    "pass": 28,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "checks": [
+    {
+      "name": "syntax",
+      "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+      "command": [
+        "node",
+        "--check",
+        "app/src/main/assets/continuum-command03/native-bridge.js"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.079,
+      "log": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/root-web/final-b56a614b/syntax.txt",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original-assets",
+      "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+      "command": [
+        "node",
+        "tools/command03-native-qa/check-visual-source.mjs"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.188,
+      "log": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/root-web/final-b56a614b/original-assets.txt",
+      "log_sha256": "1bb22a39f40fca6c2e144826763d8e54cd3d43ce1020209096dc31a3852cb04e"
+    },
+    {
+      "name": "dom28",
+      "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tools/command03-native-qa/native-bridge-behavior.test.mjs"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 3.245,
+      "log": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/root-web/final-b56a614b/dom28.txt",
+      "log_sha256": "1c5851dd53221af0e649214a0054a7621f6c5c4e81d4429b836434ff230638ec"
+    }
+  ],
+  "status": "PASS_LOCAL_DOM_AND_NATIVE_WIRE_INTEROP",
+  "device_gpu_pixels_verified": false
+}

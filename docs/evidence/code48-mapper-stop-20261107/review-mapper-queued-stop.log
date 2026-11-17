@@ -1,0 +1,16 @@
+CASE at.heinz.deviceai.ui.IndependentVideo3ReviewUiTest#bufferedMemoryEventCannotSurviveAnActualStop
+.E
+Time: 4.065
+There was 1 failure:
+1) bufferedMemoryEventCannotSurviveAnActualStop(at.heinz.deviceai.ui.IndependentVideo3ReviewUiTest)
+java.lang.AssertionError: Buffered pre-STOP memory event must not resurrect
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.IndependentVideo3ReviewUiTest.bufferedMemoryEventCannotSurviveAnActualStop$lambda$0(IndependentVideo3ReviewUiTest.kt:304)
+	at at.heinz.deviceai.ui.IndependentVideo3ReviewUiTest.withCockpit(IndependentVideo3ReviewUiTest.kt:61)
+	at at.heinz.deviceai.ui.IndependentVideo3ReviewUiTest.bufferedMemoryEventCannotSurviveAnActualStop(IndependentVideo3ReviewUiTest.kt:288)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=1 failures=1

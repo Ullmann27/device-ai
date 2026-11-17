@@ -1,0 +1,7 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34131 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34131 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt:929:22: warning: 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+                info.isChecked = isSelected
+                     ^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:196:13: warning: 'when' is exhaustive so 'else' is redundant here.
+            else -> Unit
+            ^^^^

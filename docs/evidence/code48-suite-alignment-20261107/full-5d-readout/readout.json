@@ -1,0 +1,564 @@
+{
+  "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "sourceTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "archiveRoot": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d",
+  "archiveZipSha256": "95b51e1f4de5e5ec2b049d478dbc9035114f5c92fe876576a529de6beacbcc8d",
+  "xmlFiles": 664,
+  "counts": {
+    "tests": 3776,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 20,
+    "passed": 3754
+  },
+  "lint": "NOT_RUN_TASK_ABORTED_AFTER_UNIT_FAILURE",
+  "allXmlHashesMatchArchiveManifest": true,
+  "targetSuites": [
+    {
+      "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 42.108,
+      "timestamp": "2026-11-07T06:57:00",
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.FullStageMemoryReviewUiTest.xml",
+      "xmlSha256": "a8f692362e9d1080d52f4ac59ab2e3d3aab8150912466465c0cd75b154548019",
+      "methods": [
+        {
+          "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+          "method": "theEntireActualControlRectangleStaysOutsideTheCompositor",
+          "status": "PASS",
+          "timeSeconds": 0.784,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.FullStageMemoryReviewUiTest.xml",
+          "xmlSha256": "a8f692362e9d1080d52f4ac59ab2e3d3aab8150912466465c0cd75b154548019"
+        },
+        {
+          "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+          "method": "actualWindowCloseAndSystemTapRemainUsableAboveTheScene",
+          "status": "PASS",
+          "timeSeconds": 37.226,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.FullStageMemoryReviewUiTest.xml",
+          "xmlSha256": "a8f692362e9d1080d52f4ac59ab2e3d3aab8150912466465c0cd75b154548019"
+        },
+        {
+          "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+          "method": "falseSignalsAndAnEventFloodCannotInventOrExtendTheEpisode",
+          "status": "PASS",
+          "timeSeconds": 1.119,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.FullStageMemoryReviewUiTest.xml",
+          "xmlSha256": "a8f692362e9d1080d52f4ac59ab2e3d3aab8150912466465c0cd75b154548019"
+        },
+        {
+          "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+          "method": "actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight",
+          "status": "PASS",
+          "timeSeconds": 1.793,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.FullStageMemoryReviewUiTest.xml",
+          "xmlSha256": "a8f692362e9d1080d52f4ac59ab2e3d3aab8150912466465c0cd75b154548019"
+        },
+        {
+          "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+          "method": "realStopRejectsQueuedMemoryAndChatReparentingCannotReplay",
+          "status": "PASS",
+          "timeSeconds": 0.455,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.FullStageMemoryReviewUiTest.xml",
+          "xmlSha256": "a8f692362e9d1080d52f4ac59ab2e3d3aab8150912466465c0cd75b154548019"
+        },
+        {
+          "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+          "method": "actualActivityMemoryBusEnlargesAndReturnsTheOriginalOrb",
+          "status": "PASS",
+          "timeSeconds": 0.731,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.FullStageMemoryReviewUiTest.xml",
+          "xmlSha256": "a8f692362e9d1080d52f4ac59ab2e3d3aab8150912466465c0cd75b154548019"
+        }
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest",
+      "tests": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.135,
+      "timestamp": "2026-11-07T06:58:59",
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.xml",
+      "xmlSha256": "3b8c458a52e1c2e729e2ff750558fdb97a6919e1a73f91c8879d34818e342eb7",
+      "methods": [
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest",
+          "method": "realStorageFailureRemainsFailedAndRetryable",
+          "status": "PASS",
+          "timeSeconds": 0.055,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.xml",
+          "xmlSha256": "3b8c458a52e1c2e729e2ff750558fdb97a6919e1a73f91c8879d34818e342eb7"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest",
+          "method": "realStorageFailureAfterDeadlineRemainsFailedAndRetryable",
+          "status": "PASS",
+          "timeSeconds": 0.018,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.xml",
+          "xmlSha256": "3b8c458a52e1c2e729e2ff750558fdb97a6919e1a73f91c8879d34818e342eb7"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest",
+          "method": "expiredBudgetBeforeCdxStartIsDeferredWithoutFailure",
+          "status": "PASS",
+          "timeSeconds": 0.032,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.xml",
+          "xmlSha256": "3b8c458a52e1c2e729e2ff750558fdb97a6919e1a73f91c8879d34818e342eb7"
+        },
+        {
+          "class": "at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest",
+          "method": "ownerPauseBeforeCdxStartIsInterruptedWithoutFailure",
+          "status": "PASS",
+          "timeSeconds": 0.03,
+          "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.xml",
+          "xmlSha256": "3b8c458a52e1c2e729e2ff750558fdb97a6919e1a73f91c8879d34818e342eb7"
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "class": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "method": "semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn",
+      "status": "FAIL",
+      "timeSeconds": 0.145,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.xml",
+      "xmlSha256": "117f0b800f365cb3ecf06556eb5542f2e833ff1a40c4f696ba588eb837a36617",
+      "failureType": "java.lang.AssertionError",
+      "failureMessage": "java.lang.AssertionError: The logic destination must open a real dialog"
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest",
+      "method": "freshRecallAfterStopStillReachesTheVisibleSurface",
+      "status": "FAIL",
+      "timeSeconds": 0.03,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest.xml",
+      "xmlSha256": "73a630c5fb038a30e7c9ab85e87524d73a8c84795bfbc99ac12c82cffb4a6eab",
+      "failureType": "java.lang.AssertionError",
+      "failureMessage": "java.lang.AssertionError: Fresh recall must animate"
+    }
+  ],
+  "skipGroupCounts": {
+    "OPTIONAL_MOTION_EXPORT": 1,
+    "EXPLICIT_PENDING_SPEC": 12,
+    "OPT_IN_HOST_WORKSPACE": 2,
+    "EXTERNAL_PARITY_FIXTURES": 3,
+    "HOST_JDK21_REQUIRED": 2
+  },
+  "skips": [
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "method": "fold7InnerMotionClip",
+      "status": "SKIP",
+      "timeSeconds": 0.02,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.ContinuumVisualEvidenceUiTest.xml",
+      "xmlSha256": "abc7175bccef2ce7127f6afa6a712b725b075cd74018913050184ac34b3434b1",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumVisualEvidenceUiTest.kt",
+        "blob": "9cdcf3cb7e8de7e1ccf1b0e38c0a90d8b5ec4e28",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 467,
+      "group": "OPTIONAL_MOTION_EXPORT",
+      "staticReason": "assumeTrue(\"clip frames are evidence only\", dir != null); requires continuum.ui.evidenceDir",
+      "reasonKind": "Static assumption guard",
+      "reasonLine": 352
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "method": "s7_pending_agentMessagesUrgentWakesInfoWaits",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml",
+      "xmlSha256": "2914eb3688c1ddc46e7e8ed06c12e4535e48383431d15790165bf61ab3b5b546",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+        "blob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 386,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING Punkt 7 (Continuum 1): Keine Agent-zu-Agent-Nachrichten mit Stufen dringend/Info auf #373.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 384
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "method": "s4b_pending_profileDiarySharedLayers",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml",
+      "xmlSha256": "2914eb3688c1ddc46e7e8ed06c12e4535e48383431d15790165bf61ab3b5b546",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+        "blob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 341,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING Punkt 4 (Continuum Gedaechtnis): Schichten Profil/Tagebuch/geteiltes Wissen fuer alle Agenten gibt es auf #373 nicht als API. Vorhanden sind nur MemoryType (SELF/EPISODIC/SEMANTIC) und HybridMemoryRetriever; ein agentenuebergreifender Speicher fehlt.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 337
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "method": "s8d_pending_limitGuardIsWiredBeforeWorkerStart",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml",
+      "xmlSha256": "2914eb3688c1ddc46e7e8ed06c12e4535e48383431d15790165bf61ab3b5b546",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+        "blob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 442,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING Punkt 8 (REPERATEUR): ConstrainedResourceFabric ist im Produktivcode nirgends aufgerufen (nur Tests). Es fehlt die Verdrahtung des RAM-/Temperatur-/Nutzungslimitwaechters vor Modell-/Arbeiterstart.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 439
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "method": "s5b_pending_textFileSkillLibraryLoadedOnDemand",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml",
+      "xmlSha256": "2914eb3688c1ddc46e7e8ed06c12e4535e48383431d15790165bf61ab3b5b546",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+        "blob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 369,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING Punkt 5 (Continuum Gedaechtnis): Faehigkeiten-Bibliothek als Textdatei (Name + wann benutzen + Anleitung), bei Bedarf geladen, existiert auf #373 nicht.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 366
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "method": "s6_pending_routineReportsOnlyWhenSomethingIsNew",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml",
+      "xmlSha256": "2914eb3688c1ddc46e7e8ed06c12e4535e48383431d15790165bf61ab3b5b546",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+        "blob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 378,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING Punkt 6 (Continuum 1): Kein Routinen-Speicher mit Zeitplan/Ausloeser und 'nur bei Neuem melden'. Vorhandene learning/*Scheduler sind Lern-/Studienjobs, keine Nutzer-Routinen.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 375
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "method": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml",
+      "xmlSha256": "2914eb3688c1ddc46e7e8ed06c12e4535e48383431d15790165bf61ab3b5b546",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt",
+        "blob": "4daa63e9a5790ad2ddd518abc483a2aac8a9de58",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 202,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING Punkt 2 (HAUPT): Es gibt noch keine Chief/Arbeiter-API mit eigenem Auftrag, eigener Werkzeug-Whitelist und strukturiertem Bericht zurueck. Heute ist ein 'Arbeiter' nur ein zweiter BoundedAgentOrchestrator-Lauf; docs/CHIEF-PATTERN.md existiert auf #373 noch nicht.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 198
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "method": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations",
+      "status": "SKIP",
+      "timeSeconds": 0.001,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.xml",
+      "xmlSha256": "f53d3659590021e59447b9daaabf204554169dfbbb33c82126c07425e2ed58a4",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringHostTest.kt",
+        "blob": "ceba627d0809e39bd846ffd94386f7aa66159ce5",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 89,
+      "group": "OPT_IN_HOST_WORKSPACE",
+      "staticReason": "assumeTrue(CONTINUUM_WORKSPACE_CHIEF_HOST_PROOF == \"1\"); opt-in real Node/container workspace proof",
+      "reasonKind": "Static assumption guard",
+      "reasonLine": 78
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "method": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.xml",
+      "xmlSha256": "f53d3659590021e59447b9daaabf204554169dfbbb33c82126c07425e2ed58a4",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringHostTest.kt",
+        "blob": "ceba627d0809e39bd846ffd94386f7aa66159ce5",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 114,
+      "group": "OPT_IN_HOST_WORKSPACE",
+      "staticReason": "assumeTrue(CONTINUUM_WORKSPACE_CHIEF_HOST_PROOF == \"1\"); opt-in real Node/container workspace proof",
+      "reasonKind": "Static assumption guard",
+      "reasonLine": 78
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "method": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml",
+      "xmlSha256": "55974f434d945678e8694cf8f88d2debfd8c799ece1f4319180ab7ca91b7e22f",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+        "blob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 202,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING – wartet auf REPERATEUR: S4-Injektionsschutz + Freigabe-Gate in der Schleife (Klasse/Methode im Integrationszweig noch nicht vorhanden).",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 199
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "method": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml",
+      "xmlSha256": "55974f434d945678e8694cf8f88d2debfd8c799ece1f4319180ab7ca91b7e22f",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+        "blob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 134,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING – wartet auf HAUPT: chief/TurnLifecycle.acknowledge()/deliver() (PR #379, continuum/haupt-chief-pattern-20261103) ist noch nicht im Integrationszweig.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 131
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "method": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml",
+      "xmlSha256": "55974f434d945678e8694cf8f88d2debfd8c799ece1f4319180ab7ca91b7e22f",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+        "blob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 194,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING – wartet auf HAUPT (Merge #379) + Lumo: Aufgabenschleife als ChiefWorkerPool-Job in chief/ (WorkerBrief/WorkerScope.runner/model) mit Geraetewerkzeugen nur im Job-Scope.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 191
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "method": "schritt6b_lernen_hypotheseUndTagebuchEintrag",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml",
+      "xmlSha256": "55974f434d945678e8694cf8f88d2debfd8c799ece1f4319180ab7ca91b7e22f",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+        "blob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 249,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING – wartet auf Continuum Gedaechtnis: Reflexionsschritt 'was habe ich gelernt' -> Hypothesen-Speicher + datierter Tagebuch-Eintrag pro Schleifenschritt (keine Klasse im Integrationszweig).",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 246
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "method": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml",
+      "xmlSha256": "55974f434d945678e8694cf8f88d2debfd8c799ece1f4319180ab7ca91b7e22f",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+        "blob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 163,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING – wartet auf Continuum Gedaechtnis + HAUPT: MemoryLayers.shared()/search() und Anbindung 'jeder Schleifenschritt liest relevantes Gedaechtnis' existieren in keinem Zweig.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 160
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "method": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml",
+      "xmlSha256": "55974f434d945678e8694cf8f88d2debfd8c799ece1f4319180ab7ca91b7e22f",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/chief/FirstThinkingRunE2ETest.kt",
+        "blob": "e7930d853d308bb266163dbf4d569a7d169d366b",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 267,
+      "group": "EXPLICIT_PENDING_SPEC",
+      "staticReason": "PENDING – wartet auf Lumo: Aufgabenschleife (chief/) muss einen strukturierten naechsten Schritt liefern und selbststaendig den naechsten Durchlauf anstossen; heute steht er nur im Modelltext.",
+      "reasonKind": "Static @Ignore annotation; historical wording, not a current feature audit",
+      "reasonLine": 264
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "method": "actualNodeKotlinNodeTrainingParity",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.learning.ContinuumContrastiveParityTest.xml",
+      "xmlSha256": "68168a5caabb4818c2dfc77b615e11322e4348a6cd4d98a32f55515daf7e64b2",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveParityTest.kt",
+        "blob": "fcb92a24a05f8275c1037be364da57ffab9d0306",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 27,
+      "group": "EXTERNAL_PARITY_FIXTURES",
+      "staticReason": "Requires nonblank CONTINUUM_CONTRASTIVE_PARITY_DIR containing Node training vectors",
+      "reasonKind": "Static assumption guard",
+      "reasonLine": 29
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "method": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.learning.ContinuumContrastiveParityTest.xml",
+      "xmlSha256": "68168a5caabb4818c2dfc77b615e11322e4348a6cd4d98a32f55515daf7e64b2",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveParityTest.kt",
+        "blob": "fcb92a24a05f8275c1037be364da57ffab9d0306",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 88,
+      "group": "EXTERNAL_PARITY_FIXTURES",
+      "staticReason": "Requires nonblank CONTINUUM_CONTRASTIVE_PARITY_DIR containing Node training vectors",
+      "reasonKind": "Static assumption guard",
+      "reasonLine": 90
+    },
+    {
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "method": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.learning.Cre1InferenceEncoderTest.xml",
+      "xmlSha256": "299564c7e07af874b82dcbe2c6ff3e6904f787e19c35bc05ac76c4b14fd055cc",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/learning/Cre1InferenceEncoderTest.kt",
+        "blob": "568aeac31a767a1d9636489698707d8ae102a5dc",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 21,
+      "group": "EXTERNAL_PARITY_FIXTURES",
+      "staticReason": "Requires nonblank CONTINUUM_CRE1_PARITY_DIR containing CI CRE1 fixtures",
+      "reasonKind": "Static assumption guard",
+      "reasonLine": 23
+    },
+    {
+      "class": "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+      "method": "failureBeforeAnyModelWasLoadedCanRetryWithoutUnload",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.xml",
+      "xmlSha256": "542a0e55042a5b5b24896f67a4478bd3c1a9c1c52078a1882b39006a9cfa4435",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelReloadLifecycleTest.kt",
+        "blob": "a165eff8e19247630654ed8740294e6e4b357c06",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 73,
+      "group": "HOST_JDK21_REQUIRED",
+      "staticReason": "@Before assumeTrue(\"LiteRT 0.18 lifecycle host tests require JDK21\", hostJava >= 21)",
+      "reasonKind": "Static assumption guard",
+      "reasonLine": 20
+    },
+    {
+      "class": "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+      "method": "failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload",
+      "status": "SKIP",
+      "timeSeconds": 0.0,
+      "xml": "/workspace/scratch/3d1967be6193/qa/full-android-failure-5d/junit/TEST-at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.xml",
+      "xmlSha256": "542a0e55042a5b5b24896f67a4478bd3c1a9c1c52078a1882b39006a9cfa4435",
+      "xmlReason": "",
+      "xmlSkipAttributes": {},
+      "source": {
+        "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelReloadLifecycleTest.kt",
+        "blob": "a165eff8e19247630654ed8740294e6e4b357c06",
+        "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9"
+      },
+      "sourceMethodLine": 23,
+      "group": "HOST_JDK21_REQUIRED",
+      "staticReason": "@Before assumeTrue(\"LiteRT 0.18 lifecycle host tests require JDK21\", hostJava >= 21)",
+      "reasonKind": "Static assumption guard",
+      "reasonLine": 20
+    }
+  ],
+  "limits": [
+    "Only immutable archived XML/receipt data used for run results.",
+    "All 20 XML skipped tags have empty reason metadata; explanations are separately identified static source guards/Ignore annotations from exact 5d Git objects.",
+    "The historical PENDING annotations are not evidence that the described features are still absent today; they are disabled/incomplete acceptance specifications.",
+    "No project code, test, model or provider executed; no source edited.",
+    "Passing cancellation tests demonstrate these controlled cases; the real phone training-failure cause is still unknown.",
+    "Fullstage 6/6 does not cover or override the separately failing freshRecallAfterStopStillReachesTheVisibleSurface path.",
+    "No physical-device or GPU acceptance is inferred."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "status": "UNSIGNED_BUILD_VERIFIED_NOT_PUBLISHED",
+  "local_head_before_build": "9032ab2573a64e4ed1a967ae900a2731155ee741",
+  "production_code_unchanged_since_test_commit": "132fbd97f3225174e8d076898cc47669909af712",
+  "working_tree_delta": "Only handoff/evidence documentation changed while assembling.",
+  "package": "at.heinz.deviceai.continuumlocal",
+  "versionCode": 45,
+  "versionName": "0.3.44",
+  "abis": [
+    "arm64-v8a"
+  ],
+  "apk_bytes": 101872407,
+  "apk_sha256": "8ee9b2cc3e5263c93045361d2fe3f6f5277d9089f0cab01e4edf8cb6f41d7e46",
+  "aab_bytes": 71341334,
+  "aab_sha256": "36b84456818c5752e460acbf20503995deeecc9f1f1e1fe0fbc3c34b9ec6812d",
+  "owner_signed": false,
+  "published": false
+}

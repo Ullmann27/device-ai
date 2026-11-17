@@ -1,0 +1,60 @@
+{
+  "baseline_commit": "f4b0a403b4e51fc0b0df5d697345d6f94308af05",
+  "source_local_commit": "61b961bfcd63cf572a06a7d5b31bf2fe622e7ae3",
+  "source_remote_commit": "eadc72bac95f8b1a554a59e5baff624977b09f73",
+  "source_tree": "187aab3fe44a94b9b01451a867589c8e967cc641",
+  "source_handoff": "docs/research/omega/MEMORY-BRAIN-R3-HANDOFF-20261104.md",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "source_blob": "beb0f37d8de8965984bf38846b6479e0137d2340",
+      "integrated_blob": "2aab35194170710b216f81b6ec886521ca767fbe",
+      "integrated_sha256": "d34313b2a8d98a4fdf034ba1195bd9a14e52342b9f6c207cdb23f900c0b76674",
+      "exact_source_copy": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "source_blob": "42f4714c72ee057566be54171f01703f39d48aaf",
+      "integrated_blob": "42f4714c72ee057566be54171f01703f39d48aaf",
+      "integrated_sha256": "6719544a62ec6c19442e2bcb2ecdd22cbf1cfee37d3d600c433b18f660c19a81",
+      "exact_source_copy": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryRegressionTest.kt",
+      "source_blob": "0c798951d4f19d0ac873330caf2c5b6ce6a29d99",
+      "integrated_blob": "0c798951d4f19d0ac873330caf2c5b6ce6a29d99",
+      "integrated_sha256": "0e7baeb42e93a93e5564a2972be9b5f5898d491fffbb29bda1580c5bc46235ce",
+      "exact_source_copy": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt",
+      "source_blob": "8e0d89fee6ed05af7b32e4ca589c83fb008c5f8d",
+      "integrated_blob": "8e0d89fee6ed05af7b32e4ca589c83fb008c5f8d",
+      "integrated_sha256": "dcf924b4e15b74adf2492ae0b38260bd79dbc19f6787abbcdafe3640cde049f7",
+      "exact_source_copy": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt",
+      "source_blob": "b8803c074ad56c6b51d1b587818ae4bc5e1003dd",
+      "integrated_blob": "b8803c074ad56c6b51d1b587818ae4bc5e1003dd",
+      "integrated_sha256": "3d490f43091ddff69dd264c5b9f48b73613d82c5bfbddcfc11defaf845be3690",
+      "exact_source_copy": true
+    }
+  ],
+  "checks": {
+    "git_diff_check": "PASS",
+    "exact_source_mapper_and_tests": "PASS",
+    "baseline_byte_counter_and_recall_observer_preserved": "PASS",
+    "new_test_annotations": 14,
+    "kotlin_compilation": "NOT_RUN",
+    "junit": "NOT_RUN",
+    "gradle_android": "NOT_RUN (parent-owned serial gate)",
+    "historical_462_case_parity": "NOT_RUN; contradiction semantics intentionally changed"
+  },
+  "decisions": [
+    "Import bounded #522 fixes and original tests only.",
+    "Keep #523 subtraction-based budget comparison and increment only after accepted append; utf8Size is UTF-8 byte length.",
+    "Existing AgentActivity passes source memories alongside contradiction projections and already wires mapper and recall observer. No Activity/factory changes.",
+    "Unattributed caller annotations remain untrusted; original memory identity is required to enforce memory privacy."
+  ]
+}

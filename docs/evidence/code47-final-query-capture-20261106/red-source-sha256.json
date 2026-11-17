@@ -1,0 +1,8 @@
+{
+  "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt": "5b37b05ac3ad567d820d48b3317195e72b8945fd576b527ae967ea4f515c3dcb",
+  "app/src/main/java/at/heinz/deviceai/cognitive/NativeAppLookup.kt": "6bdad4ff7c05497ddcc79838f057de2483544d219a8c4690d619a9dbed4c6f25",
+  "app/src/test/java/at/heinz/deviceai/AppLookupToolPolicyTest.kt": "1cef8c2a14ce68cafdccac1f65dd1d80fff84534aa8ec7bdcb7db6b2708b0978",
+  "app/src/test/java/at/heinz/deviceai/AppLookupReadableQueryTest.kt": "cb7bb94d2b18971f349737abe863004768beed03da5bf132562bfc6640a5c596",
+  "app/src/test/java/at/heinz/deviceai/cognitive/NativeAppLookupTest.kt": "d25a327e382376a7774ff7a9d7d82c76ec7cb6aa6dc486e50092a37a5ab4ebdd",
+  "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppActionFlowTest.kt": "df2a7c7879b390bde74010fd1c89f5f9d16c1c2018beeb6122094570bb11a2da"
+}

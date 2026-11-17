@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:05" hostname="5c9e18abbd30" time="0.014">
+  <properties/>
+  <testcase name="scriptedFakeModelProducesReviewableProposal" classname="at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest" time="0.014"/>
+  <system-out><![CDATA[DEVELOPMENT PROPOSAL (review only) · task demo-1
+Judge: RECOMMEND — Minimal change
+Critic: ACCEPT
+  [INFO] Overflow at Int.MAX_VALUE not handled
+Summary: Increment n
+Suggested tests (NOT EXECUTED, suggestions only):
+  - nextIncrements: next(1)==2
+NOT EXECUTED:
+  - Edits applied to any file
+  - Code compiled
+  - Generated tests executed
+  - APK built or installed
+  - Changes pushed to GitHub
+Job recorded in the development backlog: an app restart mid-job returns it to READY when its lease ends; the proposal waits there (VERIFYING) for executed test evidence.
+Model calls: 4 · models: scripted-fake@0
+
+# REVIEW ONLY — NOT APPLIED. Nothing has been written, compiled or tested.
+--- a/app/Counter.kt (sha256 a787f8c4044599440637d51fdb14c8aad98c722dba0cb1b273fabea80a3b19eb)
++++ b/app/Counter.kt
+@@ -1,1 +1,1 @@
+-fun next(n: Int) = n
++fun next(n: Int) = n + 1
+
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

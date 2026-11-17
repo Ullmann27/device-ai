@@ -1,0 +1,20 @@
+{
+  "source": "4e4abc61ffb9d9a7e9d6db351c306d1105baf2fe",
+  "node": "v24.19.0",
+  "command": [
+    "node",
+    "--test",
+    ".github/continuum/coin-wm-v3-shadow-model.test.mjs",
+    ".github/continuum/coin-wm-v3-numeric-safety.test.mjs",
+    ".github/continuum/structured-statement-translator.test.mjs",
+    ".github/continuum/structured-binding-safety.test.mjs",
+    ".github/continuum/coin-wm-v3-structured-shadow.test.mjs",
+    ".github/continuum/ccc1-independent-verifier.test.mjs",
+    ".github/continuum/ccc1-bottleneck-diagnosis.test.mjs",
+    ".github/continuum/continuum-virtual-model-fabric.test.mjs",
+    "scripts/continuum-deepseek-tier-plan.test.mjs"
+  ],
+  "exitCode": 0,
+  "seconds": 0.937,
+  "dependencyDoubles": false
+}

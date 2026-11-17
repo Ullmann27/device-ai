@@ -1,0 +1,11 @@
+first=FAIL IOException: Input/output error
+Exception in thread "main" java.io.IOException: Input/output error
+	at java.base/sun.nio.ch.FileDispatcherImpl.force0(Native Method)
+	at java.base/sun.nio.ch.FileDispatcherImpl.force(FileDispatcherImpl.java:83)
+	at java.base/sun.nio.ch.FileChannelImpl.force(FileChannelImpl.java:468)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStore$Companion.syncDirectory(Lex3LearningExperienceStore.kt:196)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStore$Companion.access$syncDirectory(Lex3LearningExperienceStore.kt:146)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStore.forceCommittedDirectories(Lex3LearningExperienceStore.kt:95)
+	at at.heinz.deviceai.learning.FileLearningExperienceStore.transaction(ContinuumLearningExperience.kt:333)
+	at at.heinz.deviceai.learning.FileLearningExperienceStore.updateStatus(ContinuumLearningExperience.kt:186)
+	at at.heinz.deviceai.learning.MemorySyncProbe.main(MemorySyncProbe.kt:17)

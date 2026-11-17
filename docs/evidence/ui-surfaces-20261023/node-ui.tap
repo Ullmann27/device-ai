@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: no new Flutter dependency and existing native layout remains authoritative
+ok 1 - no new Flutter dependency and existing native layout remains authoritative
+  ---
+  duration_ms: 2.342408
+  type: 'test'
+  ...
+# Subtest: scanline effect runs in draw pass, never as an input-intercepting view
+ok 2 - scanline effect runs in draw pass, never as an input-intercepting view
+  ---
+  duration_ms: 0.225586
+  type: 'test'
+  ...
+# Subtest: background glows behind live cards, do not obscure labels or inflate telemetry
+ok 3 - background glows behind live cards, do not obscure labels or inflate telemetry
+  ---
+  duration_ms: 0.157665
+  type: 'test'
+  ...
+# Subtest: all existing cockpit destinations remain connected to owner callbacks
+ok 4 - all existing cockpit destinations remain connected to owner callbacks
+  ---
+  duration_ms: 0.304874
+  type: 'test'
+  ...
+# Subtest: system gauges show only measured values and explain unknown GPU
+ok 5 - system gauges show only measured values and explain unknown GPU
+  ---
+  duration_ms: 0.140359
+  type: 'test'
+  ...
+# Subtest: device storage legend does not present unidentified data as measured system bytes
+ok 6 - device storage legend does not present unidentified data as measured system bytes
+  ---
+  duration_ms: 0.249892
+  type: 'test'
+  ...
+# Subtest: positive measured event deltas use green in both form factors
+ok 7 - positive measured event deltas use green in both form factors
+  ---
+  duration_ms: 2.159116
+  type: 'test'
+  ...
+# Subtest: both phone and Fold storage cards show compact legend without losing measured category names
+ok 8 - both phone and Fold storage cards show compact legend without losing measured category names
+  ---
+  duration_ms: 0.216672
+  type: 'test'
+  ...
+# Subtest: transparent native 3D hero has no network, model execution or fake status
+ok 9 - transparent native 3D hero has no network, model execution or fake status
+  ---
+  duration_ms: 4.526952
+  type: 'test'
+  ...
+# Subtest: reference start screen reaches all seven real Android feature paths
+ok 10 - reference start screen reaches all seven real Android feature paths
+  ---
+  duration_ms: 2.846499
+  type: 'test'
+  ...
+# Subtest: responsive dashboard retains chat composer, updates and keyboard visibility
+ok 11 - responsive dashboard retains chat composer, updates and keyboard visibility
+  ---
+  duration_ms: 0.287898
+  type: 'test'
+  ...
+# Subtest: reference-style composer keeps real model/web/file actions and truthful idle state
+ok 12 - reference-style composer keeps real model/web/file actions and truthful idle state
+  ---
+  duration_ms: 0.352665
+  type: 'test'
+  ...
+# Subtest: large text scales the drawn start screen in a bounded range instead of cropping
+ok 13 - large text scales the drawn start screen in a bounded range instead of cropping
+  ---
+  duration_ms: 0.280678
+  type: 'test'
+  ...
+# Subtest: start screen never manufactures ready model or internet state
+ok 14 - start screen never manufactures ready model or internet state
+  ---
+  duration_ms: 3.405953
+  type: 'test'
+  ...
+# Subtest: exactly five owner-visible work areas remain in fixed order
+ok 15 - exactly five owner-visible work areas remain in fixed order
+  ---
+  duration_ms: 4.353974
+  type: 'test'
+  ...
+# Subtest: phone bottom navigation stays outside conversation pane and above system bar
+ok 16 - phone bottom navigation stays outside conversation pane and above system bar
+  ---
+  duration_ms: 0.286957
+  type: 'test'
+  ...
+# Subtest: all navigation taps route to existing trusted screens
+ok 17 - all navigation taps route to existing trusted screens
+  ---
+  duration_ms: 0.243803
+  type: 'test'
+  ...
+# Subtest: home work areas are reachable without expert-only controls
+ok 18 - home work areas are reachable without expert-only controls
+  ---
+  duration_ms: 0.43586
+  type: 'test'
+  ...
+# Subtest: Fold rail offers the five work areas without a second bottom bar
+ok 19 - Fold rail offers the five work areas without a second bottom bar
+  ---
+  duration_ms: 0.172607
+  type: 'test'
+  ...
+# Subtest: existing chat, learning monitoring and owner permission boundaries remain
+ok 20 - existing chat, learning monitoring and owner permission boundaries remain
+  ---
+  duration_ms: 0.253288
+  type: 'test'
+  ...
+# Subtest: Fold rail and start screen reach all actions at short heights
+ok 21 - Fold rail and start screen reach all actions at short heights
+  ---
+  duration_ms: 0.153308
+  type: 'test'
+  ...
+# Subtest: start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+ok 22 - start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+  ---
+  duration_ms: 0.392755
+  type: 'test'
+  ...
+# Subtest: recreated activity preserves chat selection and draft without persistent More selection
+ok 23 - recreated activity preserves chat selection and draft without persistent More selection
+  ---
+  duration_ms: 0.341999
+  type: 'test'
+  ...
+# Subtest: design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+ok 24 - design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+  ---
+  duration_ms: 0.471953
+  type: 'test'
+  ...
+# Subtest: unfold reflows from actual laid out root window width, not stale screenWidthDp
+ok 25 - unfold reflows from actual laid out root window width, not stale screenWidthDp
+  ---
+  duration_ms: 0.981092
+  type: 'test'
+  ...
+# Subtest: reflow preserves the active agent, user draft, conversation views and dashboard telemetry
+ok 26 - reflow preserves the active agent, user draft, conversation views and dashboard telemetry
+  ---
+  duration_ms: 0.684769
+  type: 'test'
+  ...
+# Subtest: Fold rail and phone navigation are mutually exclusive after a reflow
+ok 27 - Fold rail and phone navigation are mutually exclusive after a reflow
+  ---
+  duration_ms: 3.785848
+  type: 'test'
+  ...
+# Subtest: keyboard-only height change does not recreate the Fold dashboard
+ok 28 - keyboard-only height change does not recreate the Fold dashboard
+  ---
+  duration_ms: 0.550129
+  type: 'test'
+  ...
+# Subtest: both layouts display the same measured journal series and native painter
+ok 29 - both layouts display the same measured journal series and native painter
+  ---
+  duration_ms: 5.692428
+  type: 'test'
+  ...
+# Subtest: missing or zero measurements render no fabricated decorative peaks
+ok 30 - missing or zero measurements render no fabricated decorative peaks
+  ---
+  duration_ms: 0.165767
+  type: 'test'
+  ...
+# Subtest: continuous decorative motion is lifecycle-bound, visible, power-aware and never edits measurements
+ok 31 - continuous decorative motion is lifecycle-bound, visible, power-aware and never edits measurements
+  ---
+  duration_ms: 0.233308
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 782.212487

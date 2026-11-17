@@ -1,0 +1,18 @@
+{
+  "head_before": "8d523d5d524dd5ad5d6e2a0f4b2938c1535b972b",
+  "production_base": "5f87bdc610944b93d3173a83c5beeea315abeb66",
+  "compiler": "Kotlin 2.4.0",
+  "max_heap_mb": 512,
+  "active_processors": 1,
+  "clock": "synthetic_monotonic",
+  "original_type_declarations_extracted": 6,
+  "gradle": "NOT_RUN",
+  "android_device": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "compile_exit": 0,
+  "experiment_exit": 0,
+  "neighbors_exit": 0,
+  "head_after": "8d523d5d524dd5ad5d6e2a0f4b2938c1535b972b",
+  "sources_unchanged": true,
+  "java": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)"
+}

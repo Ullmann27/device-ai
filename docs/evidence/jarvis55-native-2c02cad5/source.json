@@ -1,0 +1,42 @@
+{
+  "schema": "continuum-source-bound-native-preflight-v1",
+  "sourceSha": "2c02cad5f3533388dd4a457d895dfceeefcc59bb",
+  "runId": 43357310925,
+  "jobId": 131662313877,
+  "runUrl": "https://github.com/Ullmann27/device-ai/actions/runs/43357310925",
+  "result": "PASS",
+  "runtime": {
+    "type": "Android emulator",
+    "api": 35,
+    "abi": "x86_64",
+    "graphics": "ANGLE + SwiftShader, OpenGL ES 3.1",
+    "physicalFold7": false
+  },
+  "artifact": {
+    "id": 14006842071,
+    "name": "Code55-native-PDF-emulator-QA",
+    "bytes": 18877,
+    "sha256": "b2ecdddd98dad8125f7a4b01e3ed06a3fba5a03380e945fef89cb5f8965ac19a"
+  },
+  "nativePdf": "PASS",
+  "filament": {
+    "result": "PASS",
+    "nativeQuads": 2,
+    "nativeMaterials": 2,
+    "nativeTextures": 2,
+    "aggregateUploadCompletions": 1,
+    "renderedFrames": 2,
+    "presentedFrames": 1,
+    "outputFrames": 2,
+    "contentCleared": true,
+    "panelsReleased": true,
+    "engineReleased": true,
+    "instrumentationCode": -1
+  },
+  "limits": [
+    "Synthetic PDF and panel fixtures; no owner document inspected.",
+    "Actual production Filament context-panel lifecycle on API35 x86_64 software emulator, not Fold7 or Android17 hardware acceptance.",
+    "Frame counts are lifecycle assertions, not frame rate or performance measurements.",
+    "Real MediaProjection, Accessibility task, Maya, Gemma, thermal longevity remain NOT_RUN."
+  ]
+}

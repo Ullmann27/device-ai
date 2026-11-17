@@ -1,0 +1,26 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=43077 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=43077 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+JUnit version 4.13.2
+.E..E.E
+Time: 0.16
+There were 3 failures:
+1) mandatoryIdentityIsAtomicAtItsActualByteBoundary(at.heinz.deviceai.cognitive.AiContextIdentityRegressionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.AiContextIdentityRegressionTest.mandatoryIdentityIsAtomicAtItsActualByteBoundary(AiContextIdentityRegressionTest.kt:31)
+2) actualNameAndModelAreRequiredBeforeOptionalMemoryAndTools(at.heinz.deviceai.cognitive.AiContextIdentityRegressionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.AiContextIdentityRegressionTest.actualNameAndModelAreRequiredBeforeOptionalMemoryAndTools(AiContextIdentityRegressionTest.kt:22)
+3) actualContextContainsTheLastAnswerSection(at.heinz.deviceai.cognitive.LocalConversationAnswerEndRegressionTest)
+java.lang.AssertionError: The actual retained response end must reach history
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.LocalConversationAnswerEndRegressionTest.actualContextContainsTheLastAnswerSection(LocalConversationAnswerEndRegressionTest.kt:11)
+
+FAILURES!!!
+Tests run: 4,  Failures: 3
+

@@ -1,0 +1,25 @@
+{
+  "schema": "genesis-independent-a0-v1",
+  "taskCount": 3,
+  "taskOrder": [
+    "g01",
+    "g02",
+    "g03"
+  ],
+  "limitsPerTask": {
+    "maxModelCalls": 2,
+    "maxContextChars": 8192
+  },
+  "maxTotalReservedCalls": 6,
+  "files": {
+    "g01/acceptance.fixture": "15692fe4a4909db2643744271a02769a628f3056a7b6df1283a0fc9cb7beb3d9",
+    "g01/subject.source": "46022b74122285dab962ceb7cb624da6c5792c6a1e96118d274432ac331a3e2d",
+    "g01/task.json": "6c9817d629d1c074bb8c7fbf8f18342ddfc5b7e2182cd90983df8ce79de261c4",
+    "g02/acceptance.fixture": "3fe00757890603b2ebb389a79f78801f16360263cc5b51f4c27befc39c80dbce",
+    "g02/subject.source": "338176bacc6f2d503b8a90d456262dab820661b403ade0cbfa39b572ab6ccaac",
+    "g02/task.json": "b4e8fa6f2273677c3e6bb79a78cf1618bdee6ff031615a565ec96521f29be5ed",
+    "g03/acceptance.fixture": "3c6bb0f186843a878d1235c3c642d2cf62f42ab302acfa0c84dfabce4e2b0ea2",
+    "g03/subject.source": "6019ac4267d2a64bbfebb657235a69980756662099bda126fc015f9f8b184d71",
+    "g03/task.json": "a87cc6a86885a036c86f8e6f512d0c319a0ec4f2281bfdce2c14e8d5cb27ece2"
+  }
+}

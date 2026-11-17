@@ -1,0 +1,6 @@
+report directory after the cancel (owner-repair/mob-af25e699a94c0639-d2aad8e51dff-1792797086216-08ef9c20):
+node-junit.xml 52 bytes
+backlog: [('mob-af25e699a94c0639', 'ABORTED')]
+clone status --porcelain: ''
+git worktree list: 1 entry
+leftover processes under the clone: 0

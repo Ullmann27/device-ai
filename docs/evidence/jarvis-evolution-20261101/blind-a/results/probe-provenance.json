@@ -1,0 +1,15 @@
+{
+  "fixtureSha256": "1762e7cb3d969802f2c507e90a5aee7ee725cfd021497ec7a01ce482def079e7",
+  "track": "SPAN_EXTRACTION_NOT_CDX_GENERATION",
+  "status": "RESULTS_WITHHELD_UNTIL_LEARNED_CANDIDATE_FREEZE",
+  "baseline": {
+    "commit": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+    "sourceSha256": "7095b9273d794cb4f7375ab8879c7c0ea43f2dde1494a11c70ffdc694568ff83",
+    "binaryTreeSha256": "6172c8157dfa239521e577ec481c203cd7d3b460104476c89ea9df84f5b59bb6"
+  },
+  "candidate": {
+    "commit": "ae2da0e7622bba9ed759bedbc16e2dd71e7192a1",
+    "sourceSha256": "fb14985dcac0487ffb953cb1bf1f1c1d1995c001f6744a62ace0416484ee02ae",
+    "binaryTreeSha256": "5e3507788653ce486a659bd85497fa92fdd4557aeb736082039db83b18e5e738"
+  }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:18:47" hostname="6e2f8005d77e" time="0.023">
+  <properties/>
+  <testcase name="measuredJawAloneKeepsItsFullRangeWithoutInventingVisemes" classname="at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest" time="0.0"/>
+  <testcase name="roundedVowelPreservesPursingWithoutAddingSharedOpeningTwice" classname="at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest" time="0.019"/>
+  <testcase name="aaCannotAddSharedOpeningTwiceWhileItsLateralShapeIsPreserved" classname="at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest" time="0.003"/>
+  <testcase name="activeOpeningCueMovesInnerJawAndActualStopClosesBoth" classname="at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

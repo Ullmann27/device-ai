@@ -1,0 +1,166 @@
+[
+  {
+    "tag": "old-dual-activity",
+    "ref": "27f1861eab2f0fed3d251bdc0ef4e37cfa35b2ae",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "patterns": [
+      "ContinuumDualControlPolicy",
+      "controlProfile",
+      "ControlProfile",
+      "OWNER_AUTONOMOUS",
+      "protectedBoundary"
+    ],
+    "blob": "fbb0db014f04efbf56a0fb29bfdbd169ba10c640",
+    "url": "https://github.com/Ullmann27/device-ai/blob/27f1861eab2f0fed3d251bdc0ef4e37cfa35b2ae/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-dual-activity.kt",
+    "matches": []
+  },
+  {
+    "tag": "old-dual-mission",
+    "ref": "27f1861eab2f0fed3d251bdc0ef4e37cfa35b2ae",
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt",
+    "patterns": [
+      "ContinuumDualControlPolicy",
+      "controlProfile",
+      "ControlProfile",
+      "OWNER_AUTONOMOUS",
+      "protectedBoundary"
+    ],
+    "blob": "4a637e3327dad0dd6fb8bbcff8f59cf2fc8f306c",
+    "url": "https://github.com/Ullmann27/device-ai/blob/27f1861eab2f0fed3d251bdc0ef4e37cfa35b2ae/app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-dual-mission.kt",
+    "matches": []
+  },
+  {
+    "tag": "old-micro-builder",
+    "ref": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+    "patterns": [
+      "MicroAgent",
+      "micro-agent",
+      "microagent",
+      "MICRO_AGENT"
+    ],
+    "blob": "86540bef0846ee3c6b0760ebf5d8554dbdcfb5cf",
+    "url": "https://github.com/Ullmann27/device-ai/blob/cc6c6295002cce1fa46e10c28f4e7436dd7fa967/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-micro-builder.kt",
+    "matches": [
+      {
+        "line": 147,
+        "text": "ContinuumMicroAgentBridge.CALLBACK,"
+      },
+      {
+        "line": 149,
+        "text": "ContinuumMicroAgentBridge.command()"
+      }
+    ]
+  },
+  {
+    "tag": "old-micro-receiver",
+    "ref": "cc6c6295002cce1fa46e10c28f4e7436dd7fa967",
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+    "patterns": [
+      "MicroAgent",
+      "MICRO_AGENT"
+    ],
+    "blob": "fe273bfb5e744d53c7ffed04f6c521ff47523c56",
+    "url": "https://github.com/Ullmann27/device-ai/blob/cc6c6295002cce1fa46e10c28f4e7436dd7fa967/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-micro-receiver.kt",
+    "matches": [
+      {
+        "line": 62,
+        "text": "val microAgentAudit = operationName == ContinuumMicroAgentBridge.CALLBACK"
+      },
+      {
+        "line": 120,
+        "text": "val report = ContinuumMicroAgentBridge.evaluate("
+      }
+    ]
+  },
+  {
+    "tag": "old-self-activity",
+    "ref": "316c55543f2e1e84a52c5ace437c572791e1936d",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "patterns": [
+      "ContinuumSelfInspectionQuery"
+    ],
+    "blob": "8c9f1213c5d082ca167fe068e080dfe7fc2f5c8c",
+    "url": "https://github.com/Ullmann27/device-ai/blob/316c55543f2e1e84a52c5ace437c572791e1936d/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-self-activity.kt",
+    "matches": [
+      {
+        "line": 2665,
+        "text": "if (ContinuumSelfInspectionQuery.matches(request)) {"
+      }
+    ]
+  },
+  {
+    "tag": "old-termux-receiver",
+    "ref": "ccbf0431d446789234fe8d5f0583cf9b8d40b8ba",
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+    "patterns": [
+      "ContinuumTermuxFailureDiagnosis"
+    ],
+    "blob": "f191fabb96605e06940257c719ab3acf933086e0",
+    "url": "https://github.com/Ullmann27/device-ai/blob/ccbf0431d446789234fe8d5f0583cf9b8d40b8ba/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-termux-receiver.kt",
+    "matches": [
+      {
+        "line": 204,
+        "text": "ContinuumTermuxFailureDiagnosis.explanation(operation ?: return, bundle?.getString(\"stderr\"))"
+      }
+    ]
+  },
+  {
+    "tag": "old-phase1-activity",
+    "ref": "9eaa591239b54dc486ecc9d94457621963e34a91",
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "patterns": [
+      "ContinuumLocalContextAdapter",
+      "continuum.",
+      "AiContextInput"
+    ],
+    "blob": "2034a29002c67038bbd22ba18f29cc308e824f45",
+    "url": "https://github.com/Ullmann27/device-ai/blob/9eaa591239b54dc486ecc9d94457621963e34a91/app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-phase1-activity.kt",
+    "matches": [
+      {
+        "line": 52,
+        "text": "import at.heinz.deviceai.continuum.AiContextCompiler"
+      },
+      {
+        "line": 53,
+        "text": "import at.heinz.deviceai.continuum.AiContextInput"
+      },
+      {
+        "line": 54,
+        "text": "import at.heinz.deviceai.continuum.ContextMemory"
+      },
+      {
+        "line": 55,
+        "text": "import at.heinz.deviceai.continuum.ContinuumLocalContextAdapter"
+      },
+      {
+        "line": 969,
+        "text": "val contextAdapter = ContinuumLocalContextAdapter("
+      },
+      {
+        "line": 1000,
+        "text": "AiContextInput("
+      }
+    ]
+  },
+  {
+    "tag": "old-phase2-deliberation",
+    "ref": "3d7608023b3f7ebbdf09ecb29aef48816685b594",
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/Deliberation.kt",
+    "blob": "38c0186cbef8f75a0f29c82753d846cac2b8389d",
+    "url": "https://github.com/Ullmann27/device-ai/blob/3d7608023b3f7ebbdf09ecb29aef48816685b594/app/src/main/java/at/heinz/deviceai/cognitive/Deliberation.kt",
+    "copy": "/workspace/scratch/3d1967be6193/inspection/semantic-core-3ff/old-phase2-deliberation.kt",
+    "patterns": [
+      "TaskComplexityAnalyzer",
+      "AdaptiveReasoningPolicy"
+    ],
+    "matches": []
+  }
+]

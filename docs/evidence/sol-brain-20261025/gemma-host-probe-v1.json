@@ -1,0 +1,53 @@
+{
+  "schema": "CONTINUUM_GEMMA_HOST_PROBE_V1",
+  "runtime": "0.18.1",
+  "model_sha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+  "model_bytes": 3659530240,
+  "fixture_sha256": "72c9fa03d862aa44ffaea14dde9a8b037bf0717d73e667c83f1fcdcb940f8ad8",
+  "backend": "CPU",
+  "threads": 2,
+  "context_tokens": 2048,
+  "max_output_tokens": 128,
+  "thinking_budget": 32,
+  "status": "MEASURED_HOST_ONLY",
+  "cases": [
+    {
+      "id": "arithmetic",
+      "text": "85",
+      "expected": "85",
+      "exact_correct": true,
+      "seconds": 1.901994652999747
+    },
+    {
+      "id": "identifier-positive",
+      "text": "Wien",
+      "expected": "Wien",
+      "exact_correct": true,
+      "seconds": 1.69188250399975
+    },
+    {
+      "id": "identifier-absent",
+      "text": "UNBEKANNT",
+      "expected": "UNBEKANNT",
+      "exact_correct": true,
+      "seconds": 2.004140731999996
+    },
+    {
+      "id": "logic",
+      "text": "NEIN",
+      "expected": "NEIN",
+      "exact_correct": true,
+      "seconds": 1.7339829089996783
+    }
+  ],
+  "device_inference": "NOT_RUN",
+  "tools": [],
+  "training": false,
+  "promotion": false,
+  "source_commit": "bc33e09d7f25339b9d7617e90c124a8341726de1",
+  "peak_rss_kib": 3083192,
+  "declared_context_tokens": 0,
+  "supports_thinking": false,
+  "load_seconds": 4.960679228000117,
+  "correct": 4
+}

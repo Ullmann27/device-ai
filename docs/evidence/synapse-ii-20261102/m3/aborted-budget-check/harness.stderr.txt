@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"outcome":"DONE_INVESTIGATION","ccc1":"ABORTED","taskId":"t-81ba33eb7b00206f","detail":"CCC1 ABORTED task t-81ba33eb7b"}
++ actual - expected
+
++ 'ABORTED'
+- 'COMPLETED'
+
+    at file:///workspace/continuum-post-fable/tools/continuum-worker-proof/run-m3.mjs:70:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'ABORTED',
+  expected: 'COMPLETED',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

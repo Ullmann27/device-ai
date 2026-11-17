@@ -1,0 +1,617 @@
+TAP version 13
+# Subtest: 7B exact owner pin admits a bounded manifest without inference promotion
+ok 1 - 7B exact owner pin admits a bounded manifest without inference promotion
+  ---
+  duration_ms: 50.912972
+  type: 'test'
+  ...
+# Subtest: resource profile is frozen and restricted to every exact pin field plus runtime hash
+ok 2 - resource profile is frozen and restricted to every exact pin field plus runtime hash
+  ---
+  duration_ms: 0.595909
+  type: 'test'
+  ...
+# Subtest: 7B uses the fixed Qwen ChatML serialization, unknown model does not
+ok 3 - 7B uses the fixed Qwen ChatML serialization, unknown model does not
+  ---
+  duration_ms: 4.538943
+  type: 'test'
+  ...
+# Subtest: 7B total-job memory check is real and cannot accept the shared16GiB host group
+ok 4 - 7B total-job memory check is real and cannot accept the shared16GiB host group
+  ---
+  duration_ms: 0.923294
+  type: 'test'
+  ...
+# Subtest: large header requires exact complete provenance, no caller file-size bypass
+ok 5 - large header requires exact complete provenance, no caller file-size bypass
+  ---
+  duration_ms: 4.948582
+  type: 'test'
+  ...
+# Subtest: normal caller cannot certify a serialized runtime observation
+ok 6 - normal caller cannot certify a serialized runtime observation
+  ---
+  duration_ms: 1.991287
+  type: 'test'
+  ...
+# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
+ok 7 - coding CLI blocks endpoint-only configuration before any network/model call
+  ---
+  duration_ms: 208.724683
+  type: 'test'
+  ...
+# Subtest: unapproved or absent local weights never produce runtime observations
+ok 8 - unapproved or absent local weights never produce runtime observations
+  ---
+  duration_ms: 1.685555
+  type: 'test'
+  ...
+# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
+not ok 9 - actual namespace binds admitted descriptors and fixture output; never inference evidence
+  ---
+  duration_ms: 5.256356
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:60:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:61:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
+not ok 10 - altered model/runtime, unsafe executable and mismatched request cannot execute
+  ---
+  duration_ms: 3.760542
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:70:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:71:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: deadline cancels actual isolated process with bounded return
+not ok 11 - deadline cancels actual isolated process with bounded return
+  ---
+  duration_ms: 19.906216
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:78:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:79:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: STOP cancels actual isolated process and leaves no trusted observation
+not ok 12 - STOP cancels actual isolated process and leaves no trusted observation
+  ---
+  duration_ms: 3.574086
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:83:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:84:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: malformed/oversized output and missing generation counters are rejected
+not ok 13 - malformed/oversized output and missing generation counters are rejected
+  ---
+  duration_ms: 5.726906
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:88:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:93:13)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
+ok 14 - sandbox exposes no checkout, HOME, network, secret or configurable shell
+  ---
+  duration_ms: 1.643171
+  type: 'test'
+  ...
+# Subtest: actual FD mount retains selected inode across model path replacement
+not ok 15 - actual FD mount retains selected inode across model path replacement
+  ---
+  duration_ms: 5.305661
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:102:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:103:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: prompt evaluation counter alone cannot masquerade as output generation
+not ok 16 - prompt evaluation counter alone cannot masquerade as output generation
+  ---
+  duration_ms: 3.986789
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:112:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:113:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
+not ok 17 - inference sandbox denies host files, external interfaces, secrets and writable model
+  ---
+  duration_ms: 2.728049
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:116:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:117:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
+not ok 18 - seccomp denies fork and rlimits bound native memory/descriptor budgets
+  ---
+  duration_ms: 3.232701
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:131:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:132:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: changing model during actual execution invalidates otherwise valid output
+not ok 19 - changing model during actual execution invalidates otherwise valid output
+  ---
+  duration_ms: 4.719566
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:144:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:145:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
+not ok 20 - production provider rejects synthetic fixture receipt even when transport MAC is valid
+  ---
+  duration_ms: 1.526806
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:161:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    taskFixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:152:10)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:162:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
+not ok 21 - self-asserted inference flag is rejected instead of upgraded or accepted
+  ---
+  duration_ms: 3.322196
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:166:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    taskFixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:152:10)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:167:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: native worker threads remain permitted while process creation stays denied
+not ok 22 - native worker threads remain permitted while process creation stays denied
+  ---
+  duration_ms: 2.001011
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:170:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:171:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: unavailable isolation launcher fails closed and creates no observation
+not ok 23 - unavailable isolation launcher fails closed and creates no observation
+  ---
+  duration_ms: 5.379733
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:178:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:179:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: integration strict observation option rejects injected unobserved provider replies
+not ok 24 - integration strict observation option rejects injected unobserved provider replies
+  ---
+  duration_ms: 5.129525
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:185:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    taskFixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:152:10)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:186:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
+not ok 25 - integration technical recall enters prompt as bounded untrusted data within context budget
+  ---
+  duration_ms: 2.852267
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:189:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    taskFixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:152:10)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:190:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: integration malformed recall and strict remote selection fail before transport
+not ok 26 - integration malformed recall and strict remote selection fail before transport
+  ---
+  duration_ms: 5.394365
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:202:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    taskFixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:152:10)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:203:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+not ok 27 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+  ---
+  duration_ms: 3.44467
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:209:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    taskFixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:152:10)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:210:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
+ok 28 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
+  ---
+  duration_ms: 1.241414
+  type: 'test'
+  ...
+# Subtest: invalid model JSON retains authenticated process observation without a candidate
+not ok 29 - invalid model JSON retains authenticated process observation without a candidate
+  ---
+  duration_ms: 2.522414
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:235:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:236:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
+not ok 30 - provider retains authenticated rejected-response observation and consumed durable budget
+  ---
+  duration_ms: 3.560105
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:250:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    null !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    fixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:53:96)
+    taskFixture (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:152:10)
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-observation.test.mjs:251:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 10
+# fail 20
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 875.685381

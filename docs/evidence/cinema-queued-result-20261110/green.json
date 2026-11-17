@@ -1,0 +1,65 @@
+{
+  "baseline_remote_sha": "5d36c5a57c031308c8de91049e19e9e8cb8365d5",
+  "latest_target_checked": "5457351a7585eada2393f80aa81db4bff5cc8897",
+  "target_production_delta": "No main-source changes; AGENTS, new button UI test and checkpoint evidence only",
+  "module_name": "DeviceAI_app_debug",
+  "compiler": "Kotlin 2.4.0-release-281; JVM target17; JDK21",
+  "actual_recompiled_source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt": "b97179b3d3f03b1f4e8a7d082ad3a6623ed4a946db66bb9a88c85d59369cde70",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisCinemaReplayUiTest.kt": "0e97ea307b79d1fe1d026ef6b1fb993d0686b441d0a82b38f7147f1b0645e855",
+    "app/src/test/java/at/heinz/deviceai/ui/JarvisCinemaEntranceTest.kt": "14e8fd9f2bc902075ad8bfc41c6db595a6d5e36f0f8e823a0ed83f7daa1f48e4",
+    "app/src/test/java/at/heinz/deviceai/ui/WindowProjectedMotionSamplerTest.kt": "671067e4414410f5fe030ba29523b83160c54055b8b57b44f205aaf6d25e91d8",
+    "app/src/uiTest/java/at/heinz/deviceai/CinemaStopReturnUiTest.kt": "18b77d4a3b2ee21f9bb35ad363d6481106aee8b9660e52efb53ea9b4d61e6b4a",
+    "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt": "8fd846639c0ed9b207f9e5f6599ee448c9e58fadb2eb7f818d4362d83c8acf18",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt": "85ddef985fa295b9ff3d4448f481a294c81bc8a7416d13508809ad071a90fd5d"
+  },
+  "dependency_manifest": "baseline.json",
+  "baseline_result": {
+    "tests": 8,
+    "failures": 2,
+    "log": "red.txt"
+  },
+  "candidate_result": {
+    "tests": 46,
+    "failures": 0,
+    "errors": 0,
+    "log": "green.txt",
+    "classes": [
+      "at.heinz.deviceai.JarvisCinemaReplayUiTest",
+      "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+      "at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest",
+      "at.heinz.deviceai.CinemaStopReturnUiTest"
+    ]
+  },
+  "compiled_baseline": {
+    "files": 7,
+    "sha256": "062b2ed6b6f047e370dcbb7188ce2e6a412ab065d44bd70e82398da60c88af72"
+  },
+  "compiled_candidate": {
+    "files": 13,
+    "sha256": "da51d903bf3e18d3ace0ebe9b02e1c59b4efeae4ed911c5f8dd2e292fa325d0a"
+  },
+  "prior_attempts": [
+    {
+      "phase": "full Gradle compile",
+      "result": "Daemon disappeared before tests",
+      "log": "initial-gradle-failure.txt"
+    },
+    {
+      "phase": "first expanded scoped run",
+      "result": "45/46 passed; STOP fixture had NoSuchMethodError from wrong compiler module name app_debug. Product source unchanged; rerun uses module name read from frozen app JAR.",
+      "log": "scoped-linkage-failure.txt"
+    }
+  ],
+  "scope": "Actual JarvisShellView recompiled and run with frozen compiled app/Android resources, Robolectric API28; STOP check uses real decor touch with scripted work and existing 2D fallback. No alternative View or state machine.",
+  "not_run": [
+    "Fresh full Android build after the failed first attempt",
+    "Full repository suite",
+    "Lint on this candidate",
+    "Filament GPU",
+    "Fold7",
+    "Model inference",
+    "Device TTS/ASR",
+    "APK/signing/install"
+  ]
+}

@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: independent examples and metamorphic relations reject constant pseudo-repairs
+ok 1 - independent examples and metamorphic relations reject constant pseudo-repairs
+  ---
+  duration_ms: 109.391877
+  type: 'test'
+  ...
+# Subtest: a bounded exact distance passes all four frozen checks reproducibly
+ok 2 - a bounded exact distance passes all four frozen checks reproducibly
+  ---
+  duration_ms: 159.225183
+  type: 'test'
+  ...
+# Subtest: maximum frozen suite completes all 384 checks within the existing subprocess budget
+ok 3 - maximum frozen suite completes all 384 checks within the existing subprocess budget
+  ---
+  duration_ms: 886.256405
+  type: 'test'
+  ...
+# Subtest: metamorphic failure supplies the distinguishing pair
+ok 4 - metamorphic failure supplies the distinguishing pair
+  ---
+  duration_ms: 66.698893
+  type: 'test'
+  ...
+# Subtest: non-finite values, foreign exports and capability-bearing code never pass
+ok 5 - non-finite values, foreign exports and capability-bearing code never pass
+  ---
+  duration_ms: 290.076846
+  type: 'test'
+  ...
+# Subtest: suite mutation, malformed cases, unbounded inputs and empty verification are rejected
+ok 6 - suite mutation, malformed cases, unbounded inputs and empty verification are rejected
+  ---
+  duration_ms: 52.099029
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1720.088601

@@ -1,0 +1,37 @@
+PASS 38 behavioral/gradient/immutability controls; classifier NLL, no byte generation
+DEV evaluate: raw=100/100 verified=100 rule=100 abstain=55/55 unsafe=0 falseSource=0
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "trainNllAfter": 0.0028133692902478657,
+  "trials": [
+    {
+      "rate": 0.05,
+      "devClassifierNll": 0.02457877031276444,
+      "epochs": 20
+    },
+    {
+      "rate": 0.15,
+      "devClassifierNll": 0.008303430206356386,
+      "epochs": 20
+    },
+    {
+      "rate": 0.05,
+      "devClassifierNll": 0.008356281707238346,
+      "epochs": 60
+    },
+    {
+      "rate": 0.15,
+      "devClassifierNll": 0.0027843158600500124,
+      "epochs": 60
+    }
+  ],
+  "selection": "DEV NLL only",
+  "trainMillis": 1582.610423,
+  "parameterCount": 11,
+  "devClassifierNll": 0.0027843158600500124,
+  "trainCurrentThreadCpuMillis": 685.202523,
+  "trainItems": 240,
+  "trainNllBefore": 1.3935530535947087,
+  "devItems": 100
+}

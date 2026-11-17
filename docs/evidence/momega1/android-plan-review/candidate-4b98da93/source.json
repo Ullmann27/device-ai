@@ -1,0 +1,41 @@
+{
+  "candidate": "4b98da9362f91ab9930a7f4b279737a9e80f94bd",
+  "baseline": "e8c155e706924d3f611cdce4591849efe0902067",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha256": "31a0a9bbc4914b8fc6669a507260ae5060262de713148f17fce9f35c34a8cb48",
+      "gitBlob": "3229be890a1338548e16408f63fcb33964aa1142"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCodingPlanning.kt",
+      "sha256": "0fc07fa0b02eeff4c5ef1fef814f2e48e668ecc22320fc3a75dac7fbdf9746df",
+      "gitBlob": "e60f92bf286d8912ca8040c2e1b39a28fb24dad2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+      "sha256": "db529c2bcdc931eb0432763f55e7c51ea3b5b9e975eba7fb99cfbc78afd4910c",
+      "gitBlob": "81a00cc300d71bfd0c0b1ceb46eededd828bc779"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
+      "sha256": "a5275dbce6d2beb86b01621e87f1fa061a690bdccbe5eacf473fd298b8596400",
+      "gitBlob": "d586589ac6474f88812525fae37ce337f76a67d8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "sha256": "8b0af54349c404ec87c009c2b0ef23e3ef7cc88a3b84f085337e51268229b74e",
+      "gitBlob": "db53984d5b76ccb5d2b4a386edbf755c27f75298"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalTurnModelBinding.kt",
+      "sha256": "1be81cd77dfe380dc4c4c73190d3e062c4e459d9452c834861069aeccf3136e9",
+      "gitBlob": "46cde51ad00e665944b3176ebd8dd1a980059fc6"
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "sha256": "16e39790b987b8362294867041624b40f0d0f388258738082592441835513cc1",
+      "gitBlob": "77b2682eb4b3aad029ec021166a88b137225009d"
+    }
+  ]
+}

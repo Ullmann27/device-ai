@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "mode": "review-required",
+  "analyzedAt": "2026-10-15T07:30:00.000Z",
+  "tasks": [
+    {
+      "kind": "DEAD_CLUSTER",
+      "symbol": "at.heinz.deviceai.SkillSource",
+      "file": "main/java/at/heinz/deviceai/AgentToolLayer.kt",
+      "confidence": "medium",
+      "score": 3,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "DEAD_CLUSTER",
+      "symbol": "at.heinz.deviceai.cognitive.researchDossierPrivacyClass",
+      "file": "main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt",
+      "confidence": "medium",
+      "score": 3,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "DEAD_CLUSTER",
+      "symbol": "at.heinz.deviceai.learning.ContextDecoderResearchMain",
+      "file": "main/java/at/heinz/deviceai/learning/ContextDecoderResearchMain.kt",
+      "confidence": "medium",
+      "score": 3,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "TEST_ONLY",
+      "symbol": "at.heinz.deviceai.cognitive.CognitiveRaidPlanner",
+      "file": "main/java/at/heinz/deviceai/cognitive/CognitiveRaid.kt",
+      "confidence": "medium",
+      "score": 2,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "TEST_ONLY",
+      "symbol": "at.heinz.deviceai.cognitive.RecoverySeverity",
+      "file": "main/java/at/heinz/deviceai/cognitive/CognitiveRaid.kt",
+      "confidence": "medium",
+      "score": 2,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "TEST_ONLY",
+      "symbol": "at.heinz.deviceai.cognitive.ReplicaHealth",
+      "file": "main/java/at/heinz/deviceai/cognitive/CognitiveRaid.kt",
+      "confidence": "medium",
+      "score": 2,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "TEST_ONLY",
+      "symbol": "at.heinz.deviceai.cognitive.ReplicaPolicy",
+      "file": "main/java/at/heinz/deviceai/cognitive/CognitiveRaid.kt",
+      "confidence": "medium",
+      "score": 2,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "TEST_ONLY",
+      "symbol": "at.heinz.deviceai.cognitive.StateTier",
+      "file": "main/java/at/heinz/deviceai/cognitive/CognitiveRaid.kt",
+      "confidence": "medium",
+      "score": 2,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "TEST_ONLY",
+      "symbol": "at.heinz.deviceai.cognitive.ModelMortalityExperiment",
+      "file": "main/java/at/heinz/deviceai/cognitive/ContinuumBenchmark.kt",
+      "confidence": "medium",
+      "score": 2,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "TEST_ONLY",
+      "symbol": "at.heinz.deviceai.cognitive.ModelMortalityReport",
+      "file": "main/java/at/heinz/deviceai/cognitive/ContinuumBenchmark.kt",
+      "confidence": "medium",
+      "score": 2,
+      "action": "INVESTIGATE_ONLY"
+    },
+    {
+      "kind": "UNREFERENCED",
+      "symbol": "at.heinz.deviceai.cognitive.DevelopmentRole",
+      "file": "main/java/at/heinz/deviceai/cognitive/DevelopmentTypes.kt",
+      "confidence": "high",
+      "score": 1,
+      "action": "INVESTIGATE_ONLY"
+    }
+  ]
+}

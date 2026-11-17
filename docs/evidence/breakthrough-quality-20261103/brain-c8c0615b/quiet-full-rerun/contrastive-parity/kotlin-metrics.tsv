@@ -1,0 +1,14 @@
+steps=350
+interrupted=false
+trainingBefore.top1=1
+trainingBefore.total=6
+trainingBefore.reciprocalRank=0.5277777777777778
+trainingAfter.top1=2
+trainingAfter.total=6
+trainingAfter.reciprocalRank=0.6666666666666666
+validationBefore.top1=3
+validationBefore.total=4
+validationBefore.reciprocalRank=0.875
+validationAfter.top1=3
+validationAfter.total=4
+validationAfter.reciprocalRank=0.875

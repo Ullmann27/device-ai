@@ -1,0 +1,16 @@
+{
+  "baseline": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+  "production_delta": [],
+  "reviewed_ui_sha256": {
+    "OwnerAppActionWorkSceneUiTest": "8e8f5b78125bdeb242df151aa6568bd24fa292b040b866f8d5f178346b8eb790",
+    "OwnerAppPlanningContextUiTest": "f11e2056f674b40e5b619bb8b1104d77fe6e936a070f550ff1e7ec7ea56195c0",
+    "OwnerObjectStateConversationUiTest": "ca74aa0701e74d2686a427c56269c449fd057d8fa22ca58139bce1be7c1a22ca"
+  },
+  "pure_safety_inputs_matches": 21,
+  "pure_safety_inputs_total": 21,
+  "followup_prs": [
+    783,
+    784
+  ],
+  "common_android": "NOT_RUN"
+}

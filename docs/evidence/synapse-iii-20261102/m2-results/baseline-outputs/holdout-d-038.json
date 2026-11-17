@@ -1,0 +1,20 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-038:s2",
+    "decision": "SPAN",
+    "sha256": "425c4a7d1f8935865b6de06c1ada00d124eb5a53e3d812eec5e2b7fdb76b937a",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Dahahofa",
+    "offsetEncoding": "UTF-16",
+    "revision": 2
+  },
+  "RULE": {"decision": "NOANSWER"},
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 77.61525
+}

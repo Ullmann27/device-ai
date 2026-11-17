@@ -1,0 +1,389 @@
+{
+  "date": "2026-11-02",
+  "retrieval": "GitHub connector; pinned commit, commit metadata and complete recursive trees. Source snapshots copied from previously fetched local files, verified against Git blob SHA-1.",
+  "scope": "Selected source review only. No upstream installation, server, binary, model, microphone or cloud call executed.",
+  "repositories": [
+    {
+      "repository": "tokenarc/open-jarvis",
+      "commit": "04873998933830ce582018fe4664ebce5ec64d2f",
+      "tree": "f5fb97075d78dab96bb0525b8b2c77b0e0888e33",
+      "commitUrl": "https://github.com/tokenarc/open-jarvis/commit/04873998933830ce582018fe4664ebce5ec64d2f",
+      "treeInventory": {
+        "url": "https://api.github.com/repos/tokenarc/open-jarvis/git/trees/04873998933830ce582018fe4664ebce5ec64d2f?recursive=1",
+        "returnedSha": "04873998933830ce582018fe4664ebce5ec64d2f",
+        "truncated": false,
+        "totalEntries": 165
+      },
+      "noticeLicensePaths": [
+        {
+          "path": "LICENSE",
+          "blob": "bb57ccb04c4d88189828562387f5b760810c8838",
+          "size": 1064
+        }
+      ],
+      "selectedSources": [
+        {
+          "path": "LICENSE",
+          "blob": "bb57ccb04c4d88189828562387f5b760810c8838",
+          "size": 1064,
+          "url": "https://github.com/tokenarc/open-jarvis/blob/04873998933830ce582018fe4664ebce5ec64d2f/LICENSE"
+        },
+        {
+          "path": "app/build.gradle",
+          "blob": "acf1accb68a7bff75ef2e1d87a040a7d91c74ac0",
+          "size": 3052,
+          "url": "https://github.com/tokenarc/open-jarvis/blob/04873998933830ce582018fe4664ebce5ec64d2f/app/build.gradle"
+        },
+        {
+          "path": "app/src/main/AndroidManifest.xml",
+          "blob": "59e4085285f831031b69a689da21da0838fbe548",
+          "size": 2790,
+          "url": "https://github.com/tokenarc/open-jarvis/blob/04873998933830ce582018fe4664ebce5ec64d2f/app/src/main/AndroidManifest.xml"
+        },
+        {
+          "path": "app/src/main/java/com/openjarvis/accessibility/ScreenReader.kt",
+          "blob": "93b98aaae9ac6665f31efa13ad0c806b9e5a775e",
+          "size": 3508,
+          "url": "https://github.com/tokenarc/open-jarvis/blob/04873998933830ce582018fe4664ebce5ec64d2f/app/src/main/java/com/openjarvis/accessibility/ScreenReader.kt"
+        },
+        {
+          "path": "app/src/main/java/com/openjarvis/accessibility/ActionExecutor.kt",
+          "blob": "5a2667ab099ac5ee9fc42b689698880ed2d4f3a8",
+          "size": 3654,
+          "url": "https://github.com/tokenarc/open-jarvis/blob/04873998933830ce582018fe4664ebce5ec64d2f/app/src/main/java/com/openjarvis/accessibility/ActionExecutor.kt"
+        },
+        {
+          "path": "app/src/main/java/com/openjarvis/accessibility/JarvisAccessibilityService.kt",
+          "blob": "ad8800b7afab54594e4bfac4af685cf86085fded",
+          "size": 4447,
+          "url": "https://github.com/tokenarc/open-jarvis/blob/04873998933830ce582018fe4664ebce5ec64d2f/app/src/main/java/com/openjarvis/accessibility/JarvisAccessibilityService.kt"
+        },
+        {
+          "path": "app/src/main/java/com/openjarvis/agent/AgentCore.kt",
+          "blob": "df8fadb1f0b77fbce00ae44d92181250c7f68a06",
+          "size": 13657,
+          "url": "https://github.com/tokenarc/open-jarvis/blob/04873998933830ce582018fe4664ebce5ec64d2f/app/src/main/java/com/openjarvis/agent/AgentCore.kt"
+        }
+      ],
+      "declaredManifestPaths": [
+        {
+          "path": "app/build.gradle",
+          "blob": "acf1accb68a7bff75ef2e1d87a040a7d91c74ac0",
+          "size": 3052
+        },
+        {
+          "path": "build.gradle",
+          "blob": "91f8f9be3d2a00e3028d033b68e76df69ffcac71",
+          "size": 308
+        },
+        {
+          "path": "settings.gradle",
+          "blob": "c57e7fd1c2bd48737be41b39d2153daf99358059",
+          "size": 327
+        }
+      ],
+      "upstreamTestFilesCount": 2,
+      "sourceTestExecution": "NOT_RUN",
+      "dependencyArtifactAudit": "NOT_RUN"
+    },
+    {
+      "repository": "open-jarvis/OpenJarvis",
+      "commit": "45504acbb49459993d60e19d5b37c85fbc0c35ed",
+      "tree": "fc8c4089e5b43d4882e1fdc1fd026aa28ec40f69",
+      "commitUrl": "https://github.com/open-jarvis/OpenJarvis/commit/45504acbb49459993d60e19d5b37c85fbc0c35ed",
+      "treeInventory": {
+        "url": "https://api.github.com/repos/open-jarvis/OpenJarvis/git/trees/45504acbb49459993d60e19d5b37c85fbc0c35ed?recursive=1",
+        "returnedSha": "45504acbb49459993d60e19d5b37c85fbc0c35ed",
+        "truncated": false,
+        "totalEntries": 2461
+      },
+      "noticeLicensePaths": [
+        {
+          "path": "LICENSE",
+          "blob": "7d8b094eda9393e9ac5fcaa34fe276ee947f61bd",
+          "size": 10773
+        },
+        {
+          "path": "src/openjarvis/evals/comparison/third_party.py",
+          "blob": "d51d180218f5f40cea410115ec45d4bb815dd83e",
+          "size": 5987
+        }
+      ],
+      "selectedSources": [
+        {
+          "path": "LICENSE",
+          "blob": "7d8b094eda9393e9ac5fcaa34fe276ee947f61bd",
+          "size": 10773,
+          "url": "https://github.com/open-jarvis/OpenJarvis/blob/45504acbb49459993d60e19d5b37c85fbc0c35ed/LICENSE"
+        },
+        {
+          "path": "pyproject.toml",
+          "blob": "8f48a5ea46b1217bf2a56af11a356b8949b15557",
+          "size": 12180,
+          "url": "https://github.com/open-jarvis/OpenJarvis/blob/45504acbb49459993d60e19d5b37c85fbc0c35ed/pyproject.toml"
+        },
+        {
+          "path": "src/openjarvis/agents/loop_guard.py",
+          "blob": "f7e92cfea63ec93acb03db091adecb6c364b5bf9",
+          "size": 9424,
+          "url": "https://github.com/open-jarvis/OpenJarvis/blob/45504acbb49459993d60e19d5b37c85fbc0c35ed/src/openjarvis/agents/loop_guard.py"
+        }
+      ],
+      "declaredManifestPaths": [
+        {
+          "path": "examples/cross_device_travel/Cargo.lock",
+          "blob": "5ee7798ed3dc7a9417fab667280b387cec822b80",
+          "size": 2687
+        },
+        {
+          "path": "examples/cross_device_travel/Cargo.toml",
+          "blob": "5e11a1ce0a475dfa716eec3e59e64a562ba1e1ad",
+          "size": 300
+        },
+        {
+          "path": "frontend/package-lock.json",
+          "blob": "07ff1ddfecd62be0f597fa82632b75060a57d051",
+          "size": 373291
+        },
+        {
+          "path": "frontend/package.json",
+          "blob": "0a942806e1adb1398273a66ebbfa1d9247a5eb69",
+          "size": 1839
+        },
+        {
+          "path": "frontend/src-tauri/Cargo.lock",
+          "blob": "010613dc2eeeafe87e5c4dc3025a75f40f83120e",
+          "size": 156467
+        },
+        {
+          "path": "frontend/src-tauri/Cargo.toml",
+          "blob": "8ea221b82a555582bb9056cea5bd35646d4aa35f",
+          "size": 1720
+        },
+        {
+          "path": "pyproject.toml",
+          "blob": "8f48a5ea46b1217bf2a56af11a356b8949b15557",
+          "size": 12180
+        },
+        {
+          "path": "rust/Cargo.lock",
+          "blob": "604c3d277b36a3b7416c845d1eac9bea58d431e0",
+          "size": 81542
+        },
+        {
+          "path": "rust/Cargo.toml",
+          "blob": "207f1e45884498e60ae9a2fc462003c814a1d6dc",
+          "size": 1515
+        },
+        {
+          "path": "rust/crates/openjarvis-a2a/Cargo.toml",
+          "blob": "1d4bd31246f284734fec06a672ad34f977b0e834",
+          "size": 226
+        },
+        {
+          "path": "rust/crates/openjarvis-agents/Cargo.toml",
+          "blob": "6e725310562af79195c45c256ac0f87e3c9888e2",
+          "size": 592
+        },
+        {
+          "path": "rust/crates/openjarvis-core/Cargo.toml",
+          "blob": "cc5093350737da325891a0a83814913980235ce8",
+          "size": 431
+        },
+        {
+          "path": "rust/crates/openjarvis-engine/Cargo.toml",
+          "blob": "95d968b58f235facda0f2733d78b1bcba8d71942",
+          "size": 604
+        },
+        {
+          "path": "rust/crates/openjarvis-learning/Cargo.toml",
+          "blob": "b2e5a55bc7f9d88a8868f9547fbc95449aa6c8aa",
+          "size": 506
+        },
+        {
+          "path": "rust/crates/openjarvis-mcp/Cargo.toml",
+          "blob": "42469006bcbb324fbcb4c399857b56143d61ab9e",
+          "size": 343
+        },
+        {
+          "path": "rust/crates/openjarvis-python/Cargo.toml",
+          "blob": "d1ded23217c1a8c8ae879240bbedd2302f7efdeb",
+          "size": 1214
+        },
+        {
+          "path": "rust/crates/openjarvis-python/pyproject.toml",
+          "blob": "b79ff4aa878f4822d90f30f7da97913d008d0190",
+          "size": 253
+        },
+        {
+          "path": "rust/crates/openjarvis-python/uv.lock",
+          "blob": "7f3fa09b5dc3de3fabdc0b444cad3c88a9c8e190",
+          "size": 136
+        },
+        {
+          "path": "rust/crates/openjarvis-recipes/Cargo.toml",
+          "blob": "3a07e20f7ce7a056e7a45a6f4d8f2713281a60d3",
+          "size": 230
+        },
+        {
+          "path": "rust/crates/openjarvis-scheduler/Cargo.toml",
+          "blob": "0d01852df17ea3fda54510b090034ce0fbaca2de",
+          "size": 294
+        },
+        {
+          "path": "rust/crates/openjarvis-security/Cargo.toml",
+          "blob": "efdf0a573568127fc4569a7fb79b13a1bae5faca",
+          "size": 672
+        },
+        {
+          "path": "rust/crates/openjarvis-sessions/Cargo.toml",
+          "blob": "7a63ad62ed88d1caf0653d9d61af8814ad240e26",
+          "size": 263
+        },
+        {
+          "path": "rust/crates/openjarvis-skills/Cargo.toml",
+          "blob": "3f913867e9ea133328a401c1c1d9d19663d6810b",
+          "size": 266
+        },
+        {
+          "path": "rust/crates/openjarvis-telemetry/Cargo.toml",
+          "blob": "a02fc451a39b705d284685e83f534858eb09ebf3",
+          "size": 556
+        },
+        {
+          "path": "rust/crates/openjarvis-templates/Cargo.toml",
+          "blob": "a8bb56aa9c5c385066bfc1e5d42d264d4cfd59ac",
+          "size": 232
+        },
+        {
+          "path": "rust/crates/openjarvis-tools/Cargo.toml",
+          "blob": "5e59cf66e1eba33cf43a732ebb2672fdd3476806",
+          "size": 779
+        },
+        {
+          "path": "rust/crates/openjarvis-traces/Cargo.toml",
+          "blob": "428ec7aee65ddbba04f1c21a74af7dd65e8b3815",
+          "size": 397
+        },
+        {
+          "path": "rust/crates/openjarvis-workflow/Cargo.toml",
+          "blob": "2f1b94a82e6cdd67e086b2e2fadcd46e6e311fb7",
+          "size": 231
+        },
+        {
+          "path": "src/openjarvis/agents/claude_code_runner/package.json",
+          "blob": "bb7bc78d8441da2df59acc42dbeb971009f65ca2",
+          "size": 164
+        },
+        {
+          "path": "src/openjarvis/channels/whatsapp_baileys_bridge/package-lock.json",
+          "blob": "c17620ec11dbf4a6114202df931a5926862de76a",
+          "size": 48114
+        },
+        {
+          "path": "src/openjarvis/channels/whatsapp_baileys_bridge/package.json",
+          "blob": "32c465230e7cd1a401dfb0e091de51f27c6b7c2b",
+          "size": 410
+        },
+        {
+          "path": "uv.lock",
+          "blob": "6ab977c2dd2b8e90cbf091ebcd2bee0008b646a9",
+          "size": 1682459
+        }
+      ],
+      "upstreamTestFilesCount": 755,
+      "sourceTestExecution": "NOT_RUN",
+      "dependencyArtifactAudit": "NOT_RUN"
+    },
+    {
+      "repository": "Dix01/JARVIS",
+      "commit": "dff115ca4f30b74240fc6199b55b4770474e7ac8",
+      "tree": "f1a6b46f666edb6b9afaec6b164288794418bffe",
+      "commitUrl": "https://github.com/Dix01/JARVIS/commit/dff115ca4f30b74240fc6199b55b4770474e7ac8",
+      "treeInventory": {
+        "url": "https://api.github.com/repos/Dix01/JARVIS/git/trees/dff115ca4f30b74240fc6199b55b4770474e7ac8?recursive=1",
+        "returnedSha": "dff115ca4f30b74240fc6199b55b4770474e7ac8",
+        "truncated": false,
+        "totalEntries": 194
+      },
+      "noticeLicensePaths": [
+        {
+          "path": "LICENSE",
+          "blob": "b2006100277902747d09dd9c1e03a157ba0e6fda",
+          "size": 1062
+        }
+      ],
+      "selectedSources": [
+        {
+          "path": "LICENSE",
+          "blob": "b2006100277902747d09dd9c1e03a157ba0e6fda",
+          "size": 1062,
+          "url": "https://github.com/Dix01/JARVIS/blob/dff115ca4f30b74240fc6199b55b4770474e7ac8/LICENSE"
+        },
+        {
+          "path": "requirements.txt",
+          "blob": "46388f6d32615fe66bbedd83ebda7ce4b4352763",
+          "size": 1981,
+          "url": "https://github.com/Dix01/JARVIS/blob/dff115ca4f30b74240fc6199b55b4770474e7ac8/requirements.txt"
+        },
+        {
+          "path": "web/package.json",
+          "blob": "699cbe4a346a12ebeb34834ad3a572b8032d66d6",
+          "size": 811,
+          "url": "https://github.com/Dix01/JARVIS/blob/dff115ca4f30b74240fc6199b55b4770474e7ac8/web/package.json"
+        },
+        {
+          "path": "web/src/lib/wakeWord.ts",
+          "blob": "ac8815d78f293412dce136deecd1f15a4651660f",
+          "size": 4410,
+          "url": "https://github.com/Dix01/JARVIS/blob/dff115ca4f30b74240fc6199b55b4770474e7ac8/web/src/lib/wakeWord.ts"
+        },
+        {
+          "path": "jarvis/core/permissions.py",
+          "blob": "2b0c664af2586a02a51bb715234035fd5ea7ab70",
+          "size": 2953,
+          "url": "https://github.com/Dix01/JARVIS/blob/dff115ca4f30b74240fc6199b55b4770474e7ac8/jarvis/core/permissions.py"
+        }
+      ],
+      "declaredManifestPaths": [
+        {
+          "path": "electron/package-lock.json",
+          "blob": "aae7a2d60618991f2dc8b088d963c1149dc418f2",
+          "size": 188482
+        },
+        {
+          "path": "electron/package.json",
+          "blob": "b0122a40dfe7af0c1babdc7ae32c52ad1bb0121c",
+          "size": 697
+        },
+        {
+          "path": "requirements.txt",
+          "blob": "46388f6d32615fe66bbedd83ebda7ce4b4352763",
+          "size": 1981
+        },
+        {
+          "path": "web/package-lock.json",
+          "blob": "d32e1a95099579fc41f61ebf87381df93ee4c3e4",
+          "size": 124899
+        },
+        {
+          "path": "web/package.json",
+          "blob": "699cbe4a346a12ebeb34834ad3a572b8032d66d6",
+          "size": 811
+        }
+      ],
+      "upstreamTestFilesCount": 2,
+      "sourceTestExecution": "NOT_RUN",
+      "dependencyArtifactAudit": "NOT_RUN"
+    }
+  ],
+  "notAudited": [
+    "k2-fsa/sherpa-onnx",
+    "OpenHands/OpenHands",
+    "bytedance/UI-TARS-desktop",
+    "ManojRakshu/pocketclaw",
+    "browser-use/browser-use",
+    "ggml-org/llama.cpp",
+    "whisper.cpp (optional)"
+  ]
+}

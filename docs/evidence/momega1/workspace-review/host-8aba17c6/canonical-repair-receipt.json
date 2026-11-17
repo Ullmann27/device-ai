@@ -1,0 +1,82 @@
+{
+  "schema": "continuum-mobile-coding-receipt",
+  "version": 1,
+  "job": "4264a20c-6e41-49c1-9b3d-fcd7281089ab",
+  "operation": "code-repair",
+  "taskId": "mob-f1db9c2e505619f3",
+  "commit": "9b01334246dd040a800c52f9be476112b6ce7782",
+  "toolchain": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64",
+    "git": "git version 2.52.0"
+  },
+  "order": {
+    "chain": "node"
+  },
+  "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+  "teamleaderOutcome": "VERIFIED_PATCH_PENDING_REVIEW",
+  "patch": {
+    "sha256": "14f52804b9f3c83bb08b50974a80fccf7e89d99878f0db0ffee3dba7b3e1059c",
+    "path": "/tmp/workspace-canonical-repair-ugqWiG/worker-canonical-state/teamleader/reports/owner-repair/mob-f1db9c2e505619f3-9b01334246dd-1793735138523-ea32650c/repair.patch",
+    "bytes": 394
+  },
+  "evidence": {
+    "verificationSha256": "e2edff57025cfffe41b187ab45a374faa83623fba0f40eba7615db39b5692c25",
+    "baselineFailed": 1,
+    "baselineExecuted": 1,
+    "candidateExecuted": 1,
+    "independentExecuted": 1,
+    "evidenceSufficient": true
+  },
+  "commands": [
+    {
+      "phase": "baseline",
+      "exitCode": 1,
+      "passed": false,
+      "executed": 1,
+      "failed": 1,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    },
+    {
+      "phase": "candidate",
+      "exitCode": 0,
+      "passed": true,
+      "executed": 1,
+      "failed": 0,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    },
+    {
+      "phase": "independent",
+      "exitCode": 0,
+      "passed": true,
+      "executed": 1,
+      "failed": 0,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    }
+  ],
+  "failure": null,
+  "backlog": {
+    "state": "DONE",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "error": null
+  },
+  "approvedForMerge": false,
+  "apk": null,
+  "installed": false,
+  "deviceVerified": false,
+  "createdAt": "2026-11-03T19:45:38.483Z",
+  "repair": {
+    "outcome": "VERIFIED",
+    "strategy": "REVERT_FILE_TO_PARENT",
+    "files": [
+      ".github/continuum/text-utils.mjs"
+    ],
+    "diagnostics": 1,
+    "attempts": 1
+  }
+}

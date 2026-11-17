@@ -1,0 +1,18 @@
+{
+  "id": "C048",
+  "question": "Wo lebt Zyduvegu?",
+  "sources": [
+    {
+      "revision": 6,
+      "sha256": "fc20cfb78947c74d8d918c191ba0532b53b56ef6fa93d54074f83683884a659b",
+      "sourceId": "bc:C048:s1",
+      "text": "Zyduvegu steht in Uvduguhe Uvpamame Uvlodovi."
+    },
+    {
+      "revision": 7,
+      "sha256": "f2bbd6919db2e0b65625456217330779b375b3a37b07c35283db18395a13087c",
+      "sourceId": "bc:C048:s2",
+      "text": "Zyduvegu lebt in Uvfafihi."
+    }
+  ]
+}

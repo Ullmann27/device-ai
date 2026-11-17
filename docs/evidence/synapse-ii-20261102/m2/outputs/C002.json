@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C002:s1",
+    "decision": "SPAN",
+    "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+    "endExclusive": 81,
+    "start": 64,
+    "text": "Uvlafeci Uvvaputi",
+    "offsetEncoding": "UTF-16",
+    "revision": 2
+  },
+  "RULE": {
+    "sourceId": "bc:C002:s1",
+    "decision": "SPAN",
+    "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+    "endExclusive": 81,
+    "start": 64,
+    "text": "Uvlafeci Uvvaputi",
+    "offsetEncoding": "UTF-16",
+    "revision": 2
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C002:s1",
+    "decision": "SPAN",
+    "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+    "endExclusive": 81,
+    "start": 64,
+    "text": "Uvlafeci Uvvaputi",
+    "offsetEncoding": "UTF-16",
+    "revision": 2
+  },
+  "rawMillis": 75.838688
+}

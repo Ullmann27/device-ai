@@ -1,0 +1,11 @@
+6ff9a183dc084643ed13cbb0b3b8c6ab8e903061
+ M app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt
+ M docs/evidence/breakthrough-research-20261103/alce-code-fetches.json
+ M docs/evidence/breakthrough-research-20261103/external-source-fetches.json
+?? docs/evidence/breakthrough-research-20261103/SOURCE-REVIEW.md
+?? docs/evidence/breakthrough-research-20261103/run-research-jvm.sh
+b51c363635aa829f9f8bd7c1443524957ea902cf520b07ffec84ac517515b2c6  /workspace/breakthrough-research/app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+info: kotlinc-jvm 2.4.0 (JRE 17.0.20.1+1)

@@ -1,0 +1,22 @@
+{
+  "baseline": "be256a1ae3f31fa04f0acdd7c7537a43beb219b3",
+  "cachedProduction": "6a6f885f952784c79b209ad39b20d14ccf014df8",
+  "productionSourcesEqualBeforePatch": true,
+  "verification": "git diff 6a6f885f952784c79b209ad39b20d14ccf014df8 be256a1ae3f31fa04f0acdd7c7537a43beb219b3 -- app/src/main (empty)",
+  "evidenceClass": "HOST_ANDROID_ROBOLECTRIC_CONTROLLED_EXECUTOR",
+  "red": {
+    "tests": 4,
+    "failures": 3
+  },
+  "green": {
+    "tests": 4,
+    "failures": 0
+  },
+  "androidSdkCompile": "PASS",
+  "fullGradle": "NOT_RUN_IN_THIS_SUBTASK",
+  "physicalDeviceThermal": "NOT_RUN",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "0f06ece0f387a23ba2eeaa7a04e658b48ab35c63f431696e8d9dea5cbdea2b86",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumDashboardVisibilityUiTest.kt": "c310cf972ea1bbc5034d2f2726c1d78fdd915e2ca268a394148bf88c52994e05"
+  }
+}

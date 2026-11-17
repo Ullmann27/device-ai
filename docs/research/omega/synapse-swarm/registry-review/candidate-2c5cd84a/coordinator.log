@@ -1,0 +1,5 @@
+PASS caller-owned-profile-sets-cannot-expand-approved-scope
+PASS listed-profile-sets-cannot-expand-internal-scope
+PASS delegation-tool-set-snapshot-survives-queued-caller-mutation
+PASS shutdown-rejection-does-not-leave-phantom-assignment
+RESULT passed=4 failed=0

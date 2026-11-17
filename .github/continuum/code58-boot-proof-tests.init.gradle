@@ -1,0 +1,20 @@
+// Source-exact Fold7 startup and proof regression selection.
+// Gradle startParameter.taskNames must remain only testDebugUnitTest for disposable QA.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.findProject(':app')
+    if (app == null) throw new GradleException('Missing Android app')
+    app.tasks.withType(org.gradle.api.tasks.testing.Test).matching { it.name == 'testDebugUnitTest' }.configureEach {
+        filter {
+            includeTestsMatching 'at.heinz.deviceai.ContinuumHologramMotionUiTest'
+            includeTestsMatching 'at.heinz.deviceai.ContinuumGemmaRestorePolicyTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDocumentIntentTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.OwnerDocumentDialogueTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.DocumentDraftPromptTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest'
+            includeTestsMatching 'at.heinz.deviceai.cognitive.LocalTextOnlyInferenceRouteTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalNativePromptBudgetTest'
+            includeTestsMatching 'at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest'
+            failOnNoMatchingTests = true
+        }
+    }
+}

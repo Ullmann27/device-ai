@@ -1,0 +1,284 @@
+{
+  "count": 30,
+  "renderedResearchSha256": "49df4e35ab58b0e4d8cf8561d2fae2e28a9211ef227dc1e67146bf0be9debed7",
+  "acceptedRuntimeSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "allPositionsTrianglesAndMorphsEqualToAccepted": true,
+  "comparisonReport": "reproduction.json",
+  "renderer": "Blender4.3.2/Cycles/CPU2/nice10/512x512/16samples",
+  "frames": [
+    {
+      "file": "view-00-neutral-000.png",
+      "sha256": "b74800bc8782a9615c821851effc53e7be50ca699e45fbb342a697b364914992",
+      "bytes": 466031,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-01-neutral-015.png",
+      "sha256": "fe9ceb002f4fb7232176389fcc027fca6da8f1c57e9a29abfd67222c8107fa4c",
+      "bytes": 464493,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-02-neutral-030.png",
+      "sha256": "128d40f9028b1988c03b1aa8f4c9025f83a5fbfa0391ca3e7ddbb81d8a987a7b",
+      "bytes": 462420,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-03-neutral-045.png",
+      "sha256": "4f105502b71399ea2a896fda9f26826322bb3587a18a4050cea2a5e8c383c395",
+      "bytes": 451448,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-04-neutral-060.png",
+      "sha256": "85b3c9b1f7d233bf5710ee892139ad2e23a4ae44cedb5bbcc8745bbb40d94c98",
+      "bytes": 432699,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-05-neutral-075.png",
+      "sha256": "b549e87eb0cc013ce505e9dd31a614f4c9b328ba36c6e4c7681f538c014ba647",
+      "bytes": 415171,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-06-neutral-090.png",
+      "sha256": "bd046f58b17adc6ba3f6f032844547f6827d1ae19076434db79e332f04e8f6dc",
+      "bytes": 408921,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-07-neutral-105.png",
+      "sha256": "108a49e011a6411d3de975f5af9a223d0af47501841ef4c7fecfdcd559875f84",
+      "bytes": 429055,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-08-neutral-120.png",
+      "sha256": "1cffa7e1020b5d847c0e7b98af828cdba78ad0cc3281359725eb699dd6451fe6",
+      "bytes": 445626,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-09-neutral-135.png",
+      "sha256": "48fb7f1fb1c1ce6e5178a43cbe3e2b523f9a11f073f2e7244533326e34437b1c",
+      "bytes": 458083,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-10-neutral-150.png",
+      "sha256": "696ade248fff01224e4df2cc79aee6582196862a4278981ff0ed60ac34d9be9e",
+      "bytes": 461274,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-11-neutral-165.png",
+      "sha256": "01bad42d7bd9906b9b3d0402032aa616863614e7bc0df44d2c0314e1a2a50bec",
+      "bytes": 458327,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-12-neutral-180.png",
+      "sha256": "6c726e6ebf84c3d3bb56f9deef36c7d2427866ee3f94fd34305e4ccd84344e52",
+      "bytes": 457680,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-13-neutral-195.png",
+      "sha256": "8592f4b50e74bff09d75c853cc26363695bdcc65a9670c3528b68eb3b6b18e48",
+      "bytes": 458959,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-14-neutral-210.png",
+      "sha256": "e597017b1977431d64b4c3ebef284fe4911d148fa7033edd877ec346a9c9b82c",
+      "bytes": 461237,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-15-neutral-225.png",
+      "sha256": "4c3583d56df3fd9014f14792faf9821c3c7316f0c8b8a09af52ec776b4f124ab",
+      "bytes": 458311,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-16-neutral-240.png",
+      "sha256": "d28814a83db2b9a3ebdb4ec95dd76de5b48191d8c2c8d10d415725b294bd4ded",
+      "bytes": 447179,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-17-neutral-255.png",
+      "sha256": "35e9f86e40b4503bbd620a598551a175523334218409a8fc5f2d130b0645848f",
+      "bytes": 430702,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-18-neutral-270.png",
+      "sha256": "e18a73cbe6c2acdadb08280d55880c61833bb32716a55867bf635482234a238c",
+      "bytes": 413124,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-19-neutral-285.png",
+      "sha256": "9925ff211d79c35c1455fcce523fcb3106de98fec5eba812fb0283d7b025ad2b",
+      "bytes": 422434,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-20-neutral-300.png",
+      "sha256": "22324c017e5c80d01cc96d00c47e9044d1da0ee1386468914d5bb31b8ea53dd0",
+      "bytes": 439235,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-21-neutral-315.png",
+      "sha256": "ffb65ae555fc51118db58f898d17fb12e44db9542cbf1f9e9f8cf8c3bc9cf26f",
+      "bytes": 456452,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-22-neutral-330.png",
+      "sha256": "3141d8512c463de8cd5b8c4457aee7a0908522958436fce1b9b598fe673787e0",
+      "bytes": 465813,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-23-neutral-345.png",
+      "sha256": "26039ac205862c7f433b07067733ed1ffe9afcee2089cd85041be4fc8ebb7287",
+      "bytes": 466090,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-24-blink.png",
+      "sha256": "dbfb1bd579e4bd88facaedaa57d3f50fa2d9a8a595c76229c278a63762d17a4a",
+      "bytes": 465667,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-25-smile.png",
+      "sha256": "9f20141e2210556ece9e2bc037be1b0ef1e6b78fa9cfddbe032bb3f7cbda6254",
+      "bytes": 466178,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-26-speech-aa.png",
+      "sha256": "6ac7013dbb8047423cdb5967256e2e4400389ad5ef8690c8ea92a6f58882a7f6",
+      "bytes": 466217,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-27-speech-o.png",
+      "sha256": "47a0c0140f33681f43657e3c11ce8b6240b6216c676b0a073e38b96d8088d1ac",
+      "bytes": 466290,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-28-speech-u.png",
+      "sha256": "b6110519bba7b957ed6e950781975595b969672a70d1090bd1f7f316b6d31c28",
+      "bytes": 466322,
+      "pixels": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "view-29-brow-speech.png",
+      "sha256": "b1dcf4d93db8c801fb04a4c562e611131afa475ea8547777a4540a977754b619",
+      "bytes": 466529,
+      "pixels": [
+        512,
+        512
+      ]
+    }
+  ],
+  "requestedSemanticAnchorsComplete": false,
+  "scope": "24 neutral orbit angles plus6expressions, not the requested30 semantic anchors and not high resolution.",
+  "contactSheet": "contact-sheet-30.png",
+  "referenceImageProcessed": false
+}

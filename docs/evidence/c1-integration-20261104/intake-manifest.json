@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "taskId": "C1-INTEGRATE-001",
+  "timezone": "Europe/Vienna",
+  "date": "2026-11-04",
+  "status": "SOURCE_REVIEW_TESTS_NOT_RUN",
+  "branch": "integration/continuum-c1-candidate-20261104",
+  "candidate": {
+    "pr": 513,
+    "remoteCommit": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+    "localBaseCommit": "2d5ce59b786f427eacb394484d81796568bb87b4",
+    "tree": "e52acc146e66ae66a95429da2fb0f34242ad1791"
+  },
+  "inputs": [
+    {
+      "pr": 498,
+      "head": "e95076c2a396a785ae80bceca0610890ff1af5d9",
+      "branch": "coordination/astra-nucleus-20261104-1027",
+      "base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+      "url": "https://github.com/Ullmann27/device-ai/pull/498"
+    },
+    {
+      "pr": 491,
+      "head": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "branch": "codex/astra-jarvis-takeover-20261104",
+      "base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+      "url": "https://github.com/Ullmann27/device-ai/pull/491"
+    },
+    {
+      "pr": 506,
+      "head": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "branch": "integration/continuum-ready-connections-20261104",
+      "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "url": "https://github.com/Ullmann27/device-ai/pull/506"
+    },
+    {
+      "pr": 512,
+      "head": "f9267a3743a87a77bf6421011c014b2ca2d6b0d6",
+      "branch": "integration/continuum-followup-connectors-20261104-822e",
+      "base": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "url": "https://github.com/Ullmann27/device-ai/pull/512"
+    },
+    {
+      "pr": 513,
+      "head": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+      "branch": "integration/continuum-apk-connections-wave2-20261104",
+      "base": "f9267a3743a87a77bf6421011c014b2ca2d6b0d6",
+      "url": "https://github.com/Ullmann27/device-ai/pull/513"
+    },
+    {
+      "pr": 515,
+      "head": "572e12ecc4ce5f7c79f2634a5b5773047b6d674f",
+      "branch": "codex/continuum-branch-integration-bots-20261104",
+      "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "url": "https://github.com/Ullmann27/device-ai/pull/515"
+    }
+  ],
+  "firstSlice": "#515 negative canonical ABSTAINED report/snapshot only, pending independent review",
+  "tests": {
+    "sourceTreeIdentity": "PASS",
+    "targeted": "NOT_RUN",
+    "nodeFull": "NOT_RUN",
+    "androidFull": "NOT_RUN",
+    "model": "NOT_RUN",
+    "device": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "externalAcknowledgements": {
+    "C2": "NOT_OBSERVED",
+    "C3_C4": "NOT_OBSERVED",
+    "C5_C6": "NOT_OBSERVED",
+    "C7_C8": "NOT_OBSERVED",
+    "C9_C10": "NOT_OBSERVED"
+  }
+}

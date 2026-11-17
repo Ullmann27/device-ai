@@ -1,0 +1,61 @@
+{
+  "schema": "independent-mouth-geometry-red-and-first-candidate",
+  "version": 1,
+  "testFreeze": "d0c2ca85f482683dc4a3f9e7918472c2390ac8ea",
+  "evidenceClass": "HOST_GEOMETRY_CONTRACT",
+  "tool": "tools/jarvis-reference-review/check-mouth-occlusion.py",
+  "python": "Python 3.12.14",
+  "numpy": "2.3.5",
+  "cpuThreads": 1,
+  "candidateDecision": "REJECT_REMAINING_FRONTMOST_INTERSECTIONS",
+  "posesSha256": "6c6ad2a59f881a0855cf19a5c6a8966e48b6ecdcb06bed13049bd3da466a6496",
+  "originalAssetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "candidateAssetSha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+  "labels": [
+    "neutral",
+    "AA",
+    "PP",
+    "O",
+    "I",
+    "U"
+  ],
+  "originalFrontmostCounts": [
+    0,
+    16,
+    152,
+    65,
+    36,
+    28
+  ],
+  "candidateFrontmostCounts": [
+    0,
+    36,
+    0,
+    48,
+    0,
+    20
+  ],
+  "originalExit": 1,
+  "candidateExit": 1,
+  "maximumIndependentWitnessReconstructionResidualMetres": 3.929062510380681e-17,
+  "candidateChangeIndependentlyInspected": "Only Jaw local Y+0.04 and nine rigid child local Y-0.04; complete BIN chunk and every other glTF JSON semantic unchanged.",
+  "commands": [
+    "python3 tools/jarvis-reference-review/check-mouth-occlusion.py /workspace/jarvis-reference-ui-fixed/app/src/main/assets/avatar3d/continuum-avatar.glb /workspace/jarvis-reference-review-results/reachable-poses-2655/poses.json /workspace/jarvis-reference-review-results/mouth-geometry-red-original.json",
+    "python3 tools/jarvis-reference-review/check-mouth-occlusion.py /workspace/jarvis-reference-build/materials/jaw-pivot-40mm-original.glb /workspace/jarvis-reference-review-results/reachable-poses-2655/poses.json /workspace/jarvis-reference-review-results/mouth-geometry-candidate-6b199c59.json"
+  ],
+  "limits": [
+    "Strict sampled triangle crossings, not complete collision or native GPU certification",
+    "Raw projection counts include correctly visible teeth inside the aperture and are not penetration claims",
+    "Crossing count is not a severity scale",
+    "Material/head motion/audio/device acceptance remain separate"
+  ],
+  "sha256": {
+    "docs/evidence/momega1/reference-review/mouth-geometry-red-original.json": "cae5a2e688fe4338315c2a63554c73261fcc387a222eea75a2582b30f82d7cc3",
+    "docs/evidence/momega1/reference-review/mouth-geometry-red-original.stdout": "d8ebbf8f8dfb6ec1ec35fcb03dc9da805934c3986c4fa720c6d1790f0c106b98",
+    "docs/evidence/momega1/reference-review/mouth-geometry-red-original.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/evidence/momega1/reference-review/mouth-geometry-candidate-6b199c59.json": "4cb3aedac4ed36ab6ea75590011309981071454ee7f46a1a0f8b9562840c8d6d",
+    "docs/evidence/momega1/reference-review/mouth-geometry-candidate-6b199c59.stdout": "1dd8b3f02aa49f6ea891be4d15c9c6aa85535cfa2c5a43962b1f7a6b1e0940eb",
+    "docs/evidence/momega1/reference-review/mouth-geometry-candidate-6b199c59.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "tools/jarvis-reference-review/check-mouth-occlusion.py": "886c9760ae518a88ffd407bd3555e08a24f4d38dd2c29f5b7ec4c881b2a775e2"
+  }
+}

@@ -1,0 +1,22 @@
+JUnit version 4.13.2
+.......E.E........
+Time: 0.184
+There were 2 failures:
+1) deniedToolCannotBecomeSuccessfulSkillThroughPermissiveEvaluator(at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest)
+java.lang.AssertionError: expected:<PARTIAL> but was:<SUCCESS>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest.deniedToolCannotBecomeSuccessfulSkillThroughPermissiveEvaluator(BoundedAgentOutcomeEvidenceTest.kt:20)
+2) replayedSucceededReceiptDoesNotCreateFreshPositiveEvidence(at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest)
+java.lang.AssertionError: expected:<PARTIAL> but was:<SUCCESS>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest.replayedSucceededReceiptDoesNotCreateFreshPositiveEvidence(BoundedAgentOutcomeEvidenceTest.kt:38)
+
+FAILURES!!!
+Tests run: 16,  Failures: 2
+

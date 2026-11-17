@@ -1,0 +1,20 @@
+[
+  {
+    "path": "docs/evidence/wave2-avatar-20261104/imported/junit.log",
+    "original_sha256": "58aad2e1253ac8c8aab3a2eeea792ffb8654d6bd621a0baeab83fcc23cf70050",
+    "archived_sha256": "28e25778258aec4f1338f1a48020ea4aeabf3dc6050b9a9043d3e85df82983c3",
+    "normalization": "Removed terminal empty lines only; test output content and ordering unchanged."
+  },
+  {
+    "path": "docs/evidence/wave2-avatar-20261104/integrated/junit.log",
+    "original_sha256": "93eefb9cea238fbfc2ba13e683c63efa5993cd33d0e344355ee63b7fafe2239e",
+    "archived_sha256": "0a666191bfd7850e40ef7986d0964563d2c914bd33dd60b33b9cfefed9e2d1a9",
+    "normalization": "Removed terminal empty lines only; test output content and ordering unchanged."
+  },
+  {
+    "path": "docs/evidence/wave2-avatar-20261104/reparent-red/junit.log",
+    "original_sha256": "9e838e0cbb9670a30db8aff265d32f463875bb587e6ddb0b95b8083faeff3f51",
+    "archived_sha256": "0c75031ba28d64556646010499a3ddd1a009de5e1a6474172422ac76113b902b",
+    "normalization": "Removed terminal empty lines only; test output content and ordering unchanged."
+  }
+]

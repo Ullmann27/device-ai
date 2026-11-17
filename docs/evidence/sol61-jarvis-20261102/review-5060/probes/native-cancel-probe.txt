@@ -1,0 +1,4 @@
+TEXT_AFTER_CANCEL_RETURNED=true
+EVENTS_CANCEL=[TextDelta(text=first), TextDelta(text=late), Cancelled]
+TEXT_AFTER_UNLOAD_RETURNED=true
+EVENTS_UNLOAD=[TextDelta(text=first), TextDelta(text=late), Cancelled]

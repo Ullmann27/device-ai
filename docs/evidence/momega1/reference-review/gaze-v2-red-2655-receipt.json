@@ -1,0 +1,27 @@
+{
+  "schema": "independent-mouth-composition-v2-red",
+  "version": 1,
+  "testFreeze": "cd9758907ac1fe48aa14b2e002087da7ed6005aa",
+  "source": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+  "evidenceClass": "CONTRACT_TEST",
+  "command": "bash tools/jarvis-reference-review/run-gaze-v2-challenge.sh /workspace/jarvis-reference-ui-fixed 26555aa6c59fdd4dd2e190defcdf49b983305555 /workspace/jarvis-reference-review-results/gaze-v2-red-2655",
+  "run": 27,
+  "pass": 25,
+  "fail": 2,
+  "skip": 0,
+  "exit": 1,
+  "failures": [
+    "Uncoupled inner/outer jaw for FF jaw=0.0 cue=0.45",
+    "FF jaw=0.25 cue=0.4 shared opening0.224 exceeds budget0.2"
+  ],
+  "v1Status": "Unchanged original26 remains archived and previously passed on26555; V2 changes the proved obsolete exact double-mapping requirement explicitly.",
+  "limits": "Synthetic actual Kotlin inputs; not phonetic/audio/device acceptance. Geometry and visuals remain mandatory.",
+  "sha256": {
+    "docs/evidence/momega1/reference-review/gaze-v2-red-2655-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/momega1/reference-review/gaze-v2-red-2655-junit.txt": "2aa20951cc41cc59a29e57a85feb04fba8b4d318bedf292e8261d94f8151f7fe",
+    "docs/evidence/momega1/reference-review/gaze-v2-red-2655-junit.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "tools/jarvis-reference-review/MapperMotionV2ChallengeTest.kt": "6225afb286d77c27fe3ffb0073e9b77997a270e55eeac35054615d8cd4aff3ea",
+    "tools/jarvis-reference-review/ObservedGazeChallengeTest.kt": "ac7f44ec7fd166fe6c30e9666702ea819455c549539c0bffb716f04923b4fa45",
+    "tools/jarvis-reference-review/run-gaze-v2-challenge.sh": "0f22b6350955a7013e3f2d43b47c99c1991cb8916107fb88ccdb20fad950e82f"
+  }
+}

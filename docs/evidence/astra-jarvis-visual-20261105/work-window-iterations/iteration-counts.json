@@ -1,0 +1,243 @@
+{
+  "warning": "Runs overlap. Names containing green are intentions, not outcomes. See actual counts and exit codes. Compile failures executed zero tests.",
+  "runs": [
+    {
+      "label": "work-window-red",
+      "baseCommit": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": null,
+      "counts": {
+        "tests": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "work-window-red/receipt.json"
+    },
+    {
+      "label": "work-window-avatar-red",
+      "baseCommit": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": null,
+      "counts": {
+        "tests": 14,
+        "passed": 0,
+        "failed": 14,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "work-window-avatar-red/receipt.json"
+    },
+    {
+      "label": "stop-early-return-red",
+      "baseCommit": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": null,
+      "counts": {
+        "tests": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "stop-early-return-red/receipt.json"
+    },
+    {
+      "label": "stop-early-return-red-retry",
+      "baseCommit": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": null,
+      "counts": {
+        "tests": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "stop-early-return-red-retry/receipt.json"
+    },
+    {
+      "label": "work-window-avatar-green-attempt1",
+      "baseCommit": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": null,
+      "counts": {
+        "tests": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "work-window-avatar-green-attempt1/receipt.json"
+    },
+    {
+      "label": "work-window-avatar-green-attempt2",
+      "baseCommit": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": null,
+      "counts": {
+        "tests": 99,
+        "passed": 93,
+        "failed": 6,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "work-window-avatar-green-attempt2/receipt.json"
+    },
+    {
+      "label": "phone-approval-red",
+      "baseCommit": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "506148db112c5873405cca54d6bab55d657955245d5943d2f8aef6b74518334a",
+      "counts": {
+        "tests": 16,
+        "passed": 12,
+        "failed": 4,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "phone-approval-red/receipt.json"
+    },
+    {
+      "label": "work-window-avatar-green-attempt3",
+      "baseCommit": "2859f18d94cb56e2b1f280db73ca785cb58d2459",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "03724f76323b734463527ac7f7183c7acdf738a26ce07c69410811184ec0887c",
+      "counts": {
+        "tests": 127,
+        "passed": 110,
+        "failed": 17,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "work-window-avatar-green-attempt3/receipt.json"
+    },
+    {
+      "label": "intent-window-lifecycle-red",
+      "baseCommit": "cc2848bb952e6568bcc627718691f41a65fb32c9",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "07f2c9b7b1a56d0021451d4921ea6e773d4e931dc84f63cdf57cba145d9dc9b5",
+      "counts": {
+        "tests": 6,
+        "passed": 0,
+        "failed": 6,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "intent-window-lifecycle-red/receipt.json"
+    },
+    {
+      "label": "integrated-lifecycle-green-attempt1",
+      "baseCommit": "7159aba8ca29d71d779e7b1b83efd00a3bee0b3f",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "793a98e523eeb7cee6946d99b052451fc1f1ed818b0fb1317dd0392d94994488",
+      "counts": {
+        "tests": 196,
+        "passed": 196,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "receipt": "integrated-lifecycle-green-attempt1/receipt.json"
+    },
+    {
+      "label": "phone-density-check",
+      "baseCommit": "8c851a09d7c641bdfc02d5e2d2c432cd3fda0e8c",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "9c34edce566111f51b8989f6e8c5de5ce6cac1f64bc2b3c993c3426d216090d7",
+      "counts": {
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "phone-density-check/receipt.json"
+    },
+    {
+      "label": "phone-density-green",
+      "baseCommit": "8c851a09d7c641bdfc02d5e2d2c432cd3fda0e8c",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "583831e55f8401a2007b6b8ee0474d3a485a72ca1682b2e2e66a244dfa14246c",
+      "counts": {
+        "tests": 23,
+        "passed": 23,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "receipt": "phone-density-green/receipt.json"
+    },
+    {
+      "label": "final-cockpit-validation",
+      "baseCommit": "9468eb87cd875c5e07f689aeb53767880ccd6765",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "counts": {
+        "tests": 275,
+        "passed": 274,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "final-cockpit-validation/receipt.json"
+    },
+    {
+      "label": "real-scroll-red",
+      "baseCommit": "9468eb87cd875c5e07f689aeb53767880ccd6765",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "4a1c63c1a060be9d2c7dc85d151d901bdf77b3c1bd4ad06a27ede621ebdfc7a0",
+      "counts": {
+        "tests": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "real-scroll-red/receipt.json"
+    },
+    {
+      "label": "real-scroll-green",
+      "baseCommit": "9468eb87cd875c5e07f689aeb53767880ccd6765",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "8a7ffa9d72cf12f9ee9139b6ad8a68957955262b13168669c39c934661d15e56",
+      "counts": {
+        "tests": 3,
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "real-scroll-green/receipt.json"
+    },
+    {
+      "label": "real-scroll-red-corrected",
+      "baseCommit": "9468eb87cd875c5e07f689aeb53767880ccd6765",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "c0b2d0b288219e7560f44ba774f07365153d81f3e454ed3606020b0e5ee01964",
+      "counts": {
+        "tests": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "receipt": "real-scroll-red-corrected/receipt.json"
+    },
+    {
+      "label": "final-scroll-cockpit-validation",
+      "baseCommit": "7c3523cde9dae302a52d69818867a9abe8cf0fb7",
+      "sourceUnchanged": true,
+      "sourcePatchSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "counts": {
+        "tests": 39,
+        "passed": 39,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "receipt": "final-scroll-cockpit-validation/receipt.json"
+    }
+  ]
+}

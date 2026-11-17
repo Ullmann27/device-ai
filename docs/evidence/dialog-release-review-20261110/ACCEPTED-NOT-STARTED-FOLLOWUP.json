@@ -1,0 +1,31 @@
+{
+  "status": "WIP_ANDROID_NOT_RUN",
+  "base_local": "934bd07a195d11e510f2ba0d372fdfd2e7123021",
+  "base_remote": "dab14e19ce2e65eb769dcc81a753277f35c98d5c",
+  "integration_owner": "root / PR739 / integration/continuum-cinema-apk53-20261110",
+  "integration_remote_at_review": "0e8f6c75eb667abb3b2c23e52c59bacbdfa59a47",
+  "change": "All five direct owner research callers require idle admission before completion. An accepted grant is cancelled when busy or the local executor is shut down, with one scoped honest nonexecution notice and no composer write.",
+  "compatibility": "The existing four-parameter confirmation entry remains for a model awaiting approval while busy. No authority expansion or research execution change. Production executor shutdown occurs only during onDestroy on the UI lifecycle path.",
+  "scope": "Existing captured session, presentation revision, responded and noticeEmitted guards suppress old-session, replaced-ticket and duplicate output.",
+  "android_regressions": {
+    "suite": "at.heinz.deviceai.ResearchChatApprovalUiTest",
+    "tests_prepared": 21,
+    "new_tests": 2,
+    "cases": [
+      "accepted while busy through actual topic dialog and actual direct chat caller: once, no active research, draft retained",
+      "accepted after executor shutdown through both actual callers: once, no active research, draft retained"
+    ],
+    "positive_control": "existing exactReplyApprovesOnlyTheDisplayedTicketWhileTheModelWaits remains unchanged",
+    "status": "NOT_RUN"
+  },
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "1d6d30508b2fcb06e5ac4359c5cdf8cf94a8be16d085afe9bdea46db88d5b9db",
+    "app/src/uiTest/java/at/heinz/deviceai/ResearchChatApprovalUiTest.kt": "fce84d0e6757d1dd8a4f5c778227d2640cbe7ce7335e3707c74d4312248049ea"
+  },
+  "source_checks": "git diff --check -- app/src passed; enumerated all five runResearch call sites and all confirmWebRequest callers",
+  "build": "NOT_RUN",
+  "network": "NOT_RUN",
+  "model": "NOT_RUN",
+  "next_step": "Root integrates the exact small follow-up and runs combined-source ResearchChatApprovalUiTest under its Gradle lease.",
+  "rollback": "Revert only this follow-up commit; earlier transcript-order and nonexecution-notice fixes remain."
+}

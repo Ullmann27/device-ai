@@ -1,0 +1,11 @@
+{
+  "recordedAt": "2026-11-07T06:44:22.442971+00:00",
+  "method": "curl HTTPS GET, no provider mutation",
+  "url": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/latest.json",
+  "catalogFile": "publisher-catalog-code47-readonly.json",
+  "catalogSha256": "d566cef201c4f53aeed7a45f77c3222ebe1bc6d065a9e3d33ef192e6768b3609",
+  "exactTwelveKeys": true,
+  "actualBinaryFetchedThisRead": false,
+  "binaryPreviouslyVerifiedEvidence": "docs/evidence/code47-apk-20261107/served-apk/verification.json",
+  "ownerSigningApprovalForCode48": "PENDING"
+}

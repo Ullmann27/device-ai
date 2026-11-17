@@ -1,0 +1,46 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tools/independence-mcp-review/canonical-reader.test.mjs",
+    "tools/independence-mcp-review/canonical-http.test.mjs"
+  ],
+  "before": {
+    "head": "1aae431d08e01342ed509b57513e73e118fdd877",
+    "status": "",
+    "files": {
+      ".github/continuum/coding-mcp-canonical-check.mjs": "03ab6cff39e414e6ad3e4fffc2bf877b963721477af4956e2a814e98f81ef3ce",
+      ".github/continuum/coding-mcp-process.test.mjs": "0e25142e66f445f6dd3f47a0a874036eb8214151ef9303a03e3a2830180456c0",
+      ".github/continuum/coding-mcp-reader-worker.mjs": "4f4a3db56f91630377ee39ab85dedb2516068fba8fca6266484a0df1480b8532",
+      ".github/continuum/coding-mcp-reader.mjs": "e124787328b07644faded714221fbdb20f8bf6ef99402ac497f0f68badf3a847",
+      ".github/continuum/coding-mcp-server.mjs": "8c6f9842b1c8b00411ec94471e86f11fe08b57f9596db3d13941048218bc8791",
+      ".github/continuum/coding-mcp.test.mjs": "c5aacd59e44786b5b28617056a253fb9afd25f53b16277fe31968e4a0bca6f93",
+      ".github/continuum/coding-service-reader.mjs": "740dbaa5b550b7887cfdbef4d41f8ea778b4c45bac9a0deae7deb7cff1dd607b",
+      ".github/continuum/coding-service-store.mjs": "52ee739aa8fa44c5a64b504b45a818fc058d5799c76317abac1bdff564b34fad",
+      ".github/continuum/coding-service-worker.mjs": "f22a011fa9ac817bcebd8796cbbafc25a6593b2aafd2c56a5332933419e70ee8",
+      ".github/continuum/coding-service.mjs": "53b38e3e5fcb40f4f5339e291d57f12f013c25e796580a8355f702f8b262a827"
+    }
+  },
+  "after": {
+    "head": "1aae431d08e01342ed509b57513e73e118fdd877",
+    "status": "",
+    "files": {
+      ".github/continuum/coding-mcp-canonical-check.mjs": "03ab6cff39e414e6ad3e4fffc2bf877b963721477af4956e2a814e98f81ef3ce",
+      ".github/continuum/coding-mcp-process.test.mjs": "0e25142e66f445f6dd3f47a0a874036eb8214151ef9303a03e3a2830180456c0",
+      ".github/continuum/coding-mcp-reader-worker.mjs": "4f4a3db56f91630377ee39ab85dedb2516068fba8fca6266484a0df1480b8532",
+      ".github/continuum/coding-mcp-reader.mjs": "e124787328b07644faded714221fbdb20f8bf6ef99402ac497f0f68badf3a847",
+      ".github/continuum/coding-mcp-server.mjs": "8c6f9842b1c8b00411ec94471e86f11fe08b57f9596db3d13941048218bc8791",
+      ".github/continuum/coding-mcp.test.mjs": "c5aacd59e44786b5b28617056a253fb9afd25f53b16277fe31968e4a0bca6f93",
+      ".github/continuum/coding-service-reader.mjs": "740dbaa5b550b7887cfdbef4d41f8ea778b4c45bac9a0deae7deb7cff1dd607b",
+      ".github/continuum/coding-service-store.mjs": "52ee739aa8fa44c5a64b504b45a818fc058d5799c76317abac1bdff564b34fad",
+      ".github/continuum/coding-service-worker.mjs": "f22a011fa9ac817bcebd8796cbbafc25a6593b2aafd2c56a5332933419e70ee8",
+      ".github/continuum/coding-service.mjs": "53b38e3e5fcb40f4f5339e291d57f12f013c25e796580a8355f702f8b262a827"
+    }
+  },
+  "sourceStable": true,
+  "classpath": "/workspace/independence-profile-773fbc94/classes:/workspace/synapse-ui-candidate/app/build/tmp/kotlin-classes/debug:/workspace/continuum-build-env/native-graph-deps/json-20240303.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+  "exitCode": 0,
+  "elapsedSeconds": 10.355649471282959
+}

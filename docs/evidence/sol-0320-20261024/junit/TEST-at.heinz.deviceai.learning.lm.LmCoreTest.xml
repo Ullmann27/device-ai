@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.lm.LmCoreTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:37" hostname="5c9e18abbd30" time="1.863">
+  <properties/>
+  <testcase name="predictionsNeverDependOnFutureTokens" classname="at.heinz.deviceai.learning.lm.LmCoreTest" time="0.056"/>
+  <testcase name="tokenizerRoundTripsAnyTextAndIsBoundToItsMerges" classname="at.heinz.deviceai.learning.lm.LmCoreTest" time="0.008"/>
+  <testcase name="everyOperationHasAnExactGradient" classname="at.heinz.deviceai.learning.lm.LmCoreTest" time="0.019"/>
+  <testcase name="bothArchitecturesHaveExactEndToEndGradients" classname="at.heinz.deviceai.learning.lm.LmCoreTest" time="0.262"/>
+  <testcase name="bothArchitecturesLearnARepeatedPhrase" classname="at.heinz.deviceai.learning.lm.LmCoreTest" time="1.442"/>
+  <testcase name="trainingIsDeterministicForAFixedSeedAndThreadCount" classname="at.heinz.deviceai.learning.lm.LmCoreTest" time="0.06"/>
+  <testcase name="checkpointsRoundTripAndRejectDamageOrForeignTokenizers" classname="at.heinz.deviceai.learning.lm.LmCoreTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

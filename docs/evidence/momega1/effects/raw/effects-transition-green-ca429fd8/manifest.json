@@ -1,0 +1,63 @@
+{
+  "sourceCommit": "ca429fd81007473f1b0c0e66be6112f78f652613",
+  "scope": "actual pure production helper and Painter; no Android stubs",
+  "inputs": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+      "gitBlob": "00690eed087675cb74dffaf4a8bec765de8b2bb3",
+      "sha256": "976136b814b208de8e88cf9f5055b293a91be93c10b5373a1cbb6952af334169"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumTaskEffects.kt",
+      "gitBlob": "88c73b9ea9a1410b63de5fb862b7a648f63d5d1c",
+      "sha256": "99f524b13d5c0c73e20949c1115e2c9d16f682f9a39cf2959084ede1beae0874"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumTaskEffectsTest.kt",
+      "gitBlob": "886d742528414225332ead70346f6c5395b8ff8c",
+      "sha256": "6638817416f244349b015b06c8fd6388318ba164e4c4db182746e4e932f3ec62"
+    }
+  ],
+  "cpuAffinity": "2",
+  "compileCommand": [
+    "taskset",
+    "-c",
+    "2",
+    "/workspace/momega1-build-env/kotlinc/bin/kotlinc",
+    "-J-XX:ActiveProcessorCount=1",
+    "-J-Xmx512m",
+    "/workspace/momega1-build-env/effects-transition-green-ca429fd8/source/ContinuumPainter.kt",
+    "/workspace/momega1-build-env/effects-transition-green-ca429fd8/source/ContinuumTaskEffects.kt",
+    "/workspace/momega1-build-env/effects-transition-green-ca429fd8/source/ContinuumTaskEffectsTest.kt",
+    "-cp",
+    "/workspace/momega1-build-env/jvm-deps/junit-4.13.2.jar:/workspace/momega1-build-env/jvm-deps/hamcrest-core-1.3.jar:/workspace/momega1-build-env/kotlinc/lib/kotlin-stdlib.jar",
+    "-d",
+    "/workspace/momega1-build-env/effects-transition-green-ca429fd8/classes"
+  ],
+  "testCommand": [
+    "taskset",
+    "-c",
+    "2",
+    "/workspace/momega1-build-env/jdk17/bin/java",
+    "-XX:ActiveProcessorCount=1",
+    "-Xmx512m",
+    "-cp",
+    "/workspace/momega1-build-env/effects-transition-green-ca429fd8/classes:/workspace/momega1-build-env/jvm-deps/junit-4.13.2.jar:/workspace/momega1-build-env/jvm-deps/hamcrest-core-1.3.jar:/workspace/momega1-build-env/kotlinc/lib/kotlin-stdlib.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.ui.ContinuumTaskEffectsTest"
+  ],
+  "dependencies": [
+    {
+      "path": "/workspace/momega1-build-env/jvm-deps/junit-4.13.2.jar",
+      "sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3"
+    },
+    {
+      "path": "/workspace/momega1-build-env/jvm-deps/hamcrest-core-1.3.jar",
+      "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+    },
+    {
+      "path": "/workspace/momega1-build-env/kotlinc/lib/kotlin-stdlib.jar",
+      "sha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+    }
+  ]
+}

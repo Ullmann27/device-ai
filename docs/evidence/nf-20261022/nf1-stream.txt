@@ -1,0 +1,59 @@
+JAR 3a60683a6a225e6ee70a2ccff8d616737be92e36c5fc9084102ba2723396156e commit=4220c410 start=2026-10-22T21:24:49Z args=stream ckpt=a20515a13f74324b748a319d84d865bd7d7d6530a6a2a84406525070ad9c307a ckpt=b07ff9ccd780f6bcdb81eb4b15d148e18a0436adcbb8dcbe38ba49ed450d7327 ckpt=aa69716590d3f69e3c3af7fe6fef69edf9f7055e4aa864df60eb15c762692586 ckpt=ab535c6e211bb3cce3938dbf6e67cb148e1748f4cc6a70441f2053794bd5ed82 ckpt=542a53665dcb116f7e770f993b8b6cc750697286b6bbdfde85143ec5243a8e3b ckpt=ab97ff1e2f31cbdce6394e92b7da2c34451bcebe89b03c68249b2dc011b31118 store=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad/nf/ckpt
+NFC1 commit=68b0a33512d18570ddf450e8f9205a60dbee1c66 docs=239 tokenizer=v512 sha=296567efa53d0461a73e548615fc412afc330610ac086b8c4fc2335e74bb6224
+SPLIT DOC TRAIN docs=71 segments=2446 bytes=422773 sha=86ad7f86d8073e349150e45ac86d09d75716fe9b31160c3fa4411f1f54b6cca3
+SPLIT DOC VALIDATION docs=9 segments=395 bytes=60365 sha=e6c7c3f61377fa14f8d496f0225256916fbe29c94e50f980289a5399c2fa90e1
+SPLIT DOC TEST docs=8 segments=251 bytes=43124 sha=3bbb7b5b6fd5195217507cf99365cd0141cd4f7e2620402dbfb7f6bb568ac7dd
+SPLIT CODE TRAIN docs=126 segments=6138 bytes=1306918 sha=78324e710c6cb10359846df5922cbdf6b27caa42eed8b0e44d12084baa6c0c5c
+SPLIT CODE VALIDATION docs=14 segments=318 bytes=66085 sha=68cb72c9a04aa0160d1b1892828d64405c88c5f82b12be9224773c3e4fdb4774
+SPLIT CODE TEST docs=11 segments=475 bytes=100826 sha=ac3881236bac73db6baca830e2e037395a0bf5eca750466bc2407a98522c3b25
+STREAM documents=19 segments=572 bytes=120370 codeVal=318 docVal=395
+STREAM BASE base=G-S seed=1 streamBPB=4.1877 codeValBPB=4.1169 docValBPB=2.9518 updates=0 updateSeconds=0.0
+STREAM CARRY base=G-S seed=1 streamBPB=4.1922 codeValBPB=4.1169 docValBPB=2.9518 updates=0 updateSeconds=0.0
+STREAM FT base=G-S seed=1 streamBPB=3.1943 codeValBPB=3.1493 docValBPB=4.4060 updates=572 updateSeconds=7.4
+STREAM REPLAY base=G-S seed=1 streamBPB=3.1974 codeValBPB=3.1204 docValBPB=3.3320 updates=572 updateSeconds=14.3
+STREAM ADAPT base=G-S seed=1 streamBPB=3.5822 codeValBPB=3.5323 docValBPB=3.7424 updates=572 updateSeconds=9.1 docValAdapterOff=2.9518 baseUnchanged=true
+STREAM SURPRISE base=G-S seed=1 streamBPB=3.7016 codeValBPB=3.5882 docValBPB=3.6589 updates=242 updateSeconds=3.8 docValAdapterOff=2.9518 baseUnchanged=true
+STREAM TWO base=G-S seed=1 streamBPB=3.5840 codeValBPB=3.5338 docValBPB=3.7333 updates=572 updateSeconds=9.1 docValAdapterOff=2.9518 baseUnchanged=true
+STREAM TWOS base=G-S seed=1 streamBPB=3.7023 codeValBPB=3.5897 docValBPB=3.6590 updates=244 updateSeconds=4.0 docValAdapterOff=2.9518 baseUnchanged=true
+STREAM BASE base=G-S seed=2 streamBPB=4.1800 codeValBPB=4.1038 docValBPB=2.9744 updates=0 updateSeconds=0.0
+STREAM CARRY base=G-S seed=2 streamBPB=4.1784 codeValBPB=4.1038 docValBPB=2.9744 updates=0 updateSeconds=0.0
+STREAM FT base=G-S seed=2 streamBPB=3.1843 codeValBPB=3.1283 docValBPB=4.3055 updates=572 updateSeconds=8.3
+STREAM REPLAY base=G-S seed=2 streamBPB=3.1973 codeValBPB=3.1036 docValBPB=3.3019 updates=572 updateSeconds=14.5
+STREAM ADAPT base=G-S seed=2 streamBPB=3.5905 codeValBPB=3.5607 docValBPB=3.7271 updates=572 updateSeconds=8.5 docValAdapterOff=2.9744 baseUnchanged=true
+STREAM SURPRISE base=G-S seed=2 streamBPB=3.7031 codeValBPB=3.6006 docValBPB=3.7232 updates=245 updateSeconds=4.2 docValAdapterOff=2.9744 baseUnchanged=true
+STREAM TWO base=G-S seed=2 streamBPB=3.5929 codeValBPB=3.5433 docValBPB=3.7241 updates=572 updateSeconds=9.1 docValAdapterOff=2.9744 baseUnchanged=true
+STREAM TWOS base=G-S seed=2 streamBPB=3.7019 codeValBPB=3.5987 docValBPB=3.7035 updates=243 updateSeconds=4.3 docValAdapterOff=2.9744 baseUnchanged=true
+STREAM BASE base=G-S seed=3 streamBPB=4.1220 codeValBPB=4.0579 docValBPB=2.9558 updates=0 updateSeconds=0.0
+STREAM CARRY base=G-S seed=3 streamBPB=4.1156 codeValBPB=4.0579 docValBPB=2.9558 updates=0 updateSeconds=0.0
+STREAM FT base=G-S seed=3 streamBPB=3.1676 codeValBPB=3.0888 docValBPB=4.2479 updates=572 updateSeconds=8.3
+STREAM REPLAY base=G-S seed=3 streamBPB=3.1682 codeValBPB=3.0937 docValBPB=3.2863 updates=572 updateSeconds=15.0
+STREAM ADAPT base=G-S seed=3 streamBPB=3.5719 codeValBPB=3.5137 docValBPB=3.6346 updates=572 updateSeconds=8.6 docValAdapterOff=2.9558 baseUnchanged=true
+STREAM SURPRISE base=G-S seed=3 streamBPB=3.6808 codeValBPB=3.5590 docValBPB=3.5939 updates=252 updateSeconds=4.4 docValAdapterOff=2.9558 baseUnchanged=true
+STREAM TWO base=G-S seed=3 streamBPB=3.5710 codeValBPB=3.5066 docValBPB=3.6207 updates=572 updateSeconds=8.5 docValAdapterOff=2.9558 baseUnchanged=true
+STREAM TWOS base=G-S seed=3 streamBPB=3.6756 codeValBPB=3.5542 docValBPB=3.5747 updates=259 updateSeconds=4.4 docValAdapterOff=2.9558 baseUnchanged=true
+STREAM BASE base=D-S seed=1 streamBPB=4.1582 codeValBPB=4.0867 docValBPB=2.9954 updates=0 updateSeconds=0.0
+STREAM CARRY base=D-S seed=1 streamBPB=4.1449 codeValBPB=4.0867 docValBPB=2.9954 updates=0 updateSeconds=0.0
+STREAM FT base=D-S seed=1 streamBPB=3.1884 codeValBPB=3.1139 docValBPB=4.3389 updates=572 updateSeconds=9.5
+STREAM REPLAY base=D-S seed=1 streamBPB=3.2051 codeValBPB=3.1060 docValBPB=3.3378 updates=572 updateSeconds=17.3
+STREAM ADAPT base=D-S seed=1 streamBPB=3.5951 codeValBPB=3.5513 docValBPB=3.7993 updates=572 updateSeconds=9.8 docValAdapterOff=2.9954 baseUnchanged=true
+STREAM SURPRISE base=D-S seed=1 streamBPB=3.7052 codeValBPB=3.5845 docValBPB=3.6341 updates=238 updateSeconds=4.8 docValAdapterOff=2.9954 baseUnchanged=true
+STREAM TWO base=D-S seed=1 streamBPB=3.5981 codeValBPB=3.5525 docValBPB=3.7879 updates=572 updateSeconds=10.3 docValAdapterOff=2.9954 baseUnchanged=true
+STREAM TWOS base=D-S seed=1 streamBPB=3.7097 codeValBPB=3.5902 docValBPB=3.6275 updates=233 updateSeconds=4.4 docValAdapterOff=2.9954 baseUnchanged=true
+STREAM BASE base=D-S seed=2 streamBPB=4.1267 codeValBPB=4.0556 docValBPB=2.9948 updates=0 updateSeconds=0.0
+STREAM CARRY base=D-S seed=2 streamBPB=4.1268 codeValBPB=4.0556 docValBPB=2.9948 updates=0 updateSeconds=0.0
+STREAM FT base=D-S seed=2 streamBPB=3.1887 codeValBPB=3.1411 docValBPB=4.3532 updates=572 updateSeconds=9.1
+STREAM REPLAY base=D-S seed=2 streamBPB=3.2132 codeValBPB=3.1294 docValBPB=3.3611 updates=572 updateSeconds=17.0
+STREAM ADAPT base=D-S seed=2 streamBPB=3.5935 codeValBPB=3.5793 docValBPB=3.7706 updates=572 updateSeconds=9.9 docValAdapterOff=2.9948 baseUnchanged=true
+STREAM SURPRISE base=D-S seed=2 streamBPB=3.7046 codeValBPB=3.6259 docValBPB=3.7313 updates=247 updateSeconds=4.7 docValAdapterOff=2.9948 baseUnchanged=true
+STREAM TWO base=D-S seed=2 streamBPB=3.5979 codeValBPB=3.5838 docValBPB=3.7922 updates=572 updateSeconds=10.0 docValAdapterOff=2.9948 baseUnchanged=true
+STREAM TWOS base=D-S seed=2 streamBPB=3.7087 codeValBPB=3.6270 docValBPB=3.7228 updates=244 updateSeconds=4.9 docValAdapterOff=2.9948 baseUnchanged=true
+STREAM BASE base=D-S seed=3 streamBPB=4.1689 codeValBPB=4.0918 docValBPB=2.9933 updates=0 updateSeconds=0.0
+STREAM CARRY base=D-S seed=3 streamBPB=4.1677 codeValBPB=4.0918 docValBPB=2.9933 updates=0 updateSeconds=0.0
+STREAM FT base=D-S seed=3 streamBPB=3.1894 codeValBPB=3.1290 docValBPB=4.3240 updates=572 updateSeconds=9.4
+STREAM REPLAY base=D-S seed=3 streamBPB=3.2093 codeValBPB=3.1263 docValBPB=3.3654 updates=572 updateSeconds=17.2
+STREAM ADAPT base=D-S seed=3 streamBPB=3.5969 codeValBPB=3.5592 docValBPB=3.7180 updates=572 updateSeconds=10.4 docValAdapterOff=2.9933 baseUnchanged=true
+STREAM SURPRISE base=D-S seed=3 streamBPB=3.7168 codeValBPB=3.6089 docValBPB=3.7147 updates=242 updateSeconds=4.5 docValAdapterOff=2.9933 baseUnchanged=true
+STREAM TWO base=D-S seed=3 streamBPB=3.6002 codeValBPB=3.5672 docValBPB=3.7126 updates=572 updateSeconds=11.1 docValAdapterOff=2.9933 baseUnchanged=true
+STREAM TWOS base=D-S seed=3 streamBPB=3.7228 codeValBPB=3.6157 docValBPB=3.7024 updates=241 updateSeconds=4.7 docValAdapterOff=2.9933 baseUnchanged=true
+PEAK heapMb=314
+exit=0 end=2026-10-22T21:36:43Z

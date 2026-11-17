@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:36" hostname="b50d54a1ac03" time="0.063">
+  <properties/>
+  <testcase name="aCorruptBoundSnapshotIsQuarantinedWhileOwnerFactsRemainAvailable" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.006"/>
+  <testcase name="theSameExplicitConversationKeepsItsTopicAcrossCoreRecreation" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.004"/>
+  <testcase name="explicitCorrectionResetsGroundedTopicButNeverFactsOrWeights" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.004"/>
+  <testcase name="invalidIdentitiesCannotModifyTheCurrentDialogueOrOwnerState" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.004"/>
+  <testcase name="withdrawalCannotLeaveARevokedQuestionInTheLocalModelPrompt" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.006"/>
+  <testcase name="anExplicitConversationNeverAdoptsUnboundLegacyHistory" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.003"/>
+  <testcase name="aLegacyCallCannotBorrowAnExplicitlyBoundHistory" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.004"/>
+  <testcase name="theSameRuntimeIdentityKeepsItsGroundedDialogueContextAcrossRecreation" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.006"/>
+  <testcase name="anotherRuntimeCannotPutAForeignQuestionIntoItsLocalModelPrompt" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.003"/>
+  <testcase name="switchingBackAfterAnotherConversationAsksFreshInsteadOfBorrowingItsTopic" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.008"/>
+  <testcase name="anUnansweredNewTopicCannotResurrectAnOlderQuestionInTheLocalPrompt" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.004"/>
+  <testcase name="anotherExplicitConversationCannotBorrowThePreviousTopic" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.004"/>
+  <testcase name="anOldResetCannotDiscardANewerBoundConversation" classname="at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

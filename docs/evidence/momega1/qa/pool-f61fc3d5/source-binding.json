@@ -1,0 +1,204 @@
+{
+  "baselineSourceBlobMatchesMomega": true,
+  "candidateCommit": "f61fc3d56b9437d762b78625f748e64f887ef5f6",
+  "testGitBlob": "7acd71b9a7bf27a6196d811d12650082454fe388",
+  "artifacts": [
+    {
+      "path": "/workspace/momega1-build-env/pool-review/baseline/ChiefWorkerPool.kt",
+      "sha256": "c4277f500e30c5ff41b671c052ef03b294adf6cba29fe315650647a73605b8f0",
+      "gitBlob": "3fbbc651e0e3637826ab73646a7360a4f565967a"
+    },
+    {
+      "path": "/workspace/momega1-build-env/pool-review/candidate/ChiefWorkerPool.kt",
+      "sha256": "14c33a1ab7b82db27d5c295ae3eaaefce46161cfb68ea1cca283ef85b164ac7a",
+      "gitBlob": "6023e52e41e62bfa94ec6806ad64baf42557b8cd"
+    },
+    {
+      "path": "/workspace/momega1-build-env/pool-review/ChiefWorkerPoolTest.kt",
+      "sha256": "650f81e4e1e9e837a411a1c2c61ba63cf54ec8cb5df0da9cca0960f518ab2294",
+      "gitBlob": "7acd71b9a7bf27a6196d811d12650082454fe388"
+    },
+    {
+      "path": "/workspace/momega1-android/app/src/main/java/at/heinz/deviceai/chief/ChiefJobs.kt",
+      "sha256": "32e83e2d0357c77a6bc864ff1e6268d74db79b6c04bf37bd08a16452004fde72",
+      "gitBlob": "f42b22e2d49fb9f8f3c46a385953d83a0a6cb27b"
+    },
+    {
+      "path": "/workspace/momega1-android/app/src/test/java/at/heinz/deviceai/chief/ChiefBrainWiringTest.kt",
+      "sha256": "3fc90fc6ef9f5cf410e567f589c66f91936b4733f85d6a1f02d1c80305aaae73",
+      "gitBlob": "3b0f9049b27e974b74f0932f7cebd1ecadd5188a"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/AccessibilityControlPort.class",
+      "sha256": "ac339c154479e4b4b42779e8b56599e1fa21e85ecc0b48f073b48a7d09836603"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefJobDeps$1.class",
+      "sha256": "d51cbaf3b84d3823fe5fff6c42d2856fd80c4b1338199e17af8dd9449c2c7968"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefJobDeps.class",
+      "sha256": "a1e1e21c58ed03d67cec2218a25545642dd5a77e7d878098fe48de6fb121b944"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefJobs$agentJob$1.class",
+      "sha256": "cd950b6a73a06987e67568f5471ac4921af9083e0f1903ff8be35083b1978cdc"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefJobs$agentJob$model$1.class",
+      "sha256": "6655cfe93cecf22eff3b0bfa40e3522fd55b9d471141088674799d5538dd8263"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefJobs.class",
+      "sha256": "d335c629ad823294c0171c7b9a3605aa034c55b6d4b080ce7beeb3b6b5ce2a01"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefMemory.class",
+      "sha256": "d839c558722ae2753fd158cd3ff12b7a72d66840ae54aabe640f67d6ce23f9f2"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefMemoryItem.class",
+      "sha256": "7bdfb14e6813560208e190f8f13abbd808ae7ef290e63c223dd301ae298b96ae"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefMemoryPort.class",
+      "sha256": "8ef4e9f04e6c72fa7e915794984522da02397ffe5a7490cc4a3328fea51adabf"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefTurnBridge.class",
+      "sha256": "3febf5690d30c5f6c57b1b7762ed4c88c5c1003615a03fe86a081204eb511077"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefWiring.class",
+      "sha256": "e71a80e95717f08e7e45b6678026d769660b21b4e35b810c2dc12624ef6d2412"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefWorkerPool$Slot.class",
+      "sha256": "0c273378f151dfcf08562f64ecfcc57c8763a419eff2e8c4ceda5737b0011b65"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ChiefWorkerPool.class",
+      "sha256": "18b1e7d3583eb533da442806aba53c335d55b1682c34b72df4fbfed2c37ee2a0"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ControlPath.class",
+      "sha256": "687d501e6d61db7c3293d2a5a97ec24c8a28d3507e422f691284077e0ffd11da"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlArguments.class",
+      "sha256": "dca06e2277eca1958196c94a847ce6e228da6a7cd6749dc636abe06da159adc9"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlCapabilities$Companion.class",
+      "sha256": "581fc05b1e848ef481ab013f733aebb47b4583f2db36a59cc8d053fc196b818a"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlCapabilities.class",
+      "sha256": "532a7c91c2fe7f06f2c81b3dc32c5dee833aba7687f14bd302df725171b437bb"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlRouter$Route$Accessibility.class",
+      "sha256": "91428fe6316b97c791117ce05e9c4d2877111eb334db69bec065877f432ec6cd"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlRouter$Route$Report.class",
+      "sha256": "d63bbeca906b342b53408005eaeabc338c12d3065cac99764e2db07c4a1d9ab6"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlRouter$Route$Shell.class",
+      "sha256": "39a3889de96c276f9a22c62831dec3a52c07b048ccf4ac7e82d8811e3b76861d"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlRouter$Route.class",
+      "sha256": "740f57742b0de48f6eb48014bb856b258e11d6fe60a96d17eff2e65a3ae84454"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlRouter.class",
+      "sha256": "148367d21ce4db90fb71f9e529568242e135e69c994f8476a6ecf4984d1ee949"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceControlTools.class",
+      "sha256": "983adfc671d7bf63facb611ad4d62b5d5b7a2310b11b59fcb046cb6b9ba70c18"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/DeviceDispatchUncertain.class",
+      "sha256": "0910cbee5ebb17841f47349c913d373b9e8849a617f8705cdae639ca94a35ab4"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/LayersMemoryPort.class",
+      "sha256": "98349e87c5ba2047c7ff18af67242c09488b9ec39a94673766a79d278c209910"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/RoutineDispatcher$1.class",
+      "sha256": "0e9ff913d714f61754f8b9c463c903fdd743c3bffc51878d1eeed4c349677413"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/RoutineDispatcher$WhenMappings.class",
+      "sha256": "901ec54c681a2ff3a37b136b8aaab85037634bb65df46ac5c629c6406754b64f"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/RoutineDispatcher.class",
+      "sha256": "70947d58f44e310619c2b31e2b52fe80f5531804e3a4ab7dd20fe806ae1605e1"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/ShizukuInputCommands.class",
+      "sha256": "00379fdec60728064d8d1d2177c62ac59edea17749d014752c58231c2f3bf431"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/TurnLifecycle$1.class",
+      "sha256": "95bf38c4fa618748562293cb048d6cb989839485a30141c2503211a9c86bcf07"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/TurnLifecycle$Companion$WhenMappings.class",
+      "sha256": "72062bc3d6dc141b3aef7fdeb2151657aa9dc83bcc5c0d5132373a93cde524e8"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/TurnLifecycle$Companion.class",
+      "sha256": "f90bbd1c85f6b0655c4b8ddc608465ad00a45e6b30e47bd86b6ba7f351f0dfe6"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/TurnLifecycle.class",
+      "sha256": "97b19ef6d561cc3cc5647227dbaa8cb108d388a253d21566a85bc17eae96284e"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/TurnMilestone.class",
+      "sha256": "55e38c62a905158521de11e3d62f56865bbe18488df7b93bd8769b519e7ec5ab"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/TurnPhase.class",
+      "sha256": "c3914e183ff7d72c88332f0de1d625f38b163ae0f1178bfd8c4b30ded361f428"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/UnattendedApproval.class",
+      "sha256": "f8f886396562fbaaa11f0a7d18b2f9086d5a68c93e0f56b2871d484d196e797b"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/WorkerBlocked.class",
+      "sha256": "64b3e6977d194150929aead89309cbe293f2e214a8a3bfcf34477e25d1a30224"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/WorkerBrief.class",
+      "sha256": "0e565fabd6a5803721de30ab8db7c4ec1171dc77df0188f03118518484d794fe"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/WorkerJob$DefaultImpls.class",
+      "sha256": "8f149c631a09610c8c8c2032a4a5f8eab8137b1e94a67df9e6e75e9043ece4f4"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/WorkerJob.class",
+      "sha256": "4c4d1b349f77fc327823e5fd8969790e946201954e5257383a37a86882e33923"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/WorkerReport.class",
+      "sha256": "85e55505f64234eae63cb60ee2a393272514c8faee4a99b204477e058e83b910"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/WorkerScope.class",
+      "sha256": "2932b8861da4fe10f23f66ec0f4573b720f6ba650ce95a040986257bcf00df2e"
+    },
+    {
+      "path": "/workspace/momega1-android/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/chief/WorkerStatus.class",
+      "sha256": "82afc8ee37d13c3db64d9255aa72cc9975530157af7becc68f7746529b57b434"
+    }
+  ]
+}

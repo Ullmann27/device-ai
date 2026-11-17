@@ -1,0 +1,108 @@
+✖ original exact profile alone grants fixed2CPU policy (1.654668ms)
+✖ cloned or increased profile rejected before runtime invocation (1.13896ms)
+✖ fixed CLI heap arguments cannot be mutated (0.732586ms)
+✖ legacy1.5B aggregate CPU formula is unchanged (2.865507ms)
+﹣ 7B exact remainingwall 1 yields bounded CPU 2 (0.146341ms) # SKIP
+﹣ 7B exact remainingwall 1000 yields bounded CPU 2 (0.084257ms) # SKIP
+﹣ 7B exact remainingwall 1001 yields bounded CPU 4 (0.063406ms) # SKIP
+﹣ 7B exact remainingwall 176123 yields bounded CPU 354 (0.080021ms) # SKIP
+﹣ 7B exact remainingwall 300000 yields bounded CPU 600 (0.130677ms) # SKIP
+ℹ tests 9
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 5
+ℹ todo 0
+ℹ duration_ms 96.05416
+
+✖ failing tests:
+
+test at tools/momega1-challenger/seven-b-cpu-contract.test.mjs:6:1
+✖ original exact profile alone grants fixed2CPU policy (1.654668ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-cpu-contract.test.mjs:6:73)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/momega1-challenger/seven-b-cpu-contract.test.mjs:7:1
+✖ cloned or increased profile rejected before runtime invocation (1.13896ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /INVALID_LOCAL_RESOURCE_PROFILE/. Input:
+  
+  'Error: BLOCKED_LOCAL_JOB_MEMORY_LIMIT'
+  
+      at async TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-cpu-contract.test.mjs:7:143)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: BLOCKED_LOCAL_JOB_MEMORY_LIMIT
+        at fail (file:///workspace/momega1-challenger-7b-candidate/scripts/continuum-local-model-observation.mjs:28:25)
+        at assertLocalModelJobMemoryLimit (file:///workspace/momega1-challenger-7b-candidate/scripts/continuum-local-model-observation.mjs:128:9)
+        at launchLocalModel (file:///workspace/momega1-challenger-7b-candidate/scripts/continuum-local-model-observation.mjs:134:2)
+        at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-cpu-contract.test.mjs:7:164)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3),
+    expected: /INVALID_LOCAL_RESOURCE_PROFILE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/momega1-challenger/seven-b-cpu-contract.test.mjs:8:1
+✖ fixed CLI heap arguments cannot be mutated (0.732586ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - [
+  -   '--max-old-space-size=256',
+  -   '--max-semi-space-size=16'
+  - ]
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-cpu-contract.test.mjs:8:63)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: [ '--max-old-space-size=256', '--max-semi-space-size=16' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools/momega1-challenger/seven-b-cpu-contract.test.mjs:10:1
+✖ legacy1.5B aggregate CPU formula is unchanged (2.865507ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-cpu-contract.test.mjs:10:200)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

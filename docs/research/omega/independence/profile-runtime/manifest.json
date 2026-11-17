@@ -1,0 +1,21 @@
+{
+  "source": "aa52e7e6bbe02e85a0fb22c19c8707461e0384fc",
+  "maintainedScriptSha256": "8185f66141373793a94a7e4b0505cdcb487356ffde31faf48117eec209c562f1",
+  "baseClassesManifest": "../profile-bridge/gradle-class-dependencies.sha256",
+  "runtimeClasspathEmptyEntry": false,
+  "runtimeDependencyCount": 3,
+  "compileExit": 0,
+  "checksExit": 0,
+  "checksPassed": 10,
+  "files": {
+    "checks.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "checks.log": "a570957b728942fc960be76d5f20a7b3bc4af6df25cb6c49317f4eea7f52518a",
+    "compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "compile.log": "fc5241d17d5c152231109d80ee72623f4db5f3fc29064c27e52520220b9f9476",
+    "gradle-source-sha.txt": "6cc7ff6f23d5952d3fb6de587903e4e1900aa7cc4cc593a9e8c0d406dd6e6e28",
+    "inputs.sha256": "b4a4a9d813bcf83444c0d9f80780331be3ea95bf10167f22d4530f8a827ea619",
+    "java-version.txt": "bf61371a588e139353579c26bedbc9693004380fe8e053aa012cb6f7d2c43f20",
+    "source-sha.txt": "b5ff12c780a92957c1fdd697e0e8876dcd12f8c61a3e1a3b966658aba11eb23b",
+    "source-status.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

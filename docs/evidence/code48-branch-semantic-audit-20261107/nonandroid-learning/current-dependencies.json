@@ -1,0 +1,30 @@
+{
+  "sourceSha": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "dependencies": {
+    "scripts/continuum-nvidia-ultra-review.mjs": false,
+    "scripts/continuum-neuro-agent.test.mjs": false,
+    "scripts/continuum-nvidia-ultra-review.test.mjs": false,
+    "scripts/verification/ContinuumDialogueRoutingSmoke.kt": false,
+    "scripts/android-kotlin-unit-check.sh": true,
+    "experimental/ccc1-counterexample-lab/run.mjs": false,
+    "experimental/autonomous-cycle-20261027/experiment.json": false,
+    "experimental/interactive-intelligence/fixtures/seal.json": false,
+    "docs/research/m6-independent/ewm-v2-foreign-240.jsonl": false,
+    "app/src/test/java/at/heinz/deviceai/intelligence/ewm/M6ForeignEwmProbe.kt": false,
+    "app/src/test/java/at/heinz/deviceai/intelligence/ewm/M6MetamorphicInvariantProbe.kt": false,
+    "app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm2Foreign240ReceiptTest.kt": false,
+    ".github/continuum/cre-encoder.mjs": true,
+    ".github/continuum/cre-parity.mjs": true,
+    ".github/continuum/cre-sgd-parity.mjs": true,
+    ".github/continuum/coding-orchestrator.mjs": true,
+    ".github/continuum/coding-provider.mjs": true,
+    ".github/continuum/isolated-executor.mjs": true,
+    ".github/continuum/repair-loop.mjs": true,
+    ".github/continuum/dialogue-retrieval.mjs": true,
+    "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt": true,
+    "app/src/main/java/at/heinz/deviceai/learning/Cre1ResearchLab.kt": true,
+    "app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt": true,
+    "app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm2ProductEquivalenceTest.kt": true,
+    "docs/evidence/sol-breakthroughs-20261026/grounding-independent-not-run/grounding-decision-fixtures-v1.json": true
+  }
+}

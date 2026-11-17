@@ -1,0 +1,103 @@
+{
+  "observedAt": "2026-11-06 17:26:52 UTC",
+  "serviceId": "srv-dbf1tr2vcj2c73ehpfog",
+  "deploy": {
+    "commit": {
+      "createdAt": "2026-11-06T16:41:10Z",
+      "id": "48251610d9c9519678e9fc5ef652ad8286675b7f",
+      "message": "fix(continuum): close review gaps and prepare original Code45 owner build\n\nPreserve normal lifecycle work, natural multi-sentence context and source-bound quality evidence. Local preflight: 80 targeted Android/JVM tests, NewApi lint, 44 quality-lab tests and original-package ARM64 APK/AAB assembly pass. Complete exact-source publisher gates and original signing remain required before delivery."
+    },
+    "createdAt": "2026-11-06T16:42:21.320012Z",
+    "id": "dep-dbn06r8u01pc73fpcgt0",
+    "startedAt": "2026-11-06T16:42:21.31768Z",
+    "status": "build_in_progress",
+    "trigger": "api",
+    "updatedAt": "2026-11-06T16:42:21.320012Z"
+  },
+  "queuedDeploy": {
+    "commit": {
+      "createdAt": "2026-11-06T17:02:14Z",
+      "id": "756bc68d0fb7f8522da8900fd889fd2eae2e8caf",
+      "message": "fix(continuum): finish reviewed follow-up context and freeze Code46 candidate\n\nRetain expanded previous-owner context for three concrete reviewed particle questions. RED 3/41 reproduced, then pure JVM 41/41 and integrated Android/JVM 83/83 pass. Compile, NewApi lint and original-package ARM64 unsigned APK/AAB pass. Complete original publisher QA and signing remain mandatory before delivery."
+    },
+    "createdAt": "2026-11-06T17:03:09.783024Z",
+    "id": "dep-dbn0gj5s25qs73a1vrv0",
+    "status": "queued",
+    "trigger": "api",
+    "updatedAt": "2026-11-06T17:03:09.783024Z"
+  },
+  "counts": {
+    "total": 3556,
+    "failed": 5,
+    "skipped": 20,
+    "passedBySubtraction": 3531
+  },
+  "logs": [
+    {
+      "timestamp": "2026-11-06T17:23:58.683323845Z",
+      "message": "JarvisWorkWindowDepthTest > aNarrowWindowKeepsItsSheetsInsideTheirOwnWidth FAILED"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683326257Z",
+      "message": "    java.lang.RuntimeException at JarvisWorkWindowDepthTest.kt:118"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683328584Z",
+      "message": "JarvisWorkWindowDepthTest > nonFiniteOrEmptyGeometryDrawsNothing FAILED"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683329874Z",
+      "message": "    java.lang.RuntimeException at JarvisWorkWindowDepthTest.kt:103"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683332837Z",
+      "message": "JarvisWorkWindowDepthTest > thePageRecedesFromItsPlaceInTheDocumentToTheSourceSlotOfTheDraft FAILED"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683334207Z",
+      "message": "    java.lang.RuntimeException at JarvisWorkWindowDepthTest.kt:58"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683336611Z",
+      "message": "JarvisWorkWindowDepthTest > theDocumentPlaneSettlesAsTheFirstRearLayerOfTheDraft FAILED"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683337854Z",
+      "message": "    java.lang.RuntimeException at JarvisWorkWindowDepthTest.kt:86"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683340253Z",
+      "message": "JarvisWorkWindowDepthTest > rearLayersStepBackAndUpBehindTheFrontWhileItIsOpen FAILED"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683341422Z",
+      "message": "    java.lang.RuntimeException at JarvisWorkWindowDepthTest.kt:31"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.683343855Z",
+      "message": "3556 tests completed, 5 failed, 20 skipped"
+    },
+    {
+      "timestamp": "2026-11-06T17:23:58.68336904Z",
+      "message": "QA_RED android-gradle"
+    },
+    {
+      "timestamp": "2026-11-06T17:24:17.936200152Z",
+      "message": "QA_RED incomplete-or-stale-android-junit"
+    },
+    {
+      "timestamp": "2026-11-06T17:24:18.004669697Z",
+      "message": "QA_RED mandatory owner suites {'seen': {'at.heinz.deviceai.ShizukuBridgeLifecycleTest': 14, 'at.heinz.deviceai.ShizukuConnectionDialogTest': 2, 'at.heinz.deviceai.ui.ContinuumControlsTest': 10, 'at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest': 5, 'at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest': 6}, 'skips': {'at.heinz.deviceai.ShizukuBridgeLifecycleTest': 0, 'at.heinz.deviceai.ShizukuConnectionDialogTest': 0, 'at.heinz.deviceai.ui.ContinuumControlsTest': 0, 'at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest': 0, 'at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest': 0}, 'failures': 5}"
+    },
+    {
+      "timestamp": "2026-11-06T17:24:18.008983811Z",
+      "message": "QA_RED mandatory-owner-Fold7-suites"
+    }
+  ],
+  "signingGate": {
+    "sourceChecked": "48251610d9c9519678e9fc5ef652ad8286675b7f",
+    "qaScript": "scripts/render-continuum-owner-continuous-qa.sh",
+    "releaseScript": "scripts/render-continuum-owner-continuous-release.sh",
+    "observation": "QA_RED recorded; deploy still build_in_progress. QA finishes unsigned assembly then exits nonzero when gateFailures>0; release exits before signing directory/P12 decode. Terminal failure marker not yet observed."
+  }
+}

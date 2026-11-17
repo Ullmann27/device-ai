@@ -1,0 +1,23 @@
+{"status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"4e1927ce4007ff2dba36571f6f3f603b93c832bbc16bf7191f6637744a898632","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-b9078ce3663b9b8f6cce68ab","workspaceBinding":{"workerId":"worker-review","taskId":"t-05a918ab205ebd7f","requestMessageId":"e7699536-03da-43d0-811f-28ad681578e3","requestHash":"8d71487d4c39ed6b898eb32591a83ac69b2966dab874e4a59beba9bc1303170f","sourceCommit":"466d08db79bcb6106508ee2513e0787194676dca","jobId":"0693479b-32c4-4aed-a192-1f322bb1af8b"},"observed":{"containerId":"612f87f957f9741539268ac5314a3cb61db2f67bab5bb7cdc82b75ad91c68ad9","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+{"status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"4e1927ce4007ff2dba36571f6f3f603b93c832bbc16bf7191f6637744a898632","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-85680aa0e9aade68058577d0","workspaceBinding":{"workerId":"worker-review","taskId":"t-05a918ab205ebd7f","requestMessageId":"e7699536-03da-43d0-811f-28ad681578e3","requestHash":"8d71487d4c39ed6b898eb32591a83ac69b2966dab874e4a59beba9bc1303170f","sourceCommit":"466d08db79bcb6106508ee2513e0787194676dca","jobId":"0693479b-32c4-4aed-a192-1f322bb1af8b"},"observed":{"containerId":"88602d1ca1a78c401eaec4e95c51f4d5a5471ebb30cbc7de890545e57819a4c8","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+✔ unclaimed scoped executor always refuses execution (65.17605ms)
+✔ canonical live claim permits multiple fixed verification profiles (778.289727ms)
+✔ wrong claim token cannot activate execution (52.319891ms)
+✔ wrong canonical job cannot activate execution (57.102012ms)
+✔ copied backlog outside canonical state cannot activate execution (50.231346ms)
+✔ claim activated before canonical owner ABORT cannot execute (53.036074ms)
+✔ claim activated before MAC corruption cannot execute (55.983542ms)
+✔ claim activated before canonical source mutation cannot execute (65.22753ms)
+✔ claim activated before backlog abort cannot execute or reactivate (69.917859ms)
+✔ controlled-clock expired lease cannot execute (60.5279ms)
+✔ controlled-clock expired goal cannot execute with a longer live lease (64.079678ms)
+✔ claim cannot expand fixed chain or introduce arbitrary shell profile (52.848694ms)
+✔ replaced canonical claim token invalidates already activated executor (66.00186ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1588.027538

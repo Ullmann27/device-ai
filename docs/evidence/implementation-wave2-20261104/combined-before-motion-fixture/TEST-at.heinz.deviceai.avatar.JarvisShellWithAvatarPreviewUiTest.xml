@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.JarvisShellWithAvatarPreviewUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:33:14" hostname="04c8b0ba7ea6" time="0.472">
+  <properties/>
+  <testcase name="shellPreviewUsesTheOneHeadInTheAvatarSlot" classname="at.heinz.deviceai.avatar.JarvisShellWithAvatarPreviewUiTest" time="0.472"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

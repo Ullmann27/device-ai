@@ -1,0 +1,113 @@
+TAP version 13
+# Subtest: experience journal refuses complete JSON without newline as uncertain torn append
+not ok 1 - experience journal refuses complete JSON without newline as uncertain torn append
+  ---
+  duration_ms: 4.013572
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:11:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:14:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: experience journal validates sequence independently of rehashed bytes
+not ok 2 - experience journal validates sequence independently of rehashed bytes
+  ---
+  duration_ms: 1.88028
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:16:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:20:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: experience journal rejects an oversized record before publication
+not ok 3 - experience journal rejects an oversized record before publication
+  ---
+  duration_ms: 2.71437
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:23:31)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: experience journal refuses a held cross-process writer lease
+not ok 4 - experience journal refuses a held cross-process writer lease
+  ---
+  duration_ms: 0.692026
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:26:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:28:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: experience journal refuses symlink storage
+not ok 5 - experience journal refuses symlink storage
+  ---
+  duration_ms: 0.991908
+  type: 'test'
+  location: '/workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:30:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory/.github/continuum/ccc1-experience-durability.test.mjs:32:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 0
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 133.166401

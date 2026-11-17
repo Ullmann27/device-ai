@@ -1,0 +1,142 @@
+{"cases": [
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-001",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 22 Äpfel (unverändert)\n- Korb (beig): 73 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-002",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 25 Äpfel (unverändert)\n- Korb (beig): 77 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-003",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 28 Äpfel (unverändert)\n- Korb (beig): 81 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-004",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 31 Äpfel (unverändert)\n- Korb (beig): 85 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-005",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 34 Äpfel (unverändert)\n- Korb (beig): 89 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-006",
+    "category": "RETRACTION",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 37 Äpfel (unverändert)\n- Korb (beig): 93 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-007",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 40 Äpfel (unverändert)\n- Korb (beig): 97 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-008",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 43 Äpfel (unverändert)\n- Korb (beig): 101 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-009",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 46 Äpfel (unverändert)\n- Korb (beig): 105 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-010",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 49 Äpfel (unverändert)\n- Korb (beig): 109 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-011",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 52 Äpfel (unverändert)\n- Korb (beig): 113 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": false,
+    "setupValid": true,
+    "id": "QB-C2-012",
+    "category": "UNCERTAINTY",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 55 Äpfel (unverändert)\n- Korb (beig): 117 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C2-013",
+    "category": "CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 58 Äpfel (unverändert)\n- Korb (beig): 121 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C2-014",
+    "category": "CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 61 Äpfel (unverändert)\n- Korb (beig): 125 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C2-015",
+    "category": "CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 64 Äpfel (unverändert)\n- Korb (beig): 129 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C2-016",
+    "category": "CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 67 Äpfel (unverändert)\n- Korb (beig): 133 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C2-017",
+    "category": "CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 70 Äpfel (unverändert)\n- Korb (beig): 137 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C2-018",
+    "category": "CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 73 Äpfel (unverändert)\n- Korb (beig): 141 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C2-019",
+    "category": "CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 76 Äpfel (unverändert)\n- Korb (beig): 145 Äpfel (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C2-020",
+    "category": "CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Korb (grün): 79 Äpfel (unverändert)\n- Korb (beig): 149 Äpfel (unverändert)\n"
+  }
+]}

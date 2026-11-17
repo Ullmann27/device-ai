@@ -1,0 +1,21 @@
+JUnit version 4.13.2
+.E....E..
+Time: 0.09
+There were 2 failures:
+1) legacyGlanceCannotReplaceActualDocumentReading(at.heinz.deviceai.avatar.AvatarDirectorTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.avatar.AvatarDirectorTest.legacyGlanceCannotReplaceActualDocumentReading(AvatarDirectorTest.kt:32)
+2) projectedGlanceCannotReplaceActualDocumentReading(at.heinz.deviceai.avatar.AvatarDirectorTest)
+java.lang.AssertionError: expected:<false> but was:<true>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarDirectorTest.projectedGlanceCannotReplaceActualDocumentReading(AvatarDirectorTest.kt:20)
+
+FAILURES!!!
+Tests run: 7,  Failures: 2
+

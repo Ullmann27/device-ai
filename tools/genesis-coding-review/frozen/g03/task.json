@@ -1,0 +1,1 @@
+{"id":"g03","requirements":["isWithinPath(candidate, root) must return true exactly when candidate is root itself or a descendant by complete path components. Inputs are normalized nonempty relative POSIX paths without dot or empty components and without trailing slashes. Comparison is case-sensitive; a sibling whose name merely begins with root is not a descendant."]}

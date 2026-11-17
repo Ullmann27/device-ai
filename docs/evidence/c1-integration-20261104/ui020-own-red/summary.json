@@ -1,0 +1,163 @@
+{
+  "taskId": "android-ui020-red-01",
+  "localSource": "f31855138d77ecb5e05e7a17a620b1fd6e9d28c5",
+  "remoteSource": "c65604c85855a8dfb2e17617feafe83b7d560115",
+  "tree": "323227c1c05017b0733509e24f0aebc2cc9faa25",
+  "command": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumStandaloneVersionCode=41",
+    "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-ui020-red-01-active-test.json",
+    "-PcontinuumAuditTestClasses=at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+    "-I",
+    "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+    ":app:testDebugUnitTest"
+  ],
+  "startedAt": "2026-11-04T21:51:17.910700+00:00",
+  "finishedAt": "2026-11-04T21:51:51.247445+00:00",
+  "exitCode": 1,
+  "sourceUnchanged": true,
+  "counts": {
+    "total": 8,
+    "passed": 1,
+    "failed": 7,
+    "skipped": 0
+  },
+  "suites": {
+    "at.heinz.deviceai.ContinuumReferenceCockpitUiTest": 8
+  },
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Home actual width 0.0dp",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldLandscapeHasRealDestinationsAndReadableLargeType",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: jarvis-panel:STATUS actual height 39.0dp",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "narrowPhoneHasRealDestinationsAndReadableLargeType",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.NullPointerException: Cannot invoke \"Object.toString()\" because the return value of \"android.view.View.getTag()\" is null",
+        "type": "java.lang.NullPointerException"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "presentationControlsReuseTheLiveAvatarAndPersistCompactChoice",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: Retain all original choices and add the explicit compact choice expected:<[Kugel \u00b7 Original, Kopf \u00b7 Native 2D-Vorschau, Kopf \u00b7 Native 3D-Vorschau, Kompakt \u00b7 Kugel]> but was:<[Kugel \u00b7 Original, Kopf \u00b7 Native 2D-Vorschau, Kopf \u00b7 Native 3D-Vorschau]>",
+        "type": "java.lang.AssertionError"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "phoneHasRealDestinationsAndReadableLargeType",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.NullPointerException: Cannot invoke \"Object.toString()\" because the return value of \"android.view.View.getTag()\" is null",
+        "type": "java.lang.NullPointerException"
+      }
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldPortraitHasRealDestinationsAndReadableLargeType",
+      "status": "FAIL",
+      "failure": {
+        "message": "java.lang.AssertionError: jarvis-panel:STATUS actual height 39.0dp",
+        "type": "java.lang.AssertionError"
+      }
+    }
+  ],
+  "caseStartEndIdentitiesMatch": true,
+  "scope": "ACTUAL_ANDROID_PROJECT_FOCUSED_JVM_OR_ROBOLECTRIC_CLASSES",
+  "limits": [
+    "Not a full Android or lint gate",
+    "No model, native GPU, physical device or APK acceptance",
+    "Overlapping prior and future test groups must not be added"
+  ],
+  "archive": {
+    "name": "android-ui020-red-01.tar.xz",
+    "bytes": 9088,
+    "sha256": "191c9330db35639c1bb9bfea11f6dfaec0adfd25f683bb4d4105865de9ecc966",
+    "members": [
+      {
+        "path": "android-ui020-red-01-active-test.json",
+        "bytes": 194,
+        "sha256": "b11aa35b75773446a493943328f52040b3ee7ca39625a13612bf7e1e41e10934"
+      },
+      {
+        "path": "android-ui020-red-01.log",
+        "bytes": 13638,
+        "sha256": "c097f571e3cd292cb494ea21f6b6a40e5389338b1fd61e74cede501c73685e65"
+      },
+      {
+        "path": "android-ui020-red-01.result.json",
+        "bytes": 1791,
+        "sha256": "b7b6c795f95caf1ba94992455bda28d62eec6265696f2cd74cfc982a2cbf0a64"
+      },
+      {
+        "path": "archive_android_gate.py",
+        "bytes": 4561,
+        "sha256": "3ef7baedee1123ac7756a5cbc85b960dcb1fd2ae0a30fb55e2ca1806720b3acf"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml",
+        "bytes": 20585,
+        "sha256": "4f2b62882031d902d47880b6e17ce780eca295de917ab412a97e7e07b1cc2805"
+      },
+      {
+        "path": "observe-tests.init.gradle",
+        "bytes": 1798,
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb"
+      },
+      {
+        "path": "run_c1_gate_v3.py",
+        "bytes": 5722,
+        "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd"
+      },
+      {
+        "path": "summary.json",
+        "bytes": 4523,
+        "sha256": "85497d3915579b883f5afb288c11368420038eda3316bb07f913f58cd5abceb1"
+      }
+    ]
+  }
+}

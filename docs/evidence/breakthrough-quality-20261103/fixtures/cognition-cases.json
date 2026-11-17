@@ -1,0 +1,317 @@
+{
+  "schema": "OMEGA_QA_OWNER_TIMELINE_V1",
+  "cases": [
+    {
+      "id": "QB-C-001",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 13 Münzen, in der silbernen 41."
+      ],
+      "currentTurn": "Die Angabe zur violetten Truhe stimmt nicht.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        13,
+        41
+      ]
+    },
+    {
+      "id": "QB-C-002",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 15 Münzen, in der silbernen 44."
+      ],
+      "currentTurn": "Die Menge in der violetten Truhe war falsch.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        15,
+        44
+      ]
+    },
+    {
+      "id": "QB-C-003",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 17 Münzen, in der silbernen 47."
+      ],
+      "currentTurn": "Meine Zahl für die silberne Truhe ist nicht korrekt.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        17,
+        47
+      ]
+    },
+    {
+      "id": "QB-C-004",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 19 Münzen, in der silbernen 50."
+      ],
+      "currentTurn": "Ich widerrufe die Angabe zur violetten Truhe.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        19,
+        50
+      ]
+    },
+    {
+      "id": "QB-C-005",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 21 Münzen, in der silbernen 53."
+      ],
+      "currentTurn": "Die Anzahl der Münzen ist falsch.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        21,
+        53
+      ]
+    },
+    {
+      "id": "QB-C-006",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 23 Münzen, in der silbernen 56."
+      ],
+      "currentTurn": "Die Zahl der Münzen stimmt nicht.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        23,
+        56
+      ]
+    },
+    {
+      "id": "QB-C-007",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 25 Münzen, in der silbernen 59."
+      ],
+      "currentTurn": "Die Angabe zur silbernen Truhe war ein Irrtum.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        25,
+        59
+      ]
+    },
+    {
+      "id": "QB-C-008",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 27 Münzen, in der silbernen 62."
+      ],
+      "currentTurn": "Die Menge der Münzen ist nicht bestätigt.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        27,
+        62
+      ]
+    },
+    {
+      "id": "QB-C-009",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 29 Münzen, in der silbernen 65."
+      ],
+      "currentTurn": "Die Mengenangabe für die violette Truhe gilt nicht mehr.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        29,
+        65
+      ]
+    },
+    {
+      "id": "QB-C-010",
+      "category": "RETRACTION",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 31 Münzen, in der silbernen 68."
+      ],
+      "currentTurn": "Die Zahl in der silbernen Truhe ist falsch.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        31,
+        68
+      ]
+    },
+    {
+      "id": "QB-C-011",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 33 Münzen, in der silbernen 71."
+      ],
+      "currentTurn": "Die Anzahl der Münzen ist vielleicht falsch.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        33,
+        71
+      ]
+    },
+    {
+      "id": "QB-C-012",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 35 Münzen, in der silbernen 74."
+      ],
+      "currentTurn": "Bei der Menge in der violetten Truhe bin ich unsicher.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        35,
+        74
+      ]
+    },
+    {
+      "id": "QB-C-013",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 37 Münzen, in der silbernen 77."
+      ],
+      "currentTurn": "Die Zahl der Münzen ist unklar.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        37,
+        77
+      ]
+    },
+    {
+      "id": "QB-C-014",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 39 Münzen, in der silbernen 80."
+      ],
+      "currentTurn": "Die Angabe zur silbernen Truhe ist nur geschätzt.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        39,
+        80
+      ]
+    },
+    {
+      "id": "QB-C-015",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 41 Münzen, in der silbernen 83."
+      ],
+      "currentTurn": "Die Menge in der violetten Truhe ist ungefähr richtig.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        41,
+        83
+      ]
+    },
+    {
+      "id": "QB-C-016",
+      "category": "UNCERTAINTY",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 43 Münzen, in der silbernen 86."
+      ],
+      "currentTurn": "Die Anzahl der Münzen ist eventuell falsch.",
+      "expected": "NO_STALE_PROJECTION",
+      "values": [
+        43,
+        86
+      ]
+    },
+    {
+      "id": "QB-C-017",
+      "category": "UNRELATED_CONTROL",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 45 Münzen, in der silbernen 89."
+      ],
+      "currentTurn": "Bitte antworte knapp.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        45,
+        89
+      ]
+    },
+    {
+      "id": "QB-C-018",
+      "category": "UNRELATED_CONTROL",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 47 Münzen, in der silbernen 92."
+      ],
+      "currentTurn": "Die violette Truhe ist nicht verschlossen.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        47,
+        92
+      ]
+    },
+    {
+      "id": "QB-C-019",
+      "category": "UNRELATED_CONTROL",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 49 Münzen, in der silbernen 95."
+      ],
+      "currentTurn": "Die silberne Truhe ist nicht beschädigt.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        49,
+        95
+      ]
+    },
+    {
+      "id": "QB-C-020",
+      "category": "UNRELATED_CONTROL",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 51 Münzen, in der silbernen 98."
+      ],
+      "currentTurn": "Ich habe die Farbe der Truhe nicht geändert.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        51,
+        98
+      ]
+    },
+    {
+      "id": "QB-C-021",
+      "category": "UNRELATED_CONTROL",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 53 Münzen, in der silbernen 101."
+      ],
+      "currentTurn": "Bitte speichere diese Aufgabe nicht.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        53,
+        101
+      ]
+    },
+    {
+      "id": "QB-C-022",
+      "category": "UNRELATED_CONTROL",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 55 Münzen, in der silbernen 104."
+      ],
+      "currentTurn": "Wie viele Münzen waren ursprünglich in der violetten Truhe?",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        55,
+        104
+      ]
+    },
+    {
+      "id": "QB-C-023",
+      "category": "UNRELATED_CONTROL",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 57 Münzen, in der silbernen 107."
+      ],
+      "currentTurn": "Die Münzen sind nicht aus Gold.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        57,
+        107
+      ]
+    },
+    {
+      "id": "QB-C-024",
+      "category": "UNRELATED_CONTROL",
+      "previousOwnerTurns": [
+        "In der violetten Truhe liegen 59 Münzen, in der silbernen 110."
+      ],
+      "currentTurn": "Die Truhe ist ungefähr rechteckig.",
+      "expected": "RETAIN_BOTH_ORIGINAL_VALUES",
+      "values": [
+        59,
+        110
+      ]
+    }
+  ]
+}

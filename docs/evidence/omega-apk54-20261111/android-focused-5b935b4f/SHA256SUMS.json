@@ -1,0 +1,11 @@
+{
+  "SUMMARY.json": "6914a612d93d6e2a1fb4d315d68c09d18fc7f52491a48c46775e2c11003c4944",
+  "android-focused-driver.json": "c2be5863b9f992bcf21c7a499c050a85b121ca65fdfee6685d79460082e50548",
+  "failures.json": "3a43f451eb05a8385629e9e69813c6c8a7769073916fac9511a5a5f0c6ae6759",
+  "gradle.log.gz": "647b79fd2b4be520825d81da621ea36206575632b1262ed915e0a6bbafe8f269",
+  "junit-progress.ndjson": "a48425086eafe5ce39190e9490371a26c53afc51591c121d4c1ddec046477f1b",
+  "junit-xml.tar.gz": "ecf30ab1094fc996265dec9b28ff9a264dd6ee705ac9308eb951ee6611f8f6e9",
+  "lint-results-debug.html": "e291fe46339b88d73ba05f9a31202965a27846e8bb3cdbed109f63633e7b91d4",
+  "lint-results-debug.txt": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334",
+  "lint-results-debug.xml": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809"
+}

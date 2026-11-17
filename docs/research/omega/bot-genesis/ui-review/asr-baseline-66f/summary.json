@@ -1,0 +1,33 @@
+{
+  "source": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+  "tests": 5,
+  "failures": 5,
+  "skipped": 0,
+  "seconds": 5.289,
+  "gradleExit": 1,
+  "compilation": "PASS",
+  "sourceAndTestsUnchanged": true,
+  "environment": "Robolectric SDK35 actual Activity/ASR controller; Android speech callbacks and cancellation-counting ports; no real audio/model/coding execution",
+  "failedAssertions": [
+    {
+      "name": "microphoneDictationDoesNotCancelOrExecuteBoundDevelopmentJob",
+      "message": "java.lang.AssertionError: Microphone activation cannot cancel a coding job expected:<0> but was:<1>"
+    },
+    {
+      "name": "botSwitchRejectsOldRecognizerResult",
+      "message": "org.junit.ComparisonFailure: Old bot speech cannot enter the newly selected scope expected:<...s sichtbarer Entwurf[]> but was:<...s sichtbarer Entwurf[ PRIVATE_ALPHA_LATE_TRANSCRIPT]>"
+    },
+    {
+      "name": "delayedPermissionGrantCannotStartMicrophoneForAnotherBot",
+      "message": "java.lang.AssertionError: Stale owner permission must not activate another bot's microphone expected null, but was:<android.speech.SpeechRecognizerProxy@fe1641b>"
+    },
+    {
+      "name": "selectedContextEditRejectsOldRecognizerResult",
+      "message": "org.junit.ComparisonFailure: Old bot speech cannot enter the newly selected scope expected:<...s sichtbarer Entwurf[]> but was:<...s sichtbarer Entwurf[ PRIVATE_ALPHA_LATE_TRANSCRIPT]>"
+    },
+    {
+      "name": "returnToJarvisRejectsOldBotRecognizerResult",
+      "message": "org.junit.ComparisonFailure: Old bot speech cannot enter the newly selected scope expected:<...s sichtbarer Entwurf[]> but was:<...s sichtbarer Entwurf[ PRIVATE_ALPHA_LATE_TRANSCRIPT]>"
+    }
+  ]
+}

@@ -1,0 +1,1974 @@
+{
+  "schemaVersion": 1,
+  "state": "PROPOSAL_NOT_APPROVAL",
+  "sourceHead": "d7429145ad5dff64364ed47f9ceb0c07a5a8ed85",
+  "basePr116": "3d7326d047ee91a91105f6f3e352ada613b6ff87",
+  "signed019": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62",
+  "package": "at.heinz.deviceai.mentorpaired",
+  "versionName": "0.3.20",
+  "versionCode": 21,
+  "certificateSha256": "2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc",
+  "scope": "Tracked main Android sources/assets and Gradle inputs, plus unchanged historical signer recipes. Git commit binds the full repository. Dependency/toolchain and external signer attestation remain separate.",
+  "files": [
+    {
+      "path": "app/build.gradle.kts",
+      "blob": "4851524f8bec3120570ac9c16b012f4d48a99f78",
+      "sha256": "231b8999d55735da7995f14d070c85c23ba20329b90216d3674d641a698bda30",
+      "bytes": 7340,
+      "signed019Blob": "9bd2f119ca06e7f91a9a7cf616e5154fa5776e6c",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "blob": "983138c8e8cc9b25189288c7202d4e17f699f959",
+      "sha256": "719ffba4796d876b7c9f59f73ab1bef2dfe88bb6b798fe7365bb59a981e26eb6",
+      "bytes": 4372,
+      "signed019Blob": "983138c8e8cc9b25189288c7202d4e17f699f959",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/aidl/at/heinz/deviceai/IDeviceShell.aidl",
+      "blob": "7673ae83491ba4ea77dc22b50493b19cc1bf7c5b",
+      "sha256": "c229feaa0bfaaa04c32ff174f05196aa046aee117186c674000693080632b22e",
+      "bytes": 126,
+      "signed019Blob": "7673ae83491ba4ea77dc22b50493b19cc1bf7c5b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/continuum-owned-project-plans-v1.json",
+      "blob": "d19297d5715821ac1073934adde07c64ddf25d5b",
+      "sha256": "29611eb49a3bd7583793ac8b1838be69892aa2f7c759958919804c6272d4f410",
+      "bytes": 3744,
+      "signed019Blob": "d19297d5715821ac1073934adde07c64ddf25d5b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/continuum-training-studio-v1.json",
+      "blob": "c0e4fc9a075ec88e3be572b29d15bc718a838fad",
+      "sha256": "9f9a26b4e2928554ccedf49a53f5927fdb1e169b2e049232d96bb18098e6cf98",
+      "bytes": 169019,
+      "signed019Blob": "c0e4fc9a075ec88e3be572b29d15bc718a838fad",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/LICENSE-Roboto-Apache-2.0.txt",
+      "blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357,
+      "signed019Blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/Montserrat-Light.ttf",
+      "blob": "b3c3fcee92e6f63aa86150cda571787d7407a4ae",
+      "sha256": "853de0dd715d6681f7038cf6cd53c1695b614657cbc57c8f542fe08d5b84e006",
+      "bytes": 444356,
+      "signed019Blob": "b3c3fcee92e6f63aa86150cda571787d7407a4ae",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/Montserrat-Medium.ttf",
+      "blob": "62ebd66a36cd3534bd67228cd82e6917e0b05533",
+      "sha256": "dae47428bb041f9716604e0e07b5b0c8585b3bdd8183362f75c69fe7bb3cfaf4",
+      "bytes": 447320,
+      "signed019Blob": "62ebd66a36cd3534bd67228cd82e6917e0b05533",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/Montserrat-Regular.ttf",
+      "blob": "3ef210ab1107142c0aa19cb916ae38a5f99e86ba",
+      "sha256": "3e8abe50c44c82e2242e97d1ec8c0d385c4890cdc50447bcdb8605c81a38cfb2",
+      "bytes": 445928,
+      "signed019Blob": "3ef210ab1107142c0aa19cb916ae38a5f99e86ba",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/Montserrat-SemiBold.ttf",
+      "blob": "e36320fb70339b14a9077f637637d6a459301e20",
+      "sha256": "b4e1563393d73fdff491a869441245aef31add2ec03d9c97a6dae4de07c52fd0",
+      "bytes": 454716,
+      "signed019Blob": "e36320fb70339b14a9077f637637d6a459301e20",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/OFL-Montserrat.txt",
+      "blob": "fe576a2ee1f96353b05d030c0b7620d525cc53a8",
+      "sha256": "8b7141c03fa4f8d44e6345d5d4931709290f0f67875e452e95ac1fd3a027802e",
+      "bytes": 4400,
+      "signed019Blob": "fe576a2ee1f96353b05d030c0b7620d525cc53a8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/Roboto-Bold.ttf",
+      "blob": "8869666f245c6f474b98024327df7082e4c868b8",
+      "sha256": "61f89f8db49261c2f6106e8dccc35df7b2f7ed909020db40a3fc905e95f99334",
+      "bytes": 514260,
+      "signed019Blob": "8869666f245c6f474b98024327df7082e4c868b8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/Roboto-Light.ttf",
+      "blob": "e19094a8845f3d8db5deb9890059e51f4d21b37b",
+      "sha256": "028f843b1990ba46e2a1c4ef1b82729c4da9a946b0d9d8dbf59e623d1095e454",
+      "bytes": 518580,
+      "signed019Blob": "e19094a8845f3d8db5deb9890059e51f4d21b37b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/Roboto-Medium.ttf",
+      "blob": "6a9513371a957b50eae98c8725e89ddc4668ab52",
+      "sha256": "2879a5ecb7fbfa13a7fc3e2cdd7fecbf73aa45e91b541dfdfa2c442eed0aac21",
+      "bytes": 511592,
+      "signed019Blob": "6a9513371a957b50eae98c8725e89ddc4668ab52",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/assets/fonts/Roboto-Regular.ttf",
+      "blob": "ddee473e02035bfce6244746d5d2a281616f7ff8",
+      "sha256": "56a45233d29f11b4dfb86d248e921939d115778f87325e7ae8cc108383d6664d",
+      "bytes": 515100,
+      "signed019Blob": "ddee473e02035bfce6244746d5d2a281616f7ff8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "blob": "86dd39fc357deb58b3583a83468b4446b76d3244",
+      "sha256": "afe1d59806e45c22560a992dd0b18ed7c464ff61118b343bc03bdb8ac962bcd5",
+      "bytes": 386124,
+      "signed019Blob": "1f636f35b09837c13bb954b48da1fabe7039cb05",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt",
+      "blob": "297c8c7eb1f40a1ffe542a79a4d0461654173948",
+      "sha256": "c0495aed3f502ec290301111a0468f9ba30736edddee0a31e0fa2112a1b08fe9",
+      "bytes": 19518,
+      "signed019Blob": "297c8c7eb1f40a1ffe542a79a4d0461654173948",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt",
+      "blob": "777e50cab74ade0b343acb19a364486bb7a16a45",
+      "sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+      "bytes": 471,
+      "signed019Blob": "777e50cab74ade0b343acb19a364486bb7a16a45",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+      "blob": "064467020a92c9376a0e6fdf0c7f7e597d7d278b",
+      "sha256": "5ee65e7942a53a140a3153e498f58009088e155fc12fd8fa9446923d9e9e9e3f",
+      "bytes": 20246,
+      "signed019Blob": "064467020a92c9376a0e6fdf0c7f7e597d7d278b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ApprovedWebResearchToolRunner.kt",
+      "blob": "685fb1e81797a79b327fdff7ee03d5398bb29c1d",
+      "sha256": "1f8ea24853f8e6c5ad922378c700f56fde4b76acc5933c8cc24352cd6245afa7",
+      "bytes": 2575,
+      "signed019Blob": "685fb1e81797a79b327fdff7ee03d5398bb29c1d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AssistantSkill.kt",
+      "blob": "8f9aa72de6e30c6cee1b3cd94aaa92810b967cfb",
+      "sha256": "85bf5e8d6ef73837c75ae999ec4c0706b617865dbe4e970377e26627a6a1a05c",
+      "bytes": 1023,
+      "signed019Blob": "8f9aa72de6e30c6cee1b3cd94aaa92810b967cfb",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+      "blob": "e0981a9a8052f72bc5959ae2de68319fc1692e66",
+      "sha256": "7273b814fc64c3f52dd8f4c8feeb4c1a13239be0efbb16d3b27ae6485bd9a919",
+      "bytes": 11052,
+      "signed019Blob": "e0981a9a8052f72bc5959ae2de68319fc1692e66",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapMemoryStore.kt",
+      "blob": "b095456f27d6266514b0ebfaaf04c9e095dbdae1",
+      "sha256": "7797ff010c3d482eff4cbbc7191cdd6e21eeeecd2649922cc0c2b6c78cad3d87",
+      "bytes": 4845,
+      "signed019Blob": "b095456f27d6266514b0ebfaaf04c9e095dbdae1",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapTraining.kt",
+      "blob": "7e77c16c6bd3abc8aa8d5c5d24f4b03a57f0316e",
+      "sha256": "f0ed7a4853132c5ca1ab6bf5763a28d89aedee6d000148b2c55e236122ef990c",
+      "bytes": 6558,
+      "signed019Blob": "7e77c16c6bd3abc8aa8d5c5d24f4b03a57f0316e",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BoundedIo.kt",
+      "blob": "351eb30fcd196cf14d3c62bd040af504a60b1cad",
+      "sha256": "1a0a29e7ee3abea80cd64f22d11b8af78d0f086870b670e6bae97127b3fa5774",
+      "bytes": 843,
+      "signed019Blob": "351eb30fcd196cf14d3c62bd040af504a60b1cad",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
+      "blob": "1835375c6420b14ee9bf431cd9d855e48bfc0dc1",
+      "sha256": "74c48a28e1db7cfa3f39fe547a15295c566d00c7784f65b1c69651f19731e851",
+      "bytes": 17424,
+      "signed019Blob": "1835375c6420b14ee9bf431cd9d855e48bfc0dc1",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ComposerReflowDraft.kt",
+      "blob": "02b860f20dc99e0d1ada8747696f63e21bce34e4",
+      "sha256": "25dfc5553640f85e1eded6e47f0d666e51fa3b3e34746b870335cb280e2b8c53",
+      "bytes": 739,
+      "signed019Blob": "02b860f20dc99e0d1ada8747696f63e21bce34e4",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ComposerUiPolicy.kt",
+      "blob": "d92a5c03997f0d783d4d45e9613a1d727992c47a",
+      "sha256": "825a22a2117e39fe6101679fc86802dbaa7b7c554ae7be181ced11ce994fe124",
+      "bytes": 1256,
+      "signed019Blob": "d92a5c03997f0d783d4d45e9613a1d727992c47a",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt",
+      "blob": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740",
+      "sha256": "e1e8e7be980c2b2e962aa19eb3f5e2228ab7cb019bd892aaf4ea3c3495e4a9f3",
+      "bytes": 15497,
+      "signed019Blob": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt",
+      "blob": "b2732626709517ee49fb0213796ed272e8e0f76c",
+      "sha256": "403c4c47fa87502f96f91cae0d834beab292a1a2141f2b9b1335e07fb8269913",
+      "bytes": 5178,
+      "signed019Blob": "b2732626709517ee49fb0213796ed272e8e0f76c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCoreArtView.kt",
+      "blob": "ab94b5e2fef4cb2fa05a26a34bc348a01e329f93",
+      "sha256": "ed99229af01d3ea263e66b46d7569811a0650c52f5eb9c912c06cc2ddc50c60a",
+      "bytes": 3976,
+      "signed019Blob": "ab94b5e2fef4cb2fa05a26a34bc348a01e329f93",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "blob": "333c867b5740847d878ac96b6c4b3e595c8286f7",
+      "sha256": "7844c42413dbcc72dad71a1d8970ae79ad384a93d0acdf20b826e2d1277be202",
+      "bytes": 16325,
+      "signed019Blob": "520db0554c0e4d8803d674f229f243f51f2aba17",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumFirstSteps.kt",
+      "blob": "01f4e37f986aebc93a2ec48acae65484b3f678a7",
+      "sha256": "83d2983c083a386f268b864b6d3b954fe51982aeb6722fb6d502d001341c7a1b",
+      "bytes": 3846,
+      "signed019Blob": "01f4e37f986aebc93a2ec48acae65484b3f678a7",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "blob": "c7fb2c1480c4bc7d0bf1d7dff73712cf829385a5",
+      "sha256": "2ef07dba86f1f9a9e14e7f9e999deff540edb164ecd7f70addd2ec0eb9cdc218",
+      "bytes": 12046,
+      "signed019Blob": "682f6f5946828b7b2a1e9b7d5d37a6e8481b74fe",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt",
+      "blob": "22234d244c08f6e7b041509eca7ea6df4d13cc24",
+      "sha256": "e8a9556613e2779691bec18ed6560b185f774934dcd0e90ead2eda40e4fc7f86",
+      "bytes": 7405,
+      "signed019Blob": "22234d244c08f6e7b041509eca7ea6df4d13cc24",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
+      "blob": "6ebec7bad39cb842e22a8031f4728338221b0da2",
+      "sha256": "561b1d53588bf3a759d010b044c629f80aed60a49be104e75c85a2a621704598",
+      "bytes": 2053,
+      "signed019Blob": "6ebec7bad39cb842e22a8031f4728338221b0da2",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+      "blob": "b1cdf34bb2cfdca831d874a63b443eedcaf6c857",
+      "sha256": "962a58f710caf2be559982cc936f105e3abfb023d1b55a6b7629aaca0d492009",
+      "bytes": 11826,
+      "signed019Blob": "b1cdf34bb2cfdca831d874a63b443eedcaf6c857",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+      "blob": "a3f6d68db2cbccabd640928926c3ca28d92dc058",
+      "sha256": "2a07e8d106e4c8388370af8032aaaa60c398d515ffeea7b5cfcd53a1245345b2",
+      "bytes": 26807,
+      "signed019Blob": "a3f6d68db2cbccabd640928926c3ca28d92dc058",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderRoute.kt",
+      "blob": "4ff37654794498a4062ef77045bd443410b8363f",
+      "sha256": "a06900413e82bb90f9009fcf4b51e4ce1058e593f7deafa13a81d55b21a48a0e",
+      "bytes": 1150,
+      "signed019Blob": "4ff37654794498a4062ef77045bd443410b8363f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileCodingJob.kt",
+      "blob": "4f9c0d0af96fc96396c46fd82f7470fcf1ef1db1",
+      "sha256": "65f3c2b3ca79c8307918ac3442c05d615105d10e228966e2ddefe0f0ec8b1d0c",
+      "bytes": 7710,
+      "signed019Blob": "4f9c0d0af96fc96396c46fd82f7470fcf1ef1db1",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
+      "blob": "79f365032047fa1818c5d60ed83485a32d9c626b",
+      "sha256": "1230d9b85f21c13c5084295e0aa80552f691ebf82fc67463a62574d20624e54a",
+      "bytes": 10499,
+      "signed019Blob": "79f365032047fa1818c5d60ed83485a32d9c626b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumNexusHomeSpec.kt",
+      "blob": "dd2299a083174db78e2f13b1a19fc23ef7b75ce0",
+      "sha256": "9b832f368d7dd392366497c8c8b36b9a50815666bac24adf2ce6ce03a17c3b4a",
+      "bytes": 1930,
+      "signed019Blob": "dd2299a083174db78e2f13b1a19fc23ef7b75ce0",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt",
+      "blob": "53efcb096fe152189a1731948706b4ccb1294790",
+      "sha256": "b3a133306e0a19f71ec4eaf4bddcb26e73dcb97a87ef0ff820a42d9f907a4fc6",
+      "bytes": 2997,
+      "signed019Blob": "53efcb096fe152189a1731948706b4ccb1294790",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
+      "blob": "e1871932855c65b5e2e60f13cd2243e34f3d20d4",
+      "sha256": "68f6d4e4820323cdd3fb3f1e3e2c085d453a1e45312e3afa7493b036957c1528",
+      "bytes": 17432,
+      "signed019Blob": "e1871932855c65b5e2e60f13cd2243e34f3d20d4",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt",
+      "blob": "703f95c3c7d6fc1e16e3362cedc511f325ad39ce",
+      "sha256": "79a2435d3bfc17b6451160d1b91a0015ad228719c6120e34098497bcb5db9afe",
+      "bytes": 13361,
+      "signed019Blob": "703f95c3c7d6fc1e16e3362cedc511f325ad39ce",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt",
+      "blob": "7316ca1b4b8ee09a6e081ec12bb8f3da883df464",
+      "sha256": "1cfad03e9a1eca3b591cb1aaee09d98c6666d2bede06ae7fc780aab197a4282b",
+      "bytes": 5268,
+      "signed019Blob": "7316ca1b4b8ee09a6e081ec12bb8f3da883df464",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt",
+      "blob": "c154f06a567c964797beccf00c7659196b624f3e",
+      "sha256": "a7abb31f8659b06e1516270776832f86954431e01c1dc4845706ca09d612be52",
+      "bytes": 1637,
+      "signed019Blob": "c154f06a567c964797beccf00c7659196b624f3e",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+      "blob": "a900cdc73b757cec751ecc23825a92153da257ad",
+      "sha256": "66e36af3ad0efdf3ca550223ec50a711ae572469c1449db835301722874c0a67",
+      "bytes": 3953,
+      "signed019Blob": "a900cdc73b757cec751ecc23825a92153da257ad",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt",
+      "blob": "7362f67e61a6a18ac9d19a6b077884dd52ccac07",
+      "sha256": "c53d62ca607f292f8ee06a2e4328d37304fa3069ed2dfca8fc1aeb07a5e69a51",
+      "bytes": 12219,
+      "signed019Blob": "7362f67e61a6a18ac9d19a6b077884dd52ccac07",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/GroqInvocationRouter.kt",
+      "blob": "fd88291c19d3ac16be7cd96377bff183e33b552a",
+      "sha256": "1ba0620ee1daedcd9eaabe82593567e1ce4943d61c41ad618aabee8257315c07",
+      "bytes": 896,
+      "signed019Blob": "fd88291c19d3ac16be7cd96377bff183e33b552a",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/HologramAudio.kt",
+      "blob": "313530d45824a01ccf3b551891c71f327ecb0403",
+      "sha256": "671fe68134834778c218291c4593520db51d411be5ec3fc9d5a9ed265fa14bf8",
+      "bytes": 2899,
+      "signed019Blob": "313530d45824a01ccf3b551891c71f327ecb0403",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
+      "blob": "df4feebd32e36e284cffd8ec83fb153e8b6b632d",
+      "sha256": "c02fa0c7f77fb2a7b6b89f3257445ae4c12c1f8935bef36e54c2551806a434f9",
+      "bytes": 1917,
+      "signed019Blob": "df4feebd32e36e284cffd8ec83fb153e8b6b632d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/MainActivity.kt",
+      "blob": "5cba57afbc9cf3256bb8a90a5391b2815ac6c117",
+      "sha256": "48a84c649282cf298c9f31042fadd10de5ac60a9fddd3026f17839fb05842d99",
+      "bytes": 22665,
+      "signed019Blob": "5cba57afbc9cf3256bb8a90a5391b2815ac6c117",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/MentorDeviceIdentity.kt",
+      "blob": "8da0878b0ce29924b8acbe022012592ee64a2144",
+      "sha256": "c7c36c5cfd7ba8b9d7239d3e1d585271191d05070e66a3f31e181d54841afa28",
+      "bytes": 2220,
+      "signed019Blob": "8da0878b0ce29924b8acbe022012592ee64a2144",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/SecureTokenStore.kt",
+      "blob": "25ff15e943a7538ef74f581a14523449e040cda6",
+      "sha256": "cf846d827e1e177d32d3836068396bc095a4d311ece83a6b091c741bbed12f44",
+      "bytes": 4469,
+      "signed019Blob": "25ff15e943a7538ef74f581a14523449e040cda6",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ShellUserService.kt",
+      "blob": "6a55cf1a7ed06e0d636654898b54f8b3b2ffcbb1",
+      "sha256": "bab4f363c8ff164928c3213a71d9f3149ba8a89a7978d4de07a433f4f3baeb6b",
+      "bytes": 2040,
+      "signed019Blob": "6a55cf1a7ed06e0d636654898b54f8b3b2ffcbb1",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ShizukuBridge.kt",
+      "blob": "428908fe9be5656eae0603211610fabfad90e94e",
+      "sha256": "0be742e1f9ffb158f8d35290fa664a514a439ab3812d7c924ee0c2dbf40fd547",
+      "bytes": 5216,
+      "signed019Blob": "428908fe9be5656eae0603211610fabfad90e94e",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+      "blob": "5b0bffdb39c96da3828fe71cb5e6fbb0e551471e",
+      "sha256": "472b7bc6b9e9b5d7ed3c8a46be606d67c3a73b01cf63ccbcea07b1852ba0c340",
+      "bytes": 13490,
+      "signed019Blob": "5b0bffdb39c96da3828fe71cb5e6fbb0e551471e",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+      "blob": "fd212811a303102c37ed73a3c7f00dc42ada397c",
+      "sha256": "6d7db2b5287b9fa03ecda70d2ba13d28ae15a2af15b4e55d808cf58dbf646b40",
+      "bytes": 4707,
+      "signed019Blob": "fd212811a303102c37ed73a3c7f00dc42ada397c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt",
+      "blob": "c8dcbcb54410c7c8b48fcf12cf0b1196a2fe8eb3",
+      "sha256": "e09827ead1e0f523a107cac0bf815d1dbf110a654a5a7c9dc4dfe79dec875eea",
+      "bytes": 2945,
+      "signed019Blob": "c8dcbcb54410c7c8b48fcf12cf0b1196a2fe8eb3",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkModel.kt",
+      "blob": "ed1956583e66c86f80c31b94d08a18793a3ca42f",
+      "sha256": "c19bce30b85174a89328ecdd61565269315b80d7e289599a55ef1e27bd6f5d3a",
+      "bytes": 2258,
+      "signed019Blob": "ed1956583e66c86f80c31b94d08a18793a3ca42f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkReport.kt",
+      "blob": "5d0f7b1b644815d696a883756f67b2f1b613476c",
+      "sha256": "94499c2ea9d142d67380b0be007ed3876a916f37912b3d0c22a37023516850e2",
+      "bytes": 6223,
+      "signed019Blob": "5d0f7b1b644815d696a883756f67b2f1b613476c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkRunner.kt",
+      "blob": "db76f61015bf450ec73e2a200c5ddcffe2a2312f",
+      "sha256": "c972c5d9ba6bb32aa9a2c8f44d887613614be238f28ea1503729f8200b9888fd",
+      "bytes": 3002,
+      "signed019Blob": "db76f61015bf450ec73e2a200c5ddcffe2a2312f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AdaptiveIdentity.kt",
+      "blob": "cf8d64b6074ad26452caaf65f42f1aed5cce0d26",
+      "sha256": "828158ee17f0bf92e0ce4a6cb0e3ce8e6749ecef3d359bb37b1faaed95bfc454",
+      "bytes": 2686,
+      "signed019Blob": "cf8d64b6074ad26452caaf65f42f1aed5cce0d26",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AgentCheckpointStore.kt",
+      "blob": "ef26062883499e78fde91fbca48334a8447d3a8d",
+      "sha256": "e143d33449af04380172f7ff91f17c2f68143688fd2c8f35a97f5fd229d953c4",
+      "bytes": 4483,
+      "signed019Blob": "ef26062883499e78fde91fbca48334a8447d3a8d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "blob": "22c98419773e0b87660cacdaa22a4859cf61ac4d",
+      "sha256": "7fc354f5b77c057dff0e95881468d140c088ffd62b2bdb825fbd307d3bf93bd7",
+      "bytes": 9922,
+      "signed019Blob": "22c98419773e0b87660cacdaa22a4859cf61ac4d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AndroidKeystoreIdentitySigner.kt",
+      "blob": "09ea8cedc320200739b6b0ca3d62121136502565",
+      "sha256": "daad146f453083683c603cdd36e59e029df7b02526110fa2876646edbf920fb5",
+      "bytes": 2363,
+      "signed019Blob": "09ea8cedc320200739b6b0ca3d62121136502565",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt",
+      "blob": "1b0624ef22b741e8927329f90e52f7b7a8d7344a",
+      "sha256": "33206967474eb6a9d8336145426e8252861e7b1a8f697b5fe9dae7c07c58c30c",
+      "bytes": 6203,
+      "signed019Blob": "1b0624ef22b741e8927329f90e52f7b7a8d7344a",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BehaviorProfile.kt",
+      "blob": "6228462c8c3869b8e5e23e15557761b7c9919ded",
+      "sha256": "c932d9ca53b7b0268c64c2b173153302a9fdd24f7fce5bd275a55eadf148e823",
+      "bytes": 1470,
+      "signed019Blob": "6228462c8c3869b8e5e23e15557761b7c9919ded",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BehaviorUpdate.kt",
+      "blob": "d754dbbfbb3718374bd052ecede98ef553c8797a",
+      "sha256": "fb21b884d5ddbb86775df18947f5388db301806b365328679b894e035d6a53b5",
+      "bytes": 4348,
+      "signed019Blob": "d754dbbfbb3718374bd052ecede98ef553c8797a",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+      "blob": "3a2d028dda96b82fb13a16e48228ca398ae548bf",
+      "sha256": "5fcb0e672e995d5f519f2c50377113fcaad32bcdd3ab0a5892616fc84d4296ce",
+      "bytes": 17396,
+      "signed019Blob": "3a2d028dda96b82fb13a16e48228ca398ae548bf",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedResearchTextSanitizer.kt",
+      "blob": "823c9f1ac7559e4f4919c2f796212ca877a1dbab",
+      "sha256": "5891e03ee5d388890941b9a4cf4cb9bada07aee85f57dd1fb1e4ef49758088d4",
+      "bytes": 3101,
+      "signed019Blob": "823c9f1ac7559e4f4919c2f796212ca877a1dbab",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ChatReasoningRouter.kt",
+      "blob": "846be4340b8e462f73d5f611e877c08003b819f8",
+      "sha256": "fc3644d368823ed798ffdf2117bec1e4a9a1f1ad739626bdb5735406475006c3",
+      "bytes": 4441,
+      "signed019Blob": "846be4340b8e462f73d5f611e877c08003b819f8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveCore.kt",
+      "blob": "3912186b5b5b2bfe4183ce271e0950005da2ebf8",
+      "sha256": "7794948f987870937687bca3483cc7a7bcbd15631e74f165b045499a7c240a66",
+      "bytes": 2910,
+      "signed019Blob": "3912186b5b5b2bfe4183ce271e0950005da2ebf8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
+      "blob": "cf7058a8230c45a42b1c5a8006d9861facb4e270",
+      "sha256": "01d1c0462a0957fce9c7c2b952b0a3ee1bdc98f0f090ee1500073b3c06ac54f4",
+      "bytes": 4285,
+      "signed019Blob": "cf7058a8230c45a42b1c5a8006d9861facb4e270",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveGenome.kt",
+      "blob": "3bd1cc8d4b080c62bedf99d1b97fcf1637a3f2c3",
+      "sha256": "aaaa99327cf947513968c574bdebe2aa350d251862f17a45f2ccf4c730a6ad21",
+      "bytes": 3840,
+      "signed019Blob": "3bd1cc8d4b080c62bedf99d1b97fcf1637a3f2c3",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitivePersistence.kt",
+      "blob": "79dc8815fe8416ba7399060451514b7d223a57e4",
+      "sha256": "dc91846408638d40864e9d773e2413fa7e3c2da85cc8ce5fe3c612d0e2362219",
+      "bytes": 21307,
+      "signed019Blob": "79dc8815fe8416ba7399060451514b7d223a57e4",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveRaid.kt",
+      "blob": "45f399e578af990270cea4042e121a3df23fcd1f",
+      "sha256": "1378641dda8ec32587556ac151542ebdba2fcc502eb4e8216a23fdc82a7e3894",
+      "bytes": 3160,
+      "signed019Blob": "45f399e578af990270cea4042e121a3df23fcd1f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ComputeFabric.kt",
+      "blob": "370de7aea0618095d28402e32057df12bf1b7628",
+      "sha256": "0bce95f8c75731f449e604bcda7d8e1ce7b291823b9d03e3cd45144d7cc6c987",
+      "bytes": 10562,
+      "signed019Blob": "370de7aea0618095d28402e32057df12bf1b7628",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumBenchmark.kt",
+      "blob": "b6499cbe2fc452c274d8146a58b852a586a0ad09",
+      "sha256": "dcb0c3570ffd7069b979d6e6ebbbdf7194c7886546ed002b8634b19c875811e7",
+      "bytes": 5771,
+      "signed019Blob": "b6499cbe2fc452c274d8146a58b852a586a0ad09",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumDnaGuardian.kt",
+      "blob": "7f925439d9bf483c3d3dda84542067cd28abb72f",
+      "sha256": "d0400a695cf9812c5da928c46a813c8b3ae827ec2e9cddfd6e17a58862600e92",
+      "bytes": 2231,
+      "signed019Blob": "7f925439d9bf483c3d3dda84542067cd28abb72f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumIntelligence.kt",
+      "blob": "8ab20e1ca371b021e67ee19067105c3cca9d898d",
+      "sha256": "37fd455568dcedc7ea7d5e384f91175448bf4a5bb105225a078127642dd5c32f",
+      "bytes": 12694,
+      "signed019Blob": "8ab20e1ca371b021e67ee19067105c3cca9d898d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumRuntimeStore.kt",
+      "blob": "131a3db803a4e5c9e0cf0049b2b399ac54326d4b",
+      "sha256": "15123e381ce78cce3f74e7d22119c55bf36b80990736bc7d52938970ee94070e",
+      "bytes": 10030,
+      "signed019Blob": "131a3db803a4e5c9e0cf0049b2b399ac54326d4b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt",
+      "blob": "784acffa9f0e322a369ec7609fbe2a96c5d92cc8",
+      "sha256": "567eca9ee9748ec70aee2064d0a3057af006ecc196065585be1718287708c110",
+      "bytes": 9438,
+      "signed019Blob": "784acffa9f0e322a369ec7609fbe2a96c5d92cc8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeedStore.kt",
+      "blob": "e45a4faa14126b4024af889bc9bf61654cbf867d",
+      "sha256": "1222259d3256b53db302ec107b7e5a571cf1c1322cfb035f0f54b86b27347327",
+      "bytes": 3314,
+      "signed019Blob": "e45a4faa14126b4024af889bc9bf61654cbf867d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt",
+      "blob": "492d881a615803c5dc4a48cdd789a79d6b6869f3",
+      "sha256": "6e3694bb3a27c307d10f84d6e21ec469a0575517feab05dee4d1a86d061f1713",
+      "bytes": 7895,
+      "signed019Blob": "492d881a615803c5dc4a48cdd789a79d6b6869f3",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/Deliberation.kt",
+      "blob": "38c0186cbef8f75a0f29c82753d846cac2b8389d",
+      "sha256": "d499bf6992116571d886487b9f1d8de9f104a9a5b7b25e036dd3a553721b3d95",
+      "bytes": 8657,
+      "signed019Blob": "38c0186cbef8f75a0f29c82753d846cac2b8389d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentBacklog.kt",
+      "blob": "ec85505a90f1eac438bcb119d3b0c318590e6848",
+      "sha256": "a84b85681fa1ab29918ae43eb82e731634c81be347d7f3d354f781c17ffb8914",
+      "bytes": 46480,
+      "signed019Blob": "ec85505a90f1eac438bcb119d3b0c318590e6848",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentBacklogStore.kt",
+      "blob": "4857583f04eb4d53982c6b70cb89b06f1c684b84",
+      "sha256": "7b781b8dfd98870a6bd00d608ff224e55977e32bd854b83a1757f595f816ccf5",
+      "bytes": 10558,
+      "signed019Blob": "4857583f04eb4d53982c6b70cb89b06f1c684b84",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentCoordinator.kt",
+      "blob": "2781414458624cb0f9d41122fc378cdb5bf9410c",
+      "sha256": "47ee00b3efb11980a9d05ed8c8728c919477c6e647acaf500a57a30270e74811",
+      "bytes": 9665,
+      "signed019Blob": "2781414458624cb0f9d41122fc378cdb5bf9410c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentProtocol.kt",
+      "blob": "b01279e764cce19ec8860a043907bdbae4002549",
+      "sha256": "6b8f080d8ea0f3b62d6c07b64c787bf8341a3a0081a63353388d253faad39410",
+      "bytes": 11853,
+      "signed019Blob": "b01279e764cce19ec8860a043907bdbae4002549",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentTypes.kt",
+      "blob": "3f5f8a57a028b58d67549982984293a5221887e2",
+      "sha256": "bcc8e37ceccdb43d29145995388f55dcea0618e80c6c0134d0d3940f58deaaf9",
+      "bytes": 8439,
+      "signed019Blob": "3f5f8a57a028b58d67549982984293a5221887e2",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentUiController.kt",
+      "blob": "247f713d040071324311dde07890df6cc3fe8939",
+      "sha256": "b7bb8436779728d427f0f68bb2a3990d9d5da99fefcbf2d8e401befc02e167a1",
+      "bytes": 5849,
+      "signed019Blob": "247f713d040071324311dde07890df6cc3fe8939",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklog.kt",
+      "blob": "c2cb52806931510647c74da56dbeb89c218c24e8",
+      "sha256": "1c5ec92e9ce0c6e054811a5fd5fcc19d5d24dc90bcbc5a4e627559a9413dd425",
+      "bytes": 9185,
+      "signed019Blob": "c2cb52806931510647c74da56dbeb89c218c24e8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt",
+      "blob": "9f234ccda50ec80c95aeea7272177ee13c43c8ff",
+      "sha256": "40bef1b46519a4cfa7ee4230db3c81a90d63bea68f4e218e6372f9c59fd49b5e",
+      "bytes": 10318,
+      "signed019Blob": "9f234ccda50ec80c95aeea7272177ee13c43c8ff",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
+      "blob": "186a4a2d19d56d149b723b18df07ac0f3f64bfbe",
+      "sha256": "30edf08e39a597de19e04541f16a5d41c7a26ba8f1473af05675d33de488e441",
+      "bytes": 4665,
+      "signed019Blob": "186a4a2d19d56d149b723b18df07ac0f3f64bfbe",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/GeneralWebDiscoveryProvider.kt",
+      "blob": "6e299059c4b3a48381d16e6d2d51cbdcca8e83f3",
+      "sha256": "9f58ca6a272ed9366826b5f13d54cdb20f37ffb0ff6d98d8af7fbaef91fd3dca",
+      "bytes": 7229,
+      "signed019Blob": "6e299059c4b3a48381d16e6d2d51cbdcca8e83f3",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/GroundedWebRecall.kt",
+      "blob": "e8b614cc06c9e9eb045cc179fb46158a56033526",
+      "sha256": "d11bbab8b29f3a747757e8292eed98d2fed2aaaf2a625f790c7a1e56f7cde559",
+      "bytes": 3524,
+      "signed019Blob": "e8b614cc06c9e9eb045cc179fb46158a56033526",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+      "blob": "e4c0f56207c24b3e691404029664788dc3da2c00",
+      "sha256": "5bc480324b3dd95be450eebda30191922be79e142e93000a1b137a2f68ae1cfb",
+      "bytes": 8922,
+      "signed019Blob": "e4c0f56207c24b3e691404029664788dc3da2c00",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityDrift.kt",
+      "blob": "5b9d94e4d436c24f4bef4052a59b1d82ca92c25f",
+      "sha256": "4287c290808b018acadb42a8dbcb55071151f20191581836a72049fda110a325",
+      "bytes": 1384,
+      "signed019Blob": "5b9d94e4d436c24f4bef4052a59b1d82ca92c25f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityState.kt",
+      "blob": "a9d9a223a35ad188e6b193de6cb7bf054115c0e2",
+      "sha256": "46a5c3c0380bed0087986e7e91d0d4622b9ebb61f5e9681908315ea43b3ed90a",
+      "bytes": 4685,
+      "signed019Blob": "a9d9a223a35ad188e6b193de6cb7bf054115c0e2",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityUpdateValidator.kt",
+      "blob": "6a3d376abbeb4d365552704ff183cfb7fc1a2b1d",
+      "sha256": "953fcbb585819745c731baa52f1d7052a7ebbe0e9a686c4b47175c7ea507afb3",
+      "bytes": 2823,
+      "signed019Blob": "6a3d376abbeb4d365552704ff183cfb7fc1a2b1d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt",
+      "blob": "1d74b14ef17838c9879cc9940edaf154ed7116bd",
+      "sha256": "76f2e7d361ff8c37cd1650f3f7c20881ed66bdd9a0e7caa7f093ce97a781d4b9",
+      "bytes": 2860,
+      "signed019Blob": "1d74b14ef17838c9879cc9940edaf154ed7116bd",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
+      "blob": "6ef997f9a9bb2b341de0f856496a11dbedcbe791",
+      "sha256": "7c4be879ba0630442fa52ebffb65ddfed52063bd7153918695dfacb41d1b8393",
+      "bytes": 6271,
+      "signed019Blob": "6ef997f9a9bb2b341de0f856496a11dbedcbe791",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+      "blob": "69a6140a29108af238c1896cc6b28f03a74295df",
+      "sha256": "0226d435ebab3fa4b1f8e135520bfbe283fb532dd89076cad7700e5bcb6426c2",
+      "bytes": 21796,
+      "signed019Blob": "69a6140a29108af238c1896cc6b28f03a74295df",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt",
+      "blob": "b52b09d4898d0f61f6f8942c3cfff2df1e86695a",
+      "sha256": "05da98f3003916f1313d601412b64851f307ba1becd58b57a2de5ea731ea26f5",
+      "bytes": 3378,
+      "signed019Blob": "b52b09d4898d0f61f6f8942c3cfff2df1e86695a",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+      "blob": "3df63f05d26d97e4eec2e9c33ee5ee1a0069b608",
+      "sha256": "f5157358d4771dd91918efbae8801f15db1a801d972e64c94e929920beaf67d2",
+      "bytes": 6113,
+      "signed019Blob": "3df63f05d26d97e4eec2e9c33ee5ee1a0069b608",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/Research.kt",
+      "blob": "e8c87ffa3121df2c1ab800459240fd812fcf6e78",
+      "sha256": "a9f740864e507b362b42f4eba62b1ab33ba5079905d62406cb34c2ab19029b28",
+      "bytes": 21205,
+      "signed019Blob": "e8c87ffa3121df2c1ab800459240fd812fcf6e78",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchDossierStore.kt",
+      "blob": "e1b792e8392b23d9eb94cbeb453b8b6844d82c09",
+      "sha256": "57db323241d02090a51cbe48475d93bf5f8dca9bb5a602b3901c9d75189a8547",
+      "bytes": 14313,
+      "signed019Blob": "e1b792e8392b23d9eb94cbeb453b8b6844d82c09",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt",
+      "blob": "f6ba851bfbf585a2cba547e139421b3ecbd396c3",
+      "sha256": "b20554a96e1c01be9a094b3e4f863d8743bcd20bcc88486b45be5590b8e769da",
+      "bytes": 50986,
+      "signed019Blob": "f6ba851bfbf585a2cba547e139421b3ecbd396c3",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt",
+      "blob": "2502b9669f0867f50bfbb92d526f912dc5a2cfcd",
+      "sha256": "6d53eb1568e797c6e5574e4baa00503e70a4f5ddc58ea2da44cfe39c3542e6b0",
+      "bytes": 2953,
+      "signed019Blob": "2502b9669f0867f50bfbb92d526f912dc5a2cfcd",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+      "blob": "f2d0589e2d0214e666bdd5b0ad7a6b492e562ba1",
+      "sha256": "adaadaf521a798ce52443e5f56e45d35b57555b2171f16e415eab376e2a416c9",
+      "bytes": 4402,
+      "signed019Blob": "f2d0589e2d0214e666bdd5b0ad7a6b492e562ba1",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WebLearningInbox.kt",
+      "blob": "747b759bebef020c1265ca6253d72703480a85f3",
+      "sha256": "88b260aa815187c807db88c8347bd1e600155ebe0feb8da8f96ca70776d37ed4",
+      "bytes": 3023,
+      "signed019Blob": "747b759bebef020c1265ca6253d72703480a85f3",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WebLearningJournal.kt",
+      "blob": "10148536307c31e040567a078afd7aa4413fc321",
+      "sha256": "1346b7a2814094afa1ff651254555046a10eebe6f69439f78ffcdee43a8c41d9",
+      "bytes": 2313,
+      "signed019Blob": "10148536307c31e040567a078afd7aa4413fc321",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProvider.kt",
+      "blob": "b70d1c044ab705c3be96579a371f3b52458abdf8",
+      "sha256": "91b1d0b185622c4cac881e1e9a0273bb7465bf3458ef6de0749138120304e648",
+      "bytes": 5544,
+      "signed019Blob": "b70d1c044ab705c3be96579a371f3b52458abdf8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WikipediaResearchDiscoveryProvider.kt",
+      "blob": "3d129637d6673b7d0f4c94d95172c0cb7ec7ec84",
+      "sha256": "a35ab7180055e1cbcf6509bec508cc979f3a6a149282a725258401935af09c45",
+      "bytes": 4862,
+      "signed019Blob": "3d129637d6673b7d0f4c94d95172c0cb7ec7ec84",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/diagnostics/ContinuumDiagnostics.kt",
+      "blob": "7f5eed334ebfaf40492034d04a0726cda59af7d6",
+      "sha256": "b51630c0320b3ac8475e8012d7104d14a3dbdfb96e660186689c8d8f574721fa",
+      "bytes": 10449,
+      "signed019Blob": "7f5eed334ebfaf40492034d04a0726cda59af7d6",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumCognitiveSpine.kt",
+      "blob": "bf64ecc418d7ee0b5db563fba9a6c9e45e034bee",
+      "sha256": "126742e2aae2a60547107e865bcaf4db732a21f189680d5604577a12ca26182d",
+      "bytes": 4150,
+      "signed019Blob": "bf64ecc418d7ee0b5db563fba9a6c9e45e034bee",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ResidualSpanResearchAdapter.kt",
+      "blob": "f1cc96ec083b912e3e5684d3820661720843fa57",
+      "sha256": "e62cd9a4625022cb1df58418d2a7720066f2b43450f92ea2f0d70879436cbb0d",
+      "bytes": 1881,
+      "signed019Blob": "f1cc96ec083b912e3e5684d3820661720843fa57",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/maxultra/ContinuumCortexResearchPipeline.kt",
+      "blob": "e57d371196d2f7e9e862c4c3228c8515f547e732",
+      "sha256": "3ce3248ec34946d43176ff4c78b6f0179f76598cde32b8fa0ce9c7f5215bb103",
+      "bytes": 2834,
+      "signed019Blob": "e57d371196d2f7e9e862c4c3228c8515f547e732",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/maxultra/ContinuumCortexShadow.kt",
+      "blob": "135901226b845654c49444fbd5fe108312e294aa",
+      "sha256": "fad515a0731bc233bf15fcffb97ccea2e571d0c804eacb94d09947640ea12b16",
+      "bytes": 10132,
+      "signed019Blob": "135901226b845654c49444fbd5fe108312e294aa",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContextDecoderResearchMain.kt",
+      "blob": "e957f86f274d0006839d1ba15306719b6b9fbf77",
+      "sha256": "9e14e935e0ddc280f519f319e87ca0a80c13eb2f242653b8efbc1592ad52f338",
+      "bytes": 2070,
+      "signed019Blob": "e957f86f274d0006839d1ba15306719b6b9fbf77",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAtomicPairedBundleStore.kt",
+      "blob": "809effe5631ea82628173225e48af0baa0955951",
+      "sha256": "6aef4d9be9083f265ad33406750cd0f59390c31bf5446190d21b3ea280a7fbd7",
+      "bytes": 7620,
+      "signed019Blob": "809effe5631ea82628173225e48af0baa0955951",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueCurriculum.kt",
+      "blob": "f7771c7c36436ac7b3fbdaf45f27b4dd9b87a2a1",
+      "sha256": "69c38ca292e45be367517d3d4a0f43f828db57d44f898e848b8b83e99058b172",
+      "bytes": 4025,
+      "signed019Blob": null,
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+      "blob": "53be8a189168f374b0a3174771fef961a311f278",
+      "sha256": "d1df462e1bd0dc2d0e05b0579f8a11380f207ea3c5bd8fcfa8fea419764bf607",
+      "bytes": 5166,
+      "signed019Blob": null,
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "blob": "31debd954cd9ee427721ce0d61e1affe5035c5dd",
+      "sha256": "941ed33f466fc2cca724014e8e589d58da15073cde3b217de78612a9d97f63e7",
+      "bytes": 15225,
+      "signed019Blob": "74a4276f81587504729412c28a2348e0da0206a8",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBimodalConditioner.kt",
+      "blob": "20738275e6e40992dc750b22f5e3780412e8989f",
+      "sha256": "d99a8a23040226885b13e2be7079a5016e15c79f1d2ba4d2636aa83791e5f3a9",
+      "bytes": 2049,
+      "signed019Blob": "20738275e6e40992dc750b22f5e3780412e8989f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculum.kt",
+      "blob": "4512d431f091bf3d5b072cf3f3973405869d2880",
+      "sha256": "fced4155f01506adf5515511ad15193251b09fc090661fa9309a6b2d5bbcd30b",
+      "bytes": 4387,
+      "signed019Blob": "4512d431f091bf3d5b072cf3f3973405869d2880",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+      "blob": "08e2d886a0098e73996379a0578af2deffedd4b8",
+      "sha256": "21a359ecb13da7efeec6b78168fd4fb4e3a0e469659accba4d64193623461a63",
+      "bytes": 5344,
+      "signed019Blob": "08e2d886a0098e73996379a0578af2deffedd4b8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "blob": "7cdf1121e2f7c61ca49125a45e4b776908c6626c",
+      "sha256": "d9227f257c01aa1322acd79d2d035632f0e218afeeff573aed4ea3d011812793",
+      "bytes": 8743,
+      "signed019Blob": "656532f9798b0b5b53cf2973d296faf2ee8e6afe",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumContrastiveGate.kt",
+      "blob": "0d0211b5c8890882a2ba33e135c5dff7d63b3ad2",
+      "sha256": "36e7a4e4dc2dea0abbbc6415dae2c874831789b66dcf82b48222b98607194ba5",
+      "bytes": 3353,
+      "signed019Blob": "0d0211b5c8890882a2ba33e135c5dff7d63b3ad2",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumContrastiveViews.kt",
+      "blob": "82a886332b065aee9f8b561b35b3a205ac5535c7",
+      "sha256": "2daf98dc78554ae25cd4e9d38596cdc5acd989b989e6a732e5feba6a8d6f29df",
+      "bytes": 5134,
+      "signed019Blob": "82a886332b065aee9f8b561b35b3a205ac5535c7",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt",
+      "blob": "60d5e3e988765a40ef3e54109f01df888d7e0ba0",
+      "sha256": "f577468bac66f109d1080e44851394101a6199f2a392e15441c4409b4e4a91e5",
+      "bytes": 13526,
+      "signed019Blob": "60d5e3e988765a40ef3e54109f01df888d7e0ba0",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumDeviceTeamleaderScheduler.kt",
+      "blob": "d06be2b501b2c12171ca52dc5671841e1a1247e4",
+      "sha256": "e35159cf7f1c55b8aa0d744fbc7bd612fcd07a9a91de828aae2a04319bec0476",
+      "bytes": 6283,
+      "signed019Blob": "d06be2b501b2c12171ca52dc5671841e1a1247e4",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumDualCoreAutoStudy.kt",
+      "blob": "a7b3c5469d4145105740fae61a7130aff10c465f",
+      "sha256": "d3b977259bf17cdf3391972976e7e614212acf1da76f182442a11cdc35e19640",
+      "bytes": 1140,
+      "signed019Blob": "a7b3c5469d4145105740fae61a7130aff10c465f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumEvidenceSpanProbe.kt",
+      "blob": "90e8bef2743fd73f425793ba214af83c5ac306f8",
+      "sha256": "4db5fb99c1e819e957f589d831343e9b064453b2743309539de240f88951a2bc",
+      "bytes": 3906,
+      "signed019Blob": "90e8bef2743fd73f425793ba214af83c5ac306f8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumExtendedCurriculum.kt",
+      "blob": "921522367938e226da4d207554ae64b37685e3b2",
+      "sha256": "dcbc6c927b9ab8563af7e0f2df66080848794bf1b3d40bf172afaf29b46fb834",
+      "bytes": 9811,
+      "signed019Blob": "921522367938e226da4d207554ae64b37685e3b2",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumIntelligenceAudit.kt",
+      "blob": "4305b274ad9f0bc2543846ccc4e5635ad7961fc7",
+      "sha256": "4e0bc64398c5b2da04d76ada810c88199980ab273653b864f16aadefaa32293c",
+      "bytes": 9382,
+      "signed019Blob": "4305b274ad9f0bc2543846ccc4e5635ad7961fc7",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumIntelligenceOnDevice.kt",
+      "blob": "e3b3e91c4f50802d420fd298611b1fcf8ec19545",
+      "sha256": "b5b79027dcac002cc274d3b389125bd0f512732d70c724c84cd55d4e8c87825c",
+      "bytes": 2453,
+      "signed019Blob": "e3b3e91c4f50802d420fd298611b1fcf8ec19545",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt",
+      "blob": "5069052e05a5a49a1e88eeb1cf0441b270b43c37",
+      "sha256": "9892e78cc177261f0ebe32dedf89ee275e673adc69abe9a92f1b91cb077bb485",
+      "bytes": 10579,
+      "signed019Blob": "5069052e05a5a49a1e88eeb1cf0441b270b43c37",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "blob": "f0f901298f4365581d72c686aa0a65ed31b80610",
+      "sha256": "5d061151630f68c8c7b85e81902e559191621d7b183aaf0ebbe3a1df352919e5",
+      "bytes": 56379,
+      "signed019Blob": "8c9da619e62608155c496c25919f2c213616e7b7",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt",
+      "blob": "51b53e6a5ba9b196199f9f2d9aeed745b829d513",
+      "sha256": "9aa2f71f592e85653c1862165dea5feb59dd6cf3c31f780e6c7c7cea43210b3f",
+      "bytes": 15410,
+      "signed019Blob": "51b53e6a5ba9b196199f9f2d9aeed745b829d513",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningResourceReader.kt",
+      "blob": "3671d61276ea7212ed481e5648424713711d885a",
+      "sha256": "26e31efc42efffd47e448550bd42cf86da8967c6a906d6d22d461ade25975300",
+      "bytes": 999,
+      "signed019Blob": "3671d61276ea7212ed481e5648424713711d885a",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbe.kt",
+      "blob": "ac2aee58be6530759a8434b8c4386800d4d6ba62",
+      "sha256": "e15e768fe53f9f2c27080187ccd242c9be2235ecb5276045efcc489c5dae7402",
+      "bytes": 3122,
+      "signed019Blob": "ac2aee58be6530759a8434b8c4386800d4d6ba62",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "blob": "821d5b783324b0e19aa01fc2d6709927fecceff1",
+      "sha256": "35f4a3bf4cfdd7d4b9710b2bb30ee062fa87948255a2a7b7a9c10ac71f07fb08",
+      "bytes": 18624,
+      "signed019Blob": "71e79ff285cc509858907d9fdd3bd3c1d6cca785",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumOfflineJobStatus.kt",
+      "blob": "9e85ea069c1603dc6082b2f62c1d7c8e3db2b655",
+      "sha256": "d4f8c45921b23e4eccc00009cb668f3ac8f3d6e9d31cd65443b186a68a9d7dbe",
+      "bytes": 4614,
+      "signed019Blob": "9e85ea069c1603dc6082b2f62c1d7c8e3db2b655",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumOfflineLearningBudget.kt",
+      "blob": "3c7277bd7a2e85550bff8e24bd42b65cae17d68b",
+      "sha256": "53944042a596183d8acf9cdf7255dc253afc8d76a30fe01cc68a641f77355bfc",
+      "bytes": 2781,
+      "signed019Blob": "3c7277bd7a2e85550bff8e24bd42b65cae17d68b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumOrthographyProbe.kt",
+      "blob": "63fa173f2733a084be0dbc76050a970f4f8aa9e8",
+      "sha256": "689d8e379b7364e64dc059085e6704f7a3597c89d8a469618cc090748b499087",
+      "bytes": 3898,
+      "signed019Blob": "63fa173f2733a084be0dbc76050a970f4f8aa9e8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPairedEncoderBinding.kt",
+      "blob": "9d7ae4e5c9ddc4d703a7c75cdcca28ba61a55e59",
+      "sha256": "5998b953589ab48e38027bc99dd458043caa4c3dccee2c1d48bdb1a1f915036c",
+      "bytes": 3982,
+      "signed019Blob": "9d7ae4e5c9ddc4d703a7c75cdcca28ba61a55e59",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicCurriculum.kt",
+      "blob": "b01815924ecd740140ac9d7f215223c6f38109f0",
+      "sha256": "a043253f24f5a957125d1e5fddd3e8ccc875d2158df6228655102a4a7944507b",
+      "bytes": 9081,
+      "signed019Blob": "b01815924ecd740140ac9d7f215223c6f38109f0",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicModelPackage.kt",
+      "blob": "a8905eadb0addbdce96874e47baa6e3688ca01ee",
+      "sha256": "74866be56fc3749aa05b01c2e6f54b24670f934f9f78e7e1a05febf4f0eea44d",
+      "bytes": 2281,
+      "signed019Blob": "a8905eadb0addbdce96874e47baa6e3688ca01ee",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "blob": "9872c2209b550d8b4c361f087ddc09595324b681",
+      "sha256": "6518e5f703fa1251c3e046647726e43b9a46cec0ae6b131b2605a3a4b180ef54",
+      "bytes": 4455,
+      "signed019Blob": "9872c2209b550d8b4c361f087ddc09595324b681",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyPolicy.kt",
+      "blob": "84b91cd527d18e3482b325f5d98e10e052d33960",
+      "sha256": "ed7ea2bbe3d788ca45fedceb651b5e036fb32cbd26c1171d5de18feaa4b640f9",
+      "bytes": 3610,
+      "signed019Blob": "84b91cd527d18e3482b325f5d98e10e052d33960",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "blob": "de3b7e8860bf03cad81e0e539cf3e20961a01fda",
+      "sha256": "b19f5fb8e88b6c943656058b3eaf6c280342497d396cef0c4f15ff0157d12db0",
+      "bytes": 26562,
+      "signed019Blob": "de3b7e8860bf03cad81e0e539cf3e20961a01fda",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumRuntimeEventJournal.kt",
+      "blob": "a1cefd4cc23a38457e3753d6a8205ff6f252def1",
+      "sha256": "b9495b815fca1d18558218f1e84668827d294b0512a62cec750568e3db11f091",
+      "bytes": 2415,
+      "signed019Blob": "a1cefd4cc23a38457e3753d6a8205ff6f252def1",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumSignedCre1Package.kt",
+      "blob": "1458957737c7b54db24c140f67d0e4e138d0358a",
+      "sha256": "7a4b705ba2bc6543daf50f6673debd242d82db83ed14404f9e7ad56896569e01",
+      "bytes": 6185,
+      "signed019Blob": "1458957737c7b54db24c140f67d0e4e138d0358a",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumSourceNovelty.kt",
+      "blob": "6db6a1c7d1aa9600c24c4e9605aad1cb4a2dc581",
+      "sha256": "dfa8f833a95ab54effa69cacd3801723dceefd8d7b592fb0866b4b0be7688997",
+      "bytes": 1806,
+      "signed019Blob": "6db6a1c7d1aa9600c24c4e9605aad1cb4a2dc581",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumSwb2DecoderResearch.kt",
+      "blob": "3db862031b6b173db684932415238bef8f27c93c",
+      "sha256": "cd1cc98f06c6a17b491f5d17afce009b1c01071539b07d9a557760ced2a43322",
+      "bytes": 2584,
+      "signed019Blob": "3db862031b6b173db684932415238bef8f27c93c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumTopicFrontier.kt",
+      "blob": "ce52f5f68210e4f2c6931bac7bf55b392ced2bfa",
+      "sha256": "1b86c7a95e124af1764ff81aac2582b6a78f2136f1dec00224952fc5886786b0",
+      "bytes": 2079,
+      "signed019Blob": "ce52f5f68210e4f2c6931bac7bf55b392ced2bfa",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumTrainingMonitor.kt",
+      "blob": "f8df2741ccdfb39d6eb34c53ab232643e34196ee",
+      "sha256": "43122862745ef54c8e2ed56c7ba0d6d4743639293ffcea9aa27dd7c014c08e97",
+      "bytes": 4561,
+      "signed019Blob": "f8df2741ccdfb39d6eb34c53ab232643e34196ee",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/Cre1FrozenBenchmark.kt",
+      "blob": "921c754635e01478e0a3d01136711bb99d7593e6",
+      "sha256": "015bfde9cd4f37041046acd711eb657a80c8c291a35b73c1511ee01fe64a7e4d",
+      "bytes": 4093,
+      "signed019Blob": "921c754635e01478e0a3d01136711bb99d7593e6",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/Cre1InferenceEncoder.kt",
+      "blob": "e811681f96f2683481b73c3e43ab103cf78bd108",
+      "sha256": "99bced9f5a948547d7749a7fe809e4596ecd8289be2a96d6038c568cf39364f9",
+      "bytes": 12504,
+      "signed019Blob": "e811681f96f2683481b73c3e43ab103cf78bd108",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/Cre1PromotionAudit.kt",
+      "blob": "f2a7f932b292dda0842ddb78f2abc1fa5f2da813",
+      "sha256": "66384e3513369f47facc16753389449dc03e3b58f2f948d35fe501d37bd763ec",
+      "bytes": 5820,
+      "signed019Blob": "f2a7f932b292dda0842ddb78f2abc1fa5f2da813",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/Cre1PromotionGate.kt",
+      "blob": "7ef0f8aebc6bebdfc0e71ad45012b275d58174c6",
+      "sha256": "c4b4c3bcaa95d862b43b0d2a5c9f5a6028216b308716453fa0528424a2cc4769",
+      "bytes": 8040,
+      "signed019Blob": "7ef0f8aebc6bebdfc0e71ad45012b275d58174c6",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/Cre1ResearchLab.kt",
+      "blob": "fa6b8ce525fca56f815255cec6ba959e4fb33c43",
+      "sha256": "c0e136dcf9ae4aaf50749fc21648de01393422688e5ed135e37889122e69c544",
+      "bytes": 6029,
+      "signed019Blob": "fa6b8ce525fca56f815255cec6ba959e4fb33c43",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/LearningSnapshot.kt",
+      "blob": "ca2c12ced1f427f289d40dabc325d36b25d00cfa",
+      "sha256": "602c3ec18c710ad2d52074241712d94ee6dcacc5a3f471e1be92d3f68a58143a",
+      "bytes": 1331,
+      "signed019Blob": "ca2c12ced1f427f289d40dabc325d36b25d00cfa",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorConceptNetwork.kt",
+      "blob": "8356c19447c5f1431aed3925c3cb1809cb472e73",
+      "sha256": "9bb604b500f3ce26638aef44ac8848b2268e23b96df6defc706dba12967bc46e",
+      "bytes": 5874,
+      "signed019Blob": "8356c19447c5f1431aed3925c3cb1809cb472e73",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorCuriosityPlanner.kt",
+      "blob": "f0075bd02dabff9f8ecfc6ba205db5c79829b131",
+      "sha256": "c91ade34e95b9cebea7956c9b665311824c8b2ab5e5b17d3a4118d58ebe41df6",
+      "bytes": 2911,
+      "signed019Blob": "f0075bd02dabff9f8ecfc6ba205db5c79829b131",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorCurriculum.kt",
+      "blob": "ed1a1a988ed45f04cb87321cd79eaf5e63853848",
+      "sha256": "20686d70f586b2c6583b6af1dee35941b82ff46c427c9d1b5eb50c3e059b769e",
+      "bytes": 1569,
+      "signed019Blob": "ed1a1a988ed45f04cb87321cd79eaf5e63853848",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorRecall.kt",
+      "blob": "9726d1e2d023e5393fdaebc56be54d58ed53004f",
+      "sha256": "0874548d91b07fa19a6739865eb6cbf252b6a81edb70afc267d4ac004dd5f59e",
+      "bytes": 2291,
+      "signed019Blob": "9726d1e2d023e5393fdaebc56be54d58ed53004f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorSemanticModel.kt",
+      "blob": "c188eefcf8fceb47bbb1e9b4fd3f8cb39c61683c",
+      "sha256": "5e8c204cafbc65f13faf2ed42b3cb847483178567adb47734fc17e177c9cbbf8",
+      "bytes": 8729,
+      "signed019Blob": "c188eefcf8fceb47bbb1e9b4fd3f8cb39c61683c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorSource.kt",
+      "blob": "19acd35e5eb6f17fdcc7e6a3f6a3d0a370dd08a0",
+      "sha256": "0f169c31373457e2512729289486edce769c2216938178bfb6812882d74fbfb9",
+      "bytes": 572,
+      "signed019Blob": "19acd35e5eb6f17fdcc7e6a3f6a3d0a370dd08a0",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorStudyScheduler.kt",
+      "blob": "9776f6d4d7e66b645f9140146a5a1fde6fb07406",
+      "sha256": "299d58ebe41db5a3eedcf363792d72c62ad8bd574092a222f207b86a1405d698",
+      "bytes": 5702,
+      "signed019Blob": "9776f6d4d7e66b645f9140146a5a1fde6fb07406",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
+      "blob": "080503bdabf230b39323065936d1be2d1f71cd79",
+      "sha256": "6ae777ee5f2c728cb09918cc24f1d9b3bc61420e35c8f0b439e9d27f19e0ca60",
+      "bytes": 4926,
+      "signed019Blob": "080503bdabf230b39323065936d1be2d1f71cd79",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralCuriosityRadar.kt",
+      "blob": "4b6c0351891f7d17f98b9e30df177c160d3e580c",
+      "sha256": "b437f621fd9cd5b6692f5d82873faa538ca28d1f5132d39853507bbe9761c6aa",
+      "bytes": 1521,
+      "signed019Blob": "4b6c0351891f7d17f98b9e30df177c160d3e580c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralDialogue.kt",
+      "blob": "5fab87d551094a74143631077eb7db4018147414",
+      "sha256": "ea9a19118c98e2259eeed7ab5e3b4b97bc3c8ebe52ca1c54fb91349cd015b021",
+      "bytes": 15936,
+      "signed019Blob": "5fab87d551094a74143631077eb7db4018147414",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralGeneralizationComparison.kt",
+      "blob": "a4ec159bedaa93220358cc56be9c84abda054129",
+      "sha256": "8baef640ae2ed3b125a41ac2b66f98c98e054523e24583c006481233e85b4702",
+      "bytes": 6966,
+      "signed019Blob": "a4ec159bedaa93220358cc56be9c84abda054129",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralLearningCoach.kt",
+      "blob": "6d3a199c130e021f8759166b650aadecca6ec014",
+      "sha256": "1ce3872fa5dae967f287d553538517d8d6693fa7dd8154f9000866d79cff47e3",
+      "bytes": 4480,
+      "signed019Blob": "6d3a199c130e021f8759166b650aadecca6ec014",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralPracticeScheduler.kt",
+      "blob": "0a6a25127c1f005a4a46b00dcc05492b2dfa2fa8",
+      "sha256": "84fe6c724d0e81687c114c8c352fa21a3565833617b2c42543da9487bc58f498",
+      "bytes": 9061,
+      "signed019Blob": "0a6a25127c1f005a4a46b00dcc05492b2dfa2fa8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralTransferExperiment.kt",
+      "blob": "6b44524d0fd615a77c99fc52c107a2c0386358eb",
+      "sha256": "15d366c461d87de09b26d772c433e248cf5fbea2e36bc721361cc7ec814ce02b",
+      "bytes": 3620,
+      "signed019Blob": "6b44524d0fd615a77c99fc52c107a2c0386358eb",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/OnlineNaiveBayes.kt",
+      "blob": "d3001ddf123afeadee35a3a5b82bdcd74a572f8f",
+      "sha256": "e19e9ee4dcd85946c1faa0e333c0dbc3bcfaac111ee1fa291c247f346f918162",
+      "bytes": 4477,
+      "signed019Blob": "d3001ddf123afeadee35a3a5b82bdcd74a572f8f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/StrictJson.kt",
+      "blob": "f6ed3f4be8b0690f52b1e072b17ed4101853baed",
+      "sha256": "f1d620a4401371c740e352a28959b5929f692f572eb8c6bebbd33a5530db9930",
+      "bytes": 8535,
+      "signed019Blob": "f6ed3f4be8b0690f52b1e072b17ed4101853baed",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/StructuredKnowledge.kt",
+      "blob": "0a583818c370f4e1e3a4a507198e8a03bdb68cc1",
+      "sha256": "675d545b09aaa91c8642d8090f59cb63cfe22d4fd228685625a1ca5da3854a9a",
+      "bytes": 7028,
+      "signed019Blob": "0a583818c370f4e1e3a4a507198e8a03bdb68cc1",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/Swb2ExperimentalEncoder.kt",
+      "blob": "da0b937de5a9b46a59d3a9922e29f3038acc178e",
+      "sha256": "143bc4e6b4f475ecd7fabf8c4bd1377109467f29a4106f11cb4fe23dde327f0d",
+      "bytes": 6626,
+      "signed019Blob": "da0b937de5a9b46a59d3a9922e29f3038acc178e",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
+      "blob": "6e10ef2a45895da810fe5c6997f5d71b5b8cd8a1",
+      "sha256": "e85666004884c05b1a98bb3d9330bcdf9d1b3bd8f8c7aa6172d10e6c9f4c2d04",
+      "bytes": 15583,
+      "signed019Blob": "6e10ef2a45895da810fe5c6997f5d71b5b8cd8a1",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/TinyNeuralNetwork.kt",
+      "blob": "8fcd34e64df5fd29032a1108ae9690665ae309c4",
+      "sha256": "1d82f6642cbc2800e7ddda6eb00a5b56090b517c68b3b373e877add18ba452d8",
+      "bytes": 6264,
+      "signed019Blob": "8fcd34e64df5fd29032a1108ae9690665ae309c4",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/TrainableSubwordEncoder.kt",
+      "blob": "6eec44f7183720f96721db755258bda144f0b620",
+      "sha256": "557a97d43655e06fd7f8f498a7a8007b255364b9eaa2a89be2697a291ab9f1ff",
+      "bytes": 10281,
+      "signed019Blob": "6eec44f7183720f96721db755258bda144f0b620",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt",
+      "blob": "cb9e51b1362c22df06cde7e21247a48f12d69e8c",
+      "sha256": "41b15e9f6f3c2b060f695ab4d3c20cdd67478ab4f0c97762322f7519b7268ebb",
+      "bytes": 7327,
+      "signed019Blob": "cb9e51b1362c22df06cde7e21247a48f12d69e8c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+      "blob": "f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe",
+      "sha256": "c0ff0531cd41f54c71dc447e8de41cce2aafed4057632a7d8d7c4db62d2e8376",
+      "bytes": 4358,
+      "signed019Blob": "f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "blob": "a81eb0256ad6c59584df78ee589d4c7490545e29",
+      "sha256": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "bytes": 6695,
+      "signed019Blob": "a81eb0256ad6c59584df78ee589d4c7490545e29",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "blob": "7bc91176ea240bd287fcc214a8204d93298a9f17",
+      "sha256": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "bytes": 5547,
+      "signed019Blob": "7bc91176ea240bd287fcc214a8204d93298a9f17",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "blob": "5c5705d614f8bb457cfb10bd497e646577667005",
+      "sha256": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+      "bytes": 4496,
+      "signed019Blob": "5c5705d614f8bb457cfb10bd497e646577667005",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "blob": "1df9dc9378a732e37e8e4568a2d46310442d15a8",
+      "sha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "bytes": 13794,
+      "signed019Blob": "1df9dc9378a732e37e8e4568a2d46310442d15a8",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "blob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+      "sha256": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+      "bytes": 9364,
+      "signed019Blob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "blob": "bc1176e2b230439c3fa36d6be996444eaab8efbd",
+      "sha256": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "bytes": 17044,
+      "signed019Blob": "bc1176e2b230439c3fa36d6be996444eaab8efbd",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumCertifiedAbstention.kt",
+      "blob": "6c01a6f669bd8c5264648604a54eb986c0e2d282",
+      "sha256": "d4ac90c941d421bcb25dccf5c6d9e28ba1ad65777d3f5bb418a8d42cb0fc9325",
+      "bytes": 5100,
+      "signed019Blob": "6c01a6f669bd8c5264648604a54eb986c0e2d282",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumCounterfactualCurriculum.kt",
+      "blob": "7a0694c70de6f3d9461e91d1e6e9506db61aa33f",
+      "sha256": "e0fe01d6d591c2f027a5d905965110d501c3c1983539167e43a5b46859cc6ef1",
+      "bytes": 3024,
+      "signed019Blob": "7a0694c70de6f3d9461e91d1e6e9506db61aa33f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumResidualSpanCore.kt",
+      "blob": "5b0b22e849023fa5e771e3e3e6daf4b3106c501d",
+      "sha256": "633d39ee72942eb6cd1b0116aa6da263419679dd8e9a37efe573e6dd0590247b",
+      "bytes": 22644,
+      "signed019Blob": "5b0b22e849023fa5e771e3e3e6daf4b3106c501d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumSelectiveRiskCertification.kt",
+      "blob": "75f75353458b30169182757358ea935590239239",
+      "sha256": "a20533038835be0c73a1c0f3e20be2b66db5516f433de542e0f3f78844f8d3ca",
+      "bytes": 8748,
+      "signed019Blob": "75f75353458b30169182757358ea935590239239",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "blob": "69bb6f7320560fdb6b51098e87d5e25de289713a",
+      "sha256": "31deb58f4fd03d53dbcfdaa5cfc786c2ed25be3913d97ff4970c2a3485a1ecac",
+      "bytes": 21259,
+      "signed019Blob": "69bb6f7320560fdb6b51098e87d5e25de289713a",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+      "blob": "0581247a8f97dec795099214b91ac1b747b70c6f",
+      "sha256": "3dbcf54f5cd544e0c8d7979eb97f6f76297db707e00c89006aefb66c1583ff2d",
+      "bytes": 12297,
+      "signed019Blob": "d7f0192e39a36ce90e300ffbb03e437c9788ee29",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+      "blob": "ef3574c97799997961354286eff3e98e189b8ffa",
+      "sha256": "3b1629e3fbd41f214a2b363919e24c81629486114f25ea5e7c58f64fbdd38cf9",
+      "bytes": 963,
+      "signed019Blob": "ef3574c97799997961354286eff3e98e189b8ffa",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalQwenPromptPolicy.kt",
+      "blob": "65e0ae06c027f2824e2c84a381fce1b40ba39265",
+      "sha256": "60d8188aff4e44f8bff6ce6f5961f37490fff116b020ecc3355ffaa2fbf4fee0",
+      "bytes": 1114,
+      "signed019Blob": "65e0ae06c027f2824e2c84a381fce1b40ba39265",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalToolTurnGate.kt",
+      "blob": "0c9d67983796bc2ed774aa3fda2ac7fcfd8ff250",
+      "sha256": "5bde9f200bdd43ab754d56cc1a3c11704728063898d9f54289f515386b9eeb36",
+      "bytes": 575,
+      "signed019Blob": "0c9d67983796bc2ed774aa3fda2ac7fcfd8ff250",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/AndroidContinuumPainter.kt",
+      "blob": "f2b0934435037d389a64301f3f4e7869f37d4f4f",
+      "sha256": "2de5bd972b64bdf3aedc56144420963ca8fa6a6c5a4c727c4a1f3b3a393816a7",
+      "bytes": 8004,
+      "signed019Blob": "f2b0934435037d389a64301f3f4e7869f37d4f4f",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumBentoCockpit.kt",
+      "blob": "d13c5f13f4f6f72a09efb84055555f3a72abd3df",
+      "sha256": "d34d10e1f767b990f1e89f68737e21dc6563039ddbad1b2a6b4f50275cf3f3cd",
+      "bytes": 12442,
+      "signed019Blob": "d13c5f13f4f6f72a09efb84055555f3a72abd3df",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumControls.kt",
+      "blob": "70566627946672612316316243c1758fad799b96",
+      "sha256": "1e1c99200b09fd9fc842dc50e5836a42563f89a7b23e16b087a1e9cc6d41b626",
+      "bytes": 4427,
+      "signed019Blob": "70566627946672612316316243c1758fad799b96",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardMath.kt",
+      "blob": "e5c5306a97df99c717684a15678b6632749844cf",
+      "sha256": "1969a60216e2df2c70937ddff0cb23a12ae809156f8bda7f872a55f50d5c15d4",
+      "bytes": 4977,
+      "signed019Blob": "e5c5306a97df99c717684a15678b6632749844cf",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardState.kt",
+      "blob": "dfc46555a6870a608faa2036924ae99cea493ee4",
+      "sha256": "e02b81a4b2c321360ae6cbd43f7064a76c9c0ff6003cc9165b4380124fffaa04",
+      "bytes": 8113,
+      "signed019Blob": "dfc46555a6870a608faa2036924ae99cea493ee4",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumFonts.kt",
+      "blob": "73ab177c7e9cf90689f62a3896c1a3fcdfb33870",
+      "sha256": "9045765c008c3110a68d6324270738e3dff9dfe37d57801a6877f4b9dc3ceca2",
+      "bytes": 1094,
+      "signed019Blob": "73ab177c7e9cf90689f62a3896c1a3fcdfb33870",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumGridPolicy.kt",
+      "blob": "b6c72af37329259907b2d4d92b714fee22408277",
+      "sha256": "58e2e808f37ce6026dcdb65b146d3ef00ea8752c5e98281d4b093f8781070579",
+      "bytes": 810,
+      "signed019Blob": "b6c72af37329259907b2d4d92b714fee22408277",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramPlexus.kt",
+      "blob": "fb89a6329cafec8f18d5068bf41447c1e31b753b",
+      "sha256": "3ce63bfb8ae0a656b20eca5a388dc5b8202a4e8128e7797d4f0cef3a258e1027",
+      "bytes": 9592,
+      "signed019Blob": "fb89a6329cafec8f18d5068bf41447c1e31b753b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+      "blob": "9b27cc7d7e7b005d23f4f7cc2be32f4b792ec1ec",
+      "sha256": "a6d13328988d17d1f417997900e8f108695be4a400f85d54f7ec53c04d122294",
+      "bytes": 38476,
+      "signed019Blob": "2bb8817da268bdcca676aa9a9b48f56b50d06609",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt",
+      "blob": "e243a487a2011906a9c149a2324b63b39ad2f25c",
+      "sha256": "ab2d7490af5e0926add7dc7d8429519a80fe1cbf4777a987e8530a2e97c1982e",
+      "bytes": 32585,
+      "signed019Blob": "e243a487a2011906a9c149a2324b63b39ad2f25c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+      "blob": "22a924b206f18b04dafdd8447a3cd3415006a94e",
+      "sha256": "7b740fc8c7345c1580ea7acf3ec40164943fde5f6c33d02e5b57d9509de2bbad",
+      "bytes": 7847,
+      "signed019Blob": "22a924b206f18b04dafdd8447a3cd3415006a94e",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt",
+      "blob": "5f9edeccfccb99b0efe83b122f8d314217d0b71d",
+      "sha256": "743dcf69ce2be445caafad0750f8c11ab717fcc54491250b63a47eb0e3f39edc",
+      "bytes": 4070,
+      "signed019Blob": "5f9edeccfccb99b0efe83b122f8d314217d0b71d",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "blob": "f1bc7cdd804285b6d3e698d079f556c13d00ddab",
+      "sha256": "74f9981f021b83ad8eac4f1fc3401baff26f0680535862b5e066ab75d5f09449",
+      "bytes": 12922,
+      "signed019Blob": "fd4e2e448c56f2b0f3a5323ff73a82aba5fd4a28",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumIcons.kt",
+      "blob": "33baa73cc58110a38a0df13dccbd9a7c0dd0703c",
+      "sha256": "d9caa618d86b8d3cff86d0c127165059a9983bcfd567fa6bb8d11ec2c9c44452",
+      "bytes": 10653,
+      "signed019Blob": "33baa73cc58110a38a0df13dccbd9a7c0dd0703c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt",
+      "blob": "35a92c7a8587e22d6e5dfaa93550407371d5e304",
+      "sha256": "97ea8358c09c23ac688fbdc7eed4579b3a88ce80d3b3a010890df84406a3a46b",
+      "bytes": 3294,
+      "signed019Blob": "35a92c7a8587e22d6e5dfaa93550407371d5e304",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumPainter.kt",
+      "blob": "00690eed087675cb74dffaf4a8bec765de8b2bb3",
+      "sha256": "976136b814b208de8e88cf9f5055b293a91be93c10b5373a1cbb6952af334169",
+      "bytes": 7363,
+      "signed019Blob": "00690eed087675cb74dffaf4a8bec765de8b2bb3",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumSciFiEffects.kt",
+      "blob": "2203db5d8fc2fc7d6b0f5a6c092366efa73bd3d0",
+      "sha256": "67fda92c69d3bf9e3c6bdd67fcb2fd58bd06b6b61c7a96bd1210aaf56c0d0e98",
+      "bytes": 2767,
+      "signed019Blob": "2203db5d8fc2fc7d6b0f5a6c092366efa73bd3d0",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumSurfaces.kt",
+      "blob": "fceb5d50c3070ce9da043004530d4c134b54ed9c",
+      "sha256": "a3a995311a230ff0f521b4bc878a59542f554eb0430a39cf9a4f87a4a251a261",
+      "bytes": 5017,
+      "signed019Blob": "fceb5d50c3070ce9da043004530d4c134b54ed9c",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt",
+      "blob": "d4b0dbb34112c5b426f8b604bf9456f40ad32d19",
+      "sha256": "cbfe6cf1bc90629b4b963b4eecf3eba5015d6ba7678369184ab844f1cd6fa2d2",
+      "bytes": 7850,
+      "signed019Blob": "edaa4acbab2c9f2086d26d95e1044a3ccc4c7fc5",
+      "changedSince019": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumTheme.kt",
+      "blob": "087de0b840b347ed402eb65ec51975229b1dc31b",
+      "sha256": "9ae047746ee3b3b707a68c814db221d9b457303c66d82621b4ed65ad86ecd207",
+      "bytes": 2626,
+      "signed019Blob": "087de0b840b347ed402eb65ec51975229b1dc31b",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumUiSnapshot.kt",
+      "blob": "1be0b2fb11acac3889960ea1dd8111ec5bc9a8dd",
+      "sha256": "99daf6733d96637b754d5fac5fe18384fd6ac66227bc9cf9457e3dfa1adcdb0b",
+      "bytes": 5159,
+      "signed019Blob": "1be0b2fb11acac3889960ea1dd8111ec5bc9a8dd",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumWideElements.kt",
+      "blob": "6885c0b682ba513a3afc0ddcaa566a5e2bc7f557",
+      "sha256": "908462f84c6fc17676f1426be72f0d4d2b6e401ca7813bdc0195f6810dd86601",
+      "bytes": 23038,
+      "signed019Blob": "6885c0b682ba513a3afc0ddcaa566a5e2bc7f557",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/color/continuum_dialog_button_text.xml",
+      "blob": "5c00a94af3c74b67a68b93c80ffad467da9b2989",
+      "sha256": "c756c9218ec4f5448da0954e2315c2ce973d0f021f0b0efed46c4c287f341a79",
+      "bytes": 291,
+      "signed019Blob": "5c00a94af3c74b67a68b93c80ffad467da9b2989",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/drawable/continuum_dialog_surface.xml",
+      "blob": "17174764c7ffecf3106225e17222ea7edf7bb71e",
+      "sha256": "8811d93757b2f3e56c325755c111cdde7c0a9c0b2b84d9e534bbbbed6c4445d4",
+      "bytes": 549,
+      "signed019Blob": "17174764c7ffecf3106225e17222ea7edf7bb71e",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/drawable/continuum_widget_chip.xml",
+      "blob": "b85c6c9f883b528a8e1678c35d0f46a95561b4ff",
+      "sha256": "622e128e9e83074bcdeb8b1062b7bbc3df603e5648675cb2a1a8f8422683b3f4",
+      "bytes": 250,
+      "signed019Blob": "b85c6c9f883b528a8e1678c35d0f46a95561b4ff",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/drawable/continuum_widget_panel.xml",
+      "blob": "c7dc776aec6dddd6d21bd513a974522e641fe870",
+      "sha256": "a67bdc84a0daebddb2b8e396aa69226ee2fc3e9f69ae27dfd686298c28484621",
+      "bytes": 333,
+      "signed019Blob": "c7dc776aec6dddd6d21bd513a974522e641fe870",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/drawable/device_ai_holo_logo.xml",
+      "blob": "c60dc7a8d96140b66acf3f9a7114b8f892695685",
+      "sha256": "19e3c018a1f33adc03d3176190a1d8e0725b8cf96cd99f8a600713db2a6a2cce",
+      "bytes": 1296,
+      "signed019Blob": "c60dc7a8d96140b66acf3f9a7114b8f892695685",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/drawable/device_ai_model_stack.xml",
+      "blob": "445ebc132df1689ecdbf1f98b3efbb75d80588db",
+      "sha256": "ed91ae3143e94754aff7c211c011dbbf1e1dc7669ca90ec76822e8bef6faf433",
+      "bytes": 1969,
+      "signed019Blob": "445ebc132df1689ecdbf1f98b3efbb75d80588db",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/drawable/device_ai_robot.xml",
+      "blob": "aa1b37d907ee8cc05335667c37594ca172330bed",
+      "sha256": "87a4c3bd838a8d0aed73f35ea09ba59ce1d8f0dbef62213f7beb55471bda78e9",
+      "bytes": 3101,
+      "signed019Blob": "aa1b37d907ee8cc05335667c37594ca172330bed",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_device_ai.xml",
+      "blob": "f01d6f7f520463a59f239d070df5aae5d2caf3bf",
+      "sha256": "8e3a44181b947f0ad4d965dc36d9763b5aaa670b1dce40606ee1611a92eef5bc",
+      "bytes": 1317,
+      "signed019Blob": "f01d6f7f520463a59f239d070df5aae5d2caf3bf",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/layout/continuum_training_widget.xml",
+      "blob": "019f9ca539b0d09e29b8de2513401f80de7667bb",
+      "sha256": "b00391e5d0876c77e8fc518250dc96ca61ac5eba2e447ff4958cb2191b5f59f2",
+      "bytes": 5964,
+      "signed019Blob": "019f9ca539b0d09e29b8de2513401f80de7667bb",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/values-v27/styles.xml",
+      "blob": "ca8ec78c0cf352e32f03b6d8148a7604729d0056",
+      "sha256": "fc88637a0f1d07160f1f272bf1e2baec0023b8d9feeffd270c6a8159fbcc8bea",
+      "bytes": 696,
+      "signed019Blob": "ca8ec78c0cf352e32f03b6d8148a7604729d0056",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/values/continuum_widget_strings.xml",
+      "blob": "5ceac16e5ca8cf2f8411a7d79fa8c36fec7076bd",
+      "sha256": "ad812770475b8e7d90b1dd4304e15cc75ec2f3419f4bc95718a7fba49ca2e328",
+      "bytes": 225,
+      "signed019Blob": "5ceac16e5ca8cf2f8411a7d79fa8c36fec7076bd",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/values/styles.xml",
+      "blob": "4e4a86ee4eb831309c35fc72a2ebb191b48ec660",
+      "sha256": "f73284fa41e32ca300d66e3f539eaa65b6b3283ea78044a47f9b4ae67db3bd54",
+      "bytes": 2050,
+      "signed019Blob": "4e4a86ee4eb831309c35fc72a2ebb191b48ec660",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/res/xml/continuum_training_widget_info.xml",
+      "blob": "6fed0d62dfc40ba0f70e43c9a1918d76948649f5",
+      "sha256": "55ac789688413009756b88f7238cd30d5b29a69c6862212595f4a473ca904d94",
+      "bytes": 503,
+      "signed019Blob": "6fed0d62dfc40ba0f70e43c9a1918d76948649f5",
+      "changedSince019": false
+    },
+    {
+      "path": "app/src/main/resources/continuum/benchmark-v1.json",
+      "blob": "5b306ab09a4d52f5aab06e30a9c16733080c1edd",
+      "sha256": "d34afafdf98ab5cf58753d6533db9cbc6ff7027883a4bc2a60a9107576751fee",
+      "bytes": 12533,
+      "signed019Blob": "5b306ab09a4d52f5aab06e30a9c16733080c1edd",
+      "changedSince019": false
+    },
+    {
+      "path": "build.gradle.kts",
+      "blob": "0c78129a579e19d3c36507270447c0ac923d6990",
+      "sha256": "30b87bf76d9ec1604dfe579fdf5d71e1d722fe05b8a7043b9deed7ae6916e499",
+      "bytes": 142,
+      "signed019Blob": "0c78129a579e19d3c36507270447c0ac923d6990",
+      "changedSince019": false
+    },
+    {
+      "path": "gradle.properties",
+      "blob": "576d1063c72ad332decbf9614b20f447c673af9d",
+      "sha256": "949550ad13b20c9dbd693a5c4dd59896c55bc5c441f473b1e83ed1e5ccca6923",
+      "bytes": 102,
+      "signed019Blob": "576d1063c72ad332decbf9614b20f447c673af9d",
+      "changedSince019": false
+    },
+    {
+      "path": "scripts/render-mentor-owner-update-v20.sh",
+      "blob": "8c41bdc45788e63edce7ec62990881bb6125de9f",
+      "sha256": "6cc045cd9050fe1fa8cfb9575696a687d5fb906b30c9b38c9d445da08b3ec7fc",
+      "bytes": 16815,
+      "signed019Blob": "8c41bdc45788e63edce7ec62990881bb6125de9f",
+      "changedSince019": false
+    },
+    {
+      "path": "scripts/render-mentor-preview.sh",
+      "blob": "5666738634c2aba4607adf7136fb377be26d93fb",
+      "sha256": "0b6c9e8bfe8bcf95a817fe418158a552b6b29875804083b1ae5facdbdd4ad25f",
+      "bytes": 12790,
+      "signed019Blob": "5666738634c2aba4607adf7136fb377be26d93fb",
+      "changedSince019": false
+    },
+    {
+      "path": "settings.gradle.kts",
+      "blob": "a28a73967af24ad4ae6fb5f3cc7e681e258b63f4",
+      "sha256": "eae2b268ce19144a26aeb6487bf1e43d0ff09b52e4d417e4451a9f4b12fe81be",
+      "bytes": 328,
+      "signed019Blob": "a28a73967af24ad4ae6fb5f3cc7e681e258b63f4",
+      "changedSince019": false
+    }
+  ]
+}

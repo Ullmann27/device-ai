@@ -1,0 +1,262 @@
+{
+  "taskId": "android-memory017b-01",
+  "localSource": "d3487a83ea1cc61a34afcde4e17601c56def9ed2",
+  "remoteSource": "4b6c38902c1ebb93598dd125f5ea0bcc3cddabf8",
+  "tree": "5c9745630cca44da3cb297761c8c59622e6c3a15",
+  "command": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumStandaloneVersionCode=41",
+    "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-memory017b-01-active-test.json",
+    "-PcontinuumAuditTestClasses=at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest,at.heinz.deviceai.cockpit.MemoryEventSourceTest,at.heinz.deviceai.cockpit.RealMemoryEventSourceTest,at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest,at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest,at.heinz.deviceai.MemoryRecallActivityUiTest",
+    "-I",
+    "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+    ":app:testDebugUnitTest"
+  ],
+  "startedAt": "2026-11-04T21:27:55.842336+00:00",
+  "finishedAt": "2026-11-04T21:28:20.888591+00:00",
+  "exitCode": 0,
+  "sourceUnchanged": true,
+  "counts": {
+    "total": 23,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0
+  },
+  "suites": {
+    "at.heinz.deviceai.MemoryRecallActivityUiTest": 2,
+    "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest": 10,
+    "at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest": 2,
+    "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest": 4,
+    "at.heinz.deviceai.cockpit.MemoryEventSourceTest": 2,
+    "at.heinz.deviceai.cockpit.RealMemoryEventSourceTest": 3
+  },
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.MemoryRecallActivityUiTest",
+      "name": "constructionDefersCompilerUntilAttachedAccessAndRecallReachesTheMainLooper",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.MemoryRecallActivityUiTest",
+      "name": "actualSubscriptionTeardownDropsQueuedRecallAndResubscriptionRemainsLive",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "invalidScoresNeverBecomeConfidenceAndRankOneIsUsedInsteadOfTheLargestScore",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "malformedTextFieldsAreNotForwardedToPresentationAsIdsOrHashes",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "listenerAlreadyCapturedByRealHubIsSuppressedAfterClose",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "closeWaitsForDeliveryAlreadyInProgressAndNoDeliveryStartsAfterItReturns",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "detachingMapperBeforeCloseSuppressesAnAlreadyQueuedMainThreadFlush",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "realRetrieverEmitsOnlySaltedQueryHashCountAndScoreWithoutOwnerText",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "closeCanBeCalledFromTheSinkAndUnsubscribesExactlyOnce",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "factorySharesCanonicalDirectoryButNeverAnotherAppsEvents",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "realHubMapsDocumentAndStorageOnlyDuringTheMainThreadFlush",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+      "name": "throwingVisualSinkCannotStopOtherSubscriptionsOnTheRealHub",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest",
+      "name": "closingAppFactorySubscriptionSuppressesAnAlreadyCapturedHubListener",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest",
+      "name": "appFactoryRejectsRawTextMetadataButDeliversValidStorageEvents",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest",
+      "name": "aRendererCanWaitForAnotherProducerWithoutHoldingAMapperLock",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest",
+      "name": "detachingInTheStorageCallbackDropsThePendingRecall",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest",
+      "name": "detachingInTheDocumentCallbackDropsTheRemainingKindsInThatFlush",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest",
+      "name": "concurrentProducerAndFlushAccountForEveryWriteExactlyOnce",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventSourceTest",
+      "name": "productionSourceIsHonestlyMissing",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventSourceTest",
+      "name": "fakeSourceEventsArePostedThenMappedToCockpitEvents",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.RealMemoryEventSourceTest",
+      "name": "closingTheSourceStopsEventsAndAppDirectoriesRemainIsolated",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.RealMemoryEventSourceTest",
+      "name": "subscribingDoesNotInventActivityAndActualConfirmationArrives",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.RealMemoryEventSourceTest",
+      "name": "anActualRevocationIsNotAConfirmedEvent",
+      "status": "PASS",
+      "failure": null
+    }
+  ],
+  "caseStartEndIdentitiesMatch": true,
+  "scope": "ACTUAL_ANDROID_PROJECT_FOCUSED_JVM_OR_ROBOLECTRIC_CLASSES",
+  "limits": [
+    "Not a full Android or lint gate",
+    "No model, native GPU, physical device or APK acceptance",
+    "Overlapping prior and future test groups must not be added"
+  ],
+  "archive": {
+    "name": "android-memory017b-01.tar.xz",
+    "bytes": 8448,
+    "sha256": "23135ea515b55f3e48aa7de976e36271fc7aeac382c4bd58bf19efdeab8ddd7e",
+    "members": [
+      {
+        "path": "android-memory017b-01-active-test.json",
+        "bytes": 183,
+        "sha256": "3a533b9ad0db6cd36c90bcb19cd0efb69b3e167da5cee73c9a3faeec2d84f5a6"
+      },
+      {
+        "path": "android-memory017b-01.log",
+        "bytes": 10741,
+        "sha256": "f661d00a44b4dec9c2c5ac4c846cd2c4c712a92dbb2aec8f1dda4f64a096882a"
+      },
+      {
+        "path": "android-memory017b-01.result.json",
+        "bytes": 1947,
+        "sha256": "b6f40931680b00d2ab7fddc74a24e75795d7ad07a79c0f551636f603ee4ec26e"
+      },
+      {
+        "path": "archive_android_gate.py",
+        "bytes": 4561,
+        "sha256": "3ef7baedee1123ac7756a5cbc85b960dcb1fd2ae0a30fb55e2ca1806720b3acf"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.MemoryRecallActivityUiTest.xml",
+        "bytes": 656,
+        "sha256": "b0beb8d2766b1aee928967c6299db8b4ef9e36c37dc860dff8527a2f1748c8e4"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest.xml",
+        "bytes": 2411,
+        "sha256": "943b1640b6b29567894b95b03d258e366489d2ce86ddcfabff0f79eefa77f85c"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest.xml",
+        "bytes": 684,
+        "sha256": "e1b787b3d5eafaeb7a5ed876a5351511ba8a223a5587de1f5a274da3d5a3a77a"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest.xml",
+        "bytes": 1034,
+        "sha256": "35835ce11966c0d77d6046fd3b5761723082a1f94ab3f175f217dea9e3c5685c"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cockpit.MemoryEventSourceTest.xml",
+        "bytes": 601,
+        "sha256": "a5ea029fcb99b9642854a75b8b7916b7cb946b6ac038a919d0dc10d2dc284de1"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cockpit.RealMemoryEventSourceTest.xml",
+        "bytes": 787,
+        "sha256": "0f19fe06373fbcc5e71af196c0d953f44717c5b6c64b71c541eade426c2a5a52"
+      },
+      {
+        "path": "observe-tests.init.gradle",
+        "bytes": 1798,
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb"
+      },
+      {
+        "path": "run_c1_gate_v3.py",
+        "bytes": 5722,
+        "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd"
+      },
+      {
+        "path": "summary.json",
+        "bytes": 7205,
+        "sha256": "64232065160369607ebfa9e309a4e0421fdfb3f52ad6159c5ef21d26191445cf"
+      }
+    ]
+  }
+}

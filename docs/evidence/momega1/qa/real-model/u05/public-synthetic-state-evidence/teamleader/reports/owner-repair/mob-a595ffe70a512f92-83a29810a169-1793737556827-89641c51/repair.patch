@@ -1,0 +1,7 @@
+diff --git a/lib/subject.mjs b/lib/subject.mjs
+index 5f1c985..8515981 100644
+--- a/lib/subject.mjs
++++ b/lib/subject.mjs
+@@ -1 +1 @@
+-export const run = values => values.filter((v,i)=>values.lastIndexOf(v)===i);
++export const run = values => [...new Set(values)].sort((a, b) => values.indexOf(a) - values.indexOf(b));

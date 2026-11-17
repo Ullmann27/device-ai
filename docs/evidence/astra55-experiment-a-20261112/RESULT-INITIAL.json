@@ -1,0 +1,260 @@
+{
+  "experiment": "CODE55-A-MONITOR-UNIFORMS",
+  "source_commit": "af4ce72efea2ac09f5c2ef231d70a98948ec2715",
+  "baseline_commit": "5f87bdc610944b93d3173a83c5beeea315abeb66",
+  "host_gate": "PASS",
+  "status": "SOURCE_INTEGRATED_ON_EXPERIMENT_BRANCH",
+  "native_gpu": "NOT_RUN",
+  "device": "NOT_RUN",
+  "gradle": "NOT_RUN",
+  "primary_metric": "Calls to frameAvailable, pointerAvailable and contentScale inside 60 synthetic update ticks; excludes setup and shutdown; not all Filament calls",
+  "scenarios_per_arm": 14,
+  "arms": [
+    "baseline",
+    "enabled",
+    "disabled"
+  ],
+  "source_hashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "86c9e939ce20bf1d96c66829ea91e59c3c8a55eb93feeb43eb6a673fe7ede0cd",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "13723d111bc2248aa8e7ffa677e00cffb28eb10cd6e52948da828ef177988e88",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "89ac810d7795f14733424b0f7d908d8edd83f08bdb26033e338f14bab104d239",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9"
+  },
+  "baseline_source_hashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "3ad786ce3b1bdce96d80fb4b32b37f7646bb04ff43cef2b0fb3549db08188731",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitPresentationSequence.kt": "20fbee7f3a14b86a15aa9d7b0cac373cade23259c223d287c5dd49d5d7f11e31",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": "77f37b8fd75398a75c46cdf0a97d21b29d81457c66ab031b8e8ba75377c20a16",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerFrames.kt": "13723d111bc2248aa8e7ffa677e00cffb28eb10cd6e52948da828ef177988e88",
+    "app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt": "89ac810d7795f14733424b0f7d908d8edd83f08bdb26033e338f14bab104d239",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+    "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9"
+  },
+  "harness_hashes": {
+    "DisplayUniformExperiment.kt": "2309e42cc07bd00cf01a0c1d0c02630c3449b530d44e78570d959e45d9204a1f",
+    "fixtures/AndroidColorSpace.kt": "b01a522949fdd5b026f8f848a2a545c7bbab85783c896badc73325659552cabe",
+    "fixtures/AndroidHardware.kt": "532347325cf53eaf1a455593d1fbdad63a0380df862bbe761c81de44c80b8c54",
+    "fixtures/AndroidOs.kt": "20cf7b8d07aee13219ca05aba2f28e36fb7979dd8c359ddf912a5bca1f60bb06",
+    "fixtures/AnimationType.kt": "dd3c37e8feb9692d3cfcbeba2b35b922620b8cf8fe5621d8eb2434e05ebbe074",
+    "fixtures/FilamentFixtures.kt": "7d394a0e8c4bccf8b7a48b5257a27a4d8a463e3db20ef4ec23ea87e96e5fcac2"
+  },
+  "runner_sha256": "202ed1ec62d5db23d8826816f398c033b4289c639f94b04f677b58a89125b2ee",
+  "compiler_dependencies": {
+    "kotlin-compiler-embeddable-2.0.20.jar": "a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad",
+    "kotlin-stdlib-2.0.20.jar": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+    "kotlin-reflect-2.0.20.jar": "18f451e6b4b7bd1d1f9d60849c3cbf160e115302f97a2008c190d505c439c670",
+    "kotlin-script-runtime-2.0.20.jar": "fe97002a6798f7207564648919d6eeccfb338b95dc04b48886d856655bc64a4e",
+    "trove4j-1.0.20200330.jar": "c5fd725bffab51846bf3c77db1383c60aaaebfe1b7fe2f00d23fe1b7df0a439d",
+    "annotations-24.0.1.jar": "61666dbce7e42e6c85b43c04fcfb8293a21dcb55b3c80e869270ce42c01a6b35",
+    "kotlinx-coroutines-core-jvm-1.6.4.jar": "c24c8bb27bb320c4a93871501a7e5e0c61607638907b197aef675513d4c820be"
+  },
+  "max_heap_mib": 512,
+  "all_state_import_release_traces_equal": true,
+  "disabled_all_call_budgets_equal_baseline": true,
+  "comparisons": [
+    {
+      "case": "sixty_ticks_ten_frames",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 180,
+      "enabled_writes": 2,
+      "disabled_writes": 180,
+      "saving": 0.9888888888888889,
+      "primary_gate": true
+    },
+    {
+      "case": "sixty_ticks_one_frame",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 180,
+      "enabled_writes": 2,
+      "disabled_writes": 180,
+      "saving": 0.9888888888888889,
+      "primary_gate": true
+    },
+    {
+      "case": "no_source",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 24,
+      "enabled_writes": 0,
+      "disabled_writes": 24,
+      "saving": 1.0,
+      "primary_gate": null
+    },
+    {
+      "case": "session_switch_and_old_callback",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 17,
+      "enabled_writes": 8,
+      "disabled_writes": 17,
+      "saving": 0.5294117647058824,
+      "primary_gate": null
+    },
+    {
+      "case": "pause_stop_and_rebind",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 19,
+      "enabled_writes": 8,
+      "disabled_writes": 19,
+      "saving": 0.5789473684210527,
+      "primary_gate": null
+    },
+    {
+      "case": "resize_and_content_aspect",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 18,
+      "enabled_writes": 4,
+      "disabled_writes": 18,
+      "saving": 0.7777777777777778,
+      "primary_gate": null
+    },
+    {
+      "case": "viewport_pointer_and_frame_binding",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 24,
+      "enabled_writes": 6,
+      "disabled_writes": 24,
+      "saving": 0.75,
+      "primary_gate": null
+    },
+    {
+      "case": "stale_and_out_of_order",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 11,
+      "enabled_writes": 6,
+      "disabled_writes": 11,
+      "saving": 0.4545454545454546,
+      "primary_gate": null
+    },
+    {
+      "case": "latest_frame_only",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 3,
+      "enabled_writes": 2,
+      "disabled_writes": 3,
+      "saving": 0.33333333333333337,
+      "primary_gate": null
+    },
+    {
+      "case": "delayed_gpu_releases",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 12,
+      "enabled_writes": 4,
+      "disabled_writes": 12,
+      "saving": 0.6666666666666667,
+      "primary_gate": null
+    },
+    {
+      "case": "unsupported_color",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 6,
+      "enabled_writes": 3,
+      "disabled_writes": 6,
+      "saving": 0.5,
+      "primary_gate": null
+    },
+    {
+      "case": "import_failure_retry",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 6,
+      "enabled_writes": 3,
+      "disabled_writes": 6,
+      "saving": 0.5,
+      "primary_gate": null
+    },
+    {
+      "case": "material_failure_retry",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 7,
+      "enabled_writes": 3,
+      "disabled_writes": 7,
+      "saving": 0.5714285714285714,
+      "primary_gate": null
+    },
+    {
+      "case": "feed_detach_and_stream_reset",
+      "equivalent_trace": true,
+      "disabled_matches_baseline": true,
+      "baseline_writes": 20,
+      "enabled_writes": 12,
+      "disabled_writes": 20,
+      "saving": 0.4,
+      "primary_gate": null
+    }
+  ],
+  "boundary": "Host execution of full newly compiled CockpitLiveTexture; Android/Filament fixtures, no native GPU",
+  "sdk_compile": {
+    "compile_exit": 0,
+    "compiler": "2.4.0",
+    "sdk": 36,
+    "filament": "1.56.0",
+    "max_heap_mib": 512,
+    "boundary": "Compile-only against actual Android/Filament types and existing integration main classes; current unchanged caller/geometry sources included; no native/GPU execution",
+    "sources": {
+      "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "86c9e939ce20bf1d96c66829ea91e59c3c8a55eb93feeb43eb6a673fe7ede0cd",
+      "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "5910fda1223e42f54c97973a05ff619fd58ad49b72ecddaa853e8a6f5b451d86",
+      "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitWorldTransforms.kt": "47e4401345d3d3c6af678b89a1b8d479adf4a5226850f83713a50f4a9574aec0",
+      "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitOrbMotion.kt": "f67133d9bab28f25c7d2069cc7fcf55407618aa1ac2c88f10b91d4ee5b5b5d68"
+    },
+    "sources_after": {
+      "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt": "86c9e939ce20bf1d96c66829ea91e59c3c8a55eb93feeb43eb6a673fe7ede0cd",
+      "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": "5910fda1223e42f54c97973a05ff619fd58ad49b72ecddaa853e8a6f5b451d86",
+      "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitWorldTransforms.kt": "47e4401345d3d3c6af678b89a1b8d479adf4a5226850f83713a50f4a9574aec0",
+      "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitOrbMotion.kt": "f67133d9bab28f25c7d2069cc7fcf55407618aa1ac2c88f10b91d4ee5b5b5d68"
+    },
+    "dependency_sha256": {
+      "android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a",
+      "filament-1.56.0-classes.jar": "cad38e83e0226bd16f1e86385d7fd82b108258676949d7924b9c14a1eaa18c62",
+      "gltfio-1.56.0-classes.jar": "81e3f4c036306e74d6a8c19b58f11cd957cd091494cc3c493eecbeee57015a22"
+    },
+    "compile_log_sha256": "9e3c5f161682f8c4dfa4ca4c3c344a7d3ea6cf6cbffbbf990fd8293affddc7f3",
+    "device": "NOT_RUN",
+    "gradle": "NOT_RUN"
+  },
+  "raw_receipts": {
+    "${OUTPUT}/run-01/baseline-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "${OUTPUT}/run-01/baseline.jsonl": "373ce9798ca7cd9bc1358d213febe2bb60429aab6f9e8963e8f9826e7ac6de03",
+    "${OUTPUT}/run-01/baseline.stderr": "038976a27fdbd475f4aa7efd0b4f9036df99a9a500cf7cc2889bf150c61289ac",
+    "${OUTPUT}/run-01/manifest.json": "4913b85089c2f5eb3132df448efe533108a71e9cfb0f97370ff2cc84bd29eaeb",
+    "${OUTPUT}/run-02/baseline-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "${OUTPUT}/run-02/baseline.jsonl": "be8e91acef3d265c1bf6237a26e8dd5c5ada664ad74939612270100f5c792e22",
+    "${OUTPUT}/run-02/baseline.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "${OUTPUT}/run-02/candidate-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "${OUTPUT}/run-02/disabled.jsonl": "be8e91acef3d265c1bf6237a26e8dd5c5ada664ad74939612270100f5c792e22",
+    "${OUTPUT}/run-02/disabled.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "${OUTPUT}/run-02/enabled.jsonl": "88c1010b57e9f2ca7be7fe24151e76bd270248c1152b4d5c2d819525eb6e10d9",
+    "${OUTPUT}/run-02/enabled.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "${OUTPUT}/run-02/manifest.json": "996603d385dd96e34a043cfc035ffd56d6c43ee7a2e12426067cea40af1d60f7",
+    "${OUTPUT}/sdk-compile/compile.log": "be4a03659b4883f52c0695c430563190ed62b2785a900fdeec8f5fbbba71ca4c",
+    "${OUTPUT}/sdk-compile/manifest.json": "7f2c9138f3fd530420aaf563d59f2ee915c8c7750d7d2689f34421420f38292e",
+    "${OUTPUT}/sdk-compile-02/compile.log": "9e3c5f161682f8c4dfa4ca4c3c344a7d3ea6cf6cbffbbf990fd8293affddc7f3",
+    "${OUTPUT}/sdk-compile-02/manifest.json": "3e3708fc02de44a4e379752d165de9227c3561918d5050a6d7a79a52ff2735e9"
+  },
+  "prior_failed_checks": [
+    {
+      "run": "run-01",
+      "state": "HARNESS_SETUP_FAILED",
+      "reason": "A backwards test clock hit the existing rate limit before the intended stale frame was accepted. Corrected setup uses a fresh test session and checks acceptance/PAUSED before invoking the monitor; production unchanged."
+    },
+    {
+      "run": "sdk-compile",
+      "state": "CLASSPATH_INCOMPLETE",
+      "reason": "Existing integration classes lacked the current CockpitWorldTransforms source used by the new canonical stage. The second compile includes the unchanged current caller and geometry sources; no product workaround."
+    }
+  ],
+  "superseded_by": "3e2bc6d30e9c8ab088a1b7266643825af7e5879c",
+  "post_review_state": "Three additional fail-after-write holdouts failed; do not adopt the initial candidate without its cache invalidation fix."
+}

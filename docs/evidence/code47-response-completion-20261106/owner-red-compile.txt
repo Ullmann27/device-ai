@@ -1,0 +1,13 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34137 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34137 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+app/src/test/java/at/heinz/deviceai/cognitive/OwnerDialogueOutputTest.kt:57:41: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+            assertFalse(run.taskEvidence!!.outcomeVerified)
+                                        ^^
+app/src/test/java/at/heinz/deviceai/cognitive/OwnerDialogueOutputTest.kt:58:40: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+            assertNull(run.taskEvidence!!.learningCandidateExperienceId)
+                                       ^^
+app/src/test/java/at/heinz/deviceai/cognitive/OwnerDialogueOutputTest.kt:59:70: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+            assertEquals(CognitiveWorkState.BLOCKED, run.taskEvidence!!.events.last().state)
+                                                                     ^^
+app/src/test/java/at/heinz/deviceai/cognitive/OwnerDialogueOutputTest.kt:88:37: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+        assertFalse(run.taskEvidence!!.outcomeVerified)
+                                    ^^

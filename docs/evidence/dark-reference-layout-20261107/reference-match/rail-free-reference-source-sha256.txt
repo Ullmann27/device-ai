@@ -1,0 +1,3 @@
+88e638b80697abede637fe6010f55b6802ee34c80f9858c7e16273f3d92f78a1  app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt
+93c86e1bcf230a48ba7aacb4e3d1ee3af03c337e18713b3c51cfbd722330fdc2  app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt
+7a31a7298a7dabc156ab17fc85dca63bddd67ae341f8013bdce946c3ae9e583e  app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt

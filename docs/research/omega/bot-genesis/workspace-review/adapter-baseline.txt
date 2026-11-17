@@ -1,0 +1,1 @@
+NOT_RUN: provide candidate bridge exporting evaluateCase(fixture); no production adapter exists in this baseline.

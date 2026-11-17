@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-11-04T10:51:02.821685+00:00",
+  "overall_status": "APP_BUILD_AND_SELECTED_TESTS_PASS_WITH_OPEN_UI_GATES",
+  "source": {
+    "commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+    "main_tree": "9228dfb380983f59c96ac8d1fcd290b99624cd44",
+    "qa_worktree": "/workspace/scratch/b3170a7ae924/device-ai-qa-f14",
+    "tracked_worktree_clean": true
+  },
+  "toolchain": {
+    "jdk": "Eclipse Temurin17.0.21+9",
+    "gradle": "8.11.1",
+    "kotlin": "2.4.0",
+    "gradle_workers": 1,
+    "gradle_runs_serialized": true
+  },
+  "gates": {
+    "standard_unit_suite": {
+      "source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+      "source_worktree": "/workspace/scratch/b3170a7ae924/device-ai-qa-f14",
+      "recorded_utc": "2026-11-04T10:38:56.009657+00:00",
+      "suite_count": 434,
+      "tests": 2416,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 19,
+      "passed": 2397,
+      "status": "PASS",
+      "exit_code": 0,
+      "log": "/workspace/scratch/b3170a7ae924/build-logs/combined-f14-unit.log",
+      "xml_directory": "/workspace/scratch/b3170a7ae924/build-logs/combined-f14-unit-results"
+    },
+    "functional_views_and_dialog": {
+      "status": "PASS",
+      "tests": 14,
+      "passed": 14,
+      "failures": 0,
+      "ignored": 0,
+      "exit_code": 0,
+      "log": "/workspace/scratch/b3170a7ae924/diagnostic-ui/combined-f14-small-views.log",
+      "groups": {
+        "JarvisLiveAvatarWiringUiTest (standalone preferences and texture/target geometry)": 2,
+        "JarvisMemorySignalWiringUiTest": 5,
+        "JarvisHoloAvatarUiTest": 1,
+        "OwnerMemoryRecoveryDialogTest": 6
+      },
+      "graphics": "LEGACY/default functional Robolectric; no pixel or GPU acceptance"
+    },
+    "actual_bootstrap_caller": {
+      "status": "PASS",
+      "tests": 7,
+      "passed": 7,
+      "failures": 0,
+      "ignored": 0,
+      "exit_code": 0,
+      "log": "/workspace/scratch/b3170a7ae924/diagnostic-ui/combined-f14-caller-09e.log",
+      "test_class": "at.heinz.deviceai.BootstrapRecoveryCallerUiTest",
+      "test_source_commit": "09e235070cb87ed6ff3dd8d327a01659ced0d396",
+      "test_source_sha256": "16bf6d81beb8c2a068d70e5d4b691970e7cf855c5afbcd9178ac878d92c0e6b4",
+      "test_provenance": "/workspace/scratch/b3170a7ae924/direct-tests/bootstrap-caller-09e/provenance.json",
+      "graphics": "LEGACY, PAUSED looper, actual Activity composer and recovery ledger with controlled worker delivery"
+    },
+    "lint": {
+      "source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+      "task": ":app:lintDebug",
+      "exit_code": 0,
+      "scope": "Repository configured NewApi-only lint gate",
+      "issues": [],
+      "issue_count": 0,
+      "xml_path": "/workspace/scratch/b3170a7ae924/device-ai-qa-f14/app/build/reports/lint-results-debug.xml",
+      "status": "PASS",
+      "log": "/workspace/scratch/b3170a7ae924/build-logs/combined-f14-lint.log",
+      "archived_xml": "/workspace/scratch/b3170a7ae924/build-logs/combined-f14-lint-results.xml"
+    },
+    "assemble_debug": {
+      "source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+      "task": ":app:assembleDebug",
+      "exit_code": 0,
+      "apk_path": "/workspace/scratch/b3170a7ae924/device-ai-qa-f14/app/build/outputs/apk/debug/app-debug.apk",
+      "bytes": 88255113,
+      "sha256": "47b3e17e0293d3b48f7f439b292f0143e13f07cb06f4a588dbecf23cfbf6eb75",
+      "kind": "Local debug QA build, not an owner release; not installed or published",
+      "status": "PASS",
+      "log": "/workspace/scratch/b3170a7ae924/build-logs/combined-f14-assemble.log",
+      "installed": false,
+      "published": false
+    },
+    "full_activity": {
+      "status": "BLOCKED_TIMEOUT",
+      "requested_full_activity_cases": 4,
+      "started": 1,
+      "completed": 0,
+      "exit_code": 124,
+      "timeout_seconds": 45,
+      "attempted_method": "JarvisLiveAvatarWiringUiTest.foldSlotContainsTheSeparateHeadAndOrbAreas",
+      "remaining_methods_not_run": [
+        "shellUsesTheOneSurfaceReceivingActivitySignals",
+        "actualDirectorSpeechReachesTheVisibleHead",
+        "resizingTheSlotPreservesTheSurfaceAndCurrentSpeech"
+      ],
+      "observed_stack": "ActivityController.setup/visible -> ShadowPausedLooper.idle -> Choreographer -> ViewRootImpl.performTraversals -> Editor.PositionListener/getLocationInWindow -> ShadowRenderNode.hasIdentityMatrix; no assertion reached",
+      "log": "/workspace/scratch/b3170a7ae924/diagnostic-ui/combined-f14-avatar-geometry.log",
+      "thread_dump": "/workspace/scratch/b3170a7ae924/diagnostic-ui/combined-f14-avatar-geometry-threads.txt"
+    },
+    "existing_native_pane": {
+      "status": "BLOCKED_TIMEOUT",
+      "test_class": "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest",
+      "test_source_unchanged": true,
+      "graphics": "NATIVE",
+      "requested_cases": 5,
+      "started": 1,
+      "completed": 0,
+      "exit_code": 124,
+      "timeout_seconds": 45,
+      "attempted_method": "largeTypePortraitRestoresCockpitGeometry",
+      "observed_stack": "After actual buildConversationPane and host window attachment, JarvisCameraDrift.onTimeUpdate -> TimeAnimator/ValueAnimator -> Choreographer -> ShadowPausedLooper.idle at test line70; no assertion reached",
+      "log": "/workspace/scratch/b3170a7ae924/diagnostic-ui/combined-f14-existing-pane.log",
+      "thread_dump": "/workspace/scratch/b3170a7ae924/diagnostic-ui/combined-f14-existing-pane-threads.txt",
+      "repeated": false
+    }
+  },
+  "aggregate_targeted_ui_passed": 21,
+  "benchmark_in_full_standard_suite": {
+    "cases": 819,
+    "correct": 819,
+    "p50_ms": 0.746,
+    "p95_ms": 1.203,
+    "unchanged_p95_limit_ms": 5,
+    "xml": "/workspace/scratch/b3170a7ae924/build-logs/combined-f14-unit-results/TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest.xml"
+  },
+  "earlier_ui_attempt": {
+    "log": "/workspace/scratch/b3170a7ae924/build-logs/combined-f14-ui.log",
+    "exit_code": 130,
+    "details": "Initial caller sourceba26 yielded4 failed answer-text assertions because the test excluded rows with Android-added TOP gravity. The horizontal mask was corrected in09e; all7 behavior assertions then passed on unchanged f14 production. This combined Gradle run was interrupted when the first full Activity case did not finish; remaining cases were subsequently run separately."
+  },
+  "visual_evidence": {
+    "source_commit": "41433ff0eafebde1240d09dacec2eea3f9db5100",
+    "image": "/workspace/scratch/b3170a7ae924/screenshots/combined-final-414/jarvis-menu-avatar-41433ff0.png",
+    "provenance": "/workspace/scratch/b3170a7ae924/screenshots/combined-final-414/provenance.json",
+    "kind": "Actual production Java2D component rendering; not a running Activity, Fold7 capture or Filament GPU result",
+    "pixels": [
+      1768,
+      1520
+    ],
+    "viewport_dp": [
+      884,
+      760
+    ],
+    "static_idle_no_fabricated_measurements": true
+  },
+  "open_limits": [
+    "No successful complete Activity/native screenshot gate",
+    "No Fold7 device, Filament/GPU or animation-performance acceptance",
+    "Debug QA APK only; no owner release/signing/installation acceptance"
+  ],
+  "work_complete": {
+    "no_tests_or_gradle_processes_left_running": true,
+    "baseline_worktree_sources_unchanged": true
+  }
+}

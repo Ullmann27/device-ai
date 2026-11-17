@@ -1,0 +1,65 @@
+DecorView shown=true visibility=0 x=0 y=0 w=412 h=915 text=
+FrameLayout shown=true visibility=0 x=0 y=0 w=412 h=915 text=
+FrameLayout shown=true visibility=0 x=0 y=0 w=412 h=915 text=
+FrameLayout shown=true visibility=0 x=0 y=0 w=412 h=915 text=
+LinearLayout shown=true visibility=0 x=0 y=0 w=412 h=841 text=
+ScrollView shown=false visibility=8 x=0 y=0 w=412 h=841 text=Continuum-Cockpit, vertikal scrollbar: sechs Diagrammkarten und Systemstatus
+LinearLayout shown=false visibility=0 x=0 y=0 w=407 h=844 text=
+ContinuumHomeView shown=false visibility=0 x=0 y=0 w=407 h=787 text=
+ElementView shown=false visibility=0 x=0 y=0 w=276 h=68 text=Continuum. Dein KI-Universum. Ohne Grenzen.
+ElementView shown=false visibility=0 x=279 y=22 w=32 h=32 text=Wissensarchiv durchsuchen
+ElementView shown=false visibility=0 x=322 y=22 w=32 h=32 text=Keine offenen Hinweise
+ElementView shown=false visibility=0 x=364 y=22 w=32 h=32 text=Persönliche Einstellungen
+ElementView shown=false visibility=0 x=10 y=96 w=109 h=40 text=VERBUNDEN: Offline
+ElementView shown=false visibility=0 x=10 y=165 w=109 h=40 text=LERNEN: Bereit
+ElementView shown=false visibility=0 x=10 y=242 w=109 h=40 text=ENTWICKELN: Bereit
+ElementView shown=false visibility=0 x=293 y=96 w=109 h=40 text=DENKEN: Bereit
+ElementView shown=false visibility=0 x=293 y=165 w=109 h=40 text=ANALYSIEREN: Bereit
+ElementView shown=false visibility=0 x=293 y=242 w=109 h=40 text=EVOLVIEREN: Webforschung eingeplant
+ElementView shown=false visibility=0 x=13 y=380 w=385 h=89 text=Modellstatus: Continuum-Startkern (SWB1), Nur Startkern. Prüffragen des Lernkerns (Intent und Semantik, kein allgemeiner Intelligenzwert) 50%, 24 h: noch kein Vergleich, Reaktionszeit —, Kontextfenster 1 Zug (Thema).
+ElementView shown=false visibility=0 x=13 y=479 w=202 h=182 text=Lernen und Forschung: 2 Lernereignisse heute. Training geprüft, gerade eben. Training geprüft, gerade eben
+ElementView shown=false visibility=0 x=224 y=479 w=174 h=182 text=Speicher und Quellen: — belegt. App: eigene Dateien 133 KB. App: Wissensquellen 0 B. App: Projektdateien 216 B. Übrige Gerätebelegung 0 B. 0 gespeicherte Quellen, Webforschung eingeplant.
+ElementView shown=false visibility=0 x=13 y=673 w=385 h=100 text=Entwicklung und Code: Keine Fehlschläge. 0 offene Aufgaben im Backlog, 0 laufend, 0 fehlgeschlagen.
+TextView shown=false visibility=8 x=0 y=0 w=0 h=0 text=Bereit — · 0s · Fortschritt: nicht messbar
+LinearLayout shown=false visibility=0 x=0 y=787 w=407 h=57 text=
+LinearLayout shown=false visibility=8 x=0 y=787 w=0 h=0 text=
+TextView shown=false visibility=0 x=0 y=787 w=0 h=0 text=AKTIONSPLAN
+TextView shown=false visibility=0 x=0 y=787 w=0 h=0 text=
+TextView shown=false visibility=0 x=14 y=787 w=379 h=47 text=CONTINUUM · offline-semantic-bootstrap: angenommen (550 Schritte)
+LinearLayout shown=true visibility=0 x=0 y=0 w=412 h=841 text=
+TextView shown=true visibility=0 x=14 y=14 w=384 h=44 text=‹ START   ·   Continuum
+ContinuumHologramView shown=true visibility=0 x=14 y=58 w=384 h=160 text=
+LinearLayout shown=true visibility=0 x=14 y=222 w=384 h=58 text=
+Button shown=true visibility=0 x=19 y=227 w=122 h=48 text=DIALOG
+Button shown=true visibility=0 x=145 y=227 w=122 h=48 text=INTERNET
+Button shown=true visibility=0 x=271 y=227 w=122 h=48 text=GERÄT
+TextView shown=true visibility=0 x=14 y=280 w=384 h=37 text=NEURON · Auto-Lernen aus Noch kein Lernzyklus.
+ProgressBar shown=false visibility=8 x=0 y=0 w=0 h=0 text=Fortschritt des lokalen neuronalen Trainings
+ScrollView shown=true visibility=0 x=14 y=317 w=384 h=390 text=
+LinearLayout shown=true visibility=0 x=14 y=317 w=384 h=380 text=
+LinearLayout shown=true visibility=0 x=14 y=472 w=384 h=108 text=
+TextView shown=true visibility=0 x=14 y=472 w=360 h=108 text=Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokal
+LinearLayout shown=true visibility=0 x=14 y=588 w=384 h=40 text=
+TextView shown=true visibility=0 x=38 y=588 w=360 h=40 text=Prüfe bitte die Darstellung dieser Ansicht.
+LinearLayout shown=true visibility=0 x=14 y=636 w=384 h=57 text=
+TextView shown=true visibility=0 x=14 y=636 w=360 h=57 text=Synthetischer Layout-Prüftext: Stimme, Kamera und Modell werden hier nicht ausgeführt.
+LinearLayout shown=true visibility=0 x=14 y=707 w=384 h=120 text=
+LinearLayout shown=true visibility=0 x=21 y=715 w=370 h=48 text=
+ shown=true visibility=0 x=21 y=715 w=48 h=48 text=＋
+EditText shown=true visibility=0 x=76 y=720 w=261 h=37 text=
+ shown=true visibility=0 x=343 y=715 w=48 h=48 text=🎙
+LinearLayout shown=true visibility=0 x=21 y=771 w=370 h=48 text=
+ shown=true visibility=0 x=21 y=771 w=95 h=48 text=✧ Denken
+ shown=true visibility=0 x=120 y=771 w=64 h=48 text=◎ Web
+ shown=true visibility=0 x=188 y=771 w=67 h=48 text=⌁ Datei
+ shown=true visibility=0 x=259 y=771 w=67 h=48 text=TON AUS
+ shown=true visibility=0 x=330 y=771 w=61 h=48 text=➤
+FrameLayout shown=true visibility=0 x=0 y=841 w=412 h=74 text=Navigation zu allen Continuum-Arbeitsbereichen
+ContinuumElementView shown=true visibility=0 x=0 y=841 w=412 h=74 text=Navigation
+LinearLayout shown=true visibility=0 x=0 y=841 w=412 h=74 text=
+View shown=true visibility=0 x=0 y=841 w=82 h=74 text=Start – Startseite und Übersicht öffnen
+View shown=true visibility=0 x=82 y=841 w=82 h=74 text=Chat – Mit der lokalen KI sprechen
+View shown=true visibility=0 x=164 y=841 w=82 h=74 text=Lernen – Lernzentrum und Trainingsstand öffnen
+View shown=true visibility=0 x=246 y=841 w=83 h=74 text=Entwickeln – Sichere Entwicklungswerkzeuge öffnen
+View shown=true visibility=0 x=329 y=841 w=83 h=74 text=Mehr – Forschung, Modelle, Speicher und System öffnen
+ViewStub shown=false visibility=8 x=0 y=0 w=0 h=0 text=

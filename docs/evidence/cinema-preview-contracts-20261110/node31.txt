@@ -1,0 +1,39 @@
+✔ transparent native 3D hero has no network, model execution or fake status (3.762774ms)
+✔ reference start screen reaches all seven real Android feature paths (1.593498ms)
+✔ responsive dashboard retains chat composer, updates and keyboard visibility (0.763615ms)
+✔ shell action contract rejects missing navigation or origin cleanup (1.831709ms)
+✔ reference-style composer keeps real model/web/file actions and truthful idle state (0.695916ms)
+✔ large text is bounded and propagated into adaptive layout without window shrinking (0.578292ms)
+✔ start screen never manufactures ready model or internet state (1.313425ms)
+✔ Code49: orb planes and wire net reuse point buffers instead of allocating each vertex (1.354806ms)
+✔ EXP14 uses hardware-only single-pass stroke, never a full-window postprocess (2.385484ms)
+✔ EXP14 respects original avatar/dialog protected bounds and owner opt-in (0.389053ms)
+✔ original frame timeline and safe keep-out remain canonical (1.4044ms)
+✔ text-safe 0.09 raster never controls structural rim and scan (0.353471ms)
+✔ EXP01 slices glass and brackets into different Z planes, not native text (0.40723ms)
+✔ only an honest completed tool result may trigger a current-window pulse (0.586895ms)
+✔ cinema uses the owner-controlled existing window and frame budget (2.57585ms)
+✔ EXP11 orb glow is tied to a real accepted window with a bounded time course (0.276397ms)
+✔ EXP14 shader rim uses pixel space after leaving dp scaled glass canvas (1.328037ms)
+✔ no fake external-send or new native frame timers introduced (2.832002ms)
+✔ PR #550 phase safety and PR #558 original-orb hypothesis marker remain live (1.484537ms)
+✔ PRs #489 #541 #549 animations arrive at the actual visible and budgeted tiles (0.336015ms)
+✔ material clock contract rejects ungated motion and background coupling (14.397023ms)
+✔ PRs #565 #617 #659 #666 #677 #678 original avatar still owns one GLB renderer (0.211712ms)
+✔ Cinema 52 defaults to all wired effects and clips decorative glass around the native UI (0.353521ms)
+✔ Astra #661 Java2D reference-fidelity tool and preview both remain available (0.254075ms)
+✔ Fold portrait uses the shared width/font profile, one Activity rail and no duplicated shell rail (1.609091ms)
+✔ current information panels and separate status keep real sources and complete scrollable rows (0.597451ms)
+✔ ten action controls share draw bounds while head and original orb retain separate regions (1.254719ms)
+✔ Fold chat remains a real native action and both content and rail stay scrollable (0.643928ms)
+✔ phone and Fold share the original live surface and preserve its lifecycle during reflow (0.408982ms)
+✔ home microphone retains the cockpit for continuous voice replies (3.334332ms)
+✔ reference cockpit reuses the original animated orb without a solid tile (0.209939ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 211.89922

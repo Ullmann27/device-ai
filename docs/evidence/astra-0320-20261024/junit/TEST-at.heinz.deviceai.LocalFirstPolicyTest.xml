@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.LocalFirstPolicyTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:02" hostname="5c9e18abbd30" time="0.01">
+  <properties/>
+  <testcase name="autoUsesReadyLocalModelAndNeverSilentlyRoutesOrdinaryChatToCloud" classname="at.heinz.deviceai.LocalFirstPolicyTest" time="0.009"/>
+  <testcase name="onlyTurnsWithoutConfirmedMemoryReachALoadedLanguageModel" classname="at.heinz.deviceai.LocalFirstPolicyTest" time="0.0"/>
+  <testcase name="modelUiExposesNoModelAndRuntimeLifecycleStates" classname="at.heinz.deviceai.LocalFirstPolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

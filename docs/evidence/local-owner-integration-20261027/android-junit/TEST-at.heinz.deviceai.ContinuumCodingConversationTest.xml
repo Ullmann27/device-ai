@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCodingConversationTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:39" hostname="7b281259906f" time="0.605">
+  <properties/>
+  <testcase name="explicitRejectionsAndInternetChangesInvalidateEveryPreview" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.005"/>
+  <testcase name="concurrentApprovalsConsumeExactlyOnePreview" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.586"/>
+  <testcase name="negativeInstructionsCannotKeepOrResurrectAnExistingPlan" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="aQuestionNeedsAnExplicitRequirementBeforeAnOldPreviewCanReturn" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="multiTurnNotesPlanNeedsExplicitStorageAndRevisionBoundApproval" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="fiveTurnDialogueDoesNotTurnAQuestionIntoAnExplicitRequirement" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="generalKotlinRequirementsRequestBoundSourceScopeAndAcceptance" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.009"/>
+  <testcase name="generalCodingQuestionNeverClaimsExecution" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="aQuestionMarkInsideATurnNeverConfirmsStorage" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="unsupportedTodoFeaturesAreNeverSilentlyDropped" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="consumedHandoffCannotBeRearmedByAnUnrelatedTurn" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="counterCorrectionsConditionsAndNegationNeverGrantAuthority" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.001"/>
+  <testcase name="independentCatalogMustStillValidateBeforeHandoff" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <testcase name="postponedBuildAndIndirectDocumentTextInvalidateAReadyPlan" classname="at.heinz.deviceai.ContinuumCodingConversationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

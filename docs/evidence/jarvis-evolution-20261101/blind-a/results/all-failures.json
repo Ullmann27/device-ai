@@ -1,0 +1,557 @@
+[
+  {
+    "track": "baseline",
+    "id": "guard-07",
+    "kind": "indirect-speech",
+    "question": "Wo wohnt Ceyda?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Liselotte sagt: Ceyda wohnt in Rottweil."
+      }
+    ],
+    "expected": null,
+    "actual": "Rottweil",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "baseline",
+    "id": "guard-08",
+    "kind": "hypothetical",
+    "question": "Wo lebt Thore?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Angenommen, Thore lebt in Koblenz; dann wäre sein Arbeitsweg kurz."
+      }
+    ],
+    "expected": null,
+    "actual": "Koblenz",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "baseline",
+    "id": "guard-12",
+    "kind": "interrogative-evidence",
+    "question": "Wo wohnt Farid?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Farid wohnt in Pirna? Das weiß niemand sicher."
+      }
+    ],
+    "expected": null,
+    "actual": "Pirna",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "baseline",
+    "id": "guard-14",
+    "kind": "relation-drift-standing",
+    "question": "Wo wohnt Imran?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Imran steht in Bamberg."
+      }
+    ],
+    "expected": null,
+    "actual": "Bamberg",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "baseline",
+    "id": "guard-15",
+    "kind": "relation-drift-presence",
+    "question": "Wo ist Loretta?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Loretta wohnt in Lüneburg."
+      }
+    ],
+    "expected": null,
+    "actual": "Lüneburg",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "baseline",
+    "id": "guard-16",
+    "kind": "coordinated-places",
+    "question": "Wo lebt Enno?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Enno lebt in Plauen und Zwickau."
+      }
+    ],
+    "expected": null,
+    "actual": "Plauen und Zwickau",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "baseline",
+    "id": "guard-17",
+    "kind": "hearsay",
+    "question": "Wo wohnt Aylin?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Es heißt, Aylin wohnt in Cottbus."
+      }
+    ],
+    "expected": null,
+    "actual": "Cottbus",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "baseline",
+    "id": "guard-18",
+    "kind": "denied-report",
+    "question": "Wo lebt Melvin?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Falsch ist die Behauptung: Melvin lebt in Greifswald."
+      }
+    ],
+    "expected": null,
+    "actual": "Greifswald",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "baseline",
+    "id": "guard-20",
+    "kind": "simulated-report",
+    "question": "Wo wohnt Leona?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Die Simulation meldet: Leona wohnt in Detmold."
+      }
+    ],
+    "expected": null,
+    "actual": "Detmold",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "candidate",
+    "id": "guard-12",
+    "kind": "interrogative-evidence",
+    "question": "Wo wohnt Farid?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Farid wohnt in Pirna? Das weiß niemand sicher."
+      }
+    ],
+    "expected": null,
+    "actual": "Pirna",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "candidate",
+    "id": "guard-15",
+    "kind": "relation-drift-presence",
+    "question": "Wo ist Loretta?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Loretta wohnt in Lüneburg."
+      }
+    ],
+    "expected": null,
+    "actual": "Lüneburg",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "candidate",
+    "id": "guard-16",
+    "kind": "coordinated-places",
+    "question": "Wo lebt Enno?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Enno lebt in Plauen und Zwickau."
+      }
+    ],
+    "expected": null,
+    "actual": "Plauen und Zwickau",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "main-08",
+    "kind": "known-explicit",
+    "question": "Wo steht Tarik?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Tarik steht in Sankt Gallen."
+      }
+    ],
+    "expected": {
+      "text": "Sankt Gallen",
+      "sourceId": "natural-source"
+    },
+    "actual": "Sankt",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_VERIFIED",
+    "id": "main-08",
+    "kind": "known-explicit",
+    "question": "Wo steht Tarik?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Tarik steht in Sankt Gallen."
+      }
+    ],
+    "expected": {
+      "text": "Sankt Gallen",
+      "sourceId": "natural-source"
+    },
+    "actual": "",
+    "reason": "INDEPENDENT_VERIFICATION_REJECTED",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "main-22",
+    "kind": "missing-location",
+    "question": "Wo lebt Felina?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Felina besitzt ein violettes Fahrrad."
+      }
+    ],
+    "expected": null,
+    "actual": "besitzt",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "main-23",
+    "kind": "missing-relation",
+    "question": "Wo wohnt Jaron?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Jaron arbeitet als Tischler."
+      }
+    ],
+    "expected": null,
+    "actual": "arbeitet",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "main-25",
+    "kind": "missing-location",
+    "question": "Wo wohnt Merle?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Merle lernt Schwedisch."
+      }
+    ],
+    "expected": null,
+    "actual": "lernt",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-07",
+    "kind": "indirect-speech",
+    "question": "Wo wohnt Ceyda?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Liselotte sagt: Ceyda wohnt in Rottweil."
+      }
+    ],
+    "expected": null,
+    "actual": "sagt",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-08",
+    "kind": "hypothetical",
+    "question": "Wo lebt Thore?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Angenommen, Thore lebt in Koblenz; dann wäre sein Arbeitsweg kurz."
+      }
+    ],
+    "expected": null,
+    "actual": "Koblenz",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-09",
+    "kind": "quotation",
+    "question": "Wo ist Jasna?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "„Jasna ist in Chemnitz.“ ist nur ein Zitat."
+      }
+    ],
+    "expected": null,
+    "actual": "Chemnitz",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-10",
+    "kind": "positive-then-negation",
+    "question": "Wo wohnt Ilka?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Ilka wohnt in Gera. Ilka wohnt nicht in Gera."
+      }
+    ],
+    "expected": null,
+    "actual": "Gera",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-11",
+    "kind": "conflicting-sources",
+    "question": "Wo lebt Milos?",
+    "evidence": [
+      {
+        "id": "source-one",
+        "revision": 1,
+        "text": "Milos lebt in Rheine."
+      },
+      {
+        "id": "source-two",
+        "revision": 1,
+        "text": "Milos lebt in Siegen."
+      }
+    ],
+    "expected": null,
+    "actual": "Rheine",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-12",
+    "kind": "interrogative-evidence",
+    "question": "Wo wohnt Farid?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Farid wohnt in Pirna? Das weiß niemand sicher."
+      }
+    ],
+    "expected": null,
+    "actual": "niemand",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-13",
+    "kind": "non-direct-knowledge-claim",
+    "question": "Wo lebt Ottilie?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Nicht alle wissen, ob Ottilie in Goslar lebt."
+      }
+    ],
+    "expected": null,
+    "actual": "Goslar",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-14",
+    "kind": "relation-drift-standing",
+    "question": "Wo wohnt Imran?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Imran steht in Bamberg."
+      }
+    ],
+    "expected": null,
+    "actual": "steht",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-15",
+    "kind": "relation-drift-presence",
+    "question": "Wo ist Loretta?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Loretta wohnt in Lüneburg."
+      }
+    ],
+    "expected": null,
+    "actual": "Lüneburg",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "TRAINED_VERIFIED",
+    "id": "guard-15",
+    "kind": "relation-drift-presence",
+    "question": "Wo ist Loretta?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Loretta wohnt in Lüneburg."
+      }
+    ],
+    "expected": null,
+    "actual": "Lüneburg",
+    "reason": "",
+    "verifier": "true"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-16",
+    "kind": "coordinated-places",
+    "question": "Wo lebt Enno?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Enno lebt in Plauen und Zwickau."
+      }
+    ],
+    "expected": null,
+    "actual": "Zwickau",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-17",
+    "kind": "hearsay",
+    "question": "Wo wohnt Aylin?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Es heißt, Aylin wohnt in Cottbus."
+      }
+    ],
+    "expected": null,
+    "actual": "Cottbus",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-18",
+    "kind": "denied-report",
+    "question": "Wo lebt Melvin?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Falsch ist die Behauptung: Melvin lebt in Greifswald."
+      }
+    ],
+    "expected": null,
+    "actual": "Greifswald",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-19",
+    "kind": "future",
+    "question": "Wo wohnt Kira?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Kira wird in Eisenach wohnen."
+      }
+    ],
+    "expected": null,
+    "actual": "wird",
+    "reason": "",
+    "verifier": "false"
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "guard-20",
+    "kind": "simulated-report",
+    "question": "Wo wohnt Leona?",
+    "evidence": [
+      {
+        "id": "natural-source",
+        "revision": 1,
+        "text": "Die Simulation meldet: Leona wohnt in Detmold."
+      }
+    ],
+    "expected": null,
+    "actual": "Detmold",
+    "reason": "",
+    "verifier": "false"
+  }
+]

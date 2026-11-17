@@ -1,0 +1,67 @@
+{
+  "baseline_commit": "5b935b4feaf960bb6973dd4d630f02744e41913f",
+  "baseline_tree": "246ff9ffbbb3d17e59147806c90bb0b47a7743ef",
+  "android_run_id": "0fb80769-cffc-481d-99db-4c0a7ae6a4ba",
+  "android_source_journal": "/workspace/scratch/2d62a799e417/qa/android-focused-5b935b4f/junit-progress.ndjson",
+  "android_selected_records_sha256": "d117d7115a29d34fed312d563d20d5a24398964fcf165f48935560782c398d87",
+  "android_rerun": "NOT_RUN",
+  "planning_ui_commit": "71a71d89d",
+  "planning_ui_sha256": "15274895d8e4a755bd80e0b753877318823150af3a37b4f83a4c6e29de91624d",
+  "safety_baseline_sha256": "f1569524035bf9c4520a261941b319ae03365f7a435be3326ae012ef08324a08",
+  "safety_candidate_sha256": "97121251eec075051e677fbb164c7527e4e37184a31d1059ad282b89ec74d460",
+  "red": {
+    "cases": 11,
+    "failures": 5,
+    "all_production_inputs_equal_baseline": true
+  },
+  "red_green_test_difference": "Original RED reproduces all three dialogue failures individually. Review REDs add stricter whole-request and imperative-tail rejection checks. The shared test source is byte-identical between tail-red and final green; among their six common compiled inputs only OwnerDeviceRequestSafety.kt differs.",
+  "runtime": "OpenJDK 21.0.13+9-1-deb13u2-Debian; Kotlin compiler 2.4.0; JUnit 4.13.2",
+  "resource_guard": "flock /tmp/continuum-omega-gradle.lock; -Xmx512m; -XX:ActiveProcessorCount=1",
+  "gradle": "NOT_RUN",
+  "device": "NOT_RUN",
+  "intermediate_green": {
+    "cases": 100,
+    "failures": 0,
+    "prior_cases": 94,
+    "additional_regression_cases": 6,
+    "test_class_count": 16,
+    "input_count": 21,
+    "post_run_source_mismatches": [],
+    "status": "Superseded after independent review found additional-action gap"
+  },
+  "review_red": {
+    "cases": 12,
+    "failures": 2,
+    "production_sha256": "a8004f3b5a30ee03862f16f2b160ef7cca36e4a9e7d365786811ba19e529812e"
+  },
+  "intermediate_second_green": {
+    "cases": 101,
+    "failures": 0,
+    "production_sha256": "28d469ab6bc3185d340c263de4ce81dc0332a6f454d9f83d5aecb13a2d6fa0f5",
+    "status": "Superseded after independent review found unbounded imperative tail"
+  },
+  "tail_red": {
+    "cases": 12,
+    "failures": 1,
+    "production_sha256": "28d469ab6bc3185d340c263de4ce81dc0332a6f454d9f83d5aecb13a2d6fa0f5"
+  },
+  "green": {
+    "cases": 101,
+    "failures": 0,
+    "prior_cases": 94,
+    "additional_regression_cases": 7,
+    "test_class_count": 16,
+    "input_count": 21,
+    "post_run_source_mismatches": [],
+    "status": "Final bounded grammar; independent source review OK"
+  },
+  "independent_review": {
+    "agent": "/root/extensions",
+    "scope": "read-only source review; no test execution",
+    "safety_sha256": "97121251eec075051e677fbb164c7527e4e37184a31d1059ad282b89ec74d460",
+    "result": "OK"
+  },
+  "tail_red_to_green_common_input_differences": [
+    "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDeviceRequestSafety.kt"
+  ]
+}

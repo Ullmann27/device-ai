@@ -1,0 +1,10 @@
+✔ a rejected import cannot relabel the independently loaded runtime as failed (1.182187ms)
+✔ smoke result names the captured catalog identity and rejects a model swap (0.439633ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 65.0367

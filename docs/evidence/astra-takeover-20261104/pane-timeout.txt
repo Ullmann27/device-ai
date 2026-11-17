@@ -1,0 +1,3 @@
+START largeTypePortraitRestoresCockpitGeometry(at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest)
+DIAGNOSTIC TIMEOUT; thread dump written to /workspace/scratch/b3170a7ae924/diagnostic-ui/combined-f14-existing-pane-threads.txt
+EXIT_CODE=124

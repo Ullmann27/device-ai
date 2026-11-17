@@ -2,11 +2,38 @@ package at.heinz.deviceai
 
 import android.content.Context
 import java.util.Locale
+import at.heinz.deviceai.systemintelligence.*
 
-class DeviceToolExecutor(
+class DeviceToolExecutor internal constructor(
     private val context: Context,
-    private val bridge: ShizukuBridge
+    private val bridgeReady: () -> Boolean,
+    private val runBridge: (String, (Result<String>) -> Unit) -> Unit,
+    private val appActions: DeviceAppActionPort?,
+    private val probeBridge: (((Result<ShizukuCapabilities>) -> Unit) -> Unit)? = null
 ) {
+    constructor(context: Context, bridge: ShizukuBridge) :
+        this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context), bridge::probeCapabilities)
+    internal val systemStorage by lazy { SystemStorageInspector(context) }
+    @Volatile internal var lastDiagnosis: SystemDiagnosis? = null
+        private set
+    @Volatile internal var lastCachePreview: OwnCachePreview? = null
+        private set
+    @Volatile internal var lastStorageAnalysis: StorageAnalysis? = null
+        private set
+    @Volatile internal var lastCleanupUndoId: String? = null
+        private set
+    @Volatile internal var lastCleanupResult: Pair<String, OwnCacheCleanupResult>? = null
+        private set
+    private data class SelectedStorage(val token: String, val uris: List<android.net.Uri>, val deadline: Long)
+    private val selectedStorage = java.util.concurrent.atomic.AtomicReference<SelectedStorage?>(null)
+
+    internal fun selectStorage(uris: List<android.net.Uri>): String {
+        require(uris.size in 1..64 && uris.all { it.scheme == "content" })
+        val token = java.util.UUID.randomUUID().toString()
+        selectedStorage.set(SelectedStorage(token, uris.toList(), android.os.SystemClock.elapsedRealtime() + 60_000))
+        return token
+    }
+    internal fun clearStorageSelection() { selectedStorage.set(null); lastStorageAnalysis = null }
     private val sharedRoots = listOf(
         "/sdcard/Download",
         "/sdcard/Documents",
@@ -15,26 +42,203 @@ class DeviceToolExecutor(
         "/sdcard/Movies"
     )
 
-    fun execute(call: ToolCallRequest, callback: (String) -> Unit) {
+    fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
         ToolRegistry.validate(call)?.let {
-            callback("TOOL_VALIDATION_ERROR: $it")
+            callback(Result.failure(IllegalArgumentException(it)))
             return
         }
-        if (!bridge.isReady()) {
-            callback("SHIZUKU_NOT_READY: Shizuku ist nicht verbunden.")
+        if (call.name == SystemIntelligenceCommands.CAPABILITIES) {
+            val probe = probeBridge
+            if (probe == null) callback(Result.failure(IllegalStateException("SHIZUKU_PROBE_UNAVAILABLE")))
+            else probe { result -> callback(result.map { caps ->
+                "Android-API: ${caps.sdkInt}\nServer-UID: ${caps.serverUid}\nDienst-UID: ${caps.userServiceUid}" +
+                    "\nIdentität: ${caps.identity}\nRoot-Expertenmodus: deaktiviert" +
+                    "\nShell geeignet: ${caps.standardShellEligible}" +
+                    "\nDiagnoseprogramme vorhanden: dumpsys=${caps.dumpsysExecutable}, pm=${caps.packageManagerExecutable}, cmd=${caps.commandServiceExecutable}" +
+                    "\nVorhandensein beweist keine einzelne Befehlsberechtigung."
+            }) }
+            return
+        }
+        if (call.name in SystemIntelligenceCommands.localTools) {
+            callback(runCatching { executeSystemTool(call) })
+            return
+        }
+        if (call.name == "get_device_info") {
+            callback(Result.success("Hersteller: ${android.os.Build.MANUFACTURER}\nModell: ${android.os.Build.MODEL}" +
+                "\nAndroid: ${android.os.Build.VERSION.RELEASE}\nSDK: ${android.os.Build.VERSION.SDK_INT}" +
+                "\nBuild: ${android.os.Build.DISPLAY}"))
+            return
+        }
+        if (call.name == "list_installed_apps") {
+            callback(runCatching {
+                val userOnly = boolArg(call, "userOnly", true)
+                val packages = context.packageManager.getInstalledApplications(0)
+                    .filter { !userOnly || it.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM == 0 }
+                    .map { it.packageName }.sorted().take(400)
+                "Von Android sichtbare Pakete (${packages.size}, maximal 400; keine Vollständigkeitszusage):\n" +
+                    packages.joinToString("\n")
+            })
+            return
+        }
+        if (call.name == "get_app_info") {
+            callback(runCatching {
+                val pkg = resolvePackage(requiredString(call, "packageOrName")) ?: error("APP_NOT_FOUND")
+                @Suppress("DEPRECATION") val info = context.packageManager.getPackageInfo(pkg, 0)
+                val version = if (android.os.Build.VERSION.SDK_INT >= 28) info.longVersionCode else {
+                    @Suppress("DEPRECATION") info.versionCode.toLong()
+                }
+                "Paket: ${info.packageName}\nVersion: ${info.versionName ?: "unbekannt"}\nVersionscode: $version" +
+                    "\nApp-Speicher und Energieverbrauch hier nicht gemessen."
+            })
+            return
+        }
+        if (call.name == "open_android_settings") {
+            callback(runCatching {
+                val page = requiredString(call, "page").lowercase(Locale.GERMAN)
+                val action = when (page) {
+                    "wifi", "wlan" -> android.provider.Settings.ACTION_WIFI_SETTINGS
+                    "bluetooth" -> android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
+                    "akku", "battery" -> android.provider.Settings.ACTION_BATTERY_SAVER_SETTINGS
+                    "speicher", "storage" -> android.provider.Settings.ACTION_INTERNAL_STORAGE_SETTINGS
+                    "apps" -> android.provider.Settings.ACTION_APPLICATION_SETTINGS
+                    else -> android.provider.Settings.ACTION_SETTINGS
+                }
+                context.startActivity(android.content.Intent(action).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK))
+                "Android-Einstellungsseite angefordert; keine Einstellung geändert. Sichtbares Ergebnis nicht geprüft."
+            })
+            return
+        }
+        if (call.name in setOf("launch_app", "read_app_screen")) {
+            val adapter=appActions
+            if(adapter==null)callback(Result.failure(IllegalStateException("NO_VERIFIED_DEVICE_ACTION_ADAPTER")))
+            else startNativeAction(call,adapter,callback)
+            return
+        }
+        if (call.name == "find_app") {
+            callback(runCatching { AndroidInstalledAppLookup.search(context, call.arguments["query"] as String) })
+            return
+        }
+        // App-volume statistics need neither Shizuku nor access to personal files.
+        // Exceptions propagate to the existing ToolGate as FAILED, never as a
+        // successful string containing an error. The runner consumes Result explicitly.
+        if (call.name == "get_storage_info") {
+            callback(runCatching { DeviceStorageProbe.read(context.filesDir) })
+            return
+        }
+        // Android owns connectivity state; it does not require a shell, Binder
+        // bridge or private device data. Do not treat a failed shell as offline.
+        if (call.name == "get_network_summary") {
+            callback(runCatching { DeviceNetworkProbe.read(context) })
+            return
+        }
+        // Battery data comes from Android's sticky system broadcast, not a shell dump.
+        if (call.name == "get_battery_info") {
+            callback(runCatching { DeviceBatteryProbe.read(context) })
+            return
+        }
+        if (!bridgeReady()) {
+            callback(Result.failure(IllegalStateException("Shizuku ist nicht verbunden.")))
             return
         }
 
         val command = runCatching { buildCommand(call) }
             .getOrElse {
-                callback("TOOL_ARGUMENT_ERROR: ${it.message ?: it.javaClass.simpleName}")
+                callback(Result.failure(it))
                 return
             }
 
-        bridge.execute(command) { result ->
-            callback(limitOutput(result))
+        runBridge(command, callback)
+    }
+
+    private fun executeSystemTool(call: ToolCallRequest): String {
+        val worker = Thread.currentThread()
+        fun cancelled() = worker.isInterrupted
+        return when (call.name) {
+            SystemIntelligenceCommands.SAVE -> {
+                val snapshot = lastDiagnosis ?: error("NO_SYSTEM_SNAPSHOT")
+                check(requiredString(call, "snapshotId") == snapshot.observedAtMillis.toString()) { "SYSTEM_SNAPSHOT_CHANGED" }
+                val id = systemStorage.retainDiagnosis(DiagnosticCacheRecord(snapshot.observedAtMillis,
+                    snapshot.storageAvailableBytes, snapshot.ownPssBytes, snapshot.batteryPercent, snapshot.thermalStatus), ::cancelled)
+                "Technische Momentaufnahme lokal gespeichert: $id. Keine persönlichen Inhalte."
+            }
+            SystemIntelligenceCommands.DIAGNOSE -> {
+                val sample = AndroidSystemDiagnosis(context).capture(::cancelled)
+                check(!cancelled()) { "DIAGNOSIS_CANCELLED" }
+                lastDiagnosis = sample
+                // Read-only like the diagnosis itself: the preview only lists own reports; cleanup needs its own approval.
+                var previewProblem: String? = null
+                val preview = if (!boolArg(call, SystemIntelligenceCommands.INCLUDE_CACHE_PREVIEW, false)) null else try {
+                    systemStorage.previewOwnCache(::cancelled).also { lastCachePreview = it }
+                } catch (failure: Exception) {
+                    check(!cancelled()) { "DIAGNOSIS_CANCELLED" }
+                    previewProblem = failure.message?.takeIf { it.matches(Regex("[A-Z_]{3,64}")) } ?: "PREVIEW_FAILED"
+                    null
+                }
+                check(!cancelled()) { "DIAGNOSIS_CANCELLED" }
+                sample.reportHeader() + "\n\n" +
+                    DiagnosisEvaluation.evaluate(sample, preview, previewUnavailableReason = previewProblem).render()
+            }
+            SystemIntelligenceCommands.PREVIEW -> systemStorage.previewOwnCache(::cancelled).let {
+                lastCachePreview = it
+                "Bereinigungsvorschau: ${it.entries.size} technische Berichte; ${it.eligibleBytes} Byte." +
+                    "\nGeschützte Cache-Einträge: ${it.protectedEntryCount}. Vollständig: ${it.complete}. Noch nichts verändert."
+            }
+            SystemIntelligenceCommands.CLEANUP -> systemStorage.cleanupOwnCache(
+                requiredString(call, "previewId"), requiredString(call, "planDigest"), ::cancelled).let {
+                lastCachePreview = null
+                if (it.undoId != null) lastCleanupUndoId = it.undoId
+                lastCleanupResult = call.callId to it
+                if (it.status != "COMPLETED") throw ToolBackendFailure(ToolExecutionStatus.FAILED, "CACHE_${it.status}")
+                "Cache-Ergebnis: ${it.status}; ${it.removedFiles} Berichte; logisch ${it.logicalBytesRemoved} Byte." +
+                    "\nGemessene Platzänderung: ${it.availableBytesDelta?.let { delta -> "$delta Byte" } ?: "nicht verfügbar"}. Rücknahme: ${it.undoId != null}. Kein Geschwindigkeitsnachweis."
+            }
+            SystemIntelligenceCommands.RESTORE -> systemStorage.restoreOwnCache(requiredString(call, "undoId"), ::cancelled).let {
+                lastCleanupResult = call.callId to it
+                if (it.status != "RESTORED") throw ToolBackendFailure(ToolExecutionStatus.FAILED, "CACHE_${it.status}")
+                lastCleanupUndoId = null
+                "Wiederherstellung: ${it.status}."
+            }
+            SystemIntelligenceCommands.FILES -> {
+                val selected = selectedStorage.getAndSet(null) ?: error("NO_SELECTED_STORAGE_SCOPE")
+                check(selected.token == requiredString(call, "scopeToken") &&
+                    android.os.SystemClock.elapsedRealtime() <= selected.deadline) { "STORAGE_SCOPE_EXPIRED" }
+                systemStorage.analyzeSelectedDocuments(selected.uris, ::cancelled).also {
+                    check(!cancelled()) { "STORAGE_SCAN_CANCELLED" }
+                    lastStorageAnalysis = it
+                }.summaryForTool()
+            }
+            else -> error("UNSUPPORTED_SYSTEM_TOOL")
         }
     }
+
+    private class PendingAction(val callId:String) {
+        val cancelled=java.util.concurrent.atomic.AtomicBoolean()
+        @Volatile var thread:Thread?=null
+    }
+    private val pendingAction=java.util.concurrent.atomic.AtomicReference<PendingAction?>(null)
+    private fun startNativeAction(call:ToolCallRequest,adapter:DeviceAppActionPort,callback:(Result<String>)->Unit){
+        val pending=PendingAction(call.callId)
+        if(!pendingAction.compareAndSet(null,pending)){
+            callback(Result.failure(ToolBackendFailure(ToolExecutionStatus.FAILED,"ANOTHER_DEVICE_ACTION_ACTIVE")));return
+        }
+        val thread=Thread({
+            var outcome:Result<String>?=null
+            try {
+                if(!pending.cancelled.get())adapter.execute(call,{pending.cancelled.get()}){result->if(outcome==null)outcome=result}
+            }catch(error:Exception){outcome=Result.failure(error)}
+            finally{pendingAction.compareAndSet(pending,null)}
+            callback(if(pending.cancelled.get())Result.failure(ToolBackendFailure(ToolExecutionStatus.CANCELLED,"DEVICE_ACTION_CANCELLED"))
+                else outcome?:Result.failure(IllegalStateException("DEVICE_ACTION_NO_COMPLETION")))
+        },"continuum-native-action").apply{isDaemon=true}
+        pending.thread=thread
+        try{thread.start()}catch(error:RuntimeException){pendingAction.compareAndSet(pending,null);callback(Result.failure(error))}
+    }
+    fun cancelNativeRequest(callId:String){
+        pendingAction.get()?.takeIf{it.callId==callId}?.let{
+            it.cancelled.set(true);appActions?.cancelPending();it.thread?.interrupt()
+        }
+    }
+    fun cancelPendingActions(){pendingAction.get()?.let{cancelNativeRequest(it.callId)}}
 
     private fun buildCommand(call: ToolCallRequest): String =
         when (call.name) {
@@ -46,12 +250,6 @@ class DeviceToolExecutor(
                     "echo SDK: $(getprop ro.build.version.sdk); " +
                     "echo Build: $(getprop ro.build.display.id); " +
                     "echo ABI: $(getprop ro.product.cpu.abi)"
-
-            "get_battery_info" -> "dumpsys battery | head -60"
-
-            "get_storage_info" ->
-                "df -h /data /sdcard 2>/dev/null; echo; " +
-                    "du -sh /sdcard/Download /sdcard/Documents /sdcard/DCIM /sdcard/Pictures 2>/dev/null"
 
             "list_installed_apps" -> {
                 val userOnly = boolArg(call, "userOnly", true)
@@ -80,13 +278,6 @@ class DeviceToolExecutor(
                     val pkg = resolvePackage(target) ?: safePackage(target)
                     "logcat -d -t 1600 2>/dev/null | grep -i -E 'AndroidRuntime|FATAL EXCEPTION|${escapeGrep(pkg)}' | tail -$lines"
                 }
-            }
-
-            "launch_app" -> {
-                val name = requiredString(call, "packageOrName")
-                val pkg = resolvePackage(name) ?: error("App nicht gefunden: $name")
-                val safe = safePackage(pkg)
-                "monkey -p $safe -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1 && echo 'Gestartet: $safe'"
             }
 
             "stop_app" -> {
@@ -119,7 +310,7 @@ class DeviceToolExecutor(
 
             "list_files" -> {
                 val path = safeSharedPath(requiredString(call, "path"))
-                "ls -lah -- ${shellQuote(path)} 2>/dev/null | head -180"
+                checkedDirectoryListingCommand(path)
             }
 
             "find_files" -> {
@@ -181,11 +372,6 @@ class DeviceToolExecutor(
                 }
                 "am start -a $action >/dev/null 2>&1 && echo 'Einstellungen geöffnet.'"
             }
-
-            "get_network_summary" ->
-                "echo '=== Interfaces ==='; ip -brief addr 2>/dev/null | head -30; " +
-                    "echo; echo '=== Connectivity ==='; dumpsys connectivity 2>/dev/null | " +
-                    "grep -E 'NetworkAgentInfo|VALIDATED|WIFI|MOBILE' | head -80"
 
             else -> error("Tool nicht implementiert: ${call.name}")
         }
@@ -274,6 +460,4 @@ class DeviceToolExecutor(
     private fun shellQuote(value: String): String =
         "'" + value.replace("'", "'\\''") + "'"
 
-    private fun limitOutput(value: String): String =
-        if (value.length <= 60_000) value else value.take(60_000) + "\n… Ausgabe gekürzt …"
 }

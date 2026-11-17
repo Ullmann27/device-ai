@@ -1,0 +1,44 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=35163 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=35163 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ContinuumDocumentFlowUiTest#stoppedScreenReadRemainsEphemeral
+.
+Time: 8.521
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumDocumentFlowUiTest#politePdfInputOpensTheExistingPickerBeforeAnyModelCall
+.
+Time: 2.763
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest#busyProposalAloneNeverAnimatesAnActualWorker
+.
+Time: 0.074
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest#authorizedRealRunnerEntryAndExitReachTheVisibleSurface
+.
+Time: 0.508
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest#deniedToolHasNoBackendAndNoArrival
+.
+Time: 0.056
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest#actualChiefStatusWorkerProducesAWorkerArrival
+.
+Time: 0.054
+
+OK (1 test)
+
+CASE at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest#actualActionButtonUsesBoundedFeedbackAndPendingSpeechMutesIt
+.
+Time: 0.09
+
+OK (1 test)
+
+TOTAL tests=7 failures=0

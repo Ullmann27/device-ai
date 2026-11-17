@@ -1,0 +1,19 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34507 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34507 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.FullStageMemoryReviewUiTest#actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight
+.E
+Time: 7.129
+There was 1 failure:
+1) actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight(at.heinz.deviceai.FullStageMemoryReviewUiTest)
+java.lang.AssertionError: The actual notice receives its dismissal tap expected null, but was:<at.heinz.deviceai.ui.ContinuumElementView{126430f9 VFED..C.. ......I. 532,790-989,916}>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at at.heinz.deviceai.FullStageMemoryReviewUiTest.actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight$lambda$0(FullStageMemoryReviewUiTest.kt:316)
+	at at.heinz.deviceai.FullStageMemoryReviewUiTest.withActivity(FullStageMemoryReviewUiTest.kt:114)
+	at at.heinz.deviceai.FullStageMemoryReviewUiTest.actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight(FullStageMemoryReviewUiTest.kt:251)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=1 failures=1

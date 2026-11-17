@@ -1,0 +1,2 @@
+PROPOSED_NOT_APPLIED_NOT_RUN
+Separate five-file product proposal, frozen after tests and before the own RED result. Independent static review pending. Additional actual 39dp status target defect is outside this proposal.

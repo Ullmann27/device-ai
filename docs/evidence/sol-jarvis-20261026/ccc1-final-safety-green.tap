@@ -1,0 +1,39 @@
+✔ read-only binding checks the canonical typed task and all four identities (5.961373ms)
+✔ invalid source, task or patch hash cannot cross the research binding (3.696633ms)
+✔ forbid test tampering and unapproved paths independently of candidate label (0.986847ms)
+✔ a fake executor or a caller-supplied sandbox cannot issue a dual-run claim (0.929034ms)
+✔ existing CCC1 owner grant must be valid, canonical and fully prepared (3.705946ms)
+✔ NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an executable-free chain (4.807585ms)
+✔ CCC1: an apparent green with fewer executed tests than RED is NOT verified (1.266369ms)
+✔ CCC1: equal or increased executed coverage preserves same-profile evidence (0.774119ms)
+✔ CCC1: skipped tests must remain identical across RED, GREEN and fresh run (0.450087ms)
+✔ CCC1: no missing profile, zero executed tests or contradictory JUnit counts (0.518556ms)
+✔ CCC1: same number of tests but a replaced testcase cannot fake equal coverage (0.384487ms)
+✔ CCC1: missing, duplicate or malformed executed identities never attest repairs (0.200871ms)
+✔ diagnostic cap cannot truncate executed coverage or hide disappearing failed tests (6.161677ms)
+✔ oversized XML cannot be silently treated as complete executed evidence (3.118996ms)
+✔ parity rejects explicitly incomplete coverage even if identities and counts match (0.431947ms)
+✔ JUnit directory cannot silently omit an oversized or linked report (18.71594ms)
+✔ incomplete failing report cannot become negative strategy training evidence (1.786753ms)
+✔ a concurrent HEAD change cannot hide behind a one-file patch diff (40.076404ms)
+✔ signal, process error or absent exit code cannot be a reproduced RED baseline (0.90973ms)
+✔ interrupted process metadata survives ledger sanitization and cannot train a negative (0.728781ms)
+✔ failed independent patch check records a negative learning signal without fake success (2.59229ms)
+✔ independently verified patch keeps legitimate positive experience (0.308932ms)
+✔ unverified teamleader calls never create positive or negative learning labels (1.351699ms)
+✔ explicit independent rejection is negative, not an unknown outcome (0.2723ms)
+✔ non-verified sessions retain their original failure diagnoses (0.384383ms)
+✔ optional scoped task identity survives ledger serialization and rejects malformed bindings (0.798161ms)
+✔ unverified session cannot poison history through claimed failed alternatives (0.593766ms)
+✔ invalid syntax is retained as negative repair experience without fabricated test execution (0.488785ms)
+✔ syntax checker errors remain audit evidence without becoming failed-strategy labels (0.392646ms)
+✔ an edit too large for the ledger is recorded by digest, keeps the session record and is never replayed (4.855117ms)
+✔ infrastructure-only repair failures stay auditable without poisoning strategy learning (0.62615ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 353.426294

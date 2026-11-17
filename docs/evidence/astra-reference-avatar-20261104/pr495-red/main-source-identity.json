@@ -1,0 +1,21 @@
+{
+  "test_source_commit": "d38508a78e0afd9ccbd9616445b9dd73c9f9259a",
+  "runtime_source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "checks": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "sha256": "02c3207d712c8a618bb7ab03577d8351fe55198b162b2c0170faa6354c2e5f4c",
+      "same_as_compiled_f14": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "sha256": "ecac61c0dc53d7cbbcb6723f4374f8082e4fd446dbd9d838e6245f2c0d54996a",
+      "same_as_compiled_f14": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "sha256": "80e7dbc861ded4a2d19092fcca025ac94b04a8f363596b5bc6e3f4a3146c2b78",
+      "same_as_compiled_f14": true
+    }
+  ]
+}

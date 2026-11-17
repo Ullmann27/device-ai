@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentTypedCancellationUiTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-03T20:45:12" hostname="b354f2cb821b" time="0.425">
+  <properties/>
+  <testcase name="legacyPendingAbortBlocksAnAlreadyOpenRunApproval" classname="at.heinz.deviceai.IndependentTypedCancellationUiTest" time="0.214"/>
+  <testcase name="wrongTargetAbortReceiptCannotRevokePreparedAuthorization" classname="at.heinz.deviceai.IndependentTypedCancellationUiTest" time="0.034"/>
+  <testcase name="explicitAbortRevokesMatchingPreparationBeforeWorkerReceipt" classname="at.heinz.deviceai.IndependentTypedCancellationUiTest" time="0.155"/>
+  <testcase name="confirmedAbortOfADifferentTaskPreservesPreparedTask" classname="at.heinz.deviceai.IndependentTypedCancellationUiTest" time="0.022"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

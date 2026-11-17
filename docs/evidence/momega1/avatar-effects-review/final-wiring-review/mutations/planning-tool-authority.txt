@@ -1,0 +1,94 @@
+✔ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (205.826686ms)
+✖ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (329.579669ms)
+✔ background consolidation records failure without losing interrupted source trials (0.281876ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (0.293654ms)
+✔ activity request codes are unique and every one has a result handler (168.526887ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.54251ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (6.187248ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (667.008479ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (42.366506ms)
+✔ startup bootstrap training stops with the activity and is retried later (84.230728ms)
+✔ startup I/O off the UI thread and shell commands stop with their activity (166.257518ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (343.045682ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (164.933878ms)
+✔ Teamleader Android UI reports status without false success (43.042658ms)
+✔ live model status does not revert the beginner cockpit to English (40.990757ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (124.954968ms)
+✔ new visual start screen is local, accessible and honest about capabilities (85.124594ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (42.283961ms)
+✔ Wikipedia article research uses bounded authentic extracts and original citations (0.447737ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (0.427026ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (0.543711ms)
+✔ Qwen chat validates replies without unconditional 0.8 success (66.627204ms)
+✔ context is bounded, clearly untrusted, and never authorizes tools or factual memories (48.343718ms)
+✔ low cost evaluator refuses mechanical repeats but cannot claim truth (0.217709ms)
+✔ M2 contract 01 pinned owner Gemma ID (1.50895ms)
+✔ M2 contract 02 pinned owner Gemma digest (0.114142ms)
+✔ M2 contract 03 original Gemma file is LiteRT, not GGUF (0.089395ms)
+✔ M2 contract 04 main app exposes safe milestone status (0.109866ms)
+✔ M2 contract 05 status binds real imported model SHA (0.214875ms)
+✔ M2 contract 06 status binds real loaded model SHA (0.119871ms)
+✔ M2 contract 07 status checks native runtime readiness (0.11224ms)
+✔ M2 contract 08 status checks same model session receipt (0.163177ms)
+✔ M2 contract 09 native diagnostic starts only on explicit chat command (0.195235ms)
+✔ M2 contract 10 native diagnostic calls actual localRuntime.stream (0.21198ms)
+✔ M2 contract 11 diagnostic rejects blank generated text (0.128114ms)
+✔ M2 contract 12 diagnostic never executes tool proposals (0.111929ms)
+✔ M2 contract 13 measured response tied to chosen original SHA (0.06675ms)
+✔ M2 contract 14 fresh attempt revokes stale evidence (0.055454ms)
+✔ M2 contract 15 readiness never claims offline test from native reply (0.166322ms)
+✔ M2 contract 16 readiness never claims authentic model patch by metadata (0.073111ms)
+✔ M2 contract 17 readiness requires independent RED and fresh GREEN (0.07286ms)
+✔ M2 contract 18 readiness never claims long-term learning by sample (0.056486ms)
+✔ M2 contract 19 command decoder remains pure and non-executing (0.138729ms)
+✔ M2 contract 20 direct model test never accepts a broad arbitrary command (0.078749ms)
+✔ M2 contract 21 production local coding CLI imports preflight gate (0.054993ms)
+✔ M2 contract 22 coding and legacy patch routes enforce admission before generation (1.747951ms)
+✔ M2 contract 23 local original LiteRT is rejected on llama CPP boundary (0.075083ms)
+✔ M2 contract 24 alternative model always needs explicit owner consent (0.053471ms)
+✔ M2 contract 25 configuration decision never asserts runtime or repair success (0.047862ms)
+✔ M2 contract 26 no model caller can edit Git in the preflight (0.178029ms)
+✔ M2 contract 27 original CCC1 still protects test identities (0.069996ms)
+✔ M2 contract 28 original CCC1 still protects source patch scope (0.092259ms)
+✔ M2 contract 29 CCC1 task keeps explicit owner permission (0.063947ms)
+✔ M2 contract 30 model status is exposed as text without training (0.117888ms)
+✔ M2 contract 31 harness coding CLI enforces same owner model preflight (0.0592ms)
+✔ M2 contract 32 harness CLI rejects format mismatch before generation (0.110467ms)
+✔ M2 contract 33 harness safely redacts arbitrary errors (0.065139ms)
+✔ M2 contract 34 model load always resets stale session proof (0.380385ms)
+✔ M2 contract 35 model unload always resets stale session proof (0.449028ms)
+✔ M2 contract 36 model import always resets stale session proof (0.362989ms)
+✔ voice input barge-in silences TTS engine and avatar mouth before the recognizer starts (70.191651ms)
+✔ assistant TTS is refused while the on-device microphone turn is active (51.209939ms)
+✔ dictation is merged at the cursor and never overwrites a typed composer draft (51.182418ms)
+✔ model load path is gated by measured RAM/thermal admission before the native engine starts (41.25722ms)
+✔ live runLocal model binds every step to the model captured at turn start (42.201317ms)
+ℹ tests 65
+ℹ suites 0
+ℹ pass 64
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3318.749799
+
+✖ failing tests:
+
+test at .github/continuum/android-integration-wiring.test.mjs:73:1
+✖ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (329.579669ms)
+  AssertionError [ERR_ASSERTION]: Disconnected or unsupported code path: owner tool authorization uses untouched input and planning has no memory/tool authority
+      at ensure (file:///workspace/momega1-wiring-tests/.github/continuum/android-integration-wiring.test.mjs:16:34)
+      at TestContext.<anonymous> (file:///workspace/momega1-wiring-tests/.github/continuum/android-integration-wiring.test.mjs:92:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

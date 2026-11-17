@@ -1,0 +1,104 @@
+{
+  "observed_utc": "2026-11-04T20:14:10.181498+00:00",
+  "toolchain": [
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/toolchain/jdk17",
+      "exists": true,
+      "is_symlink": true,
+      "realpath": "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17",
+      "du_exit": 0,
+      "allocated_bytes": 0,
+      "expected_files": [
+        {
+          "path": "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/java",
+          "exists": true,
+          "executable": true
+        },
+        {
+          "path": "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/javac",
+          "exists": true,
+          "executable": true
+        },
+        {
+          "path": "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/keytool",
+          "exists": true,
+          "executable": true
+        }
+      ],
+      "target_du_exit": 0,
+      "target_allocated_bytes": 332922880
+    },
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1",
+      "exists": true,
+      "is_symlink": true,
+      "realpath": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1",
+      "du_exit": 0,
+      "allocated_bytes": 4096,
+      "expected_files": [
+        {
+          "path": "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+          "exists": true,
+          "executable": true
+        }
+      ],
+      "target_du_exit": 0,
+      "target_allocated_bytes": 152141824
+    },
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/toolchain/android-sdk",
+      "exists": true,
+      "is_symlink": false,
+      "realpath": "/workspace/scratch/b6ee64d418cf/toolchain/android-sdk",
+      "du_exit": 0,
+      "allocated_bytes": 494637056,
+      "expected_files": [
+        {
+          "path": "/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar",
+          "exists": true,
+          "executable": false
+        },
+        {
+          "path": "/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/build-tools/35.0.0/aapt2",
+          "exists": true,
+          "executable": true
+        },
+        {
+          "path": "/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/build-tools/35.0.0/apksigner",
+          "exists": true,
+          "executable": true
+        }
+      ]
+    }
+  ],
+  "ui_dependencies": [
+    {
+      "path": "/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.robolectric/android-all-instrumented/9-robolectric-4913185-2-i7/62774277200aae1785bba84232aec389dc7a0953/android-all-instrumented-9-robolectric-4913185-2-i7.jar",
+      "bytes": 106130412,
+      "allocated_bytes": 106131456
+    },
+    {
+      "path": "/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.robolectric/android-all-instrumented/15-robolectric-12650502-i7/4a72756411af462a4ca89b355b0834799dc8258e/android-all-instrumented-15-robolectric-12650502-i7.jar",
+      "bytes": 199527464,
+      "allocated_bytes": 199528448
+    }
+  ],
+  "gradle_cache": {
+    "path": "/workspace/scratch/d663e8444310/gradle-cache",
+    "exists": true,
+    "is_symlink": false,
+    "realpath": "/workspace/scratch/d663e8444310/gradle-cache",
+    "du_exit": 0,
+    "allocated_bytes": 1541558272
+  },
+  "cache_inventory_exit": 0,
+  "ui_dependency_logical_bytes": 305657876,
+  "ui_dependency_allocated_bytes": 305659904,
+  "disk": {
+    "path": "/workspace",
+    "total": 67586535424,
+    "used": 62485127168,
+    "free": 1648660480
+  },
+  "completed_utc": "2026-11-04T20:14:32.854250+00:00"
+}

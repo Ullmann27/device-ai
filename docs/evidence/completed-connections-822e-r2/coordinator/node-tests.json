@@ -1,0 +1,12 @@
+[
+  ".github/continuum/development-backlog.test.mjs",
+  ".github/continuum/backlog-cli.test.mjs",
+  ".github/continuum/backlog-contract-cli.test.mjs",
+  ".github/continuum/backlog-investigator.test.mjs",
+  ".github/continuum/backlog-investigator-recovery.test.mjs",
+  ".github/continuum/backlog-repair-worker.test.mjs",
+  ".github/continuum/owner-contract-worker.test.mjs",
+  ".github/continuum/autonomous-teamleader.test.mjs",
+  ".github/continuum/local-teamleader-loop.test.mjs",
+  ".github/continuum/coding-orchestrator-failure-report.test.mjs"
+]

@@ -1,0 +1,9 @@
+{
+  "source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "task": ":app:lintDebug",
+  "exit_code": 0,
+  "scope": "Repository configured NewApi-only lint gate",
+  "issues": [],
+  "issue_count": 0,
+  "xml_path": "/workspace/scratch/b3170a7ae924/device-ai-qa-f14/app/build/reports/lint-results-debug.xml"
+}

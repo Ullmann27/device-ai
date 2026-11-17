@@ -1,0 +1,65 @@
+{
+  "generatedBy": "CodeRabbit Agent",
+  "schemaVersion": 1,
+  "baselineCommit": "6e4fcfc7bffc956b47e5a0543af7d3bf26372bc3",
+  "testedInputsSha256": {
+    "scripts/continuum-0324-live-source-gate.test.mjs": "8f42318c4bdf77333112268441f2f6a7fd0af9d0e89410e085876dbcce97afea",
+    "scripts/continuum-0324-live-source-gate.mjs": "8bb38b55b09d142f1e512ba0e3e7fdf3cac953f5a7260fbe2f0dbcde5a848c8e",
+    "scripts/render-mentor-owner-update-v25-live.sh": "206a24709b393c67325592c63c3acad3065358f9144314e0a5b23e9553fe56ad",
+    "docs/release/continuum-0324-live-source-proposal-20261027.json": "2e9364226b1845f159d1f90b620a7044cbf66d67396710a8114a11400c969998"
+  },
+  "environment": {
+    "os": "Ubuntu 26.04.1 x64",
+    "node": "24.21.0",
+    "fixtures": "temporary independent Git repository and local frozen source commit; synthetic approvals only"
+  },
+  "gitSourceRequirement": "5270202e0699764b0eac5d4dd3e6a587b982ae05 must be present locally with all inventoried objects; shallow/partial checkouts must fetch it",
+  "checks": [
+    {
+      "command": "node --test scripts/continuum-0324-live-source-gate.test.mjs",
+      "status": "FAIL",
+      "exitCode": 1,
+      "passed": 4,
+      "failed": 3,
+      "skipped": 0,
+      "evidence": "release-fixture-red.log"
+    },
+    {
+      "command": "node --test scripts/continuum-0324-live-source-gate.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "release-fixture-final.log"
+    },
+    {
+      "command": "node scripts/continuum-reliability-qa.mjs full-node --out /home/vercel-sandbox/runtime/continuum-validation/release-fixture-final-full",
+      "status": "PASS",
+      "exitCode": 0,
+      "total": 1951,
+      "passed": 1938,
+      "failed": 0,
+      "skipped": 13,
+      "sourceUnchanged": true,
+      "terminationConfirmed": true,
+      "evidence": "full-node/report.json"
+    }
+  ],
+  "limits": [
+    "13 skipped Node tests remain SKIP, not PASS.",
+    "Full-node host scope excludes Android Gradle, APK, Fold7 and model inference; earlier SDK verification applies only to its tested inputs.",
+    "Exact historical Git source commit and objects are required; missing objects cause an explicit failure, not a pass or skip.",
+    "Frozen manifest, production gate and signing shell script unchanged; no APK assembled or signed."
+  ],
+  "evidenceSha256": {
+    "full-node/full-node.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "full-node/full-node.xml": "4972c217af0bd3ed8efc7a9bc8957311cb87818609b2b4ee40be3979edccba62",
+    "full-node/report.json": "ba513065f02ba07e43bd778253edc9532bdf5c5a25a888c0cbff326777bd0b6d",
+    "full-node/report.md": "c8ee1a196a1936922875bde423c8994bdaf36f3fc1db9cda6c0ab64f1f407d78",
+    "release-fixture-final.log": "0d2102114f2f29a013fcf29491b7a3a2377032a7e854960e8d157e172074cc11",
+    "release-fixture-green-attempt.log": "aa9ad19fdec88e9dda03c2b380e4c678430456e48f6cde83e5900b4f33918b03",
+    "release-fixture-green.log": "30baf443c76513b814d25bdd08306ae74b67df8ea8353993f1c840ef4ce50ade",
+    "release-fixture-red.log": "7ea3d5a35e71330e452dbb9fe2029371d8f5ed83cbee99e8abbea9a1c0f5c767"
+  }
+}

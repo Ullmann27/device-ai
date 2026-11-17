@@ -1,0 +1,14 @@
+{
+  "compiledProductionSource": "ff28ae74f18570daa6485fc6e885de360dd70e9f",
+  "fixtureSha256": "9e8d2af9e10fafd2c5f925a5082c3fc51967d537e03ef5cd2ece8928b87a46e1",
+  "repositoryUnchanged": true,
+  "exitCode": 0,
+  "scope": "Four existing permission tests against actual compiled production classes; candidate test fixture only; final commit/full gate still pending",
+  "productionRemoteSource": "0d21f08466e1036346071536ac5eeec54f54efdc",
+  "tests": {
+    "passed": 4,
+    "failed": 0
+  },
+  "canonicalIntegrationPr": 740,
+  "productionCodeChanged": false
+}

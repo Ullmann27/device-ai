@@ -1,0 +1,82 @@
+{
+  "avatarOpacity": 1,
+  "contentHeight": 960,
+  "scene": {
+    "top": 116,
+    "left": 12,
+    "bottom": 692,
+    "right": 399
+  },
+  "head": {
+    "top": 179,
+    "left": 15,
+    "bottom": 450,
+    "right": 395
+  },
+  "avatarWindow": {
+    "cameraCenterY": 0.21031251179540994,
+    "left": -0.2966241115204581,
+    "halfHeight": 0.21153982690011613,
+    "right": 0.2966241115204581
+  },
+  "slots": {
+    "STATUS": {
+      "top": 904,
+      "left": 12,
+      "bottom": 952,
+      "right": 399
+    },
+    "INPUT": {
+      "top": 700,
+      "left": 12,
+      "bottom": 756,
+      "right": 399
+    },
+    "TOP_BAR": {
+      "top": 8,
+      "left": 12,
+      "bottom": 60,
+      "right": 399
+    },
+    "DIALOG": {
+      "top": 68,
+      "left": 12,
+      "bottom": 116,
+      "right": 399
+    },
+    "AVATAR": {
+      "top": 116,
+      "left": 12,
+      "bottom": 692,
+      "right": 399
+    },
+    "WORK_PROCESS": {
+      "top": 427.04,
+      "left": 27.48,
+      "bottom": 628.64,
+      "right": 383.52
+    },
+    "BOTTOM_NAV": {
+      "top": 764,
+      "left": 12,
+      "bottom": 896,
+      "right": 399
+    }
+  },
+  "avatarFocus": {
+    "centerZ": 0.06414049118757248,
+    "centerX": -3.228597342967987E-4,
+    "azimuthDegrees": 0
+  },
+  "name": "phone",
+  "width": 411,
+  "avatarPullBackScale": 0.76,
+  "sideMonitorsVisible": false,
+  "orb": {
+    "top": 153,
+    "left": 84,
+    "bottom": 396,
+    "right": 326
+  },
+  "height": 960
+}

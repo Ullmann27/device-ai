@@ -1,0 +1,45 @@
+{
+  "scope": "Read-only independent code/test/evidence reviews; no additional runtime passes claimed",
+  "reviews": [
+    {
+      "reviewer": "connect_completed_lm",
+      "scope": "Worker selector, four imported tests, frozen-blob parity harness and unchanged callers",
+      "source_local": "182ae0284f9c330f0675faf432e78d3a8c00ba2a",
+      "baseline_local": "0dac310728a84bd1adc296377ed7d124bc09692a",
+      "result": "NO_MATERIAL_BLOCKER_WITHIN_VALID_CANONICAL_DOCUMENT_CONTRACT",
+      "checks": [
+        "Comparator order and strict first-object selection",
+        "Unchanged eligibility/filter short-circuit order",
+        "Original object identity and canonical nonmutation",
+        "Unchanged worker authority, dependency checks, claims and persistence",
+        "Frozen baseline/candidate blobs and harness hash match actual parity receipt"
+      ]
+    },
+    {
+      "reviewer": "connect_completed_worker",
+      "scope": "LM1 sampler and context accepted-byte accounting with tests/parity transformation",
+      "baseline_local": "0dac310728a84bd1adc296377ed7d124bc09692a",
+      "result": "NO_PRODUCTION_BLOCKER; ONE_REPLAY_PORTABILITY_FINDING_CORRECTED",
+      "checks": [
+        "Frozen LM sorted oracle exactly equals C1 baseline",
+        "Float total order, signed zero, NaN, ties, topK empty-array exception and RNG preserved",
+        "Context accumulator is local, accepted-only and bounded; ASCII section boundaries preserve UTF-8 additivity",
+        "Whole compiler outside narrow diff, private-frame code and recall observer unchanged",
+        "Generated baseline is exact class/self-reference rename; oracle matches upstream; 53 source hashes match"
+      ],
+      "finding": {
+        "problem": "Context replay depended on local-equivalent commit absent from published history",
+        "correction": "Use immutable baseline blob f42f526cefaa96295205f161241fbc8035f27c01 with canonical remote1a5302c5 metadata",
+        "verification": "Coordinator repeated real 47-file compilation, both21-method JUnit groups and unchanged462-case parity on combined source; exit0"
+      }
+    },
+    {
+      "reviewer": "connect_completed_context",
+      "scope": "Author recheck of coordinator replay correction and existing caller preservation; not an independent review of own production patch",
+      "source_local": "578ea5dd64f059de1b8173badf4d34d0e52a5b76",
+      "result": "BASELINE_BYTES_AND_CALLERS_MATCH_EXECUTED_RECEIPTS",
+      "baseline_sha256": "b2fb053666fc6a056ce8d5351ed01f76cc8514ca59a231b2667c1ecec116711a",
+      "candidate_sha256": "6adf073f1e9b06c45c847ca46c379f295f5be0598ba7fd028b63993da30de02a"
+    }
+  ]
+}

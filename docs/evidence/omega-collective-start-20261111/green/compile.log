@@ -1,0 +1,6 @@
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:87:39: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+        assertNull(result.taskEvidence!!.learningCandidateExperienceId)
+                                      ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:112:43: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+            assertNull(replay.taskEvidence!!.learningCandidateExperienceId)
+                                          ^^

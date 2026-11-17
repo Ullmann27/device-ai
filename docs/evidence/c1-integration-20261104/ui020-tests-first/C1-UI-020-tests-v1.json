@@ -1,0 +1,40 @@
+{
+  "task": "C1-UI-020",
+  "phase": "TEST_FIRST_FREEZE_V1",
+  "sourceCommit": "59d8d7e25a5936403e8579373883fa04bec5c37f",
+  "status": "NOT_RUN",
+  "frozenAtUtc": "2026-11-04T21:40:57.696898+00:00",
+  "methods": [
+    "presentationControlsReuseTheLiveAvatarAndPersistCompactChoice",
+    "composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+    "narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor",
+    "narrowPhoneHasRealDestinationsAndReadableLargeType",
+    "phoneHasRealDestinationsAndReadableLargeType",
+    "foldLandscapeHasRealDestinationsAndReadableLargeType",
+    "foldPortraitHasRealDestinationsAndReadableLargeType",
+    "shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable"
+  ],
+  "methodCount": 8,
+  "baseBlob": "4fa09ef1fe3a6fe88b707e8150611a066c01c72d",
+  "baseSha256": "39b4371e773f0f342dc1606700d59c2fa95cb67f622ee6d0ce7577c9ed8a813f",
+  "targetSha256": "b162dda889669fb6818b9e35114a1874f7991d3df3d0d2f83da9b937e9748547",
+  "patchSha256": "fdd1d7bccba6c400ccaa2edc0fad8224b83da9dfcbf1be9488a07327829f9b7e",
+  "patchBytes": 32022,
+  "hypothesis": [
+    "Current actual shell replaces hidden legacy test selectors without dropping any of the eight test methods or behavioural requirements.",
+    "Actual native appearance chooser must retain orb/2D/3D/motion/close and expose explicit compact orb; active shell must actually shrink, persist across recreation and restore exact normal geometry.",
+    "Visible System centre must provide explicit existing More-category navigation where header/category dock are absent; actual Decor taps must reach Development and the coding draft, then return without task execution."
+  ],
+  "predictedRedOnBase": [
+    "Chooser has three rather than four native choices; compact route and active geometry absent.",
+    "Wide reference/reflow has no visible More fallback in the existing System centre."
+  ],
+  "redEvidence": "NOT_RUN: only parent C1 may execute the frozen test patch before production changes. Existing UI015 failure evidence is separately bound to cdea and the old test source.",
+  "restrictions": [
+    "No changed product sources in this patch",
+    "No test execution/compilation/build by helper",
+    "No legacy visibility forcing or private route invocation",
+    "No model, GPU or device claim"
+  ],
+  "productionPreparedAtFreeze": false
+}

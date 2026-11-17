@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.Command03ComputerProjectionTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-16T05:16:19" hostname="731a0110a54f" time="0.005">
+  <properties/>
+  <testcase name="currentHideIsPersistentButARealNewFeedBindingCanStartAgain" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.004"/>
+  <testcase name="malformedOrOversizeEncodedImagesNeverSatisfyTheTransportBudget" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.0"/>
+  <testcase name="sendingAndDecodingNeverSubmitUntilTheVisibleNativeDrawBoundary" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.0"/>
+  <testcase name="encodingPreservesOriginalAgeAndDropsFramesThatExpiredWhileWorking" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.0"/>
+  <testcase name="replacementHidesOnlyTheOldReceiptAndKeepsItsPendingSuccessor" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.0"/>
+  <testcase name="stopRebindAndSessionChangeDiscardAlreadyEncodedLateDeliveries" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.001"/>
+  <testcase name="oneEncoderAndOnePendingImageKeepTheExistingTwoFrameLeaseBound" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.0"/>
+  <testcase name="coverBeforeEncoderCompletionCannotSubmitTheRecoveredSourcesPixels" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.0"/>
+  <testcase name="rejectedExecutorImmediatelyWithdrawsThePreviousVisibleReceipt" classname="at.heinz.deviceai.ui.Command03ComputerProjectionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

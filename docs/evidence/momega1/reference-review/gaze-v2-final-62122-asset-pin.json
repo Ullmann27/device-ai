@@ -1,0 +1,7 @@
+{
+  "sha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+  "bytes": 8690616,
+  "evidenceClass": "CONTRACT_TEST_NOT_NATIVE_RENDER",
+  "targetCount": 21,
+  "status": "PASS_COMPILED_PIN_AND_PRODUCTION_PREFLIGHT"
+}

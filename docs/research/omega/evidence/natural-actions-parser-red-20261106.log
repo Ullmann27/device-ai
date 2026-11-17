@@ -1,0 +1,20 @@
+JUnit version 4.13.2
+..E.E
+Time: 0.024
+There were 2 failures:
+1) addressedCommandsResolveGeneralAppNames(at.heinz.deviceai.cognitive.OwnerAppLookupNaturalRegressionTest)
+java.lang.AssertionError: Jarvis öffne mir WhatsApp expected:<WhatsApp> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.OwnerAppLookupNaturalRegressionTest.addressedCommandsResolveGeneralAppNames(OwnerAppLookupNaturalRegressionTest.kt:13)
+2) politeAndReorderedRequestsResolveGeneralApps(at.heinz.deviceai.cognitive.OwnerAppLookupNaturalRegressionTest)
+java.lang.AssertionError: Kannst du mir bitte WhatsApp öffnen? expected:<WhatsApp> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.OwnerAppLookupNaturalRegressionTest.politeAndReorderedRequestsResolveGeneralApps(OwnerAppLookupNaturalRegressionTest.kt:22)
+
+FAILURES!!!
+Tests run: 3,  Failures: 2
+

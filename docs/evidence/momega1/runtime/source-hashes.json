@@ -1,0 +1,9 @@
+{
+  "source": "37e16cefac4ee3b794d79540214a69f1c6181b82",
+  "sha256": {
+    ".github/continuum/coding-provider.mjs": "88a14e2abe4c030b665aa1ea522fd995d4b8e1319d8188d92a52ac552b0bdac5",
+    "scripts/continuum-local-brain-cli.mjs": "a179f0aaddc83ef95a70814d82e36241276e2125d8d66e180eaeb252ac726550",
+    "scripts/continuum-local-model-observation.mjs": "8a28523904acdb1f3c4e1c35f3621014d5001db2039365485b1cd9ada6f851de",
+    "scripts/continuum-local-model-observation.test.mjs": "d44db26184c044ce7429a24810036db2b591ba98b159d96dcd86ae42600f89e4"
+  }
+}

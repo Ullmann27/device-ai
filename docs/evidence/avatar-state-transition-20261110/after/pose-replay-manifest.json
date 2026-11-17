@@ -1,0 +1,395 @@
+{
+  "schema": "continuum-exact-production-pose-host-replay-v1",
+  "status": "PASS",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "assetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "poseExportSha256": "c07f36746f6b0eb8ac61917165a51766e9b6a20825d28770f02e1e0a0ab18aa9",
+  "renderScriptSha256": "c5c653f0bec450ea5c63cf95cc8935fec1f36510b7d21ede2eac373142feff67",
+  "mapperSourceCommit": "74892201d766d4d5c756079893642ed1547c95b8",
+  "mapperSourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "a4236dd37074c601ab94df68f2bbdb9c510a43ef167cc445d510130e627e01f6",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "8e9747b26fc6924fa926ba64b937a24de0fec77bd1debd7f92db863640651fb4",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/GazeBlinkPolicy.kt": "a8bcb17382b2e326ecc3d7aabf5ca3b91630d7c9d0046889bde3f29fa3bba333",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CriticalDampedSpring.kt": "86df1b2d4b1cccef6e3bf911a11b548ec708b3d85064dae946a08f98e14a13b3",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "61db876a606701efaa50c5555909c96696bba95322665918625f88bbb1e3cc3c",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "4f7bfd666634ff68ee75a98ee73197827aa34390b38c1b6d311971983113c7ed",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "34fddaa9bf283b8ef40930e7190542b8241700cd1f455452ba5f03329e5ac11f"
+  },
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "cpuThreads": 1,
+  "hiddenNodes": [
+    "ToothLower0",
+    "ToothLower1",
+    "ToothLower2",
+    "ToothLower3",
+    "ToothLower4",
+    "ToothLower5",
+    "ToothLower6",
+    "ToothLower7",
+    "ToothUpper0",
+    "ToothUpper1",
+    "ToothUpper2",
+    "ToothUpper3",
+    "ToothUpper4",
+    "ToothUpper5",
+    "ToothUpper6",
+    "ToothUpper7"
+  ],
+  "jointPolicy": "production Neck plus residual Head",
+  "pixels": [
+    512,
+    640
+  ],
+  "samples": 32,
+  "denoising": false,
+  "rendered": true,
+  "frames": [
+    {
+      "name": "gaze-right-up",
+      "actualMapperPose": {
+        "input": {
+          "expression": "NEUTRAL",
+          "viseme": "SIL",
+          "jawOpen": 0,
+          "gazeX": 1,
+          "state": "LISTENING",
+          "speakEnergy": 0,
+          "gazeY": 0.6000000238418579,
+          "visemeWeight": 0,
+          "gazeObserved": false
+        },
+        "seconds": 1,
+        "jawPitch": 0,
+        "motion": true,
+        "eyePitch": -4.800000190734863,
+        "neckPitch": -4.679999828338623,
+        "name": "gaze-right-up",
+        "headYaw": 24,
+        "weights": {
+          "PP": 0,
+          "FF": 0,
+          "DD": 0,
+          "KK": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "BlinkRight": 0,
+          "CH": 0,
+          "E": 0,
+          "I": 0,
+          "BrowUp": 0,
+          "Smile": 0,
+          "BlinkLeft": 0,
+          "O": 0,
+          "JawOpen": 0,
+          "BrowDown": 0,
+          "TH": 0,
+          "U": 0,
+          "SIL": 0
+        },
+        "neckYaw": 15.59999942779541,
+        "headPitch": -7.200000286102295,
+        "eyeYaw": 12
+      },
+      "maximumControlMatrixError": 2.980232238769531e-07,
+      "maximumFaceSkinPositionErrorMetres": 4.6480895084509305e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9136764407157898,
+          -0.03976457193493843,
+          0.40449246764183044,
+          0.0055666775442659855
+        ],
+        [
+          -0.011919014155864716,
+          0.9921531081199646,
+          0.12445884943008423,
+          0.2691417336463928
+        ],
+        [
+          -0.40626758337020874,
+          -0.11853627115488052,
+          0.9060330390930176,
+          0.022342665120959282
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.24355243146419525,
+        2.076648235321045
+      ],
+      "file": "gaze-right-up.png",
+      "imageSha256": "ab73953fdaceffe3d864ba7b4d150e9e567f0c8e81704944ba2ae8ea147ad859"
+    },
+    {
+      "name": "idle-to-thinking-f000",
+      "actualMapperPose": {
+        "input": {
+          "expression": "NEUTRAL",
+          "viseme": "SIL",
+          "jawOpen": 0,
+          "gazeX": 0,
+          "state": "THINKING",
+          "speakEnergy": 0,
+          "gazeY": 0,
+          "visemeWeight": 0,
+          "gazeObserved": false
+        },
+        "seconds": 2.4000000953674316,
+        "jawPitch": 0,
+        "motion": true,
+        "eyePitch": -0.3765999972820282,
+        "neckPitch": 1.123656988143921,
+        "name": "idle-to-thinking-f000",
+        "headYaw": 3.063290596008301,
+        "weights": {
+          "PP": 0,
+          "FF": 0,
+          "DD": 0,
+          "KK": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "BlinkRight": 0,
+          "CH": 0,
+          "E": 0,
+          "I": 0,
+          "BrowUp": 0,
+          "Smile": 0,
+          "BlinkLeft": 0,
+          "O": 0,
+          "JawOpen": 0,
+          "BrowDown": 0,
+          "TH": 0,
+          "U": 0,
+          "SIL": 0
+        },
+        "neckYaw": 1.9911388158798218,
+        "headPitch": 1.7287031412124634,
+        "eyeYaw": 0.6299999952316284
+      },
+      "maximumControlMatrixError": 1.7136335372924805e-07,
+      "maximumFaceSkinPositionErrorMetres": 3.4698284483818525e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9985712766647339,
+          0.001245557446964085,
+          0.05342209339141846,
+          0.0012709266738966107
+        ],
+        [
+          0.0003669374855235219,
+          0.9995449185371399,
+          -0.03016362339258194,
+          0.2663075625896454
+        ],
+        [
+          -0.053435347974300385,
+          0.03014012984931469,
+          0.9981163740158081,
+          0.03773210197687149
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.24918846786022186,
+        2.093116521835327
+      ],
+      "file": "idle-to-thinking-f000.png",
+      "imageSha256": "f7787b4a3656a3aa0d3baab1025590a9701d9c7b221a96e24c5d857a2c7ab755"
+    },
+    {
+      "name": "idle-to-thinking-f006",
+      "actualMapperPose": {
+        "input": {
+          "expression": "NEUTRAL",
+          "viseme": "SIL",
+          "jawOpen": 0,
+          "gazeX": 0,
+          "state": "THINKING",
+          "speakEnergy": 0,
+          "gazeY": 0,
+          "visemeWeight": 0,
+          "gazeObserved": false
+        },
+        "seconds": 2.5,
+        "jawPitch": 0,
+        "motion": true,
+        "eyePitch": -0.5829203128814697,
+        "neckPitch": 0.8510681986808777,
+        "name": "idle-to-thinking-f006",
+        "headYaw": 2.4835588932037354,
+        "weights": {
+          "PP": 0,
+          "FF": 0,
+          "DD": 0,
+          "KK": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "BlinkRight": 0,
+          "CH": 0,
+          "E": 0,
+          "I": 0,
+          "BrowUp": 0,
+          "Smile": 0,
+          "BlinkLeft": 0,
+          "O": 0,
+          "JawOpen": 0,
+          "BrowDown": 0,
+          "TH": 0,
+          "U": 0,
+          "SIL": 0
+        },
+        "neckYaw": 1.6143132448196411,
+        "headPitch": 1.309335708618164,
+        "eyeYaw": -0.16829964518547058
+      },
+      "maximumControlMatrixError": 1.695007085800171e-07,
+      "maximumFaceSkinPositionErrorMetres": 8.198796709184842e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9990607500076294,
+          0.000764985044952482,
+          0.04332498833537102,
+          0.0010100386571139097
+        ],
+        [
+          0.00022533669834956527,
+          0.999738872051239,
+          -0.02284848317503929,
+          0.26648175716400146
+        ],
+        [
+          -0.04333115741610527,
+          0.02283678576350212,
+          0.9987996816635132,
+          0.03707394376397133
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.2496120035648346,
+        2.0942132472991943
+      ],
+      "file": "idle-to-thinking-f006.png",
+      "imageSha256": "2e929fe7e1154841e86c7e7312a314938df435b09caab6e60194a2d14f6c2277"
+    },
+    {
+      "name": "idle-to-thinking-f020",
+      "actualMapperPose": {
+        "input": {
+          "expression": "NEUTRAL",
+          "viseme": "SIL",
+          "jawOpen": 0,
+          "gazeX": 0,
+          "state": "THINKING",
+          "speakEnergy": 0,
+          "gazeY": 0,
+          "visemeWeight": 0,
+          "gazeObserved": false
+        },
+        "seconds": 2.7333333492279053,
+        "jawPitch": 0,
+        "motion": true,
+        "eyePitch": -0.5211730003356934,
+        "neckPitch": 0.41099464893341064,
+        "name": "idle-to-thinking-f020",
+        "headYaw": 1.5307191610336304,
+        "weights": {
+          "PP": 0,
+          "FF": 0,
+          "DD": 0,
+          "KK": 0,
+          "SS": 0,
+          "NN": 0,
+          "RR": 0,
+          "AA": 0,
+          "BlinkRight": 0,
+          "CH": 0,
+          "E": 0,
+          "I": 0,
+          "BrowUp": 0,
+          "Smile": 0,
+          "BlinkLeft": 0,
+          "O": 0,
+          "JawOpen": 0,
+          "BrowDown": 0,
+          "TH": 0,
+          "U": 0,
+          "SIL": 0
+        },
+        "neckYaw": 0.9949674010276794,
+        "headPitch": 0.6322994828224182,
+        "eyeYaw": -0.7215186357498169
+      },
+      "maximumControlMatrixError": 1.7881393432617188e-07,
+      "maximumFaceSkinPositionErrorMetres": 4.340231308933425e-08,
+      "jawWorldMatrixGltfRowMajor": [
+        [
+          0.9996431469917297,
+          0.00022773245291318744,
+          0.026711687445640564,
+          0.0006021886947564781
+        ],
+        [
+          6.707266584271565e-05,
+          0.9999390840530396,
+          -0.01103514339774847,
+          0.2667545974254608
+        ],
+        [
+          -0.026712574064731598,
+          0.011032996699213982,
+          0.9995822310447693,
+          0.03600475937128067
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cameraAzimuthDegrees": 0,
+      "cameraWorldGltf": [
+        -0.0003228597342967987,
+        0.25034478306770325,
+        2.0967202186584473
+      ],
+      "file": "idle-to-thinking-f020.png",
+      "imageSha256": "5fbce5a0a397c23a3a4a5d841e41f44bce29ae3ef029b55a11f4a10f35da0d97"
+    }
+  ],
+  "limitations": [
+    "Actual compiled mapper with synthetic inputs; no actual TTS/camera session",
+    "Blender materials, studio lights and glow are not native Filament pixel/performance evidence",
+    "Studio framing is not the adaptive app viewport",
+    "No app-driven smile exists in the exported contract; no smile is fabricated",
+    "Reference likeness still requires visual review"
+  ]
+}

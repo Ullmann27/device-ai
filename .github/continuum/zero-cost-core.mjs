@@ -13,6 +13,11 @@ import {
   createWorldModel,migrateWorldModel,proposeHypothesis,selectHypothesisTest,
   evaluateHypothesisEvidence,worldModelStatus
 } from "./world-model.mjs";
+import {isOwnerComment} from "./console-policy.mjs";
+import {captureProgressSample,appendProgressSample,formatProgressReport} from "./progress-watcher.mjs";
+
+import {restoreNeuralState,ingestPublicSources,trainRound,exportWeights,formatNeuralStatus,neuralStatus,selectNeuralResearchTarget} from "./neural-core.mjs";
+import {dialogueTurn} from "./neural-dialogue.mjs";
 
 const STATE_FILE = ".continuum/state.json";
 const EVENT = process.env.CONTINUUM_EVENT ?? "workflow_dispatch";
@@ -68,7 +73,7 @@ function freshState() {
 function loadState() {
   if (!fs.existsSync(STATE_FILE)) return freshState();
   const raw = fs.readFileSync(STATE_FILE, "utf8").trim();
-  if (!raw) return freshState();
+  if (!raw) throw new Error("Existing Continuum state is empty; refusing memory reset");
   const state = JSON.parse(raw);
   if (state.integrityHash !== hashState(state)) throw new Error("Continuum state integrity mismatch");
   if (state.schemaVersion === 1) {
@@ -128,9 +133,18 @@ function saveState(state) {
   state.baby = refreshSkillCurriculum(migrateBabyState(state.baby));
   state.worldModel=migrateWorldModel(state.worldModel);
   state.strategyRewardVersion=2;
+  state.progressHistory=appendProgressSample(state.progressHistory,
+    captureProgressSample(state,state.updatedAt));
   state.integrityHash = hashState(state);
   fs.mkdirSync(".continuum", { recursive: true });
-  fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
+  // State is canonical; exports contain weights and measurements only, no owner text.
+  const weights=exportWeights(state.neural);
+  const manifest={schemaVersion:1,format:"SWB1",...neuralStatus(state.neural),privacy:"PUBLIC_AND_CURATED_TRAINING_ONLY",codeSha:process.env.CONTINUUM_CODE_SHA??null,modelSha256:crypto.createHash("sha256").update(weights).digest("hex"),modelBytes:weights.length};
+  for(const [file,bytes] of [[STATE_FILE,JSON.stringify(state,null,2)],[".continuum/neural-public.bin",weights],[".continuum/neural-public.json",JSON.stringify(manifest,null,2)]]){
+    const temporary=file+".tmp";
+    const fd=fs.openSync(temporary,"w");try{fs.writeFileSync(fd,bytes);fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
+    fs.renameSync(temporary,file);
+  }
 }
 
 function hashState(state) {
@@ -219,6 +233,12 @@ function recordStrategyReward(state, id, sources) {
 }
 
 function nextTarget(state) {
+  const neuralTarget=state.generation%3===0?selectNeuralResearchTarget(state.neural):null;
+  if(neuralTarget){
+    const experience=state.neural.replay.find(x=>x.id===neuralTarget.experienceId);
+    experience.researchAttempts=Number(experience.researchAttempts??0)+1;
+    return neuralTarget;
+  }
   state.baby = refreshSkillCurriculum(migrateBabyState(state.baby));
   state.worldModel=migrateWorldModel(state.worldModel);
   const hypothesis=(state.generation%2===0)?selectHypothesisTest(state.worldModel):null;
@@ -621,6 +641,7 @@ async function researchTurn(state, query, interact = false, goalId = null, hypot
     recordStrategyReward(state, strategyId, []);
     throw new Error("Keine hinreichend relevante öffentliche Quelle gefunden.");
   }
+  state.neural=ingestPublicSources(state.neural,sources);
   learnGraph(state, sources.map(x => x.text));
   const deterministic = synthesize(query, sources, state);
   const copilot = interact ? await maybeCopilot(query, sources, state) : null;
@@ -728,6 +749,7 @@ async function deepResearchTurn(state,query){
     const retrieval=await research(step.searchQuery??step.question,false,strategyId);
     if(!retrieval.sources.length)continue;
     const reward=recordStrategyReward(state,strategyId,retrieval.sources);
+    state.neural=ingestPublicSources(state.neural,retrieval.sources);
     allSources.push(...retrieval.sources);
     const part=synthesize(step.question,retrieval.sources,state);
     parts.push({step,text:part.text,reward,sources:retrieval.sources});
@@ -778,6 +800,7 @@ async function deepResearchTurn(state,query){
 
 async function directUrlTurn(state,value){
   const page=await fetchPublicPage(value);
+  state.neural=ingestPublicSources(state.neural,[page]);
   learnGraph(state,[page.text]);
   const copilot=await maybeCopilot("Fasse diese öffentliche Seite zusammen, nenne Kernaussagen, Unsicherheiten und was als Nächstes geprüft werden sollte.",[page]);
   const answer=copilot?.text||page.text.slice(0,5000);
@@ -813,13 +836,16 @@ function statusText(state) {
       s.id + "=" + (s.attempts ? (s.rewardSum/s.attempts).toFixed(2) : "neu")
     ).join(" · "),
     "**Baby-Core:** "+bs.beliefs+" Überzeugungen ("+bs.grounded+" grounded, "+bs.provisional+" vorläufig) · "+bs.openGoals+" offene epistemische Ziele · "+bs.contradictions+" erkannte Widersprüche",
+    "**Evidenz-Audit:** "+bs.explicitlyCited+" Aussagen mit expliziter Quellenreferenz · "+bs.unattributedOrLegacy+" nicht explizit belegte Aussagen · "+bs.quarantinedBeliefs+" quarantänisierte Aussagen",
+    "**Fortschrittswächter:** "+(state.progressHistory?.length??0)+" gespeicherte Messpunkte",
+    formatNeuralStatus(state.neural),
     "**Skills:** "+bs.skills.map(s=>s.id+"="+(s.meanReward==null?"neu":s.meanReward.toFixed(2))).join(" · "),
     "**Interaktion gelernt:** "+bs.interactionProfile.total+" Nachrichten · Ø Dringlichkeit "+bs.interactionProfile.meanUrgency.toFixed(2)+" · Nutzerregeln "+bs.ownerRules,
     "**Selbst-Curriculum:** "+bs.curriculumOpen+" aktuell offene Skill-Lernziele",
     "**World-Model:** "+ws.total+" Hypothesen · "+ws.supported+" unterstützt · "+ws.disputed+" umstritten · "+ws.provisional+" vorläufig · "+ws.evidenceTests+" Falsifikationstests",
     top ? "**Stärkste Begriffe:** " + top : "**Stärkste Begriffe:** noch keine",
     "",
-    "Der Zustand lebt auf dem Branch `continuum-state` und ist unabhängig von einer installierten APK."
+    "Der Zustand lebt auf dem Branch `continuum-state` und ist unabhängig von einer installierten APK. Skillwerte sind interne Proxy-Bewertungen, keine extern gemessene Modellqualität."
   ].join("\n");
 }
 
@@ -871,7 +897,14 @@ function trimObject(object,max) {
   return Object.fromEntries(Object.entries(object).sort((a,b)=>b[1]-a[1]).slice(0,max));
 }
 
+// Console commands can turn into durable user lessons and owner rules.
+// A GitHub comment is not owner-authorized merely because it appears on Issue #20.
+if (EVENT === "issue_comment" && !isOwnerComment(REPOSITORY,COMMENT_USER)) {
+  console.log("Continuum: ignoring non-owner issue comment without state mutation.");
+  process.exit(0);
+}
 const state = loadState();
+state.neural=restoreNeuralState(state.neural);
 try {
   if (EVENT === "issue_comment") {
     const body = COMMENT;
@@ -882,6 +915,29 @@ try {
     state.interactions.push({ at:Date.now(), user:COMMENT_USER, text:clean(body,1000), analysis:interactionAnalysis });
     if (lower === "/status" || lower === "status") {
       await reply(statusText(state));
+    } else if(lower === "/neural") {
+      await reply(formatNeuralStatus(state.neural));
+    } else if(lower === "/pause" || lower === "/resume") {
+      state.neural.paused=lower==="/pause";
+      await reply(state.neural.paused?"Autonome Recherche und neuronales Training pausiert. Mit `/resume` fortsetzen.":"Autonome Lernzyklen wieder aktiviert.");
+    } else if(lower === "/train") {
+      const trained=trainRound(state.neural);state.neural=trained.state;
+      await reply(formatNeuralStatus(state.neural));
+    } else if(lower === "/progress") {
+      await reply(formatProgressReport(state.progressHistory,
+        captureProgressSample(state)));
+    } else if(lower==="/audit"){
+      const audit=babyStatus(state.baby);
+      const quarantine=(state.baby.quarantinedBeliefs??[]).slice(-8);
+      const detail=quarantine.length
+        ? quarantine.map(x=>"- `"+x.id+"` · "+x.reason+" · Frage: "+clean(x.query,180)).join("\n")
+        : "Keine zurückgestellten Aussagen.";
+      await reply("## Continuum · Evidence Audit\n\nAktive Überzeugungen: **"+audit.beliefs+
+        "** · explizite Quellenreferenz: **"+audit.explicitlyCited+
+        "** · vorläufig: **"+audit.provisional+
+        "** · Quarantäne: **"+audit.quarantinedBeliefs+"**\n\n"+
+        detail+"\n\nQuarantäne bedeutet: nicht als Wissen verwendet, Herkunft bleibt dokumentiert. "+
+        "Eine explizite Referenz ist noch kein unabhängiger Nachweis der sachlichen Richtigkeit.");
     } else if(lower.startsWith("/memory ")){
       const query=body.slice(8).trim();
       const memory=retrieveMemory(state.baby,query,10);
@@ -954,19 +1010,22 @@ try {
         state.cycles.push({at:Date.now(),query:value,success:true,sourceCount:1,interactive:true,directUrl:true});
         await reply(formatResearch(value,turn,state));
       }
+    } else if(!lower.startsWith("/research ") && !lower.startsWith("/ask ")) {
+      const text=lower.startsWith("/chat ")?body.slice(6):body;
+      await reply(dialogueTurn(state,text).answer);
     } else {
       const query = lower.startsWith("/research ") ? body.slice(10).trim()
         : lower.startsWith("/ask ") ? body.slice(5).trim()
         : body;
       if (!query) {
-        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/memory <Thema>`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
+        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/memory <Thema>`, `/progress`, `/audit`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
       } else {
         const turn = await researchTurn(state, query, true);
         state.cycles.push({ at:Date.now(), query, success:true, sourceCount:turn.sources.length, interactive:true });
         await reply(formatResearch(query,turn,state));
       }
     }
-  } else {
+  } else if(!state.neural.paused) {
     const target = nextTarget(state);
     try {
       const turn = await researchTurn(state,target.text,false,target.babyGoalId??null,target.hypothesisId??null);
@@ -984,5 +1043,11 @@ try {
   state.cycles.push({ at:Date.now(), query:COMMENT || "autonomous", success:false, reason:clean(error.message,500), interactive:EVENT==="issue_comment" });
   if (EVENT === "issue_comment") await reply("## Continuum · Fehler\n\n" + clean(error.message,1000) + "\n\nDer bisherige Lernzustand bleibt erhalten.");
 }
+// Research outages do not prevent the independent bounded neural replay round.
+if(EVENT!=="issue_comment" && !state.neural.paused){
+  const trained=trainRound(state.neural);state.neural=trained.state;
+  console.log(JSON.stringify(trained.report));
+}
 saveState(state);
 console.log(statusText(state));
+

@@ -1,0 +1,197 @@
+# Source HEAD: 92d9b43bf33f1f53fecfd104dce3e03a928bf1f3; verifier change is uncommitted
+# Verifier SHA256: d0900ad8af992161f893c934669ef0a964febd71822b562d4003bb9cd29dc463
+# UTC: 2026-11-03T17:59:47.721288+00:00
+# Command argv: ['node', '--test', '--test-reporter=tap', '--test-name-pattern=the verifier checks a receipt|non-success repair verdicts', '.github/continuum/ccc1.test.mjs', '.github/continuum/ccc1-repair.test.mjs']
+# Exit: 0
+TAP version 13
+# Subtest: non-success repair verdicts require completed baseline evidence
+    # Subtest: NO_FAILURE_FOUND valid completed baseline
+    ok 1 - NO_FAILURE_FOUND valid completed baseline
+      ---
+      duration_ms: 1.387177
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND timeout
+    ok 2 - NO_FAILURE_FOUND timeout
+      ---
+      duration_ms: 3.427745
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND signal exit
+    ok 3 - NO_FAILURE_FOUND signal exit
+      ---
+      duration_ms: 0.297387
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND contradicting exit
+    ok 4 - NO_FAILURE_FOUND contradicting exit
+      ---
+      duration_ms: 0.242935
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND zero executed tests
+    ok 5 - NO_FAILURE_FOUND zero executed tests
+      ---
+      duration_ms: 0.330707
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND string executed count
+    ok 6 - NO_FAILURE_FOUND string executed count
+      ---
+      duration_ms: 0.189355
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND extra run record
+    ok 7 - NO_FAILURE_FOUND extra run record
+      ---
+      duration_ms: 0.21994
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR valid completed baseline
+    ok 8 - FAILED_REPAIR valid completed baseline
+      ---
+      duration_ms: 0.227752
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR timeout
+    ok 9 - FAILED_REPAIR timeout
+      ---
+      duration_ms: 0.430787
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR signal exit
+    ok 10 - FAILED_REPAIR signal exit
+      ---
+      duration_ms: 0.238128
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR contradicting exit
+    ok 11 - FAILED_REPAIR contradicting exit
+      ---
+      duration_ms: 0.684769
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR zero executed tests
+    ok 12 - FAILED_REPAIR zero executed tests
+      ---
+      duration_ms: 0.15896
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR string executed count
+    ok 13 - FAILED_REPAIR string executed count
+      ---
+      duration_ms: 0.143525
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR extra run record
+    ok 14 - FAILED_REPAIR extra run record
+      ---
+      duration_ms: 0.096615
+      type: 'test'
+      ...
+    1..14
+ok 1 - non-success repair verdicts require completed baseline evidence
+  ---
+  duration_ms: 21.07888
+  type: 'test'
+  ...
+# Subtest: the verifier checks a receipt against the real patch bytes, runs, profile and the exact order
+    # Subtest: baseline execution exceeds its summary
+    ok 1 - baseline execution exceeds its summary
+      ---
+      duration_ms: 4.352116
+      type: 'test'
+      ...
+    # Subtest: candidate execution is below its summary
+    ok 2 - candidate execution is below its summary
+      ---
+      duration_ms: 0.690729
+      type: 'test'
+      ...
+    # Subtest: independent execution is below its summary
+    ok 3 - independent execution is below its summary
+      ---
+      duration_ms: 1.284712
+      type: 'test'
+      ...
+    # Subtest: summary changes candidate count without command evidence
+    ok 4 - summary changes candidate count without command evidence
+      ---
+      duration_ms: 0.301984
+      type: 'test'
+      ...
+    # Subtest: independent command drops candidate tests
+    ok 5 - independent command drops candidate tests
+      ---
+      duration_ms: 0.260872
+      type: 'test'
+      ...
+    # Subtest: string command counts
+    ok 6 - string command counts
+      ---
+      duration_ms: 0.316736
+      type: 'test'
+      ...
+    # Subtest: fractional command counts
+    ok 7 - fractional command counts
+      ---
+      duration_ms: 0.415825
+      type: 'test'
+      ...
+    # Subtest: unsafe command counts
+    ok 8 - unsafe command counts
+      ---
+      duration_ms: 1.231232
+      type: 'test'
+      ...
+    # Subtest: expected tests cannot be zero
+    ok 9 - expected tests cannot be zero
+      ---
+      duration_ms: 0.397428
+      type: 'test'
+      ...
+    # Subtest: expected tests must match the ordered cases
+    ok 10 - expected tests must match the ordered cases
+      ---
+      duration_ms: 0.291589
+      type: 'test'
+      ...
+    # Subtest: null command entry
+    ok 11 - null command entry
+      ---
+      duration_ms: 1.995271
+      type: 'test'
+      ...
+    # Subtest: commands are not an array
+    ok 12 - commands are not an array
+      ---
+      duration_ms: 0.278539
+      type: 'test'
+      ...
+    # Subtest: missing timeout completion evidence
+    ok 13 - missing timeout completion evidence
+      ---
+      duration_ms: 0.249605
+      type: 'test'
+      ...
+    # Subtest: additional candidate and independent coverage is accepted
+    ok 14 - additional candidate and independent coverage is accepted
+      ---
+      duration_ms: 0.209535
+      type: 'test'
+      ...
+    1..14
+ok 2 - the verifier checks a receipt against the real patch bytes, runs, profile and the exact order
+  ---
+  duration_ms: 58.77513
+  type: 'test'
+  ...
+1..2
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 494.28044

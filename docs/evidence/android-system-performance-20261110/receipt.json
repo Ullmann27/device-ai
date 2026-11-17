@@ -1,0 +1,37 @@
+{
+  "schema": "continuum.system.performance.host-evidence.v1",
+  "local_source_commit": "40bd524b831a1aa1e39819ff19155b008bda7cae",
+  "published_equivalent_commit": "4e56e8bfde29d8038086c28c43949fdb298d5333",
+  "equivalent_git_tree": "48a6d29687e4338ad945b1cceea861314f7668cb",
+  "jvm": {
+    "compiler": "Kotlin 2.4.0",
+    "runtime": "OpenJDK 21.0.13",
+    "tests": 24,
+    "failed": 0,
+    "compiler_heap_mib": 256,
+    "test_heap_mib": 128,
+    "data": "synthetic"
+  },
+  "python": {
+    "tests": 57,
+    "failed": 0,
+    "new_tests": 11,
+    "device_calls": "mocked"
+  },
+  "device_probe": {
+    "tool": "Android SDK adb devices",
+    "result": "empty attached-device list",
+    "physical_fold7": "NOT_RUN",
+    "measured_optimization": "NOT_RUN"
+  },
+  "android_gradle": "NOT_RUN_BY_THIS_AGENT",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkModel.kt": "c19bce30b85174a89328ecdd61565269315b80d7e289599a55ef1e27bd6f5d3a",
+    "app/src/main/java/at/heinz/deviceai/systemintelligence/SystemPerformance.kt": "7877be9ae2fa29838a0054a549edd6ec05d01bfd87b0e02e2c458108c1c7f515",
+    "app/src/test/java/at/heinz/deviceai/systemintelligence/SystemPerformanceTest.kt": "2edf1e75e64ceeede642851124088a2f52c3d6a1bab29087f53a4135afd90c59",
+    "scripts/continuum-system-performance-check.sh": "06252c3cab9a7df508e1ae049938291c4c613f397639d949fcdc8944be60cb3c",
+    "tools/fold7_quality_lab/fold7.py": "933377a0e5eb9df5297fa51c32bccccc407d58ebe37a8c12a28a10bd7eefb051",
+    "tools/fold7_quality_lab/system_capture.py": "7d97bda2e2c9f189bb9e691e80cf94c24e3d7983dd8345df7cdbee098fb67308",
+    "tools/fold7_quality_lab/tests/test_system_capture.py": "4b56bbb30702eaad365f9c9f4a98f82854494e4e80feb82e2083bd5fd216cb32"
+  }
+}

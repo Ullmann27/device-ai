@@ -1,0 +1,169 @@
+#!/usr/bin/env node
+/** Fail-closed evidence gate for locally executed Continuum and backend Node tests. */
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+function declaredCount(xml,name){
+ const match=xml.match(new RegExp('<!--\\s*'+name+'\\s+(\\d+)\\s*-->'));
+ if(!match)throw Error('Missing Node JUnit '+name+' total');
+ const n=Number(match[1]);
+ if(!Number.isSafeInteger(n))throw Error('Invalid Node JUnit '+name+' total');
+ return n;
+}
+
+/** Remove JUnit comments before interpreting XML structure. Node's reporter writes
+ * statistical totals in comments, but XML comments are never executable tests.
+ * CDATA/DOCTYPE can also contain apparent testcase tags, so reject them.
+ */
+export function structuralJUnitMarkup(xml){
+ if(typeof xml!=='string'||xml.length<32||Buffer.byteLength(xml,'utf8')>20*1024*1024)
+  throw Error('Missing or unsafe Node JUnit document');
+ const body=xml.replace(/<!--[\s\S]*?-->/g,'');
+ if(body.includes('<!--')||body.includes('-->')||
+    /<!\s*(?:\[CDATA\[|DOCTYPE|ENTITY)/i.test(body))
+  throw Error('Malformed or unsafe Node JUnit markup');
+ return body;
+}
+
+/** Count only structurally valid JUnit testcases and suites, excluding XML
+ * elements hidden in unrelated log/container nodes. This is deliberately a
+ * bounded structural validator for Node's JUnit subset, not a general XML API.
+ */
+function verifyJUnitNesting(xml){
+ const stack=[];
+ let rootSeen=false,xmlDeclaration=false,cases=0,suites=0;
+ let offset=0;
+ while(true){
+  const begin=xml.indexOf('<',offset);
+  if(begin<0)break;
+  let quote=null,end=-1;
+  for(let i=begin+1;i<xml.length;i++){
+   const c=xml[i];
+   if(quote){
+    if(c===quote)quote=null;
+    else if(c==='<')throw Error('Invalid angle bracket in JUnit attribute');
+   }else if(c==='"'||c==="'")quote=c;
+   else if(c==='<')throw Error('Malformed nested JUnit markup');
+   else if(c==='>'){end=i;break;}
+  }
+  if(end<0)throw Error('Unterminated JUnit tag');
+  const tag=xml.slice(begin+1,end).trim();
+  offset=end+1;
+  if(tag.startsWith('?')){
+   if(xmlDeclaration||rootSeen||!/^\?xml\s[^<>]*\?$/.test(tag))
+    throw Error('Invalid JUnit XML declaration');
+   xmlDeclaration=true;
+   continue;
+  }
+  if(tag.startsWith('!'))throw Error('Unsupported JUnit markup');
+  const closing=tag.startsWith('/');
+  const name=tag.match(/^\/?([A-Za-z_:][A-Za-z0-9_.:-]*)/)?.[1];
+  if(!name)throw Error('Malformed JUnit element');
+  if(closing){
+   if(tag!==('/'+name)||stack.pop()!==name)throw Error('Mismatched JUnit closing element');
+   continue;
+  }
+  const parent=stack.at(-1);
+  if(name==='testsuites'){
+   if(rootSeen||parent)throw Error('Duplicate or nested JUnit root');
+   rootSeen=true;
+  }else if(name==='testsuite'||name==='testcase'){
+   if(parent!=='testsuites'&&parent!=='testsuite')
+    throw Error('JUnit testcase or suite outside test containers');
+   if(name==='testcase')cases++;else suites++;
+  }else if(!parent)throw Error('JUnit markup outside testsuites root');
+  if(!/\/\s*$/.test(tag))stack.push(name);
+ }
+ if(!xmlDeclaration||!rootSeen||stack.length!==0)
+  throw Error('Incomplete JUnit document structure');
+ return {cases,suites};
+}
+
+export function verifyJUnitXml(xml){
+ const structural=structuralJUnitMarkup(xml);
+ const nesting=verifyJUnitNesting(structural);
+ if(!/^\s*<\?xml\b/.test(structural)||!/<testsuites(?:\s[^>]*)?>[\s\S]*<\/testsuites>\s*$/.test(structural))
+  throw Error('Malformed Node JUnit document');
+ const testcase=/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
+ let caseCount=0,skipped=0,todo=0,failed=0,placeholders=0;
+ for(const match of structural.matchAll(testcase)){
+  caseCount++;
+  const attrs=match[1],body=match[3]??'';
+  if(/\bname="[^"]*\.test\.m?js"/.test(attrs))placeholders++;
+  const skippedTag=body.match(/<skipped\b([^>]*)\/?\s*>/);
+  if(skippedTag){
+   if(/\btype="todo"/.test(skippedTag[1]))todo++;
+   else skipped++;
+  }
+  if(/<(?:failure|error)\b/.test(body))failed++;
+ }
+ const declared={
+  tests:declaredCount(xml,'tests'),pass:declaredCount(xml,'pass'),
+  fail:declaredCount(xml,'fail'),cancelled:declaredCount(xml,'cancelled'),
+  skipped:declaredCount(xml,'skipped'),todo:declaredCount(xml,'todo')
+ };
+ // Node's JUnit reporter emits a <testsuite> for each nested parent test.
+ // Those parents count in its declared 'tests' and 'pass' totals, even though
+ // only their children are represented by <testcase> entries.
+ const groupCount=[...structural.matchAll(/<testsuite\b(?=[\s>])/g)].length;
+ const total=caseCount+groupCount;
+ const executed=total-skipped-todo-placeholders;
+ if(caseCount!==nesting.cases||groupCount!==nesting.suites||
+    total!==declared.tests||caseCount===0||executed<=0||
+    failed!==declared.fail||skipped!==declared.skipped||todo!==declared.todo||
+    failed!==0||declared.cancelled!==0||
+    declared.pass!==executed||
+    (structural.match(/<testcase\b/g)??[]).length!==caseCount)
+  throw Error('Node JUnit has incomplete, failing or inconsistent executed-test evidence');
+ return {total,executed,failed,skipped,todo,placeholders,groupCount};
+}
+
+/** Parse a local JUnit report. Byte-consistent consumers can call verifyJUnitXml
+ * with an already-opened document instead of reopening it after hashing. */
+function readJUnitEvidence(file){
+ const info=fs.lstatSync(file);
+ if(!info.isFile()||info.isSymbolicLink()||info.size<32||info.size>20*1024*1024)
+  throw Error('Missing or unsafe Node JUnit report');
+ const xml=fs.readFileSync(file,'utf8');
+ return {xml,report:{file:path.resolve(file),...verifyJUnitXml(xml)}};
+}
+
+export function verifyJUnitReport(file){
+ return readJUnitEvidence(file).report;
+}
+
+/** Critical M4 acceptance must prove an actual broken-code -> verified-patch cycle. */
+const MANDATORY_REPAIRS=Object.freeze([
+ 'end-to-end: injected fault is reproduced, repaired in isolation, verified and committed',
+ 'regression search reverts only the culprit hunk and keeps unrelated changes',
+ 'a module that crashes while loading is located and gets its missing import back'
+]);
+
+export function verifyM4AcceptanceEvidence(repairFile,nodeFile,backendFile){
+ const evidence=readJUnitEvidence(repairFile);
+ const reports=[evidence.report,verifyJUnitReport(nodeFile),verifyJUnitReport(backendFile)];
+ const xml=structuralJUnitMarkup(evidence.xml);
+ const executed=new Set();
+ const cases=/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
+ for(const item of xml.matchAll(cases)){
+  const name=item[1].match(/\bname="([^"]*)"/)?.[1];
+  if(name&&!/<skipped\b/.test(item[3]??''))executed.add(name);
+ }
+ for(const name of MANDATORY_REPAIRS){
+  if(!executed.has(name))throw Error('Missing or skipped mandatory M4 repair: '+name);
+ }
+ return {schema:'continuum-m4-test-evidence',version:2,
+  reports,mandatoryRepairs:[...MANDATORY_REPAIRS]};
+}
+
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ try{
+  if(process.argv.length!==5)throw Error('Usage: m4-junit-evidence.mjs <repair.xml> <continuum.xml> <backend.xml>');
+  const evidence=verifyM4AcceptanceEvidence(...process.argv.slice(2));
+  process.stdout.write(JSON.stringify(evidence)+'\n');
+ }catch(error){
+  console.error('M4 regression evidence rejected:',error.message);
+  process.exitCode=1;
+ }
+}

@@ -1,0 +1,40 @@
+MODEL V8 entity proximity + cue words excluded seed=1 steps=7380 checkpointSha256=1786fa9e58d2a1262c461bd2d9563cddf5478260ac62da88f160e868c3c3b7ef
+CALIBRATION n=1700 sha=d1f85560e6b99b6091ea223ec2b6b1d380157e065ae0ad32bf6689d7d38f385b
+HOLDOUT     n=1700 sha=6bfc22aa44ec8a32028aa42bd2a920a4ed5e0c5275a4758bc3064c556a2160d3 (exchangeable with CALIBRATION)
+TEST        n=264 sha=974e4ba3c405005a7773c479282f4abc03e2a23530def4da69471a27799b0ba8 (frozen; distribution shift: new values, held-out forms)
+CERTIFICATE alpha=0.1 delta=0.1 -> threshold=0.00 calibrationErrors=80/1700 answered=734 p=0.0000
+CERTIFICATE alpha=0.05 delta=0.1 -> threshold=0.40 calibrationErrors=70/1700 answered=708 p=0.0502
+CERTIFICATE alpha=0.02 delta=0.1 -> threshold=0.64 calibrationErrors=26/1700 answered=576 p=0.0931
+GUARANTEE alpha=0.1 delta=0.1 resplits=200 violations=0 (0.000) noCertificate=0 meanHoldoutErrorRate=0.0483
+GUARANTEE alpha=0.05 delta=0.1 resplits=200 violations=10 (0.050) noCertificate=0 meanHoldoutErrorRate=0.0453
+GUARANTEE alpha=0.02 delta=0.1 resplits=200 violations=6 (0.030) noCertificate=0 meanHoldoutErrorRate=0.0166
+== argmax (no threshold)
+  HOLDOUT       n=1700 answered=742 correct=664 errors=78 errorRate=0.046 [0.037, 0.057] precision=0.895 score@0.75=0.253
+  TEST ALL      n=264 answered=115 correct=99 errors=16 errorRate=0.061 [0.038, 0.096] precision=0.861 score@0.75=0.193
+  TEST SEEN     n=196 answered=93 correct=87 errors=6 errorRate=0.031 [0.014, 0.065] precision=0.935 score@0.75=0.352
+  TEST UNSEEN   n=68 answered=22 correct=12 errors=10 errorRate=0.147 [0.082, 0.250] precision=0.545 score@0.75=-0.265
+  TEST          answerable 99/124 correct, wrong span 10, false abstain 15 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+== heuristic threshold 0.40 (VALIDATION score)
+  HOLDOUT       n=1700 answered=717 correct=646 errors=71 errorRate=0.042 [0.033, 0.052] precision=0.901 score@0.75=0.255
+  TEST ALL      n=264 answered=110 correct=98 errors=12 errorRate=0.045 [0.026, 0.078] precision=0.891 score@0.75=0.235
+  TEST SEEN     n=196 answered=93 correct=87 errors=6 errorRate=0.031 [0.014, 0.065] precision=0.935 score@0.75=0.352
+  TEST UNSEEN   n=68 answered=17 correct=11 errors=6 errorRate=0.088 [0.041, 0.179] precision=0.647 score@0.75=-0.103
+  TEST          answerable 98/124 correct, wrong span 6, false abstain 20 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+== certified alpha=0.1
+  HOLDOUT       n=1700 answered=742 correct=664 errors=78 errorRate=0.046 [0.037, 0.057] precision=0.895 score@0.75=0.253
+  TEST ALL      n=264 answered=115 correct=99 errors=16 errorRate=0.061 [0.038, 0.096] precision=0.861 score@0.75=0.193
+  TEST SEEN     n=196 answered=93 correct=87 errors=6 errorRate=0.031 [0.014, 0.065] precision=0.935 score@0.75=0.352
+  TEST UNSEEN   n=68 answered=22 correct=12 errors=10 errorRate=0.147 [0.082, 0.250] precision=0.545 score@0.75=-0.265
+  TEST          answerable 99/124 correct, wrong span 10, false abstain 15 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+== certified alpha=0.05
+  HOLDOUT       n=1700 answered=717 correct=646 errors=71 errorRate=0.042 [0.033, 0.052] precision=0.901 score@0.75=0.255
+  TEST ALL      n=264 answered=110 correct=98 errors=12 errorRate=0.045 [0.026, 0.078] precision=0.891 score@0.75=0.235
+  TEST SEEN     n=196 answered=93 correct=87 errors=6 errorRate=0.031 [0.014, 0.065] precision=0.935 score@0.75=0.352
+  TEST UNSEEN   n=68 answered=17 correct=11 errors=6 errorRate=0.088 [0.041, 0.179] precision=0.647 score@0.75=-0.103
+  TEST          answerable 98/124 correct, wrong span 6, false abstain 20 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+== certified alpha=0.02
+  HOLDOUT       n=1700 answered=569 correct=543 errors=26 errorRate=0.015 [0.010, 0.022] precision=0.954 score@0.75=0.274
+  TEST ALL      n=264 answered=81 correct=78 errors=3 errorRate=0.011 [0.004, 0.033] precision=0.963 score@0.75=0.261
+  TEST SEEN     n=196 answered=78 correct=76 errors=2 errorRate=0.010 [0.003, 0.036] precision=0.974 score@0.75=0.357
+  TEST UNSEEN   n=68 answered=3 correct=2 errors=1 errorRate=0.015 [0.003, 0.079] precision=0.667 score@0.75=-0.015
+  TEST          answerable 78/124 correct, wrong span 1, false abstain 45 | unanswerable 138/140 abstained, unsupported answers 2 | traps 2/202

@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "tested_code_commit": "3bac4166c9fcd0dca4889ca3eee9ca29f2a1daff",
+  "baseline_commit": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "purpose": "Archive existing raw receipts only; no re-execution",
+  "raw_files": [
+    {
+      "path": "red-compile-command.json",
+      "bytes": 1599,
+      "sha256": "ec8b0b76cab42525196f75d6fced76b95fa944e8fda4a3165f5f7f4423774833"
+    },
+    {
+      "path": "red-compile.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "red-junit-command.json",
+      "bytes": 1075,
+      "sha256": "a05d94e586a36977651dfb8de83d00e89bcac0dcbb29be7bcceaea055a376f3e"
+    },
+    {
+      "path": "red-junit.txt",
+      "bytes": 1839,
+      "sha256": "c08e8166d8a245e6b2e92579f6df29938ffad575ab0d8141c9370980c7f5818b"
+    },
+    {
+      "path": "red-source-sha256.json",
+      "bytes": 827,
+      "sha256": "2c2dcdbe0980ab494107f0c150413c6ad4bf8db0e4fc5193085d776d28ad3add"
+    },
+    {
+      "path": "green-compile-command.json",
+      "bytes": 1601,
+      "sha256": "d3ac65dde79c1ebad70447c0d1a667199b274a03e8ac623e19657801bb3337d4"
+    },
+    {
+      "path": "green-compile.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "green-junit-command.json",
+      "bytes": 1077,
+      "sha256": "a3abf87e442fabd694262ff3362248d000ba946ac77c969ff16d76311845bc88"
+    },
+    {
+      "path": "green-junit.txt",
+      "bytes": 74,
+      "sha256": "ca2a82dc4e9743035698d91d3cf4970db0141fb00569c434b1b443c4a8495747"
+    },
+    {
+      "path": "green-source-sha256.json",
+      "bytes": 827,
+      "sha256": "8754485f40d6a9d773c1f2c5bddde578b2e12cf39015e32ca8e263b843c73142"
+    },
+    {
+      "path": "node-red-command.json",
+      "bytes": 651,
+      "sha256": "dee16ced9a1c50be912a8c1e6b1cdede3ec39a3d611b08a5f21c5209f2f055be"
+    },
+    {
+      "path": "node-green-command.json",
+      "bytes": 633,
+      "sha256": "e928ae5939d96fcae9f1273c7b770a8b7cf6d6e8b4b37d37d3f55c6f447ec59c"
+    },
+    {
+      "path": "node-green.txt",
+      "bytes": 2458,
+      "sha256": "6ea89b649003c50479d98f0c48ad2d5e54bbd35e3dee3d0cc3f3280bc104c853"
+    },
+    {
+      "path": "final-receipt.json",
+      "bytes": 2511,
+      "sha256": "7d0142f50f659dc409a8dde8960fe12d461deba99b76111d42ac69a1f882d550"
+    },
+    {
+      "path": "run-focused.py",
+      "bytes": 2394,
+      "sha256": "4199c3ebfc836bfc5751addd0d82133d098c622d92d2efbcef5e60d8236e974e"
+    },
+    {
+      "path": "node-red.txt.gz",
+      "bytes": 364683,
+      "sha256": "fe63bb4edb57dae5389d232723051f47de248b33ce97d69343f6716ec3f18a41",
+      "uncompressed_path": "node-red.txt",
+      "uncompressed_bytes": 1620273,
+      "uncompressed_sha256": "428eeeac5fc976c4e236ac233e1774e8d1ce179c7e589de2cceb873d15762a2c"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+name: Continuum V19 Isolated Integration QA
+on:
+  push:
+    branches:
+      - "chatgpt/continuum-master-integration-v19-20261024"
+      - "chatgpt/continuum-hologram-context-recovery-20261024"
+    paths:
+      - "app/**"
+      - "scripts/**"
+      - "backend/**"
+      - ".github/continuum/**"
+      - ".github/workflows/continuum-v19-master-integration-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: continuum-v19-integration-review
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    steps:
+      - name: Checkout exact review source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate owner-source attestations without granting approval
+        run: |
+          node --test scripts/continuum-v19-pin-audit.test.mjs
+          node scripts/continuum-v19-pin-audit.mjs --report-only > owner-source-review.json
+          cat owner-source-review.json
+      - name: Backend from locked dependencies
+        run: npm ci --prefix backend --ignore-scripts --no-audit --no-fund
+      - name: Node regressions
+        run: env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
+      - name: Backend regressions
+        run: env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 backend/test/*.test.js
+      - name: Android SDK 36
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Exact review-source Android tests Robolectric lint and separate preview build
+        run: |
+          gradle --no-daemon --max-workers=2 --console=plain             -PdeviceAiPreview=true -PcontinuumUiWidgetTests=true             -Pkotlin.compiler.execution.strategy=in-process             :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+      - name: Verify isolated preview artifact - never an owner update
+        run: |
+          set -euo pipefail
+          mkdir -p integration-evidence
+          apk="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" | grep -F "package: name='at.heinz.deviceai.preview'"
+          cp "$apk" integration-evidence/Continuum-M5-Source-Review-Preview.apk
+          sha256sum integration-evidence/Continuum-M5-Source-Review-Preview.apk > integration-evidence/SHA256SUMS.txt
+          git rev-parse HEAD > integration-evidence/COMMIT.txt
+      - name: Publish only review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-M5-V19-Source-QA-Not-Owner-Release
+          path: |
+            owner-source-review.json
+            integration-evidence/
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/lint-results-debug.xml
+          if-no-files-found: warn
+          retention-days: 14

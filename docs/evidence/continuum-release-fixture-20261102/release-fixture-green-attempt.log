@@ -1,0 +1,17 @@
+✔ live inventory is explicitly NOT owner release approval (1.545472ms)
+✔ without owner consent the signed-release inventory gate fails closed (33.743014ms)
+✔ partial, wrong or stale source and manifest approval fails closed (160.954521ms)
+✔ synthetic exact approval exercises inventory verifier but authorizes NO release (1806.401382ms)
+✔ live signing recipe is syntactically valid but does not self-authorize an APK (3.059579ms)
+✔ live signer refuses even a matching branch and dummy keystore without owner approvals (6.445647ms)
+✔ even with synthetic exact builder approval, missing owner source/manifest blocks signing (37.38389ms)
+✔ frozen inventory rejects modified, missing, untracked and redirected sources (1920.198408ms)
+✔ unexpected branch is independently rejected by the unchanged signer (16.337968ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4468.849577

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumAvatarNativeUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:15:08" hostname="6e2f8005d77e" time="0.893">
+  <properties/>
+  <testcase name="optionalHeadPersistsAndSharesOnePausedReducedMotionClock" classname="at.heinz.deviceai.ContinuumAvatarNativeUiTest" time="0.046"/>
+  <testcase name="actualActivityStopClosesAvatarBeforeAnyAsynchronousTtsCallback" classname="at.heinz.deviceai.ContinuumAvatarNativeUiTest" time="0.024"/>
+  <testcase name="phoneAndFoldNativeHeadFollowsSpeechAndStopsOnInterruption" classname="at.heinz.deviceai.ContinuumAvatarNativeUiTest" time="0.823"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

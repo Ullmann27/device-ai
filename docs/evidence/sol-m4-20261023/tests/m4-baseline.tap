@@ -1,0 +1,37 @@
+✔ M4 creates an isolated app with two screens and offline local persistence (4.417609ms)
+✔ source manifest binds every created source file to a digest (1.332419ms)
+✔ repeat create refuses replacement and does not touch owner notes (1.04771ms)
+✔ empty project query blocks (0.210367ms)
+✔ corrupted template is never promoted as verified (0.939537ms)
+✔ removed file is never verified (2.973743ms)
+✔ symlink source cannot escape trusted project (1.43256ms)
+✔ external symbolic project destination is never accepted (1.59913ms)
+✔ symbolic home or parent is rejected (0.59696ms)
+✔ relative paths are forbidden (0.21242ms)
+✔ build reports unavailable when recipe not created (0.475417ms)
+✔ toolchain unavailable cannot call build tool (3.707569ms)
+✔ failing Gradle tests prevent any APK claim (2.837748ms)
+✔ a disappearing APK is never reported successful (2.060626ms)
+✔ false signature is rejected (3.19123ms)
+✔ foreign package is rejected even if signed (2.045234ms)
+✔ source change during Gradle is blocked and not saved (1.38669ms)
+✔ successful mock Gradle, real SHA verification and signed receipt - not device success (3.11093ms)
+✔ corrupt preexisting artifact blocks overwrites (2.348089ms)
+✔ build never starts a package installer, app signature and source are validated (2.123371ms)
+✔ symlinked existing project parent is refused before source reading (0.494766ms)
+✔ symlinked nested source ancestors are rejected before build (0.610671ms)
+✔ symbolic state parent never receives an APK artifact (1.776557ms)
+✔ M4 refuses a symlinked Gradle build output before running Gradle (0.933828ms)
+✔ M4 refuses a symlinked nested APK output before running Gradle (0.78934ms)
+✔ M4 refuses a redirected output appearing during a Gradle run (1.558469ms)
+✔ M4 identity checker reads exactly the same private staged APK as apksigner (1.607083ms)
+✔ changing the original Gradle APK after staged signature check cannot alter published bytes (2.045944ms)
+✔ failed signature validation leaves no private verification-stage residue (1.646021ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 128.735369

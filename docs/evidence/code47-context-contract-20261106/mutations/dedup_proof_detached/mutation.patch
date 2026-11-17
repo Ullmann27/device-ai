@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -9423,7 +9423,7 @@
+                                 promptBody, promptEnd, promptCap),
+                             requireCompleteOwnerHistory = requiresPriorDialogue,
+                             continuation = continuingAnswer,
+-                            ownerTurnsInTask = followUpFrame.ownerTurnsIn(promptBody)))
++                            ownerTurnsInTask = followUpFrame.ownerTurnsIn(agentTask)))
+                 val prompt = at.heinz.deviceai.cognitive.LocalDecisionPromptFrame.assemble(
+                     requiredBody=promptBody, safeHistory=boundedConversationContext,
+                     decisionDigest=decisionDigest, advisory=advisory,

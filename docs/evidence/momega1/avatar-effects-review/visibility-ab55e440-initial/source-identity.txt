@@ -1,0 +1,6 @@
+6fa70291525df7042cc459e97e9d8f1aa4e262d939008dfd37df41e901685068  /workspace/momega1-build-env/visible-avatar-candidate-ab55e440/source-before.txt
+ab55e440860f5b8d04d9f44f714809e13292af76
+100644 e8cac6136814e043bd14d5f17a7d2ef69bb9ae39 0	app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+100644 a0b2fbb40f1316b22ed6f16f84d591a6b233b226 0	app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+100644 63fc1ec840d73ae0dd0cdf8dc015a25b0df40954 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt
+6fa70291525df7042cc459e97e9d8f1aa4e262d939008dfd37df41e901685068  /workspace/momega1-build-env/visible-avatar-candidate-ab55e440/source-after.txt

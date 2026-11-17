@@ -1,0 +1,10 @@
+{
+  "classification": "INDEPENDENT_SYNTHETIC_PATCH_TEST",
+  "baseline": false,
+  "sourceSha256": "61979530348e1e2be47557fd830848be690bd9b61e036a699e9130d53a8d2b2f",
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "PASS 0,2\nPASS -8,-2\nPASS 0.5,1.5\nPASS 3,3\nPASS -4,4\n",
+  "stderr": ""
+}

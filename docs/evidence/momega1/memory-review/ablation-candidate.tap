@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: A01 nonBoolean toggle refuses before any state access
+ok 1 - A01 nonBoolean toggle refuses before any state access
+  ---
+  duration_ms: 1.59564
+  type: 'test'
+  ...
+# Subtest: A02 default controls actual providerFactory context on identical synthetic history
+ok 2 - A02 default controls actual providerFactory context on identical synthetic history
+  ---
+  duration_ms: 164.043281
+  type: 'test'
+  ...
+# Subtest: A02 true controls actual providerFactory context on identical synthetic history
+ok 3 - A02 true controls actual providerFactory context on identical synthetic history
+  ---
+  duration_ms: 140.026938
+  type: 'test'
+  ...
+# Subtest: A02 false controls actual providerFactory context on identical synthetic history
+ok 4 - A02 false controls actual providerFactory context on identical synthetic history
+  ---
+  duration_ms: 103.736114
+  type: 'test'
+  ...
+# Subtest: A03 returned recall count reflects true on eligible history
+ok 5 - A03 returned recall count reflects true on eligible history
+  ---
+  duration_ms: 120.601915
+  type: 'test'
+  ...
+# Subtest: A03 returned recall count reflects false on eligible history
+ok 6 - A03 returned recall count reflects false on eligible history
+  ---
+  duration_ms: 88.248443
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 742.824851

@@ -1,0 +1,48 @@
+{
+  "schema": "continuum.cdxa1.independent-test-provenance",
+  "schemaVersion": 1,
+  "fixtureId": "CDXA1-INDEPENDENT-TEST32-20261026-V1",
+  "fixtureFile": "cdxa1-independent-test32-20261026-v1.json",
+  "fixtureSha256": "58bcb0d6393b10f9af0f064692a71458f1ff8978759fb9b5e86d1b8b0a4e0e7c",
+  "authoredOn": "2026-10-26",
+  "authoredBy": "/root/experiment_audit",
+  "authorization": "Root requested a new independently authored frozen32case TEST before candidate freeze/evaluation.",
+  "candidateCodeInspected": false,
+  "candidateOutputsInspected": false,
+  "trainingDataInspected": false,
+  "predictionsOrInferenceRun": false,
+  "weightsOrTrainingRun": false,
+  "repositoryIndexOrRefsChanged": false,
+  "priorConsumedNamesExcluded": [
+    "Mira",
+    "Lea",
+    "Nora",
+    "Paul",
+    "Tim",
+    "Eva",
+    "KIRA",
+    "Luro",
+    "Tavo",
+    "ORION"
+  ],
+  "labelsFixedBeforeAnyEvaluation": true,
+  "caseCounts": {
+    "supported": 32,
+    "positive": 18,
+    "unknown": 14,
+    "absentEntity": 4,
+    "absentRelation": 4,
+    "negationOnly": 6,
+    "challenges": 8
+  },
+  "inputLimitsValidated": {
+    "maxEvidenceBytes": 105,
+    "maxQuestionBytes": 37,
+    "maxEvidenceWhitespaceTokens": 15
+  },
+  "scoringLockedInFixture": true,
+  "candidateFreezeStatus": "PENDING; evaluator fixture contents withheld from candidate author until source/model/tokenizer/data/inference freeze.",
+  "beforeEvaluation": "Root must commit and push this exact fixture and provenance in the official repository before independent evaluation.",
+  "visibility": "Candidate author received only supported task protocol and resource-limit acknowledgement; no case contents, labels or counts were sent by evaluator.",
+  "executionStatus": "NOT_EVALUATED"
+}

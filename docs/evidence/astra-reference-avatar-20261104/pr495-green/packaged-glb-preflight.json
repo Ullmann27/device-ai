@@ -1,0 +1,39 @@
+{
+  "morphNodes": [
+    "Face",
+    "NeuralThreads"
+  ],
+  "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "bytes": 10165644,
+  "focus": {
+    "centerY": 0.2471020522713661,
+    "centerZ": 0.06414049118757248,
+    "centerX": -3.228597342967987E-4,
+    "halfHeight": 0.16180582076311112,
+    "halfWidth": 0.14748052787035704
+  },
+  "targets": [
+    "SIL",
+    "PP",
+    "FF",
+    "TH",
+    "DD",
+    "KK",
+    "CH",
+    "SS",
+    "NN",
+    "RR",
+    "AA",
+    "E",
+    "I",
+    "O",
+    "U",
+    "BlinkLeft",
+    "BlinkRight",
+    "BrowUp",
+    "BrowDown",
+    "Smile",
+    "JawOpen"
+  ],
+  "status": "PASS"
+}

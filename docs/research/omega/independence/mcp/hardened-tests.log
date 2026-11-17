@@ -1,0 +1,24 @@
+✔ actual token CLI creates a private non-overwritable credential without printing it (186.417505ms)
+✔ actual owner CLI refuses permissive credential directories and undeclared flags (137.947915ms)
+✔ fixed canonical child reader sanitizes preload environment and reports no arbitrary error text (78.7199ms)
+✔ a real spawned read process has a timeout, and closed reader cannot start another process (3.543868ms)
+✔ real loopback HTTP lifecycle exposes exactly four read-only tools and fresh adapter state (66.12068ms)
+✔ missing/wrong/query credentials and hostile Origin/Host never read service state (21.582812ms)
+✔ write tools, path arguments, invalid pagination, batches and unsolicited responses rejected (36.040531ms)
+✔ pagination cursor is session and tool bound and canonical cursor is not disclosed (19.367342ms)
+✔ token rotation revokes existing sessions and previously valid token (7.822922ms)
+✔ a grant reader failure is redacted and digest mismatch cannot become evidence (8.993112ms)
+✔ no successful read after credential revocation during a pending call (7.72801ms)
+✔ timeouts, oversized results/body and per-session parallel reads fail closed (61.624154ms)
+✔ terminated, absent, uninitialized and unknown sessions cannot query service (18.716302ms)
+✔ MCP version negotiation and JSON content negotiation follow pinned protocol (11.515886ms)
+✔ unknown session is 404 for GET too, before optional stream rejection (11.320742ms)
+✔ credential files reject symlinks, permissive access, hard links and bot writable placement (5.575403ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 461.273973

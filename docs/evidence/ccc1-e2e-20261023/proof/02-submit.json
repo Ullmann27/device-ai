@@ -1,0 +1,12 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-submit-repair",
+  "status": "OK",
+  "result": {
+    "taskId": "t-a1bf9c70fe199bb7",
+    "duplicate": false,
+    "sourceCommit": "98f1408248e4a3fa575c75faf81979bfb1488303",
+    "branch": "ccc1-proof-20261023"
+  }
+}

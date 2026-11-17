@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "workstream": "CONTINUUM_SOVEREIGN_EXECUTION_GUARDS",
+  "date": "2026-11-02",
+  "repository": "Ullmann27/device-ai",
+  "branch": "research/continuum-execution-atomicity-20261102",
+  "baseCommit": "699c85e24ace808203993b7fafbef6cb1c9f5e02",
+  "sourceProofs": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionStartLatch.kt",
+      "githubBlobSha1": "810e8c6c76d43dfd21fc101f86beb35b006a4ce6",
+      "localCompiledCopyGitBlobSha1": "810e8c6c76d43dfd21fc101f86beb35b006a4ce6",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt",
+      "githubBlobSha1": "1d7f168f302c6521cc65ca5e6a8a15bf04e9f57c",
+      "localCompiledCopyGitBlobSha1": "1d7f168f302c6521cc65ca5e6a8a15bf04e9f57c",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlan.kt",
+      "githubBlobSha1": "ce3df482e8750f6b570dc1166daefe56e3563369",
+      "localCompiledCopyGitBlobSha1": "ce3df482e8750f6b570dc1166daefe56e3563369",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalChatPromptBudget.kt",
+      "githubBlobSha1": "1db85d0b57d35c5ee1e5c5f69d92a62bd918f009",
+      "localCompiledCopyGitBlobSha1": "1db85d0b57d35c5ee1e5c5f69d92a62bd918f009",
+      "match": true
+    }
+  ],
+  "commands": [
+    {
+      "cmd": "kotlinc ToolExecutionStartLatch.kt ToolStartHarness.kt -include-runtime -d latch-test.jar && java -jar latch-test.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; local standalone harness with exact identical GitHub file",
+      "status": "PASS",
+      "cases": 1000,
+      "meaning": "1,000 commit/revoke races, revoke-before-dispatch and post-commit ambiguity; standalone class only, not ToolGate/JUnit/Gradle"
+    },
+    {
+      "cmd": "kotlinc LocalPromptFrame.kt PromptHarness.kt -include-runtime -d prompt-test.jar && java -jar prompt-test.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; exact identical GitHub file plus manually reconstructed equivalent ChatReasoningRouter.composePrompt and LocalChatPromptBudget stubs",
+      "status": "PASS",
+      "meaning": "Mandatory owner text, negation, optional history omission, advisory exclusion, Unicode/CJK/emoji; does NOT prove full Android Activity"
+    },
+    {
+      "cmd": "kotlinc ToolExecutionStartLatch.kt WrappedCancellationHarness.kt -include-runtime -d wrapped-cancel.jar && java -jar wrapped-cancel.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; exact ToolExecutionStartLatch class, standalone JDK future simulation, not full ToolGate",
+      "status": "PASS",
+      "cases": 2,
+      "meaning": "FutureTask worker CancellationException is wrapped in ExecutionException; test decision maps wrapper to CANCELLED; cannot certify ToolGate integration alone"
+    },
+    {
+      "cmd": "kotlinc ReadOnlyToolPlan.kt ReadOnlyToolStubs.kt ReadOnlyCognitiveStubs.kt ReadOnlyOutputHarness.kt -include-runtime -d output-test.jar && java -jar output-test.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; exact GitHub ReadOnlyToolPlan class blob with controlled minimal project interface stubs",
+      "status": "PASS",
+      "cases": 8204,
+      "meaning": "Length 1..8200 inclusive: 7990 accepted/verified, 210 rejected oversized; 3 oversized Unicode cases blocked; failed observation rejected, no response >8000. Real BoundedAgent/ExperienceCompiler not compiled here."
+    },
+    {
+      "cmd": "kotlinc LocalPromptFrame.kt PromptHarness.kt Utf8Harness.kt -include-runtime -d utf8-test.jar && kotlin -classpath utf8-test.jar at.heinz.deviceai.cognitive.PromptHarnessKt && kotlin -classpath utf8-test.jar at.heinz.deviceai.cognitive.Utf8HarnessKt",
+      "environment": "Linux x64 JDK21 Kotlin1.9; exact byte-identical GitHub LocalPromptFrame.kt plus reconstructed Router/Budget stand-ins",
+      "status": "PASS",
+      "cases": 2,
+      "meaning": "Original whole-evidence/advisory regression and new UTF8 test: multibyte complete mandatory overflow rejected, optional multilingual history/advisory discarded without clipping correction. Real on-device model token limit not proven."
+    },
+    {
+      "cmd": "kotlinc LocalChatPromptBudget.kt LocalPromptFrame.kt PromptDependencies.kt EntryGateHarness.kt -include-runtime -d entrygate-test.jar && java -jar entrygate-test.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; exact GitHub budget and prompt-frame files, classifier/router controlled build-only stubs",
+      "status": "PASS",
+      "meaning": "ASCII 7900 boundary accepted; 7901 rejected; CJK 6000 UTF16/9000 UTF8 and emoji 4000 UTF16/8000 UTF8 both early rejected, while mandatory later prompt never clips. No actual Activity, LiteRT or full project build."
+    }
+  ],
+  "githubSourceChanges": [
+    "Atomic start-commit latch integrated into existing ToolGate; cancel+commit serialized and pending timeout uses atomic revocation; already committed outcome explicitly ambiguous when terminalized",
+    "ReadOnlyToolPlan rejects complete formatted output >8000 with unverified response instead of throwing or falsely promoting success",
+    "LocalPromptFrame protects mandatory body and tail; Activity no longer duplicates task when compiled; optional history omitted whole if no room; explicit clarification on mandatory budget overflow",
+    "JUnit regression files committed but full project JUnit NOT_RUN",
+    "Gitar finding: unwrap worker-side CancellationException from FutureTask ExecutionException as CANCELLED, not FAILED; new isolated regressions cover the wrapped cause and post-commit UNKNOWN no-retry",
+    "LocalPromptFrame: complete final prompt now respects both character and conservative UTF-8 byte budgets; if an optional advisory overflows in bytes, omit advisory while preserving mandatory context/tail",
+    "Gitar second independent review: LocalChatPromptBudget early acceptance now uses the same UTF-8 byte ceiling as LocalPromptFrame, avoiding late context overflow after spending tool/model resources."
+  ],
+  "unverified": [
+    "Full Android Gradle and Kotlin2.4 compile",
+    "Existing ToolGate integration JUnit",
+    "New JUnit regressions against exact project deps",
+    "Full Node suite and Android lint",
+    "Late side-effecting backend after logical commit under OS preemption",
+    "Fold7 native device/APK/owner model",
+    "Gitar/CodeRabbit new review approval",
+    "New JUnit exact boundary and wrapped-cancellation tests are committed, but actual Gradle project test run NOT_RUN",
+    "Device tokenizer capacity beyond character/UTF-8 protection; full Activity run with selected actual LiteRT model NOT_RUN",
+    "Full JNI/model tokenizer and Android Activity early-clarification UI behavior NOT_RUN."
+  ],
+  "status": "SOURCE_INTEGRATED / STANDALONE_HOST_VERIFIED; PRODUCT_HOST_QA_NOT_RUN; DEVICE_NOT_RUN",
+  "safety": "No main merge; no owner data or signing changes; no PR354 Android-click or PR356 GGUF/Termux file changes; backend commit does not imply observed side-effect or safe rollback. Fail-closed and no automatic replay."
+}

@@ -1,0 +1,22 @@
+# M2.3 signed owner corrections (ProofCarryingMemory sidecar) 2026-11-03 14:34:17 CET
+## RED (stub: entries()=[], audit NOT_CONFIGURED, toMemoryRecord TODO)
+SignedOwnerCorrectionJournalTest > aTamperedJournalIsDetected FAILED
+SignedOwnerCorrectionJournalTest > aForeignSignerCannotVerifyTheJournal FAILED
+SignedOwnerCorrectionJournalTest > heldHypotheticalsAreNeverSignedAsFacts FAILED
+SignedOwnerCorrectionJournalTest > aLedgerChangeOutsideTheSignedPathIsReported FAILED
+SignedOwnerCorrectionJournalTest > correctionsAndRevocationsFormAVerifiedSignedChain FAILED
+6 tests completed, 5 failed
+> Task :app:testDebugUnitTest FAILED
+BUILD FAILED in 56s
+## GREEN
+BUILD SUCCESSFUL in 14s
+PASS aTamperedJournalIsDetected
+PASS aForeignSignerCannotVerifyTheJournal
+PASS theLedgerFormatIsByteIdenticalWithAndWithoutSigning
+PASS heldHypotheticalsAreNeverSignedAsFacts
+PASS aLedgerChangeOutsideTheSignedPathIsReported
+PASS correctionsAndRevocationsFormAVerifiedSignedChain
+Design: learning-core-v2/owner-corrections-pcm-v1.log (append-only, one v1 line per ProofCarryingMemoryMutation,
+fsync). experiences-v2.bin is byte-identical with/without signing (asserted). MAX_RECORDS=256 unchanged.
+Opt-in: ContinuumLearningCore(dir, signer) { clock }; existing constructors unchanged (signer=null => no journal).
+Production signer (AndroidKeystoreIdentitySigner) wiring = handoff to Continuum 1 (AgentActivity/BootstrapBrain not touched).

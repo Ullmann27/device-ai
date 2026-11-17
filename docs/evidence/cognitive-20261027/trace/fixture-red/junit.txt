@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+.E......................................................
+Time: 0.872
+There was 1 failure:
+1) realMemoryTurnTracesItsSourcesAndActualShadowModeWithoutPretendingLLMInference(at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.realMemoryTurnTracesItsSourcesAndActualShadowModeWithoutPretendingLLMInference(ContinuumCognitiveRuntimeTest.kt:19)
+
+FAILURES!!!
+Tests run: 55,  Failures: 1
+

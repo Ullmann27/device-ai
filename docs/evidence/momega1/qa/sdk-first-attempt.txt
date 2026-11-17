@@ -1,0 +1,5 @@
+                                                                                Warning: Failed to download any source lists!
+                                                                                Warning: IO exception while downloading manifest
+                                                                                Warning: IO exception while downloading manifest
+                                                                                Warning: Still waiting for package manifests to be fetched remotely.
+                                                                                Warning: Failed to find package 'platforms;android-36'

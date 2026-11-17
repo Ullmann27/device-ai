@@ -107,7 +107,12 @@ class MainActivity : Activity() {
 
         content.addView(buildHeader())
         content.addView(buildConnectionCard(), matchWidth(top = 14))
-        content.addView(buildCommandCard(), matchWidth(top = 14))
+        content.addView(
+            textView("Manuelle Expert-Eingabe · niemals durch das lokale Modell aufrufbar", 12f, AMBER, bold = true)
+                .apply { setPadding(dp(4), dp(10), dp(4), 0) },
+            matchWidth(top = 10)
+        )
+        content.addView(buildCommandCard(), matchWidth(top = 6))
         content.addView(buildQuickActions(), matchWidth(top = 14))
 
         planCard = verticalCard().apply {
@@ -150,7 +155,7 @@ class MainActivity : Activity() {
         left.addView(textView("Device AI", 31f, TEXT, bold = true))
         left.addView(
             textView(
-                "Dein lokaler Android-Agent",
+                "EXPERT · USER-ONLY · SHIZUKU",
                 14f,
                 MUTED
             ).apply { setPadding(0, dp(3), 0, 0) }
@@ -222,7 +227,7 @@ class MainActivity : Activity() {
         }
 
         input = EditText(this).apply {
-            hint = "z. B. „Installiere die neueste Lumo APK und starte Lumo“"
+            hint = "z. B. „Zeige die Dateien in Downloads“"
             setHintTextColor(Color.rgb(112, 126, 148))
             setTextColor(TEXT)
             textSize = 16f
@@ -394,25 +399,24 @@ class MainActivity : Activity() {
             Risk.CONFIRM -> {
                 AlertDialog.Builder(this)
                     .setTitle(plan.title)
-                    .setMessage(
-                        "Geplante Aktionen:\n\n" +
-                            plan.steps.joinToString("\n") { "• ${it.label}" } +
-                            "\n\nAusführen?"
-                    )
+                    .setMessage(ExpertModeConsent.confirmMessage(plan))
                     .setNegativeButton("Abbrechen", null)
                     .setPositiveButton("Ausführen") { _, _ -> execute(plan) }
                     .show()
             }
             Risk.DESTRUCTIVE -> {
                 AlertDialog.Builder(this)
-                    .setTitle("Kritische Aktion")
-                    .setMessage(
-                        "Dieser Auftrag enthält eine destruktive Aktion:\n\n" +
-                            plan.steps.joinToString("\n") { "• ${it.label}" } +
-                            "\n\nNur fortfahren, wenn du das wirklich willst."
-                    )
+                    .setTitle(ExpertModeConsent.DESTRUCTIVE_TITLE)
+                    .setMessage(ExpertModeConsent.destructiveFirstMessage(plan))
                     .setNegativeButton("Abbrechen", null)
-                    .setPositiveButton("Trotzdem ausführen") { _, _ -> execute(plan) }
+                    .setPositiveButton(ExpertModeConsent.DESTRUCTIVE_CONTINUE) { _, _ ->
+                        AlertDialog.Builder(this)
+                            .setTitle(ExpertModeConsent.STRONG_TITLE)
+                            .setMessage(ExpertModeConsent.destructiveStrongMessage(plan))
+                            .setNegativeButton("Abbrechen", null)
+                            .setPositiveButton(ExpertModeConsent.STRONG_CONFIRM) { _, _ -> execute(plan) }
+                            .show()
+                    }
                     .show()
             }
         }
@@ -433,6 +437,8 @@ class MainActivity : Activity() {
         val results = mutableListOf<String>()
 
         fun runStep(index: Int) {
+            // A recreated or closed activity must not keep running confirmed steps unseen.
+            if (isFinishing || isDestroyed) return
             if (index >= plan.steps.size) {
                 runButton.isEnabled = true
                 resultTitle.text = "Fertig"

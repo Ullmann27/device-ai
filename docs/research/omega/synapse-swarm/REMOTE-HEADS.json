@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-03",
+  "quota": "NOT_VISIBLE",
+  "main": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+  "productionSource": "c7ec853e2ffaa488b92826306f015bfaa67f5bb7",
+  "environment": "UNAVAILABLE; provider running status does not establish usable executor",
+  "branchRefs": [
+    {
+      "branch": "codex/synapse-lifecycle-20261103",
+      "sha": "833f1e09d21d84af1046bd82215a546f60ab2d88"
+    },
+    {
+      "branch": "codex/synapse-swarm-chief-20261103",
+      "sha": "c7ec853e2ffaa488b92826306f015bfaa67f5bb7"
+    },
+    {
+      "branch": "codex/synapse-registry-20261103",
+      "sha": "e12c28f51c0f91f2dfb37dd4bc34d372358c8ab5"
+    },
+    {
+      "branch": "codex/synapse-registry-review-20261103",
+      "sha": "3c155aaee9e6bf4744ccf3d54fb7e8d2366fa1cb"
+    },
+    {
+      "branch": "codex/synapse-lifecycle-review-20261103",
+      "sha": "573525c9ff6bcb63ecefd22fa184070e0d1442ff"
+    },
+    {
+      "branch": "codex/synapse-ui-review-20261103",
+      "sha": "de153623a8cc99403b84f239fc3a21d6497117f3"
+    },
+    {
+      "branch": "codex/synapse-runtime-audit-20261103",
+      "sha": "0ff9df3cd894663461b82264a76228a1e8b835b6"
+    },
+    {
+      "branch": "codex/synapse-model-prerequisites-20261103",
+      "sha": "71761204ce64f0d443d5abb2e2e7eba5bd95fde9"
+    },
+    {
+      "branch": "codex/synapse-p0-audit-20261103",
+      "sha": "a50b8e15bae4ce819115b9be23f37374b9346121"
+    },
+    {
+      "branch": "codex/synapse-sources-20261103",
+      "sha": "ad5a5d586230f3d658baaf486cfd15da40d20338"
+    }
+  ],
+  "note": "Direct git/ref reads; closed PR head snapshots can lag branch refs. Chief gains a documentation-only handoff commit after this source snapshot. No final combined test success."
+}

@@ -1,0 +1,7 @@
+# Baseline #390 negative-latency test repair
+
+Starting source: chief integration `5c536d9b1510aad50eb19b27c5fbdc5f78e637e8`, whose benchmark files are byte-identical to #390 `b4f61ae9765e26dd401db928b76fa9f233c0742a`. Independent full Gradle baseline first discovered the failure.
+
+Actual isolated Kotlin/JUnit reproduction: 24 tests, 1 failure before the test-only fix; 24 tests, 0 failures afterward. `TaskMeasurement` already rejects negative latency in its constructor, so the old test never reached the evaluator. The corrected assertion expects that existing rejection. No production benchmark guard changed; zero-ms, missing/skipped measurements, error outcomes, safety and quality cases remain present. `BenchmarkRunnerTest` separately tests a backwards clock becoming an error.
+
+Environment: shared pinned JDK17, Kotlin compiler2.4.0, JUnit4.13.2. Compile all `app/src/main/java/at/heinz/deviceai/benchmark/*.kt` and `app/src/test/java/at/heinz/deviceai/benchmark/*.kt` with K2JVMCompiler, `-jvm-target17`, dependency jars in `/workspace/continuum-build-env/jvm-deps`; execute JUnitCore `at.heinz.deviceai.benchmark.CoreGemmaRaceTest at.heinz.deviceai.benchmark.BenchmarkRunnerTest`. Raw stdout/stderr is preserved in compile-red.txt/red.txt and compile-green.txt/green.txt. Combined exact-commit Gradle verification is owned by independent Quality; these fixture timings are not Gemma/Fold7 performance measurements.

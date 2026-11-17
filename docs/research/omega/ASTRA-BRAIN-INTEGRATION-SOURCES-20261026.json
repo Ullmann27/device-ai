@@ -1,0 +1,504 @@
+{
+  "schemaVersion": 1,
+  "status": "SOURCE_AUDIT_IN_PROGRESS",
+  "observedAt": "2026-10-26",
+  "repository": "Ullmann27/device-ai",
+  "base": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+  "branch": "astra/continuum-brain-integration-20261026",
+  "pullRequests": [
+    {
+      "number": 151,
+      "head": "sol/continuum-brain-breakthroughs-20261026",
+      "sha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "base": "sol/continuum-infrastructure-repair-20261025",
+      "baseSha": "ad14f8b82f9be2cd0026bc16eef71a16bec41424",
+      "state": "open",
+      "mergeBaseWithIntegration": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "changedPaths": []
+    },
+    {
+      "number": 152,
+      "head": "sol/cdx-generation-repair-20261026",
+      "sha": "e53c91404fce44ac32aa448b901a9eeeb90d2431",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "state": "open",
+      "mergeBaseWithIntegration": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "changedPaths": [
+        "config/research/cdx-conditioner-repair-v1.json",
+        "config/research/cdxa1-pointer-v1.json",
+        "docs/evidence/sol-cdx-20261026/README.md",
+        "docs/evidence/sol-cdx-20261026/cdxa1-stop-manifest.json",
+        "docs/evidence/sol-cdx-20261026/cdxa1-unit-checks.txt",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1-run.txt",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1-summary.json",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/raw/stage-0.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/raw/stage-120000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/raw/stage-30000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/raw/stage-6000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/report.json",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/train_mean_centered_x32/stage-0.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/train_mean_centered_x32/stage-120000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/train_mean_centered_x32/stage-30000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/train_mean_centered_x32/stage-6000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/unit_l2/stage-0.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/unit_l2/stage-120000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/unit_l2/stage-30000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/conditioner-v1/unit_l2/stage-6000.cdx.base64",
+        "docs/evidence/sol-cdx-20261026/diagnosis.json",
+        "docs/evidence/sol-cdx-20261026/diagnosis.txt",
+        "docs/evidence/sol-cdx-20261026/green-centered.txt",
+        "docs/evidence/sol-cdx-20261026/manifest.json",
+        "docs/evidence/sol-cdx-20261026/quality-regression.json",
+        "docs/evidence/sol-cdx-20261026/red-archived.txt",
+        "docs/research/omega/SOL-CDX-HANDOFF-20261026.md",
+        "docs/superpowers/plans/2026-10-26-cdx-generation-repair.md",
+        "experimental/brain/CDXA1-RESUME.md",
+        "experimental/brain/Cdx1CausalDiagnosis.kt",
+        "experimental/brain/Cdx1ConditionerRepairProbe.kt",
+        "experimental/brain/cdxa1_pointer.py",
+        "experimental/brain/cdxa1_protocol.py",
+        "experimental/brain/test_cdxa1_pointer.py"
+      ]
+    },
+    {
+      "number": 153,
+      "head": "sol/grounding-relations-20261026",
+      "sha": "b41408b3cae889b4727b00648a0340419298b1f0",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "state": "open",
+      "mergeBaseWithIntegration": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "changedPaths": [
+        ".github/continuum/dialogue-retrieval.mjs",
+        ".github/continuum/retrieval-location-grounding.test.mjs",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumLocationGroundingTest.kt",
+        "app/src/test/resources/continuum-location-grounding.tsv",
+        "docs/evidence/sol-grounding-20261026/README.md",
+        "docs/evidence/sol-grounding-20261026/candidate-freeze.json",
+        "docs/evidence/sol-grounding-20261026/consumed-fixture-retention.txt",
+        "docs/evidence/sol-grounding-20261026/kotlin-green.txt",
+        "docs/evidence/sol-grounding-20261026/kotlin-red.txt",
+        "docs/evidence/sol-grounding-20261026/kotlin-unicode-red.txt",
+        "docs/evidence/sol-grounding-20261026/node-baseline.txt",
+        "docs/evidence/sol-grounding-20261026/node-full-interrupted.tap",
+        "docs/evidence/sol-grounding-20261026/node-green-broader.txt",
+        "docs/evidence/sol-grounding-20261026/node-green-focused.txt",
+        "docs/evidence/sol-grounding-20261026/node-red.txt",
+        "docs/evidence/sol-grounding-20261026/run-kotlin-focused.sh",
+        "docs/research/omega/SOL-GROUNDING-HANDOFF.md"
+      ]
+    },
+    {
+      "number": 154,
+      "head": "sol/deepseek-authenticated-bridge-20261026",
+      "sha": "2fb604609d8f7c86ec49fe5ebd4d9158b80beb5a",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "state": "open",
+      "mergeBaseWithIntegration": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "changedPaths": [
+        ".github/continuum/coding-provider-remote.test.mjs",
+        ".github/continuum/coding-provider.mjs",
+        ".github/continuum/coding-provider.test.mjs",
+        "docs/CONTINUUM-DEEPSEEK-BRIDGE-20261026.md",
+        "docs/evidence/sol-deepseek-20261026/bridge-red.txt",
+        "docs/evidence/sol-deepseek-20261026/bridge-unit-green.txt",
+        "docs/evidence/sol-deepseek-20261026/capacity-green.txt",
+        "docs/evidence/sol-deepseek-20261026/capacity-hub-green.txt",
+        "docs/evidence/sol-deepseek-20261026/capacity-red.txt",
+        "docs/evidence/sol-deepseek-20261026/https-integration.txt",
+        "docs/evidence/sol-deepseek-20261026/hub-red.txt",
+        "docs/evidence/sol-deepseek-20261026/pinned-hub-live-first-failure.txt",
+        "docs/evidence/sol-deepseek-20261026/pinned-hub-live.json",
+        "docs/evidence/sol-deepseek-20261026/provider-bridge-green.txt",
+        "docs/evidence/sol-deepseek-20261026/provider-remote-red.txt",
+        "docs/evidence/sol-deepseek-20261026/scoped-final-green.txt",
+        "docs/evidence/sol-deepseek-20261026/scoped-integration-green.txt",
+        "docs/research/omega/SOL-CODING-DISCOVERY-HANDOFF-20261026.md",
+        "docs/research/omega/SOL-DEEPSEEK-HANDOFF-20261026.md",
+        "scripts/continuum-deepseek-bridge.mjs",
+        "scripts/continuum-deepseek-bridge.test.mjs",
+        "scripts/continuum-deepseek-https.test.mjs",
+        "scripts/continuum-deepseek-hub-preflight.mjs",
+        "scripts/continuum-deepseek-hub-preflight.test.mjs",
+        "scripts/continuum-deepseek-tier-plan.mjs",
+        "scripts/continuum-deepseek-tier-plan.test.mjs",
+        "scripts/continuum-local-brain-cli.mjs",
+        "scripts/continuum-local-brain.mjs"
+      ]
+    },
+    {
+      "number": 155,
+      "head": "sol/coding-discovery-safety-20261026",
+      "sha": "d08d6396aa91f1abe43fa1e3a615be61fb18cfd7",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "state": "open",
+      "mergeBaseWithIntegration": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "changedPaths": [
+        ".github/continuum/coding-provider.mjs",
+        ".github/continuum/coding-provider.test.mjs",
+        ".github/continuum/repair-ledger-independent.test.mjs",
+        ".github/continuum/repair-ledger.mjs",
+        ".github/continuum/repair-loop.mjs",
+        ".github/continuum/scoped-repair-pipeline.test.mjs",
+        "docs/evidence/sol-coding-discovery-20261026/Dockerfile",
+        "docs/evidence/sol-coding-discovery-20261026/backend-missing-deps.tap",
+        "docs/evidence/sol-coding-discovery-20261026/backend-with-cached-deps.tap",
+        "docs/evidence/sol-coding-discovery-20261026/full-node.tap",
+        "docs/evidence/sol-coding-discovery-20261026/isolation-profile-summary.json",
+        "docs/evidence/sol-coding-discovery-20261026/isolation-proof.mjs",
+        "docs/evidence/sol-coding-discovery-20261026/isolation-result.json",
+        "docs/evidence/sol-coding-discovery-20261026/isolation-summary.json",
+        "docs/evidence/sol-coding-discovery-20261026/isolation-task.json",
+        "docs/evidence/sol-coding-discovery-20261026/isolation/independent-check/verification.json",
+        "docs/evidence/sol-coding-discovery-20261026/isolation/repair.patch",
+        "docs/evidence/sol-coding-discovery-20261026/isolation/report.json",
+        "docs/evidence/sol-coding-discovery-20261026/ledger-green.tap",
+        "docs/evidence/sol-coding-discovery-20261026/ledger-red.tap",
+        "docs/evidence/sol-coding-discovery-20261026/provider-green.tap",
+        "docs/evidence/sol-coding-discovery-20261026/provider-red.tap",
+        "docs/evidence/sol-coding-discovery-20261026/quick-review.tap",
+        "docs/research/omega/SOL-CODING-DISCOVERY-HANDOFF-20261026.md"
+      ]
+    },
+    {
+      "number": 156,
+      "head": "sol/continuum-fast-repair-20261026",
+      "sha": "df4b395ff6cee7fdedbe742560f1685eaff5767c",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "state": "open",
+      "mergeBaseWithIntegration": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "changedPaths": [
+        "docs/research/omega/SOL-FAST-REPAIR-HANDOFF-20261026.md"
+      ]
+    },
+    {
+      "number": 157,
+      "head": "review/continuum-brain-safety-continuation-20261026",
+      "sha": "95e6ad4f4a80d51a5a3293dbb914cdb9288d8c29",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "state": "open",
+      "mergeBaseWithIntegration": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "changedPaths": [
+        "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
+        "app/src/test/java/at/heinz/deviceai/LocalFirstPolicyTest.kt",
+        "docs/evidence/gpt6-brain-routing-20261026/GITHUB-ACTIONS-RUNNER-BLOCKER-20261026.md",
+        "docs/evidence/gpt6-brain-routing-20261026/GROUNDING-EVALUATOR.md",
+        "docs/evidence/gpt6-brain-routing-20261026/GROUNDING-FIXTURE-SHA256.md",
+        "docs/evidence/gpt6-brain-routing-20261026/GROUNDING-RESULTS.md",
+        "docs/evidence/gpt6-brain-routing-20261026/LOCALFIRST-JUNIT-REPAIR-20261026.md",
+        "docs/evidence/gpt6-brain-routing-20261026/README.md",
+        "docs/evidence/gpt6-brain-routing-20261026/UNQUOTED-RECALL-20261026.md",
+        "docs/evidence/gpt6-brain-routing-20261026/grounding-independent-direct-replay-v1.json",
+        "docs/research/omega/GPT6-CONTINUATION-HANDOFF-20261026.md",
+        "scripts/continuum-dialogue-routing-smoke.sh",
+        "scripts/continuum-grounding-independent-eval.mjs",
+        "scripts/continuum-grounding-independent-eval.test.mjs",
+        "scripts/verification/ContinuumDialogueRoutingSmoke.kt"
+      ]
+    },
+    {
+      "number": 158,
+      "head": "review/continuum-baby-memory-migration-20261026",
+      "sha": "4cff5abda4f71bcb46795323e468cf0e0fb3429a",
+      "base": "main",
+      "baseSha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+      "state": "open",
+      "mergeBaseWithIntegration": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4",
+      "changedPaths": [
+        ".github/continuum/baby-core.mjs",
+        ".github/continuum/baby-core.test.mjs",
+        ".github/continuum/public-web.mjs",
+        ".github/continuum/world-model.mjs",
+        ".github/continuum/world-model.test.mjs",
+        ".github/continuum/zero-cost-core.mjs",
+        ".github/workflows/android.yml",
+        ".github/workflows/continuum-hourly-watch.yml",
+        ".github/workflows/continuum-zero-cost.yml",
+        "docs/evidence/gpt6-main-baby-memory-20261026/ISOLATED-UNIT-SUITE-20261026.md",
+        "docs/evidence/gpt6-main-baby-memory-20261026/PROVENANCE-RED-GREEN.md",
+        "docs/research/omega/GPT6-BABY-MEMORY-MIGRATION-HANDOFF-20261026.md"
+      ]
+    }
+  ],
+  "scope": [
+    "EXP-00",
+    "EXP-01",
+    "EXP-02",
+    "EXP-04",
+    "EXP-05",
+    "EXP-06",
+    "EXP-08",
+    "EXP-11",
+    "EXP-12",
+    "EXP-14"
+  ],
+  "tests": "NOT_RUN",
+  "productionPromotion": false,
+  "components": [
+    {
+      "id": "dialogue",
+      "entry": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "exists": true,
+      "dependencies": [
+        "memory",
+        "reasoning",
+        "local-model",
+        "toolgate"
+      ],
+      "prs": [
+        151,
+        157
+      ],
+      "status": "Android main entry; SDK verification running; no Fold7",
+      "deviceVerified": false
+    },
+    {
+      "id": "memory",
+      "entry": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "exists": true,
+      "dependencies": [
+        "swb1",
+        "provenance",
+        "context"
+      ],
+      "prs": [
+        153
+      ],
+      "status": "Current deterministic recall integrated; stricter candidate NOT adopted pending positive-recall repair",
+      "deviceVerified": false
+    },
+    {
+      "id": "provenance",
+      "entry": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "exists": true,
+      "dependencies": [],
+      "prs": [
+        151
+      ],
+      "status": "Existing owner/source/model separation, persistent store; no second database",
+      "deviceVerified": false
+    },
+    {
+      "id": "context",
+      "entry": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "exists": true,
+      "dependencies": [
+        "memory",
+        "cre1"
+      ],
+      "prs": [
+        151
+      ],
+      "status": "Conversation-bound; CTX3 remains OFF/SHADOW after failed independent benchmark",
+      "deviceVerified": false
+    },
+    {
+      "id": "reasoning",
+      "entry": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
+      "exists": true,
+      "dependencies": [
+        "memory",
+        "local-model"
+      ],
+      "prs": [
+        151
+      ],
+      "status": "Canonical exact-memory bridge; separate synthesis via existing bounded agent",
+      "deviceVerified": false
+    },
+    {
+      "id": "local-model",
+      "entry": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelRuntime.kt",
+      "exists": false,
+      "dependencies": [],
+      "prs": [
+        151,
+        156
+      ],
+      "status": "LiteRT-LM0.18.0; selected model bytes/Android execution not available yet",
+      "deviceVerified": false
+    },
+    {
+      "id": "swb1",
+      "entry": "app/src/main/java/at/heinz/deviceai/learning/SemanticWordBrain.kt",
+      "exists": false,
+      "dependencies": [],
+      "prs": [
+        151
+      ],
+      "status": "Existing trained encoder, lexical retrieval authority; exact entry resolved below",
+      "deviceVerified": false
+    },
+    {
+      "id": "cre1",
+      "entry": "app/src/main/java/at/heinz/deviceai/learning/Cre1InferenceEncoder.kt",
+      "exists": true,
+      "dependencies": [
+        "swb1"
+      ],
+      "prs": [
+        151
+      ],
+      "status": "Shadow unless existing signed promotion gate",
+      "deviceVerified": false
+    },
+    {
+      "id": "coding",
+      "entry": ".github/continuum/coding-orchestrator.mjs",
+      "exists": true,
+      "dependencies": [
+        "ccc1",
+        "repair",
+        "sandbox"
+      ],
+      "prs": [
+        155
+      ],
+      "status": "Typed task/commit/budget path; reviewed integration pending",
+      "deviceVerified": false
+    },
+    {
+      "id": "ccc1",
+      "entry": ".github/continuum/ccc1-worker.mjs",
+      "exists": true,
+      "dependencies": [
+        "backlog",
+        "repair"
+      ],
+      "prs": [
+        155
+      ],
+      "status": "Canonical worker and journal",
+      "deviceVerified": false
+    },
+    {
+      "id": "backlog",
+      "entry": ".github/continuum/development-backlog.mjs",
+      "exists": true,
+      "dependencies": [],
+      "prs": [
+        155
+      ],
+      "status": "Canonical tasks, no parallel store",
+      "deviceVerified": false
+    },
+    {
+      "id": "repair",
+      "entry": ".github/continuum/repair-loop.mjs",
+      "exists": true,
+      "dependencies": [
+        "sandbox"
+      ],
+      "prs": [
+        155
+      ],
+      "status": "Candidate critic/test/fresh independent worktree",
+      "deviceVerified": false
+    },
+    {
+      "id": "sandbox",
+      "entry": ".github/continuum/isolated-executor.mjs",
+      "exists": true,
+      "dependencies": [],
+      "prs": [
+        155
+      ],
+      "status": "Docker capability available; real policy proof NOT_RUN; Android confinement open",
+      "deviceVerified": false
+    },
+    {
+      "id": "mobile-builder",
+      "entry": "scripts/continuum-mobile-builder.mjs",
+      "exists": true,
+      "dependencies": [
+        "ccc1"
+      ],
+      "prs": [
+        151
+      ],
+      "status": "Existing Android-Termux transport; current physical device UNAVAILABLE",
+      "deviceVerified": false
+    },
+    {
+      "id": "teamleader",
+      "entry": ".github/continuum/local-teamleader-loop.mjs",
+      "exists": true,
+      "dependencies": [
+        "backlog",
+        "repair"
+      ],
+      "prs": [
+        155
+      ],
+      "status": "Bounded cyclic worker; Doze/thermal on-device unverified",
+      "deviceVerified": false
+    },
+    {
+      "id": "baby-core",
+      "entry": ".github/continuum/baby-core.mjs",
+      "exists": true,
+      "dependencies": [
+        "provenance"
+      ],
+      "prs": [
+        158
+      ],
+      "status": "GitHub worker only; PR158 conflicts with newer explicit-citation rules",
+      "deviceVerified": false
+    },
+    {
+      "id": "cdx1",
+      "entry": "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
+      "exists": true,
+      "dependencies": [
+        "swb1"
+      ],
+      "prs": [
+        152
+      ],
+      "status": "Existing decoder; no generalization established",
+      "deviceVerified": false
+    },
+    {
+      "id": "cdxa1",
+      "entry": "experimental/brain/cdxa1_pointer.py",
+      "exists": true,
+      "dependencies": [],
+      "prs": [
+        152
+      ],
+      "status": "Imported frozen UNTRAINED research source, no runtime activation",
+      "deviceVerified": false
+    },
+    {
+      "id": "deepseek",
+      "entry": "scripts/continuum-deepseek-bridge.mjs",
+      "exists": false,
+      "dependencies": [
+        "coding"
+      ],
+      "prs": [
+        154
+      ],
+      "status": "Optional external adapter NOT adopted/activated; no endpoint or consent",
+      "deviceVerified": false
+    },
+    {
+      "id": "toolgate",
+      "entry": "app/src/main/java/at/heinz/deviceai/ToolGate.kt",
+      "exists": false,
+      "dependencies": [],
+      "prs": [
+        151
+      ],
+      "status": "Existing permission boundary; path discovery pending",
+      "deviceVerified": false
+    }
+  ]
+}

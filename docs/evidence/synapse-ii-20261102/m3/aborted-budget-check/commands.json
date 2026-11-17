@@ -1,0 +1,134 @@
+[
+  {
+    "label": "source-head",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/workspace/continuum-post-fable",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "source-branch",
+    "cmd": "git",
+    "args": [
+      "branch",
+      "--show-current"
+    ],
+    "cwd": "/workspace/continuum-post-fable",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-init",
+    "cmd": "git",
+    "args": [
+      "init",
+      "-q",
+      "-b",
+      "synapse-m3-fixture"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-iz1QWK/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-add-seed",
+    "cmd": "git",
+    "args": [
+      "add",
+      "."
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-iz1QWK/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-commit-seed",
+    "cmd": "git",
+    "args": [
+      "-c",
+      "user.name=continuum-m3-fixture",
+      "-c",
+      "user.email=m3-fixture@example.invalid",
+      "commit",
+      "-qm",
+      "seed: bounded arithmetic fixture"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-iz1QWK/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-seed-head",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-iz1QWK/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "seed-test",
+    "cmd": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "args": [
+      "--test",
+      ".github/continuum/math.test.mjs"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-iz1QWK/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-commit-fault",
+    "cmd": "git",
+    "args": [
+      "-c",
+      "user.name=continuum-m3-fixture",
+      "-c",
+      "user.email=m3-fixture@example.invalid",
+      "commit",
+      "-qam",
+      "fault: unresolved numeric helper"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-iz1QWK/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "fixture-fault-head",
+    "cmd": "git",
+    "args": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-iz1QWK/fixture",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "label": "baseline-raw",
+    "cmd": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "args": [
+      "--test",
+      ".github/continuum/math.test.mjs"
+    ],
+    "cwd": "/tmp/continuum-synapse-m3-iz1QWK/fixture",
+    "exitCode": 1,
+    "signal": null,
+    "error": null
+  }
+]

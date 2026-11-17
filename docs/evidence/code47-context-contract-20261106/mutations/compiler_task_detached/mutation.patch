@@ -1,0 +1,11 @@
+--- app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -9281,7 +9281,7 @@
+                             seed = runtimeState.seed,
+                             genome = runtimeState.archive.genome,
+                             identityState = runtimeState.archive.identityState,
+-                            userRequest = task,
++                            userRequest = text,
+                             memories = memories,
+                             activeTaskSummary = reflection?.correction?.take(1_024),
+                             unresolvedContradictions = memories

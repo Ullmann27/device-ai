@@ -1,0 +1,24 @@
+{
+  "id": "C015",
+  "question": "Wo lebt Zydohabo?",
+  "sources": [
+    {
+      "revision": 1,
+      "sha256": "1f352decdcd9dcd5a087131e2474f61963f5b5371bf97476a951cf3f76895e4f",
+      "sourceId": "bc:C015:s1",
+      "text": "Qetaseta lebt in Uvdazife. Qezuvaku lebt in Uvmoline."
+    },
+    {
+      "revision": 2,
+      "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+      "sourceId": "bc:C015:s2",
+      "text": "Qesarozi lebt in Uvzutiju. Zydohabo lebt in Uvzisimu Uvnamuju Uvnanazi."
+    },
+    {
+      "revision": 3,
+      "sha256": "eccf7a6c0db03164bc40f8ec24d789919ec5ad866ece5c0a1fe17f05462f1f04",
+      "sourceId": "bc:C015:s3",
+      "text": "Qefazeja lebt in Uvhikaso. Qezuvaku lebt in Uvmoline."
+    }
+  ]
+}

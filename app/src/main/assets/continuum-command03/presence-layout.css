@@ -1,0 +1,217 @@
+/* Central presence: the original avatar stands in front of a fixed original orb. */
+.center-stage .presence.presence-orbit {
+  container-name: presence-orbit;
+  container-type: inline-size;
+  display: block;
+  height: auto;
+  min-height: 0;
+  padding: 8px 0 20px;
+  isolation: isolate;
+  margin-bottom: 5px;
+}
+.presence-orbit::before {
+  content: "";
+  position: absolute;
+  inset: -16px -14px 22px;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(ellipse at 50% 42%, #1c50643d 0, #102b432b 29%, transparent 67%),
+    linear-gradient(120deg, transparent 25%, #4568c609 46%, transparent 66%);
+  border-radius: 30px;
+}
+.presence-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 28px;
+  gap: 16px;
+  padding: 0 4px;
+}
+.presence-topline .eyebrow { font-size: 10px; letter-spacing: 1.5px; color: #7faac0; }
+.presence-edition { font-family: "Space Grotesk", Manrope, sans-serif; font-size: 11px; letter-spacing: 2px; color: #6d91aa; white-space: nowrap; }
+.presence-system {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 1.28fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(12px, 2cqi, 25px);
+  position: relative;
+  min-height: 356px;
+}
+.presence-core {
+  position: relative;
+  min-width: 0;
+  height: 356px;
+  isolation: isolate;
+  z-index: 2;
+}
+.presence-core::after {
+  content: "";
+  position: absolute;
+  height: 12px;
+  left: -13%; right: -13%; bottom: 39px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #63cce927, #6073c30b 50%, transparent 70%);
+  filter: blur(7px);
+  z-index: -1;
+  pointer-events: none;
+}
+.center-stage .presence-orbit .orb-zone {
+  position: absolute;
+  left: 50%; top: -3px;
+  width: clamp(300px, 43cqi, 420px);
+  height: 326px;
+  transform: translateX(-50%);
+  transform-origin: 50% 50%;
+  z-index: 0;
+  opacity: .7;
+  pointer-events: none;
+  animation: none;
+  transition: opacity 600ms ease;
+}
+.center-stage .presence-orbit .avatar-zone {
+  position: absolute;
+  left: 50%; top: 12px;
+  width: clamp(292px, 43cqi, 344px);
+  height: 304px;
+  transform: translateX(-50%);
+  transform-origin: center bottom;
+  z-index: 3;
+  perspective: none;
+}
+.center-stage .presence-orbit .avatar-crop {
+  inset: 0;
+  width: 100%; height: 100%;
+  background-size: contain;
+  background-position: center;
+  transform: none;
+  animation: none;
+  filter: drop-shadow(0 4px 7px #020a10b3) drop-shadow(0 0 14px #6aaacb24);
+}
+.center-stage .presence-orbit .avatar-aura { inset: 4% 5% 5%; opacity: .4; }
+.center-stage .presence-orbit .avatar-pedestal { display: none; }
+.center-stage .presence-orbit .avatar-caption {
+  left: 50%; bottom: 36px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 6px 11px;
+  background: linear-gradient(90deg, transparent, #06141ad9 25%, #07141de0 75%, transparent);
+  border: 0;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  z-index: 4;
+}
+.center-stage .presence-orbit .avatar-caption small { font-size: 9px; letter-spacing: 1px; }
+.center-stage .presence-orbit .avatar-linkbar {
+  top: auto; left: 50%; bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  gap: 9px;
+  z-index: 6;
+}
+.presence-orbit .avatar-linkbar .icon-button {
+  width: 44px; height: 44px;
+  border-radius: 13px;
+  border: 1px solid #68bed83d;
+  background: linear-gradient(145deg, #17394bba, #06121deb);
+  box-shadow: inset 0 1px #b5ecff16, 0 5px 18px #01071044;
+}
+.core-status {
+  position: absolute;
+  left: 50%; top: 5px;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #a5c7db;
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #0714228f;
+  border: 1px solid #679bb529;
+}
+.core-status .status-dot { width: 4px; height: 4px; box-shadow: 0 0 8px #92e6ff; }
+.center-stage .presence-orbit .presence-copy {
+  position: relative;
+  inset: auto;
+  max-width: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 27px;
+  margin-top: 15px;
+  padding: 0 12px 19px;
+  text-align: left;
+  z-index: 4;
+}
+.center-stage .presence-orbit .presence-copy h1 {
+  font-size: clamp(21px, 3cqi, 27px);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -.8px;
+  max-width: none;
+  margin: 0;
+}
+.center-stage .presence-orbit .presence-copy p { display: none; }
+.center-stage .presence-orbit .presence-copy .text-action {
+  display: inline-flex;
+  font-size: 13px;
+  min-height: 44px;
+  align-self: center;
+  padding: 8px 3px;
+  margin: 0;
+}
+.center-stage .presence-orbit .scene-identity {
+  left: 3px; right: 3px; bottom: 0;
+  font-size: 10px;
+  letter-spacing: .4px;
+}
+.presence-instrument { position: relative; z-index: 4; min-width: 0; }
+.presence-instrument-left { transform: perspective(1100px) rotateY(3deg); transform-origin: right center; }
+.presence-instrument-right { transform: perspective(1100px) rotateY(-3deg); transform-origin: left center; }
+body[data-state="forming"] .presence-orbit .orb-zone,
+body[data-state="result"] .presence-orbit .orb-zone { opacity: .82; }
+/* The document view stays proportional instead of collapsing the head sideways. */
+.expanded .center-stage .presence.presence-orbit { height: auto; }
+.expanded .center-stage .presence-orbit .presence-copy .text-action { display: inline-flex; }
+@container presence-orbit (max-width: 649px) {
+  .presence-system {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 14px;
+    min-height: 0;
+  }
+  .presence-core { grid-column: 1 / -1; grid-row: 1; height: 288px; }
+  .presence-instrument-left { grid-column: 1; grid-row: 2; transform: none; }
+  .presence-instrument-right { grid-column: 2; grid-row: 2; transform: none; }
+  .center-stage .presence-orbit .orb-zone { width: min(360px, 92cqi); height: 274px; top: -7px; opacity: .64; }
+  .center-stage .presence-orbit .avatar-zone { width: min(316px, 86cqi); height: 250px; top: 8px; }
+  .center-stage .presence-orbit .avatar-caption { bottom: 36px; font-size: 10px; padding: 5px 10px; }
+  .center-stage .presence-orbit .avatar-caption small { font-size: 9px; }
+  .center-stage .presence-orbit .avatar-linkbar { bottom: -1px; }
+  .center-stage .presence-orbit .presence-copy { margin-top: 19px; gap: 17px; padding: 0 2px 23px; justify-content: space-between; }
+  .center-stage .presence-orbit .presence-copy h1 { font-size: 22px; max-width: 220px; }
+  .center-stage .presence-orbit .presence-copy .text-action { font-size: 12px; gap: 8px; }
+  .presence-topline { gap: 8px; }
+  .presence-topline .eyebrow { font-size: 9px; letter-spacing: 1px; }
+  .presence-edition { font-size: 9px; letter-spacing: 1px; }
+  .core-status { top: 3px; font-size: 9px; }
+}
+@container presence-orbit (max-width: 359px) {
+  .presence-system { gap: 10px; }
+  .presence-topline .eyebrow { max-width: 225px; line-height: 1.5; }
+  .presence-edition { display: none; }
+  .center-stage .presence-orbit .presence-copy h1 { font-size: 20px; }
+}
+@supports not (container-type: inline-size) {
+  @media (max-width: 700px) {
+    .presence-system { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .presence-core { grid-column: 1 / -1; grid-row: 1; height: 300px; }
+    .presence-instrument { grid-row: 2; transform: none; }
+    .center-stage .presence-orbit .orb-zone { width: 330px; height: 285px; }
+    .center-stage .presence-orbit .avatar-zone { width: 300px; height: 264px; }
+  }
+}

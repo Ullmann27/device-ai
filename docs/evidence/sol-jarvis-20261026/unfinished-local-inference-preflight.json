@@ -1,0 +1,18 @@
+{
+  "status": "STOPPED_AT_OWNER_20_PERCENT_REQUEST",
+  "runtimeRelease": "b11861",
+  "runtimeAsset": {
+    "browser_download_url": "https://github.com/ggml-org/llama.cpp/releases/download/b11861/llama-b11861-bin-ubuntu-x64.tar.gz",
+    "digest": "sha256:af86309b14d55f77b59053b8e8e064e1ce27c58f288adb474ff99d61b29a8e76",
+    "name": "llama-b11861-bin-ubuntu-x64.tar.gz",
+    "size": 22439458
+  },
+  "archiveDigestChecked": true,
+  "license": "MIT",
+  "licenseInspectedAt": "https://raw.githubusercontent.com/ggml-org/llama.cpp/73adf89e3/LICENSE",
+  "modelDownloaded": false,
+  "modelAvailable": false,
+  "runtimeExecuted": false,
+  "realInference": "NOT_RUN",
+  "note": "Public toolchain acquisition started before owner stop. No model download or inference followed. Tool binary need not be committed; official immutable release and digest suffice for recovery."
+}

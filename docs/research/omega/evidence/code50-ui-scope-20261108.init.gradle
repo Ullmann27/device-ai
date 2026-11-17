@@ -1,0 +1,10 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        filter {
+            includeTestsMatching('at.heinz.deviceai.OwnerAppActionWorkSceneUiTest')
+            includeTestsMatching('at.heinz.deviceai.LocalReasoningWorkSceneUiTest')
+            includeTestsMatching('at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest')
+            includeTestsMatching('at.heinz.deviceai.AndroidOnDeviceSpeechRetryUiTest')
+        }
+    }
+}

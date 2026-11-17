@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisWorkWindowUiTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:50:22" hostname="6e2f8005d77e" time="0.329">
+  <properties/>
+  <testcase name="detachingReleasesFrameSubscription" classname="at.heinz.deviceai.JarvisWorkWindowUiTest" time="0.042"/>
+  <testcase name="geometryFindsPhoneAndFoldSpaceWithoutCoveringHeadOrDialog" classname="at.heinz.deviceai.JarvisWorkWindowUiTest" time="0.015"/>
+  <testcase name="reducedMotionSettlesBothDirectionsOnNextSuppliedFrame" classname="at.heinz.deviceai.JarvisWorkWindowUiTest" time="0.033"/>
+  <testcase name="protectedAreaRemainsTransparentDuringOpening" classname="at.heinz.deviceai.JarvisWorkWindowUiTest" time="0.094"/>
+  <testcase name="outsideAndProtectedTouchesReachCockpit" classname="at.heinz.deviceai.JarvisWorkWindowUiTest" time="0.033"/>
+  <testcase name="immediateCloseReleasesBodyAndCallbackExactlyOnce" classname="at.heinz.deviceai.JarvisWorkWindowUiTest" time="0.051"/>
+  <testcase name="suppliedFramesOpenExistingBodyAndKeepCloseOutsideScroll" classname="at.heinz.deviceai.JarvisWorkWindowUiTest" time="0.059"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

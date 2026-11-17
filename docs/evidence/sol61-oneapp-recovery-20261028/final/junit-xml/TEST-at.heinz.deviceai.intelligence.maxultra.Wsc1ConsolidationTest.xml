@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:28" hostname="b50d54a1ac03" time="5.534">
+  <properties/>
+  <testcase name="habitsNeverDisagreeWithFreshReasoningAfterTheKnowledgeChanged" classname="at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest" time="3.137"/>
+  <testcase name="theGateRejectsUnverifiedClaimsAndFlawedHabitsAndLeavesRecomputableReceipts" classname="at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest" time="2.397"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

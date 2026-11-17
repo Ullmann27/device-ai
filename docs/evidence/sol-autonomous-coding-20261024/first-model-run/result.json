@@ -1,0 +1,119 @@
+{
+  "schema": "continuum-real-local-coding-experiment",
+  "version": 1,
+  "implementationCommit": "23d76d57370fbca82d399feceb6d2e66162134ab",
+  "fixtureCommit": "1e4562b550e10a72d054fb787c950800a5bd11fb",
+  "fixtureNature": "newly authored application regression; not a blind model-training contamination guarantee",
+  "configuredModel": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+  "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+  "elapsedMs": 64792,
+  "parentCpuMicros": 134847,
+  "parentMaxRssKiB": 45756,
+  "modelResources": "server resource measurements recorded separately; parent RSS excludes inference server",
+  "originalSourceUnchanged": true,
+  "originalSourceSha256": "e4368e59a3472e4cecd26120ec902964f5f8693c997445c63bb22ce1b2281e70",
+  "prepared": {
+    "id": "novel-pagination-20261024",
+    "ccc1TaskId": "t-908c234c13623c1b",
+    "fingerprint": "b26d23cf9321445aec12eff4adbd996bd5b387b224fc33f186e16c4d3b978a65",
+    "replayed": false
+  },
+  "result": {
+    "schema": "continuum-coding-task-result",
+    "version": 1,
+    "id": "novel-pagination-20261024",
+    "ccc1TaskId": "t-908c234c13623c1b",
+    "taskFingerprint": "b26d23cf9321445aec12eff4adbd996bd5b387b224fc33f186e16c4d3b978a65",
+    "sourceCommit": "1e4562b550e10a72d054fb787c950800a5bd11fb",
+    "status": "PATCH_PENDING_OWNER_REVIEW",
+    "receipts": [
+      {
+        "schema": "continuum-mobile-coding-receipt",
+        "version": 1,
+        "job": "a19fdeeb-f8a1-4bf9-89a7-29dd7f00e18d",
+        "operation": "code-repair",
+        "taskId": "mob-57577e26f85b78c6",
+        "commit": "1e4562b550e10a72d054fb787c950800a5bd11fb",
+        "toolchain": {
+          "node": "v24.19.0",
+          "platform": "linux",
+          "arch": "x64",
+          "git": "git version 2.52.0"
+        },
+        "order": {
+          "chain": "node"
+        },
+        "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+        "teamleaderOutcome": "VERIFIED_PATCH_PENDING_REVIEW",
+        "patch": {
+          "sha256": "22d6371ad369f283020e2b67f1318dcec1c2f3fd9e4afabda23b65936da513f5",
+          "path": "/workspace/scratch/coding-real-20261024-first/state/teamleader/reports/owner-repair/mob-57577e26f85b78c6-1e4562b550e1-1792870853358-666e9a3b/repair.patch",
+          "bytes": 510
+        },
+        "evidence": {
+          "verificationSha256": "7bcaf62b2a7959a791616778c61d919f21dc6a2d4a4bc15eaa1a3004861e0de0",
+          "baselineFailed": 4,
+          "baselineExecuted": 12,
+          "candidateExecuted": 12,
+          "independentExecuted": 12,
+          "evidenceSufficient": true
+        },
+        "commands": [
+          {
+            "phase": "baseline",
+            "exitCode": 1,
+            "passed": false,
+            "executed": 12,
+            "failed": 4,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          },
+          {
+            "phase": "candidate",
+            "exitCode": 0,
+            "passed": true,
+            "executed": 12,
+            "failed": 0,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          },
+          {
+            "phase": "independent",
+            "exitCode": 0,
+            "passed": true,
+            "executed": 12,
+            "failed": 0,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          }
+        ],
+        "failure": null,
+        "backlog": {
+          "state": "DONE",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "error": null
+        },
+        "approvedForMerge": false,
+        "apk": null,
+        "installed": false,
+        "deviceVerified": false,
+        "createdAt": "2026-10-24T19:40:53.298Z",
+        "repair": {
+          "outcome": "VERIFIED",
+          "strategy": "LOCAL_SCOPED_PATCH",
+          "files": [
+            "lib/pagination.mjs"
+          ],
+          "diagnostics": 4,
+          "attempts": 2
+        }
+      }
+    ],
+    "approvedForMerge": false,
+    "deviceVerified": false,
+    "neuralTraining": false
+  },
+  "deviceVerified": false,
+  "remoteInference": false
+}

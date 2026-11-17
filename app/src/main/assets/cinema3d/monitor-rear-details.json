@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "monitorRear": {
+    "path": "cinema3d/monitor-rear-details.glb",
+    "sha256": "ac2c309d545934ab8bc935ee5b5c86358aa24f55305a78d6b8accb1202f9ead1",
+    "bytes": 16500
+  },
+  "generator_sha256": "712e5078e0a9693e828f8dc4be6d407e416bc6979342df49451a871b732fe6ee"
+}

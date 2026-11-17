@@ -1,0 +1,214 @@
+TAP version 13
+# Subtest: Cayley inversion rejects singular inputs without guessing a solver
+ok 1 - Cayley inversion rejects singular inputs without guessing a solver
+  ---
+  duration_ms: 6.191491
+  type: 'test'
+  ...
+# Subtest: Cayley proof preserves E and rejects holdout leakage, without asserting 2ms or success
+ok 2 - Cayley proof preserves E and rejects holdout leakage, without asserting 2ms or success
+  ---
+  duration_ms: 344.122324
+  type: 'test'
+  ...
+# Subtest: lexical micro-mutations are proposals, never unreviewed writes or test green claims
+ok 3 - lexical micro-mutations are proposals, never unreviewed writes or test green claims
+  ---
+  duration_ms: 1.851232
+  type: 'test'
+  ...
+# Subtest: proof consolidation never merges paraphrases or differing source hashes
+ok 4 - proof consolidation never merges paraphrases or differing source hashes
+  ---
+  duration_ms: 0.409359
+  type: 'test'
+  ...
+# Subtest: bimodal synapse is 16-dimensional, finite and depends on CRE1 evidence
+ok 5 - bimodal synapse is 16-dimensional, finite and depends on CRE1 evidence
+  ---
+  duration_ms: 46.883995
+  type: 'test'
+  ...
+# Subtest: workshop accepts only explicit bounded modes and options
+ok 6 - workshop accepts only explicit bounded modes and options
+  ---
+  duration_ms: 1.35274
+  type: 'test'
+  ...
+# Subtest: capability discovery never authorizes unreviewed Flutter or Godot exports
+ok 7 - capability discovery never authorizes unreviewed Flutter or Godot exports
+  ---
+  duration_ms: 17.234483
+  type: 'test'
+  ...
+# Subtest: private worker state stays outside checkout and refuses a dirty source before a cycle
+ok 8 - private worker state stays outside checkout and refuses a dirty source before a cycle
+  ---
+  duration_ms: 92.366785
+  type: 'test'
+  ...
+# Subtest: worker status does not hallucinate a running PC worker
+ok 9 - worker status does not hallucinate a running PC worker
+  ---
+  duration_ms: 75.399454
+  type: 'test'
+  ...
+# Subtest: real Teamleader FSM runs with an injected bounded safe driver, no merge
+ok 10 - real Teamleader FSM runs with an injected bounded safe driver, no merge
+  ---
+  duration_ms: 100.48799
+  type: 'test'
+  ...
+# Subtest: one-cycle cadence persists bounded heartbeat and never claims automatic merge
+ok 11 - one-cycle cadence persists bounded heartbeat and never claims automatic merge
+  ---
+  duration_ms: 107.91086
+  type: 'test'
+  ...
+# Subtest: explicit virtual Atlas research mode cannot start arbitrary commands or merge code
+ok 12 - explicit virtual Atlas research mode cannot start arbitrary commands or merge code
+  ---
+  duration_ms: 95.860563
+  type: 'test'
+  ...
+# Subtest: academy distinguishes testable coding practice from unavailable iOS and regulated domains
+ok 13 - academy distinguishes testable coding practice from unavailable iOS and regulated domains
+  ---
+  duration_ms: 6.841759
+  type: 'test'
+  ...
+# Subtest: only bounded, fixed tests are executed, with source and test digests
+ok 14 - only bounded, fixed tests are executed, with source and test digests
+  ---
+  duration_ms: 139.575454
+  type: 'test'
+  ...
+# Subtest: repeated autonomous runs rotate to the next subject and do not rewrite source
+ok 15 - repeated autonomous runs rotate to the next subject and do not rewrite source
+  ---
+  duration_ms: 106.325214
+  type: 'test'
+  ...
+# Subtest: zero executed tests, failure and timeout never become acquired skills
+ok 16 - zero executed tests, failure and timeout never become acquired skills
+  ---
+  duration_ms: 99.983535
+  type: 'test'
+  ...
+# Subtest: corrupt evidence, concurrent lock, symlink lessons and dirty checkouts fail closed
+ok 17 - corrupt evidence, concurrent lock, symlink lessons and dirty checkouts fail closed
+  ---
+  duration_ms: 87.674286
+  type: 'test'
+  ...
+# Subtest: academy CLI cannot accept commands, scripts or arbitrary tests
+ok 18 - academy CLI cannot accept commands, scripts or arbitrary tests
+  ---
+  duration_ms: 0.949611
+  type: 'test'
+  ...
+# Subtest: trusted naming describes publisher origin only, never fact truth
+ok 19 - trusted naming describes publisher origin only, never fact truth
+  ---
+  duration_ms: 1.460601
+  type: 'test'
+  ...
+# Subtest: exact source substring and cryptographic document match are mandatory
+ok 20 - exact source substring and cryptographic document match are mandatory
+  ---
+  duration_ms: 4.303405
+  type: 'test'
+  ...
+# Subtest: two different source domains are corroboration, never verified truth
+ok 21 - two different source domains are corroboration, never verified truth
+  ---
+  duration_ms: 1.219132
+  type: 'test'
+  ...
+# Subtest: potential version or negation conflicts get review flags, not silent supersession
+ok 22 - potential version or negation conflicts get review flags, not silent supersession
+  ---
+  duration_ms: 15.667615
+  type: 'test'
+  ...
+# Subtest: active-counterexample search plans are bounded descriptions, not executable requests
+ok 23 - active-counterexample search plans are bounded descriptions, not executable requests
+  ---
+  duration_ms: 0.840128
+  type: 'test'
+  ...
+# Subtest: invalid input and malformed graph fail closed
+ok 24 - invalid input and malformed graph fail closed
+  ---
+  duration_ms: 1.251871
+  type: 'test'
+  ...
+# Subtest: Atlas only stores verified-structure public HTTPS references, no copied documents
+ok 25 - Atlas only stores verified-structure public HTTPS references, no copied documents
+  ---
+  duration_ms: 106.973973
+  type: 'test'
+  ...
+# Subtest: Atlas enforces cooldown, one fixed topic per cycle and no arbitrary remote searches
+ok 26 - Atlas enforces cooldown, one fixed topic per cycle and no arbitrary remote searches
+  ---
+  duration_ms: 96.019684
+  type: 'test'
+  ...
+# Subtest: Atlas rejects malformed sources and never imports private, non-HTTPS or local references
+ok 27 - Atlas rejects malformed sources and never imports private, non-HTTPS or local references
+  ---
+  duration_ms: 92.703129
+  type: 'test'
+  ...
+# Subtest: failed public research is persisted for cooldown, not converted to verified knowledge
+ok 28 - failed public research is persisted for cooldown, not converted to verified knowledge
+  ---
+  duration_ms: 117.820973
+  type: 'test'
+  ...
+# Subtest: tampered index, dirty source, repository-located state and invalid queries fail closed
+ok 29 - tampered index, dirty source, repository-located state and invalid queries fail closed
+  ---
+  duration_ms: 103.540342
+  type: 'test'
+  ...
+# Subtest: platform selection chooses a primary expert plus mandatory judges
+ok 30 - platform selection chooses a primary expert plus mandatory judges
+  ---
+  duration_ms: 1.880144
+  type: 'test'
+  ...
+# Subtest: approved draft never pretends to be compiled, tested or merged
+ok 31 - approved draft never pretends to be compiled, tested or merged
+  ---
+  duration_ms: 2.989233
+  type: 'test'
+  ...
+# Subtest: banking restrictions trigger exactly one review iteration
+ok 32 - banking restrictions trigger exactly one review iteration
+  ---
+  duration_ms: 1.091252
+  type: 'test'
+  ...
+# Subtest: cleartext and forbidden manifests never enter verified build state
+ok 33 - cleartext and forbidden manifests never enter verified build state
+  ---
+  duration_ms: 2.540665
+  type: 'test'
+  ...
+# Subtest: test absence and path traversal fail closed
+ok 34 - test absence and path traversal fail closed
+  ---
+  duration_ms: 1.016501
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2946.799337

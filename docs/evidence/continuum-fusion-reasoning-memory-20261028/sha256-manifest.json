@@ -1,0 +1,58 @@
+{
+  "TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml": {
+    "sha256": "0786faa224aeef112d546d3048d6251ea0367f6322588ca5eee315c78d890831",
+    "bytes": 1400
+  },
+  "TEST-at.heinz.deviceai.cognitive.ChatReasoningRouterTest.xml": {
+    "sha256": "c9e36f2a1595c33bc9813507430666de4875e7aebfcb9f79e10885d21bb4059d",
+    "bytes": 1575
+  },
+  "TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml": {
+    "sha256": "6db7dda265757f1b5a3f765aca334620a9757bf127a621224889b05e734cca4c",
+    "bytes": 1806
+  },
+  "TEST-at.heinz.deviceai.cognitive.LocalGroundedRecallTest.xml": {
+    "sha256": "b93875e486a5d72c49dd257dba557a22ed27df36715a22a636510cffe03c983b",
+    "bytes": 809
+  },
+  "TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml": {
+    "sha256": "81c31e8af454ff10844d0f7efefa2ef281e4758e523992be077551fb5e6dc714",
+    "bytes": 1318
+  },
+  "TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml": {
+    "sha256": "f96d8ab4db28a60e5dacbf31b56f12c8f0f3a9b4effb185d879223350862b514",
+    "bytes": 1778
+  },
+  "TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml": {
+    "sha256": "63895cc639516a4d755af8f48055a1b28bc083ef4c2cfbe0655033d1d6b9a5d8",
+    "bytes": 2639
+  },
+  "commands.txt": {
+    "sha256": "111e7dafb28647a2ea11a9f35dfa7094db14053db2cb867da1751d42ebc67314",
+    "bytes": 1143
+  },
+  "gradle-junit-lint.txt": {
+    "sha256": "c59f95f7d69ea91434c82f2a7dcc6d058e150dd3defe7e29a0095c0779165ab6",
+    "bytes": 4457
+  },
+  "lint-results-debug.txt": {
+    "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334",
+    "bytes": 17
+  },
+  "lint-results-debug.xml": {
+    "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "bytes": 87
+  },
+  "node-contracts.txt": {
+    "sha256": "5206ca1b587791278f87d5624d6bc9a2ea34c5f608540f80f939577604d63047",
+    "bytes": 1628
+  },
+  "summary.json": {
+    "sha256": "fbdeb04cabf07194ed3e8961a6568bae985e4406da06aa27c8194508dc5fcf88",
+    "bytes": 1574
+  },
+  "tested-source-sha256.json": {
+    "sha256": "8b7345f1f1cf8b9d673fe45c879a9203c11c54ea0a5476b704da30a16fac5662",
+    "bytes": 417
+  }
+}

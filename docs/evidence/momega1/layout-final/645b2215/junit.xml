@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentFullLayoutUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T22:18:33" hostname="b354f2cb821b" time="4.987">
+  <properties/>
+  <testcase name="phoneHomeAndChat" classname="at.heinz.deviceai.IndependentFullLayoutUiTest" time="2.14"/>
+  <testcase name="foldLandscapeHomeAndChat" classname="at.heinz.deviceai.IndependentFullLayoutUiTest" time="1.391"/>
+  <testcase name="foldPortraitHomeAndChat" classname="at.heinz.deviceai.IndependentFullLayoutUiTest" time="1.456"/>
+  <system-out><![CDATA[LAYOUT_CAPTURE phone-412x915-home-orb-host 412x915 nativeCanvas window=0
+LAYOUT_CAPTURE phone-412x915-chat-orb-host 412x915 nativeCanvas window=0
+LAYOUT_CAPTURE fold-landscape-840x649-home-orb-host 840x649 nativeCanvas window=0
+LAYOUT_CAPTURE fold-landscape-840x649-chat-orb-host 840x649 nativeCanvas window=0
+LAYOUT_CAPTURE fold-portrait-840x1050-home-orb-host 840x1050 nativeCanvas window=0
+LAYOUT_CAPTURE fold-portrait-840x1050-chat-orb-host 840x1050 nativeCanvas window=0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

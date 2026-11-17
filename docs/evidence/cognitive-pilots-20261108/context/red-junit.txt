@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+....................E
+Time: 0.051
+There was 1 failure:
+1) discoursePrefixesPreserveAnaphoricContext(at.heinz.deviceai.cognitive.ContextDiscoursePrefixTest)
+java.lang.AssertionError: Und kann er die Aufgabe erledigen?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.ContextDiscoursePrefixTest.discoursePrefixesPreserveAnaphoricContext(ContextDiscoursePrefixTest.kt:10)
+
+FAILURES!!!
+Tests run: 20,  Failures: 1
+

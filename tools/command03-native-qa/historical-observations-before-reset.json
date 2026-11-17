@@ -1,0 +1,93 @@
+{
+  "status": "OBSERVED_BEFORE_RESET",
+  "provenance": "Previously observed tool outputs and team conversation, reconstructed after executor reset on 2026-11-15",
+  "original_local_evidence_available": false,
+  "new_execution_or_pass_certification": false,
+  "observations": [
+    {
+      "run": "command03-compile-02",
+      "source_commit": "c66cf77bef76130f17f9964316515ce6d98b2eca",
+      "observed_status": "PASS_LOCAL",
+      "exit_code": 0,
+      "elapsed_seconds": 283.691,
+      "gradle_output": "BUILD SUCCESSFUL in 4m 42s",
+      "source_clean_and_unchanged": true,
+      "sampled_java_peak_rss_kib": 2206148,
+      "lowest_sampled_mem_available_kib": 1829988
+    },
+    {
+      "run": "command03-compile-04",
+      "source_commit": "a0bc97934a4fadda6346a9336e5de4b832b46bdb",
+      "source_tree": "4453097b7f2608dbc718b0a3012c2fb367e3f477",
+      "observed_status": "PASS_LOCAL",
+      "exit_code": 0,
+      "elapsed_seconds": 138.05,
+      "gradle_output": "BUILD SUCCESSFUL in 2m 16s",
+      "source_clean_and_unchanged": true,
+      "kotlin_compiler_errors_observed": 0,
+      "sampled_java_peak_rss_kib": 1290320,
+      "lowest_sampled_mem_available_kib": 1569632
+    },
+    {
+      "run": "command03-unit-01",
+      "source_commit": "a0bc97934a4fadda6346a9336e5de4b832b46bdb",
+      "observed_status": "FAILED_BEFORE_TEST_EXECUTION",
+      "exit_code": 1,
+      "elapsed_seconds": 17.526,
+      "executed_tests": 0,
+      "cause": "Raw --tests arguments rejected by the existing QA task-name allowlist",
+      "followup": "Changed only local runner selection to existing Test.filter API; project gate unchanged"
+    },
+    {
+      "run": "command03-unit-02",
+      "source_commit": "a0bc97934a4fadda6346a9336e5de4b832b46bdb",
+      "observed_status": "FAILED_BEFORE_TEST_EXECUTION",
+      "exit_code": 1,
+      "elapsed_seconds": 79.868,
+      "executed_tests": 0,
+      "kotlin_compiler_errors_observed": 0,
+      "daemon_disappeared": true,
+      "cause": "Unknown; limited memory was plausible but no cgroup OOM proof was available",
+      "followup": "Authorized focused compilation of unchanged selected test files and existing helpers"
+    },
+    {
+      "run": "command03-unit-03",
+      "source_commit": "a0bc97934a4fadda6346a9336e5de4b832b46bdb",
+      "observed_status": "FAILED_TEST_COMPILATION",
+      "exit_code": 1,
+      "elapsed_seconds": 50.662,
+      "executed_tests": 0,
+      "physical_test_sources": 13,
+      "daemon_disappeared": false,
+      "cause": "Existing JarvisPresentationRecordingPainter helper was missing from focused selection",
+      "followup": "Added that unchanged original helper to the physical source list; no assertion mutation",
+      "sampled_java_peak_rss_kib": 857128,
+      "lowest_sampled_mem_available_kib": 2233004
+    },
+    {
+      "run": "command03-unit-04",
+      "source_commit": "a0bc97934a4fadda6346a9336e5de4b832b46bdb",
+      "observed_status": "FAILED_BEFORE_TEST_PROCESS_EXECUTION",
+      "exit_code": 1,
+      "elapsed_seconds": 56.152,
+      "source_clean_and_unchanged": true,
+      "physical_test_sources": 14,
+      "kotlin_compiler_errors_observed": 0,
+      "daemon_disappeared": false,
+      "fresh_junit_files": 0,
+      "executed_tests": 0,
+      "failure": "Could not open cache directory workerMain; cannot create the Gradle 8.11.1 workerMain directory in the former cache path",
+      "secondary_failure": "BuildFinish service could not create the .kotlin/errors log in the former checkout",
+      "cause": "Undetermined; the executor disconnected before filesystem diagnosis and the environment was reset",
+      "sampled_java_peak_rss_kib": 918360,
+      "lowest_sampled_mem_available_kib": 2289160
+    }
+  ],
+  "not_executed_before_reset_on_a0bc": [
+    "Focused JVM test assertions",
+    "UI test execution",
+    "Phone/Fold/Computer capture generation",
+    "Code60 APK build",
+    "Owner signing or APK installation"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "at": 1793741438.693536,
+  "source": "1595389274acb840c4ab544fa699c9eb2a04bd53",
+  "artifacts": {
+    "MODEL": {
+      "path": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "bytes": 1117320768,
+      "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046"
+    },
+    "RUNTIME": {
+      "path": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+      "bytes": 12476968,
+      "sha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a"
+    }
+  }
+}

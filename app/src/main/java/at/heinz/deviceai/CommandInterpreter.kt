@@ -41,7 +41,8 @@ class CommandInterpreter(private val context: Context) {
                     CommandStep(
                         label = "Shell-Befehl ausführen",
                         shellCommand = command,
-                        risk = Risk.CONFIRM
+                        // Unregistered shell is treated as destructive, same as ToolRegistry.risk("shell").
+                        risk = ToolRegistry.risk("shell")
                     )
                 )
             )
@@ -148,7 +149,8 @@ class CommandInterpreter(private val context: Context) {
             steps += CommandStep(
                 "Screenshot speichern",
                 "out=/sdcard/Download/device-ai-$(date +%Y%m%d-%H%M%S).png; " +
-                    "screencap -p \"\$out\" && echo \"Gespeichert: \$out\""
+                    "screencap -p \"\$out\" && echo \"Gespeichert: \$out\"",
+                ToolRegistry.risk("take_screenshot")
             )
         }
 
@@ -157,7 +159,7 @@ class CommandInterpreter(private val context: Context) {
                 "15-Sekunden-Bildschirmaufnahme",
                 "out=/sdcard/Download/device-ai-recording-$(date +%Y%m%d-%H%M%S).mp4; " +
                     "screenrecord --time-limit 15 \"\$out\"; echo \"Gespeichert: \$out\"",
-                Risk.CONFIRM
+                ToolRegistry.risk("record_screen")
             )
         }
 
@@ -170,7 +172,7 @@ class CommandInterpreter(private val context: Context) {
                     "if [ -n \"\$apk\" ]; then " +
                     "echo \"APK: \$apk\"; pm install -r \"\$apk\"; " +
                     "else echo 'Keine passende APK direkt in Downloads gefunden.'; exit 2; fi",
-                Risk.CONFIRM
+                ToolRegistry.risk("install_apk")
             )
         }
 
@@ -205,7 +207,7 @@ class CommandInterpreter(private val context: Context) {
                     "am force-stop $safePkg; sleep 1; " +
                         "monkey -p $safePkg -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; " +
                         "echo 'Neu gestartet: $safePkg'",
-                    Risk.CONFIRM
+                    ToolRegistry.risk("restart_app")
                 )
             } else {
                 steps += notFoundStep(restartName)
@@ -219,7 +221,7 @@ class CommandInterpreter(private val context: Context) {
                     steps += CommandStep(
                         "App beenden: $stopName",
                         "am force-stop ${safePackage(pkg)} && echo 'Beendet: ${safePackage(pkg)}'",
-                        Risk.CONFIRM
+                        ToolRegistry.risk("stop_app")
                     )
                 } else {
                     steps += notFoundStep(stopName)
@@ -237,7 +239,8 @@ class CommandInterpreter(private val context: Context) {
                     steps += CommandStep(
                         "App starten: $actualStartName",
                         "monkey -p $safePkg -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1 && " +
-                            "echo 'Gestartet: $safePkg'"
+                            "echo 'Gestartet: $safePkg'",
+                        ToolRegistry.risk("launch_app")
                     )
                 } else {
                     steps += notFoundStep(actualStartName)
@@ -254,7 +257,7 @@ class CommandInterpreter(private val context: Context) {
                     steps += CommandStep(
                         "App deinstallieren: $name",
                         "pm uninstall ${safePackage(pkg)}",
-                        Risk.DESTRUCTIVE
+                        ToolRegistry.risk("uninstall_app")
                     )
                 } else {
                     steps += notFoundStep(name)
@@ -295,14 +298,10 @@ class CommandInterpreter(private val context: Context) {
                 "Beispiele anzeigen",
                 "printf '%s\\n' " +
                     "'Öffne WhatsApp' " +
-                    "'Starte Lumo neu' " +
                     "'Zeig meine Downloads' " +
-                    "'Finde Lumo' " +
                     "'Zeig große Dateien' " +
                     "'Geräteinfo und Akku' " +
                     "'Screenshot' " +
-                    "'Zeig Fehler von Lumo' " +
-                    "'Installiere neueste Lumo APK und starte Lumo' " +
                     "'! pm list packages -3'"
             )
         }
@@ -310,7 +309,7 @@ class CommandInterpreter(private val context: Context) {
         if (steps.isEmpty()) {
             steps += CommandStep(
                 "Befehl nicht erkannt",
-                "echo 'Das habe ich noch nicht sicher verstanden. Beispiele: Hilfe, Öffne WhatsApp, Geräteinfo, Downloads, Screenshot, Zeig Fehler von Lumo.'"
+                "echo 'Das habe ich noch nicht sicher verstanden. Beispiele: Hilfe, Öffne WhatsApp, Geräteinfo, Downloads, Screenshot.'"
             )
         }
 
@@ -323,7 +322,7 @@ class CommandInterpreter(private val context: Context) {
     }
 
     private fun apkFilter(lower: String): String? {
-        val known = listOf("lumo", "device-ai", "device ai")
+        val known = listOf("device-ai", "device ai")
         return known.firstOrNull { lower.contains(it) }
             ?.replace(" ", "-")
             ?.replace(Regex("[^a-z0-9._-]"), "")

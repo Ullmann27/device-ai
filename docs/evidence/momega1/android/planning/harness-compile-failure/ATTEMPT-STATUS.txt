@@ -1,0 +1,1 @@
+HARNESS_COMPILE_FAILURE. No tests executed. Two independent RuntimeFixture classes lacked abstract unload implementation. Copied XML belongs to previous RED run and is STALE_NOT_RESULT. Exact production source unchanged.

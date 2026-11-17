@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest" tests="2" skipped="0" failures="2" errors="0" timestamp="2026-11-05T17:10:11" hostname="6e2f8005d77e" time="5.53">
+  <properties/>
+  <testcase name="largeTextPhoneOpensInsideSafePixelsAtHdpi" classname="at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest" time="5.421">
+    <failure message="java.lang.AssertionError" type="java.lang.AssertionError">java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest.assertRealDensityWindow(JarvisPhoneWorkWindowDensityUiTest.kt:122)
+	at at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest.largeTextPhoneOpensInsideSafePixelsAtHdpi(JarvisPhoneWorkWindowDensityUiTest.kt:41)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="largeTextPhoneOpensInsideSafePixelsAt420Dpi" classname="at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest" time="0.109">
+    <failure message="java.lang.AssertionError: Native work area must open: density=2.625, viewport=RectF(0.0, 0.0, 1081.0, 2206.75), target=RectF(21.0, 1765.75, 1060.0, 2185.75)" type="java.lang.AssertionError">java.lang.AssertionError: Native work area must open: density=2.625, viewport=RectF(0.0, 0.0, 1081.0, 2206.75), target=RectF(21.0, 1765.75, 1060.0, 2185.75)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest.assertRealDensityWindow(JarvisPhoneWorkWindowDensityUiTest.kt:99)
+	at at.heinz.deviceai.JarvisPhoneWorkWindowDensityUiTest.largeTextPhoneOpensInsideSafePixelsAt420Dpi(JarvisPhoneWorkWindowDensityUiTest.kt:44)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <system-out><![CDATA[DENSITY_WINDOW native=618x1372px density=1.5 font=2.0 viewport=RectF(0.0, 0.0, 618.0, 1261.0) target=RectF(12.0, 1009.0, 606.0, 1249.0) protected=[RectF(18.0, 207.0, 330.6, 598.0), RectF(345.6, 429.0, 600.0, 598.0), RectF(18.0, 613.0, 600.0, 997.0)]
+DENSITY_WINDOW native=1081x2401px density=2.625 font=2.0 viewport=RectF(0.0, 0.0, 1081.0, 2206.75) target=RectF(21.0, 1765.75, 1060.0, 2185.75) protected=[RectF(31.5, 362.25, 578.275, 1046.5), RectF(604.525, 750.75, 1049.5, 1046.5), RectF(31.5, 1072.75, 1049.5, 1744.75)]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

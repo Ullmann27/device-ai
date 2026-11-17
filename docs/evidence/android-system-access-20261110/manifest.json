@@ -1,0 +1,35 @@
+{
+  "compile_exit": 0,
+  "junit_exit": 0,
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/ShizukuCapabilities.kt": "9fe9121bf0440201bfb8ae3829d794dcd2113a338341a20bba14f0ece6fff302",
+    "app/src/main/java/at/heinz/deviceai/ShizukuBridge.kt": "b976c5ef9c3cb8975775181e38907c4749c8d055909c8eb464518730c705809a",
+    "app/src/main/java/at/heinz/deviceai/CheckedShellCallDispatcher.kt": "e76086a66d325f33a95ac9442b22fd5aaaa2ad078c3a63c627b1d20d7ee05e92",
+    "app/src/main/java/at/heinz/deviceai/ShellExecution.kt": "b5e24ff46e8a4395824c27d4ab04506f4eeef544c43898c5264e7dbdc1f24a04",
+    "app/src/uiTest/java/at/heinz/deviceai/ShizukuBridgeLifecycleTest.kt": "1466e2677483e350249ac08e2ef1abbff6bec08f456e2d6c236fcef65894f4d8"
+  },
+  "dependency_appjar_sha256": "d599ae7805a71f56a17ac8be53ea57de57927105c411f99aad662fd992bdd5e2",
+  "dependencies": {
+    "android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a",
+    "kotlin-stdlib.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+  },
+  "runtime": "Direct Kotlin compilation of actual bridge; Robolectric Android API28; cached app classes supply unchanged unrelated types; Shizuku server shadowed. No Gradle or device.",
+  "tests": 21,
+  "failures": 0,
+  "baseline_tests": 5,
+  "baseline_failures": 5,
+  "corrected_subset_tests": 5,
+  "corrected_subset_failures": 0,
+  "parser_tests": 8,
+  "parser_failures": 0,
+  "parser_source_sha256": "d803a06eeab53cec14e7a483e734b86679fba0b91cb4cdbfe0d3516188f592ff",
+  "baseline_commit": "c1fdbaeab95d8f808715c180fbc77762e459a59c",
+  "baseline_bridge_sha256": "95157004bdaa54e9db3ef65adf3bf33d56a6e62c5a50bf3d7352f8e16f8746d0",
+  "Fold7": "NOT_RUN",
+  "full_Android_Gradle": "NOT_RUN",
+  "root_device": "NOT_RUN",
+  "setup_corrections": [
+    "Initial test fixture uid getter collided with getUid; renamed field before the passing run.",
+    "Baseline harness javac was absent from PATH; used the already installed JDK javac."
+  ]
+}

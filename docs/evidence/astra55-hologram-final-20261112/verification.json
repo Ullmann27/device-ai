@@ -1,0 +1,82 @@
+{
+  "type": "COMBINED_COCKPIT_HOST_VERIFICATION",
+  "date": "2026-11-12",
+  "public_visual_freeze": "097aace1db04d51c13c13be7a88985d9f34fcfcc",
+  "local_visual_freeze": "df43ec3580b7939462619505a1e196cf0373879e",
+  "visual_freeze_tree": "22c08f103e7a40a9d05cde4c285f4d4e14b35f20",
+  "validation_base": "a99eba365d",
+  "validation_head": "e9523efd0bc36bacecf845e195f2f655bfa603ef",
+  "production_jar_sha256": "e6f5fda932025fd26405b4a2a7871f865f886cb0f686365b9ab01461aaff2d29",
+  "production_and_host_source_equalities": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/CockpitStageFrame.kt": {
+      "sha256": "5af385e2bb7b65306547797ba1a54c87b42b3600d2b6296122264a9bf25fed30",
+      "equal_to_validation": true
+    },
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentCockpitStage.kt": {
+      "sha256": "c60bd35244b2bcb0d05255cdcd22ab3fb112e3311085c52e8f9310e96ef23ed2",
+      "equal_to_validation": true
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorMotion.kt": {
+      "sha256": "547cc50c8ca02cac4f7d80563b8ca50dfd1d692aa000bb4871bfc684a0ffadd0",
+      "equal_to_validation": true
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/CinematicWorkstationLayout.kt": {
+      "sha256": "7d121ccd1c87c9b59759a8947682eba79505106966e4b5ec889a2c8129fb60e0",
+      "equal_to_validation": true
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt": {
+      "sha256": "e0b6ab9dfe5212287eff18f466840f19c5b94f29654942114c5e9d8d1d908409",
+      "equal_to_validation": true
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/CockpitMonitorPainter.kt": {
+      "sha256": "fbdddaf2ee32ca3f3c016f4290cb29b0f11db6c2b892cfa92d44a6dac05074ca",
+      "equal_to_validation": true
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt": {
+      "sha256": "6881c3c19016a578b6a76fa3f74810f42438bb0f7ef77da016b7d6642132c613",
+      "equal_to_validation": true
+    },
+    "app/src/main/assets/cinema3d/cockpit-workstation.glb": {
+      "sha256": "3223168a58e5fa51c48bb56ba36aabbf0cdb936025a01d96d4b14e5e0fa023aa",
+      "equal_to_validation": true
+    },
+    "app/src/test/java/at/heinz/deviceai/avatar3d/CockpitStageFrameTest.kt": {
+      "sha256": "152f302f3e0244d43672135851e3444cb346bee5aebb31b38ecc15fac2bb9340",
+      "equal_to_validation": true
+    },
+    "app/src/test/java/at/heinz/deviceai/ui/CockpitMonitorMotionTest.kt": {
+      "sha256": "c480719c4b0f567911c2cdcdef6d7e2bd1d6644ee033b63a73f5224f39edbe4f",
+      "equal_to_validation": true
+    },
+    "app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationLayoutTest.kt": {
+      "sha256": "3d150dfe73f287b22cec0a117be636cd08f055b919741ef554411b06674c0f62",
+      "equal_to_validation": true
+    },
+    "app/src/test/java/at/heinz/deviceai/ui/CinematicWorkstationVisibilityTest.kt": {
+      "sha256": "6f3d9f5d9991391f30805b5346462f34b69b68ac7c8c733c3f841204759b5120",
+      "equal_to_validation": true
+    }
+  },
+  "ordinary_junit": {
+    "tests": 24,
+    "exit_code": 0,
+    "elapsed_seconds": 1.2569079669992789,
+    "classes": [
+      "CockpitStageFrameTest",
+      "CockpitMonitorMotionTest",
+      "CinematicWorkstationLayoutTest",
+      "CinematicWorkstationVisibilityTest"
+    ]
+  },
+  "robolectric": {
+    "tests": 8,
+    "exit_code": 0,
+    "evidence": "../astra55-hologram-motion-20261112/android-ui-proof.json"
+  },
+  "total_targeted_tests": 32,
+  "android_compilation": "PASS",
+  "gradle_test_task": "INTERRUPTED_AFTER_WORKER_STALL_NOT_PASS",
+  "android_filament_device": "NOT_RUN",
+  "fold7_gpu_thermal": "NOT_RUN",
+  "signed_apk": "NOT_BUILT"
+}

@@ -1,0 +1,34 @@
+✔ optional research verification leaves the default path unchanged (1.326962ms)
+✔ research verification requires exact source, suite and complete positive checks (5.682711ms)
+✔ exceptions, promises and elapsed deadlines never turn into verification (1.704929ms)
+✔ a numeric counterexample is bounded data and cannot carry arbitrary diagnostics (0.938799ms)
+✔ opt-in verifier rejects a test-passing constant and feeds the counterexample into the same repair loop (1059.035891ms)
+✔ independent research veto blocks completion even after primary tests passed (743.517421ms)
+✔ a throwing optional verifier exhausts the fixed proposal budget without publishing a patch (661.289766ms)
+✔ owner worker refuses a supplied untrusted executor before claim or checks (37.463839ms)
+✔ scoped task identity and commit are checked before claiming the owner task (92.656692ms)
+✔ scoped revision receives actual failed diagnostics and bounded history then verifies independently (999.630545ms)
+✔ repeated scoped patch is rejected without a second candidate check (356.066208ms)
+✔ scoped proposals cannot edit outside task grants or change context commit (338.040906ms)
+✔ scoped pure numeric changes can cover two files on the host (352.684271ms)
+✔ general scoped source is blocked before executing candidate code without isolation (146.239282ms)
+✔ new coding and isolation control files stay protected by the critic (0.421773ms)
+✔ general scoped proposals cannot mutate test APIs or write their own reports (0.334512ms)
+✔ scoped successes remain owner-review evidence without automatic learning (2.614624ms)
+✔ scoped provider failures count against the fixed model-call budget (192.294182ms)
+✔ total scoped candidate limit bounds revisions even when model budget remains (276.528882ms)
+✔ local teamleader forwards the scoped provider through the canonical owner worker (547.382083ms)
+✔ independent examples and metamorphic relations reject constant pseudo-repairs (65.756921ms)
+✔ a bounded exact distance passes all four frozen checks reproducibly (99.780215ms)
+✔ metamorphic failure supplies the distinguishing pair (52.731963ms)
+✔ non-finite values, foreign exports and capability-bearing code never pass (193.94805ms)
+✔ suite mutation, malformed cases, unbounded inputs and empty verification are rejected (53.884098ms)
+✔ model patches cannot rewrite OMEGA evaluators or benchmark definitions (0.27973ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3522.148978

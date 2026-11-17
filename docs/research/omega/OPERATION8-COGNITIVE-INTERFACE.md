@@ -1,0 +1,15 @@
+# Operation 8 — event-bound first stage
+
+Extends PR349; no new app, renderer, agent or permissions. Existing ContinuumHologramView already maps microphone, TTS, research, learning and busy state and owns reduced-motion, foreground, thermal and battery limits. This patch adds CognitiveWorkPresentation plus a native accessible monospace status band under the existing core in AgentActivity.buildConversationPane.
+
+The status is projected from actual voice/research/learning/busy flags, authorized ToolRunner entry/finally and existing CognitiveTurnTrace outcomes. Model interpretation stays UNCONFIRMED; dispatch alone is not success. Module labels are an allowlist, never raw prompts, screen text or tool arguments. Session hash rejects completed traces from a different chat. Tool callbacks check session/start and call identity before clearing presentation. Existing tool/generation safety remains authoritative.
+
+Elapsed uses monotonic elapsedRealtime, updates on real state events, freezes at busy completion. No timer/polling, GPU dependency, cloud, files/audio capture or new continuous animation. No known total work denominator exists, so percentage is explicitly unavailable; do not synthesize 0–100 progress from time. Performance estimate: small constant-size text projection per existing event and one TextView; device frame time/energy NOT_MEASURED. Existing hologram animation guards remain unchanged.
+
+Four JVM policy tests PASS: unverified model completion, launch attempt vs success, block/abort, hostile/private tool labels, unknown percentage and elapsed bounds. Activity incremental compile recorded separately. This is source/host verification, UI screenshot/real Fold7/render behavior NOT_RUN.
+
+Stage1 PARTIAL: actual status band and core-state synchronization implemented. No new avatar geometry, module grid, interactive object cards or percentage for unknown tasks. Planning/verifying/specialists need real live typed event hooks before activation. Stage2 spoken work comments deliberately not connected yet (must be opt-in, deduplicated, interruptible, never overlap answer TTS). Stages3–5 app/document flows, terminal, effects and measured performance remain OPEN. No model chain-of-thought or pretend agents displayed. Read-only metadata terminal can build on existing CognitiveTurnTrace; do not parse arbitrary activity log text into authority or success.
+
+Next: verify current exact-source Android build and visual layout on folded/unfolded device; add live trace observer with turn identity before further phases; add opt-in work-comment channel to existing TTS arbitration; only then animate bounded real objects. Preserve owner data/model weights/signing and release gates.
+
+Activity incremental compile PASS with existing Android nullability warning policy (first attempt omitted that flag and failed on existing JobScheduler nullability). Final subsequent chat-reset statements clear presentation state; latest complete Android QA remains required. Host receipts in docs/evidence/grand-challenge-20261102/operation8.

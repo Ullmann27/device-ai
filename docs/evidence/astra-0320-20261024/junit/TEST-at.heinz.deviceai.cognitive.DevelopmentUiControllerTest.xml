@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:05" hostname="5c9e18abbd30" time="0.011">
+  <properties/>
+  <testcase name="failedOrCancelledSourcePickerLeavesExistingSelectionUsable" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.0"/>
+  <testcase name="pendingSourceReadBlocksStartAndImmediatelyRevokesStaleProposal" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.006"/>
+  <testcase name="failureAndTimeoutAreSurfacedAndInputIsLockedWhileRunning" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.0"/>
+  <testcase name="runningJobTransitionsToDoneAndAllowsExportOnlyThen" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.001"/>
+  <testcase name="sourceSelectionRejectsForbiddenDuplicateAndExcessFiles" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.001"/>
+  <testcase name="noModelFailsVisiblyWithoutCloudFallback" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.0"/>
+  <testcase name="startWithoutSourcesOrGoalFailsVisibly" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.001"/>
+  <testcase name="stopLeadsToCancelledWithoutPreview" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.0"/>
+  <testcase name="runningJobCannotBeginAnotherSourceImport" classname="at.heinz.deviceai.cognitive.DevelopmentUiControllerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

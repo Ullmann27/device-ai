@@ -1,0 +1,353 @@
+{
+  "source_commit": "bb4da2a128b2220d095625d49673032df1e1f6c1",
+  "application_main_tree": "46e8fbd3cf913f11c2d150830e89502f41bc5528",
+  "phase": "capture",
+  "result_scope": "HOST_NATIVE_TEST_CAPTURE",
+  "tests_selected": [
+    "at.heinz.deviceai.CinemaNativeSequenceUiTest",
+    "at.heinz.deviceai.CinemaButtonMaterialUiTest",
+    "at.heinz.deviceai.CinemaStopReturnUiTest",
+    "at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest",
+    "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+    "at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest",
+    "at.heinz.deviceai.ui.JarvisResultVisibilityTest",
+    "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+    "at.heinz.deviceai.ui.JarvisCompactModuleGeometryTest",
+    "at.heinz.deviceai.ui.JarvisLivePanelsRegressionTest",
+    "at.heinz.deviceai.ui.JarvisThermalVisualContractTest",
+    "at.heinz.deviceai.avatar3d.AvatarOcularTransitionTest",
+    "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest"
+  ],
+  "exit_code": 1,
+  "gradle_exit_code": 1,
+  "elapsed_seconds": 236.14799254600075,
+  "frames": [
+    {
+      "file": "button-cover-cancelled.png",
+      "sha256": "43c85ef4ee9a44956756d78199cc3938c615056e9e62a7d228f7e32bc5efa1bd",
+      "metadata": "button-cover-cancelled.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-cover-held-160ms.png",
+      "sha256": "64a627bfbf425cabdb1364bb44accacf7884d6a91e0b2265e68535e064ec9392",
+      "metadata": "button-cover-held-160ms.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-cover-idle.png",
+      "sha256": "2495907e02008cffc3d2152a9dca410d2cce4c4a3a8232fc6a213af06eb913cf",
+      "metadata": "button-cover-idle.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-cover-opened.png",
+      "sha256": "34b31527007a142b239cab02bba296c2689a6f223b6532e54f211a28710175ed",
+      "metadata": "button-cover-opened.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-cover-opening-672ms.png",
+      "sha256": "e8ef4101f35cf0668842b8931ff6c3033814a7f3de60654dcff29e206372defc",
+      "metadata": "button-cover-opening-672ms.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-inner-cancelled.png",
+      "sha256": "9be324e4065ab872d0de1e8c3501b3aafd50ca715f0e261ce3145e2b520b5dd1",
+      "metadata": "button-inner-cancelled.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-inner-held-160ms.png",
+      "sha256": "84ef87bd2f0077e7d5e1a3a01ec3e5ddb9f07d9eb28e302efc2dccc691e2fcfb",
+      "metadata": "button-inner-held-160ms.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-inner-idle.png",
+      "sha256": "3867e7ac5ec810b27ed58e968b83dfa498a0b42fc3b2d6911f6f69f7c8ba4fd4",
+      "metadata": "button-inner-idle.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-inner-opened.png",
+      "sha256": "ad9e92d63e89831b4ae9029403823a73fdd7a8c7556c21b60702aa99f6a88098",
+      "metadata": "button-inner-opened.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "button-inner-opening-672ms.png",
+      "sha256": "e87cd7d2f011b18bfbb4e55ced3d3c4b9076835d26f97d9989f7ff317fe06b2b",
+      "metadata": "button-inner-opening-672ms.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "crystal-after.png",
+      "sha256": "68c57cf2dafb8907b05c37952f226657fcf42259556e0dab850e5225b99188e8",
+      "metadata": null,
+      "declared_hash_matches": null
+    },
+    {
+      "file": "crystal-before-disc.png",
+      "sha256": "23499c720383aeaa0351b7cb98be35ab2b44109ed3cefc0fc97a0c88fd1680d2",
+      "metadata": null,
+      "declared_hash_matches": null
+    },
+    {
+      "file": "native-cover-aborted-return.png",
+      "sha256": "97c744647615b63249310cc8bab08b9d28a8a119aa1f703d3af789af4d48585b",
+      "metadata": "native-cover-aborted-return.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-idle.png",
+      "sha256": "53996f5c9784e0f06183b6665a4f8a646df806e259ee326cd16516c5374210f8",
+      "metadata": "native-cover-idle.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-result-140ms.png",
+      "sha256": "ac08043c96030ce68f60f19db5e969ec05f7282cdbcd2f16f7a5f4962bf8c12c",
+      "metadata": "native-cover-result-140ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-result-900ms.png",
+      "sha256": "9187ec0aa35341e1b53e6a3bb1d20710c6b870b26c64ba4c38b3f0fc6caecece",
+      "metadata": "native-cover-result-900ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-return-650ms.png",
+      "sha256": "78e3c30d7a101fa06e46a572e54c1ba6a3c78b4e3f13a4c8536b899216bb1687",
+      "metadata": "native-cover-return-650ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-returned.png",
+      "sha256": "bbc52755e680a4da0bfbdf2fbf808c018deeabaf0bcde816f040617fd0ecd0d9",
+      "metadata": "native-cover-returned.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-work-1180ms.png",
+      "sha256": "18b9e147a72ca3b09da066d03a68435cafcae0f1b6a0a1ec39c6ab2e7106c120",
+      "metadata": "native-cover-work-1180ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-work-140ms.png",
+      "sha256": "09113accad3150a182c939f6c6bd2ddb9e04cdc083138274ca64bb562fbc31d0",
+      "metadata": "native-cover-work-140ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-work-2100ms.png",
+      "sha256": "960fe265a40d37109d355fff703ca391055b97a4e7939af66bf662672ec5b8d3",
+      "metadata": "native-cover-work-2100ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-work-280ms.png",
+      "sha256": "e712f5d9d6478aaf7421fd03be3d6207d3d29f50abfe108cbeaa772a7772aaef",
+      "metadata": "native-cover-work-280ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-cover-work-650ms.png",
+      "sha256": "3879bd04dda499984066ed945950af2821ee3d154d778036a258988a500de41e",
+      "metadata": "native-cover-work-650ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-aborted-return.png",
+      "sha256": "77e62a5b4551567ea113722d5f88d8c17385a0b3d309447ba318f7bb17a9fe34",
+      "metadata": "native-inner-aborted-return.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-idle.png",
+      "sha256": "9e099c8a81eb76e5d567b5bfca58595b5b0f6d58005d91555517cea1619ce6aa",
+      "metadata": "native-inner-idle.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-result-140ms.png",
+      "sha256": "9afa7e32aa5fa1e1ac2bddd7956d56da33bb0b7336f3dac84dd7fe9df97c5f0f",
+      "metadata": "native-inner-result-140ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-result-900ms.png",
+      "sha256": "ce99847271c39e28ec721553ef629498a110b4fedc328db729295c3b7eb5978c",
+      "metadata": "native-inner-result-900ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-return-650ms.png",
+      "sha256": "a08a4899e05591a8693685939df2013ed6891fc5ab1ade29558edc0b74e9475d",
+      "metadata": "native-inner-return-650ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-returned.png",
+      "sha256": "cb648a10d21f2ac2bc17d79df584e0f8db239a33f6fbb24d82cb3ba7d2336878",
+      "metadata": "native-inner-returned.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-work-1180ms.png",
+      "sha256": "f1e17bac300396a4e401f8d4017069b68de90d5c140d22b95d62472dd04449b2",
+      "metadata": "native-inner-work-1180ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-work-140ms.png",
+      "sha256": "6e494a1f11e2e4ffd632232e355f2e85b5c7ada7122ac3e47e99cb2daf235197",
+      "metadata": "native-inner-work-140ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-work-2100ms.png",
+      "sha256": "3af96d91e068b408bffa50607226809c826d40f5ce09fb24ef5127dc14c3abe0",
+      "metadata": "native-inner-work-2100ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-work-280ms.png",
+      "sha256": "6027e81a398350a9cd3474274254e6e6df376c2d35cdbcbf3724b994447c90a3",
+      "metadata": "native-inner-work-280ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "native-inner-work-650ms.png",
+      "sha256": "dc1d076093504f37ee181d133294fdde338ca7a7ed1c73f2affc82825a6efe47",
+      "metadata": "native-inner-work-650ms.json",
+      "declared_hash_matches": true
+    },
+    {
+      "file": "stop-32ms.png",
+      "sha256": "8885bf8927e0620669c6be8f7ee0ac11e0c43ae96e65318b14e6f9277cdccaa7",
+      "metadata": "stop-32ms.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "stop-352ms.png",
+      "sha256": "441c38a2b8e9ed9021aee474c02f98b0c7948a285a859fb88c0d217bf54bd670",
+      "metadata": "stop-352ms.json",
+      "declared_hash_matches": null
+    },
+    {
+      "file": "stop-returned.png",
+      "sha256": "570046b69aa3fb4f0af266a7854dc01974933b276a076e78d9570fa972833c8c",
+      "metadata": "stop-returned.json",
+      "declared_hash_matches": null
+    }
+  ],
+  "junit": [
+    {
+      "name": "at.heinz.deviceai.CinemaButtonMaterialUiTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.CinemaNativeSequenceUiTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarOcularTransitionTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.CockpitAnimationPresenterTurnUiTest",
+      "tests": "11",
+      "failures": "11",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisCinemaEntranceTest",
+      "tests": "29",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisCompactModuleGeometryTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisLivePanelsRegressionTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisResultVisibilityTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisSequenceTurnLifecycleUiTest",
+      "tests": "27",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.JarvisThermalVisualContractTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.WindowProjectedMotionSamplerTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "validation_errors": [
+    "Frame provenance mismatch: crystal-after.png",
+    "Frame provenance mismatch: crystal-before-disc.png",
+    "Fresh JUnit failures/errors/skips retained"
+  ],
+  "post_run_source_commit": "bb4da2a128b2220d095625d49673032df1e1f6c1",
+  "tracked_changes_after_run": "",
+  "renderer": "Fixture-specific; defaults use Robolectric API28 native Canvas / 2D fallback",
+  "Fold7": "NOT_RUN",
+  "Filament": "NOT_RUN",
+  "GPU": "NOT_RUN",
+  "inference": "NOT_RUN"
+}

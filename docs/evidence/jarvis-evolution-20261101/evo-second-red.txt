@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+..E...
+Time: 0.112
+There was 1 failure:
+1) interrogativesCoordinationAndResidenceDoNotProveCurrentPresence(at.heinz.deviceai.learning.span.NaturalLocationVerificationTest)
+java.lang.AssertionError: Mama ist in Graz?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.learning.span.NaturalLocationVerificationTest.interrogativesCoordinationAndResidenceDoNotProveCurrentPresence(NaturalLocationVerificationTest.kt:52)
+
+FAILURES!!!
+Tests run: 5,  Failures: 1
+

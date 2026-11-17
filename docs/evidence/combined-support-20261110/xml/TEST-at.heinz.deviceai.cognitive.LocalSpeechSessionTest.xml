@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:07" hostname="1a6f5c6cf9c0" time="0.009">
+  <properties/>
+  <testcase name="unavailableServiceNeverCreatesRecognizerOrTimer" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.002"/>
+  <testcase name="cancellationInsideTerminalStateCallbackPreventsPendingTextDelivery" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.002"/>
+  <testcase name="replacementDuringOldCancellationWinsOverOuterStart" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.001"/>
+  <testcase name="lifecycleReleaseCancelsEveryTurnAndRemovesTimer" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="recognizedTextDeliveredExactlyOnceAndResourcesReleased" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="creationFailureNeverRetriesAutomatically" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="cancellationDoesNotReportFailureOrRestartAfterLateCallbacksAndTimeout" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="replacementInsideTerminalStateCallbackPreventsOldResultDelivery" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.001"/>
+  <testcase name="unavailableServiceDoesNotRequestPermissionForAbsentRecognizer" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="emptyResultIsActionableNoMatch" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="deadlineReleasesAndReportsOnceEvenWhenTimerRacesWithResult" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.001"/>
+  <testcase name="replacementInsidePreflightStateCallbackSuppressesOldError" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="timeoutActivelyCancelsAndLateResultsCannotReviveTurn" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="fullShutdownCancelsActiveTurnAndEndsPlatformLifetime" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.001"/>
+  <testcase name="replacedTurnIgnoresOldErrorsResultsAndTimerWithoutDestroyingNewRecognizer" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="missingPermissionNeverCreatesRecognizerOrTimer" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="revokedMicrophoneNeverDeliversTranscript" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="creationSecurityFailureIsPermissionFailure" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.0"/>
+  <testcase name="noInputAndPermissionLanguageAndServiceFailuresRemainDistinct" classname="at.heinz.deviceai.cognitive.LocalSpeechSessionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

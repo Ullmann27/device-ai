@@ -1,0 +1,17 @@
+{
+  "source_sha": "c8c0615bc9f5398ad2e47b94669e3117ecf9f32d",
+  "suite_count": 387,
+  "total": {
+    "tests": 2142,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 12
+  },
+  "failures": [
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest",
+      "name": "specialistLatencyBudgetOnTenYearHistory",
+      "message": "java.lang.AssertionError: p95 21.446 ms must be < 5 ms"
+    }
+  ]
+}

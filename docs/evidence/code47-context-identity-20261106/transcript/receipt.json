@@ -1,0 +1,20 @@
+{
+  "base": "5572edfbb02570ae479a8f0f72179f5ca33027c5",
+  "baseline_store_git_blob": "4000e0db603b1cf30ba7e0e8ad7d55a68dae1e88",
+  "new_tests_red": {
+    "run": 2,
+    "failed": 2
+  },
+  "green": {
+    "run": 7,
+    "failed": 0,
+    "new": 2,
+    "existing": 5
+  },
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalChatTranscriptStore.kt": "cc38aa5f8a8587a5578dcafd8cfbeb9e8d4f5512c226a8259ff90c9a03d1eb7d",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalDialogueContextLimits.kt": "bb1d1d5376a158f0d380dcc4e2875e278e645d8c98cb298d0b6ff60cf5c07228",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalChatTranscriptCompletenessTest.kt": "610b1d33f9018d712d159aac47e8784972f5d13d9638a6b7a29b5a6264a550d6"
+  },
+  "boundary": "Store-only real JVM regression; retained-context/Activity/SDK/device/model not yet verified"
+}

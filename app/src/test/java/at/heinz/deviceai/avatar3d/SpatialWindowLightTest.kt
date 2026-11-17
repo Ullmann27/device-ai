@@ -1,0 +1,99 @@
+package at.heinz.deviceai.avatar3d
+
+import org.junit.Assert.*
+import org.junit.Test
+
+class SpatialWindowLightTest {
+    @Test fun openWindowWithoutAccentRetainsExistingSceneLight() {
+        val sceneAccent = 0xFFAA40FF.toInt()
+        CinemaWindowLightState.apply(null, .7f, true, -.4f)
+        try {
+            val window = CinemaWindowLightState.snapshot
+            val actual = SpatialWindowLight.tint(window.accentOr(sceneAccent), .75f,
+                window.open, true, window.gazeX, window.gazeY)
+            val expected = SpatialWindowLight.tint(sceneAccent, .75f, true, true, .7f, -.4f)
+            assertEquals("Projected geometry retains the available scene tint", expected, actual)
+        } finally { CinemaWindowLightState.reset() }
+    }
+
+    @Test fun explicitProjectedAccentWinsOnlyWhileOpen() {
+        val sceneAccent = 0xFFAA40FF.toInt()
+        val projectedAccent = 0xFFFFAA20.toInt()
+        val window = CinemaWindowLightState.Snapshot(projectedAccent, .7f, -.4f, true)
+        assertEquals(projectedAccent, window.accentOr(sceneAccent))
+        assertEquals(projectedAccent, window.accentOr(null))
+        assertEquals(sceneAccent, window.copy(open = false).accentOr(sceneAccent))
+        assertNull(window.copy(open = false).accentOr(null))
+    }
+
+    @Test fun absentAccentsRetainNeutralSpatialLight() {
+        val window = CinemaWindowLightState.Snapshot(gazeX = -.8f, gazeY = .6f, open = true)
+        val actual = SpatialWindowLight.tint(window.accentOr(null), .5f,
+            window.open, true, window.gazeX, window.gazeY)
+        assertEquals(SpatialWindowLight.tint(null, .5f, true, true, -.8f, .6f), actual)
+        assertEquals(SpatialWindowLight.REST_X - .8f * SpatialWindowLight.SIDE_SPAN,
+            actual.positionX, 0f)
+    }
+
+    @Test fun verifiedWindowAccentTintsExistingLightWithoutChangingFaceGeometry() {
+        val base = SpatialWindowLight.tint(null, .75f, false, true)
+        val window = SpatialWindowLight.tint(0xFFAA40FF.toInt(), .75f, true, true)
+        assertTrue(window.red > base.red)
+        assertTrue(window.green < base.green)
+        assertTrue(window.blue in 0f..1f)
+        assertTrue(window.lumens >= base.lumens)
+        assertTrue(window.lumens <= 36_000f)
+        assertEquals(base, SpatialWindowLight.tint(0xFFAA40FF.toInt(), .75f, false, true))
+    }
+
+    @Test fun thermalAndPermissionFallbackRestoreOriginalCyanFill() {
+        val disabled = SpatialWindowLight.tint(0xFFFF0000.toInt(), 1f, true, false)
+        val idle = SpatialWindowLight.tint(null, 1f, false, false)
+        assertEquals(idle, disabled)
+        assertEquals(AvatarCoreLighting.BASE_LUMENS, disabled.lumens, 0f)
+        assertEquals(1f, disabled.blue, 0f)
+        assertEquals(0.18f, disabled.red, 0f)
+    }
+
+    @Test fun rightWindowShiftsCatchlightToTheMatchingFaceSideAndRestoresOnClose() {
+        val violet = 0xFFAA40FF.toInt()
+        val left = SpatialWindowLight.tint(violet, .75f, true, true, gazeX = -1f)
+        val right = SpatialWindowLight.tint(violet, .75f, true, true, gazeX = 1f)
+        val closed = SpatialWindowLight.tint(violet, .75f, false, true, gazeX = 1f)
+        val idle = SpatialWindowLight.tint(null, .75f, false, true)
+        assertTrue("viewer-right glass moves the fill toward +X", right.positionX > left.positionX)
+        assertTrue(right.side > 0f && left.side < 0f)
+        assertEquals(SpatialWindowLight.REST_X + SpatialWindowLight.SIDE_SPAN, right.positionX, 0f)
+        assertEquals(SpatialWindowLight.REST_X - SpatialWindowLight.SIDE_SPAN, left.positionX, 0f)
+        assertEquals(SpatialWindowLight.WINDOW_ROUGHNESS, right.roughness, 0f)
+        assertEquals(idle, closed)
+        assertEquals(SpatialWindowLight.AUTHORED_SKIN_ROUGHNESS, closed.roughness, 0f)
+        assertEquals(SpatialWindowLight.REST_X, closed.positionX, 0f)
+        assertTrue("violet accent raises red versus the cyan fill", right.red > idle.red)
+        assertTrue(right.green < idle.green)
+    }
+    @Test fun projectedElevationMovesTheExistingLightWithinBounds() {
+        val above = SpatialWindowLight.tint(null, .5f, true, true, gazeY = 1f)
+        val below = SpatialWindowLight.tint(null, .5f, true, true, gazeY = -1f)
+        assertEquals(SpatialWindowLight.REST_Y + SpatialWindowLight.HEIGHT_SPAN, above.positionY, 0f)
+        assertEquals(SpatialWindowLight.REST_Y - SpatialWindowLight.HEIGHT_SPAN, below.positionY, 0f)
+        assertEquals(above, SpatialWindowLight.tint(null, .5f, true, true, gazeY = 100f))
+        assertEquals(SpatialWindowLight.REST_Y,
+            SpatialWindowLight.tint(null, .5f, true, true, gazeY = Float.NaN).positionY, 0f)
+        assertEquals(SpatialWindowLight.REST_Y,
+            SpatialWindowLight.tint(null, .5f, false, true, gazeY = 1f).positionY, 0f)
+        assertEquals(SpatialWindowLight.REST_Y,
+            SpatialWindowLight.tint(null, .5f, true, false, gazeY = 1f).positionY, 0f)
+    }
+
+    @Test fun oneSnapshotKeepsGeometryAndAccentTogether() {
+        CinemaWindowLightState.apply(0xFF112233.toInt(), .3f, true, -.4f)
+        val before = CinemaWindowLightState.snapshot
+        CinemaWindowLightState.apply(0xFF665544.toInt(), -.8f, true, .7f)
+        assertEquals(0xFF112233.toInt(), before.accentArgb)
+        assertEquals(.3f, before.gazeX, 0f)
+        assertEquals(-.4f, before.gazeY, 0f)
+        CinemaWindowLightState.reset()
+        assertEquals(CinemaWindowLightState.Snapshot(), CinemaWindowLightState.snapshot)
+    }
+}

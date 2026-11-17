@@ -1,0 +1,11 @@
+✔ QA requires actual executed evidence and confirmed cleanup (3.44672ms)
+✔ QA reports skips and failed assertions separately and keeps severity and device limits (2.017757ms)
+✔ CLI lists a fixed command scope and refuses nesting without running tests (86.148347ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 168.8692

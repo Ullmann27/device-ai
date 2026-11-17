@@ -1,0 +1,20 @@
+JUnit version 4.13.2
+.E..........
+Time: 0.209
+There was 1 failure:
+1) undeclaredProfileCannotHideBehindEmptyToolRequest(at.heinz.deviceai.chief.IndependentBotHandoffTest)
+java.lang.AssertionError: unexpected exception type thrown; expected:<java.lang.IllegalArgumentException> but was:<java.lang.IllegalStateException>
+	at org.junit.Assert.assertThrows(Assert.java:1020)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.chief.IndependentBotHandoffTest.undeclaredProfileCannotHideBehindEmptyToolRequest(IndependentBotHandoffTest.kt:102)
+	... 30 trimmed
+Caused by: java.lang.IllegalStateException: BOT_HANDOFF_PROFILE_UNAVAILABLE
+	at at.heinz.deviceai.chief.ChiefBotHandoffAdmission.workspaceJob(ChiefBotHandoff.kt:99)
+	at at.heinz.deviceai.chief.IndependentBotHandoffTest$Fixture.worker(IndependentBotHandoffTest.kt:83)
+	at at.heinz.deviceai.chief.IndependentBotHandoffTest.undeclaredProfileCannotHideBehindEmptyToolRequest$lambda$0$0(IndependentBotHandoffTest.kt:102)
+	at org.junit.Assert.assertThrows(Assert.java:1001)
+	... 33 more
+
+FAILURES!!!
+Tests run: 11,  Failures: 1
+

@@ -1,0 +1,134 @@
+1
+00:00:00,054 --> 00:00:01,794
+Speaker: Hallo Jarvis, die Leute
+meinten, du siehst hässlich aus.
+
+2
+00:00:01,814 --> 00:00:03,853
+Bitte tu deine Dashboards hier umdesignen.
+
+3
+00:00:04,334 --> 00:00:09,133
+Mach am besten drei-D-Optik, clean,
+minimalistik, schwarz und baue meine
+
+4
+00:00:09,174 --> 00:00:12,754
+Unternehmen in drei-D-Gebäude um,
+die ich anklicken kann, worüber dann
+
+5
+00:00:12,793 --> 00:00:15,434
+wieder mehrere Schnittstellen sind,
+die ich auch alle anklicken kann
+
+6
+00:00:15,674 --> 00:00:18,554
+und gib jedem Mitarbeiter einzelne
+Namen, die ich auch anklicken kann
+
+7
+00:00:18,593 --> 00:00:19,753
+und sehe, was die gerade machen.
+
+8
+00:00:19,794 --> 00:00:20,253
+Speaker 2: Hässlich?
+
+9
+00:00:21,214 --> 00:00:24,434
+Das sagt der Typ, der mit einem Mikrofon
+vor einem schwarzen Terminal sitzt.
+
+10
+00:00:24,514 --> 00:00:25,834
+Aber okay, Boss.
+
+11
+00:00:26,573 --> 00:00:27,354
+Ich bin ein Profi.
+
+12
+00:00:28,014 --> 00:00:29,954
+Ich baue dir das Dashboard komplett neu.
+
+13
+00:00:30,913 --> 00:00:33,734
+Schwarze Ballistikoptik,
+drei-D-Szene, deine Unternehmen
+
+14
+00:00:33,794 --> 00:00:35,134
+als Gebäude, die du anklickst.
+
+15
+00:00:35,794 --> 00:00:38,274
+Dann kommen die Abteilungen,
+dann jeder Mitarbeiter mit Namen
+
+16
+00:00:38,734 --> 00:00:41,114
+und beim Klick siehst du live,
+was die Jungs gerade machen.
+
+17
+00:00:42,034 --> 00:00:44,914
+Das Ganze läuft als neue Seite im
+Browser und das Fenster öffne ich
+
+18
+00:00:44,994 --> 00:00:46,354
+erst, wenn du das Kommando gibst.
+
+19
+00:00:46,774 --> 00:00:48,834
+Speaker: So, jetzt hat das Jarvis
+auch schon schön bearbeitet.
+
+20
+00:00:49,394 --> 00:00:50,214
+Ich kann es hier drehen.
+
+21
+00:00:50,254 --> 00:00:51,294
+Hier sind meine drei Unternehmen.
+
+22
+00:00:51,854 --> 00:00:53,114
+Dann klicken wir mal auf das Größte.
+
+23
+00:00:53,414 --> 00:00:56,794
+Hier haben wir Strategie,
+Automatisierung und Website-Pflege.
+
+24
+00:00:57,734 --> 00:00:58,914
+Welche Mitarbeiter haben wir hier?
+
+25
+00:00:58,994 --> 00:01:02,294
+Lena Schmidt, deployed,
+Updates auf die Kundenseite.
+
+26
+00:01:03,354 --> 00:01:04,113
+Was haben wir hier?
+
+27
+00:01:05,233 --> 00:01:11,054
+Vertrieb, Lena Fischer, qualifiziert,
+vierzehn neue Leads aus dem Webformular.
+
+28
+00:01:11,854 --> 00:01:13,113
+Das ist wirklich gut gemacht von ihm.
+
+29
+00:01:13,333 --> 00:01:15,753
+Wenn du die KI auch haben magst, du
+solche krassen Sachen erstellen willst,
+
+30
+00:01:16,393 --> 00:01:17,854
+dann geh auf den Link in meiner Bio.

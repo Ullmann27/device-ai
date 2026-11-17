@@ -1,0 +1,205 @@
+{
+  "scope": "Post-freeze exploratory, genuine patch executes; examines embedded receipt field consistency only, not false execution or authentication",
+  "cases": [
+    {
+      "label": "baseline",
+      "kind": "positive",
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "1ec17fdb22bae0fa4b4660f9aaf7dcaa8e33dc794804a0d6a319c33732350e17",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "8018b996e4fb9e7866a27ba19e7b88eda07f61e8ea27017c1e9f427d9853deda",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "80186ec4dfbd82a2606de800df46726952f374406dbf341703c50f3f14a1f5de",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "label": "baseline",
+      "kind": "embedded_patch_hash",
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "5ac8acb1b6daa67d8acf7c1dcf272473e72e2c5253213f58eee312f9b12db80d",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "875d8532eb878bbad8e059043d65991784bf325ac59e8a6e87e1e4d3b3b50522",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "8afd9e1716fe214e4e41ec196edeee99d7cb94dd7db44544b319771ee609bb81",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "label": "baseline",
+      "kind": "embedded_red_sha",
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "58625224424c38948da1bd2934df517a02ab193f84f5dcb2775d93385585b4b7",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "90fad3da2e20f66e1afa699bf94ed7bfb3fa397532fdb3cd3127f6766c9b460d",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "88932135bb82aa827bf98a8c58b1db1fa1aac365c47fd2841732fad67bf7dedc",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "label": "baseline",
+      "kind": "embedded_green_sha",
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "0ebe022e14bea5873c8b583fc3af6b698f26b4be4505eb3e2e1b08b112b966de",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "aacb3c1faad2d221822f0552a03947973892fc02ec220476f6e511361c30c1e1",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "ad7c7cc88f76a99a5643a7fe513f281037405461d0c6518d9594099ec4576849",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "label": "candidate",
+      "kind": "positive",
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "1ec17fdb22bae0fa4b4660f9aaf7dcaa8e33dc794804a0d6a319c33732350e17",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "d0c72b7511074a78fd58e43ef0590267e74be9a6e92f0487e42dcf7d771168d1",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "6a920a2ecc7a57aa1801f96aa624e4f2ff652c87d4edd1ff843b27e956a2cf94",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "label": "candidate",
+      "kind": "embedded_patch_hash",
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "5ac8acb1b6daa67d8acf7c1dcf272473e72e2c5253213f58eee312f9b12db80d",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "387227d88313da1e143d5b5d8a9d3919090efffc1aa045df2c29ce00b35ae559",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "a6b710ca14aa628f765a0f8912e87dd72f83836d1c30c2a0aeee5342f35f5c4a",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "label": "candidate",
+      "kind": "embedded_red_sha",
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "58625224424c38948da1bd2934df517a02ab193f84f5dcb2775d93385585b4b7",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "932cb50e83128f94a41e2819d99cadcc3ab7f8c48e098efd2e899b4a5e656e66",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "4baefa31ad9868e54579d38aa69147ffe634bf268739d75f2a8b3355389f33e1",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "label": "candidate",
+      "kind": "embedded_green_sha",
+      "attestation": {
+        "schema": "continuum-ccc1-redgreen-attestation",
+        "version": 1,
+        "receiptSha256": "0ebe022e14bea5873c8b583fc3af6b698f26b4be4505eb3e2e1b08b112b966de",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+        "patchSha256": "4e99f5efeb6abe87d5fdeed9dc54926def3aab70719c19156226d3ef14d2fe91",
+        "red": {
+          "xmlSha256": "36e6f9b1652cd46834d8be5fb53e0637ceb7e430d875c4349c545092c4383d5a",
+          "exitCode": 1,
+          "executed": 2,
+          "failed": 1
+        },
+        "green": {
+          "xmlSha256": "cdceeae5fad822bd07c46410d71e02efb190fdc1d42c2905ddf1aa641756fdc4",
+          "exitCode": 0,
+          "executed": 2,
+          "failed": 0
+        }
+      }
+    }
+  ]
+}

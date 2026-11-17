@@ -1,0 +1,339 @@
+{
+  "split": "validation",
+  "intent": [
+    {
+      "id": "validation-i0-0",
+      "text": "Herzliche Morgengrüße für dich.",
+      "label": 0
+    },
+    {
+      "id": "validation-i0-1",
+      "text": "Sei willkommen an diesem Abend.",
+      "label": 0
+    },
+    {
+      "id": "validation-i0-2",
+      "text": "Viele freundliche Grüße in deine Richtung.",
+      "label": 0
+    },
+    {
+      "id": "validation-i0-3",
+      "text": "Hallo, einen angenehmen Nachmittag.",
+      "label": 0
+    },
+    {
+      "id": "validation-i0-4",
+      "text": "Guten Abend und schön dich zu sehen.",
+      "label": 0
+    },
+    {
+      "id": "validation-i0-5",
+      "text": "Moin, ich begrüße euch herzlich.",
+      "label": 0
+    },
+    {
+      "id": "validation-i1-0",
+      "text": "Weshalb sammeln sich Teilchen im Filter?",
+      "label": 1
+    },
+    {
+      "id": "validation-i1-1",
+      "text": "Woran erkenne ich den Füllstand?",
+      "label": 1
+    },
+    {
+      "id": "validation-i1-2",
+      "text": "An wen richtet sich diese Nachricht?",
+      "label": 1
+    },
+    {
+      "id": "validation-i1-3",
+      "text": "Welche Fahrzeuge dürfen auf die Brücke?",
+      "label": 1
+    },
+    {
+      "id": "validation-i1-4",
+      "text": "Ist für die Behauptung ein Beleg vorhanden?",
+      "label": 1
+    },
+    {
+      "id": "validation-i1-5",
+      "text": "Kann das Gerät kabellos senden?",
+      "label": 1
+    }
+  ],
+  "semantic": [
+    {
+      "id": "validation-s0-0",
+      "left": "Der Filter hält grobe Teilchen zurück.",
+      "right": "Grobe Partikel bleiben im Filter hängen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s0-1",
+      "left": "Der Filter hält grobe Teilchen nicht zurück.",
+      "right": "Grobe Partikel gehen durch den Filter hindurch.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s0-2",
+      "left": "Grobe Partikel bleiben im Filter hängen.",
+      "right": "Der Filter lässt grobe Partikel nicht passieren.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s0-3",
+      "left": "Der Filter hält grobe Teilchen zurück.",
+      "right": "Der Filter hält grobe Teilchen nicht zurück.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s0-4",
+      "left": "Grobe Partikel bleiben im Filter hängen.",
+      "right": "Grobe Partikel gehen durch den Filter hindurch.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s0-5",
+      "left": "Der Filter hält grobe Teilchen zurück.",
+      "right": "Alle groben Partikel passieren diesen Filter.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s1-0",
+      "left": "Tessa informiert Arno.",
+      "right": "Arno wird von Tessa benachrichtigt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s1-1",
+      "left": "Tessa informiert Arno nicht.",
+      "right": "Arno erhält von Tessa keine Nachricht.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s1-2",
+      "left": "Arno wird von Tessa benachrichtigt.",
+      "right": "Tessa gibt Arno eine Nachricht.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s1-3",
+      "left": "Tessa informiert Arno.",
+      "right": "Tessa informiert Arno nicht.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s1-4",
+      "left": "Arno wird von Tessa benachrichtigt.",
+      "right": "Arno erhält von Tessa keine Nachricht.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s1-5",
+      "left": "Tessa informiert Arno.",
+      "right": "Arno informiert Tessa.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s2-0",
+      "left": "Der Tank ist vollständig gefüllt.",
+      "right": "Der Behälter ist bis zum Rand voll.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s2-1",
+      "left": "Der Tank ist nicht gefüllt.",
+      "right": "Der Behälter ist leer.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s2-2",
+      "left": "Der Behälter ist bis zum Rand voll.",
+      "right": "Im Tank ist kein freier Raum mehr.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s2-3",
+      "left": "Der Tank ist vollständig gefüllt.",
+      "right": "Der Tank ist nicht gefüllt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s2-4",
+      "left": "Der Behälter ist bis zum Rand voll.",
+      "right": "Der Behälter ist leer.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s2-5",
+      "left": "Der Tank ist vollständig gefüllt.",
+      "right": "Der Tank ist vollständig leer.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s3-0",
+      "left": "Die Brücke ist für Fahrzeuge gesperrt.",
+      "right": "Fahrzeuge dürfen die Brücke nicht befahren.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s3-1",
+      "left": "Die Brücke ist nicht für Fahrzeuge gesperrt.",
+      "right": "Fahrzeuge dürfen die Brücke befahren.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s3-2",
+      "left": "Fahrzeuge dürfen die Brücke nicht befahren.",
+      "right": "Auf dieser Brücke ist Fahrzeugverkehr verboten.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s3-3",
+      "left": "Die Brücke ist für Fahrzeuge gesperrt.",
+      "right": "Die Brücke ist nicht für Fahrzeuge gesperrt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s3-4",
+      "left": "Fahrzeuge dürfen die Brücke nicht befahren.",
+      "right": "Fahrzeuge dürfen die Brücke befahren.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s3-5",
+      "left": "Die Brücke ist für Fahrzeuge gesperrt.",
+      "right": "Die Brücke ist für Fahrzeuge freigegeben.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s4-0",
+      "left": "Ein Beleg für die Behauptung fehlt.",
+      "right": "Die Aussage ist bisher unbelegt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s4-1",
+      "left": "Ein Beleg für die Behauptung fehlt nicht.",
+      "right": "Die Aussage ist durch einen Beleg gestützt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s4-2",
+      "left": "Die Aussage ist bisher unbelegt.",
+      "right": "Für die Aussage gibt es bislang keinen Nachweis.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s4-3",
+      "left": "Ein Beleg für die Behauptung fehlt.",
+      "right": "Ein Beleg für die Behauptung fehlt nicht.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s4-4",
+      "left": "Die Aussage ist bisher unbelegt.",
+      "right": "Die Aussage ist durch einen Beleg gestützt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s4-5",
+      "left": "Ein Beleg für die Behauptung fehlt.",
+      "right": "Die Behauptung ist bereits nachgewiesen.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s5-0",
+      "left": "Das Gerät sendet nur über Kabel.",
+      "right": "Das Gerät überträgt ausschließlich kabelgebunden.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s5-1",
+      "left": "Das Gerät sendet nicht über Kabel.",
+      "right": "Dieses Gerät überträgt ohne Kabel.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s5-2",
+      "left": "Das Gerät überträgt ausschließlich kabelgebunden.",
+      "right": "Die Datenübertragung des Geräts ist an ein Kabel gebunden.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s5-3",
+      "left": "Das Gerät sendet nur über Kabel.",
+      "right": "Das Gerät sendet nicht über Kabel.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s5-4",
+      "left": "Das Gerät überträgt ausschließlich kabelgebunden.",
+      "right": "Dieses Gerät überträgt ohne Kabel.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "validation-s5-5",
+      "left": "Das Gerät sendet nur über Kabel.",
+      "right": "Das Gerät überträgt drahtlos.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    }
+  ],
+  "dialogue": [
+    {
+      "id": "validation-d0",
+      "turns": [
+        "Nutzer: Der Tank war voll.",
+        "Nutzer: Korrektur, der Tank ist inzwischen leer."
+      ],
+      "claim": "Der Tank ist aktuell voll.",
+      "consistent": false
+    },
+    {
+      "id": "validation-d1",
+      "turns": [
+        "Nutzer: Die Messung fehlt.",
+        "Modell: Vielleicht beträgt der Wert sieben."
+      ],
+      "claim": "Der Wert sieben ist nur eine Vermutung.",
+      "consistent": true
+    }
+  ]
+}

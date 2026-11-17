@@ -1,0 +1,105 @@
+✔ coding loopback uses bounded structured schema and accepts relevant larger context (26.964758ms)
+✔ coding output cannot add tools, duplicate paths, unknown files or blank hunks (3.308259ms)
+✖ coding CLI UTF-8 transport accommodates the character-bounded multilingual context (70.890638ms)
+✔ M2 model admission denies 01: no model (1.473727ms)
+✔ M2 model admission denies 02: empty model (0.210979ms)
+✔ M2 model admission denies 03: whitespace model (0.197128ms)
+✔ M2 model admission denies 04: NUL model (0.241706ms)
+✔ M2 model admission denies 05: linebreak model (0.419043ms)
+✔ M2 model admission denies 06: oversized name (0.193512ms)
+✔ M2 model admission denies 07: unspecified local fallback (0.169616ms)
+✔ M2 model admission denies 07a: implicit default alias (0.181655ms)
+✔ M2 model admission denies 07b: automatic model alias (0.246242ms)
+✔ M2 model admission denies 08: missing format (0.393234ms)
+✔ M2 model admission denies 09: unexpected format spelling (0.159801ms)
+✔ M2 model admission denies 10: selected original Gemma name (0.289578ms)
+✔ M2 model admission denies 11: original selected file (0.147323ms)
+✔ M2 model admission denies 12: selected native LiteRT format (0.134633ms)
+✔ M2 model admission denies 13: unsupported native runtime (0.115004ms)
+✔ M2 model admission denies 14: remote runtime (1.183479ms)
+✔ M2 model admission denies 15: omitted checkpoint digest (3.498317ms)
+✔ M2 model admission denies 16: malformed digest (0.152701ms)
+✔ M2 model admission denies 17: uppercase digest (0.08595ms)
+✔ M2 model admission denies 18: digest with junk (0.068734ms)
+✔ M2 model admission denies 19: Gemma original digest wrongly asserted as GGUF (0.122024ms)
+✔ M2 model admission denies 20: consent absent (0.136306ms)
+✔ M2 model admission denies 21: consent not explicit (0.133872ms)
+✔ M2 model admission denies 22: consent mismatched (0.082665ms)
+✔ explicit approved alternate GGUF is configuration ONLY, not inference proof (0.127012ms)
+✔ a Qwen name NEVER enters absent explicit consent and remains only configuration with consent (0.105259ms)
+✖ production coding CLI fails closed before asking the unavailable model (63.383528ms)
+✖ production coding CLI refuses silent unspecified-model fallback even with otherwise valid credentials (65.000712ms)
+✔ harness coding CLI cannot bypass the selected Gemma format gate (61.308012ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 29
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 286.179799
+
+✖ failing tests:
+
+test at scripts/continuum-coding-brain.test.mjs:23:1
+✖ coding CLI UTF-8 transport accommodates the character-bounded multilingual context (70.890638ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /LOCAL_AUTH_REQUIRED/. Input:
+  
+  'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n'
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-cli-fixtures/scripts/continuum-coding-brain.test.mjs:30:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n',
+    expected: /LOCAL_AUTH_REQUIRED/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-m2-model-preflight.test.mjs:77:1
+✖ production coding CLI fails closed before asking the unavailable model (63.383528ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /GEMMA_LITERTLM_NOT_GGUF/. Input:
+  
+  'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n'
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-cli-fixtures/scripts/continuum-m2-model-preflight.test.mjs:89:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n',
+    expected: /GEMMA_LITERTLM_NOT_GGUF/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-m2-model-preflight.test.mjs:94:1
+✖ production coding CLI refuses silent unspecified-model fallback even with otherwise valid credentials (65.000712ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /MODEL_ID_UNSPECIFIED/. Input:
+  
+  'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n'
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-cli-fixtures/scripts/continuum-m2-model-preflight.test.mjs:105:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: BLOCKED_LOCAL_MODEL_UNAVAILABLE\n',
+    expected: /MODEL_ID_UNSPECIFIED/,
+    operator: 'match',
+    diff: 'simple'
+  }

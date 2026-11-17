@@ -1,0 +1,22 @@
+{
+  "source": "19474261c15a3503a9f041244b4b4c3eaed4636f",
+  "observedAt": "2026-11-03T20:30:32.302Z",
+  "method": "Read-only existing runtimeKey, existing canonical serializer and unchanged domain; no raw key or key digest exported, no proof rewritten.",
+  "rows": [
+    {
+      "task": "u03",
+      "experienceSha256": "52f6ebb0379daa3f94865cb6cb4f52b4f1ea04b749e7a18c9db3553e78bcf855",
+      "persistedProofMacValid": false
+    },
+    {
+      "task": "u04",
+      "experienceSha256": "3c07949e813a1e50ee49f2ee1650e87cdab78f2e79525b76b3a62a5f364a76e6",
+      "persistedProofMacValid": false
+    },
+    {
+      "task": "u05",
+      "experienceSha256": "da72effe2115aeb1853f34a255a6bc7b354dabfc9e2e4daec584cd8fb0082242",
+      "persistedProofMacValid": false
+    }
+  ]
+}

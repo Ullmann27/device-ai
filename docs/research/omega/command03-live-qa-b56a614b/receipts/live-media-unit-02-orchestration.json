@@ -1,0 +1,207 @@
+{
+  "started_epoch": 1794806162.0584657,
+  "authorized_sha": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "restore_sha": "fbdb612f31158075bdb746d4cb267ba671179fa4",
+  "restore_branch": "integrate/continuum-command03-android-20261115",
+  "mode": "unit-tests",
+  "label": "live-media-unit-02",
+  "orchestration_sha256": "7a6d750072b69311620f4d0526ce14171896ea74d7221215c4a878e8d2166b5b",
+  "java_memory_limits_mib": {
+    "heap": 768,
+    "metaspace": 256
+  },
+  "historical_backup": "/workspace/scratch/8f95e7fd540d/native-qa-output/original-build-backup-533eb104/manifest.json",
+  "historical_backup_sha256": "a160f9fe000151fc4eef34383e6f71134894bff2b52c13ca6afaa76f72c298ec",
+  "previous_validation": "/workspace/scratch/8f95e7fd540d/native-qa-output/validation-summary-f79d5754.json",
+  "previous_validation_sha256": "c381b58c29addfb65d892e07c198924c0c9a7592eaaeb5247fabf27adec417a9",
+  "source_path": "/workspace/scratch/5d87eafb90be/device-ai-android",
+  "build_path": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+  "output_path": "/workspace/scratch/8f95e7fd540d/native-live-qa-output",
+  "locks": [
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/native-source.lock",
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/native-build.lock"
+  ],
+  "original_before": {
+    "head": "fbdb612f31158075bdb746d4cb267ba671179fa4",
+    "branch_ref": "fbdb612f31158075bdb746d4cb267ba671179fa4",
+    "status": "",
+    "head_name": "integrate/continuum-command03-android-20261115"
+  },
+  "historical_release_before": {
+    "app-release-unsigned.apk": {
+      "bytes": 104718385,
+      "sha256": "744b1e158d73506fbf76ec6036b5e9c0f229452bb443e051f48cfcd9f1a33bc0"
+    },
+    "output-metadata.json": {
+      "bytes": 431,
+      "sha256": "4d434139962b06bb33340969e18c0a45f37ae6b14fc9b0c3b3bf9b609b0c48e3"
+    }
+  },
+  "free_bytes_before": 488808448,
+  "candidate_tree": "092827dcd6ea9cdf92129e80d55c868577075c2c",
+  "prior_verified_source": "f79d57546516b92788bd83c6039ce474955da8ea",
+  "source_diff_from_previous_validation": "M\tapp/src/main/assets/continuum-command03/native-bridge.js\nM\tapp/src/main/assets/continuum-command03/native-layer.css\nM\tapp/src/main/java/at/heinz/deviceai/AgentActivity.kt\nM\tapp/src/main/java/at/heinz/deviceai/cognitive/LiveMonitorSubmission.kt\nA\tapp/src/main/java/at/heinz/deviceai/ui/Command03ComputerProjection.kt\nA\tapp/src/main/java/at/heinz/deviceai/ui/Command03FrameEncoder.kt\nA\tapp/src/main/java/at/heinz/deviceai/ui/Command03SpeechProjection.kt\nM\tapp/src/main/java/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.kt\nM\tapp/src/test/java/at/heinz/deviceai/cognitive/LiveMonitorSubmissionTest.kt\nA\tapp/src/test/java/at/heinz/deviceai/ui/Command03ComputerProjectionTest.kt\nA\tapp/src/test/java/at/heinz/deviceai/ui/Command03SpeechProjectionTest.kt\nA\tapp/src/uiTest/java/at/heinz/deviceai/Command03HostWebView.kt\nM\tapp/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03BridgeUiTest.kt\nA\tapp/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03MediaStageUiTest.kt",
+  "build_dependency_diff": "app/build.gradle.kts | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)",
+  "existing_main_classes_before": {
+    "debug/at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "2e2da58811db6c10b1c9c90a285b2f93e64c327dd027c2b6d396da5502911b35",
+      "mtime": 1794805981.6741052
+    },
+    "debug/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "114cfc2e75f36d7016652dc54dc598797e7c87bb88c93d9eaefbf65249d12c56",
+      "mtime": 1794805981.681271
+    },
+    "debug/at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "2c0c940e065f30d4ee0ad04454b9c25dc9ea8676f817249c03d75c8c950c03c0",
+      "mtime": 1794805981.6801226
+    },
+    "release/at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "fe63f4c6ae9f01f8aabee7ea69d2c201080f533208ccca22dae5edf0a1c83e6e",
+      "mtime": 1794758105.4380789
+    },
+    "release/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": false,
+      "sha256": null,
+      "mtime": null
+    },
+    "release/at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": false,
+      "sha256": null,
+      "mtime": null
+    }
+  },
+  "candidate_before": {
+    "head": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "branch_ref": "fbdb612f31158075bdb746d4cb267ba671179fa4",
+    "status": "",
+    "head_name": "HEAD"
+  },
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "tools/command03-native-qa/run.py",
+    "--config",
+    "/workspace/scratch/5d87eafb90be/native-qa-config.json",
+    "--repo",
+    "/workspace/scratch/5d87eafb90be/device-ai-android",
+    "--output-dir",
+    "/workspace/scratch/8f95e7fd540d/native-live-qa-output",
+    "--build-dir",
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+    "--mode",
+    "unit-tests",
+    "--version-code",
+    "60",
+    "--label",
+    "live-media-unit-02",
+    "--expected-sha",
+    "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "--heap-mib",
+    "768",
+    "--metaspace-mib",
+    "256",
+    "--resource-sample-seconds",
+    "2",
+    "--focus-test-sources",
+    "--test",
+    "at.heinz.deviceai.ui.Command03ComputerProjectionTest",
+    "--test",
+    "at.heinz.deviceai.ui.Command03SpeechProjectionTest",
+    "--test",
+    "at.heinz.deviceai.ui.Command03BridgeContractTest",
+    "--test",
+    "at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest",
+    "--test",
+    "at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest",
+    "--test",
+    "at.heinz.deviceai.cognitive.LiveComputerFramesTest",
+    "--test",
+    "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+    "--test",
+    "at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest"
+  ],
+  "harness_exit": 0,
+  "candidate_after": {
+    "head": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "branch_ref": "fbdb612f31158075bdb746d4cb267ba671179fa4",
+    "status": "",
+    "head_name": "HEAD"
+  },
+  "raw_receipt_sha256": "eb4e387072fd7da750919c96663ce636d110a3ab820319fc94c5b857a81c5375",
+  "raw_status": "PASS_LOCAL",
+  "raw_apk": null,
+  "archived_junit": {
+    "TEST-at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest.xml": {
+      "bytes": 1102,
+      "sha256": "776a2046e289aba8c0af6564a43526d02033c085446982a8f433fe998d2561aa"
+    },
+    "TEST-at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.xml": {
+      "bytes": 1905,
+      "sha256": "27b5598353d60e61ccb3d277db3d87278df8cc53238d78b34edaae93f795fc3a"
+    },
+    "TEST-at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest.xml": {
+      "bytes": 1685,
+      "sha256": "d421010426d11641db79e17f060f045bfd8ddd3b8640fc0d003e7f1df691ef99"
+    },
+    "TEST-at.heinz.deviceai.cognitive.LiveComputerFramesTest.xml": {
+      "bytes": 2169,
+      "sha256": "2046bb542cf040af825d2a74265b93c7d30bed9957c4c775aa567b754e53aa88"
+    },
+    "TEST-at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest.xml": {
+      "bytes": 2438,
+      "sha256": "8fc7e6fb87c58cde1b00a72cd3cb499756535e51f6975a5db83df9106461f5c2"
+    },
+    "TEST-at.heinz.deviceai.ui.Command03BridgeContractTest.xml": {
+      "bytes": 1215,
+      "sha256": "56c19d362c7aaa0c7b37619ddedcc679bdb2cb41e9743acced72c4f8dda9b6fd"
+    },
+    "TEST-at.heinz.deviceai.ui.Command03ComputerProjectionTest.xml": {
+      "bytes": 1776,
+      "sha256": "2002ef72707807ef5f547fd619db891da2f831ddc6b96c218d4297d6dcafd8e6"
+    },
+    "TEST-at.heinz.deviceai.ui.Command03SpeechProjectionTest.xml": {
+      "bytes": 1105,
+      "sha256": "53d3c76d6f5b1a35de5805f9b6096f5233a21aa85277805d5b92a28096db43ac"
+    }
+  },
+  "main_classes": {
+    "at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "2e2da58811db6c10b1c9c90a285b2f93e64c327dd027c2b6d396da5502911b35",
+      "mtime": 1794805981.6741052
+    },
+    "at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "114cfc2e75f36d7016652dc54dc598797e7c87bb88c93d9eaefbf65249d12c56",
+      "mtime": 1794805981.681271
+    },
+    "at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "2c0c940e065f30d4ee0ad04454b9c25dc9ea8676f817249c03d75c8c950c03c0",
+      "mtime": 1794805981.6801226
+    }
+  },
+  "source_restore_status": "RESTORED_WITHOUT_FORCE_OR_RESET",
+  "original_after": {
+    "head": "fbdb612f31158075bdb746d4cb267ba671179fa4",
+    "branch_ref": "fbdb612f31158075bdb746d4cb267ba671179fa4",
+    "status": "",
+    "head_name": "integrate/continuum-command03-android-20261115"
+  },
+  "historical_release_after": {
+    "app-release-unsigned.apk": {
+      "bytes": 104718385,
+      "sha256": "744b1e158d73506fbf76ec6036b5e9c0f229452bb443e051f48cfcd9f1a33bc0"
+    },
+    "output-metadata.json": {
+      "bytes": 431,
+      "sha256": "4d434139962b06bb33340969e18c0a45f37ae6b14fc9b0c3b3bf9b609b0c48e3"
+    }
+  },
+  "historical_release_unchanged": true,
+  "finished_epoch": 1794806179.9759817,
+  "wrapper_exit": 0
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "continuum.synthetic-research.v1",
+  "name": "hypothesis-workspace-order-bias",
+  "date": "2026-11-08",
+  "source_repository": "Ullmann27/device-ai",
+  "source_commit": "8bc695fd0d0fcc10ef0aa88684da8b57acc928f4",
+  "source_file": "app/src/main/java/at/heinz/deviceai/cognitive/HypothesisWorkspace.kt",
+  "verified_source_git_blob_sha1": "916b21b7d1d3e8c05771c7f4250d6e085e6f063f",
+  "environment": "Kotlin/JVM 1.9.0; JRE 21; host synthetic; Android NOT_RUN",
+  "experiment": {
+    "hypotheses": 4,
+    "initial_weight_each": 1,
+    "permutations": 24,
+    "probe_cost_ms": 1,
+    "probe_thermal_cost": 0
+  },
+  "observed": {
+    "permutations_last_candidate_max_weight": 24,
+    "permutations_total": 24,
+    "original_order_weights": {
+      "config": 0.125,
+      "data": 0.125,
+      "lifecycle": 0.25,
+      "ui": 0.5
+    },
+    "reverse_order_weights": {
+      "ui": 0.125,
+      "lifecycle": 0.125,
+      "data": 0.25,
+      "config": 0.5
+    },
+    "max_absolute_weight_gap": 0.375,
+    "probe_choices": {
+      "p_ui": 6,
+      "p_lifecycle": 6,
+      "p_data": 6,
+      "p_config": 6
+    }
+  },
+  "conclusion": "equal input weights are not permutation invariant under sequential add",
+  "limitations": [
+    "synthetic",
+    "no calibrated probabilities",
+    "non-product-wired source",
+    "no model, Android, or GPU QA"
+  ]
+}

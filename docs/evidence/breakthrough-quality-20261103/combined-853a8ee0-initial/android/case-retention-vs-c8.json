@@ -1,0 +1,134 @@
+{
+  "baseline": "c8c0615bc9f5398ad2e47b94669e3117ecf9f32d",
+  "candidate": "853a8ee08359ce41375ddb9334ac8ae9c2e2c59e",
+  "removed": [
+    [
+      "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "landscapeStillKeepsItsExistingRailAndLegacyCards"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "unfoldedPortraitKeepsExactThreeByTwoCardAlignment"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "withoutAHeightTheWideLayoutIsTheScaledReference"
+    ]
+  ],
+  "added": [
+    [
+      "at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest",
+      "largeTypeAndRealLongValuesStayInsideEachCardWithoutTextCollisions"
+    ],
+    [
+      "at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest",
+      "renderPhoneFoldAndTabletAtNormalAndLargeFonts"
+    ],
+    [
+      "at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest",
+      "actualFailurePathRetains2dAndOriginalSingleLifecycleClock"
+    ],
+    [
+      "at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest",
+      "defaultOrbAndPausedOptional3dNeverStartAssetOrNativeWork"
+    ],
+    [
+      "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "allVisemesUseNamesEvenWhenAssetOrderChanges"
+    ],
+    [
+      "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "binaryNonFiniteAndNegativeScaleRejected"
+    ],
+    [
+      "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "focusPreservesHeadAcrossNarrowPhoneAndWideFold"
+    ],
+    [
+      "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "gazeIsViewerRightAndUpAndNeverNaN"
+    ],
+    [
+      "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "interruptionAndOldUtteranceUseExistingReducer"
+    ],
+    [
+      "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "malformedSkinIndicesMorphAliasingAndEmptyShapeAreRejected"
+    ],
+    [
+      "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "reducedMotionClosesSpeechAndBlink"
+    ],
+    [
+      "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "validBinaryMetadataAndMissingTruncatedInvalidAssets"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest",
+      "everyHeaderAndActionHasUnscaledFortyEightDpTouchArea"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest",
+      "heroAndClickableCardsNeverIntersectAndAllRemainReachable"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "landscapeKeepsExistingRailOffsetAndEveryDestination"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "largeFontsReflowInsteadOfShrinkingText"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "portraitFoldReflowsIntoTwoColumnsBelowUnobstructedStage"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "widthChangesColumnWidthsButNeverScaleTextOrTouchTargets"
+    ]
+  ],
+  "status_changes": [
+    {
+      "id": [
+        "at.heinz.deviceai.chief.ChiefBrainWiringTest",
+        "routineRunsAsWorkerJobAndReportsOnlyNews"
+      ],
+      "before": "PASS",
+      "after": "FAIL"
+    },
+    {
+      "id": [
+        "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+        "allSixControlsHaveEqualAndReflectedBounds"
+      ],
+      "before": "PASS",
+      "after": "FAIL"
+    },
+    {
+      "id": [
+        "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+        "onlyRightHandCardsReverseElementOrderNotLetters"
+      ],
+      "before": "PASS",
+      "after": "FAIL"
+    },
+    {
+      "id": [
+        "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+        "portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror"
+      ],
+      "before": "PASS",
+      "after": "FAIL"
+    },
+    {
+      "id": [
+        "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+        "foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows"
+      ],
+      "before": "PASS",
+      "after": "FAIL"
+    }
+  ]
+}

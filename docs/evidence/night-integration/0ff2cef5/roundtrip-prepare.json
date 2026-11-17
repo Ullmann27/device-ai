@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    ".github/continuum/backlog-fixtures.mjs",
+    "roundtrip-prepare",
+    "/workspace/scratch/391c0f6de827/build-env/roundtrip-receipt-0ff2cef5/fixture"
+  ],
+  "exitCode": 0,
+  "output": "{\"revision\":8,\"integrity\":\"18fd4707b517ddaae1816b65e9992a5ffc410f79e472c37cb0a6709792984e84\"}\n",
+  "at": "2026-11-03T23:34:58.671010+00:00"
+}

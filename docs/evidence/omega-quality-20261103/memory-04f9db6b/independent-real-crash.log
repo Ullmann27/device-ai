@@ -1,0 +1,2 @@
+PASS: two real process halts before atomic commit preserve legacy, committed revocation and retry; 258 records
+LIMIT: Linux filesystem/process test, not Android power-loss or device durability

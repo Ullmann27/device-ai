@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumGermanLongMemEvalHoldoutTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-03T18:05:26" hostname="5268aff5350a" time="0.105">
+  <properties/>
+  <testcase name="blindGermanHoldoutIsScoredHonestly" classname="at.heinz.deviceai.learning.ContinuumGermanLongMemEvalHoldoutTest" time="0.105"/>
+  <system-out><![CDATA[M2-LME T1 temporal CORRECT kind=ANSWER q="Wo habe ich 2017 gewohnt?" a="2017 wohntest du laut deinen Angaben in Feldkirch. Beleg: lx-dc32670400750e4de9bed331 (gesagt am 01.06.2015, SHA-256 546debc0776c…) · bestät"
+M2-LME T2 temporal CORRECT kind=ANSWER q="Wo wohne ich?" a="Du wohnst in Wels. Zeitbezug: gültig seit März 2019. Beleg: lx-8fba51031ad8b96ce825dbd6 (gesagt am 01.03.2019, SHA-256 38b33deaf657…) · best"
+M2-LME T3 temporal ABSTAINED kind=NO_EVIDENCE q="Wo habe ich 2012 gewohnt?" a="Dazu habe ich keine bestätigte Angabe für 2012."
+M2-LME T4 temporal CORRECT kind=NO_EVIDENCE q="Wo habe ich 2016 gewohnt?" a="Dazu habe ich keine bestätigte Angabe für 2016."
+M2-LME T5 temporal CORRECT kind=ANSWER q="Wo habe ich 2020 gearbeitet?" a="2020 hast du gearbeitet laut deinen Angaben bei Voestalpine. Beleg: lx-e19b5ccb309bfb6aa3dfe391 (gesagt am 01.06.2018, SHA-256 4180e3940083…"
+M2-LME T6 temporal CORRECT kind=ANSWER q="Wo habe ich ursprünglich gewohnt?" a="Ursprünglich (früheste Angabe) hast du in Dornbirn gewohnt. Zeitbezug: gültig ab deiner Angabe vom 01.06.2018 bis 01.06.2021. Beleg: lx-9a3d"
+M2-LME T7 temporal ABSTAINED kind=null q="Wo wohnte ich im Jahr 2022?" a=""
+M2-LME T8 temporal CORRECT kind=ANSWER q="Seit wann wohne ich in Mödling?" a="Du wohnst seit 2016 in Mödling. Beleg: lx-4bd1780e02b48ad76aaf019a (gesagt am 01.06.2020, SHA-256 5de2d453f7b9…) · bestätigte Langzeiterinne"
+M2-LME C1 correction CORRECT kind=ANSWER q="Wo wohne ich?" a="Du wohnst in Enns. Zeitbezug: gültig ab deiner Angabe vom 01.06.2024. Beleg: lx-88724f6a0015d1ddc2cc49e4 (gesagt am 01.07.2024, SHA-256 1621"
+M2-LME C2 correction ABSTAINED kind=CLARIFY q="Wie alt bin ich?" a="Dazu habe ich widersprüchliche Angaben ohne ausdrückliche Änderung: 42 und 41. Was davon stimmt? Sag z. B. „Merke dir: Ich wohne jetzt in …“"
+M2-LME C3 correction ABSTAINED kind=CLARIFY q="Wie heißt mein Hund?" a="Dazu habe ich widersprüchliche Angaben ohne ausdrückliche Änderung: Balu und Bello. Was davon stimmt? Sag z. B. „Merke dir: Ich wohne jetzt "
+M2-LME C4 correction CORRECT kind=ANSWER q="Wo arbeite ich?" a="Du arbeitest bei Billa. Zeitbezug: gültig ab deiner Angabe vom 01.06.2024. Beleg: lx-326d1b2e1af4cf5fca2b230e (gesagt am 01.09.2024, SHA-256"
+M2-LME C5 correction CORRECT kind=CLARIFY q="Wo wohne ich?" a="Dazu habe ich widersprüchliche Angaben ohne ausdrückliche Änderung: Baden und Tulln. Was davon stimmt? Sag z. B. „Merke dir: Ich wohne jetzt"
+M2-LME C6 correction CORRECT kind=ANSWER q="Wo wohne ich jetzt?" a="Du wohnst in Horn. Zeitbezug: gültig ab deiner Angabe vom 01.06.2025. Beleg: lx-65cd810dc821c79bae405605 (gesagt am 01.06.2025, SHA-256 8466"
+M2-LME C7 correction CORRECT kind=null q="Wie hieß meine Katze ursprünglich?" a=""
+M2-LME C8 correction CORRECT kind=ANSWER q="Was arbeite ich?" a="Du arbeitest als Schulleiter. Zeitbezug: gültig seit 2025. Beleg: lx-49e33f798f7a904d7603a0ba (gesagt am 01.06.2025, SHA-256 2db3921e60ed…) "
+M2-LME H1 hypothetical CORRECT kind=UNCONFIRMED_ONLY q="Wo wohne ich?" a="Dazu habe ich keine bestätigte Angabe. Du hast dazu nur eine Aussage als Möglichkeit, Plan, Frage oder Bericht gemacht; das ist nicht bestät"
+M2-LME H2 hypothetical CORRECT kind=ANSWER q="Wo wohne ich?" a="Du wohnst in Wien. Zeitbezug: gültig ab deiner Angabe vom 01.06.2024. Beleg: lx-0c8426b0f444c1f1d7cb942b (gesagt am 01.06.2024, SHA-256 d729"
+M2-LME H3 hypothetical CORRECT kind=UNCONFIRMED_ONLY q="Wo arbeite ich?" a="Dazu habe ich keine bestätigte Angabe. Du hast dazu nur eine Aussage als Möglichkeit, Plan, Frage oder Bericht gemacht; das ist nicht bestät"
+M2-LME H4 hypothetical CORRECT kind=UNCONFIRMED_ONLY q="Wie alt bin ich?" a="Dazu habe ich keine bestätigte Angabe. Du hast dazu nur eine Aussage als Möglichkeit, Plan, Frage oder Bericht gemacht; das ist nicht bestät"
+M2-LME H5 hypothetical CORRECT kind=UNCONFIRMED_ONLY q="Wo wohne ich?" a="Dazu habe ich keine bestätigte Angabe. Du hast dazu nur eine Aussage als Möglichkeit, Plan, Frage oder Bericht gemacht; das ist nicht bestät"
+M2-LME H6 hypothetical CORRECT kind=ANSWER q="Wo arbeite ich?" a="Du arbeitest bei Kapsch. Zeitbezug: gültig ab deiner Angabe vom 01.06.2024. Beleg: lx-784653b402ccf80bca0c89c9 (gesagt am 01.06.2024, SHA-25"
+M2-LME H7 hypothetical CORRECT kind=UNCONFIRMED_ONLY q="Wo wohne ich?" a="Dazu habe ich keine bestätigte Angabe. Du hast dazu nur eine Aussage als Möglichkeit, Plan, Frage oder Bericht gemacht; das ist nicht bestät"
+M2-LME H8 hypothetical CORRECT kind=UNCONFIRMED_ONLY q="Wo lebe ich?" a="Dazu habe ich keine bestätigte Angabe. Du hast dazu nur eine Aussage als Möglichkeit, Plan, Frage oder Bericht gemacht; das ist nicht bestät"
+M2-LME M1 multisession CORRECT kind=ANSWER q="Wie alt ist Klara?" a="Klara war laut deiner Angabe vom 01.06.2019 7 Jahre alt (Stand der Angabe, nicht automatisch fortgeschrieben). Beleg: lx-14d7969b9232337b553"
+M2-LME M2 multisession CORRECT kind=ANSWER q="Wo wohnt Klara?" a="Klara wohnt in Wien. Zeitbezug: gültig ab deiner Angabe vom 01.06.2021. Beleg: lx-4ad286e5e9da65e5b883a698 (gesagt am 01.06.2021, SHA-256 28"
+M2-LME M3 multisession CORRECT kind=ANSWER q="Wo arbeitet Stefan?" a="Stefan arbeitet bei ÖBB. Zeitbezug: gültig ab deiner Angabe vom 01.06.2022. Beleg: lx-fed7410061a4f4ae3af48cb6 (gesagt am 01.06.2022, SHA-25"
+M2-LME M4 multisession CORRECT kind=ANSWER q="Wo arbeite ich?" a="Du arbeitest bei KTM. Zeitbezug: gültig ab deiner Angabe vom 01.06.2020. Beleg: lx-f84cee344506effcf4acdb8b (gesagt am 01.06.2020, SHA-256 5"
+M2-LME M5 multisession CORRECT kind=ANSWER q="Wo habe ich 2021 gewohnt?" a="2021 wohntest du laut deinen Angaben in Ried. Beleg: lx-5d81ea8a7959d838512b0264 (gesagt am 01.06.2017, SHA-256 d0f6c58e6c22…) · bestätigte "
+M2-LME M6 multisession CORRECT kind=ANSWER q="Wo wohnt Paul?" a="Paul wohnt in Bregenz. Zeitbezug: gültig ab deiner Angabe vom 01.06.2024. Beleg: lx-3e8a57590331eee2663fa09e (gesagt am 01.06.2024, SHA-256 "
+M2-LME M7 multisession CORRECT kind=ANSWER q="Wo hat Paul 2020 gewohnt?" a="2020 wohnte Paul laut deinen Angaben in Bludenz. Beleg: lx-f3500cd4b6eb0c499107616b (gesagt am 01.06.2016, SHA-256 ff191cf686a1…) · bestätig"
+M2-LME M8 multisession ABSTAINED kind=null q="Wie heiße ich?" a=""
+M2-LME A1 abstention CORRECT kind=NO_EVIDENCE q="Wo arbeite ich?" a="Dazu habe ich keine bestätigte Angabe."
+M2-LME A2 abstention CORRECT kind=NO_EVIDENCE q="Wie alt bin ich?" a="Dazu habe ich keine bestätigte Angabe."
+M2-LME A3 abstention CORRECT kind=NO_EVIDENCE q="Wo habe ich 2015 gewohnt?" a="Dazu habe ich keine bestätigte Angabe für 2015."
+M2-LME A4 abstention CORRECT kind=NO_EVIDENCE q="Wo wohnt Lea?" a="Dazu habe ich keine bestätigte Angabe."
+M2-LME A5 abstention CORRECT kind=NO_EVIDENCE q="Wo wohne ich?" a="Dazu habe ich keine bestätigte Angabe."
+M2-LME A6 abstention CORRECT kind=CLARIFY q="Wo wohne ich?" a="Das kann ich nicht sicher beantworten: Deine Angabe vom 01.06.2024 kann ich nicht eindeutig einordnen. Sag es mir bitte in einem einfachen S"
+M2-LME A7 abstention CORRECT kind=NO_EVIDENCE q="Wie heißt meine Katze?" a="Dazu habe ich keine bestätigte Angabe."
+M2-LME A8 abstention WRONG kind=ANSWER q="Wo arbeite ich?" a="Du arbeitest bei Red Bull. Zeitbezug: gültig ab deiner Angabe vom 01.06.2024. Beleg: lx-ef82a8f8d0f68770a04f06d4 (gesagt am 01.06.2024, SHA-"
+M2-METRIC lme_holdout ability=temporal n=8 correct=6 abstained=2 wrong=0
+M2-METRIC lme_holdout ability=correction n=8 correct=6 abstained=2 wrong=0
+M2-METRIC lme_holdout ability=hypothetical n=8 correct=8 abstained=0 wrong=0
+M2-METRIC lme_holdout ability=multisession n=8 correct=7 abstained=1 wrong=0
+M2-METRIC lme_holdout ability=abstention n=8 correct=7 abstained=0 wrong=1
+M2-METRIC lme_holdout n=40 correct=34 abstained=5 wrong=1 forbidden_value_answered=0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

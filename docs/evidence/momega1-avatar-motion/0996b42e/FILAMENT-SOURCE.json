@@ -1,0 +1,8 @@
+{
+  "upstreamCommit": "003e5005713cba55cbd3f3a423c472000b96b868",
+  "viewApiSource": "https://github.com/google/filament/blob/003e5005713cba55cbd3f3a423c472000b96b868/android/filament-android/src/main/java/com/google/android/filament/View.java",
+  "postProcessingDocumentation": "Disabling post-processing forgoes color correctness as well as some anti-aliasing techniques. It also includes bloom, color grading and gamma encoding.",
+  "assetLoaderSource": "https://github.com/google/filament/blob/003e5005713cba55cbd3f3a423c472000b96b868/libs/gltfio/src/AssetLoader.cpp",
+  "assetLoaderSha256": "ed1c3d41d6f5c79dd5fa172ff95064bf9cd9a5f9c43aa2e49b6ba460fdb26bd2",
+  "hdrPortabilityConcern": "AssetLoader1493 multiplies emissiveFactor by strength;1678 sets strength separately; base.mat.in138 multiplies both. Actual Ubershader execution not yet measured; do not promote HDR extension candidate based on Blender alone."
+}

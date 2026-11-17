@@ -1,0 +1,20 @@
+✔ bounded process executes argv directly and reports its actual exit (185.669938ms)
+✔ timeout kills the process group and never reports success (561.039026ms)
+✔ owner cancellation is asynchronous and cannot become a successful exit (455.068488ms)
+✔ the signal that ended the direct child is reported, an exit code is not (259.311828ms)
+✔ oversized process logs are bounded and fail closed (417.499169ms)
+✔ cancellation also stops a child that detached like the Gradle daemon (694.12353ms)
+✔ inherited run identity catches a rapidly orphaned detached child on linux (386.176826ms)
+✔ inherited run identity catches a rapidly orphaned detached child on android (428.220523ms)
+✔ an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup (97.935425ms)
+✔ an unreadable process younger than the run blocks a confirmed cleanup (157.260332ms)
+✔ unreadable proc stat is not confused with an exited process (131.647841ms)
+✔ denied proc access still stops its direct child and returns a bounded unconfirmed timeout (472.695686ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4402.218165

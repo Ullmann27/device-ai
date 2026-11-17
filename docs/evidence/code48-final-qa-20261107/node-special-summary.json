@@ -1,0 +1,53 @@
+{
+  "gate": "node-special",
+  "status": "PASS",
+  "sourceCommit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+  "sourceTree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+  "sourceUnchanged": true,
+  "startedAt": "2026-11-07T06:26:46.296486+00:00",
+  "finishedAt": "2026-11-07T06:26:54.030467+00:00",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/continuum-atomic-acceptance.test.mjs",
+        "scripts/continuum-gguf-preflight.test.mjs",
+        "scripts/continuum-gguf-preflight.integration.test.mjs",
+        "scripts/continuum-owner-v38-release.test.mjs",
+        "scripts/continuum-owner-continuous-release.test.mjs",
+        "scripts/continuum-owner-backend-gate.test.mjs"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate",
+      "exitCode": 0
+    }
+  ],
+  "deviceAcceptance": "NOT_RUN",
+  "signingAndPublication": "NOT_RUN",
+  "tests": {
+    "tests": 23,
+    "suites": 0,
+    "pass": 23,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "rawEvidence": {
+    "archive": "node-special-evidence.zip",
+    "bytes": 2035,
+    "sha256": "06c6666bf3f8020da102c6e4702873678eb557d5643b8f3553ebc4fad8136d67",
+    "files": [
+      {
+        "path": "node-special-receipt.json",
+        "bytes": 1420,
+        "sha256": "eee7de0876c8568e008c5a99067e563655ff9a1391b60d7211ae0007b1d875e8"
+      },
+      {
+        "path": "node-special.log",
+        "bytes": 2511,
+        "sha256": "36fb5ded26512c131495d31438d962208c35291946e3a458681f663326abf897"
+      }
+    ]
+  }
+}

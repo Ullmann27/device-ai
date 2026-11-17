@@ -1,0 +1,260 @@
+parent source: 750ae86a584ac8c6adde6697c8d0a7f80b02b93a
+status: compatibilitycandidate staged afterRED
+command: node --test --test-reporter=tap scripts/continuum-local-model-native.test.mjs scripts/continuum-local-model-observation.test.mjs .github/continuum/coding-provider.test.mjs .github/continuum/coding-provider-remote.test.mjs
+exit: 0
+TAP version 13
+# Subtest: remote seam needs explicit config, server credential and durable canonical job evidence
+ok 1 - remote seam needs explicit config, server credential and durable canonical job evidence
+  ---
+  duration_ms: 23.81136
+  type: 'test'
+  ...
+# Subtest: declined or mismatched per-request consent consumes no reservation and starts no child
+ok 2 - declined or mismatched per-request consent consumes no reservation and starts no child
+  ---
+  duration_ms: 57.310912
+  type: 'test'
+  ...
+# Subtest: approved remote proposal uses the fixed CLI and existing durable budget without leaking private contents
+ok 3 - approved remote proposal uses the fixed CLI and existing durable budget without leaking private contents
+  ---
+  duration_ms: 31.662878
+  type: 'test'
+  ...
+# Subtest: remote CLI failure cannot silently invoke a local or another remote model
+ok 4 - remote CLI failure cannot silently invoke a local or another remote model
+  ---
+  duration_ms: 28.783507
+  type: 'test'
+  ...
+# Subtest: fixed remote failure reason and offline fallback survive the canonical provider boundary
+ok 5 - fixed remote failure reason and offline fallback survive the canonical provider boundary
+  ---
+  duration_ms: 28.103605
+  type: 'test'
+  ...
+# Subtest: canonical provider preserves explicit model admission metadata without forwarding unrelated credentials
+ok 6 - canonical provider preserves explicit model admission metadata without forwarding unrelated credentials
+  ---
+  duration_ms: 34.24349
+  type: 'test'
+  ...
+# Subtest: provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI
+ok 7 - provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI
+  ---
+  duration_ms: 25.629951
+  type: 'test'
+  ...
+# Subtest: model child receives only local credentials and durable trace excludes raw source/model output
+ok 8 - model child receives only local credentials and durable trace excludes raw source/model output
+  ---
+  duration_ms: 31.251642
+  type: 'test'
+  ...
+# Subtest: malformed model name is rejected before invoking the local child
+ok 9 - malformed model name is rejected before invoking the local child
+  ---
+  duration_ms: 55.000899
+  type: 'test'
+  ...
+# Subtest: unsafe evidence paths fail before dirtying the source checkout
+ok 10 - unsafe evidence paths fail before dirtying the source checkout
+  ---
+  duration_ms: 22.476334
+  type: 'test'
+  ...
+# Subtest: same canonical job resumes its request budget without repeating evidence slots
+ok 11 - same canonical job resumes its request budget without repeating evidence slots
+  ---
+  duration_ms: 38.571519
+  type: 'test'
+  ...
+# Subtest: request reservation is durable before inference and interrupted calls consume the budget
+ok 12 - request reservation is durable before inference and interrupted calls consume the budget
+  ---
+  duration_ms: 26.913148
+  type: 'test'
+  ...
+# Subtest: foreign or corrupt persisted requests block before another inference
+ok 13 - foreign or corrupt persisted requests block before another inference
+  ---
+  duration_ms: 25.213481
+  type: 'test'
+  ...
+# Subtest: native pinned completion counters preserve actual timestamped format
+ok 14 - native pinned completion counters preserve actual timestamped format
+  ---
+  duration_ms: 1.116225
+  type: 'test'
+  ...
+# Subtest: only known native completion trailer is removed; raw hash input is unchanged
+ok 15 - only known native completion trailer is removed; raw hash input is unchanged
+  ---
+  duration_ms: 0.391701
+  type: 'test'
+  ...
+# Subtest: official Qwen bytes select ChatML, with schema constraint supplied as inert data
+ok 16 - official Qwen bytes select ChatML, with schema constraint supplied as inert data
+  ---
+  duration_ms: 0.7418
+  type: 'test'
+  ...
+# Subtest: normal caller cannot certify a serialized runtime observation
+ok 17 - normal caller cannot certify a serialized runtime observation
+  ---
+  duration_ms: 0.953479
+  type: 'test'
+  ...
+# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
+ok 18 - coding CLI blocks endpoint-only configuration before any network/model call
+  ---
+  duration_ms: 55.312194
+  type: 'test'
+  ...
+# Subtest: unapproved or absent local weights never produce runtime observations
+ok 19 - unapproved or absent local weights never produce runtime observations
+  ---
+  duration_ms: 1.47689
+  type: 'test'
+  ...
+# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
+ok 20 - actual namespace binds admitted descriptors and fixture output; never inference evidence
+  ---
+  duration_ms: 68.729015
+  type: 'test'
+  ...
+# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
+ok 21 - altered model/runtime, unsafe executable and mismatched request cannot execute
+  ---
+  duration_ms: 44.494757
+  type: 'test'
+  ...
+# Subtest: deadline cancels actual isolated process with bounded return
+ok 22 - deadline cancels actual isolated process with bounded return
+  ---
+  duration_ms: 283.887388
+  type: 'test'
+  ...
+# Subtest: STOP cancels actual isolated process and leaves no trusted observation
+ok 23 - STOP cancels actual isolated process and leaves no trusted observation
+  ---
+  duration_ms: 186.473309
+  type: 'test'
+  ...
+# Subtest: malformed/oversized output and missing generation counters are rejected
+ok 24 - malformed/oversized output and missing generation counters are rejected
+  ---
+  duration_ms: 130.884339
+  type: 'test'
+  ...
+# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
+ok 25 - sandbox exposes no checkout, HOME, network, secret or configurable shell
+  ---
+  duration_ms: 0.875993
+  type: 'test'
+  ...
+# Subtest: actual FD mount retains selected inode across model path replacement
+ok 26 - actual FD mount retains selected inode across model path replacement
+  ---
+  duration_ms: 40.962869
+  type: 'test'
+  ...
+# Subtest: prompt evaluation counter alone cannot masquerade as output generation
+ok 27 - prompt evaluation counter alone cannot masquerade as output generation
+  ---
+  duration_ms: 42.366899
+  type: 'test'
+  ...
+# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
+ok 28 - inference sandbox denies host files, external interfaces, secrets and writable model
+  ---
+  duration_ms: 50.557115
+  type: 'test'
+  ...
+# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
+ok 29 - seccomp denies fork and rlimits bound native memory/descriptor budgets
+  ---
+  duration_ms: 48.061216
+  type: 'test'
+  ...
+# Subtest: changing model during actual execution invalidates otherwise valid output
+ok 30 - changing model during actual execution invalidates otherwise valid output
+  ---
+  duration_ms: 249.581933
+  type: 'test'
+  ...
+# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
+ok 31 - production provider rejects synthetic fixture receipt even when transport MAC is valid
+  ---
+  duration_ms: 134.371484
+  type: 'test'
+  ...
+# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
+ok 32 - self-asserted inference flag is rejected instead of upgraded or accepted
+  ---
+  duration_ms: 61.124219
+  type: 'test'
+  ...
+# Subtest: native worker threads remain permitted while process creation stays denied
+ok 33 - native worker threads remain permitted while process creation stays denied
+  ---
+  duration_ms: 53.895385
+  type: 'test'
+  ...
+# Subtest: unavailable isolation launcher fails closed and creates no observation
+ok 34 - unavailable isolation launcher fails closed and creates no observation
+  ---
+  duration_ms: 37.77175
+  type: 'test'
+  ...
+# Subtest: integration strict observation option rejects injected unobserved provider replies
+ok 35 - integration strict observation option rejects injected unobserved provider replies
+  ---
+  duration_ms: 63.430152
+  type: 'test'
+  ...
+# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
+ok 36 - integration technical recall enters prompt as bounded untrusted data within context budget
+  ---
+  duration_ms: 65.266228
+  type: 'test'
+  ...
+# Subtest: integration malformed recall and strict remote selection fail before transport
+ok 37 - integration malformed recall and strict remote selection fail before transport
+  ---
+  duration_ms: 47.661112
+  type: 'test'
+  ...
+# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+ok 38 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+  ---
+  duration_ms: 136.058621
+  type: 'test'
+  ...
+# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
+ok 39 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
+  ---
+  duration_ms: 0.354675
+  type: 'test'
+  ...
+# Subtest: invalid model JSON retains authenticated process observation without a candidate
+ok 40 - invalid model JSON retains authenticated process observation without a candidate
+  ---
+  duration_ms: 47.04682
+  type: 'test'
+  ...
+# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
+ok 41 - provider retains authenticated rejected-response observation and consumed durable budget
+  ---
+  duration_ms: 137.76997
+  type: 'test'
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2192.688139

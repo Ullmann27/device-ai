@@ -1,0 +1,65 @@
+{
+  "baseline_commit": "9918891a6da1d74275b087a04f4aa86c79074d46",
+  "validated_code_commit": "25b86244e219dbf0401b32248c64adb794b15452",
+  "source_hashes_match_code_commit": true,
+  "scope": "Fresh pure Kotlin/JUnit execution; Android wiring and added native UI regression await integrator",
+  "compiler": "Kotlin 2.4.0, Java 17",
+  "dependency_jar_sha256": "6f5f1cfee967e825b11537f8b9abf05686378def648b7fd8edfbe8aea925e952",
+  "before": {
+    "tests": 17,
+    "failures": 1,
+    "test_result": 1,
+    "source_hashes": {
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflow.kt": "8df36ff35a5e81f2463139216b7a585e153b4253c7f9872220ef7836f4077bde",
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerTaskGrant.kt": "5bc41272c207d8967a8087dde73f950cbb4f5fb6cbd529afe27c981c07cb279d",
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt": "626665ac4182af50ac9e7e3ff6f0464f3d2b008ef73de26e45a5509bc9f608c8",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+      "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "adeaa956fbfcf9ef363e75b148293ebc36f90004891825a94fe57c17d9242561",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveActionCockpitAdapter.kt": "6231e38541e2c3e811b5ea0f17edb3c0f41c25ccf82c9c1e507efefd0c7c74f8",
+      "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+      "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt": "87321fb471ece1e67b1450cb009b6f040b888ee0d1b9345627b7a2900b70eaa9"
+    },
+    "negative_control": "englishDraftUsesObservedComposerAfterDifferentSearchHints: Search... expected VERIFIED, actual PAUSED"
+  },
+  "after": {
+    "tests": 67,
+    "failures": 0,
+    "test_result": 0,
+    "source_hashes": {
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflow.kt": "e2854c4e3d4b338aef2324688661015ccf73d472a85043d64870abf1b5f5731e",
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerTaskGrant.kt": "1a743004d13a6e2199ae106e1a10af57e3f0ac6fc49afb54f0f87abbb3e20a85",
+      "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt": "626665ac4182af50ac9e7e3ff6f0464f3d2b008ef73de26e45a5509bc9f608c8",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+      "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt": "f87adcad148e8cfb177403ac4d45c3005ad923fd076c086bec49de67184a30ea",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveActionCockpitAdapter.kt": "6231e38541e2c3e811b5ea0f17edb3c0f41c25ccf82c9c1e507efefd0c7c74f8",
+      "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+      "app/src/main/java/at/heinz/deviceai/cognitive/LiveComposeSemantics.kt": "5314801dfc221383b35383f243fac290046cf20272a1fd359c8a9d3da2ab543c",
+      "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt": "7991e8882e5fd5645e00d0a23cba0fd4ff81fd29035dda98b03b09f011d9abef",
+      "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerTaskGrantTest.kt": "e5601b10c2964b11390608f8b40956639846e6c14992984af2c2d3e2291b0970",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LiveSearchClickTest.kt": "2fb3814ecc323d79911d30ad05566821053a527717507a3df0c218a684d770a4",
+      "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerActionsTest.kt": "e195333da8153333157223c9f825adea58459cfbd5113ad3c31d87ccee2b142e",
+      "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParserTest.kt": "65685669a30a5b869d7198f01dcdc8959375ca5a730fe7e12a1462583c0bb3e2"
+    }
+  },
+  "test_classes": [
+    "at.heinz.deviceai.cognitive.OwnerComputerWorkflowTest",
+    "at.heinz.deviceai.cognitive.OwnerComputerTaskGrantTest",
+    "at.heinz.deviceai.cognitive.LiveSearchClickTest",
+    "at.heinz.deviceai.cognitive.LiveComputerActionsTest",
+    "at.heinz.deviceai.cognitive.OwnerComputerIntentParserTest"
+  ],
+  "raw_execution_receipt_sha256": {
+    "red": "20c595a26d1df71dd25ad611ef912023073341462f67f49a4d3ac96b67798af0",
+    "green": "4b23932f9e033f4a3afb4861a2a4d766905905b2564ae0de583eecff00941baf"
+  },
+  "device": "NOT_RUN",
+  "android_wiring_compile": "INTEGRATOR_PENDING",
+  "new_native_ui_test": "INTEGRATOR_PENDING",
+  "message_only_followup_commit": "aba74577cb7b9d529509c980718bff6cfe1b97d1",
+  "message_only_followup_test": "NOT_RERUN; text only, no control-flow change",
+  "validated_code_blob_hashes_match": true
+}

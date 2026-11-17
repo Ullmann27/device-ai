@@ -1,0 +1,45 @@
+{
+  "schema": "CDX1_CONDITIONER_REPAIR_PROTOCOL_V1",
+  "status": "FROZEN_BEFORE_CANDIDATE_PREDICTIONS",
+  "experiment": "EXP-05",
+  "seed": 91,
+  "learningRate": 0.035,
+  "stages": [0, 6000, 30000, 120000],
+  "arms": ["raw", "unit_l2", "train_mean_centered_x32"],
+  "byteBudget": 64,
+  "train": [
+    {"id":"train-mira","evidence":"Mira wohnt in Graz.","question":"Wo wohnt Mira?","answer":"Mira wohnt in Graz."},
+    {"id":"train-lea","evidence":"Lea wohnt in Linz.","question":"Wo wohnt Lea?","answer":"Lea wohnt in Linz."},
+    {"id":"train-nora","evidence":"Nora arbeitet als Ärztin.","question":"Was arbeitet Nora?","answer":"Nora ist Ärztin."},
+    {"id":"train-paul","evidence":"Paul trägt einen Helm.","question":"Was trägt Paul?","answer":"Paul trägt einen Helm."}
+  ],
+  "dev": [
+    {"id":"dev-wording-01","stratum":"known_fact_new_wording","evidence":"Mira wohnt in Graz.","question":"In welcher Stadt wohnt Mira?","answer":"Mira wohnt in Graz."},
+    {"id":"dev-wording-02","stratum":"known_fact_new_wording","evidence":"Lea wohnt in Linz.","question":"Wo lebt Lea?","answer":"Lea wohnt in Linz."},
+    {"id":"dev-wording-03","stratum":"known_fact_new_wording","evidence":"Nora arbeitet als Ärztin.","question":"Welchen Beruf hat Nora?","answer":"Nora ist Ärztin."},
+    {"id":"dev-wording-04","stratum":"known_fact_new_wording","evidence":"Paul trägt einen Helm.","question":"Was hat Paul auf?","answer":"Paul trägt einen Helm."},
+    {"id":"dev-wording-05","stratum":"known_fact_new_wording","evidence":"Miras Wohnort ist Graz.","question":"Wo wohnt Mira?","answer":"Mira wohnt in Graz."},
+    {"id":"dev-wording-06","stratum":"known_fact_new_wording","evidence":"Lea lebt in Linz.","question":"Wo wohnt Lea?","answer":"Lea wohnt in Linz."},
+    {"id":"dev-wording-07","stratum":"known_fact_new_wording","evidence":"Nora ist von Beruf Ärztin.","question":"Was arbeitet Nora?","answer":"Nora ist Ärztin."},
+    {"id":"dev-wording-08","stratum":"known_fact_new_wording","evidence":"Paul hat einen Helm auf.","question":"Was trägt Paul?","answer":"Paul trägt einen Helm."},
+    {"id":"dev-changed-01","stratum":"known_entity_changed_fact","evidence":"Mira wohnt in Bonn.","question":"Wo wohnt Mira?","answer":"Mira wohnt in Bonn."},
+    {"id":"dev-changed-02","stratum":"known_entity_changed_fact","evidence":"Lea wohnt in Graz.","question":"Wo wohnt Lea?","answer":"Lea wohnt in Graz."},
+    {"id":"dev-changed-03","stratum":"known_entity_changed_fact","evidence":"Nora arbeitet als Köchin.","question":"Was arbeitet Nora?","answer":"Nora ist Köchin."},
+    {"id":"dev-changed-04","stratum":"known_entity_changed_fact","evidence":"Paul trägt einen Schal.","question":"Was trägt Paul?","answer":"Paul trägt einen Schal."},
+    {"id":"dev-new-01","stratum":"unseen_entity_and_fact","evidence":"Omar wohnt in Bern.","question":"Wo wohnt Omar?","answer":"Omar wohnt in Bern."},
+    {"id":"dev-new-02","stratum":"unseen_entity_and_fact","evidence":"Jana wohnt in Ulm.","question":"Wo wohnt Jana?","answer":"Jana wohnt in Ulm."},
+    {"id":"dev-new-03","stratum":"unseen_entity_and_fact","evidence":"Bela arbeitet als Maler.","question":"Was arbeitet Bela?","answer":"Bela ist Maler."},
+    {"id":"dev-new-04","stratum":"unseen_entity_and_fact","evidence":"Ida trägt eine Mütze.","question":"Was trägt Ida?","answer":"Ida trägt eine Mütze."},
+    {"id":"dev-negative-01","stratum":"unsupported","evidence":"Mira wohnt in Graz.","question":"Wo wohnt Lea?","answer":"UNBEKANNT"},
+    {"id":"dev-negative-02","stratum":"unsupported","evidence":"Paul trägt einen Helm.","question":"Wo wohnt Paul?","answer":"UNBEKANNT"},
+    {"id":"dev-negative-03","stratum":"unsupported","evidence":"Nora arbeitet nicht als Ärztin.","question":"Was arbeitet Nora?","answer":"UNBEKANNT"},
+    {"id":"dev-negative-04","stratum":"unsupported","evidence":"Lea wohnt nicht in Linz.","question":"Wo wohnt Lea?","answer":"UNBEKANNT"}
+  ],
+  "selection": {
+    "primary": "Free generation exact answer after trim AND EOS; report every stratum and every arm/stage, not loss-only",
+    "candidateRule": "Best supported DEV exact score; ties lower update count then listed arm order. Report matched-budget raw arm. No independent TEST may select or tune candidate.",
+    "minimumClaim": "Any gain confined to known facts with new wording is called known-fact wording transfer, never unseen-fact generalization",
+    "independent": "Parent authors genuinely new cases only after chosen candidate and source freeze. Include changed facts, unseen entities and unsupported cases. Run once, retain all outputs."
+  },
+  "limits": ["No old TEST16 as a tuning signal", "Existing encoder and decoder checkpoint formats remain byte-preserved", "All new checkpoints isolated research-only", "No production hook or promotion"]
+}

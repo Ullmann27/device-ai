@@ -1,0 +1,93 @@
+TAP version 13
+# Subtest: confirmed recall remains exact when supplementary model context is not representable
+not ok 1 - confirmed recall remains exact when supplementary model context is not representable
+  ---
+  duration_ms: 1.805966
+  type: 'test'
+  location: '/workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/recall_answer_clipped/source/.github/continuum/grounded-recall-android-wiring.test.mjs:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /if\(recall==null\)\s*\{[\s\S]*addNonModelReply\(request,\s*answer,\s*at\.heinz\.deviceai\.cognitive\.NonModelReplyKind\.MEMORY_RECALL\)/. Input:
+    
+    'if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&\n' +
+      '                            localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {\n' +
+      '                        val modelQuestion=LocalFirstPolicy.localModelQuestion(\n' +
+      '                            request,localPrompt,\n' +
+      '                            hasSameSessionLocalTurn=localConversationContext\n' +
+      '                                .render(requestSessionId).isNotBlank(),\n' +
+      '                            grounded=grounded\n' +
+      '                        )\n' +
+      '                        if(grounded) {\n' +
+      '                            val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall\n' +
+      '                                .boundedOrNull(answer,evidence)\n' +
+      '                            if(recall==null) {\n' +
+      '                                // A confirmed retrieval must remain exact. If it cannot fit\n' +
+      "                                // the model's bounded evidence envelope, do not truncate it,\n" +
+      '                                // throw from the UI callback or synthesize on incomplete facts.\n' +
+      '                                turnTrace.event(TraceStage.GATED_FALLBACK)\n' +
+      '                                publishCognitiveTrace(turnTrace,TraceOutcome.MEMORY_EXACT)\n' +
+      '                                addNonModelReply(request, answer.take(4_000), at.heinz.deviceai.cognitive.NonModelReplyKind.MEMORY_RECALL)\n' +
+      '                                addToolActivity(evidence.take(2_000)+\n' +
+      '                                    " · Zusatzanalyse nicht gestartet: Abruf überschreitet sichere Modellgrenzen.")\n' +
+      '                            } else {\n' +
+      '                                addToolActivity(evidence+" · Zusatzaufgabe → lokale Modellschlussfolgerung, nicht bestätigt")\n' +
+      '                                runLocal(request,modelQuestion,recall,turnTrace)\n' +
+      '                            }\n' +
+      '                        } else {\n' +
+      '                            addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")\n' +
+      '                            if(modelQuestion==request)runLocal(request,turnTrace=turnTrace)\n' +
+      '                            else runLocal(request,modelQuestion,turnTrace=turnTrace)\n' +
+      '                        }\n' +
+      '                        '
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
+                                localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {
+                            val modelQuestion=LocalFirstPolicy.localModelQuestion(
+                                request,localPrompt,
+                                hasSameSessionLocalTurn=localConversationContext
+                                    .render(requestSessionId).isNotBlank(),
+                                grounded=grounded
+                            )
+                            if(grounded) {
+                                val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall
+                                    .boundedOrNull(answer,evidence)
+                                if(recall==null) {
+                                    // A confirmed retrieval must remain exact. If it cannot fit
+                                    // the model's bounded evidence envelope, do not truncate it,
+                                    // throw from the UI callback or synthesize on incomplete facts.
+                                    turnTrace.event(TraceStage.GATED_FALLBACK)
+                                    publishCognitiveTrace(turnTrace,TraceOutcome.MEMORY_EXACT)
+                                    addNonModelReply(request, answer.take(4_000), at.heinz.deviceai.cognitive.NonModelReplyKind.MEMORY_RECALL)
+                                    addToolActivity(evidence.take(2_000)+
+                                        " · Zusatzanalyse nicht gestartet: Abruf überschreitet sichere Modellgrenzen.")
+                                } else {
+                                    addToolActivity(evidence+" · Zusatzaufgabe → lokale Modellschlussfolgerung, nicht bestätigt")
+                                    runLocal(request,modelQuestion,recall,turnTrace)
+                                }
+                            } else {
+                                addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")
+                                if(modelQuestion==request)runLocal(request,turnTrace=turnTrace)
+                                else runLocal(request,modelQuestion,turnTrace=turnTrace)
+                            }
+                            
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/b31a9d731016/context-contract-evidence/additional-mutations/recall_answer_clipped/source/.github/continuum/grounded-recall-android-wiring.test.mjs:13:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93.260855

@@ -1,0 +1,90 @@
+{
+  "schema": "independent-idle224-source-and-frame-check",
+  "version": 1,
+  "assetSha256": "3805ba43261784993d3f4c65bb24df2a0ee306b89962167d81763c12c9d81deb",
+  "source": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+  "poseFileSha256": "8d2af24cb1e0bb22a8e35a456f9be41de91d322980d7f46c63159be6628b7677",
+  "frameCount": 224,
+  "fps": 24,
+  "durationSeconds": 9.333333333333334,
+  "pixels": [
+    192,
+    224
+  ],
+  "samples": 2,
+  "allFrameHashesMatch": true,
+  "allActualExportedPosesMatch": true,
+  "fixedCameraAcrossBatches": true,
+  "completeContiguousIndices": true,
+  "mouthIdleZero": true,
+  "motionDegrees": {
+    "headYaw": {
+      "min": -0.014567674,
+      "max": 1.2443461,
+      "maxPerFrameChange": 0.031383794,
+      "batchBoundaryChange": 0.009797559999999983
+    },
+    "headPitch": {
+      "min": -0.41242695,
+      "max": 0.719429,
+      "maxPerFrameChange": 0.019620975,
+      "batchBoundaryChange": 0.010032769999999969
+    },
+    "eyeYaw": {
+      "min": -1.6274731,
+      "max": 2.5077648,
+      "maxPerFrameChange": 0.08811091,
+      "batchBoundaryChange": 0.04768954999999997
+    },
+    "eyePitch": {
+      "min": -1.0604806,
+      "max": 1.0907727,
+      "maxPerFrameChange": 0.03439775,
+      "batchBoundaryChange": 0.013439360000000011
+    }
+  },
+  "blinkFrameRuns": [
+    [
+      107,
+      108,
+      109,
+      110
+    ],
+    [
+      217,
+      218,
+      219,
+      220
+    ]
+  ],
+  "sampledBlinkPeaks": [
+    0.88889164,
+    0.8333348
+  ],
+  "manifestSha256": {
+    "replay-idle-0000-0111.json": "9a9899b341bf3a4a199524e291ebf32bb75ddecce521c3f392cd0313f76d6628",
+    "replay-idle-0112-0223.json": "a17e2dbab0fb92c6330a16c5f22eab858c94072221c5332a6bb79d3153612237"
+  },
+  "contactSha256": {
+    "frames-096-127.png": "2c71fef71d3f13ad55ab5b1ea19270f1e2a037e26fe47995906f05e3a78bedf8",
+    "frames-032-063.png": "28c3831ab79b1ec61db6490e8d8cfdb67eaf7f8ceed6522cbd01426ea17917da",
+    "frames-192-223.png": "8000aee33ce993c6c93af7b9be6973f380ffb822246d44d29b182d0f2a76030a",
+    "frames-160-191.png": "196114f2be574a9fe0619eda95f1afcb16ce7c4a3e4e579a9c1e594006668b29",
+    "frames-000-031.png": "f123ee1387d1d0a5a7d60489dddf31597f3b9a61bc7788067cc603a9b794b0b5",
+    "frames-128-159.png": "72dc6498864ead93e2f6fd0512c4fe784635b9c1ad14321eed0b02609d6ecba6",
+    "frames-064-095.png": "29034eab47dfab513acc4797b101503bc050ba5d9920a832a68d98a4eb7fcf9f"
+  },
+  "limits": [
+    "Source and all frames checked; contact-sheet inspection is frame-sequence review, not real-time playback or a human perceptual naturalness trial.",
+    "Two-sample Cycles noise and192x224 pixels limit eye/material judgments.",
+    "No audio, camera, native Filament or device evidence; HDR material portability is not accepted."
+  ],
+  "all224FramesIndependentlyViewedInContactSheets": true,
+  "observations": [
+    "Both blink events are visible at frames107\u2013110 and217\u2013220, followed by reopening.",
+    "The full224-frame contact review shows a small continuous head/gaze drift, a still mouth and no visible coarse pose jump at the112-frame batch join.",
+    "Two-sample grain is strong across skin and eyes; fine iris/lid/texture quality cannot be certified from these frames.",
+    "This is a complete frame-sequence review, not a claim of real-time playback or perceived human naturalness."
+  ],
+  "decision": "ACCEPT_COMPLETE_HOST_IDLE_REPLAY_BINDING; NATURALNESS_AND_H01_NOT_ACCEPTED"
+}

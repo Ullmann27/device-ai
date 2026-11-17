@@ -1,0 +1,19 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=43639 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=43639 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ContinuumDocumentSceneUiTest#restoredChatOpensPdfBeforeTheCockpitsFirstLayout
+.E
+Time: 9.893
+There was 1 failure:
+1) restoredChatOpensPdfBeforeTheCockpitsFirstLayout(at.heinz.deviceai.ContinuumDocumentSceneUiTest)
+java.lang.AssertionError: A newly visible cockpit must retain the pending document scene
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.restoredChatOpensPdfBeforeTheCockpitsFirstLayout$lambda$0(ContinuumDocumentSceneUiTest.kt:216)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.withCockpit(ContinuumDocumentSceneUiTest.kt:116)
+	at at.heinz.deviceai.ContinuumDocumentSceneUiTest.restoredChatOpensPdfBeforeTheCockpitsFirstLayout(ContinuumDocumentSceneUiTest.kt:205)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=1 failures=1

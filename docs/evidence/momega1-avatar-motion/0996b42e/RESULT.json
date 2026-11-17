@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "0996b42e4c8bdbc1a3af49b85c0a3382bbcac346",
+  "evidenceClass": "HOST_API_COMPILE",
+  "actualSdk36Filament156ApiCompile": "PASS",
+  "nativeRendering": "NOT_RUN",
+  "device": "FOLD7_NOT_RUN",
+  "change": "Enable existing View color/gamma postprocessing and bounded128px/4level/LOW/.06 bloom, no lensflare or chromatic aberration",
+  "newFrameCallbacks": 0,
+  "newEngines": 0,
+  "newEntities": 0,
+  "cleanup": "Existing destroyView releases its postprocessing resources",
+  "rawLogSha256": "db7dae1e5191e99fb1ff8a3ac319d01d89bd59175de88764f8dd68c74d7299e9",
+  "independentSourceReview": "Requested in PR434; no self-acceptance"
+}

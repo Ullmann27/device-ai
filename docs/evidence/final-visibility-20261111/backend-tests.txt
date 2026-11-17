@@ -1,0 +1,254 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> device-ai-backend@0.3.0 test
+> node --test test/*.test.js
+
+✔ web tools are exact bounded Android function proposals, never hosted browsing (2.791421ms)
+✔ disabled discovery advertises no web capability; new calls do not share mutable schemas (0.302399ms)
+✔ actual server advertises Android proposals and removes hosted web-search bypass (0.715007ms)
+✖ health reports disabled hosted research without exposing credentials (187.589517ms)
+✖ continuum status enforces bearer authentication (1.370945ms)
+✖ unauthorized or invalid agent turns never call upstream (0.772292ms)
+✖ agent turn maps mock Responses API to Android reply contract (0.256645ms)
+✖ tool-result continuation reuses session and limits the forwarded result count (0.139412ms)
+✖ oversized payload is rejected before upstream forwarding (0.107386ms)
+✖ upstream HTTP and JSON failures are bounded and do not leak secrets (0.093736ms)
+✔ dataset prioritizes gaps, low coverage and uncertain observations (20.581414ms)
+✔ dataset includes recent failed cycles as recovery benchmarks (1.101078ms)
+✔ immutable governance cannot be mutated by challenger (0.963282ms)
+✔ brain registry is checksummed and recovers last-known-good (5.368188ms)
+✔ factory promotes only objectively better grounded safe challenger (5.109517ms)
+✔ factory refuses promotion when safety or grounding regress (2.936619ms)
+✔ state persists with integrity and last-known-good recovery (11.583292ms)
+✔ observation requires citations and creates research gaps without authority (2.430098ms)
+✔ planner prioritizes unresolved gap and changes query strategy after failures (17.076316ms)
+✔ daemon learns cited observation, persists gaps and respects interval budget (16.434799ms)
+✔ failed research is recorded and alternative strategy becomes available (5.464412ms)
+✔ public memory retrieval respects query, citations and epistemic boundaries (4.495746ms)
+✔ unverified research is never silently promoted to trusted memory (0.717627ms)
+✔ oversized queries and limits are rejected (0.728579ms)
+✔ Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts (3.923224ms)
+✔ every real model request requires a new owner checkbox consent (1.110903ms)
+✔ render only serves local UI assets; mentor POST keeps auth and owner consent (0.421155ms)
+✔ mentor is opt-in disabled and never invokes external fetch without key (4.589948ms)
+✔ one authorized message is bounded and contains no tools, memory or device context (13.272517ms)
+✔ input length validation happens before network and before quota consumption (1.094492ms)
+✔ daily quota is isolated by UTC day and refuses concurrent calls (1.325208ms)
+✔ upstream errors do not expose API response contents or key (0.668733ms)
+✔ Groq throttling and malformed output are non-tool error responses (2.278081ms)
+✔ oversized responses are rejected without parsing or logging private contents (1.136985ms)
+✔ mentor ignores whitespace around environment key and never follows a redirect (3.583453ms)
+✔ provider rejects unknown models and invalid requests without exposing response bodies (1.481606ms)
+✔ exhausted reasoning-only response retries same consented question once (1.301819ms)
+✔ empty response after a bounded retry has a specific reason, no reasoning text leaks (1.119129ms)
+✔ other model names do not get unsupported gpt-oss reasoning options (0.829259ms)
+✔ hypotheses are explicitly non-authoritative (1.493771ms)
+✔ invented evidence references cannot enter a tournament (3.855192ms)
+✔ tournament store is integrity checked with LKG recovery (2.071383ms)
+✔ generation reflection Elo tournament evolution and research questions form a closed loop (5.340191ms)
+✔ daily tournament budget prevents runaway agent loops (11.749304ms)
+✔ long Groq answers are preserved beyond old 1800 character limit (10.072691ms)
+✔ table markdown becomes plain, legible text without losing values (0.647144ms)
+✔ oversized answers end at a boundary and explicitly signal shortening (0.387521ms)
+✔ provider token-limit completion is explicitly marked as incomplete (0.762649ms)
+✔ unverified mentor has no current device or repo state (0.700868ms)
+✔ unapproved device cannot redeem; no credentials are exposed (9.449679ms)
+✔ owner-approved device receives only revocable mentor token (4.677721ms)
+✔ expired, forged, tampered, and replayable altered challenges are rejected (3.069767ms)
+✔ wrong elliptic curve and missing owner token fail closed (4.062447ms)
+✔ rotated backend token is recovered only by fresh signed owner-approved pairing (3.565107ms)
+✔ OpenRouter stays off without secret or explicit enablement (4.177807ms)
+✔ OpenRouter uses its pinned HTTPS endpoint, a bounded one-off prompt and returns no tools (12.777712ms)
+✔ OpenRouter errors never expose upstream key or private payload (1.095385ms)
+✔ OpenRouter rejects too-long prompts without calling provider (0.410679ms)
+✔ zero-cost autonomous daemon persists public source observations across restarts (33.368484ms)
+✔ free research collects deduplicated cited metadata without a paid API (9.793133ms)
+✔ one unavailable source does not stop other public sources (1.43069ms)
+✔ empty results never become made-up observations (2.160307ms)
+✔ unsafe citation URLs and oversized metadata responses are rejected (4.937545ms)
+✔ query/output bounds and timeout input validation stay enforced (2.801093ms)
+ℹ tests 64
+ℹ suites 0
+ℹ pass 57
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 417.170218
+
+✖ failing tests:
+
+test at test/api-integration.test.js:149:1
+✖ health reports disabled hosted research without exposing credentials (187.589517ms)
+  Error: Backend exited: node:internal/modules/package_json_reader:331
+    throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+          ^
+  
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/scratch/c9f74e2967e3/device-ai/backend/src/server.js
+      at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+      at packageResolve (node:internal/modules/esm/resolve:784:25)
+      at moduleResolve (node:internal/modules/esm/resolve:873:18)
+      at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+      at #resolve (node:internal/modules/esm/loader:687:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+      at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+    code: 'ERR_MODULE_NOT_FOUND'
+  }
+  
+  Node.js v24.22.1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c9f74e2967e3/device-ai/backend/test/api-integration.test.js:123:42)
+      at async TestHook.run (node:internal/test_runner/test:1409:7)
+
+test at test/api-integration.test.js:159:1
+✖ continuum status enforces bearer authentication (1.370945ms)
+  Error: Backend exited: node:internal/modules/package_json_reader:331
+    throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+          ^
+  
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/scratch/c9f74e2967e3/device-ai/backend/src/server.js
+      at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+      at packageResolve (node:internal/modules/esm/resolve:784:25)
+      at moduleResolve (node:internal/modules/esm/resolve:873:18)
+      at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+      at #resolve (node:internal/modules/esm/loader:687:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+      at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+    code: 'ERR_MODULE_NOT_FOUND'
+  }
+  
+  Node.js v24.22.1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c9f74e2967e3/device-ai/backend/test/api-integration.test.js:123:42)
+      at async TestHook.run (node:internal/test_runner/test:1409:7)
+
+test at test/api-integration.test.js:172:1
+✖ unauthorized or invalid agent turns never call upstream (0.772292ms)
+  Error: Backend exited: node:internal/modules/package_json_reader:331
+    throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+          ^
+  
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/scratch/c9f74e2967e3/device-ai/backend/src/server.js
+      at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+      at packageResolve (node:internal/modules/esm/resolve:784:25)
+      at moduleResolve (node:internal/modules/esm/resolve:873:18)
+      at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+      at #resolve (node:internal/modules/esm/loader:687:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+      at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+    code: 'ERR_MODULE_NOT_FOUND'
+  }
+  
+  Node.js v24.22.1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c9f74e2967e3/device-ai/backend/test/api-integration.test.js:123:42)
+      at async TestHook.run (node:internal/test_runner/test:1409:7)
+
+test at test/api-integration.test.js:185:1
+✖ agent turn maps mock Responses API to Android reply contract (0.256645ms)
+  Error: Backend exited: node:internal/modules/package_json_reader:331
+    throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+          ^
+  
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/scratch/c9f74e2967e3/device-ai/backend/src/server.js
+      at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+      at packageResolve (node:internal/modules/esm/resolve:784:25)
+      at moduleResolve (node:internal/modules/esm/resolve:873:18)
+      at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+      at #resolve (node:internal/modules/esm/loader:687:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+      at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+    code: 'ERR_MODULE_NOT_FOUND'
+  }
+  
+  Node.js v24.22.1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c9f74e2967e3/device-ai/backend/test/api-integration.test.js:123:42)
+      at async TestHook.run (node:internal/test_runner/test:1409:7)
+
+test at test/api-integration.test.js:224:1
+✖ tool-result continuation reuses session and limits the forwarded result count (0.139412ms)
+  Error: Backend exited: node:internal/modules/package_json_reader:331
+    throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+          ^
+  
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/scratch/c9f74e2967e3/device-ai/backend/src/server.js
+      at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+      at packageResolve (node:internal/modules/esm/resolve:784:25)
+      at moduleResolve (node:internal/modules/esm/resolve:873:18)
+      at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+      at #resolve (node:internal/modules/esm/loader:687:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+      at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+    code: 'ERR_MODULE_NOT_FOUND'
+  }
+  
+  Node.js v24.22.1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c9f74e2967e3/device-ai/backend/test/api-integration.test.js:123:42)
+      at async TestHook.run (node:internal/test_runner/test:1409:7)
+
+test at test/api-integration.test.js:239:1
+✖ oversized payload is rejected before upstream forwarding (0.107386ms)
+  Error: Backend exited: node:internal/modules/package_json_reader:331
+    throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+          ^
+  
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/scratch/c9f74e2967e3/device-ai/backend/src/server.js
+      at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+      at packageResolve (node:internal/modules/esm/resolve:784:25)
+      at moduleResolve (node:internal/modules/esm/resolve:873:18)
+      at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+      at #resolve (node:internal/modules/esm/loader:687:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+      at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+    code: 'ERR_MODULE_NOT_FOUND'
+  }
+  
+  Node.js v24.22.1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c9f74e2967e3/device-ai/backend/test/api-integration.test.js:123:42)
+      at async TestHook.run (node:internal/test_runner/test:1409:7)
+
+test at test/api-integration.test.js:249:1
+✖ upstream HTTP and JSON failures are bounded and do not leak secrets (0.093736ms)
+  Error: Backend exited: node:internal/modules/package_json_reader:331
+    throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+          ^
+  
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/scratch/c9f74e2967e3/device-ai/backend/src/server.js
+      at Object.getPackageJSONURL (node:internal/modules/package_json_reader:331:9)
+      at packageResolve (node:internal/modules/esm/resolve:784:25)
+      at moduleResolve (node:internal/modules/esm/resolve:873:18)
+      at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+      at #resolve (node:internal/modules/esm/loader:687:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+      at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+    code: 'ERR_MODULE_NOT_FOUND'
+  }
+  
+  Node.js v24.22.1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c9f74e2967e3/device-ai/backend/test/api-integration.test.js:123:42)
+      at async TestHook.run (node:internal/test_runner/test:1409:7)

@@ -1,0 +1,21 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+JUnit version 4.13.2
+.....E.
+Time: 0.205
+There was 1 failure:
+1) aQueuedResetFromADestroyedActivityCannotEraseAReplacementConversation(at.heinz.deviceai.ContinuumDialogueSessionResetTest)
+java.lang.AssertionError: A delayed reset from a dead Activity must not erase newer context expected:<[ContinuumDialogueTurn(at=1792831244910, input=Wo wohnt Max?, resolvedQuery=Wo wohnt Max?, answer=Dazu finde ich in meinem Gedächtnis:
+
+Max wohnt in Graz.
+(Bestätigte Nutzererinnerung), topic=Wo wohnt Max?, modelHash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593, memoryIds=[lx-a644fb34cf82635d0436583e], grounded=true, contextReset=false), ContinuumDialogueTurn(at=1792831244914, input=Wo wohnt Max?, resolvedQuery=Wo wohnt Max?, answer=Dazu finde ich in meinem Gedächtnis:
+
+Max wohnt in Graz.
+(Bestätigte Nutzererinnerung), topic=Wo wohnt Max?, modelHash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593, memoryIds=[lx-a644fb34cf82635d0436583e], grounded=true, contextReset=false)]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ContinuumDialogueSessionResetTest.aQueuedResetFromADestroyedActivityCannotEraseAReplacementConversation(ContinuumDialogueSessionResetTest.kt:31)
+
+FAILURES!!!
+Tests run: 6,  Failures: 1
+

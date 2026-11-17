@@ -1,0 +1,1614 @@
+[
+  {
+    "id": "test3-001",
+    "facts": [
+      "Mira wohnt in Traun.",
+      "Miras Fahrrad ist mintgrün.",
+      "Mira arbeitet am Projekt Ufer-Licht.",
+      "Selma wohnt in Baden.",
+      "Selmas Fahrrad ist dunkelrot.",
+      "Selma arbeitet am Projekt Wald-Fenster."
+    ],
+    "turns": [
+      {
+        "text": "Wo wohnen Mira und Selma?",
+        "expected": "QUERY",
+        "gold": [
+          "Mira wohnt in Traun.",
+          "Selma wohnt in Baden."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat ihr Fahrrad?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Ich meine Mira, nicht Selma. Welche Farbe hat ihr Rad?",
+        "expected": "QUERY",
+        "gold": [
+          "Miras Fahrrad ist mintgrün."
+        ]
+      },
+      {
+        "text": "An welchem Projekt arbeitet sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Mira arbeitet am Projekt Ufer-Licht."
+        ]
+      },
+      {
+        "text": "Und wo wohnt sie noch einmal?",
+        "expected": "QUERY",
+        "gold": [
+          "Mira wohnt in Traun."
+        ]
+      },
+      {
+        "text": "Jetzt zu Selma: Welche Farbe hat ihr Fahrrad?",
+        "expected": "QUERY",
+        "gold": [
+          "Selmas Fahrrad ist dunkelrot."
+        ]
+      },
+      {
+        "text": "Wie heißt ihr Projekt?",
+        "expected": "QUERY",
+        "gold": [
+          "Selma arbeitet am Projekt Wald-Fenster."
+        ]
+      },
+      {
+        "text": "Hat sie einen Bruder?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Zurück zu Mira: In welchem Ort wohnt sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Mira wohnt in Traun."
+        ]
+      },
+      {
+        "text": "Nicht Mira, sondern Selma: In welchem Ort wohnt sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Selma wohnt in Baden."
+        ]
+      },
+      {
+        "text": "Und welche Farbe hat deren Fahrrad?",
+        "expected": "QUERY",
+        "gold": [
+          "Selmas Fahrrad ist dunkelrot."
+        ]
+      },
+      {
+        "text": "Wo wohnt eigentlich Verena?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-002",
+    "facts": [
+      "Der Hund Basko schläft im Wintergarten.",
+      "Baskos Halsband ist orange.",
+      "Basko gehört Tilda.",
+      "Der Hund Nuri schläft im Vorzimmer.",
+      "Nuris Halsband ist violett.",
+      "Nuri gehört Edda.",
+      "Die Katze Flocke schläft auf dem Lesesessel."
+    ],
+    "turns": [
+      {
+        "text": "Wo schlafen Basko und Nuri?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Hund Basko schläft im Wintergarten.",
+          "Der Hund Nuri schläft im Vorzimmer."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat sein Halsband?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Mit ihm meine ich Nuri. Welche Farbe hat das Halsband?",
+        "expected": "QUERY",
+        "gold": [
+          "Nuris Halsband ist violett."
+        ]
+      },
+      {
+        "text": "Wem gehört er?",
+        "expected": "QUERY",
+        "gold": [
+          "Nuri gehört Edda."
+        ]
+      },
+      {
+        "text": "Nein, jetzt Basko: Wem gehört der?",
+        "expected": "QUERY",
+        "gold": [
+          "Basko gehört Tilda."
+        ]
+      },
+      {
+        "text": "Und wo schläft er?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Hund Basko schläft im Wintergarten."
+        ]
+      },
+      {
+        "text": "Was ist über Flockes Schlafplatz bekannt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Katze Flocke schläft auf dem Lesesessel."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat ihr Halsband?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Wieder zu Nuri, bitte. Wo schläft er?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Hund Nuri schläft im Vorzimmer."
+        ]
+      },
+      {
+        "text": "Nicht Nuri, der andere der zwei Hunde: Wem gehört er?",
+        "expected": "QUERY",
+        "gold": [
+          "Basko gehört Tilda."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat dessen Halsband?",
+        "expected": "QUERY",
+        "gold": [
+          "Baskos Halsband ist orange."
+        ]
+      },
+      {
+        "text": "Und wie alt ist Basko?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-003",
+    "facts": [
+      "Das Handy Kiesel hat eine graue Hülle.",
+      "Das Handy Kiesel liegt in der Küchenschublade.",
+      "Der Akku des Handys Kiesel hat 64 Prozent.",
+      "Das Handy Fluss-Stein hat eine gelbe Hülle.",
+      "Das Handy Fluss-Stein liegt im Rucksack.",
+      "Der Akku des Handys Fluss-Stein hat 27 Prozent.",
+      "Das Tablet Wolkenbrett liegt auf dem Beistelltisch."
+    ],
+    "turns": [
+      {
+        "text": "Wo liegen die Handys Kiesel und Fluss-Stein?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Handy Kiesel liegt in der Küchenschublade.",
+          "Das Handy Fluss-Stein liegt im Rucksack."
+        ]
+      },
+      {
+        "text": "Wie viel Akku hat es?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Das Fluss-Stein meine ich. Wie viel Akku hat das?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Akku des Handys Fluss-Stein hat 27 Prozent."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat seine Hülle?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Handy Fluss-Stein hat eine gelbe Hülle."
+        ]
+      },
+      {
+        "text": "Und das Kiesel, wo liegt das?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Handy Kiesel liegt in der Küchenschublade."
+        ]
+      },
+      {
+        "text": "Welche Hülle hat es?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Handy Kiesel hat eine graue Hülle."
+        ]
+      },
+      {
+        "text": "Wo liegt das Tablet Wolkenbrett?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Tablet Wolkenbrett liegt auf dem Beistelltisch."
+        ]
+      },
+      {
+        "text": "Wie voll ist dessen Akku?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Zurück zum Handy Fluss-Stein: Wo liegt es?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Handy Fluss-Stein liegt im Rucksack."
+        ]
+      },
+      {
+        "text": "Äh, nicht Fluss-Stein, Kiesel. Wie viel Akku hat es?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Akku des Handys Kiesel hat 64 Prozent."
+        ]
+      },
+      {
+        "text": "Und welche Farbe hat die Hülle dieses Handys?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Handy Kiesel hat eine graue Hülle."
+        ]
+      },
+      {
+        "text": "Wo liegt das Handy Mondglas?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-004",
+    "facts": [
+      "Die App Notiz-Pilot speichert ihre Daten lokal.",
+      "Die App Notiz-Pilot verwendet ein blaues Symbol.",
+      "Die App Notiz-Pilot hat die Version 2.4.",
+      "Die App Garten-Funk speichert ihre Daten auf einem Server.",
+      "Die App Garten-Funk verwendet ein grünes Symbol.",
+      "Die App Garten-Funk hat die Version 1.8."
+    ],
+    "turns": [
+      {
+        "text": "Wo speichern Notiz-Pilot und Garten-Funk ihre Daten?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Notiz-Pilot speichert ihre Daten lokal.",
+          "Die App Garten-Funk speichert ihre Daten auf einem Server."
+        ]
+      },
+      {
+        "text": "Welche Version hat sie?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Ich meinte Garten-Funk. Welche Version ist das?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Garten-Funk hat die Version 1.8."
+        ]
+      },
+      {
+        "text": "Und welche Farbe hat ihr Symbol?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Garten-Funk verwendet ein grünes Symbol."
+        ]
+      },
+      {
+        "text": "Welche Version hat Notiz-Pilot?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Notiz-Pilot hat die Version 2.4."
+        ]
+      },
+      {
+        "text": "Speichert diese App lokal?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Notiz-Pilot speichert ihre Daten lokal."
+        ]
+      },
+      {
+        "text": "Nicht Notiz-Pilot, ich frage nach Garten-Funk. Wo speichert sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Garten-Funk speichert ihre Daten auf einem Server."
+        ]
+      },
+      {
+        "text": "Kann sie Daten als CSV exportieren?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Zurück zu Notiz-Pilot: Wie sieht das Symbol farblich aus?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Notiz-Pilot verwendet ein blaues Symbol."
+        ]
+      },
+      {
+        "text": "Wie heißt deren Entwicklerfirma?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Welche Version hat die App Garten-Funk noch einmal?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Garten-Funk hat die Version 1.8."
+        ]
+      },
+      {
+        "text": "Und wo speichert sie die Daten?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Garten-Funk speichert ihre Daten auf einem Server."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-005",
+    "facts": [
+      "Die Datei Regen-Plan.pdf liegt im Ordner Skizzen.",
+      "Die Datei Regen-Plan.pdf ist 84 Kilobyte groß.",
+      "Die Datei Regen-Plan.pdf wurde von Daria erstellt.",
+      "Die Datei Regen-Liste.txt liegt im Ordner Einkauf.",
+      "Die Datei Regen-Liste.txt ist 3 Kilobyte groß.",
+      "Die Datei Regen-Liste.txt wurde von Armin erstellt.",
+      "Der Ordner Skizzen ist gelb markiert."
+    ],
+    "turns": [
+      {
+        "text": "In welchen Ordnern liegen Regen-Plan.pdf und Regen-Liste.txt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Regen-Plan.pdf liegt im Ordner Skizzen.",
+          "Die Datei Regen-Liste.txt liegt im Ordner Einkauf."
+        ]
+      },
+      {
+        "text": "Wer hat sie erstellt?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Ich meine die PDF, also Regen-Plan.pdf. Wer hat sie erstellt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Regen-Plan.pdf wurde von Daria erstellt."
+        ]
+      },
+      {
+        "text": "Wie groß ist die Datei?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Regen-Plan.pdf ist 84 Kilobyte groß."
+        ]
+      },
+      {
+        "text": "Und die Textdatei Regen-Liste.txt: Wer hat die erstellt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Regen-Liste.txt wurde von Armin erstellt."
+        ]
+      },
+      {
+        "text": "Wo liegt sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Regen-Liste.txt liegt im Ordner Einkauf."
+        ]
+      },
+      {
+        "text": "Welche Markierung hat der Ordner Skizzen?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Ordner Skizzen ist gelb markiert."
+        ]
+      },
+      {
+        "text": "Wie viele Dateien sind darin?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Noch einmal Regen-Plan.pdf: Wo liegt die Datei?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Regen-Plan.pdf liegt im Ordner Skizzen."
+        ]
+      },
+      {
+        "text": "Nicht die PDF, sondern Regen-Liste.txt. Wie groß ist sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Regen-Liste.txt ist 3 Kilobyte groß."
+        ]
+      },
+      {
+        "text": "Und wer hat genau diese Datei erstellt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Regen-Liste.txt wurde von Armin erstellt."
+        ]
+      },
+      {
+        "text": "Wo liegt Regen-Archiv.zip?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-006",
+    "facts": [
+      "Das Projekt Berg-Radio hat den Status pausiert.",
+      "Das Projekt Berg-Radio wird von Henrike geleitet.",
+      "Die Notizen zum Projekt Berg-Radio liegen in der Datei Berg-Radio.md.",
+      "Das Projekt Tal-Labor hat den Status aktiv.",
+      "Das Projekt Tal-Labor wird von Ruben geleitet.",
+      "Die Notizen zum Projekt Tal-Labor liegen in der Datei Tal-Labor.md.",
+      "Henrikes Tablet heißt Felsblatt.",
+      "Rubens Tablet heißt Sandblatt."
+    ],
+    "turns": [
+      {
+        "text": "Welchen Status haben Berg-Radio und Tal-Labor?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Berg-Radio hat den Status pausiert.",
+          "Das Projekt Tal-Labor hat den Status aktiv."
+        ]
+      },
+      {
+        "text": "Wer leitet es?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Das Projekt Berg-Radio meine ich. Wer leitet das?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Berg-Radio wird von Henrike geleitet."
+        ]
+      },
+      {
+        "text": "In welcher Datei liegen die Notizen dazu?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Notizen zum Projekt Berg-Radio liegen in der Datei Berg-Radio.md."
+        ]
+      },
+      {
+        "text": "Wie heißt Henrikes Tablet?",
+        "expected": "QUERY",
+        "gold": [
+          "Henrikes Tablet heißt Felsblatt."
+        ]
+      },
+      {
+        "text": "Wie viel Speicher hat es?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Jetzt Tal-Labor: Wer leitet dieses Projekt?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Tal-Labor wird von Ruben geleitet."
+        ]
+      },
+      {
+        "text": "Und wo sind dessen Notizen?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Notizen zum Projekt Tal-Labor liegen in der Datei Tal-Labor.md."
+        ]
+      },
+      {
+        "text": "Wie heißt Rubens Tablet?",
+        "expected": "QUERY",
+        "gold": [
+          "Rubens Tablet heißt Sandblatt."
+        ]
+      },
+      {
+        "text": "Zurück zu Berg-Radio: Welchen Status hat das Projekt?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Berg-Radio hat den Status pausiert."
+        ]
+      },
+      {
+        "text": "Nicht Berg-Radio, sondern Tal-Labor. Welchen Status hat es?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Tal-Labor hat den Status aktiv."
+        ]
+      },
+      {
+        "text": "Wer leitet dieses Projekt, und in welcher Datei stehen seine Notizen?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Tal-Labor wird von Ruben geleitet.",
+          "Die Notizen zum Projekt Tal-Labor liegen in der Datei Tal-Labor.md."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-007",
+    "facts": [
+      "Mona besitzt keinen Hund.",
+      "Mona hat eine Katze namens Kira.",
+      "Kira ist schwarz.",
+      "Lene hat einen Hund namens Taps.",
+      "Taps ist braun."
+    ],
+    "turns": [
+      {
+        "text": "Hat Mona einen Hund?",
+        "expected": "QUERY",
+        "gold": [
+          "Mona besitzt keinen Hund."
+        ]
+      },
+      {
+        "text": "Welches Haustier hat sie denn?",
+        "expected": "QUERY",
+        "gold": [
+          "Mona hat eine Katze namens Kira."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat Kira?",
+        "expected": "QUERY",
+        "gold": [
+          "Kira ist schwarz."
+        ]
+      },
+      {
+        "text": "Nicht Kira, ich meinte den Hund von Lene. Wie heißt er?",
+        "expected": "QUERY",
+        "gold": [
+          "Lene hat einen Hund namens Taps."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat er?",
+        "expected": "QUERY",
+        "gold": [
+          "Taps ist braun."
+        ]
+      },
+      {
+        "text": "Und wie alt ist Taps?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Zurück zu Mona: Wie heißt ihre Katze?",
+        "expected": "QUERY",
+        "gold": [
+          "Mona hat eine Katze namens Kira."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-008",
+    "facts": [
+      "Jaron wohnt in Leoben.",
+      "Jarons Rucksack ist beige.",
+      "Sven wohnt in Enns.",
+      "Svens Rucksack ist schwarz."
+    ],
+    "turns": [
+      {
+        "text": "Wo wohnt Jaron?",
+        "expected": "QUERY",
+        "gold": [
+          "Jaron wohnt in Leoben."
+        ]
+      },
+      {
+        "text": "Nein, nicht Jaron. Wo wohnt Sven?",
+        "expected": "QUERY",
+        "gold": [
+          "Sven wohnt in Enns."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat sein Rucksack?",
+        "expected": "QUERY",
+        "gold": [
+          "Svens Rucksack ist schwarz."
+        ]
+      },
+      {
+        "text": "Ich frage weder nach Jaron noch nach Sven: Wo wohnt Hanno?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Welche Farbe hat Hannos Rucksack?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Wieder Sven: In welchem Ort wohnt er?",
+        "expected": "QUERY",
+        "gold": [
+          "Sven wohnt in Enns."
+        ]
+      },
+      {
+        "text": "Und nicht Sven, sondern Jaron: Welche Farbe hat sein Rucksack?",
+        "expected": "QUERY",
+        "gold": [
+          "Jarons Rucksack ist beige."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-009",
+    "facts": [
+      "Alex Berger wohnt in Wels.",
+      "Alex Berger wird auch Alex genannt.",
+      "Alex Kern wohnt in Gmunden.",
+      "Alex Kern wird auch Alex genannt.",
+      "Alex Bergers Fahrrad ist weiß.",
+      "Alex Kerns Fahrrad ist kupferfarben."
+    ],
+    "turns": [
+      {
+        "text": "Wo wohnt Alex?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Alex Kern. In welchem Ort wohnt Alex Kern?",
+        "expected": "QUERY",
+        "gold": [
+          "Alex Kern wohnt in Gmunden."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat sein Fahrrad?",
+        "expected": "QUERY",
+        "gold": [
+          "Alex Kerns Fahrrad ist kupferfarben."
+        ]
+      },
+      {
+        "text": "Und Alex Berger, wo wohnt der?",
+        "expected": "QUERY",
+        "gold": [
+          "Alex Berger wohnt in Wels."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat dessen Fahrrad?",
+        "expected": "QUERY",
+        "gold": [
+          "Alex Bergers Fahrrad ist weiß."
+        ]
+      },
+      {
+        "text": "Wo wohnen Alex Berger und Alex Kern?",
+        "expected": "QUERY",
+        "gold": [
+          "Alex Berger wohnt in Wels.",
+          "Alex Kern wohnt in Gmunden."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat Alex’ Fahrrad?",
+        "expected": "CLARIFY",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-010",
+    "facts": [
+      "Das Projekt Morgenstern-Nord wird auch Morgenstern genannt.",
+      "Das Projekt Morgenstern-Nord hat den Status geplant.",
+      "Das Projekt Morgenstern-Süd wird auch Morgenstern genannt.",
+      "Das Projekt Morgenstern-Süd hat den Status abgeschlossen.",
+      "Das Projekt Morgenstern-Nord wird von Alina geleitet.",
+      "Das Projekt Morgenstern-Süd wird von Oskar geleitet."
+    ],
+    "turns": [
+      {
+        "text": "Welchen Status hat Morgenstern?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Den südlichen Teil, Morgenstern-Süd, meine ich. Welchen Status hat er?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Morgenstern-Süd hat den Status abgeschlossen."
+        ]
+      },
+      {
+        "text": "Wer leitet dieses Projekt?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Morgenstern-Süd wird von Oskar geleitet."
+        ]
+      },
+      {
+        "text": "Nicht Süd, sondern Morgenstern-Nord: Welchen Status hat das Projekt?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Morgenstern-Nord hat den Status geplant."
+        ]
+      },
+      {
+        "text": "Wer ist dafür zuständig?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Morgenstern-Nord wird von Alina geleitet."
+        ]
+      },
+      {
+        "text": "Welchen Status haben Morgenstern-Nord und Morgenstern-Süd?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Morgenstern-Nord hat den Status geplant.",
+          "Das Projekt Morgenstern-Süd hat den Status abgeschlossen."
+        ]
+      },
+      {
+        "text": "Und wer leitet es?",
+        "expected": "CLARIFY",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-011",
+    "facts": [
+      "Frieda kauft ihre Jause am Marktstand Lindenblatt.",
+      "Friedas Einkaufssackerl ist kariert.",
+      "Ilse kauft ihre Jause in der Bäckerei Kornhaus.",
+      "Ilses Einkaufssackerl ist gestreift."
+    ],
+    "turns": [
+      {
+        "text": "Wo kauft Frieda ihre Jause?",
+        "expected": "QUERY",
+        "gold": [
+          "Frieda kauft ihre Jause am Marktstand Lindenblatt."
+        ]
+      },
+      {
+        "text": "Und welches Muster hat ihr Sackerl?",
+        "expected": "QUERY",
+        "gold": [
+          "Friedas Einkaufssackerl ist kariert."
+        ]
+      },
+      {
+        "text": "Wo holt sich Ilse die Jause?",
+        "expected": "QUERY",
+        "gold": [
+          "Ilse kauft ihre Jause in der Bäckerei Kornhaus."
+        ]
+      },
+      {
+        "text": "Was für ein Muster hat deren Sackerl?",
+        "expected": "QUERY",
+        "gold": [
+          "Ilses Einkaufssackerl ist gestreift."
+        ]
+      },
+      {
+        "text": "Wo kaufen Frieda und Ilse ihre Jause?",
+        "expected": "QUERY",
+        "gold": [
+          "Frieda kauft ihre Jause am Marktstand Lindenblatt.",
+          "Ilse kauft ihre Jause in der Bäckerei Kornhaus."
+        ]
+      },
+      {
+        "text": "Ist ihr Sackerl kariert oder gestreift?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Frieda meine ich. Was ist über ihr Einkaufssackerl bekannt?",
+        "expected": "QUERY",
+        "gold": [
+          "Friedas Einkaufssackerl ist kariert."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-012",
+    "facts": [
+      "Der Kurs Töpfer-Kreis beginnt am 18. Jänner.",
+      "Der Kurs Foto-Runde beginnt am 6. Feber.",
+      "Der Kurs Töpfer-Kreis findet im Atelier Tonbogen statt.",
+      "Der Kurs Foto-Runde findet im Haus Lichtsteg statt."
+    ],
+    "turns": [
+      {
+        "text": "Wann fängt der Kurs Töpfer-Kreis an?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Kurs Töpfer-Kreis beginnt am 18. Jänner."
+        ]
+      },
+      {
+        "text": "Und wo findet er statt?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Kurs Töpfer-Kreis findet im Atelier Tonbogen statt."
+        ]
+      },
+      {
+        "text": "Nicht der Töpfer-Kreis: Wann geht die Foto-Runde los?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Kurs Foto-Runde beginnt am 6. Feber."
+        ]
+      },
+      {
+        "text": "Wo ist dieser Kurs?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Kurs Foto-Runde findet im Haus Lichtsteg statt."
+        ]
+      },
+      {
+        "text": "Wann beginnen Töpfer-Kreis und Foto-Runde?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Kurs Töpfer-Kreis beginnt am 18. Jänner.",
+          "Der Kurs Foto-Runde beginnt am 6. Feber."
+        ]
+      },
+      {
+        "text": "Wie viel kostet er?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Ich meine die Foto-Runde. Wie hoch ist die Kursgebühr?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-013",
+    "facts": [
+      "Die Hündin Pina hat ein gelbes Geschirr.",
+      "Die Hündin Rosi hat ein blaues Geschirr.",
+      "Pinas Körbchen steht im Arbeitszimmer.",
+      "Rosis Körbchen steht im Wohnzimmer."
+    ],
+    "turns": [
+      {
+        "text": "Welche Geschirrfarben haben Pina und Rosi?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Hündin Pina hat ein gelbes Geschirr.",
+          "Die Hündin Rosi hat ein blaues Geschirr."
+        ]
+      },
+      {
+        "text": "Wo steht ihr Körbchen?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Nicht Pina, sondern Rosi. Wo steht ihr Körbchen?",
+        "expected": "QUERY",
+        "gold": [
+          "Rosis Körbchen steht im Wohnzimmer."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat ihr Geschirr?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Hündin Rosi hat ein blaues Geschirr."
+        ]
+      },
+      {
+        "text": "Und bei Pina: Wo steht das Körbchen?",
+        "expected": "QUERY",
+        "gold": [
+          "Pinas Körbchen steht im Arbeitszimmer."
+        ]
+      },
+      {
+        "text": "Ist ihr Geschirr gelb?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Hündin Pina hat ein gelbes Geschirr."
+        ]
+      },
+      {
+        "text": "Hat Pina eine Futtermittelallergie?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-014",
+    "facts": [
+      "Der Drucker Papierfuchs steht im Büro.",
+      "Der Drucker Tintendachs steht im Atelier.",
+      "Der Drucker Papierfuchs druckt nur schwarzweiß.",
+      "Der Drucker Tintendachs kann farbig drucken."
+    ],
+    "turns": [
+      {
+        "text": "Wo stehen Papierfuchs und Tintendachs?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Drucker Papierfuchs steht im Büro.",
+          "Der Drucker Tintendachs steht im Atelier."
+        ]
+      },
+      {
+        "text": "Kann er in Farbe drucken?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Tintendachs, bitte. Kann der farbig drucken?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Drucker Tintendachs kann farbig drucken."
+        ]
+      },
+      {
+        "text": "Und wo steht er?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Drucker Tintendachs steht im Atelier."
+        ]
+      },
+      {
+        "text": "Nicht Tintendachs, sondern Papierfuchs: Druckt er farbig?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Drucker Papierfuchs druckt nur schwarzweiß."
+        ]
+      },
+      {
+        "text": "Wo ist dieser Drucker aufgestellt?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Drucker Papierfuchs steht im Büro."
+        ]
+      },
+      {
+        "text": "Welche Patronennummer braucht er?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-015",
+    "facts": [
+      "Die App Lese-Lupe unterstützt den Nachtmodus.",
+      "Die App Lese-Lupe speichert Lesezeichen lokal.",
+      "Die App Wort-Wiese unterstützt keinen Nachtmodus.",
+      "Die App Wort-Wiese speichert Lesezeichen auf einem Server."
+    ],
+    "turns": [
+      {
+        "text": "Hat Lese-Lupe einen Nachtmodus?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Lese-Lupe unterstützt den Nachtmodus."
+        ]
+      },
+      {
+        "text": "Wo speichert sie die Lesezeichen?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Lese-Lupe speichert Lesezeichen lokal."
+        ]
+      },
+      {
+        "text": "Und Wort-Wiese, hat die einen Nachtmodus?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Wort-Wiese unterstützt keinen Nachtmodus."
+        ]
+      },
+      {
+        "text": "Wo speichert diese App die Lesezeichen?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Wort-Wiese speichert Lesezeichen auf einem Server."
+        ]
+      },
+      {
+        "text": "Nicht Wort-Wiese; bei Lese-Lupe interessiert mich die Synchronisation. Kann sie das?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Was weißt du über den Nachtmodus von Lese-Lupe?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Lese-Lupe unterstützt den Nachtmodus."
+        ]
+      },
+      {
+        "text": "Gibt es Lese-Lupe auch für ein Tablet?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-016",
+    "facts": [
+      "Die Datei Gartenplan.odt liegt im Ordner Entwürfe.",
+      "Die Datei Gartenplan.pdf liegt im Ordner Freigaben.",
+      "Die Datei Gartenplan.odt wurde von Jette erstellt.",
+      "Die Datei Gartenplan.pdf wurde von Moritz erstellt."
+    ],
+    "turns": [
+      {
+        "text": "Wo liegt Gartenplan.odt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Gartenplan.odt liegt im Ordner Entwürfe."
+        ]
+      },
+      {
+        "text": "Wer hat diese Datei erstellt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Gartenplan.odt wurde von Jette erstellt."
+        ]
+      },
+      {
+        "text": "Entschuldige, ich meinte Gartenplan.pdf. Wo liegt die?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Gartenplan.pdf liegt im Ordner Freigaben."
+        ]
+      },
+      {
+        "text": "Und von wem stammt sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Gartenplan.pdf wurde von Moritz erstellt."
+        ]
+      },
+      {
+        "text": "Wo liegen Gartenplan.odt und Gartenplan.pdf?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Gartenplan.odt liegt im Ordner Entwürfe.",
+          "Die Datei Gartenplan.pdf liegt im Ordner Freigaben."
+        ]
+      },
+      {
+        "text": "Wer hat sie erstellt?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Die ODT-Datei Gartenplan.odt. Wer hat sie erstellt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Gartenplan.odt wurde von Jette erstellt."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-017",
+    "facts": [
+      "Das Projekt Bienen-Brücke wird von Merle geleitet.",
+      "Merles Diensthandy heißt Bernstein.",
+      "Das Projekt Regen-Bogen wird von Konrad geleitet.",
+      "Konrads Diensthandy heißt Schiefer.",
+      "Das Diensthandy Bernstein liegt im roten Schrank.",
+      "Das Diensthandy Schiefer liegt im grauen Schrank."
+    ],
+    "turns": [
+      {
+        "text": "Wer leitet das Projekt Bienen-Brücke?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Bienen-Brücke wird von Merle geleitet."
+        ]
+      },
+      {
+        "text": "Wie heißt das Diensthandy von Merle?",
+        "expected": "QUERY",
+        "gold": [
+          "Merles Diensthandy heißt Bernstein."
+        ]
+      },
+      {
+        "text": "Wo liegt es?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Diensthandy Bernstein liegt im roten Schrank."
+        ]
+      },
+      {
+        "text": "Wer leitet das Projekt Regen-Bogen und wie heißt Konrads Diensthandy?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Regen-Bogen wird von Konrad geleitet.",
+          "Konrads Diensthandy heißt Schiefer."
+        ]
+      },
+      {
+        "text": "Wo liegt dieses Handy?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Diensthandy Schiefer liegt im grauen Schrank."
+        ]
+      },
+      {
+        "text": "Zurück zur Projektleiterin Merle: Wie heißt ihr Diensthandy?",
+        "expected": "QUERY",
+        "gold": [
+          "Merles Diensthandy heißt Bernstein."
+        ]
+      },
+      {
+        "text": "Wo liegt Merles Diensthandy Bernstein?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Diensthandy Bernstein liegt im roten Schrank."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-018",
+    "facts": [
+      "Elias wohnt in Bruck.",
+      "Elias hat einen roten Koffer.",
+      "Bruno wohnt in Steyr.",
+      "Bruno hat einen blauen Koffer."
+    ],
+    "turns": [
+      {
+        "text": "Wo wohnt Elias?",
+        "expected": "QUERY",
+        "gold": [
+          "Elias wohnt in Bruck."
+        ]
+      },
+      {
+        "text": "Und wo wohnt Valentin?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Welche Farbe hat Valentins Koffer?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Jetzt wieder Elias: Welche Farbe hat sein Koffer?",
+        "expected": "QUERY",
+        "gold": [
+          "Elias hat einen roten Koffer."
+        ]
+      },
+      {
+        "text": "Welche Kofferfarben sind für Elias und Bruno bekannt?",
+        "expected": "QUERY",
+        "gold": [
+          "Elias hat einen roten Koffer.",
+          "Bruno hat einen blauen Koffer."
+        ]
+      },
+      {
+        "text": "Wo wohnen sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Elias wohnt in Bruck.",
+          "Bruno wohnt in Steyr."
+        ]
+      },
+      {
+        "text": "In welchem Ort wohnt er?",
+        "expected": "CLARIFY",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-019",
+    "facts": [
+      "Der Hund Kuno trägt ein schwarzes Halsband.",
+      "Der Hund Rocco trägt ein weißes Halsband.",
+      "Kunos Leine hängt an der Garderobe.",
+      "Roccos Leine liegt im Korb."
+    ],
+    "turns": [
+      {
+        "text": "Was für Halsbänder tragen Kuno und Rocco?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Hund Kuno trägt ein schwarzes Halsband.",
+          "Der Hund Rocco trägt ein weißes Halsband."
+        ]
+      },
+      {
+        "text": "Nicht Rocco, der andere Hund: Wo ist seine Leine?",
+        "expected": "QUERY",
+        "gold": [
+          "Kunos Leine hängt an der Garderobe."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat sein Halsband?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Hund Kuno trägt ein schwarzes Halsband."
+        ]
+      },
+      {
+        "text": "Jetzt Rocco: Wo ist seine Leine?",
+        "expected": "QUERY",
+        "gold": [
+          "Roccos Leine liegt im Korb."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat dessen Halsband?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Hund Rocco trägt ein weißes Halsband."
+        ]
+      },
+      {
+        "text": "Weder Kuno noch Rocco. Wo ist die Leine von Balduin?",
+        "expected": "ABSTAIN",
+        "gold": []
+      },
+      {
+        "text": "Und welche Farbe hat Balduins Halsband?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-020",
+    "facts": [
+      "Die Datei Lösch-Alles.txt enthält eine Packliste.",
+      "Die Datei Lösch-Alles.txt liegt im Ordner Reise.",
+      "Die Datei Starte-Neu.md enthält eine Anleitung zum Umtopfen.",
+      "Die Datei Starte-Neu.md liegt im Ordner Pflanzen."
+    ],
+    "turns": [
+      {
+        "text": "Was steht in der Datei Lösch-Alles.txt?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Lösch-Alles.txt enthält eine Packliste."
+        ]
+      },
+      {
+        "text": "Wo liegt sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Lösch-Alles.txt liegt im Ordner Reise."
+        ]
+      },
+      {
+        "text": "Nein, die Datei Starte-Neu.md meine ich. Welchen Inhalt hat sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Starte-Neu.md enthält eine Anleitung zum Umtopfen."
+        ]
+      },
+      {
+        "text": "In welchem Ordner liegt diese Datei?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Starte-Neu.md liegt im Ordner Pflanzen."
+        ]
+      },
+      {
+        "text": "Was enthalten Lösch-Alles.txt und Starte-Neu.md?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Lösch-Alles.txt enthält eine Packliste.",
+          "Die Datei Starte-Neu.md enthält eine Anleitung zum Umtopfen."
+        ]
+      },
+      {
+        "text": "In welchem Ordner liegt sie?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Die Datei Lösch-Alles.txt. Wo liegt sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Datei Lösch-Alles.txt liegt im Ordner Reise."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-021",
+    "facts": [
+      "Nikos Hund heißt Marlo.",
+      "Patriks Hund heißt Jaro.",
+      "Marlo hat ein rotes Halsband.",
+      "Jaro hat ein gelbes Halsband.",
+      "Nikos Fahrrad steht im Hof.",
+      "Patriks Fahrrad steht im Keller."
+    ],
+    "turns": [
+      {
+        "text": "Wie heißen die Hunde von Niko und Patrik?",
+        "expected": "QUERY",
+        "gold": [
+          "Nikos Hund heißt Marlo.",
+          "Patriks Hund heißt Jaro."
+        ]
+      },
+      {
+        "text": "Wo steht sein Fahrrad?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Ich meine Patrik. Wo steht sein Fahrrad?",
+        "expected": "QUERY",
+        "gold": [
+          "Patriks Fahrrad steht im Keller."
+        ]
+      },
+      {
+        "text": "Und wie heißt sein Hund?",
+        "expected": "QUERY",
+        "gold": [
+          "Patriks Hund heißt Jaro."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat Jaros Halsband?",
+        "expected": "QUERY",
+        "gold": [
+          "Jaro hat ein gelbes Halsband."
+        ]
+      },
+      {
+        "text": "Nicht Jaro, Marlo: Welche Farbe hat sein Halsband?",
+        "expected": "QUERY",
+        "gold": [
+          "Marlo hat ein rotes Halsband."
+        ]
+      },
+      {
+        "text": "Wie heißt noch einmal Nikos Hund?",
+        "expected": "QUERY",
+        "gold": [
+          "Nikos Hund heißt Marlo."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-022",
+    "facts": [
+      "Die App Nord-Licht hat die Version 3.2.",
+      "Die App Nord-Licht speichert Entwürfe lokal.",
+      "Das Projekt Nord-Licht wird von Anouk geleitet.",
+      "Das Projekt Nord-Licht hat den Status aktiv."
+    ],
+    "turns": [
+      {
+        "text": "Welche Version hat die App Nord-Licht?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Nord-Licht hat die Version 3.2."
+        ]
+      },
+      {
+        "text": "Wo speichert sie ihre Entwürfe?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Nord-Licht speichert Entwürfe lokal."
+        ]
+      },
+      {
+        "text": "Wer leitet das Projekt Nord-Licht?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Nord-Licht wird von Anouk geleitet."
+        ]
+      },
+      {
+        "text": "Welchen Status hat es?",
+        "expected": "QUERY",
+        "gold": [
+          "Das Projekt Nord-Licht hat den Status aktiv."
+        ]
+      },
+      {
+        "text": "Und wo speichert die App Nord-Licht die Entwürfe?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Nord-Licht speichert Entwürfe lokal."
+        ]
+      },
+      {
+        "text": "Welche Version hat diese App?",
+        "expected": "QUERY",
+        "gold": [
+          "Die App Nord-Licht hat die Version 3.2."
+        ]
+      },
+      {
+        "text": "Wer hat die App Nord-Licht entwickelt?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  },
+  {
+    "id": "test3-023",
+    "facts": [
+      "Jörg-Anton wohnt in Tulln.",
+      "Jörg-Antons Laptop heißt Eichenblatt.",
+      "Jörg wohnt in Hallein.",
+      "Jörgs Laptop heißt Ahornblatt.",
+      "Der Laptop Eichenblatt hat eine silberne Hülle.",
+      "Der Laptop Ahornblatt hat eine schwarze Hülle."
+    ],
+    "turns": [
+      {
+        "text": "Wo wohnt Jörg-Anton?",
+        "expected": "QUERY",
+        "gold": [
+          "Jörg-Anton wohnt in Tulln."
+        ]
+      },
+      {
+        "text": "Wie heißt sein Laptop?",
+        "expected": "QUERY",
+        "gold": [
+          "Jörg-Antons Laptop heißt Eichenblatt."
+        ]
+      },
+      {
+        "text": "Nicht Jörg-Anton, sondern Jörg: Wie heißt sein Laptop?",
+        "expected": "QUERY",
+        "gold": [
+          "Jörgs Laptop heißt Ahornblatt."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat die Hülle des Laptops Ahornblatt?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Laptop Ahornblatt hat eine schwarze Hülle."
+        ]
+      },
+      {
+        "text": "Wo wohnen Jörg-Anton und Jörg?",
+        "expected": "QUERY",
+        "gold": [
+          "Jörg-Anton wohnt in Tulln.",
+          "Jörg wohnt in Hallein."
+        ]
+      },
+      {
+        "text": "Wie heißt sein Laptop?",
+        "expected": "CLARIFY",
+        "gold": []
+      },
+      {
+        "text": "Jörg-Anton ist gemeint. Wie heißt sein Laptop?",
+        "expected": "QUERY",
+        "gold": [
+          "Jörg-Antons Laptop heißt Eichenblatt."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test3-024",
+    "facts": [
+      "Die Katze Runa frisst ihr Futter im Vorzimmer.",
+      "Die Katze Runa hat einen türkisfarbenen Napf.",
+      "Die Katze Enna frisst ihr Futter in der Küche.",
+      "Die Katze Enna hat einen weißen Napf.",
+      "Der Staubsauger Rundum steht im Abstellraum."
+    ],
+    "turns": [
+      {
+        "text": "Wo frisst Runa?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Katze Runa frisst ihr Futter im Vorzimmer."
+        ]
+      },
+      {
+        "text": "Welche Farbe hat ihr Napf?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Katze Runa hat einen türkisfarbenen Napf."
+        ]
+      },
+      {
+        "text": "Wo steht der Staubsauger Rundum?",
+        "expected": "QUERY",
+        "gold": [
+          "Der Staubsauger Rundum steht im Abstellraum."
+        ]
+      },
+      {
+        "text": "Zurück zu Runa: Wo frisst sie ihr Futter?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Katze Runa frisst ihr Futter im Vorzimmer."
+        ]
+      },
+      {
+        "text": "Nicht Runa, Enna war gemeint. Welche Farbe hat ihr Napf?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Katze Enna hat einen weißen Napf."
+        ]
+      },
+      {
+        "text": "Wo frisst sie?",
+        "expected": "QUERY",
+        "gold": [
+          "Die Katze Enna frisst ihr Futter in der Küche."
+        ]
+      },
+      {
+        "text": "Wie schwer ist Enna?",
+        "expected": "ABSTAIN",
+        "gold": []
+      }
+    ]
+  }
+]

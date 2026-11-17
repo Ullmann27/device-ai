@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" tests="9" skipped="0" failures="2" errors="0" timestamp="2026-11-03T19:33:47" hostname="b354f2cb821b" time="5.575">
+  <properties/>
+  <testcase name="fullyValidReplacementWhileDialogOpenNeedsFreshApproval" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="3.529"/>
+  <testcase name="everyPreparedTupleFieldFailsClosedWhenMissingOrChanged" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="1.131"/>
+  <testcase name="duplicatePositiveClickDispatchesAtMostOnce" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.242"/>
+  <testcase name="terminalCancellationWhileApprovalDialogOpenCannotDispatch" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.214">
+    <failure message="java.lang.AssertionError: A confirmed canceled CCC1 job must not be re-dispatched expected null, but was:&lt;Intent { act=com.termux.RUN_COMMAND cmp=com.termux/.app.RunCommandService (has extras) }&gt;" type="java.lang.AssertionError">java.lang.AssertionError: A confirmed canceled CCC1 job must not be re-dispatched expected null, but was:&lt;Intent { act=com.termux.RUN_COMMAND cmp=com.termux/.app.RunCommandService (has extras) }&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at at.heinz.deviceai.IndependentTypedAuthorizationUiTest.terminalCancellationWhileApprovalDialogOpenCannotDispatch(IndependentTypedAuthorizationUiTest.kt:166)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <testcase name="oldCallbackCannotConsumeTheReplacementPendingSlot" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.023"/>
+  <testcase name="canceledPreparedTaskCannotBeOfferedForExecution" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.097">
+    <failure message="java.lang.AssertionError: Terminal cancellation must revoke prepared execution" type="java.lang.AssertionError">java.lang.AssertionError: Terminal cancellation must revoke prepared execution
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.IndependentTypedAuthorizationUiTest.canceledPreparedTaskCannotBeOfferedForExecution(IndependentTypedAuthorizationUiTest.kt:158)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <testcase name="destroyedActivityCannotConsumeOrDispatchItsOldDialog" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.148"/>
+  <testcase name="matchingExtrasWithWrongImmutableUriCannotPrepare" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.023"/>
+  <testcase name="duplicatePreparationCallbackCannotResurrectConsumedPreparation" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.167"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

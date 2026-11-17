@@ -1,0 +1,134 @@
+{
+  "schema": "continuum-development-session-checks-v1",
+  "date": "2026-10-29",
+  "repository": "Ullmann27/device-ai",
+  "baseSha": "b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+  "checkpointSha": "668b516033505f807f598b9315cc982340886a67",
+  "branch": "sol/continuum-generation16-gemma-20261029",
+  "pullRequest": 218,
+  "observedHeads": [
+    {
+      "pr": 196,
+      "head": "126309f9a7069c7e7b5bea3e2082462cab4f9f9c",
+      "branch": "sol/continuum-local-owner-integration-20261027",
+      "base": "8b75080cbfb40e8e6a284ee95f65b8700d9105a8"
+    },
+    {
+      "pr": 206,
+      "head": "979f1e3c3dafb5e0414ac5c2bbae54991c4369d3",
+      "branch": "research/continuum-local-brain-sol-20261028",
+      "base": "bb9900d6dc0c865400b7fa1c55890b5ff7f6932e"
+    },
+    {
+      "pr": 215,
+      "head": "043ffe6255d9beece7069f20a6cf5463e1d0af90",
+      "branch": "sol/continuum-oneapp-brain-recovery-20261028",
+      "base": "c4b8713872232de38671d2fdc52d2124086f6855"
+    },
+    {
+      "pr": 216,
+      "head": "b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+      "branch": "research/continuum-worker-untracked-gate-20261028",
+      "base": "043ffe6255d9beece7069f20a6cf5463e1d0af90"
+    },
+    {
+      "pr": 217,
+      "head": "7aeb670d8965dbc4d7dec9abbb0afd750100d2f6",
+      "branch": "research/continuum-v25-owner-ledger-export-20261028",
+      "base": "126309f9a7069c7e7b5bea3e2082462cab4f9f9c"
+    }
+  ],
+  "checks": [
+    {
+      "name": "GitHub/git inventory before executor failure",
+      "status": "PASS",
+      "detail": "Official remote fetched; PR216 is ahead of215 by11 commits across8 files. PR217 has5 commits across4 files on historical196 lineage. No histories merged."
+    },
+    {
+      "command": "adb devices -l",
+      "status": "UNAVAILABLE",
+      "exitCode": 127,
+      "detail": "adb was not installed in this execution environment; this says nothing about owner Termux."
+    },
+    {
+      "command": "git worktree add /workspace/device-ai-continuum-master -b sol/continuum-generation16-gemma-20261029 b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+      "status": "UNAVAILABLE",
+      "exitCode": null,
+      "detail": "Exec server disconnected; no completion or worktree outcome claimed."
+    },
+    {
+      "command": "pwd",
+      "status": "UNAVAILABLE",
+      "exitCode": null,
+      "detail": "Subsequent exec returned: No usable execution environment is available. GitHub connector writes remain operational."
+    },
+    {
+      "path": "scripts/continuum-generation16-rescue.test.mjs",
+      "check": "V8 JavaScript parse only",
+      "status": "PASS"
+    },
+    {
+      "path": "scripts/continuum-generation16-rescue.sh",
+      "check": "V8 JavaScript parse only",
+      "status": "PASS"
+    },
+    {
+      "path": "scripts/continuum-local-chat-streaming.test.mjs",
+      "check": "V8 JavaScript parse only",
+      "status": "PASS"
+    },
+    {
+      "path": "scripts/continuum-historical-ledger-review.test.mjs",
+      "check": "V8 JavaScript parse only",
+      "status": "PASS"
+    },
+    {
+      "name": "Cross-agent original ledger/SAF source review",
+      "status": "PASS",
+      "detail": "Two independent source reviews; no blocking source defect found. Not compilation/runtime."
+    },
+    {
+      "name": "Cross-agent streaming source review",
+      "status": "PASS",
+      "detail": "Found stale preview after Stop and hardcoded model label; corrected719f8648. No Android execution."
+    },
+    {
+      "name": "New Kotlin/JUnit, full Android compile/lint",
+      "status": "NOT_RUN",
+      "reason": "Execution environment UNAVAILABLE",
+      "exitCode": null
+    },
+    {
+      "name": "Real Node --test including synthetic fake-adb process cases",
+      "status": "NOT_RUN",
+      "reason": "Execution environment UNAVAILABLE",
+      "exitCode": null
+    },
+    {
+      "name": "Real Fold7 run-as recovery / 256 private records",
+      "status": "NOT_RUN",
+      "reason": "No authorized device access",
+      "exitCode": null
+    },
+    {
+      "name": "Current Gemma normal-chat latency/quality/offline/stability",
+      "status": "NOT_RUN",
+      "reason": "No hardware/model access",
+      "exitCode": null
+    },
+    {
+      "name": "SWB1/CDX1 training, private-memory apply, signing/APK/install",
+      "status": "NOT_RUN",
+      "reason": "No device and deliberately no authority expansion",
+      "exitCode": null
+    }
+  ],
+  "sourceDataAccessed": false,
+  "privateContentsPublished": false,
+  "mainWritten": false,
+  "testsSimulated": false,
+  "notes": [
+    "Previous PR2151169-JUnit/156-Node PASS concerns414ce4a2 only, not this checkpoint.",
+    "Owner reports installed27 native Gemma33217ms and PR217 Fold7 BUILD SUCCESSFUL; these are owner-reported prior results, not current-session runs."
+  ]
+}

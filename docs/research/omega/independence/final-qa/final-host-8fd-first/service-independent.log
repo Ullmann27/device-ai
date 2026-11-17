@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success
+ok 1 - S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success
+  ---
+  duration_ms: 6945.976684
+  type: 'test'
+  ...
+# Subtest: S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work
+not ok 2 - S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work
+  ---
+  duration_ms: 9897.943419
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:102:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'RESOURCE_RECONCILIATION_REQUIRED'
+    - 'ORPHAN_WORKER'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'ORPHAN_WORKER'
+  actual: 'RESOURCE_RECONCILIATION_REQUIRED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:112:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: S02 supplement: per-UID admission excludes a second different project and state directory until verified stop
+not ok 3 - S02 supplement: per-UID admission excludes a second different project and state directory until verified stop
+  ---
+  duration_ms: 14235.152282
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:139:1'
+  failureType: 'testCodeFailure'
+  error: 'CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\\"status\\":\\"BLOCKED\\",\\"code\\":\\"SERVICE_RESOURCE_RECONCILIATION_REQUIRED\\"}\\n","timedOut":false,"limited":false,"pid":361502,"elapsedMs":1187.087}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+    TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:145:5)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: S10 supplement: per-UID admission retains a live orphan across different project and state directories
+not ok 4 - S10 supplement: per-UID admission retains a live orphan across different project and state directories
+  ---
+  duration_ms: 14328.74525
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:161:1'
+  failureType: 'testCodeFailure'
+  error: 'CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\\"status\\":\\"BLOCKED\\",\\"code\\":\\"SERVICE_RESOURCE_RECONCILIATION_REQUIRED\\"}\\n","timedOut":false,"limited":false,"pid":362380,"elapsedMs":1189.558}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+    dispatchWithoutExecutableRuntime (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:30:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:166:21)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: S10 critical supplement: unexpected worker death pauses a different queued task
+not ok 5 - S10 critical supplement: unexpected worker death pauses a different queued task
+  ---
+  duration_ms: 7698.895185
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:193:1'
+  failureType: 'testCodeFailure'
+  error: 'CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\\"status\\":\\"BLOCKED\\",\\"code\\":\\"SERVICE_RESOURCE_RECONCILIATION_REQUIRED\\"}\\n","timedOut":false,"limited":false,"pid":363117,"elapsedMs":1195.019}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+    dispatchWithoutExecutableRuntime (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:30:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:197:37)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: S01/S15: real idle daemon starts, stops and starts again without creating model work
+not ok 6 - S01/S15: real idle daemon starts, stops and starts again without creating model work
+  ---
+  duration_ms: 7991.354922
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  error: 'CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\\"status\\":\\"BLOCKED\\",\\"code\\":\\"SERVICE_RESOURCE_RECONCILIATION_REQUIRED\\"}\\n","timedOut":false,"limited":false,"pid":363611,"elapsedMs":1305.621}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+    started (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:30:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:41:19)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: S02: concurrent actual starts leave exactly one daemon ownership
+not ok 7 - S02: concurrent actual starts leave exactly one daemon ownership
+  ---
+  duration_ms: 7761.870222
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:62:1'
+  failureType: 'testCodeFailure'
+  error: 'at least one start must establish service'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:66:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: S04/S11: SIGKILL of an idle daemon cannot leave live status and can restart safely
+not ok 8 - S04/S11: SIGKILL of an idle daemon cannot leave live status and can restart safely
+  ---
+  duration_ms: 7738.391222
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:82:1'
+  failureType: 'testCodeFailure'
+  error: 'CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\\"status\\":\\"BLOCKED\\",\\"code\\":\\"SERVICE_RESOURCE_RECONCILIATION_REQUIRED\\"}\\n","timedOut":false,"limited":false,"pid":364475,"elapsedMs":1191.356}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+    started (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:30:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:85:15)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: S03: stale descriptor pointing at an unrelated live process never authorizes killing it
+not ok 9 - S03: stale descriptor pointing at an unrelated live process never authorizes killing it
+  ---
+  duration_ms: 7764.551147
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:98:1'
+  failureType: 'testCodeFailure'
+  error: 'CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\\"status\\":\\"BLOCKED\\",\\"code\\":\\"SERVICE_RESOURCE_RECONCILIATION_REQUIRED\\"}\\n","timedOut":false,"limited":false,"pid":364886,"elapsedMs":1193.828}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+    started (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:30:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:102:15)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: S05: last-slot admission is atomic across independent CLI processes
+ok 10 - S05: last-slot admission is atomic across independent CLI processes
+  ---
+  duration_ms: 11906.259484
+  type: 'test'
+  ...
+# Subtest: S06/S08: duplicate identity is durable; cancellation prevents resubmission and restart resurrection
+not ok 11 - S06/S08: duplicate identity is durable; cancellation prevents resubmission and restart resurrection
+  ---
+  duration_ms: 12116.874915
+  type: 'test'
+  location: '/workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:135:1'
+  failureType: 'testCodeFailure'
+  error: 'CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\\"status\\":\\"BLOCKED\\",\\"code\\":\\"SERVICE_RESOURCE_RECONCILIATION_REQUIRED\\"}\\n","timedOut":false,"limited":false,"pid":367377,"elapsedMs":1321.917}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+    started (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:30:3)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs:153:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: S07/S13: owner acceptance binds the exact task and source, not an arbitrary approve flag
+ok 12 - S07/S13: owner acceptance binds the exact task and source, not an arbitrary approve flag
+  ---
+  duration_ms: 8679.319425
+  type: 'test'
+  ...
+# Subtest: S14: corrupt delivery state is rejected rather than reset to a fresh accepting queue
+ok 13 - S14: corrupt delivery state is rejected rather than reset to a fresh accepting queue
+  ---
+  duration_ms: 8158.053579
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 4
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 125350.859477

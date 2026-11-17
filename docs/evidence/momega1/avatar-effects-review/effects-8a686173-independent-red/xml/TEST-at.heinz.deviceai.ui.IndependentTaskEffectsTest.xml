@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.IndependentTaskEffectsTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:32:08" hostname="b354f2cb821b" time="0.023">
+  <properties/>
+  <testcase name="finiteExtremeAndInvalidSizesNeverEmitNonFiniteGeometry" classname="at.heinz.deviceai.ui.IndependentTaskEffectsTest" time="0.013"/>
+  <testcase name="boundedBurstAndMaximumLongClockDoNotCreateUnboundedPaint" classname="at.heinz.deviceai.ui.IndependentTaskEffectsTest" time="0.005"/>
+  <testcase name="workerCannotAcquireReadPageThroughToolIdReplayOrScopeChange" classname="at.heinz.deviceai.ui.IndependentTaskEffectsTest" time="0.0"/>
+  <testcase name="invalidScopeClearsOutstandingWorkAndCannotReviveOldScope" classname="at.heinz.deviceai.ui.IndependentTaskEffectsTest" time="0.0"/>
+  <testcase name="oldTerminalRetiresOnlyMatchingSlotWithoutInventingFreshDeparture" classname="at.heinz.deviceai.ui.IndependentTaskEffectsTest" time="0.001"/>
+  <testcase name="exactFreshnessBoundaryUsesOriginalTimeNotDeliveryTime" classname="at.heinz.deviceai.ui.IndependentTaskEffectsTest" time="0.0"/>
+  <testcase name="invalidFutureAndForeignEventsCannotConsumeTheRealId" classname="at.heinz.deviceai.ui.IndependentTaskEffectsTest" time="0.001"/>
+  <testcase name="unknownOrOutOfOrderTerminalCannotFreeAnotherTasksSlot" classname="at.heinz.deviceai.ui.IndependentTaskEffectsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,32 @@
+{
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "assetSha256": "3805ba43261784993d3f4c65bb24df2a0ee306b89962167d81763c12c9d81deb",
+  "productionMapperSource": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+  "poseFileSha256": "8d2af24cb1e0bb22a8e35a456f9be41de91d322980d7f46c63159be6628b7677",
+  "fixedCamera": {
+    "targetBlender": [
+      -0.00032285970519296825,
+      -0.06414049118757248,
+      0.26499998569488525
+    ],
+    "orthoScale": 0.34
+  },
+  "renderPixels": [
+    192,
+    224
+  ],
+  "presentationPixels": [
+    384,
+    512
+  ],
+  "frameCount": 224,
+  "framesPerSecond": 24,
+  "durationSeconds": 9.333333333333334,
+  "audio": false,
+  "syntheticInputs": true,
+  "videoSha256": "be5841f5bb57f708efeb09eb0b2c368bb95ac48c7f3b5cd7e0f68266745d9bca",
+  "limitations": [
+    "Upscaled low-resolution host render",
+    "No actual TTS/camera or Filament/device evidence"
+  ]
+}

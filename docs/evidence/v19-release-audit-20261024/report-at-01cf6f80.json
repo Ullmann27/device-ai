@@ -1,0 +1,269 @@
+{
+  "sourceHead": "01cf6f8016e79634ea71e82c0cd3c2d1d0105795",
+  "total": 22,
+  "matched": 11,
+  "reviewRequired": 11,
+  "status": "OWNER_REVIEW_REQUIRED",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "expected": "c151ade5d88d7434f818a5ed5c1b27e3eddc7aa5",
+      "actual": "5634095f82cdb7870aef8b7c182f8d1e1ef004a4",
+      "matches": false,
+      "role": "WIRING_OR_UI",
+      "changesSincePin": [
+        {
+          "commit": "d2fd0f7cf270185ba20408c81b87db64e13d70d6",
+          "subject": "feat(android): carry safe unsubmitted M5 planning draft from owner chat to lab"
+        },
+        {
+          "commit": "d3f5f3ee34af1e698a34c5ee943cd528bfb2653f",
+          "subject": "docs(android): expose M5 plan command in local Worker help"
+        },
+        {
+          "commit": "6138cbe6bf170d3c1ea854aff418c77a05b132fb",
+          "subject": "feat(android): connect explicit Worker Projektplan chat route to existing M5 lab"
+        },
+        {
+          "commit": "63ea9189dd4a1410bf7c56e845d7360893663b57",
+          "subject": "fix(m5): isolate shadow conversations and bind source revisions across chat lifecycle"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+      "expected": "acfebe1fa5d882013b11f11133cabc0c5d01409b",
+      "actual": "ea350fb291fa35bdf6c3fb09fa3486f0edb6c82a",
+      "matches": false,
+      "role": "WIRING_OR_UI",
+      "changesSincePin": [
+        {
+          "commit": "01cf6f8016e79634ea71e82c0cd3c2d1d0105795",
+          "subject": "fix(m4/m5): a fold or rotation no longer reverts the owner's project choice to a stale M5 handoff"
+        },
+        {
+          "commit": "f8b85774a1a8c8152d16866720f5e087640c9aa0",
+          "subject": "feat(m5): add opt-in context shadow and reviewed dialogue-to-project handoff"
+        },
+        {
+          "commit": "c787c0986a2dd944e41cfa08bf4ceba226148a07",
+          "subject": "feat(m4): bind Android project selection and recover jobs without losing build identity"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
+      "expected": "3cb8e5d5c28b98edfa3043f756fb09e907088f48",
+      "actual": "6ebec7bad39cb842e22a8031f4728338221b0da2",
+      "matches": false,
+      "role": "SECURITY_REVIEW",
+      "changesSincePin": [
+        {
+          "commit": "c787c0986a2dd944e41cfa08bf4ceba226148a07",
+          "subject": "feat(m4): bind Android project selection and recover jobs without losing build identity"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
+      "expected": "e8c153afe22dbdef67dfeb3044d40e7fba97bf61",
+      "actual": "79f365032047fa1818c5d60ed83485a32d9c626b",
+      "matches": false,
+      "role": "SECURITY_REVIEW",
+      "changesSincePin": [
+        {
+          "commit": "c787c0986a2dd944e41cfa08bf4ceba226148a07",
+          "subject": "feat(m4): bind Android project selection and recover jobs without losing build identity"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+      "expected": "384ab70a79c2eb09f13478e89aa06ee89739eed2",
+      "actual": "402fc6f7bb302881fd450c62d4bc0a76e7fab749",
+      "matches": false,
+      "role": "SECURITY_REVIEW",
+      "changesSincePin": [
+        {
+          "commit": "c787c0986a2dd944e41cfa08bf4ceba226148a07",
+          "subject": "feat(m4): bind Android project selection and recover jobs without losing build identity"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+      "expected": "479849bd277d4781f53db216e2dd884c1f87f355",
+      "actual": "a900cdc73b757cec751ecc23825a92153da257ad",
+      "matches": false,
+      "role": "SECURITY_REVIEW",
+      "changesSincePin": [
+        {
+          "commit": "5e81011b27ddc29e0bc684330ee031ec5f0aa94e",
+          "subject": "fix(router): reject control-bearing requests before whitespace normalization"
+        },
+        {
+          "commit": "7b17bdd838208370cffa7d36b308e8a9edba316e",
+          "subject": "feat(m5): preserve bounded Worker Projektplan chat draft without granting execution"
+        },
+        {
+          "commit": "1a890eb64919caf97a0db045ae910661077ce9a0",
+          "subject": "feat(m5): expose explicit tool-free Worker Projektplan command"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt",
+      "expected": "2736d947f40d0fbefb16a5f9470542fdfbe2b949",
+      "actual": "a4f1b385739d99912081fffbaa405900e98e8fed",
+      "matches": false,
+      "role": "TEST_ONLY",
+      "changesSincePin": [
+        {
+          "commit": "c787c0986a2dd944e41cfa08bf4ceba226148a07",
+          "subject": "feat(m4): bind Android project selection and recover jobs without losing build identity"
+        }
+      ]
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt",
+      "expected": "697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb",
+      "actual": "9a6f7a4c4bebc36c4dab8041491643bca2696df5",
+      "matches": false,
+      "role": "TEST_ONLY",
+      "changesSincePin": [
+        {
+          "commit": "16a055b4405d43d547dc197124dc2de1f71a6013",
+          "subject": "fix(test): pass actual newline to project-plan control-character rejection"
+        },
+        {
+          "commit": "239c9cdd499e45de9b171dde85a62cfecae58bac",
+          "subject": "test(m5): bound chat-carried requirements and reject newlines or oversize input"
+        },
+        {
+          "commit": "b09a81486d0a45865a913f94509e913c3295f3bc",
+          "subject": "test(m5): assert explicit project-plan chat entry preserves draft and tool gates"
+        }
+      ]
+    },
+    {
+      "path": "scripts/continuum-owned-app.mjs",
+      "expected": "83692c7ae749f451cae495aa95bc52107165334f",
+      "actual": "c735606419fcdec445fd3b344eecba2bdee55989",
+      "matches": false,
+      "role": "SECURITY_REVIEW",
+      "changesSincePin": [
+        {
+          "commit": "c787c0986a2dd944e41cfa08bf4ceba226148a07",
+          "subject": "feat(m4): bind Android project selection and recover jobs without losing build identity"
+        },
+        {
+          "commit": "6ff6d8f03fccefeb42afb2fbb0e8471f58cd1ddc",
+          "subject": "feat(m4): verify fresh build evidence and recover bounded project jobs"
+        },
+        {
+          "commit": "3f9ce263a9134a6236fae234dd43ae35bcce947c",
+          "subject": "feat(m4): describe and generate two bounded Android project plans"
+        },
+        {
+          "commit": "ba6aa26b95ca2dfa9ce6c924cc788a544c5f3a40",
+          "subject": "fix(m4): reject extra build inputs and changed APK verification bytes"
+        }
+      ]
+    },
+    {
+      "path": "scripts/continuum-owned-app.test.mjs",
+      "expected": "e287909e67074a1ac53764c1ecc22b3a36ac5105",
+      "actual": "65cec140fa13896131f18403c69c8a868781e9b7",
+      "matches": false,
+      "role": "TEST_ONLY",
+      "changesSincePin": [
+        {
+          "commit": "c787c0986a2dd944e41cfa08bf4ceba226148a07",
+          "subject": "feat(m4): bind Android project selection and recover jobs without losing build identity"
+        },
+        {
+          "commit": "6ff6d8f03fccefeb42afb2fbb0e8471f58cd1ddc",
+          "subject": "feat(m4): verify fresh build evidence and recover bounded project jobs"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+      "expected": "5ddd43cb32120c43cd2f854897136178464b3645",
+      "actual": "e0981a9a8052f72bc5959ae2de68319fc1692e66",
+      "matches": false,
+      "role": "SECURITY_REVIEW",
+      "changesSincePin": [
+        {
+          "commit": "c787c0986a2dd944e41cfa08bf4ceba226148a07",
+          "subject": "feat(m4): bind Android project selection and recover jobs without losing build identity"
+        }
+      ]
+    }
+  ],
+  "attestedBaseCommit": "2ef71365f7efc3749d094adecf7640b1138a54f2",
+  "unattestedApkSourceChanges": [
+    {
+      "status": "M",
+      "path": "app/src/main/AndroidManifest.xml",
+      "blob": "983138c8e8cc9b25189288c7202d4e17f699f959"
+    },
+    {
+      "status": "A",
+      "path": "app/src/main/assets/continuum-owned-project-plans-v1.json",
+      "blob": "d19297d5715821ac1073934adde07c64ddf25d5b"
+    },
+    {
+      "status": "A",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt",
+      "blob": "b2732626709517ee49fb0213796ed272e8e0f76c"
+    },
+    {
+      "status": "A",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt",
+      "blob": "22234d244c08f6e7b041509eca7ea6df4d13cc24"
+    },
+    {
+      "status": "A",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt",
+      "blob": "53efcb096fe152189a1731948706b4ccb1294790"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "blob": "e5b9fa8390d48780534e695f2ad22b33ba35e50a"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "blob": "176ec21a4c86eddf3a20911fcd728a92808444ac"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "blob": "9872c2209b550d8b4c361f087ddc09595324b681"
+    },
+    {
+      "status": "A",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt",
+      "blob": "cb9e51b1362c22df06cde7e21247a48f12d69e8c"
+    },
+    {
+      "status": "A",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+      "blob": "f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe"
+    }
+  ],
+  "releaseGate": {
+    "commands": [
+      "no_signing_env node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs",
+      "no_signing_env node --test --test-concurrency=2 backend/test/*.test.js",
+      "no_signing_env node --test backend/test/groq-mentor.test.js backend/test/mentor-answer-format.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs",
+      "no_signing_env node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs .github/continuum/workshop-specialist-orchestrator.test.mjs .github/continuum/continuum-hyper-lab.test.mjs",
+      "no_signing_env node --test",
+      "gradle --no-daemon --max-workers=2"
+    ],
+    "androidSdk": "SDK_UNAVAILABLE",
+    "note": "Gradle tests, lint, assembleDebug, signing and the rollback check run only in the owner-approved Render build"
+  }
+}

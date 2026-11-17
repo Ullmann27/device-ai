@@ -1,0 +1,86 @@
+TRAIN binding curriculum=false trainSha=5743baa51a2f2702fb46abcbfb2b052a3c77cab951452642ca57353dc2380ddd
+DATASET train=246 validation=170 (unseen 36) validationSha=73c1c7ad3cdf67cd3ac66f0ff4a5c0a04ce4396b0dfd4a24eeacabf34b44a600
+== V8 entity proximity + cue words excluded seed=1 steps=7380 loss 1.4189->0.1339 checkpoint=1786fa9e58d2a126 argmax (TEST)
+  ALL      answerable 99/124 correct, wrong span 10, false abstain 15 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+  SEEN     answerable 87/89 correct, wrong span 0, false abstain 2 | unanswerable 101/107 abstained, unsupported answers 6 | traps 1/157
+  UNSEEN   answerable 12/35 correct, wrong span 10, false abstain 13 | unanswerable 33/33 abstained, unsupported answers 0 | traps 2/45
+  ANSWER               answerable 41/56 correct, wrong span 3, false abstain 12 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 20/21 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  CONTRAST             answerable 7/8 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/8
+  MULTI_ENTITY         answerable 21/21 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  SAME_CLAUSE_ENTITIES answerable 6/6 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 4/6 correct, wrong span 2, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 2/6
+  UNIT_MULTIWORD       answerable 0/6 correct, wrong span 5, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 53/56 abstained, unsupported answers 3 | traps 0/56
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 56/56 abstained, unsupported answers 0 | traps 0/56
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 25/28 abstained, unsupported answers 3 | traps 1/28
+== V8 entity proximity + cue words excluded seed=1 steps=7380 loss 1.4189->0.1339 checkpoint=1786fa9e58d2a126 threshold=0.40 from VALIDATION (TEST)
+  ALL      answerable 98/124 correct, wrong span 6, false abstain 20 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+  SEEN     answerable 87/89 correct, wrong span 0, false abstain 2 | unanswerable 101/107 abstained, unsupported answers 6 | traps 1/157
+  UNSEEN   answerable 11/35 correct, wrong span 6, false abstain 18 | unanswerable 33/33 abstained, unsupported answers 0 | traps 2/45
+  ANSWER               answerable 41/56 correct, wrong span 1, false abstain 14 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 20/21 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  CONTRAST             answerable 7/8 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/8
+  MULTI_ENTITY         answerable 21/21 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  SAME_CLAUSE_ENTITIES answerable 5/6 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 4/6 correct, wrong span 2, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 2/6
+  UNIT_MULTIWORD       answerable 0/6 correct, wrong span 3, false abstain 3 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 53/56 abstained, unsupported answers 3 | traps 0/56
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 56/56 abstained, unsupported answers 0 | traps 0/56
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 25/28 abstained, unsupported answers 3 | traps 1/28
+== V8 entity proximity + cue words excluded seed=2 steps=7380 loss 1.4189->0.1352 checkpoint=f459eeb859077eb7 argmax (TEST)
+  ALL      answerable 99/124 correct, wrong span 10, false abstain 15 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+  SEEN     answerable 87/89 correct, wrong span 0, false abstain 2 | unanswerable 101/107 abstained, unsupported answers 6 | traps 1/157
+  UNSEEN   answerable 12/35 correct, wrong span 10, false abstain 13 | unanswerable 33/33 abstained, unsupported answers 0 | traps 2/45
+  ANSWER               answerable 41/56 correct, wrong span 3, false abstain 12 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 20/21 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  CONTRAST             answerable 7/8 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/8
+  MULTI_ENTITY         answerable 21/21 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  SAME_CLAUSE_ENTITIES answerable 6/6 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 4/6 correct, wrong span 2, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 2/6
+  UNIT_MULTIWORD       answerable 0/6 correct, wrong span 5, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 53/56 abstained, unsupported answers 3 | traps 0/56
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 56/56 abstained, unsupported answers 0 | traps 0/56
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 25/28 abstained, unsupported answers 3 | traps 1/28
+== V8 entity proximity + cue words excluded seed=2 steps=7380 loss 1.4189->0.1352 checkpoint=f459eeb859077eb7 threshold=0.50 from VALIDATION (TEST)
+  ALL      answerable 91/124 correct, wrong span 3, false abstain 30 | unanswerable 134/140 abstained, unsupported answers 6 | traps 2/202
+  SEEN     answerable 86/89 correct, wrong span 0, false abstain 3 | unanswerable 101/107 abstained, unsupported answers 6 | traps 1/157
+  UNSEEN   answerable 5/35 correct, wrong span 3, false abstain 27 | unanswerable 33/33 abstained, unsupported answers 0 | traps 1/45
+  ANSWER               answerable 40/56 correct, wrong span 0, false abstain 16 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 19/21 correct, wrong span 0, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  CONTRAST             answerable 7/8 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/8
+  MULTI_ENTITY         answerable 21/21 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  SAME_CLAUSE_ENTITIES answerable 1/6 correct, wrong span 0, false abstain 5 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 3/6 correct, wrong span 1, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 1/6
+  UNIT_MULTIWORD       answerable 0/6 correct, wrong span 2, false abstain 4 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 53/56 abstained, unsupported answers 3 | traps 0/56
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 56/56 abstained, unsupported answers 0 | traps 0/56
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 25/28 abstained, unsupported answers 3 | traps 1/28
+== V8 entity proximity + cue words excluded seed=3 steps=7380 loss 1.4189->0.1340 checkpoint=6084ec57dfd2cfb4 argmax (TEST)
+  ALL      answerable 99/124 correct, wrong span 8, false abstain 17 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+  SEEN     answerable 87/89 correct, wrong span 0, false abstain 2 | unanswerable 101/107 abstained, unsupported answers 6 | traps 1/157
+  UNSEEN   answerable 12/35 correct, wrong span 8, false abstain 15 | unanswerable 33/33 abstained, unsupported answers 0 | traps 2/45
+  ANSWER               answerable 41/56 correct, wrong span 1, false abstain 14 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 20/21 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  CONTRAST             answerable 7/8 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/8
+  MULTI_ENTITY         answerable 21/21 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  SAME_CLAUSE_ENTITIES answerable 6/6 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 4/6 correct, wrong span 2, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 2/6
+  UNIT_MULTIWORD       answerable 0/6 correct, wrong span 5, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 53/56 abstained, unsupported answers 3 | traps 0/56
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 56/56 abstained, unsupported answers 0 | traps 0/56
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 25/28 abstained, unsupported answers 3 | traps 1/28
+== V8 entity proximity + cue words excluded seed=3 steps=7380 loss 1.4189->0.1340 checkpoint=6084ec57dfd2cfb4 threshold=0.40 from VALIDATION (TEST)
+  ALL      answerable 98/124 correct, wrong span 7, false abstain 19 | unanswerable 134/140 abstained, unsupported answers 6 | traps 3/202
+  SEEN     answerable 87/89 correct, wrong span 0, false abstain 2 | unanswerable 101/107 abstained, unsupported answers 6 | traps 1/157
+  UNSEEN   answerable 11/35 correct, wrong span 7, false abstain 17 | unanswerable 33/33 abstained, unsupported answers 0 | traps 2/45
+  ANSWER               answerable 41/56 correct, wrong span 1, false abstain 14 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  MULTI_FACT           answerable 20/21 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  CONTRAST             answerable 7/8 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/8
+  MULTI_ENTITY         answerable 21/21 correct, wrong span 0, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/21
+  SAME_CLAUSE_ENTITIES answerable 5/6 correct, wrong span 0, false abstain 1 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/6
+  TEMPORAL             answerable 4/6 correct, wrong span 2, false abstain 0 | unanswerable 0/0 abstained, unsupported answers 0 | traps 2/6
+  UNIT_MULTIWORD       answerable 0/6 correct, wrong span 4, false abstain 2 | unanswerable 0/0 abstained, unsupported answers 0 | traps 0/0
+  OTHER_RELATION       answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 53/56 abstained, unsupported answers 3 | traps 0/56
+  OTHER_ENTITY         answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 56/56 abstained, unsupported answers 0 | traps 0/56
+  NEGATED              answerable 0/0 correct, wrong span 0, false abstain 0 | unanswerable 25/28 abstained, unsupported answers 3 | traps 1/28

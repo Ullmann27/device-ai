@@ -1,0 +1,20 @@
+{
+  "schema": "independent-bounded-bloom-source-review",
+  "version": 1,
+  "source": "0996b42e4c8bdbc1a3af49b85c0a3382bbcac346",
+  "file": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+  "sourceFileSha256": "dbf94e3fd96201f85a89ac3e933e2f33311ace08fc793dc4ca92a022da210de0",
+  "evidenceClass": "SOURCE_REVIEW",
+  "decision": "ACCEPT_BOUNDED_EXISTING_VIEW_POSTPROCESSING_CHANGE",
+  "observations": [
+    "Only existingView postprocessing/bloom configuration changes.",
+    "Bloom strength0.06, resolution128, levels4, qualityLOW; no lensflare, starburst or chromatic aberration.",
+    "No newEngine, Entity, callback, task state or request authority.",
+    "Normal and failed initialization retain existing close()/destroyView cleanup."
+  ],
+  "limits": [
+    "API compile is separately authored evidence, not an independently repeated native run here.",
+    "Actual GPU allocation, alpha composition, pixels, frame time, thermal behavior and reference appearance are NOT_RUN.",
+    "Experimental HDR texture/emissive-strength compatibility is not accepted by this source review."
+  ]
+}

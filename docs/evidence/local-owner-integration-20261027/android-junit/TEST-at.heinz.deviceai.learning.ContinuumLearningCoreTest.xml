@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumLearningCoreTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:51" hostname="7b281259906f" time="1.151">
+  <properties/>
+  <testcase name="ownerCorrectionSupersedesConflictingIntentAndSurvivesRestart" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.054"/>
+  <testcase name="ownerCanExplicitlyRestoreAnEarlierIntentLabelWithoutReplayingItsReplacement" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.025"/>
+  <testcase name="confirmedIntentUsesReplayHoldoutAndPersistsOnlyAcceptedCandidate" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.035"/>
+  <testcase name="modelAndExperienceStateSurviveFreshCoordinatorInstance" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.068"/>
+  <testcase name="reconfirmedOldIntentParticipatesInBoundedReplay" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.118"/>
+  <testcase name="invalidIntentTextCannotPoisonPersistentReplay" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.05"/>
+  <testcase name="offlineBootstrapNeedsNoOwnerLessonsAndRunsOnlyOnce" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.022"/>
+  <testcase name="interruptedOfflineStagesAreRetriedInsteadOfCountedAsDone" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.097"/>
+  <testcase name="offlineBootstrapDoesNotModifyOwnerData" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.005"/>
+  <testcase name="sourceTrainingIsSkippedWhenTheOwnerLedgerHasNoObservationCapacity" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.327"/>
+  <testcase name="bothOfflineStagesRunWithoutUserTrainingAndDoNotRepeat" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.078"/>
+  <testcase name="damagedActiveWeightsAreRestoredFromLastKnownGoodOnceAndAudited" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.121"/>
+  <testcase name="sourceObservationsTrainRepresentationWithoutOwnerTrustOrIntentAuthority" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.078"/>
+  <testcase name="semanticBootstrapIsAuditedIdempotentAndProtectsIntent" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.03"/>
+  <testcase name="ownerFactsAndCommandsAreAuditableAndRevocableWithoutTrainingAuthority" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.003"/>
+  <testcase name="cancelledRoundRollsBackWeightsButKeepsApprovedLessonForReplay" classname="at.heinz.deviceai.learning.ContinuumLearningCoreTest" time="0.037"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

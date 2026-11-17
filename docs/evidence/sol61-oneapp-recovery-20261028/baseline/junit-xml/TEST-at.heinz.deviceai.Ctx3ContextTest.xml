@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.Ctx3ContextTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:16" hostname="b50d54a1ac03" time="0.082">
+  <properties/>
+  <testcase name="mixedUnknownsAndNonAdjacentNegationNeverReuseOldFocus" classname="at.heinz.deviceai.Ctx3ContextTest" time="0.008"/>
+  <testcase name="factualGenderIsNotWidenedByAnAttributeFact" classname="at.heinz.deviceai.Ctx3ContextTest" time="0.0"/>
+  <testcase name="rejectedNamesAndChangedSourcesCannotBeResurrected" classname="at.heinz.deviceai.Ctx3ContextTest" time="0.0"/>
+  <testcase name="fiveTurnsKeepSourcesAndRequireAUniqueReferent" classname="at.heinz.deviceai.Ctx3ContextTest" time="0.009"/>
+  <testcase name="overlappingAliasesAndQuotedCommandsFailClosed" classname="at.heinz.deviceai.Ctx3ContextTest" time="0.064"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

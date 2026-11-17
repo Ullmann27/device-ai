@@ -1,0 +1,14 @@
+{
+  "package": "litert-lm-api",
+  "version": "0.18.1",
+  "project": "https://github.com/google-ai-edge/LiteRT-LM",
+  "metadata_url": "https://pypi.org/pypi/litert-lm-api/json",
+  "wheel_url": "https://files.pythonhosted.org/packages/42/73/130210891a494372d3440de3639f9435d9f8522a4a056f6152be34b3361a/litert_lm_api-0.18.1-py3-none-manylinux_2_27_x86_64.whl",
+  "wheel_bytes": 47051755,
+  "wheel_sha256": "b2fe9b9a87afe991a7b0d29615b0bfc3d41c7a0ac28e9c54436676482bca2e5b",
+  "publisher_sha256": "b2fe9b9a87afe991a7b0d29615b0bfc3d41c7a0ac28e9c54436676482bca2e5b",
+  "license": "Apache-2.0",
+  "isolated_venv": true,
+  "android_runtime_version": "0.18.0 unchanged",
+  "native_host_result": "gemma-host-probe-v1.json"
+}

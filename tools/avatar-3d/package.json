@@ -1,0 +1,12 @@
+{
+  "name": "continuum-avatar-asset-verification",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "validate": "node validate-glb.mjs ../../assets/avatar/jarvis-research-v1.glb"
+  },
+  "devDependencies": {
+    "gltf-validator": "2.0.0-dev.3.10"
+  }
+}

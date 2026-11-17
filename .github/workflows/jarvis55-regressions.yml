@@ -1,0 +1,224 @@
+name: Jarvis55 - targeted integration regressions
+
+on:
+  push:
+    branches: [work/jarvis55-master-20261113]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jarvis55-targeted-regressions
+  cancel-in-progress: false
+
+jobs:
+  regression:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/jarvis55-master-20261113' && (contains(github.event.head_commit.message, '[jarvis-regressions]') || contains(github.event.head_commit.message, '[jarvis-kotlin]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify immutable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Verify JUnit evidence guard
+        run: python3 -B tools/code55-apk/junit_summary_test.py
+      - name: Install official Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Exact-source focused Kotlin and UI regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=55 -PcontinuumLocalStandaloneQa=true             -PcontinuumUiWidgetTests=true -I tools/code55-apk/regression.init.gradle :app:testDebugUnitTest
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - name: Summarize actual focused JUnit results
+        if: always()
+        run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest
+      - name: Preserve focused JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Jarvis55-targeted-regression-JUnit
+          path: app/build/test-results/testDebugUnitTest/
+          if-no-files-found: warn
+          retention-days: 14
+
+  node-backend:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/jarvis55-master-20261113' && (contains(github.event.head_commit.message, '[jarvis-regressions]') || contains(github.event.head_commit.message, '[jarvis-node]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Freeze Node source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.2"
+      - name: Original scene and APK validator contracts
+        run: |
+          set -euo pipefail
+          python3 -B tools/cockpit-workstation/verify_scene.py
+          python3 -B tools/cockpit-workstation/verify_unified_assets.py --require-blacksite
+          python3 -B tools/cockpit-workstation/test_blacksite_contract.py
+          python3 -B tools/code55-apk/validator_test.py
+          python3 -B tools/code55-apk/junit_summary_test.py
+      - name: Source-bound full critical and Node QA
+        run: |
+          set -euo pipefail
+          node scripts/continuum-reliability-qa.mjs critical --out "$RUNNER_TEMP/code55-critical"
+          node scripts/continuum-reliability-qa.mjs full-node --out "$RUNNER_TEMP/code55-full"
+          node -e "for(const p of ['code55-critical','code55-full']){const r=require(process.env.RUNNER_TEMP+'/'+p+'/report.json');if(r.status!=='PASS'||r.source.commit!==process.env.GITHUB_SHA||!r.sourceUnchanged)process.exit(69);console.log(p+' SOURCE_BOUND_PASS')}"
+      - name: Explain actual Node QA outcomes
+        if: always()
+        run: python3 -B tools/code55-apk/node-summary.py "$RUNNER_TEMP/code55-critical" "$RUNNER_TEMP/code55-full"
+      - name: Backend check and tests
+        run: |
+          set -euo pipefail
+          npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+          npm --prefix backend run check
+          npm --prefix backend test
+      - name: Preserve Node receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Jarvis55-targeted-node-evidence
+          path: |
+            ${{ runner.temp }}/code55-critical/
+            ${{ runner.temp }}/code55-full/
+          if-no-files-found: warn
+          retention-days: 14
+
+
+  native-pdf:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/work/jarvis55-master-20261113' && contains(github.event.head_commit.message, '[jarvis-native]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Freeze native probe source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain --untracked-files=normal)"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install official native Android runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0' 'emulator' 'system-images;android-35;google_apis;x86_64'
+          export ANDROID_USER_HOME="$RUNNER_TEMP/continuum-native-user"
+          export ANDROID_AVD_HOME="$ANDROID_USER_HOME/avd"
+          mkdir -p "$ANDROID_AVD_HOME"
+          printf 'ANDROID_USER_HOME=%s\n' "$ANDROID_USER_HOME" >> "$GITHUB_ENV"
+          printf 'ANDROID_AVD_HOME=%s\n' "$ANDROID_AVD_HOME" >> "$GITHUB_ENV"
+          printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd \
+            --name continuum-native-pdf --package 'system-images;android-35;google_apis;x86_64' \
+            --device pixel_7 --path "$ANDROID_AVD_HOME/continuum-native-pdf.avd"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
+          test "$("$ANDROID_HOME/emulator/emulator" -list-avds | tr -d '\r')" = continuum-native-pdf
+      - name: Build disposable native test APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
+            :app:assembleDebug :app:assembleDebugAndroidTest
+      - name: Verify native PDF and actual Filament panel lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/code55-native-pdf"
+          mkdir -p "$evidence"
+          : "${ANDROID_USER_HOME:?Native user directory missing}"
+          : "${ANDROID_AVD_HOME:?Native AVD directory missing}"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.ini"
+          test -s "$ANDROID_AVD_HOME/continuum-native-pdf.avd/config.ini"
+          test -c /dev/kvm
+          original_kvm_group="$(stat -c '%g' /dev/kvm)"
+          original_kvm_mode="$(stat -c '%a' /dev/kvm)"
+          emulator_pid=''
+          cleanup() {
+            native_exit=$?
+            if (( native_exit != 0 )) && [[ -f "$evidence/emulator.log" ]]; then
+              cat "$evidence/emulator.log" || true
+            fi
+            if [[ -n "$emulator_pid" ]]; then
+              timeout 10 "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 emu kill || true
+              kill "$emulator_pid" 2>/dev/null || true
+            fi
+            sudo chgrp "$original_kvm_group" /dev/kvm
+            sudo chmod "$original_kvm_mode" /dev/kvm
+            return "$native_exit"
+          }
+          trap cleanup EXIT
+          sudo chgrp "$(id -gn)" /dev/kvm
+          sudo chmod g+rw /dev/kvm
+          "$ANDROID_HOME/emulator/emulator" -no-window -version > "$evidence/emulator-version.txt"
+          "$ANDROID_HOME/platform-tools/adb" start-server
+          "$ANDROID_HOME/emulator/emulator" -avd continuum-native-pdf -port 5554 -accel on \
+            -no-window -no-audio -no-boot-anim -no-snapshot -gpu swangle -memory 2048 -cores 2 \
+            > "$evidence/emulator.log" 2>&1 &
+          emulator_pid=$!
+          ready=false
+          deadline=$((SECONDS + 600))
+          while (( SECONDS < deadline )); do
+            kill -0 "$emulator_pid"
+            if [[ "$(timeout 10 "$ANDROID_HOME/platform-tools/adb" -s emulator-5554 shell -n getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)" == 1 ]]; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          test "$ready" = true
+          timeout 300 bash tools/code55-apk/native-pdf-emulator.sh emulator-5554 "$evidence"
+          timeout 300 bash tools/code55-apk/native-filament-emulator.sh emulator-5554 "$evidence/filament"
+      - name: Preserve native proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code55-native-PDF-emulator-QA
+          path: ${{ runner.temp }}/code55-native-pdf/
+          retention-days: 14
+          if-no-files-found: warn
+

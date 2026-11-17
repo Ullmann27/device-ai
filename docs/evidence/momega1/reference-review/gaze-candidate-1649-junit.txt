@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+..................E........
+Time: 0.094
+There was 1 failure:
+1) discardedFutureObservationCannotLockOutNewCurrentObservations(at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest)
+java.lang.AssertionError: Discarded future timestamp locked out current observations: 2000
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.discardedFutureObservationCannotLockOutNewCurrentObservations(ObservedGazeChallengeTest.kt:78)
+
+FAILURES!!!
+Tests run: 26,  Failures: 1
+

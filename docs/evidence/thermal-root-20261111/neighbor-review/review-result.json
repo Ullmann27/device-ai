@@ -1,0 +1,77 @@
+{
+  "baseline": "f88d7d1936b9c0d53c176a0af31108fb863199e6",
+  "integrated_source": "e80bb68a93218acac287213951550d81a84399ff",
+  "node_first_run": {
+    "tests": 33,
+    "pass": 32,
+    "fail": 1,
+    "skip": 0,
+    "reason": "Old direct catalog.get source contract no longer follows verified resolver"
+  },
+  "baseline_gemma": {
+    "tests": 14,
+    "pass": 14,
+    "fail": 0,
+    "skip": 0
+  },
+  "updated_gemma": {
+    "tests": 15,
+    "pass": 15,
+    "fail": 0,
+    "skip": 0,
+    "rejected_mutants": 6
+  },
+  "policy_comparison": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt",
+      "unchanged": true,
+      "sha256": "db0a352d53fd93d84d74f3e816ad5190baea982b9ab4e667b1503d7a25a4a82a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisComputePhasePolicy.kt",
+      "unchanged": true,
+      "sha256": "e85ca0246e4c6f4d24cd190d0843d4c304c413b21e3702c85b6b752197991358"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/AvatarEssentialMotionPolicy.kt",
+      "unchanged": true,
+      "sha256": "32928855dd6b1980b69ac2ca257489a15e1ddc9d7f98a0f0d4aa646ff6992302"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCinematicSettings.kt",
+      "unchanged": true,
+      "sha256": "c76dd4ac0ff091fac48824f12a2ce1950e1a025ae729e3a3e775c35be7322810"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt",
+      "unchanged": true,
+      "sha256": "94c59bb5d7105773ab7b4c8aa79f044bb9e435311e5fccce8ffca20bc6deddfc"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelGenerationPolicy.kt",
+      "unchanged": true,
+      "sha256": "8c45f4d6825662cbc101df11bc023b4e79ddb54a13f737cb0536fe109caaa131"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelThermalGuard.kt",
+      "unchanged": true,
+      "sha256": "7d8b16c4966d28255260bbc81f817a2df7982e0d118e2793ade2faf03553c7d5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "unchanged": true,
+      "sha256": "83e808fe15caf2aa3c0bd50da3e631022caf650ed271507d929f273c270e24ea"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+      "unchanged": true,
+      "sha256": "209b6b3f74c0c1d1324c7e9495ec66241e164c81bf9dbf6fe909911996fc5acd"
+    }
+  ],
+  "render_production_files": [
+    "JarvisEnergyFlows.kt",
+    "JarvisHeadAura.kt"
+  ],
+  "conclusion": "No FPS, quality, thermal, generation or model-compute threshold changed by the render fix. Unchanged Java/Kotlin source hashes confirm integrated policy bytes. Node tests are source contracts, not hardware evidence.",
+  "fold7": "NOT_RUN"
+}

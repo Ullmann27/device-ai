@@ -1,11 +1,12 @@
 name: "Code59/60 - integrated exact-source full QA and unsigned ARM64 APK"
-run-name: ${{ github.ref_name == 'diagnostic/code59-native-lint-20261114' && 'DIAGNOSTIC ONLY - native runtime and full lint' || (github.ref == 'refs/heads/integrate/continuum-command03-android-20261115' && 'Code60 manual exact-source QA and ARM64' || 'Code59 full source QA and ARM64') }}
+run-name: ${{ github.ref_name == 'diagnostic/code59-native-lint-20261114' && 'DIAGNOSTIC ONLY - native runtime and full lint' || (github.ref == 'refs/heads/integrate/continuum-command03-android-20261115' && 'Code60 exact-source QA and ARM64' || 'Code59 full source QA and ARM64') }}
 on:
   push:
     branches:
       - release/code59-complete-qa-20261114
       - fix/code59-context-complete-20261114
       - diagnostic/code59-native-lint-20261114
+      - fix/code60-full-qa-html-mode-20261116
   workflow_dispatch:
     inputs:
       expected_sha:
@@ -15,20 +16,20 @@ on:
 
 env:
   # Fixed branch profiles; version inputs cannot select another release.
-  RELEASE_CODE: ${{ github.ref == 'refs/heads/integrate/continuum-command03-android-20261115' && '60' || '59' }}
-  RELEASE_VERSION: ${{ github.ref == 'refs/heads/integrate/continuum-command03-android-20261115' && '0.3.59' || '0.3.58' }}
-  EXPECTED_SOURCE_SHA: ${{ inputs.expected_sha || '' }}
+  RELEASE_CODE: ${{ (github.ref == 'refs/heads/integrate/continuum-command03-android-20261115' || github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116') && '60' || '59' }}
+  RELEASE_VERSION: ${{ (github.ref == 'refs/heads/integrate/continuum-command03-android-20261115' || github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116') && '0.3.59' || '0.3.58' }}
+  EXPECTED_SOURCE_SHA: ${{ inputs.expected_sha || (github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116' && github.sha) || '' }}
 
 permissions:
   contents: read
 
 concurrency:
   group: code59-complete-qa-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref == 'refs/heads/fix/code59-context-complete-20261114' }}
+  cancel-in-progress: ${{ github.ref == 'refs/heads/fix/code59-context-complete-20261114' || github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116' }}
 
 jobs:
   unsigned-arm64:
-    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115'))
+    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116'))
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -41,8 +42,12 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$RELEASE_CODE" == 60 ]]; then
-            test "$GITHUB_EVENT_NAME" = workflow_dispatch
-            test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            if [[ "$GITHUB_REF" == 'refs/heads/fix/code60-full-qa-html-mode-20261116' ]]; then
+              test "$GITHUB_EVENT_NAME" = push
+            else
+              test "$GITHUB_EVENT_NAME" = workflow_dispatch
+              test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            fi
             [[ "$EXPECTED_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
             test "$EXPECTED_SOURCE_SHA" = "$GITHUB_SHA"
           fi
@@ -119,7 +124,7 @@ jobs:
           retention-days: 14
 
   renderer-preflight:
-    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115'))
+    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -130,8 +135,12 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$RELEASE_CODE" == 60 ]]; then
-            test "$GITHUB_EVENT_NAME" = workflow_dispatch
-            test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            if [[ "$GITHUB_REF" == 'refs/heads/fix/code60-full-qa-html-mode-20261116' ]]; then
+              test "$GITHUB_EVENT_NAME" = push
+            else
+              test "$GITHUB_EVENT_NAME" = workflow_dispatch
+              test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            fi
             [[ "$EXPECTED_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
             test "$EXPECTED_SOURCE_SHA" = "$GITHUB_SHA"
           fi
@@ -182,7 +191,7 @@ jobs:
           retention-days: 14
 
   full-android:
-    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114", "refs/heads/diagnostic/code59-native-lint-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115'))
+    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114", "refs/heads/diagnostic/code59-native-lint-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116'))
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
@@ -194,8 +203,12 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$RELEASE_CODE" == 60 ]]; then
-            test "$GITHUB_EVENT_NAME" = workflow_dispatch
-            test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            if [[ "$GITHUB_REF" == 'refs/heads/fix/code60-full-qa-html-mode-20261116' ]]; then
+              test "$GITHUB_EVENT_NAME" = push
+            else
+              test "$GITHUB_EVENT_NAME" = workflow_dispatch
+              test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            fi
             [[ "$EXPECTED_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
             test "$EXPECTED_SOURCE_SHA" = "$GITHUB_SHA"
           fi
@@ -216,7 +229,7 @@ jobs:
           set -euo pipefail
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
       - name: Full unfiltered Android and UI regression suite (motion exercised without PNG export)
-        if: (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115'))
+        if: (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116'))
         env:
           CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/code59-backlog
           CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/code59-contrastive
@@ -251,10 +264,10 @@ jobs:
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             -I .github/continuum/code59-targeted-tests.init.gradle :app:testDebugUnitTest
       - name: Require exact declared skip policy
-        if: ${{ always() && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115')) }}
+        if: ${{ always() && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116')) }}
         run: python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
       - name: Require Code59 regression coverage
-        if: ${{ always() && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115')) }}
+        if: ${{ always() && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116')) }}
         run: |
           python3 - <<'PY'
           import pathlib, xml.etree.ElementTree as ET
@@ -693,7 +706,7 @@ jobs:
           retention-days: 14
 
   node-backend:
-    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115'))
+    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116'))
     runs-on: ubuntu-latest
     timeout-minutes: 100
     steps:
@@ -704,8 +717,12 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$RELEASE_CODE" == 60 ]]; then
-            test "$GITHUB_EVENT_NAME" = workflow_dispatch
-            test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            if [[ "$GITHUB_REF" == 'refs/heads/fix/code60-full-qa-html-mode-20261116' ]]; then
+              test "$GITHUB_EVENT_NAME" = push
+            else
+              test "$GITHUB_EVENT_NAME" = workflow_dispatch
+              test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            fi
             [[ "$EXPECTED_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
             test "$EXPECTED_SOURCE_SHA" = "$GITHUB_SHA"
           fi
@@ -737,7 +754,7 @@ jobs:
           retention-days: 14
 
   native-runtime:
-    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114", "refs/heads/diagnostic/code59-native-lint-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115'))
+    if: github.repository == 'Ullmann27/device-ai' && (contains(fromJSON('["refs/heads/release/code59-complete-qa-20261114", "refs/heads/fix/code59-context-complete-20261114", "refs/heads/diagnostic/code59-native-lint-20261114"]'), github.ref) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116'))
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -750,8 +767,12 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$RELEASE_CODE" == 60 ]]; then
-            test "$GITHUB_EVENT_NAME" = workflow_dispatch
-            test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            if [[ "$GITHUB_REF" == 'refs/heads/fix/code60-full-qa-html-mode-20261116' ]]; then
+              test "$GITHUB_EVENT_NAME" = push
+            else
+              test "$GITHUB_EVENT_NAME" = workflow_dispatch
+              test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            fi
             [[ "$EXPECTED_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
             test "$EXPECTED_SOURCE_SHA" = "$GITHUB_SHA"
           fi

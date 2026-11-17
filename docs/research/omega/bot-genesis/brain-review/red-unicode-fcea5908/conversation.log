@@ -1,0 +1,16 @@
+PASS selected-private-notes-and-history-exclude-other-bots-and-owner-facts
+PASS owner-seed-genome-and-model-metadata-canaries-stay-out-of-bot-prompt
+PASS rename-keeps-stable-history-without-new-authority
+PASS switch-and-late-completion-cannot-corrupt-current-bot
+PASS cancelled-old-frame-cannot-cancel-or-complete-new-turn
+PASS model-digest-version-and-session-mismatch-reject-output
+PASS rejected-terminal-releases-only-its-own-pending-correlation
+PASS unselected-identity-cannot-be-requested-by-parameter
+PASS controller-restart-does-not-reuse-old-ticket
+PASS single-pending-slot-survives-concurrent-prepares
+PASS failed-prepare-and-oversized-output-do-not-poison-state
+PASS notes-withdrawal-invalidates-inflight-and-derived-history
+PASS profile-edit-during-generation-rejects-old-frame
+PASS reset-preserves-notes-and-excludes-old-conversation
+PASS more-than-twenty-identities-do-not-imply-model-runs
+RESULT passed=15 failed=0; synthetic software routing only; local_model_inference=NOT_RUN

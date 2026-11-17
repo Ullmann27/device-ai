@@ -1,0 +1,27 @@
+{
+  "caseCount": 55,
+  "exactFullSourceOverlaps": 0,
+  "exactQuestionOverlaps": 0,
+  "namespaces": [
+    "Zy",
+    "Qe",
+    "Uv"
+  ],
+  "oracleMethod": "All independent proper tokens absent from entire public Oracle source, which includes every generator name/location literal; therefore no generated Oracle question/source can exactly overlap.",
+  "references": [
+    {
+      "path": "docs/evidence/jarvis-evolution-20261101/blind-a/corpus/fixture.json",
+      "sha256": "1762e7cb3d969802f2c507e90a5aee7ee725cfd021497ec7a01ce482def079e7"
+    },
+    {
+      "path": "docs/evidence/jarvis-evolution-20261101/blind-b/corpus/fixture.json",
+      "sha256": "4a8314061ca589d19b5043a4ef48869534b2ff8387e7ae787c143117dbb1ae4f"
+    },
+    {
+      "path": "tools/continuum-span-research/Cdx1OracleBoundExperiment.kt",
+      "sha256": "0c7ca2831f686668d3b7173eeca5bc16a97e0a736546f8b0e75ce1f689f918d2"
+    }
+  ],
+  "scope": "Only published synthetic A/B fixtures and Oracle corpus generator source; no owner records or candidate code read.",
+  "syntheticProperTokenOverlaps": 0
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.NeuralLearningCoachTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:44" hostname="b50d54a1ac03" time="0.007">
+  <properties/>
+  <testcase name="credentialsNeverBecomeGuidedLessons" classname="at.heinz.deviceai.learning.NeuralLearningCoachTest" time="0.001"/>
+  <testcase name="quotedBatchIsSplitAndClassifiedSequentially" classname="at.heinz.deviceai.learning.NeuralLearningCoachTest" time="0.002"/>
+  <testcase name="liveProgressIsMeasuredOnActualUpdatedWeights" classname="at.heinz.deviceai.learning.NeuralLearningCoachTest" time="0.002"/>
+  <testcase name="cancelledLearningNeverPublishesDialogueWeights" classname="at.heinz.deviceai.learning.NeuralLearningCoachTest" time="0.002"/>
+  <testcase name="guidedVoiceOrTextExampleNeedsExplicitLessonApproval" classname="at.heinz.deviceai.learning.NeuralLearningCoachTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

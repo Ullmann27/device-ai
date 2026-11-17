@@ -1,0 +1,9 @@
+{
+  "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+  "nodeHome": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node",
+  "memoryMb": 256,
+  "pids": 64,
+  "cpus": 1,
+  "timeoutMs": 10000,
+  "runtime": "runc"
+}

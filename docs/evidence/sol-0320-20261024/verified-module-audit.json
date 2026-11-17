@@ -1,0 +1,110 @@
+{
+  "kind": "STATIC_SOURCE_INVENTORY_NOT_DEVICE_TEST",
+  "branch_commit": "Report does not assert any signed release",
+  "modules": [
+    {
+      "name": "SWB1 memory and deterministic dialogue",
+      "sources_present": true,
+      "evidence": [
+        {
+          "meaning": "Main chat calls cognitive bridge",
+          "matched": true
+        },
+        {
+          "meaning": "SWB1 dialogue with evidence exists",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "name": "LiteRT language model import and conditional chat route",
+      "sources_present": true,
+      "evidence": [
+        {
+          "meaning": "Chat route selects local model after memory",
+          "matched": true
+        },
+        {
+          "meaning": "Tool-free model test exists",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "name": "CRE1 research and auto dialogue opt-in",
+      "sources_present": true,
+      "evidence": [
+        {
+          "meaning": "Explicit owner enable/disable API",
+          "matched": true
+        },
+        {
+          "meaning": "Existing bounded daily scheduler runs a dialogue round",
+          "matched": true
+        },
+        {
+          "meaning": "Independent CRE1 audit must improve",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "name": "CDX1 guarded offline research",
+      "sources_present": true,
+      "evidence": [
+        {
+          "meaning": "Bounded optional research stage",
+          "matched": true
+        },
+        {
+          "meaning": "Separate CDX1 training path",
+          "matched": true
+        }
+      ]
+    },
+    {
+      "name": "LM1 research runtime (not owner chat)",
+      "sources_present": true,
+      "evidence": [
+        {
+          "meaning": "LM1 generation API exists",
+          "matched": true
+        },
+        {
+          "meaning": "LM1 called by owner Android chat",
+          "matched": false
+        }
+      ]
+    },
+    {
+      "name": "Standalone GGUF / local context scripts",
+      "sources_present": true,
+      "evidence": [
+        {
+          "meaning": "Standalone GGUF helper exists",
+          "matched": true
+        },
+        {
+          "meaning": "Android chat directly invokes GGUF helper",
+          "matched": false
+        }
+      ]
+    },
+    {
+      "name": "On-device job is finite and resource bounded",
+      "sources_present": true,
+      "evidence": [
+        {
+          "meaning": "15 second per-job wall bound",
+          "matched": true
+        },
+        {
+          "meaning": "Battery floor present",
+          "matched": true
+        }
+      ]
+    }
+  ],
+  "all_required_static_invariants_met": true,
+  "failures": []
+}

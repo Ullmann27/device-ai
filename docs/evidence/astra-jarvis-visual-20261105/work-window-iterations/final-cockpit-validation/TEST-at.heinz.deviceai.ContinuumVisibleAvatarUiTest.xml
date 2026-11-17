@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumVisibleAvatarUiTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-05T17:28:03" hostname="6e2f8005d77e" time="0.218">
+  <properties/>
+  <testcase name="returningHomeRestoresTheSameAvatarAndItsAppearanceChoice" classname="at.heinz.deviceai.ContinuumVisibleAvatarUiTest" time="0.087"/>
+  <testcase name="hiddenHomeCannotRemeasureAnAvatarHostedInChat" classname="at.heinz.deviceai.ContinuumVisibleAvatarUiTest" time="0.043"/>
+  <testcase name="repeatedKeyboardChangesResizeWithoutDuplicatingAvatar" classname="at.heinz.deviceai.ContinuumVisibleAvatarUiTest" time="0.042"/>
+  <testcase name="enteringChatKeepsTheSameAvatarInTheVisibleColumn" classname="at.heinz.deviceai.ContinuumVisibleAvatarUiTest" time="0.045"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

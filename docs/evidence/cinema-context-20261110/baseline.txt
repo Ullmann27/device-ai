@@ -1,0 +1,25 @@
+JUnit version 4.13.2
+.........E..E.E
+Time: 0.1
+There were 3 failures:
+1) rejectedAlternativeCannotBecomeFocus(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError: Nicht die erste
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.rejectedAlternativeCannotBecomeFocus(Ctx3OrderedCorrectionTest.kt:28)
+2) ambiguousAlternativesRequireClarification(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError: Die erste oder die zweite
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.ambiguousAlternativesRequireClarification(Ctx3OrderedCorrectionTest.kt:35)
+3) explicitContrastSelectsOnlyThePositiveAlternative(at.heinz.deviceai.Ctx3OrderedCorrectionTest)
+java.lang.AssertionError: expected:<[s2]> but was:<[s1]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.Ctx3OrderedCorrectionTest.explicitContrastSelectsOnlyThePositiveAlternative(Ctx3OrderedCorrectionTest.kt:21)
+
+FAILURES!!!
+Tests run: 12,  Failures: 3
+

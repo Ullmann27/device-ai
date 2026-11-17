@@ -1,0 +1,17 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Device AI Continuum Mentor Preview, O=Continuum, C=AT
+Signer #1 certificate SHA-256 digest: 2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc
+Signer #1 certificate SHA-1 digest: 380ad7ed7e843ee326197a4f402810ef75c58150
+Signer #1 certificate MD5 digest: 4a4bbae3e98ef40c2bb5626e6e167d3e
+Signer #1 key algorithm: EC
+Signer #1 key size (bits): 256
+Signer #1 public key SHA-256 digest: e21b8acefd91784b3d72f7680a3b21e327f5d85247cc3915e2a1dbcd5e980d74
+Signer #1 public key SHA-1 digest: bb327d411a3597c455267968046ec9793ff8c64b
+Signer #1 public key MD5 digest: a508daafcc53b171e443d4b3f01555eb

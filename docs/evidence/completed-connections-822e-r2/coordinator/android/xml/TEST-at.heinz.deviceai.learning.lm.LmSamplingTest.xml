@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.lm.LmSamplingTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-04T20:35:15" hostname="04c8b0ba7ea6" time="0.189">
+  <properties/>
+  <testcase name="emptyInputKeepsTheExistingFailureAndRandomState" classname="at.heinz.deviceai.learning.lm.LmSamplingTest" time="0.001"/>
+  <testcase name="greedyMatchesReferenceAcrossVocabularySizesAndRawFloatBits" classname="at.heinz.deviceai.learning.lm.LmSamplingTest" time="0.119"/>
+  <testcase name="unicodePromptsRetainGeneratedTokenIdsAndTokenizerBytes" classname="at.heinz.deviceai.learning.lm.LmSamplingTest" time="0.014"/>
+  <testcase name="greedyPreservesStableTiesNaNAndSignedZero" classname="at.heinz.deviceai.learning.lm.LmSamplingTest" time="0.017"/>
+  <testcase name="positiveAndNaNTemperaturesRetainSamplingAndRandomConsumption" classname="at.heinz.deviceai.learning.lm.LmSamplingTest" time="0.038"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

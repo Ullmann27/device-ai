@@ -1,0 +1,30 @@
+{
+  "id": "C004",
+  "question": "Wo steht Zybupiso?",
+  "sources": [
+    {
+      "revision": 4,
+      "sha256": "270684b0c708ae1afee3c05f4674acc27d64985d7ec6c2085fe2dd9f1df7818a",
+      "sourceId": "bc:C004:s1",
+      "text": "Qemizopo steht in Uvtiburu. Qefofave steht in Uvvinamu."
+    },
+    {
+      "revision": 5,
+      "sha256": "25eebe791de7cac969ffb6d7a37f414b2e473e33956f68bb23577d90d16bbb5d",
+      "sourceId": "bc:C004:s2",
+      "text": "Qehulalo steht in Uvjetadu. Qefofave steht in Uvvinamu."
+    },
+    {
+      "revision": 6,
+      "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+      "sourceId": "bc:C004:s3",
+      "text": "Qecununu steht in Uvlavemu Uvgujifo; Zybupiso steht in Uvvagaja."
+    },
+    {
+      "revision": 7,
+      "sha256": "a4d77cc20c1e3e64914b79b1a84aedc4caa8c6b3e9ed5cf4b5959b1e8f840d7c",
+      "sourceId": "bc:C004:s4",
+      "text": "Qelilile steht in Uvzamuza. Qefofave steht in Uvvinamu."
+    }
+  ]
+}

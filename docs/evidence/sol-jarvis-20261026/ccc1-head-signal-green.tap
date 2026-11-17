@@ -1,0 +1,27 @@
+✔ read-only binding checks the canonical typed task and all four identities (6.556912ms)
+✔ invalid source, task or patch hash cannot cross the research binding (2.688953ms)
+✔ forbid test tampering and unapproved paths independently of candidate label (0.997276ms)
+✔ a fake executor or a caller-supplied sandbox cannot issue a dual-run claim (0.885642ms)
+✔ existing CCC1 owner grant must be valid, canonical and fully prepared (3.912443ms)
+✔ NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an executable-free chain (3.091787ms)
+✔ CCC1: an apparent green with fewer executed tests than RED is NOT verified (0.894922ms)
+✔ CCC1: equal or increased executed coverage preserves same-profile evidence (0.814786ms)
+✔ CCC1: skipped tests must remain identical across RED, GREEN and fresh run (0.579231ms)
+✔ CCC1: no missing profile, zero executed tests or contradictory JUnit counts (0.583664ms)
+✔ CCC1: same number of tests but a replaced testcase cannot fake equal coverage (0.297274ms)
+✔ CCC1: missing, duplicate or malformed executed identities never attest repairs (0.343448ms)
+✔ diagnostic cap cannot truncate executed coverage or hide disappearing failed tests (10.663876ms)
+✔ oversized XML cannot be silently treated as complete executed evidence (2.678241ms)
+✔ parity rejects explicitly incomplete coverage even if identities and counts match (0.344554ms)
+✔ JUnit directory cannot silently omit an oversized or linked report (16.885462ms)
+✔ incomplete failing report cannot become negative strategy training evidence (1.909853ms)
+✔ a concurrent HEAD change cannot hide behind a one-file patch diff (35.569509ms)
+✔ signal, process error or absent exit code cannot be a reproduced RED baseline (1.008138ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 409.420058

@@ -1,0 +1,15 @@
+{
+  "task": "C1-MEMORY-017",
+  "status": "STATIC_INTAKE_READY_C1_EXECUTION_REQUIRED",
+  "archive": "C1-MEMORY-017-reviewed-intake.tar.xz",
+  "sha256": "d56a8b3a541e02903a201bd26987b3662c8f4eb9d61f8985f541b47fb86c8d27",
+  "bytes": 257880,
+  "memberCount": 77,
+  "packageIndexSha256": "995285480dd5e32d56483895be86898a437ce5cf4f283a32eb402f6416380e63",
+  "productPatchFiles": 5,
+  "documentationPatchSeparate": true,
+  "ownTests": "NOT_RUN",
+  "repoModified": false,
+  "externalC2Ack": "NOT_CLAIMED",
+  "archiveReadbackVerified": true
+}

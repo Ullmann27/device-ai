@@ -1,0 +1,664 @@
+{
+  "cases": [
+    {
+      "id": "holdout-d-001",
+      "question": "Wo ist EDabinogi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-001:s1",
+          "revision": 1,
+          "sha256": "6d13abec3f2e8463ef7a047b69c53ddb5585f3d5de5f77883e088fc2a2916249",
+          "text": "EDabinogi ist in EDanehado. EDamofavo ist in EDakahema."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-002",
+      "question": "Wo ist EDalinani?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-002:s1",
+          "revision": 1,
+          "sha256": "5b7708a59b2aa1628f485a4848b2d548c1cf8e80473dca24666d644c59c369bc",
+          "text": "EDalinani ist in EDapefoco. EDabepiku ist in EDalepoce."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-003",
+      "question": "Wo steht EDarohote?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-003:s1",
+          "revision": 1,
+          "sha256": "060b16c61d955618f8e0864d5d8d5fd5b07130d7872d281cc0d66fc331b77431",
+          "text": "EDarohote steht in EDacidufo. EDakirice steht in EDavulage."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-004",
+      "question": "Wo wohnt EDarukufa?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-004:s1",
+          "revision": 1,
+          "sha256": "ab1fe3e618723b578623784a5b169f6cf3dceffaf696cadb4ac11b0d2af33431",
+          "text": "EDarukufa wohnt in EDaserogu. EDafosure wohnt in EDacomepi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-005",
+      "question": "Wo steht EDagucelu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-005:s1",
+          "revision": 1,
+          "sha256": "ba68bb7eec0a9265f132a078d3169a9a440a1a9f4e06b104c3fe17fc6fbc5ad3",
+          "text": "EDagucelu steht in EDapelani. EDadibeko steht in EDadulodu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-006",
+      "question": "Wo ist EDapedamu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-006:s1",
+          "revision": 1,
+          "sha256": "3ed587cf2c410ebfa7dd9f42bd35a549f654c08d9aba7db78af5872b48a880b7",
+          "text": "EDapedamu ist in EDahacibi. EDahevapu ist in EDasumige."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-007",
+      "question": "Wo steht EDasofune?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-007:s1",
+          "revision": 1,
+          "sha256": "1060d9d5f522a2b12f57c2baabef4473e0285b4f5c0b72a52e586db60078154d",
+          "text": "EDasofune steht in EDaruluke. EDarukoti steht in EDamidaki."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-008",
+      "question": "Wo ist EDabocole?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-008:s1",
+          "revision": 1,
+          "sha256": "6741b71fa0d417a4046a5e6a590bc8f20a493dab102ab15cab7886e4f26fef41",
+          "text": "EDabocole ist in EDavaripu. EDaleruse ist in EDalavoru."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-009",
+      "question": "Wo wohnt EDajutajo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-009:s1",
+          "revision": 1,
+          "sha256": "80ecf191bb20fc32e52c3d3f8ccd1d28ad6ad00435447d4912b973a55020c876",
+          "text": "EDajutajo wohnt in EDadelupi. EDarikuni wohnt in EDakapihe."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-010",
+      "question": "Wo steht EDanufidi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-010:s1",
+          "revision": 1,
+          "sha256": "4a16f16ceca49eb927763a4e00aa803791cb3e3d35df656439064596639cd260",
+          "text": "EDanufidi steht in EDadoneva. EDabunifo steht in EDanosuki."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-011",
+      "question": "Wo steht EDaducipa?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-011:s1",
+          "revision": 1,
+          "sha256": "ef273a5fc8b12a917f383b638c90be2b7a11a6cfe7204cc36e32d8b5a58dc7da",
+          "text": "EDaducipa steht in EDajagimu. EDanurovo steht in EDapeveti."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-012",
+      "question": "Wo wohnt EDanehosa?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-012:s1",
+          "revision": 1,
+          "sha256": "e0c23cf17241f6564c884526576ecee3c6d80de880aa9eba3d5eb42671a66941",
+          "text": "EDanehosa wohnt in EDavapisa. EDaluduma wohnt in EDajifuta."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-013",
+      "question": "Wo lebt EDabejoko?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-013:s1",
+          "revision": 1,
+          "sha256": "2661560c46698d8f68cad3a6455fdb088bdec1d8621573a6448e23f06ffc7cf6",
+          "text": "EDabejoko lebt in EDadagadi. EDabikocu lebt in EDanajaki."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-014",
+      "question": "Wo steht EDahadune?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-014:s1",
+          "revision": 1,
+          "sha256": "ddf535e2b5446d2b2c3e269e96e8912ef340a7afa605cbbeb9f1331a67e7dc40",
+          "text": "EDahadune steht in EDakepiji. EDarakigi steht in EDapugeba."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-015",
+      "question": "Wo lebt EDagirago?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-015:s1",
+          "revision": 1,
+          "sha256": "93298a78052ff59a46998f051566a9f702150b905d28defea920940dc08bf7e2",
+          "text": "EDagirago lebt in EDajigove. EDagaboco lebt in EDadovifu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-016",
+      "question": "Wo wohnt EDapujavo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-016:s1",
+          "revision": 1,
+          "sha256": "7f2bd28feb33058769492f92b20d62ea0a1ca035d6183afc2808b084f37874f3",
+          "text": "EDapujavo wohnt in EDajedube. EDafanuki wohnt in EDafohale."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-017",
+      "question": "Wo lebt EDacotapo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-017:s1",
+          "revision": 1,
+          "sha256": "eefa7d276d33e3f7132852a8ad4f562d83e4a350da515cea87fe599f9df73bcb",
+          "text": "EDacotapo lebt in EDacepufa. EDamedehe lebt in EDaguputu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-018",
+      "question": "Wo wohnt EDalamuso?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-018:s1",
+          "revision": 1,
+          "sha256": "3f24a6c9dde2ed1cffa07c104577e6174c556f51155be367eef6e3ceded7258b",
+          "text": "EDalamuso wohnt in EDalufugo. EDasolebo wohnt in EDakanelu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-019",
+      "question": "Wo steht EDakanuva?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-019:s1",
+          "revision": 1,
+          "sha256": "080cbac75b8668c22c1ce5bf6ed62298626740494b63740b396735310900b819",
+          "text": "EDakanuva steht in EDadefife. EDatocoma steht in EDamulolu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-020",
+      "question": "Wo lebt EDalibofo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-020:s1",
+          "revision": 1,
+          "sha256": "b67072472af10a98a54d92dcf013f2860bcb2792aa25dad484f0f5349c7d31d9",
+          "text": "EDalibofo lebt in EDakaluna. EDakotoha lebt in EDabevuno."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-021",
+      "question": "Wo ist EDasegute?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-021:s1",
+          "revision": 1,
+          "sha256": "01ced1a94e3ca74c21e2de68eb3617cb1bc6c4a6dab46f6a9b1fdfe136a6ec0b",
+          "text": "EDasupeme ist in EDaritusi. EDanudana ist in EDajukoja."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-022",
+      "question": "Wo lebt EDanovemi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-022:s1",
+          "revision": 1,
+          "sha256": "82e6e7bf3b8253a322eebf6de73b8cba012af4c98340319f715a833981bb1c51",
+          "text": "EDatibero lebt in EDabuvelu. EDafepiri lebt in EDakedotu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-023",
+      "question": "Wo ist EDafofeno?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-023:s1",
+          "revision": 1,
+          "sha256": "34f586569504d599647a862b659d2713fa701625a57d12330ef26d457807febc",
+          "text": "EDabokava ist in EDatesife. EDahegose ist in EDadulinu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-024",
+      "question": "Wo wohnt EDanafapu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-024:s1",
+          "revision": 1,
+          "sha256": "0c4b6d2e671be49cb70be02587a80e0974e188f2a2c7a649b5d05baa991e863e",
+          "text": "EDajuguvu wohnt in EDapetogu. EDahekofo wohnt in EDacucana."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-025",
+      "question": "Wo lebt EDasinesa?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-025:s1",
+          "revision": 1,
+          "sha256": "d6a20a855fb6802c3f19b472f95662da582a36e277e8c6bf21244b4b30106c9c",
+          "text": "EDabitahu lebt in EDapukora. EDamelupa lebt in EDaniruso."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-026",
+      "question": "Wo lebt EDakenuso?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-026:s1",
+          "revision": 1,
+          "sha256": "e9b5bbb1993f0371a0658734a0aee82a0e88899480e3703b6fa9c4c3b2ae2211",
+          "text": "EDatevubo lebt in EDakorini. EDakenuso lebt in EDavasofa."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-027",
+      "question": "Wo lebt EDapopito?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-027:s1",
+          "revision": 1,
+          "sha256": "8271286ad632033ebaecd4171c718be930ea984cb593f99f8a2befc008dd0804",
+          "text": "EDabodako lebt in EDahojeji. EDapopito lebt in EDavomadi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-028",
+      "question": "Wo ist EDalolohu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-028:s1",
+          "revision": 1,
+          "sha256": "2d2aab010ccb281ce42cad94fcfb2cfc542b9e86bb7667509ce14dfc3ba0abd5",
+          "text": "EDahoveji ist in EDahikepa. EDalolohu ist in EDanibaje."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-029",
+      "question": "Wo wohnt EDajafumo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-029:s1",
+          "revision": 1,
+          "sha256": "127102d3d61382bb9ca11e4a2b8224520bbd024a369646041f5a01eacd3d0881",
+          "text": "EDakenahu wohnt in EDajesufu. EDajafumo wohnt in EDatasefi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-030",
+      "question": "Wo wohnt EDaviteki?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-030:s1",
+          "revision": 1,
+          "sha256": "9449c1bbe7acffa03e0b7bc061fa7fe073a88e88c29758400560393840d17ff2",
+          "text": "EDafakacu wohnt in EDacureko. EDaviteki wohnt in EDavesoju."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-031",
+      "question": "Wo steht EDalavasi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-031:s1",
+          "revision": 1,
+          "sha256": "cb5b1438bf58ce9abc183554a039c10354324a18b2ae13a60169317302adf127",
+          "text": "EDatahari steht in EDamesiba. EDalavasi steht in EDahedumu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-032",
+      "question": "Wo wohnt EDaruhula?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-032:s1",
+          "revision": 1,
+          "sha256": "b3d37796b6290164b1eadbfd2d28cac7b1224bba55ac99f589cc75eb3f664415",
+          "text": "EDaritedi wohnt in EDanumago. EDaruhula wohnt in EDakurohu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-033",
+      "question": "Wo lebt EDamoheju?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-033:s1",
+          "revision": 1,
+          "sha256": "18de00aa811ae0fdb4bf2f28f912d980b8b3e4b41d20417e5da2dcfa2cfc65e8",
+          "text": "EDarebico lebt in EDavedaro. EDamoheju lebt in EDamupitu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-034",
+      "question": "Wo wohnt EDaratako?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-034:s1",
+          "revision": 1,
+          "sha256": "5f6e1188020faf3786f433e86521afbba6f5aabee3fb18d9d457ff5eaf657255",
+          "text": "EDadubimu wohnt in EDagofoma. EDaratako wohnt in EDapususi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-035",
+      "question": "Wo ist EDavikopu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-035:s1",
+          "revision": 1,
+          "sha256": "bf605fcfecbf65756992cdad28bf69fa9d16405fc4557f38f289c51dca2781bf",
+          "text": "EDagurecu ist in EDanopege. EDavikopu ist in EDalicogo."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-036",
+      "question": "Wo lebt EDajakaku?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-036:s1",
+          "revision": 1,
+          "sha256": "f04fb91a7a0e12c2409bd2c7d1cb65b4a3511092350183768d10da93b911536d",
+          "text": "EDajakaku lebt nicht in EDakokare."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-037",
+      "question": "Wo lebt EDakaleda?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-037:s1",
+          "revision": 1,
+          "sha256": "edb57d828207e9efd889f92ab4e742ddecf2c20e70811c3238efe800ee566907",
+          "text": "EDakaleda lebt in EDahimitu, EDakaleda ist in EDametati."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-038",
+      "question": "Wo steht EDatibana?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-038:s1",
+          "revision": 1,
+          "sha256": "bf37f0f1185fe7278615816b67b56b2561c74939a2ec308b7df8f2f0d442ccb7",
+          "text": "EDatibana steht nicht in EDalohibi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-039",
+      "question": "Wo steht EDarenimi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-039:s1",
+          "revision": 1,
+          "sha256": "2bb92410a01e9f40f7a6432772a2ef289bf9bff8a43294fff14e3827363ae02f",
+          "text": "EDarenimi steht in EDabuhofo, EDarenimi ist in EDadutame."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-040",
+      "question": "Wo lebt EDanapure?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-040:s1",
+          "revision": 1,
+          "sha256": "ced7200c533578ea36045251e5b9461e9edca633a4bf017b4448d004f51a277c",
+          "text": "EDanapure lebt nicht in EDanomuvo."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-041",
+      "question": "Wo wohnt EDakiregi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-041:s1",
+          "revision": 1,
+          "sha256": "fc6bf1bd44b4f6a0ee914940132a698e8b1794f82f0e729cc7ea9db73ba359c0",
+          "text": "EDakiregi wohnt in EDabifeno, EDakiregi ist in EDasuvago."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-042",
+      "question": "Wo lebt EDafedeva?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-042:s1",
+          "revision": 1,
+          "sha256": "765060589929636e39e7e31b1a129a1c2fd56bce1a538299ba2ceea09c874028",
+          "text": "EDafedeva lebt nicht in EDahenatu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-043",
+      "question": "Wo wohnt EDaburuci?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-043:s1",
+          "revision": 1,
+          "sha256": "8634b787f34b82c7c84ee79c7d194fb967808c9a277a263e5fdd58663a5d5962",
+          "text": "EDaburuci wohnt in EDacimake, EDaburuci ist in EDagoraha."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-044",
+      "question": "Wo steht EDareniho?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-044:s1",
+          "revision": 1,
+          "sha256": "c8fe75e1179aa59578ef9fb76643d20e086f52458712478aa1bcd1dc66229935",
+          "text": "EDareniho steht nicht in EDanejove."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-045",
+      "question": "Wo steht EDarifoto?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-045:s1",
+          "revision": 1,
+          "sha256": "78de890388ceb91913cb429a9349961fd952d3f8717232c298d1b038c0e1f539",
+          "text": "EDarifoto steht in EDakakudu, EDarifoto ist in EDaluhivi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-046",
+      "question": "Wo ist EDavigofo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-046:s1",
+          "revision": 1,
+          "sha256": "2280950b4f2855493f7e887c4fe73230ade735b4a7c343397af96126f01d2ccf",
+          "text": "EDavigofo ist nicht in EDarujano."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-047",
+      "question": "Wo steht EDalimama?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-047:s1",
+          "revision": 1,
+          "sha256": "dc265e19735823616be1f7d8511af7d36e48d31d0276cad149799d90d0df6cb2",
+          "text": "EDalimama steht in EDatifilu, EDalimama ist in EDadipare."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-048",
+      "question": "Wo steht EDalohafu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-048:s1",
+          "revision": 1,
+          "sha256": "bf4c62269b99b7bed79dd7e7929644de74dc0287eb0f4db39c8cf7c8f2a91df6",
+          "text": "EDalohafu steht nicht in EDafesavo."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-049",
+      "question": "Wo lebt EDabopura?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-049:s1",
+          "revision": 1,
+          "sha256": "dd922176330ac3f49cfa860a1602588ff6757569ffdcf1fae334ce9221d6a0da",
+          "text": "EDabopura lebt in EDagaceju, EDabopura ist in EDapasusu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-050",
+      "question": "Wo wohnt EDabohudo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-050:s1",
+          "revision": 1,
+          "sha256": "734278efcf41c1afb79b55db987e62d0212edf95be847927d20d76ecb676972d",
+          "text": "EDabohudo wohnt nicht in EDabaduhe."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-051",
+      "question": "Wo ist EDanirite?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-051:s1",
+          "revision": 1,
+          "sha256": "73275c8cc9d4ccae8f7f535f1b811c756f6486747a78debd4e4451b030f003b1",
+          "text": "EDanirite ist in EDagasavo, EDanirite wohnt in EDakohahu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-052",
+      "question": "Wo ist EDalecoge?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-052:s1",
+          "revision": 1,
+          "sha256": "fa14ad3d88224f0f25d9bf8646ec737e60b8c17ffc94c27f6bcb36db5d16d8bc",
+          "text": "EDalecoge ist nicht in EDamonihu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-053",
+      "question": "Wo ist EDapocejo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-053:s1",
+          "revision": 1,
+          "sha256": "296fe2e69bcd324663bb1eeeee32a0fa1201885a37d27c018b0af3a17889ed0d",
+          "text": "EDapocejo ist in EDasejoka, EDapocejo wohnt in EDapatohi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-054",
+      "question": "Wo lebt EDapakogo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-054:s1",
+          "revision": 1,
+          "sha256": "db8a9e16ead2a7d3a6bf36d354b3e2f490809f49ce41866385e8d6322cd4b2cb",
+          "text": "EDapakogo lebt nicht in EDacosape."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-055",
+      "question": "Wo ist EDakimoci?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-055:s1",
+          "revision": 1,
+          "sha256": "5d1930432a34b37e2d4d1254ff7711cb42aa73ebaea38d0cab2b444837a3d584",
+          "text": "EDakimoci ist in EDafotopi, EDakimoci wohnt in EDakifobi."
+        }
+      ]
+    }
+  ]
+}

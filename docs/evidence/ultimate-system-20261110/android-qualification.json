@@ -1,0 +1,61 @@
+{
+  "status": "QUALIFIED_EXECUTED_HOST_TESTS",
+  "mode": "FULL_SUITE_PLUS_CHANGED_TEST_REGRESSION",
+  "singleFullRunPassed": false,
+  "source": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+  "productionUnchangedFromFullRun": true,
+  "sourceDiff": [
+    "app/src/test/java/at/heinz/deviceai/ConsequentialActionApprovalTest.kt",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+    "docs/evidence/ultimate-system-20261110/full-baseline-summary.json",
+    "docs/evidence/ultimate-system-20261110/historical-callsite-notes.md",
+    "docs/evidence/ultimate-system-20261110/historical-source-comparison.json",
+    "docs/evidence/ultimate-system-20261110/native-action-action-receipt.txt",
+    "docs/evidence/ultimate-system-20261110/native-action-actual-two-step.txt",
+    "docs/evidence/ultimate-system-20261110/native-action-invocation.json",
+    "docs/evidence/ultimate-system-20261110/native-action-run.log",
+    "docs/evidence/ultimate-system-20261110/node-fixtures-final.json",
+    "docs/evidence/ultimate-system-20261110/permission-fixture-green.json",
+    "docs/evidence/ultimate-system-20261110/permission-fixture-green.txt",
+    "docs/evidence/ultimate-system-20261110/skipped-node-tests.json",
+    "docs/evidence/ultimate-system-20261110/skipped-tests-explained.json",
+    "docs/evidence/ultimate-system-20261110/task-effects-fixture-WIP.md",
+    "docs/research/omega/ULTIMATE-SYSTEM-INTEGRATION-HANDOFF-20261110.md"
+  ],
+  "baselineFullRun": {
+    "source": "ff28ae74f18570daa6485fc6e885de360dd70e9f",
+    "exitCode": 1,
+    "tests": 4617,
+    "failures": [
+      {
+        "class": "at.heinz.deviceai.ConsequentialActionApprovalTest",
+        "test": "everyConsequentialRegistryToolIsRefusedWithoutAnExplicitOwnerYes"
+      },
+      {
+        "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+        "test": "authorizedRealRunnerEntryAndExitReachTheVisibleSurface"
+      },
+      {
+        "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+        "test": "deniedToolHasNoBackendAndNoArrival"
+      }
+    ],
+    "sourceUnchanged": true
+  },
+  "correctedRegression": {
+    "source": "35dbef497efaf41cdcb3d37c83d5c00702c935cc",
+    "tests": 9,
+    "passed": 9,
+    "sourceUnchanged": true
+  },
+  "combinedUniqueCases": {
+    "tests": 4617,
+    "passed": 4600,
+    "skipped": 17,
+    "failures": 0,
+    "errors": 0
+  },
+  "caseStatusSha256": "a59d0afa1ef7b2149e84b80a470dbe7b11fe680a76520d3c3ac962543e6496ff",
+  "explanation": "The original full run remains recorded as failed. Only its two changed test classes are replaced by the green exact-source regression. All production/build sources and every other test file are unchanged. This is combined coverage, not a claimed green single full run.",
+  "Fold7": "NOT_RUN"
+}

@@ -1,0 +1,150 @@
+{
+  "baseline-node": {
+    "source": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "command": [
+      "node",
+      "--test",
+      ".github/continuum/owner-cockpit-voice-original-orb.test.mjs",
+      "scripts/continuum-owner-local-routing.test.mjs"
+    ],
+    "exit": 1,
+    "summary": [
+      "\u2139 tests 7",
+      "\u2139 pass 4",
+      "\u2139 fail 3"
+    ]
+  },
+  "green-node": {
+    "source": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e plus test-only working diff",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      ".github/continuum/owner-cockpit-voice-original-orb.test.mjs",
+      "scripts/continuum-owner-local-routing.test.mjs"
+    ],
+    "exit": 0,
+    "summary": [
+      "# tests 7",
+      "# pass 7",
+      "# fail 0"
+    ]
+  },
+  "mutation-results": {
+    "source": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      ".github/continuum/owner-cockpit-voice-original-orb.test.mjs",
+      "scripts/continuum-owner-local-routing.test.mjs"
+    ],
+    "mutations": [
+      {
+        "mutation": "user_remove_keep_cockpit",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 1 - home microphone retains the cockpit for continuous voice replies",
+          "not ok 6 - rendering a conversation updates the selected navigation destination",
+          "# tests 7",
+          "# pass 5",
+          "# fail 2"
+        ]
+      },
+      {
+        "mutation": "user_remove_hands_free",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 1 - home microphone retains the cockpit for continuous voice replies",
+          "not ok 6 - rendering a conversation updates the selected navigation destination",
+          "# tests 7",
+          "# pass 5",
+          "# fail 2"
+        ]
+      },
+      {
+        "mutation": "user_remove_tool_scene",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 1 - home microphone retains the cockpit for continuous voice replies",
+          "not ok 6 - rendering a conversation updates the selected navigation destination",
+          "# tests 7",
+          "# pass 5",
+          "# fail 2"
+        ]
+      },
+      {
+        "mutation": "assistant_remove_keep_cockpit",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 1 - home microphone retains the cockpit for continuous voice replies",
+          "not ok 6 - rendering a conversation updates the selected navigation destination",
+          "# tests 7",
+          "# pass 5",
+          "# fail 2"
+        ]
+      },
+      {
+        "mutation": "assistant_remove_hands_free",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 1 - home microphone retains the cockpit for continuous voice replies",
+          "not ok 6 - rendering a conversation updates the selected navigation destination",
+          "# tests 7",
+          "# pass 5",
+          "# fail 2"
+        ]
+      },
+      {
+        "mutation": "assistant_remove_tool_scene",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 1 - home microphone retains the cockpit for continuous voice replies",
+          "not ok 6 - rendering a conversation updates the selected navigation destination",
+          "# tests 7",
+          "# pass 5",
+          "# fail 2"
+        ]
+      },
+      {
+        "mutation": "storage_remove_native_probe",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 4 - storage remains a fresh read-only native probe even with a model loaded",
+          "# tests 7",
+          "# pass 6",
+          "# fail 1"
+        ]
+      },
+      {
+        "mutation": "storage_add_model_route",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 4 - storage remains a fresh read-only native probe even with a model loaded",
+          "# tests 7",
+          "# pass 6",
+          "# fail 1"
+        ]
+      },
+      {
+        "mutation": "storage_remove_return",
+        "exit": 1,
+        "detected": true,
+        "summary": [
+          "not ok 4 - storage remains a fresh read-only native probe even with a model loaded",
+          "# tests 7",
+          "# pass 6",
+          "# fail 1"
+        ]
+      }
+    ]
+  }
+}

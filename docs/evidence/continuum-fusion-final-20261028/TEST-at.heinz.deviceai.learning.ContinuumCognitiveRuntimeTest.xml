@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-28T04:46:44" hostname="b50d54a1ac03" time="0.408">
+  <properties/>
+  <testcase name="realMemoryTurnTracesItsSourcesAndActualShadowModeWithoutPretendingLLMInference" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.067"/>
+  <testcase name="boundedPreviousTopicSurvivesNewRuntimeOnlyWhenPassedByCurrentSession" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.038"/>
+  <testcase name="brokenCre1CheckpointIsNeverSilentlyTrustedOrDeleted" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.008"/>
+  <testcase name="newConfirmedFactResolvesPreviouslyUnansweredQuestion" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.009"/>
+  <testcase name="unresolvedPronounNeverBorrowsAnotherConversationFromProfileHistory" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.009"/>
+  <testcase name="onlyCurrentTurnResolutionMayProvideLocalGeneratorContext" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.0"/>
+  <testcase name="aNewConversationIdWithoutExplicitResetCannotLeakGlobalResolvedQueryToModel" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.009"/>
+  <testcase name="confirmedFactIsRetrievedAndBothNeuralKernelsAreObserved" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.017"/>
+  <testcase name="hybridShadowTraversesRealConversationButCannotResurrectRevokedOwnerFact" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.015"/>
+  <testcase name="sameRuntimeMayOnlyContextualizeOwnPreviouslyGroundedQuestion" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.032"/>
+  <testcase name="realCre1ResearchSnapshotParticipatesOnlyInShadow" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.179"/>
+  <testcase name="actualOptInCtx3CallIsRecordedAsShadowNotAnActiveAnswerReplacement" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.02"/>
+  <testcase name="invalidOrUnconfirmedPriorTopicNeverBecomesModelContext" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.002"/>
+  <testcase name="unknownQuestionNeverBecomesFactFromUntrainedCre1" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

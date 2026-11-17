@@ -1,0 +1,42 @@
+DEV 144 cases, 2760 facts, sha256 8ad641680c37f3124edda2db1d39e372e283fe91207cd4473c967a04e05d8b08
+TEST 600 cases, 7890 facts, sha256 dd6fda28302c81ca97f4fe39aef264ff086f10a7a575627d2a5c6a6a323913be
+variant                              L           L+V            B0         Z-rel        Z-beam
+HOP2_CITY (A)                   25/0/0        25/0/0        25/0/0        0/0/25        25/0/0
+HOP2_MAYOR (A)                  25/0/0        25/0/0        25/0/0        0/0/25        25/0/0
+HOP3_REGION (A)                 25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+HOP3_VOLTAGE (A)                25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+HOP3_CEO (A)                    25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+CONTRA_STEP (E)                 25/0/0        25/0/0        25/0/0        25/0/0        4/21/0
+AMBIG_MENTION (E)               25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+AMBIG_INTERMEDIATE_GAP (E)        25/0/0        25/0/0        0/25/0        25/0/0        25/0/0
+AMBIG_INTERMEDIATE_OK (A)        25/0/0        25/0/0        0/0/25        25/0/0        25/0/0
+WRONG_REL_CITY (E)              25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+WRONG_REL_CAPITAL (E)           25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+OUTDATED_WITH_CURRENT (A)        25/0/0        25/0/0        0/0/25       12/0/13        25/0/0
+OUTDATED_ONLY (E)               25/0/0        25/0/0        0/25/0        25/0/0        25/0/0
+FUTURE_ONLY (E)                 25/0/0        25/0/0        0/25/0        25/0/0        25/0/0
+SRC_REVOKED_ONLY (E)            25/0/0        25/0/0        0/25/0        25/0/0        25/0/0
+SRC_TAMPERED (E)                25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+SRC_UNKNOWN (E)                 25/0/0        25/0/0        0/25/0        25/0/0        25/0/0
+SRC_REVOKED_CONFLICT (A)        25/0/0        25/0/0        0/0/25        25/0/0        25/0/0
+MISSING_LINK (E)                25/0/0        25/0/0        25/0/0        20/5/0        25/0/0
+NUM_CHECK_TRUE (A)              25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+NUM_CHECK_CHANGED (A)           25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+NEG_QUESTION (A)                25/0/0        25/0/0        25/0/0        0/0/25        25/0/0
+NEG_FACT_CONFLICT (E)           25/0/0        25/0/0        0/25/0        25/0/0        25/0/0
+NEG_FACT_ONLY (E)               25/0/0        25/0/0        25/0/0        25/0/0        25/0/0
+WRONG total                          0             0           150             5            21
+coverage                         1.000         1.000         0.727         0.680         1.000
+
+seed 1: transition accuracy 0.840, Z-rel wrong=5 coverage=0.680, Z-beam wrong=21 coverage=1.000
+seed 2: transition accuracy 0.800, Z-rel wrong=4 coverage=0.502, Z-beam wrong=22 coverage=1.000
+seed 3: transition accuracy 0.880, Z-rel wrong=0 coverage=0.775, Z-beam wrong=19 coverage=1.000
+seed 4: transition accuracy 0.680, Z-rel wrong=0 coverage=0.545, Z-beam wrong=21 coverage=1.000
+seed 5: transition accuracy 0.840, Z-rel wrong=3 coverage=0.636, Z-beam wrong=21 coverage=1.000
+verifier: correct L answers 275, false rejections 0, mutations rejected VALUE 275/275, FOREIGN_FACT 275/275, DROP_STEP 275/275, SWAP 275/275, OTHER_DATE 75/75
+verifier on latent wrong answers (wrong, caught): {1={Z-rel=[5, 5], Z-beam=[21, 21]}, 2={Z-rel=[4, 4], Z-beam=[22, 22]}, 3={Z-rel=[0, 0], Z-beam=[19, 19]}, 4={Z-rel=[0, 0], Z-beam=[21, 21]}, 5={Z-rel=[3, 3], Z-beam=[21, 21]}}
+B0 vs real EvidenceBoundedThoughtSearch on CITY_OF_DEVICE: 118/118 agree
+1x: 7890 facts L {medianMicros=39.172, p95Micros=67.248}, L+V {medianMicros=43.362, p95Micros=1135.844}, B0 {medianMicros=3.327, p95Micros=5.975}, Z-rel {medianMicros=133.021, p95Micros=262.556}, Z-beam {medianMicros=39.841, p95Micros=55.369}
+10x: 18150 facts L {medianMicros=56.505, p95Micros=106.048}, L+V {medianMicros=42.839, p95Micros=2009.159}, B0 {medianMicros=1.967, p95Micros=2.751}, Z-rel {medianMicros=132.97, p95Micros=278.089}, Z-beam {medianMicros=39.842, p95Micros=55.308}
+50x: 63750 facts L {medianMicros=39.176, p95Micros=54.244}, L+V {medianMicros=43.962, p95Micros=19328.668}, B0 {medianMicros=1.547, p95Micros=2.22}, Z-rel {medianMicros=114.57, p95Micros=153.912}, Z-beam {medianMicros=39.671, p95Micros=54.136}
+report written: /tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad/lct1-test-report.json

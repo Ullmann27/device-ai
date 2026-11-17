@@ -1,0 +1,11 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=35527 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=35527 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+[0.000s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/32 because it is locked by another process (errno = 11)
+app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt:65:58: error: cannot access 'data class NativeAppCandidate : Any': it is internal in file.
+    fun contextualTarget(query: String, candidates: List<NativeAppCandidate>): String? {
+                                                         ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt:76:54: error: cannot access 'data class NativeAppCandidate : Any': it is internal in file.
+                ?: return candidates.singleOrNull()?.packageName
+                                                     ^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt:78:45: error: cannot access 'data class NativeAppCandidate : Any': it is internal in file.
+        return candidates.getOrNull(index)?.packageName
+                                            ^^^^^^^^^^^

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.continuum.m4notes.NotePolicyTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-23T21:40:30" hostname="6fc640315df4" time="0.009">
+  <properties/>
+  <testcase name="boundsNotes" classname="at.heinz.continuum.m4notes.NotePolicyTest" time="0.009"/>
+  <testcase name="trimsWhitespace" classname="at.heinz.continuum.m4notes.NotePolicyTest" time="0.0"/>
+  <testcase name="keepsEmptyNotes" classname="at.heinz.continuum.m4notes.NotePolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

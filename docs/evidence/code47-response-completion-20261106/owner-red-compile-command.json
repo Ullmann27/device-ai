@@ -1,0 +1,21 @@
+{
+  "command": [
+    "kotlinc",
+    "-J-Xmx256m",
+    "-jvm-target",
+    "17",
+    "-Xfriend-paths=/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug",
+    "-classpath",
+    "/workspace/scratch/b31a9d731016/device-ai-wiring/app/build/tmp/kotlin-classes/debug:/workspace/scratch/b31a9d731016/build-env/test-libs/hamcrest-core-1.3.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/json-20240303.jar:/workspace/scratch/b31a9d731016/build-env/test-libs/junit-4.13.2.jar:/workspace/scratch/b31a9d731016/build-env/android-sdk/platforms/android-36/android.jar",
+    "-d",
+    "/workspace/scratch/b31a9d731016/output-completion-evidence/owner-red.jar",
+    "/workspace/scratch/b31a9d731016/wiring-output/app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+    "/workspace/scratch/b31a9d731016/wiring-output/app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationDeadlinePolicy.kt",
+    "/workspace/scratch/b31a9d731016/wiring-output/app/src/main/java/at/heinz/deviceai/cognitive/LocalGenerationCapture.kt",
+    "/workspace/scratch/b31a9d731016/wiring-output/app/src/test/java/at/heinz/deviceai/cognitive/AgentModelOutputBoundaryTest.kt",
+    "/workspace/scratch/b31a9d731016/wiring-output/app/src/test/java/at/heinz/deviceai/cognitive/OwnerDialogueOutputTest.kt"
+  ],
+  "exit": 0,
+  "sdk_base": "24547da",
+  "runtime_note": "new classes must precede stable SDK classes"
+}

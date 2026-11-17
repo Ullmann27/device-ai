@@ -1,0 +1,17 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=34051 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34051 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.ui.FullStageMemorySceneUiTest#realRecallDrawsBeyondTheAvatarSlot
+.E
+Time: 4.86
+There was 1 failure:
+1) realRecallDrawsBeyondTheAvatarSlot(at.heinz.deviceai.ui.FullStageMemorySceneUiTest)
+java.lang.AssertionError: A real recall must draw a document scene beyond the avatar slot
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.FullStageMemorySceneUiTest.realRecallDrawsBeyondTheAvatarSlot$lambda$0(FullStageMemorySceneUiTest.kt:96)
+	at at.heinz.deviceai.ui.FullStageMemorySceneUiTest.withCockpit(FullStageMemorySceneUiTest.kt:54)
+	at at.heinz.deviceai.ui.FullStageMemorySceneUiTest.realRecallDrawsBeyondTheAvatarSlot(FullStageMemorySceneUiTest.kt:83)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=1 failures=1

@@ -1,0 +1,41 @@
+{
+  "attempt": "red-5d",
+  "sourceBefore": {
+    "commit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "command": [
+    "gradle",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumStandaloneVersionCode=48",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumLocalStandaloneQa=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn",
+    "--tests",
+    "at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest.freshRecallAfterStopStillReachesTheVisibleSurface"
+  ],
+  "cwd": "/workspace/scratch/3d1967be6193/candidate",
+  "startedAt": "2026-11-07T07:02:22.841184+00:00",
+  "finishedAt": "2026-11-07T07:02:30.456571+00:00",
+  "exitCode": 1,
+  "junit": [],
+  "logSha256": "78a0c83cf191d62a1dad1e0e57c87214e3c5f96cd665d83370c44203f8c50a2d",
+  "status": "FAIL",
+  "deviceAcceptance": "NOT_RUN"
+}

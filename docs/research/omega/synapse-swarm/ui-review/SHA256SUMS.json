@@ -1,0 +1,18 @@
+{
+  "FROZEN-ACCEPTANCE.md": "db61007de2efb1ac39889b18de3f0ba104fceb23723e43d500467878e8e77595",
+  "RUNS.md": "3cd29eab33d878f7e9618b751600442ff8b65064791d37d69aac45c0fc0a0d5f",
+  "a479-corrected-invocation/after.json": "6e894caec9f1de7b3143e0ea25f9e12c52c9a7f73a62f7e0e44e3c141ebe6540",
+  "a479-corrected-invocation/before.json": "6e894caec9f1de7b3143e0ea25f9e12c52c9a7f73a62f7e0e44e3c141ebe6540",
+  "a479-corrected-invocation/gradle.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+  "a479-corrected-invocation/gradle.log": "6973c3bf1cbb196af0174b590d1d3d9bc71d9aee16f057869d26cc4dccfcac75",
+  "a479-initial/after.json": "6e894caec9f1de7b3143e0ea25f9e12c52c9a7f73a62f7e0e44e3c141ebe6540",
+  "a479-initial/before.json": "2a8782485ec257ffcd00b2f6e3d96c963c72dc84836cedc4666987cfb61e34df",
+  "a479-initial/gradle.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+  "a479-initial/gradle.log": "e1a6ed505041af9710d3d03f74764d43f018b964824f51f97cf3534cad15837c",
+  "a479-initial/setup-note.txt": "af42553d4522c038f24ed825b095d5f3692ebeaa9e5776ca00859b5a91672eff",
+  "c502-first-ui/after.json": "d0b1499b66c10a2778d2990e7c0bf075d4cc1988242021fc2aa55d3928aacdbe",
+  "c502-first-ui/before.json": "d0b1499b66c10a2778d2990e7c0bf075d4cc1988242021fc2aa55d3928aacdbe",
+  "c502-first-ui/gradle.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+  "c502-first-ui/gradle.log": "2ccf0479c6e74476b2bf04f67aba79294c340842bd26f7a47bc66d9a15f7a4e4",
+  "c502-first-ui/junit.xml": "488afe9c6274d12b24d3057d79e50aff5369bd7c32e5cfb141e50daf13b8d128"
+}

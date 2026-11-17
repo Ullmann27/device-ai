@@ -1,0 +1,40 @@
+✔ finds candidate orphan but not referenced class (4.255898ms)
+✔ ignores non-Kotlin sources (0.152729ms)
+✔ enforces source limit (0.880752ms)
+✔ indexes a large app entry point instead of silently losing its references (20.782361ms)
+✔ oversized UTF-8 sources fail explicitly instead of producing incomplete findings (1.775024ms)
+✔ lexer ignores comments and string text but sees template references (1.127141ms)
+✔ imports resolve the right declaration when simple names collide (0.414081ms)
+✔ constructor properties and header lambdas stay inside their class (0.263145ms)
+✔ reachability separates production, test-only and unreferenced code (9.544545ms)
+✔ call chains follow real references from an entry point (0.504006ms)
+✔ manifest entry points resolve relative component names (0.408353ms)
+✔ repository analysis reaches the learning core from the chat activity (644.371719ms)
+✔ Android confirmed task is passed only to the existing in-app Termux Builder (2.612ms)
+✔ existing protected Android Termux receiver binds both callback identity and reviewed task digest (0.337146ms)
+✔ Node Termux accepts fixed operations and never promotes an unevidenced success status (1.415074ms)
+✔ M6 QA rejects unpinned, mismatched and dirty source before starting (31.129661ms)
+✔ M6 QA rejects another branch and preserves owner checkout (18.457291ms)
+✔ M6 QA allows an explicitly pinned research branch but never main (78.390793ms)
+✔ M6 QA writes fail-closed nonrelease evidence outside the source tree (68.790003ms)
+✔ Android confirmed task is passed only to the existing in-app Termux Builder (2.578891ms)
+✔ existing protected Android Termux receiver binds both callback identity and reviewed task digest (0.305408ms)
+✔ Node Termux accepts fixed operations and never promotes an unevidenced success status (1.446531ms)
+✔ fixed command grammar rejects arbitrary CLI paths, shell and unbound run (0.213461ms)
+✔ strict canonical JSON and SHA binding prevent duplicate-key/changed-authorization replay (3.587324ms)
+✔ prepared confirmation is separate from execution; same bound task is idempotent (0.813812ms)
+✔ run requires saved exact fingerprint and cannot claim installation (3.329818ms)
+✔ archived real Qwen repair receipt stays reviewable only with explicit bound chain (0.430456ms)
+✔ failed host runtime redacts unexpected exception text (0.573611ms)
+✔ actual CCC1 preparation and execution through typed Termux boundary preserve fail-closed verification (78.28926ms)
+✔ trusted isolation configuration is mandatory and unsafe paths are rejected (0.415624ms)
+✔ sandbox absence blocks before any entrusted run callback and does not claim verified repair (0.183987ms)
+✔ the protected runner receives an explicit strict-isolation requirement (0.197155ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1261.275148

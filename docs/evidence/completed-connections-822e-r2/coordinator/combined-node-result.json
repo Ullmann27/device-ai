@@ -1,0 +1,29 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/development-backlog.test.mjs",
+    ".github/continuum/backlog-cli.test.mjs",
+    ".github/continuum/backlog-contract-cli.test.mjs",
+    ".github/continuum/backlog-investigator.test.mjs",
+    ".github/continuum/backlog-investigator-recovery.test.mjs",
+    ".github/continuum/backlog-repair-worker.test.mjs",
+    ".github/continuum/owner-contract-worker.test.mjs",
+    ".github/continuum/autonomous-teamleader.test.mjs",
+    ".github/continuum/local-teamleader-loop.test.mjs",
+    ".github/continuum/coding-orchestrator-failure-report.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/822e72396ed9/continuum-attach-r2",
+  "source_commit": "578ea5dd64f059de1b8173badf4d34d0e52a5b76",
+  "exit_code": 0,
+  "elapsed_seconds": 6.729945884999324,
+  "counts": {
+    "tests": 121,
+    "pass": 121,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  }
+}

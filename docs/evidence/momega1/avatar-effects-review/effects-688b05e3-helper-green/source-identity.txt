@@ -1,0 +1,9 @@
+8cc945aaa6e7c07b27c6436c28c65030cdd0522fe992a355bf5fb821a60ddc10  /workspace/momega1-build-env/effects-final-688b05e3/source-before.txt
+688b05e30666a63b1d39e0d6188fcded0790be3c
+100644 9ed0b405ae4b416f8dbf44651532eeffca43a223 0	app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+100644 5f25658025119a3a4843c18b8ffb8d11074d0cc3 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumTaskEffects.kt
+100644 05c104bbbbfab3d1d9d1cd663d336b80d63ef47b 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumUiFeedback.kt
+8cc945aaa6e7c07b27c6436c28c65030cdd0522fe992a355bf5fb821a60ddc10  /workspace/momega1-build-env/effects-final-688b05e3/source-after.txt
+VISUALLY_INSPECTED 63001ad0b86c95c1b2633b2112efd7dd3357ee1c7d0b87aeca6e027df672e33e  /workspace/momega1-build-env/effects-final-688b05e3/ui/synthetic-task-412-88-3-read.png
+VISUALLY_INSPECTED b4fa86b1872b874b8f0eaf0ab0dae9961ad18fff90957df97062f2e53ebc51f8  /workspace/momega1-build-env/effects-final-688b05e3/ui/synthetic-task-412-160-1-worker.png
+VISUALLY_INSPECTED 81c0c676a3e8049607900a258c8afbd933387ec046b7a9b607b03ee40b76fdf1  /workspace/momega1-build-env/effects-final-688b05e3/ui/synthetic-task-410-291-3-read.png

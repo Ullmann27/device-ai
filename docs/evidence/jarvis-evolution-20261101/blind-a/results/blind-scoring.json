@@ -1,0 +1,232 @@
+{
+  "fixtureSha256": "1762e7cb3d969802f2c507e90a5aee7ee725cfd021497ec7a01ce482def079e7",
+  "track": "SPAN_EXTRACTION_ONLY_NOT_CDX_GENERATION",
+  "results": {
+    "baseline": {
+      "main25": {
+        "known": 20,
+        "missing": 5,
+        "correctKnown": 20,
+        "correctAbstentions": 5,
+        "wrongAccepted": 0,
+        "allCorrect": 25,
+        "errors": 0,
+        "p50Ms": 4.666,
+        "p95Ms": 191.517,
+        "failures": []
+      },
+      "guard20": {
+        "known": 4,
+        "missing": 16,
+        "correctKnown": 4,
+        "correctAbstentions": 7,
+        "wrongAccepted": 9,
+        "allCorrect": 11,
+        "errors": 0,
+        "p50Ms": 0.8785000000000001,
+        "p95Ms": 10.007,
+        "failures": [
+          "guard-07",
+          "guard-08",
+          "guard-12",
+          "guard-14",
+          "guard-15",
+          "guard-16",
+          "guard-17",
+          "guard-18",
+          "guard-20"
+        ]
+      },
+      "all45": {
+        "known": 24,
+        "missing": 21,
+        "correctKnown": 24,
+        "correctAbstentions": 12,
+        "wrongAccepted": 9,
+        "allCorrect": 36,
+        "errors": 0,
+        "p50Ms": 1.107,
+        "p95Ms": 61.646,
+        "failures": [
+          "guard-07",
+          "guard-08",
+          "guard-12",
+          "guard-14",
+          "guard-15",
+          "guard-16",
+          "guard-17",
+          "guard-18",
+          "guard-20"
+        ]
+      }
+    },
+    "candidate": {
+      "main25": {
+        "known": 20,
+        "missing": 5,
+        "correctKnown": 20,
+        "correctAbstentions": 5,
+        "wrongAccepted": 0,
+        "allCorrect": 25,
+        "errors": 0,
+        "p50Ms": 8.356,
+        "p95Ms": 84.824,
+        "failures": []
+      },
+      "guard20": {
+        "known": 4,
+        "missing": 16,
+        "correctKnown": 4,
+        "correctAbstentions": 13,
+        "wrongAccepted": 3,
+        "allCorrect": 17,
+        "errors": 0,
+        "p50Ms": 1.9695,
+        "p95Ms": 34.244,
+        "failures": [
+          "guard-12",
+          "guard-15",
+          "guard-16"
+        ]
+      },
+      "all45": {
+        "known": 24,
+        "missing": 21,
+        "correctKnown": 24,
+        "correctAbstentions": 18,
+        "wrongAccepted": 3,
+        "allCorrect": 42,
+        "errors": 0,
+        "p50Ms": 5.447,
+        "p95Ms": 76.771,
+        "failures": [
+          "guard-12",
+          "guard-15",
+          "guard-16"
+        ]
+      }
+    },
+    "TRAINED_RAW": {
+      "main25": {
+        "known": 20,
+        "missing": 5,
+        "correctKnown": 19,
+        "correctAbstentions": 2,
+        "wrongAccepted": 4,
+        "allCorrect": 21,
+        "errors": 0,
+        "p50Ms": 1.428,
+        "p95Ms": 2.167,
+        "failures": [
+          "main-08",
+          "main-22",
+          "main-23",
+          "main-25"
+        ]
+      },
+      "guard20": {
+        "known": 4,
+        "missing": 16,
+        "correctKnown": 4,
+        "correctAbstentions": 2,
+        "wrongAccepted": 14,
+        "allCorrect": 6,
+        "errors": 0,
+        "p50Ms": 0.914,
+        "p95Ms": 2.678,
+        "failures": [
+          "guard-07",
+          "guard-08",
+          "guard-09",
+          "guard-10",
+          "guard-11",
+          "guard-12",
+          "guard-13",
+          "guard-14",
+          "guard-15",
+          "guard-16",
+          "guard-17",
+          "guard-18",
+          "guard-19",
+          "guard-20"
+        ]
+      },
+      "all45": {
+        "known": 24,
+        "missing": 21,
+        "correctKnown": 23,
+        "correctAbstentions": 4,
+        "wrongAccepted": 18,
+        "allCorrect": 27,
+        "errors": 0,
+        "p50Ms": 1.207,
+        "p95Ms": 2.678,
+        "failures": [
+          "main-08",
+          "main-22",
+          "main-23",
+          "main-25",
+          "guard-07",
+          "guard-08",
+          "guard-09",
+          "guard-10",
+          "guard-11",
+          "guard-12",
+          "guard-13",
+          "guard-14",
+          "guard-15",
+          "guard-16",
+          "guard-17",
+          "guard-18",
+          "guard-19",
+          "guard-20"
+        ]
+      }
+    },
+    "TRAINED_VERIFIED": {
+      "main25": {
+        "known": 20,
+        "missing": 5,
+        "correctKnown": 19,
+        "correctAbstentions": 5,
+        "wrongAccepted": 0,
+        "allCorrect": 24,
+        "errors": 0,
+        "p50Ms": 1.886,
+        "p95Ms": 5.772,
+        "failures": [
+          "main-08"
+        ]
+      },
+      "guard20": {
+        "known": 4,
+        "missing": 16,
+        "correctKnown": 4,
+        "correctAbstentions": 15,
+        "wrongAccepted": 1,
+        "allCorrect": 19,
+        "errors": 0,
+        "p50Ms": 1.049,
+        "p95Ms": 3.044,
+        "failures": [
+          "guard-15"
+        ]
+      },
+      "all45": {
+        "known": 24,
+        "missing": 21,
+        "correctKnown": 23,
+        "correctAbstentions": 20,
+        "wrongAccepted": 1,
+        "allCorrect": 43,
+        "errors": 0,
+        "p50Ms": 1.486,
+        "p95Ms": 5.772,
+        "failures": [
+          "main-08",
+          "guard-15"
+        ]
+      }
+    }
+  }
+}

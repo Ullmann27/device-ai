@@ -1,0 +1,420 @@
+{
+  "status": "PASS",
+  "recordType": "OBSERVED_PREVIOUS_RUN",
+  "date": "2026-11-12",
+  "checks": 48,
+  "validatorSha256": "377b772241510d5cf21a1eb6b05f3088f92f57cc93c989a31dd965c40b25156b",
+  "originalValidatorSource": "67bf048a7d50a78b027da27a6b9814cbd2457372:docs/qa/apk53-a980/validate-unsigned-apk.py",
+  "cases": [
+    {
+      "case": "eight_inherited_gate_functions_byte_identical",
+      "result": "PASS"
+    },
+    {
+      "case": "avatar_package_native_pins_unchanged",
+      "result": "PASS"
+    },
+    {
+      "case": "correct_code55_badging",
+      "result": "PASS"
+    },
+    {
+      "case": "old_version_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "qa_package_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "extra_abi_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "debuggable_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "wrong_min_sdk_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "wrong_target_sdk_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "minimal_elf_control",
+      "result": "PASS"
+    },
+    {
+      "case": "elf32_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "x86_elf_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "executable_elf_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "elf_4k_alignment_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "elf_non_power_alignment_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "elf_incongruent_segment_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "elf_file_overflow_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "elf_program_table_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "elf_without_load_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "explicit_unsigned_control",
+      "result": "PASS"
+    },
+    {
+      "case": "unsigned_tool_failure_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "unsigned_arbitrary_error_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "unsigned_exception_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "signed_apk_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "verified_signature_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "exact_clean_source_mock_control",
+      "result": "PASS"
+    },
+    {
+      "case": "wrong_source_sha_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "wrong_source_tree_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "dirty_source_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "untracked_source_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "changed_original_avatar_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "archive_gate_fixture_control",
+      "result": "PASS"
+    },
+    {
+      "case": "duplicate_zip_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "traversal_zip_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "jar_signature_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "zip_symlink_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "missing_asset_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "missing_avatar_asset_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "missing_native_library_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "altered_asset_hash_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "locked_model_hash_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "corrupt_crc_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "apk_signing_block_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "mandatory_source_and_tree_cli",
+      "result": "PASS"
+    },
+    {
+      "case": "mandatory_tree_cli",
+      "result": "PASS"
+    },
+    {
+      "case": "symbolic_source_cli_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "short_tree_cli_rejected",
+      "result": "PASS"
+    },
+    {
+      "case": "missing_apk_cli_rejected",
+      "result": "PASS"
+    }
+  ],
+  "executedAs": "python3 - <<'PY' (inline Python self-check body)",
+  "exitCode": 0,
+  "reproducer": "tools/code55-apk/validator_test.py",
+  "reproducerCommand": "python3 tools/code55-apk/validator_test.py",
+  "reproducerSha256": "abd9aabb1922f7030419c14e85ccea5f8cd18565a2d6df1c5910b3c05d904f4b",
+  "reconstructionChanges": [
+    "Repository path resolved relative to script",
+    "main entrypoint wrapper",
+    "Unused os import removed"
+  ],
+  "replayedAfterSaving": false,
+  "savedScriptSyntax": "PASS",
+  "actual_APK_validation": "NOT_RUN",
+  "Gradle": "NOT_RUN",
+  "signing": "NOT_USED",
+  "reproductionByIntegrator": {
+    "status": "PASS",
+    "checks": 48,
+    "validatorSha256": "377b772241510d5cf21a1eb6b05f3088f92f57cc93c989a31dd965c40b25156b",
+    "cases": [
+      {
+        "case": "eight_inherited_gate_functions_byte_identical",
+        "result": "PASS"
+      },
+      {
+        "case": "avatar_package_native_pins_unchanged",
+        "result": "PASS"
+      },
+      {
+        "case": "correct_code55_badging",
+        "result": "PASS"
+      },
+      {
+        "case": "old_version_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "qa_package_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "extra_abi_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "debuggable_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "wrong_min_sdk_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "wrong_target_sdk_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "minimal_elf_control",
+        "result": "PASS"
+      },
+      {
+        "case": "elf32_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "x86_elf_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "executable_elf_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "elf_4k_alignment_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "elf_non_power_alignment_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "elf_incongruent_segment_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "elf_file_overflow_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "elf_program_table_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "elf_without_load_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "explicit_unsigned_control",
+        "result": "PASS"
+      },
+      {
+        "case": "unsigned_tool_failure_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "unsigned_arbitrary_error_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "unsigned_exception_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "signed_apk_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "verified_signature_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "exact_clean_source_mock_control",
+        "result": "PASS"
+      },
+      {
+        "case": "wrong_source_sha_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "wrong_source_tree_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "dirty_source_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "untracked_source_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "changed_original_avatar_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "archive_gate_fixture_control",
+        "result": "PASS"
+      },
+      {
+        "case": "duplicate_zip_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "traversal_zip_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "jar_signature_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "zip_symlink_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "missing_asset_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "missing_avatar_asset_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "missing_native_library_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "altered_asset_hash_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "locked_model_hash_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "corrupt_crc_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "apk_signing_block_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "mandatory_source_and_tree_cli",
+        "result": "PASS"
+      },
+      {
+        "case": "mandatory_tree_cli",
+        "result": "PASS"
+      },
+      {
+        "case": "symbolic_source_cli_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "short_tree_cli_rejected",
+        "result": "PASS"
+      },
+      {
+        "case": "missing_apk_cli_rejected",
+        "result": "PASS"
+      }
+    ],
+    "actual_APK_validation": "NOT_RUN",
+    "Gradle": "NOT_RUN",
+    "signing": "NOT_USED"
+  },
+  "reproductionCommand": "python3 tools/code55-apk/validator_test.py"
+}

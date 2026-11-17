@@ -1,0 +1,17 @@
+Holdout-RED (nach erster Implementierung neu geschriebene Formulierungen) · 2026-11-03 13:58 CET
+ContinuumTemporalMemoryHoldoutTest tests 1 failures 1
+M2-METRIC holdout_cases=20 correct=10 abstained=6 wrong=4
+M2-WRONG Wo lebe ich? <- [Ich wohne in Graz., Inzwischen lebe ich in Leoben.] => Du wohnst in Graz.
+Zeitbezug: gültig ab deiner Angabe vom 01.01.2018.
+
+M2-WRONG Wo wohne ich? <- [Ich wohne in Graz., Ich bin umgezogen, jetzt wohne ich in Krems.] => Du wohnst in Graz.
+Zeitbezug: gültig ab deiner Angabe vom 01.01.2018.
+
+M2-WRONG Wo wohne ich? <- [Ich wohne in Graz, aber nur unter der Woche.] => Du wohnst in Graz.
+Zeitbezug: gültig ab deiner Angabe vom 01.01.2024.
+
+M2-WRONG Wo wohne ich? <- [Ich wohne in Graz und in Wien.] => Du wohnst in Graz.
+Zeitbezug: gültig ab deiner Angabe vom 01.01.2024.
+
+Holdout-GREEN:
+   M2-METRIC holdout_cases=20 correct=18 abstained=2 wrong=0

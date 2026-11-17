@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:06" hostname="1a6f5c6cf9c0" time="0.013">
+  <properties/>
+  <testcase name="staleDialogCannotCancelTheReplacementRequest" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.004"/>
+  <testcase name="currentDialogCompletesExactlyOnceIncludingGenuineDecline" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.0"/>
+  <testcase name="searchRequiresExactOneShotAuthorization" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.002"/>
+  <testcase name="blocksLocalAndReservedHostsBeforeGrant" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.002"/>
+  <testcase name="cancellationNeverCallsProvider" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.001"/>
+  <testcase name="revokedDialogNeverDeliversApprovalOrDeclineFallback" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.0"/>
+  <testcase name="readRequiresHttpsAndCannotExpandToAnotherSource" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.002"/>
+  <testcase name="modeChangeAndReenableDoNotRevivePendingDialogs" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.0"/>
+  <testcase name="invalidReplacementRevokesOldConsent" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.001"/>
+  <testcase name="disabledModeCancelsPendingCall" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.0"/>
+  <testcase name="mismatchedApprovalRevokesPendingConsent" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.0"/>
+  <testcase name="revokedInFlightResultCannotBePublishedOrReused" classname="at.heinz.deviceai.cognitive.ApprovedWebToolGateTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,30 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=33033 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=33033 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+[0.000s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/66 because it is locked by another process (errno = 11)
+JUnit version 4.13.2
+...E..E.
+Time: 6.61
+There were 2 failures:
+1) completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript(at.heinz.deviceai.OwnerAppPlanningContextUiTest)
+java.lang.AssertionError: One persisted current owner turn expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript$lambda$0(OwnerAppPlanningContextUiTest.kt:155)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript(OwnerAppPlanningContextUiTest.kt:148)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+2) planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory(at.heinz.deviceai.OwnerAppPlanningContextUiTest)
+java.lang.AssertionError: Current request occurs once expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory$lambda$0(OwnerAppPlanningContextUiTest.kt:137)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity(OwnerAppPlanningContextUiTest.kt:109)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.withActivity$default(OwnerAppPlanningContextUiTest.kt:99)
+	at at.heinz.deviceai.OwnerAppPlanningContextUiTest.planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory(OwnerAppPlanningContextUiTest.kt:131)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 6,  Failures: 2
+

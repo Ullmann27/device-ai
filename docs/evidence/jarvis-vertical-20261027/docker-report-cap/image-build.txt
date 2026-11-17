@@ -1,0 +1,18 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 193B 0.0s done
+#1 DONE 0.1s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [1/1] WORKDIR /work
+#3 CACHED
+
+#4 exporting to image
+#4 exporting layers done
+#4 writing image sha256:695fb07716de18118c92d0e613fe8b7413f86c27dc2b5fd5faa4e8fca51d29f8 done
+#4 naming to docker.io/library/continuum-local-proof:jarvis-20261027 done
+#4 DONE 0.0s

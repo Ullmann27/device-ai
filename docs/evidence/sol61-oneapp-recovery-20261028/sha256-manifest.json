@@ -1,0 +1,1906 @@
+{
+  "BackupCompatibilityAudit.java": {
+    "sha256": "211707a44ba98a4cb62f2b8e92a2417210bb13fec9bac9e203018afe0eb3033c",
+    "bytes": 3322
+  },
+  "baseline/command.txt": {
+    "sha256": "650fe9c69622dac9bc35fbeb5853a199c6b921453bf3c686c3792e11dae21676",
+    "bytes": 1134
+  },
+  "baseline/gradle-full-suite.log": {
+    "sha256": "682577570b3759a88e87096666441122e5143a90624f2cec63e7715d0d2948ec",
+    "bytes": 12444
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.AgentToolLayerTest.xml": {
+    "sha256": "1928f79c7a88081910a0da9af5468666cc890c4fdde4769bc6c0e543575aea6f",
+    "bytes": 1280
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.BootstrapBrainTest.xml": {
+    "sha256": "2abf5e4feced3f75dabf9cc431cbf915257b4fa172af306ee006cf47ecb0869a",
+    "bytes": 1808
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.BoundedIoTest.xml": {
+    "sha256": "3127a320337977864124fa389798c054fd34a0f7209871b0e4e3230c54315631",
+    "bytes": 542
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.CheckedShellCallDispatcherTest.xml": {
+    "sha256": "b23e8c5430d66de0e0074f95a8af8bf05c63f717226cfdca7b513f9764bf0c59",
+    "bytes": 1049
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ComposerReflowDraftTest.xml": {
+    "sha256": "c0bf419e41339c9fe48e4870bd1a56162348002488d619f499413f744c3f7c40",
+    "bytes": 450
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ComposerUiPolicyTest.xml": {
+    "sha256": "a833ff7aba8c8bd2c3a8626e2581663e41e7339d1d2e003a2cd3c00011b8b89a",
+    "bytes": 786
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumCcc1BridgeTest.xml": {
+    "sha256": "55039ffaafe8cf742b8fbf93743fbaf325379702b317cbb4e1b30213b2f3a22a",
+    "bytes": 837
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumCodingConversationTest.xml": {
+    "sha256": "0f91253a6e9d08739f2fc3d0a4475d4309d18524f714897a032d261c63f4df5e",
+    "bytes": 2422
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumCodingPreparationReviewTest.xml": {
+    "sha256": "dfe69ff2e9834f2ab96d818c41a931bf2bf215078d3acb5a1265fe52fb8f3f69",
+    "bytes": 807
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumCodingTaskTest.xml": {
+    "sha256": "bc9f9c01a9e4b309daad50f1d0d021852f339df93241ecffd0d72a1b0aa2c279",
+    "bytes": 1339
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumDialogueSessionResetTest.xml": {
+    "sha256": "801ff362b75635d135a0505fd640b4d62fcd2334ab97ce6bda45e31527a60583",
+    "bytes": 1285
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumGemmaRestorePolicyTest.xml": {
+    "sha256": "c03c89faa9fdd09b2aaa94e7860b2b47c0fd63dd3a3b89f64627f434cc3bf5f0",
+    "bytes": 1333
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumM2StatusTest.xml": {
+    "sha256": "1b7cc0204c23d4bbea33fad0cc974f202bc70093287aa4104535d7a57cec23cc",
+    "bytes": 1009
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumMobileBuildPlanTest.xml": {
+    "sha256": "6e5128c6003d17779bc7d7a2e35bb712398cc63e3f66e9421df10fee11f80662",
+    "bytes": 741
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumMobileBuilderRouteTest.xml": {
+    "sha256": "d6e3ac24d92bf148266663795a351941f7714f3c617703c37cd88c0af0fe6ff5",
+    "bytes": 1048
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumMobileCodingJobTest.xml": {
+    "sha256": "0869ce0f24d20ba7a4ef8420573275bfd361496b9c5253f312b76ee3b79755b9",
+    "bytes": 983
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumMobileResultPolicyTest.xml": {
+    "sha256": "f524911441a9d1441ae737fd6599a8759546730a1784a62840a12d1b766ae9b0",
+    "bytes": 1651
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumNexusHomeSpecTest.xml": {
+    "sha256": "fc9f2e7a18af71e12d6bffef09ba393457516c1de9c5d78b63318ee5ff3d1240",
+    "bytes": 720
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumOwnedAppContractTest.xml": {
+    "sha256": "5a6bce96acbff6bd74a73db68ddd312bcd575d7ff40840cc29502d744c7dab96",
+    "bytes": 859
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumOwnedProjectPlanTest.xml": {
+    "sha256": "02521cce38b94cec79b57d1295083f55bd667579519e0a0ec8395739b91c2d32",
+    "bytes": 932
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumSelectedModelsTest.xml": {
+    "sha256": "9788a3b28dcb85e6da63e383164451da1a30a289091f1c82b190b6867fd117df",
+    "bytes": 1025
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumStatusExcerptTest.xml": {
+    "sha256": "240733a4a43aefc58076bd9fbe7694dc79d3e717fbb40a77b16e747cea79ae6e",
+    "bytes": 846
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml": {
+    "sha256": "1bd7cf88bb504c266025ff35709881ae2aed5b0e07b301baa9517d68c86d7dca",
+    "bytes": 1223
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumUiCopyTest.xml": {
+    "sha256": "e86a74ed6a53810522438f1cc3abef9ecab96071653736395bac9f6c76ef8883",
+    "bytes": 1103
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumWorkAreaNavigationSpecTest.xml": {
+    "sha256": "56bf2bf9ec75ec0b8e4660f99126c94825bb54e108e1a53e392e11e2bc638426",
+    "bytes": 1091
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ContinuumWorkerChatRouterTest.xml": {
+    "sha256": "499da59dded77677eebfd66fa2035ffdc1320ac87d161c2f72ef9aa8b97cc7bf",
+    "bytes": 1702
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.Ctx3ContextTest.xml": {
+    "sha256": "088818f83bb1b5fc7ada17ebaf3e2484ac4361aad090db023ac439cde6f3d0fb",
+    "bytes": 951
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.Ctx3SessionTest.xml": {
+    "sha256": "03cb2c25e704572587f24a011b754dfd14651da47ac2ca521d2eb56ac2a25d42",
+    "bytes": 457
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.Ctx3ShadowTest.xml": {
+    "sha256": "430613f3e2b4050e2138b58d3a0af8099a3e16dbb5140541a8c7f572ec52159a",
+    "bytes": 728
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.DeviceToolExecutorRunnerTest.xml": {
+    "sha256": "bb4714bbf6ac4b25d6a3941a3be32cd80b62e3386463fec5d3cfa04fd6730270",
+    "bytes": 1147
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.GroqInvocationRouterTest.xml": {
+    "sha256": "d7443715a78f86156ebbac365cbdd1831b883d1d453ca220959013cc36498426",
+    "bytes": 836
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.HologramAudioTest.xml": {
+    "sha256": "c6514381fa0e5e9bb31b72752a28f287df5994ad725a6cfb3860c8a9893cf7b1",
+    "bytes": 1306
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.LocalFirstPolicyTest.xml": {
+    "sha256": "32e3f894af2c864a6a5d125445a5846cb17df2340c33ec182fe22a072513ef61",
+    "bytes": 1757
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.NeuralSnapshotCasTest.xml": {
+    "sha256": "5a8741981be73ea2abfb1239b5644950429e64dc921795fe2f344060081c14d9",
+    "bytes": 575
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ShellExecutionTest.xml": {
+    "sha256": "5a847cf4560780f5a68494bf0ee6583345fdd760f58f7cc3039cf8a20e13ec72",
+    "bytes": 1834
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ToolExecutionReceiptStoreTest.xml": {
+    "sha256": "075643f136461e7cb871e56c1d77680842a49b522dbf7fcfb267797e1406d6d6",
+    "bytes": 1075
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ToolRegistryTest.xml": {
+    "sha256": "57fd5ea3a5f550f69bdd5ec102c7987db086829ccc3a091262f95d460d9c018e",
+    "bytes": 748
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ToolReplayGuardTest.xml": {
+    "sha256": "a173e5965bb95e1d9ed6be761f1cc77d5aafffcad04d99e16ba608e94a446d27",
+    "bytes": 573
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.TtsHologramSignalTest.xml": {
+    "sha256": "5cded814c578669fcffd4154a115ce0686d45f3ef4382157e53e91f3207381a4",
+    "bytes": 1273
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.benchmark.BenchmarkRunnerTest.xml": {
+    "sha256": "d4fcf593ec316f7d58d09685827583723a3b7a1ce9763167177cde2f7106026f",
+    "bytes": 2058
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.AdaptiveIdentityTest.xml": {
+    "sha256": "ed16567ca136da314c86896dd8d32011cab0966a2d3957caf2e1b19603b7a112",
+    "bytes": 3353
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.AgentCancellationRegressionTest.xml": {
+    "sha256": "5e91ae42935a197044d66730669edcd5ab97694d603cbd3e3dce5e4af826cda4",
+    "bytes": 826
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.AgentCheckpointStoreTest.xml": {
+    "sha256": "1fec4ac23b69e8c6d39c2d388300dff6fdfe471801725fbd623b7ef66e16344a",
+    "bytes": 631
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.AiContextCompilerTest.xml": {
+    "sha256": "7e26160a3ddaeceb7ba22f20a3d9d4a628ff42a5c6117e0dfbdb8910da436d40",
+    "bytes": 632
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest.xml": {
+    "sha256": "df3c327e08ae35558ef76397ff801ec7f51dedb6441f87193469137f5f61edfc",
+    "bytes": 1671
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ApprovedWebToolGateTest.xml": {
+    "sha256": "f81edab13e5cb9417c9731f63bfbc704bb863a35e34dd85b6fdd5ad04f0fd7a3",
+    "bytes": 1275
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml": {
+    "sha256": "16430e9020e62a82e66dd02f5dcceea6dbb778078a5cc33801733718b10f2094",
+    "bytes": 1401
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest.xml": {
+    "sha256": "283dd55859546755cbfb1f0800ab4ed55efdebb2951d5a09ac09846271ffd219",
+    "bytes": 677
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.BoundedAgentTest.xml": {
+    "sha256": "191d38a96c58721a0438458aa61141e795215e44ddd9a4ae96ab2ca48121a0d8",
+    "bytes": 1235
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ChatReasoningRouterTest.xml": {
+    "sha256": "f2f8ebece64f2be5f7088c380c9e60f8839c7c720012a67e0bd13b77d47202ac",
+    "bytes": 1575
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml": {
+    "sha256": "6c5434393ce2f526a0bd1ad40afafed7d70fd2aa30f10f6e7e0ddad75eca166e",
+    "bytes": 1806
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.CognitivePersistenceTest.xml": {
+    "sha256": "2d55d8625c725c84cdb6f2a2fd739e8cda9686458ad4a1f5043611d995bc3d06",
+    "bytes": 942
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.CognitiveRaidTest.xml": {
+    "sha256": "925da2c6d14678d63d06954ff2b15976faa846b44a1046165050463cc9011471",
+    "bytes": 620
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.CognitiveTurnTraceTest.xml": {
+    "sha256": "da86e59afd2625a0eb188a0ad5f1a9db4fbbb924b1721fe57289e1796adaf9f2",
+    "bytes": 972
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ComputeFabricTest.xml": {
+    "sha256": "d7460b0b620b3d0a5697b77d31f8b570f93ca810ed40ddd4be38aaa8f280a1e1",
+    "bytes": 1559
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ComputeResultVerifierTest.xml": {
+    "sha256": "858c5fadf17291f65a4cc6600dcc1d488bac28d4cef046c2c364084f7936d549",
+    "bytes": 755
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumBenchmarkTest.xml": {
+    "sha256": "c4e2d9d9c4fdd89cfa71f02b1a5e4c81a98029a1cd19938942ddb6b85499ed06",
+    "bytes": 625
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest.xml": {
+    "sha256": "eca13c489a72ded8c368110e82ecb20e93367fc829d78965abaa5d376459c508",
+    "bytes": 1255
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumEvidenceSwitchProbeTest.xml": {
+    "sha256": "7a2c59bd2f77a48926ddb6c1440068ecd64962017bc4250968e155a77f260c9e",
+    "bytes": 4173
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test.xml": {
+    "sha256": "c154e139614040302adcae2ba65d8e5798543031a0849553f140b491256193bc",
+    "bytes": 1129
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest.xml": {
+    "sha256": "02289d55c209b3eb65edec95890d691d7650176435d7c66b615700fab388e8ea",
+    "bytes": 1737
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest.xml": {
+    "sha256": "8115615c1f15a1eb006f1705391d802dbc3152a5fa86814dc5ebcfef188f0622",
+    "bytes": 627
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumSeedStoreTest.xml": {
+    "sha256": "8c85d2e513abe49ad01d368cec4bfe87d4b35dcca1f5f9e815e56f9af3003bfb",
+    "bytes": 465
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumSeedTest.xml": {
+    "sha256": "6bbd3eea389aa977ccc48063c4b917eca7874372b6636e512fbec0ef5d61f2a6",
+    "bytes": 836
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumStateTest.xml": {
+    "sha256": "782ef2d04b772b0a01a3241b36383c2f868f204600335ee0e933be643a3c0c8d",
+    "bytes": 705
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumTaskClassifierWordBoundaryTest.xml": {
+    "sha256": "a136fd550872f6134c7b68ec75c869511fa37a63e6d96a51860f0328c6544a6c",
+    "bytes": 950
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ConversationControlTest.xml": {
+    "sha256": "f8cef2e255704d5047a1d3f003dcefab655d617f8423c2efb6330999d321d57c",
+    "bytes": 971
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DeliberationTest.xml": {
+    "sha256": "31b68bf2724a3de458d71af07a217cee2752907c623fbc966832c1a12cd1f06d",
+    "bytes": 884
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogRoundtripTest.xml": {
+    "sha256": "b039962f9671cad83d7408cfa158cc1932e11eae5136fae551c3d674215b5638",
+    "bytes": 498
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogTest.xml": {
+    "sha256": "2e8969487f0dd065bc86221c64f7bff3bc6d60d9ea21116a40449f463f859ae5",
+    "bytes": 2916
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentClaimGateTest.xml": {
+    "sha256": "33ef014c52246dda5a3516ea0e70b7dc991f322604e4c253cb80a6e64ce17ef6",
+    "bytes": 647
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest.xml": {
+    "sha256": "e8ff9f2d130fbe544c65ace1c472bf35fb2ad7b1869a5ca6ef9521f0a0ac1d1e",
+    "bytes": 4145
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest.xml": {
+    "sha256": "29fc73485a1cfe4378e1014aea5d449d98894241f4f2699b7c90654e1cb69803",
+    "bytes": 1372
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest.xml": {
+    "sha256": "0560887dc5771b4b28c602be771e228eb3471f47daae2966098a4624408da05b",
+    "bytes": 2006
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentSharedHashTest.xml": {
+    "sha256": "893f5a4db1b914c4b45e976c78af3651fce545f0b487170a45e33ba87e7a0cf5",
+    "bytes": 760
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentUiControllerTest.xml": {
+    "sha256": "e6abded719dbf6a9ddec552d0541f10d8be9d8179690313e3ba7d217348d108c",
+    "bytes": 1687
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest.xml": {
+    "sha256": "a31dc3eeceaf799910d5d7427e1ff315abd8394eb9d9f66eaac473e6c1d7f5b7",
+    "bytes": 1538
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.DeviceTeamleaderTest.xml": {
+    "sha256": "40f6d702ec97c85420bd29d1c49386852e644d17ae1451caf05b2535d2e99b45",
+    "bytes": 1993
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest.xml": {
+    "sha256": "570e489506b54ed1c9f87eccc10e9f2bc35d3b83effb3bf85610b7af689ab7b8",
+    "bytes": 1550
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest.xml": {
+    "sha256": "b20fc8b59b9b8bfc3f26028187b2e6f415cbc3e43e59b7bd30f84725c2035b4a",
+    "bytes": 2170
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.GroundedWebRecallTest.xml": {
+    "sha256": "7d748bdc6d07df21ce0c164b872646c480866c29f42ba77345a7f39ec949d64c",
+    "bytes": 743
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest.xml": {
+    "sha256": "99b84e3356ef228f37c65755125519c8c065fe8f55fb2e82694f873ad0e8786e",
+    "bytes": 782
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.IdentityStateTest.xml": {
+    "sha256": "047ce17823594786e91d0b1522315384c19cbc1181db1f8f8f92f17c82d6e488",
+    "bytes": 1042
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.InternetConsentPolicyTest.xml": {
+    "sha256": "ad9d083b3ec54cd6edcf89db027cc532a3a5b3824d1cba8734152d021c48bbf3",
+    "bytes": 1147
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest.xml": {
+    "sha256": "b07f538ca836ef8b6504c2091200414d9302692c6a93301f18ce7397aa93d93e",
+    "bytes": 1680
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalGroundedRecallTest.xml": {
+    "sha256": "06220f13ee708081d38f000056e64c42d0c411a5739323bd6630e811f8ec5222",
+    "bytes": 807
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalIntelligenceIntegrationTest.xml": {
+    "sha256": "c961c7c89abc086b2930f65abe177756e4c32397d2841c15ddb436438c2201ec",
+    "bytes": 1326
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest.xml": {
+    "sha256": "77455746694d25afa0ec5c1099b40865f4d402727fb55528814e56d234bb1d66",
+    "bytes": 1137
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalReasoningBoundaryRegressionTest.xml": {
+    "sha256": "e5e613ecc6fc465896a0e0e09d5beab1910bdfcf7c7c246e0c28f39a1b59def6",
+    "bytes": 1264
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.MemoryEcologyTest.xml": {
+    "sha256": "5c9bf68687aa18bd5a3727a546a76799f9d7e17e65ef8f5dacdc656b25c63976",
+    "bytes": 1689
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml": {
+    "sha256": "5ff7639c4c8383109cdb00871ba095c789b7cd32a57f133d2ba194e035f6336b",
+    "bytes": 1316
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml": {
+    "sha256": "fabc87f4cb3fe55fb990a344abdaaaf836349aa4de0417e7989467634adf4eba",
+    "bytes": 1771
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest.xml": {
+    "sha256": "c60460562acc8a529f6a967cffb0f7cce0faee9d26569b82060fbdfd18037de8",
+    "bytes": 525
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest.xml": {
+    "sha256": "dff233babce84bddff9f61f9106e05ba09f1f23eb88e0d820827e24b2b4c111d",
+    "bytes": 827
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest.xml": {
+    "sha256": "2f2fb379b192266eeee150824f18a7422651cf103d2104df9c99a68e0b9e91af",
+    "bytes": 971
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchEngineTest.xml": {
+    "sha256": "a0bad37deb6e95d826c004c9122047b7c09347cdb64385da88d503a41f517012",
+    "bytes": 2434
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchHttpTransportTest.xml": {
+    "sha256": "94ee660dc74499d52afec976b7ec4a925629f8427e66d55e3fb321c1874b6a40",
+    "bytes": 1125
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchNegationSignalsTest.xml": {
+    "sha256": "8168b3cdc413d151d4516f0a40d981f7059b63a4724e6cd4ab15c49182f9eb7c",
+    "bytes": 920
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest.xml": {
+    "sha256": "764c103b6623591e8193527714b5c864837d22599de9bfaa9e5a078e75e35da3",
+    "bytes": 1078
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest.xml": {
+    "sha256": "8f62939eba0ffdf91e6f2fb0baf8273e20279f00cb46df05e75c98cd20f019c0",
+    "bytes": 949
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchTest.xml": {
+    "sha256": "84ceb15f30d8722e02de64ff50d6317b7ec9c53eda10b3a053ee766552eabf32",
+    "bytes": 1068
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.UntrustedResearchEvidenceTest.xml": {
+    "sha256": "7170d7562a20b9238be19ae431409f972e23b7fb78cde5486483d11d715c17f7",
+    "bytes": 1041
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.VirtualModelFabricTest.xml": {
+    "sha256": "eb897ff1a3cc6559792098f97beb17804a0364bfa781438c63bf5969896044b6",
+    "bytes": 804
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.WebLearningInboxTest.xml": {
+    "sha256": "76a16665694f1d1e12ee515602beae7e67f8ad5bdc250486049f1be5c9de9caa",
+    "bytes": 918
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.WebResearchIntegrationTest.xml": {
+    "sha256": "0ec613bec01993941957342cffe1b152fda1b139e030a11a7597eea98cce526c",
+    "bytes": 1467
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest.xml": {
+    "sha256": "e41d2d79943ba6053f50d1f71b7de43e943c7a7c368f7c050c369c71468652de",
+    "bytes": 1155
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest.xml": {
+    "sha256": "7bca6dfe4f90cd4eb4ae2b26fbd032f1dcb30f06aaf680affad57658004dff08",
+    "bytes": 1141
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.diagnostics.ContinuumDiagnosticsTest.xml": {
+    "sha256": "c0180c626111baa2c51472ad4e9701511c283cf34b26553ec7d3cbc1f2044fd0",
+    "bytes": 1412
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest.xml": {
+    "sha256": "7531745d1b1db04d8c8e1d240d889d651f72a901d38ebd56802a1ee467f25974",
+    "bytes": 533
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest.xml": {
+    "sha256": "42e12d7b2c39a0146e21707f4b36b8bee55c8708c64bf63e04f9893483eeb012",
+    "bytes": 675
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexPipelineTest.xml": {
+    "sha256": "5003540d90a2ea618b5cfd8f6cf102ccbd60bb3e3ff9ea3c6a4de8b16eb3967e",
+    "bytes": 578
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexShadowTest.xml": {
+    "sha256": "2a69f72131f96d28d82c120b264e9e26d92f32fb4eefa47b39bed7dfdf3336fb",
+    "bytes": 572
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest.xml": {
+    "sha256": "1b25f7d474246de0b04cc10fe482e34e21396eb0699785873e732d60a66ed6fa",
+    "bytes": 1841
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest.xml": {
+    "sha256": "fe26e178e91247ef187cb560ee3cbd54574423a3c0d81a9043de69c8da4f8358",
+    "bytes": 1300
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2NegationTest.xml": {
+    "sha256": "1531d9453095d7eb0446e2fce9dd6254057bd052738e56cb31fbf9eff0e56021",
+    "bytes": 945
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest.xml": {
+    "sha256": "0c28af23890a3b5309b87972a4f67765c9b9fe88726e3094b29c9e5b95afd003",
+    "bytes": 823
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest.xml": {
+    "sha256": "c6ee98dbd61cc1806b3ac6223020074f6117a27d70176cb2cafd4c38843015c4",
+    "bytes": 786
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest.xml": {
+    "sha256": "cb8fe0abef4ed660c020d366b1cc3fb9e87acd28de911dcf73ead6f2b51706f6",
+    "bytes": 697
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest.xml": {
+    "sha256": "c61aa1eac2b16c0b1e411e186bdb688bfbc9aa81edcef5da50e5373c247a9201",
+    "bytes": 783
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.Cdx1PatchShadowStudyTest.xml": {
+    "sha256": "f7410c22e08c30bf63854010b625f56cd31bcd7f62d2a01a14e8221ddd5325d9",
+    "bytes": 627
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest.xml": {
+    "sha256": "e007ce3aa3896eadb429dc2ac285917dd29f299d8c2b1a2d92d0574c5a5d7fa6",
+    "bytes": 1199
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueCurriculumTest.xml": {
+    "sha256": "f6c06e984bc03d7d547bf9a812c94c21414f3f08f728bb43c50ae38e6300d1f6",
+    "bytes": 935
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest.xml": {
+    "sha256": "1bc5723932b675011cf628e2a860db983dbb987af321c6df4de909b4a7eb71fb",
+    "bytes": 999
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumAutonomousSchedulerTest.xml": {
+    "sha256": "35dec290a7a218d69dae1019f6ae6463836d8fef4639067107432a78b87704cb",
+    "bytes": 1277
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumBimodalConditionerTest.xml": {
+    "sha256": "552e4479464909902fb077a5f448be4b4767648fd9be323b1e988ca10bb690b0",
+    "bytes": 760
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumCycleTest.xml": {
+    "sha256": "d93013ca0ec006e9449cabe36285ac484879d19a7fb607aa884189c4631e2378",
+    "bytes": 701
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest.xml": {
+    "sha256": "81494e55ecbfb26ae253a310795f8b6fccda1a3ef9b441135b11d06ab6c1c40a",
+    "bytes": 1323
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml": {
+    "sha256": "0a179afba8219705b1d3ca3570591aac537f9f86ece3af68d80eb3e483875bd2",
+    "bytes": 2640
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveGateTest.xml": {
+    "sha256": "c1f493b5d0088ee59888a24df2a5a6b4af6281e7b1dad7bc0b8e89172dd754ac",
+    "bytes": 882
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveParityTest.xml": {
+    "sha256": "ac0bf78911ddaef778bd9143eb4cf1590b914f8448b40bcaeb57d32654811106",
+    "bytes": 690
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveViewsTest.xml": {
+    "sha256": "f74b3a77d554451955c006d0c3d5f3415cc363ec05f41c29998e8383cb45bae8",
+    "bytes": 773
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDecoderBridgeTest.xml": {
+    "sha256": "b7ea18d6a169b674b2238af4cf4796f75a992b891c64d820c806ecce7701a14f",
+    "bytes": 2636
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest.xml": {
+    "sha256": "aed7c6c7bd9f2b3c53333170eda1276397b980a60a53c8cc72a5044411b590b0",
+    "bytes": 511
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDeviceTeamleaderSchedulerTest.xml": {
+    "sha256": "0ebec7d6126dd1cafb5391868bcda238ee0c25199b7a65c9574429a0ed9df0ea",
+    "bytes": 1010
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDialogueAuditTest.xml": {
+    "sha256": "bcd3ddb7d6c61e11b2c3f881906231ee033c682854b49a9a62e7d120dbbc452f",
+    "bytes": 835
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest.xml": {
+    "sha256": "df35ffc3d8a2c3f05be52e34e62cacd010b4766c41dfeb8b3ea7b8708972add2",
+    "bytes": 2616
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDualCoreAutoStudyTest.xml": {
+    "sha256": "7ce79bcd0b1e4848a12232f97d6dc3ad5a8494dba7940e885891b5e4bd6f47d0",
+    "bytes": 480
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumEvidenceSpanProbeTest.xml": {
+    "sha256": "411e37f96e191bca58f49af300a5a1f44c11f163c4c8aeb86392f3009d89dc5e",
+    "bytes": 786
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest.xml": {
+    "sha256": "7ade434730c039eba353e7957eb59004651213fed8e7693b0748ca498a79ebd8",
+    "bytes": 789
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumIdentifierGroundingTest.xml": {
+    "sha256": "f300831f7575520a1184e7042f3154b6bb4835c9a36cad9b5607fc9034569066",
+    "bytes": 703
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest.xml": {
+    "sha256": "dcdd5486722b42f9a542e989f51e73038d27c82672e23e1bd18a24ab677db44f",
+    "bytes": 2031
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest.xml": {
+    "sha256": "78f9356c1c753343e03d8439384a6c01f8956062097c1125a1699cd14dd3055b",
+    "bytes": 1899
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumLearningCoreTest.xml": {
+    "sha256": "85a2b067ee4eeaa0951f54a0aff5763752404a1f46cf864d1dd6584d13f92fef",
+    "bytes": 2859
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest.xml": {
+    "sha256": "bcd66a8ee9baaa351d5481ca861fa64d65e3579fb2101664d4d7d2d43b70370d",
+    "bytes": 822
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumMemoryDialogueTest.xml": {
+    "sha256": "ab6b47205d7ae6b9520bc8ec6d12e3f773402e6002c1a4f7934ccaf217f84067",
+    "bytes": 2916
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumOfflineLearningBudgetTest.xml": {
+    "sha256": "cf18227e0c3a7c6502c0a3c4dccfc0d7d3b8f2f0325d8d5430ecbdda5c1103fc",
+    "bytes": 1271
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumOrthographyProbeTest.xml": {
+    "sha256": "2e26c365acc04fc1f2016822d6aed6c153ef0a8d7e497161a22da86d1912511b",
+    "bytes": 766
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumOwnerFactTest.xml": {
+    "sha256": "bfed5ef1c68fe01c0e8879a9292af76f7be7a6b1c799111bd1c7d2e7d3834a1a",
+    "bytes": 1359
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicCurriculumTest.xml": {
+    "sha256": "db775aee649e0ae710ec7b33ec8d1d82035df45de842bcea683290b77a8b749e",
+    "bytes": 954
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicModelPackageTest.xml": {
+    "sha256": "a4901480453190817b29dbf1c272fc821eb125e0a3dbe002260e9b1a5613721a",
+    "bytes": 1181
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyCycleResultTest.xml": {
+    "sha256": "3d7e98fce82fbd0d45989d55ca9f304ebb5c241941a49346d33b43ee560ff835",
+    "bytes": 1186
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest.xml": {
+    "sha256": "75be1c93bce05dd1a5940c6bf952518c2c4ed4151d200d7850f4dacd30bcbe5c",
+    "bytes": 1737
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyPolicyTest.xml": {
+    "sha256": "0459ca9c9911cbd3be3a7088e560ee12edacc74dc8c24240b9ff0e864f845488",
+    "bytes": 790
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumRuntimeEventJournalTest.xml": {
+    "sha256": "1b7ee34ed41475492396703ab9b1b238ebdc8b7305f3d993bcf69fb91596495b",
+    "bytes": 647
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest.xml": {
+    "sha256": "63645ad0f419938ecb18e79dd43940c3efc168e6d3142e6ae5384c63ed3bfb9e",
+    "bytes": 942
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumSourceNoveltyTest.xml": {
+    "sha256": "e2967916261e9cdfe3c50c8eeac3083dca38ed6cfd58eb3ce6962ce13b96f344",
+    "bytes": 619
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest.xml": {
+    "sha256": "76ddf6710f4700ee3c6a82ed64a5e919224a9d89518ddc681072ebdf6b70c91b",
+    "bytes": 1266
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumSwb2DecoderResearchTest.xml": {
+    "sha256": "5a02942e6069173e61fcbac7866689b7b04fe5ae1c68c26c284e0c0986afdf73",
+    "bytes": 501
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumTopicFrontierTest.xml": {
+    "sha256": "c7546b5d485879ae67fbc9709163ff6226aff54c5234a405227843dd592d4ce0",
+    "bytes": 969
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest.xml": {
+    "sha256": "b8a7a1d2034c92b05ea37d89a8b30ced762cf97ad117225dd0f388f59674b064",
+    "bytes": 788
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.Cre1InferenceEncoderTest.xml": {
+    "sha256": "f4840e40bb4093b85f821062c04b5491f97cd631b5fdd06145eb3f705436c39e",
+    "bytes": 636
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.Cre1PromotionAuditTest.xml": {
+    "sha256": "51628ebb37d9fa8dac0b42989b430117aa78567a2f917e33ad4c63b7ca6517de",
+    "bytes": 1110
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.Cre1PromotionGateTest.xml": {
+    "sha256": "73661a1f1d877687c10d6b8c51dc030a0faf012a1688f2379d5cd1f4a0f9164f",
+    "bytes": 1219
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.Cre1ResearchLabTest.xml": {
+    "sha256": "0b60b8a05f2e958ac73a27ecbdfe61ebe6ea8bfc12ea798046b6dc167040bdb5",
+    "bytes": 1090
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.KnowledgeDialogueTest.xml": {
+    "sha256": "4de5ffa3349c6f339c89a3bf18153033fdf0ac360b0a22055c2637283802e402",
+    "bytes": 486
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.KnowledgeReasoningTest.xml": {
+    "sha256": "19ea2c97398e144dd21d160423f97b41b6ae2382b9b5aabae2577f488a57045d",
+    "bytes": 1062
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.LearningExperienceStoreTest.xml": {
+    "sha256": "7a2ad91eef8c9ad274216cdf2b70b0aef90c71176d43d4e8d109d4f427bc391a",
+    "bytes": 937
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.LearningIntegrationTest.xml": {
+    "sha256": "5078b2ef63184c34ada6e5ecbbab5cfb64c678c279fae21072e5694205062223",
+    "bytes": 652
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.MentorConceptNetworkTest.xml": {
+    "sha256": "d863fd86af49c629dfaf639e8c39b85cb47cb757414663e110310a0462671eba",
+    "bytes": 923
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.MentorCuriosityPlannerTest.xml": {
+    "sha256": "299c660b9342b7becc940557564eb5d06639854ca1315193e21cd0bfd2bd3932",
+    "bytes": 898
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.MentorCurriculumTest.xml": {
+    "sha256": "f07874776ee9b16c7e7994aa21eb08314bb5ec80801f961a863dd0609539a1f4",
+    "bytes": 592
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.MentorRecallTest.xml": {
+    "sha256": "3869f28ca57fc139faaf19cefdc08d175372635c25e865ea9dad7bb05361260c",
+    "bytes": 588
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.MentorSemanticModelTest.xml": {
+    "sha256": "bcee337bd4a49bc59d0d694221d52767ea2206f8ee28fa19ebb00c10caa56c52",
+    "bytes": 904
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.ModelCheckpointStoreTest.xml": {
+    "sha256": "6b9ce522cc79ae395d2ff0a9ff7e4329eddb5101064652626e31ced3cee7cb59",
+    "bytes": 1627
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralCommandParserTest.xml": {
+    "sha256": "3d585467445fad4ef1897402cf39dc6afa5925492807a5bae7fbf95d2cf8b532",
+    "bytes": 475
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralCuriosityRadarTest.xml": {
+    "sha256": "ba4126f77d687c0f99f1937425607149f1d38ba4cf940695a008cfc51c33df26",
+    "bytes": 638
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralDemoSandboxTest.xml": {
+    "sha256": "20c392db87cb65e62716996c9a8ecdb56b76bebe25485fa9939d8d3e14580ca4",
+    "bytes": 772
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralDialogueTest.xml": {
+    "sha256": "1ffa5888927b31d4419a7d7a7c1f7f0c92cf7630264b458a7c38cc3a59ebee2d",
+    "bytes": 1383
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralGeneralizationComparisonTest.xml": {
+    "sha256": "f2aa5f26fefcbb3d4ecf1d1491f796e7c66bd1fccdeb4fe6ad63d59f5451b323",
+    "bytes": 1014
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralGradientTest.xml": {
+    "sha256": "50a415edbfca746a4948b5a5980153b1fabcda04c95fffe80eaa0adf24818b0c",
+    "bytes": 614
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralLearningCoachTest.xml": {
+    "sha256": "b47451e9a024c5af213a92d1feee49678f3e8ccf68145b50d08d9ec5cc9afcda",
+    "bytes": 1040
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralPracticeTest.xml": {
+    "sha256": "125fc500045c47dcc93c76f3958f5260300003f8e0c76d964c1fcf8ce1362546",
+    "bytes": 1161
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralSnapshotImportTest.xml": {
+    "sha256": "d6d90c92b0e826d24e3ce9799f32d7de6ab095e696a56ea813c70856546515a7",
+    "bytes": 807
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralTeachingAuditTest.xml": {
+    "sha256": "db1a1cf8b776d1fe86726494897f1064878c588611f06a9fbdf04a797205e0ae",
+    "bytes": 1076
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.NeuralTransferExperimentTest.xml": {
+    "sha256": "59b178e6f69b3b1f3a1287a58073604db8a74010ae12c3c62ac44dbc31883b6e",
+    "bytes": 834
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.OnlineNaiveBayesTest.xml": {
+    "sha256": "8547f2bb31515ec2fe83d6794a439d2cf17da27cc0fda6428b1d425df6f33e64",
+    "bytes": 617
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.RetrievalBenchmarkTest.xml": {
+    "sha256": "74dfeac989640303a184c03e7a1da01bd5b92447efee20a8c4835d7729b1a241",
+    "bytes": 764
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.StrictJsonTest.xml": {
+    "sha256": "b9c9343f2c4da8fbd6b3d23894ab693eb04d6b013941d229286665979882e802",
+    "bytes": 1008
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest.xml": {
+    "sha256": "077984b348edc69f2dcda0a5aa797c534daf4edba3935162e5d9b1468f814b41",
+    "bytes": 480
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.TinyContextDecoderTest.xml": {
+    "sha256": "a5604be76b9435b46f56746d8be9722f33b9377256f3b7301e6ca64266fcd4b9",
+    "bytes": 1254
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.TinyNeuralNetworkTest.xml": {
+    "sha256": "c0f3b100dde044866b1f388b996e658c75e47e786bce2b3e34fed0c1e5cef053",
+    "bytes": 1003
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.TrainableSubwordEncoderTest.xml": {
+    "sha256": "1c3e1d3616b1a876fcc99bd5cdaf5b6912e9360e70317503aa57db13c5c36a59",
+    "bytes": 944
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest.xml": {
+    "sha256": "938e12ceba6a49b9c0a04c298f56db604605d31cfbf0f060fc0709b4976d54cd",
+    "bytes": 686
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackTest.xml": {
+    "sha256": "3ce313243716267a1eb34d8a43b7e5dfe055e24bc508495e93da02f8f53c7f70",
+    "bytes": 985
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.lm.LmCoreTest.xml": {
+    "sha256": "8ece419535d2307e6cc6463e6a120b42e886ccfd11c24fd0b94188230960cd94",
+    "bytes": 1237
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.lm.LmRuntimeTest.xml": {
+    "sha256": "ccd80dba76318a0c9c1c1e3393d2f7855a495fbd5f2f241123b0de157a160ab2",
+    "bytes": 1026
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.lm.LmStep7Test.xml": {
+    "sha256": "d1269f7df116c96ac082caf4f3a91d453e2b4d9692b333699dffa640ea9dae53",
+    "bytes": 1280
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.nf.NfCoreTest.xml": {
+    "sha256": "3df36adac67bbbbe275b786b20ff32b867157f532ab420f4b883bddbb9fc60b8",
+    "bytes": 1191
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.nf.NfHybridTest.xml": {
+    "sha256": "a6e4ef622f64e7cd3f205bfe237b747e522193916dcc1999616bb8039f9076ea",
+    "bytes": 935
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.nf.NfResidualTest.xml": {
+    "sha256": "c9686bba519e1a90377c977da932f6b2de2d5f1ba3d51f3b913f2c88f72c3e02",
+    "bytes": 1568
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest.xml": {
+    "sha256": "588a283ff01ef6a37b2439c4046afd66737687d7893753af7d09cad47594f260",
+    "bytes": 1112
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest.xml": {
+    "sha256": "b093e3ea51e5c2435c152a3cddf460365f6ab0bf279fbffea7b892bc5a12551a",
+    "bytes": 678
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest.xml": {
+    "sha256": "0d8e806fb1f92a17ebdcda7b043059fcb0aff33ad88b6de0cc100a472edcd90b",
+    "bytes": 1258
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest.xml": {
+    "sha256": "3cf9594299c4b595a82ac739ab0089362bf070820da4e39a693e3c0abd7d559e",
+    "bytes": 1169
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest.xml": {
+    "sha256": "ba110d018a8e81a342ad68e95e03c2050ada59a3d755d0f5fee95dda18e821a2",
+    "bytes": 1771
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest.xml": {
+    "sha256": "86e61d192f357849bb0f33d8331254ca22f880a1fb1d311356292d797de2aa66",
+    "bytes": 965
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalConversationBoundaryTest.xml": {
+    "sha256": "92ed540cb75b30b6c994ff7202df08b2ee78c9d1837a6b1cc7fd7698c383eb70",
+    "bytes": 675
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelCatalogTest.xml": {
+    "sha256": "cbb38e79bd29389325dbbf721b621bd8d4749778ab7d900cbb3c01be717d8621",
+    "bytes": 815
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest.xml": {
+    "sha256": "d1968a587dcc0255694c6c3372ae3860b2250ab2b41573abfb08f8f6cabf8847",
+    "bytes": 800
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelImportProgressTest.xml": {
+    "sha256": "fcfed752a9eb502906482f7b7bb741376997f4d1d453d772336b969d62a779d3",
+    "bytes": 1672
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelImportStreamTest.xml": {
+    "sha256": "9a4809ac21c08f3e6130792e490e93569a1d67db740e33c310d56538466e7144",
+    "bytes": 1702
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest.xml": {
+    "sha256": "9dd30f3bd7b64b5e7df1f4acc9b86e846ce0675fea6dcc42296b301c43fbe1be",
+    "bytes": 508
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalQwenPromptPolicyTest.xml": {
+    "sha256": "3615427554846228a0e3d039d1465ea83b6febba57893be78ba5b5dd4e573616",
+    "bytes": 1092
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalToolTurnGateTest.xml": {
+    "sha256": "1ffd0c3665bbbf67b73efcdc5ad1265c67eb0c0c3270107301e924c466ec326e",
+    "bytes": 855
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumCoreMirrorTest.xml": {
+    "sha256": "9f6c09a7183a025e2ebb50fa52026a20837d162b68691c7c87d3fd34aa08cae4",
+    "bytes": 892
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumDashboardMathTest.xml": {
+    "sha256": "730461d69853ee2422017cb57a383e059606c929a3b13efc7a0b8875147f647c",
+    "bytes": 1013
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumGridPolicyTest.xml": {
+    "sha256": "27d1b9ff161fc70bcac100861173d09a3bf334895a56a85b5af6c3a5e495e0b3",
+    "bytes": 599
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumHologramPlexusTest.xml": {
+    "sha256": "b12f7ac68403fe94d77a0621ec1b3ee771562de2cd0a9a3d2cf8ac28728fdff6",
+    "bytes": 1019
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumHomeLayoutTest.xml": {
+    "sha256": "2c0ea5c7ed6c8c4ace90dd9e40b34a289b3225af5789ebb22b64cf0c9facbd88",
+    "bytes": 1152
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumOrbitalRingTest.xml": {
+    "sha256": "e5d7e01498b572980a2fbeb2b16bdc68c742364d55b4f087bfc3d418c18a9a35",
+    "bytes": 634
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ui.RidgeChartTest.xml": {
+    "sha256": "5873949eaa27e9693daaa119ce119f1e2f0a917f3c311d3af18ec9ec1f6f90a3",
+    "bytes": 690
+  },
+  "baseline/junit-xml/TEST-at.heinz.deviceai.ui.WaveChartMarkerTest.xml": {
+    "sha256": "10c519482d75e671df65a734ac2e5ecd52d16ddc898f251c3e85c97218410efb",
+    "bytes": 570
+  },
+  "baseline/node-contracts.log": {
+    "sha256": "e6fcb17655afbb45771ba185b0cdc8f6d7c893e36500829952d89d50253b9a7e",
+    "bytes": 11262
+  },
+  "baseline/summary.json": {
+    "sha256": "47b77c3952795ad06a42ef15b07764a071154cfaa3fddcdacb0fc8d960449c80",
+    "bytes": 426
+  },
+  "branch-divergence.json": {
+    "sha256": "4c25a225ca836aba6c1d800e2862f44f96650e0de75cab12618c9259d1c28cce",
+    "bytes": 2324
+  },
+  "final/command.txt": {
+    "sha256": "3301dd34d53188c2eeb674215e52bf147f884ae48a035b489dc1f1fef98cb1a3",
+    "bytes": 1232
+  },
+  "final/gradle-full-suite.log": {
+    "sha256": "9364673449de7d13d43b28d6272cbacc5c7890bd9b344cd0cdf91b556051e8ae",
+    "bytes": 12240
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.AgentToolLayerTest.xml": {
+    "sha256": "8f00c6db17f837608616d8013b6bce875ded8fd33a9fb96e077ccd36fcce58a8",
+    "bytes": 1281
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.BootstrapBrainTest.xml": {
+    "sha256": "2b3d7434fd64fe069eccf57ee4910f53114f962bfe6424c518566bf7e4604cd7",
+    "bytes": 1812
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.BoundedIoTest.xml": {
+    "sha256": "2643ae537bac0a8974e5c96f950a834b19c5edb5fc4bb6de108b63349e900072",
+    "bytes": 544
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.CheckedShellCallDispatcherTest.xml": {
+    "sha256": "820be8a1fa52fadd4eacafaa2928abf2139a58c0f59d9620b4ebcf35b530f266",
+    "bytes": 1047
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ComposerReflowDraftTest.xml": {
+    "sha256": "712fd5e9bc50c36116fc68ee74183efdb7a81919f9fc44fce4e6ea003e5d065c",
+    "bytes": 454
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ComposerUiPolicyTest.xml": {
+    "sha256": "2474ed6fb72cb08c0f1f17bcf7a063c3d10e0f4c0351e943b1aa8db4f3a0854f",
+    "bytes": 788
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumCcc1BridgeTest.xml": {
+    "sha256": "05f0727e07d9281125905e7d953fdfb750fdb35612e91f356b93cd5ec9674bd9",
+    "bytes": 836
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumCodingConversationTest.xml": {
+    "sha256": "5005cda16d7dd4dc3edf1f62028de8369a4e56af00191971981ad95784d31763",
+    "bytes": 2426
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumCodingPreparationReviewTest.xml": {
+    "sha256": "12402591f31542c834114dac7981afeb0772d2cc8ab5c6ce99a7e588778adfba",
+    "bytes": 804
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumCodingTaskTest.xml": {
+    "sha256": "371052c204ec2e90af24e67b8cf0f6e0356d045329a2b92bba8b4ee42145bfa2",
+    "bytes": 1339
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumDialogueSessionResetTest.xml": {
+    "sha256": "382cd354898bd40e3f68c52af244abc9e9cc43e0846b08403a73c2ca5543c156",
+    "bytes": 1285
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumGemmaRestorePolicyTest.xml": {
+    "sha256": "6b5af15e2d03cdc0082af2dd0b905442b737522b9ac11c64eebc94c96395bfea",
+    "bytes": 1335
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumM2StatusTest.xml": {
+    "sha256": "4731a7ae3cb622c3bec0a8e150d2c0e6565859f2e69e83f88461d17d82bc8db2",
+    "bytes": 1013
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumMobileBuildPlanTest.xml": {
+    "sha256": "c57edfc07a373087975fcf0e8bc8f2c04572258bb411739a220d186303ac24de",
+    "bytes": 741
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumMobileBuilderRouteTest.xml": {
+    "sha256": "7bfe96b87b38a99eb38819659b5c17e8adc28d17d464c0163ab68a73606c031c",
+    "bytes": 1048
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumMobileCodingJobTest.xml": {
+    "sha256": "0d220e0abcfa0e190fd3ee6593245de5d080a4e0072998ce410a7bbdc8ec439b",
+    "bytes": 983
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumMobileResultPolicyTest.xml": {
+    "sha256": "a511f5726000033c2a6184228c3691d4028ceaa735b041aa11875f168a955a94",
+    "bytes": 1655
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumNexusHomeSpecTest.xml": {
+    "sha256": "bf62c341c7d3282988f68b8667151b1eaddf6e02b89a93275d8db743b60fbeac",
+    "bytes": 720
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumOwnedAppContractTest.xml": {
+    "sha256": "939174718ba6edc33e15e54a8d0eab3492ee93b393898b6cf889363cbf646517",
+    "bytes": 861
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumOwnedProjectPlanTest.xml": {
+    "sha256": "05bda05ea1e32e429d54919923004ac6b2af7cb51448431cd5577a63a34a0e28",
+    "bytes": 935
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumSelectedModelsTest.xml": {
+    "sha256": "bf93379b112ef783d802fabdde263ce35883573f5308c63b3d7803434c01ae33",
+    "bytes": 1023
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumStatusExcerptTest.xml": {
+    "sha256": "612adc2fa6daeabecc28f988cdf5c07a8da011276fcdd758ef41e242a7cdf091",
+    "bytes": 846
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml": {
+    "sha256": "c332ae4b3eceb436b32fddd1b7f8ac121873fe28f131c1c68ec7829394d79ba2",
+    "bytes": 1224
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumUiCopyTest.xml": {
+    "sha256": "5372e43f339eaab8c0cd5eea277726b7e60ed98db191604fed157a070fe1f2cd",
+    "bytes": 1101
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumWorkAreaNavigationSpecTest.xml": {
+    "sha256": "32d5b5631bfc0cc5288f339842f88b5654746507b611e6a6a19f0b0d06d35554",
+    "bytes": 1091
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ContinuumWorkerChatRouterTest.xml": {
+    "sha256": "50d300e1355059c9c3fe80ed66fc7c9b8395f6aa6088cd9f3e82d7742479ff9c",
+    "bytes": 1707
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.Ctx3ContextTest.xml": {
+    "sha256": "bec02132edc82a37de38b1834a0123c329f6e06b8fbb85a2262db812593232a1",
+    "bytes": 953
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.Ctx3SessionTest.xml": {
+    "sha256": "3dda78f9a1f435363ed63f3cb3231ca1d64f9f617152acb6d39cdaeec75a7713",
+    "bytes": 457
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.Ctx3ShadowTest.xml": {
+    "sha256": "ab892fefdddea43a9e555bafaecde78d23ee37e09455c303114ecfb9015a6827",
+    "bytes": 727
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.DeviceToolExecutorRunnerTest.xml": {
+    "sha256": "bfaf7cef470f85747a0ceef04b5dc1c8027950fde18eea409e4f48e7f860baa6",
+    "bytes": 1149
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.GroqInvocationRouterTest.xml": {
+    "sha256": "b0fbb4128495d4a49a08e2192f4f04b108abeecd556358901c7e6358c621c8aa",
+    "bytes": 836
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.HologramAudioTest.xml": {
+    "sha256": "07d3e033412bceb63d187556886617e22d07f6dd2c9038dcb01903411694d67f",
+    "bytes": 1302
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.LocalFirstPolicyTest.xml": {
+    "sha256": "548a138ae43f2fa175bfc1fb3e0046252eea87954db3fa9f6c8793e13d6ade30",
+    "bytes": 1761
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.NeuralSnapshotCasTest.xml": {
+    "sha256": "af7425b15afb3c0f89fa4c53371e09d797f6b97c29458eec4b15cb9ff58e76dc",
+    "bytes": 571
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ShellExecutionTest.xml": {
+    "sha256": "e62a04893e8d9ff3bd84a54cec085e50515d6db51e3fa0965dc56eba36a1187a",
+    "bytes": 1833
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ToolExecutionReceiptStoreTest.xml": {
+    "sha256": "f27f3ebc4175376c6ad2931df481297f203fd8ca4c04db8ccc0e67be745db9d6",
+    "bytes": 1076
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ToolRegistryTest.xml": {
+    "sha256": "b30552234d32fec2c33099a18a8b42fb5fb4d61d767c3e0e84afa9c18edff2ee",
+    "bytes": 750
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ToolReplayGuardTest.xml": {
+    "sha256": "8231f9535cef8f0b090785ca6aa2f0e60d2e10543f3db0b81ee84dbb2bbb9492",
+    "bytes": 573
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.TtsHologramSignalTest.xml": {
+    "sha256": "22ead68bf203cb7d6ae2dde34febb8c6a0659cdd19ecb8bf11d4565dd518573d",
+    "bytes": 1271
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.benchmark.BenchmarkRunnerTest.xml": {
+    "sha256": "435ac788ca5de1d98793bbd5afa96a8c8d81e37d4ec100c7d0d0dda2d7ca5581",
+    "bytes": 2058
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.AdaptiveIdentityTest.xml": {
+    "sha256": "6958b056c3e593e670041d7a267b8021f96d0a9890d2e3f4e5671ac96a8e0551",
+    "bytes": 3348
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.AgentCancellationRegressionTest.xml": {
+    "sha256": "f908d80c242e34d274f9116c7c5028171366552c520c09e27c1bb3cbd068bb26",
+    "bytes": 826
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.AgentCheckpointStoreTest.xml": {
+    "sha256": "b6b79b41a166f4d891e2e4a7fbc2282288887e53d0b25f732dc87c92d40ef3ca",
+    "bytes": 632
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.AiContextCompilerTest.xml": {
+    "sha256": "3f5e98dddc6554de6c2d21d21f5c0b277ffacda78f101125ef1c37dd33cd9d9d",
+    "bytes": 633
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest.xml": {
+    "sha256": "d3666c449834ff53ed2e115212eea15145dfa9972c3bc9f5e190f069a4325061",
+    "bytes": 1671
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ApprovedWebToolGateTest.xml": {
+    "sha256": "3017c577a2c708c2471bc5669a21bcdb968399ae1bb09939fe8284f358790753",
+    "bytes": 1277
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml": {
+    "sha256": "f0b3ab71a7de8fada37a0763a3cdde697d2cc0fd575d0f10f951ff973528e94f",
+    "bytes": 1401
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest.xml": {
+    "sha256": "8d9063c5b0ecd2e874b6e92b5288862f1c93486cce12c36782094496434cf7f2",
+    "bytes": 677
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.BoundedAgentTest.xml": {
+    "sha256": "d218e788cefc5edabb09d4d55823d76e221c969c20701f0d37bb761c8a482a7a",
+    "bytes": 1234
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ChatReasoningRouterTest.xml": {
+    "sha256": "970594534779979e1bea9c975b15d22fab05a9be074701c57dd8186a9151a58c",
+    "bytes": 1576
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml": {
+    "sha256": "df9ddd29d311c7637ef7151ff4a9c743ce2e8c9fefde259b2ccc099bc4ccdcf4",
+    "bytes": 1806
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.CognitivePersistenceTest.xml": {
+    "sha256": "7db4eca75badc1d95df348818f50da2f19ae2c8ffb201b40c9a17007a2740e76",
+    "bytes": 942
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.CognitiveRaidTest.xml": {
+    "sha256": "8a2287d7408a95c87e94d41df33a0ce697832599d0af0c7f6c71ff0048d1d31f",
+    "bytes": 620
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.CognitiveTurnTraceTest.xml": {
+    "sha256": "fe2b11618904ec34134a1c378098d7105bfa2d58bab92f9b0ad1f9fa763138a6",
+    "bytes": 972
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ComputeFabricTest.xml": {
+    "sha256": "adfb0aab57a83ab7612c311d8c1f121804a2f4ea74bfff6cb33a90b556cf7d31",
+    "bytes": 1561
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ComputeResultVerifierTest.xml": {
+    "sha256": "18b273537380d5759dad06479322cff39957bc33e9a5add2bb17045a765dc578",
+    "bytes": 756
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumBenchmarkTest.xml": {
+    "sha256": "c2f1674a3edf7391269058c33ec4d45b96bfadc406bb0a859470a90079f488a2",
+    "bytes": 625
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest.xml": {
+    "sha256": "1d623294f73b3f7a43b14336b3f2c68198b537f8fa9665960ff0fd2a0414ceba",
+    "bytes": 1257
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumEvidenceSwitchProbeTest.xml": {
+    "sha256": "3c1fe52fec7cf719a53a55cf648e7e121eb1c75386fbaab194507d1f92ebd26d",
+    "bytes": 4172
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test.xml": {
+    "sha256": "f5dbfd8e1c327c9422fa8a0189223fe7ddf6c9c08a138c134afefc1d27ca5e61",
+    "bytes": 1129
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest.xml": {
+    "sha256": "b2e1bbf7215337b00ad8082e0175bbc106c2238d6a599026b732993dc9193cee",
+    "bytes": 1735
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest.xml": {
+    "sha256": "5132fa6979316375a710886dab8ba7609e675a778e45758cdbaedf2302c38f3a",
+    "bytes": 627
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumSeedStoreTest.xml": {
+    "sha256": "5d09c5501a8ffb024f1ff914858fb78e25ee5e5c6ea2587db31abe9baf71b93a",
+    "bytes": 465
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumSeedTest.xml": {
+    "sha256": "1341cf6a3c6d25d09707fe8f52db117218a56e9b9fdd486f630b94eea5944e23",
+    "bytes": 840
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumStateTest.xml": {
+    "sha256": "9b636d7b573dedd4087b54318e3e00eb9a61a93919ce06cce0d33900cc40ac8c",
+    "bytes": 705
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ContinuumTaskClassifierWordBoundaryTest.xml": {
+    "sha256": "e03cb0dbf3fc4aba0ec2bdc84d9252b3a058e552b868e46f57e8e6b4a9adb79f",
+    "bytes": 948
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ConversationControlTest.xml": {
+    "sha256": "5c9880e4934ebe7f4971f35fb4f9d4d321b6c8ed46e37e8b0ac23aa36036c3ae",
+    "bytes": 973
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DeliberationTest.xml": {
+    "sha256": "536d946c1f4bd1cbeea66f484c2ca75f3288c66f656bd5404974086af581017f",
+    "bytes": 882
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogRoundtripTest.xml": {
+    "sha256": "acf8076207e1ee6646b031c9664ea831f9d29fa4dfac7a50de2fa7410153119d",
+    "bytes": 498
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogTest.xml": {
+    "sha256": "a2ad1f2568c97949d3f8c2a637243fee4fdae2ec51cd15818d9f1ea72c4b6d2b",
+    "bytes": 2918
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentClaimGateTest.xml": {
+    "sha256": "6b889173bca66e99d1c0470600a5a20dba96d04834b5776441ebdcb75b722f12",
+    "bytes": 647
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest.xml": {
+    "sha256": "29ed38cee42224564dc521240d1b567916b640c265e05fa4e3a60b4d861316b4",
+    "bytes": 4143
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest.xml": {
+    "sha256": "945914b3d395eaeea2b4acf2cd5eb6d15d95c32788a99e1b8d5ae056124e65c8",
+    "bytes": 1372
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest.xml": {
+    "sha256": "20b2c70036c053b8a246097d222000bbef7cddb22df1c82b1110bc2c906529ad",
+    "bytes": 2009
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentSharedHashTest.xml": {
+    "sha256": "640cfe3a2c8659962a375bbfd0f1b8d1a424456850f0a371959ead469b2ae586",
+    "bytes": 766
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DevelopmentUiControllerTest.xml": {
+    "sha256": "11ffc8d2d004f9999fcd003258c7cd402e72703f12299ec28a461518dd25e485",
+    "bytes": 1687
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest.xml": {
+    "sha256": "9c95894cc45bdeb184fedce388302a52618b6516827bfa9784ddce5bcf4c6626",
+    "bytes": 1536
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.DeviceTeamleaderTest.xml": {
+    "sha256": "61ec35e612cd5d432a131968833aa5c4124c690c45483711aa97099c6b2718f2",
+    "bytes": 1992
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest.xml": {
+    "sha256": "bcdd276aa3491c5700de2edfddc07f1c1c01cbfe6919a8bc02670dbf13396d65",
+    "bytes": 1556
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest.xml": {
+    "sha256": "b7b65e1c92ccbd0639094b10ea911380c102151f3d2b3c2262d66d383b8614fd",
+    "bytes": 2174
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.GroundedWebRecallTest.xml": {
+    "sha256": "3401811bb0ab14fec9b9499d5c4f0e8d4abc17a452d94b125d9b02059502d829",
+    "bytes": 743
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest.xml": {
+    "sha256": "8c7108d147f179fc1dc885a69372043b83f75c30ac303ee8ff2281cf108e1097",
+    "bytes": 782
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.IdentityStateTest.xml": {
+    "sha256": "7252e28784675fe493047db51d376d71e3a83bfbc19b630dfbe46c5c7b5bc808",
+    "bytes": 1040
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.InternetConsentPolicyTest.xml": {
+    "sha256": "b6c2ade1e23cc38a93903254d03c576d05ded106c254f33cbb6c792e0bad9217",
+    "bytes": 1147
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest.xml": {
+    "sha256": "d06a4c95b390e815815407137b165e4b1d07f1683f39cb8d1b23ddfd00d27238",
+    "bytes": 1682
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalGroundedRecallTest.xml": {
+    "sha256": "c6ff24116dade514cb1f0677e22cecaa26d1cb06887fab92de63559d2b4a33c7",
+    "bytes": 809
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalIntelligenceIntegrationTest.xml": {
+    "sha256": "b80e058dfdba4b0e0d003de6944e5a70cc8decfc2ec25e796856ef4ccbabef5f",
+    "bytes": 1329
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest.xml": {
+    "sha256": "4a56703ccb6ba4b292239528172dc9a2cd4f1d850b14e4a6e84180675b6e15cc",
+    "bytes": 1141
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.LocalReasoningBoundaryRegressionTest.xml": {
+    "sha256": "a300572ae88f341139036b838c7f9d5ad9589d62e2e5080b7ac18fd45704e54e",
+    "bytes": 1266
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.MemoryEcologyTest.xml": {
+    "sha256": "b0dd6d9bd2e7c9a3c52f0c506b8e19f7695f9f40f10467a6926bd9d1cb1eba42",
+    "bytes": 1692
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml": {
+    "sha256": "4e10e80f0001904832ce91ddd98026e6b636813abc4c0bc35dfb3b8805258adc",
+    "bytes": 1318
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml": {
+    "sha256": "19592486210ca7eaf576cf203a8c1ab4f51b527e5b73efa6641a3a853fda0d76",
+    "bytes": 1775
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest.xml": {
+    "sha256": "6e1cb34741a4a1b22a5efe61cb0dd00e0d68b49b7573ce190d908fc161d98404",
+    "bytes": 525
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest.xml": {
+    "sha256": "1d304d29fac3c6bf9ca565e482ace336c3e88191e5f1d7db61f8751d15f1c5d4",
+    "bytes": 827
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest.xml": {
+    "sha256": "09e4acf4246adbd4903514c875d0cfa4cb3c998d05b52c0beafd0b08357d052e",
+    "bytes": 971
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchEngineTest.xml": {
+    "sha256": "e63ea178b2ad96850a6a6cf1aa3ea3f28f519e571b2b580d36d18b862c8b3bca",
+    "bytes": 2430
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchHttpTransportTest.xml": {
+    "sha256": "ba1ff62ab58851c9cd09be262cd719d7878e831675d7c622ed9fb10dbd73d311",
+    "bytes": 1129
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchNegationSignalsTest.xml": {
+    "sha256": "94803f75aefe3e284d591fd5306511d07705fbe277e2470e414ff1df0c667125",
+    "bytes": 918
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest.xml": {
+    "sha256": "57f5745f882efe338de78d7e37aa3f8276f17fba304627c251e37175643796b0",
+    "bytes": 1082
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest.xml": {
+    "sha256": "20c51843ce03e1f824e6d02805d65cc5418d8fe1265c88288cc739e7bdaeb9b5",
+    "bytes": 950
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.ResearchTest.xml": {
+    "sha256": "51ecbab7442415ac6579b38cf2bfc13a037812311fc3802c878a561961da6f3c",
+    "bytes": 1212
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.UntrustedResearchEvidenceTest.xml": {
+    "sha256": "c5ef3be79d7d82b3cdfefe78376fe2bcb9fcd055a8d09940e42ae550f80f6014",
+    "bytes": 1040
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.VirtualModelFabricTest.xml": {
+    "sha256": "0a97d5ab18e50f7c22b9d596844859b84031d0085fb826737f308d01f3ad2bcc",
+    "bytes": 804
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.WebLearningInboxTest.xml": {
+    "sha256": "b8b5f6a90cb6f25e4a5134a63436f436c4d622880de14193cdc2d984fa1320a5",
+    "bytes": 920
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.WebResearchIntegrationTest.xml": {
+    "sha256": "eb2e71130b34d3677a3208883e264758bae314283562c8f61a861f9dc351a261",
+    "bytes": 1465
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest.xml": {
+    "sha256": "04aa0c2b25f902c89ff1d3c630cd34bc12afe35a6ad9cb9d505bb7ce94d0b1b6",
+    "bytes": 1154
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest.xml": {
+    "sha256": "df4e7d3935bcfb96c0c62025769ee83913ece367943aedd17ba4accd0700abf1",
+    "bytes": 1141
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.diagnostics.ContinuumDiagnosticsTest.xml": {
+    "sha256": "2e12c52469af3de0e2d140acb3b7b45428e675b86b330726ba8c5f7169ee5ca1",
+    "bytes": 1411
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest.xml": {
+    "sha256": "f11077531d50cedebf19cb5052ac1d7c47b28c4f3c1571f21324a5ea9c10353f",
+    "bytes": 533
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest.xml": {
+    "sha256": "f2c0c81450b5cdeab6e2418f2080dfaac6c09a069dc68110e903652e6025deaa",
+    "bytes": 674
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexPipelineTest.xml": {
+    "sha256": "ac66d37d13644d6a5234c09355d5d926514865e4bb2c38c6b8af1c533ca83636",
+    "bytes": 578
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexShadowTest.xml": {
+    "sha256": "78dbf4424ca1132f4b68edae3438b444cb34b5617df6c7417056aedd3aaa23fb",
+    "bytes": 572
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest.xml": {
+    "sha256": "3c8bdf191aea596c6da3ab5ffe9d0e42150e87b5d652abf771e460910612ec09",
+    "bytes": 1840
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest.xml": {
+    "sha256": "c87ae8af1f0079a447f96b825edfecbefd055eb37543f1ef27e5bbe0ffc186c1",
+    "bytes": 1302
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2NegationTest.xml": {
+    "sha256": "e01661093e8ab505b963fd1c1697a0dc02e9743032e442d381e2ef3cb1fddbe4",
+    "bytes": 945
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest.xml": {
+    "sha256": "bc123f88c8338410c1437189942bb43e99b38944ef5483ea0acced3b0c382f16",
+    "bytes": 823
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest.xml": {
+    "sha256": "04234ed1a923f56e252ffa66179d986bbed56730c397757c1c4f2955a159f0f9",
+    "bytes": 787
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest.xml": {
+    "sha256": "0562be9bbf7433c2158f8b390d9c61071b07d617cf66684aaa057ca62c5a5200",
+    "bytes": 697
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest.xml": {
+    "sha256": "f1a32d99210fc30b54702ea23a41f04ed74ced643ccf762f7ec30c3ab04a2340",
+    "bytes": 785
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.Cdx1PatchShadowStudyTest.xml": {
+    "sha256": "6650103d7f1252c73d64784216bb9ac4829b09177a104e66eb6b7467027953df",
+    "bytes": 627
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest.xml": {
+    "sha256": "f6472d1ed4c1e20f8529af69538816873a5ca11dbe41f0966dacd91fc2a3d6ae",
+    "bytes": 1200
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueCurriculumTest.xml": {
+    "sha256": "d499af0d2b607a0a3ff77026920159bb07268ca49b2664f8a122497a90cdab16",
+    "bytes": 935
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest.xml": {
+    "sha256": "1aa44890a4c2ec41c3fb897b232f32dbbe8b1b8547912131b0b91fdeafa57b68",
+    "bytes": 998
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumAutonomousSchedulerTest.xml": {
+    "sha256": "05351263c716bb86ce312445c0507aa1a29da0dab66787ad570c185a480ee378",
+    "bytes": 1279
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumBimodalConditionerTest.xml": {
+    "sha256": "9427697fad96a6f902765af534b028accf1f4b3ed4accfcd2e55302fc3353eba",
+    "bytes": 764
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumCycleTest.xml": {
+    "sha256": "b0149420cc5047920df4e5762090bed369005c14a400777f5fc8516ee6595216",
+    "bytes": 701
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest.xml": {
+    "sha256": "6e97a194cb161610eb0c0a6443884b3d6b8c2b8fc0f889340237777af6a5d349",
+    "bytes": 1323
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml": {
+    "sha256": "9bd1daea23916f4437aca2279c0c9ca7953cc610a665013b2e201d7613ec0641",
+    "bytes": 2640
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveGateTest.xml": {
+    "sha256": "22b42d67d9092e7be510f02feea477e79f6733461d9b4b03260407f44dc5e510",
+    "bytes": 882
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveParityTest.xml": {
+    "sha256": "49f6f5cd2df2a95b736cba9709514dd66048509dc5c1950e4e6a3a75f6eb787d",
+    "bytes": 636
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumContrastiveViewsTest.xml": {
+    "sha256": "f889cd84f8d1ba299c2aecd83a0e09d25f7f09293177a0f389ea2121ec094705",
+    "bytes": 772
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDecoderBridgeTest.xml": {
+    "sha256": "e9362063fd8e77ae7ee4d6957d1670ad8f72315aae8ff7c45e34a96de01c95c0",
+    "bytes": 2636
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest.xml": {
+    "sha256": "e3aed8e6018e0c41fa6e33e066d4d2ce36da8729145792426721184387c9a75f",
+    "bytes": 511
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDeviceTeamleaderSchedulerTest.xml": {
+    "sha256": "86b64287fd86809cc688b4ef02ab533fcccb3fc91abc114289d58b2e5d597cf0",
+    "bytes": 1010
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDialogueAuditTest.xml": {
+    "sha256": "620fbdc5be50419a566a777905636334eb22d2b9280cfe835c0cea21dfeff741",
+    "bytes": 835
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest.xml": {
+    "sha256": "2ec37fd8564cf53822f18d7edcf9b26b9a61ac244d7c08f47820b0ebea18d829",
+    "bytes": 2616
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumDualCoreAutoStudyTest.xml": {
+    "sha256": "a907f3c1c616eec937d8dc89c9898c9f5c5a6c73b0636ba8d43f56e90f979633",
+    "bytes": 484
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumEvidenceSpanProbeTest.xml": {
+    "sha256": "bb73fbe0a6175940aa44b4641369aedb338e05f8462a3b5cc2ea28ed70672bcf",
+    "bytes": 788
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest.xml": {
+    "sha256": "8c940dd59aa9e5f163c261c69379df21d389f99fdf279a1c87aafd3263d2e3cd",
+    "bytes": 789
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumIdentifierGroundingTest.xml": {
+    "sha256": "f5f53951b70a398b7858f3c37d6c5dbfde4bf5ed7d04cebbb642e74083b3f7ff",
+    "bytes": 704
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest.xml": {
+    "sha256": "ff61e8999fef206180fda6af28437db82c4df3500a67b2841b37e937acf55076",
+    "bytes": 2029
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest.xml": {
+    "sha256": "2612e5d014818b9134a4c9e86797f65ddedbf0920ed842f586337137fc9280b6",
+    "bytes": 2589
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumLearningCoreTest.xml": {
+    "sha256": "1a2519ef0de3d884395064e0573630ca617384a9c00cb2c875ef3f911d5f7837",
+    "bytes": 2856
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest.xml": {
+    "sha256": "b415a84dee37971a929c1cbadf4b4543075c763f9d1da1d1f2ade1a5491879f2",
+    "bytes": 824
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumMemoryDialogueTest.xml": {
+    "sha256": "3a8263765cd4e41824fd3fd6e3a326755289470154ffbdf23b52d78f3d22d376",
+    "bytes": 2917
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumOfflineLearningBudgetTest.xml": {
+    "sha256": "0ae3b81d4f2a6bb7b923526a517e9723ed899f76928d0f115d822c94f4979832",
+    "bytes": 1271
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumOrthographyProbeTest.xml": {
+    "sha256": "5a21e0a23ef7aa9fd7f5b46b0749f45363841ea797a1849eb4561a0d05fe4f14",
+    "bytes": 766
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumOwnerFactTest.xml": {
+    "sha256": "bb34f14bd0c7a8839925c9932d97c6012b73e26bc8ea8922ed17e1658b1cc913",
+    "bytes": 1362
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicCurriculumTest.xml": {
+    "sha256": "b413a56c9198f251d0886e2f9aaa15603997c47e85746cf5a901496496a45881",
+    "bytes": 955
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicModelPackageTest.xml": {
+    "sha256": "7a16eb54082f3edbe642e6ad201af755aeb14e6b862519496c0fe5a0186018b9",
+    "bytes": 1184
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyCycleResultTest.xml": {
+    "sha256": "2edaa9441ec8be7f3171267edd336bf21246a4accdf5b14c94313034c00c5eb1",
+    "bytes": 1186
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest.xml": {
+    "sha256": "b458e2d2ef753fff3c97976cbaf9c55e2b52bccebcfe62c957eaebb24d4823dc",
+    "bytes": 1745
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumPublicStudyPolicyTest.xml": {
+    "sha256": "31527f4b6e4bc58f30224f21aa6e407cbd2b0adcf57875323a178f2103bc5534",
+    "bytes": 788
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumRuntimeEventJournalTest.xml": {
+    "sha256": "3eae6722384b0a5ea379958b373ae58054b2d98fa9d291cbac9f1c01c0409032",
+    "bytes": 647
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest.xml": {
+    "sha256": "394f0c63ab4703c3128dfdd40c151a324ff721de499ea549b8a1d72b50dc64f1",
+    "bytes": 939
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumSourceNoveltyTest.xml": {
+    "sha256": "8ae0fe1fd99aa1e2329a3b572fa8ce1475793092f0df4a0f942baa93caa585ba",
+    "bytes": 617
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest.xml": {
+    "sha256": "e01771d6f6d9a200eb5ecd5401d20a74e84189447b9faec0794b82f391fab62f",
+    "bytes": 1270
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumSwb2DecoderResearchTest.xml": {
+    "sha256": "584850db5bbf9973769afe922dd08c87934ff7e867eade10e20f37aa3d518e30",
+    "bytes": 501
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ContinuumTopicFrontierTest.xml": {
+    "sha256": "a3a856773a50b6de8fed5ca900ff5f1c42e42342be32281d90223fecffd03750",
+    "bytes": 971
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest.xml": {
+    "sha256": "77e1cb60a4b81213606f6703f44d137bac162bcf1f01431ffb33c91d86f789d5",
+    "bytes": 787
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.Cre1InferenceEncoderTest.xml": {
+    "sha256": "1707e4bc8c102583ffb3f1c34779cfa9ce8dfd0d4987126840c9ae26c0706df1",
+    "bytes": 606
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.Cre1PromotionAuditTest.xml": {
+    "sha256": "5aad6f0c416fcb5aa70676989928fe5a3169c17a5be0aef333ff06510025f219",
+    "bytes": 1110
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.Cre1PromotionGateTest.xml": {
+    "sha256": "1dcf555a269ceb9faac623ce2f250706b0d6babd3fe163229a2a07db8298f770",
+    "bytes": 1217
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.Cre1ResearchLabTest.xml": {
+    "sha256": "c0743fad1b1f4a966c361f09294b5e4d0887f0ebabfd0244524edcbae07b3100",
+    "bytes": 1091
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.KnowledgeDialogueTest.xml": {
+    "sha256": "1375bc6a8ab64c0832ebfa000c296acd053a74d59b42b135edb6866774959893",
+    "bytes": 486
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.KnowledgeReasoningTest.xml": {
+    "sha256": "e0171dc1d783034a150d6a213cc05209a77835a96202427f231f4b659a8024f1",
+    "bytes": 1064
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.LearningExperienceStoreTest.xml": {
+    "sha256": "65c73370ab3a6fbed27d99223cbecc607d6f5650d89f0ca6ab70605006af5085",
+    "bytes": 937
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.LearningIntegrationTest.xml": {
+    "sha256": "a91874b6f8b7224194eaf414c48fc9bfe6a32cd6e6d3e77caabf054005eeabab",
+    "bytes": 650
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.MentorConceptNetworkTest.xml": {
+    "sha256": "834469d69af0cbd8960b2b4f4ce4fa2f986964e3f4b7c9137abfb89b942bf8b2",
+    "bytes": 923
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.MentorCuriosityPlannerTest.xml": {
+    "sha256": "7f81961dca6adc150309eba43d172559dc2b5f0d303f5c233dfd706dd70c306d",
+    "bytes": 897
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.MentorCurriculumTest.xml": {
+    "sha256": "b8745d4d2bcd2ebdf72bf6e40eda2599ec6432127c30dd1afd6830a1388b8518",
+    "bytes": 596
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.MentorRecallTest.xml": {
+    "sha256": "c77119474b7bb44e2350280bb18104bf3dc4a4c70c033f7fcaeeec7297017584",
+    "bytes": 588
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.MentorSemanticModelTest.xml": {
+    "sha256": "b6f0409f829b3555686878f7a9ded779875d57b72d7a6db00d63573bd722a56e",
+    "bytes": 905
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.ModelCheckpointStoreTest.xml": {
+    "sha256": "2d8648aeaa6a6b8f2b92b322ef31057304382216239097bf2b040109ec27c795",
+    "bytes": 1622
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralCommandParserTest.xml": {
+    "sha256": "6938d17b7b46198ee80e46592f0b5ad3f4b9d36099bb68cc81b668e06e8e1d6f",
+    "bytes": 475
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralCuriosityRadarTest.xml": {
+    "sha256": "fdd14878f421b13228097bbbd5bae53cd5f157b793cf4c996a456bdd019acb3a",
+    "bytes": 634
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralDemoSandboxTest.xml": {
+    "sha256": "b3462465abcd4b1bd6e63a2b65aa29f24e1093e4115e00e2d5783d951003e27b",
+    "bytes": 772
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralDialogueTest.xml": {
+    "sha256": "152672552c2f45f4d387adcfbf894d3115c185427c9a7b982a4c885d6f65fcde",
+    "bytes": 1382
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralGeneralizationComparisonTest.xml": {
+    "sha256": "a34c27dc1baad956ce8c6bbe8fbd273fd3390f942a6c235c834eef7645f92f3e",
+    "bytes": 1012
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralGradientTest.xml": {
+    "sha256": "0c71ea73f39103aacbb3803bc5e1e13d9f93e570e31c21a8fa4dbeedc9130a31",
+    "bytes": 614
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralLearningCoachTest.xml": {
+    "sha256": "5c898408e4686e07baf682220fac849d7a94cf1687aad9cd04095d97529e389d",
+    "bytes": 1040
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralPracticeTest.xml": {
+    "sha256": "048f1ffd7dd7b4961c448c99224faf4862abb6e2c1e775237d9c4bb4c628f403",
+    "bytes": 1159
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralSnapshotImportTest.xml": {
+    "sha256": "7a45304d463afe43c04f1146a7394fbacbad00c7bf79564abd0ae2edae384689",
+    "bytes": 807
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralTeachingAuditTest.xml": {
+    "sha256": "64a7fd192ad7d05cb9dc3c09a64c29d2095e2b89d8ca595e4752934cb0988304",
+    "bytes": 1077
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.NeuralTransferExperimentTest.xml": {
+    "sha256": "bd7d1da28711ef929aab6e9dfa34f145a723181abe12b18a84f4d7fbba2698a2",
+    "bytes": 835
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.OnlineNaiveBayesTest.xml": {
+    "sha256": "cde1dfbbb530b3ff22b3f7b0dfa1055e7d7eaa52e77352795fe2b871791537d5",
+    "bytes": 617
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.PersonalLearningTransferTest.xml": {
+    "sha256": "8fc082e02a0ca27d629d8a71568cde8bca4ccd70822e5e764aa7b77144cf66b0",
+    "bytes": 1805
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.RetrievalBenchmarkTest.xml": {
+    "sha256": "1e0e8d3016656b6c56428e920100b6bae5e20e49c1d6c155d9f7a679a26b1003",
+    "bytes": 764
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.StrictJsonTest.xml": {
+    "sha256": "5442d4d1a9cd801650d7cc5eb0dfbe79f29d1634affdf27226d23c03320a9301",
+    "bytes": 1012
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest.xml": {
+    "sha256": "7f5d32f5fa0d291b3f6649bb5fae4570d3976b3188c58f9d6723a918d3991487",
+    "bytes": 480
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.TinyContextDecoderTest.xml": {
+    "sha256": "e6123a27db98235921cc571cadc0d4df01ecd15879efede19ce52dd4bf43c1a2",
+    "bytes": 1256
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.TinyNeuralNetworkTest.xml": {
+    "sha256": "4615d3d494e3fd625150450be065d0e596d3770b9db929fcef18d3f1b434dfc5",
+    "bytes": 1001
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.TrainableSubwordEncoderTest.xml": {
+    "sha256": "62ae84a23b6526a1c8ed24243059c483dd997cd23deb0e0748912d96c3a8062d",
+    "bytes": 944
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest.xml": {
+    "sha256": "0793acd8d6390b11c9fd252caa5f39e2e0b9655271807fe61b0c95168302bdbd",
+    "bytes": 687
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackTest.xml": {
+    "sha256": "e735675d2409b2e26ddde58cc920b31507f155c5327d035938aa3352e1783f40",
+    "bytes": 983
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.lm.LmCoreTest.xml": {
+    "sha256": "36e51a415fa2ce86fc3f1d043047bbb13a7e317857c92bb6604e8b0c14d66992",
+    "bytes": 1237
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.lm.LmRuntimeTest.xml": {
+    "sha256": "3360a9737e59d7bb7ebd0632181c30abe0108d9c2b73c52b777318986733e09b",
+    "bytes": 1026
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.lm.LmStep7Test.xml": {
+    "sha256": "7301f71b06d77c1c18c61a960d9e96d97c9b7f64e00036496dc2b5d6b8bdb840",
+    "bytes": 1280
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.nf.NfCoreTest.xml": {
+    "sha256": "0352f6e5ff0082410c33793906391589f733b498f05119ed716c4509d403e1e3",
+    "bytes": 1191
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.nf.NfHybridTest.xml": {
+    "sha256": "0d9ad439c655eb9c4abbe35179e19f4bec52ac53cbea45ac69929fc3f874d230",
+    "bytes": 935
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.nf.NfResidualTest.xml": {
+    "sha256": "cc428cdcad79e3afb3441419a669ba9dd250af1f9450e4d4522e2e34db9647dd",
+    "bytes": 1569
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest.xml": {
+    "sha256": "aec594159db0b52b9c3acdefc987be691dd9c773dd0f3b582cb422f09851df05",
+    "bytes": 1108
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest.xml": {
+    "sha256": "1c93923dd40d038b063904be9dc12f50bdb322cdbdeff8cebe1ab982819aa05b",
+    "bytes": 679
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest.xml": {
+    "sha256": "44da45786f22723c192a4ecea5f919a8364c4fdc8493e9f55af86291747ffac5",
+    "bytes": 1258
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest.xml": {
+    "sha256": "378f65438e5df948ca6f0f150779b16217735c1d8d29469fc435ad7c2f94aa7a",
+    "bytes": 1171
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest.xml": {
+    "sha256": "4a72a409cc6df3f27049d8e5719a803e3d0c57233482de0b779d0bdfa1a4fd77",
+    "bytes": 1772
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest.xml": {
+    "sha256": "eb9ccf2e2ef44f0f9aae870f42b5625539415804774d0ff3dc344c62d4ed2112",
+    "bytes": 966
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalConversationBoundaryTest.xml": {
+    "sha256": "d6cb87e0300e923d60728fe89c41dfc8ed10961773f633c84c6d335ee07a081e",
+    "bytes": 675
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelCatalogTest.xml": {
+    "sha256": "9876c97f025679b00d72a76743654a520699393d9e03b813e1ea73ef6320020b",
+    "bytes": 1144
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest.xml": {
+    "sha256": "03f9ec6872c2eb1056814508dc48bf75f789513eb0e6dc8df2c1416e5d27af1a",
+    "bytes": 796
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest.xml": {
+    "sha256": "d9877a1a2d80a8a1bf3dc6345478bd1694d5566f36a8e2f2f1ceab4ed52bde01",
+    "bytes": 1059
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelImportProgressTest.xml": {
+    "sha256": "ee56e43bef669e43edd7b93efafac30dd7ad5ea6aadfc724dad4dea1b5293b14",
+    "bytes": 1664
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelImportStreamTest.xml": {
+    "sha256": "20052a381191d61ced651ea3a033e02f54fb4e5a0e2da4d8f85b5159806f3130",
+    "bytes": 1696
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest.xml": {
+    "sha256": "9e974d543faeaee68694e8a3372dff8d0e7e8a073700e8dc88c70d3b8c3dddef",
+    "bytes": 508
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalQwenPromptPolicyTest.xml": {
+    "sha256": "ddbcee109f3dbce0bde6650eb129b06b299d2d114082b6537354e373ae8ea77f",
+    "bytes": 1092
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.localmodel.LocalToolTurnGateTest.xml": {
+    "sha256": "42d6a184672144d70191f35ba9c08b7c4c1b52db39617e5c75e237a533f1d643",
+    "bytes": 855
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumCoreMirrorTest.xml": {
+    "sha256": "bbca180552f90df8e59d022a90855b526da0c893d4a446cc6e18715b24d4331f",
+    "bytes": 890
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumDashboardMathTest.xml": {
+    "sha256": "08b4e15d21cd02b3dfdc8212e99347a5f12f1323ee0233ed2179a3ee9fe88870",
+    "bytes": 1011
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumGridPolicyTest.xml": {
+    "sha256": "a2244280b89311050a3d8397c98b63b775e9673dfdc542b5018ae9c29cd6bafb",
+    "bytes": 599
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumHologramPlexusTest.xml": {
+    "sha256": "c5068b90ba5278c5e4f862e9a439037bd3acfaaad24d4e72ef2751ea7361dd56",
+    "bytes": 1019
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumHomeLayoutTest.xml": {
+    "sha256": "6c9314fb98ff2b7bd05a672e9d2ec2fc4b0f3cde408d6d68365f4d8458bd0b56",
+    "bytes": 1154
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ui.ContinuumOrbitalRingTest.xml": {
+    "sha256": "2067e437c3c916533e507cb77db8b387ef31bb2a78296e0b1b97b9b5e7fb2a89",
+    "bytes": 635
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ui.RidgeChartTest.xml": {
+    "sha256": "316158f23a045a4d754b14ed44228fd90a22be746181b4acdc68ad153037496d",
+    "bytes": 688
+  },
+  "final/junit-xml/TEST-at.heinz.deviceai.ui.WaveChartMarkerTest.xml": {
+    "sha256": "1b07e941a43641479f260379acaf9023beace4b426ceb3ea018ad772a7780dfd",
+    "bytes": 570
+  },
+  "final/node-contracts.log": {
+    "sha256": "95c0437208047e8125742078b80da9256c7cc8677b56d4a310fede2eefb5097a",
+    "bytes": 12642
+  },
+  "final/parity-prepare.log": {
+    "sha256": "57772f4a65ecbc88656231d46f41203d2ddbbdf7cb2e2c170877a125756731c5",
+    "bytes": 117
+  },
+  "final/parity-verify.log": {
+    "sha256": "b06bfc2aac890819fda996f283fe4d9feda2a7e8a261cef213a0e92a35fd6e01",
+    "bytes": 309
+  },
+  "final/summary.json": {
+    "sha256": "2bc9b4440087c3e888baf275d10fb124fd155dc216dc3b312e5e306a7a58b077",
+    "bytes": 426
+  },
+  "integration-gate-final.json": {
+    "sha256": "e4234b80cc816b4358631ffb9829afdd2847eb0b7da445b58d285d223ce70e52",
+    "bytes": 825
+  },
+  "intermediate/ccc1-final.txt": {
+    "sha256": "f24aba48bf6d130692483c2222d977c4092d8e8490f99a7c2d3962c9f6eae86d",
+    "bytes": 3241
+  },
+  "intermediate/ccc1-red.txt": {
+    "sha256": "66b8e56f2e6b14942d9be882c70937ec76c681025b342c184df32fba32bfa999",
+    "bytes": 2377
+  },
+  "intermediate/environment-interrupted.log": {
+    "sha256": "3b356040928697e1523ecd78aed906b164595e16ac1ecb40dc664a6cc649d6da",
+    "bytes": 1828
+  },
+  "intermediate/first-full-node-errors.log": {
+    "sha256": "0f6a1cf6a3928c18b089c9c24a639902ec32e722890279014b58159374d32d03",
+    "bytes": 22025
+  },
+  "intermediate/first-full-repair-summary.json": {
+    "sha256": "923627231dd7570be39b702aa83e2059e38af7c1086ab6e4af84fce3a5da386d",
+    "bytes": 426
+  },
+  "intermediate/no-device-release-refusal.txt": {
+    "sha256": "ab7783a57fcd14673b034cf2a144c3a6d66fab6617318a5372f9726df4917078",
+    "bytes": 101
+  },
+  "intermediate/preflight-final.txt": {
+    "sha256": "13d20d67d664e4669a9c96cf3aa2ee9dc5cf8cb3f5e2073f9bde831e32c63654",
+    "bytes": 4263
+  },
+  "intermediate/qa-apk-refusal.txt": {
+    "sha256": "f9b6fffc11b5cf0d855df9c334d64f4400dfc8c61721f8a8b482c92cf45a0dba",
+    "bytes": 1464
+  },
+  "intermediate/research-baseline-failure.txt": {
+    "sha256": "f8bd6e2ddede1968a9deb30c629a3b902c97bf60f70ed6df0be9e58cb8980239",
+    "bytes": 1473
+  },
+  "intermediate/research-red-full.txt": {
+    "sha256": "d5ef10571e0d1daf12165e5131d8ebe25bd0a59f8e9c5f3ae3163819a3cc1af8",
+    "bytes": 2991
+  },
+  "intermediate/source-sha-refusal.txt": {
+    "sha256": "0875aeb53966dff8211f6058b2aa4f33806a9a6590cb5025e4b88827a8e220f3",
+    "bytes": 158
+  },
+  "pr-inventory.tsv": {
+    "sha256": "119f1d9e11757646132ba91448e93cd6d1901b249ab14c0db449cd50f2182fee",
+    "bytes": 1806
+  },
+  "private-backup-metadata.json": {
+    "sha256": "f74b03fef9daf0ac25453284922c9624337d7d0acbdfe141e9bde16a54cb1981",
+    "bytes": 352
+  },
+  "private-backup-project-audit-final.json": {
+    "sha256": "260739f967124b636409dcbd48382f016bcabfb8d22d0f8c144faa989f626679",
+    "bytes": 612
+  },
+  "source-files-sha256.json": {
+    "sha256": "99181b76b6ce89bbe1ffbc11f56e0b0caa3e955b4907c5c187fdb77102efd313",
+    "bytes": 2769
+  },
+  "tool-versions.txt": {
+    "sha256": "213108168848f110fd5fc0ebc29b8c0e05f0c91f90975f7891c9fcf6d1799cde",
+    "bytes": 1090
+  },
+  "worksteps.md": {
+    "sha256": "cacfd958c42695a947be26a6b2ff7117dd6e34847e839f9fc1dcbc2f371acaed",
+    "bytes": 8826
+  }
+}

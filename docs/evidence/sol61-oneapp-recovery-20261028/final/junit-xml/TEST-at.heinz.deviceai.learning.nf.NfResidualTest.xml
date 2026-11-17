@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.nf.NfResidualTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:53" hostname="b50d54a1ac03" time="0.035">
+  <properties/>
+  <testcase name="nfc2KeepsSpentAndReservedTestDocumentsOutAndSplitsDeterministically" classname="at.heinz.deviceai.learning.nf.NfResidualTest" time="0.008"/>
+  <testcase name="withLambdaOneTheMixtureLossIsTheCrossEntropy" classname="at.heinz.deviceai.learning.nf.NfResidualTest" time="0.002"/>
+  <testcase name="countModelProbabilitiesAreAlignedWithTheByteTargets" classname="at.heinz.deviceai.learning.nf.NfResidualTest" time="0.003"/>
+  <testcase name="positionsTheCountModelAlreadyPredictsTeachTheNetworkLess" classname="at.heinz.deviceai.learning.nf.NfResidualTest" time="0.002"/>
+  <testcase name="overlapCountsVerbatimSegmentsAndBytesInSharedWindows" classname="at.heinz.deviceai.learning.nf.NfResidualTest" time="0.0"/>
+  <testcase name="theMixtureLossHasTheExactGradientAndMatchesItsDefinition" classname="at.heinz.deviceai.learning.nf.NfResidualTest" time="0.004"/>
+  <testcase name="theTestEvaluationNeedsItsFlagsAndRunsOnlyOncePerStore" classname="at.heinz.deviceai.learning.nf.NfResidualTest" time="0.005"/>
+  <testcase name="crossFittedProbabilitiesComeFromCountModelsWithoutTheDocumentsOwnFold" classname="at.heinz.deviceai.learning.nf.NfResidualTest" time="0.004"/>
+  <system-out><![CDATA[HYBRID-TEST validationSegments=0 testSegments=0 testBytes=0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" tests="8" skipped="0" failures="4" errors="0" timestamp="2026-11-03T22:00:19" hostname="b354f2cb821b" time="0.921">
+  <properties/>
+  <testcase name="actualPauseReleasesButtonTrackAndBackgroundCannotReviveIt" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.151">
+    <failure message="java.lang.AssertionError: Actual button must reach bounded feedback" type="java.lang.AssertionError">java.lang.AssertionError: Actual button must reach bounded feedback
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.actualPauseReleasesButtonTrackAndBackgroundCannotReviveIt$lambda$0(IndependentTaskEffectsCallerUiTest.kt:140)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.fixture(IndependentTaskEffectsCallerUiTest.kt:62)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.actualPauseReleasesButtonTrackAndBackgroundCannotReviveIt(IndependentTaskEffectsCallerUiTest.kt:136)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <testcase name="gateCreatedForOldTurnCannotBorrowNewTurnScopeAtRunnerEntry" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.113"/>
+  <testcase name="actualCancelPathRevokesScopeBeforeLateBackendCompletion" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.073">
+    <failure message="java.lang.AssertionError" type="java.lang.AssertionError">java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.actualCancelPathRevokesScopeBeforeLateBackendCompletion$lambda$0$0(IndependentTaskEffectsCallerUiTest.kt:108)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.running(IndependentTaskEffectsCallerUiTest.kt:77)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.actualCancelPathRevokesScopeBeforeLateBackendCompletion$lambda$0(IndependentTaskEffectsCallerUiTest.kt:107)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.fixture(IndependentTaskEffectsCallerUiTest.kt:62)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.actualCancelPathRevokesScopeBeforeLateBackendCompletion(IndependentTaskEffectsCallerUiTest.kt:105)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="delayedRealExitCannotRenderIntoReplacementTurn" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.101">
+    <failure message="java.lang.AssertionError" type="java.lang.AssertionError">java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.delayedRealExitCannotRenderIntoReplacementTurn$lambda$0$0(IndependentTaskEffectsCallerUiTest.kt:99)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.running(IndependentTaskEffectsCallerUiTest.kt:77)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.delayedRealExitCannotRenderIntoReplacementTurn$lambda$0(IndependentTaskEffectsCallerUiTest.kt:98)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.fixture(IndependentTaskEffectsCallerUiTest.kt:62)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.delayedRealExitCannotRenderIntoReplacementTurn(IndependentTaskEffectsCallerUiTest.kt:96)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="recordedProposalAndBusyDoNotRepresentExecution" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.127"/>
+  <testcase name="actualChiefJobIsSilentWhileQueuedAndUsesRunTimeAfterLongQueue" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.09">
+    <failure message="java.lang.AssertionError" type="java.lang.AssertionError">java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.actualChiefJobIsSilentWhileQueuedAndUsesRunTimeAfterLongQueue$lambda$0(IndependentTaskEffectsCallerUiTest.kt:115)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.fixture(IndependentTaskEffectsCallerUiTest.kt:62)
+	at at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.actualChiefJobIsSilentWhileQueuedAndUsesRunTimeAfterLongQueue(IndependentTaskEffectsCallerUiTest.kt:113)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <testcase name="innerEphemeralContextRejectionDoesNotInventAdmittedToolActivity" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.136"/>
+  <testcase name="microphoneAndSavedMuteBlockActualButtonFeedback" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.129"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

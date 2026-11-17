@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.NativeClickCandidateTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-02T11:50:02" hostname="64c62d88-b43" time="0.257">
+  <properties/>
+  <testcase name="revokedPermissionAfterClickIsNeverSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.054"/>
+  <testcase name="verifiedActionRequiresNewObservedScreen" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.03"/>
+  <testcase name="duplicateVisibleTargetsNeverClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.026"/>
+  <testcase name="noApprovalOrOverlayNeverClicks" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.019"/>
+  <testcase name="acceptedClickWithoutNewEvidenceIsNotSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.069"/>
+  <testcase name="overlayAppearingImmediatelyBeforeDispatchDoesNotClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.018"/>
+  <testcase name="wrongPackageSensitiveAndStaleNeverClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.021"/>
+  <testcase name="revokedPermissionBeforeDispatchNeverClicks" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.02"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,3982 @@
+{
+  "sourceCommit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+  "reports": 441,
+  "counts": {
+    "total": 2501,
+    "passed": 2487,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 14
+  },
+  "suites": [
+    {
+      "report": "TEST-at.heinz.deviceai.AgentToolLayerTest.xml",
+      "class": "at.heinz.deviceai.AgentToolLayerTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.AndroidAvatarCameraInputUiTest.xml",
+      "class": "at.heinz.deviceai.AndroidAvatarCameraInputUiTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.AppLookupToolPolicyTest.xml",
+      "class": "at.heinz.deviceai.AppLookupToolPolicyTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.BootstrapBrainCommaContrastTest.xml",
+      "class": "at.heinz.deviceai.BootstrapBrainCommaContrastTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.BootstrapBrainNegatedToolRoutingTest.xml",
+      "class": "at.heinz.deviceai.BootstrapBrainNegatedToolRoutingTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.BootstrapBrainNegationDeEnTest.xml",
+      "class": "at.heinz.deviceai.BootstrapBrainNegationDeEnTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.BootstrapBrainTest.xml",
+      "class": "at.heinz.deviceai.BootstrapBrainTest",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.BoundedIoTest.xml",
+      "class": "at.heinz.deviceai.BoundedIoTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.Ccc1PatchReceiptTest.xml",
+      "class": "at.heinz.deviceai.Ccc1PatchReceiptTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.CheckedShellCallDispatcherTest.xml",
+      "class": "at.heinz.deviceai.CheckedShellCallDispatcherTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ComposerReflowDraftTest.xml",
+      "class": "at.heinz.deviceai.ComposerReflowDraftTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ComposerUiPolicyTest.xml",
+      "class": "at.heinz.deviceai.ComposerUiPolicyTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ConsequentialActionApprovalTest.xml",
+      "class": "at.heinz.deviceai.ConsequentialActionApprovalTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumAdaptiveCockpitUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumAvatarNativeUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumAvatarNativeUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumBotStatusRoutingUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumBotStatusRoutingUiTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumBuilderLifecycleUiTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumCcc1BridgeTest.xml",
+      "class": "at.heinz.deviceai.ContinuumCcc1BridgeTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumCodingConversationTest.xml",
+      "class": "at.heinz.deviceai.ContinuumCodingConversationTest",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumCodingPlanningTest.xml",
+      "class": "at.heinz.deviceai.ContinuumCodingPlanningTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumCodingPlanningUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumCodingPlanningUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumCodingPreparationReviewTest.xml",
+      "class": "at.heinz.deviceai.ContinuumCodingPreparationReviewTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumCodingTaskTest.xml",
+      "class": "at.heinz.deviceai.ContinuumCodingTaskTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumDashboardArchiveUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumDashboardArchiveUiTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumDialogueSessionResetTest.xml",
+      "class": "at.heinz.deviceai.ContinuumDialogueSessionResetTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumFirstVoiceUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumFirstVoiceUiTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumGemmaRestorePolicyTest.xml",
+      "class": "at.heinz.deviceai.ContinuumGemmaRestorePolicyTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumHologramMotionUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumHologramMotionUiTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumM2StatusTest.xml",
+      "class": "at.heinz.deviceai.ContinuumM2StatusTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumM5UiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumM5UiTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumMobileBuildPlanTest.xml",
+      "class": "at.heinz.deviceai.ContinuumMobileBuildPlanTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumMobileBuilderRouteTest.xml",
+      "class": "at.heinz.deviceai.ContinuumMobileBuilderRouteTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumMobileCodingJobTest.xml",
+      "class": "at.heinz.deviceai.ContinuumMobileCodingJobTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumMobileResultPolicyTest.xml",
+      "class": "at.heinz.deviceai.ContinuumMobileResultPolicyTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumModelImportUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumModelImportUiTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumNexusHomeSpecTest.xml",
+      "class": "at.heinz.deviceai.ContinuumNexusHomeSpecTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumOwnedAppContractTest.xml",
+      "class": "at.heinz.deviceai.ContinuumOwnedAppContractTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumOwnedBuilderUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumOwnedBuilderUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumOwnedProjectPlanTest.xml",
+      "class": "at.heinz.deviceai.ContinuumOwnedProjectPlanTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumReadinessGuideUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumReadinessGuideUiTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumSelectedModelsTest.xml",
+      "class": "at.heinz.deviceai.ContinuumSelectedModelsTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumStatusExcerptTest.xml",
+      "class": "at.heinz.deviceai.ContinuumStatusExcerptTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumTaskEffectsUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumTelemetryMotionUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumTelemetryMotionUiTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml",
+      "class": "at.heinz.deviceai.ContinuumTypedCodingBridgeTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumTypedSnapshotBindingTest.xml",
+      "class": "at.heinz.deviceai.ContinuumTypedSnapshotBindingTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumUiCopyTest.xml",
+      "class": "at.heinz.deviceai.ContinuumUiCopyTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumUiFeedbackTest.xml",
+      "class": "at.heinz.deviceai.ContinuumUiFeedbackTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumVisibleAvatarUiTest.xml",
+      "class": "at.heinz.deviceai.ContinuumVisibleAvatarUiTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumWorkAreaNavigationSpecTest.xml",
+      "class": "at.heinz.deviceai.ContinuumWorkAreaNavigationSpecTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ContinuumWorkerChatRouterTest.xml",
+      "class": "at.heinz.deviceai.ContinuumWorkerChatRouterTest",
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.Ctx3ContextTest.xml",
+      "class": "at.heinz.deviceai.Ctx3ContextTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.Ctx3SessionTest.xml",
+      "class": "at.heinz.deviceai.Ctx3SessionTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.Ctx3ShadowTest.xml",
+      "class": "at.heinz.deviceai.Ctx3ShadowTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.DeviceNetworkProbeTest.xml",
+      "class": "at.heinz.deviceai.DeviceNetworkProbeTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.DeviceToolExecutorRunnerTest.xml",
+      "class": "at.heinz.deviceai.DeviceToolExecutorRunnerTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.GroqInvocationRouterTest.xml",
+      "class": "at.heinz.deviceai.GroqInvocationRouterTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.HologramAudioTest.xml",
+      "class": "at.heinz.deviceai.HologramAudioTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentActivitySpeechTest.xml",
+      "class": "at.heinz.deviceai.IndependentActivitySpeechTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentBotAddressRouterTest.xml",
+      "class": "at.heinz.deviceai.IndependentBotAddressRouterTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentBotRosterUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentBotRosterUiTest",
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentBotSelectionUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentBotSelectionUiTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentBotSpeechScopeTest.xml",
+      "class": "at.heinz.deviceai.IndependentBotSpeechScopeTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentCameraCallbacksUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentCameraCallbacksUiTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentCodingPlanningIntakeUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentCodingPlanningIntakeUiTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentCodingPlanningTest.xml",
+      "class": "at.heinz.deviceai.IndependentCodingPlanningTest",
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentFinalVisualPolishUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentFinalVisualPolishUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentFirstWelcomeUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentFirstWelcomeUiTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentFullLayoutUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentFullLayoutUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentReadinessCallerUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentReadinessCallerUiTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentReadinessVoiceCompletionUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentReadinessVoiceCompletionUiTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentTaskEffectsBoundaryUiTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentTaskEffectsCallerUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentTaskEffectsCallerUiTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentTypedCancellationUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentTypedCancellationUiTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentUiFeedbackUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentUiFeedbackUiTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.IndependentVisibleAvatarUiTest.xml",
+      "class": "at.heinz.deviceai.IndependentVisibleAvatarUiTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.LocalFirstPolicyTest.xml",
+      "class": "at.heinz.deviceai.LocalFirstPolicyTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.NativeClickCandidateTest.xml",
+      "class": "at.heinz.deviceai.NativeClickCandidateTest",
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.NeuralSnapshotCasTest.xml",
+      "class": "at.heinz.deviceai.NeuralSnapshotCasTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ReadOnlyToolSizeRegressionTest.xml",
+      "class": "at.heinz.deviceai.ReadOnlyToolSizeRegressionTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ScreenObservationRevisionTest.xml",
+      "class": "at.heinz.deviceai.ScreenObservationRevisionTest",
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ShellExecutionTest.xml",
+      "class": "at.heinz.deviceai.ShellExecutionTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ShizukuBridgeLifecycleTest.xml",
+      "class": "at.heinz.deviceai.ShizukuBridgeLifecycleTest",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ShizukuConnectionDialogTest.xml",
+      "class": "at.heinz.deviceai.ShizukuConnectionDialogTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ToolDurableOutcomeTest.xml",
+      "class": "at.heinz.deviceai.ToolDurableOutcomeTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ToolExecutionReceiptStoreTest.xml",
+      "class": "at.heinz.deviceai.ToolExecutionReceiptStoreTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ToolExecutionStartLatchTest.xml",
+      "class": "at.heinz.deviceai.ToolExecutionStartLatchTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ToolReceiptJournalRetentionTest.xml",
+      "class": "at.heinz.deviceai.ToolReceiptJournalRetentionTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ToolRegistryTest.xml",
+      "class": "at.heinz.deviceai.ToolRegistryTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ToolReplayGuardTest.xml",
+      "class": "at.heinz.deviceai.ToolReplayGuardTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.TtsHologramSignalTest.xml",
+      "class": "at.heinz.deviceai.TtsHologramSignalTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.VerifiedAppDispatchTest.xml",
+      "class": "at.heinz.deviceai.VerifiedAppDispatchTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.avatar.AvatarDirectorTest.xml",
+      "class": "at.heinz.deviceai.avatar.AvatarDirectorTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest.xml",
+      "class": "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.avatar.AvatarNativeRegressionTest.xml",
+      "class": "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.avatar.AvatarObservedGazeTest.xml",
+      "class": "at.heinz.deviceai.avatar.AvatarObservedGazeTest",
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.avatar.AvatarPortedPartsTest.xml",
+      "class": "at.heinz.deviceai.avatar.AvatarPortedPartsTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.avatar3d.Avatar3dContractTest.xml",
+      "class": "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest.xml",
+      "class": "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.benchmark.BenchmarkRunnerTest.xml",
+      "class": "at.heinz.deviceai.benchmark.BenchmarkRunnerTest",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.benchmark.CoreGemmaRaceTest.xml",
+      "class": "at.heinz.deviceai.benchmark.CoreGemmaRaceTest",
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefBotConversationTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefBotProfileStoreTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefBotProfileStoreTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefBrainWiringTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefBrainWiringTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefDelegationCoordinatorTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefDelegationCoordinatorTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefMemoryAndJobTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefMemoryAndJobTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "total": 17,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 6
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefWorkerPoolTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefWorkerPoolTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "total": 2,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ChiefWorkspaceWiringTest.xml",
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml",
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "total": 15,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 6
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.ToolSchemaSafetyTest.xml",
+      "class": "at.heinz.deviceai.chief.ToolSchemaSafetyTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.TurnLifecycleTest.xml",
+      "class": "at.heinz.deviceai.chief.TurnLifecycleTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.chief.WorkspaceIndependentReviewTest.xml",
+      "class": "at.heinz.deviceai.chief.WorkspaceIndependentReviewTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AdaptiveIdentityTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AdaptiveIdentityTest",
+      "total": 24,
+      "passed": 24,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AgentCancellationRegressionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AgentCheckpointStoreTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AgentCheckpointStoreTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AgentContextFallbackTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AgentContextFallbackTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AgentExperiencePairedBenchmarkTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AgentExperiencePairedBenchmarkTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AgentExperienceRecallTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AgentExperienceRecallTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AgentModelOutputBoundaryTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AgentModelOutputBoundaryTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AgentTaskEvidenceTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AgentTaskEvidenceTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AgentTaskIdentityTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AgentTaskIdentityTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AiContextCompilerTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AiContextIntegrityTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ApprovedWebToolGateTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.AvatarCameraPolicyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.AvatarCameraPolicyTest",
+      "total": 17,
+      "passed": 17,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest.xml",
+      "class": "at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.BoundedAgentTest.xml",
+      "class": "at.heinz.deviceai.cognitive.BoundedAgentTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.BoundedScreenReaderTest.xml",
+      "class": "at.heinz.deviceai.cognitive.BoundedScreenReaderTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest.xml",
+      "class": "at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.CertifiedLocationReflexTest.xml",
+      "class": "at.heinz.deviceai.cognitive.CertifiedLocationReflexTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ChatReasoningRouterTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ChatReasoningRouterTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ChatSpecialistChainTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ChatSpecialistChainTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml",
+      "class": "at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.CognitivePersistenceTest.xml",
+      "class": "at.heinz.deviceai.cognitive.CognitivePersistenceTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.CognitiveRaidTest.xml",
+      "class": "at.heinz.deviceai.cognitive.CognitiveRaidTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.CognitiveTurnTraceTest.xml",
+      "class": "at.heinz.deviceai.cognitive.CognitiveTurnTraceTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ComputeFabricTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ComputeFabricTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ComputeResultVerifierTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ComputeResultVerifierTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ConstrainedResourceFabricTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ConstrainedResourceFabricTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumAutonomyControlTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumAutonomyControlTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumBenchmarkTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumBenchmarkTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumComputeReuseResearchTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumComputeReuseResearchTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumEvidenceSwitchProbeTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumEvidenceSwitchProbeTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumLocalAgentModelTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumLocalAgentModelTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumOfflineEvalTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumOfflineEvalTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumSeedStoreTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumSeedStoreTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumSeedTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumSeedTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumStateTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumStateTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ContinuumTaskClassifierWordBoundaryTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ContinuumTaskClassifierWordBoundaryTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ConversationControlTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ConversationControlTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DeliberationTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DeliberationTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogRoundtripTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DevelopmentBacklogRoundtripTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DevelopmentBacklogTest",
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DevelopmentClaimGateTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DevelopmentClaimGateTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest",
+      "total": 27,
+      "passed": 27,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DevelopmentSharedHashTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DevelopmentSharedHashTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DevelopmentUiControllerTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DevelopmentUiControllerTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.DeviceTeamleaderTest.xml",
+      "class": "at.heinz.deviceai.cognitive.DeviceTeamleaderTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ExplicitEvidenceAndRevocationTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ExplicitEvidenceAndRevocationTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ExternalContentInjectionGuardTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ExternalContentInjectionGuardTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.FreshKnowledgeNeedTest.xml",
+      "class": "at.heinz.deviceai.cognitive.FreshKnowledgeNeedTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest.xml",
+      "class": "at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest",
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.GroundedWebRecallTest.xml",
+      "class": "at.heinz.deviceai.cognitive.GroundedWebRecallTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest.xml",
+      "class": "at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.IdentityStateTest.xml",
+      "class": "at.heinz.deviceai.cognitive.IdentityStateTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.IndependentCameraPolicyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.IndependentCameraPolicyTest",
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.IndependentReadinessGuideTest.xml",
+      "class": "at.heinz.deviceai.cognitive.IndependentReadinessGuideTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.InternetConsentPolicyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.JarvisCounterfactualShadowMatrixTest.xml",
+      "class": "at.heinz.deviceai.cognitive.JarvisCounterfactualShadowMatrixTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.JarvisIntentIntakeTest.xml",
+      "class": "at.heinz.deviceai.cognitive.JarvisIntentIntakeTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.JarvisUnifiedEvidenceContractTest.xml",
+      "class": "at.heinz.deviceai.cognitive.JarvisUnifiedEvidenceContractTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.JarvisVoiceProfileTest.xml",
+      "class": "at.heinz.deviceai.cognitive.JarvisVoiceProfileTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.JournalAvailabilityTest.xml",
+      "class": "at.heinz.deviceai.cognitive.JournalAvailabilityTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.JournalUnavailableOwnerMessageTest.xml",
+      "class": "at.heinz.deviceai.cognitive.JournalUnavailableOwnerMessageTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LegalRisDiscoveryProviderTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LegalRisDiscoveryProviderTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LegalRisEvidenceProviderTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LegalRisEvidenceProviderTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalChatPromptBudgetTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalChatPromptBudgetTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalClockIntentTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalClockIntentTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalContextIntegrityProbeTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalContextIntegrityProbeTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalContextRetentionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalContextRetentionTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalConversationPromptFirewallTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalConversationPromptFirewallTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalDialogueRetentionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalDialogueRetentionTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalFollowUpTaskFrameTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalFollowUpTaskFrameTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalGroundedRecallTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalGroundedRecallTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalIntelligenceIntegrationTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalIntelligenceIntegrationTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalPromptFrameTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalPromptFrameTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalReasoningBoundaryRegressionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalReasoningBoundaryRegressionTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.LocalSpeechInputPolicyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.LocalSpeechInputPolicyTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.M3EvalGapsTest.xml",
+      "class": "at.heinz.deviceai.cognitive.M3EvalGapsTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.MemoryEcologyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.MemoryEcologyTest",
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml",
+      "class": "at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml",
+      "class": "at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.NativeAppLookupTest.xml",
+      "class": "at.heinz.deviceai.cognitive.NativeAppLookupTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.NetworkTurnConstraintTest.xml",
+      "class": "at.heinz.deviceai.cognitive.NetworkTurnConstraintTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.OwnerAppLookupIntentTest.xml",
+      "class": "at.heinz.deviceai.cognitive.OwnerAppLookupIntentTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest.xml",
+      "class": "at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.OwnerFactAdmissionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.OwnerFactAdmissionTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest.xml",
+      "class": "at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.OwnerStatementTimelineTest.xml",
+      "class": "at.heinz.deviceai.cognitive.OwnerStatementTimelineTest",
+      "total": 24,
+      "passed": 24,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouterTest.xml",
+      "class": "at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouterTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+      "total": 17,
+      "passed": 17,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchEngineTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchEngineTest",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchHttpTransportTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchHttpTransportTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchNegationSignalsTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchNegationSignalsTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchPromptGraphBoundaryTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchPromptGraphBoundaryTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchQuestionFocusTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchQuestionFocusTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ResearchTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ResearchTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ScreenEvidenceContractTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ScreenEvidenceContractTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ScreenExperiencePrivacyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ScreenExperiencePrivacyTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ScreenObservationPromptTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ScreenObservationPromptTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.xml",
+      "class": "at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.SessionLocationRoutingTest.xml",
+      "class": "at.heinz.deviceai.cognitive.SessionLocationRoutingTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.SessionRevisionRoutingTest.xml",
+      "class": "at.heinz.deviceai.cognitive.SessionRevisionRoutingTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.SovereignReviewRegressionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.SovereignReviewRegressionTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.SpeechDictationDraftTest.xml",
+      "class": "at.heinz.deviceai.cognitive.SpeechDictationDraftTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.TaskScopedRingStateProjectorTest.xml",
+      "class": "at.heinz.deviceai.cognitive.TaskScopedRingStateProjectorTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.TemporalRoleEvidenceLedgerTest.xml",
+      "class": "at.heinz.deviceai.cognitive.TemporalRoleEvidenceLedgerTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.ToolJournalSaturationE2eTest.xml",
+      "class": "at.heinz.deviceai.cognitive.ToolJournalSaturationE2eTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.TurnScopedInternetModeTest.xml",
+      "class": "at.heinz.deviceai.cognitive.TurnScopedInternetModeTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.UnansweredOwnerTurnTest.xml",
+      "class": "at.heinz.deviceai.cognitive.UnansweredOwnerTurnTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest.xml",
+      "class": "at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.UnscopedLocationCorrectionTest.xml",
+      "class": "at.heinz.deviceai.cognitive.UnscopedLocationCorrectionTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.UntrustedResearchEvidenceTest.xml",
+      "class": "at.heinz.deviceai.cognitive.UntrustedResearchEvidenceTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.VerifiedForegroundLaunchTest.xml",
+      "class": "at.heinz.deviceai.cognitive.VerifiedForegroundLaunchTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.VerifiedNodeClickTest.xml",
+      "class": "at.heinz.deviceai.cognitive.VerifiedNodeClickTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.VerifiedSkillReviewTest.xml",
+      "class": "at.heinz.deviceai.cognitive.VerifiedSkillReviewTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.VirtualModelFabricTest.xml",
+      "class": "at.heinz.deviceai.cognitive.VirtualModelFabricTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.VoiceDuplexBargeInTest.xml",
+      "class": "at.heinz.deviceai.cognitive.VoiceDuplexBargeInTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.WebLearningInboxTest.xml",
+      "class": "at.heinz.deviceai.cognitive.WebLearningInboxTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.WebResearchIntegrationTest.xml",
+      "class": "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest.xml",
+      "class": "at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest.xml",
+      "class": "at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.diagnostics.ContinuumDiagnosticsTest.xml",
+      "class": "at.heinz.deviceai.diagnostics.ContinuumDiagnosticsTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ContinuumLanguageCoreSelectionTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ContinuumLanguageCoreSelectionTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ContinuumOwnerUpdateCatalogTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ContinuumOwnerUpdateCatalogTest",
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ContinuumSignedUpdatePolicyTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ContinuumSignedUpdatePolicyTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest",
+      "total": 38,
+      "passed": 38,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ewm.Ewm1SourceIndexTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ewm.Ewm1SourceIndexTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest.xml",
+      "class": "at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexPipelineTest.xml",
+      "class": "at.heinz.deviceai.intelligence.maxultra.ContinuumCortexPipelineTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexShadowTest.xml",
+      "class": "at.heinz.deviceai.intelligence.maxultra.ContinuumCortexShadowTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest.xml",
+      "class": "at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest.xml",
+      "class": "at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2NegationTest.xml",
+      "class": "at.heinz.deviceai.intelligence.maxultra.Ctx2NegationTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest.xml",
+      "class": "at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest.xml",
+      "class": "at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest.xml",
+      "class": "at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest.xml",
+      "class": "at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Cdx1PatchShadowStudyTest.xml",
+      "class": "at.heinz.deviceai.learning.Cdx1PatchShadowStudyTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueCurriculumTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumAutoDialogueCurriculumTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumAutonomousSchedulerTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumAutonomousSchedulerTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumBimodalConditionerTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumBimodalConditionerTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumBrainBridgeTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumBrainBridgeTest",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumCycleTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumCycleTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest",
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumContrastiveGateTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveGateTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumContrastiveParityTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumContrastiveViewsTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveViewsTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumDecoderBridgeTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumDecoderBridgeTest",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumDeviceTeamleaderSchedulerTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumDeviceTeamleaderSchedulerTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumDialogueAuditTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumDialogueAuditTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest",
+      "total": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumDualCoreAutoStudyTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumDualCoreAutoStudyTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumEvidenceSpanProbeTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumEvidenceSpanProbeTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumEvidenceWindowTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumEvidenceWindowTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumGermanLongMemEvalHoldoutTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumGermanLongMemEvalHoldoutTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumIdentifierGroundingTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumIdentifierGroundingTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumLearningCoreTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumLearningCoreTest",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumMemoryDialogueTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumMemoryDialogueTest",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumMemoryLayersTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumMemoryLayersTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumOfflineLearningBudgetTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumOfflineLearningBudgetTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumOpenWebStudyFetchTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumOpenWebStudyFetchTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumOrthographyProbeTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumOrthographyProbeTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumOwnerFactTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumOwnerFactTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumOwnerRoleDialogueTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumOwnerRoleDialogueTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumPublicCurriculumTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumPublicCurriculumTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumPublicModelPackageTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumPublicModelPackageTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumPublicStudyCycleResultTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumPublicStudyCycleResultTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumPublicStudyPolicyTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumPublicStudyPolicyTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumRuntimeEventJournalTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumRuntimeEventJournalTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumSkillLibraryTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumSkillLibraryTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumSourceNoveltyTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumSourceNoveltyTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumSwb2DecoderResearchTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumSwb2DecoderResearchTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryCacheTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumTemporalMemoryCacheTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryHoldoutTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumTemporalMemoryHoldoutTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumTemporalMemorySpecialistTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumTemporalMemorySpecialistTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumTemporalMemoryTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumTemporalMemoryTest",
+      "total": 19,
+      "passed": 19,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumThinkingMemoryTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumThinkingMemoryTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ContinuumTopicFrontierTest.xml",
+      "class": "at.heinz.deviceai.learning.ContinuumTopicFrontierTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest.xml",
+      "class": "at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Cre1InferenceEncoderTest.xml",
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Cre1PromotionAuditTest.xml",
+      "class": "at.heinz.deviceai.learning.Cre1PromotionAuditTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Cre1PromotionGateTest.xml",
+      "class": "at.heinz.deviceai.learning.Cre1PromotionGateTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Cre1ResearchLabTest.xml",
+      "class": "at.heinz.deviceai.learning.Cre1ResearchLabTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.DecoderGenerativeGateTest.xml",
+      "class": "at.heinz.deviceai.learning.DecoderGenerativeGateTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.DecoderGenerativePromotionTest.xml",
+      "class": "at.heinz.deviceai.learning.DecoderGenerativePromotionTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.HistoricalLearningLedgerTest.xml",
+      "class": "at.heinz.deviceai.learning.HistoricalLearningLedgerTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.KnowledgeDialogueTest.xml",
+      "class": "at.heinz.deviceai.learning.KnowledgeDialogueTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.KnowledgeReasoningTest.xml",
+      "class": "at.heinz.deviceai.learning.KnowledgeReasoningTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.LearningExperienceReplayCacheTest.xml",
+      "class": "at.heinz.deviceai.learning.LearningExperienceReplayCacheTest",
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.LearningExperienceStoreTest.xml",
+      "class": "at.heinz.deviceai.learning.LearningExperienceStoreTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.LearningIntegrationTest.xml",
+      "class": "at.heinz.deviceai.learning.LearningIntegrationTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.xml",
+      "class": "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.MentorConceptNetworkTest.xml",
+      "class": "at.heinz.deviceai.learning.MentorConceptNetworkTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.MentorCuriosityPlannerTest.xml",
+      "class": "at.heinz.deviceai.learning.MentorCuriosityPlannerTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.MentorCurriculumTest.xml",
+      "class": "at.heinz.deviceai.learning.MentorCurriculumTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.MentorRecallTest.xml",
+      "class": "at.heinz.deviceai.learning.MentorRecallTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.MentorSemanticModelTest.xml",
+      "class": "at.heinz.deviceai.learning.MentorSemanticModelTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.ModelCheckpointStoreTest.xml",
+      "class": "at.heinz.deviceai.learning.ModelCheckpointStoreTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralCommandParserTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralCommandParserTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralCuriosityRadarTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralCuriosityRadarTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralDemoSandboxTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralDemoSandboxTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralDialogueTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralDialogueTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralGeneralizationComparisonTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralGeneralizationComparisonTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralGradientTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralGradientTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralLearningCoachTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralLearningCoachTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralPracticeTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralPracticeTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralSnapshotImportTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralSnapshotImportTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralTeachingAuditTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralTeachingAuditTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.NeuralTransferExperimentTest.xml",
+      "class": "at.heinz.deviceai.learning.NeuralTransferExperimentTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.OnlineNaiveBayesTest.xml",
+      "class": "at.heinz.deviceai.learning.OnlineNaiveBayesTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.OwnerFamilyAgeScopeTest.xml",
+      "class": "at.heinz.deviceai.learning.OwnerFamilyAgeScopeTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.OwnerHypotheticalGateTest.xml",
+      "class": "at.heinz.deviceai.learning.OwnerHypotheticalGateTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.OwnerLocationRevisionBarrierTest.xml",
+      "class": "at.heinz.deviceai.learning.OwnerLocationRevisionBarrierTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest.xml",
+      "class": "at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.OwnerMemoryLocationSpecialistTest.xml",
+      "class": "at.heinz.deviceai.learning.OwnerMemoryLocationSpecialistTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.OwnerMemoryPerspectiveTest.xml",
+      "class": "at.heinz.deviceai.learning.OwnerMemoryPerspectiveTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.OwnerStatementModalityTest.xml",
+      "class": "at.heinz.deviceai.learning.OwnerStatementModalityTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.PersonalLearningTransferTest.xml",
+      "class": "at.heinz.deviceai.learning.PersonalLearningTransferTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.RetrievalBenchmarkTest.xml",
+      "class": "at.heinz.deviceai.learning.RetrievalBenchmarkTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.SignedOwnerCorrectionJournalTest.xml",
+      "class": "at.heinz.deviceai.learning.SignedOwnerCorrectionJournalTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.StrictJsonTest.xml",
+      "class": "at.heinz.deviceai.learning.StrictJsonTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest.xml",
+      "class": "at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.TinyContextDecoderTest.xml",
+      "class": "at.heinz.deviceai.learning.TinyContextDecoderTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.TinyNeuralNetworkTest.xml",
+      "class": "at.heinz.deviceai.learning.TinyNeuralNetworkTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.TrainableSubwordEncoderTest.xml",
+      "class": "at.heinz.deviceai.learning.TrainableSubwordEncoderTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest.xml",
+      "class": "at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackTest.xml",
+      "class": "at.heinz.deviceai.learning.interactive.ResearchFeedbackTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.lm.LmCoreTest.xml",
+      "class": "at.heinz.deviceai.learning.lm.LmCoreTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.lm.LmRuntimeTest.xml",
+      "class": "at.heinz.deviceai.learning.lm.LmRuntimeTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.lm.LmStep7Test.xml",
+      "class": "at.heinz.deviceai.learning.lm.LmStep7Test",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.nf.NfCoreTest.xml",
+      "class": "at.heinz.deviceai.learning.nf.NfCoreTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.nf.NfHybridTest.xml",
+      "class": "at.heinz.deviceai.learning.nf.NfHybridTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.nf.NfResidualTest.xml",
+      "class": "at.heinz.deviceai.learning.nf.NfResidualTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest.xml",
+      "class": "at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest.xml",
+      "class": "at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest.xml",
+      "class": "at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest.xml",
+      "class": "at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest.xml",
+      "class": "at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest.xml",
+      "class": "at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.DualEvidenceReadContractTest.xml",
+      "class": "at.heinz.deviceai.learning.span.DualEvidenceReadContractTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest.xml",
+      "class": "at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest.xml",
+      "class": "at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest.xml",
+      "class": "at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest.xml",
+      "class": "at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.NaturalLocationVerificationTest.xml",
+      "class": "at.heinz.deviceai.learning.span.NaturalLocationVerificationTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.learning.span.RoleAwareShadowTest.xml",
+      "class": "at.heinz.deviceai.learning.span.RoleAwareShadowTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalConversationBoundaryTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalConversationBoundaryTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalInferenceProfileTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalInferenceProfileTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalModelCatalogTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalModelCatalogTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalModelImportCoordinatorTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalModelImportProgressTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalModelImportProgressTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalModelImportStreamTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalModelImportStreamTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalModelLoadAdmissionTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalQwenPromptPolicyTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalQwenPromptPolicyTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalToolContinuationTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalToolContinuationTest",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalToolTurnGateTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalToolTurnGateTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.localmodel.LocalTurnModelBindingTest.xml",
+      "class": "at.heinz.deviceai.localmodel.LocalTurnModelBindingTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.referencecheck.MapperMotionV2ChallengeTest.xml",
+      "class": "at.heinz.deviceai.referencecheck.MapperMotionV2ChallengeTest",
+      "total": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest.xml",
+      "class": "at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.research.neuro.ReviewedEvidenceGraphTest.xml",
+      "class": "at.heinz.deviceai.research.neuro.ReviewedEvidenceGraphTest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.research.neuro.TemporalNeuralShadowTest.xml",
+      "class": "at.heinz.deviceai.research.neuro.TemporalNeuralShadowTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.routines.ContinuumRoutinesTest.xml",
+      "class": "at.heinz.deviceai.routines.ContinuumRoutinesTest",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.CognitiveWorkPresentationTest.xml",
+      "class": "at.heinz.deviceai.ui.CognitiveWorkPresentationTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumControlsTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumControlsTest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumCoreMirrorTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumDashboardMathTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumDashboardMathTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumGridPolicyTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumGridPolicyTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumHologramPlexusTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumHologramPlexusTest",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumHomeLayoutTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumOrbitalRingTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumOrbitalRingTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.ContinuumTaskEffectsTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumTaskEffectsTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.IndependentTaskEffectsTest.xml",
+      "class": "at.heinz.deviceai.ui.IndependentTaskEffectsTest",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.RidgeChartTest.xml",
+      "class": "at.heinz.deviceai.ui.RidgeChartTest",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "report": "TEST-at.heinz.deviceai.ui.WaveChartMarkerTest.xml",
+      "class": "at.heinz.deviceai.ui.WaveChartMarkerTest",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ]
+}

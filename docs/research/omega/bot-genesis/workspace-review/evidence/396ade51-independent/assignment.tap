@@ -1,0 +1,17 @@
+✔ both exact principals re-resolve and expose one shared immutable expiry (10.377653ms)
+✔ expiry boundary blocks both stages rather than renewing execution time (2.204729ms)
+✔ mutating original task after authorization invalidates binding (1.097652ms)
+✔ same fields in clone or prototype wrapper cannot reconstruct origin (0.623849ms)
+✔ removing verifier blocks builder before next profile checkpoint (1.824907ms)
+✔ decreasing verifier lifetime invalidates both stages without changing old expiry (2.656138ms)
+✔ increasing a profile cap cannot extend the admitted assignment (3.115825ms)
+✔ reader replacement cannot revive a removed principal (1.424144ms)
+✔ invalid current budget values fail closed (12.596483ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 260.262934

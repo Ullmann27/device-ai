@@ -1,0 +1,19 @@
+JUnit version 4.13.2
+....E..E..
+Time: 6.976
+There were 2 failures:
+1) shutdownReportsEveryAcceptedQueuedAssignmentExactlyOnce(at.heinz.deviceai.chief.IndependentPoolLifecycleTest)
+java.lang.AssertionError: shutdown must drain accepted assignment accounting
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.chief.IndependentPoolLifecycleTest.shutdownReportsEveryAcceptedQueuedAssignmentExactlyOnce(IndependentPoolLifecycleTest.kt:36)
+2) queuedCallbackExceptionDoesNotSuppressOtherCancellationReports(at.heinz.deviceai.chief.IndependentPoolLifecycleTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.chief.IndependentPoolLifecycleTest.queuedCallbackExceptionDoesNotSuppressOtherCancellationReports(IndependentPoolLifecycleTest.kt:151)
+
+FAILURES!!!
+Tests run: 8,  Failures: 2
+

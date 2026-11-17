@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "status": "LOCAL_GATES_PASS / PUBLISHER_BUILD_RUNNING",
+  "source": {
+    "commit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+    "branch": "release/continuum-night-integration-20261103",
+    "treeDigest": "3691bfda273d37d41fccda705b8a88982fada49330434197bd08fb761bf59f14"
+  },
+  "gitTreeObject": "e8a9949c1e1eaaf4f9d14b01b30361ffded86d73",
+  "localGates": {
+    "android": {
+      "total": 2501,
+      "passed": 2487,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 14
+    },
+    "fullNode": {
+      "total": 2306,
+      "passed": 2269,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 37
+    },
+    "criticalSubsetOfNode": {
+      "total": 135,
+      "passed": 135,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "backend": {
+      "total": 64,
+      "passed": 64,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "freshRoundtripSubset": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "status": "PASS",
+      "issues": 0,
+      "scope": "Configured NewApi lint"
+    },
+    "unsignedBuild": {
+      "sourceCommit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+      "status": "UNSIGNED_APK_AND_AAB_BUILT_IDENTITY_VERIFIED",
+      "artifacts": [
+        {
+          "path": "/workspace/scratch/391c0f6de827/device-ai/app/build/outputs/apk/release/app-release-unsigned.apk",
+          "sha256": "77f41a5e82f55e8c376faba0765b53ec415c5690eed2f3730609e576367cb27a",
+          "bytes": 84294137,
+          "nativeAbis": [
+            "arm64-v8a",
+            "armeabi-v7a",
+            "x86",
+            "x86_64"
+          ]
+        },
+        {
+          "path": "/workspace/scratch/391c0f6de827/device-ai/app/build/outputs/bundle/release/app-release.aab",
+          "sha256": "a9b86f26462551af6957c7acf60fedc0fb308a9863a564de7dd9d9aa78c5e117",
+          "bytes": 45680955,
+          "nativeAbis": [
+            "arm64-v8a",
+            "armeabi-v7a",
+            "x86",
+            "x86_64"
+          ]
+        }
+      ],
+      "packageLine": "package: name='at.heinz.deviceai.continuumlocal' versionCode='40' versionName='0.3.39' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'"
+    },
+    "parity": {
+      "status": "PASS_ON_FRESH_ROUNDTRIP_FIXTURE",
+      "receipt": "parity-final.json",
+      "failedSecondInvocationPreserved": "parity-second-invocation.json"
+    }
+  },
+  "publisher": {
+    "service": "srv-dbf1tr2vcj2c73ehpfog",
+    "deploy": "dep-dbl70arm8hqs73ch40pg",
+    "sourceCommit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+    "statusAtEvidenceCheckpoint": "BUILD_RUNNING",
+    "sourceOfStatus": "Root integration coordinator observation; publisher receipt to be preserved separately",
+    "signedArtifactVerified": false,
+    "liveCatalogVerifiedForCode40": false
+  },
+  "scopeLimits": [
+    "Host Linux/JVM/Robolectric; no physical Fold7 acceptance",
+    "14 Android and 37 Node skips remain explicit",
+    "No consumed S01 replay; crash/resource barrier remains unresolved",
+    "No model inference or native Android ARM64 execution proof",
+    "Unsigned artifact hashes are not final signed APK hashes",
+    "No device installation, main merge, signing-key change or owner-data access"
+  ],
+  "subsetWarning": "Critical and fresh roundtrip are additional runs of existing coverage; do not add them to unique full-suite counts."
+}

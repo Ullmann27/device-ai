@@ -1,0 +1,24 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-status",
+  "status": "OK",
+  "result": {
+    "schema": "continuum-ccc1-status",
+    "version": 1,
+    "experienceRecords": 1,
+    "taskCount": 1,
+    "tasks": [
+      {
+        "taskId": "t-744099441e5b87bc",
+        "state": "ABSTAINED",
+        "waitingForOwner": false,
+        "goal": "Repariere die fehlschlagenden Tests der Testkette node.",
+        "question": "Die Quittung entscheidet nichts (job ended CANCELLED); kein blinder Wiederholungsversuch.",
+        "confirmed": null,
+        "uncheckedAlternatives": 0,
+        "review": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {median} from '../../lib/subject.mjs';
+const cases=[[[5],5],[[1,2],1.5],[[2,10,3],3],[[12,1,9,4],6.5],[[-8,-2,-5],-5],[[7,7,7,7],7],[[0,100,-100,2],1],[[1.5,0.5,2.5],1.5],[[4,1,3,2,5],3],[[10,2],6]];
+for(const [i,[values,expected]] of cases.entries())test('frozen median boundary '+i,()=>{
+ const before=values.slice();assert.equal(median(values),expected);assert.deepEqual(values,before);
+});

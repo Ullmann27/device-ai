@@ -1,0 +1,59 @@
+{
+  "status": "FULL_RUN_FAILED_FIXTURE_REPAIR_PENDING_GRADLE",
+  "remoteSource": "0d21f08466e1036346071536ac5eeec54f54efdc",
+  "receipt": {
+    "source": "ff28ae74f18570daa6485fc6e885de360dd70e9f",
+    "tree": "152c3170f4d6e96549288e2be9855476e7c4fce5",
+    "phase": "test-full-release-final",
+    "command": [
+      "/tmp/continuum-toolchain/gradle-8.11.1/bin/gradle",
+      "--offline",
+      "--no-daemon",
+      "--max-workers=1",
+      "--console=plain",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-PdeviceAiMentorPreview=true",
+      "-PcontinuumOwnerLocalQa=true",
+      "-PcontinuumOwnerLocalVersionCode=53",
+      "-PcontinuumUiWidgetTests=true",
+      "-PcontinuumUiEvidenceDir=/workspace/scratch/c9f74e2967e3/qa/test-full-release-final",
+      "-Dorg.gradle.jvmargs=-Xmx512m -XX:MaxMetaspaceSize=512m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -Dfile.encoding=UTF-8",
+      "-I",
+      "/workspace/scratch/c9f74e2967e3/tests-memory.gradle",
+      ":app:testDebugUnitTest"
+    ],
+    "started": 1794351875.0022275,
+    "Fold7": "NOT_RUN",
+    "exitCode": 1,
+    "completed": 1794354660.636753,
+    "sourceUnchanged": true
+  },
+  "suites": 794,
+  "counts": {
+    "tests": 4617,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 17,
+    "passed": 4597
+  },
+  "failures": [
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "test": "deniedToolHasNoBackendAndNoArrival",
+      "message": "java.util.NoSuchElementException: Array contains no element matching the predicate."
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "test": "authorizedRealRunnerEntryAndExitReachTheVisibleSurface",
+      "message": "java.util.NoSuchElementException: Array contains no element matching the predicate."
+    },
+    {
+      "class": "at.heinz.deviceai.ConsequentialActionApprovalTest",
+      "test": "everyConsequentialRegistryToolIsRefusedWithoutAnExplicitOwnerYes",
+      "message": "java.util.NoSuchElementException: Key snapshotId is missing in the map."
+    }
+  ],
+  "fixRemote": "2d946d4b2acbbddf5eef66bf56f5d26ba89dee9b",
+  "finalQa": "Queued for shared Android lease; not a green full run",
+  "Fold7": "NOT_RUN"
+}

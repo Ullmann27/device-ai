@@ -1,0 +1,30 @@
+{
+  "directory": "/tmp/continuum-observation-review-ke03fa",
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-reporter-destination=/tmp/continuum-observation-review-ke03fa/host-tests.tap",
+    "--test-reporter=junit",
+    "--test-reporter-destination=/tmp/continuum-observation-review-ke03fa/host-tests.junit.xml",
+    "scripts/continuum-local-model-observation.test.mjs",
+    "scripts/continuum-local-model-cpu.test.mjs",
+    "scripts/continuum-local-model-7b.test.mjs"
+  ],
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "",
+  "stderr": "",
+  "counts": [
+    "# tests 41",
+    "# suites 0",
+    "# pass 23",
+    "# fail 0",
+    "# cancelled 0",
+    "# skipped 18",
+    "# todo 0",
+    "# duration_ms 636.969624"
+  ],
+  "skipCount": 18
+}

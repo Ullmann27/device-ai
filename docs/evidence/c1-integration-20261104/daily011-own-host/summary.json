@@ -1,0 +1,48 @@
+{
+  "taskId": "C1-TEMPORAL-011-OWN-HOST",
+  "testedLocal": "ce5bcf6d7c7e87e630b33df86d021dfd4bd52ccd",
+  "testedRemote": "9c09a6add6c52f0be01a2e6b18e9cd2fdf4f3cc7",
+  "testedTree": "d27f253b1b922c98c72acb8fc4bdf3b8bdf27e41",
+  "result": {
+    "taskId": "C1-COMBINED-GATES-001",
+    "label": "daily-host-01",
+    "source": {
+      "commit": "ce5bcf6d7c7e87e630b33df86d021dfd4bd52ccd",
+      "tree": "d27f253b1b922c98c72acb8fc4bdf3b8bdf27e41",
+      "dirty": ""
+    },
+    "command": [
+      "bash",
+      "tools/temporal-cue-host-check/run.sh",
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib"
+    ],
+    "requestedAt": "2026-11-04T20:53:53.299671+00:00",
+    "locks": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+      "/workspace/scratch/d663e8444310/qa/gradle.lock"
+    ],
+    "exitCode": 0,
+    "status": "PASS",
+    "freeBytesAtStart": 1567977472,
+    "startedAt": "2026-11-04T20:53:53.299970+00:00",
+    "finishedAt": "2026-11-04T20:54:02.494262+00:00",
+    "sourceUnchanged": true,
+    "recordedAt": "2026-11-04T20:54:02.528586+00:00"
+  },
+  "tests": 29,
+  "passed": 29,
+  "failed": 0,
+  "skipped": 0,
+  "compileExit": 0,
+  "junitExit": 0,
+  "compiler": "Existing Gradle8.11.1 distribution Kotlin2.0.20; JDK17; JUnit4.13.2",
+  "limits": [
+    "Full original retriever and29tests executed with explicit fail-fast event decorator compile stand-in",
+    "No Android, real event delivery, loaded model or device execution",
+    "Existing default retrieval remains42/44Recall@3 with theater result rank5; no new ranking or main-chat model acceptance"
+  ],
+  "files": {
+    "daily-host-01.result.json": "6962be80d4845f31c9a6367efe07841960f35fc1daa28785012f3c1c0f8a3c1f",
+    "daily-host-01.txt": "15e82e4f64632ba70a4a6b0f7093374dc5257dea4e65d07b84cdfb72225c9d0c"
+  }
+}

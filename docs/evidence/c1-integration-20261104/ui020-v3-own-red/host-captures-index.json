@@ -1,0 +1,11 @@
+{
+  "archiveSha256": "289865d452e3f9c220965ff917e4bf1832a954d5b986a2e5e3460e9c0f4bf85f",
+  "files": {
+    "narrow-280x720-font100-home.png": "f25673347166436c0e88208983080b7779dd639a6ee430ac46bd050dfe8ddf1f",
+    "narrow-280x720-font100-home.views.txt": "ec1c841d48bb9e6a24b1732c2e60066bd045cb8e75b2817a1bb9c54c89908c1d",
+    "narrow-280x720-font200-stop.png": "6d9905da29c0667e949be1f1a1c8060541616c0e9a6fdbc1c719997571a76393",
+    "narrow-280x720-font200-stop.views.txt": "2208dbce129c108c353ab63cadfdf45884af57b52873e1d29676c0bf047c57d8",
+    "phone-412x915-font100-home.png": "cdd1cb6bfedc2a04021a7b484dea05360282239a36d7e5bd70b5d4e9d2a92cfb",
+    "phone-412x915-font100-home.views.txt": "6a67d737295797ffe803b1d4dc9a78f7616c8c031284843f841942fd15a55dca"
+  }
+}

@@ -1,0 +1,36 @@
+[
+  {
+    "root": "/workspace/momega1-build-env/final-gradle-1bf0af5f/workspace-host/cancel/worker-alpha",
+    "stateDir": "/workspace/momega1-build-env/final-gradle-1bf0af5f/workspace-host/cancel/worker-alpha-state",
+    "scope": {
+      "workerId": "worker-alpha",
+      "taskId": "t-c30a918f723a14d5",
+      "sourceCommit": "0e8c1991d6dfd0f31fbc8be7d44abff34a9d24a2",
+      "requestMessageId": "bd83a9ab-07b0-4507-9801-5bc7d3c21ff5",
+      "requestHash": "ae06f5d655b42ac8d55e640efeaacc229f4bdb95cc43b2f95ac0640780df6e94",
+      "jobId": "d615b1a0-faa4-47f9-87ce-2551d545aef2",
+      "profile": "node-continuum",
+      "memoryMb": 256,
+      "cpus": 1,
+      "pids": 64,
+      "timeoutMillis": 15000
+    }
+  },
+  {
+    "root": "/workspace/momega1-build-env/final-gradle-1bf0af5f/workspace-host/cancel/worker-beta",
+    "stateDir": "/workspace/momega1-build-env/final-gradle-1bf0af5f/workspace-host/cancel/worker-beta-state",
+    "scope": {
+      "workerId": "worker-beta",
+      "taskId": "t-b215677f9082b602",
+      "sourceCommit": "57b2925a3e90ef1a1b40b94d1c3ffd1e3a9f7fb8",
+      "requestMessageId": "f4ef4d74-d462-4d94-90cd-9a3fd0f9f83c",
+      "requestHash": "4894dbe9394958c3467cad52d2169c9d171950b91c02a34acb167c41a7c82de1",
+      "jobId": "6f557a81-93e3-4ebe-9ab9-c745ec3390dd",
+      "profile": "node-continuum",
+      "memoryMb": 256,
+      "cpus": 1,
+      "pids": 64,
+      "timeoutMillis": 15000
+    }
+  }
+]

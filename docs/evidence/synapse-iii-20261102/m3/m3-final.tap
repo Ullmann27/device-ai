@@ -1,0 +1,184 @@
+TAP version 13
+# Subtest: the bridge accepts only the fixed CCC1 operations with validated values
+ok 1 - the bridge accepts only the fixed CCC1 operations with validated values
+  ---
+  duration_ms: 6.489682
+  type: 'test'
+  ...
+# Subtest: owner chain over the bridge: real regression -> verified patch for review; replays never run again
+ok 2 - owner chain over the bridge: real regression -> verified patch for review; replays never run again
+  ---
+  duration_ms: 13260.920132
+  type: 'test'
+  ...
+# Subtest: a worker crash before execution is never a success; the owner cancels the pending order cleanly
+ok 3 - a worker crash before execution is never a success; the owner cancels the pending order cleanly
+  ---
+  duration_ms: 2825.648918
+  type: 'test'
+  ...
+# Subtest: refusals are data with exit code 2: protected branch, dirty tree, state in or linked into the checkout, damaged journal
+ok 4 - refusals are data with exit code 2: protected branch, dirty tree, state in or linked into the checkout, damaged journal
+  ---
+  duration_ms: 2361.112
+  type: 'test'
+  ...
+# Subtest: Android speaks the same fixed CCC1 operations and stores only validated summaries
+ok 5 - Android speaks the same fixed CCC1 operations and stores only validated summaries
+  ---
+  duration_ms: 7.898343
+  type: 'test'
+  ...
+# Subtest: same Android order cannot bind another checkout even with identical commit bytes
+ok 6 - same Android order cannot bind another checkout even with identical commit bytes
+  ---
+  duration_ms: 250.278887
+  type: 'test'
+  ...
+# Subtest: new order cannot deduplicate an open goal belonging to another checkout
+ok 7 - new order cannot deduplicate an open goal belonging to another checkout
+  ---
+  duration_ms: 111.082117
+  type: 'test'
+  ...
+# Subtest: stale source supplied to a new order is refused before a task exists
+ok 8 - stale source supplied to a new order is refused before a task exists
+  ---
+  duration_ms: 93.717315
+  type: 'test'
+  ...
+# Subtest: same checkout/order is idempotent after module restart and canonical symlink
+ok 9 - same checkout/order is idempotent after module restart and canonical symlink
+  ---
+  duration_ms: 292.0192
+  type: 'test'
+  ...
+# Subtest: bound worker cycle refuses a different checkout before indexing or execution
+ok 10 - bound worker cycle refuses a different checkout before indexing or execution
+  ---
+  duration_ms: 239.893119
+  type: 'test'
+  ...
+# Subtest: retry cannot relabel an old task with a newer checkout HEAD
+ok 11 - retry cannot relabel an old task with a newer checkout HEAD
+  ---
+  duration_ms: 277.598245
+  type: 'test'
+  ...
+# Subtest: missing legacy binding requires owner review, never automatic state adoption
+ok 12 - missing legacy binding requires owner review, never automatic state adoption
+  ---
+  duration_ms: 234.445426
+  type: 'test'
+  ...
+# Subtest: protocol v2: repair goals, hypotheses and requests are strict; v1 journals stay valid; foreign hashes do not
+ok 13 - protocol v2: repair goals, hypotheses and requests are strict; v1 journals stay valid; foreign hashes do not
+  ---
+  duration_ms: 4.818143
+  type: 'test'
+  ...
+# Subtest: the gate allows a repair only for a chain the owner granted, within deadline, rounds and CPU budget
+ok 14 - the gate allows a repair only for a chain the owner granted, within deadline, rounds and CPU budget
+  ---
+  duration_ms: 0.770204
+  type: 'test'
+  ...
+# Subtest: the verifier confirms a repair only from real artifacts: failing baseline, passing candidate and independent run
+ok 15 - the verifier confirms a repair only from real artifacts: failing baseline, passing candidate and independent run
+  ---
+  duration_ms: 2.406112
+  type: 'test'
+  ...
+# Subtest: CCC1 repairs a real regression end to end and records it once for the owner to review
+ok 16 - CCC1 repairs a real regression end to end and records it once for the owner to review
+  ---
+  duration_ms: 2709.886441
+  type: 'test'
+  ...
+# Subtest: a passing chain is reported as nothing to repair, never as a repair
+ok 17 - a passing chain is reported as nothing to repair, never as a repair
+  ---
+  duration_ms: 884.058145
+  type: 'test'
+  ...
+# Subtest: repair orders refuse invalid input, dirty checkouts, reused job ids and stale bases; replays never execute again
+ok 18 - repair orders refuse invalid input, dirty checkouts, reused job ids and stale bases; replays never execute again
+  ---
+  duration_ms: 617.132969
+  type: 'test'
+  ...
+# Subtest: an interrupted repair is never repeated without the owner; recovery classifies it like any coding job
+ok 19 - an interrupted repair is never repeated without the owner; recovery classifies it like any coding job
+  ---
+  duration_ms: 93.006279
+  type: 'test'
+  ...
+# Subtest: every orchestrator outcome maps to a known loop outcome; only real progress is not a failure
+ok 20 - every orchestrator outcome maps to a known loop outcome; only real progress is not a failure
+  ---
+  duration_ms: 2.132746
+  type: 'test'
+  ...
+# Subtest: a submitted goal is confirmed by the real job, reported for review and recorded once
+ok 21 - a submitted goal is confirmed by the real job, reported for review and recorded once
+  ---
+  duration_ms: 3428.067843
+  type: 'test'
+  ...
+# Subtest: an ambiguous goal becomes an owner question without a job, recorded as an investigation
+ok 22 - an ambiguous goal becomes an owner question without a job, recorded as an investigation
+  ---
+  duration_ms: 761.741792
+  type: 'test'
+  ...
+# Subtest: the existing local loop drives CCC1 cycles with its durable checkpoint
+ok 23 - the existing local loop drives CCC1 cycles with its durable checkpoint
+  ---
+  duration_ms: 2994.056464
+  type: 'test'
+  ...
+# Subtest: damaged journals are reported, never repaired, and stop the worker; the experience log detects edits
+ok 24 - damaged journals are reported, never repaired, and stop the worker; the experience log detects edits
+  ---
+  duration_ms: 38.088719
+  type: 'test'
+  ...
+# Subtest: the CLI keeps its state outside the repository and lists tasks
+ok 25 - the CLI keeps its state outside the repository and lists tasks
+  ---
+  duration_ms: 173.090859
+  type: 'test'
+  ...
+# Subtest: an idle cycle refreshes the code index only when asked, and probes again only what changed
+ok 26 - an idle cycle refreshes the code index only when asked, and probes again only what changed
+  ---
+  duration_ms: 529.508168
+  type: 'test'
+  ...
+# Subtest: the task compiler answers before any task or coding job: ready, ambiguous, no match, needs the owner
+ok 27 - the task compiler answers before any task or coding job: ready, ambiguous, no match, needs the owner
+  ---
+  duration_ms: 1553.733879
+  type: 'test'
+  ...
+# Subtest: tasks are bound to the real repository, never to a placeholder
+ok 28 - tasks are bound to the real repository, never to a placeholder
+  ---
+  duration_ms: 99.30573
+  type: 'test'
+  ...
+# Subtest: submit runs the CCC1 preflight: no task on a production branch, a dirty checkout or without the runtime
+ok 29 - submit runs the CCC1 preflight: no task on a production branch, a dirty checkout or without the runtime
+  ---
+  duration_ms: 305.203759
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 35705.261189

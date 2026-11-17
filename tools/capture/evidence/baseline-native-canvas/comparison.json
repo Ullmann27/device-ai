@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "purpose": "Diagnostic numerical differences; no automatic aesthetic or device pass",
+  "reference_sha256": "e0afbdd199f619e0e8ee4ed791c8f930d34dd7769c3f0a9b154ccbfbb80749de",
+  "capture_sha256": "f6eed4d949e5e0e740041c43dc589274f5d295b6c0a4c24fbbeb827d9fec744d",
+  "region_contract_sha256": "edf00355a4dc98ca8987d4edf546b74d03a217806dbe60c1a06d057fc7d14e42",
+  "capture_manifest_sha256": "bdbf68dd65ed97f879e45019c0f67b4a62986a857ccda1a5dcc6263c2a18224e",
+  "capture_manifest": {
+    "schema_version": 1,
+    "fidelity": "android_activity_host_native_canvas_api28_explicit_2d_head",
+    "source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+    "pixel_width": 960,
+    "pixel_height": 640,
+    "viewport_width_dp": 960,
+    "viewport_height_dp": 640,
+    "density": 1,
+    "font_scale": 1,
+    "animation_duration_scale": 0,
+    "head_mode": "existing_2d_renderer_explicitly_selected",
+    "native_filament_verified": false,
+    "physical_device_verified": false,
+    "data_policy": "isolated empty test storage; real application startup; no invented status data",
+    "bounds_coordinate_space": "each View relative to its real parent; no synthetic composition",
+    "home_bounds": {
+      "left": 0,
+      "top": 0,
+      "right": 814,
+      "bottom": 640
+    },
+    "avatar_bounds": {
+      "left": 215,
+      "top": 60,
+      "right": 584,
+      "bottom": 565
+    },
+    "shell_bounds": {
+      "left": 0,
+      "top": 0,
+      "right": 814,
+      "bottom": 640
+    },
+    "png_sha256": "f6eed4d949e5e0e740041c43dc589274f5d295b6c0a4c24fbbeb827d9fec744d"
+  },
+  "reference_raster": [
+    1536,
+    1024
+  ],
+  "capture_original_raster": [
+    960,
+    640
+  ],
+  "explicit_crop": null,
+  "alignment": {
+    "operation": "uniform_resample",
+    "source_size": [
+      960,
+      640
+    ],
+    "target_size": [
+      1536,
+      1024
+    ],
+    "scale": 1.6,
+    "kernel": "Pillow LANCZOS"
+  },
+  "masks": [
+    {
+      "box": [
+        30,
+        18,
+        158,
+        80
+      ],
+      "reason": "Clock/date are real values and may use the configured locale."
+    },
+    {
+      "box": [
+        292,
+        377,
+        631,
+        434
+      ],
+      "reason": "Reference dialogue claims connectivity; the app must display its actual dialogue instead."
+    },
+    {
+      "box": [
+        1432,
+        174,
+        1510,
+        388
+      ],
+      "reason": "Reference module health and counts are illustrations, not permitted fixture values."
+    },
+    {
+      "box": [
+        1272,
+        111,
+        1420,
+        134
+      ],
+      "reason": "Camera tracking must not claim an observation without permission and a real source."
+    },
+    {
+      "box": [
+        277,
+        749,
+        537,
+        875
+      ],
+      "reason": "Agent names and running tasks depend on authentic runtime events."
+    },
+    {
+      "box": [
+        578,
+        736,
+        829,
+        875
+      ],
+      "reason": "Plan progress depends on real execution; checkmarks cannot be copied from the reference."
+    },
+    {
+      "box": [
+        862,
+        744,
+        1140,
+        875
+      ],
+      "reason": "Memory graph and counts require actual memory events; zero/offline is valid."
+    },
+    {
+      "box": [
+        1223,
+        736,
+        1503,
+        875
+      ],
+      "reason": "Model/device values and readiness depend on a real loaded model and measurements."
+    },
+    {
+      "box": [
+        40,
+        924,
+        1510,
+        958
+      ],
+      "reason": "Status text and lights must truthfully describe device/network/model state; frame remains compared."
+    }
+  ],
+  "regions": [
+    {
+      "name": "header",
+      "box": [
+        8,
+        4,
+        1528,
+        97
+      ],
+      "all_pixels": {
+        "included_pixels": 141360,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 40.10666855310319,
+        "root_mean_square_rgb_error_0_255": 75.55953473256751,
+        "psnr_db": 10.565018107987221,
+        "identical_included_pixels": false
+      },
+      "declared_masks_only": {
+        "included_pixels": 133424,
+        "excluded_pixels": 7936,
+        "included_fraction": 0.9438596491228071,
+        "mean_absolute_rgb_error_0_255": 38.911317803893354,
+        "root_mean_square_rgb_error_0_255": 73.28173048805643,
+        "psnr_db": 10.830889282890341,
+        "identical_included_pixels": false
+      }
+    },
+    {
+      "name": "navigation",
+      "box": [
+        8,
+        96,
+        246,
+        900
+      ],
+      "all_pixels": {
+        "included_pixels": 191352,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 38.42674582270719,
+        "root_mean_square_rgb_error_0_255": 70.38976346709241,
+        "psnr_db": 11.180613492029725,
+        "identical_included_pixels": false
+      },
+      "declared_masks_only": {
+        "included_pixels": 191352,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 38.42674582270719,
+        "root_mean_square_rgb_error_0_255": 70.38976346709241,
+        "psnr_db": 11.180613492029725,
+        "identical_included_pixels": false
+      }
+    },
+    {
+      "name": "avatar_and_dialog",
+      "box": [
+        246,
+        64,
+        810,
+        502
+      ],
+      "all_pixels": {
+        "included_pixels": 247032,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 52.24323164610253,
+        "root_mean_square_rgb_error_0_255": 79.296471805879,
+        "psnr_db": 10.14572632117334,
+        "identical_included_pixels": false
+      },
+      "declared_masks_only": {
+        "included_pixels": 227709,
+        "excluded_pixels": 19323,
+        "included_fraction": 0.9217793646167298,
+        "mean_absolute_rgb_error_0_255": 52.95083930220881,
+        "root_mean_square_rgb_error_0_255": 79.41962267795414,
+        "psnr_db": 10.132247220621869,
+        "identical_included_pixels": false
+      }
+    },
+    {
+      "name": "brain_and_pedestal",
+      "box": [
+        802,
+        176,
+        1218,
+        502
+      ],
+      "all_pixels": {
+        "included_pixels": 135616,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 65.89613811546327,
+        "root_mean_square_rgb_error_0_255": 91.88306484867343,
+        "psnr_db": 8.86609414712066,
+        "identical_included_pixels": false
+      },
+      "declared_masks_only": {
+        "included_pixels": 135616,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 65.89613811546327,
+        "root_mean_square_rgb_error_0_255": 91.88306484867343,
+        "psnr_db": 8.86609414712066,
+        "identical_included_pixels": false
+      }
+    },
+    {
+      "name": "module_panel",
+      "box": [
+        1215,
+        153,
+        1525,
+        407
+      ],
+      "all_pixels": {
+        "included_pixels": 78740,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 34.639044111421555,
+        "root_mean_square_rgb_error_0_255": 65.29279712596211,
+        "psnr_db": 11.833498127430758,
+        "identical_included_pixels": false
+      },
+      "declared_masks_only": {
+        "included_pixels": 62048,
+        "excluded_pixels": 16692,
+        "included_fraction": 0.788011176022352,
+        "mean_absolute_rgb_error_0_255": 32.69443549080282,
+        "root_mean_square_rgb_error_0_255": 63.05553461744142,
+        "psnr_db": 12.136339364383733,
+        "identical_included_pixels": false
+      }
+    },
+    {
+      "name": "action_tiles",
+      "box": [
+        255,
+        502,
+        1525,
+        690
+      ],
+      "all_pixels": {
+        "included_pixels": 238760,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 48.417832411905955,
+        "root_mean_square_rgb_error_0_255": 73.68399989753682,
+        "psnr_db": 10.783339743112299,
+        "identical_included_pixels": false
+      },
+      "declared_masks_only": {
+        "included_pixels": 238760,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 48.417832411905955,
+        "root_mean_square_rgb_error_0_255": 73.68399989753682,
+        "psnr_db": 10.783339743112299,
+        "identical_included_pixels": false
+      }
+    },
+    {
+      "name": "activity_panels",
+      "box": [
+        255,
+        696,
+        1525,
+        894
+      ],
+      "all_pixels": {
+        "included_pixels": 251460,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 33.25124473077229,
+        "root_mean_square_rgb_error_0_255": 63.14838160738156,
+        "psnr_db": 12.123559113541024,
+        "identical_included_pixels": false
+      },
+      "declared_masks_only": {
+        "included_pixels": 108473,
+        "excluded_pixels": 142987,
+        "included_fraction": 0.4313727829475861,
+        "mean_absolute_rgb_error_0_255": 30.816089410882586,
+        "root_mean_square_rgb_error_0_255": 56.30220148785257,
+        "psnr_db": 13.12029607565436,
+        "identical_included_pixels": false
+      }
+    },
+    {
+      "name": "status_strip",
+      "box": [
+        8,
+        904,
+        1526,
+        982
+      ],
+      "all_pixels": {
+        "included_pixels": 118404,
+        "excluded_pixels": 0,
+        "included_fraction": 1.0,
+        "mean_absolute_rgb_error_0_255": 33.91093487832618,
+        "root_mean_square_rgb_error_0_255": 60.53443602427168,
+        "psnr_db": 12.490753596388204,
+        "identical_included_pixels": false
+      },
+      "declared_masks_only": {
+        "included_pixels": 68424,
+        "excluded_pixels": 49980,
+        "included_fraction": 0.5778858822337083,
+        "mean_absolute_rgb_error_0_255": 34.86195389531938,
+        "root_mean_square_rgb_error_0_255": 58.95097681370708,
+        "psnr_db": 12.720983494259446,
+        "identical_included_pixels": false
+      }
+    }
+  ],
+  "all_pixels": {
+    "included_pixels": 1572864,
+    "excluded_pixels": 0,
+    "included_fraction": 1.0,
+    "mean_absolute_rgb_error_0_255": 42.72131750318739,
+    "root_mean_square_rgb_error_0_255": 71.84645827302434,
+    "psnr_db": 11.002696326398368,
+    "identical_included_pixels": false
+  },
+  "declared_masks_only": {
+    "included_pixels": 1332542,
+    "excluded_pixels": 240322,
+    "included_fraction": 0.8472073872884115,
+    "mean_absolute_rgb_error_0_255": 43.830549931384276,
+    "root_mean_square_rgb_error_0_255": 72.23519360336887,
+    "psnr_db": 10.955826786429139,
+    "identical_included_pixels": false
+  },
+  "interpretation": "Live values and translated labels may differ honestly. Unmasked and masked measurements are both retained. Pixel errors do not prove usability, identity, animation or native GPU fidelity."
+}

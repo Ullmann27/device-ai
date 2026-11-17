@@ -1,0 +1,681 @@
+{
+  "schema": "SYNAPSE_NEW_10_CONTROLS_V1",
+  "status": "COMPLETED_HOST_ONLY",
+  "seed": 20261102,
+  "corpusSha256": "6c73763bf77cf8c1defaeb04574ef39f18156b6bcbc4a597dc20a860a26811e0",
+  "checkpointSha256": "629c8319ede2aba3cd60f0448b6469034c8550530e0326739b79c26bfc40939d",
+  "checkpointBytes": 910,
+  "caseCount": 10,
+  "independentFreezeBeforeCandidateInspection": true,
+  "rulePriorKnowledge": "Auditor had read existing rule/reflex for M1; no new-rule-blindness claim.",
+  "freshness": {
+    "checkedFiles": 537,
+    "overlaps": [],
+    "scope": "Prior issue340 datasets and JSON evidence/resources, including available pr330 A/B private corpora. Novel generated identities and complete inputs; templates may overlap."
+  },
+  "metrics": {
+    "RAW": {
+      "exact": 10,
+      "total": 10,
+      "supportedExact": 5,
+      "supportedTotal": 5,
+      "declineExact": 5,
+      "declineTotal": 5,
+      "falsePositive": 0,
+      "unsupportedAbstention": 0
+    },
+    "VERIFIED": {
+      "exact": 10,
+      "total": 10,
+      "supportedExact": 5,
+      "supportedTotal": 5,
+      "declineExact": 5,
+      "declineTotal": 5,
+      "falsePositive": 0,
+      "unsupportedAbstention": 0
+    },
+    "RULE": {
+      "exact": 9,
+      "total": 10,
+      "supportedExact": 5,
+      "supportedTotal": 5,
+      "declineExact": 4,
+      "declineTotal": 5,
+      "falsePositive": 1,
+      "unsupportedAbstention": 0
+    }
+  },
+  "rows": [
+    {
+      "id": "N01",
+      "category": "supported",
+      "expected": {
+        "text": "Neuinccuargk",
+        "sourceId": "fresh-20261102-1-0",
+        "revision": 3,
+        "sha256": "6c9bf98c9777c16b665a5ea4fa1b21f1b7593431879b57e84456dac64b633d5f",
+        "start": 20,
+        "endExclusive": 32
+      },
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-1-0",
+          "decision": "SPAN",
+          "sha256": "6c9bf98c9777c16b665a5ea4fa1b21f1b7593431879b57e84456dac64b633d5f",
+          "endExclusive": 32,
+          "start": 20,
+          "text": "Neuinccuargk",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-1-0",
+          "decision": "SPAN",
+          "sha256": "6c9bf98c9777c16b665a5ea4fa1b21f1b7593431879b57e84456dac64b633d5f",
+          "endExclusive": 32,
+          "start": 20,
+          "text": "Neuinccuargk",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-1-0",
+          "decision": "SPAN",
+          "sha256": "6c9bf98c9777c16b665a5ea4fa1b21f1b7593431879b57e84456dac64b633d5f",
+          "endExclusive": 32,
+          "start": 20,
+          "text": "Neuinccuargk",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      }
+    },
+    {
+      "id": "N02",
+      "category": "supported",
+      "expected": {
+        "text": "Neulundnznha",
+        "sourceId": "fresh-20261102-2-0",
+        "revision": 3,
+        "sha256": "248c72884cb1c94b48f6e2d0db5c67fa50806577bae66ad857f3d81541498f81",
+        "start": 52,
+        "endExclusive": 64
+      },
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-2-0",
+          "decision": "SPAN",
+          "sha256": "248c72884cb1c94b48f6e2d0db5c67fa50806577bae66ad857f3d81541498f81",
+          "endExclusive": 64,
+          "start": 52,
+          "text": "Neulundnznha",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-2-0",
+          "decision": "SPAN",
+          "sha256": "248c72884cb1c94b48f6e2d0db5c67fa50806577bae66ad857f3d81541498f81",
+          "endExclusive": 64,
+          "start": 52,
+          "text": "Neulundnznha",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-2-0",
+          "decision": "SPAN",
+          "sha256": "248c72884cb1c94b48f6e2d0db5c67fa50806577bae66ad857f3d81541498f81",
+          "endExclusive": 64,
+          "start": 52,
+          "text": "Neulundnznha",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      }
+    },
+    {
+      "id": "N03",
+      "category": "supported",
+      "expected": {
+        "text": "Neupminsgzlr",
+        "sourceId": "fresh-20261102-3-1",
+        "revision": 3,
+        "sha256": "22d4945f15ba49e2b66f1e30eb1b3d7aeca77b7028d798342b5698adbc2ca967",
+        "start": 18,
+        "endExclusive": 30
+      },
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-3-1",
+          "decision": "SPAN",
+          "sha256": "22d4945f15ba49e2b66f1e30eb1b3d7aeca77b7028d798342b5698adbc2ca967",
+          "endExclusive": 30,
+          "start": 18,
+          "text": "Neupminsgzlr",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-3-1",
+          "decision": "SPAN",
+          "sha256": "22d4945f15ba49e2b66f1e30eb1b3d7aeca77b7028d798342b5698adbc2ca967",
+          "endExclusive": 30,
+          "start": 18,
+          "text": "Neupminsgzlr",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-3-1",
+          "decision": "SPAN",
+          "sha256": "22d4945f15ba49e2b66f1e30eb1b3d7aeca77b7028d798342b5698adbc2ca967",
+          "endExclusive": 30,
+          "start": 18,
+          "text": "Neupminsgzlr",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      }
+    },
+    {
+      "id": "N04",
+      "category": "supported",
+      "expected": {
+        "text": "Neuimzkkdkez",
+        "sourceId": "fresh-20261102-4-0",
+        "revision": 3,
+        "sha256": "5fca61b2efdc1c28e677be39856eb4be5650500054c9b150c05f23000e3691d5",
+        "start": 20,
+        "endExclusive": 32
+      },
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-4-0",
+          "decision": "SPAN",
+          "sha256": "5fca61b2efdc1c28e677be39856eb4be5650500054c9b150c05f23000e3691d5",
+          "endExclusive": 32,
+          "start": 20,
+          "text": "Neuimzkkdkez",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-4-0",
+          "decision": "SPAN",
+          "sha256": "5fca61b2efdc1c28e677be39856eb4be5650500054c9b150c05f23000e3691d5",
+          "endExclusive": 32,
+          "start": 20,
+          "text": "Neuimzkkdkez",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-4-0",
+          "decision": "SPAN",
+          "sha256": "5fca61b2efdc1c28e677be39856eb4be5650500054c9b150c05f23000e3691d5",
+          "endExclusive": 32,
+          "start": 20,
+          "text": "Neuimzkkdkez",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      }
+    },
+    {
+      "id": "N05",
+      "category": "supported",
+      "expected": {
+        "text": "Neulhgdpfbpz",
+        "sourceId": "fresh-20261102-5-0",
+        "revision": 3,
+        "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+        "start": 54,
+        "endExclusive": 66
+      },
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-5-0",
+          "decision": "SPAN",
+          "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+          "endExclusive": 66,
+          "start": 54,
+          "text": "Neulhgdpfbpz",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-5-0",
+          "decision": "SPAN",
+          "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+          "endExclusive": 66,
+          "start": 54,
+          "text": "Neulhgdpfbpz",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-5-0",
+          "decision": "SPAN",
+          "sha256": "6bafcf795f3e5c30a4b63102d5905ecc55c58e6d70f78328d2d300a4e52c2fd0",
+          "endExclusive": 66,
+          "start": 54,
+          "text": "Neulhgdpfbpz",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      }
+    },
+    {
+      "id": "N06",
+      "category": "decline-relation",
+      "expected": null,
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      }
+    },
+    {
+      "id": "N07",
+      "category": "decline-pronoun-correction",
+      "expected": null,
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      }
+    },
+    {
+      "id": "N08",
+      "category": "decline-time-correction",
+      "expected": null,
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "RULE": {
+        "exact": false,
+        "falsePositive": true,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-8-0",
+          "decision": "SPAN",
+          "sha256": "713d7793f2072eb5e3496500cac388d0bb13bcecdc24f6e221189b2d75246ff8",
+          "endExclusive": 30,
+          "start": 18,
+          "text": "Neupugnnoodo",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      }
+    },
+    {
+      "id": "N09",
+      "category": "decline-conflict",
+      "expected": null,
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      }
+    },
+    {
+      "id": "N10",
+      "category": "decline-reported-claim",
+      "expected": null,
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "RULE": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      }
+    }
+  ],
+  "failures": [
+    {
+      "id": "N08",
+      "category": "decline-time-correction",
+      "expected": null,
+      "RAW": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "VERIFIED": {
+        "exact": true,
+        "falsePositive": false,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "decision": "NOANSWER"
+        }
+      },
+      "RULE": {
+        "exact": false,
+        "falsePositive": true,
+        "unsupportedAbstention": false,
+        "prediction": {
+          "sourceId": "fresh-20261102-8-0",
+          "decision": "SPAN",
+          "sha256": "713d7793f2072eb5e3496500cac388d0bb13bcecdc24f6e221189b2d75246ff8",
+          "endExclusive": 30,
+          "start": 18,
+          "text": "Neupugnnoodo",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        }
+      }
+    }
+  ],
+  "notPooledWithConsumedBlindC": true,
+  "promotion": "FORBIDDEN_RESEARCH_ONLY",
+  "training": "NOT_RUN",
+  "device": "NOT_RUN",
+  "commands": [
+    {
+      "id": "N01",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N01.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N01.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.6024850349999724
+    },
+    {
+      "id": "N02",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N02.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N02.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.7667959599999676
+    },
+    {
+      "id": "N03",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N03.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N03.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.534173929000076
+    },
+    {
+      "id": "N04",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N04.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N04.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.5293789209999886
+    },
+    {
+      "id": "N05",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N05.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N05.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.843101402000002
+    },
+    {
+      "id": "N06",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N06.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N06.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.63225936799995
+    },
+    {
+      "id": "N07",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N07.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N07.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.9580304999999498
+    },
+    {
+      "id": "N08",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N08.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N08.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 1.0363518130000102
+    },
+    {
+      "id": "N09",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N09.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N09.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 1.7836109239999587
+    },
+    {
+      "id": "N10",
+      "command": [
+        "/workspace/post-fable-toolchain/jdk21/bin/java",
+        "-cp",
+        "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+        "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+        "predict",
+        "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/requests/N10.json",
+        "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2-fresh-controls/outputs/N10.json"
+      ],
+      "exitCode": 0,
+      "wallSeconds": 0.7187945690000106
+    }
+  ]
+}

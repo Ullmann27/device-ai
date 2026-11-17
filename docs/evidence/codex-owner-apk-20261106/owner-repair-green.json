@@ -1,0 +1,56 @@
+{
+  "category": "HOST_ROBOLECTRIC_CONTROLLED_ENGINE",
+  "baseline_remote_commit": "24e1a9b77e7796575abf2c71262dc3fc9c984e86",
+  "baseline_local_commit": "7266097975760315abbf8d63b338ec5fa28f416e",
+  "working_tree_fixes": "source file SHA-256 below; committed immediately after receipt",
+  "tests": 7,
+  "passed": 7,
+  "failed": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "anEmptyDecisionQueryClearsThePreviousFocus",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "stopRejectsAQueuedPdfFailureAndItsPicker",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "stopRejectsAQueuedDecisionContinuation",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "name": "failedOwnerVoiceFallsBackToAnActuallyLoadableOfflineVoice",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "name": "brokenAutomaticWinnerDoesNotPreventTheNextOfflineVoice",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "name": "selectingAWorkingVoiceWhileMutedDoesNotReportFailure",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOfflineVoiceRecoveryUiTest",
+      "name": "allOfflineFailuresNeverSelectANetworkVoice",
+      "status": "PASS"
+    }
+  ],
+  "source_sha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "15a5c3f5875f8d28f62615da913d984b36f9f897b96eece8d04ce262edabc90f",
+    "app/src/main/java/at/heinz/deviceai/cognitive/JarvisVoiceSelection.kt": "0b6ccba34aeb8f1588e707b2d5f8bc2024066bceed001cd804d8f95e4318d8fa",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentFlowUiTest.kt": "335bd3320e22eeeabd6ef401ddcc968b0dc6730ca4c4576e0fa2b7846ab5f540",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumOfflineVoiceRecoveryUiTest.kt": "511bdd849802ab288dfa3a878cc7f320d537371b2c17a048bb0e276f61b2426e"
+  },
+  "real_device": "NOT_RUN",
+  "real_model": "NOT_RUN",
+  "real_audio": "NOT_RUN"
+}

@@ -1,0 +1,21 @@
+{
+  "status": "EVIDENCE_ONLY_CLOSURE",
+  "checkedAtUtc": "2026-11-04T23:07:33.503721+00:00",
+  "testedLocalCommit": "191ee80fe2a916f2a8e4041df386bfa29a6a03b0",
+  "testedRemoteCommit": "80c01939e8a1fdd04cfa9a818c352be494bc1719",
+  "testedFullTree": "2defed4632b02a78478f9ecc1e910557181343cf",
+  "unchangedRuntimeAndBuildPaths": {
+    "app": "2a3f8524f8740eefb1284d313101d345501ee324",
+    ".github": "8662378ce1e3c58b4852752560d3ac0ccec46432",
+    "scripts": "55fcbce4bc4609275752900d12c05b9fb2c761b1",
+    "tools": "085c4fd195d871d359d24d2ca09a93fff4b55679",
+    "backend": "f4bc00c1ba8afb0f115b26450757fd322843fd0c",
+    "gradle": "4167f4ea961fcf6b4ae64c287eee7d16241e967e",
+    "build.gradle.kts": "0c78129a579e19d3c36507270447c0ac923d6990",
+    "settings.gradle.kts": "a28a73967af24ad4ae6fb5f3cc7e681e258b63f4",
+    "gradle.properties": "576d1063c72ad332decbf9614b20f447c673af9d"
+  },
+  "changedPathsMustRemainUnder": "docs/",
+  "newRuntimeAcceptanceClaim": false,
+  "note": "Final published closure adds original evidence and documentation only. Runtime source remains the exact tested published commit."
+}

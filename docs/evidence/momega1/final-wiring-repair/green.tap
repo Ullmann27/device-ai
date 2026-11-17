@@ -1,0 +1,400 @@
+TAP version 13
+# Subtest: learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+ok 1 - learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+  ---
+  duration_ms: 282.020406
+  type: 'test'
+  ...
+# Subtest: cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+ok 2 - cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+  ---
+  duration_ms: 465.616947
+  type: 'test'
+  ...
+# Subtest: background consolidation records failure without losing interrupted source trials
+ok 3 - background consolidation records failure without losing interrupted source trials
+  ---
+  duration_ms: 0.27766
+  type: 'test'
+  ...
+# Subtest: experimental module is inspectable and not on any automatic model promotion path
+ok 4 - experimental module is inspectable and not on any automatic model promotion path
+  ---
+  duration_ms: 0.234564
+  type: 'test'
+  ...
+# Subtest: activity request codes are unique and every one has a result handler
+ok 5 - activity request codes are unique and every one has a result handler
+  ---
+  duration_ms: 179.347637
+  type: 'test'
+  ...
+# Subtest: scheduled offline job names the JobService declared in the manifest
+ok 6 - scheduled offline job names the JobService declared in the manifest
+  ---
+  duration_ms: 0.597914
+  type: 'test'
+  ...
+# Subtest: user-visible texts contain line breaks, not a literal backslash-n
+ok 7 - user-visible texts contain line breaks, not a literal backslash-n
+  ---
+  duration_ms: 9.179438
+  type: 'test'
+  ...
+# Subtest: learning-core and research store I/O stays off the UI thread in dialogs and chat input
+ok 8 - learning-core and research store I/O stays off the UI thread in dialogs and chat input
+  ---
+  duration_ms: 697.834237
+  type: 'test'
+  ...
+# Subtest: neural weights are saved by compare-and-swap and foreground practice can be stopped
+ok 9 - neural weights are saved by compare-and-swap and foreground practice can be stopped
+  ---
+  duration_ms: 39.590781
+  type: 'test'
+  ...
+# Subtest: startup bootstrap training stops with the activity and is retried later
+ok 10 - startup bootstrap training stops with the activity and is retried later
+  ---
+  duration_ms: 82.435189
+  type: 'test'
+  ...
+# Subtest: startup I/O off the UI thread and shell commands stop with their activity
+ok 11 - startup I/O off the UI thread and shell commands stop with their activity
+  ---
+  duration_ms: 181.471707
+  type: 'test'
+  ...
+# Subtest: local language model path is reachable: model center, loading, chat escalation and reasoning chain
+ok 12 - local language model path is reachable: model center, loading, chat escalation and reasoning chain
+  ---
+  duration_ms: 350.532924
+  type: 'test'
+  ...
+# Subtest: every area has a center reachable from the start screen; no demo buttons; experiments marked
+ok 13 - every area has a center reachable from the start screen; no demo buttons; experiments marked
+  ---
+  duration_ms: 184.880747
+  type: 'test'
+  ...
+# Subtest: Teamleader Android UI reports status without false success
+ok 14 - Teamleader Android UI reports status without false success
+  ---
+  duration_ms: 43.928655
+  type: 'test'
+  ...
+# Subtest: live model status does not revert the beginner cockpit to English
+ok 15 - live model status does not revert the beginner cockpit to English
+  ---
+  duration_ms: 46.276622
+  type: 'test'
+  ...
+# Subtest: model setup stays usable for beginners while preserving SHA-256 integrity
+ok 16 - model setup stays usable for beginners while preserving SHA-256 integrity
+  ---
+  duration_ms: 122.831866
+  type: 'test'
+  ...
+# Subtest: new visual start screen is local, accessible and honest about capabilities
+ok 17 - new visual start screen is local, accessible and honest about capabilities
+  ---
+  duration_ms: 82.242783
+  type: 'test'
+  ...
+# Subtest: neural training failures expose bounded diagnostics without claiming saved weights
+ok 18 - neural training failures expose bounded diagnostics without claiming saved weights
+  ---
+  duration_ms: 37.203831
+  type: 'test'
+  ...
+# Subtest: Wikipedia article research uses bounded authentic extracts and original citations
+ok 19 - Wikipedia article research uses bounded authentic extracts and original citations
+  ---
+  duration_ms: 0.666477
+  type: 'test'
+  ...
+# Subtest: Android-first Teamleader is scheduled, observable and serialized across background and chat
+ok 20 - Android-first Teamleader is scheduled, observable and serialized across background and chat
+  ---
+  duration_ms: 0.343209
+  type: 'test'
+  ...
+# Subtest: explicit M5 project planning command reaches reviewed builder without bypassing approval
+ok 21 - explicit M5 project planning command reaches reviewed builder without bypassing approval
+  ---
+  duration_ms: 0.610773
+  type: 'test'
+  ...
+# Subtest: Qwen chat validates replies without unconditional 0.8 success
+ok 22 - Qwen chat validates replies without unconditional 0.8 success
+  ---
+  duration_ms: 91.812731
+  type: 'test'
+  ...
+# Subtest: context is bounded, clearly untrusted, and never authorizes tools or factual memories
+ok 23 - context is bounded, clearly untrusted, and never authorizes tools or factual memories
+  ---
+  duration_ms: 93.925848
+  type: 'test'
+  ...
+# Subtest: low cost evaluator refuses mechanical repeats but cannot claim truth
+ok 24 - low cost evaluator refuses mechanical repeats but cannot claim truth
+  ---
+  duration_ms: 0.252922
+  type: 'test'
+  ...
+# Subtest: M2 contract 01 pinned owner Gemma ID
+ok 25 - M2 contract 01 pinned owner Gemma ID
+  ---
+  duration_ms: 1.331612
+  type: 'test'
+  ...
+# Subtest: M2 contract 02 pinned owner Gemma digest
+ok 26 - M2 contract 02 pinned owner Gemma digest
+  ---
+  duration_ms: 0.114754
+  type: 'test'
+  ...
+# Subtest: M2 contract 03 original Gemma file is LiteRT, not GGUF
+ok 27 - M2 contract 03 original Gemma file is LiteRT, not GGUF
+  ---
+  duration_ms: 0.087002
+  type: 'test'
+  ...
+# Subtest: M2 contract 04 main app exposes safe milestone status
+ok 28 - M2 contract 04 main app exposes safe milestone status
+  ---
+  duration_ms: 0.127302
+  type: 'test'
+  ...
+# Subtest: M2 contract 05 status binds real imported model SHA
+ok 29 - M2 contract 05 status binds real imported model SHA
+  ---
+  duration_ms: 0.188345
+  type: 'test'
+  ...
+# Subtest: M2 contract 06 status binds real loaded model SHA
+ok 30 - M2 contract 06 status binds real loaded model SHA
+  ---
+  duration_ms: 0.135855
+  type: 'test'
+  ...
+# Subtest: M2 contract 07 status checks native runtime readiness
+ok 31 - M2 contract 07 status checks native runtime readiness
+  ---
+  duration_ms: 3.485436
+  type: 'test'
+  ...
+# Subtest: M2 contract 08 status checks same model session receipt
+ok 32 - M2 contract 08 status checks same model session receipt
+  ---
+  duration_ms: 0.203838
+  type: 'test'
+  ...
+# Subtest: M2 contract 09 native diagnostic starts only on explicit chat command
+ok 33 - M2 contract 09 native diagnostic starts only on explicit chat command
+  ---
+  duration_ms: 0.1923
+  type: 'test'
+  ...
+# Subtest: M2 contract 10 native diagnostic calls actual localRuntime.stream
+ok 34 - M2 contract 10 native diagnostic calls actual localRuntime.stream
+  ---
+  duration_ms: 0.224029
+  type: 'test'
+  ...
+# Subtest: M2 contract 11 diagnostic rejects blank generated text
+ok 35 - M2 contract 11 diagnostic rejects blank generated text
+  ---
+  duration_ms: 0.130126
+  type: 'test'
+  ...
+# Subtest: M2 contract 12 diagnostic never executes tool proposals
+ok 36 - M2 contract 12 diagnostic never executes tool proposals
+  ---
+  duration_ms: 0.147453
+  type: 'test'
+  ...
+# Subtest: M2 contract 13 measured response tied to chosen original SHA
+ok 37 - M2 contract 13 measured response tied to chosen original SHA
+  ---
+  duration_ms: 0.106932
+  type: 'test'
+  ...
+# Subtest: M2 contract 14 fresh attempt revokes stale evidence
+ok 38 - M2 contract 14 fresh attempt revokes stale evidence
+  ---
+  duration_ms: 0.076155
+  type: 'test'
+  ...
+# Subtest: M2 contract 15 readiness never claims offline test from native reply
+ok 39 - M2 contract 15 readiness never claims offline test from native reply
+  ---
+  duration_ms: 0.086381
+  type: 'test'
+  ...
+# Subtest: M2 contract 16 readiness never claims authentic model patch by metadata
+ok 40 - M2 contract 16 readiness never claims authentic model patch by metadata
+  ---
+  duration_ms: 0.098118
+  type: 'test'
+  ...
+# Subtest: M2 contract 17 readiness requires independent RED and fresh GREEN
+ok 41 - M2 contract 17 readiness requires independent RED and fresh GREEN
+  ---
+  duration_ms: 0.136887
+  type: 'test'
+  ...
+# Subtest: M2 contract 18 readiness never claims long-term learning by sample
+ok 42 - M2 contract 18 readiness never claims long-term learning by sample
+  ---
+  duration_ms: 0.080972
+  type: 'test'
+  ...
+# Subtest: M2 contract 19 command decoder remains pure and non-executing
+ok 43 - M2 contract 19 command decoder remains pure and non-executing
+  ---
+  duration_ms: 0.160042
+  type: 'test'
+  ...
+# Subtest: M2 contract 20 direct model test never accepts a broad arbitrary command
+ok 44 - M2 contract 20 direct model test never accepts a broad arbitrary command
+  ---
+  duration_ms: 0.082926
+  type: 'test'
+  ...
+# Subtest: M2 contract 21 production local coding CLI imports preflight gate
+ok 45 - M2 contract 21 production local coding CLI imports preflight gate
+  ---
+  duration_ms: 0.081834
+  type: 'test'
+  ...
+# Subtest: M2 contract 22 coding and legacy patch routes enforce admission before generation
+ok 46 - M2 contract 22 coding and legacy patch routes enforce admission before generation
+  ---
+  duration_ms: 2.203729
+  type: 'test'
+  ...
+# Subtest: M2 contract 23 local original LiteRT is rejected on llama CPP boundary
+ok 47 - M2 contract 23 local original LiteRT is rejected on llama CPP boundary
+  ---
+  duration_ms: 0.192071
+  type: 'test'
+  ...
+# Subtest: M2 contract 24 alternative model always needs explicit owner consent
+ok 48 - M2 contract 24 alternative model always needs explicit owner consent
+  ---
+  duration_ms: 0.102685
+  type: 'test'
+  ...
+# Subtest: M2 contract 25 configuration decision never asserts runtime or repair success
+ok 49 - M2 contract 25 configuration decision never asserts runtime or repair success
+  ---
+  duration_ms: 0.079119
+  type: 'test'
+  ...
+# Subtest: M2 contract 26 no model caller can edit Git in the preflight
+ok 50 - M2 contract 26 no model caller can edit Git in the preflight
+  ---
+  duration_ms: 0.11891
+  type: 'test'
+  ...
+# Subtest: M2 contract 27 original CCC1 still protects test identities
+ok 51 - M2 contract 27 original CCC1 still protects test identities
+  ---
+  duration_ms: 0.082495
+  type: 'test'
+  ...
+# Subtest: M2 contract 28 original CCC1 still protects source patch scope
+ok 52 - M2 contract 28 original CCC1 still protects source patch scope
+  ---
+  duration_ms: 0.067161
+  type: 'test'
+  ...
+# Subtest: M2 contract 29 CCC1 task keeps explicit owner permission
+ok 53 - M2 contract 29 CCC1 task keeps explicit owner permission
+  ---
+  duration_ms: 0.069274
+  type: 'test'
+  ...
+# Subtest: M2 contract 30 model status is exposed as text without training
+ok 54 - M2 contract 30 model status is exposed as text without training
+  ---
+  duration_ms: 0.108334
+  type: 'test'
+  ...
+# Subtest: M2 contract 31 harness coding CLI enforces same owner model preflight
+ok 55 - M2 contract 31 harness coding CLI enforces same owner model preflight
+  ---
+  duration_ms: 0.075193
+  type: 'test'
+  ...
+# Subtest: M2 contract 32 harness CLI rejects format mismatch before generation
+ok 56 - M2 contract 32 harness CLI rejects format mismatch before generation
+  ---
+  duration_ms: 0.114864
+  type: 'test'
+  ...
+# Subtest: M2 contract 33 harness safely redacts arbitrary errors
+ok 57 - M2 contract 33 harness safely redacts arbitrary errors
+  ---
+  duration_ms: 0.102946
+  type: 'test'
+  ...
+# Subtest: M2 contract 34 model load always resets stale session proof
+ok 58 - M2 contract 34 model load always resets stale session proof
+  ---
+  duration_ms: 0.703072
+  type: 'test'
+  ...
+# Subtest: M2 contract 35 model unload always resets stale session proof
+ok 59 - M2 contract 35 model unload always resets stale session proof
+  ---
+  duration_ms: 0.652215
+  type: 'test'
+  ...
+# Subtest: M2 contract 36 model import always resets stale session proof
+ok 60 - M2 contract 36 model import always resets stale session proof
+  ---
+  duration_ms: 0.683322
+  type: 'test'
+  ...
+# Subtest: voice input barge-in silences TTS engine and avatar mouth before the recognizer starts
+ok 61 - voice input barge-in silences TTS engine and avatar mouth before the recognizer starts
+  ---
+  duration_ms: 96.341196
+  type: 'test'
+  ...
+# Subtest: assistant TTS is refused while the on-device microphone turn is active
+ok 62 - assistant TTS is refused while the on-device microphone turn is active
+  ---
+  duration_ms: 57.963208
+  type: 'test'
+  ...
+# Subtest: dictation is merged at the cursor and never overwrites a typed composer draft
+ok 63 - dictation is merged at the cursor and never overwrites a typed composer draft
+  ---
+  duration_ms: 73.615674
+  type: 'test'
+  ...
+# Subtest: model load path is gated by measured RAM/thermal admission before the native engine starts
+ok 64 - model load path is gated by measured RAM/thermal admission before the native engine starts
+  ---
+  duration_ms: 43.466416
+  type: 'test'
+  ...
+# Subtest: live runLocal model binds every step to the model captured at turn start
+ok 65 - live runLocal model binds every step to the model captured at turn start
+  ---
+  duration_ms: 47.631509
+  type: 'test'
+  ...
+1..65
+# tests 65
+# suites 0
+# pass 65
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2898.576321

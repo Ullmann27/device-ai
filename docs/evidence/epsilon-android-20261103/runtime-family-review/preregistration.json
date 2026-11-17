@@ -1,0 +1,25 @@
+{
+  "assetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "runtimeSource": "853a8ee0",
+  "controls": [
+    {
+      "AA": 1,
+      "JawOpen": 0,
+      "jawDegrees": 0
+    },
+    {
+      "AA": 1,
+      "JawOpen": 0.5,
+      "jawDegrees": 6.0
+    },
+    {
+      "AA": 1,
+      "JawOpen": 1,
+      "jawDegrees": 12
+    }
+  ],
+  "hypothesis": "Anchor24 stress pose is not directly reachable; actual tied controls may or may not reproduce its dental/lip failure.",
+  "adverseCriterion": "Any visible lower dental geometry outside/below lower-lip surface in a sampled reachable pose counts as FAIL; absence is only sampled host visual evidence, not a full collision proof.",
+  "frozenBeforeReachableRender": true,
+  "noAppSourceEdits": true
+}

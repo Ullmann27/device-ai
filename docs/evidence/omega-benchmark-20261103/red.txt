@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+......E..................
+Time: 0.074
+There was 1 failure:
+1) refusesUnpairedSkippedNegativeLatencyAndFailedMeasurements(at.heinz.deviceai.benchmark.CoreGemmaRaceTest)
+java.lang.IllegalArgumentException: latencyMillis must be >= 0
+	at at.heinz.deviceai.benchmark.TaskMeasurement.<init>(BenchmarkModel.kt:68)
+	at at.heinz.deviceai.benchmark.TaskMeasurement.copy(BenchmarkModel.kt)
+	at at.heinz.deviceai.benchmark.TaskMeasurement.copy$default(BenchmarkModel.kt)
+	at at.heinz.deviceai.benchmark.CoreGemmaRaceTest.refusesUnpairedSkippedNegativeLatencyAndFailedMeasurements(CoreGemmaRaceTest.kt:59)
+
+FAILURES!!!
+Tests run: 24,  Failures: 1
+

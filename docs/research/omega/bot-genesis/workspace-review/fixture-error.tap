@@ -1,0 +1,44 @@
+✔ B01 workspace strings are correlation, not persisted identity admission (0.922638ms)
+✔ B02 lookalike executor cannot acquire canonical workspace authority (0.419351ms)
+✔ B03 claimed unfinished work requires owner recovery and never becomes executable pending (34.215264ms)
+✔ B04 changed checkout source blocks old authorized pending work (30.95285ms)
+✖ B05 a valid prepared grant cannot turn copied model prose into admitted experience (13.838118ms)
+✖ B06 recall without a current authorized grant remains blocked for a named bot (0.900234ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 4
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 191.810783
+
+✖ failing tests:
+
+test at tools/genesis-workspace-review/canonical-boundaries.test.mjs:38:1
+✖ B05 a valid prepared grant cannot turn copied model prose into admitted experience (13.838118ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///workspace/genesis-workspace-review/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///workspace/genesis-workspace-review/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///workspace/genesis-workspace-review/.github/continuum/coding-orchestrator.mjs:37:13)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/canonical-boundaries.test.mjs:39:109)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/genesis-workspace-review/canonical-boundaries.test.mjs:42:1
+✖ B06 recall without a current authorized grant remains blocked for a named bot (0.900234ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///workspace/genesis-workspace-review/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///workspace/genesis-workspace-review/.github/continuum/coding-task.mjs:33:126)
+      at recallTechnicalExperiences (file:///workspace/genesis-workspace-review/.github/continuum/ccc1-technical-recall.mjs:255:13)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/canonical-boundaries.test.mjs:43:33)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

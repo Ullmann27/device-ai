@@ -1,0 +1,67 @@
+{
+  "sourceSha": "058d754b82e134b3eec0e3e3f21b788c46c8c479",
+  "sourceTree": "bf0536a3d08ce54ccc2e976bd9a2883d0619062e",
+  "fullRun": 43358315168,
+  "fullAndroidJob": 131665544652,
+  "tests": 5374,
+  "executed": 5357,
+  "passed": 5354,
+  "failures": 3,
+  "errors": 0,
+  "skipped": 17,
+  "unexpectedSkips": [],
+  "suites": 893,
+  "lint": "PASS",
+  "failedCases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "name": "fold7InnerLargerFont",
+      "message": "Closing frame must visibly fold after data fade"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "name": "referenceTablet",
+      "message": "Closing frame must visibly fold after data fade"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "name": "fold7Inner",
+      "message": "Closing frame must visibly fold after data fade"
+    }
+  ],
+  "hostArtifact": {
+    "id": 14009178288,
+    "node_id": "MDg6QXJ0aWZhY3QxNDAwOTE3ODI4OA==",
+    "name": "Code55-full-Android-source-QA",
+    "size_in_bytes": 310710423,
+    "url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14009178288",
+    "archive_download_url": "https://api.github.com/repos/Ullmann27/device-ai/actions/artifacts/14009178288/zip",
+    "expired": false,
+    "digest": "sha256:c86b7a36f77736e51d5eed0a7afc5b23afd25e1e78c90bacd4291a1d92b2ef5f",
+    "created_at": "2026-11-13T04:12:23Z",
+    "updated_at": "2026-11-13T04:12:23Z",
+    "expires_at": "2026-11-27T04:12:12Z",
+    "workflow_run": {
+      "id": 43358315168,
+      "repository_id": 1415878393,
+      "head_repository_id": 1415878393,
+      "head_branch": "integrate/code55-apk-fable-20261112",
+      "head_sha": "058d754b82e134b3eec0e3e3f21b788c46c8c479"
+    }
+  },
+  "diagnostic": {
+    "run": 43364305019,
+    "job": 131684965917,
+    "sha": "84872c9c093a789e8b800d02f45472223f06f00a",
+    "archiveSha256Verified": true,
+    "duplicateTestIdentities": [],
+    "observedAnchorScaleX": {
+      "fold7CoverAndPhone": 0.97979796,
+      "fold7Inner": 1.33125,
+      "fold7InnerLargerFont": 1.33125,
+      "referenceTablet": 2.6809268
+    }
+  },
+  "classification": "Incorrect test assumption: return to wider source legitimately has scaleX > 1. Production geometry/timing unchanged; actual phase, source-bound width/height/horizontal translation, motion, protected areas and final cleanup remain asserted.",
+  "replacementTestStatus": "NOT_RUN"
+}

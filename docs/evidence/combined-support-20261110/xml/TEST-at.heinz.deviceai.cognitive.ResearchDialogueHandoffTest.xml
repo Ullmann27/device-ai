@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:07" hostname="1a6f5c6cf9c0" time="0.025">
+  <properties/>
+  <testcase name="onlyTheLatestResearchIsKept" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.007"/>
+  <testcase name="expiryAndUnknownRetrievalCannotBeOverriddenByOnlineMode" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.002"/>
+  <testcase name="nothingUsableYieldsNoDigest" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.0"/>
+  <testcase name="researchLabelsStayTransientBoundedAndOutsideOwnerEvidence" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="revocationAndModeRoundTripCannotReactivatePriorTurnResearch" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="renderedResearchCarriesAnExplainableFreshnessVerdict" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.002"/>
+  <testcase name="sessionChangeTopicResetAndClearDropResearch" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.0"/>
+  <testcase name="researchBecomesFollowUpContextAndSurvivesTheFirewall" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="digestCarriesSynthesisSourcesAndRetrievalTime" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.0"/>
+  <testcase name="sessionContextReportsFreshnessOnlyForItsOwnSession" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="citationLineShowsRetrievalDate" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.0"/>
+  <testcase name="repealedStatuteEvidenceIsNeverPresentedAsCurrentLaw" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="ordinaryFollowUpAndContextReportRetainResearchWithoutCreatingOwnerEvidence" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="promptBoundaryCarriesTodayAndRetrievalDates" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="hostileSourceTextIsSanitizedAndBounded" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="leakedFramesAreRejectedByTheQualityGate" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.001"/>
+  <testcase name="explicitScopeCorrectionDropsResearchAndItsFreshnessEvidence" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.0"/>
+  <testcase name="currentAccessStateControlsWebEvidenceWithoutErasingHistoricalContext" classname="at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

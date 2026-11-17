@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.NeuralDialogueTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:31" hostname="b50d54a1ac03" time="0.045">
+  <properties/>
+  <testcase name="explicitDemoLearnsThenPersistsConversationalClassifier" classname="at.heinz.deviceai.learning.NeuralDialogueTest" time="0.022"/>
+  <testcase name="frozenUnseenVocabularyEvaluationDoesNotTrainOrLeakTrainingPhrases" classname="at.heinz.deviceai.learning.NeuralDialogueTest" time="0.018"/>
+  <testcase name="teachingRequiresApprovalAndCancellationDoesNotPublishPartialWeights" classname="at.heinz.deviceai.learning.NeuralDialogueTest" time="0.005"/>
+  <system-out><![CDATA[NEURAL_DIALOGUE NeuralDialogueReport(before=NeuralEvaluation(loss=0.701007444326343, correct=6, total=16), after=NeuralEvaluation(loss=9.741802992381196E-4, correct=16, total=16), holdout=NeuralEvaluation(loss=0.009017078519470633, correct=8, total=8), holdoutBefore=NeuralEvaluation(loss=0.7103019927356238, correct=2, total=8), training=NeuralTraining(steps=4000, elapsedNanos=17308905, stoppedEarly=false), unfamiliarBefore=NeuralEvaluation(loss=0.6904853697999958, correct=6, total=12), unfamiliarAfter=NeuralEvaluation(loss=2.7399724553260314, correct=6, total=12)) snapshotBytes=2566
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

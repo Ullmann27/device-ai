@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+...E..
+Time: 0.06
+There was 1 failure:
+1) aRetrievedFactMustNotSuppressAnExplicitSynthesisTask(at.heinz.deviceai.LocalFirstPolicyTest)
+java.lang.AssertionError: Warum könnte Miras Wohnort für den Arbeitsweg wichtig sein? expected:<LOCAL_MODEL> but was:<LOCAL_CORE>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.LocalFirstPolicyTest.aRetrievedFactMustNotSuppressAnExplicitSynthesisTask(LocalFirstPolicyTest.kt:32)
+
+FAILURES!!!
+Tests run: 5,  Failures: 1

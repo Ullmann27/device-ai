@@ -1,0 +1,49 @@
+Android production and test compilation completed on the validation source.
+Gradle test execution stalled after the first class and was interrupted; it is NOT a passing Gradle test task.
+Final execution used the compiled real Android classes through JUnit: 24 ordinary tests and 8 Robolectric tests, all passing.
+Build tools: Gradle 8.11.1; JDK 17.0.21; Android SDK 36; installed Build Tools 36.0.0.
+The local init override selected the installed Build Tools only; project build configuration was not changed.
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+COCKPIT_TEST at.heinz.deviceai.avatar3d.CockpitStageFrameTest#viewBufferIsBoundedWithoutChangingAspect SUCCESS
+COCKPIT_TEST at.heinz.deviceai.avatar3d.CockpitStageFrameTest#depthUsesPerspectiveWithoutMirroringPixels SUCCESS
+COCKPIT_TEST at.heinz.deviceai.avatar3d.CockpitStageFrameTest#projectedPixelsKeepOrientationAtBothYawLimits SUCCESS
+COCKPIT_TEST at.heinz.deviceai.avatar3d.CockpitStageFrameTest#invalidSourceGeometryCannotReachRenderer SUCCESS
+COCKPIT_TEST at.heinz.deviceai.avatar3d.CockpitStageFrameTest#simultaneousPitchYawAndDepthMatchModelMatrix SUCCESS

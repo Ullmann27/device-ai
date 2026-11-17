@@ -1,0 +1,49 @@
+[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/6 because it is locked by another process (errno = 11)
+app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:187:80: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                verdict = ActionEffectVerifier.verify(before.stamp, true, after!!.stamp,
+                                                                               ^^
+app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:188:26: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                    after!!.nodes.count { !it.password && request.matchesExpected(it) } == 1)
+                         ^^
+app/src/main/java/at/heinz/deviceai/AndroidLiveComputer.kt:190:22: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'NodeActionFrame'.
+                after!!
+                     ^^
+app/src/main/java/at/heinz/deviceai/AndroidLiveNodePort.kt:175:107: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'ActionNode'.
+                    scrollWatch = ScreenObservationBus.beginScroll(access, request, original.stamp, target!!, node)
+                                                                                                          ^^
+app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt:65:32: warning: this class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+    private val lock=java.lang.Object();private var service:ContinuumScreenObservationService?=null
+                               ^^^^^^
+app/src/main/java/at/heinz/deviceai/avatar3d/CockpitLiveTexture.kt:163:42: warning: unnecessary safe call on a non-null receiver of type 'CockpitWorkEvent'.
+        val target = requireNotNull(event?.target)
+                                         ^^
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:322:38: warning: unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.MORPH_UPLOADED) ?: 0
+                                     ^^
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:330:38: warning: unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.JOINTS_UPLOADED) ?: 0
+                                     ^^
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:333:38: warning: unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+        receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_BEGIN) ?: 0
+                                     ^^
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:336:42: warning: unnecessary safe call on a non-null receiver of type 'AvatarFrameReceipt'.
+            receipt?.stageFlags = receipt?.stageFlags?.or(AvatarFrameReceipt.FILAMENT_RENDERED) ?: 0
+                                         ^^
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:387:56: warning: 'fun toneMapping(p0: ColorGrading.ToneMapping!): ColorGrading.Builder!' is deprecated. Deprecated in Java.
+            worldColorGrading = ColorGrading.Builder().toneMapping(ColorGrading.ToneMapping.LINEAR)
+                                                       ^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:387:81: warning: 'enum class ToneMapping : Enum<ColorGrading.ToneMapping!>' is deprecated. Deprecated in Java.
+            worldColorGrading = ColorGrading.Builder().toneMapping(ColorGrading.ToneMapping.LINEAR)
+                                                                                ^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt:1202:22: warning: 'var isChecked: Boolean' is deprecated. Deprecated in Java.
+                info.isChecked = isSelected
+                     ^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt:136:35: warning: unnecessary safe call on a non-null receiver of type 'JarvisShellRenderer.GlassBackend'.
+            if (nativeDepth) glass?.endDepth()
+                                  ^^
+app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt:314:35: warning: unnecessary safe call on a non-null receiver of type 'JarvisShellRenderer.GlassBackend'.
+            if (depthNative) glass?.endDepth()
+                                  ^^
+app/src/main/java/at/heinz/deviceai/ui/VirtualComputerMonitorView.kt:21:53: warning: 'field scaledDensity: Float' is deprecated. Deprecated in Java.
+        textSize = 12.5f * resources.displayMetrics.scaledDensity
+                                                    ^^^^^^^^^^^^^

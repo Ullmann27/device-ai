@@ -1,0 +1,203 @@
+{
+  "source": "EXTERNAL_AUTHOR_EXECUTION_RECOMPUTED_FROM_ORIGINAL_ARCHIVE_NOT_RERUN",
+  "archiveSha256": "0e89de23cb7b68bf4b9e419250775f33a57560e219abdbf6761ed1e262e9d927",
+  "verifiedMemberCount": 480,
+  "xmlTotals": {
+    "full": {
+      "suites": 467,
+      "tests": 2638,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 19,
+      "passed": 2618
+    },
+    "activity": {
+      "suites": 1,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 2
+    }
+  },
+  "failures": [
+    {
+      "archiveMember": "r3-full-unit-lint-retry1/junit/TEST-at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest.xml",
+      "class": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "method": "everythingFitsOneScreenWithUsableTargetsAndNoOverlap",
+      "message": "java.lang.AssertionError: 832.0 x 700.0 font 1.0 VIEW_AVATAR ≥ 48 dp"
+    }
+  ],
+  "newRegressionClasses": [
+    {
+      "member": "r3-full-unit-lint-retry1/junit/TEST-at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest.xml",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "methods": [
+        "aRendererCanWaitForAnotherProducerWithoutHoldingAMapperLock",
+        "detachingInTheStorageCallbackDropsThePendingRecall",
+        "detachingInTheDocumentCallbackDropsTheRemainingKindsInThatFlush",
+        "concurrentProducerAndFlushAccountForEveryWriteExactlyOnce"
+      ]
+    },
+    {
+      "member": "r3-full-unit-lint-retry1/junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.xml",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "methods": [
+        "standaloneCompleteCorrectionsStayRequiredAndAtomic",
+        "oversizedForbiddenContradictionDoesNotConsumeMandatoryContextBudget",
+        "publicOnlyPolicyAlsoExcludesPrivateContradictionAliases",
+        "aStringSharedByAllowedAndForbiddenRecordsCannotChooseTheAllowedAlias",
+        "explicitSensitiveAllowanceKeepsTheCompleteContradiction",
+        "conflictingIdCannotReenterThroughItsOtherwiseAllowedContradictionContent"
+      ]
+    },
+    {
+      "member": "r3-full-unit-lint-retry1/junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest.xml",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "methods": [
+        "sensitiveContradictionIsExcludedWhenTheLossyCallerProjectionIsAbsent",
+        "sensitiveContradictionCannotBypassTheCompilerPrivacyPolicyThroughCallerProjection",
+        "plainAllowedContradictionKeepsItsCompleteLateNegation",
+        "allowedContradictionCannotIntroduceRawModelControlTokens"
+      ]
+    }
+  ],
+  "lintIssueCounts": {
+    "r3-actual-activity-lint/lint-results-debug.xml": 0
+  },
+  "fourSourceManifestsByteIdentical": true,
+  "sourceHashCount": 1080,
+  "sourceHashMismatches": [],
+  "c1SourceDifferencesInRecordedManifest": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "executedBlob": "c1482ed3be0cb91734e10947613ec62d1a3c38cb",
+      "c1Blob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "executedBlob": "8181cd16e241481837d6489d3fe35acac7ad6c7c",
+      "c1Blob": "020c388468ce2ad5017579f7ba1551b5c17fbcf6",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "executedBlob": "c60d0e180d2d3393b2db355b188a61dcba42f79e",
+      "c1Blob": "fb2050171cb57ef9729a7a2bc603574bc6ad0292",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "executedBlob": "42f4714c72ee057566be54171f01703f39d48aaf",
+      "c1Blob": "98e19b678a48b448738009db1d1322efd1e49440",
+      "satisfiedByPatch": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "executedBlob": "beb0f37d8de8965984bf38846b6479e0137d2340",
+      "c1Blob": "f42f526cefaa96295205f161241fbc8035f27c01",
+      "satisfiedByPatch": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+      "executedBlob": "fa67f32044e57a3f23fdd158924f1f8bf004d5cf",
+      "c1Blob": "857eb1fb8bbada8282a095956667bb521e44abe6",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+      "executedBlob": "bd943129a52c92ccb46022c0f083e328acbf24b9",
+      "c1Blob": "86d39aedf0fadb6e0633bec42112b36f3a6fea9c",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/chief/ChiefBotAddressRouterTest.kt",
+      "executedBlob": "916c0b3751cfd852fe3d98d2ab482931cf5f079d",
+      "c1Blob": "7a567eeeebb7b898ae70ec47d244db3ebea03026",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt",
+      "executedBlob": "b8803c074ad56c6b51d1b587818ae4bc5e1003dd",
+      "c1Blob": null,
+      "satisfiedByPatch": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt",
+      "executedBlob": "8e0d89fee6ed05af7b32e4ca589c83fb008c5f8d",
+      "c1Blob": null,
+      "satisfiedByPatch": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryRegressionTest.kt",
+      "executedBlob": "0c798951d4f19d0ac873330caf2c5b6ce6a29d99",
+      "c1Blob": null,
+      "satisfiedByPatch": true
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt",
+      "executedBlob": "3d5be8271a9e831a1f0d1f7d8c7e5f2c601fbfc6",
+      "c1Blob": "0623ef7a4a7c47ae8eb9991153e006c64637f7f0",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatarNativeUiTest.kt",
+      "executedBlob": "af387b01d47226fb57b2879599663c2f652637c8",
+      "c1Blob": "e344a4e4c17abcdffa4c1cef2cf39c5c9e358933",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumBotTaskRoutingUiTest.kt",
+      "executedBlob": "69787916640ff26ec266db693e9b030fb559e255",
+      "c1Blob": "e403b9ccb6ea53e2dd0fc6bffd8a4c96f56c707f",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt",
+      "executedBlob": "e8929a78617218bc689e23748f6461bf3f88a31b",
+      "c1Blob": "df6529bc0fb5fb98352fbdbb4dc064efd0484bcd",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+      "executedBlob": "76c82e7fa5f5bfd5c6f94b569a09fedc51660bd5",
+      "c1Blob": "90481bc205537601e95b311b442d4fa554a8d8e0",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+      "executedBlob": "e7591367df95ade9859e632e18227260add6c668",
+      "c1Blob": "b213cad36abde70fae4024b2988a8be1d09250b9",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt",
+      "executedBlob": "400e6db70374fea82a09abd35ba587ec11872301",
+      "c1Blob": "8758292c557e4eb523cb73b495e0c1599cfc9dc8",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt",
+      "executedBlob": "8169dc9446a5670e96dcd97cd5aaf767a4e0b380",
+      "c1Blob": "3ed6866756f85ce2daf25542e3940bba340ed9a8",
+      "satisfiedByPatch": false
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt",
+      "executedBlob": "265b67a874deecedc262b3403349f2151e09af1e",
+      "c1Blob": "51db7f4f6996b314ff715a7ea0978b9b744578dd",
+      "satisfiedByPatch": false
+    }
+  ],
+  "allNewRegressionTestsPassInExternalXml": true
+}

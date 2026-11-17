@@ -1,0 +1,257 @@
+{
+  "task_id": "C1-GATES-012",
+  "status": "READ_ONLY_GATE_SCOPE_AUDIT",
+  "source": {
+    "repository": "Ullmann27/device-ai",
+    "checkout": "/workspace/scratch/174c84456ee3/continuum-c1",
+    "inspected_head": "165fc9f58ae9e36295690df60145174fd5dc58e7",
+    "inspected_app_tree": "b2b0cd21327ac1d5c8dd1f0cb35e94e2dcfbee1e",
+    "inspected_scripts_tree": "ca3460d5dab6c632ceeb84742cd04f80190a07f4",
+    "continuous_qa_sha256_captured_during_audit": "62f6a7cf0168390d98a7b28c7916bfe96bff7284cf755654daf1b07add850f43"
+  },
+  "audit_execution": {
+    "builds_run": false,
+    "tests_run": false,
+    "repository_changes": false,
+    "old_pass_results_inherited": false,
+    "later_router_activity_lint_results_included": false,
+    "note": "Later C1 Router/Activity executions and the ongoing lint are separate evidence and are not attributed to this audit."
+  },
+  "conclusion": {
+    "central_full_node_scope": "Only direct *.test.mjs entries of .github/continuum and scripts; no recursive tools/ discovery.",
+    "direct_test_file_counts": {
+      ".github/continuum": 228,
+      "scripts": 96,
+      "total": 324
+    },
+    "additional_tools_tests": "Separate development-tool/research acceptance unless explicitly included by a particular required runner/contract. Existing tests under the two canonical roots remain required even when they concern isolation.",
+    "reported_external_tools_failures": {
+      "count": 38,
+      "status_preserved": "FAIL",
+      "independently_reverified": false,
+      "attribution": "Parent report; not an executed result of this audit"
+    },
+    "capability_boundary": "Central app QA cannot prove or repair missing real host isolation, autonomous coding capability, genuine model inference or device behavior.",
+    "no_waiver": "No FAIL is converted to PASS/SKIP; no isolation substitute or permission bypass is authorized."
+  },
+  "mandatory_node": {
+    "special_command": "node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs scripts/continuum-owner-v38-release.test.mjs scripts/continuum-owner-continuous-release.test.mjs",
+    "critical_command": "node scripts/continuum-reliability-qa.mjs critical --out \"$qa_proofs/critical\"",
+    "critical_gates": [
+      "process",
+      "storage-agent",
+      "android-source-contracts",
+      "host-checker"
+    ],
+    "full_command": "node scripts/continuum-reliability-qa.mjs full-node --out \"$qa_proofs/full-node\"",
+    "runner_command_shape": "node --test --test-concurrency=2 --test-reporter=junit --test-reporter-destination=JUNIT <selected files>",
+    "evidence_validator": "node scripts/continuum-qa-evidence.mjs node RECEIPT SHA PROFILE START",
+    "evidence_requirements": [
+      "Exact source SHA/profile and fresh receipt",
+      "Source unchanged before/after",
+      "Confirmed process termination",
+      "Executed tests and complete JUnit",
+      "Zero failures/placeholders"
+    ],
+    "overlap": "Special, critical and full-node overlap; counts must not be summed as independent coverage.",
+    "output_location": "New directory outside the checkout."
+  },
+  "mandatory_android": {
+    "command": "gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=\"$CONTINUUM_RELEASE_VERSION_CODE\" :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug",
+    "scope": "Full unit suite plus app/src/uiTest/java; no test-class filter.",
+    "ui_flag": "continuumUiWidgetTests=true",
+    "ui_effect": [
+      "Adds src/uiTest/java to test source set",
+      "Includes Android resources",
+      "Uses offline Robolectric SDK directory"
+    ],
+    "evidence_validator": "node scripts/continuum-qa-evidence.mjs android ROOT START",
+    "evidence_requirements": [
+      "Fresh regular non-symlink JUnit files from this run",
+      "Complete testcase evidence",
+      "No failure/error/placeholder",
+      "Required suites present and actually executed"
+    ],
+    "required_suites": [
+      "at.heinz.deviceai.ToolExecutionStartLatchTest",
+      "at.heinz.deviceai.ReadOnlyToolSizeRegressionTest",
+      "at.heinz.deviceai.cognitive.LocalPromptFrameTest",
+      "at.heinz.deviceai.ToolDurableOutcomeTest",
+      "at.heinz.deviceai.localmodel.LocalToolContinuationTest",
+      "at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest",
+      "at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest",
+      "at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest",
+      "at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest",
+      "at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest",
+      "at.heinz.deviceai.cognitive.JournalAvailabilityTest"
+    ],
+    "required_suite_min_executed": 1,
+    "required_suite_allowed_skipped": 0,
+    "additional_minimum_case_counts": {
+      "at.heinz.deviceai.ShizukuBridgeLifecycleTest": 14,
+      "at.heinz.deviceai.ShizukuConnectionDialogTest": 2,
+      "at.heinz.deviceai.ui.ContinuumControlsTest": 7,
+      "at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest": 5,
+      "at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest": 6
+    },
+    "additional_minimum_suite_allowed_skipped": 0,
+    "minimum_scope_note": "11+5 are completeness checks, not permission to replace the full suite with selected classes.",
+    "other_skips": "The existing validator permits reported skips in non-required classes; these are not capability PASS and cannot retroactively reclassify FAIL."
+  },
+  "lint": {
+    "checkOnly": [
+      "NewApi"
+    ],
+    "abortOnError": true,
+    "checkReleaseBuilds": false,
+    "allowed_claim": "Configured NewApi lint, not all Android lint rules."
+  },
+  "mandatory_unsigned_apk": {
+    "command": "gradle --no-daemon --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true -PcontinuumStandaloneVersionCode=\"$CONTINUUM_RELEASE_VERSION_CODE\" :app:assembleRelease :app:bundleRelease",
+    "package": "at.heinz.deviceai.continuumlocal",
+    "qa_version_code_range": [
+      39,
+      9999
+    ],
+    "version_name_rule": "0.3.(versionCode - 1)",
+    "apk_path": "app/build/outputs/apk/release/app-release-unsigned.apk",
+    "checks": [
+      "All preceding gates green for final QA success",
+      "Regular non-symlink APK exists",
+      "aapt2 badging exactly matches package/version",
+      "apksigner verify must not confirm a signed artifact",
+      "Head/tracked source unchanged",
+      "Actual SHA256 and size > 1000000 bytes",
+      "No signing file/password/base64 material in QA"
+    ],
+    "ordering_note": "The existing script accumulates assembly diagnostics even after an earlier failed gate, then rejects final QA success if any gate failed.",
+    "success_status": "UNSIGNED_BUILD_VERIFIED_DEVICE_NOT_RUN",
+    "ownerSigned": false,
+    "apkPublished": false,
+    "deviceVerified": false
+  },
+  "environment_contract": {
+    "actions": "No GitHub Actions for acceptance; real Render or demonstrably working local gates.",
+    "recorded_toolchain": "Existing script pins Temurin 17.0.20.1+1, Gradle 8.11.1, SDK36 and build-tools35.0.0.",
+    "render_wrapper": "Pinned real service/host/approved SHA and integration/continuum-all-systems-apk-qa-20261102 (or trusted detached reattachment); do not fake Render variables or branch identity for C1 local execution.",
+    "local_equivalence": "AGENTS permits local execution with actual source identity, identical gate scopes and evidence validation."
+  },
+  "later_acceptance_gates": [
+    "Original signing continuity",
+    "Fresh installed version and live-channel version before update decision",
+    "Existing update host and identical downloaded hash",
+    "Authorized update test retaining application data",
+    "Physical Fold7: local inference, memory, avatar, audio, worker cancellation/resume and lifecycle"
+  ],
+  "source_reads": [
+    {
+      "path": "AGENTS.md",
+      "read_scope": "Full governing instruction file",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/AGENTS.md",
+      "bytes": 17040,
+      "sha256": "deec8d8638ee7837ab6a686644312e072a4421a22173803bf2b95e7048fdf534",
+      "git_blob": "511396c8e88ef0b9811b791d6c8bccc10f868b26",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "scripts/render-continuum-owner-continuous-qa.sh",
+      "read_scope": "Full central QA launcher",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/scripts/render-continuum-owner-continuous-qa.sh",
+      "bytes": 17500,
+      "sha256": "62f6a7cf0168390d98a7b28c7916bfe96bff7284cf755654daf1b07add850f43",
+      "git_blob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "scripts/continuum-qa-evidence.mjs",
+      "read_scope": "Full Node/JUnit evidence validator",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/scripts/continuum-qa-evidence.mjs",
+      "bytes": 5944,
+      "sha256": "787804965d23df864b0a19baeb2c52c50e06b8f22e584383aaa9a7ff6815128f",
+      "git_blob": "81227a950b1162e37bc267d95767b6e6a75dbc78",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "scripts/continuum-reliability-qa.mjs",
+      "read_scope": "Full critical/full-node selection and source-identity runner",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/scripts/continuum-reliability-qa.mjs",
+      "bytes": 8431,
+      "sha256": "ed57537bd748481088372e76291afee541c1b52f47261f1f9efd71218404ceca",
+      "git_blob": "67b0f9ccb2b9e2777e5aa304934572d268d7bd48",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "read_scope": "UI source-set, offline Robolectric and configured lint excerpts",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/app/build.gradle.kts",
+      "bytes": 15080,
+      "sha256": "d375fabbc1633da9c440039e03fed28e3e2e38a14beed0743e64d9dc57f9588c",
+      "git_blob": "34def8f8ee30401b635945909bd54c223cb61599",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "docs/CONTINUUM-EXPERIMENTVERTRAG.md",
+      "read_scope": "Governing experiment, isolation and mobile acceptance clauses",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/docs/CONTINUUM-EXPERIMENTVERTRAG.md",
+      "bytes": 10612,
+      "sha256": "0513a4b48cd6e38d3da55225ebdcc805f54efa2003519a112fb0106a530586d3",
+      "git_blob": "1e10c49c019109a3ea1c790490328ecaf2fb6348",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "docs/research/omega/ASTRA-NUCLEUS-HANDOFF-20261104.md",
+      "read_scope": "Current C1 scope, resource/release boundaries and APK acceptance contract",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/docs/research/omega/ASTRA-NUCLEUS-HANDOFF-20261104.md",
+      "bytes": 25401,
+      "sha256": "85f12b4fe0d42b6a46b04832ab1abf4b009522ed494860ba6d6b8d14f86fde58",
+      "git_blob": "d0e8a058fa2cbb07aba6bf12d473277378a9c226",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "docs/research/omega/GRAND-CHALLENGE-HANDOFF-20261102.md",
+      "read_scope": "Matched combined QA and capability-boundary clauses",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/docs/research/omega/GRAND-CHALLENGE-HANDOFF-20261102.md",
+      "bytes": 9335,
+      "sha256": "07772e2aed6923d12913d32f1b34ac8b68b97d6c4fdec049de4234f37f4d4817",
+      "git_blob": "ce58fd747df880c19946339c472dbaa96e4d5b0f",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "scripts/continuum-frontier-v30-qa.sh",
+      "read_scope": "Only matched explicit tools/continuum-virtual-fabric test invocation",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/scripts/continuum-frontier-v30-qa.sh",
+      "bytes": 2950,
+      "sha256": "3c603cb39b64c0c5dd57ffb53de7084192d1e956682b63ff62ee8b5c788252e4",
+      "git_blob": "c385fc3f92a3bdecc3d77874df3ae23288ae2b2e",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "scripts/render-continuum-v37-qa.sh",
+      "read_scope": "Only matched explicit tools/continuum-virtual-fabric test invocation",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/scripts/render-continuum-v37-qa.sh",
+      "bytes": 10546,
+      "sha256": "3d9efd5fb21a57809c4dd3997f29f59f9fd141ce3a317a3b005624c7d1eeb6fa",
+      "git_blob": "f9cbb3676abb072ddab0544fa6a4d57ceda787eb",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "scripts/render-continuum-m8-qa.sh",
+      "read_scope": "Only matched explicit tools/continuum-virtual-fabric test invocation",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/scripts/render-continuum-m8-qa.sh",
+      "bytes": 11675,
+      "sha256": "0c6a9256ef8c289faecad19dfb9fc0f01e7b5094424b2ac44a0e5488b10fa732",
+      "git_blob": "68beca3396c81f03989844008cdcf76d34e23adf",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    },
+    {
+      "path": "scripts/continuum-local-model-observation.test.mjs",
+      "read_scope": "Matched real-isolation capability checks and existing host-only test guards",
+      "absolute_path": "/workspace/scratch/174c84456ee3/continuum-c1/scripts/continuum-local-model-observation.test.mjs",
+      "bytes": 23152,
+      "sha256": "6700017faf9c9beff53ca159e5806d2692445790a48157707542a29829569736",
+      "git_blob": "1e94dce9d810293947f20d10309373680299a9a6",
+      "hash_origin": "Immutable Git blob at inspected_head; computed while saving evidence"
+    }
+  ],
+  "artifact_created_at_utc": "2026-11-04T20:47:42.324491+00:00"
+}

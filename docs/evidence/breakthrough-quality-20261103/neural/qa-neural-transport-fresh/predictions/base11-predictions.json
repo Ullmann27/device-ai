@@ -1,0 +1,302 @@
+{"cases": [
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-001",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-002",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-003",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-004",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-005",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-006",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-007",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-008",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-009",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-010",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-011",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "QB-NT-012",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  }
+]}

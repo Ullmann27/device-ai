@@ -1,0 +1,118 @@
+{
+  "schema": "completed-connections-bots-source-provenance-v1",
+  "sourceRepository": "Ullmann27/device-ai",
+  "sourcePullRequest": 515,
+  "sourceCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+  "integrationBase": "c79486eb49d2ca5273956a161c6e3732ddfd5672",
+  "retrieval": "GitHub connector fetch_file at exact commit, each decoded file verified with Git blob SHA1",
+  "sourceSnapshotNotUsed": "/workspace/scratch/672924e4650b/branch-bots is a partial dirty snapshot, not the published commit",
+  "files": [
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "sourceBlob": "d9174f55c45013bd6a0db2b979eff3033d95cc9b",
+      "beforeBlob": null,
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "sourceBlob": "b1f85c32abce041b595f34fa34a724824cfbd3a5",
+      "beforeBlob": null,
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "sourceBlob": "45e8c8e9d19405117207678598673d7f1e12dcec",
+      "beforeBlob": null,
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "sourceBlob": "27666c5ce287b663dd92e0e875510808065c3076",
+      "beforeBlob": null,
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+      "sourceBlob": "8ebcc0900571c78fdf279038a40fff7706a491be",
+      "beforeBlob": "8ebcc0900571c78fdf279038a40fff7706a491be",
+      "action": "ALREADY_IDENTICAL",
+      "imported": false
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.mjs",
+      "sourceBlob": "31f7a598d4d560e0374b9e8656446b30c512e611",
+      "beforeBlob": "31f7a598d4d560e0374b9e8656446b30c512e611",
+      "action": "ALREADY_IDENTICAL",
+      "imported": false
+    },
+    {
+      "path": ".github/continuum/coding-service-reader.mjs",
+      "sourceBlob": "eef34b205f791e1b8e82871020635400addfbde4",
+      "beforeBlob": "eef34b205f791e1b8e82871020635400addfbde4",
+      "action": "ALREADY_IDENTICAL",
+      "imported": false
+    },
+    {
+      "path": ".github/continuum/coding-service-worker.mjs",
+      "sourceBlob": "0d3097bd2b9422993849fb6882868e1d431b65b6",
+      "beforeBlob": "0d3097bd2b9422993849fb6882868e1d431b65b6",
+      "action": "ALREADY_IDENTICAL",
+      "imported": false
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "sourceBlob": "13c5661432115c883fc2b64161757aad9d1128f4",
+      "beforeBlob": null,
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "sourceBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "beforeBlob": "3dc5d63077fce0244e2bdeeb20b310aa762d2cfa",
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": ".github/continuum/repair-critic.mjs",
+      "sourceBlob": "f40fec66618c1315e4144cf0e6d196a16afd3409",
+      "beforeBlob": "472f0721fc86507def7de7b3ea4e87a2ec6503ab",
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": "scripts/continuum-owner-continuous-qa-preflight.test.mjs",
+      "sourceBlob": "fe2278df7b543ceb2bd51f22188bd9e361805782",
+      "beforeBlob": "211950224981a09f9b4ea128b47c89e42b008fdb",
+      "action": "PRESERVE_CURRENT_QA_TEST",
+      "imported": false
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "sourceBlob": "c273b39943047b2b1e658eabe4c77646de9c77c8",
+      "beforeBlob": "15d448e47828c02b7a24c1b1b92c40ed3200776a",
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "sourceBlob": "783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35",
+      "beforeBlob": "1b67da869f36cebb917f859d907b0f461ddf1c30",
+      "action": "IMPORT_EXACT",
+      "imported": true
+    },
+    {
+      "path": "scripts/render-continuum-owner-continuous-qa.sh",
+      "sourceBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+      "beforeBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+      "action": "ALREADY_IDENTICAL",
+      "imported": false
+    }
+  ],
+  "preservedBacklogBlob": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+  "qaTestDecision": "Current test keeps the existing per-signing-key checks and additional workspace/log assertions; no replacement required."
+}

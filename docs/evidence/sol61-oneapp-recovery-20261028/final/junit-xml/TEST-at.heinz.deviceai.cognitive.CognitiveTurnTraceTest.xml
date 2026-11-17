@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.CognitiveTurnTraceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:23" hostname="b50d54a1ac03" time="0.098">
+  <properties/>
+  <testcase name="boundedJournalSurvivesRestartAndReviewChangesOnlyTheAnnotation" classname="at.heinz.deviceai.cognitive.CognitiveTurnTraceTest" time="0.096"/>
+  <testcase name="excessMetadataIsMarkedIncompleteAndCorruptRowsCannotInventEvidence" classname="at.heinz.deviceai.cognitive.CognitiveTurnTraceTest" time="0.001"/>
+  <testcase name="metadataContainsNoRawConversationIdentifiersOrModelText" classname="at.heinz.deviceai.cognitive.CognitiveTurnTraceTest" time="0.001"/>
+  <testcase name="startedFailedAndCompletedCallsAreDistinguishedAndLateEventsIgnored" classname="at.heinz.deviceai.cognitive.CognitiveTurnTraceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,19 @@
+✔ Exact UTF16 offsets and SHA bound source (3.581369ms)
+✔ Wrong source is an unsupported claim and false assignment (0.973461ms)
+✔ Wrong Unicode offset is detected (0.583757ms)
+✔ False abstention is not counted correct (0.82174ms)
+✔ Missing predictions are rejected even with plausible aggregate score (3.071657ms)
+✔ Duplicate or unexpected ids reject entire result (0.473222ms)
+✔ Malformed empty replies never become safe abstentions (34.671629ms)
+✔ Mutating frozen original invalidates whole run (0.671968ms)
+✔ Source range cannot exceed original string (0.747718ms)
+✔ Confidence intervals are finite and no primary promotion for toy sample (0.777873ms)
+✔ One hundred deterministic tuple mutations never pass as source-bound evidence (6.447408ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 300.908534

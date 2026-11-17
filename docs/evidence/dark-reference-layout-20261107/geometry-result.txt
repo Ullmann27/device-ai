@@ -1,0 +1,5 @@
+692.0 x 700.0: hero=Box(left=124.0, top=84.0, right=680.0, bottom=344.0), tile=Box(left=124.0, top=424.0, right=228.8, bottom=582.0), primary=Box(left=12.0, top=760.0, right=680.0, bottom=816.0), content=1368.0
+832.0 x 748.0: hero=Box(left=143.625, top=84.0, right=820.0, bottom=344.0), tile=Box(left=143.625, top=424.0, right=272.5, bottom=591.5375), primary=Box(left=12.0, top=779.07495, right=820.0, bottom=835.07495), content=1387.075
+884.0 x 760.0: hero=Box(left=151.85156, top=84.0, right=872.0, bottom=344.0), tile=Box(left=151.85156, top=424.0, right=289.48126, bottom=600.0), primary=Box(left=12.0, top=796.0, right=872.0, bottom=852.0), content=1404.0
+1536.0 x 1024.0: hero=Box(left=255.0, top=84.0, right=1524.0, bottom=492.0), tile=Box(left=255.0, top=572.0, right=502.4, bottom=748.0), primary=Box(left=12.0, top=944.0, right=1524.0, bottom=1000.0), content=1376.0
+PASS 150 responsive geometry cases

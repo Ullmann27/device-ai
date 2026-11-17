@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.AiContextByteBudgetTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T20:35:14" hostname="04c8b0ba7ea6" time="0.033">
+  <properties/>
+  <testcase name="redactedTextDeterminesTheBudgetAndKeepsResearchDelimiters" classname="at.heinz.deviceai.cognitive.AiContextByteBudgetTest" time="0.008"/>
+  <testcase name="optionalMemoryIsIncludedWithItsIdOrOmittedAsAWholeAtTheByteBoundary" classname="at.heinz.deviceai.cognitive.AiContextByteBudgetTest" time="0.01"/>
+  <testcase name="omittedMemoryDoesNotSpendBytesNeededByLaterResearchAndSkills" classname="at.heinz.deviceai.cognitive.AiContextByteBudgetTest" time="0.005"/>
+  <testcase name="requiredContradictionsStillFailClosedBeforeOptionalSections" classname="at.heinz.deviceai.cognitive.AiContextByteBudgetTest" time="0.001"/>
+  <testcase name="blankSectionsDoNotChangeTheBudgetAndCounterIsLocalToEachCompile" classname="at.heinz.deviceai.cognitive.AiContextByteBudgetTest" time="0.004"/>
+  <testcase name="requiredUnicodeSectionsFitExactlyAndFailOneByteBelow" classname="at.heinz.deviceai.cognitive.AiContextByteBudgetTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,124 @@
+JUnit version 4.13.2
+..E..E.E.E..E.E.E....E.E.E.E..E.E.E.E.E..E.E
+Time: 0.089
+There were 18 failures:
+1) vowelTransitionCompensatesBothVisibleOpeningComponents(at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest)
+java.lang.AssertionError: AA -> O frame 1: common face opening expected:<0.72964287> but was:<0.87964284>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.assertOpening(AvatarMorphTransitionTest.kt:103)
+	at at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.vowelTransitionCompensatesBothVisibleOpeningComponents(AvatarMorphTransitionTest.kt:36)
+2) outgoingVowelDoesNotAddItsOpeningToTheMeasuredJaw(at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest)
+java.lang.AssertionError: AA -> PP frame 1: common face opening expected:<0.6267857> but was:<1.2267857>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.assertOpening(AvatarMorphTransitionTest.kt:103)
+	at at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.outgoingVowelDoesNotAddItsOpeningToTheMeasuredJaw(AvatarMorphTransitionTest.kt:23)
+3) outgoingVowelKeepsTheInnerJawAlignedWithoutMeasuredAudio(at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest)
+java.lang.AssertionError: cue-only AA -> PP frame 1: inner jaw follows the visible opening expected:<7.521428> but was:<0.0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.assertOpening(AvatarMorphTransitionTest.kt:104)
+	at at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.outgoingVowelKeepsTheInnerJawAlignedWithoutMeasuredAudio(AvatarMorphTransitionTest.kt:57)
+4) incomingVowelDoesNotPrematurelyRemoveMeasuredJawOpening(at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest)
+java.lang.AssertionError: PP -> AA frame 1: common face opening expected:<0.6> but was:<0.18571429>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.assertOpening(AvatarMorphTransitionTest.kt:103)
+	at at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest.incomingVowelDoesNotPrematurelyRemoveMeasuredJawOpening(AvatarMorphTransitionTest.kt:47)
+5) repeatedTimestampIsIdempotent(at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest)
+java.lang.AssertionError: expected:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.50249994, viseme=SIL, visemeWeight=0.0, speakEnergy=0.35999998, gazeObserved=false)> but was:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=1.0, viseme=SIL, visemeWeight=0.0, speakEnergy=0.78335994, gazeObserved=false)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.repeatedTimestampIsIdempotent(AvatarSpeechOrderingRegressionTest.kt:40)
+6) rejectedAudioCannotRewindOrAdvanceTheDefaultPoseClock(at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest)
+java.lang.AssertionError: Rejected audio changed the default pose: AudioLevel(utteranceId=current, level=0.9, atMillis=200, source=PCM_ENVELOPE) expected:<AvatarPose(state=SPEAKING, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.0, viseme=AA, visemeWeight=0.7, speakEnergy=0.0, gazeObserved=false)> but was:<AvatarPose(state=SPEAKING, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.73289996, viseme=SIL, visemeWeight=0.0, speakEnergy=0.5136, gazeObserved=false)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.rejectedAudioCannotRewindOrAdvanceTheDefaultPoseClock(AvatarSpeechOrderingRegressionTest.kt:66)
+7) rejectedFutureAudioCannotPoisonEnergyOrderingOrTheDefaultPoseClock(at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest)
+java.lang.AssertionError: expected:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.0, viseme=AA, visemeWeight=0.7, speakEnergy=0.0, gazeObserved=false)> but was:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.8865, viseme=SIL, visemeWeight=0.0, speakEnergy=0.616, gazeObserved=false)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.rejectedFutureAudioCannotPoisonEnergyOrderingOrTheDefaultPoseClock(AvatarSpeechOrderingRegressionTest.kt:93)
+8) futureAudioBetweenFramesCannotReopenFromAlreadyDeliveredSamples(at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest)
+java.lang.AssertionError: Queued audio revived after future rejection: 199 expected:<0.0> but was:<0.7296>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.futureAudioBetweenFramesCannotReopenFromAlreadyDeliveredSamples(AvatarSpeechOrderingRegressionTest.kt:114)
+9) aDefaultPoseCannotKeepFutureAudioAheadOfTheExplicitRenderClock(at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest)
+java.lang.AssertionError: expected:<0.04> but was:<0.40960002>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.aDefaultPoseCannotKeepFutureAudioAheadOfTheExplicitRenderClock(AvatarSpeechOrderingRegressionTest.kt:133)
+10) olderAudioCannotResmoothTheCurrentEnvelope(at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest)
+java.lang.AssertionError: expected:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.34649998, viseme=SIL, visemeWeight=0.0, speakEnergy=0.25599998, gazeObserved=false)> but was:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.73289996, viseme=SIL, visemeWeight=0.0, speakEnergy=0.5136, gazeObserved=false)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.olderAudioCannotResmoothTheCurrentEnvelope(AvatarSpeechOrderingRegressionTest.kt:18)
+11) olderAudioCannotMoveTheLatestSamplesExpiry(at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest)
+java.lang.AssertionError: expected:<0.256> but was:<0.0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.olderAudioCannotMoveTheLatestSamplesExpiry(AvatarSpeechOrderingRegressionTest.kt:27)
+12) registryFailureDoesNotPreventRendererDelivery(at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest)
+java.lang.IllegalStateException: Synthetic registry failure
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.registryFailureDoesNotPreventRendererDelivery$lambda$0(JarvisAvatarDispatchRegressionTest.kt:51)
+	at at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut$lambda$0(CockpitContracts.kt:48)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.registryFailureDoesNotPreventRendererDelivery(JarvisAvatarDispatchRegressionTest.kt:53)
+13) coarseStateFailureDoesNotLoseFullExpressionAndGazeEvent(at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest)
+java.lang.IllegalStateException: Synthetic coarse state failure
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.coarseStateFailureDoesNotLoseFullExpressionAndGazeEvent$lambda$0(JarvisAvatarDispatchRegressionTest.kt:117)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest$RecordingRenderer.onAvatarState(JarvisAvatarDispatchRegressionTest.kt:174)
+	at at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut$lambda$0$0$0(CockpitContracts.kt:51)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.drain(JarvisAvatarDispatchRegressionTest.kt:45)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.coarseStateFailureDoesNotLoseFullExpressionAndGazeEvent(JarvisAvatarDispatchRegressionTest.kt:122)
+14) replacementDropsOldQueuedEventAndReceivesOnlyNewEvents(at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest)
+java.lang.AssertionError: An old renderer must not receive an event after replacement
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.replacementDropsOldQueuedEventAndReceivesOnlyNewEvents(JarvisAvatarDispatchRegressionTest.kt:72)
+15) reregistrationDuringCoarseCallbackInvalidatesRemainingFullEvent(at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest)
+java.lang.AssertionError: A callback must not continue into a new registration
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.reregistrationDuringCoarseCallbackInvalidatesRemainingFullEvent(JarvisAvatarDispatchRegressionTest.kt:137)
+16) registeringSameInstanceAgainStartsANewRegistration(at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest)
+java.lang.AssertionError: expected:<[StateChanged(state=THINKING, expression=FOCUSED, gaze=GazeTarget(x=0.35, y=0.25), atMillis=101)]> but was:<[SpeechStarted(utteranceId=dispatch-test, text=Synthetic test speech, atMillis=100), StateChanged(state=THINKING, expression=FOCUSED, gaze=GazeTarget(x=0.35, y=0.25), atMillis=101)]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.registeringSameInstanceAgainStartsANewRegistration(JarvisAvatarDispatchRegressionTest.kt:112)
+17) unregisterDropsQueuedEvent(at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.unregisterDropsQueuedEvent(JarvisAvatarDispatchRegressionTest.kt:85)
+18) detachAndReregisterSameInstanceDoesNotReviveOldEvent(at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest)
+java.lang.AssertionError: Only the new registration may receive events expected:<[StateChanged(state=THINKING, expression=FOCUSED, gaze=GazeTarget(x=0.35, y=0.25), atMillis=101)]> but was:<[SpeechStarted(utteranceId=dispatch-test, text=Synthetic test speech, atMillis=100), StateChanged(state=THINKING, expression=FOCUSED, gaze=GazeTarget(x=0.35, y=0.25), atMillis=101)]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest.detachAndReregisterSameInstanceDoesNotReviveOldEvent(JarvisAvatarDispatchRegressionTest.kt:99)
+
+FAILURES!!!
+Tests run: 26,  Failures: 18
+

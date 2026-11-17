@@ -1,0 +1,3 @@
+{"call":"01-submit-on-main","argv":"ccc1-submit-repair --chain node --order e5d1e6ef-3c6f-48b0-9a6a-43a552395cc5","exitCode":2,"seconds":0.2}
+{"call":"02-submit-dirty","argv":"ccc1-submit-repair --chain node --order ba309555-33a0-4df9-8cb9-f195cc00f536","exitCode":2,"seconds":0.1}
+{"call":"03-state-inside-checkout","argv":"ccc1-status --state-dir <TERMUX_HOME>/device-ai/.ccc1-state","exitCode":2,"seconds":0.1}

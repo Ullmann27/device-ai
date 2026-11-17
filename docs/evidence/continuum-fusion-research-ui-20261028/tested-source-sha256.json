@@ -1,0 +1,5 @@
+{
+  "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "9f3cdfa402bbd4986a8425e1451b239946ac0327a90f3aff15732b6acb4658e9",
+  "app/src/main/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparator.kt": "ae0e2be177fb83cfd5d79ebb767f066cb4598e132c371bb9487b20aac6ea3022",
+  "app/src/test/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparatorTest.kt": "014ba6bd7f63623f9b83cfdab56cd5100acf344692891fa547afbe4e504543f6"
+}

@@ -1,0 +1,258 @@
+TAP version 13
+# Subtest: I01 original synthetic branded failure counts once but replay/JSON clone do not
+ok 1 - I01 original synthetic branded failure counts once but replay/JSON clone do not
+  ---
+  duration_ms: 6.457472
+  type: 'test'
+  ...
+# Subtest: I02 failure denies false-tier
+ok 2 - I02 failure denies false-tier
+  ---
+  duration_ms: 0.381835
+  type: 'test'
+  ...
+# Subtest: I02 failure denies mutable
+ok 3 - I02 failure denies mutable
+  ---
+  duration_ms: 0.734777
+  type: 'test'
+  ...
+# Subtest: I02 failure denies wrong-task
+ok 4 - I02 failure denies wrong-task
+  ---
+  duration_ms: 0.801608
+  type: 'test'
+  ...
+# Subtest: I02 failure denies wrong-source
+ok 5 - I02 failure denies wrong-source
+  ---
+  duration_ms: 1.245597
+  type: 'test'
+  ...
+# Subtest: I02 failure denies wrong-fingerprint
+ok 6 - I02 failure denies wrong-fingerprint
+  ---
+  duration_ms: 0.457319
+  type: 'test'
+  ...
+# Subtest: I03 failure rejects inconsistent unknown-error
+ok 7 - I03 failure rejects inconsistent unknown-error
+  ---
+  duration_ms: 0.360423
+  type: 'test'
+  ...
+# Subtest: I03 failure rejects inconsistent invalid-with-hash
+ok 8 - I03 failure rejects inconsistent invalid-with-hash
+  ---
+  duration_ms: 0.324209
+  type: 'test'
+  ...
+# Subtest: I03 failure rejects inconsistent proposal-null
+ok 9 - I03 failure rejects inconsistent proposal-null
+  ---
+  duration_ms: 0.496127
+  type: 'test'
+  ...
+# Subtest: I03 failure rejects inconsistent unknown-status
+ok 10 - I03 failure rejects inconsistent unknown-status
+  ---
+  duration_ms: 0.548476
+  type: 'test'
+  ...
+# Subtest: I04 failed inference cannot be converted into executable proposal
+ok 11 - I04 failed inference cannot be converted into executable proposal
+  ---
+  duration_ms: 0.859104
+  type: 'test'
+  ...
+# Subtest: I05 exact proposal digest required and rejection does not consume execution ID
+ok 12 - I05 exact proposal digest required and rejection does not consume execution ID
+  ---
+  duration_ms: 0.813716
+  type: 'test'
+  ...
+# Subtest: I06 strict task returns failed real-observation accounting without proposal success
+ok 13 - I06 strict task returns failed real-observation accounting without proposal success
+  ---
+  duration_ms: 7.342916
+  type: 'test'
+  ...
+# Subtest: I07 failed response followed by valid proposal same identity counts separately
+ok 14 - I07 failed response followed by valid proposal same identity counts separately
+  ---
+  duration_ms: 3.790553
+  type: 'test'
+  ...
+# Subtest: I08 modelSha256 switch is terminal across failed and valid attempts
+ok 15 - I08 modelSha256 switch is terminal across failed and valid attempts
+  ---
+  duration_ms: 4.626864
+  type: 'test'
+  ...
+# Subtest: I08 runtimeSha256 switch is terminal across failed and valid attempts
+ok 16 - I08 runtimeSha256 switch is terminal across failed and valid attempts
+  ---
+  duration_ms: 1.226959
+  type: 'test'
+  ...
+# Subtest: I08 reviewedPairId switch is terminal across failed and valid attempts
+ok 17 - I08 reviewedPairId switch is terminal across failed and valid attempts
+  ---
+  duration_ms: 2.075077
+  type: 'test'
+  ...
+# Subtest: I09 repeated original observation does not inflate task accounting
+ok 18 - I09 repeated original observation does not inflate task accounting
+  ---
+  duration_ms: 1.167439
+  type: 'test'
+  ...
+# Subtest: I10 entirely unbranded failures cannot manufacture strict result counts
+ok 19 - I10 entirely unbranded failures cannot manufacture strict result counts
+  ---
+  duration_ms: 0.954469
+  type: 'test'
+  ...
+# Subtest: I11 REPORT_GAP original synthetic branded proposal updates repair inference metadata
+not ok 20 - I11 REPORT_GAP original synthetic branded proposal updates repair inference metadata
+  ---
+  duration_ms: 305.468862
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/caller-accounting.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/caller-accounting.test.mjs:37:227)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: I12 REPORT_GAP original branded rejected output is counted without a candidate
+not ok 21 - I12 REPORT_GAP original branded rejected output is counted without a candidate
+  ---
+  duration_ms: 189.471812
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/caller-accounting.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/caller-accounting.test.mjs:38:447)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: I13 REPORT_GAP trusted returned inference counted before nonmatching patch span rejection
+not ok 22 - I13 REPORT_GAP trusted returned inference counted before nonmatching patch span rejection
+  ---
+  duration_ms: 160.489942
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/caller-accounting.test.mjs:39:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/caller-accounting.test.mjs:39:377)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: I14 report does not promote clone observation
+ok 23 - I14 report does not promote clone observation
+  ---
+  duration_ms: 298.267259
+  type: 'test'
+  ...
+# Subtest: I14 report does not promote false-tier observation
+ok 24 - I14 report does not promote false-tier observation
+  ---
+  duration_ms: 316.475601
+  type: 'test'
+  ...
+# Subtest: I14 report does not promote wrong-task observation
+ok 25 - I14 report does not promote wrong-task observation
+  ---
+  duration_ms: 299.118762
+  type: 'test'
+  ...
+# Subtest: I14 report does not promote mutable observation
+ok 26 - I14 report does not promote mutable observation
+  ---
+  duration_ms: 326.067594
+  type: 'test'
+  ...
+# Subtest: I15 REPORT_GAP duplicate genuine observation counts only once in rejected report
+not ok 27 - I15 REPORT_GAP duplicate genuine observation counts only once in rejected report
+  ---
+  duration_ms: 197.68699
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/caller-accounting.test.mjs:41:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/caller-accounting.test.mjs:41:350)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: I16 actual repair loop treats changed-model error as terminal
+ok 28 - I16 actual repair loop treats changed-model error as terminal
+  ---
+  duration_ms: 150.891957
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 24
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2387.552243

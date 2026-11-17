@@ -1,0 +1,48 @@
+✖ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (2.066422ms)
+✔ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (1.263479ms)
+✔ background consolidation records failure without losing interrupted source trials (0.146818ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (0.216542ms)
+✔ activity request codes are unique and every one has a result handler (4.384029ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.242651ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (8.119372ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (2.188204ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (0.358834ms)
+✔ startup bootstrap training stops with the activity and is retried later (0.69925ms)
+✔ startup I/O off the UI thread and shell commands stop with their activity (3.948432ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (0.863264ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (1.164892ms)
+✔ Teamleader Android UI reports status without false success (0.149773ms)
+✔ live model status does not revert the beginner cockpit to English (0.3159ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (1.258531ms)
+✔ new visual start screen is local, accessible and honest about capabilities (0.654774ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (0.154629ms)
+✔ Wikipedia article research uses bounded authentic extracts and original citations (0.173418ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (0.347296ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (0.473654ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 20
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 194.469781
+
+✖ failing tests:
+
+test at .github/continuum/android-integration-wiring.test.mjs:17:1
+✖ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (2.066422ms)
+  AssertionError [ERR_ASSERTION]: Disconnected or unsupported code path: SWB1 evidence and CRE1 reranking share one locked snapshot and persisted order
+      at ensure (file:///workspace/device-ai-sol-0320/.github/continuum/android-integration-wiring.test.mjs:16:34)
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol-0320/.github/continuum/android-integration-wiring.test.mjs:27:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

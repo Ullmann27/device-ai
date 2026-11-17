@@ -1,0 +1,370 @@
+[
+  {
+    "pr": 327,
+    "head_sha": "0c104e5d83e94096ab634685bf6184f753fc4e72",
+    "object_exists": true,
+    "head_is_702_ancestor": true,
+    "head_is_331_ancestor": true,
+    "mergebase_331": "0c104e5d83e94096ab634685bf6184f753fc4e72",
+    "file_status": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "head_blob": "2ee859c04abee6f8006c8776c71abdb3fbabf048",
+        "baseline_blob": "a5070c54ba16def66f75d9146db1452cae99a7c1",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+        "head_blob": "32ce7c070ef966fda2d0e19aa997ffccda116dc6",
+        "baseline_blob": "32ce7c070ef966fda2d0e19aa997ffccda116dc6",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt",
+        "head_blob": "f76adc6f14cb16fd919139450f13fa9e31df7645",
+        "baseline_blob": "f76adc6f14cb16fd919139450f13fa9e31df7645",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/Cdx1EvidenceSlotBinder.kt",
+        "head_blob": "f6f7f1813db8556a1c18f36d43dc6e40f4eb0f54",
+        "baseline_blob": "f6f7f1813db8556a1c18f36d43dc6e40f4eb0f54",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt",
+        "head_blob": "c4470f74981253b96b3af8bf1189f67cccf3ab8c",
+        "baseline_blob": "c4470f74981253b96b3af8bf1189f67cccf3ab8c",
+        "status": "SAME"
+      },
+      {
+        "path": "scripts/render-continuum-m8-qa.sh",
+        "head_blob": "521f43d5e14f210262db4db067931de0e0903c81",
+        "baseline_blob": "316d2fc0235ffa5061bd007f5631d9591c155d43",
+        "status": "DIVERGED"
+      }
+    ]
+  },
+  {
+    "pr": 328,
+    "head_sha": "081065b7d3628bf6a51239360f1e377f20df3fff",
+    "object_exists": true,
+    "head_is_702_ancestor": true,
+    "head_is_331_ancestor": true,
+    "mergebase_331": "081065b7d3628bf6a51239360f1e377f20df3fff",
+    "file_status": [
+      {
+        "path": "scripts/render-continuum-m8-qa.sh",
+        "head_blob": "371806be298d27e8d844223392da6a6e06ee8d37",
+        "baseline_blob": "316d2fc0235ffa5061bd007f5631d9591c155d43",
+        "status": "DIVERGED"
+      }
+    ]
+  },
+  {
+    "pr": 329,
+    "head_sha": "3064ceb85a84b24dd1d2a4d36c9059fccbf68d24",
+    "object_exists": true,
+    "head_is_702_ancestor": true,
+    "head_is_331_ancestor": true,
+    "mergebase_331": "3064ceb85a84b24dd1d2a4d36c9059fccbf68d24",
+    "file_status": [
+      {
+        "path": "scripts/continuum-architecture-proof.mjs",
+        "head_blob": "1966a540643837958fc8ee534fb4c3a2425bba0c",
+        "baseline_blob": "27f83a4a3b28983fc6d07f5ac74749cd3fc33d22",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "scripts/render-continuum-m8-qa.sh",
+        "head_blob": "d73fe89a0637cd477709b011e878a0c545b0c066",
+        "baseline_blob": "316d2fc0235ffa5061bd007f5631d9591c155d43",
+        "status": "DIVERGED"
+      }
+    ]
+  },
+  {
+    "pr": 330,
+    "head_sha": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+    "object_exists": true,
+    "head_is_702_ancestor": true,
+    "head_is_331_ancestor": true,
+    "mergebase_331": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+    "file_status": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+        "head_blob": "65ddcc1fd16d327624694ba35350f6681f8ccb83",
+        "baseline_blob": "d0ae6c3030559254bb32541da0502bcd96132856",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "scripts/render-continuum-m8-qa.sh",
+        "head_blob": "03f43982a4e3efd5f40467280f47aeab7605314a",
+        "baseline_blob": "316d2fc0235ffa5061bd007f5631d9591c155d43",
+        "status": "DIVERGED"
+      }
+    ]
+  },
+  {
+    "pr": 331,
+    "head_sha": "cc9a56b152afb1a8359b768417cf395583db2027",
+    "object_exists": true,
+    "head_is_702_ancestor": false,
+    "head_is_331_ancestor": true,
+    "mergebase_331": "cc9a56b152afb1a8359b768417cf395583db2027",
+    "file_status": [
+      {
+        "path": "app/src/main/assets/continuum-research/natural-location-v3.csx",
+        "head_blob": "fa8ac7b7367cfa570c21f2bb77c92f1f810e0bb2",
+        "baseline_blob": "fa8ac7b7367cfa570c21f2bb77c92f1f810e0bb2",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "head_blob": "f5bc50f8249f8f0a512da31b68a318d8a593a979",
+        "baseline_blob": "a5070c54ba16def66f75d9146db1452cae99a7c1",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumResidualSpanCore.kt",
+        "head_blob": "28623a560f8658e292a4ae8551ba310c93982dba",
+        "baseline_blob": "28623a560f8658e292a4ae8551ba310c93982dba",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/DualEvidenceReadContract.kt",
+        "head_blob": "31b81aff95d4fcde2850a46c936b4f7ddead28db",
+        "baseline_blob": "31b81aff95d4fcde2850a46c936b4f7ddead28db",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/EntityRelationLocationShadowAdapter.kt",
+        "head_blob": "f74a82ff60176b6020b47ec4b4817cb9053429e8",
+        "baseline_blob": "84859b1edd69a96723c22e19b16bed3baa89fb42",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+        "head_blob": "df992a97a6cc4445bde684dcf5517f76df150139",
+        "baseline_blob": "d0ae6c3030559254bb32541da0502bcd96132856",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/NaturalLocationLabComparison.kt",
+        "head_blob": "8fad3cefb4f31c749f1f686f9c595954605bb96b",
+        "baseline_blob": "8fad3cefb4f31c749f1f686f9c595954605bb96b",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/VerifiedLocationSpanResearch.kt",
+        "head_blob": "554abf59f9b909da52df81e5478dd4bc22e2b2e2",
+        "baseline_blob": "554abf59f9b909da52df81e5478dd4bc22e2b2e2",
+        "status": "SAME"
+      },
+      {
+        "path": "scripts/continuum-architecture-proof.mjs",
+        "head_blob": "27f83a4a3b28983fc6d07f5ac74749cd3fc33d22",
+        "baseline_blob": "27f83a4a3b28983fc6d07f5ac74749cd3fc33d22",
+        "status": "SAME"
+      },
+      {
+        "path": "scripts/render-continuum-m8-qa.sh",
+        "head_blob": "316d2fc0235ffa5061bd007f5631d9591c155d43",
+        "baseline_blob": "316d2fc0235ffa5061bd007f5631d9591c155d43",
+        "status": "SAME"
+      }
+    ]
+  },
+  {
+    "pr": 332,
+    "head_sha": "27bdfccda95d870b70529f93716a861c054eebb5",
+    "object_exists": true,
+    "head_is_702_ancestor": true,
+    "head_is_331_ancestor": false,
+    "mergebase_331": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+    "file_status": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
+        "head_blob": "a9f39b9c7b36246bf98f8cc621d6afa166bd4339",
+        "baseline_blob": "a9f39b9c7b36246bf98f8cc621d6afa166bd4339",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/GeneralWebDiscoveryProvider.kt",
+        "head_blob": "95e469dee328a20fff5ac8fa6d5c530047c13d8b",
+        "baseline_blob": "95e469dee328a20fff5ac8fa6d5c530047c13d8b",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalDialogueQualityGate.kt",
+        "head_blob": "cf360a4790cb3b19b7701d888256545e5c4016bf",
+        "baseline_blob": "5753b357fdee47d37c08dbfe727b071c6a282076",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+        "head_blob": "1a145ab67eae15167f39febcf0f3241e629ee6b7",
+        "baseline_blob": "1a145ab67eae15167f39febcf0f3241e629ee6b7",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt",
+        "head_blob": "afae00381c05c29fafa8e9ed1b186bf9e4452d53",
+        "baseline_blob": "afae00381c05c29fafa8e9ed1b186bf9e4452d53",
+        "status": "SAME"
+      }
+    ]
+  },
+  {
+    "pr": 333,
+    "head_sha": "cc878fb9e2e8374805648a12455f6b08fbce00e0",
+    "object_exists": true,
+    "head_is_702_ancestor": true,
+    "head_is_331_ancestor": false,
+    "mergebase_331": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+    "file_status": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "head_blob": "c57cce4dbaea6ac85f1e975df6cc3a994255f72b",
+        "baseline_blob": "a5070c54ba16def66f75d9146db1452cae99a7c1",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+        "head_blob": "1eca8adf6acb4836d6fca7368e2fdf3ae8a44499",
+        "baseline_blob": "49bf88e7efc5d10bceb4ce8312676a39a572edef",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/ConstrainedResourceFabric.kt",
+        "head_blob": "089207ad5efacc06a2a0c11de8b2d9ddc73ccf3c",
+        "baseline_blob": "089207ad5efacc06a2a0c11de8b2d9ddc73ccf3c",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt",
+        "head_blob": "95f931adbd84898a9ab177f452a92388135b9291",
+        "baseline_blob": "95f931adbd84898a9ab177f452a92388135b9291",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/JarvisUnifiedEvidenceContract.kt",
+        "head_blob": "315d84aade811d9d98e60b2e3ad5e5a857ab1286",
+        "baseline_blob": "315d84aade811d9d98e60b2e3ad5e5a857ab1286",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LegalRisEvidenceProvider.kt",
+        "head_blob": "b43e09489fa3ee03743f877e7cdcdaa43ab2791b",
+        "baseline_blob": "1b890b0bf21041dfa5a2380be67ead6704f4da83",
+        "status": "DIVERGED"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationPromptFirewall.kt",
+        "head_blob": "1a08824712b3ff613578983bef0235c48a9050b7",
+        "baseline_blob": "1a08824712b3ff613578983bef0235c48a9050b7",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/TemporalRoleEvidenceLedger.kt",
+        "head_blob": "902ae44f90d22cd1561d3425b740a888276d4104",
+        "baseline_blob": "902ae44f90d22cd1561d3425b740a888276d4104",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/TurnScopedInternetMode.kt",
+        "head_blob": "c6e3e39a7ead2005464f65d280a8cd08b5df38b9",
+        "baseline_blob": "c6e3e39a7ead2005464f65d280a8cd08b5df38b9",
+        "status": "SAME"
+      }
+    ]
+  },
+  {
+    "pr": 334,
+    "head_sha": "702b57ae5c2724a819048bcc3b7775272b48f2b3",
+    "object_exists": true,
+    "head_is_702_ancestor": true,
+    "head_is_331_ancestor": false,
+    "mergebase_331": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+    "file_status": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "head_blob": "a5070c54ba16def66f75d9146db1452cae99a7c1",
+        "baseline_blob": "a5070c54ba16def66f75d9146db1452cae99a7c1",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+        "head_blob": "49bf88e7efc5d10bceb4ce8312676a39a572edef",
+        "baseline_blob": "49bf88e7efc5d10bceb4ce8312676a39a572edef",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt",
+        "head_blob": "1afc292051c666fcd096589fb1f9a0d7c2942f66",
+        "baseline_blob": "1afc292051c666fcd096589fb1f9a0d7c2942f66",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LegalRisDiscoveryProvider.kt",
+        "head_blob": "461e56824e3b7da00a872a2b67b085b8a669b7df",
+        "baseline_blob": "461e56824e3b7da00a872a2b67b085b8a669b7df",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LegalRisEvidenceProvider.kt",
+        "head_blob": "1b890b0bf21041dfa5a2380be67ead6704f4da83",
+        "baseline_blob": "1b890b0bf21041dfa5a2380be67ead6704f4da83",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+        "head_blob": "c7ff6c9049e6da6f9b6dcf3b16d4a9c2d12349d2",
+        "baseline_blob": "c7ff6c9049e6da6f9b6dcf3b16d4a9c2d12349d2",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalDialogueQualityGate.kt",
+        "head_blob": "5753b357fdee47d37c08dbfe727b071c6a282076",
+        "baseline_blob": "5753b357fdee47d37c08dbfe727b071c6a282076",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/Research.kt",
+        "head_blob": "782e78429f3f121653aed71d7d06c4d8cc9bd085",
+        "baseline_blob": "782e78429f3f121653aed71d7d06c4d8cc9bd085",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoff.kt",
+        "head_blob": "1f8d3c1f0cca734199aa698cb1e41eab7e5015ae",
+        "baseline_blob": "1f8d3c1f0cca734199aa698cb1e41eab7e5015ae",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt",
+        "head_blob": "1063615b21d9bf653f2c07f77276b9015070ee81",
+        "baseline_blob": "1063615b21d9bf653f2c07f77276b9015070ee81",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+        "head_blob": "4132e2ecefc84264ff7dda5951f3bf3b45ae8a21",
+        "baseline_blob": "4132e2ecefc84264ff7dda5951f3bf3b45ae8a21",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/EntityRelationLocationShadowAdapter.kt",
+        "head_blob": "84859b1edd69a96723c22e19b16bed3baa89fb42",
+        "baseline_blob": "84859b1edd69a96723c22e19b16bed3baa89fb42",
+        "status": "SAME"
+      },
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+        "head_blob": "d0ae6c3030559254bb32541da0502bcd96132856",
+        "baseline_blob": "d0ae6c3030559254bb32541da0502bcd96132856",
+        "status": "SAME"
+      }
+    ]
+  }
+]

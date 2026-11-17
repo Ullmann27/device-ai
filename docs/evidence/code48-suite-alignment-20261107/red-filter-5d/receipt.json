@@ -1,0 +1,48 @@
+{
+  "attempt": "red-filter-5d",
+  "sourceBefore": {
+    "commit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "command": [
+    "gradle",
+    "--no-daemon",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumStandaloneVersionCode=48",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumLocalStandaloneQa=true",
+    "--init-script",
+    "/workspace/scratch/3d1967be6193/qa/full-suite-repair/focused-tests.init.gradle",
+    ":app:testDebugUnitTest"
+  ],
+  "cwd": "/workspace/scratch/3d1967be6193/candidate",
+  "startedAt": "2026-11-07T07:04:07.768059+00:00",
+  "finishedAt": "2026-11-07T07:04:26.396325+00:00",
+  "exitCode": 1,
+  "junit": [
+    {
+      "file": "TEST-at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.xml",
+      "sha256": "074acfdc2595873cf82a7760dec33283d58c631d7715c7646120f48b8852b0ab"
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest.xml",
+      "sha256": "50e76d3097fe7d6635255ba653a4292460bf3c58cafa936577db32f90c7c55c7"
+    }
+  ],
+  "logSha256": "50d6caa7a5d362e75ef1fc9b8205e421825f13c7ccec796e4ff9e9bd76615d40",
+  "status": "FAIL",
+  "deviceAcceptance": "NOT_RUN"
+}

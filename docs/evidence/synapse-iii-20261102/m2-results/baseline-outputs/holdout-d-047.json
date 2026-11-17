@@ -1,0 +1,20 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-047:s1",
+    "decision": "SPAN",
+    "sha256": "1aea7e7b5e428de0f0e3c8e3ecafbba54be0c67304c7deca0d547a88a9f03fca",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Dagavicu",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {"decision": "NOANSWER"},
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 71.769152
+}

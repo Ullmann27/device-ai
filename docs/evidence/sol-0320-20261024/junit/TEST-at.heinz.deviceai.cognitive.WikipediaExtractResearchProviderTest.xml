@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:22" hostname="5c9e18abbd30" time="0.062">
+  <properties/>
+  <testcase name="missingExcerptDoesNotTurnIntoClaimOrCitation" classname="at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest" time="0.003"/>
+  <testcase name="doctypeExternalEntityAndWrongTitleAreRejected" classname="at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest" time="0.053"/>
+  <testcase name="forgedTransportResponseDoesNotBecomeArticleEvidence" classname="at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest" time="0.001"/>
+  <testcase name="unrelatedOrModifiedUrlsStayInExistingSecureProvider" classname="at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest" time="0.001"/>
+  <testcase name="boundedExtractRetainsOriginalArticleCitationAndSourceHash" classname="at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

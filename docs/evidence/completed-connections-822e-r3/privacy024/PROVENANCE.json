@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "created_utc": "2026-11-04T22:41:20.746591+00:00",
+  "status": "SOURCE_INTEGRATED_NOT_ANDROID_VERIFIED",
+  "integration_base": "75533fa97532ace8333d1023c689ee2a86e87668",
+  "repository": "Ullmann27/device-ai",
+  "pr": 529,
+  "source_commit": "4a60c758fd31f5436401769d9ed91da646de815c",
+  "source_tree": "cf3f45bb3c59aa9bfc20d063c896d4d1d8a7d95d",
+  "published_evidence_commit": "00049e5c76b30e3a3587755a65ac6a30a693eb8a",
+  "published_evidence_tree": "93828a9b4d0fea44940c2b9751277059b8d388c1",
+  "verification_method": "GitHub connector fetch_file at pinned source commit; computed Git blob IDs match both target and public-verified archive members; commit/tree identities independently read through GitHub Git commits endpoint",
+  "transport": {
+    "path": "/workspace/scratch/174c84456ee3/continuum-c1/docs/evidence/c1-integration-20261104/privacy024-intake/privacy024-complete-intake.tar.xz",
+    "sha256": "112859134f6b5f9d5bccdc643679cea55bcab0fc76e1227fd352e03683c29c18",
+    "members": [
+      "public-verified/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "public-verified/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt"
+    ],
+    "target_and_public_verified_bytes_identical": true
+  },
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "source_commit": "4a60c758fd31f5436401769d9ed91da646de815c",
+      "source_git_blob": "0e4718176518131828688092ea95e894a1d4c2fa",
+      "source_sha256": "03a439cb730fe517e480b271089126d5a08fbe2366c41f9c6ea93573b8581a84",
+      "source_bytes": 18412,
+      "base_git_blob": "2aab35194170710b216f81b6ec886521ca767fbe",
+      "integrated_git_blob": "f3d5290597952b42ff411816500865cab90e31d9",
+      "integrated_sha256": "636bc35f13cb3d7a8ada0674545cc755fec9109c1c4296c04c28b05ea19c25a1",
+      "integrated_bytes": 18596,
+      "source_equality": "exact except retained #523 usedBytes declaration and accepted-section byte-count update",
+      "url": "https://github.com/Ullmann27/device-ai/blob/4a60c758fd31f5436401769d9ed91da646de815c/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+      "source_commit": "4a60c758fd31f5436401769d9ed91da646de815c",
+      "source_git_blob": "3368e6939061d259e9c8b8c6d419e3dc71cabcaf",
+      "source_sha256": "69e10868d7ad9384868204f08478148db76e414c1ccf412452e1ee8c110bd8fe",
+      "source_bytes": 22308,
+      "base_git_blob": "1c3a7543ebaa826b0105002c8bfe5e23fa1c0c84",
+      "integrated_git_blob": "3368e6939061d259e9c8b8c6d419e3dc71cabcaf",
+      "integrated_sha256": "69e10868d7ad9384868204f08478148db76e414c1ccf412452e1ee8c110bd8fe",
+      "integrated_bytes": 22308,
+      "source_equality": "exact",
+      "url": "https://github.com/Ullmann27/device-ai/blob/4a60c758fd31f5436401769d9ed91da646de815c/app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt"
+    }
+  ],
+  "retained": [
+    "#523 incremental UTF-8 usedBytes accounting and atomic sections",
+    "existing RecallObserver instrumentation and post-compile dispatch",
+    "#522 contradiction privacy, source identity, ambiguous-record exclusion and evidence framing"
+  ],
+  "not_modified": [
+    "tests",
+    "AgentActivity",
+    "UI and avatar renderers",
+    "tool/consent gates",
+    "storage format or existing records"
+  ],
+  "validation": {
+    "pinned_source_blobs": "MATCH",
+    "semantic_merge": "Reviewed exact source plus retained usedBytes delta",
+    "gradle": "NOT_RUN",
+    "android_ui": "NOT_RUN",
+    "new_tests": "NOT_ADDED",
+    "tests": "NOT_RUN by parent instruction"
+  },
+  "upstream_evidence": {
+    "source": "https://github.com/Ullmann27/device-ai/pull/529",
+    "reported_sdk_ui_pass": 100,
+    "reported_new_api_issues": 0,
+    "scope": "Upstream completed source only; not an integration result"
+  },
+  "next_gate": "Parent merges frozen C1 tests and runs actual integration validation; UI handling of UNTERMINATED_CREDENTIAL_VALUE remains C1 ownership."
+}

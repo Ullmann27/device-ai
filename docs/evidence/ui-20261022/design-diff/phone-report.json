@@ -1,0 +1,40 @@
+{
+ "kind": "phone",
+ "scaleToReference": 0.8653,
+ "offsetPx": [
+  116,
+  112
+ ],
+ "edgeCorrelation": 0.335,
+ "meanAbsDiff": 26.4,
+ "slots": {
+  "BRAND": {
+   "meanAbsDiff": 25.8,
+   "edgeCorrelation": 0.297
+  },
+  "HERO": {
+   "meanAbsDiff": 39.7,
+   "edgeCorrelation": 0.073
+  },
+  "MODEL": {
+   "meanAbsDiff": 22.0,
+   "edgeCorrelation": 0.171
+  },
+  "LEARNING": {
+   "meanAbsDiff": 21.4,
+   "edgeCorrelation": 0.255
+  },
+  "STORAGE": {
+   "meanAbsDiff": 23.1,
+   "edgeCorrelation": 0.294
+  },
+  "DEVELOPMENT": {
+   "meanAbsDiff": 18.2,
+   "edgeCorrelation": 0.197
+  },
+  "NAV": {
+   "meanAbsDiff": 14.2,
+   "edgeCorrelation": 0.242
+  }
+ }
+}

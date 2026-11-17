@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:33:16" hostname="04c8b0ba7ea6" time="0.003">
+  <properties/>
+  <testcase name="absentRendererStillReceivesRegistryEventWithoutQueueing" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.001"/>
+  <testcase name="registryFailureDoesNotPreventRendererDelivery" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.001"/>
+  <testcase name="coarseStateFailureDoesNotLoseFullExpressionAndGazeEvent" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.0"/>
+  <testcase name="replacementDropsOldQueuedEventAndReceivesOnlyNewEvents" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.0"/>
+  <testcase name="reregistrationDuringCoarseCallbackInvalidatesRemainingFullEvent" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.0"/>
+  <testcase name="registeringSameInstanceAgainStartsANewRegistration" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.0"/>
+  <testcase name="normalStateDeliveryPreservesRegistryAndRendererContract" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.001"/>
+  <testcase name="unregisterDropsQueuedEvent" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.0"/>
+  <testcase name="detachAndReregisterSameInstanceDoesNotReviveOldEvent" classname="at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

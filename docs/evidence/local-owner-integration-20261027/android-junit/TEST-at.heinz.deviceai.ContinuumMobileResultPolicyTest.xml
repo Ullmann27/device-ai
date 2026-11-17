@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumMobileResultPolicyTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:40" hostname="7b281259906f" time="0.012">
+  <properties/>
+  <testcase name="buildNeedsSignatureEvidenceAndCompletedTermuxStatus" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.005"/>
+  <testcase name="storedStatusNeverTurnsInvalidOrAbsentEvidenceIntoSuccessfulInstall" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.002"/>
+  <testcase name="statusNeverClaimsDeviceInstallation" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.0"/>
+  <testcase name="modifiedGitSourceDuringBuildIsAValidBlockedReport" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.0"/>
+  <testcase name="exitCodesAndTermuxErrorsCannotBePromotedToSuccess" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.005"/>
+  <testcase name="buildMustBindARealCommitPreviewPackageAndVersion" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.0"/>
+  <testcase name="doctorNeedsTrueExitAndRecognizedReport" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.0"/>
+  <testcase name="rejectedPackageIsHistoricalFailureAndNeverABuildSuccess" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.0"/>
+  <testcase name="storedStatusExplainsHistoricalFailureWithoutReclassifyingCurrentTools" classname="at.heinz.deviceai.ContinuumMobileResultPolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,236 @@
+{
+  "source": {
+    "commit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+    "branch": "release/continuum-night-integration-20261103",
+    "treeDigest": "3691bfda273d37d41fccda705b8a88982fada49330434197bd08fb761bf59f14"
+  },
+  "originalReportsAndFiles": [
+    {
+      "originalBuildEnvPath": "full-node-0ff2cef5/full-node.xml",
+      "preservedPath": "full-node.xml",
+      "bytes": 519316,
+      "sha256": "e22345a323d9f94d962138a0474bb83fc5a94050f14f22a7fd2c79b55ddba333"
+    },
+    {
+      "originalBuildEnvPath": "backend-0ff2cef5.xml",
+      "preservedPath": "backend.xml",
+      "bytes": 13476,
+      "sha256": "a62910fc6e510e6169256252fc8f8b728518ecca56134303b0d410ae449bee23"
+    },
+    {
+      "originalBuildEnvPath": "android-qa/final-0ff2cef5.log",
+      "preservedPath": "android-log.txt",
+      "bytes": 3181,
+      "sha256": "bd8a10529c4f618a8cb907ad87978915cfe6a9bc4408dd7579c31c60a73bc970"
+    },
+    {
+      "originalBuildEnvPath": "android-qa/unsigned-0ff2cef5.json",
+      "preservedPath": "unsigned.json",
+      "bytes": 1045,
+      "sha256": "9600ff03f07b64a5342be6d64a1176b96137d030de08809d8cdad1b0c68295f5"
+    },
+    {
+      "originalBuildEnvPath": "android-qa/unsigned-0ff2cef5.log",
+      "preservedPath": "unsigned-log.txt",
+      "bytes": 16874,
+      "sha256": "9603e6b673b8ea88beed40df0b3b4d62115c97fd9c96c89ab993c3b4905699d6"
+    },
+    {
+      "originalBuildEnvPath": "android-qa/unsigned-0ff2cef5-badging.txt",
+      "preservedPath": "unsigned-badging.txt",
+      "bytes": 1807,
+      "sha256": "5ceef5321a85bbbbe493478d6d387926e3945738a84a2f369cf816677861f125"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/verification-final.json",
+      "preservedPath": "parity-final.json",
+      "bytes": 1584,
+      "sha256": "e926abfba415e8127fb2879dd6d60643b5f3cbe7b3225cf10db8b595a01b3a34"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/verification-second-invocation.json",
+      "preservedPath": "parity-second-invocation.json",
+      "bytes": 1396,
+      "sha256": "53bb6c24ce70163e6c8054f852733579fbd6055c8e10f624487adcd9aa9256b7"
+    },
+    {
+      "originalBuildEnvPath": "parity-prepare.log",
+      "preservedPath": "parity-prepare-log.txt",
+      "bytes": 211,
+      "sha256": "8f8dc17f1fbe6bacab734b09a155fae1426ec3b695cacd9b11f3d5429c28d73d"
+    },
+    {
+      "originalBuildEnvPath": "run_gradle.py",
+      "preservedPath": "reproduction/run_gradle.py",
+      "bytes": 1133,
+      "sha256": "8c45ff52924a8234e552ed3efab20ebfa57c5d7b2229bcba744271b00517bc78"
+    },
+    {
+      "originalBuildEnvPath": "night-ui.init.gradle",
+      "preservedPath": "reproduction/night-ui.init.gradle",
+      "bytes": 817,
+      "sha256": "16aa611672e4d3e22c0e4be394514ce16269464e88b7959c040aedef72b65e79"
+    },
+    {
+      "originalBuildEnvPath": "independent-tests-source.json",
+      "preservedPath": "reproduction/independent-tests-source.json",
+      "bytes": 5880,
+      "sha256": "f2f2db4484c5ddca359c464c5c22789a805d7db82b709c4a8aba13e056278a12"
+    },
+    {
+      "originalBuildEnvPath": "roundtrip-receipt-0ff2cef5/prepare.json",
+      "preservedPath": "roundtrip-prepare.json",
+      "bytes": 367,
+      "sha256": "d7def2d26fd81d03ee79df46466059a2f3bb9d0c7fa75dec7dc701cc5041e526"
+    },
+    {
+      "originalBuildEnvPath": "roundtrip-receipt-0ff2cef5/TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogRoundtripTest.xml",
+      "preservedPath": "roundtrip-junit.xml",
+      "bytes": 498,
+      "sha256": "e5fc9d47645931059da6a10cd6276bee4d4eec7c9cb0b3916f079830e439a230"
+    },
+    {
+      "originalBuildEnvPath": "roundtrip-receipt-0ff2cef5/gradle.log",
+      "preservedPath": "roundtrip-gradle-log.txt",
+      "bytes": 2670,
+      "sha256": "7b9befa29f85695c4baaf1c16998b5dd3e6e45826f80411036a4105fba958a41"
+    },
+    {
+      "originalRepositoryPath": "app/build/reports/lint-results-debug.xml",
+      "preservedPath": "lint.xml",
+      "bytes": 87,
+      "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809"
+    },
+    {
+      "originalRepositoryPath": "app/build/reports/lint-results-debug.txt",
+      "preservedPath": "lint.txt",
+      "bytes": 17,
+      "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334"
+    },
+    {
+      "originalBuildEnvPath": "full-node-0ff2cef5/report.json",
+      "compactPath": "full-node-summary.json",
+      "bytes": 2159849,
+      "sha256": "9890141c85c1ba068c1659865d2f1513569e083d95e4600bfee3f6435b493407"
+    },
+    {
+      "originalBuildEnvPath": "critical-0ff2cef5/report.json",
+      "compactPath": "critical-summary.json",
+      "bytes": 1975765,
+      "sha256": "a498c11db08bea353c7cd7eccc754e40a5c103eab97baa2e8b65c31a0ef4f24c"
+    }
+  ],
+  "paritySyntheticFixtureHashes": [
+    {
+      "originalBuildEnvPath": "final-parity/backlog/backlog.json",
+      "bytes": 3933,
+      "sha256": "48bcad12d6c9f4f5f3bbca68be3c996281118855565f3c5bcd034c553765262d"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/backlog/backlog.json.bak",
+      "bytes": 3737,
+      "sha256": "9dc3b55105e8659b7230a2c6661efc0d0c129505039d6ad19b1e286187bc8608"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/backlog/kotlin-ops.json",
+      "bytes": 228,
+      "sha256": "dc71385c4e0ba0483650f06d91c8e5758860368148fc28d0682903aa0c41c59e"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/backlog/kotlin-state.json",
+      "bytes": 95,
+      "sha256": "7fd90bde8dd3b0bb47f83928f39f02a4f77fd1bc973ae020c6b9972f9e6ed314"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/backlog/node-state.json",
+      "bytes": 94,
+      "sha256": "0b4c6830ee4dccb5d848a9239c439916b8fa87fbd2a8c948c2b42260f8136556"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/contrastive/kotlin-candidate.swb1",
+      "bytes": 32960,
+      "sha256": "7ddb6959004cc6944206c740b57cbe23ebd5363cc80291464b33249f01bd288a"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/contrastive/kotlin-metrics.tsv",
+      "bytes": 384,
+      "sha256": "37e0d80224835ccd6c2e100ac924701f4a88e4df7ae75a1f332bac7762d21d9d"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/contrastive/kotlin-swb2.swb2",
+      "bytes": 32960,
+      "sha256": "2530545ba55acab64fa6a37822b468a17e85379df1c756b16176a727d9e64a54"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/contrastive/node-candidate.swb1",
+      "bytes": 32960,
+      "sha256": "40b28cccd1932e24d465ed86a9909ee0534a220f67c7bc20fcf82e7ea62abb42"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/contrastive/node-metrics.tsv",
+      "bytes": 384,
+      "sha256": "37e0d80224835ccd6c2e100ac924701f4a88e4df7ae75a1f332bac7762d21d9d"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/contrastive/node-swb2.swb2",
+      "bytes": 32960,
+      "sha256": "2530545ba55acab64fa6a37822b468a17e85379df1c756b16176a727d9e64a54"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/cre1/kotlin-scores.tsv",
+      "bytes": 1166,
+      "sha256": "63eb8a1e3472a3b282eb02e9530a7dfaafa3abbc4bf0c5b9bbd6c184336e37ea"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/cre1/kotlin-sgd.cre1",
+      "bytes": 4210736,
+      "sha256": "e89fce20debd648646787cb6ecca36ddfeb1f1aebe4f6a1da9e5f4fffd232b43"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/cre1/node-cre1.cre1",
+      "bytes": 4210736,
+      "sha256": "2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/cre1/node-features.tsv",
+      "bytes": 11708,
+      "sha256": "bd4862ff5af0385160d0e78adb021224747669e994526076acebb442614b3650"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/cre1/node-scores.tsv",
+      "bytes": 1188,
+      "sha256": "9422263213574601ce2bbe0da8f4d16be6148c25e02dab5a9adbae75b725869e"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/cre1/node-seed73.cre1",
+      "bytes": 4210736,
+      "sha256": "57ddcc0b3eee6902ae6610719ca8237543e5d2576c2fed5cb4441331f7ff3031"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/cre1/node-sgd-losses.tsv",
+      "bytes": 60,
+      "sha256": "f677fbcde02401c1dfaf793a09159b1d412cfb369efe69f01c9bf8caa2da0057"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/cre1/node-sgd.cre1",
+      "bytes": 4210736,
+      "sha256": "2cfed4ff1d48401dc493941342823c0a27c8b8eff1002344a7094b8a16981a89"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/verification-final.json",
+      "bytes": 1584,
+      "sha256": "e926abfba415e8127fb2879dd6d60643b5f3cbe7b3225cf10db8b595a01b3a34"
+    },
+    {
+      "originalBuildEnvPath": "final-parity/verification-second-invocation.json",
+      "bytes": 1396,
+      "sha256": "53bb6c24ce70163e6c8054f852733579fbd6055c8e10f624487adcd9aa9256b7"
+    }
+  ],
+  "notes": [
+    "Original full reports are hashed before compaction; huge source.inputsSha256 maps are omitted from compact summaries.",
+    "Original XML/log/receipt bytes are preserved unchanged. Archive metadata is normalized deterministically.",
+    "Original command receipts and external harnesses retain their original workspace paths. Documentation links are repository-relative.",
+    "No owner data, signing key, credential or literal proxy environment value is included."
+  ]
+}

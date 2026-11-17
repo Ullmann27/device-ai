@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: D10: changed pinned profile classpath is refused before Java metadata execution
+not ok 1 - D10: changed pinned profile classpath is refused before Java metadata execution
+  ---
+  duration_ms: 676.146252
+  type: 'test'
+  location: '/workspace/independence-mcp-review/tools/independence-mcp-review/canonical-reader.test.mjs:106:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    fixture.copyProfileClasspath (file:///workspace/independence-mcp-review/tools/independence-mcp-review/canonical-reader.test.mjs:111:10)
+    fixture (file:///workspace/independence-mcp-review/tools/independence-mcp-review/canonical-reader.test.mjs:13:128)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 773.809931

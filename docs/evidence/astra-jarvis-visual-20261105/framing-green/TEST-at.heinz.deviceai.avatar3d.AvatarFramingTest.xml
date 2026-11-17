@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar3d.AvatarFramingTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:18:40" hostname="6e2f8005d77e" time="5.285">
+  <properties/>
+  <testcase name="withoutAKeepOutTheHeadNeverMovesSidewaysAndStillFitsAnyAspect" classname="at.heinz.deviceai.avatar3d.AvatarFramingTest" time="0.965"/>
+  <testcase name="turningChinNeverEntersTheDialogueCard" classname="at.heinz.deviceai.avatar3d.AvatarFramingTest" time="0.778"/>
+  <testcase name="contractReachAndSilhouetteCoverTheSkinnedFace" classname="at.heinz.deviceai.avatar3d.AvatarFramingTest" time="0.928"/>
+  <testcase name="cockpitHeadStaysInsideEveryStageInEveryPose" classname="at.heinz.deviceai.avatar3d.AvatarFramingTest" time="0.664"/>
+  <testcase name="formerCentredFitCutTheFold7FaceAndCoveredTheDialogue" classname="at.heinz.deviceai.avatar3d.AvatarFramingTest" time="0.717"/>
+  <testcase name="unconstrainedRoomyStageKeepsCompositionAndCrownMarginNeverMoves" classname="at.heinz.deviceai.avatar3d.AvatarFramingTest" time="0.619"/>
+  <testcase name="fold7KeepsALargerHeadByMovingItBeforeShrinkingIt" classname="at.heinz.deviceai.avatar3d.AvatarFramingTest" time="0.612"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

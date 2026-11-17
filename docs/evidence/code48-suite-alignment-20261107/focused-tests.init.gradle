@@ -1,0 +1,12 @@
+allprojects {
+    tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+        if (name == 'testDebugUnitTest') {
+            filter {
+                includeTestsMatching 'at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn'
+                includeTestsMatching 'at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest.freshRecallAfterStopStillReachesTheVisibleSurface'
+                includeTestsMatching 'at.heinz.deviceai.cockpit.MemoryEventMapperStopUiTest.bufferedRecallCannotSurviveTheActualSurfaceStop'
+                failOnNoMatchingTests = true
+            }
+        }
+    }
+}

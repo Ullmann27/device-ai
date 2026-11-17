@@ -1,0 +1,9 @@
+app/src/test/java/at/heinz/deviceai/cognitive/NetworkTurnConstraintTest.kt:14:48: error: unresolved reference 'bindToTurn'.
+            val runner = NetworkTurnConstraint.bindToTurn(original, delegate)
+                                               ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/NetworkTurnConstraintTest.kt:22:48: error: unresolved reference 'bindToTurn'.
+        val deviceOnly = NetworkTurnConstraint.bindToTurn("Nur lokal antworten", delegate)
+                                               ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/NetworkTurnConstraintTest.kt:25:45: error: unresolved reference 'bindToTurn'.
+        val allowed = NetworkTurnConstraint.bindToTurn("Bitte recherchiere das Wetter", delegate)
+                                            ^^^^^^^^^^

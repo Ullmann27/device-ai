@@ -1,0 +1,27 @@
+JUnit version 4.13.2
+.E.E.E
+Time: 0.025
+There were 3 failures:
+1) replacingSinkDuringSpeechContinuesTheCurrentUtterance(at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest)
+java.lang.AssertionError: New view must accept the ongoing TTS envelope
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest.replacingSinkDuringSpeechContinuesTheCurrentUtterance(AvatarExistingContractRegressionTest.kt:31)
+2) replacementUtteranceStartsWithClosedNeutralMouth(at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest)
+java.lang.AssertionError: expected:<SIL> but was:<O>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest.replacementUtteranceStartsWithClosedNeutralMouth(AvatarExistingContractRegressionTest.kt:14)
+3) malformedAudioMustNotProduceNaNJaw(at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest)
+java.lang.AssertionError: expected:<0.0> but was:<NaN>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest.malformedAudioMustNotProduceNaNJaw(AvatarExistingContractRegressionTest.kt:22)
+
+FAILURES!!!
+Tests run: 3,  Failures: 3
+

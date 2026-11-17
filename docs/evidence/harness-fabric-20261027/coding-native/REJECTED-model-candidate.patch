@@ -1,0 +1,10 @@
+--- a/lib/ledger.mjs
++++ b/lib/ledger.mjs
+@@ -1,6 +1,6 @@
+ export function applyAdjustment(balance, adjustment) {
+   if (!Number.isSafeInteger(balance) || !Number.isSafeInteger(adjustment)) {
+-    throw new RangeError('safe integer inputs required');
++    throw new TypeError('safe integer inputs required');
+   }
+   return balance - adjustment;
+ }

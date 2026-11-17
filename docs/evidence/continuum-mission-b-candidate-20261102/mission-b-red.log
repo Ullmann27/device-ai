@@ -1,0 +1,163 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:generateDebugLintReportModel UP-TO-DATE
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug UP-TO-DATE
+> Task :app:lintAnalyzeDebugAndroidTest UP-TO-DATE
+
+> Task :app:compileDebugUnitTestKotlin
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:7:26 Unresolved reference 'ClickNode'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:8:24 Unresolved reference 'ClickNode'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:9:26 Unresolved reference 'ClickFrame'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:9:90 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:10:25 Unresolved reference 'ClickFrame'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:10:88 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:11:27 Unresolved reference 'ClickRequest'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:12:37 Unresolved reference 'ClickFrame'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:12:60 Unresolved reference 'ClickFrame'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:12:74 Unresolved reference 'ClickObservationPort'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:17:32 Unresolved reference 'ClickFrame'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:18:40 Unresolved reference 'ClickRequest'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:19:43 Unresolved reference 'ClickFrame'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:22:40 Unresolved reference 'ClickRequest'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:23:9 Unresolved reference 'VerifiedNodeClick'.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:19 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:33 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:33 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:33 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:75 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:75 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:75 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:96 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:96 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:29:96 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:30:20 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:30:20 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:30:20 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:30:51 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:30:51 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:30:51 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:35:19 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:35:26 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:35:48 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:35:62 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:35:62 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:35:62 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:13 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:27 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:27 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:27 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:48 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:62 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:62 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:62 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:36:84 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:37:50 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:37:50 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:37:50 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:19 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:32 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:32 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:32 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:52 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:52 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:52 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:92 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:92 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:40:92 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:19 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:19 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:19 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:47 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:47 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:47 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:77 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:77 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:41:77 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:19 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:19 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:19 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:30 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:49 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:49 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:49 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:60 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:85 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:85 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:85 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:96 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:108 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:108 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:42:108 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:54:110 Cannot infer type for type parameter 'K'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:54:110 Cannot infer type for type parameter 'V'. Specify it explicitly.
+e: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/VerifiedNodeClickTest.kt:54:110 This declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+
+> Task :app:compileDebugUnitTestKotlin FAILED
+> Task :app:lintAnalyzeDebugUnitTest
+[Incubating] Problems report is available at: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugUnitTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 17s
+36 actionable tasks: 3 executed, 33 up-to-date

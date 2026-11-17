@@ -1,0 +1,128 @@
+{
+  "substitutions": [
+    "local repository prefix -> ${REPO}",
+    "local output prefix -> ${OUTPUT}"
+  ],
+  "files": [
+    {
+      "file": "a-primary/manifest.json",
+      "raw_sha256": "963de7a5d85d4da4f8b857925b60104f1bd91f845c51f86e76ab37fc6acd7653",
+      "published_sha256": "963de7a5d85d4da4f8b857925b60104f1bd91f845c51f86e76ab37fc6acd7653",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-primary/baseline.jsonl",
+      "raw_sha256": "c8723bfe541d6c7549c65eddeee00a5573efa5731916f4b71e075ebf45dea52a",
+      "published_sha256": "c8723bfe541d6c7549c65eddeee00a5573efa5731916f4b71e075ebf45dea52a",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-primary/enabled.jsonl",
+      "raw_sha256": "de196607ebeabde196fe1e9ce695b7d53fa1c7477f5c85e51a71c3b4e7fbcedc",
+      "published_sha256": "de196607ebeabde196fe1e9ce695b7d53fa1c7477f5c85e51a71c3b4e7fbcedc",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-primary/disabled.jsonl",
+      "raw_sha256": "c8723bfe541d6c7549c65eddeee00a5573efa5731916f4b71e075ebf45dea52a",
+      "published_sha256": "c8723bfe541d6c7549c65eddeee00a5573efa5731916f4b71e075ebf45dea52a",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-primary/baseline-compile.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-primary/candidate-compile.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-primary/baseline.stderr",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-primary/enabled.stderr",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-primary/disabled.stderr",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/manifest.json",
+      "raw_sha256": "3123ed705780837af1f64f9b1bdf8bd9184e781ca548ddda06de7a48d22c5c59",
+      "published_sha256": "3123ed705780837af1f64f9b1bdf8bd9184e781ca548ddda06de7a48d22c5c59",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/baseline.jsonl",
+      "raw_sha256": "1b9118c29c0bc3a97316345fdb6b27d368ada96bd7f5687cd49184ef5742e27f",
+      "published_sha256": "1b9118c29c0bc3a97316345fdb6b27d368ada96bd7f5687cd49184ef5742e27f",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/enabled.jsonl",
+      "raw_sha256": "170ea3bf1619a8abfdf51929fc0633a797dd934cbabbf59a697aede14c08dd1b",
+      "published_sha256": "170ea3bf1619a8abfdf51929fc0633a797dd934cbabbf59a697aede14c08dd1b",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/disabled.jsonl",
+      "raw_sha256": "1b9118c29c0bc3a97316345fdb6b27d368ada96bd7f5687cd49184ef5742e27f",
+      "published_sha256": "1b9118c29c0bc3a97316345fdb6b27d368ada96bd7f5687cd49184ef5742e27f",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/baseline-compile.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/candidate-compile.log",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/baseline.stderr",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/enabled.stderr",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "a-holdout/disabled.stderr",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path_redaction_only": false
+    },
+    {
+      "file": "android-compile/receipt.json",
+      "raw_sha256": "0770d65fba29dd178e2e6d996757ee11b365ab56e3966dfe5383d96fb8fe28c3",
+      "published_sha256": "0770d65fba29dd178e2e6d996757ee11b365ab56e3966dfe5383d96fb8fe28c3",
+      "path_redaction_only": false
+    },
+    {
+      "file": "android-compile/compile.txt",
+      "raw_sha256": "b632d4052a17cfe101892de163b0ac6ce4e02fb25477bdf3855ada0feaad1571",
+      "published_sha256": "b632d4052a17cfe101892de163b0ac6ce4e02fb25477bdf3855ada0feaad1571",
+      "path_redaction_only": false
+    }
+  ]
+}

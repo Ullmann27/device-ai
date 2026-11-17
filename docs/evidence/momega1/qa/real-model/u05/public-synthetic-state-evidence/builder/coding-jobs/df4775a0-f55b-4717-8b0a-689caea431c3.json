@@ -1,0 +1,82 @@
+{
+  "schema": "continuum-mobile-coding-receipt",
+  "version": 1,
+  "job": "df4775a0-f55b-4717-8b0a-689caea431c3",
+  "operation": "code-repair",
+  "taskId": "mob-a595ffe70a512f92",
+  "commit": "83a29810a169e9b77aaec20858ae7becc1560288",
+  "toolchain": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64",
+    "git": "git version 2.52.0"
+  },
+  "order": {
+    "chain": "node"
+  },
+  "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+  "teamleaderOutcome": "VERIFIED_PATCH_PENDING_REVIEW",
+  "patch": {
+    "sha256": "6da4b4ab42526074164e592626cdef17ae34ba8af3504aca8c9dc91db7897d8d",
+    "path": "/workspace/momega1-build-env/real-model-benchmark/u05/task/private-synthetic-state/teamleader/reports/owner-repair/mob-a595ffe70a512f92-83a29810a169-1793737556827-89641c51/repair.patch",
+    "bytes": 318
+  },
+  "evidence": {
+    "verificationSha256": "81acddc24decb297ca3072ab3d88b8bc30f73b334d4d8c5729257ed85ced7c8b",
+    "baselineFailed": 1,
+    "baselineExecuted": 1,
+    "candidateExecuted": 1,
+    "independentExecuted": 1,
+    "evidenceSufficient": true
+  },
+  "commands": [
+    {
+      "phase": "baseline",
+      "exitCode": 1,
+      "passed": false,
+      "executed": 1,
+      "failed": 1,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    },
+    {
+      "phase": "candidate",
+      "exitCode": 0,
+      "passed": true,
+      "executed": 1,
+      "failed": 0,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    },
+    {
+      "phase": "independent",
+      "exitCode": 0,
+      "passed": true,
+      "executed": 1,
+      "failed": 0,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    }
+  ],
+  "failure": null,
+  "backlog": {
+    "state": "DONE",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "error": null
+  },
+  "approvedForMerge": false,
+  "apk": null,
+  "installed": false,
+  "deviceVerified": false,
+  "createdAt": "2026-11-03T20:25:56.772Z",
+  "repair": {
+    "outcome": "VERIFIED",
+    "strategy": "LOCAL_SCOPED_PATCH",
+    "files": [
+      "lib/subject.mjs"
+    ],
+    "diagnostics": 1,
+    "attempts": 1
+  }
+}

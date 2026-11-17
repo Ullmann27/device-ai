@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Handler
+import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import rikka.shizuku.Shizuku
+import java.util.concurrent.atomic.AtomicLong
 
 class ShizukuBridge(
     private val context: Context,
@@ -18,38 +20,125 @@ class ShizukuBridge(
     }
 
     private val mainHandler = Handler(Looper.getMainLooper())
-    private var shell: IDeviceShell? = null
+    // written on the main thread, read on tool worker threads
+    @Volatile private var shell: IDeviceShell? = null
+    // Stop/rebind invalidates a checked result even if Android reuses the same
+    // Binder proxy object later. The dispatcher owns one in-flight slot.
+    private val checkedSession = AtomicLong(0)
+    private val checkedCalls = CheckedShellCallDispatcher()
     private var listenersRegistered = false
 
+    private val bindDeadlineMs = 15_000L
+    private val permissionDeadlineMs = 20_000L
+    @Volatile private var started = false
+    private var permissionRequestsAllowed = true
+    private var permissionPending = false
+    private var permissionTimeout: Runnable? = null
+    private var activeConnection: ServiceConnection? = null
+    private var bindTimeout: Runnable? = null
+    @Volatile private var lastConnectionStatus = "Shizuku-Verbindung noch nicht geprüft"
+
+    fun statusDetail(): String = lastConnectionStatus
+
+    private fun readyStatus(): String = when (runCatching { Shizuku.getUid() }.getOrNull()) {
+        2000 -> "Bereit · ADB-Shell UID 2000 · Einzelrechte werden geprüft"
+        0 -> "Verbunden · Root UID 0 · Expertenmodus deaktiviert"
+        else -> "Verbunden · Shizuku-Identität ungeprüft"
+    }
+
+    private fun reportStatus(value: String) {
+        lastConnectionStatus = value
+        onStatus(value)
+    }
+
+    private fun clearPermissionPending() {
+        permissionPending = false
+        permissionTimeout?.let(mainHandler::removeCallbacks)
+        permissionTimeout = null
+    }
+
+    private fun cancelBindTimeout() {
+        bindTimeout?.let(mainHandler::removeCallbacks)
+        bindTimeout = null
+    }
+
+    /** The old connection is invalidated before unbinding. Late callbacks
+     * are never allowed to resurrect an old shell or grant any tool access. */
+    @Synchronized private fun resetBinding() {
+        cancelBindTimeout()
+        val old = activeConnection
+        activeConnection = null
+        shell = null
+        checkedSession.incrementAndGet()
+        if (old != null) {
+            runCatching { Shizuku.unbindUserService(userServiceArgs, old, false) }
+        }
+    }
+
+    @Synchronized private fun connectResult(
+        attempted: ServiceConnection,
+        service: IBinder?
+    ) {
+        if (!started || activeConnection !== attempted) return
+        if (!isShizukuRunning() || runCatching { Shizuku.checkSelfPermission() }.getOrNull() != PackageManager.PERMISSION_GRANTED) {
+            resetBinding()
+            reportStatus("Shizuku-Zugriff widerrufen · erneut freigeben")
+            return
+        }
+        val candidate = runCatching { IDeviceShell.Stub.asInterface(service) }.getOrNull()
+        if (candidate == null || !runCatching {
+                candidate.asBinder()?.pingBinder() == true
+            }.getOrDefault(false)) {
+            resetBinding()
+            reportStatus("Shizuku-Shell fehlgeschlagen: ungültige Dienstverbindung")
+            return
+        }
+        cancelBindTimeout()
+        checkedSession.incrementAndGet()
+        shell = candidate
+        reportStatus(readyStatus())
+    }
+
+    @Synchronized private fun bindFailed(
+        attempted: ServiceConnection, reason: String
+    ) {
+        if (!started || activeConnection !== attempted) return
+        resetBinding()
+        reportStatus(reason)
+    }
+
+
     private val binderReceived = Shizuku.OnBinderReceivedListener {
-        onStatus("Shizuku-Dienst gefunden")
-        ensurePermissionAndBind()
+        if (started) {
+            reportStatus("Shizuku-Dienst gefunden")
+            ensurePermissionAndBind()
+        }
     }
 
     private val binderDead = Shizuku.OnBinderDeadListener {
-        shell = null
-        onStatus("Shizuku nicht verbunden")
-    }
-
-    private val permissionResult = Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
-        if (requestCode == REQUEST_CODE) {
-            if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                bindShellService()
-            } else {
-                onStatus("Shizuku-Zugriff nicht erlaubt")
+        synchronized(this) {
+            if (started) {
+                resetBinding()
+                clearPermissionPending()
+                reportStatus("Shizuku-Dienst beendet · bitte in Shizuku neu starten")
             }
         }
     }
 
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            shell = IDeviceShell.Stub.asInterface(service)
-            onStatus("Bereit · Shell UID über Shizuku")
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            shell = null
-            onStatus("Shell-Dienst getrennt")
+    private val permissionResult = Shizuku.OnRequestPermissionResultListener { requestCode, _ ->
+        synchronized(this) {
+            if (requestCode == REQUEST_CODE && started) {
+                clearPermissionPending()
+                // A person may approve after the watchdog expired. The callback
+                // is a wake-up signal; actual permission and Binder state are
+                // checked again before binding, even for a reported grant.
+                if (runCatching { Shizuku.checkSelfPermission() }.getOrNull() == PackageManager.PERMISSION_GRANTED) {
+                    ensurePermissionAndBind()
+                } else {
+                    resetBinding()
+                    reportStatus("Shizuku-Zugriff abgelehnt · Berechtigung in Shizuku prüfen")
+                }
+            }
         }
     }
 
@@ -62,7 +151,12 @@ class ShizukuBridge(
             .tag("device-ai-shell")
     }
 
-    fun start() {
+    @Synchronized fun start() {
+        if (started) {
+            refresh()
+            return
+        }
+        started = true
         if (!listenersRegistered) {
             Shizuku.addBinderReceivedListener(binderReceived)
             Shizuku.addBinderDeadListener(binderDead)
@@ -72,40 +166,70 @@ class ShizukuBridge(
         refresh()
     }
 
-    fun refresh() {
-        if (isReady()) {
-            onStatus("Bereit · Shell UID über Shizuku")
-            return
-        }
+    // Never requests new permission.
+    @Synchronized fun startGrantedOnly() {
+        permissionRequestsAllowed = false
+        clearPermissionPending()
+        start()
+    }
 
-        if (isShizukuRunning()) {
-            ensurePermissionAndBind()
+    @Synchronized fun refresh() {
+        if (!started) return
+        if (isReady()) {
+            reportStatus(readyStatus())
+        } else if (!isShizukuRunning()) {
+            resetBinding()
+            clearPermissionPending()
+            reportStatus("Shizuku ist noch nicht gestartet · Shizuku-App öffnen")
         } else {
-            onStatus("Shizuku ist noch nicht gestartet")
+            if (shell != null && runCatching { Shizuku.checkSelfPermission() }.getOrNull() != PackageManager.PERMISSION_GRANTED) {
+                resetBinding()
+            }
+            ensurePermissionAndBind()
         }
     }
 
-    fun stop() {
+    @Synchronized fun stop() {
+        started = false
+        clearPermissionPending()
+        resetBinding()
         if (listenersRegistered) {
             runCatching { Shizuku.removeBinderReceivedListener(binderReceived) }
             runCatching { Shizuku.removeBinderDeadListener(binderDead) }
             runCatching { Shizuku.removeRequestPermissionResultListener(permissionResult) }
             listenersRegistered = false
         }
-        runCatching { Shizuku.unbindUserService(userServiceArgs, connection, false) }
+        // A stopped bridge issues no further tool calls; a dispatched
+        // external shell side effect can still complete independently.
+        lastConnectionStatus = "Shizuku-Verbindung beendet"
     }
 
-    fun requestAccess() {
+    @Synchronized fun requestAccess() {
+        if (!started) {
+            reportStatus("Shizuku-Brücke noch nicht gestartet")
+            return
+        }
         ensurePermissionAndBind(forceRequest = true)
     }
 
     fun isShizukuRunning(): Boolean =
         runCatching { Shizuku.pingBinder() }.getOrDefault(false)
 
-    fun isReady(): Boolean =
-        shell?.asBinder()?.pingBinder() == true
+    fun isReady(): Boolean = runCatching {
+        started && isShizukuRunning() &&
+            Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED &&
+            shell?.asBinder()?.pingBinder() == true
+    }.getOrDefault(false)
 
     fun execute(command: String, callback: (String) -> Unit) {
+        if (!isReady()) {
+            callback("Shizuku-Verbindung oder Berechtigung fehlt.")
+            return
+        }
+        if (runCatching { Shizuku.getUid() }.getOrNull() != 2000) {
+            callback("Root-Expertenmodus deaktiviert oder Shizuku-Identität ungeprüft.")
+            return
+        }
         val service = shell
         if (service == null) {
             callback("Noch nicht verbunden. Starte Shizuku und verbinde Device AI.")
@@ -113,42 +237,162 @@ class ShizukuBridge(
         }
 
         Thread {
-            val result = runCatching { service.execute(command) }
-                .getOrElse { "Fehler: ${it.message ?: it.javaClass.simpleName}" }
+            val result = runCatching {
+                check(isReady() && shell === service && Shizuku.getUid() == 2000) { "SHIZUKU_ACCESS_CHANGED" }
+                val raw = service.execute(command)
+                check(isReady() && shell === service && Shizuku.getUid() == 2000) { "SHIZUKU_ACCESS_CHANGED" }
+                if (raw.startsWith("DEVICE_AI_SHELL_RESULT_")) ShellExecutionWire.decodeResult(raw).display()
+                else raw // legacy human console display only; tools never use this fallback
+            }.getOrElse { "Fehler: ${it.message ?: it.javaClass.simpleName}" }
             mainHandler.post { callback(result) }
         }.start()
     }
 
-    private fun ensurePermissionAndBind(forceRequest: Boolean = false) {
-        try {
-            if (!Shizuku.pingBinder()) {
-                onStatus("Shizuku ist noch nicht gestartet")
-                return
-            }
-
-            when {
-                Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED -> bindShellService()
-                forceRequest || !Shizuku.shouldShowRequestPermissionRationale() -> {
-                    onStatus("Warte auf Shizuku-Freigabe …")
-                    Shizuku.requestPermission(REQUEST_CODE)
-                }
-                else -> onStatus("Shizuku-Berechtigung wurde abgelehnt")
-            }
-        } catch (t: Throwable) {
-            onStatus("Shizuku-Fehler: ${t.message ?: t.javaClass.simpleName}")
-        }
+    /** Checked tools do not depend on the UI thread to finish. A stale service,
+     * unknown result version or failed exit never becomes a successful string.
+     */
+    fun executeChecked(command: String, callback: (Result<String>) -> Unit) {
+        executeCheckedInternal(command, identityProbe = false, callback)
     }
 
-    private fun bindShellService() {
-        if (isReady()) {
-            onStatus("Bereit · Shell UID über Shizuku")
+    internal fun executeCheckedGuarded(command: String, guard: (() -> String) -> String,
+                                       callback: (Result<String>) -> Unit) {
+        executeCheckedInternal(command, identityProbe = false, callback, guard)
+    }
+
+    fun probeCapabilities(callback: (Result<ShizukuCapabilities>) -> Unit) {
+        val identity = runCatching { Shizuku.getUid() to Shizuku.getVersion() }
+        if (identity.isFailure) {
+            callback(Result.failure(IllegalStateException("SHIZUKU_IDENTITY_UNAVAILABLE")))
             return
         }
+        val (uid, version) = identity.getOrThrow()
+        executeCheckedInternal(ShizukuCapabilityProbe.COMMAND, identityProbe = true, callback = { result ->
+            callback(result.mapCatching {
+                check(Shizuku.getUid() == uid && Shizuku.getVersion() == version) { "SHIZUKU_IDENTITY_CHANGED" }
+                ShizukuCapabilityProbe.parse(it, uid, Build.VERSION.SDK_INT, version)
+            })
+        })
+    }
 
-        onStatus("Verbinde Shell-Dienst …")
-        runCatching { Shizuku.bindUserService(userServiceArgs, connection) }
+    private fun executeCheckedInternal(command: String, identityProbe: Boolean, callback: (Result<String>) -> Unit,
+                                       guard: (() -> String) -> String = { it() }) {
+        val request = runCatching { ShellExecutionRequest(command, 15_000) }
+        if (request.isFailure) { callback(Result.failure(request.exceptionOrNull()!!)); return }
+        val service = shell
+        if (service == null) { callback(Result.failure(IllegalStateException("Shizuku not ready."))); return }
+        val sessionAtStart = checkedSession.get()
+        checkedCalls.execute({ guard {
+            check(checkedSession.get() == sessionAtStart && shell === service && isReady()) {
+                "Shizuku service changed or stopped."
+            }
+            val uid = Shizuku.getUid()
+            check(uid == 2000 || identityProbe && command == ShizukuCapabilityProbe.COMMAND && uid == 0) {
+                if (uid == 0) "ROOT_EXPERT_DISABLED" else "SHIZUKU_UNSUPPORTED_IDENTITY"
+            }
+            val raw = service.execute(ShellExecutionWire.encodeRequest(request.getOrThrow()))
+            check(checkedSession.get() == sessionAtStart && shell === service && isReady() && Shizuku.getUid() == uid) {
+                "Shizuku service changed or stopped during execution."
+            }
+            ShellExecutionWire.decodeResult(raw).checkedOutput()
+        } }, callback)
+    }
+
+    @Synchronized private fun ensurePermissionAndBind(forceRequest: Boolean = false) {
+        if (!started) return
+        try {
+            if (!Shizuku.pingBinder()) {
+                resetBinding()
+                clearPermissionPending()
+                reportStatus("Shizuku ist noch nicht gestartet · Shizuku-App öffnen")
+                return
+            }
+            when {
+                isReady() -> reportStatus(readyStatus())
+                Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED -> {
+                    clearPermissionPending()
+                    bindShellService()
+                }
+                !permissionRequestsAllowed -> reportStatus("Shizuku-Freigabe fehlt · Routine ist blockiert")
+                permissionPending -> reportStatus("Warte auf Shizuku-Freigabe …")
+                forceRequest || !Shizuku.shouldShowRequestPermissionRationale() -> {
+                    permissionPending = true
+                    val timeout = Runnable {
+                        synchronized(this) {
+                            if (started && permissionPending) {
+                                clearPermissionPending()
+                                reportStatus("Zeitüberschreitung bei Shizuku-Freigabe · erneut verbinden")
+                            }
+                        }
+                    }
+                    permissionTimeout = timeout
+                    mainHandler.postDelayed(timeout, permissionDeadlineMs)
+                    reportStatus("Warte auf Shizuku-Freigabe …")
+                    try {
+                        Shizuku.requestPermission(REQUEST_CODE)
+                    } catch (t: Throwable) {
+                        clearPermissionPending()
+                        reportStatus("Shizuku-Freigabe fehlgeschlagen: " +
+                            (t.message ?: t.javaClass.simpleName))
+                    }
+                }
+                else -> reportStatus("Shizuku-Berechtigung wurde abgelehnt · in Shizuku freigeben")
+            }
+        } catch (t: Throwable) {
+            reportStatus("Shizuku-Fehler: " + (t.message ?: t.javaClass.simpleName))
+        }
+    }
+
+    @Synchronized private fun bindShellService() {
+        if (!started) return
+        if (isReady()) {
+            reportStatus(readyStatus())
+            return
+        }
+        if (activeConnection != null) {
+            if (shell == null) {
+                reportStatus("Verbinde Shell-Dienst …")
+                return
+            }
+            // A previously connected shell may die without a service-disconnect
+            // callback. Revoke its session and retry through the normal gate.
+            resetBinding()
+        }
+
+        val attempted = object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                connectResult(this, service)
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                bindFailed(this, "Shizuku-Shell getrennt · erneut verbinden")
+            }
+
+            override fun onNullBinding(name: ComponentName?) {
+                bindFailed(this, "Shizuku-Shell fehlgeschlagen: Dienst ohne Binder")
+            }
+
+            override fun onBindingDied(name: ComponentName?) {
+                bindFailed(this, "Shizuku-Shell beendet · erneut verbinden")
+            }
+        }
+        activeConnection = attempted
+        val timeout = Runnable {
+            synchronized(this) {
+                if (started && activeConnection === attempted && !isReady()) {
+                    resetBinding()
+                    reportStatus("Zeitüberschreitung beim Shizuku-Shell-Binden · erneut verbinden")
+                }
+            }
+        }
+        bindTimeout = timeout
+        mainHandler.postDelayed(timeout, bindDeadlineMs)
+        reportStatus("Verbinde Shell-Dienst …")
+        runCatching { Shizuku.bindUserService(userServiceArgs, attempted) }
             .onFailure {
-                onStatus("Verbindung fehlgeschlagen: ${it.message ?: it.javaClass.simpleName}")
+                bindFailed(attempted, "Shizuku-Verbindung fehlgeschlagen: " +
+                    (it.message ?: it.javaClass.simpleName))
             }
     }
+
 }

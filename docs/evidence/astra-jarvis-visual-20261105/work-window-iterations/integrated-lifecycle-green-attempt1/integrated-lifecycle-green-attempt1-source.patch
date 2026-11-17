@@ -1,0 +1,155 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt b/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt
+index 2d4cd5a6..ef0a0a4e 100644
+--- a/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt
++++ b/app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt
+@@ -16,6 +16,8 @@ import android.widget.LinearLayout
+ import android.widget.ScrollView
+ import android.widget.TextView
+ import at.heinz.deviceai.ui.JarvisDesign.Colors
++import kotlin.math.ceil
++import kotlin.math.floor
+ import kotlin.math.hypot
+ import kotlin.math.roundToInt
+ 
+@@ -33,6 +35,9 @@ class JarvisWorkWindow(
+     private var phase = Phase.CLOSED
+     private var disposed = false
+     private var subscription: AutoCloseable? = null
++    private var generation = 0L
++    private var deliveringFrame = false
++    private var pendingCleanup: Runnable? = null
+     private var startedAt: Long? = null
+     private var lastFrameTime: Long? = null
+     private var openness = 0f
+@@ -111,28 +116,34 @@ class JarvisWorkWindow(
+     fun open(body: View, origin: RectF, destination: RectF, title: String,
+              protectedBounds: List<RectF> = emptyList(),
+              onOpened: () -> Unit = {}, onClosed: () -> Unit = {}): Boolean {
+-        if (disposed || !JarvisWorkWindowGeometry.valid(origin) || !JarvisWorkWindowGeometry.valid(destination) ||
+-            destination.width() < 200f * density || destination.height() < 160f * density ||
++        if (disposed || deliveringFrame || isInLayout || !JarvisWorkWindowGeometry.valid(origin) ||
++            !JarvisWorkWindowGeometry.valid(destination)) return false
++        val pixels = RectF(ceil(destination.left), ceil(destination.top), floor(destination.right), floor(destination.bottom))
++        if (pixels.width() < 200f * density || pixels.height() < 160f * density ||
+             protectedBounds.any { !JarvisWorkWindowGeometry.finite(it) ||
+-                (JarvisWorkWindowGeometry.valid(it) && RectF.intersects(it, destination)) } ||
++                (JarvisWorkWindowGeometry.valid(it) && RectF.intersects(it, pixels)) } ||
+             (body.parent != null && body.parent !== scroll) ||
+-            (width > 0 && height > 0 && !RectF(0f, 0f, width.toFloat(), height.toFloat()).contains(destination))) return false
++            (width > 0 && height > 0 && !RectF(0f, 0f, width.toFloat(), height.toFloat()).contains(pixels))) return false
++        generation++
++        pendingCleanup?.let { removeCallbacks(it) }
++        pendingCleanup = null
++        this.onClosed = {}
+         close(immediate = true)
++        scroll.removeAllViews()
+         this.origin.set(origin)
+-        this.destination.set(destination)
++        this.destination.set(pixels)
+         this.protectedBounds = protectedBounds.filter(JarvisWorkWindowGeometry::valid).map(::RectF)
+         this.onOpened = onOpened
+         this.onClosed = onClosed
+         titleView.text = title
+         scroll.addView(body, FrameLayout.LayoutParams(-1, -2))
+         scroll.scrollTo(0, 0)
+-        panel.layoutParams = LayoutParams(destination.width().roundToInt().coerceAtLeast(1),
+-            destination.height().roundToInt().coerceAtLeast(1)).apply {
+-            leftMargin = destination.left.roundToInt()
+-            topMargin = destination.top.roundToInt()
++        panel.layoutParams = LayoutParams(pixels.width().toInt(), pixels.height().toInt()).apply {
++            leftMargin = pixels.left.toInt()
++            topMargin = pixels.top.toInt()
+         }
+         edge = Fill.Linear(origin.centerX() / density, origin.centerY() / density,
+-            destination.centerX() / density, destination.centerY() / density,
++            pixels.centerX() / density, pixels.centerY() / density,
+             intArrayOf(Colors.cyan, Colors.cardRimEnd, Colors.violet, Colors.magenta))
+         phase = Phase.OPENING
+         startedAt = null
+@@ -151,7 +162,10 @@ class JarvisWorkWindow(
+     }
+ 
+     fun close(immediate: Boolean = false) {
+-        if (!isShowing) return
++        if (!isShowing) {
++            if (immediate && !deliveringFrame && !isInLayout) pendingCleanup?.run()
++            return
++        }
+         if (immediate || openness <= 0f) { finishClose(); return }
+         if (phase == Phase.CLOSING) return
+         phase = Phase.CLOSING
+@@ -168,6 +182,12 @@ class JarvisWorkWindow(
+     }
+ 
+     private fun onFrame(nowMs: Long, animatorScale: Float): Boolean {
++        val previous = deliveringFrame
++        deliveringFrame = true
++        return try { updateFrame(nowMs, animatorScale) } finally { deliveringFrame = previous }
++    }
++
++    private fun updateFrame(nowMs: Long, animatorScale: Float): Boolean {
+         if (!isShowing) return false
+         lastFrameTime = nowMs
+         if (phase == Phase.OPEN) return false
+@@ -197,10 +217,17 @@ class JarvisWorkWindow(
+ 
+     private fun applyFrame() {
+         val params = panel.layoutParams as LayoutParams
+-        panel.translationX = origin.left + (destination.left - origin.left) * openness - params.leftMargin
+-        panel.translationY = origin.top + (destination.top - origin.top) * openness - params.topMargin
+-        panel.scaleX = (origin.width() + (destination.width() - origin.width()) * openness) / params.width
+-        panel.scaleY = (origin.height() + (destination.height() - origin.height()) * openness) / params.height
++        if (openness >= 1f) {
++            panel.translationX = 0f
++            panel.translationY = 0f
++            panel.scaleX = 1f
++            panel.scaleY = 1f
++        } else {
++            panel.translationX = origin.left + (destination.left - origin.left) * openness - params.leftMargin
++            panel.translationY = origin.top + (destination.top - origin.top) * openness - params.topMargin
++            panel.scaleX = (origin.width() + (destination.width() - origin.width()) * openness) / params.width
++            panel.scaleY = (origin.height() + (destination.height() - origin.height()) * openness) / params.height
++        }
+         panel.alpha = opacity
+         panel.invalidate()
+         invalidate()
+@@ -211,7 +238,6 @@ class JarvisWorkWindow(
+         val handle = subscription
+         subscription = null
+         handle?.close()
+-        scroll.removeAllViews()
+         visibility = GONE
+         route = emptyList()
+         openness = 0f
+@@ -222,7 +248,18 @@ class JarvisWorkWindow(
+         onOpened = {}
+         val callback = onClosed
+         onClosed = {}
+-        callback()
++        val body = scroll.getChildAt(0)
++        val expectedGeneration = generation
++        lateinit var release: Runnable
++        release = Runnable {
++            if (pendingCleanup !== release || generation != expectedGeneration) return@Runnable
++            pendingCleanup = null
++            removeCallbacks(release)
++            if (body?.parent === scroll) scroll.removeView(body)
++            callback()
++        }
++        pendingCleanup = release
++        if (deliveringFrame || isInLayout) post(release) else release.run()
+     }
+ 
+     private fun updateRoute() {
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt
+index fbfdd863..90873a5e 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/JarvisWorkWindowUiTest.kt
+@@ -90,6 +90,7 @@ class JarvisWorkWindowUiTest {
+         }
+         fun frame(time: Long, scale: Float = 1f): Boolean {
+             val active = frames.at(time, scale)
++            shadowOf(Looper.getMainLooper()).idle()
+             layout()
+             return active
+         }

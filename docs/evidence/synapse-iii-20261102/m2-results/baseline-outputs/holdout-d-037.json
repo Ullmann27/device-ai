@@ -1,0 +1,20 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-037:s1",
+    "decision": "SPAN",
+    "sha256": "b583514e8eba6f390220d21f30b0010b9a8f869e2c03f846bf7eedaf0b2e6a18",
+    "endExclusive": 24,
+    "start": 16,
+    "text": "Dakirona",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {"decision": "NOANSWER"},
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 52.221025
+}

@@ -1,0 +1,32 @@
+{
+  "programs": [],
+  "streams": [
+    {
+      "width": 884,
+      "height": 830,
+      "avg_frame_rate": "20/1",
+      "duration": "3.000000",
+      "nb_read_frames": "60"
+    }
+  ],
+  "scope": "Decoded host export; no device FPS measurement",
+  "clipSha256": "2c844bbda2096edcf26be2707ea095e33444f1c14ff7156e3d3ff01ee2113468",
+  "contactSheetSha256": "50064779841d929bd521bd59853c44d31dffd102be2b09a8f76b337129de1c98",
+  "contactFrameIndices": [
+    0,
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    28,
+    32,
+    36,
+    40,
+    44,
+    48,
+    52,
+    56
+  ]
+}

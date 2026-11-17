@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentBotSpeechScopeTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:19:41" hostname="5268aff5350a" time="6.083">
+  <properties/>
+  <testcase name="microphoneDictationDoesNotCancelOrExecuteBoundDevelopmentJob" classname="at.heinz.deviceai.IndependentBotSpeechScopeTest" time="5.74"/>
+  <testcase name="botSwitchRejectsOldRecognizerResult" classname="at.heinz.deviceai.IndependentBotSpeechScopeTest" time="0.091"/>
+  <testcase name="delayedPermissionGrantCannotStartMicrophoneForAnotherBot" classname="at.heinz.deviceai.IndependentBotSpeechScopeTest" time="0.101"/>
+  <testcase name="selectedContextEditRejectsOldRecognizerResult" classname="at.heinz.deviceai.IndependentBotSpeechScopeTest" time="0.076"/>
+  <testcase name="returnToJarvisRejectsOldBotRecognizerResult" classname="at.heinz.deviceai.IndependentBotSpeechScopeTest" time="0.075"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

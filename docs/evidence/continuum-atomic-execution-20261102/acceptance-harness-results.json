@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-02",
+  "testSubject": {
+    "path": "scripts/continuum-atomic-acceptance.sh",
+    "githubBlobSha1": "f194ad8d7fcbbb2b4fd63195ce7817a4956bdb87",
+    "localGitHashObject": "f194ad8d7fcbbb2b4fd63195ce7817a4956bdb87",
+    "byteIdentical": true,
+    "sourceCommit": "2245057f9c710d86277a600f2e0206766fa3f43c"
+  },
+  "host": {
+    "os": "Debian 13 x86_64",
+    "node": "v22.16.0",
+    "java": "OpenJDK 21.0.12.1",
+    "shell": "bash"
+  },
+  "executed": [
+    {
+      "case": "Shell syntax",
+      "cmd": "bash -n <byte-identical checkout script>",
+      "result": "PASS",
+      "exit": 0
+    },
+    {
+      "case": "wrong expected commit SHA",
+      "result": "BLOCKED HEAD_MISMATCH",
+      "exit": 4,
+      "receipt": "none"
+    },
+    {
+      "case": "protected main branch",
+      "result": "BLOCKED PROTECTED_BRANCH_REFUSED",
+      "exit": 4,
+      "receipt": "none"
+    },
+    {
+      "case": "dirty tracked/untracked source",
+      "result": "BLOCKED DIRTY_SOURCE_REFUSED",
+      "exit": 4,
+      "receipt": "none"
+    },
+    {
+      "case": "simulated Gradle returns 0 but JUnit absent",
+      "result": "BLOCKED ANDROID_JUNIT_EMPTY_OR_FAILED",
+      "exit": 1,
+      "receipt": "FAIL",
+      "checkStatuses": [
+        "PASS",
+        "FAIL",
+        "NOT_RUN",
+        "NOT_RUN",
+        "NOT_RUN",
+        "NOT_RUN"
+      ]
+    },
+    {
+      "case": "simulated Gradle/JUnit succeed, Node command returns 0 but canonical report says FAIL",
+      "result": "BLOCKED node-critical-proof",
+      "exit": 1,
+      "receipt": "FAIL",
+      "checkStatuses": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "FAIL",
+        "NOT_RUN",
+        "NOT_RUN"
+      ]
+    },
+    {
+      "case": "all six checks simulated PASS in disposable fixture",
+      "result": "CONTINUUM_ACCEPTANCE_PASS",
+      "exit": 0,
+      "receipt": "PASS",
+      "checkStatuses": [
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    }
+  ],
+  "executionClassification": "SYNTHETIC_HARNESS_VERIFIED",
+  "limitations": [
+    "Gradle executable, JUnit parser and Node QA commands were mocked in a disposable local git repository, not actual product tests.",
+    "No full repository checkout, Android SDK, Android Gradle, real Kotlin JUnit, CodeRabbit device, Fold7 or APK tests executed.",
+    "Script must run on a complete authorized local checkout, with --expected-head exact 40 hex and --out outside source.",
+    "GitHub Actions not used; no signing, main write, owner assets or model weights accessed."
+  ],
+  "requiredNext": "bash scripts/continuum-atomic-acceptance.sh --expected-head <actual 40-hex PR HEAD> --out <new absolute external directory>",
+  "status": "SOURCE_INTEGRATED + EXACT_BLOB_HOST_SCRIPT_AND_MOCK_TESTED; FULL_PRODUCT_QA_NOT_RUN"
+}

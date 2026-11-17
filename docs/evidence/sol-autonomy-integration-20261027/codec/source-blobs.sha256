@@ -1,0 +1,6 @@
+602c3ec18c710ad2d52074241712d94ee6dcacc5a3f471e1be92d3f68a58143a  /workspace/device-ai-autonomy-integration/app/src/main/java/at/heinz/deviceai/learning/LearningSnapshot.kt
+557a97d43655e06fd7f8f498a7a8007b255364b9eaa2a89be2697a291ab9f1ff  /workspace/device-ai-autonomy-integration/app/src/main/java/at/heinz/deviceai/learning/TrainableSubwordEncoder.kt
+143bc4e6b4f475ecd7fabf8c4bd1377109467f29a4106f11cb4fe23dde327f0d  /workspace/device-ai-autonomy-integration/app/src/main/java/at/heinz/deviceai/learning/Swb2ExperimentalEncoder.kt
+61280078b62892354b61d2401b9f9ab748522ce3757a3679ee0b1ec2f4d80e00  /workspace/device-ai-autonomy-integration/experimental/swb1-contrastive-20261027/CheckpointCompatibility.kt
+5e577c21b22c6b31ff71274640d45f8900ca646e370bef6179ab608ffb992cd1  /workspace/continuum-local-state/contrastive-train-v2-20261027/baseline.swb1
+10ff0e36c27ce946c650a291d7b75cc7e2c356cc525e258fb4337978bedde78a  /workspace/continuum-local-state/contrastive-train-v2-20261027/FROZEN_INTENT_SWB2-73.bin

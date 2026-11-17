@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: baseline preflight falsely admits a plain-text AAPT2 file
+ok 1 - baseline preflight falsely admits a plain-text AAPT2 file
+  ---
+  duration_ms: 11.668936
+  type: 'test'
+  ...
+# Subtest: version probe rejects non-executable tool
+ok 2 - version probe rejects non-executable tool
+  ---
+  duration_ms: 3.479375
+  type: 'test'
+  ...
+# Subtest: version probe rejects executable but non-AAPT2 tool
+ok 3 - version probe rejects executable but non-AAPT2 tool
+  ---
+  duration_ms: 6.481364
+  type: 'test'
+  ...
+# Subtest: version probe rejects a tool reporting failure
+ok 4 - version probe rejects a tool reporting failure
+  ---
+  duration_ms: 4.748119
+  type: 'test'
+  ...
+# Subtest: version probe admits runnable AAPT2 protocol fixture only
+ok 5 - version probe admits runnable AAPT2 protocol fixture only
+  ---
+  duration_ms: 4.676035
+  type: 'test'
+  ...
+# Subtest: no PATH/global environment mutation
+ok 6 - no PATH/global environment mutation
+  ---
+  duration_ms: 6.366984
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 225.846121

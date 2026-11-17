@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "docs/evidence/completed-connections-822e-r2/context/run.py",
+    "check",
+    "/workspace/scratch/822e72396ed9/verification-r2/context-replay"
+  ],
+  "cwd": "/workspace/scratch/822e72396ed9/continuum-attach-r2",
+  "source_commit": "578ea5dd64f059de1b8173badf4d34d0e52a5b76",
+  "exit_code": 0,
+  "elapsed_seconds": 26.066234234998774
+}

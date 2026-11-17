@@ -1,0 +1,46 @@
+{
+  "codeCommit": "c721f785a5afc65cc05ec3415d9d0f7844d5ad88",
+  "node": {
+    "version": "24.19.0",
+    "tests": 1208,
+    "passed": 1202,
+    "failed": 0,
+    "skipped": 6,
+    "milliseconds": 56388.980535,
+    "command": "env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs",
+    "skipReason": "standalone kotlinc absent"
+  },
+  "android": {
+    "tests": 978,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 975,
+    "suites": 194,
+    "jdk": "17.0.21+9",
+    "gradle": "8.11.1",
+    "sdk": 36,
+    "buildTools": "35.0.0",
+    "lint": "PASS - configured NewApi only",
+    "compile": "PASS",
+    "command": "gradle --no-daemon --offline --max-workers=2 --console=plain -Dorg.gradle.jvmargs=-Xmx2g -Pkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest :app:lintDebug :app:compileDebugKotlin"
+  },
+  "backend": {
+    "testedAt": "821df5d1acf68f0caf10369298352a3589f56a97",
+    "codeUnchanged": true,
+    "tests": 60,
+    "passed": 60,
+    "failed": 0,
+    "skipped": 0,
+    "command": "env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 backend/test/*.test.js"
+  },
+  "notRun": [
+    "native local-model five-scenario evaluation",
+    "Fold7 motion, memory, latency and thermals",
+    "UI widget opt-in",
+    "on-device Termux E2E",
+    "real-model VH-SR holdout",
+    "new learning/retention/transfer experiment"
+  ],
+  "actions": "BLOCKED before first test due billing/spending-limit annotation"
+}

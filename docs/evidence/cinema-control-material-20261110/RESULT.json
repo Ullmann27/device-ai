@@ -1,0 +1,296 @@
+{
+  "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+  "remote_commit": "31f61c6f1ff24f116135824403f0a6a57721c787",
+  "tree": "6aa5201f1bd29b2f9c5fb193aafe1050483671c5",
+  "baseline_source": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+  "baseline": {
+    "tests": 2,
+    "expected_failures": 2,
+    "reason": "Dock press reaches drawn material expected bottom:system but was null"
+  },
+  "compilation": "PASS Android main and test Kotlin, 39 seconds",
+  "native_suite_counts": [
+    {
+      "name": "at.heinz.deviceai.CinemaButtonMaterialUiTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisReferenceHitTargetsUiTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisShellMotionUiTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisWorkWindowHostViewportUiTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.JarvisWorkWindowLifecycleUiTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarOcularTransitionTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "at.heinz.deviceai.ui.LuxuryHoloButtonRendererTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "totals": {
+    "tests": 38,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "frames": [
+    {
+      "checkpoint": "before",
+      "file": "button-cover-cancelled.png",
+      "sha256": "5323199a27d90b1dc8ac2a5c7e3861f3ffe9cea7084b768af5f1dfb6916f7108",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-cover-held-160ms.png",
+      "sha256": "f84e7e3e22b0afef771ad018d0c732c234307fa08ce418d7ce76397af674f0cf",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-cover-idle.png",
+      "sha256": "f53013ab0679f1d141d43ee577b78908a589509ebb2567f4a495c79965ce476c",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-cover-opened.png",
+      "sha256": "53e93250a8a56b7e24d33e8a00b742c0db0badece1e5e063990ccca19561b6bd",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-cover-opening-672ms.png",
+      "sha256": "0e66f5431be88508e79688f3b50bcc1b848d5ae4a7ba1978cafc0ef0862d8b82",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-inner-cancelled.png",
+      "sha256": "9be324e4065ab872d0de1e8c3501b3aafd50ca715f0e261ce3145e2b520b5dd1",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-inner-held-160ms.png",
+      "sha256": "953668d1279ce27c5bb18202d1f06fe68a61e904f424c88e5d3446b3eb5883b9",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-inner-idle.png",
+      "sha256": "3867e7ac5ec810b27ed58e968b83dfa498a0b42fc3b2d6911f6f69f7c8ba4fd4",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-inner-opened.png",
+      "sha256": "915096e89fa67622a91ae588b0a8ad6794615255e5532f1e87f0caffa03b3b4d",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "before",
+      "file": "button-inner-opening-672ms.png",
+      "sha256": "8bc1ebdd96436a5df5f1baf69fd0af860a668550898ece46871fbc4a37243c5a",
+      "source_commit": "a7b4d1a090ab7117f29f6fcc3440b60b863395a5",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-cover-cancelled.png",
+      "sha256": "5323199a27d90b1dc8ac2a5c7e3861f3ffe9cea7084b768af5f1dfb6916f7108",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-cover-held-160ms.png",
+      "sha256": "a85e13febaba44fed7e4c98c8e74c406f2f4fb62e01458f9b3b2b29786977eb8",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": "bottom:system",
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-cover-idle.png",
+      "sha256": "f53013ab0679f1d141d43ee577b78908a589509ebb2567f4a495c79965ce476c",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-cover-opened.png",
+      "sha256": "34b31527007a142b239cab02bba296c2689a6f223b6532e54f211a28710175ed",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-cover-opening-672ms.png",
+      "sha256": "e8ef4101f35cf0668842b8931ff6c3033814a7f3de60654dcff29e206372defc",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-inner-cancelled.png",
+      "sha256": "9be324e4065ab872d0de1e8c3501b3aafd50ca715f0e261ce3145e2b520b5dd1",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-inner-held-160ms.png",
+      "sha256": "84ef87bd2f0077e7d5e1a3a01ec3e5ddb9f07d9eb28e302efc2dccc691e2fcfb",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": "bottom:system",
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-inner-idle.png",
+      "sha256": "3867e7ac5ec810b27ed58e968b83dfa498a0b42fc3b2d6911f6f69f7c8ba4fd4",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-inner-opened.png",
+      "sha256": "ad9e92d63e89831b4ae9029403823a73fdd7a8c7556c21b60702aa99f6a88098",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    },
+    {
+      "checkpoint": "after",
+      "file": "button-inner-opening-672ms.png",
+      "sha256": "e87cd7d2f011b18bfbb4e55ced3d3c4b9076835d26f97d9989f7ff317fe06b2b",
+      "source_commit": "fac1e1e28bfba3de0ccc87dee430b1bc699fef84",
+      "backend": "Robolectric API28 native Canvas; 2D fallback",
+      "input": "Real decor DOWN/CANCEL/UP on bottom:system",
+      "pressed_key": null,
+      "model_inference": "NOT_RUN",
+      "Fold7": "NOT_RUN"
+    }
+  ],
+  "gpu": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "Filament": "NOT_RUN",
+  "live_voice": "NOT_RUN",
+  "inference": "NOT_RUN"
+}

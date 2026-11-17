@@ -1,0 +1,726 @@
+{
+  "name": "pr330-independent-natural-location-blind-v2",
+  "status": "FROZEN_NOT_RUN_DEVELOPER_MUST_NOT_INSPECT_UNTIL_CANDIDATE_FREEZE",
+  "baselineSourceCommit": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+  "track": "SPAN_EXTRACTION_ONLY_NOT_CDX_GENERATION",
+  "partition": "main25:20 known+5 missing; guard20:4 known+16 missing",
+  "declaredRuleScope": [
+    "Question is a bounded German Wo ist/wohnt/lebt/steht NAME? with one explicit natural first or hyphenated name, no pronouns or assumed aliases.",
+    "Answer evidence is a direct affirmative declarative NAME VERB in PLACE. clause; original exact place substring and source identity must match.",
+    "Questions and evidence bind the same relation. wohnt/lebt are the declared residence family; neither standing nor residence establishes generic current presence, and standing never establishes residence.",
+    "Single unambiguous supported place only. Conflicts, negations, contrasts, times, quotations, questions, hearsay, hypothetical/simulated or denied propositions cannot establish the requested current fact.",
+    "Other entities may occur only in independent direct sentences; a suffix or component of a different name is not the requested entity.",
+    "SHA256, source ID, revision and offsets prove binding to stored synthetic evidence, never truth, authority, tool permission, learning or CDX generation quality."
+  ],
+  "oracle": "Each known case has exact expected text/sourceId; null means explicit abstention. Labels and scope are fixed before any candidate execution. No tuning after observing results.",
+  "cases": [
+    {
+      "id": "main-01",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Frida?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Frida wohnt in Lübeck."
+        }
+      ],
+      "expected": {
+        "text": "Lübeck",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-02",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Dorian?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Dorian lebt in Würzburg."
+        }
+      ],
+      "expected": {
+        "text": "Würzburg",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-03",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Nadira?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Nadira ist in Konstanz."
+        }
+      ],
+      "expected": {
+        "text": "Konstanz",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-04",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Kaspar?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Kaspar steht in Erfurt."
+        }
+      ],
+      "expected": {
+        "text": "Erfurt",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-05",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Aurelia?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Aurelia wohnt in Oldenburg."
+        }
+      ],
+      "expected": {
+        "text": "Oldenburg",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-06",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Levin?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Levin lebt in Bad Nauheim."
+        }
+      ],
+      "expected": {
+        "text": "Bad Nauheim",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-07",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Marisol?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Marisol ist in Kempten."
+        }
+      ],
+      "expected": {
+        "text": "Kempten",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-08",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Tarik?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Tarik steht in Sankt Gallen."
+        }
+      ],
+      "expected": {
+        "text": "Sankt Gallen",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-09",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Selma?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Selma wohnt in Winterthur."
+        }
+      ],
+      "expected": {
+        "text": "Winterthur",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-10",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Amalia?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Amalia lebt in Biel."
+        }
+      ],
+      "expected": {
+        "text": "Biel",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-11",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Cedric?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Cedric ist in Bellinzona."
+        }
+      ],
+      "expected": {
+        "text": "Bellinzona",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-12",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Elwira?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Elwira steht in Chur."
+        }
+      ],
+      "expected": {
+        "text": "Chur",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-13",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Runa?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Runa wohnt in Neubrandenburg."
+        }
+      ],
+      "expected": {
+        "text": "Neubrandenburg",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-14",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Bastian?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Bastian lebt in Freudenstadt."
+        }
+      ],
+      "expected": {
+        "text": "Freudenstadt",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-15",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Florent?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Florent ist in Hildesheim."
+        }
+      ],
+      "expected": {
+        "text": "Hildesheim",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-16",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Kamila?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Kamila steht in Passau."
+        }
+      ],
+      "expected": {
+        "text": "Passau",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-17",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Leandro?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Leandro wohnt in Regensburg."
+        }
+      ],
+      "expected": {
+        "text": "Regensburg",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-18",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Nele?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Nele lebt in Aschaffenburg."
+        }
+      ],
+      "expected": {
+        "text": "Aschaffenburg",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-19",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Soraya?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Soraya ist in Weimar."
+        }
+      ],
+      "expected": {
+        "text": "Weimar",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-20",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Valentin?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Valentin steht in Tübingen."
+        }
+      ],
+      "expected": {
+        "text": "Tübingen",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "main-21",
+      "part": "main25",
+      "kind": "missing-entity",
+      "question": "Wo wohnt Adina?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Roderich wohnt in Wetzlar."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "main-22",
+      "part": "main25",
+      "kind": "missing-location",
+      "question": "Wo lebt Felina?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Felina besitzt ein violettes Fahrrad."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "main-23",
+      "part": "main25",
+      "kind": "missing-relation",
+      "question": "Wo wohnt Jaron?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Jaron arbeitet als Tischler."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "main-24",
+      "part": "main25",
+      "kind": "missing-entity",
+      "question": "Wo ist Ivona?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Carsten ist in Dessau."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "main-25",
+      "part": "main25",
+      "kind": "missing-location",
+      "question": "Wo wohnt Merle?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Merle lernt Schwedisch."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-01",
+      "part": "guard20",
+      "kind": "known-unicode-name",
+      "question": "Wo wohnt Ümit?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Ümit wohnt in Singen."
+        }
+      ],
+      "expected": {
+        "text": "Singen",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "guard-02",
+      "part": "guard20",
+      "kind": "known-hyphen-name",
+      "question": "Wo lebt Ana-Luz?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Ana-Luz lebt in Bad Aibling."
+        }
+      ],
+      "expected": {
+        "text": "Bad Aibling",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "guard-03",
+      "part": "guard20",
+      "kind": "known-multiword-place",
+      "question": "Wo ist Malo?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Malo ist in Sankt Pölten."
+        }
+      ],
+      "expected": {
+        "text": "Sankt Pölten",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "guard-04",
+      "part": "guard20",
+      "kind": "known-unicode-name",
+      "question": "Wo steht Åsa?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Åsa steht in Fulda."
+        }
+      ],
+      "expected": {
+        "text": "Fulda",
+        "sourceId": "natural-source"
+      }
+    },
+    {
+      "id": "guard-05",
+      "part": "guard20",
+      "kind": "substring-entity",
+      "question": "Wo wohnt Lene?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Marlene wohnt in Speyer."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-06",
+      "part": "guard20",
+      "kind": "hyphen-subentity",
+      "question": "Wo wohnt Lina?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Nora-Lina wohnt in Wismar."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-07",
+      "part": "guard20",
+      "kind": "indirect-speech",
+      "question": "Wo wohnt Ceyda?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Liselotte sagt: Ceyda wohnt in Rottweil."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-08",
+      "part": "guard20",
+      "kind": "hypothetical",
+      "question": "Wo lebt Thore?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Angenommen, Thore lebt in Koblenz; dann wäre sein Arbeitsweg kurz."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-09",
+      "part": "guard20",
+      "kind": "quotation",
+      "question": "Wo ist Jasna?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "„Jasna ist in Chemnitz.“ ist nur ein Zitat."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-10",
+      "part": "guard20",
+      "kind": "positive-then-negation",
+      "question": "Wo wohnt Ilka?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Ilka wohnt in Gera. Ilka wohnt nicht in Gera."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-11",
+      "part": "guard20",
+      "kind": "conflicting-sources",
+      "question": "Wo lebt Milos?",
+      "sources": [
+        {
+          "id": "source-one",
+          "revision": 1,
+          "text": "Milos lebt in Rheine."
+        },
+        {
+          "id": "source-two",
+          "revision": 1,
+          "text": "Milos lebt in Siegen."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-12",
+      "part": "guard20",
+      "kind": "interrogative-evidence",
+      "question": "Wo wohnt Farid?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Farid wohnt in Pirna? Das weiß niemand sicher."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-13",
+      "part": "guard20",
+      "kind": "non-direct-knowledge-claim",
+      "question": "Wo lebt Ottilie?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Nicht alle wissen, ob Ottilie in Goslar lebt."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-14",
+      "part": "guard20",
+      "kind": "relation-drift-standing",
+      "question": "Wo wohnt Imran?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Imran steht in Bamberg."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-15",
+      "part": "guard20",
+      "kind": "relation-drift-presence",
+      "question": "Wo ist Loretta?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Loretta wohnt in Lüneburg."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-16",
+      "part": "guard20",
+      "kind": "coordinated-places",
+      "question": "Wo lebt Enno?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Enno lebt in Plauen und Zwickau."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-17",
+      "part": "guard20",
+      "kind": "hearsay",
+      "question": "Wo wohnt Aylin?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Es heißt, Aylin wohnt in Cottbus."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-18",
+      "part": "guard20",
+      "kind": "denied-report",
+      "question": "Wo lebt Melvin?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Falsch ist die Behauptung: Melvin lebt in Greifswald."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-19",
+      "part": "guard20",
+      "kind": "future",
+      "question": "Wo wohnt Kira?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Kira wird in Eisenach wohnen."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "guard-20",
+      "part": "guard20",
+      "kind": "simulated-report",
+      "question": "Wo wohnt Leona?",
+      "sources": [
+        {
+          "id": "natural-source",
+          "revision": 1,
+          "text": "Die Simulation meldet: Leona wohnt in Detmold."
+        }
+      ],
+      "expected": null
+    }
+  ],
+  "authoringNote": "Before any execution or developer handoff, four negative sentences were rewritten into idiomatic German; labels and declared scope are unchanged. The initial authoring snapshot is retained unrun."
+}

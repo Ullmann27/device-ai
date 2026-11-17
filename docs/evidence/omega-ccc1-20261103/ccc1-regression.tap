@@ -1,0 +1,693 @@
+# Source HEAD: c9e52a640440b45fe9845273b20458ae2d72d6ce
+# UTC: 2026-11-03T17:56:04.384529+00:00
+# Command: node --test --test-reporter=tap .github/continuum/ccc1-bottleneck-diagnosis.test.mjs .github/continuum/ccc1-bottleneck-evidence-export.test.mjs .github/continuum/ccc1-bottleneck-scorecard.test.mjs .github/continuum/ccc1-bridge.test.mjs .github/continuum/ccc1-checkout-binding.test.mjs .github/continuum/ccc1-independent-verifier.test.mjs .github/continuum/ccc1-local-preflight.test.mjs .github/continuum/ccc1-native-evidence-integrity.test.mjs .github/continuum/ccc1-path-policy.test.mjs .github/continuum/ccc1-redgreen-verifier.test.mjs .github/continuum/ccc1-repair.test.mjs .github/continuum/ccc1-worker.test.mjs .github/continuum/ccc1.test.mjs
+TAP version 13
+# Subtest: three arms share source binding but never claim executed or verified fixes
+ok 1 - three arms share source binding but never claim executed or verified fixes
+  ---
+  duration_ms: 8.344786
+  type: 'test'
+  ...
+# Subtest: neural pass@1 does not fall back to a later applicable operator
+ok 2 - neural pass@1 does not fall back to a later applicable operator
+  ---
+  duration_ms: 2.295224
+  type: 'test'
+  ...
+# Subtest: forged operator, mismatched paths and unsupported manifests fail closed
+ok 3 - forged operator, mismatched paths and unsupported manifests fail closed
+  ---
+  duration_ms: 1.368289
+  type: 'test'
+  ...
+# Subtest: ranking cannot mutate research model parameters during a diagnosis
+ok 4 - ranking cannot mutate research model parameters during a diagnosis
+  ---
+  duration_ms: 1.443101
+  type: 'test'
+  ...
+# Subtest: pagination case: A reference, B forced operator and C top-1 produce same source-bound hypothesis
+ok 5 - pagination case: A reference, B forced operator and C top-1 produce same source-bound hypothesis
+  ---
+  duration_ms: 2.270676
+  type: 'test'
+  ...
+# Subtest: write immutable redacted research-only observation with digest and owner mode
+ok 6 - write immutable redacted research-only observation with digest and owner mode
+  ---
+  duration_ms: 11.861787
+  type: 'test'
+  ...
+# Subtest: same content cannot be silently overwritten or double-counted
+ok 7 - same content cannot be silently overwritten or double-counted
+  ---
+  duration_ms: 19.228682
+  type: 'test'
+  ...
+# Subtest: no export into repository, public directory or unprepared state
+ok 8 - no export into repository, public directory or unprepared state
+  ---
+  duration_ms: 3.417783
+  type: 'test'
+  ...
+# Subtest: symlinked report directory is refused
+ok 9 - symlinked report directory is refused
+  ---
+  duration_ms: 2.111396
+  type: 'test'
+  ...
+# Subtest: same unverified patch is not misclassified as a verified repair
+ok 10 - same unverified patch is not misclassified as a verified repair
+  ---
+  duration_ms: 15.905963
+  type: 'test'
+  ...
+# Subtest: wrong neural rank one reports local ranking review, not hidden rank two fallback
+ok 11 - wrong neural rank one reports local ranking review, not hidden rank two fallback
+  ---
+  duration_ms: 2.916538
+  type: 'test'
+  ...
+# Subtest: scorecard is redacted and cannot contain raw candidate source
+ok 12 - scorecard is redacted and cannot contain raw candidate source
+  ---
+  duration_ms: 2.469075
+  type: 'test'
+  ...
+# Subtest: untrusted serialized or fabricated observation does not gain a trusted origin
+ok 13 - untrusted serialized or fabricated observation does not gain a trusted origin
+  ---
+  duration_ms: 2.785962
+  type: 'test'
+  ...
+# Subtest: the scorecard does not execute or train while summarizing
+ok 14 - the scorecard does not execute or train while summarizing
+  ---
+  duration_ms: 7.903051
+  type: 'test'
+  ...
+# Subtest: the bridge accepts only the fixed CCC1 operations with validated values
+ok 15 - the bridge accepts only the fixed CCC1 operations with validated values
+  ---
+  duration_ms: 3.860539
+  type: 'test'
+  ...
+# Subtest: owner chain over the bridge: real regression -> verified patch for review; replays never run again
+ok 16 - owner chain over the bridge: real regression -> verified patch for review; replays never run again
+  ---
+  duration_ms: 2391.580882
+  type: 'test'
+  ...
+# Subtest: a worker crash before execution is never a success; the owner cancels the pending order cleanly
+ok 17 - a worker crash before execution is never a success; the owner cancels the pending order cleanly
+  ---
+  duration_ms: 908.130048
+  type: 'test'
+  ...
+# Subtest: refusals are data with exit code 2: protected branch, dirty tree, state in or linked into the checkout, damaged journal
+ok 18 - refusals are data with exit code 2: protected branch, dirty tree, state in or linked into the checkout, damaged journal
+  ---
+  duration_ms: 860.5449
+  type: 'test'
+  ...
+# Subtest: Android speaks the same fixed CCC1 operations and stores only validated summaries
+ok 19 - Android speaks the same fixed CCC1 operations and stores only validated summaries
+  ---
+  duration_ms: 4.023479
+  type: 'test'
+  ...
+# Subtest: same Android order cannot bind another checkout even with identical commit bytes
+ok 20 - same Android order cannot bind another checkout even with identical commit bytes
+  ---
+  duration_ms: 71.169254
+  type: 'test'
+  ...
+# Subtest: new order cannot deduplicate an open goal belonging to another checkout
+ok 21 - new order cannot deduplicate an open goal belonging to another checkout
+  ---
+  duration_ms: 55.626278
+  type: 'test'
+  ...
+# Subtest: stale source supplied to a new order is refused before a task exists
+ok 22 - stale source supplied to a new order is refused before a task exists
+  ---
+  duration_ms: 37.349869
+  type: 'test'
+  ...
+# Subtest: same checkout/order is idempotent after module restart and canonical symlink
+ok 23 - same checkout/order is idempotent after module restart and canonical symlink
+  ---
+  duration_ms: 61.401311
+  type: 'test'
+  ...
+# Subtest: bound worker cycle refuses a different checkout before indexing or execution
+ok 24 - bound worker cycle refuses a different checkout before indexing or execution
+  ---
+  duration_ms: 56.905873
+  type: 'test'
+  ...
+# Subtest: retry cannot relabel an old task with a newer checkout HEAD
+ok 25 - retry cannot relabel an old task with a newer checkout HEAD
+  ---
+  duration_ms: 53.14841
+  type: 'test'
+  ...
+# Subtest: missing legacy binding requires owner review, never automatic state adoption
+ok 26 - missing legacy binding requires owner review, never automatic state adoption
+  ---
+  duration_ms: 56.982694
+  type: 'test'
+  ...
+# Subtest: HEAD changing between initial validation and task creation cannot rebind authorization
+ok 27 - HEAD changing between initial validation and task creation cannot rebind authorization
+  ---
+  duration_ms: 64.757897
+  type: 'test'
+  ...
+# Subtest: a later change after source capture keeps the old binding and aborts before reasoning
+ok 28 - a later change after source capture keeps the old binding and aborts before reasoning
+  ---
+  duration_ms: 53.479738
+  type: 'test'
+  ...
+# Subtest: read-only binding checks the canonical typed task and all four identities
+ok 29 - read-only binding checks the canonical typed task and all four identities
+  ---
+  duration_ms: 6.795104
+  type: 'test'
+  ...
+# Subtest: invalid source, task or patch hash cannot cross the research binding
+ok 30 - invalid source, task or patch hash cannot cross the research binding
+  ---
+  duration_ms: 2.978502
+  type: 'test'
+  ...
+# Subtest: forbid test tampering and unapproved paths independently of candidate label
+ok 31 - forbid test tampering and unapproved paths independently of candidate label
+  ---
+  duration_ms: 1.110791
+  type: 'test'
+  ...
+# Subtest: a fake executor or a caller-supplied sandbox cannot issue a dual-run claim
+ok 32 - a fake executor or a caller-supplied sandbox cannot issue a dual-run claim
+  ---
+  duration_ms: 0.91673
+  type: 'test'
+  ...
+# Subtest: existing CCC1 owner grant must be valid, canonical and fully prepared
+ok 33 - existing CCC1 owner grant must be valid, canonical and fully prepared
+  ---
+  duration_ms: 3.732305
+  type: 'test'
+  ...
+# Subtest: NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an executable-free chain
+ok 34 - NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an executable-free chain
+  ---
+  duration_ms: 3.107185
+  type: 'test'
+  ...
+# Subtest: CCC1: omitted or non-true evidenceComplete cannot establish RED/GREEN/fresh parity
+ok 35 - CCC1: omitted or non-true evidenceComplete cannot establish RED/GREEN/fresh parity
+  ---
+  duration_ms: 0.926975
+  type: 'test'
+  ...
+# Subtest: CCC1: run measurement requires explicit complete XML evidence
+ok 36 - CCC1: run measurement requires explicit complete XML evidence
+  ---
+  duration_ms: 0.623037
+  type: 'test'
+  ...
+# Subtest: CCC1: an apparent green with fewer executed tests than RED is NOT verified
+ok 37 - CCC1: an apparent green with fewer executed tests than RED is NOT verified
+  ---
+  duration_ms: 0.555186
+  type: 'test'
+  ...
+# Subtest: CCC1: equal or increased executed coverage preserves same-profile evidence
+ok 38 - CCC1: equal or increased executed coverage preserves same-profile evidence
+  ---
+  duration_ms: 0.99036
+  type: 'test'
+  ...
+# Subtest: CCC1: skipped tests must remain identical across RED, GREEN and fresh run
+ok 39 - CCC1: skipped tests must remain identical across RED, GREEN and fresh run
+  ---
+  duration_ms: 0.516557
+  type: 'test'
+  ...
+# Subtest: CCC1: no missing profile, zero executed tests or contradictory JUnit counts
+ok 40 - CCC1: no missing profile, zero executed tests or contradictory JUnit counts
+  ---
+  duration_ms: 0.262205
+  type: 'test'
+  ...
+# Subtest: CCC1: same number of tests but a replaced testcase cannot fake equal coverage
+ok 41 - CCC1: same number of tests but a replaced testcase cannot fake equal coverage
+  ---
+  duration_ms: 0.266821
+  type: 'test'
+  ...
+# Subtest: CCC1: missing, duplicate or malformed executed identities never attest repairs
+ok 42 - CCC1: missing, duplicate or malformed executed identities never attest repairs
+  ---
+  duration_ms: 0.264448
+  type: 'test'
+  ...
+# Subtest: read-only clean isolated local preflight is not an execution authorization
+ok 43 - read-only clean isolated local preflight is not an execution authorization
+  ---
+  duration_ms: 3.578203
+  type: 'test'
+  ...
+# Subtest: rejects source-internal state including symlink redirections
+ok 44 - rejects source-internal state including symlink redirections
+  ---
+  duration_ms: 1.256751
+  type: 'test'
+  ...
+# Subtest: rejects main branch, dirty tree and absent CCC1 CLI
+ok 45 - rejects main branch, dirty tree and absent CCC1 CLI
+  ---
+  duration_ms: 0.595516
+  type: 'test'
+  ...
+# Subtest: rejects invalid state path and non-directory parent
+ok 46 - rejects invalid state path and non-directory parent
+  ---
+  duration_ms: 0.825021
+  type: 'test'
+  ...
+# Subtest: every preflight finding gets one owner hint with the concrete next step, codes are never dropped
+ok 47 - every preflight finding gets one owner hint with the concrete next step, codes are never dropped
+  ---
+  duration_ms: 0.949509
+  type: 'test'
+  ...
+# Subtest: diagnostic cap cannot truncate executed coverage or hide disappearing failed tests
+ok 48 - diagnostic cap cannot truncate executed coverage or hide disappearing failed tests
+  ---
+  duration_ms: 7.858674
+  type: 'test'
+  ...
+# Subtest: oversized XML cannot be silently treated as complete executed evidence
+ok 49 - oversized XML cannot be silently treated as complete executed evidence
+  ---
+  duration_ms: 3.066494
+  type: 'test'
+  ...
+# Subtest: parity rejects explicitly incomplete coverage even if identities and counts match
+ok 50 - parity rejects explicitly incomplete coverage even if identities and counts match
+  ---
+  duration_ms: 0.441465
+  type: 'test'
+  ...
+# Subtest: JUnit directory cannot silently omit an oversized or linked report
+ok 51 - JUnit directory cannot silently omit an oversized or linked report
+  ---
+  duration_ms: 7.869271
+  type: 'test'
+  ...
+# Subtest: incomplete failing report cannot become negative strategy training evidence
+ok 52 - incomplete failing report cannot become negative strategy training evidence
+  ---
+  duration_ms: 1.751876
+  type: 'test'
+  ...
+# Subtest: a concurrent HEAD change cannot hide behind a one-file patch diff
+ok 53 - a concurrent HEAD change cannot hide behind a one-file patch diff
+  ---
+  duration_ms: 33.839982
+  type: 'test'
+  ...
+# Subtest: signal, process error or absent exit code cannot be a reproduced RED baseline
+ok 54 - signal, process error or absent exit code cannot be a reproduced RED baseline
+  ---
+  duration_ms: 0.582747
+  type: 'test'
+  ...
+# Subtest: interrupted process metadata survives ledger sanitization and cannot train a negative
+ok 55 - interrupted process metadata survives ledger sanitization and cannot train a negative
+  ---
+  duration_ms: 0.838582
+  type: 'test'
+  ...
+# Subtest: CCC1 rejects repo-local state, even when path hides behind symlinked ancestors
+ok 56 - CCC1 rejects repo-local state, even when path hides behind symlinked ancestors
+  ---
+  duration_ms: 5.445223
+  type: 'test'
+  ...
+# Subtest: CCC1 refuses file targets and malformed state paths
+ok 57 - CCC1 refuses file targets and malformed state paths
+  ---
+  duration_ms: 1.109239
+  type: 'test'
+  ...
+# Subtest: genuine RED→GREEN chain is VERIFIED from re-executed tests and bound to the receipt bytes
+ok 58 - genuine RED→GREEN chain is VERIFIED from re-executed tests and bound to the receipt bytes
+  ---
+  duration_ms: 450.605761
+  type: 'test'
+  ...
+# Subtest: forged receipts are rejected against the real repository
+ok 59 - forged receipts are rejected against the real repository
+  ---
+  duration_ms: 1387.051966
+  type: 'test'
+  ...
+# Subtest: a fix that edits the target test is rejected even if everything is green
+ok 60 - a fix that edits the target test is rejected even if everything is green
+  ---
+  duration_ms: 86.227002
+  type: 'test'
+  ...
+# Subtest: patch mode (CCC1 repair): base fails, base+patch passes, tampered patch is rejected
+ok 61 - patch mode (CCC1 repair): base fails, base+patch passes, tampered patch is rejected
+  ---
+  duration_ms: 453.168835
+  type: 'test'
+  ...
+# Subtest: JUnit parser maps node test files to stable ids and sees failures
+ok 62 - JUnit parser maps node test files to stable ids and sees failures
+  ---
+  duration_ms: 0.280112
+  type: 'test'
+  ...
+# Subtest: protocol v2: repair goals, hypotheses and requests are strict; v1 journals stay valid; foreign hashes do not
+ok 63 - protocol v2: repair goals, hypotheses and requests are strict; v1 journals stay valid; foreign hashes do not
+  ---
+  duration_ms: 20.05776
+  type: 'test'
+  ...
+# Subtest: the gate allows a repair only for a chain the owner granted, within deadline, rounds and CPU budget
+ok 64 - the gate allows a repair only for a chain the owner granted, within deadline, rounds and CPU budget
+  ---
+  duration_ms: 1.171643
+  type: 'test'
+  ...
+# Subtest: the verifier confirms a repair only from real artifacts: failing baseline, passing candidate and independent run
+ok 65 - the verifier confirms a repair only from real artifacts: failing baseline, passing candidate and independent run
+  ---
+  duration_ms: 2.989648
+  type: 'test'
+  ...
+# Subtest: repair receipt proof binds coverage to command details without losing independent tests
+    # Subtest: candidate command lost tests behind an unchanged summary
+    ok 1 - candidate command lost tests behind an unchanged summary
+      ---
+      duration_ms: 0.304228
+      type: 'test'
+      ...
+    # Subtest: independent command lost tests behind an unchanged summary
+    ok 2 - independent command lost tests behind an unchanged summary
+      ---
+      duration_ms: 0.277457
+      type: 'test'
+      ...
+    # Subtest: baseline summary understates the real failing suite
+    ok 3 - baseline summary understates the real failing suite
+      ---
+      duration_ms: 0.262785
+      type: 'test'
+      ...
+    # Subtest: summary claims a different failing-test count
+    ok 4 - summary claims a different failing-test count
+      ---
+      duration_ms: 0.22588
+      type: 'test'
+      ...
+    # Subtest: candidate summary differs from command
+    ok 5 - candidate summary differs from command
+      ---
+      duration_ms: 0.263577
+      type: 'test'
+      ...
+    # Subtest: independent summary differs from command
+    ok 6 - independent summary differs from command
+      ---
+      duration_ms: 0.277758
+      type: 'test'
+      ...
+    # Subtest: independent rerun drops tests introduced by candidate
+    ok 7 - independent rerun drops tests introduced by candidate
+      ---
+      duration_ms: 0.368464
+      type: 'test'
+      ...
+    # Subtest: count strings are not executed-test counts
+    ok 8 - count strings are not executed-test counts
+      ---
+      duration_ms: 0.243276
+      type: 'test'
+      ...
+    # Subtest: fractional counts are not executed-test counts
+    ok 9 - fractional counts are not executed-test counts
+      ---
+      duration_ms: 0.439882
+      type: 'test'
+      ...
+    # Subtest: unsafe integer counts are not executed-test counts
+    ok 10 - unsafe integer counts are not executed-test counts
+      ---
+      duration_ms: 0.340512
+      type: 'test'
+      ...
+    # Subtest: baseline cannot have more failures than executed tests
+    ok 11 - baseline cannot have more failures than executed tests
+      ---
+      duration_ms: 0.183896
+      type: 'test'
+      ...
+    # Subtest: baseline exit zero contradicts a claimed failure
+    ok 12 - baseline exit zero contradicts a claimed failure
+      ---
+      duration_ms: 0.239059
+      type: 'test'
+      ...
+    # Subtest: timed-out baseline is not a completed RED run
+    ok 13 - timed-out baseline is not a completed RED run
+      ---
+      duration_ms: 0.215414
+      type: 'test'
+      ...
+    # Subtest: signal termination is not a completed RED run
+    ok 14 - signal termination is not a completed RED run
+      ---
+      duration_ms: 0.202255
+      type: 'test'
+      ...
+    # Subtest: unknown chain is not an implicit undefined allowlist
+    ok 15 - unknown chain is not an implicit undefined allowlist
+      ---
+      duration_ms: 0.163616
+      type: 'test'
+      ...
+    # Subtest: extra test phases cannot supplement the three fixed phases
+    ok 16 - extra test phases cannot supplement the three fixed phases
+      ---
+      duration_ms: 0.255935
+      type: 'test'
+      ...
+    # Subtest: missing command details cannot be verified
+    ok 17 - missing command details cannot be verified
+      ---
+      duration_ms: 0.167032
+      type: 'test'
+      ...
+    # Subtest: equal coverage
+    ok 18 - equal coverage
+      ---
+      duration_ms: 0.208243
+      type: 'test'
+      ...
+    # Subtest: increased coverage
+    ok 19 - increased coverage
+      ---
+      duration_ms: 1.201158
+      type: 'test'
+      ...
+    1..19
+ok 66 - repair receipt proof binds coverage to command details without losing independent tests
+  ---
+  duration_ms: 9.425171
+  type: 'test'
+  ...
+# Subtest: CCC1 repairs a real regression end to end and records it once for the owner to review
+ok 67 - CCC1 repairs a real regression end to end and records it once for the owner to review
+  ---
+  duration_ms: 1197.61277
+  type: 'test'
+  ...
+# Subtest: a passing chain is reported as nothing to repair, never as a repair
+ok 68 - a passing chain is reported as nothing to repair, never as a repair
+  ---
+  duration_ms: 403.382247
+  type: 'test'
+  ...
+# Subtest: repair orders refuse invalid input, dirty checkouts, reused job ids and stale bases; replays never execute again
+ok 69 - repair orders refuse invalid input, dirty checkouts, reused job ids and stale bases; replays never execute again
+  ---
+  duration_ms: 391.830498
+  type: 'test'
+  ...
+# Subtest: an interrupted repair is never repeated without the owner; recovery classifies it like any coding job
+ok 70 - an interrupted repair is never repeated without the owner; recovery classifies it like any coding job
+  ---
+  duration_ms: 49.962691
+  type: 'test'
+  ...
+# Subtest: every orchestrator outcome maps to a known loop outcome; only real progress is not a failure
+ok 71 - every orchestrator outcome maps to a known loop outcome; only real progress is not a failure
+  ---
+  duration_ms: 1.437623
+  type: 'test'
+  ...
+# Subtest: a submitted goal is confirmed by the real job, reported for review and recorded once
+ok 72 - a submitted goal is confirmed by the real job, reported for review and recorded once
+  ---
+  duration_ms: 1014.031155
+  type: 'test'
+  ...
+# Subtest: an ambiguous goal becomes an owner question without a job, recorded as an investigation
+ok 73 - an ambiguous goal becomes an owner question without a job, recorded as an investigation
+  ---
+  duration_ms: 355.659661
+  type: 'test'
+  ...
+# Subtest: the existing local loop drives CCC1 cycles with its durable checkpoint
+ok 74 - the existing local loop drives CCC1 cycles with its durable checkpoint
+  ---
+  duration_ms: 1079.773725
+  type: 'test'
+  ...
+# Subtest: damaged journals are reported, never repaired, and stop the worker; the experience log detects edits
+ok 75 - damaged journals are reported, never repaired, and stop the worker; the experience log detects edits
+  ---
+  duration_ms: 23.13747
+  type: 'test'
+  ...
+# Subtest: the CLI keeps its state outside the repository and lists tasks
+ok 76 - the CLI keeps its state outside the repository and lists tasks
+  ---
+  duration_ms: 58.791956
+  type: 'test'
+  ...
+# Subtest: an idle cycle refreshes the code index only when asked, and probes again only what changed
+ok 77 - an idle cycle refreshes the code index only when asked, and probes again only what changed
+  ---
+  duration_ms: 186.849943
+  type: 'test'
+  ...
+# Subtest: the task compiler answers before any task or coding job: ready, ambiguous, no match, needs the owner
+ok 78 - the task compiler answers before any task or coding job: ready, ambiguous, no match, needs the owner
+  ---
+  duration_ms: 722.358748
+  type: 'test'
+  ...
+# Subtest: tasks are bound to the real repository, never to a placeholder
+ok 79 - tasks are bound to the real repository, never to a placeholder
+  ---
+  duration_ms: 38.255074
+  type: 'test'
+  ...
+# Subtest: submit runs the CCC1 preflight: no task on a production branch, a dirty checkout or without the runtime
+ok 80 - submit runs the CCC1 preflight: no task on a production branch, a dirty checkout or without the runtime
+  ---
+  duration_ms: 120.332888
+  type: 'test'
+  ...
+# Subtest: envelopes are strict about fields, roles, versions and payload shapes
+ok 81 - envelopes are strict about fields, roles, versions and payload shapes
+  ---
+  duration_ms: 3.88118
+  type: 'test'
+  ...
+# Subtest: the journal detects edits, forged trusted senders, broken chains and binding changes; duplicates apply once
+ok 82 - the journal detects edits, forged trusted senders, broken chains and binding changes; duplicates apply once
+  ---
+  duration_ms: 6.279179
+  type: 'test'
+  ...
+# Subtest: the gate allows only owner-granted, critic-approved requests within deadline, rounds and budget
+ok 83 - the gate allows only owner-granted, critic-approved requests within deadline, rounds and budget
+  ---
+  duration_ms: 3.120315
+  type: 'test'
+  ...
+# Subtest: the verifier checks a receipt against the real patch bytes, runs, profile and the exact order
+ok 84 - the verifier checks a receipt against the real patch bytes, runs, profile and the exact order
+  ---
+  duration_ms: 1.160526
+  type: 'test'
+  ...
+# Subtest: the interpreter abstains without verifiable examples and reads them from German text
+ok 85 - the interpreter abstains without verifiable examples and reads them from German text
+  ---
+  duration_ms: 1.515631
+  type: 'test'
+  ...
+# Subtest: end to end: refute, revise, confirm with the real coding job; source untouched
+ok 86 - end to end: refute, revise, confirm with the real coding job; source untouched
+  ---
+  duration_ms: 1330.012807
+  type: 'test'
+  ...
+# Subtest: a reasoner that contradicts its receipt fails the task; nothing is recorded as confirmed
+ok 87 - a reasoner that contradicts its receipt fails the task; nothing is recorded as confirmed
+  ---
+  duration_ms: 416.995069
+  type: 'test'
+  ...
+# Subtest: manipulated job receipts never confirm; a receipt forged into the journal stops the task
+ok 88 - manipulated job receipts never confirm; a receipt forged into the journal stops the task
+  ---
+  duration_ms: 636.642298
+  type: 'test'
+  ...
+# Subtest: duplicate deliveries are applied once; a conflicting duplicate is a protocol violation
+ok 89 - duplicate deliveries are applied once; a conflicting duplicate is a protocol violation
+  ---
+  duration_ms: 600.645793
+  type: 'test'
+  ...
+# Subtest: a moved checkout aborts the task as STALE_BASE before anything runs
+ok 90 - a moved checkout aborts the task as STALE_BASE before anything runs
+  ---
+  duration_ms: 48.22394
+  type: 'test'
+  ...
+# Subtest: unauthorized actions: protected modules fail the task; ungranted modules wait for the owner
+ok 91 - unauthorized actions: protected modules fail the task; ungranted modules wait for the owner
+  ---
+  duration_ms: 667.15077
+  type: 'test'
+  ...
+# Subtest: repair loops are bounded: the round limit ends in an abstention, the turn limit in a pause
+ok 92 - repair loops are bounded: the round limit ends in an abstention, the turn limit in a pause
+  ---
+  duration_ms: 1161.740539
+  type: 'test'
+  ...
+# Subtest: kills: SIGKILL before or after execution and during a journal write resume without a second execution
+ok 93 - kills: SIGKILL before or after execution and during a journal write resume without a second execution
+  ---
+  duration_ms: 2186.235917
+  type: 'test'
+  ...
+# Subtest: an interrupted job is never repeated without the owner; with approval the task still ends verified
+ok 94 - an interrupted job is never repeated without the owner; with approval the task still ends verified
+  ---
+  duration_ms: 2026.248981
+  type: 'test'
+  ...
+1..94
+# tests 113
+# suites 0
+# pass 113
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12334.203578
+# Process exit: 0

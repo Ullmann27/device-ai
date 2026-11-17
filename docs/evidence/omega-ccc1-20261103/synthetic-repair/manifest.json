@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "c9e52a640440b45fe9845273b20458ae2d72d6ce",
+  "fixtureCommit": "4a7382ecb9c8faeb769f1aa0d8d64227db9c9a9e",
+  "fixtureRoot": "/tmp/ccc1-repair-ZM8GQ3/device-ai",
+  "note": "Synthetic fixture only. Original raw paths retained. Runtime MAC key intentionally not exported; archived hashes are integrity metadata, not independent authentication. Quality review remains separate.",
+  "files": {
+    "worker-receipt.json": "9d61f6d25c6e35f0a5867899690b021e98b3d0d53ab385b076748a33088315a8",
+    "journal.jsonl": "c3cd9c6487258714f735c7aa4b1e5b50b350b625650fff0ffe2570f002b24e78",
+    "experience.jsonl": "2e36a7cd571cf63a9bcfeabb8114d0f2b7adbc9f703b471c1e4536ff60b7ddcf",
+    "repair.patch": "14f52804b9f3c83bb08b50974a80fccf7e89d99878f0db0ffee3dba7b3e1059c",
+    "report.json": "d3dfa76cd588da154bed0eaed5b321fac89e4b6e9473cb6e31ae073c2f4c4efe",
+    "task-result.json": "8e21eca2252b6dc1488e6de9387ec7a18cef37caf38ae12dab1bf985dcd6e5c1",
+    "node-junit.xml": "6f9689d3afd3b21d357ef5784e1966d2377f1bbc9edce87f52d8d1ed8e757ee3",
+    "independent-check/verification.json": "43d5b1967fc6c64a3838a77b731c61730754b8e2fe56cc11bdc241e32ca1fbcf",
+    "independent-check/node-junit.xml": "66d5c0463a42f6e03a12e4ca3b9dea6dce2457aa3bfb187d013f4657d9ebcbee"
+  }
+}

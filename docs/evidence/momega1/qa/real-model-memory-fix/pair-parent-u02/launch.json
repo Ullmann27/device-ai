@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python3",
+    "/workspace/momega1-qa/tools/momega1-qa/observe-native-resources.py",
+    "/workspace/momega1-build-env/real-model-memory-fix/pair-parent-u02/native-resources.json",
+    "/workspace/momega1-local-model/build-cpu/bin/llama-completion",
+    "node",
+    "/workspace/momega1-qa/tools/momega1-qa/run-real-model-task.mjs",
+    "/workspace/momega1-build-env/combined-6baec1bc",
+    "6baec1bcd6585d2d04688a7d15651c830b4886d7",
+    "/workspace/momega1-build-env/frozen-paired-v2/earlier-u02/device-ai",
+    "/workspace/momega1-build-env/real-model-memory-fix/pair-parent-u02/task"
+  ],
+  "publicRuntimeEnvironmentSha256": "cf6a6f4e5ad0ddf51ea59075a4a1cd4fe5261b8807f7cdbd3ee7b4aaeccda872"
+}

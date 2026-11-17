@@ -1,0 +1,12 @@
+VmPeak:	 1296152 kB
+VmHWM:	  749604 kB
+VmRSS:	  749604 kB
+Threads:	11
+externalWeightDownloadBytes=491400064
+externalInference=false
+paidApiCost=0
+loopbackNetworkBytes=NOT_MEASURED
+modelCalls=3
+validChangingCandidates=0
+canonicalOutcome=ABSTAINED
+referenceIsPreprogrammed=true

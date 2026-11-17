@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces
+ok 1 - HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces
+  ---
+  duration_ms: 4930.245466
+  type: 'test'
+  ...
+# Subtest: HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs
+ok 2 - HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs
+  ---
+  duration_ms: 1426.374729
+  type: 'test'
+  ...
+# Subtest: HOST_INTEGRATION: live canonical lease clamps the real Docker timeout
+ok 3 - HOST_INTEGRATION: live canonical lease clamps the real Docker timeout
+  ---
+  duration_ms: 604.091502
+  type: 'test'
+  ...
+# Subtest: HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint
+ok 4 - HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint
+  ---
+  duration_ms: 1969.992131
+  type: 'test'
+  ...
+# Subtest: workspace binding is bounded correlation, never a shell or grant
+ok 5 - workspace binding is bounded correlation, never a shell or grant
+  ---
+  duration_ms: 1.173382
+  type: 'test'
+  ...
+# Subtest: lookalike executors and self-named journals cannot bind a workspace
+ok 6 - lookalike executors and self-named journals cannot bind a workspace
+  ---
+  duration_ms: 0.711624
+  type: 'test'
+  ...
+# Subtest: canonical recovery preserves pending identity and rejects corrupt/torn journal
+ok 7 - canonical recovery preserves pending identity and rejects corrupt/torn journal
+  ---
+  duration_ms: 52.572004
+  type: 'test'
+  ...
+# Subtest: bound workspace evidence requires observation and teardown for the exact resource policy
+ok 8 - bound workspace evidence requires observation and teardown for the exact resource policy
+  ---
+  duration_ms: 0.76142
+  type: 'test'
+  ...
+# Subtest: untrusted executor objects cannot grant execution rights
+ok 9 - untrusted executor objects cannot grant execution rights
+  ---
+  duration_ms: 1.168805
+  type: 'test'
+  ...
+# Subtest: mutable images and unbounded resource policies are rejected before daemon access
+ok 10 - mutable images and unbounded resource policies are rejected before daemon access
+  ---
+  duration_ms: 0.486314
+  type: 'test'
+  ...
+# Subtest: receipts with network, privilege, missing limits or missing snapshot are invalid
+ok 11 - receipts with network, privilege, missing limits or missing snapshot are invalid
+  ---
+  duration_ms: 0.319793
+  type: 'test'
+  ...
+# Subtest: configuration cannot supply shell commands or symlinked owner data
+ok 12 - configuration cannot supply shell commands or symlinked owner data
+  ---
+  duration_ms: 0.971577
+  type: 'test'
+  ...
+# Subtest: broad model reports never become learned success even with a true independent flag
+ok 13 - broad model reports never become learned success even with a true independent flag
+  ---
+  duration_ms: 1.558433
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9377.83398

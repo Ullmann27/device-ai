@@ -1,0 +1,121 @@
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:106:22: error: unresolved reference 'Lex3LearningExperienceStore'.
+    private val lex3=Lex3LearningExperienceStore(directory)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:107:26: error: unresolved reference 'OwnerMemoryRecovery'.
+    private val recovery=OwnerMemoryRecovery(directory)
+                         ^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:130:61: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+        if(fingerprint==knownFingerprint)return fingerprint to null
+                                                            ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:130:61: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+        if(fingerprint==knownFingerprint)return fingerprint to null
+                                                            ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:132:28: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+        return fingerprint to recovery.project(raw,pending)
+                           ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:132:28: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+        return fingerprint to recovery.project(raw,pending)
+                           ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:154:12: error: unresolved reference 'Lex3LearningExperienceStore'.
+        if(Lex3LearningExperienceStore.isManifest(bytes)) return lex3.snapshot(bytes,knownFingerprint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:315:22: error: unresolved reference 'Lex3LearningExperienceStore'.
+        if(segmented)Lex3LearningExperienceStore.requireDirectory(File(directory,"experiences-v3"))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:316:43: error: unresolved reference 'Lex3LearningExperienceStore'.
+        val survivors=if(damaged!=null && Lex3LearningExperienceStore.isManifest(damaged))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:317:89: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            try { lex3.verifiedSurvivors(damaged) } catch(_:IllegalArgumentException) { emptyList() }
+                                                                                        ^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:318:18: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            else emptyList()
+                 ^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:319:31: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val records=survivors.takeIf { it.isNotEmpty() } ?: run {
+                              ^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:319:31: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T> T.takeIf(predicate: (T) -> Boolean): T?
+        val records=survivors.takeIf { it.isNotEmpty() } ?: run {
+                              ^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:319:38: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val records=survivors.takeIf { it.isNotEmpty() } ?: run {
+                                     ^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:323:17: error: unresolved reference 'Lex3LearningExperienceStore'.
+                Lex3LearningExperienceStore.requireRegular(file)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:324:54: error: unresolved reference 'Lex3LearningExperienceStore'.
+                try { LearningExperienceCodec.decode(Lex3LearningExperienceStore.readBounded(file,LearningExperienceCodec.MAX_BYTES))
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:331:54: error: unresolved reference 'OwnerMemoryRecovery'.
+        if(segmented)lex3.restoreVerified(records) { OwnerMemoryRecovery.beforeWriteForTest?.invoke(primary) }
+                                                     ^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:331:94: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        if(segmented)lex3.restoreVerified(records) { OwnerMemoryRecovery.beforeWriteForTest?.invoke(primary) }
+                                                                                             ^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:333:13: error: unresolved reference 'OwnerMemoryRecovery'.
+            OwnerMemoryRecovery.beforeWriteForTest?.invoke(primary)
+            ^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:333:53: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            OwnerMemoryRecovery.beforeWriteForTest?.invoke(primary)
+                                                    ^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:334:13: error: unresolved reference 'Lex3LearningExperienceStore'.
+            Lex3LearningExperienceStore.writeAtomic(primary,LearningExperienceCodec.encode(records))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:335:13: error: unresolved reference 'Lex3LearningExperienceStore'.
+            Lex3LearningExperienceStore.syncDirectory(directory)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:345:31: error: unresolved reference 'OwnerRecoveryReview'.
+    fun ownerRecoveryReview():OwnerRecoveryReview = transaction() {
+                              ^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:345:53: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    fun ownerRecoveryReview():OwnerRecoveryReview = transaction() {
+                                                    ^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:350:45: error: unresolved reference 'OwnerRecoveryReview'.
+    fun reconfirmRecoveredOwnerFacts(review:OwnerRecoveryReview,proof:OwnerReconfirmationProof?):Set<String> = transaction(write=true) {
+                                            ^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:350:71: error: unresolved reference 'OwnerReconfirmationProof'.
+    fun reconfirmRecoveredOwnerFacts(review:OwnerRecoveryReview,proof:OwnerReconfirmationProof?):Set<String> = transaction(write=true) {
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:366:34: error: unresolved reference 'Lex3LearningExperienceStore'.
+            (primary.exists() && Lex3LearningExperienceStore.isManifest(readPrimary()))) MAX_DURABLE_RECORDS else MAX_RECORDS
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:377:92: error: unresolved reference 'it'.
+        val previous=if(hub.hasListeners())recovery.project(loadValidated()).associateBy { it.id } else emptyMap()
+                                                                                           ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:377:105: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val previous=if(hub.hasListeners())recovery.project(loadValidated()).associateBy { it.id } else emptyMap()
+                                                                                                        ^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:377:105: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val previous=if(hub.hasListeners())recovery.project(loadValidated()).associateBy { it.id } else emptyMap()
+                                                                                                        ^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:381:13: error: unresolved reference 'Lex3LearningExperienceStore'.
+            Lex3LearningExperienceStore.syncDirectory(directory)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:382:66: error: unresolved reference 'it'.
+            emitStored(recovery.project(items).filter { previous[it.id]!=it })
+                                                                 ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:382:74: error: unresolved reference 'it'.
+            emitStored(recovery.project(items).filter { previous[it.id]!=it })
+                                                                         ^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:396:57: error: unresolved reference 'Lex3LearningExperienceStore'.
+        if(items.size>MAX_RECORDS || (previous!=null && Lex3LearningExperienceStore.isManifest(previous))) {
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:425:31: error: unresolved reference 'Lex3LearningExperienceStore'.
+    private fun readPrimary()=Lex3LearningExperienceStore.readBounded(primary,LearningExperienceCodec.MAX_BYTES)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:436:9: error: unresolved reference 'Lex3LearningExperienceStore'.
+        Lex3LearningExperienceStore.requireDirectory(directory)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:439:17: error: unresolved reference 'Lex3LearningExperienceStore'.
+                Lex3LearningExperienceStore.requireRegular(file)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:443:13: error: unresolved reference 'Lex3LearningExperienceStore'.
+            Lex3LearningExperienceStore.requireRegular(lock)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:450:49: error: unresolved reference 'Lex3LearningExperienceStore'.
+                if(write && primary.exists() && Lex3LearningExperienceStore.isManifest(readPrimary()))
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt:461:39: error: unresolved reference 'Lex3LearningExperienceStore'.
+        const val MAX_DURABLE_RECORDS=Lex3LearningExperienceStore.MAX_RECORDS
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^

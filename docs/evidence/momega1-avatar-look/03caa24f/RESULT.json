@@ -1,0 +1,29 @@
+{
+  "toolSourceCommit": "8b600bd503ad6ea5f040b2e6ea51fcc0215dbde3",
+  "productionMapperSource": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "renderCompleted": "PASS",
+  "appearanceAccepted": "NOT_RUN",
+  "actualDevice": "NOT_RUN",
+  "actualSpeechOrCamera": "NOT_RUN",
+  "syntheticPoseReplay": true,
+  "stopRestoresNeutralPixels": true,
+  "candidateIntegrated": false,
+  "assetSha256": "03caa24f5c7b8db40a91f42a53538f2b6f43c1db02147b091ea6cb0685e2759e",
+  "filesSha256": {
+    "original-replay-manifest.json": "8fe17174b4158db2eec939aeb5950c99482ec66fd5ab6183b277e2f348a6b843",
+    "original-render.txt": "ce1368aa0e919fcbc48b576f40c735bb84fb7a661baef2bab1b91cb4b2fc4277",
+    "comparison-original-soft.png": "169abb80106cb7cd9aa8e66fddde0a39cc8447d8ee2a2a873fd6827f8ca9bdbe",
+    "candidate-render.txt": "9d0edc38669c43f0b162e2a6413e86a7cf15468c18d587044ae0314cd704b656",
+    "candidate-provenance.json": "cecbee0aee1285470b471077c940bc2be53501bf2e84961814489d5be0ca5e10",
+    "candidate-replay-manifest.json": "7389bfc6e3854a6c362a4310b41387e5dfe73206281bc2a6747453db18f2361c",
+    "candidate-neutral.png": "2550eda83ebe4f605ec7ce0ec33f0fcdc1a4d0a6033814b45f48779bd1a3dfc5"
+  },
+  "openIssues": [
+    "Silhouette and nose/lip contour illumination still weaker than reference",
+    "Independent O/jaw tooth geometry and transform review pending",
+    "No Android Filament visual execution",
+    "No actual voice/synchronization comparison"
+  ],
+  "resourceNote": "Any Blender log timing/memory values are host renderer internals, not app/device measurements."
+}

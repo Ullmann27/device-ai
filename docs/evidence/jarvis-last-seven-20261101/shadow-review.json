@@ -1,0 +1,36 @@
+{
+  "review_kind": "READ_ONLY_SOURCE_REVIEW",
+  "baseline_head": "9e8e6392243397719dce341caa37184cad6724fb",
+  "reviewed_files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/EntityRelationLocationShadowAdapter.kt",
+      "sha256": "5f12213d457ec42394f52f40c72e4b490dd72da29d7c9ecd44d34ee9289436bf"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/NaturalLocationLabComparison.kt",
+      "sha256": "0088cfa5a0d6e3a3fa8e5908b62fbad8a5c7aee616af0647baca202cd760aeb5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt",
+      "sha256": "a384d5f2ad3dbf4b49d14f5eaf67df377f0737e2a48491f43f553543ffffb0cf"
+    }
+  ],
+  "blocking_defects_found": [],
+  "checks": [
+    "ordered roles and UTF-16 source-local positions derive from the exact found source",
+    "ordered identity binds source id, revision, text hash and whole snapshot hash",
+    "adapter disabled by default and enabled only by explicit lab comparison",
+    "full-snapshot conservative rule veto precedes learned-result consideration",
+    "wrong-source, stale revision and truncated learned spans cannot override independently verified current rule",
+    "no owner-state/weight/file/network/tool writes introduced",
+    "no normal-chat promotion or independent learned role-understanding claim"
+  ],
+  "suggested_small_regressions": [
+    "same source id/text/hash, revision 1 to 2: stale learned revision must yield RULE_VERIFIED revision 2",
+    "target in second source: entity/relation/location offsets must refer to that source, not concatenated evidence"
+  ],
+  "tests_run_by_this_review": "NOT_RUN; root JVM run reported in progress, no duplicate suite run",
+  "blind_data_read": false,
+  "common_files_changed": false,
+  "final_combined_sha_android_qa_required": true
+}

@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces
+ok 1 - HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces
+  ---
+  duration_ms: 4832.231675
+  type: 'test'
+  ...
+# Subtest: workspace binding is bounded correlation, never a shell or grant
+ok 2 - workspace binding is bounded correlation, never a shell or grant
+  ---
+  duration_ms: 1.381908
+  type: 'test'
+  ...
+# Subtest: lookalike executors and self-named journals cannot bind a workspace
+ok 3 - lookalike executors and self-named journals cannot bind a workspace
+  ---
+  duration_ms: 1.530874
+  type: 'test'
+  ...
+# Subtest: canonical recovery preserves pending identity and rejects corrupt/torn journal
+ok 4 - canonical recovery preserves pending identity and rejects corrupt/torn journal
+  ---
+  duration_ms: 52.820477
+  type: 'test'
+  ...
+# Subtest: bound workspace evidence requires observation and teardown for the exact resource policy
+ok 5 - bound workspace evidence requires observation and teardown for the exact resource policy
+  ---
+  duration_ms: 0.616783
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4923.778928

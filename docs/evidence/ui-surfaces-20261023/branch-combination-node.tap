@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: further inputs are deterministic, primitive, new and bounded
+ok 1 - further inputs are deterministic, primitive, new and bounded
+  ---
+  duration_ms: 2.152654
+  type: 'test'
+  ...
+# Subtest: observations are typed and printed text cannot pass as one
+ok 2 - observations are typed and printed text cannot pass as one
+  ---
+  duration_ms: 45.108757
+  type: 'test'
+  ...
+# Subtest: candidates that differ beyond the examples are ambiguous; identical ones are not
+ok 3 - candidates that differ beyond the examples are ambiguous; identical ones are not
+  ---
+  duration_ms: 75.395971
+  type: 'test'
+  ...
+# Subtest: the reasoner asks instead of proposing when the probe finds an ambiguity; lexical reasoning is unchanged
+ok 4 - the reasoner asks instead of proposing when the probe finds an ambiguity; lexical reasoning is unchanged
+  ---
+  duration_ms: 131.832531
+  type: 'test'
+  ...
+# Subtest: end to end with the real coding job: question first, nothing confirmed; the answer confirms the intended function
+ok 5 - end to end with the real coding job: question first, nothing confirmed; the answer confirms the intended function
+  ---
+  duration_ms: 645.062258
+  type: 'test'
+  ...
+# Subtest: every orchestrator outcome maps to a known loop outcome; only real progress is not a failure
+ok 6 - every orchestrator outcome maps to a known loop outcome; only real progress is not a failure
+  ---
+  duration_ms: 0.75608
+  type: 'test'
+  ...
+# Subtest: a submitted goal is confirmed by the real job, reported for review and recorded once
+ok 7 - a submitted goal is confirmed by the real job, reported for review and recorded once
+  ---
+  duration_ms: 553.266375
+  type: 'test'
+  ...
+# Subtest: an ambiguous goal becomes an owner question without a job, recorded as an investigation
+ok 8 - an ambiguous goal becomes an owner question without a job, recorded as an investigation
+  ---
+  duration_ms: 151.434959
+  type: 'test'
+  ...
+# Subtest: the existing local loop drives CCC1 cycles with its durable checkpoint
+ok 9 - the existing local loop drives CCC1 cycles with its durable checkpoint
+  ---
+  duration_ms: 676.872076
+  type: 'test'
+  ...
+# Subtest: damaged journals are reported, never repaired, and stop the worker; the experience log detects edits
+ok 10 - damaged journals are reported, never repaired, and stop the worker; the experience log detects edits
+  ---
+  duration_ms: 12.229864
+  type: 'test'
+  ...
+# Subtest: the CLI keeps its state outside the repository and lists tasks
+ok 11 - the CLI keeps its state outside the repository and lists tasks
+  ---
+  duration_ms: 11.906972
+  type: 'test'
+  ...
+# Subtest: envelopes are strict about fields, roles, versions and payload shapes
+ok 12 - envelopes are strict about fields, roles, versions and payload shapes
+  ---
+  duration_ms: 3.338541
+  type: 'test'
+  ...
+# Subtest: the journal detects edits, forged trusted senders, broken chains and binding changes; duplicates apply once
+ok 13 - the journal detects edits, forged trusted senders, broken chains and binding changes; duplicates apply once
+  ---
+  duration_ms: 5.441815
+  type: 'test'
+  ...
+# Subtest: the gate allows only owner-granted, critic-approved requests within deadline, rounds and budget
+ok 14 - the gate allows only owner-granted, critic-approved requests within deadline, rounds and budget
+  ---
+  duration_ms: 2.781348
+  type: 'test'
+  ...
+# Subtest: the verifier checks a receipt against the real patch bytes, runs, profile and the exact order
+ok 15 - the verifier checks a receipt against the real patch bytes, runs, profile and the exact order
+  ---
+  duration_ms: 1.021788
+  type: 'test'
+  ...
+# Subtest: the interpreter abstains without verifiable examples and reads them from German text
+ok 16 - the interpreter abstains without verifiable examples and reads them from German text
+  ---
+  duration_ms: 1.143329
+  type: 'test'
+  ...
+# Subtest: end to end: refute, revise, confirm with the real coding job; source untouched
+ok 17 - end to end: refute, revise, confirm with the real coding job; source untouched
+  ---
+  duration_ms: 785.055614
+  type: 'test'
+  ...
+# Subtest: a reasoner that contradicts its receipt fails the task; nothing is recorded as confirmed
+ok 18 - a reasoner that contradicts its receipt fails the task; nothing is recorded as confirmed
+  ---
+  duration_ms: 289.929191
+  type: 'test'
+  ...
+# Subtest: manipulated job receipts never confirm; a receipt forged into the journal stops the task
+ok 19 - manipulated job receipts never confirm; a receipt forged into the journal stops the task
+  ---
+  duration_ms: 459.15604
+  type: 'test'
+  ...
+# Subtest: duplicate deliveries are applied once; a conflicting duplicate is a protocol violation
+ok 20 - duplicate deliveries are applied once; a conflicting duplicate is a protocol violation
+  ---
+  duration_ms: 497.013002
+  type: 'test'
+  ...
+# Subtest: a moved checkout aborts the task as STALE_BASE before anything runs
+ok 21 - a moved checkout aborts the task as STALE_BASE before anything runs
+  ---
+  duration_ms: 35.057872
+  type: 'test'
+  ...
+# Subtest: unauthorized actions: protected modules fail the task; ungranted modules wait for the owner
+ok 22 - unauthorized actions: protected modules fail the task; ungranted modules wait for the owner
+  ---
+  duration_ms: 549.889599
+  type: 'test'
+  ...
+# Subtest: repair loops are bounded: the round limit ends in an abstention, the turn limit in a pause
+ok 23 - repair loops are bounded: the round limit ends in an abstention, the turn limit in a pause
+  ---
+  duration_ms: 1037.135244
+  type: 'test'
+  ...
+# Subtest: kills: SIGKILL before or after execution and during a journal write resume without a second execution
+ok 24 - kills: SIGKILL before or after execution and during a journal write resume without a second execution
+  ---
+  duration_ms: 1811.175203
+  type: 'test'
+  ...
+# Subtest: an interrupted job is never repeated without the owner; with approval the task still ends verified
+ok 25 - an interrupted job is never repeated without the owner; with approval the task still ends verified
+  ---
+  duration_ms: 10793.24936
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18811.837918

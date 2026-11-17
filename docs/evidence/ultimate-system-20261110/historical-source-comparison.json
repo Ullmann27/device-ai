@@ -1,0 +1,814 @@
+{
+  "source": "ff28ae74f18570daa6485fc6e885de360dd70e9f",
+  "remoteSource": "0d21f08466e1036346071536ac5eeec54f54efdc",
+  "entries": [
+    {
+      "pr": 614,
+      "title": "[DRAFT] Code50: Hollywood-FUI construct layer for canonical work scenes",
+      "head": "ca0bf6e5d8468df585891fd998963cddd195d0a5",
+      "base": "d724af80939114fcd831e116030e4d10847f91fa",
+      "comparisonBase": "d724af80939114fcd831e116030e4d10847f91fa",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisActionScenes.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiConstructTest.kt",
+        "docs/plans/2026-11-08-code50-hollywood-fui-foundation.md"
+      ],
+      "productionFiles": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt",
+          "donorBlob": "7a4af9a67d9e0e6a2a404c8994b3ddfce69345f6",
+          "currentBlob": "5842dbfa08f0460c1bae2da6b517fa252e0bc3f9",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+          "donorBlob": "1d61a986214b5b52728e331b77f969d13f70ab36",
+          "currentBlob": "ff4dcd82b4bbc7e3211967a92cad415c3798e563",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisActionScenes.kt",
+          "donorBlob": "8dd0057d1c84164b21c4444b740aa5d667a42e39",
+          "currentBlob": "ac7183caa5fd434cbac8fcaa715cf9bb98f329c5",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+          "donorBlob": "03ebd41ba6421cd29e0cfa25d95091c2114bc864",
+          "currentBlob": "01b744e3e7834c736f84f20633c3d1a315208fa6",
+          "state": "EVOLVED"
+        }
+      ],
+      "nonProductionFiles": 2
+    },
+    {
+      "pr": 630,
+      "title": "[DRAFT] Code50 QA staging: app receipts, cockpit contracts and compile repairs",
+      "head": "620307ede8843502867d02433c7366ce8ce8a092",
+      "base": "4971dce963daee37df2aceb9e7690392eec75cef",
+      "comparisonBase": "4971dce963daee37df2aceb9e7690392eec75cef",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        ".github/continuum/branch-bots-cli.test.mjs",
+        ".github/continuum/branch-discovery.test.mjs",
+        ".github/continuum/code50-github-release-contract.test.mjs",
+        ".github/continuum/code50-github-signer-preflight.test.mjs",
+        ".github/continuum/continuous-conversation-wiring.test.mjs",
+        ".github/continuum/opus55-preflight-contracts.test.mjs",
+        ".github/continuum/storage-fabric.test.mjs",
+        ".github/workflows/continuum-code50-github-qa.yml",
+        ".github/workflows/continuum-code50-sign-release.yml",
+        ".github/workflows/continuum-code51-sealed-release.yml",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumIntelligence.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/context/EntityRoleResolutionEngine.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+        "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMotionEvidenceTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/LocalChatPromptBudgetTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/LocalReasoningWorkScenePolicyTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerAppActionFlowTest.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/context/EntityRoleResolutionEngineTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeTargetPrecisionChecks.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/JarvisActionScenesTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentSceneUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumLongReplySpeechUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumSystemStatusWorkWindowUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ContinuumVisibleAvatarUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/JarvisLiveAvatarWiringUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/OwnerAppActionWorkSceneUiTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt",
+        "docs/evidence/code50-android27-qa/focused-tests.init.gradle",
+        "docs/evidence/code50-android27-qa/two-cases.init.gradle",
+        "docs/release/CODE50-BESITZER-RELEASE-RUNBOOK-20261108.md",
+        "docs/release/CODE50-GITHUB-RELEASE-KANAL-20261108.md",
+        "docs/research/omega/GPT6-CODE50-ANDROID27-REPAIR-20261108.md",
+        "docs/research/omega/GPT6-CODE50-APP-RECEIPT-HANDOFF-20261108.md",
+        "docs/research/omega/GPT6-CODE50-NODE-22-REPAIR-20261108.md",
+        "docs/research/omega/GPT6-CODE50-QA-STAGING-20261108.md",
+        "docs/research/omega/SONNET55-CODE50-DECK-INTEGRATION-HANDOFF-20261108.md",
+        "docs/research/omega/evidence/code50-critical-run1-FAIL-8bc695f/android-source-contracts.xml",
+        "docs/research/omega/evidence/code50-critical-run1-FAIL-8bc695f/host-checker.xml",
+        "docs/research/omega/evidence/code50-critical-run1-FAIL-8bc695f/process.xml",
+        "docs/research/omega/evidence/code50-critical-run1-FAIL-8bc695f/report.md",
+        "docs/research/omega/evidence/code50-critical-run1-FAIL-8bc695f/storage-agent.xml",
+        "docs/research/omega/evidence/code50-final-head-6f0137f-sonnet55-20261108.json",
+        "docs/research/omega/evidence/code50-fixture-adoption-opus-20261108/LIESMICH.md",
+        "docs/research/omega/evidence/code50-fixture-adoption-opus-20261108/audit_timeouts.py",
+        "docs/research/omega/evidence/code50-fixture-adoption-opus-20261108/fisher.py",
+        "docs/research/omega/evidence/code50-fixture-adoption-opus-20261108/lauf-zusammenfassung.json",
+        "docs/research/omega/evidence/code50-fixture-adoption-opus-20261108/mutation-result.txt",
+        "docs/research/omega/evidence/code50-fixture-adoption-opus-20261108/rounds-load-N20.jsonl",
+        "docs/research/omega/evidence/code50-merge-8bc695f-sonnet55-20261108.json",
+        "docs/research/omega/evidence/code50-node-sonnet55-20261108.json",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/LIESMICH.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/SHA256SUMS",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/critical-cc8ee5f-FAIL/android-source-contracts.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/critical-cc8ee5f-FAIL/host-checker.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/critical-cc8ee5f-FAIL/process.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/critical-cc8ee5f-FAIL/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/critical-cc8ee5f-FAIL/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-1/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-1/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-1/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-2/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-2/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-2/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-3/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-3/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-3/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-4/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-4/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-4/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-5/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-5/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/A-5/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-1/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-1/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-1/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-2/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-2/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-2/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-3/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-3/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-3/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-4/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-4/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-4/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-5/launcher.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-5/report.md",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/harness-ab/B-5/storage-agent.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/A-1.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/A-2.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/A-3.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/A-4.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/A-5.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/A-6.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/B-1.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/B-2.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/B-3.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/B-4.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/B-5.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/isoliert-ab/B-6.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/kandidat/c7fe719-fixture-timeout-1500-WIP-UNVERIFIED-NICHT-ANGEWENDET.patch",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/mechanismus/instrumentierung-storage-fabric-catalog.patch",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/mechanismus/lauf-1.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/mechanismus/lauf-2.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/mechanismus/rejections.log",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-A-1.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-A-2.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-A-3.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-A-4.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-A-5.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-A-6.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-B-1.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-B-2.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-B-3.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-B-4.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-B-5.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/stress-ab/S-B-6.xml",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/summary.json",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/werkzeuge/auswerten.py",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/werkzeuge/code50-run-filtered.py",
+        "docs/research/omega/evidence/code50-storage-flake-lead-20261108/werkzeuge/code50-storage-ab.sh",
+        "scripts/continuum-code50-github-signer.sh",
+        "scripts/continuum-code51-sealed-github-signer.sh",
+        "scripts/continuum-owner-local-routing.test.mjs"
+      ],
+      "productionFiles": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "donorBlob": "d61acbbb4a43d55fc5d00c18ac6f79e32232fab7",
+          "currentBlob": "299bb83f9485fee8f34005d97d4964c5930a3456",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+          "donorBlob": "a39406fca450a90944c20cf1f43d463aa7ff2fc1",
+          "currentBlob": "3c2f426b1c896a9b61b9189b8ef6f835af377f96",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumIntelligence.kt",
+          "donorBlob": "a3ca54d8645e33a401b2b2dec6e99767aec8bf8b",
+          "currentBlob": "a3ca54d8645e33a401b2b2dec6e99767aec8bf8b",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppActionFlow.kt",
+          "donorBlob": "27d15745e7a5a42cfb3d9e014c5f23b87533e34f",
+          "currentBlob": "99eba8b27ccea8a8eb2f8cd8ced4119c7ab560c8",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/context/EntityRoleResolutionEngine.kt",
+          "donorBlob": "5eed520cee255b76c799f67f1daef2a6c135fd29",
+          "currentBlob": "5eed520cee255b76c799f67f1daef2a6c135fd29",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+          "donorBlob": "69bd896940815b8d7f552c06177ccf0638ba3c21",
+          "currentBlob": "74794cfac126a1bf35f3b442976718a960d897c0",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+          "donorBlob": "bea5975d59201297cba816678c52f35ef448ffcf",
+          "currentBlob": "bea5975d59201297cba816678c52f35ef448ffcf",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+          "donorBlob": "bddaf2df7d6a920518a1a73cd3b0183ba4ea159a",
+          "currentBlob": "21c69305480b0dc68296a7e7d06933134a04bb25",
+          "state": "EVOLVED"
+        }
+      ],
+      "nonProductionFiles": 124
+    },
+    {
+      "pr": 636,
+      "title": "Code 50: Manuellen GitHub-Signierworkflow registrieren (Besitzer-Merge erforderlich)",
+      "head": "fca480a8b73330ed188ca9ae366d400a96ce5c26",
+      "base": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+      "comparisonBase": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        ".github/workflows/continuum-code50-sign-release.yml"
+      ],
+      "productionFiles": [],
+      "nonProductionFiles": 1
+    },
+    {
+      "pr": 644,
+      "title": "[DRAFT][DOCS ONLY] Code51 Owner-Kanon und Fable5.1-Hochmodus-\u00dcbergabe",
+      "head": "501f00ef98219333562745edf89704386eb60ab0",
+      "base": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "comparisonBase": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "AGENTS.md",
+        "docs/handoff/CONTINUUM-CODE51-FABLE51-OWNER-AUFTRAG-20261108.md"
+      ],
+      "productionFiles": [],
+      "nonProductionFiles": 2
+    },
+    {
+      "pr": 650,
+      "title": "[WIP][Code51] Master integration: natural UI routing and approved research regressions",
+      "head": "82590f532d0b070823d82e6007f53e5e825cf70f",
+      "base": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "comparisonBase": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDocumentIntent.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/AgentExecutionTruthIntegrationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ConversationResearchApprovalIntegrationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ConversationSpeechIntegrationRegressionTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntegrationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/PublicConversationResearchTest.kt",
+        "docs/research/omega/SOL-CODE51-MASTER-INTEGRATION-20261108.md"
+      ],
+      "productionFiles": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "donorBlob": "d16af604db460cd7af063df61a105468a3a56795",
+          "currentBlob": "299bb83f9485fee8f34005d97d4964c5930a3456",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt",
+          "donorBlob": "e39c92b8afa42020cf29e9ae94ee0b943ed934da",
+          "currentBlob": "c58c5e8889863517978932426de36166a9c54d4c",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+          "donorBlob": "69742cc4335c631d49c4c4afb16589be6450376e",
+          "currentBlob": "00ea011f016953b695b8faeaf9393b8b37af6120",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt",
+          "donorBlob": "d933668adc9502404530b4940c1f75d0243f4b91",
+          "currentBlob": "d933668adc9502404530b4940c1f75d0243f4b91",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+          "donorBlob": "e7e0e4c897b4952ceccd664a21686526676b40be",
+          "currentBlob": "3e6485ae4af27812273a40b80fb6ea523d8ea87e",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerDocumentIntent.kt",
+          "donorBlob": "96f4b4c679416ae7eda2383f82b3a39e1a008ebe",
+          "currentBlob": "96f4b4c679416ae7eda2383f82b3a39e1a008ebe",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+          "donorBlob": "158bfbe6447f6c2477f5365b078427fbe79d3dd0",
+          "currentBlob": "37c8fac19477c10df519e82887399f2a888c285a",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt",
+          "donorBlob": "5a9374f71ae4cfe32b0132851ba54e6963ab63eb",
+          "currentBlob": "5a9374f71ae4cfe32b0132851ba54e6963ab63eb",
+          "state": "IDENTICAL"
+        }
+      ],
+      "nonProductionFiles": 8
+    },
+    {
+      "pr": 653,
+      "title": "[WIP][Code51] Pinned integration candidate: #646 + #647\u2013649 + #650 + #651",
+      "head": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "base": "82590f532d0b070823d82e6007f53e5e825cf70f",
+      "comparisonBase": "82590f532d0b070823d82e6007f53e5e825cf70f",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt",
+        "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ContinuousConversationMode.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/HypothesisWorkspace.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechSession.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/SpeechRecoveryPolicy.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/SpeechTurnRecovery.kt",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt",
+        "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt",
+        "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+        "app/src/test/java/at/heinz/deviceai/Argon4CockpitAndBudgetRegressionTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ContinuumUiCopyTest.kt",
+        "app/src/test/java/at/heinz/deviceai/MemoryFallbackModelNotReadyTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ContextDiscoursePrefixTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ContinuousConversationRecoveryTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModelTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/HypothesisPriorBatchTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/SpeechRecoveryPolicyTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/SpeechTurnRecoveryTest.kt",
+        "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelComputeBudgetTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/ContinuumCockpitPresentationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiCinematicsTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/HollywoodFuiConstructTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/JarvisMotionTest.kt",
+        "app/src/test/java/at/heinz/deviceai/ui/JarvisRenderQualityTest.kt",
+        "app/src/uiTest/java/at/heinz/deviceai/AndroidOnDeviceSpeechRetryUiTest.kt",
+        "docs/CONTINUUM-EXPERIMENTE.json",
+        "docs/evidence/cognitive-pilots-20261108/compute/comparison.json",
+        "docs/evidence/cognitive-pilots-20261108/compute/tests.tap",
+        "docs/evidence/cognitive-pilots-20261108/context/baseline.tsv",
+        "docs/evidence/cognitive-pilots-20261108/context/candidate.tsv",
+        "docs/evidence/cognitive-pilots-20261108/context/comparison.json",
+        "docs/evidence/cognitive-pilots-20261108/context/green-junit.txt",
+        "docs/evidence/cognitive-pilots-20261108/context/red-junit.txt",
+        "docs/evidence/cognitive-pilots-20261108/fabric-baseline.tap",
+        "docs/evidence/cognitive-pilots-20261108/final-compute.txt",
+        "docs/evidence/cognitive-pilots-20261108/final-context.txt",
+        "docs/evidence/cognitive-pilots-20261108/final-reasoning.txt",
+        "docs/evidence/cognitive-pilots-20261108/final-verification.json",
+        "docs/evidence/cognitive-pilots-20261108/reasoning/ablation.tsv",
+        "docs/evidence/cognitive-pilots-20261108/reasoning/baseline-junit.txt",
+        "docs/evidence/cognitive-pilots-20261108/reasoning/baseline.tsv",
+        "docs/evidence/cognitive-pilots-20261108/reasoning/candidate.tsv",
+        "docs/evidence/cognitive-pilots-20261108/reasoning/comparison.json",
+        "docs/evidence/cognitive-pilots-20261108/reasoning/green-junit.txt",
+        "docs/evidence/cognitive-pilots-20261108/source-bindings.json",
+        "docs/evidence/fable51-fui-cinematics-20261108/README.md",
+        "docs/evidence/fable51-fui-cinematics-20261108/sheet-fold-close.png",
+        "docs/evidence/fable51-fui-cinematics-20261108/sheet-fold-open.png",
+        "docs/evidence/fable51-fui-cinematics-20261108/sheet-phone.png",
+        "docs/evidence/fable51-fui-cinematics-20261108/zoom-fold.png",
+        "docs/research/omega/CONTINUUM-COGNITIVE-PILOTS-20261108.md",
+        "docs/research/omega/CONTINUUM-PRIOR-BATCH-PILOT-20261108.md",
+        "docs/research/omega/CONTINUUM-VERIFIED-REUSE-PILOT-20261108.md",
+        "docs/research/omega/FABLE51-CODE51-FUI-CINEMATIC-HANDOFF-20261108.md",
+        "docs/research/omega/FABLE51-CODE51-P0-SPEECH-THERMAL-HANDOFF-20261108.md",
+        "docs/research/omega/SOL-CODE51-MASTER-INTEGRATION-20261108.md",
+        "scripts/android-jvm-stubs/LiteRtLmCompileStub.kt",
+        "scripts/continuum-context-pilot.sh",
+        "scripts/continuum-reasoning-pilot.sh",
+        "scripts/hollywood-fui-cinematics-preview.sh",
+        "tools/continuum-cognitive-pilots/ContextPilot.kt",
+        "tools/continuum-cognitive-pilots/ReasoningPilot.kt",
+        "tools/continuum-cognitive-pilots/admission-batch.kt",
+        "tools/continuum-cognitive-pilots/admission-sequential.kt",
+        "tools/continuum-cognitive-pilots/context-cases.tsv",
+        "tools/continuum-cognitive-pilots/measure-kotlin-pilots.py",
+        "tools/continuum-cognitive-pilots/reuse-protocol.json",
+        "tools/continuum-cognitive-pilots/verified-reuse-pilot.mjs",
+        "tools/continuum-cognitive-pilots/verified-reuse-pilot.test.mjs",
+        "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt"
+      ],
+      "productionFiles": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "donorBlob": "3426259b2df3323f2e155051c2c1aa7d47847dd7",
+          "currentBlob": "299bb83f9485fee8f34005d97d4964c5930a3456",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt",
+          "donorBlob": "6241210eb10f12574569dea8061cab1b7cf009c4",
+          "currentBlob": "6241210eb10f12574569dea8061cab1b7cf009c4",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt",
+          "donorBlob": "09c2fe70b5181952b64dc143bdcca1014f5f5ff9",
+          "currentBlob": "09c2fe70b5181952b64dc143bdcca1014f5f5ff9",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+          "donorBlob": "fcba518f3a4623f12a275e2efc5a016b46a191e6",
+          "currentBlob": "00ea011f016953b695b8faeaf9393b8b37af6120",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuousConversationMode.kt",
+          "donorBlob": "878ae493f95451f76f11677c89eea130501376ac",
+          "currentBlob": "a684feff574f8867ae10b8083b309c454790bb7b",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/HypothesisWorkspace.kt",
+          "donorBlob": "079415d5068849ee17f9bc5c97b7ad8f58278f3d",
+          "currentBlob": "079415d5068849ee17f9bc5c97b7ad8f58278f3d",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt",
+          "donorBlob": "ce11c6ac5f6ca2900b7a9147498997ca1b6f1137",
+          "currentBlob": "ce11c6ac5f6ca2900b7a9147498997ca1b6f1137",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechSession.kt",
+          "donorBlob": "edbfb156acfb01bc2281aa1b941b8f0e529bb71f",
+          "currentBlob": "edbfb156acfb01bc2281aa1b941b8f0e529bb71f",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/SpeechRecoveryPolicy.kt",
+          "donorBlob": "54c09365cc2913495bbd3e981eff7575030f6fb2",
+          "currentBlob": "54c09365cc2913495bbd3e981eff7575030f6fb2",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/SpeechTurnRecovery.kt",
+          "donorBlob": "c27b0a0edc183c720c396f3e9f21cfca76dffedf",
+          "currentBlob": "c27b0a0edc183c720c396f3e9f21cfca76dffedf",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+          "donorBlob": "b8b20749cc40d75c50eb422518cb6b348ea43554",
+          "currentBlob": "1ac0a4fe6c610d313b1b29bb6dd6beef288dea9f",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelComputeBudget.kt",
+          "donorBlob": "01208d3f35d42a82511581241edf71583b432dda",
+          "currentBlob": "dcc4591c5f34f58d25727f8c039f83291b01ab1d",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+          "donorBlob": "ed7b4307e09c36d528481a70b322df50c5575383",
+          "currentBlob": "afcbe6e6d121aee6489b02b873c11165f4c6a7fe",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiCinematics.kt",
+          "donorBlob": "996cc873de72b8663f9d5848c239fc2ea09e590b",
+          "currentBlob": "26b5b76c233a5c7f677a205db0d75e89d6dd392d",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiConstruct.kt",
+          "donorBlob": "889a672619f1edeb6811e5ff6815100a23cdde53",
+          "currentBlob": "5842dbfa08f0460c1bae2da6b517fa252e0bc3f9",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/HollywoodFuiStageOverlay.kt",
+          "donorBlob": "3eb768e2a49aab1aa6975bb95b3ce358a49ca019",
+          "currentBlob": "ff4dcd82b4bbc7e3211967a92cad415c3798e563",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitPanels.kt",
+          "donorBlob": "2fffa4d44082e57b4803afaa66f2fe4b856f6bcb",
+          "currentBlob": "a9f972b7da5f34494fbb87b993e5a33896bf6d05",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+          "donorBlob": "51fd5a5d26e161eff6b46481d59d4d6f4e8a8be3",
+          "currentBlob": "51fd5a5d26e161eff6b46481d59d4d6f4e8a8be3",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisRenderQuality.kt",
+          "donorBlob": "8fd28aebcfe03d94f30644a7871164bbd7a6fa84",
+          "currentBlob": "0564e698800e8d4edb2b3151d00b584aec69cd5c",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindow.kt",
+          "donorBlob": "b1ad235c44d169c05d1827ec48d9a157bd33d765",
+          "currentBlob": "5391ef68c60d1cbd79d8bb29ce8bc9d4faa0b99d",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisWorkWindowHost.kt",
+          "donorBlob": "592d4ac51e9cb88f84b6717aa54fc1b79f915cc1",
+          "currentBlob": "01b744e3e7834c736f84f20633c3d1a315208fa6",
+          "state": "EVOLVED"
+        }
+      ],
+      "nonProductionFiles": 61
+    },
+    {
+      "pr": 654,
+      "title": "Code 51 P1 (#639): Interne Cockpit-Ansichten per freier Sprache/Chat \u00f6ffnen \u2013 WIP / NOT DEVICE VERIFIED",
+      "head": "c61bf171e054153e9299b2c660364543f2b8f01c",
+      "base": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "comparisonBase": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntentTest.kt",
+        "docs/research/omega/FABLE51-CODE51-P1-INTERNAL-NAVIGATION-HANDOFF-20261108.md"
+      ],
+      "productionFiles": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "donorBlob": "9eba856058dc247dac8a0332fea5cc48bbcc7bba",
+          "currentBlob": "299bb83f9485fee8f34005d97d4964c5930a3456",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+          "donorBlob": "359c62ca3cca6c8fedf96b646625a308277bc6ec",
+          "currentBlob": "3e6485ae4af27812273a40b80fb6ea523d8ea87e",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt",
+          "donorBlob": "25d7155285a79d4ee872ecc452290b8413a63532",
+          "currentBlob": "7b0dc5d606248a017da760f0796a462a5cfc988b",
+          "state": "EVOLVED"
+        }
+      ],
+      "nonProductionFiles": 2
+    },
+    {
+      "pr": 656,
+      "title": "Code 51 P1 (#643): Websuche per Sprach-/Chatbefehl ohne Button (ALWAYS_ON/ASK/OFF) \u2013 WIP / NOT DEVICE VERIFIED",
+      "head": "1bbdab1af1072adf0896bf695b972ec54f17eef6",
+      "base": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "comparisonBase": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerResearchCommand.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerResearchCommandTest.kt",
+        "docs/research/omega/FABLE51-CODE51-P1-CHAT-WEB-RESEARCH-HANDOFF-20261108.md"
+      ],
+      "productionFiles": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "donorBlob": "bbe3fed30e0709bab9b734bbeb530d5cc1555318",
+          "currentBlob": "299bb83f9485fee8f34005d97d4964c5930a3456",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerResearchCommand.kt",
+          "donorBlob": "8e482e7d7ddc9b90b77e877199be511a046ee849",
+          "currentBlob": "beae7feb79ad7bbdc104ebae3036f4a1382bd70e",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+          "donorBlob": "d1e291fde30004d296e75e761ee3c7830ac5587c",
+          "currentBlob": "37c8fac19477c10df519e82887399f2a888c285a",
+          "state": "EVOLVED"
+        }
+      ],
+      "nonProductionFiles": 2
+    },
+    {
+      "pr": 657,
+      "title": "[Fable51][Code51][P1] #640 Fakt vs. Dialoganweisung trennen (Merke dir / Recall-Anzeige)",
+      "head": "b1117df179cbc92284d779399f83c381125bda43",
+      "base": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "comparisonBase": "473f79727e4b52509cc7d1af71e59b80ab9b6be5",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerFactMetaSeparator.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryPerspective.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerFactMetaSeparatorTest.kt",
+        "docs/research/omega/FABLE51-CODE51-P1-MEMORY-META-SEPARATION-HANDOFF-20261108.md"
+      ],
+      "productionFiles": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "donorBlob": "65087a0076b90a87e80431d0f7867663d83be8e8",
+          "currentBlob": "299bb83f9485fee8f34005d97d4964c5930a3456",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+          "donorBlob": "36c4dd89f09c1e7c392d73a3c39705c6d6b3652c",
+          "currentBlob": "e62d878f5d17a9c7db85eb1904f7f9e00157094a",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerFactMetaSeparator.kt",
+          "donorBlob": "6be9981975bf087bc3e08543f6fe2490f8f521de",
+          "currentBlob": "6be9981975bf087bc3e08543f6fe2490f8f521de",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryPerspective.kt",
+          "donorBlob": "c1a169edf820d2fb3e6b9bed5cc56d8080f2aa4e",
+          "currentBlob": "c1a169edf820d2fb3e6b9bed5cc56d8080f2aa4e",
+          "state": "IDENTICAL"
+        }
+      ],
+      "nonProductionFiles": 2
+    },
+    {
+      "pr": 658,
+      "title": "[WIP] Code51 reconciliation: single navigation/research entry (#654/#656/#657)",
+      "head": "f153758dfd19d1c12f6fe63b6c4c4bd1da95e4cb",
+      "base": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "comparisonBase": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerFactMetaSeparator.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/OwnerResearchCommand.kt",
+        "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryPerspective.kt",
+        "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ApprovedWebToolGateTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/ConversationResearchSingleEntryTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerFactMetaSeparatorTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntegrationTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntentTest.kt",
+        "app/src/test/java/at/heinz/deviceai/cognitive/OwnerResearchCommandTest.kt",
+        "docs/research/omega/FABLE51-CODE51-P1-CHAT-WEB-RESEARCH-HANDOFF-20261108.md",
+        "docs/research/omega/FABLE51-CODE51-P1-INTERNAL-NAVIGATION-HANDOFF-20261108.md",
+        "docs/research/omega/FABLE51-CODE51-P1-MEMORY-META-SEPARATION-HANDOFF-20261108.md",
+        "docs/research/omega/SOL-CODE51-MASTER-INTEGRATION-20261108.md"
+      ],
+      "productionFiles": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "donorBlob": "c7c52abdaaf6bc933b44d9ff57722ecb3ba57f5e",
+          "currentBlob": "299bb83f9485fee8f34005d97d4964c5930a3456",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+          "donorBlob": "740802ed861a66849f1eac95ad0b9ac7b2874a2f",
+          "currentBlob": "e62d878f5d17a9c7db85eb1904f7f9e00157094a",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt",
+          "donorBlob": "c58c5e8889863517978932426de36166a9c54d4c",
+          "currentBlob": "c58c5e8889863517978932426de36166a9c54d4c",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerAppLookupIntent.kt",
+          "donorBlob": "3da090bded341a403bcf7f5d46f34fe0c134d614",
+          "currentBlob": "3e6485ae4af27812273a40b80fb6ea523d8ea87e",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerFactMetaSeparator.kt",
+          "donorBlob": "6be9981975bf087bc3e08543f6fe2490f8f521de",
+          "currentBlob": "6be9981975bf087bc3e08543f6fe2490f8f521de",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerInternalNavigationIntent.kt",
+          "donorBlob": "9cf1ee5f0c9319304dac471a55aee904e3613b13",
+          "currentBlob": "7b0dc5d606248a017da760f0796a462a5cfc988b",
+          "state": "EVOLVED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerResearchCommand.kt",
+          "donorBlob": "beae7feb79ad7bbdc104ebae3036f4a1382bd70e",
+          "currentBlob": "beae7feb79ad7bbdc104ebae3036f4a1382bd70e",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt",
+          "donorBlob": "37c8fac19477c10df519e82887399f2a888c285a",
+          "currentBlob": "37c8fac19477c10df519e82887399f2a888c285a",
+          "state": "IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/OwnerMemoryPerspective.kt",
+          "donorBlob": "c1a169edf820d2fb3e6b9bed5cc56d8080f2aa4e",
+          "currentBlob": "c1a169edf820d2fb3e6b9bed5cc56d8080f2aa4e",
+          "state": "IDENTICAL"
+        }
+      ],
+      "nonProductionFiles": 11
+    },
+    {
+      "pr": 661,
+      "title": "[WIP][Astra] Holographic reference-fidelity measurement (VIS-REF-FIDELITY-1) \u2014 host-only, NOT_DEVICE_VERIFIED",
+      "head": "58c545aaefefb233371c92948ad1a9a002c7c004",
+      "base": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "comparisonBase": "cb11db2f967110680da92db8c0b07f01f3d2b47d",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-contact-sheet-half.png",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-fidelity.json",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-fold-glassend-high.png",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-fold-settled-high.png",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-provenance.txt",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/astra-v2-659-run.txt",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-contact-sheet-half.png",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-control-hue-rotated-180.png",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-fidelity.json",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-fold-glassend-high.png",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-fold-settled-high.png",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-provenance.txt",
+        "docs/evidence/astra-holo-reference-fidelity-20261108/fable-v2-653-run.txt",
+        "docs/research/omega/ASTRA-HOLO-REFERENCE-FIDELITY-HANDOFF-20261108.md",
+        "scripts/hollywood-fui-reference-fidelity.sh",
+        "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiCinematicsPreview.kt",
+        "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/HollywoodFuiReferenceFidelity.kt"
+      ],
+      "productionFiles": [],
+      "nonProductionFiles": 17
+    },
+    {
+      "pr": 668,
+      "title": "[Code51][CI] Register manual source-exact QA action on main (inert only)",
+      "head": "cb7650c40aec9caa3d7aa85da7eead4d918281b0",
+      "base": "52997ee3d94686add646d53fb11fd0b8d9e1e94f",
+      "comparisonBase": "52997ee3d94686add646d53fb11fd0b8d9e1e94f",
+      "ancestorOfCurrent": false,
+      "changedPaths": [
+        ".github/workflows/continuum-code50-github-qa.yml"
+      ],
+      "productionFiles": [],
+      "nonProductionFiles": 1
+    }
+  ],
+  "scope": "Twelve outstanding entries in the existing priority ledger; not every historical PR",
+  "device": "NOT_RUN",
+  "classificationNote": "EVOLVED means different current blob, not automatic equivalence; see historical-callsite-notes.md"
+}

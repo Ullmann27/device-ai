@@ -1,0 +1,38 @@
+id	part	kind	expectedKnown	correct	found	verifier	integrity	latencyUs	question64	expected64	actual64	sourceId	reason64
+b-main-01	main25	known-explicit	true	true	true	true	true	128498	V28gaXN0IElta2U/	QmF1dHplbg==	QmF1dHplbg==	blind-b-source	
+b-main-02	main25	known-explicit	true	true	true	true	true	5875	V28gd29obnQgRmFicmljZT8=	U3RyYWxzdW5k	U3RyYWxzdW5k	blind-b-source	
+b-main-03	main25	known-explicit	true	true	true	true	true	4654	V28gbGVidCBIZW5yaWtlPw==	UmF2ZW5zYnVyZw==	UmF2ZW5zYnVyZw==	blind-b-source	
+b-main-04	main25	known-explicit	true	true	true	true	true	8530	V28gc3RlaHQgWWFzZW1pbj8=	QW5zYmFjaA==	QW5zYmFjaA==	blind-b-source	
+b-main-05	main25	known-explicit	true	true	true	true	true	4213	V28gaXN0IEtpbGlhbj8=	Q2VsbGU=	Q2VsbGU=	blind-b-source	
+b-main-06	main25	known-explicit	true	true	true	true	true	4092	V28gd29obnQgUmFtb25hPw==	SW5nb2xzdGFkdA==	SW5nb2xzdGFkdA==	blind-b-source	
+b-main-07	main25	known-explicit	true	true	true	true	true	3125	V28gbGVidCBTaWx2YW4/	SGVpbGJyb25u	SGVpbGJyb25u	blind-b-source	
+b-main-08	main25	known-explicit	true	true	true	true	true	2676	V28gc3RlaHQgRGFuaWxvPw==	TmV1c3RhZHQ=	TmV1c3RhZHQ=	blind-b-source	
+b-main-09	main25	known-explicit	true	true	true	true	true	2490	V28gaXN0IEFsZXNzaWE/	QnV4dGVodWRl	QnV4dGVodWRl	blind-b-source	
+b-main-10	main25	known-explicit	true	true	true	true	true	2325	V28gd29obnQgQ2Fyb2xhPw==	V29sZnNidXJn	V29sZnNidXJn	blind-b-source	
+b-main-11	main25	known-explicit	true	true	true	true	true	2513	V28gbGVidCBIZW5kcmlrPw==	RWxtc2hvcm4=	RWxtc2hvcm4=	blind-b-source	
+b-main-12	main25	known-explicit	true	true	true	true	true	2654	V28gc3RlaHQgVml2aWFuYT8=	RnJlaWJlcmc=	RnJlaWJlcmc=	blind-b-source	
+b-main-13	main25	known-explicit	true	true	true	true	true	2546	V28gaXN0IFRhbWFyYT8=	QmFkIEtpc3Npbmdlbg==	QmFkIEtpc3Npbmdlbg==	blind-b-source	
+b-main-14	main25	known-explicit	true	true	true	true	true	2587	V28gd29obnQgUmVuYXRvPw==	TmV1LVVsbQ==	TmV1LVVsbQ==	blind-b-source	
+b-main-15	main25	known-explicit	true	true	true	true	true	2485	V28gbGVidCBGbG9yaWFuZT8=	U2Nod8OkYmlzY2ggSGFsbA==	U2Nod8OkYmlzY2ggSGFsbA==	blind-b-source	
+b-main-16	main25	known-explicit	true	true	true	true	true	2704	V28gc3RlaHQgSm9lbGxlPw==	U2Fua3QgQXVndXN0aW4=	U2Fua3QgQXVndXN0aW4=	blind-b-source	
+b-main-17	main25	known-explicit	true	true	true	true	true	1976	V28gaXN0IFNhbWlyYT8=	U29udGhvZmVu	U29udGhvZmVu	blind-b-source	
+b-main-18	main25	known-explicit	true	true	true	true	true	1711	V28gd29obnQgVG9yYmVuPw==	UmFkb2xmemVsbA==	UmFkb2xmemVsbA==	blind-b-source	
+b-main-19	main25	known-explicit	true	true	true	true	true	1957	V28gbGVidCBBbm5pa2E/	SGVyZm9yZA==	SGVyZm9yZA==	blind-b-source	
+b-main-20	main25	known-explicit	true	true	true	true	true	21139	V28gc3RlaHQgTGF1cmVudD8=	VmlsbGluZ2Vu	VmlsbGluZ2Vu	blind-b-source	
+b-main-21	main25	missing-entity	false	true	false	false	true	710	V28gd29obnQgRW1pbGlhbj8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-main-22	main25	missing-location	false	true	false	false	true	670	V28gaXN0IE9kZXR0ZT8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-main-23	main25	missing-relation	false	true	false	false	true	979	V28gbGVidCBTZXZlcmluPw==				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-main-24	main25	missing-entity	false	true	false	false	true	975	V28gc3RlaHQgTGVub3JlPw==				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-main-25	main25	missing-location	false	true	false	false	true	731	V28gd29obnQgSW5nYT8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-guard-01	guard12	anaphoric-revocation	false	true	false	false	true	1636	V28gd29obnQgSnVuaWE/				VkVSSUZJQ0FUSU9OX1JFSkVDVEVE
+b-guard-02	guard12	anaphoric-denial	false	true	false	false	true	1628	V28gbGVidCBBbnNlbG0/				VkVSSUZJQ0FUSU9OX1JFSkVDVEVE
+b-guard-03	guard12	quoted-evidence	false	true	false	false	true	2703	V28gd29obnQgUGlhPw==				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-guard-04	guard12	time-scope	false	true	false	false	true	1216	V28gbGVidCBEaWV0ZXI/				QU1CSUdVT1VTX1RJTUVfU0NPUEU=
+b-guard-05	guard12	interrogative-evidence	false	true	false	false	true	1266	V28gaXN0IE5pY28/				VkVSSUZJQ0FUSU9OX1JFSkVDVEVE
+b-guard-06	guard12	multiple-locations	false	true	false	false	true	1557	V28gd29obnQgSmFuaW5hPw==				VkVSSUZJQ0FUSU9OX1JFSkVDVEVE
+b-guard-07	guard12	standing-not-residence	false	true	false	false	true	533	V28gd29obnQgT3JsYW5kbz8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-guard-08	guard12	residence-not-presence	false	true	false	false	true	520	V28gaXN0IEFybWluPw==				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-guard-09	guard12	correction-without-time-resolver	false	true	false	false	true	1389	V28gd29obnQgRmVubmE/				VkVSSUZJQ0FUSU9OX1JFSkVDVEVE
+b-guard-10	guard12	reported-speech	false	true	false	false	true	1040	V28gbGVidCBKdXJpPw==				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-guard-11	guard12	hypothetical	false	true	false	false	true	550	V28gc3RlaHQgQW50b25pYT8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+b-guard-12	guard12	hyphen-subentity	false	true	false	false	true	1047	V28gaXN0IEJlbGE/				Tk9fU1VQUE9SVEVEX1NQQU4=

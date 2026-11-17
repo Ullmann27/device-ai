@@ -1,0 +1,151 @@
+TAP version 13
+# Subtest: learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+not ok 1 - learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+  ---
+  duration_ms: 6.602362
+  type: 'test'
+  location: '/workspace/device-ai-sol-max/.github/continuum/android-integration-wiring.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'Disconnected or unsupported code path: conversation identity survives recreation; explicit new chat clears baseline and shadow off the UI thread'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    ensure (file:///workspace/device-ai-sol-max/.github/continuum/android-integration-wiring.test.mjs:16:34)
+    TestContext.<anonymous> (file:///workspace/device-ai-sol-max/.github/continuum/android-integration-wiring.test.mjs:50:2)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+ok 2 - cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+  ---
+  duration_ms: 0.824675
+  type: 'test'
+  ...
+# Subtest: background consolidation records failure without losing interrupted source trials
+ok 3 - background consolidation records failure without losing interrupted source trials
+  ---
+  duration_ms: 0.165866
+  type: 'test'
+  ...
+# Subtest: experimental module is inspectable and not on any automatic model promotion path
+ok 4 - experimental module is inspectable and not on any automatic model promotion path
+  ---
+  duration_ms: 0.229812
+  type: 'test'
+  ...
+# Subtest: activity request codes are unique and every one has a result handler
+ok 5 - activity request codes are unique and every one has a result handler
+  ---
+  duration_ms: 4.660486
+  type: 'test'
+  ...
+# Subtest: scheduled offline job names the JobService declared in the manifest
+ok 6 - scheduled offline job names the JobService declared in the manifest
+  ---
+  duration_ms: 1.719526
+  type: 'test'
+  ...
+# Subtest: user-visible texts contain line breaks, not a literal backslash-n
+ok 7 - user-visible texts contain line breaks, not a literal backslash-n
+  ---
+  duration_ms: 7.355672
+  type: 'test'
+  ...
+# Subtest: learning-core and research store I/O stays off the UI thread in dialogs and chat input
+ok 8 - learning-core and research store I/O stays off the UI thread in dialogs and chat input
+  ---
+  duration_ms: 1.354433
+  type: 'test'
+  ...
+# Subtest: neural weights are saved by compare-and-swap and foreground practice can be stopped
+ok 9 - neural weights are saved by compare-and-swap and foreground practice can be stopped
+  ---
+  duration_ms: 0.265945
+  type: 'test'
+  ...
+# Subtest: startup bootstrap training stops with the activity and is retried later
+ok 10 - startup bootstrap training stops with the activity and is retried later
+  ---
+  duration_ms: 0.257483
+  type: 'test'
+  ...
+# Subtest: startup I/O off the UI thread and shell commands stop with their activity
+ok 11 - startup I/O off the UI thread and shell commands stop with their activity
+  ---
+  duration_ms: 1.529093
+  type: 'test'
+  ...
+# Subtest: local language model path is reachable: model center, loading, chat escalation and reasoning chain
+ok 12 - local language model path is reachable: model center, loading, chat escalation and reasoning chain
+  ---
+  duration_ms: 0.656506
+  type: 'test'
+  ...
+# Subtest: every area has a center reachable from the start screen; no demo buttons; experiments marked
+ok 13 - every area has a center reachable from the start screen; no demo buttons; experiments marked
+  ---
+  duration_ms: 3.221128
+  type: 'test'
+  ...
+# Subtest: Teamleader Android UI reports status without false success
+ok 14 - Teamleader Android UI reports status without false success
+  ---
+  duration_ms: 0.166778
+  type: 'test'
+  ...
+# Subtest: live model status does not revert the beginner cockpit to English
+ok 15 - live model status does not revert the beginner cockpit to English
+  ---
+  duration_ms: 0.555576
+  type: 'test'
+  ...
+# Subtest: model setup stays usable for beginners while preserving SHA-256 integrity
+ok 16 - model setup stays usable for beginners while preserving SHA-256 integrity
+  ---
+  duration_ms: 1.16391
+  type: 'test'
+  ...
+# Subtest: new visual start screen is local, accessible and honest about capabilities
+ok 17 - new visual start screen is local, accessible and honest about capabilities
+  ---
+  duration_ms: 0.672109
+  type: 'test'
+  ...
+# Subtest: neural training failures expose bounded diagnostics without claiming saved weights
+ok 18 - neural training failures expose bounded diagnostics without claiming saved weights
+  ---
+  duration_ms: 0.154439
+  type: 'test'
+  ...
+# Subtest: Wikipedia article research uses bounded authentic extracts and original citations
+ok 19 - Wikipedia article research uses bounded authentic extracts and original citations
+  ---
+  duration_ms: 0.314808
+  type: 'test'
+  ...
+# Subtest: Android-first Teamleader is scheduled, observable and serialized across background and chat
+ok 20 - Android-first Teamleader is scheduled, observable and serialized across background and chat
+  ---
+  duration_ms: 0.315399
+  type: 'test'
+  ...
+# Subtest: explicit M5 project planning command reaches reviewed builder without bypassing approval
+ok 21 - explicit M5 project planning command reaches reviewed builder without bypassing approval
+  ---
+  duration_ms: 0.429208
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 20
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 267.681062

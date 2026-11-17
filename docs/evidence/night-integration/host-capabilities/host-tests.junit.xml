@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="7B exact owner pin admits a bounded manifest with independently reviewed exact tuple" time="0.023871" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-7b.test.mjs"/>
+	<testcase name="resource profile is frozen and restricted to every exact pin field plus runtime hash" time="0.000443" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-7b.test.mjs"/>
+	<testcase name="7B uses the fixed Qwen ChatML serialization, unknown model does not" time="0.000472" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-7b.test.mjs"/>
+	<testcase name="7B total-job memory check rejects missing or oversized kernel bounds without caller fallback" time="0.000885" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-7b.test.mjs"/>
+	<testcase name="large header requires exact complete provenance, no caller file-size bypass" time="0.001356" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-7b.test.mjs"/>
+	<testcase name="fixed Docker CLI transport rejects mismatched weights before native launch, with no observation" time="0.002707" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-7b.test.mjs">
+		<skipped type="skipped" message="HOST_DOCKER_PROOF_NOT_RUN: fixed Docker client unavailable"/>
+	</testcase>
+	<testcase name="reviewed 7B registry never promotes altered binary/weights or caller-forged observations" time="0.000272" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-7b.test.mjs"/>
+	<testcase name="real launcher refuses an unavailable private job memory bound before any spawn" time="0.002480" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-cpu.test.mjs"/>
+	<testcase name="actual launcher gives exact private 7B profile two CPU seconds per remaining wall second" time="0.000619" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-cpu.test.mjs">
+		<skipped type="skipped" message="HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"/>
+	</testcase>
+	<testcase name="legacy launcher CPU budget remains one CPU second per wall second and ignores env override" time="0.010784" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-cpu.test.mjs"/>
+	<testcase name="resource profile clone or arbitrary caller budget cannot reach spawn" time="0.000532" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-cpu.test.mjs"/>
+	<testcase name="two-thread CPU allowance leaves the existing wall cancellation deadline unchanged" time="0.001540" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-cpu.test.mjs">
+		<skipped type="skipped" message="HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"/>
+	</testcase>
+	<testcase name="native termination returns bounded signal or numeric-exit code without output or inference receipt" time="0.003559" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-cpu.test.mjs"/>
+	<testcase name="fixed container CLI heap is bounded independently of model weights and native address space" time="0.038181" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-cpu.test.mjs"/>
+	<testcase name="actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit" time="0.000697" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-cpu.test.mjs">
+		<skipped type="skipped" message="HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"/>
+	</testcase>
+	<testcase name="normal caller cannot certify a serialized runtime observation" time="0.001249" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="coding CLI blocks endpoint-only configuration before any network/model call" time="0.055513" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="unapproved or absent local weights never produce runtime observations" time="0.001225" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="real host isolation admission matches independent capability and refuses without an observation" time="0.063208" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<!-- HOST_ISOLATION_CAPABILITY: {"tools":[{"file":"/usr/bin/bwrap","present":true,"executable":true,"admitted":false,"uid":65534,"mode":"755"},{"file":"/usr/bin/prlimit","present":true,"executable":true,"admitted":false,"uid":65534,"mode":"755"}],"namespace":{"available":false,"reason":"bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted","probe":{"command":"/usr/bin/bwrap","args":["&#45;&#45;unshare-all","&#45;&#45;cap-drop","ALL","&#45;&#45;die-with-parent","&#45;&#45;new-session","&#45;&#45;clearenv","&#45;&#45;ro-bind","/usr","/usr","&#45;&#45;ro-bind","/lib","/lib","&#45;&#45;ro-bind","/lib64","/lib64","&#45;&#45;proc","/proc","&#45;&#45;dev","/dev","&#45;&#45;tmpfs","/tmp","&#45;&#45;chdir","/tmp","&#45;&#45;","/usr/bin/true"],"status":1,"signal":null,"error":null,"stdout":"","stderr":"bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted\n"}},"launcher":{"available":false,"reason":"bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted","expectedFailure":"LOCAL_RUNTIME_PROCESS_FAILED"},"query":{"available":false,"reason":"/usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted","expectedFailure":"BLOCKED_LOCAL_ISOLATION_UNAVAILABLE"}} -->
+	<testcase name="actual namespace binds admitted descriptors and fixture output; never inference evidence" time="0.000335" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="altered model/runtime, unsafe executable and mismatched request cannot execute" time="0.043725" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="deadline cancels actual isolated process with bounded return" time="0.000263" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="STOP cancels actual isolated process and leaves no trusted observation" time="0.000183" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="malformed/oversized output and missing generation counters are rejected" time="0.000161" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="sandbox exposes no checkout, HOME, network, secret or configurable shell" time="0.000864" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="actual FD mount retains selected inode across model path replacement" time="0.000115" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="prompt evaluation counter alone cannot masquerade as output generation" time="0.000068" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="inference sandbox denies host files, external interfaces, secrets and writable model" time="0.000062" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="seccomp denies fork and rlimits bound native memory/descriptor budgets" time="0.000057" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="changing model during actual execution invalidates otherwise valid output" time="0.000071" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="production provider rejects synthetic fixture receipt even when transport MAC is valid" time="0.000078" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="self-asserted inference flag is rejected instead of upgraded or accepted" time="0.080435" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="native worker threads remain permitted while process creation stays denied" time="0.000116" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="unavailable isolation launcher fails closed and creates no observation" time="0.048141" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="integration strict observation option rejects injected unobserved provider replies" time="0.064370" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="integration technical recall enters prompt as bounded untrusted data within context budget" time="0.065768" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="integration malformed recall and strict remote selection fail before transport" time="0.047382" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind" time="0.000370" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="genuine admission registry rejects unknown model/runtime tuple and caller assertions" time="0.000553" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs"/>
+	<testcase name="invalid model JSON retains authenticated process observation without a candidate" time="0.000108" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<testcase name="provider retains authenticated rejected-response observation and consumed durable budget" time="0.000246" classname="test" file="/workspace/scratch/391c0f6de827/device-ai/scripts/continuum-local-model-observation.test.mjs">
+		<skipped type="skipped" message="HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"/>
+	</testcase>
+	<!-- tests 41 -->
+	<!-- suites 0 -->
+	<!-- pass 23 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 18 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 636.969624 -->
+</testsuites>

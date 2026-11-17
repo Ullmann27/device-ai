@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:28:34" hostname="5268aff5350a" time="0.005">
+  <properties/>
+  <testcase name="everyHeaderAndActionHasUnscaledFortyEightDpTouchArea" classname="at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest" time="0.002"/>
+  <testcase name="heroAndClickableCardsNeverIntersectAndAllRemainReachable" classname="at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

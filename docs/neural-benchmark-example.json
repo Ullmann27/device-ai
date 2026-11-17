@@ -1,0 +1,387 @@
+{
+  "description": "Three resumed offline rounds; small authored audit excluded from selection.",
+  "baseline": {
+    "version": 1,
+    "modelHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+    "updates": 0,
+    "rounds": 0,
+    "accepted": 0,
+    "paused": false,
+    "replay": 0,
+    "audit": {
+      "intent": {
+        "loss": 0.693071596248431,
+        "correct": 11,
+        "total": 20
+      },
+      "semantic": {
+        "loss": 0.6931314273046243,
+        "correct": 11,
+        "total": 20
+      }
+    },
+    "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
+    "lastDecision": "NOT_TRAINED"
+  },
+  "active": {
+    "version": 1,
+    "modelHash": "4947838b85557eb35b4fe12c88b7eb6b1bf1393833b5f5bfd60bd0e797c50462",
+    "updates": 13000,
+    "rounds": 3,
+    "accepted": 2,
+    "paused": false,
+    "replay": 0,
+    "audit": {
+      "intent": {
+        "loss": 0.08452982633326397,
+        "correct": 20,
+        "total": 20
+      },
+      "semantic": {
+        "loss": 0.69028938860685,
+        "correct": 13,
+        "total": 20
+      }
+    },
+    "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
+    "lastDecision": "VALIDATION_REGRESSION"
+  },
+  "rounds": [
+    {
+      "version": 1,
+      "round": 1,
+      "at": 0,
+      "steps": 12000,
+      "selectedSteps": 12000,
+      "sourceUpdates": 0,
+      "accepted": true,
+      "reason": "MULTITASK_GATE_PASSED",
+      "baselineHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+      "candidateHash": "ad85346788f769d99f9c897940632a5b0c4c820dca480e2cc53ec0606f31e1c7",
+      "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
+      "validationBefore": {
+        "intent": {
+          "loss": 0.6932131216385469,
+          "correct": 9,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6931030640142962,
+          "correct": 11,
+          "total": 20
+        }
+      },
+      "validationAfter": {
+        "intent": {
+          "loss": 0.1513148209768212,
+          "correct": 19,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6938468830574402,
+          "correct": 13,
+          "total": 20
+        }
+      },
+      "retentionBefore": {
+        "intent": {
+          "loss": 0.6932604467089992,
+          "correct": 15,
+          "total": 40
+        },
+        "semantic": {
+          "loss": 0.6930470870957309,
+          "correct": 21,
+          "total": 32
+        }
+      },
+      "retentionAfter": {
+        "intent": {
+          "loss": 0.013951193597046413,
+          "correct": 40,
+          "total": 40
+        },
+        "semantic": {
+          "loss": 0.6872487544230759,
+          "correct": 22,
+          "total": 32
+        }
+      },
+      "androidBefore": {
+        "intent": {
+          "loss": 0.6931840320832243,
+          "correct": 4,
+          "total": 8
+        },
+        "semantic": {
+          "loss": 0.6930862517894424,
+          "correct": 3,
+          "total": 6
+        }
+      },
+      "androidAfter": {
+        "intent": {
+          "loss": 0.30847615708925274,
+          "correct": 7,
+          "total": 8
+        },
+        "semantic": {
+          "loss": 0.6968678513184156,
+          "correct": 3,
+          "total": 6
+        }
+      },
+      "auditBefore": {
+        "intent": {
+          "loss": 0.693071596248431,
+          "correct": 11,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6931314273046243,
+          "correct": 11,
+          "total": 20
+        }
+      },
+      "auditAfter": {
+        "intent": {
+          "loss": 0.09060693870126747,
+          "correct": 20,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6907144723343511,
+          "correct": 13,
+          "total": 20
+        }
+      },
+      "auditUsedForSelection": false,
+      "benchmarkKind": "AUTHORED_SMALL_HOLDOUT_NOT_EXTERNAL_CERTIFICATION",
+      "replayExamples": 0
+    },
+    {
+      "version": 1,
+      "round": 2,
+      "at": 0,
+      "steps": 12000,
+      "selectedSteps": 1000,
+      "sourceUpdates": 0,
+      "accepted": true,
+      "reason": "MULTITASK_GATE_PASSED",
+      "baselineHash": "ad85346788f769d99f9c897940632a5b0c4c820dca480e2cc53ec0606f31e1c7",
+      "candidateHash": "4947838b85557eb35b4fe12c88b7eb6b1bf1393833b5f5bfd60bd0e797c50462",
+      "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
+      "validationBefore": {
+        "intent": {
+          "loss": 0.1513148209768212,
+          "correct": 19,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6938468830574402,
+          "correct": 13,
+          "total": 20
+        }
+      },
+      "validationAfter": {
+        "intent": {
+          "loss": 0.14673743029583777,
+          "correct": 19,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6938375419512928,
+          "correct": 13,
+          "total": 20
+        }
+      },
+      "retentionBefore": {
+        "intent": {
+          "loss": 0.013951193597046413,
+          "correct": 40,
+          "total": 40
+        },
+        "semantic": {
+          "loss": 0.6872487544230759,
+          "correct": 22,
+          "total": 32
+        }
+      },
+      "retentionAfter": {
+        "intent": {
+          "loss": 0.011766933695626172,
+          "correct": 40,
+          "total": 40
+        },
+        "semantic": {
+          "loss": 0.6856728664648329,
+          "correct": 22,
+          "total": 32
+        }
+      },
+      "androidBefore": {
+        "intent": {
+          "loss": 0.30847615708925274,
+          "correct": 7,
+          "total": 8
+        },
+        "semantic": {
+          "loss": 0.6968678513184156,
+          "correct": 3,
+          "total": 6
+        }
+      },
+      "androidAfter": {
+        "intent": {
+          "loss": 0.30402162768314617,
+          "correct": 7,
+          "total": 8
+        },
+        "semantic": {
+          "loss": 0.6972354357293695,
+          "correct": 3,
+          "total": 6
+        }
+      },
+      "auditBefore": {
+        "intent": {
+          "loss": 0.09060693870126747,
+          "correct": 20,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6907144723343511,
+          "correct": 13,
+          "total": 20
+        }
+      },
+      "auditAfter": {
+        "intent": {
+          "loss": 0.08452982633326397,
+          "correct": 20,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.69028938860685,
+          "correct": 13,
+          "total": 20
+        }
+      },
+      "auditUsedForSelection": false,
+      "benchmarkKind": "AUTHORED_SMALL_HOLDOUT_NOT_EXTERNAL_CERTIFICATION",
+      "replayExamples": 0
+    },
+    {
+      "version": 1,
+      "round": 3,
+      "at": 0,
+      "steps": 12000,
+      "selectedSteps": 0,
+      "sourceUpdates": 0,
+      "accepted": false,
+      "reason": "VALIDATION_REGRESSION",
+      "baselineHash": "4947838b85557eb35b4fe12c88b7eb6b1bf1393833b5f5bfd60bd0e797c50462",
+      "candidateHash": "a50760f6b55581a5a25f6349b0506e8a213d3a28641b7caa226698b1159921b2",
+      "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
+      "validationBefore": {
+        "intent": {
+          "loss": 0.14673743029583777,
+          "correct": 19,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6938375419512928,
+          "correct": 13,
+          "total": 20
+        }
+      },
+      "validationAfter": {
+        "intent": {
+          "loss": 0.1112781646650034,
+          "correct": 20,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.693932877061545,
+          "correct": 12,
+          "total": 20
+        }
+      },
+      "retentionBefore": {
+        "intent": {
+          "loss": 0.011766933695626172,
+          "correct": 40,
+          "total": 40
+        },
+        "semantic": {
+          "loss": 0.6856728664648329,
+          "correct": 22,
+          "total": 32
+        }
+      },
+      "retentionAfter": {
+        "intent": {
+          "loss": 0.0034939932381805616,
+          "correct": 40,
+          "total": 40
+        },
+        "semantic": {
+          "loss": 0.6384489023370759,
+          "correct": 27,
+          "total": 32
+        }
+      },
+      "androidBefore": {
+        "intent": {
+          "loss": 0.30402162768314617,
+          "correct": 7,
+          "total": 8
+        },
+        "semantic": {
+          "loss": 0.6972354357293695,
+          "correct": 3,
+          "total": 6
+        }
+      },
+      "androidAfter": {
+        "intent": {
+          "loss": 0.2517134453892126,
+          "correct": 8,
+          "total": 8
+        },
+        "semantic": {
+          "loss": 0.7111049500183703,
+          "correct": 3,
+          "total": 6
+        }
+      },
+      "auditBefore": {
+        "intent": {
+          "loss": 0.08452982633326397,
+          "correct": 20,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.69028938860685,
+          "correct": 13,
+          "total": 20
+        }
+      },
+      "auditAfter": {
+        "intent": {
+          "loss": 0.06852243759915846,
+          "correct": 20,
+          "total": 20
+        },
+        "semantic": {
+          "loss": 0.6812404386715036,
+          "correct": 12,
+          "total": 20
+        }
+      },
+      "auditUsedForSelection": false,
+      "benchmarkKind": "AUTHORED_SMALL_HOLDOUT_NOT_EXTERNAL_CERTIFICATION",
+      "replayExamples": 0
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:25" hostname="b50d54a1ac03" time="0.105">
+  <properties/>
+  <testcase name="fallsBackOnSearchFailure" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.003"/>
+  <testcase name="irrelevantSearchHitsCauseTopicFocusedWikipediaFallback" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.072"/>
+  <testcase name="revocationWhileFallbackIsRunningDiscardsItsSources" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.005"/>
+  <testcase name="fallbackFailureIsVisibleAndRevocationStopsBothProviders" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.003"/>
+  <testcase name="interruptedPrimarySearchDoesNotStartFallbackAndPreservesInterruption" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.001"/>
+  <testcase name="parsesPublicSearchResultAndDoesNotUseFallback" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.004"/>
+  <testcase name="rssRejectsExternalEntitiesAndProviderNavigationLinks" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.002"/>
+  <testcase name="solarQuestionFiltersDictionaryNoiseAndSearchesTheRealTopic" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.007"/>
+  <testcase name="rejectsLocalHostsAndNonHttpsResults" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.001"/>
+  <testcase name="doesNotExtractUrlsFromPlainTextOrScripts" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.001"/>
+  <testcase name="capsDistinctSearchSources" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.002"/>
+  <testcase name="fallbackCancellationPropagatesToItsCaller" classname="at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

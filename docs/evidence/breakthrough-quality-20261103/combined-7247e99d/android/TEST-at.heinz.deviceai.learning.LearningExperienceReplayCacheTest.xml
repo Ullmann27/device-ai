@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:45:56" hostname="5268aff5350a" time="1.996">
+  <properties/>
+  <testcase name="concurrentReadersAndForeignWriterNeverMixFingerprintAndRecords" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.431"/>
+  <testcase name="deletedAndRecreatedStoreCannotReturnOldReplay" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.037"/>
+  <testcase name="legacyWarmReadDetectsSameLengthSameMtimeStatusChange" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.024"/>
+  <testcase name="coldWarmAndChangingLimitsMatchFullOracleAt4096Records" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="1.242"/>
+  <testcase name="warmNegativeResultStillRejectsSameSizeSameMtimeUnrelatedSegmentCorruption" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.021"/>
+  <testcase name="returnedListsCannotMutateLaterReplaySelections" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.015"/>
+  <testcase name="correctionAndReconfirmationInvalidateReplayWithoutLosingHistory" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.075"/>
+  <testcase name="warmPositiveResultRejectsMissingManifestAndSegment" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.044"/>
+  <testcase name="foreignWriterRevocationAndLocalNoopNeverResurrectCachedRecord" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.036"/>
+  <testcase name="emptyTypeCacheAndTypeSwitchCannotHideNewRecords" classname="at.heinz.deviceai.learning.LearningExperienceReplayCacheTest" time="0.066"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

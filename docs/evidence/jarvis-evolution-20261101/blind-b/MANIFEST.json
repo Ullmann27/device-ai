@@ -1,0 +1,23 @@
+{
+  "README.md": "595bc7a6fccfc1e2f3b6f6decdce1fd99a748e3e393fdb380db40fe1a98010b5",
+  "corpus/FIXTURE.sha256": "f61fea26141b31eb899636bbedb7057d9125ada03cc7d5eb49e256b7b14f3a7f",
+  "corpus/STATUS.txt": "36f730c17cbea29ef30fc6942d84e0d27411ee5760f6cec765ffd0119955a754",
+  "corpus/fixture.json": "4a8314061ca589d19b5043a4ef48869534b2ff8387e7ae787c143117dbb1ae4f",
+  "results/PROVENANCE.json": "5a3c8fcd2f86acb5f060cdefdb544dfa17db86ef012d4aacf18e38650f0eb51b",
+  "results/SUMMARY.json": "f74fca0b8b38728a61b391e8a44a88a69ec473a005cdc6797c81aea75fcb4260",
+  "results/all-failures.json": "35b9d7535a23187fc5b20e99b0329c11e83d200653dfca5aae2b6acabc663409",
+  "results/baseline-first.tsv": "b4148260dc84fd2ee17392b170c31f22777f28dd50027e8d176156e6a24ce961",
+  "results/confidence-and-paired.json": "ed3ef20834439a23242f3002241f63284f4f7821e9504a0c514b8a61ff9515e9",
+  "results/final-probe-first.tsv": "3f26aba5aeb3ce0591c96126bfc6f015bddc937ef7f5a9c45446a54b6bc332da",
+  "results/learned-first.tsv": "2e9a0ef189aeb56254d0969fbcd120e1f722c479cc7f17718868fb2815eebc4d",
+  "results/learned-read-only-check.txt": "c91b96c21dfe4696b33ed2007e762c8da35d72de203b6923d860510e85044936",
+  "sources/baseline/EvidenceBoundNaturalLocationProbe.kt": "7095b9273d794cb4f7375ab8879c7c0ea43f2dde1494a11c70ffdc694568ff83",
+  "sources/candidate/EvidenceBoundNaturalLocationProbe.kt": "4d94ca8f217c22c0300e7cfa17b2699a4c280a42a356b4ac1b1921845b6190d9",
+  "sources/learned/ContinuumResidualSpanCore.kt": "daf65ff935390f02684aec4264985435c00db8c16a976e4cc71d0db843762bab",
+  "sources/learned/EvidenceBoundNaturalLocationProbe.kt": "4d94ca8f217c22c0300e7cfa17b2699a4c280a42a356b4ac1b1921845b6190d9",
+  "sources/learned/VerifiedLocationSpanResearch.kt": "d362af0ec109e7e746879dc44ff70767e57816a7f410c1a84fa4944f586cf205",
+  "tools/BlindDataset.kt": "0674768f8b905c6075c5fcb13a03de88623cd598b445e7aed6799e0d015ecbe1",
+  "tools/BlindProbeHarness.kt": "8e4729068f803d0e6331440ab450309a7a28d9f38cc05b6038160ee5b5922532",
+  "tools/LearnedBlindHarness.kt": "5d89eaf8be1e0338eb3b893bc3d7ce6cc969edb6f8724f135a74835f42fb391d",
+  "tools/replay.sh": "3654cc26a0bd647db2f25dadfe50ac1656d0fa67d3f1bc93517c04087f789099"
+}

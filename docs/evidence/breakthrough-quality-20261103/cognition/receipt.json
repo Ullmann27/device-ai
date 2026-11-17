@@ -1,0 +1,42 @@
+{
+  "fixtureSha256": "633a5edaa8cf576312591662f54c7e870910ba504223dba4430f0cdfc300b571",
+  "runnerSha256": "9d00f2e26150a4b872ff22231cf4028f3cc58f7417cc73499a3773db85189bae",
+  "runs": [
+    {
+      "label": "baseline",
+      "step": "compile",
+      "exit": 0,
+      "seconds": 6.620377459999872
+    },
+    {
+      "label": "baseline",
+      "step": "execute",
+      "exit": 0,
+      "seconds": 0.19532635299992762
+    },
+    {
+      "label": "candidate",
+      "step": "compile",
+      "exit": 0,
+      "seconds": 6.2671295800000735
+    },
+    {
+      "label": "candidate",
+      "step": "execute",
+      "exit": 0,
+      "seconds": 0.18834701900004802
+    }
+  ],
+  "baseline": {
+    "sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+    "sources": {
+      "/workspace/qa-cognition-holdout-fresh/baseline/OwnerStatementTimeline.kt": "cacf4f226e9b13555a7e49bf9a6fc36b41f56a58a8a20608111de9dda3b884d1"
+    }
+  },
+  "candidate": {
+    "sha": "107a7bb0ce680ad0c362b4226308942aa0dfaaec",
+    "sources": {
+      "/workspace/qa-cognition-holdout-fresh/candidate/OwnerStatementTimeline.kt": "375173118c83a9568610c3ad03742109317dadcdba238461f5a608ff6000dd03"
+    }
+  }
+}

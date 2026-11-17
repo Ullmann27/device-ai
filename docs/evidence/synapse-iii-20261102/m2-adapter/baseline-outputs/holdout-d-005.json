@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-005:s1",
+    "decision": "SPAN",
+    "sha256": "ba68bb7eec0a9265f132a078d3169a9a440a1a9f4e06b104c3fe17fc6fbc5ad3",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDapelani",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-005:s1",
+    "decision": "SPAN",
+    "sha256": "ba68bb7eec0a9265f132a078d3169a9a440a1a9f4e06b104c3fe17fc6fbc5ad3",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDapelani",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-005:s1",
+    "decision": "SPAN",
+    "sha256": "ba68bb7eec0a9265f132a078d3169a9a440a1a9f4e06b104c3fe17fc6fbc5ad3",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDapelani",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 66.848911
+}

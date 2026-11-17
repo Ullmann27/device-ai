@@ -1,0 +1,24 @@
+  public void setParameter(java.lang.String, boolean);
+    Code:
+       0: aload_0
+       1: invokevirtual #55                 // Method getNativeObject:()J
+       4: aload_1
+       5: iload_2
+       6: invokestatic  #60                 // Method nSetParameterBool:(JLjava/lang/String;Z)V
+       9: return
+
+  public void setParameter(java.lang.String, float);
+    Code:
+       0: aload_0
+  public void setParameter(java.lang.String, float, float);
+    Code:
+       0: aload_0
+       1: invokevirtual #55                 // Method getNativeObject:()J
+       4: aload_1
+       5: fload_2
+       6: fload_3
+       7: invokestatic  #76                 // Method nSetParameterFloat2:(JLjava/lang/String;FF)V
+      10: return
+
+  public void setParameter(java.lang.String, int, int);
+    Code:

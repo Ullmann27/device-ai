@@ -1,0 +1,29 @@
+{
+  "pypiMetadata": "https://pypi.org/pypi/litert-lm-api/0.18.0/json",
+  "filename": "litert_lm_api-0.18.0-py3-none-manylinux_2_27_x86_64.whl",
+  "url": "https://files.pythonhosted.org/packages/c9/8f/eb7a5203be1d48440c6b8d6e6382c3f744dd6d338fe400555718b4d695a1/litert_lm_api-0.18.0-py3-none-manylinux_2_27_x86_64.whl",
+  "sha256": "b64e2cf6d7dcb90ff094b74af595cc5d53faa07e0889f967d15df8d3e696b53c",
+  "bytes": 47051760,
+  "license": "Apache-2.0",
+  "projectUrls": {
+    "Homepage": "https://github.com/google-ai-edge/LiteRT-LM"
+  },
+  "files": [
+    "litert_lm/__init__.py",
+    "litert_lm/_ffi.py",
+    "litert_lm/_messages.py",
+    "litert_lm/benchmark.py",
+    "litert_lm/conversation.py",
+    "litert_lm/embedding_engine.py",
+    "litert_lm/engine.py",
+    "litert_lm/interfaces.py",
+    "litert_lm/liblitert-lm.so",
+    "litert_lm/model_info.py",
+    "litert_lm/session.py",
+    "litert_lm/tools.py",
+    "litert_lm/utils.py",
+    "litert_lm_api-0.18.0.dist-info/WHEEL",
+    "litert_lm_api-0.18.0.dist-info/METADATA",
+    "litert_lm_api-0.18.0.dist-info/RECORD"
+  ]
+}

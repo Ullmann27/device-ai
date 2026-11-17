@@ -1,0 +1,19 @@
+✔ genuine RED→GREEN chain is VERIFIED from re-executed tests and bound to the receipt bytes (376.610743ms)
+✔ patch mode (CCC1 repair): base fails, base+patch passes, tampered patch is rejected (384.045837ms)
+✔ executor coverage rejects missing in commit and patch modes (688.793526ms)
+✔ executor coverage rejects renamed in commit and patch modes (700.417676ms)
+✔ executor coverage rejects skipped in commit and patch modes (640.411725ms)
+✔ executor coverage rejects todo in commit and patch modes (621.643095ms)
+✔ executor coverage rejects suite in commit and patch modes (563.596541ms)
+✔ executor coverage rejects duplicate in commit and patch modes (538.973969ms)
+✔ executor coverage rejects reordered in commit and patch modes (545.723964ms)
+✔ executor coverage rejects skipType in commit and patch modes (713.347303ms)
+✔ Delta follow-up preserves omitted optional legacy metadata and unique aliases (707.566147ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6590.616483

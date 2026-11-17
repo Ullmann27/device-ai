@@ -1,0 +1,8 @@
+b95858c103243ec921c1de9c8fb9ae8da0e88c29
+?? docs/evidence/momega1/android/green-final/
+?? docs/evidence/momega1/android/manifest.json
+?? docs/evidence/momega1/android/node-final.txt
+?? docs/evidence/momega1/android/red-cancel-association/
+?? docs/evidence/momega1/android/red-cancel-target/
+?? docs/evidence/momega1/android/red-snapshot/
+76cb675c6bedb1cd2caf93b484f0120a43f700f85b77947bc3b87399c8577e62  /workspace/momega1-android-review/tools/momega1-android-review/IndependentTypedAuthorizationUiTest.kt

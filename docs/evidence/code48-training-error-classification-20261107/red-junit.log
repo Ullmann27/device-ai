@@ -1,0 +1,15 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=43107 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=43107 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+CASE at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest#realStorageFailureAfterDeadlineRemainsFailedAndRetryable
+.Intent = Intent { act=android.intent.action.BATTERY_CHANGED (has extras) }; Matching wrappers: []
+E
+Time: 1.802
+There was 1 failure:
+1) realStorageFailureAfterDeadlineRemainsFailedAndRetryable(at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest)
+org.junit.ComparisonFailure: An expired budget must not hide a real I/O failure expected:<[FAIL]ED> but was:<[DEFERR]ED>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at at.heinz.deviceai.learning.ContinuumTrainingCancellationUiTest.realStorageFailureAfterDeadlineRemainsFailedAndRetryable(ContinuumTrainingCancellationUiTest.kt:152)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+TOTAL tests=1 failures=1

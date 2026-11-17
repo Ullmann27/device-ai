@@ -1,0 +1,33 @@
+id	split	expected	actual	benefits	pass
+dev-modal	DEV	true	false	false	false
+dev-imperative	DEV	true	false	false	false
+dev-plain	DEV	true	true	true	true
+dev-formal	DEV	false	false	false	true
+hold-time	HOLDOUT	true	false	false	false
+hold-causal	HOLDOUT	true	false	false	false
+hold-past	HOLDOUT	true	false	false	false
+hold-conditional	HOLDOUT	true	false	false	false
+hold-translate	HOLDOUT	true	false	false	false
+hold-compare	HOLDOUT	true	false	false	false
+hold-pronoun	HOLDOUT	true	false	false	false
+hold-future	HOLDOUT	true	false	false	false
+hold-negative-question	HOLDOUT	true	false	false	false
+hold-recipient	HOLDOUT	true	false	false	false
+hold-location	HOLDOUT	true	false	false	false
+hold-original	HOLDOUT	true	true	true	true
+negative-formal	NEGATIVE	false	false	false	true
+negative-formal-object	NEGATIVE	false	false	false	true
+negative-name	NEGATIVE	false	false	false	true
+negative-definition	NEGATIVE	false	false	false	true
+negative-prefix-definition	NEGATIVE	false	false	false	true
+negative-clock	NEGATIVE	false	false	false	true
+negative-hello	NEGATIVE	false	false	false	true
+negative-embedded	NEGATIVE	false	false	false	true
+METRICS wall_ns,cpu_ns,accepted; each sample = 2400 routing calls
+19694520,18989817,200
+25486249,18470029,200
+13474946,13007468,200
+9263524,7442307,200
+7042636,6742507,200
+6676913,6295434,200
+7004300,6094376,200

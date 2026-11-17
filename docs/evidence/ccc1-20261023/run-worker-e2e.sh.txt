@@ -1,0 +1,9 @@
+# CCC1 worker, first real run (23.10.2026, 07:46-07:52 UTC). Commands as executed (copied from the session log).
+S=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad
+# 1) local clone of the working branch, three owner goals
+rm -rf $S/e2e && mkdir -p $S/e2e/home && git clone -q --branch opus/continuum-intelligence-next-20261023 /home/user/device-ai $S/e2e/device-ai && cd $S/e2e/device-ai && git log --oneline -1 && export HOME=$S/e2e/home && CLI=.github/continuum/ccc1-cli.mjs && node $CLI submit --project . --state $S/e2e/state --goal 'Normalisiere einen Titel für den Dublettenvergleich: ("abc") → "abc" und ("Hallo Welt") → "hallo welt".' && node $CLI submit --project . --state $S/e2e/state --goal 'Erzeuge die kanonische JSON-Schreibweise eines Werts: ("x") → "\"x\"", (5) → "5" und (true) → "true".' && node $CLI submit --project . --state $S/e2e/state --goal 'Finde die Funktion, die Kotlin-Schlüsselwörter erkennt.' && node $CLI status --state $S/e2e/state
+# 2) the existing local loop, four cycles
+cd $S/e2e/device-ai && export HOME=$S/e2e/home && { echo "start=$(date -u +%FT%TZ) commit=$(git rev-parse --short HEAD)"; timeout 1500 node .github/continuum/ccc1-cli.mjs loop --project . --state $S/e2e/state --cycles 4 --interval 1 2>&1; echo "exit=$? end=$(date -u +%FT%TZ)"; node .github/continuum/ccc1-cli.mjs status --state $S/e2e/state; git status --porcelain | head -5; echo "(clean checkout above if empty)"; } > $S/e2e/loop-run.txt 2>&1
+# 3) afterwards: the canonical case probed directly (v1 probe) - result:
+# [[".github/continuum/ccc1-envelope.mjs#canonical",{"matched":0,"total":3,"errors":3,"firstError":"ERR_ACCESS_DENIED"}],
+#  [".github/continuum/development-backlog.mjs#canonical",{"matched":3,"total":3,"errors":0,"firstError":null}]]

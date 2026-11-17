@@ -1,0 +1,208 @@
+TAP version 13
+# Subtest: no new Flutter dependency and existing native layout remains authoritative
+ok 1 - no new Flutter dependency and existing native layout remains authoritative
+  ---
+  duration_ms: 2.798285
+  type: 'test'
+  ...
+# Subtest: scanline effect runs in draw pass, never as an input-intercepting view
+ok 2 - scanline effect runs in draw pass, never as an input-intercepting view
+  ---
+  duration_ms: 0.62264
+  type: 'test'
+  ...
+# Subtest: background glows behind live cards, do not obscure labels or inflate telemetry
+ok 3 - background glows behind live cards, do not obscure labels or inflate telemetry
+  ---
+  duration_ms: 0.534364
+  type: 'test'
+  ...
+# Subtest: all existing cockpit destinations remain connected to owner callbacks
+ok 4 - all existing cockpit destinations remain connected to owner callbacks
+  ---
+  duration_ms: 1.525864
+  type: 'test'
+  ...
+# Subtest: system gauges show only measured values and explain unknown GPU
+ok 5 - system gauges show only measured values and explain unknown GPU
+  ---
+  duration_ms: 0.805419
+  type: 'test'
+  ...
+# Subtest: device storage legend does not present unidentified data as measured system bytes
+ok 6 - device storage legend does not present unidentified data as measured system bytes
+  ---
+  duration_ms: 0.512787
+  type: 'test'
+  ...
+# Subtest: positive measured event deltas use green in both form factors
+ok 7 - positive measured event deltas use green in both form factors
+  ---
+  duration_ms: 0.530608
+  type: 'test'
+  ...
+# Subtest: both phone and Fold storage cards show compact legend without losing measured category names
+ok 8 - both phone and Fold storage cards show compact legend without losing measured category names
+  ---
+  duration_ms: 0.800275
+  type: 'test'
+  ...
+# Subtest: Device AI quick actions are exclusive to Continuum and not to unrelated apps
+ok 9 - Device AI quick actions are exclusive to Continuum and not to unrelated apps
+  ---
+  duration_ms: 1.948649
+  type: 'test'
+  ...
+# Subtest: Every cockpit shortcut is connected to a usable UI or command
+ok 10 - Every cockpit shortcut is connected to a usable UI or command
+  ---
+  duration_ms: 0.476097
+  type: 'test'
+  ...
+# Subtest: Cockpit shortcuts remain accessible on narrow phones and folding displays
+ok 11 - Cockpit shortcuts remain accessible on narrow phones and folding displays
+  ---
+  duration_ms: 1.137321
+  type: 'test'
+  ...
+# Subtest: coding agent has one integrated entry from Android home, no second app
+ok 12 - coding agent has one integrated entry from Android home, no second app
+  ---
+  duration_ms: 2.457622
+  type: 'test'
+  ...
+# Subtest: developer speech uses actual German Android recognizer and a unique callback
+ok 13 - developer speech uses actual German Android recognizer and a unique callback
+  ---
+  duration_ms: 1.944585
+  type: 'test'
+  ...
+# Subtest: voice text is always previewed; neither recognition nor chat command executes code
+ok 14 - voice text is always previewed; neither recognition nor chat command executes code
+  ---
+  duration_ms: 1.752781
+  type: 'test'
+  ...
+# Subtest: existing mobile builder remains opt-in, not falsely labelled an app generator
+ok 15 - existing mobile builder remains opt-in, not falsely labelled an app generator
+  ---
+  duration_ms: 0.781424
+  type: 'test'
+  ...
+# Subtest: real drawn Canvas frames are counted separately from animation callbacks
+ok 16 - real drawn Canvas frames are counted separately from animation callbacks
+  ---
+  duration_ms: 2.0686
+  type: 'test'
+  ...
+# Subtest: Fold7 owner can run a 1.6s diagnostic without changing animation preferences
+ok 17 - Fold7 owner can run a 1.6s diagnostic without changing animation preferences
+  ---
+  duration_ms: 1.281117
+  type: 'test'
+  ...
+# Subtest: Qwen chat validates replies without unconditional 0.8 success
+ok 18 - Qwen chat validates replies without unconditional 0.8 success
+  ---
+  duration_ms: 252.996323
+  type: 'test'
+  ...
+# Subtest: context is bounded, clearly untrusted, and never authorizes tools or factual memories
+ok 19 - context is bounded, clearly untrusted, and never authorizes tools or factual memories
+  ---
+  duration_ms: 179.036123
+  type: 'test'
+  ...
+# Subtest: low cost evaluator refuses mechanical repeats but cannot claim truth
+ok 20 - low cost evaluator refuses mechanical repeats but cannot claim truth
+  ---
+  duration_ms: 0.378593
+  type: 'test'
+  ...
+# Subtest: Fold7 recreation keeps the ephemeral local dialogue of the same session
+ok 21 - Fold7 recreation keeps the ephemeral local dialogue of the same session
+  ---
+  duration_ms: 4.474151
+  type: 'test'
+  ...
+# Subtest: Fold portrait uses the shared width/font profile, one Activity rail and no duplicated shell rail
+ok 22 - Fold portrait uses the shared width/font profile, one Activity rail and no duplicated shell rail
+  ---
+  duration_ms: 2.862691
+  type: 'test'
+  ...
+# Subtest: current information panels and separate status keep real sources and complete scrollable rows
+ok 23 - current information panels and separate status keep real sources and complete scrollable rows
+  ---
+  duration_ms: 0.914262
+  type: 'test'
+  ...
+# Subtest: ten action controls share draw bounds while head and original orb retain separate regions
+ok 24 - ten action controls share draw bounds while head and original orb retain separate regions
+  ---
+  duration_ms: 2.043263
+  type: 'test'
+  ...
+# Subtest: Fold chat remains a real native action and both content and rail stay scrollable
+ok 25 - Fold chat remains a real native action and both content and rail stay scrollable
+  ---
+  duration_ms: 0.979235
+  type: 'test'
+  ...
+# Subtest: phone and Fold share the original live surface and preserve its lifecycle during reflow
+ok 26 - phone and Fold share the original live surface and preserve its lifecycle during reflow
+  ---
+  duration_ms: 0.896983
+  type: 'test'
+  ...
+# Subtest: home microphone retains the cockpit for continuous voice replies
+ok 27 - home microphone retains the cockpit for continuous voice replies
+  ---
+  duration_ms: 3.57577
+  type: 'test'
+  ...
+# Subtest: reference cockpit reuses the original animated orb without a solid tile
+ok 28 - reference cockpit reuses the original animated orb without a solid tile
+  ---
+  duration_ms: 0.245114
+  type: 'test'
+  ...
+# Subtest: stream preview does not force focus to bottom or make live draft selectable
+ok 29 - stream preview does not force focus to bottom or make live draft selectable
+  ---
+  duration_ms: 1.486799
+  type: 'test'
+  ...
+# Subtest: owner scrolling pauses auto-follow while a native response streams
+ok 30 - owner scrolling pauses auto-follow while a native response streams
+  ---
+  duration_ms: 1.100595
+  type: 'test'
+  ...
+# Subtest: time deadline is based on progress, not fixed wall clock
+ok 31 - time deadline is based on progress, not fixed wall clock
+  ---
+  duration_ms: 1.006272
+  type: 'test'
+  ...
+# Subtest: existing cancellation and unverified-draft protections remain in place
+ok 32 - existing cancellation and unverified-draft protections remain in place
+  ---
+  duration_ms: 1.198395
+  type: 'test'
+  ...
+# Subtest: watchdog and terminal contracts reject disconnected source copies
+ok 33 - watchdog and terminal contracts reject disconnected source copies
+  ---
+  duration_ms: 33.9013
+  type: 'test'
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1304.57065

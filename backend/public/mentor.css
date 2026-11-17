@@ -1,0 +1,17 @@
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#070d20;color:#e7f0ff}
+*{box-sizing:border-box}body{margin:0;padding:18px}
+main{max-width:720px;margin:0 auto;padding:8px 0 30px}
+header{display:flex;align-items:center;gap:16px;padding:22px 6px 28px}
+.mark{font-size:58px;color:#39dcf9;text-shadow:0 0 20px #34aaff}
+h1{font-size:26px;margin:0 0 4px}h1 em{font-style:normal;color:#49bdfa}
+header p,footer{color:#9facd1;font-size:14px;margin:0}
+section{padding:22px;margin:0 0 18px;background:linear-gradient(130deg,#112448,#131333);border:1px solid #4d62bc;border-radius:20px}
+.eyebrow{font-size:12px;letter-spacing:.12em;color:#8fcbef;font-weight:700;margin:0 0 18px}
+label{display:block;font-weight:600;margin:15px 0 8px}
+input:not([type=checkbox]),textarea{width:100%;background:#080f25;color:#f3f7ff;border:1px solid #6980c1;padding:12px 14px;border-radius:10px;font:inherit}
+button{cursor:pointer;border:0;color:white;background:linear-gradient(90deg,#1488cf,#5459dc);padding:13px 17px;border-radius:12px;font:inherit;font-weight:650;margin:18px 0 9px;min-height:48px}
+button:disabled{opacity:.6;cursor:wait}.checkbox{display:flex;gap:12px;align-items:flex-start;font-weight:450;line-height:1.4}
+.checkbox input{min-height:20px;min-width:20px;accent-color:#37bddc}
+.note{font-size:13px;line-height:1.5;color:#aab8db}
+output{display:block;min-height:16px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}
+footer{text-align:center;padding:10px}

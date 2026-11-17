@@ -1,0 +1,28 @@
+JAR 3bf1b6c5e41b278abba7a78319f7b2adefb1779f8694c99e6652727cc8a96667 commit=d340c60e start=2026-10-23T00:47:19Z args=speed ckpt=a20515a13f74324b748a319d84d865bd7d7d6530a6a2a84406525070ad9c307a ckpt=b07ff9ccd780f6bcdb81eb4b15d148e18a0436adcbb8dcbe38ba49ed450d7327 ckpt=aa69716590d3f69e3c3af7fe6fef69edf9f7055e4aa864df60eb15c762692586 ckpt=64b983cace541dda9dae251e9b7bb8319c98c30f698d06126ff402fdf575009c ckpt=08cd1b2e4bb7ad662a4525bcdd190768edc0ccdb374f3575a53f09cbaf2136ad ckpt=f71b9e3730cef64fac7bf3e1febd289bdbff1eeb1e9215bc704ed153a5ed6b37 ckpt=ab535c6e211bb3cce3938dbf6e67cb148e1748f4cc6a70441f2053794bd5ed82 ckpt=542a53665dcb116f7e770f993b8b6cc750697286b6bbdfde85143ec5243a8e3b ckpt=ab97ff1e2f31cbdce6394e92b7da2c34451bcebe89b03c68249b2dc011b31118 ckpt=56d3d4984cc9bc0d1a0c70da6b67870652cdd978f7d03638c4674aa266de2e09 ckpt=a985bf6d08ea0d98ead065ca4c28ea62997420645ce55c8b33e2acd926e9c5ca ckpt=61f84a05a7e2d46bcce250c88da4066138812ae4cc7520490b9812785089867c ckpt=c899e6ffea7cb09c91a46983ca292bc800a123851edce8bc781ca5d0d3d8c956 ckpt=9f970d9b80111147d634b97f64390ca98b1faded5c214e68ce4aa1eec0ea4ccb ckpt=ecf49d60b37efd56c0fc821071abe3474e122416327165c61fc15b4cc2f155db ckpt=9842070251c30be97a2cf4aa879006f7e9dd58e75a492761ff67c7e6eb1421ff ckpt=20182b1737e8f65bc3e93aa921c526af57c330e962fc97efcdf6a69a3d4e0e4b ckpt=fd304c23f1bf4e395a5e60120cee294ccf5c0af4dca3fc8550de9f597ea831e8 
+NFC1 commit=68b0a33512d18570ddf450e8f9205a60dbee1c66 docs=239 tokenizer=v512 sha=296567efa53d0461a73e548615fc412afc330610ac086b8c4fc2335e74bb6224
+SPLIT DOC TRAIN docs=71 segments=2446 bytes=422773 sha=86ad7f86d8073e349150e45ac86d09d75716fe9b31160c3fa4411f1f54b6cca3
+SPLIT DOC VALIDATION docs=9 segments=395 bytes=60365 sha=e6c7c3f61377fa14f8d496f0225256916fbe29c94e50f980289a5399c2fa90e1
+SPLIT DOC TEST docs=8 segments=251 bytes=43124 sha=3bbb7b5b6fd5195217507cf99365cd0141cd4f7e2620402dbfb7f6bb568ac7dd
+SPLIT CODE TRAIN docs=126 segments=6138 bytes=1306918 sha=78324e710c6cb10359846df5922cbdf6b27caa42eed8b0e44d12084baa6c0c5c
+SPLIT CODE VALIDATION docs=14 segments=318 bytes=66085 sha=68cb72c9a04aa0160d1b1892828d64405c88c5f82b12be9224773c3e4fdb4774
+SPLIT CODE TEST docs=11 segments=475 bytes=100826 sha=ac3881236bac73db6baca830e2e037395a0bf5eca750466bc2407a98522c3b25
+SPEED-FAIR G-S/s1/l1=0.0 medianMsPerToken=0.0438 minMsPerToken=0.0417 
+SPEED-FAIR G-S/s2/l1=0.0 medianMsPerToken=0.0428 minMsPerToken=0.0417 
+SPEED-FAIR G-S/s3/l1=0.0 medianMsPerToken=0.0440 minMsPerToken=0.0409 
+SPEED-FAIR T-S/s1/l1=0.0 medianMsPerToken=0.0636 minMsPerToken=0.0574 
+SPEED-FAIR T-S/s2/l1=0.0 medianMsPerToken=0.0571 minMsPerToken=0.0557 
+SPEED-FAIR T-S/s3/l1=0.0 medianMsPerToken=0.0567 minMsPerToken=0.0560 
+SPEED-FAIR D-S/s1/l1=0.0 medianMsPerToken=0.0490 minMsPerToken=0.0486 
+SPEED-FAIR D-S/s2/l1=0.0 medianMsPerToken=0.0521 minMsPerToken=0.0484 
+SPEED-FAIR D-S/s3/l1=0.0 medianMsPerToken=0.0508 minMsPerToken=0.0475 
+SPEED-FAIR L-S/s1/l1=0.0 medianMsPerToken=0.0484 minMsPerToken=0.0458 
+SPEED-FAIR L-S/s2/l1=0.0 medianMsPerToken=0.0462 minMsPerToken=0.0445 
+SPEED-FAIR L-S/s3/l1=0.0 medianMsPerToken=0.0455 minMsPerToken=0.0447 
+SPEED-FAIR Gr-S/s1/l1=0.0 medianMsPerToken=0.0335 minMsPerToken=0.0325 ffnDensity=0.425
+SPEED-FAIR Gr-S/s2/l1=0.0 medianMsPerToken=0.0333 minMsPerToken=0.0328 ffnDensity=0.442
+SPEED-FAIR Gr-S/s3/l1=0.0 medianMsPerToken=0.0339 minMsPerToken=0.0335 ffnDensity=0.440
+SPEED-FAIR Gr-S/s1/l1=0.001 medianMsPerToken=0.0309 minMsPerToken=0.0304 ffnDensity=0.126
+SPEED-FAIR Gr-S/s2/l1=0.001 medianMsPerToken=0.0346 minMsPerToken=0.0303 ffnDensity=0.135
+SPEED-FAIR Gr-S/s3/l1=0.001 medianMsPerToken=0.0304 minMsPerToken=0.0301 ffnDensity=0.133
+PEAK heapMb=249
+exit=0 end=2026-10-23T00:48:23Z

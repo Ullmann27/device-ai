@@ -1,0 +1,7 @@
+{
+  "status": "FAILED",
+  "head": "b7e9596addc9807cd5d04d835d83acf1e3fdb43a",
+  "taskId": "mob-400ba87d88cdcada",
+  "reason": "NO_VERIFIED_REPAIR",
+  "report": "/workspace/genesis-g04-experiment/runs/g04/evidence/private-synthetic-state/teamleader/reports/owner-repair/mob-400ba87d88cdcada-b7e9596addc9-1793741664021-c265b265/report.json"
+}

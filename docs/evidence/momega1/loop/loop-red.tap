@@ -1,0 +1,120 @@
+TAP version 13
+# Subtest: MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
+not ok 1 - MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
+  ---
+  duration_ms: 35.322569
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:26:28)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: MΩ canonical fresh verifier rejects removal of a baseline identity
+not ok 2 - MΩ canonical fresh verifier rejects removal of a baseline identity
+  ---
+  duration_ms: 27.014379
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:33:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:34:48)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: MΩ independent counterexample revises inside the same canonical task and model-call budget
+not ok 3 - MΩ independent counterexample revises inside the same canonical task and model-call budget
+  ---
+  duration_ms: 1351.905909
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    independent failure must reach the next existing bounded provider call
+    
+    1 !== 2
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 2
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:47:9)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: MΩ strict execution blocks before provider or missing journal when isolation is absent
+not ok 4 - MΩ strict execution blocks before provider or missing journal when isolation is absent
+  ---
+  duration_ms: 0.986551
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:53:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /CODING_ISOLATION_REQUIRED/. Input:
+    
+    "Error: ENOENT: no such file or directory, lstat '/does-not-exist'"
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: "ENOENT: no such file or directory, lstat '/does-not-exist'"
+  stack: |-
+    Object.realpathSync (node:fs:2848:29)
+    ensureCcc1StateOutsideSource (file:///workspace/momega1-loop/.github/continuum/ccc1-path-policy.mjs:36:21)
+    grantFile (file:///workspace/momega1-loop/.github/continuum/coding-orchestrator.mjs:21:14)
+    runCodingTask (file:///workspace/momega1-loop/.github/continuum/coding-orchestrator.mjs:64:24)
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:55:23)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:55:2)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1627.1041

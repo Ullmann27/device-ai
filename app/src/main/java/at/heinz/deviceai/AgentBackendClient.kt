@@ -1,13 +1,46 @@
 package at.heinz.deviceai
 
 import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+
+data class MentorPairingResult(val approved: Boolean, val fingerprint: String)
+
+internal fun cloudConversationPayload(sessionId: String, message: String?, outputs: List<ToolOutput>): JSONObject =
+    JSONObject().apply {
+        put("session_id", sessionId)
+        if (!message.isNullOrBlank()) put("message", message)
+        if (outputs.isNotEmpty()) put("tool_outputs", JSONArray().apply {
+            outputs.forEach { output -> put(JSONObject().put("call_id", output.callId).put("output", output.output)) }
+        })
+    }
+
+data class RemoteContinuumStatus(
+    val autonomousResearchEnabled: Boolean,
+    val brainEvolutionEnabled: Boolean,
+    val researchGeneration: Long?,
+    val observations: Int?,
+    val openGaps: Int?,
+    val cycles: Int?,
+    val successfulCycles: Int?,
+    val failedCycles: Int?,
+    val citationCount: Int?,
+    val brainGeneration: Int?,
+    val championId: String?,
+    val championScore: Double?,
+    val candidates: Int?,
+    val reflections: Int?,
+    val hypothesisTournamentEnabled: Boolean,
+    val hypothesisGeneration: Int?,
+    val hypotheses: Int?,
+    val tournaments: Int?,
+    val hypothesisLeaderElo: Int?
+)
 
 class AgentBackendClient(private val context: Context) {
     companion object {
@@ -16,6 +49,11 @@ class AgentBackendClient(private val context: Context) {
     }
 
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val mentorRecoveryLock = Any()
+
+    private class MentorAuthenticationRejected : IllegalStateException("MENTOR_AUTH_UNAUTHORIZED")
+    private class BackendHttpFailure(val statusCode: Int, message: String) :
+        IllegalStateException(message)
 
     fun backendUrl(): String =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -24,13 +62,126 @@ class AgentBackendClient(private val context: Context) {
             .trim()
 
     fun saveBackendUrl(value: String) {
+        val normalized = value.trim().trimEnd('/')
+        val previous = backendUrl()
+        if (previous.isNotBlank() && previous != normalized) {
+            // A cached mentor bearer credential must not be sent to another host.
+            SecureTokenStore.clearMentorToken(context)
+        }
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .edit()
-            .putString(KEY_URL, value.trim().trimEnd('/'))
+            .putString(KEY_URL, normalized)
             .apply()
     }
 
     fun hasToken(): Boolean = !SecureTokenStore.load(context).isNullOrBlank()
+
+    fun hasMentorAccess(): Boolean = !SecureTokenStore.loadMentorToken(context).isNullOrBlank() || hasToken()
+
+    fun ensureMentorBackend() {
+        if (backendUrl().isBlank()) saveBackendUrl("https://device-ai-continuum-mentor.onrender.com")
+    }
+
+    /**
+     * Explicit owner-approved pairing; the AndroidKeyStore signing key never leaves
+     * the device. The same operation is reused for bounded recovery after a 401.
+     */
+    fun pairMentor(callback: (Result<MentorPairingResult>) -> Unit) {
+        ensureMentorBackend()
+        val base = backendUrl()
+        if (!base.startsWith("https://", ignoreCase = true)) {
+            callback(Result.failure(IllegalStateException("HTTPS-Backend erforderlich.")))
+            return
+        }
+        Thread({
+            val outcome = runCatching {
+                synchronized(mentorRecoveryLock) { pairMentorOnWorker(base) }
+            }
+            mainHandler.post { callback(outcome) }
+        }, "continuum-mentor-pairing").apply { isDaemon = true; start() }
+    }
+
+    private fun pairMentorOnWorker(base: String): MentorPairingResult {
+        val publicKey = MentorDeviceIdentity.publicKeyBase64()
+        val fingerprint = MentorDeviceIdentity.fingerprint()
+        // A single replay of the harmless GET can recover a sleeping backend.
+        // POST redeem and any mentor answer are never retried after ambiguous I/O.
+        val challenge = JSONObject(pairingChallengeWithOneRetry(base))
+        val issuedAt = challenge.getLong("issuedAt")
+        val nonce = challenge.getString("nonce")
+        val signed = MentorDeviceIdentity.signChallenge(issuedAt, nonce)
+        val payload = JSONObject().apply {
+            put("publicKey", publicKey)
+            put("signature", signed)
+            put("challenge", challenge)
+        }
+        val response = try {
+            request("POST", "$base/v1/mentor/pairing/redeem",
+                payload.toString(), authenticated = false)
+        } catch (e: IllegalStateException) {
+            if (e.message == "PAIRING_PENDING") return MentorPairingResult(false, fingerprint)
+            throw e
+        }
+        val result = JSONObject(response)
+        require(result.getBoolean("ok") &&
+            result.getString("scope") == "MENTOR_ONLY" &&
+            result.getString("fingerprint") == fingerprint) {
+            "Gerätefreigabe konnte nicht verifiziert werden."
+        }
+        SecureTokenStore.saveMentorToken(context, result.getString("token"))
+        return MentorPairingResult(true, fingerprint)
+    }
+
+    private fun pairingChallengeWithOneRetry(base: String): String {
+        val url = "$base/v1/mentor/pairing/challenge"
+        return try {
+            request("GET", url, null, authenticated = false)
+        } catch (first: Exception) {
+            val retryable = first is IOException ||
+                (first is BackendHttpFailure && first.statusCode in 502..504)
+            if (!retryable || Thread.currentThread().isInterrupted) throw first
+            Thread.sleep(1_000L)
+            request("GET", url, null, authenticated = false)
+        }
+    }
+
+    /**
+     * Revived mentor access after an operator rotates the backend root token:
+     * only a cached previously owner-paired mentor identity may re-pair, and
+     * only once after a definite HTTP 401. Never retry a question on timeout,
+     * 429, 5xx, or any ambiguous upstream response. No background polling.
+     */
+    private fun mentorRequestWithOneAuthRecovery(
+        method: String,
+        url: String,
+        body: String?,
+        base: String
+    ): String {
+        val previousMentorToken = SecureTokenStore.loadMentorToken(context)
+        val token = previousMentorToken ?: SecureTokenStore.load(context)
+            ?: throw IllegalStateException("Groq-Gerätefreigabe oder Device-Token fehlt.")
+        try {
+            return request(method, url, body, authenticated = true, token = token)
+        } catch (rejected: MentorAuthenticationRejected) {
+            if (previousMentorToken.isNullOrBlank()) throw rejected
+        }
+
+        return synchronized(mentorRecoveryLock) {
+            val currentToken = SecureTokenStore.loadMentorToken(context)
+                ?: throw IllegalStateException("MENTOR_REPAIR_NOT_PAIRED")
+            if (currentToken == previousMentorToken) {
+                val paired = pairMentorOnWorker(base)
+                if (!paired.approved) {
+                    SecureTokenStore.clearMentorToken(context)
+                    throw IllegalStateException("PAIRING_PENDING")
+                }
+            }
+            val replacement = SecureTokenStore.loadMentorToken(context)
+                ?: throw IllegalStateException("MENTOR_REPAIR_NOT_PAIRED")
+            // Exactly one repeat, only after confirmed authentication rejection.
+            request(method, url, body, authenticated = true, token = replacement)
+        }
+    }
 
     fun isConfigured(): Boolean =
         backendUrl().startsWith("https://", ignoreCase = true) && hasToken()
@@ -49,10 +200,31 @@ class AgentBackendClient(private val context: Context) {
         }.start()
     }
 
+    fun continuumStatus(callback: (Result<RemoteContinuumStatus>) -> Unit) {
+        val base = backendUrl()
+        val token = SecureTokenStore.load(context)
+        if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
+            callback(Result.failure(IllegalStateException("Cloud-KI ist noch nicht eingerichtet.")))
+            return
+        }
+        Thread {
+            val result = runCatching {
+                val raw = request(
+                    "GET",
+                    "$base/v1/continuum/status",
+                    null,
+                    authenticated = true,
+                    token = token
+                )
+                parseContinuumStatus(JSONObject(raw))
+            }
+            mainHandler.post { callback(result) }
+        }.start()
+    }
+
     fun send(
         sessionId: String,
         message: String?,
-        shizukuReady: Boolean,
         toolOutputs: List<ToolOutput> = emptyList(),
         callback: (Result<AgentReply>) -> Unit
     ) {
@@ -65,28 +237,7 @@ class AgentBackendClient(private val context: Context) {
 
         Thread {
             val result = runCatching {
-                val body = JSONObject().apply {
-                    put("session_id", sessionId)
-                    if (!message.isNullOrBlank()) put("message", message)
-                    put("device", JSONObject().apply {
-                        put("manufacturer", Build.MANUFACTURER)
-                        put("model", Build.MODEL)
-                        put("android", Build.VERSION.RELEASE)
-                        put("sdk", Build.VERSION.SDK_INT)
-                        put("app_version", BuildConfig.VERSION_NAME)
-                        put("shizuku_ready", shizukuReady)
-                    })
-                    if (toolOutputs.isNotEmpty()) {
-                        put("tool_outputs", JSONArray().apply {
-                            toolOutputs.forEach { output ->
-                                put(JSONObject().apply {
-                                    put("call_id", output.callId)
-                                    put("output", output.output)
-                                })
-                            }
-                        })
-                    }
-                }
+                val body = cloudConversationPayload(sessionId, message, toolOutputs)
 
                 val raw = request(
                     "POST",
@@ -99,6 +250,79 @@ class AgentBackendClient(private val context: Context) {
             }
             mainHandler.post { callback(result) }
         }.start()
+    }
+
+    fun mentorStatus(callback: (Result<Pair<Boolean, Int>>) -> Unit) {
+        val base = backendUrl()
+        val token = SecureTokenStore.loadMentorToken(context) ?: SecureTokenStore.load(context)
+        if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
+            callback(Result.failure(IllegalStateException("Groq-Gerätefreigabe oder Device-Token fehlt.")))
+            return
+        }
+        Thread({
+            val outcome = runCatching {
+                val body = mentorRequestWithOneAuthRecovery(
+                    "GET", "$base/v1/mentor/status", null, base
+                )
+                val json = JSONObject(body)
+                val available = json.optBoolean("available", false)
+                val remaining = json.optInt("remainingToday", 0).coerceAtLeast(0)
+                available to remaining
+            }
+            mainHandler.post { callback(outcome) }
+        }, "continuum-mentor-status").apply { isDaemon = true; start() }
+    }
+
+    /**
+     * Explicitly consented one-shot cloud mentor. Both providers use the existing
+     * paired device token, never an API key inside the Android app.
+     * No local memory, device context or tool outputs are uploaded.
+     */
+    fun groqMentor(question: String, callback: (Result<String>) -> Unit) =
+        externalMentor(question, "GROQ", callback)
+
+    fun openRouterMentor(question: String, callback: (Result<String>) -> Unit) =
+        externalMentor(question, "OPENROUTER", callback)
+
+    private fun externalMentor(
+        question: String,
+        provider: String,
+        callback: (Result<String>) -> Unit
+    ) {
+        require(provider == "GROQ" || provider == "OPENROUTER")
+        val base = backendUrl()
+        val token = SecureTokenStore.loadMentorToken(context) ?: SecureTokenStore.load(context)
+        if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
+            callback(Result.failure(IllegalStateException("Mentor-Gerätefreigabe oder Device-Token fehlt.")))
+            return
+        }
+        if (question.trim().length !in 3..1800) {
+            callback(Result.failure(IllegalArgumentException("Mentorfrage muss zwischen 3 und 1800 Zeichen lang sein.")))
+            return
+        }
+        Thread({
+            val outcome = runCatching {
+                val payload = JSONObject().apply {
+                    put("consent", true)
+                    put("provider", provider)
+                    put("question", question.trim())
+                }
+                val raw = mentorRequestWithOneAuthRecovery(
+                    "POST", "$base/v1/mentor/answer", payload.toString(), base
+                )
+                val json = JSONObject(raw)
+                require(json.optString("provider") == provider &&
+                    json.optString("trust") == "UNVERIFIED_EXTERNAL" &&
+                    !json.optBoolean("memory_written", true) &&
+                    json.optJSONArray("tool_calls")?.length() == 0) {
+                    "Ungültige oder nicht isolierte Mentorantwort."
+                }
+                json.optString("message").trim().take(4200)
+                    .takeIf { it.isNotBlank() }
+                    ?: throw IllegalStateException("Leere Mentorantwort.")
+            }
+            mainHandler.post { callback(outcome) }
+        }, "continuum-remote-mentor").apply { isDaemon = true; start() }
     }
 
     private fun request(
@@ -123,22 +347,63 @@ class AgentBackendClient(private val context: Context) {
             }
         }
 
-        if (body != null) {
-            connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
-        }
+        try {
+            if (body != null) {
+                connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
+            }
+            val code = connection.responseCode
+            val stream = if (code in 200..299) connection.inputStream else connection.errorStream
+            val text = stream?.bufferedReader()?.use { it.readText() }.orEmpty()
 
-        val code = connection.responseCode
-        val stream = if (code in 200..299) connection.inputStream else connection.errorStream
-        val text = stream?.bufferedReader()?.use { it.readText() }.orEmpty()
-        connection.disconnect()
-
-        if (code !in 200..299) {
-            val message = runCatching { JSONObject(text).optString("error") }.getOrNull()
-                ?.takeIf { it.isNotBlank() }
-                ?: "HTTP $code"
-            throw IllegalStateException(message)
+            if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                throw MentorAuthenticationRejected()
+            }
+            if (code !in 200..299) {
+                val message = runCatching { JSONObject(text).optString("error") }.getOrNull()
+                    ?.takeIf { it.isNotBlank() }
+                    ?: "HTTP $code"
+                throw BackendHttpFailure(code, message)
+            }
+            return text
+        } finally {
+            connection.disconnect()
         }
-        return text
+    }
+
+    private fun parseContinuumStatus(json: JSONObject): RemoteContinuumStatus {
+        val daemon = json.optJSONObject("daemon")
+        val brain = json.optJSONObject("brain")
+        val hypotheses = json.optJSONObject("hypotheses")
+        fun JSONObject?.intOrNull(key: String): Int? =
+            this?.takeIf { it.has(key) && !it.isNull(key) }?.optInt(key)
+        fun JSONObject?.longOrNull(key: String): Long? =
+            this?.takeIf { it.has(key) && !it.isNull(key) }?.optLong(key)
+        fun JSONObject?.doubleOrNull(key: String): Double? =
+            this?.takeIf { it.has(key) && !it.isNull(key) }?.optDouble(key)
+                ?.takeIf { it.isFinite() }
+        fun JSONObject?.stringOrNull(key: String): String? =
+            this?.optString(key)?.takeIf { it.isNotBlank() && it != "null" }
+        return RemoteContinuumStatus(
+            autonomousResearchEnabled = json.optBoolean("autonomousResearchEnabled", false),
+            brainEvolutionEnabled = json.optBoolean("brainEvolutionEnabled", false),
+            researchGeneration = daemon.longOrNull("generation"),
+            observations = daemon.intOrNull("observations"),
+            openGaps = daemon.intOrNull("openGaps"),
+            cycles = daemon.intOrNull("cycles"),
+            successfulCycles = daemon.intOrNull("successfulCycles"),
+            failedCycles = daemon.intOrNull("failedCycles"),
+            citationCount = daemon.intOrNull("citationCount"),
+            brainGeneration = brain.intOrNull("generation"),
+            championId = brain.stringOrNull("championId"),
+            championScore = brain.doubleOrNull("championScore"),
+            candidates = brain.intOrNull("candidates"),
+            reflections = brain.intOrNull("reflections"),
+            hypothesisTournamentEnabled = json.optBoolean("hypothesisTournamentEnabled", false),
+            hypothesisGeneration = hypotheses.intOrNull("generation"),
+            hypotheses = hypotheses.intOrNull("hypotheses"),
+            tournaments = hypotheses.intOrNull("tournaments"),
+            hypothesisLeaderElo = hypotheses.intOrNull("leaderElo")
+        )
     }
 
     private fun parseReply(json: JSONObject): AgentReply {

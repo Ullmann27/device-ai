@@ -1,0 +1,652 @@
+18:08:03 | INFO: Data are loaded, start creating Blender stuff
+18:08:03 | INFO: Blender create Mesh node EyeballLeftMesh
+18:08:03 | INFO: Blender create Mesh node IrisLeftMesh
+18:08:03 | INFO: Blender create Mesh node PupilLeftMesh
+18:08:03 | INFO: Blender create Mesh node EyeballRightMesh
+18:08:03 | INFO: Blender create Mesh node IrisRightMesh
+18:08:03 | INFO: Blender create Mesh node PupilRightMesh
+18:08:03 | INFO: Blender create Mesh node MouthInteriorMesh
+18:08:03 | INFO: Blender create Mesh node ToothLower0Mesh
+18:08:03 | INFO: Blender create Mesh node ToothLower1Mesh
+18:08:03 | INFO: Blender create Mesh node ToothLower2Mesh
+18:08:03 | INFO: Blender create Mesh node ToothLower3Mesh
+18:08:03 | INFO: Blender create Mesh node ToothLower4Mesh
+18:08:03 | INFO: Blender create Mesh node ToothLower5Mesh
+18:08:03 | INFO: Blender create Mesh node ToothLower6Mesh
+18:08:03 | INFO: Blender create Mesh node ToothLower7Mesh
+18:08:03 | INFO: Blender create Mesh node ToothUpper0Mesh
+18:08:03 | INFO: Blender create Mesh node ToothUpper1Mesh
+18:08:03 | INFO: Blender create Mesh node ToothUpper2Mesh
+18:08:03 | INFO: Blender create Mesh node ToothUpper3Mesh
+18:08:03 | INFO: Blender create Mesh node ToothUpper4Mesh
+18:08:03 | INFO: Blender create Mesh node ToothUpper5Mesh
+18:08:03 | INFO: Blender create Mesh node ToothUpper6Mesh
+18:08:03 | INFO: Blender create Mesh node ToothUpper7Mesh
+18:08:03 | INFO: Blender create Mesh node FaceMesh
+18:08:03 | INFO: Blender create Mesh node NeuralThreadsMesh
+18:08:03 | INFO: glTF import finished in 0.21s
+Blender 4.3.2
+Fra:1 Mem:46.68M (Peak 46.68M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:51.79M (Peak 52.00M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.64M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.64M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.65M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.66M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.67M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.68M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.68M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.69M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.70M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.71M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.72M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.73M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.73M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.74M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.75M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.76M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.77M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:55.82M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:55.87M (Peak 56.23M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:55.94M (Peak 56.23M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.00M (Peak 56.23M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.05M (Peak 56.23M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.12M (Peak 56.23M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.23M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.23M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.28 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.28 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.28 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.28 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.28 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.28 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.71 | Remaining:00:03.00 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.29 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.29 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/01-ruhe.png'
+Time: 00:03.43 (Saving: 00:00.14)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 01-ruhe 45 1.485 1.7136335372924805e-07
+Fra:1 Mem:49.78M (Peak 49.78M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:52.49M (Peak 52.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:56.01M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:56.03M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:56.07M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.09M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.11M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.15M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.13 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.13 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.79 | Remaining:00:03.42 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.63 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.63 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/02-zuhoeren.png'
+Time: 00:03.66 (Saving: 00:00.03)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 02-zuhoeren 140 4.62 2.2724270820617676e-07
+Fra:1 Mem:49.78M (Peak 49.78M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:52.49M (Peak 52.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:56.01M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:56.03M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:56.07M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.09M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.11M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.15M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.30 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.75 | Remaining:00:03.14 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.75 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.75 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/03-denken.png'
+Time: 00:03.79 (Saving: 00:00.03)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 03-denken 206 6.798 2.5331974029541016e-07
+Fra:1 Mem:49.78M (Peak 49.78M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:52.49M (Peak 52.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:56.01M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:56.03M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:56.07M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.09M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.11M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.15M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.13 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.13 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.67 | Remaining:00:02.75 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.40 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.40 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/04-fenster-augen-vor-kopf.png'
+Time: 00:03.44 (Saving: 00:00.03)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 04-fenster-augen-vor-kopf 237 7.821 1.6763806343078613e-07
+Fra:1 Mem:49.78M (Peak 49.78M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:52.49M (Peak 52.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:56.01M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:56.03M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:56.07M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.09M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.11M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.15M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.10 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.10 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.10 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.10 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.10 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.10 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.10 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.67 | Remaining:00:02.89 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.31 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.31 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/05-fenster-kopf-folgt.png'
+Time: 00:03.35 (Saving: 00:00.03)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 05-fenster-kopf-folgt 258 8.514 2.384185791015625e-07
+Fra:1 Mem:49.78M (Peak 49.78M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:52.49M (Peak 52.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:56.01M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:56.03M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:56.07M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.09M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.11M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.15M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.53M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.68 | Remaining:00:02.89 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.32 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.32 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/06-bestaetigung-nicken.png'
+Time: 00:03.36 (Saving: 00:00.03)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 06-bestaetigung-nicken 269 8.877 1.7881393432617188e-07
+Fra:1 Mem:49.78M (Peak 49.78M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:52.49M (Peak 52.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:56.01M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:56.03M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:56.07M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.09M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.11M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.15M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.10 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.10 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.10 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.10 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.10 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.10 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.10 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.10 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.12 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.27 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.67 | Remaining:00:02.79 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.49 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.49 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/07-bestaetigung-ende.png'
+Time: 00:03.52 (Saving: 00:00.03)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 07-bestaetigung-ende 283 9.339 1.7881393432617188e-07
+Fra:1 Mem:49.78M (Peak 49.78M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:52.49M (Peak 52.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:56.01M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:56.03M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:56.07M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.09M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.11M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.15M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.12 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.12 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.14 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.81M (Peak 99.70M) | Time:00:00.32 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.81M (Peak 99.70M) | Time:00:00.32 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.32 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.32 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.32 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.32 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.80 | Remaining:00:03.37 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.49 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.49 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/08-sprechen.png'
+Time: 00:03.53 (Saving: 00:00.04)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 08-sprechen 339 11.187 3.252106921536324e-07
+Fra:1 Mem:49.78M (Peak 49.78M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | NeuralThreads
+Fra:1 Mem:52.49M (Peak 52.49M) | Time:00:00.01 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper7
+Fra:1 Mem:55.94M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper6
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper5
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper4
+Fra:1 Mem:55.95M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper3
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper2
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper1
+Fra:1 Mem:55.96M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothUpper0
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower7
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower6
+Fra:1 Mem:55.97M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower5
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower4
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower3
+Fra:1 Mem:55.98M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower2
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower1
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | ToothLower0
+Fra:1 Mem:55.99M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:56.01M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:56.03M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:56.07M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:56.09M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:56.11M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:56.15M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:56.17M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:51.69M (Peak 56.53M) | Time:00:00.02 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Images | Loading ContinuumReferenceAtlas
+Fra:1 Mem:58.70M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Waiting for render to start
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:58.71M (Peak 99.70M) | Time:00:00.11 | Mem:16.00M, Peak:16.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Procedurals
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Background
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Camera
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes Flags
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects
+Fra:1 Mem:58.79M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Copying Transformations to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Objects | Applying Static Transformations
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device
+Fra:1 Mem:58.80M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Meshes
+Fra:1 Mem:59.67M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Computing attributes
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:16.01M, Peak:16.01M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:17.01M, Peak:17.01M | Scene, ViewLayer | Updating Scene BVH | Building BVH
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.11 | Mem:18.75M, Peak:18.75M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.13 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device
+Fra:1 Mem:60.67M (Peak 99.70M) | Time:00:00.13 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Computing normals
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:21.01M, Peak:22.75M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Objects Flags
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Primitive Offsets
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Images
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Camera Volume
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.11M, Peak:23.11M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights
+Fra:1 Mem:62.77M (Peak 99.70M) | Time:00:00.13 | Mem:23.20M, Peak:23.20M | Scene, ViewLayer | Updating Lights | Computing tree
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Integrator
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Film
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.16M, Peak:28.24M | Scene, ViewLayer | Updating Lookup Tables
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Baking
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Updating Device | Writing constant memory
+Fra:1 Mem:67.82M (Peak 99.70M) | Time:00:00.26 | Mem:28.24M, Peak:28.24M | Scene, ViewLayer | Sample 0/8
+Fra:1 Mem:73.73M (Peak 99.70M) | Time:00:00.67 | Remaining:00:02.89 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 1/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.57 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Sample 8/8
+Fra:1 Mem:76.36M (Peak 99.70M) | Time:00:03.57 | Mem:34.16M, Peak:34.16M | Scene, ViewLayer | Finished
+Saved: '/workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/09-stop.png'
+Time: 00:03.61 (Saving: 00:00.04)
+
+HOST_BLENDER_NOT_FILAMENT_DEVICE 09-stop 501 16.533 1.73225998878479e-07
+HOST_BLENDER_NOT_FILAMENT_DEVICE RENDERED /workspace/scratch/76b7222771d5/avatar-motion/replay-integrated-8c851a09/replay-manifest.json
+
+Blender quit

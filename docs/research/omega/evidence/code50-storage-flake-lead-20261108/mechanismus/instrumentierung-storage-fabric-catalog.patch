@@ -1,0 +1,13 @@
+diff --git a/.github/continuum/storage-fabric-catalog.mjs b/.github/continuum/storage-fabric-catalog.mjs
+index b45d7c6..3a9dec0 100644
+--- a/.github/continuum/storage-fabric-catalog.mjs
++++ b/.github/continuum/storage-fabric-catalog.mjs
+@@ -100,7 +100,7 @@ export class ReplicatedStorageFabric {
+    for (let offset = 0; offset < plaintext.length || (!offset && !plaintext.length); offset += MAX_BLOCK_BYTES) {
+     const {bytes, descriptor} = sealBlock(plaintext.subarray(offset, offset + MAX_BLOCK_BYTES), this.key);
+     const results = await Promise.allSettled(this.nodes.map(node => node.put(descriptor.storedSha256, bytes)));
+-    if (results.some(r => r.status === 'rejected')) reject('FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED');
++    if (results.some(r => r.status === 'rejected')) { (await import('node:fs')).appendFileSync('/home/qa/diag/rejections.log', JSON.stringify(results.map((r, i) => r.status === 'rejected' ? {node: i, t: this.nodes[i].timeoutMs, name: r.reason?.name, message: String(r.reason?.message).slice(0, 120), cause: r.reason?.cause?.code ?? r.reason?.cause?.name} : {node: i, ok: true})) + '\n'); reject('FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED'); }
+     await this.cache(bytes, descriptor); blocks.push(descriptor);
+    }
+    const entry = {version: (existing?.versions.length ?? 0) + 1, classification, bytes: plaintext.length, sha256: sha256(plaintext), blocks};

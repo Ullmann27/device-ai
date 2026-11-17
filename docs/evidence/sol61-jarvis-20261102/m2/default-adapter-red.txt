@@ -1,0 +1,21 @@
+JUnit version 4.13.2
+..E.E
+Time: 0.094
+There were 2 failures:
+1) defaultAdapterRejectsAnOversizedBatchBeforeCallingAnEngine(at.heinz.deviceai.localmodel.LocalToolContinuationTest)
+java.lang.AssertionError: expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.localmodel.LocalToolContinuationTest.defaultAdapterRejectsAnOversizedBatchBeforeCallingAnEngine(LocalToolContinuationTest.kt:31)
+2) defaultAdapterRejectsWholeUtf8OverflowBeforeCallingAnEngine(at.heinz.deviceai.localmodel.LocalToolContinuationTest)
+java.lang.AssertionError: An oversized encoded observation must not reach an engine expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.localmodel.LocalToolContinuationTest.defaultAdapterRejectsWholeUtf8OverflowBeforeCallingAnEngine(LocalToolContinuationTest.kt:23)
+
+FAILURES!!!
+Tests run: 3,  Failures: 2
+

@@ -1,0 +1,76 @@
+{
+  "verified_source_commit": "47a741cada431197e1dc5aba8d686783b8422d8d",
+  "platform": "Linux x86_64",
+  "junit_suites": [
+    {
+      "name": "at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "junit_totals": {
+    "tests": 61,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exit_codes": {
+    "gradle_junit_lint": 0,
+    "node_contracts": 0
+  },
+  "node_tests": 8,
+  "device_ui_execution": "NOT_RUN",
+  "quality_gain": "NOT_PROVEN",
+  "synthetic_fixture_is_independent_quality_holdout": false
+}

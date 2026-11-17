@@ -1,0 +1,14 @@
+✔ source inventory parses real NUL records and literal whitespace in paths (2.069483ms)
+✔ source inventory rejects truncated, malformed and duplicate records (5.575016ms)
+✔ v22 is strictly an owner in-place update and leaves historical releases intact (7.470135ms)
+✔ missing or wrong exact SHA cannot reach owner signer (23.637573ms)
+✔ a v22 source proposal is never mistaken for signed authorization (120.939108ms)
+✔ exact approved source blob inventory is internally complete (CI simulation, NEVER signs) (159.686642ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 386.309616

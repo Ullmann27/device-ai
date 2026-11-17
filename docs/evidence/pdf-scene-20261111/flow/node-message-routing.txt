@@ -1,0 +1,19 @@
+✔ native delta preview is throttled, bounded and tied to the active request (9.143762ms)
+✔ stream completion removes only its own transient row (0.984806ms)
+✔ Stop clears preview synchronously and queued rendering checks cancellation state (1.478133ms)
+✔ native text deltas preserve standalone whitespace while ignoring empty chunks (0.959095ms)
+✔ invocation time consumes the same generation budget and safe profile reaches existing status (4.976693ms)
+✔ capture preview and budget contracts reject disconnected source copies (55.684963ms)
+✔ a ready loaded model receives the original greeting or capability request before bootstrap fallback (5.534427ms)
+✔ storage remains a fresh read-only native probe even with a model loaded (0.845126ms)
+✔ system center opens a visible connection screen and Activity forwards live status (0.487419ms)
+✔ rendering a conversation updates the selected navigation destination (3.657321ms)
+✔ oversized local replies show the existing user guidance in the conversation (0.993442ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 637.095604

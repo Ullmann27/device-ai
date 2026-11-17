@@ -1,0 +1,15 @@
+# Issue340 M0 – read-only integration audit
+
+Recommended research base: **b06889f586ed54f074d2b2d36535a0b5a820ed61 (#335)**. The installed owner baseline reported in #339/#340 is **0.3.36/code37, 80062368a469ea858c3b7cc6e21c5947b1c67e6b**. Git proves the entire `app` tree is identical between these commits. Source inclusion is established; binary, signer and device parity are not inferred.
+
+The graph is linear from334 through338: 334→335 adds7 commits; 335→336 adds6 release-only commits; 336→337 adds7 streaming/scroll commits; 337→338 adds6 avatar commits. Main is divergent:25 main-only versus3210 PR335-only commits, common ancestor64a7550bc4b48ff5317b78067d5751fc4e55e8f4. Full SHAs and all pairwise distances are in M0-MATRIX.json.
+
+The smallest M6 integration is the reviewed **net patch80062368..56e9a82f**, included as pr337-only-delta.patch: AgentActivity, LocalGenerationDeadlinePolicy, its JUnit suite, and streaming Node contract. All four preimages are identical/absent on335 and336, so release/publisher history is unnecessary to obtain this fix. Integrate on the isolated research branch; re-review AgentActivity against M1 changes rather than replacing the file. No patch was applied here. Defer338's avatar lab.
+
+Actual source calls: E7 is already wired into sendCurrentInput. Learned span/Hybrid-SHADOW is called only from the explicit laboratory. B4 is in runLocal→LocalConversationContext.render→ResearchDialogueHandoff.render→JarvisUnifiedEvidenceContract.useForAnswer with current mode/veto/approval. Actual confirmed-memory path is CognitiveDecisionBridge→ContinuumCognitiveRuntime→replyWithEvidenceInConversation→ContinuumMemoryDialogue, not the unused replyFromMemory method named in the old handoff. TemporalRoleEvidenceLedger/ConstrainedResourceFabric have no main-source callers found.
+
+M1 risk identified independently and sent to root: LocalConversationContext.record truncates/sanitizes user source before priorUserTurns feeds E7, so original offsets and late negative/temporal qualifications are lost. Root owns the regression and repair; no source edit or test execution was made here.
+
+Verification: historical host manifest1529JUnit/278classes+4checks was inspected; its7 source hash entries match335. Live read-only retrieval of335's schema3 Render receipt and **all10 logs** matched byte lengths and SHA256. Receipt sourceb06889f5/runIdc0c9fd1c-0a33-46b0-a56e-8ed54125ec56 is unsigned code36. No tests/builds/devices were run in this audit. The receipt's binary hashes were read, not freshly downloaded artifacts.336 publisher/signature/current device state was not re-read. Owner-reported five fixed natural-span laboratory cases do not prove general accuracy, E7 session safety or model promotion.
+
+Files: M0-MATRIX.json (machine-readable recommendation/module status/callers), dag-and-diffs.json, verification-readback.json, raw Render receipt/status/logs, fresh PR336/338 metadata, pinned335 source snapshots. All outputs are scratch LOCAL_ONLY for root review and publication in the authorized draft. Shared repo/branches untouched.

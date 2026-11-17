@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.HologramAudioTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:21" hostname="b50d54a1ac03" time="0.002">
+  <properties/>
+  <testcase name="malformedOrUnsupportedPcmProducesSilence" classname="at.heinz.deviceai.HologramAudioTest" time="0.0"/>
+  <testcase name="pcmLevelMeasuresAveragePowerAcrossTheBuffer" classname="at.heinz.deviceai.HologramAudioTest" time="0.001"/>
+  <testcase name="pcm16UsesLittleEndianSignedSamples" classname="at.heinz.deviceai.HologramAudioTest" time="0.0"/>
+  <testcase name="pcm8UsesUnsignedMidpointForSilence" classname="at.heinz.deviceai.HologramAudioTest" time="0.0"/>
+  <testcase name="envelopeAttackIsIndependentOfFrameRate" classname="at.heinz.deviceai.HologramAudioTest" time="0.0"/>
+  <testcase name="envelopeFollowsAudioAndReleasesWhenSamplesStop" classname="at.heinz.deviceai.HologramAudioTest" time="0.0"/>
+  <testcase name="floatPcmIgnoresNonFiniteSamplesAndBoundsClippedAudio" classname="at.heinz.deviceai.HologramAudioTest" time="0.0"/>
+  <testcase name="envelopeNeverLetsInvalidAudioPoisonLaterSamples" classname="at.heinz.deviceai.HologramAudioTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

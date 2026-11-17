@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.CinemaButtonMaterialUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-12T13:14:32" hostname="0f4ac18d136f" time="35.222">
+  <properties/>
+  <testcase name="innerDockPress" classname="at.heinz.deviceai.CinemaButtonMaterialUiTest" time="24.438"/>
+  <testcase name="coverDockPress" classname="at.heinz.deviceai.CinemaButtonMaterialUiTest" time="10.784"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,58 @@
+{
+  "task": "C1-UI-020",
+  "sourceCommit": "59d8d7e25a5936403e8579373883fa04bec5c37f",
+  "tree": "90d68760d9a0533c169697902b61eda126e9b20b",
+  "status": "SCRATCH_PROPOSAL_NOT_RUN_NOT_PUSHED",
+  "preparedAt": "2026-11-04T21:38:16.508116+00:00",
+  "files": [
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+      "mode": "100644",
+      "blob": "4fa09ef1fe3a6fe88b707e8150611a066c01c72d",
+      "sha256": "39b4371e773f0f342dc1606700d59c2fa95cb67f622ee6d0ce7577c9ed8a813f",
+      "unchangedFromUi015Cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "mode": "100644",
+      "blob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+      "sha256": "c01049c44c18db04b8f1ccb71b3a8fef77c64353728c78ada17fc5bc1e3a32b7",
+      "unchangedFromUi015Cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "mode": "100644",
+      "blob": "020c388468ce2ad5017579f7ba1551b5c17fbcf6",
+      "sha256": "75f53008759b2e1212f4df64e29682cb3cfac2ae28cf534145eb3941d83dc9ec",
+      "unchangedFromUi015Cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "mode": "100644",
+      "blob": "0052c24095dee7a11b498254bfc426294cc198b3",
+      "sha256": "2952a1a322c6a085aae4ebc396a05fc6b8543a18b0f7477bcc81be74b9b47f1b",
+      "unchangedFromUi015Cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "mode": "100644",
+      "blob": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+      "sha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302",
+      "unchangedFromUi015Cdea": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+      "mode": "100644",
+      "blob": "891319e0cbb4a59225702e41083f5bf3925df1ec",
+      "sha256": "cdfa74b5fcd86d4a1dc5b5a9a0fe9558ee2870e54e6359cf6609e6ce8f84e472",
+      "unchangedFromUi015Cdea": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/JarvisShellLayoutTest.kt",
+      "mode": "100644",
+      "blob": "65721776eea1beebf05864312f3d5f59dd289efe",
+      "sha256": "79261f72e178e89541d390f0fe5e5bb5aa24b56f8dd0b4ad4dc5f694d0f84f9c",
+      "unchangedFromUi015Cdea": true
+    }
+  ]
+}

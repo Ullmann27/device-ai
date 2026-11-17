@@ -1,0 +1,24 @@
+{
+  "generated_at_utc": "2026-11-04T09:53:30.173931+00:00",
+  "application_commit": "ad2fa70bd84988c79b9bd13319cf1a178f99ab3b",
+  "application_code_equivalent_to": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+  "image_sha256": "1302218523befa81cdabe8765214827064b586c87a9a33a124acb8ece7cda083",
+  "kind": "Java2D source-derived component preview, not an Activity/device screenshot",
+  "viewport_dp": [
+    884,
+    760
+  ],
+  "output_pixels": [
+    1768,
+    1520
+  ],
+  "state": "Default unavailable/offline data; static idle presentation without synthetic task events",
+  "composition": "Current outer JarvisMenuRail plus current JarvisShellContent/ShellRenderer and the current HEAD-only HologramView geometry using the production avatar/orb painters",
+  "limitations": [
+    "Java2D rasterizer rather than Android Skia/Filament",
+    "Activity lifecycle and actual hit targets not exercised",
+    "User-card View registration absent; fallback unknown value",
+    "Paused idle timestamp, no animation capture",
+    "Duplicate outer/inner navigation and HEAD-only orb placement intentionally visible"
+  ]
+}

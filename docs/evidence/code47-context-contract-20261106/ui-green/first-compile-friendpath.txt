@@ -1,0 +1,4 @@
+Picked up JAVA_TOOL_OPTIONS:  -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=32897 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=32897 -Djavax.net.ssl.trustStore=/workspace/scratch/b31a9d731016/build-env/java-cacerts
+src/uiTest/java/at/heinz/deviceai/ContinuumChatPersistenceUiTest.kt:127:23: error: cannot access 'val chatTranscriptIo: ExecutorService': it is internal in 'at.heinz.deviceai.AgentActivity.Companion'.
+        AgentActivity.chatTranscriptIo.submit {}.get(2, TimeUnit.SECONDS)
+                      ^^^^^^^^^^^^^^^^

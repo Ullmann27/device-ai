@@ -1,0 +1,29 @@
+{
+  "sourceCommit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+  "status": "UNSIGNED_APK_AND_AAB_BUILT_IDENTITY_VERIFIED",
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/391c0f6de827/device-ai/app/build/outputs/apk/release/app-release-unsigned.apk",
+      "sha256": "77f41a5e82f55e8c376faba0765b53ec415c5690eed2f3730609e576367cb27a",
+      "bytes": 84294137,
+      "nativeAbis": [
+        "arm64-v8a",
+        "armeabi-v7a",
+        "x86",
+        "x86_64"
+      ]
+    },
+    {
+      "path": "/workspace/scratch/391c0f6de827/device-ai/app/build/outputs/bundle/release/app-release.aab",
+      "sha256": "a9b86f26462551af6957c7acf60fedc0fb308a9863a564de7dd9d9aa78c5e117",
+      "bytes": 45680955,
+      "nativeAbis": [
+        "arm64-v8a",
+        "armeabi-v7a",
+        "x86",
+        "x86_64"
+      ]
+    }
+  ],
+  "packageLine": "package: name='at.heinz.deviceai.continuumlocal' versionCode='40' versionName='0.3.39' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'"
+}

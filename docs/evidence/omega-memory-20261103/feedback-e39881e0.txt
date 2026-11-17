@@ -1,0 +1,16 @@
+SOURCE_SHA=e39881e01062a16fd04b8776ba1700936012f5e0
+COMMAND=CONTINUUM_FABRIC_JVM_DEPS=/workspace/continuum-build-env/jvm-deps JAVA_TOOL_OPTIONS=-Xmx512m bash scripts/continuum-feedback-review-jvm.sh /workspace/continuum-build-env/memory-feedback-e39881e0
+JUnit version 4.13.2
+......
+Time: 0.419
+
+OK (6 tests)
+
+
+SOURCE_HASHES
+385b130f67e7c11564fc0b789f19182f42b4de0615665e424789ed9f2477163c  /workspace/continuum-memory/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt
+54f0ccaffa01f27541c0542004b32f846d96ece339f0616114d77f6e21884ffa  /workspace/continuum-memory/app/src/main/java/at/heinz/deviceai/learning/Lex3LearningExperienceStore.kt
+cf90607066cd3f7f3651a894952eed2c8a63fff81b00b512ce2a7b8f5d28a4b9  /workspace/continuum-memory/app/src/main/java/at/heinz/deviceai/learning/interactive/ResearchFeedbackFileLock.kt
+78bd7552475c99c5f89cc3b4881da09e759a1ff876a2bc2cddb956479cebed44  /workspace/continuum-memory/app/src/main/java/at/heinz/deviceai/learning/interactive/ResearchFeedback.kt
+f0ef9bbcc3d450ea4824592cd7cf3e364d364c84c1e84e21a16736d115bcd236  /workspace/continuum-memory/app/src/test/java/at/heinz/deviceai/learning/interactive/ResearchFeedbackTest.kt
+1374e0794511894bad012a2b95b9dab3d3cce971de2fd05159859b7438e58dc4  /workspace/continuum-memory/app/src/test/java/at/heinz/deviceai/learning/interactive/ResearchFeedbackMultiprocessTest.kt

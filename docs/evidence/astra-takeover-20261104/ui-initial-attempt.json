@@ -1,0 +1,25 @@
+{
+  "application_source_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "caller_test_source_commit": "ba26b3ca8d1d9628050ddb7a8b70470478f7a469",
+  "original_log_sha256": "cc811a3dbf9ec60df68f394170203feaeb6d0d98d6328ac5acce14198949b36f",
+  "observed_test_transitions": [
+    "> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED",
+    "BootstrapRecoveryCallerUiTest > structuredKnowledgeCannotProveARecoveredLegacyFact STARTED",
+    "BootstrapRecoveryCallerUiTest > structuredKnowledgeCannotProveARecoveredLegacyFact FAILED",
+    "BootstrapRecoveryCallerUiTest > healthyLegacyFactsStillAnswerAndDeliveryPreservesANewDraft STARTED",
+    "BootstrapRecoveryCallerUiTest > healthyLegacyFactsStillAnswerAndDeliveryPreservesANewDraft FAILED",
+    "BootstrapRecoveryCallerUiTest > supersededCallbackCannotReleaseAnotherRequestsBusyState STARTED",
+    "BootstrapRecoveryCallerUiTest > supersededCallbackCannotReleaseAnotherRequestsBusyState PASSED",
+    "BootstrapRecoveryCallerUiTest > stalePreferencesCannotBypassRecoveryThroughTheActualComposer STARTED",
+    "BootstrapRecoveryCallerUiTest > stalePreferencesCannotBypassRecoveryThroughTheActualComposer FAILED",
+    "BootstrapRecoveryCallerUiTest > rejectedSubmissionReleasesItsOwnLaneAndKeepsTheUserMessage STARTED",
+    "BootstrapRecoveryCallerUiTest > rejectedSubmissionReleasesItsOwnLaneAndKeepsTheUserMessage FAILED",
+    "BootstrapRecoveryCallerUiTest > stopAfterWorkerCompletionDropsTheQueuedReplyAndKeepsTheDraft STARTED",
+    "BootstrapRecoveryCallerUiTest > stopAfterWorkerCompletionDropsTheQueuedReplyAndKeepsTheDraft PASSED",
+    "BootstrapRecoveryCallerUiTest > sameTokenFromAnOldSessionIsReleasedWithoutPublishingItsReply STARTED",
+    "BootstrapRecoveryCallerUiTest > sameTokenFromAnOldSessionIsReleasedWithoutPublishingItsReply PASSED",
+    "JarvisLiveAvatarWiringUiTest > foldSlotContainsTheSeparateHeadAndOrbAreas STARTED"
+  ],
+  "diagnosis": "The original helper compared the entire LinearLayout gravity to START and therefore excluded all assistant rows. The production callback was unchanged; 09e23507 restricts this comparison to horizontal gravity. All seven assertions were rerun and passed on the identical application classes.",
+  "full_activity_gate": "Bounded at 45 seconds, exit 124, before its assertions; remains open. See activity-timeout-threads.txt. A comparable baseline LEGACY traversal was also blocked."
+}

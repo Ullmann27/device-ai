@@ -1,0 +1,56 @@
+{
+  "gate": "backend",
+  "startedAt": "2026-11-07T06:26:46.264866+00:00",
+  "startedEpochMillis": 1794032806264,
+  "finishedAt": "2026-11-07T06:26:48.866940+00:00",
+  "sourceBefore": {
+    "commit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+    "branch": "codex/continuum-code48-fullstage-cinema-20261107",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceAfter": {
+    "commit": "5d91442e98f78a2af623b8a3c74920805f670cb9",
+    "tree": "ae79915e7b6df784f0ba78ead4a44b44dedec08a",
+    "branch": "codex/continuum-code48-fullstage-cinema-20261107",
+    "trackedChanges": "",
+    "untrackedSource": ""
+  },
+  "sourceUnchanged": true,
+  "commands": [
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate/backend",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate/backend",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "/workspace/scratch/3d1967be6193/candidate/backend",
+      "exitCode": 0
+    }
+  ],
+  "logSha256": "dfdc23ec0d1ac4acb4a8f9b662db7ef2961938e095d9940316d882187c4f1338",
+  "logBytes": 6504,
+  "localUnsignedQaOnly": true,
+  "deviceAcceptance": "NOT_RUN",
+  "status": "PASS"
+}

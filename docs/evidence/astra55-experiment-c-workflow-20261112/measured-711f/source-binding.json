@@ -1,0 +1,179 @@
+{
+  "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+  "production_base": "711f23b33a8fc602a3a0e4baa37aa61e42e6fc64",
+  "preregistration_commit": "8d523d5d524dd5ad5d6e2a0f4b2938c1535b972b",
+  "preregistration_protocol_sha256": "e41d03e817fb766ae0382ccaa6574a580026737946d1c1e455d3f2449e266474",
+  "protocol_unchanged": true,
+  "all_27_sources_match": true,
+  "full_production_sources": 19,
+  "declaration_source_files": 3,
+  "test_source_files": 5,
+  "experiment_change": "Only unused Port.click expectedComposeField parameter; 36 cases and all gates unchanged.",
+  "metrics_byte_identical_to_historical": true,
+  "historical_metrics_sha256": "81e82ee9a7db0c6c71230fddb389ce88d8346d66a10fcbd86277449b5e41592a",
+  "runner_sha256": "9db42265561e9e1dd40ebad07f7ce0f586589d823e98b2eca1443ad347d6fd0d",
+  "sources": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+      "sha256": "4c1be43f82fafad1cc05a66925c0f38d05c9de069eba49fb81358044be1b26f3",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CockpitWorkEvent.kt",
+      "sha256": "6d5b04ac69a1aadf780a24854528feaed07dfdf956b97a7b34086340d668fbf9",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveActionCockpitAdapter.kt",
+      "sha256": "6231e38541e2c3e811b5ea0f17edb3c0f41c25ccf82c9c1e507efefd0c7c74f8",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerIntentParser.kt",
+      "sha256": "626665ac4182af50ac9e7e3ff6f0464f3d2b008ef73de26e45a5509bc9f608c8",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflow.kt",
+      "sha256": "3f202fb294aa7521d92cee5f88b291a6be8090d38ee2b0faf6c010dc27632ce3",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerComputerTaskGrant.kt",
+      "sha256": "1a743004d13a6e2199ae106e1a10af57e3f0ac6fc49afb54f0f87abbb3e20a85",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveComputerActions.kt",
+      "sha256": "6fa134b62d92a7497f6b392d3c75b94c3f4b559962ae4236f39f889dbc4d8e64",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveScrollEvidence.kt",
+      "sha256": "587f6f687dcd88a924657182b45bd892e7f4908179340800002dda0b294e945e",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveSearchSemantics.kt",
+      "sha256": "b649091333bea45a3e63f6c2a4aee2b7bac48de207ceee00f286552070930cd1",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedNodeClick.kt",
+      "sha256": "f87adcad148e8cfb177403ac4d45c3005ad923fd076c086bec49de67184a30ea",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+      "sha256": "885ed84d118c5eb866c73d229a32547fa7b7a66b25ce56ccf54ce008785304f1",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt",
+      "sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+      "sha256": "45d4a11fdeea5464bbc5431586c16ea665503de67f77115eb111d4d2943203df",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "sha256": "21dc3cbbb14e568cd1c792ccccbf04ec35838793492c6f3fbded6fe34bbad8c4",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "sha256": "19060b1c0133f055397fd21e69b0c2450bce506ba33b7eb4d0448c21c8c2fb2c",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarSentenceAccentPolicy.kt",
+      "sha256": "48cf078dc6dd6362fc9234ba816fb4e2cece0efecd4435083626c92badec56bc",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkAvatarBridge.kt",
+      "sha256": "161e14b24f85a396d0a40fd248c82e057d238558bc76bcb28a9083f4e558283c",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/ComputerWorkCuePlayer.kt",
+      "sha256": "52aa870cd6b3555709531bb22ca81cff74ef1d4c1a3842baa5062642754a4114",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LiveComposeSemantics.kt",
+      "sha256": "5314801dfc221383b35383f243fac290046cf20272a1fd359c8a9d3da2ab543c",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "sha256": "6873b4652a01873e8736781c9eafc13b006e92c9a537e457e151630e029b94b6",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
+      "sha256": "9a5b53eaae65242485042e44a502a07d7f4be466461d33a8b33efa351416e4b2",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+      "sha256": "1c4aaf29fa607504a0486e377c320eefa224ff9ebbc3e50989515b6626a9ae8f",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ComputerWorkObservationExperimentTest.kt",
+      "sha256": "35dae27daea2d4b1024601a2c6da630ae7db4ba62bba4878721df93b1e8477b5",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/OwnerComputerWorkflowTest.kt",
+      "sha256": "7991e8882e5fd5645e00d0a23cba0fd4ff81fd29035dda98b03b09f011d9abef",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LiveComputerActionsTest.kt",
+      "sha256": "e195333da8153333157223c9f825adea58459cfbd5113ad3c31d87ccee2b142e",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/CockpitWorkEventTest.kt",
+      "sha256": "1b44234246625edcd2c51d09f193f010296a082e9681f22c04e6be5729f34878",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt",
+      "sha256": "5467a039e30f7ac85b67f2e4ffd915558e1bff744129ba9fbbd393c35ab75a40",
+      "source_commit": "efe40c98118f01352967564d4c423f2faf017dbd",
+      "matches": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-16T05:15:26" hostname="731a0110a54f" time="7.771">
+  <properties/>
+  <testcase name="hiddenNativeStageStaysPausedAcrossConversationLayoutAndResume" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="3.015"/>
+  <testcase name="busyOwnerCorrectionUsesTheExistingStopAndAcknowledgesOneClarification" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.182"/>
+  <testcase name="asynchronousBotLookupAcknowledgesConsumptionAndPreservesNewerTyping" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.192"/>
+  <testcase name="busyResearchReplyConsumesOnlyTheExistingDialogTicketWithoutExecutingIt" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.209"/>
+  <testcase name="htmlOwnsTheOnlyFrameFeedAndTheClassicalSwitchRestoresTheNativeConsumer" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.173"/>
+  <testcase name="realSpeechSurvivesReparentWithANewGenerationAndPauseNeutralizesIt" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.232"/>
+  <testcase name="busyChiefStatusReachesTheRealDiagnosticWithoutCancellingOrStartingModelWork" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.155"/>
+  <testcase name="visibleSplitScreenKeepsHtmlComputerDrawingWhileFullStopEndsTheExistingSession" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="2.731"/>
+  <testcase name="staleAndSubframeDraftsCannotReplaceTheCurrentConversationDraft" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.153"/>
+  <testcase name="installedTtsPcmAndWordRangeReachHtmlAndStopRejectsLateCallbacks" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.116"/>
+  <testcase name="busyRejectionPreservesTheActualNativeDraftAndDoesNotSubmit" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.091"/>
+  <testcase name="realClockCommandConsumesTheComposerAndAcknowledgesOnlyOneSubmission" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.135"/>
+  <testcase name="actualPhoneFoldPhoneReflowKeepsTheSameReadyPageAndDraftSelection" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.249"/>
+  <testcase name="htmlDraftSurvivesTheActualSwitchBackToTheNativeComposer" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.133"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

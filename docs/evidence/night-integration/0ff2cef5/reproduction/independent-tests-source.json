@@ -1,0 +1,132 @@
+[
+  {
+    "source": "tools/momega1-android-review/IndependentTypedAuthorizationUiTest.kt",
+    "name": "IndependentTypedAuthorizationUiTest.kt",
+    "sha256": "76cb675c6bedb1cd2caf93b484f0120a43f700f85b77947bc3b87399c8577e62"
+  },
+  {
+    "source": "tools/momega1-android-review/cancellation/IndependentTypedCancellationUiTest.kt",
+    "name": "IndependentTypedCancellationUiTest.kt",
+    "sha256": "89c88476a3abe6b829e6e5c22177a3b9c86c2c003de82c2f8c1974a4953a71eb"
+  },
+  {
+    "source": "tools/momega1-workspace-review/WorkspaceIndependentReviewTest.kt",
+    "name": "WorkspaceIndependentReviewTest.kt",
+    "sha256": "c66722c02b84da71e773370d401590e9aefa9dd12b59de4d67fdd55be3385206"
+  },
+  {
+    "source": "tools/momega1-android-plan-review/ui/IndependentCodingPlanningDeliveryUiTest.kt",
+    "name": "IndependentCodingPlanningDeliveryUiTest.kt",
+    "sha256": "681c1c3c137e22b8924586ecea3be8b4b2337bc07f5345e6db71a9e07c30ab28"
+  },
+  {
+    "source": "tools/momega1-android-plan-review/ui/IndependentCodingPlanningIntakeUiTest.kt",
+    "name": "IndependentCodingPlanningIntakeUiTest.kt",
+    "sha256": "c229de166f49f588d85a57046a388873bb6fc28fff33bd4718bdbc7832e1f33f"
+  },
+  {
+    "source": "tools/momega1-android-plan-review/pure/IndependentCodingPlanningTest.kt",
+    "name": "IndependentCodingPlanningTest.kt",
+    "sha256": "be19e5189c6b4c559cc97981484916a1be73adc4f18d8bfab552e6a30a57dc9f"
+  },
+  {
+    "source": "tools/jarvis-reference-review/MapperMotionV2ChallengeTest.kt",
+    "name": "MapperMotionV2ChallengeTest.kt",
+    "sha256": "6225afb286d77c27fe3ffb0073e9b77997a270e55eeac35054615d8cd4aff3ea"
+  },
+  {
+    "source": "tools/jarvis-reference-review/ObservedGazeChallengeTest.kt",
+    "name": "ObservedGazeChallengeTest.kt",
+    "sha256": "ac7f44ec7fd166fe6c30e9666702ea819455c549539c0bffb716f04923b4fa45"
+  },
+  {
+    "source": "tools/momega1-readiness-review/IndependentCameraCallbacksUiTest.kt",
+    "name": "IndependentCameraCallbacksUiTest.kt",
+    "sha256": "0ad37cd6f0677b6bed48fa52d24981aae3fd2369bfc3e1a0948bb025a61a590f"
+  },
+  {
+    "source": "tools/momega1-readiness-review/IndependentCameraPolicyTest.kt",
+    "name": "IndependentCameraPolicyTest.kt",
+    "sha256": "445749f7f5c1afe6eb082a3c8fed5b893b055b972093bc7bd058f0e3f8d2150f"
+  },
+  {
+    "source": "tools/momega1-readiness-review/IndependentReadinessGuideTest.kt",
+    "name": "IndependentReadinessGuideTest.kt",
+    "sha256": "2dd94dbd8cb6ebb7c166853e1fc52deaaba81da4ab68cafe53c9e3948c3d0e13"
+  },
+  {
+    "source": "tools/momega1-readiness-review/activity/IndependentReadinessCallerUiTest.kt",
+    "name": "IndependentReadinessCallerUiTest.kt",
+    "sha256": "c3f4bee2bbbaedd3ebac7be34ebbce9edfb9bb49f7b63089d1c51aa3857cfa27"
+  },
+  {
+    "source": "tools/momega1-readiness-review/activity/IndependentReadinessVoiceCompletionUiTest.kt",
+    "name": "IndependentReadinessVoiceCompletionUiTest.kt",
+    "sha256": "f5a1467d7e54f511a3e57c67e7512ce852d0fae48faca836b8393cfe8bed969e"
+  },
+  {
+    "source": "tools/momega1-readiness-review/activity/IndependentFirstWelcomeUiTest.kt",
+    "name": "IndependentFirstWelcomeUiTest.kt",
+    "sha256": "8142feae180712ee05bd2a77e9f1958e25b722c559fa0b861751468685006407"
+  },
+  {
+    "source": "tools/momega1-avatar-effects-review/IndependentVisibleAvatarUiTest.kt",
+    "name": "IndependentVisibleAvatarUiTest.kt",
+    "sha256": "a4df3aa3b10c647055cd94d1f527f929921b3e26244f39483e6958ce88173c6e"
+  },
+  {
+    "source": "tools/momega1-avatar-effects-review/IndependentTaskEffectsBoundaryUiTest.kt",
+    "name": "IndependentTaskEffectsBoundaryUiTest.kt",
+    "sha256": "ac7290fe05aee1ef590b4488be93703251c00107b5f257d9264f999063cd956c"
+  },
+  {
+    "source": "tools/momega1-avatar-effects-review/IndependentTaskEffectsTest.kt",
+    "name": "IndependentTaskEffectsTest.kt",
+    "sha256": "ea7ec7f331482f6af114386f02973863afb2cbd8650bedd97219d38330624e5e"
+  },
+  {
+    "source": "tools/momega1-avatar-effects-review/IndependentUiFeedbackUiTest.kt",
+    "name": "IndependentUiFeedbackUiTest.kt",
+    "sha256": "e517083c87158040bbd92e9f38cb401f49a279dc0317685fdfbe02a9ddc3b609"
+  },
+  {
+    "source": "tools/momega1-avatar-effects-review/IndependentTaskEffectsCallerUiTest.kt",
+    "name": "IndependentTaskEffectsCallerUiTest.kt",
+    "sha256": "132d1fd2bf4da4c83a5b78728f2c02079043c44b06f6501d0763a6a349418f88"
+  },
+  {
+    "source": "tools/momega1-layout-final/ui/IndependentFullLayoutUiTest.kt",
+    "name": "IndependentFullLayoutUiTest.kt",
+    "sha256": "95842979381b6f3a4b95764cc11ec7f27128cb745cba360700e2cecf90f40c55"
+  },
+  {
+    "source": "tools/momega1-layout-final/polish/IndependentFinalVisualPolishUiTest.kt",
+    "name": "IndependentFinalVisualPolishUiTest.kt",
+    "sha256": "bb39895c725240b1160626374c943b4fed5f2944ccaefb257d4ad613e9a676a9"
+  },
+  {
+    "source": "tools/genesis-ui-review/speech/IndependentActivitySpeechTest.kt",
+    "name": "IndependentActivitySpeechTest.kt",
+    "sha256": "f3326c41a3925560e18a1f1630b09120716ecd0e8a8731888ca6fe34565fbc4d"
+  },
+  {
+    "source": "tools/genesis-ui-review/selection/IndependentBotSelectionUiTest.kt",
+    "name": "IndependentBotSelectionUiTest.kt",
+    "sha256": "7f34f1cfa489c50ad5063653e84643b26d84c5f6fb02983476e2ad020584fe91"
+  },
+  {
+    "source": "tools/genesis-ui-review/selection/IndependentBotAddressRouterTest.kt",
+    "name": "IndependentBotAddressRouterTest.kt",
+    "sha256": "940c6d1974081ce30cd06957ef71f4e9c41af73e75697223318289ab74be83ea"
+  },
+  {
+    "source": "tools/genesis-ui-review/selection/IndependentBotSpeechScopeTest.kt",
+    "name": "IndependentBotSpeechScopeTest.kt",
+    "sha256": "60fb40fafdf0e8023ecd3f8ba9e91f4c9c8151ca7cbc1856c457bd4402cec3e9"
+  },
+  {
+    "source": "tools/synapse-ui-review/IndependentBotRosterUiTest.kt",
+    "name": "IndependentBotRosterUiTest.kt",
+    "sha256": "e73820805756b7e69e4b90a1f898a1228eef26866e314e0723ad3fb127708373"
+  }
+]

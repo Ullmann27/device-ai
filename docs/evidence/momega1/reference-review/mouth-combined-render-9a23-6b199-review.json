@@ -1,0 +1,53 @@
+{
+  "schema": "independent-combined-mouth-render-review",
+  "version": 1,
+  "source": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+  "assetSha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+  "poseFileSha256": "8d2af24cb1e0bb22a8e35a456f9be41de91d322980d7f46c63159be6628b7677",
+  "manifestSha256": "232e4374b9e7092113049a4f4b92700c43f26cf5a3833d8bd215e2617b7e7698",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "allFiveFramesIndependentlyViewed": true,
+  "frameChecks": [
+    {
+      "file": "frame-0000.png",
+      "imageSha256": "d2e27fabf801111f6c3fb366b570b229b86f410300d4ebf1bccf112f82dbdcb3",
+      "actualPoseFoundUnmodified": true,
+      "independentJawMatrixMaxAbsDifference": 3.613175749705988e-07
+    },
+    {
+      "file": "frame-0001.png",
+      "imageSha256": "ca679e585083b6f78b0d509cdbba81baa5fac839cdae9801ef58244040db4be3",
+      "actualPoseFoundUnmodified": true
+    },
+    {
+      "file": "frame-0002.png",
+      "imageSha256": "1a319694f3e4192ee979a58efc593990896ea4bad8ba5fb35583fe3c3f1a0c01",
+      "actualPoseFoundUnmodified": true,
+      "independentJawMatrixMaxAbsDifference": 1.8452255517997784e-07
+    },
+    {
+      "file": "frame-0003.png",
+      "imageSha256": "d75c58973b7aa1db3bc8e943828eaad3a59d9b86275318d1cfaa20a3b1dea798",
+      "actualPoseFoundUnmodified": true,
+      "independentJawMatrixMaxAbsDifference": 1.8452255517997784e-07
+    },
+    {
+      "file": "frame-0004.png",
+      "imageSha256": "15109998bd88d5a760e36f6da8ff91044de82262889d67cabf38b920bcc517f5",
+      "actualPoseFoundUnmodified": true
+    }
+  ],
+  "neutralAndStoppedRgbPixelsExactlyEqual": true,
+  "observations": [
+    "In the actual AA and O front views, visible teeth stay inside the displayed mouth opening; the lateral exposed rows seen in the original combination are absent.",
+    "The actual full-blink anchor visibly closes both eyelids.",
+    "Speech-stop returns exactly to the neutral RGB image at this fixed pose and camera.",
+    "The original material remains dark and coarse; this anatomical correction does not establish the luminous reference appearance."
+  ],
+  "decision": "ACCEPT_COMBINED_MOUTH_ANCHOR_IMPROVEMENT; H01_STYLE_NOT_ACCEPTED",
+  "limits": [
+    "Five fixed-camera Blender CPU frames, synthetic production poses; not an animated speech clip or actual audio/Filament/device evidence.",
+    "The geometry gate is sampled canonical projection, not universal collision proof.",
+    "Styled asset and full 224-frame idle review remain pending."
+  ]
+}

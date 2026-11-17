@@ -1,0 +1,192 @@
+[
+  {
+    "file": "pure-037370f0/checks.exit",
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "bytes": 2
+  },
+  {
+    "file": "pure-037370f0/checks.txt",
+    "sha256": "bd40d2cb7a1e650fd4cc535910fd232c4deb291128e1ef3fbb1a6b2911766c4e",
+    "bytes": 1104
+  },
+  {
+    "file": "pure-037370f0/compile.exit",
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "bytes": 2
+  },
+  {
+    "file": "pure-037370f0/compile.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "file": "pure-037370f0/source.txt",
+    "sha256": "57a9823fbe3ab04e3b409e8c3d8a99168c5135665c22d200468e81153d3f7e7b",
+    "bytes": 773
+  },
+  {
+    "file": "pure-b95858c1/checks.exit",
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "bytes": 2
+  },
+  {
+    "file": "pure-b95858c1/checks.txt",
+    "sha256": "bd40d2cb7a1e650fd4cc535910fd232c4deb291128e1ef3fbb1a6b2911766c4e",
+    "bytes": 1104
+  },
+  {
+    "file": "pure-b95858c1/compile.exit",
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "bytes": 2
+  },
+  {
+    "file": "pure-b95858c1/compile.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "file": "pure-b95858c1/source.txt",
+    "sha256": "de4bf20c37658d0f7639d691b20e9fa88d63b6d7f3f19bcf8f1518ebff41a341",
+    "bytes": 773
+  },
+  {
+    "file": "pure-harness-initial-compile-error/compile.exit",
+    "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "bytes": 2
+  },
+  {
+    "file": "pure-harness-initial-compile-error/compile.txt",
+    "sha256": "305ebbe4a3a4f4343019d2af5d654c91e73f4438a1eef3b14bf5ca599f7decef",
+    "bytes": 1113
+  },
+  {
+    "file": "pure-harness-initial-compile-error/source.txt",
+    "sha256": "6bef3f832548be6b94a7ab4b60699d12070db23fd465df2e704d60f504be5d1d",
+    "bytes": 773
+  },
+  {
+    "file": "pure-harness-invalid-fixture/checks.exit",
+    "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "bytes": 2
+  },
+  {
+    "file": "pure-harness-invalid-fixture/checks.txt",
+    "sha256": "7a40ac04f9c9283c54c5d700a20d0869ad949c77bd069db065d93eef44bece23",
+    "bytes": 1024
+  },
+  {
+    "file": "pure-harness-invalid-fixture/compile.exit",
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "bytes": 2
+  },
+  {
+    "file": "pure-harness-invalid-fixture/compile.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "file": "pure-harness-invalid-fixture/source.txt",
+    "sha256": "74ff227859333c2daccc685ba244cd17afc6253cc879e772f5b6499deeb98113",
+    "bytes": 773
+  },
+  {
+    "file": "ui-green-037370f0/TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml",
+    "sha256": "db2389bcdb9be57c270e322c18305ce5feceab722faefdf5faf201a016b8cc0a",
+    "bytes": 1100
+  },
+  {
+    "file": "ui-green-037370f0/TEST-at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest.xml",
+    "sha256": "b61b66e9f2f9b33322c7efd7a590976083e77673f5e08b6a636b6f6c46391129",
+    "bytes": 925
+  },
+  {
+    "file": "ui-green-037370f0/TEST-at.heinz.deviceai.ContinuumOwnedBuilderUiTest.xml",
+    "sha256": "3374f169d93d0a23d49cfc235b20c4d52a0ce27b8e4680e66287ef3c1666a930",
+    "bytes": 815
+  },
+  {
+    "file": "ui-green-037370f0/TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml",
+    "sha256": "34ce650c4862369c966aa74c0c05f7b36b59b1e2edecf99dc692f3f5ce0c02cd",
+    "bytes": 1223
+  },
+  {
+    "file": "ui-green-037370f0/TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml",
+    "sha256": "133e0afbf99260bb6acc0a21df6a85d495ac334599ff4edf323b407bd9c87623",
+    "bytes": 2215
+  },
+  {
+    "file": "ui-green-037370f0/TEST-at.heinz.deviceai.ContinuumTypedSnapshotBindingTest.xml",
+    "sha256": "887811eac69298c77d908d806750e4115d1c718759d35f40f55392cfd8958978",
+    "bytes": 659
+  },
+  {
+    "file": "ui-green-037370f0/TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml",
+    "sha256": "750ee0ee9547c0333ab99e2ba37a2ab27e4c7eb6b05ebaf731b8eb09a6bd02c6",
+    "bytes": 1710
+  },
+  {
+    "file": "ui-green-037370f0/TEST-at.heinz.deviceai.IndependentTypedCancellationUiTest.xml",
+    "sha256": "10d402bc4d43f27e0c6024025da6f3372ff42ec2c295e5dc8cd910fc545c4c61",
+    "bytes": 948
+  },
+  {
+    "file": "ui-green-037370f0/gradle.exit",
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "bytes": 2
+  },
+  {
+    "file": "ui-green-037370f0/gradle.txt",
+    "sha256": "c46a3e434d4be55de56a2970b58b47bfaec3bfc5274942171586e69b3cf4b41b",
+    "bytes": 2973
+  },
+  {
+    "file": "ui-green-037370f0/reviewer-sources.sha256",
+    "sha256": "a380c840097c4b9d56412334fed93f6dfad19c0b200d668cdb1a94a36789ba3f",
+    "bytes": 319
+  },
+  {
+    "file": "ui-green-037370f0/source-after.txt",
+    "sha256": "bee0df8bdd680d2d50702d37936d992fe098f56950f19eda05a33b8f620c905a",
+    "bytes": 431
+  },
+  {
+    "file": "ui-green-037370f0/source-before.txt",
+    "sha256": "bee0df8bdd680d2d50702d37936d992fe098f56950f19eda05a33b8f620c905a",
+    "bytes": 431
+  },
+  {
+    "file": "ui-green-037370f0/test-filter.init.gradle",
+    "sha256": "3630a55d082c5eb360986c58497cc7b9ec71c5a536f932e3adb18f29f3f0b3ae",
+    "bytes": 858
+  },
+  {
+    "file": "ui-red-b95858c1/gradle.exit",
+    "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "bytes": 2
+  },
+  {
+    "file": "ui-red-b95858c1/gradle.txt",
+    "sha256": "ad73bfdb94664e3a9ef68e611eab51ff6230c33fd932948bbbf19651bb38f9bd",
+    "bytes": 3363
+  },
+  {
+    "file": "ui-red-b95858c1/junit.xml",
+    "sha256": "5c0b681fea13e35b87478f0b2d91aba04c9bbfc53ad324d6b1ca9c47fcd7fa13",
+    "bytes": 5556
+  },
+  {
+    "file": "ui-red-b95858c1/source-after.txt",
+    "sha256": "4fb16b2b018fa8af2a6d9f42c2b3a3c44b51ad532a1e3b649750119cf8d9f67f",
+    "bytes": 594
+  },
+  {
+    "file": "ui-red-b95858c1/source-before.txt",
+    "sha256": "4fb16b2b018fa8af2a6d9f42c2b3a3c44b51ad532a1e3b649750119cf8d9f67f",
+    "bytes": 594
+  },
+  {
+    "file": "ui-red-b95858c1/test-filter.init.gradle",
+    "sha256": "0f3ebd2b5e86a67bb3f6ce80701e78606b73e4f09a2a463c7f18adf58e97a3b6",
+    "bytes": 332
+  }
+]

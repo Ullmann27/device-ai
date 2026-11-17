@@ -1,0 +1,20 @@
+JAR 10f7968b223288703759dc23063411d0ef8304af52ed40ec5f133b9002b1ab3b commit=524c1afc start=2026-10-23T08:35:26Z args=hybrid vocab=258 corpus=nfc2 ckpt=6738e828b90a6e20f99ff6439c8cd1330e43db78738626d13eee7a80cbbe9672 ckpt=3e5d0ecfe26fa58e3028698faeb8f5373178631f09acc28f65a459b5e7452eef ckpt=f3216e993041213dae11845e4d4e56d03db632c4bd95bff2af8875e754c3d35f ckpt=3a0bae3204950b7a3d9b4ad89a8a8e16fb387b85d387a96bca9e59862559f85a ckpt=1a2be19c84f626def8b87448902dbcbed1d579eb4a0bb7a1916cbf1422e19503 ckpt=8e22187f97de01e0d460d45184691ed0e01a91c900cecdfeab05ad98c1da1c5b ckpt=74ca56d56c8c07eb0f8fa0530d4006ea4e789e4d411efce6a88bc9a73a2bf840 ckpt=a2a5f7bf3fa331559ccf2cb65009393b9893e024cb2abc2b36fe8c5984625ae4 ckpt=fcf05efef8eb6866781b5f42cb8ee91cd7deab6c0daafcfc3d0daa81935d159b store=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad/nf7/ckpt
+NFC2 commit=9fb4361c896315e9e974dd5d8feab5ce1ce65803 docs=83 tokenizer=v258 sha=f5f85a95e5046abcde7813eb7178161722163766cd0fa73dd7c1b3f682b73f8b
+SPLIT DOC TRAIN docs=71 segments=2506 bytes=422096 sha=e09a7cda131ebc583e7c9dc49c3d0d999f8d1beedfa7357d4e05863b373c3cf4
+SPLIT DOC VALIDATION docs=5 segments=180 bytes=34313 sha=73ec893c44549f039e2c4a281a60a62eec4df300060bd6e15b201561cdaf0146
+SPLIT DOC TEST docs=7 segments=219 bytes=38346 sha=3deec29e97940625223b664f9180e54a605fa9225a7defa782183b43962a68bb
+SPLIT CODE TRAIN docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+SPLIT CODE VALIDATION docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+SPLIT CODE TEST docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+HYBRID validationDocs=5 folds={1=3, 0=2} bytes=34313
+HYBRID G-M seed=1 epoch=6 ckpt=6738e828b90a6e20f99ff6439c8cd1330e43db78738626d13eee7a80cbbe9672 neuralBPB=2.3926 knBPB=1.8856 fixedBPB=1.8474 anchoredBPB=1.8469 fold0:lambda=0.200 gate=(-1.436,0.126,-0.254) fold1:lambda=0.150 gate=(-1.705,0.046,-0.067)
+HYBRID G-M seed=2 epoch=6 ckpt=3e5d0ecfe26fa58e3028698faeb8f5373178631f09acc28f65a459b5e7452eef neuralBPB=2.4089 knBPB=1.8856 fixedBPB=1.8502 anchoredBPB=1.8502 fold0:lambda=0.175 gate=(-1.600,0.116,-0.239) fold1:lambda=0.150 gate=(-1.693,-0.014,-0.022)
+HYBRID G-M seed=3 epoch=6 ckpt=f3216e993041213dae11845e4d4e56d03db632c4bd95bff2af8875e754c3d35f neuralBPB=2.4305 knBPB=1.8856 fixedBPB=1.8519 anchoredBPB=1.8517 fold0:lambda=0.175 gate=(-1.609,0.097,-0.226) fold1:lambda=0.150 gate=(-1.727,0.004,-0.084)
+HYBRID G-M-res seed=1 epoch=6 ckpt=3a0bae3204950b7a3d9b4ad89a8a8e16fb387b85d387a96bca9e59862559f85a neuralBPB=3.9904 knBPB=1.8856 fixedBPB=1.8640 anchoredBPB=1.8634 fold0:lambda=0.100 gate=(-2.165,-0.032,-0.116) fold1:lambda=0.075 gate=(-2.560,0.025,-0.094)
+HYBRID G-M-res seed=2 epoch=6 ckpt=1a2be19c84f626def8b87448902dbcbed1d579eb4a0bb7a1916cbf1422e19503 neuralBPB=4.0761 knBPB=1.8856 fixedBPB=1.8646 anchoredBPB=1.8640 fold0:lambda=0.100 gate=(-2.177,-0.004,-0.171) fold1:lambda=0.075 gate=(-2.436,-0.081,0.014)
+HYBRID G-M-res seed=3 epoch=6 ckpt=8e22187f97de01e0d460d45184691ed0e01a91c900cecdfeab05ad98c1da1c5b neuralBPB=4.0626 knBPB=1.8856 fixedBPB=1.8623 anchoredBPB=1.8618 fold0:lambda=0.100 gate=(-2.114,-0.044,-0.094) fold1:lambda=0.075 gate=(-2.487,-0.048,-0.008)
+HYBRID G-M-resin seed=1 epoch=6 ckpt=74ca56d56c8c07eb0f8fa0530d4006ea4e789e4d411efce6a88bc9a73a2bf840 neuralBPB=8.2796 knBPB=1.8856 fixedBPB=1.8852 anchoredBPB=1.8842 fold0:lambda=0.025 gate=(-3.750,-0.296,-0.120) fold1:lambda=0.025 gate=(-3.780,-0.221,-0.110)
+HYBRID G-M-resin seed=2 epoch=6 ckpt=a2a5f7bf3fa331559ccf2cb65009393b9893e024cb2abc2b36fe8c5984625ae4 neuralBPB=8.1035 knBPB=1.8856 fixedBPB=1.8857 anchoredBPB=1.8850 fold0:lambda=0.000 gate=(-6.878,0.012,0.024) fold1:lambda=0.025 gate=(-3.752,-0.226,-0.080)
+HYBRID G-M-resin seed=3 epoch=6 ckpt=fcf05efef8eb6866781b5f42cb8ee91cd7deab6c0daafcfc3d0daa81935d159b neuralBPB=8.2435 knBPB=1.8856 fixedBPB=1.8851 anchoredBPB=1.8841 fold0:lambda=0.025 gate=(-3.749,-0.274,-0.120) fold1:lambda=0.025 gate=(-3.764,-0.237,-0.097)
+PEAK heapMb=737
+exit=0 end=2026-10-23T08:36:01Z

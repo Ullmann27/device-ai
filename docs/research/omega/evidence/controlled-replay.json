@@ -1,0 +1,1500 @@
+{
+  "schema": "omega-controlled-replay",
+  "version": 1,
+  "node": "v24.19.0",
+  "platform": "linux",
+  "sourceCommit": "da8196c9c1cdb46aa20d651b330d99e49f4cf7f3",
+  "limitations": [
+    "Synthetic proposals; no real model inference",
+    "Same-author fixed tasks; not a blind generalization holdout",
+    "Equal proposal ceiling, additional verifier compute; no compute-efficiency claim",
+    "Parent CPU/RSS only; child aggregate CPU/memory and GPU utilization NOT_MEASURED",
+    "Finite examples and relations are not proofs; repeat trials are not independent task samples"
+  ],
+  "summary": {
+    "baseline": {
+      "trials": 10,
+      "accepted": 10,
+      "correct": 2,
+      "falseAcceptance": 8,
+      "abstained": 0,
+      "proposalCalls": 10,
+      "modelCalls": 0,
+      "counterexamples": 0,
+      "wallMs": 5183.222196000001
+    },
+    "vhsr": {
+      "trials": 10,
+      "accepted": 8,
+      "correct": 8,
+      "falseAcceptance": 0,
+      "abstained": 2,
+      "proposalCalls": 18,
+      "modelCalls": 0,
+      "counterexamples": 10,
+      "wallMs": 7504.605969000002
+    }
+  },
+  "rows": [
+    {
+      "task": "distance",
+      "arm": "baseline",
+      "repeat": 0,
+      "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "5"
+      ],
+      "accepted": true,
+      "correct": false,
+      "falseAcceptance": true,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+        "candidateSha256": "de7c3660f7f1e283489967e4fa8abdaa81dea61c7e6b433bc8672bd8059e2019",
+        "suiteSha256": "583c8e914a53c47f27853e13b7d2f8d8cd885609d01d5d0d1fe114caffdc531c",
+        "status": "FAIL",
+        "checks": 1,
+        "counterexample": {
+          "id": "case-0",
+          "file": "lib/math.mjs",
+          "inputs": [
+            -17,
+            11
+          ],
+          "actual": 5,
+          "expected": 28
+        }
+      },
+      "onlineSuiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 580.5693739999999,
+      "parentCpuMs": 45.286,
+      "parentMaxRssKiB": 39168,
+      "sourceClean": true
+    },
+    {
+      "task": "distance",
+      "arm": "vhsr",
+      "repeat": 0,
+      "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 2,
+      "proposalBudget": 2,
+      "proposed": [
+        "5",
+        "a>b?a-b:b-a"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+        "candidateSha256": "c265bb933d5d67c843a2c6ed9ebbda261d92430253fc177561f1eddf5299cc95",
+        "suiteSha256": "583c8e914a53c47f27853e13b7d2f8d8cd885609d01d5d0d1fe114caffdc531c",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+      "counterexamples": 1,
+      "attempts": [
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+            "candidateSha256": "de7c3660f7f1e283489967e4fa8abdaa81dea61c7e6b433bc8672bd8059e2019",
+            "suiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 5,
+              "expected": 0
+            }
+          }
+        },
+        {
+          "outcome": "VERIFIED",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+            "candidateSha256": "c265bb933d5d67c843a2c6ed9ebbda261d92430253fc177561f1eddf5299cc95",
+            "suiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+            "status": "PASS",
+            "checks": 4,
+            "counterexample": null
+          }
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": [],
+        "researchVerification": {
+          "schema": "continuum-candidate-verification",
+          "version": 1,
+          "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+          "candidateSha256": "c265bb933d5d67c843a2c6ed9ebbda261d92430253fc177561f1eddf5299cc95",
+          "suiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+          "status": "PASS",
+          "checks": 4,
+          "counterexample": null
+        }
+      },
+      "wallMs": 900.442765,
+      "parentCpuMs": 46.197,
+      "parentMaxRssKiB": 43776,
+      "sourceClean": true
+    },
+    {
+      "task": "minimum",
+      "arm": "baseline",
+      "repeat": 0,
+      "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "3"
+      ],
+      "accepted": true,
+      "correct": false,
+      "falseAcceptance": true,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+        "candidateSha256": "19ca642535ffa69caaba8021587daacef78fede5c98e0120049cfb5ac26659e4",
+        "suiteSha256": "c8347fbd0661e05da6d7a5bd3186908d8d1f65ae83d61c733e0b42d3866887ad",
+        "status": "FAIL",
+        "checks": 1,
+        "counterexample": {
+          "id": "case-0",
+          "file": "lib/math.mjs",
+          "inputs": [
+            -17,
+            11
+          ],
+          "actual": 3,
+          "expected": -17
+        }
+      },
+      "onlineSuiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 539.064085,
+      "parentCpuMs": 25.593,
+      "parentMaxRssKiB": 44084,
+      "sourceClean": true
+    },
+    {
+      "task": "minimum",
+      "arm": "vhsr",
+      "repeat": 0,
+      "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 2,
+      "proposalBudget": 2,
+      "proposed": [
+        "3",
+        "a<b?a:b"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+        "candidateSha256": "546d2804d78a65b5a75b9c2609f73a18cf1c4191ee513956f0eddcc4d436e5b9",
+        "suiteSha256": "c8347fbd0661e05da6d7a5bd3186908d8d1f65ae83d61c733e0b42d3866887ad",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+      "counterexamples": 1,
+      "attempts": [
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+            "candidateSha256": "19ca642535ffa69caaba8021587daacef78fede5c98e0120049cfb5ac26659e4",
+            "suiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 3,
+              "expected": 0
+            }
+          }
+        },
+        {
+          "outcome": "VERIFIED",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+            "candidateSha256": "546d2804d78a65b5a75b9c2609f73a18cf1c4191ee513956f0eddcc4d436e5b9",
+            "suiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+            "status": "PASS",
+            "checks": 4,
+            "counterexample": null
+          }
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": [],
+        "researchVerification": {
+          "schema": "continuum-candidate-verification",
+          "version": 1,
+          "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+          "candidateSha256": "546d2804d78a65b5a75b9c2609f73a18cf1c4191ee513956f0eddcc4d436e5b9",
+          "suiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+          "status": "PASS",
+          "checks": 4,
+          "counterexample": null
+        }
+      },
+      "wallMs": 861.595268,
+      "parentCpuMs": 44.772,
+      "parentMaxRssKiB": 46132,
+      "sourceClean": true
+    },
+    {
+      "task": "maximum",
+      "arm": "baseline",
+      "repeat": 0,
+      "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "8"
+      ],
+      "accepted": true,
+      "correct": false,
+      "falseAcceptance": true,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+        "candidateSha256": "16e713b64e6bb3a933d2d5c2479bb1c7104bd53a15b16f9a34adc349f99b7d5c",
+        "suiteSha256": "ef2371bf1ae9353b2b2fd5426fa058a45bc39a3f869285277ce64d2125d0d8cb",
+        "status": "FAIL",
+        "checks": 1,
+        "counterexample": {
+          "id": "case-0",
+          "file": "lib/math.mjs",
+          "inputs": [
+            -17,
+            11
+          ],
+          "actual": 8,
+          "expected": 11
+        }
+      },
+      "onlineSuiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 518.9838130000003,
+      "parentCpuMs": 22.386,
+      "parentMaxRssKiB": 46132,
+      "sourceClean": true
+    },
+    {
+      "task": "maximum",
+      "arm": "vhsr",
+      "repeat": 0,
+      "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 2,
+      "proposalBudget": 2,
+      "proposed": [
+        "8",
+        "a>b?a:b"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+        "candidateSha256": "f432ea49e3079699bd125a80bdf329078bea1d35965e711b593b69b3982255b7",
+        "suiteSha256": "ef2371bf1ae9353b2b2fd5426fa058a45bc39a3f869285277ce64d2125d0d8cb",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+      "counterexamples": 1,
+      "attempts": [
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+            "candidateSha256": "16e713b64e6bb3a933d2d5c2479bb1c7104bd53a15b16f9a34adc349f99b7d5c",
+            "suiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 8,
+              "expected": 0
+            }
+          }
+        },
+        {
+          "outcome": "VERIFIED",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+            "candidateSha256": "f432ea49e3079699bd125a80bdf329078bea1d35965e711b593b69b3982255b7",
+            "suiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+            "status": "PASS",
+            "checks": 4,
+            "counterexample": null
+          }
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": [],
+        "researchVerification": {
+          "schema": "continuum-candidate-verification",
+          "version": 1,
+          "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+          "candidateSha256": "f432ea49e3079699bd125a80bdf329078bea1d35965e711b593b69b3982255b7",
+          "suiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+          "status": "PASS",
+          "checks": 4,
+          "counterexample": null
+        }
+      },
+      "wallMs": 875.9317150000002,
+      "parentCpuMs": 35.733,
+      "parentMaxRssKiB": 46132,
+      "sourceClean": true
+    },
+    {
+      "task": "correct-first",
+      "arm": "baseline",
+      "repeat": 0,
+      "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "a>b?a-b:b-a"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+        "candidateSha256": "485b7a0c82ae921ab0d46e0d522401733a27aa5746c269706730fd72a251b1f3",
+        "suiteSha256": "f4e2cd91f05a3e9bfdfdd6f91155485eb475006fe4e55293329666ebbb987f71",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "f296de1192ab7284927683551c218eedc95f782e235a414fb7d12cea65d264ff",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 493.7650789999998,
+      "parentCpuMs": 25.818,
+      "parentMaxRssKiB": 46756,
+      "sourceClean": true
+    },
+    {
+      "task": "correct-first",
+      "arm": "vhsr",
+      "repeat": 0,
+      "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "a>b?a-b:b-a"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+        "candidateSha256": "485b7a0c82ae921ab0d46e0d522401733a27aa5746c269706730fd72a251b1f3",
+        "suiteSha256": "f4e2cd91f05a3e9bfdfdd6f91155485eb475006fe4e55293329666ebbb987f71",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "f296de1192ab7284927683551c218eedc95f782e235a414fb7d12cea65d264ff",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+            "candidateSha256": "485b7a0c82ae921ab0d46e0d522401733a27aa5746c269706730fd72a251b1f3",
+            "suiteSha256": "f296de1192ab7284927683551c218eedc95f782e235a414fb7d12cea65d264ff",
+            "status": "PASS",
+            "checks": 4,
+            "counterexample": null
+          }
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": [],
+        "researchVerification": {
+          "schema": "continuum-candidate-verification",
+          "version": 1,
+          "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+          "candidateSha256": "485b7a0c82ae921ab0d46e0d522401733a27aa5746c269706730fd72a251b1f3",
+          "suiteSha256": "f296de1192ab7284927683551c218eedc95f782e235a414fb7d12cea65d264ff",
+          "status": "PASS",
+          "checks": 4,
+          "counterexample": null
+        }
+      },
+      "wallMs": 572.8688480000001,
+      "parentCpuMs": 23.831,
+      "parentMaxRssKiB": 46756,
+      "sourceClean": true
+    },
+    {
+      "task": "budget-exhausted",
+      "arm": "baseline",
+      "repeat": 0,
+      "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "5"
+      ],
+      "accepted": true,
+      "correct": false,
+      "falseAcceptance": true,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+        "candidateSha256": "8131d9e3a223d125bcc699fa8ac4ea8298e1582185154f69082171b66e1aff58",
+        "suiteSha256": "81a9945a3ea58e7274659bf08d9bc8df0fa4ff50be326c86d78aff05402ae547",
+        "status": "FAIL",
+        "checks": 1,
+        "counterexample": {
+          "id": "case-0",
+          "file": "lib/math.mjs",
+          "inputs": [
+            -17,
+            11
+          ],
+          "actual": 5,
+          "expected": 28
+        }
+      },
+      "onlineSuiteSha256": "90d149678e8d3b99e50749a1cfd7e15c2fac8012569f7987ffa324d39277c08c",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 486.6574389999996,
+      "parentCpuMs": 19.087,
+      "parentMaxRssKiB": 46756,
+      "sourceClean": true
+    },
+    {
+      "task": "budget-exhausted",
+      "arm": "vhsr",
+      "repeat": 0,
+      "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+      "status": "FAILED",
+      "reason": "NO_VERIFIED_REPAIR",
+      "modelCalls": 0,
+      "proposalCalls": 2,
+      "proposalBudget": 2,
+      "proposed": [
+        "5",
+        "5+0*a"
+      ],
+      "accepted": false,
+      "correct": false,
+      "falseAcceptance": false,
+      "evaluation": null,
+      "onlineSuiteSha256": "90d149678e8d3b99e50749a1cfd7e15c2fac8012569f7987ffa324d39277c08c",
+      "counterexamples": 2,
+      "attempts": [
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+            "candidateSha256": "8131d9e3a223d125bcc699fa8ac4ea8298e1582185154f69082171b66e1aff58",
+            "suiteSha256": "90d149678e8d3b99e50749a1cfd7e15c2fac8012569f7987ffa324d39277c08c",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 5,
+              "expected": 0
+            }
+          }
+        },
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+            "candidateSha256": "62a71e05b88a4be518c3a1975ffae2c4f63865603aad44ae0bbfe7d2d3970de9",
+            "suiteSha256": "90d149678e8d3b99e50749a1cfd7e15c2fac8012569f7987ffa324d39277c08c",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 5,
+              "expected": 0
+            }
+          }
+        }
+      ],
+      "independent": null,
+      "wallMs": 654.3030009999993,
+      "parentCpuMs": 22.764,
+      "parentMaxRssKiB": 46756,
+      "sourceClean": true
+    },
+    {
+      "task": "distance",
+      "arm": "vhsr",
+      "repeat": 1,
+      "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 2,
+      "proposalBudget": 2,
+      "proposed": [
+        "5",
+        "a>b?a-b:b-a"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+        "candidateSha256": "c265bb933d5d67c843a2c6ed9ebbda261d92430253fc177561f1eddf5299cc95",
+        "suiteSha256": "583c8e914a53c47f27853e13b7d2f8d8cd885609d01d5d0d1fe114caffdc531c",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+      "counterexamples": 1,
+      "attempts": [
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+            "candidateSha256": "de7c3660f7f1e283489967e4fa8abdaa81dea61c7e6b433bc8672bd8059e2019",
+            "suiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 5,
+              "expected": 0
+            }
+          }
+        },
+        {
+          "outcome": "VERIFIED",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+            "candidateSha256": "c265bb933d5d67c843a2c6ed9ebbda261d92430253fc177561f1eddf5299cc95",
+            "suiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+            "status": "PASS",
+            "checks": 4,
+            "counterexample": null
+          }
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": [],
+        "researchVerification": {
+          "schema": "continuum-candidate-verification",
+          "version": 1,
+          "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+          "candidateSha256": "c265bb933d5d67c843a2c6ed9ebbda261d92430253fc177561f1eddf5299cc95",
+          "suiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+          "status": "PASS",
+          "checks": 4,
+          "counterexample": null
+        }
+      },
+      "wallMs": 788.6853090000004,
+      "parentCpuMs": 29.925,
+      "parentMaxRssKiB": 46756,
+      "sourceClean": true
+    },
+    {
+      "task": "distance",
+      "arm": "baseline",
+      "repeat": 1,
+      "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "5"
+      ],
+      "accepted": true,
+      "correct": false,
+      "falseAcceptance": true,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "0da8ee47704ecb2cde3a283bd024f29efcd60006",
+        "candidateSha256": "de7c3660f7f1e283489967e4fa8abdaa81dea61c7e6b433bc8672bd8059e2019",
+        "suiteSha256": "583c8e914a53c47f27853e13b7d2f8d8cd885609d01d5d0d1fe114caffdc531c",
+        "status": "FAIL",
+        "checks": 1,
+        "counterexample": {
+          "id": "case-0",
+          "file": "lib/math.mjs",
+          "inputs": [
+            -17,
+            11
+          ],
+          "actual": 5,
+          "expected": 28
+        }
+      },
+      "onlineSuiteSha256": "334579e333d1fa9ec6fd48d86775afd312e86bec4b3a4890af912b4e86edc9c2",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 512.1917170000006,
+      "parentCpuMs": 22.167,
+      "parentMaxRssKiB": 46756,
+      "sourceClean": true
+    },
+    {
+      "task": "minimum",
+      "arm": "vhsr",
+      "repeat": 1,
+      "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 2,
+      "proposalBudget": 2,
+      "proposed": [
+        "3",
+        "a<b?a:b"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+        "candidateSha256": "546d2804d78a65b5a75b9c2609f73a18cf1c4191ee513956f0eddcc4d436e5b9",
+        "suiteSha256": "c8347fbd0661e05da6d7a5bd3186908d8d1f65ae83d61c733e0b42d3866887ad",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+      "counterexamples": 1,
+      "attempts": [
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+            "candidateSha256": "19ca642535ffa69caaba8021587daacef78fede5c98e0120049cfb5ac26659e4",
+            "suiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 3,
+              "expected": 0
+            }
+          }
+        },
+        {
+          "outcome": "VERIFIED",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+            "candidateSha256": "546d2804d78a65b5a75b9c2609f73a18cf1c4191ee513956f0eddcc4d436e5b9",
+            "suiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+            "status": "PASS",
+            "checks": 4,
+            "counterexample": null
+          }
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": [],
+        "researchVerification": {
+          "schema": "continuum-candidate-verification",
+          "version": 1,
+          "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+          "candidateSha256": "546d2804d78a65b5a75b9c2609f73a18cf1c4191ee513956f0eddcc4d436e5b9",
+          "suiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+          "status": "PASS",
+          "checks": 4,
+          "counterexample": null
+        }
+      },
+      "wallMs": 812.2677010000007,
+      "parentCpuMs": 37.622,
+      "parentMaxRssKiB": 51340,
+      "sourceClean": true
+    },
+    {
+      "task": "minimum",
+      "arm": "baseline",
+      "repeat": 1,
+      "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "3"
+      ],
+      "accepted": true,
+      "correct": false,
+      "falseAcceptance": true,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "97d2a21751821760c886d9cfb897aa5c7c1756be",
+        "candidateSha256": "19ca642535ffa69caaba8021587daacef78fede5c98e0120049cfb5ac26659e4",
+        "suiteSha256": "c8347fbd0661e05da6d7a5bd3186908d8d1f65ae83d61c733e0b42d3866887ad",
+        "status": "FAIL",
+        "checks": 1,
+        "counterexample": {
+          "id": "case-0",
+          "file": "lib/math.mjs",
+          "inputs": [
+            -17,
+            11
+          ],
+          "actual": 3,
+          "expected": -17
+        }
+      },
+      "onlineSuiteSha256": "0d1126a27ebdd31a506501a186090173bc67d66e75160888868f3c0f98b9050a",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 500.72344200000043,
+      "parentCpuMs": 19.771,
+      "parentMaxRssKiB": 51340,
+      "sourceClean": true
+    },
+    {
+      "task": "maximum",
+      "arm": "vhsr",
+      "repeat": 1,
+      "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 2,
+      "proposalBudget": 2,
+      "proposed": [
+        "8",
+        "a>b?a:b"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+        "candidateSha256": "f432ea49e3079699bd125a80bdf329078bea1d35965e711b593b69b3982255b7",
+        "suiteSha256": "ef2371bf1ae9353b2b2fd5426fa058a45bc39a3f869285277ce64d2125d0d8cb",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+      "counterexamples": 1,
+      "attempts": [
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+            "candidateSha256": "16e713b64e6bb3a933d2d5c2479bb1c7104bd53a15b16f9a34adc349f99b7d5c",
+            "suiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 8,
+              "expected": 0
+            }
+          }
+        },
+        {
+          "outcome": "VERIFIED",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+            "candidateSha256": "f432ea49e3079699bd125a80bdf329078bea1d35965e711b593b69b3982255b7",
+            "suiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+            "status": "PASS",
+            "checks": 4,
+            "counterexample": null
+          }
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": [],
+        "researchVerification": {
+          "schema": "continuum-candidate-verification",
+          "version": 1,
+          "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+          "candidateSha256": "f432ea49e3079699bd125a80bdf329078bea1d35965e711b593b69b3982255b7",
+          "suiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+          "status": "PASS",
+          "checks": 4,
+          "counterexample": null
+        }
+      },
+      "wallMs": 796.5000950000012,
+      "parentCpuMs": 28.042,
+      "parentMaxRssKiB": 51340,
+      "sourceClean": true
+    },
+    {
+      "task": "maximum",
+      "arm": "baseline",
+      "repeat": 1,
+      "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "8"
+      ],
+      "accepted": true,
+      "correct": false,
+      "falseAcceptance": true,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "af6d1759df45b08edda2732f76ae3e1c6ceb10cf",
+        "candidateSha256": "16e713b64e6bb3a933d2d5c2479bb1c7104bd53a15b16f9a34adc349f99b7d5c",
+        "suiteSha256": "ef2371bf1ae9353b2b2fd5426fa058a45bc39a3f869285277ce64d2125d0d8cb",
+        "status": "FAIL",
+        "checks": 1,
+        "counterexample": {
+          "id": "case-0",
+          "file": "lib/math.mjs",
+          "inputs": [
+            -17,
+            11
+          ],
+          "actual": 8,
+          "expected": 11
+        }
+      },
+      "onlineSuiteSha256": "7680d3fe4ce9f24534897256a306ccf1382308ee03002adf608c2e2432869180",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 529.8786810000001,
+      "parentCpuMs": 19.639,
+      "parentMaxRssKiB": 51340,
+      "sourceClean": true
+    },
+    {
+      "task": "correct-first",
+      "arm": "vhsr",
+      "repeat": 1,
+      "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "a>b?a-b:b-a"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+        "candidateSha256": "485b7a0c82ae921ab0d46e0d522401733a27aa5746c269706730fd72a251b1f3",
+        "suiteSha256": "f4e2cd91f05a3e9bfdfdd6f91155485eb475006fe4e55293329666ebbb987f71",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "f296de1192ab7284927683551c218eedc95f782e235a414fb7d12cea65d264ff",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+            "candidateSha256": "485b7a0c82ae921ab0d46e0d522401733a27aa5746c269706730fd72a251b1f3",
+            "suiteSha256": "f296de1192ab7284927683551c218eedc95f782e235a414fb7d12cea65d264ff",
+            "status": "PASS",
+            "checks": 4,
+            "counterexample": null
+          }
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": [],
+        "researchVerification": {
+          "schema": "continuum-candidate-verification",
+          "version": 1,
+          "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+          "candidateSha256": "485b7a0c82ae921ab0d46e0d522401733a27aa5746c269706730fd72a251b1f3",
+          "suiteSha256": "f296de1192ab7284927683551c218eedc95f782e235a414fb7d12cea65d264ff",
+          "status": "PASS",
+          "checks": 4,
+          "counterexample": null
+        }
+      },
+      "wallMs": 606.3358709999993,
+      "parentCpuMs": 21.959,
+      "parentMaxRssKiB": 51340,
+      "sourceClean": true
+    },
+    {
+      "task": "correct-first",
+      "arm": "baseline",
+      "repeat": 1,
+      "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "a>b?a-b:b-a"
+      ],
+      "accepted": true,
+      "correct": true,
+      "falseAcceptance": false,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "6fbed071d7b88b6046792656d2bccbe9a32e02ba",
+        "candidateSha256": "485b7a0c82ae921ab0d46e0d522401733a27aa5746c269706730fd72a251b1f3",
+        "suiteSha256": "f4e2cd91f05a3e9bfdfdd6f91155485eb475006fe4e55293329666ebbb987f71",
+        "status": "PASS",
+        "checks": 7,
+        "counterexample": null
+      },
+      "onlineSuiteSha256": "f296de1192ab7284927683551c218eedc95f782e235a414fb7d12cea65d264ff",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 531.7235999999994,
+      "parentCpuMs": 23.566,
+      "parentMaxRssKiB": 51340,
+      "sourceClean": true
+    },
+    {
+      "task": "budget-exhausted",
+      "arm": "vhsr",
+      "repeat": 1,
+      "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+      "status": "FAILED",
+      "reason": "NO_VERIFIED_REPAIR",
+      "modelCalls": 0,
+      "proposalCalls": 2,
+      "proposalBudget": 2,
+      "proposed": [
+        "5",
+        "5+0*a"
+      ],
+      "accepted": false,
+      "correct": false,
+      "falseAcceptance": false,
+      "evaluation": null,
+      "onlineSuiteSha256": "90d149678e8d3b99e50749a1cfd7e15c2fac8012569f7987ffa324d39277c08c",
+      "counterexamples": 2,
+      "attempts": [
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+            "candidateSha256": "8131d9e3a223d125bcc699fa8ac4ea8298e1582185154f69082171b66e1aff58",
+            "suiteSha256": "90d149678e8d3b99e50749a1cfd7e15c2fac8012569f7987ffa324d39277c08c",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 5,
+              "expected": 0
+            }
+          }
+        },
+        {
+          "outcome": "INSUFFICIENT_EVIDENCE",
+          "verification": {
+            "schema": "continuum-candidate-verification",
+            "version": 1,
+            "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+            "candidateSha256": "62a71e05b88a4be518c3a1975ffae2c4f63865603aad44ae0bbfe7d2d3970de9",
+            "suiteSha256": "90d149678e8d3b99e50749a1cfd7e15c2fac8012569f7987ffa324d39277c08c",
+            "status": "FAIL",
+            "checks": 1,
+            "counterexample": {
+              "id": "case-0",
+              "file": "lib/math.mjs",
+              "inputs": [
+                0,
+                0
+              ],
+              "actual": 5,
+              "expected": 0
+            }
+          }
+        }
+      ],
+      "independent": null,
+      "wallMs": 635.6753960000005,
+      "parentCpuMs": 20.476,
+      "parentMaxRssKiB": 51340,
+      "sourceClean": true
+    },
+    {
+      "task": "budget-exhausted",
+      "arm": "baseline",
+      "repeat": 1,
+      "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+      "status": "DONE",
+      "reason": null,
+      "modelCalls": 0,
+      "proposalCalls": 1,
+      "proposalBudget": 2,
+      "proposed": [
+        "5"
+      ],
+      "accepted": true,
+      "correct": false,
+      "falseAcceptance": true,
+      "evaluation": {
+        "schema": "continuum-candidate-verification",
+        "version": 1,
+        "base": "f502923a77dd38ca510530459724fe1d34046c5c",
+        "candidateSha256": "8131d9e3a223d125bcc699fa8ac4ea8298e1582185154f69082171b66e1aff58",
+        "suiteSha256": "81a9945a3ea58e7274659bf08d9bc8df0fa4ff50be326c86d78aff05402ae547",
+        "status": "FAIL",
+        "checks": 1,
+        "counterexample": {
+          "id": "case-0",
+          "file": "lib/math.mjs",
+          "inputs": [
+            -17,
+            11
+          ],
+          "actual": 5,
+          "expected": 28
+        }
+      },
+      "onlineSuiteSha256": "90d149678e8d3b99e50749a1cfd7e15c2fac8012569f7987ffa324d39277c08c",
+      "counterexamples": 0,
+      "attempts": [
+        {
+          "outcome": "VERIFIED",
+          "verification": null
+        }
+      ],
+      "independent": {
+        "passed": true,
+        "profiles": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "skipped": 0
+          }
+        ],
+        "evidenceSufficient": true,
+        "reasons": []
+      },
+      "wallMs": 489.6649660000003,
+      "parentCpuMs": 18.012,
+      "parentMaxRssKiB": 51340,
+      "sourceClean": true
+    }
+  ]
+}

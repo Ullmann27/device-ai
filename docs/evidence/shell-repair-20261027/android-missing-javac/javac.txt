@@ -1,0 +1,1 @@
+scripts/continuum-shell-android-compile.sh: line 22: javac: command not found

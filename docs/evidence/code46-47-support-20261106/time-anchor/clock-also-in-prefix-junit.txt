@@ -1,0 +1,15 @@
+JUnit version 4.13.2
+.PROMPT-MESSUNG compiledContext FULL=2910 B, NATIVE=1267 B, Ersparnis=1643 B
+.E......
+Time: 0.149
+There was 1 failure:
+1) timeAnchorIsInTheRequiredTailNotInTheStaticPrefix(at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest)
+java.lang.AssertionError: time anchor must not be inside promptBody
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest.timeAnchorIsInTheRequiredTailNotInTheStaticPrefix(LocalPromptSizeAndStabilityTest.kt:61)
+
+FAILURES!!!
+Tests run: 8,  Failures: 1
+

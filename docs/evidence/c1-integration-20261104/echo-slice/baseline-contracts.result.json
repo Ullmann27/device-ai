@@ -1,0 +1,17 @@
+{
+  "taskId": "C1-INTEGRATE-001",
+  "phase": "BASELINE_EXISTING_CONTRACTS",
+  "source": "e19bf2768dc24b7c2ea1040538fdd661269a540c",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    ".github/continuum/coding-orchestrator.test.mjs",
+    ".github/continuum/ccc1-bot-report.test.mjs",
+    ".github/continuum/ccc1-bot-assignment.test.mjs",
+    ".github/continuum/coding-service.test.mjs"
+  ],
+  "startedAt": "2026-11-04T19:52:23.753204+00:00",
+  "exitCode": 0,
+  "finishedAt": "2026-11-04T19:52:31.998946+00:00"
+}

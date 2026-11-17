@@ -1,0 +1,66 @@
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:598:16: warning: 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+        window.statusBarColor = BG
+               ^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:599:16: warning: 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+        window.navigationBarColor = BG
+               ^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:601:60: warning: 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1098:20: warning: 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+            window.setDecorFitsSystemWindows(false)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1543:67: warning: 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+            level.toDouble(), android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW.toDouble())
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3673:18: warning: this declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+    override fun onBackPressed() {
+                 ^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4227:61: warning: unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+        val proof = ready && m2DirectProofModelSha == loaded?.sha256
+                                                            ^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4643:40: warning: condition is always 'true'.
+        val status = if (faceActive && face != null && state != null) {
+                                       ^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4643:56: warning: condition is always 'true'.
+        val status = if (faceActive && face != null && state != null) {
+                                                       ^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6742:128: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+                    NeuralCommandKind.RESET -> { save = true; measurement = "Neuronales Experiment zurückgesetzt."; measurement!! }
+                                                                                                                               ^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6757:36: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+                        measurement!!
+                                   ^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6786:36: warning: unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+                        measurement!!
+                                   ^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:9444:89: warning: unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+                val canResume=shouldResume && savedPlan?.question==question && savedPlan?.mode==mode
+                                                                                        ^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10094:58: warning: this call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+                        frame?.let {screenFrames.add(it);screenGrant.compareAndSet(null,grant)}
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10094:89: warning: this call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+                        frame?.let {screenFrames.add(it);screenGrant.compareAndSet(null,grant)}
+                                                                                        ^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10511:25: warning: condition is always 'true'.
+                    if (botTask == null && codingPlanning == null && sessionId == localSessionId &&
+                        ^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10511:44: warning: condition is always 'true'.
+                    if (botTask == null && codingPlanning == null && sessionId == localSessionId &&
+                                           ^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10573:58: warning: condition is always 'true'.
+                        successful && botTask == null && codingPlanning == null &&
+                                                         ^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:10576:53: warning: unnecessary safe call on a non-null receiver of type 'LocalGroundedRecall'.
+                        run.response, groundedRecall?.stateTelegram
+                                                    ^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11483:74: warning: unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+                                    runCatching { streamCandidateObserver?.invoke(candidate, elapsed) }
+                                                                         ^^
+app/src/main/java/at/heinz/deviceai/AgentActivity.kt:11529:70: warning: unnecessary safe call on a non-null receiver of type '(ApprovedStreamingSpeechAssembler.Candidate, Long) -> Unit'.
+                                runCatching { streamCandidateObserver?.invoke(candidate, elapsedMillis()) }
+                                                                     ^^
+app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt:206:13: warning: 'when' is exhaustive so 'else' is redundant here.
+            else -> Unit
+            ^^^^

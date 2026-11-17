@@ -60,9 +60,9 @@ test("html extraction strips active content and preserves public links",()=>{
 test("legacy overconfident beliefs are downgraded until revalidated",()=>{
   const legacy=createBabyState(100);
   legacy.schemaVersion=1;
-  legacy.beliefs=[{id:"belief-old",text:"An old broad claim with insufficient precise support.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
+  legacy.beliefs=[{id:"belief-old",text:"Experience replay can reduce catastrophic forgetting but this claim still lacks sufficient independent support.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
   const migrated=migrateBabyState(legacy,200);
-  assert.equal(migrated.schemaVersion,2);
+  assert.equal(migrated.schemaVersion,3);
   assert.equal(migrated.beliefs[0].status,"PROVISIONAL");
   assert.ok(migrated.beliefs[0].confidence<=.55);
 });
@@ -151,4 +151,133 @@ test("memory retrieval reward depends on relevance quality rather than raw hit c
   const weak=Array.from({length:10},(_,i)=>({kind:"BELIEF",score:.15,status:"PROVISIONAL",confidence:.2,id:String(i)}));
   assert.ok(evaluateMemoryRetrieval(good)>evaluateMemoryRetrieval(weak));
   assert.ok(evaluateMemoryRetrieval([])<5);
+});
+
+test("retrospective audit quarantines unrelated historical research without destroying provenance",()=>{
+  const state=createBabyState(100);
+  state.beliefs=[
+    {id:"physics-off-topic",text:"Rudolf Clausius formulated important thermodynamic statements about the nature of heat and entropy.",
+      query:"How does an AI assistant improve continual learning and memory retrieval?",
+      status:"GROUNDED_OBSERVATION",confidence:.92,citationUrls:["https://example.org/heat"],createdAt:110},
+    {id:"replay-on-topic",text:"Experience replay can reduce forgetting during continual learning by reusing older training examples.",
+      query:"How does an AI assistant improve continual learning and memory retrieval?",
+      status:"GROUNDED_OBSERVATION",confidence:.91,citationUrls:["https://example.org/replay"],createdAt:115}
+  ];
+  const migrated=migrateBabyState(state,200);
+  assert.deepEqual(migrated.beliefs.map(x=>x.id),["replay-on-topic"]);
+  assert.equal(migrated.beliefs[0].status,"PROVISIONAL");
+  assert.equal(migrated.quarantinedBeliefs[0].reason,"OFF_TOPIC");
+  assert.equal(migrated.quarantinedBeliefs[0].citationUrls[0],"https://example.org/heat");
+  assert.deepEqual(migrateBabyState(migrated,210).quarantinedBeliefs,migrated.quarantinedBeliefs);
+});
+
+test("new off-topic content stays quarantined even with several citation markers",()=>{
+  const state=createBabyState(100);
+  const result=ingestEvidence(state,{
+    query:"continual learning memory replay in artificial intelligence",
+    answer:"Rudolf Clausius developed theoretical work on classical heat engines and thermodynamic entropy [1].",
+    citations:[{url:"https://example.org/heat",title:"Heat studies",source:"Paper"}],now:200
+  });
+  assert.equal(result.baby.beliefs.length,0);
+  assert.equal(result.baby.quarantinedBeliefs.length,1);
+  assert.equal(babyStatus(result.baby).quarantinedBeliefs,1);
+});
+
+test("uncited attribution and invalid evidence URLs cannot promote a claim",()=>{
+  const citations=[
+    {url:"https://research.example/one",source:"OpenAlex"},
+    {url:"https://other.example/two",source:"OpenAlex"},
+    {url:"javascript:alert(1)",source:"Unknown"}
+  ];
+  const r=ingestEvidence(createBabyState(100),{
+    query:"continual learning catastrophic forgetting",
+    answer:"Continual learning methods can reduce catastrophic forgetting by replaying carefully selected older examples.",
+    citations,uncertainty:.05,now:200
+  });
+  assert.equal(r.baby.beliefs.length,1);
+  assert.equal(r.baby.beliefs[0].status,"PROVISIONAL");
+  assert.equal(r.baby.beliefs[0].sourceDiversity,2);
+  assert.equal(r.baby.beliefs[0].citationUrls.length,2);
+  assert.equal(r.baby.beliefs[0].evidenceMode,"ATTRIBUTED_UNVERIFIED");
+});
+
+test('duplicate consolidation keeps explicitly grounded provenance isolated from legacy rows',()=>{
+  const text='Spaced repetition improves durable recall through repeated retrieval practice.';
+  for(const reverse of [false,true])for(const legacyConfidence of [.70,.94]){
+    const state=createBabyState(1);
+    const explicit={id:'explicit',text,query:'spaced repetition',status:'GROUNDED_OBSERVATION',
+      evidenceMode:'EXPLICIT_CITATION',confidence:.90,uncertainty:.10,
+      citationUrls:['https://publisher.example/paper'],supportCount:1,sourceDiversity:1,
+      createdAt:10,lastValidatedAt:20,contradictionIds:[]};
+    const legacy={...explicit,id:'legacy',evidenceMode:undefined,confidence:legacyConfidence,
+      citationUrls:['https://unverified.example/legacy'],createdAt:1,lastValidatedAt:99};
+    state.beliefs=reverse?[legacy,explicit]:[explicit,legacy];
+    const migrated=migrateBabyState(state,100);
+    assert.equal(migrated.beliefs.length,1);
+    assert.deepEqual(migrated.beliefs[0],explicit);
+    assert.deepEqual(migrateBabyState(migrated,200).beliefs,migrated.beliefs);
+  }
+});
+
+test("grounded duplicate cannot inherit confidence, identity or citations from provisional row",()=>{
+  const claim="Experience replay can reduce catastrophic forgetting during continual learning when older examples are rehearsed.";
+  const unverified={
+    id:"provisional-high",text:claim,confidence:.94,uncertainty:.06,
+    status:"PROVISIONAL",citationUrls:["https://unverified.example/claim"],
+    supportCount:1,sourceDiversity:0,contradictionIds:[],createdAt:100,lastValidatedAt:100
+  };
+  const supported={
+    id:"grounded-verified",text:"[1] "+claim,confidence:.73,uncertainty:.27,
+    status:"GROUNDED_OBSERVATION",evidenceMode:"EXPLICIT_CITATION",citationUrls:["https://publisher.example/paper"],
+    supportCount:2,sourceDiversity:2,contradictionIds:[],createdAt:120,lastValidatedAt:120
+  };
+  for(const beliefs of [[unverified,supported],[supported,unverified]]){
+    const state=createBabyState(90);
+    state.beliefs=structuredClone(beliefs);
+    const snapshot=structuredClone(state);
+    const migrated=migrateBabyState(state,140);
+    assert.equal(migrated.beliefs.length,1);
+    const belief=migrated.beliefs[0];
+    assert.equal(belief.status,"GROUNDED_OBSERVATION");
+    assert.equal(belief.id,"grounded-verified");
+    assert.equal(belief.confidence,.73);
+    assert.deepEqual(belief.citationUrls,["https://publisher.example/paper"]);
+    assert.equal(belief.supportCount,2);
+    assert.equal(belief.sourceDiversity,2);
+    assert.equal(belief.createdAt,120);
+    assert.equal(belief.lastValidatedAt,120);
+    assert.deepEqual(state,snapshot,"migration must not change its input");
+  }
+
+  const onlyProvisional=createBabyState(90);
+  onlyProvisional.beliefs=[unverified,{...unverified,id:"provisional-second",confidence:.42}];
+  const deduplicated=migrateBabyState(onlyProvisional,140).beliefs;
+  assert.equal(deduplicated.length,1);
+  assert.equal(deduplicated[0].status,"PROVISIONAL");
+});
+
+test("evidence ingestion never grafts unverified citations onto verified same-claim support",()=>{
+  const answer="Experience replay can reduce catastrophic forgetting during continual learning when older examples are rehearsed and outcomes are measured [1][2][3].";
+  const unverified=[{url:"https://unverified.example/guess",source:"unverified",relevance:1}];
+  const verified=[
+    {url:"https://publisher.example/a",source:"paperA",relevance:4},
+    {url:"https://publisher.example/b",source:"paperB",relevance:4},
+    {url:"https://publisher.example/c",source:"paperC",relevance:4}
+  ];
+  let baby=createBabyState(50);
+  baby=ingestEvidence(baby,{query:"replay",answer,citations:unverified,uncertainty:.95,now:100}).baby;
+  assert.equal(baby.beliefs.length,1);
+  assert.equal(baby.beliefs[0].status,"PROVISIONAL");
+
+  baby=ingestEvidence(baby,{query:"replay",answer,citations:verified,uncertainty:.05,now:200}).baby;
+  assert.equal(baby.beliefs.length,1);
+  assert.equal(baby.beliefs[0].status,"GROUNDED_OBSERVATION");
+  assert.deepEqual(baby.beliefs[0].citationUrls,verified.map(x=>x.url));
+  const admitted=structuredClone(baby.beliefs[0]);
+
+  baby=ingestEvidence(baby,{query:"replay",answer,citations:unverified,uncertainty:.95,now:300}).baby;
+  assert.deepEqual(baby.beliefs[0].citationUrls,admitted.citationUrls);
+  assert.equal(baby.beliefs[0].confidence,admitted.confidence);
+  assert.equal(baby.beliefs[0].lastValidatedAt,admitted.lastValidatedAt);
+  assert.equal(baby.beliefs[0].status,"GROUNDED_OBSERVATION");
 });

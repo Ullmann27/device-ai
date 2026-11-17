@@ -1,0 +1,385 @@
+{
+  "task": "C1-MEMORY-017",
+  "files": [
+    {
+      "path": "AGENTS-existing-public-wording.patch",
+      "bytes": 5734,
+      "sha256": "7cee8dc444ba54fd6d4566ec597c47c5a966a3c42c71bcad565912e9305320f9"
+    },
+    {
+      "path": "C1-MEMORY-017-compiler.patch",
+      "bytes": 13979,
+      "sha256": "1f20a41f828ac8bd5fdcca55e31ada9ebf4831a6f4f2eb70c895d7af8600286a"
+    },
+    {
+      "path": "C1-MEMORY-017-mapper.patch",
+      "bytes": 11850,
+      "sha256": "9dd1d877b0f24ce710118a3907728318482f910305dda60c4248da797a238d3b"
+    },
+    {
+      "path": "C1-MEMORY-017.json",
+      "bytes": 57174,
+      "sha256": "a601d5a259ce31f52af3b036b995c02cf6ce2db5130b19d53c4e88cb0f2a2a12"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 11538,
+      "sha256": "5bfce564c81db62d5033a9715b962fa616ebb36ba6f65ff3825ff5f6280daf98"
+    },
+    {
+      "path": "android-evidence-audit.json",
+      "bytes": 8015,
+      "sha256": "6d2b469759d3bf8d982b42c82ab79918df48cb56c0fed4b251915f62d9611843"
+    },
+    {
+      "path": "base/app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "bytes": 4248,
+      "sha256": "4dff8d890a476cf92d7bfbc0e13f30cc8e99036f8f284a46a03863b572762181"
+    },
+    {
+      "path": "base/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "bytes": 14033,
+      "sha256": "b2fb053666fc6a056ce8d5351ed01f76cc8514ca59a231b2667c1ecec116711a"
+    },
+    {
+      "path": "docs-review/AGENTS.base.md",
+      "bytes": 17040,
+      "sha256": "deec8d8638ee7837ab6a686644312e072a4421a22173803bf2b95e7048fdf534"
+    },
+    {
+      "path": "docs-review/AGENTS.target.md",
+      "bytes": 17737,
+      "sha256": "d713ebcd028f21772a15f3411d63951fb563130c3910c4a6a86b1a58ef8163e5"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/C1-INITIAL-ADVANCE.json",
+      "bytes": 7275,
+      "sha256": "233f5bfb218351c81a6f5a94de63780d2f58667ec315c5cde5783e65040abec7"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/C1-LATEST-COMPARISON.json",
+      "bytes": 9127,
+      "sha256": "0be567112f5138996692ddf24dac2c6d30731c0a827e08d43eb9ef2d25879fa5"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/RESULT.md",
+      "bytes": 6750,
+      "sha256": "1677e91b1d37b44fb73fb206e66e35db213d42b13d6e837a49c0bdeea38530e8"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/REVIEW.md",
+      "bytes": 3337,
+      "sha256": "689d66a8a7365254e953e8779d12d1412a0bd5987c2da0f8f5bbe515d174c408"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/README.md",
+      "bytes": 4641,
+      "sha256": "3a0b829030a9366a204efb46a1cdc7fec3f1c86c559adda2998d7efe42244a08"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/activity-lint/bounded-tests.init.gradle",
+      "bytes": 209,
+      "sha256": "83f907c5612259debeddfccabba952e2b1f9a5714bb1c7042cf449f17ceee69c"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/activity-lint/gradle.txt",
+      "bytes": 12750,
+      "sha256": "67608efa1998612e579db80ef5bae07776219027a729ec4572c0b2a691566285"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/activity-lint/junit-index.json",
+      "bytes": 475,
+      "sha256": "2f49980f630db615602b0009624d413b2d4f8fc199f8bf01bcbd709f09ecf3a8"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/activity-lint/lint-results-debug.xml",
+      "bytes": 87,
+      "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/activity-lint/result.json",
+      "bytes": 2390,
+      "sha256": "92bbf09da0e1fd84b5626334462b01c3195eb65a9031da832afca14b885fc2a4"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/activity-lint/selected-junit/TEST-at.heinz.deviceai.MemoryRecallActivityUiTest.xml",
+      "bytes": 656,
+      "sha256": "d4f173c1acdce9650287270184c9ea2ece873bd9f29f252f28e7566b31680751"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/full-unit/bounded-tests.init.gradle",
+      "bytes": 209,
+      "sha256": "83f907c5612259debeddfccabba952e2b1f9a5714bb1c7042cf449f17ceee69c"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/full-unit/gradle.txt",
+      "bytes": 29563,
+      "sha256": "d92c95cad2600496c1aa1c8fd5af3fc26c651d1291d1b2b65b558c9e6c8a9293"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/full-unit/junit-index.json",
+      "bytes": 163208,
+      "sha256": "09031584d42543092f33c80023bf063bfdb3acaa079de7867a054fe2ce1b8e5a"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/full-unit/result.json",
+      "bytes": 2221,
+      "sha256": "c2a97b45df147ae3407846e5795119daab4e26419fd4e622a4b54bf3ed7c59cc"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/full-unit/selected-junit/TEST-at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest.xml",
+      "bytes": 1031,
+      "sha256": "a9d7efe0e27072318728f1b1e82ca42966ca51fbc84f77272babfcb81e463fec"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/full-unit/selected-junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.xml",
+      "bytes": 1354,
+      "sha256": "b0735b880eef00b3b7b80a012bd2371e5b28b0f27aaa402843dda7244d3ff714"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/full-unit/selected-junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest.xml",
+      "bytes": 1046,
+      "sha256": "8baacaefb3479b5b79d32c8f4a1b61aaa4027f219ffee3cf619d924100e659fc"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/full-unit/selected-junit/TEST-at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest.xml",
+      "bytes": 5215,
+      "sha256": "397cf1509c7262f5bef0228cb938111c5948302c2b007952ecb4ee2b4d5e28fc"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/preflight/result.json",
+      "bytes": 1248,
+      "sha256": "458bb977b1f900514b21bf3b1d7cd1287d1265a6c74458219a4751fa5553a34c"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/raw-receipts-manifest.json",
+      "bytes": 108474,
+      "sha256": "598e93c8ebff6f508300dd9f366e5b0ff58ace9bf276129ab728b38ae88b6431"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/raw-receipts.tar.xz",
+      "bytes": 134984,
+      "sha256": "0e89de23cb7b68bf4b9e419250775f33a57560e219abdbf6761ed1e262e9d927"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/android-gates/summary.json",
+      "bytes": 2066,
+      "sha256": "68dd9718062906d0f0b19329d71c80ce68c5d797e85c19dde41202abe8933dd3"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-green/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-green/junit.log",
+      "bytes": 73,
+      "sha256": "a8cf17098d79d3d0fadfd3b479371ca37138d2f537760e3ae55b7ba745627532"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-green/manifest.json",
+      "bytes": 19476,
+      "sha256": "c247a34d2c81f93f5665014b3713c04d443415b802b7eebe623757ca9f1e1fff"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-green/result.json",
+      "bytes": 151,
+      "sha256": "faedc96ea4c09ecd523249a9906be53e60b5c90c014f6d0bbd5f1836b78e20ea"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-holdout-red/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-holdout-red/junit.log",
+      "bytes": 3471,
+      "sha256": "30536eabdc940a6ebad57bb03843f0d837c2a77d5de6437dd15b7bf7db9f2389"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-holdout-red/manifest.json",
+      "bytes": 4736,
+      "sha256": "ac6b234150d79630546fdc343089f2423433bdd32ab27c6021d587e44063170f"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-holdout-red/result.json",
+      "bytes": 41,
+      "sha256": "7e02f6952b8d362cebbe4bc9cc2461a6bdbaf4c092716455b6e5b2119ef46932"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-red/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-red/junit.log",
+      "bytes": 1212,
+      "sha256": "156a311b3f32bae1bb6e8cb343cd1d878d2f39b7e1f5cad934df52d354a92cf4"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-red/manifest.json",
+      "bytes": 18389,
+      "sha256": "a5a15e0f9e81d46886d0561b03ca7c1c2d26e504f8a76e7e43870caaec100fba"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-red/result.json",
+      "bytes": 157,
+      "sha256": "22f8f6bb03f1573b61626578564f1e95bc85ad5fa96fbaf31420060ac757ae65"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/contradiction-red/run_probe.py",
+      "bytes": 4745,
+      "sha256": "a56434c1bcaf0ccf38b680f9dfea74054f4e0db5c1b66ce4664acd1111040f33"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/LayoutDiagnostic.java",
+      "bytes": 1923,
+      "sha256": "109cb1b00f4e8375272e2c9891fba4d802c39138ad159c418e460298e2125f8c"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/README.md",
+      "bytes": 6001,
+      "sha256": "fab6bc326ed8a2b83ab9eef8af8574a8da47a8c159f288150342c2503faedd69"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/float-arithmetic.json",
+      "bytes": 388,
+      "sha256": "5ec130513482b7522773f2e37ac421dd5f145219d449fa695cdc85f901453bbb"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/geometry.tsv",
+      "bytes": 39580,
+      "sha256": "af6e37d3bb375a0cb36482f81489d4669bf2029abe725729d0c805b7c3235a55"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/latest-source-comparison.json",
+      "bytes": 2547,
+      "sha256": "17886d010256f51664d14e3b4bfc785fd0bbe8810c17644100b1ab0bfe87fad9"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/manifest.json",
+      "bytes": 109390,
+      "sha256": "79e85f3749304857dbdf66800425bc5a583d85f582f800bf67023edfc2ab9667"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/original-junit.log",
+      "bytes": 508,
+      "sha256": "868c7519e866a12e1e4b5fe7cf0e8300d42bc3d35a72475cc0a3a18c9ac34181"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/layout-diagnostic/run_diagnostic.py",
+      "bytes": 5318,
+      "sha256": "d784a135127a0b788d0f4c8750bd3a02ae6b8b44e09aaf3d8cac6bb97d51ee71"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/mapper-green/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/mapper-green/junit.log",
+      "bytes": 53,
+      "sha256": "2b9c1fdbeedd68844f1cfb8108421d75682cb97d30d30f4d3cb6d40747c97e36"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/mapper-green/manifest.json",
+      "bytes": 8901,
+      "sha256": "f46b7980e8533d7ae710fd5e460f88c373841d28a27c224da2657db8ebb3f62c"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/mapper-green/result.json",
+      "bytes": 157,
+      "sha256": "5852d67fc23783f233c3f799da8804d6bfcf72c081d9e043267790eb3b4f0e8f"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/mapper-red/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/mapper-red/junit.log",
+      "bytes": 1837,
+      "sha256": "135c6e1a43c4be2eb8536de21e564fc52e61493a8a79774e73049ca5e023655b"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/mapper-red/manifest.json",
+      "bytes": 8887,
+      "sha256": "6045ebf271f67b2a0ecd75ccc8dbe032ac44f09c650474e28d188c95bcaeed7e"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/mapper-red/result.json",
+      "bytes": 157,
+      "sha256": "162161dafd3517a211365a5e99ff6217c0d320e2a2231080178261492a04942b"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-brain-r3-20261104/source-binding.json",
+      "bytes": 1744,
+      "sha256": "38fc74fa9b67649795e0efd294ec018c9c6440b6dac53d825a45d01383210505"
+    },
+    {
+      "path": "evidence/upstream/docs/evidence/memory-mapper-r3-20261104/implementation-manifest.json",
+      "bytes": 905,
+      "sha256": "40f43c5a213dcdd8fc030c03587ef278fc7ee4cd9f4259dc88f04612f82b7629"
+    },
+    {
+      "path": "evidence/upstream/docs/research/omega/MEMORY-BRAIN-R3-HANDOFF-20261104.md",
+      "bytes": 7509,
+      "sha256": "afde3f3d5ccb78957243f35073a4ab7027d82e19669797c5f2d77b41d3274d37"
+    },
+    {
+      "path": "evidence/upstream/docs/research/omega/MEMORY-MAPPER-R3-HANDOFF-20261104.md",
+      "bytes": 6278,
+      "sha256": "3c8d81605efb6207c8b4facbdc101244d87ffffdc8189aeb7f084500a8d169a7"
+    },
+    {
+      "path": "evidence/upstream/tools/memory-brain-r3/run_android_gate.py",
+      "bytes": 13895,
+      "sha256": "c0332b570f9ae378eadb1afadd8c4748af981b2e36e8c7677febae568a88b394"
+    },
+    {
+      "path": "evidence/upstream/tools/memory-brain-r3/run_mapper_focused.py",
+      "bytes": 4330,
+      "sha256": "64e573d136a0e6997cc3680fcba0c6fce35ec510b6aeb6ef2dd497a347ea2fa4"
+    },
+    {
+      "path": "evidence/upstream/tools/memory-brain-r3/run_memory_focused.py",
+      "bytes": 4230,
+      "sha256": "19226f0a67d408c22753d25d2c0741023dddd0d042f2c04a0390ba60d5a86813"
+    },
+    {
+      "path": "provenance/github-reads.json",
+      "bytes": 52829,
+      "sha256": "cb82bd45c76daffb771f120cc5e4e9c8d4817113d8616793569e5abe8a2c4439"
+    },
+    {
+      "path": "target/app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "bytes": 4815,
+      "sha256": "6719544a62ec6c19442e2bcb2ecdd22cbf1cfee37d3d600c433b18f660c19a81"
+    },
+    {
+      "path": "target/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "bytes": 16400,
+      "sha256": "93e24a73389d4e8f05ea9ee2c307b1cb73a0a87e255cadb46dedf50606d9b903"
+    },
+    {
+      "path": "target/app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt",
+      "bytes": 8428,
+      "sha256": "3d490f43091ddff69dd264c5b9f48b73613d82c5bfbddcfc11defaf845be3690"
+    },
+    {
+      "path": "target/app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt",
+      "bytes": 4767,
+      "sha256": "dcf924b4e15b74adf2492ae0b38260bd79dbc19f6787abbcdafe3640cde049f7"
+    },
+    {
+      "path": "target/app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryRegressionTest.kt",
+      "bytes": 3476,
+      "sha256": "0e7baeb42e93a93e5564a2972be9b5f5898d491fffbb29bda1580c5bc46235ce"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T22:09:32" hostname="b354f2cb821b" time="6.414">
+  <properties/>
+  <testcase name="defaultOrbAndPausedOptional3dNeverStartAssetOrNativeWork" classname="at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest" time="6.245"/>
+  <testcase name="actualFailurePathRetains2dAndOriginalSingleLifecycleClock" classname="at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest" time="0.091"/>
+  <testcase name="pauseAndReducedMotionClearObservedGazeAndRejectLateCameraSamples" classname="at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest" time="0.071"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

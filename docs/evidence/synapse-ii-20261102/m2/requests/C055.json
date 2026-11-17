@@ -1,0 +1,30 @@
+{
+  "id": "C055",
+  "question": "Wo ist Zypanatu?",
+  "sources": [
+    {
+      "revision": 6,
+      "sha256": "8ecd1b85e0b343ca21d33cf8b1c16876a668a85b26708ba92afb884bae8b31dd",
+      "sourceId": "bc:C055:s1",
+      "text": "Zypanatu ist in Uvnudake Uvzecuka."
+    },
+    {
+      "revision": 7,
+      "sha256": "8ecd1b85e0b343ca21d33cf8b1c16876a668a85b26708ba92afb884bae8b31dd",
+      "sourceId": "bc:C055:s2",
+      "text": "Zypanatu ist in Uvnudake Uvzecuka."
+    },
+    {
+      "revision": 1,
+      "sha256": "2516fc256a3f7acbd277e7995e77446fb59be4cb211a271ae37b31a5e515cc9b",
+      "sourceId": "bc:C055:s3",
+      "text": "Qelacaso ist in Uvfatezo."
+    },
+    {
+      "revision": 2,
+      "sha256": "ac9b6ecfbed4417d392ce2190dbe3e63a857b2657865d07470e6c57c34a98fcc",
+      "sourceId": "bc:C055:s4",
+      "text": "Qeridoha steht in Uvriduju."
+    }
+  ]
+}

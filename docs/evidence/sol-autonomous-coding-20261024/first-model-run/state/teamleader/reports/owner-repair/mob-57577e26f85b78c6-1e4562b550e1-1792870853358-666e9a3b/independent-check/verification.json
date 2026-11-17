@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "head": "1e4562b550e10a72d054fb787c950800a5bd11fb",
+  "taskId": "mob-57577e26f85b78c6",
+  "patchSha256": "22d6371ad369f283020e2b67f1318dcec1c2f3fd9e4afabda23b65936da513f5",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "checkedAt": "2026-10-24T19:41:57.900Z",
+  "passed": true,
+  "evidenceSufficient": true,
+  "reasons": [],
+  "executedTests": 12,
+  "profiles": [
+    {
+      "profile": "node-continuum",
+      "passed": true,
+      "executed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:f9cb3de7fe3810796e00cec72f29142e2d3a4beada075443c5614024efdca182",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 512,
+        "pids": 32,
+        "cpus": 1,
+        "timeoutMs": 30000,
+        "sourceSha256": "55e33c52399805e9edc61eaeab2e4c37a2c0e3e86dcbeb45694e72c04b3fb7af",
+        "profile": "node-continuum",
+        "untrustedReports": true
+      }
+    }
+  ]
+}

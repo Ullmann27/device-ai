@@ -1,0 +1,4 @@
+LEX3 bytes=33553407 limit=33554432 records=4096
+admitted=4096 reopened=4096
+export=OK bytes=33597519
+roundtrip=PASS records=4096 all_fields_equal=true

@@ -1,0 +1,125 @@
+from pathlib import Path
+import hashlib
+import json
+import re
+import shutil
+import subprocess
+import sys
+import time
+
+workspace = Path('/workspace/scratch/15db21c4e19a')
+root = workspace / 'wt-android-display-audit'
+out = Path(__file__).resolve().parent
+prior = json.loads((workspace / 'reference-five-ring-validation/compile-receipt.json').read_text())
+base = out / 'base-classes.jar'
+if not base.exists():
+    shutil.copy2(workspace / 'reference-five-ring-validation/base-classes.jar', base)
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def git(*args):
+    return subprocess.check_output(['git', '-C', str(root), *args], text=True).strip()
+
+def run(command, log, cwd=None):
+    result = subprocess.run(command, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    (out / log).write_text(result.stdout)
+    if result.returncode:
+        print(result.stdout[-7000:])
+    return result
+
+classpath = []
+for entry in prior['classpath']:
+    if entry.endswith('/base-classes.jar'):
+        entry = str(base)
+    if Path(entry).exists() and entry not in classpath:
+        classpath.append(entry)
+compiler = prior['command'][:prior['command'].index('org.jetbrains.kotlin.cli.jvm.K2JVMCompiler') + 1]
+paths = set(prior['source_hashes'])
+paths.update(git('diff', '--name-only', '9918891a6da1d74275b087a04f4aa86c79074d46', '--', 'app/src/main/java').splitlines())
+paths.update(git('ls-files', '--others', '--exclude-standard', 'app/src/main/java').splitlines())
+package = root / 'app/src/main/java/at/heinz/deviceai'
+for pattern in ['AndroidLive*.kt', 'AndroidNativeClick.kt', 'AndroidDeviceAppActions.kt',
+                'AndroidGpuFrameCopier.kt', 'ContinuumLiveProjectionService.kt',
+                'ContinuumScreenObservationService.kt', 'OwnerComputerSessionController.kt',
+                'cognitive/OwnerApp*.kt', 'cognitive/OwnerComputer*.kt', 'cognitive/ComputerCapture*.kt',
+                'cognitive/Live*.kt', 'cognitive/Projection*.kt', 'cognitive/VerifiedNodeClick.kt',
+                'cognitive/NativeAppLookup.kt', 'cognitive/VerifiedForegroundLaunch.kt']:
+    paths.update(str(path.relative_to(root)) for path in package.glob(pattern))
+sources = [root / path for path in sorted(paths) if path.endswith('.kt') and (root / path).is_file()]
+hashes = {str(path.relative_to(root)): sha(path) for path in sources}
+product = out / 'product-classes'
+if product.exists():
+    shutil.rmtree(product)
+product.mkdir()
+command = compiler + ['-no-stdlib', '-no-reflect', '-jvm-target', '17', '-Xfriend-paths=' + str(base),
+                      '-classpath', ':'.join(classpath), '-d', str(product)] + list(map(str, sources))
+started = time.time()
+compiled = run(command, 'product-compile.log')
+receipt = dict(source_commit=git('rev-parse', 'HEAD'), product_source_hashes=hashes,
+               base_jar_sha256=sha(base), compile_command=command, compile_result=compiled.returncode,
+               source_stable=all(sha(root / path) == digest for path, digest in hashes.items()),
+               elapsed_seconds=time.time() - started, classpath=classpath,
+               limits='Scoped Kotlin integration compile against frozen base classes; no full Gradle/APK/device claim')
+(out / 'compile-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+print(json.dumps({key: receipt[key] for key in ['source_commit', 'compile_result', 'source_stable', 'elapsed_seconds']}), flush=True)
+if compiled.returncode or not receipt['source_stable']:
+    sys.exit(compiled.returncode or 2)
+
+groups = {
+    'pure': ['cognitive.OwnerAppActionFlowTest', 'cognitive.OwnerAppLookupIntentTest',
+             'cognitive.ComputerCaptureConsentTest', 'cognitive.OwnerComputerIntentParserTest',
+             'cognitive.OwnerComputerTaskGrantTest', 'cognitive.LiveComputerDispatchGuardTest',
+             'cognitive.OwnerComputerWorkflowTest', 'cognitive.VerifiedForegroundLaunchTest'],
+    'native': ['AndroidLiveNodePortTest', 'AndroidLiveScrollTest',
+               'ContinuumLiveProjectionServiceUiTest', 'ui.CockpitMonitorLifecycleUiTest'],
+}
+for group, names in groups.items():
+    classes = out / (group + '-classes')
+    if classes.exists():
+        shutil.rmtree(classes)
+    classes.mkdir()
+    suite_classpath = [str(classes), str(product)] + classpath
+    source_root = 'uiTest' if group == 'native' else 'test'
+    tests = [root / ('app/src/' + source_root + '/java/at/heinz/deviceai') /
+             (name.replace('.', '/') + '.kt') for name in names]
+    test_hashes = {str(path.relative_to(root)): sha(path) for path in tests}
+    test_compile = compiler + ['-no-stdlib', '-no-reflect', '-jvm-target', '17',
+                              '-Xfriend-paths=' + ','.join([str(product), str(base)]),
+                              '-classpath', ':'.join(suite_classpath), '-d', str(classes)] + list(map(str, tests))
+    compiled_tests = run(test_compile, group + '-compile.log')
+    if compiled_tests.returncode:
+        sys.exit(compiled_tests.returncode)
+    jvm = [compiler[0], '-Xmx512m', '-XX:ActiveProcessorCount=2']
+    if group == 'native':
+        config = classes / 'com/android/tools/test_config.properties'
+        config.parent.mkdir(parents=True, exist_ok=True)
+        for name in ['resources.ap_', 'AndroidManifest.xml']:
+            shutil.copy2(workspace / 'reference-five-ring-validation' / name, out / name)
+        config.write_text('android_merged_assets=' + str(root / 'app/src/main/assets') + '\n' +
+                          'android_resource_apk=' + str(out / 'resources.ap_') + '\n' +
+                          'android_custom_package=at.heinz.deviceai\n' +
+                          'android_merged_manifest=' + str(out / 'AndroidManifest.xml') + '\n')
+        temporary = out / 'tmp'
+        temporary.mkdir(exist_ok=True)
+        jvm += ['-Djava.io.tmpdir=' + str(temporary), '-Drobolectric.offline=true',
+                '-Drobolectric.dependency.dir=' + str(workspace / 'wt-validation/app/build/ui-test-sdk')]
+    command = jvm + ['-cp', ':'.join(suite_classpath), 'org.junit.runner.JUnitCore'] + [
+        'at.heinz.deviceai.' + name for name in names]
+    started = time.time()
+    result = run(command, group + '-tests.log', root / 'app')
+    count = re.search(r'OK \((\d+) tests?\)', result.stdout)
+    result_receipt = dict(source_commit=receipt['source_commit'], product_source_hashes=hashes,
+                          test_source_hashes=test_hashes, base_jar_sha256=sha(base),
+                          result=result.returncode, tests=int(count.group(1)) if count else None,
+                          elapsed_seconds=time.time() - started, command=command,
+                          source_stable=all(sha(root / path) == digest for path, digest in
+                                            {**hashes, **test_hashes}.items()),
+                          limits='JVM contracts' if group == 'pure' else 'Robolectric SDK28/35 host; no device/GPU evidence')
+    if group == 'native':
+        result_receipt.update(resource_apk_sha256=sha(out / 'resources.ap_'), manifest_sha256=sha(out / 'AndroidManifest.xml'))
+    (out / (group + '-receipt.json')).write_text(json.dumps(result_receipt, indent=2) + '\n')
+    print(json.dumps({key: result_receipt[key] for key in ['source_commit', 'result', 'tests', 'source_stable', 'elapsed_seconds']}), flush=True)
+    if result.returncode or not result_receipt['source_stable']:
+        sys.exit(result.returncode or 2)
+print('ANDROID_DISPLAY_AUDIT_GATES_PASS', flush=True)

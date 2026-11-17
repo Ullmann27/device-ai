@@ -1,0 +1,55 @@
+JAR 3a60683a6a225e6ee70a2ccff8d616737be92e36c5fc9084102ba2723396156e commit=4220c410 start=2026-10-22T21:01:05Z args=blt seeds=1,2,3 epochs=6 threads=3 meanPatch=3
+NFC1 commit=68b0a33512d18570ddf450e8f9205a60dbee1c66 docs=239 tokenizer=v512 sha=296567efa53d0461a73e548615fc412afc330610ac086b8c4fc2335e74bb6224
+SPLIT DOC TRAIN docs=71 segments=2446 bytes=422773 sha=86ad7f86d8073e349150e45ac86d09d75716fe9b31160c3fa4411f1f54b6cca3
+SPLIT DOC VALIDATION docs=9 segments=395 bytes=60365 sha=e6c7c3f61377fa14f8d496f0225256916fbe29c94e50f980289a5399c2fa90e1
+SPLIT DOC TEST docs=8 segments=251 bytes=43124 sha=3bbb7b5b6fd5195217507cf99365cd0141cd4f7e2620402dbfb7f6bb568ac7dd
+SPLIT CODE TRAIN docs=126 segments=6138 bytes=1306918 sha=78324e710c6cb10359846df5922cbdf6b27caa42eed8b0e44d12084baa6c0c5c
+SPLIT CODE VALIDATION docs=14 segments=318 bytes=66085 sha=68cb72c9a04aa0160d1b1892828d64405c88c5f82b12be9224773c3e4fdb4774
+SPLIT CODE TEST docs=11 segments=475 bytes=100826 sha=ac3881236bac73db6baca830e2e037395a0bf5eca750466bc2407a98522c3b25
+BLT threshold=2.5717 bits meanPatchTarget=3.0 trainBytes=422773
+BLT entropy meanPatchLength=2.964
+RUN BLT-entropy seed=1 epoch=1 trainNll=4.0395 valBPB=4.2722 params=136864 trainSeconds=39
+RUN BLT-entropy seed=1 epoch=2 trainNll=2.6898 valBPB=3.6228 params=136864 trainSeconds=78
+RUN BLT-entropy seed=1 epoch=3 trainNll=2.3753 valBPB=3.2971 params=136864 trainSeconds=118
+RUN BLT-entropy seed=1 epoch=4 trainNll=2.1997 valBPB=3.1300 params=136864 trainSeconds=157
+RUN BLT-entropy seed=1 epoch=5 trainNll=2.0927 valBPB=3.0316 params=136864 trainSeconds=197
+RUN BLT-entropy seed=1 epoch=6 trainNll=2.0356 valBPB=2.9867 params=136864 trainSeconds=235
+SPEED BLT-entropy seed=1 msPerByte=0.0952 (patching included)
+RUN BLT-entropy seed=2 epoch=1 trainNll=4.0414 valBPB=4.3169 params=136864 trainSeconds=41
+RUN BLT-entropy seed=2 epoch=2 trainNll=2.7106 valBPB=3.6690 params=136864 trainSeconds=83
+RUN BLT-entropy seed=2 epoch=3 trainNll=2.3931 valBPB=3.3413 params=136864 trainSeconds=123
+RUN BLT-entropy seed=2 epoch=4 trainNll=2.2101 valBPB=3.1457 params=136864 trainSeconds=164
+RUN BLT-entropy seed=2 epoch=5 trainNll=2.1068 valBPB=3.0540 params=136864 trainSeconds=205
+RUN BLT-entropy seed=2 epoch=6 trainNll=2.0495 valBPB=3.0155 params=136864 trainSeconds=243
+SPEED BLT-entropy seed=2 msPerByte=0.0748 (patching included)
+RUN BLT-entropy seed=3 epoch=1 trainNll=4.0497 valBPB=4.3098 params=136864 trainSeconds=39
+RUN BLT-entropy seed=3 epoch=2 trainNll=2.7194 valBPB=3.6724 params=136864 trainSeconds=77
+RUN BLT-entropy seed=3 epoch=3 trainNll=2.4041 valBPB=3.3340 params=136864 trainSeconds=116
+RUN BLT-entropy seed=3 epoch=4 trainNll=2.2252 valBPB=3.1600 params=136864 trainSeconds=155
+RUN BLT-entropy seed=3 epoch=5 trainNll=2.1177 valBPB=3.0602 params=136864 trainSeconds=195
+RUN BLT-entropy seed=3 epoch=6 trainNll=2.0614 valBPB=3.0157 params=136864 trainSeconds=235
+SPEED BLT-entropy seed=3 msPerByte=0.0708 (patching included)
+BLT fixed meanPatchLength=2.948
+RUN BLT-fixed seed=1 epoch=1 trainNll=4.0428 valBPB=4.2850 params=136864 trainSeconds=39
+RUN BLT-fixed seed=1 epoch=2 trainNll=2.7041 valBPB=3.6515 params=136864 trainSeconds=77
+RUN BLT-fixed seed=1 epoch=3 trainNll=2.3918 valBPB=3.3239 params=136864 trainSeconds=117
+RUN BLT-fixed seed=1 epoch=4 trainNll=2.2201 valBPB=3.1659 params=136864 trainSeconds=156
+RUN BLT-fixed seed=1 epoch=5 trainNll=2.1181 valBPB=3.0767 params=136864 trainSeconds=193
+RUN BLT-fixed seed=1 epoch=6 trainNll=2.0601 valBPB=3.0338 params=136864 trainSeconds=232
+SPEED BLT-fixed seed=1 msPerByte=0.0649 (patching included)
+RUN BLT-fixed seed=2 epoch=1 trainNll=4.0486 valBPB=4.3305 params=136864 trainSeconds=40
+RUN BLT-fixed seed=2 epoch=2 trainNll=2.7224 valBPB=3.6812 params=136864 trainSeconds=77
+RUN BLT-fixed seed=2 epoch=3 trainNll=2.4170 valBPB=3.3643 params=136864 trainSeconds=116
+RUN BLT-fixed seed=2 epoch=4 trainNll=2.2347 valBPB=3.1824 params=136864 trainSeconds=154
+RUN BLT-fixed seed=2 epoch=5 trainNll=2.1291 valBPB=3.0879 params=136864 trainSeconds=192
+RUN BLT-fixed seed=2 epoch=6 trainNll=2.0713 valBPB=3.0495 params=136864 trainSeconds=229
+SPEED BLT-fixed seed=2 msPerByte=0.0655 (patching included)
+RUN BLT-fixed seed=3 epoch=1 trainNll=4.0512 valBPB=4.3338 params=136864 trainSeconds=38
+RUN BLT-fixed seed=3 epoch=2 trainNll=2.7309 valBPB=3.6740 params=136864 trainSeconds=76
+RUN BLT-fixed seed=3 epoch=3 trainNll=2.4165 valBPB=3.3603 params=136864 trainSeconds=115
+RUN BLT-fixed seed=3 epoch=4 trainNll=2.2411 valBPB=3.1904 params=136864 trainSeconds=154
+RUN BLT-fixed seed=3 epoch=5 trainNll=2.1335 valBPB=3.0918 params=136864 trainSeconds=192
+RUN BLT-fixed seed=3 epoch=6 trainNll=2.0785 valBPB=3.0512 params=136864 trainSeconds=229
+SPEED BLT-fixed seed=3 msPerByte=0.0705 (patching included)
+PEAK heapMb=443
+exit=0 end=2026-10-22T21:24:49Z

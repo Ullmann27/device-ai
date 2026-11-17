@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.ContinuumAvatarLookPreviewUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:36:34" hostname="04c8b0ba7ea6" time="0.441">
+  <properties/>
+  <testcase name="holographicBustRendersIdleSpeakingGazeAndWake" classname="at.heinz.deviceai.avatar.ContinuumAvatarLookPreviewUiTest" time="0.441"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

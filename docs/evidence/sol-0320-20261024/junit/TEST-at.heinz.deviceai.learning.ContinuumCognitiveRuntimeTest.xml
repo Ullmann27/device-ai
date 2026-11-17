@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:26" hostname="5c9e18abbd30" time="0.218">
+  <properties/>
+  <testcase name="boundedPreviousTopicSurvivesNewRuntimeOnlyWhenPassedByCurrentSession" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.013"/>
+  <testcase name="brokenCre1CheckpointIsNeverSilentlyTrustedOrDeleted" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.001"/>
+  <testcase name="newConfirmedFactResolvesPreviouslyUnansweredQuestion" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.002"/>
+  <testcase name="unresolvedPronounNeverBorrowsAnotherConversationFromProfileHistory" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.008"/>
+  <testcase name="onlyCurrentTurnResolutionMayProvideLocalGeneratorContext" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.001"/>
+  <testcase name="aNewConversationIdWithoutExplicitResetCannotLeakGlobalResolvedQueryToModel" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.002"/>
+  <testcase name="confirmedFactIsRetrievedAndBothNeuralKernelsAreObserved" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.042"/>
+  <testcase name="sameRuntimeMayOnlyContextualizeOwnPreviouslyGroundedQuestion" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.006"/>
+  <testcase name="realCre1ResearchSnapshotParticipatesOnlyInShadow" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.139"/>
+  <testcase name="invalidOrUnconfirmedPriorTopicNeverBecomesModelContext" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.0"/>
+  <testcase name="unknownQuestionNeverBecomesFactFromUntrainedCre1" classname="at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

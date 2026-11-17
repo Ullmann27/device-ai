@@ -1,0 +1,203 @@
+{
+ "commit": "9fb4361c",
+ "mined": "2026-10-23T07:32:22.314Z",
+ "modules": 77,
+ "callable": 237,
+ "eligible": 4,
+ "pool": [
+  [
+   "abc"
+  ],
+  [
+   "Hallo Welt"
+  ],
+  [
+   "a-b-c"
+  ],
+  [
+   "x_y"
+  ],
+  [
+   "Ä"
+  ],
+  [
+   ""
+  ],
+  [
+   "42"
+  ],
+  [
+   "der Hund läuft"
+  ],
+  [
+   0
+  ],
+  [
+   1
+  ],
+  [
+   2
+  ],
+  [
+   7
+  ],
+  [
+   42
+  ],
+  [
+   -3
+  ],
+  [
+   1.5
+  ],
+  [
+   true
+  ],
+  [
+   false
+  ],
+  [
+   null
+  ]
+ ],
+ "pool2": [
+  [
+   "abc",
+   2
+  ],
+  [
+   "Hallo Welt",
+   5
+  ],
+  [
+   "a-b-c",
+   1
+  ],
+  [
+   "x_y",
+   0
+  ],
+  [
+   "der Hund läuft",
+   3
+  ],
+  [
+   "abc",
+   "b"
+  ],
+  [
+   "Hallo Welt",
+   "Welt"
+  ],
+  [
+   "a-b-c",
+   "-"
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   7,
+   -3
+  ],
+  [
+   1.5,
+   2
+  ],
+  [
+   "abc",
+   true
+  ]
+ ],
+ "tasks": [
+  {
+   "gold": ".github/continuum/development-backlog.mjs#integrityOf",
+   "arity": 1,
+   "equivalent": [],
+   "alsoMeetExamples": [],
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "ce8e9b4d070d6d2d7a044f9e32af6346efa84db5c986f50faec150c4f50842fc"
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "67857ecf5157534b993cb783208f48d632de74191b2a54abedb0b1f97dcc7f32"
+    }
+   ],
+   "description": ""
+  },
+  {
+   "gold": ".github/continuum/repair-strategies.mjs#insertImport",
+   "arity": 2,
+   "equivalent": [],
+   "alsoMeetExamples": [],
+   "examples": [
+    {
+     "args": [
+      "abc",
+      "b"
+     ],
+     "expected": "\nimport b\nabc"
+    },
+    {
+     "args": [
+      "Hallo Welt",
+      "Welt"
+     ],
+     "expected": "\nimport Welt\nHallo Welt"
+    }
+   ],
+   "description": ""
+  },
+  {
+   "gold": ".github/continuum/research-radar.mjs#normalizeTitle",
+   "arity": 1,
+   "equivalent": [],
+   "alsoMeetExamples": [],
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "abc"
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "hallo welt"
+    }
+   ],
+   "description": ""
+  },
+  {
+   "gold": ".github/continuum/repair-strategies.mjs#editDistance",
+   "arity": 2,
+   "equivalent": [],
+   "alsoMeetExamples": [],
+   "examples": [
+    {
+     "args": [
+      "abc",
+      "b"
+     ],
+     "expected": 2
+    },
+    {
+     "args": [
+      "Hallo Welt",
+      "Welt"
+     ],
+     "expected": 6
+    }
+   ],
+   "description": ""
+  }
+ ]
+}

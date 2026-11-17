@@ -1,0 +1,19 @@
+JUnit version 4.13.2
+.....E..E..
+Time: 0.329
+There were 2 failures:
+1) submitAfterShutdownPreservesRejectionWithoutLeavingUnfinishedWork(at.heinz.deviceai.chief.ChiefWorkerPoolTest)
+java.lang.AssertionError: rejected admission must not retain capacity
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.chief.ChiefWorkerPoolTest.submitAfterShutdownPreservesRejectionWithoutLeavingUnfinishedWork(ChiefWorkerPoolTest.kt:127)
+2) awaitIdleDoesNotCompleteBeforeTheReportCallbackReturns(at.heinz.deviceai.chief.ChiefWorkerPoolTest)
+java.lang.AssertionError: delivery is incomplete while its callback is blocked
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.chief.ChiefWorkerPoolTest.awaitIdleDoesNotCompleteBeforeTheReportCallbackReturns(ChiefWorkerPoolTest.kt:55)
+
+FAILURES!!!
+Tests run: 9,  Failures: 2
+

@@ -1,0 +1,11 @@
+{
+  "source": "c163641b400f1fcdd02c1d2952fde1c8e76a0ad1",
+  "phase": "full",
+  "status": "NOT_RUN",
+  "session_exit": 1,
+  "observed_error": "AssertionError: UI_RECHECK_REQUIRED",
+  "gate": "Same-source UI phase FAIL",
+  "gradle_started": false,
+  "tests_executed": 0,
+  "note": "Driver line48 rejected before command launch/output directory. UI/lint completed normally; no tests were stopped."
+}

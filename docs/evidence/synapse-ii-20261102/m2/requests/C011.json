@@ -1,0 +1,24 @@
+{
+  "id": "C011",
+  "question": "Wo lebt Zynavopi?",
+  "sources": [
+    {
+      "revision": 4,
+      "sha256": "169370189aec9a012e2fd13d840d001563546f156c16e857035c3f34396aecbe",
+      "sourceId": "bc:C011:s1",
+      "text": "Qeditika lebt in Uvmaromi. Qejakase lebt in Uvpikemu."
+    },
+    {
+      "revision": 5,
+      "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+      "sourceId": "bc:C011:s2",
+      "text": "Zynavopi lebt in Uvkunoji Uvrataba."
+    },
+    {
+      "revision": 6,
+      "sha256": "9200b70093c59956b146ded3d42701754effe8666b36772b1071d06e0da43c4b",
+      "sourceId": "bc:C011:s3",
+      "text": "Qekovufe lebt in Uvgopuri. Qejakase lebt in Uvpikemu."
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "evidenceClass": "ACTUAL_ANDROID_COMPILE_AND_ROBOLECTRIC_HOST_UI_SYNTHETIC_INPUT",
+  "sourceBase": "4ac9c9b94b9fb5e391646e2e99e986db32ec7997",
+  "activityBeforeChatBinding": "348b6ae6f166c8b204ad6b43d6fa49390a7ff51d",
+  "activityBeforeOverlapGuard": "4a18f7d12a144bfffbad8cd84399020ad4515287",
+  "baselineUiRed": {
+    "baseline_activity_commit": "348b6ae6f166c8b204ad6b43d6fa49390a7ff51d",
+    "tests": "7",
+    "failures": "7",
+    "errors": "0",
+    "cases": [
+      {
+        "name": "recognizedReplyDismissesItsOriginalModal",
+        "failure": "org.junit.ComparisonFailure: expected:<[Im Chat antworten]> but was:<[]>"
+      },
+      {
+        "name": "expiredChangedOrRevokedBindingCannotGrant",
+        "failure": "org.junit.ComparisonFailure: expected:<[Im Chat antworten]> but was:<[]>"
+      },
+      {
+        "name": "pauseThenResumeCannotReviveThePendingTicket",
+        "failure": "org.junit.ComparisonFailure: expected:<[Im Chat antworten]> but was:<[]>"
+      },
+      {
+        "name": "declineCompletesWithoutAGrant",
+        "failure": "org.junit.ComparisonFailure: expected:<[Im Chat antworten]> but was:<[]>"
+      },
+      {
+        "name": "replacedDialogCannotApproveTheCurrentChatRequest",
+        "failure": "org.junit.ComparisonFailure: expected:<[Im Chat antworten]> but was:<[]>"
+      },
+      {
+        "name": "exactReplyApprovesOnlyTheDisplayedTicketWhileTheModelWaits",
+        "failure": "org.junit.ComparisonFailure: expected:<[Im Chat antworten]> but was:<[]>"
+      },
+      {
+        "name": "ambiguousOrUnrelatedReplyInvalidatesTheChatBinding",
+        "failure": "org.junit.ComparisonFailure: expected:<[Im Chat antworten]> but was:<[]>"
+      }
+    ]
+  },
+  "overlapRed": {
+    "baseline_activity_commit": "4a18f7d",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "cases": [
+      {
+        "name": "otherToolConfirmationDisarmsTheResearchChatReply",
+        "failure": "java.lang.AssertionError: expected:<false> but was:<true>"
+      }
+    ]
+  },
+  "finalGreen": {
+    "tests": 87,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "suite": "at.heinz.deviceai.AvatarExplicitConfirmationUiTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.ConsequentialActionApprovalTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.ResearchChatApprovalUiTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.ConversationControlTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.ConversationResearchApprovalIntegrationTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.LocalConversationContextInvalidationTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.LocalConversationFollowUpIntegrationTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.ResearchConsentReplyTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.ResearchDialogueHandoffTest",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "34412431e10754be37992274378519d5c68fbf716a238335d19bc5a93312e3ef",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "8da16a720414bc528f44f32508e45d90e7dcb19c38d01ceade666a4a60e2e294",
+    "app/src/main/java/at/heinz/deviceai/cognitive/ResearchConsentReply.kt": "2676b3d1df61d9a9af9ee5a8b298623976e9c47b847c82140a8cc74f41d646a9",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ConversationControlTest.kt": "0f9c6086668dac422d03842ef7f567b7992ba1ad93923ecf08a4db7550561bd8",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ResearchConsentReplyTest.kt": "f9a7cb378a7eb8e1f118cbb3ed12d4fcbc9f6c4fb5510fb8683408464f647ef8",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ConversationResearchApprovalIntegrationTest.kt": "df5caeee4e7a6781484a8620d2d546c463a47e11f6efb63f7262b34e648788c8",
+    "app/src/uiTest/java/at/heinz/deviceai/ResearchChatApprovalUiTest.kt": "68bf28f4dc33151d607d4708369db0f7b206fba0141a71d4abbacd0b01b59986"
+  },
+  "avatarAssetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "limitations": [
+    "Host Robolectric API28 LEGACY UI; no device or native GPU acceptance",
+    "New UI callbacks only record synthetic approval outcomes; no actual research network dispatch",
+    "Spoken-input route tested at actual sendCurrentInput entry with synthetic text; no real microphone/ASR engine",
+    "Research-only pending replies; generic/destructive tools retain explicit existing button gates",
+    "No full A-E entity resolution, APK, signing, install or main merge"
+  ]
+}

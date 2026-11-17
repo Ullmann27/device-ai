@@ -1,0 +1,94 @@
+package at.heinz.deviceai.cognitive
+
+import org.junit.Assert.*
+import org.junit.Test
+
+class JarvisVoiceProfileTest {
+    @Test fun localProfileIsMildAndWithinAndroidTtsRanges() {
+        assertTrue(JarvisVoiceProfile.pitch in 0.5f..1.0f)
+        assertTrue(JarvisVoiceProfile.speechRate in 0.5f..1.0f)
+    }
+
+    @Test fun markdownAndUrlsAreSpokenAsProseNotRawControlTokens() {
+        val input = "# Antwort: **Bereit**. [Quelle](https://example.org/a) https://example.org/b"
+        val spoken = JarvisVoiceProfile.speakable(input)!!
+        assertTrue(spoken.contains("Bereit"))
+        assertTrue(spoken.contains("Quelle"))
+        assertFalse(spoken.contains("https://"))
+        assertFalse(spoken.contains("**"))
+    }
+
+    @Test fun sourceCodeIsOmittedFromSpokenAnswer() {
+        val input = "Das Ergebnis ist da.\n` ` `\n".replace(" ", "") +
+            "private val key = 42\n` ` `\n".replace(" ", "") +
+            "Weitere Schritte möglich."
+        val spoken = JarvisVoiceProfile.speakable(input)!!
+        assertFalse(spoken.contains("private val"))
+        assertTrue(spoken.contains("Weitere Schritte"))
+    }
+
+    @Test fun incompleteAndInlineCodeAreNotSpokenAsSecrets() {
+        val incomplete = JarvisVoiceProfile.speakable("Hinweis:\n```kotlin\nval secret = PRIVATE")!!
+        assertFalse(incomplete.contains("PRIVATE"))
+        val inline = JarvisVoiceProfile.speakable("Hallo `secret_token` und weiter.")!!
+        assertFalse(inline.contains("secret_token"))
+        assertTrue(inline.contains("weiter"))
+    }
+
+    @Test fun multilineLongAndTildeCodeAreNeverSpoken() {
+        val hidden = "SECRET_ACCESS_TOKEN"
+        val multiline = JarvisVoiceProfile.speakable("Konto `ABC\n" + hidden + "` geändert.")!!
+        assertFalse(multiline.contains(hidden))
+        val tilde = JarvisVoiceProfile.speakable("~~~kotlin\nkey = " + hidden + "\n~~~\nFertig.")!!
+        assertFalse(tilde.contains(hidden))
+        assertTrue(tilde.contains("Fertig"))
+        val oversized = JarvisVoiceProfile.speakable("Beginn `" + hidden.repeat(40) + "` Ende.", 800)!!
+        assertFalse(oversized.contains(hidden))
+    }
+
+    @Test fun answerLengthIsBoundedAndNeverEmptyAfterTruncation() {
+        val value = "Das ist ein Satz. ".repeat(70)
+        val spoken = JarvisVoiceProfile.speakable(value, 120)!!
+        assertTrue(spoken.length in 1..120)
+        assertTrue(spoken.endsWith("."))
+        assertNull(JarvisVoiceProfile.speakable(" \n\t"))
+    }
+
+    @Test fun extendedReplyBudgetGoesBeyondLegacyFifteenChunksButStaysBounded() {
+        val medium = "Ein vollständiger Satz für die Sprachausgabe. ".repeat(210)
+        val mediumChunks = JarvisVoiceProfile.speakableChunks(medium, chunkCharacters = 480, maxChunks = 31)
+        assertTrue("legacy 15-chunk ceiling must be exceeded", mediumChunks.pieces.size > 15)
+        assertFalse("ordinary long reply should fit the extended budget", mediumChunks.truncated)
+        assertTrue(mediumChunks.pieces.all { it.length in 1..480 })
+
+        val huge = "Noch ein vollständiger Satz für die harte Obergrenze. ".repeat(800)
+        val hugeChunks = JarvisVoiceProfile.speakableChunks(huge, chunkCharacters = 480, maxChunks = 31)
+        assertEquals(31, hugeChunks.pieces.size)
+        assertTrue(hugeChunks.truncated)
+    }
+
+    @Test fun invalidSpeechBudgetFailsClosed() {
+        assertThrows(IllegalArgumentException::class.java) { JarvisVoiceProfile.speakable("Hallo", 20) }
+    }
+
+    @Test fun aTitleBeforeANameDoesNotBecomeAChunkEnding() {
+        val first = "Die erste Kontrolle ist abgeschlossen."
+        val text = "$first Jetzt meldet sich Dr. Sommer mit dem ausführlichen Bericht zur Kontrolle. Danach folgt der nächste Schritt."
+        val chunks = JarvisVoiceProfile.speakableChunks(text, chunkCharacters = 80)
+
+        assertEquals(first, chunks.pieces.first())
+        assertEquals(text, chunks.pieces.joinToString(" "))
+        assertFalse(chunks.truncated)
+    }
+
+    @Test fun aLongSentencePrefersAnExistingClausePauseToAnArbitraryWord() {
+        val pause = "Ich prüfe jetzt die vorliegenden Quellen,"
+        val text = "$pause damit die Analyse zuverlässig bleibt und keine unbelegte Behauptung entsteht. Danach folgt die Bewertung."
+        val chunks = JarvisVoiceProfile.speakableChunks(text, chunkCharacters = 80)
+
+        assertEquals(pause, chunks.pieces.first())
+        assertEquals(text, chunks.pieces.joinToString(" "))
+        assertTrue(chunks.pieces.all { it.length in 1..80 })
+        assertFalse(chunks.truncated)
+    }
+}

@@ -1,0 +1,13 @@
+# Independent checkpoint
+
+Freeze commit: 3dcc58662dd7ad5772b00c7eff33a6e4075b8974, manifest SHA256 a9b5e3b68fb78fa52833d77b4468b10887f365376a75d00032b0aaf76c4e1cd5. Draft PR409. Candidate source was first inspected only after this freeze.
+
+Actual Kotlin and Java2D tests: baseline 04b4292d796bc151c40ab18405226cd9faef01cf: 7,080 checks, 717 negative results; candidate d8340ff10c9efec5cfdfe8baa63bcf58bdfbe3d4: 8,040 checks, zero negative results. Counts differ because of returned slots and drawn lines. Each raw PASS/FAIL is retained in results.tsv. The 40 original width/height/font cases ran unchanged for both source revisions. The tests recompile the exact source files and invoke their Kotlin layout and element implementations, with asset font metrics from the repository Java2D painter. No copied geometry formulas.
+
+Baseline negatives: 232 touch-target checks, 240 actions-below-hero checks, 154 action text overlaps, 90 readability floors, one nonfinite-input case. The actions-below-hero negatives are expected against the old reference arrangement. Pure large-font runs exercise element APIs at the requested scale; baseline Android HomeView actually clamps at 1.3, so these high-font pure failures are API stress results, not a claim that baseline Android renders at fontScale2.
+
+Native HomeView callback/accessibility/state/screenshot tests are RUNNING using the prepared Robolectric Android15 runtime and real HomeView, with the prepared original hologram dependency. Initial native harness compile failed because it needed both support and freshly compiled element modules as Kotlin friend paths. That harness-only failure is preserved, and its friend-path correction is in run-native.sh.
+
+Author delivered a later exact source de86cff67b1b028645d7bf77f5fee171d66530a0 after initial candidate testing. Its sole production delta from d834 moves tablet telemetry to full-height cards above fontScale1.1. Original d834 outcomes remain preserved; same frozen checks against de86 are RUNNING in candidate-de86.
+
+Limitations: the six action slot identities and real core statuses are preserved, but displayed labels were renamed (DENKEN→Chat, ANALYSIEREN→Forschung, ENTWICKELN→Entwicklung, VERBUNDEN→Verbindung, EVOLVIEREN→Lernstatus; LERNEN→Lernen). Chief should resolve whether the contract requires literal original labels. Layout source supports widths >=240dp; no guarantee below its declared precondition. This bounded harness verifies action-text boxes but does not prove every internal metric-card label is readable, exact visual identity, full Activity navigation/tap subzones, or physical-device TalkBack. No Gradle, APK, device, FPS or performance claims.

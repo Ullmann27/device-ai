@@ -1,0 +1,17 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "scripts/continuum-fold7-stream-scroll.test.mjs",
+    "scripts/continuum-local-chat-streaming.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/b31a9d731016/wiring-app-query-format",
+  "exit": 0,
+  "utc": "2026-11-06T21:01:33.749487+00:00",
+  "base": "c3d2cdc5d84786b436b0f2eef7e4f5b8a53a218e",
+  "source_sha256": {
+    "scripts/continuum-fold7-stream-scroll.test.mjs": "cbd3ca671f5c395b60b5309351228590427f9a201a9ff92ab51f188b4982253e",
+    "scripts/continuum-local-chat-streaming.test.mjs": "86fd21ccb1fa986b53dd9ee8897ee7326ce866186c877f1fb065faea15bbd8f0"
+  }
+}

@@ -1,0 +1,15 @@
+✔ a watched step passes streams, exit code and ending signal through unchanged (243.473664ms)
+✔ a spawnSync timeout still reads as a timeout and also ends the detached grandchild (1828.979751ms)
+✔ an owner abort ends a running step and its detached grandchild within seconds (867.125625ms)
+✔ a task aborted before the step starts never runs the command (37.75051ms)
+✔ a watched step stops when the waiting parent is gone (864.771105ms)
+✔ the watchdog refuses incomplete or relative arguments (214.100993ms)
+✔ an abort watch ends a running check profile and the chain never uses its result (849.312838ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4960.418444

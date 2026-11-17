@@ -1,0 +1,92 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+QA_HEARTBEAT 2026-11-11T13:50:49.595391+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   24.7 107604', '47 java            Ssl   181 298780']
+QA_HEARTBEAT 2026-11-11T13:51:19.698626+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   23.3 107732', '47 java            Ssl   184 392244']
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+WARNING: platform-tools package is not installed.
+
+> Task :app:prepareOwnerFaceModels UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+PDF_QA_JOURNAL decode cb53c81f-d2dd-4f58-b0ce-43c2dc471f47 /workspace/scratch/6139925ecf70/qa-decode-b1b79435/junit-progress.ndjson
+QA_HEARTBEAT 2026-11-11T13:51:49.719142+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   20.2 108284', '47 java            Ssl   184 483880']
+
+PdfIntakeNativeDecodeProbeUiTest > actualProviderReadRendersAndExtractsSyntheticPdf STARTED
+QA_HEARTBEAT 2026-11-11T13:52:20.680604+00:00 pid/command/state/cpu/rss-kib ['9 java            Sl   18.6 108324', '47 java            Ssl   150 482084', '156 java            Sl    146 226456']
+PDF_QA_TEST decode at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest#actualProviderReadRendersAndExtractsSyntheticPdf FAILURE 41068ms
+
+PdfIntakeNativeDecodeProbeUiTest > actualProviderReadRendersAndExtractsSyntheticPdf FAILED
+    java.lang.NoSuchMethodError: 'long java.io.FileDescriptor.getOwnerId$()'
+        at libcore.io.IoUtils.acquireRawFd(IoUtils.java:74)
+        at android.os.ParcelFileDescriptor.acquireRawFd(ParcelFileDescriptor.java:1315)
+        at android.os.ParcelFileDescriptor.detachFd(ParcelFileDescriptor.java:818)
+        at android.os.ParcelFileDescriptor.detachFd(ParcelFileDescriptor.java:813)
+        at android.graphics.pdf.PdfProcessor.create(PdfProcessor.java:112)
+        at android.graphics.pdf.PdfRenderer.__constructor__(PdfRenderer.java:193)
+        at android.graphics.pdf.PdfRenderer.<init>(PdfRenderer.java:187)
+        at at.heinz.deviceai.PdfDocumentIntake.read(PdfDocumentIntake.kt:46)
+        at at.heinz.deviceai.PdfDocumentIntake.read$default(PdfDocumentIntake.kt:36)
+        at at.heinz.deviceai.PdfIntakeNativeDecodeProbeUiTest.actualProviderReadRendersAndExtractsSyntheticPdf(PdfIntakeNativeDecodeProbeUiTest.kt:42)
+PDF_QA_SUITE_END decode FAILURE tests=1 passed=0 failed=1 skipped=0
+
+1 test completed, 1 failed
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///workspace/scratch/6139925ecf70/device-ai/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/scratch/6139925ecf70/device-ai/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 2m 25s
+31 actionable tasks: 1 executed, 30 up-to-date

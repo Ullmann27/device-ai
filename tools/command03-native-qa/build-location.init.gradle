@@ -1,0 +1,6 @@
+def destination = System.getProperty('continuum.native.buildRoot')
+if (!destination) throw new GradleException('continuum.native.buildRoot is required')
+gradle.beforeProject { project ->
+    def name = project.path == ':' ? 'root-build' : project.path.substring(1).replace(':', '_') + '-build'
+    project.layout.buildDirectory.set(new File(destination, name))
+}

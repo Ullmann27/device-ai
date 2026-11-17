@@ -1,0 +1,36 @@
+{
+  "taskId": "C1-UI-020-TEST-REVIEW",
+  "source": "f31855138d77ecb5e05e7a17a620b1fd6e9d28c5",
+  "scope": "Independent static review of frozen V1 test; no test execution",
+  "archiveSha256": "e95655816581313fb2fd7ca8d8bb820c725b40cf3fd43fe59706ea845267dde1",
+  "members": [
+    {
+      "path": "C1-UI-020-tests-v1.json",
+      "sha256": "61d4838268406bb2a9c0fd4d1e32d949c05f870390206f7cafe9346db623c35c"
+    },
+    {
+      "path": "C1-UI-020-tests-v1.patch",
+      "sha256": "fdd1d7bccba6c400ccaa2edc0fad8224b83da9dfcbf1be9488a07327829f9b7e"
+    },
+    {
+      "path": "REVIEW.md",
+      "sha256": "cd4c1193f520c67c03a4cd4ae857e0b1b4502c006b61564afee3666eda3185e2"
+    },
+    {
+      "path": "SHA256SUMS",
+      "sha256": "9de5ed0b8de21a1240f7339e6f03d751d9286e7fdaa2f65fdde76e6f5f607413"
+    },
+    {
+      "path": "SOURCE-REVIEW.json",
+      "sha256": "3b3055c3168622a0afa2a66537167c334d39d6c7c4b371abced64e55bbbb04d4"
+    },
+    {
+      "path": "base-ContinuumReferenceCockpitUiTest.kt",
+      "sha256": "39b4371e773f0f342dc1606700d59c2fa95cb67f622ee6d0ce7577c9ed8a813f"
+    },
+    {
+      "path": "target-ContinuumReferenceCockpitUiTest.kt",
+      "sha256": "b162dda889669fb6818b9e35114a1874f7991d3df3d0d2f83da9b937e9748547"
+    }
+  ]
+}

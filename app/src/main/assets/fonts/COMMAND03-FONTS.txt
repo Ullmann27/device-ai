@@ -1,0 +1,11 @@
+Kommando 03 / Device AI Continuum
+Bundled from the approved web design source, PR #850, commit 0876aa0accdf8154e06e53da42aa5c9492892066.
+Families: Manrope and Space Grotesk. License: SIL OFL 1.1. See adjacent license and notice files.
+
+Manrope-Regular.ttf SHA256 ed335894f8d954263675f7e457bf657374d8b7be629be4dc43aef97c309ad3ae
+Manrope-Medium.ttf SHA256 437dc9f921739a6893128fa4dfc299424951148475815a9a213a46457878c42b
+Manrope-SemiBold.ttf SHA256 68ed4be49ec7d32f07b42f9232dc01ca1df7a77be1d9b0731aac74db58235f34
+Manrope-Bold.ttf SHA256 ea1f264039fed13fd36e6d6f49fcae4fe7007def02cf2972b5c7f6d6f1349d06
+SpaceGrotesk-Regular.ttf SHA256 ec926d5065eaca49a48f96e312bbae0bbc5733c24215cf5dfabbdccee926fef7
+SpaceGrotesk-Medium.ttf SHA256 3e699ead1876244fa392243054ddefe7cf631b488438828a8a100731a22ab995
+SpaceGrotesk-Bold.ttf SHA256 3e756954468ff1cb302dae0414262e72f76a67d87bef3fa1f3226cd0fb9b2d85

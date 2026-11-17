@@ -1,0 +1,22 @@
+JUnit version 4.13.2
+.....E.E.
+Time: 0.458
+There were 2 failures:
+1) terminalTraceCancellationOverridesAPreviousExecutionPhase(at.heinz.deviceai.cognitive.AgentTaskEvidenceTest)
+java.lang.AssertionError: expected:<BLOCKED> but was:<EXECUTING>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.AgentTaskEvidenceTest.terminalTraceCancellationOverridesAPreviousExecutionPhase(AgentTaskEvidenceTest.kt:138)
+2) cancellationIsObservedWithoutACompletionOrLearningCandidate(at.heinz.deviceai.cognitive.AgentTaskEvidenceTest)
+java.lang.AssertionError: expected:<BLOCKED> but was:<EXECUTING>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.AgentTaskEvidenceTest.cancellationIsObservedWithoutACompletionOrLearningCandidate(AgentTaskEvidenceTest.kt:132)
+
+FAILURES!!!
+Tests run: 7,  Failures: 2
+

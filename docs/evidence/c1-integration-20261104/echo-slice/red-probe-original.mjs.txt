@@ -1,0 +1,96 @@
+/** Negative report contracts with real CCC1 journals, grants and report artifacts.
+ * Docker's external command boundary is a failure-only double. No container,
+ * local model, successful repair or device execution is attested by these tests. */
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import childProcess from 'node:child_process';
+import {syncBuiltinESMExports} from 'node:module';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {prepareCodingTask,runCodingTask} from '../../continuum-c1/.github/continuum/coding-orchestrator.mjs';
+import {createCodingCandidateProvider} from '../../continuum-c1/.github/continuum/coding-provider.mjs';
+import {createIsolatedExecutor} from '../../continuum-c1/.github/continuum/isolated-executor.mjs';
+import {createCcc1BotAssignment} from '../../continuum-c1/.github/continuum/ccc1-bot-assignment.mjs';
+import {DurableTaskJournal,runtimeKey,WriterLock} from '../../continuum-c1/.github/continuum/ccc1-journal.mjs';
+import {taskState} from '../../continuum-c1/.github/continuum/ccc1-orchestrator.mjs';
+import {sha256Hex,canonical} from '../../continuum-c1/.github/continuum/development-backlog.mjs';
+import {createHmac} from 'node:crypto';
+import {LOCAL_MODEL_RUNTIME_CANDIDATES} from '../../continuum-c1/scripts/continuum-local-model-pins.mjs';
+
+const IMAGE='sha256:'+'a'.repeat(64);
+// The fixed repair profile reruns this file in a child. Cases requiring their
+// own repair attempt belong to the outer integration run; do not defeat DEPTH.
+const repairIntegrationTest=(name,run)=>test(name,{skip:process.env.CONTINUUM_REPAIR_DEPTH?
+ 'Nested repair execution is forbidden by the existing recursion gate':false},run);
+function fixture(t){
+ const home=fs.mkdtempSync(path.join(os.tmpdir(),'coding-negative-report-'));
+ t.after(()=>fs.rmSync(home,{recursive:true,force:true}));
+ const project=path.join(home,'repo'),serviceState=path.join(home,'service'),stateDir=path.join(serviceState,'ccc1');
+ fs.mkdirSync(path.join(serviceState,'public-evidence'),{recursive:true,mode:0o700});
+ fs.mkdirSync(path.join(project,'.github','continuum'),{recursive:true});
+ fs.mkdirSync(path.join(project,'lib'));
+ fs.writeFileSync(path.join(project,'lib','offset.mjs'),'export function offset(a,b){return a-b;}\n');
+ fs.writeFileSync(path.join(project,'.github','continuum','offset.test.mjs'),
+  "import test from 'node:test';import assert from 'node:assert/strict';import {offset} from '../../lib/offset.mjs';test('offset',()=>assert.equal(offset(3,8),5));\n");
+ const nativeSpawn=childProcess.spawnSync;
+ const git=(...args)=>{
+  const r=nativeSpawn('git',args,{cwd:project,encoding:'utf8',shell:false});
+  assert.equal(r.status,0,r.stderr);return r.stdout.trim();
+ };
+ git('init','-q','-b','negative-report-fixture');git('add','.');
+ git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','negative report fixture');
+ const task={schema:'continuum-coding-task',version:1,id:'owner-negative-report',sourceCommit:git('rev-parse','HEAD'),
+  kind:'BUGFIX',goal:'PRIVATE_OWNER_CANARY: repair offset symmetry',allowedPaths:['lib/offset.mjs'],
+  acceptance:['offset(3,8) equals 5'],chain:'node',limits:{maxModelCalls:1,maxContextChars:6000}};
+ const prepared=prepareCodingTask({project,stateDir,task});
+ const profiles=new Map(['bot-forge','bot-lint','bot-echo'].map(agentId=>[agentId,{agentId,workspaceId:'workspace-'+agentId,
+  resourceBudget:{maxModelCalls:1,deadlineMillis:120_000}}]));
+ const assignment=createCcc1BotAssignment({task,ccc1TaskId:prepared.ccc1TaskId,
+  builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',profileStore:{get:id=>profiles.get(id)}});
+ let executionAttempts=0,providerCalls=0,onAttempt=()=>{};
+ t.mock.method(childProcess,'spawnSync',(command,args,options)=>{
+  if(command!=='docker')return nativeSpawn(command,args,options);
+  assert.equal(args[0],'--host=unix:///var/run/docker.sock');
+  if(args[1]==='image'&&args[2]==='inspect')return {status:0,stdout:IMAGE+'\n',stderr:''};
+  if(args[1]==='run'){
+   executionAttempts++;onAttempt();
+   return {status:1,stdout:'',stderr:'Controlled unavailable runtime; no container started'};
+  }
+  if(args[1]==='container'&&args[2]==='inspect')
+   return {status:1,stdout:'',stderr:'No such container: '+args[3]};
+  assert.fail('Unexpected Docker operation: '+args.slice(1,3).join(' '));
+ });
+ syncBuiltinESMExports();
+ t.after(()=>{t.mock.restoreAll();syncBuiltinESMExports();});
+ const executor=createIsolatedExecutor({image:IMAGE,nodeHome:path.dirname(path.dirname(fs.realpathSync(process.execPath)))});
+ const journal=DurableTaskJournal.forTask(stateDir,prepared.ccc1TaskId,runtimeKey(stateDir));
+ const run=()=>runCodingTask({project,stateDir,id:task.id,executor,executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',
+  requireLocalModelObservation:true,botAssignment:assignment,technicalRecallEnabled:false,env:{},
+  providerFactory:({task:jobTask})=>Object.assign(()=>{providerCalls++;throw Error('UNEXPECTED_INFERENCE');},
+   {taskSpec:jobTask,allowedPaths:jobTask.allowedPaths})});
+ return {home,project,stateDir,serviceState,task,prepared,profiles,assignment,executor,journal,run,git,
+  counts:()=>({executionAttempts,providerCalls}),onAttempt:callback=>{onAttempt=callback;}};
+}
+async function rejection(run){
+ try{await run();assert.fail('Strict task must reject without verified model execution');}
+ catch(error){assert.equal(error.message,'CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');return error;}
+}
+repairIntegrationTest('strict observation failure exposes the canonical negative Echo report without learning',async t=>{
+ const f=fixture(t),error=await rejection(f.run);
+ assert.equal(taskState(f.journal.entries()).state,'ABSTAINED');
+ assert.equal(error.botReport?.status,'ABSTAINED');
+ const bytes=fs.readFileSync(error.botReport.path),body=JSON.parse(bytes);
+ assert.equal(sha256Hex(bytes),error.botReport.sha256);
+ assert.equal(body.reporterId,'bot-echo');assert.equal(body.interpretation,'NO_CONFIRMED_REPAIR');
+ assert.equal(body.journalHead,f.journal.entries().at(-1).hash);
+ assert.equal(body.modelCalls,0);assert.equal(body.modelInferenceAttestedByReport,false);
+ assert.equal(body.deviceVerified,false);assert.equal(body.approvedForMerge,false);
+ assert.ok(body.receipts.length>0);assert.ok(body.receipts.every(r=>r.verdict!=='CONFIRMED'));
+ assert.ok(!bytes.toString().includes('PRIVATE_OWNER_CANARY'));
+ assert.equal(fs.existsSync(path.join(f.stateDir,'experience.jsonl')),false);
+ assert.deepEqual(f.counts(),{executionAttempts:1,providerCalls:0});
+ assert.equal(f.git('status','--porcelain'),'');
+});
+

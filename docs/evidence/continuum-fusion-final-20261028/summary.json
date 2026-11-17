@@ -1,0 +1,51 @@
+{
+  "verified_source_commit": "63beedbb04ec35fc1ad55af60ba53562dae79cd4",
+  "branch": "chatgpt/continuum-fusion-memory-vertical-20261028",
+  "platform": "Linux x86_64",
+  "junit_suites": [
+    {
+      "name": "at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "junit_totals": {
+    "tests": 34,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exit_codes": {
+    "requested_wrapper": 127,
+    "targeted_junit": 0,
+    "compile_lint": 0,
+    "node_before_doc_fix": 1,
+    "node_after_doc_fix": 0
+  },
+  "device_execution": "NOT_RUN",
+  "observer_injected_exception": "NOT_RUN",
+  "production_or_test_source_changes": []
+}

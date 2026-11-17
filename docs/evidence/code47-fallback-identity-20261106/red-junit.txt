@@ -1,0 +1,15 @@
+JUnit version 4.13.2
+...E.
+Time: 3.126
+There was 1 failure:
+1) fallbackUsesIdentityAvailableAtPromptAssemblyWithoutImportingArchiveMemory(at.heinz.deviceai.OwnerFallbackIdentityUiTest)
+org.junit.ComparisonFailure: expected:<assistant_name="[Jarvis]"> but was:<assistant_name="[Continuum]">
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.OwnerFallbackIdentityUiTest.fallbackUsesIdentityAvailableAtPromptAssemblyWithoutImportingArchiveMemory$lambda$0(OwnerFallbackIdentityUiTest.kt:130)
+	at at.heinz.deviceai.OwnerFallbackIdentityUiTest.withActivity(OwnerFallbackIdentityUiTest.kt:85)
+	at at.heinz.deviceai.OwnerFallbackIdentityUiTest.fallbackUsesIdentityAvailableAtPromptAssemblyWithoutImportingArchiveMemory(OwnerFallbackIdentityUiTest.kt:119)
+
+FAILURES!!!
+Tests run: 4,  Failures: 1
+

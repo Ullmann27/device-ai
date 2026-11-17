@@ -1,0 +1,19 @@
+{
+  "source": "713949a86e10fb4fe4cc22d03f1af1afdcdf51e8",
+  "command": [
+    "node",
+    "--import",
+    "./tools/momega1-memory-review/tests/fixture-tier-compat.mjs",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tools/momega1-memory-review/tests/challenge.test.mjs",
+    "tools/momega1-memory-review/tests/canonical-anchor.test.mjs"
+  ],
+  "env": {
+    "MOMEGA1_CANDIDATE_ROOT": "/workspace/synapse-p0-audit"
+  },
+  "exit": 1,
+  "elapsedSeconds": 7.177626132965088,
+  "evidenceClass": "CONTRACT_TEST; fixture-only loader, no candidate rewrite or neural inference"
+}

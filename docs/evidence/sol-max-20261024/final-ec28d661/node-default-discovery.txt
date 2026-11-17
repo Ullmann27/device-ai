@@ -1,0 +1,1522 @@
+TAP version 13
+# Subtest: web tools are exact bounded Android function proposals, never hosted browsing
+ok 1 - web tools are exact bounded Android function proposals, never hosted browsing
+  ---
+  duration_ms: 12.558054
+  type: 'test'
+  ...
+# Subtest: disabled discovery advertises no web capability; new calls do not share mutable schemas
+ok 2 - disabled discovery advertises no web capability; new calls do not share mutable schemas
+  ---
+  duration_ms: 0.169642
+  type: 'test'
+  ...
+# Subtest: actual server advertises Android proposals and removes hosted web-search bypass
+ok 3 - actual server advertises Android proposals and removes hosted web-search bypass
+  ---
+  duration_ms: 1.154205
+  type: 'test'
+  ...
+# Subtest: health reports disabled hosted research without exposing credentials
+ok 4 - health reports disabled hosted research without exposing credentials
+  ---
+  duration_ms: 323.391235
+  type: 'test'
+  ...
+# Subtest: continuum status enforces bearer authentication
+ok 5 - continuum status enforces bearer authentication
+  ---
+  duration_ms: 75.613633
+  type: 'test'
+  ...
+# Subtest: unauthorized or invalid agent turns never call upstream
+ok 6 - unauthorized or invalid agent turns never call upstream
+  ---
+  duration_ms: 83.293748
+  type: 'test'
+  ...
+# Subtest: agent turn maps mock Responses API to Android reply contract
+ok 7 - agent turn maps mock Responses API to Android reply contract
+  ---
+  duration_ms: 131.396756
+  type: 'test'
+  ...
+# Subtest: tool-result continuation reuses session and limits the forwarded result count
+ok 8 - tool-result continuation reuses session and limits the forwarded result count
+  ---
+  duration_ms: 17.385227
+  type: 'test'
+  ...
+# Subtest: oversized payload is rejected before upstream forwarding
+ok 9 - oversized payload is rejected before upstream forwarding
+  ---
+  duration_ms: 42.972344
+  type: 'test'
+  ...
+# Subtest: upstream HTTP and JSON failures are bounded and do not leak secrets
+ok 10 - upstream HTTP and JSON failures are bounded and do not leak secrets
+  ---
+  duration_ms: 27.846734
+  type: 'test'
+  ...
+# Subtest: dataset prioritizes gaps, low coverage and uncertain observations
+ok 11 - dataset prioritizes gaps, low coverage and uncertain observations
+  ---
+  duration_ms: 15.59046
+  type: 'test'
+  ...
+# Subtest: dataset includes recent failed cycles as recovery benchmarks
+ok 12 - dataset includes recent failed cycles as recovery benchmarks
+  ---
+  duration_ms: 0.537309
+  type: 'test'
+  ...
+# Subtest: immutable governance cannot be mutated by challenger
+ok 13 - immutable governance cannot be mutated by challenger
+  ---
+  duration_ms: 0.456939
+  type: 'test'
+  ...
+# Subtest: brain registry is checksummed and recovers last-known-good
+ok 14 - brain registry is checksummed and recovers last-known-good
+  ---
+  duration_ms: 2.875243
+  type: 'test'
+  ...
+# Subtest: factory promotes only objectively better grounded safe challenger
+ok 15 - factory promotes only objectively better grounded safe challenger
+  ---
+  duration_ms: 6.273053
+  type: 'test'
+  ...
+# Subtest: factory refuses promotion when safety or grounding regress
+ok 16 - factory refuses promotion when safety or grounding regress
+  ---
+  duration_ms: 5.272395
+  type: 'test'
+  ...
+# Subtest: state persists with integrity and last-known-good recovery
+ok 17 - state persists with integrity and last-known-good recovery
+  ---
+  duration_ms: 21.581203
+  type: 'test'
+  ...
+# Subtest: observation requires citations and creates research gaps without authority
+ok 18 - observation requires citations and creates research gaps without authority
+  ---
+  duration_ms: 1.004343
+  type: 'test'
+  ...
+# Subtest: planner prioritizes unresolved gap and changes query strategy after failures
+ok 19 - planner prioritizes unresolved gap and changes query strategy after failures
+  ---
+  duration_ms: 52.98846
+  type: 'test'
+  ...
+# Subtest: daemon learns cited observation, persists gaps and respects interval budget
+ok 20 - daemon learns cited observation, persists gaps and respects interval budget
+  ---
+  duration_ms: 17.059122
+  type: 'test'
+  ...
+# Subtest: failed research is recorded and alternative strategy becomes available
+ok 21 - failed research is recorded and alternative strategy becomes available
+  ---
+  duration_ms: 2.574576
+  type: 'test'
+  ...
+# Subtest: public memory retrieval respects query, citations and epistemic boundaries
+ok 22 - public memory retrieval respects query, citations and epistemic boundaries
+  ---
+  duration_ms: 2.571271
+  type: 'test'
+  ...
+# Subtest: unverified research is never silently promoted to trusted memory
+ok 23 - unverified research is never silently promoted to trusted memory
+  ---
+  duration_ms: 0.372884
+  type: 'test'
+  ...
+# Subtest: oversized queries and limits are rejected
+ok 24 - oversized queries and limits are rejected
+  ---
+  duration_ms: 0.543318
+  type: 'test'
+  ...
+# Subtest: Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts
+ok 25 - Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts
+  ---
+  duration_ms: 1.118111
+  type: 'test'
+  ...
+# Subtest: every real model request requires a new owner checkbox consent
+ok 26 - every real model request requires a new owner checkbox consent
+  ---
+  duration_ms: 0.133478
+  type: 'test'
+  ...
+# Subtest: render only serves local UI assets; mentor POST keeps auth and owner consent
+ok 27 - render only serves local UI assets; mentor POST keeps auth and owner consent
+  ---
+  duration_ms: 0.1419
+  type: 'test'
+  ...
+# Subtest: mentor is opt-in disabled and never invokes external fetch without key
+ok 28 - mentor is opt-in disabled and never invokes external fetch without key
+  ---
+  duration_ms: 12.762007
+  type: 'test'
+  ...
+# Subtest: one authorized message is bounded and contains no tools, memory or device context
+ok 29 - one authorized message is bounded and contains no tools, memory or device context
+  ---
+  duration_ms: 160.570944
+  type: 'test'
+  ...
+# Subtest: input length validation happens before network and before quota consumption
+ok 30 - input length validation happens before network and before quota consumption
+  ---
+  duration_ms: 0.584359
+  type: 'test'
+  ...
+# Subtest: daily quota is isolated by UTC day and refuses concurrent calls
+ok 31 - daily quota is isolated by UTC day and refuses concurrent calls
+  ---
+  duration_ms: 8.840508
+  type: 'test'
+  ...
+# Subtest: upstream errors do not expose API response contents or key
+ok 32 - upstream errors do not expose API response contents or key
+  ---
+  duration_ms: 0.369659
+  type: 'test'
+  ...
+# Subtest: Groq throttling and malformed output are non-tool error responses
+ok 33 - Groq throttling and malformed output are non-tool error responses
+  ---
+  duration_ms: 0.895471
+  type: 'test'
+  ...
+# Subtest: oversized responses are rejected without parsing or logging private contents
+ok 34 - oversized responses are rejected without parsing or logging private contents
+  ---
+  duration_ms: 0.421356
+  type: 'test'
+  ...
+# Subtest: mentor ignores whitespace around environment key and never follows a redirect
+ok 35 - mentor ignores whitespace around environment key and never follows a redirect
+  ---
+  duration_ms: 0.505241
+  type: 'test'
+  ...
+# Subtest: provider rejects unknown models and invalid requests without exposing response bodies
+ok 36 - provider rejects unknown models and invalid requests without exposing response bodies
+  ---
+  duration_ms: 9.661008
+  type: 'test'
+  ...
+# Subtest: exhausted reasoning-only response retries same consented question once
+ok 37 - exhausted reasoning-only response retries same consented question once
+  ---
+  duration_ms: 0.744006
+  type: 'test'
+  ...
+# Subtest: empty response after a bounded retry has a specific reason, no reasoning text leaks
+ok 38 - empty response after a bounded retry has a specific reason, no reasoning text leaks
+  ---
+  duration_ms: 0.424771
+  type: 'test'
+  ...
+# Subtest: other model names do not get unsupported gpt-oss reasoning options
+ok 39 - other model names do not get unsupported gpt-oss reasoning options
+  ---
+  duration_ms: 0.351182
+  type: 'test'
+  ...
+# Subtest: hypotheses are explicitly non-authoritative
+ok 40 - hypotheses are explicitly non-authoritative
+  ---
+  duration_ms: 1.411367
+  type: 'test'
+  ...
+# Subtest: invented evidence references cannot enter a tournament
+ok 41 - invented evidence references cannot enter a tournament
+  ---
+  duration_ms: 11.295017
+  type: 'test'
+  ...
+# Subtest: tournament store is integrity checked with LKG recovery
+ok 42 - tournament store is integrity checked with LKG recovery
+  ---
+  duration_ms: 1.112123
+  type: 'test'
+  ...
+# Subtest: generation reflection Elo tournament evolution and research questions form a closed loop
+ok 43 - generation reflection Elo tournament evolution and research questions form a closed loop
+  ---
+  duration_ms: 13.694052
+  type: 'test'
+  ...
+# Subtest: daily tournament budget prevents runaway agent loops
+ok 44 - daily tournament budget prevents runaway agent loops
+  ---
+  duration_ms: 23.888532
+  type: 'test'
+  ...
+# Subtest: long Groq answers are preserved beyond old 1800 character limit
+ok 45 - long Groq answers are preserved beyond old 1800 character limit
+  ---
+  duration_ms: 34.597707
+  type: 'test'
+  ...
+# Subtest: table markdown becomes plain, legible text without losing values
+ok 46 - table markdown becomes plain, legible text without losing values
+  ---
+  duration_ms: 0.649005
+  type: 'test'
+  ...
+# Subtest: oversized answers end at a boundary and explicitly signal shortening
+ok 47 - oversized answers end at a boundary and explicitly signal shortening
+  ---
+  duration_ms: 0.312194
+  type: 'test'
+  ...
+# Subtest: provider token-limit completion is explicitly marked as incomplete
+ok 48 - provider token-limit completion is explicitly marked as incomplete
+  ---
+  duration_ms: 9.000987
+  type: 'test'
+  ...
+# Subtest: unverified mentor has no current device or repo state
+ok 49 - unverified mentor has no current device or repo state
+  ---
+  duration_ms: 1.872308
+  type: 'test'
+  ...
+# Subtest: unapproved device cannot redeem; no credentials are exposed
+ok 50 - unapproved device cannot redeem; no credentials are exposed
+  ---
+  duration_ms: 7.959249
+  type: 'test'
+  ...
+# Subtest: owner-approved device receives only revocable mentor token
+ok 51 - owner-approved device receives only revocable mentor token
+  ---
+  duration_ms: 37.390529
+  type: 'test'
+  ...
+# Subtest: expired, forged, tampered, and replayable altered challenges are rejected
+ok 52 - expired, forged, tampered, and replayable altered challenges are rejected
+  ---
+  duration_ms: 1.802228
+  type: 'test'
+  ...
+# Subtest: wrong elliptic curve and missing owner token fail closed
+ok 53 - wrong elliptic curve and missing owner token fail closed
+  ---
+  duration_ms: 11.869249
+  type: 'test'
+  ...
+# Subtest: rotated backend token is recovered only by fresh signed owner-approved pairing
+ok 54 - rotated backend token is recovered only by fresh signed owner-approved pairing
+  ---
+  duration_ms: 7.737099
+  type: 'test'
+  ...
+# Subtest: zero-cost autonomous daemon persists public source observations across restarts
+ok 55 - zero-cost autonomous daemon persists public source observations across restarts
+  ---
+  duration_ms: 86.104965
+  type: 'test'
+  ...
+# Subtest: free research collects deduplicated cited metadata without a paid API
+ok 56 - free research collects deduplicated cited metadata without a paid API
+  ---
+  duration_ms: 116.610923
+  type: 'test'
+  ...
+# Subtest: one unavailable source does not stop other public sources
+ok 57 - one unavailable source does not stop other public sources
+  ---
+  duration_ms: 0.914048
+  type: 'test'
+  ...
+# Subtest: empty results never become made-up observations
+ok 58 - empty results never become made-up observations
+  ---
+  duration_ms: 40.992461
+  type: 'test'
+  ...
+# Subtest: unsafe citation URLs and oversized metadata responses are rejected
+ok 59 - unsafe citation URLs and oversized metadata responses are rejected
+  ---
+  duration_ms: 15.773872
+  type: 'test'
+  ...
+# Subtest: query/output bounds and timeout input validation stay enforced
+ok 60 - query/output bounds and timeout input validation stay enforced
+  ---
+  duration_ms: 1.389855
+  type: 'test'
+  ...
+# Subtest: held-out arithmetic examples expose overfitted candidates without executing model code
+ok 61 - held-out arithmetic examples expose overfitted candidates without executing model code
+  ---
+  duration_ms: 1.363737
+  type: 'test'
+  ...
+# Subtest: evidence filter abstains on unaudited or self-supported claims
+ok 62 - evidence filter abstains on unaudited or self-supported claims
+  ---
+  duration_ms: 0.229941
+  type: 'test'
+  ...
+# Subtest: context packer respects exact budget and never invents extra items
+ok 63 - context packer respects exact budget and never invents extra items
+  ---
+  duration_ms: 0.488626
+  type: 'test'
+  ...
+# Subtest: all three shadow experiments report independently scored frozen holdouts
+ok 64 - all three shadow experiments report independently scored frozen holdouts
+  ---
+  duration_ms: 0.467155
+  type: 'test'
+  ...
+# Subtest: parses real GGUF v2/v3 structure and bounded tensor bytes
+ok 65 - parses real GGUF v2/v3 structure and bounded tensor bytes
+  ---
+  duration_ms: 4.937027
+  type: 'test'
+  ...
+# Subtest: rejects magic, endian and unsupported versions
+ok 66 - rejects magic, endian and unsupported versions
+  ---
+  duration_ms: 0.8883
+  type: 'test'
+  ...
+# Subtest: rejects truncation and oversized counts before iteration or allocation
+ok 67 - rejects truncation and oversized counts before iteration or allocation
+  ---
+  duration_ms: 0.665809
+  type: 'test'
+  ...
+# Subtest: rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
+ok 68 - rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
+  ---
+  duration_ms: 1.366471
+  type: 'test'
+  ...
+# Subtest: skips tokenizer arrays without retaining tokens or evaluating templates
+ok 69 - skips tokenizer arrays without retaining tokens or evaluating templates
+  ---
+  duration_ms: 1.034758
+  type: 'test'
+  ...
+# Subtest: rejects nested arrays, enormous array/string lengths and invalid alignment
+ok 70 - rejects nested arrays, enormous array/string lengths and invalid alignment
+  ---
+  duration_ms: 2.070237
+  type: 'test'
+  ...
+# Subtest: rejects wrong metadata scalar types, non-finite floats and booleans
+ok 71 - rejects wrong metadata scalar types, non-finite floats and booleans
+  ---
+  duration_ms: 0.952927
+  type: 'test'
+  ...
+# Subtest: rejects tensor overflow, out-of-file ranges, overlap and misalignment
+ok 72 - rejects tensor overflow, out-of-file ranges, overlap and misalignment
+  ---
+  duration_ms: 33.730791
+  type: 'test'
+  ...
+# Subtest: rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
+ok 73 - rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
+  ---
+  duration_ms: 0.848982
+  type: 'test'
+  ...
+# Subtest: computes quantized row storage from audited block sizes
+ok 74 - computes quantized row storage from audited block sizes
+  ---
+  duration_ms: 0.608605
+  type: 'test'
+  ...
+# Subtest: rejects bounded header exhaustion and missing/unsafe architecture metadata
+ok 75 - rejects bounded header exhaustion and missing/unsafe architecture metadata
+  ---
+  duration_ms: 0.445482
+  type: 'test'
+  ...
+# Subtest: file admission hashes actual bytes and records identity without model trust
+ok 76 - file admission hashes actual bytes and records identity without model trust
+  ---
+  duration_ms: 27.079433
+  type: 'test'
+  ...
+# Subtest: admission rejects links, writable files, directories and malformed provenance
+ok 77 - admission rejects links, writable files, directories and malformed provenance
+  ---
+  duration_ms: 2.862154
+  type: 'test'
+  ...
+# Subtest: file admission enforces caller resource and cancellation bounds
+ok 78 - file admission enforces caller resource and cancellation bounds
+  ---
+  duration_ms: 1.456444
+  type: 'test'
+  ...
+# Subtest: real Linux namespaces deny host files, environment, file writes and networking
+ok 79 - real Linux namespaces deny host files, environment, file writes and networking
+  ---
+  duration_ms: 507.955091
+  type: 'test'
+  ...
+# Subtest: unsafe stage location and symlink candidates are refused before running
+ok 80 - unsafe stage location and symlink candidates are refused before running
+  ---
+  duration_ms: 126.820341
+  type: 'test'
+  ...
+# Subtest: sandbox returns candidate failures, without treating them as successful repairs
+ok 81 - sandbox returns candidate failures, without treating them as successful repairs
+  ---
+  duration_ms: 396.00748
+  type: 'test'
+  ...
+# Subtest: fixed Linux runner produces a bounded receipt but never validates a repair
+ok 82 - fixed Linux runner produces a bounded receipt but never validates a repair
+  ---
+  duration_ms: 404.262705
+  type: 'test'
+  ...
+# Subtest: a failed candidate never upgrades to a successful verified result
+ok 83 - a failed candidate never upgrades to a successful verified result
+  ---
+  duration_ms: 410.050049
+  type: 'test'
+  ...
+# Subtest: stage escapes and symlinks fail closed without executing anything
+ok 84 - stage escapes and symlinks fail closed without executing anything
+  ---
+  duration_ms: 1.397848
+  type: 'test'
+  ...
+# Subtest: oversized stdout does not become success
+ok 85 - oversized stdout does not become success
+  ---
+  duration_ms: 405.685012
+  type: 'test'
+  ...
+# Subtest: candidate text cannot forge a trusted execution verdict
+ok 86 - candidate text cannot forge a trusted execution verdict
+  ---
+  duration_ms: 518.219591
+  type: 'test'
+  ...
+# Subtest: chat only contacts fixed localhost and returns text as untrusted data
+ok 87 - chat only contacts fixed localhost and returns text as untrusted data
+  ---
+  duration_ms: 5.837626
+  type: 'test'
+  ...
+# Subtest: rejects missing authentication, unverified facts and external configuration
+ok 88 - rejects missing authentication, unverified facts and external configuration
+  ---
+  duration_ms: 1.439389
+  type: 'test'
+  ...
+# Subtest: patch proposal is schema constrained, validated and never applied
+ok 89 - patch proposal is schema constrained, validated and never applied
+  ---
+  duration_ms: 1.874115
+  type: 'test'
+  ...
+# Subtest: server errors and overly long outputs fail closed
+ok 90 - server errors and overly long outputs fail closed
+  ---
+  duration_ms: 1.238941
+  type: 'test'
+  ...
+# Subtest: health never transmits authorization and discriminates loading/unavailable
+ok 91 - health never transmits authorization and discriminates loading/unavailable
+  ---
+  duration_ms: 0.955289
+  type: 'test'
+  ...
+# Subtest: actual Node HTTP loopback fixture exercises an end-to-end POST
+ok 92 - actual Node HTTP loopback fixture exercises an end-to-end POST
+  ---
+  duration_ms: 32.163719
+  type: 'test'
+  ...
+# Subtest: local structured patch request sends nested schema to real loopback HTTP endpoint
+ok 93 - local structured patch request sends nested schema to real loopback HTTP endpoint
+  ---
+  duration_ms: 9.894575
+  type: 'test'
+  ...
+# Subtest: schema-compatible server response still cannot smuggle authority or unsafe file edits
+ok 94 - schema-compatible server response still cannot smuggle authority or unsafe file edits
+  ---
+  duration_ms: 2.205558
+  type: 'test'
+  ...
+# Subtest: context plan uses a bounded byte estimate and reserves actual client output
+ok 95 - context plan uses a bounded byte estimate and reserves actual client output
+  ---
+  duration_ms: 2.687354
+  type: 'test'
+  ...
+# Subtest: context truncates Unicode and JSON escape-heavy input within the real serialized budget
+ok 96 - context truncates Unicode and JSON escape-heavy input within the real serialized budget
+  ---
+  duration_ms: 4.924648
+  type: 'test'
+  ...
+# Subtest: diagnostics precede source under pressure and omitted context is reported
+ok 97 - diagnostics precede source under pressure and omitted context is reported
+  ---
+  duration_ms: 8.37736
+  type: 'test'
+  ...
+# Subtest: rejects out-of-bounds contexts, unbounded inputs and unsafe fragment paths
+ok 98 - rejects out-of-bounds contexts, unbounded inputs and unsafe fragment paths
+  ---
+  duration_ms: 1.054807
+  type: 'test'
+  ...
+# Subtest: preserves the complete goal or refuses instead of silently truncating its meaning
+ok 99 - preserves the complete goal or refuses instead of silently truncating its meaning
+  ---
+  duration_ms: 2.512954
+  type: 'test'
+  ...
+# Subtest: diagnosis requires a matching admission identity and never labels input as verified facts
+ok 100 - diagnosis requires a matching admission identity and never labels input as verified facts
+  ---
+  duration_ms: 1.158101
+  type: 'test'
+  ...
+# Subtest: local diagnosis uses the existing fixed-loopback client with no tool or promotion rights
+ok 101 - local diagnosis uses the existing fixed-loopback client with no tool or promotion rights
+  ---
+  duration_ms: 91.075709
+  type: 'test'
+  ...
+# Subtest: injected source remains quoted data and model instructions cannot select shell tools
+ok 102 - injected source remains quoted data and model instructions cannot select shell tools
+  ---
+  duration_ms: 0.738487
+  type: 'test'
+  ...
+# Subtest: Termux Binder interface matches the exact existing AIDL descriptor and stable wire IDs
+ok 103 - Termux Binder interface matches the exact existing AIDL descriptor and stable wire IDs
+  ---
+  duration_ms: 1.266242
+  type: 'test'
+  ...
+# Subtest: both binder methods preserve argument, return and exception marshalling
+ok 104 - both binder methods preserve argument, return and exception marshalling
+  ---
+  duration_ms: 0.199387
+  type: 'test'
+  ...
+# Subtest: desktop and production configurations retain canonical AIDL generation
+ok 105 - desktop and production configurations retain canonical AIDL generation
+  ---
+  duration_ms: 0.235891
+  type: 'test'
+  ...
+# Subtest: only the bounded mobile builder activates the alternative, never changes source or tools
+ok 106 - only the bounded mobile builder activates the alternative, never changes source or tools
+  ---
+  duration_ms: 0.205165
+  type: 'test'
+  ...
+# Subtest: Shizuku user service, endpoint and shell gate keep their original IPC types
+ok 107 - Shizuku user service, endpoint and shell gate keep their original IPC types
+  ---
+  duration_ms: 0.347317
+  type: 'test'
+  ...
+# Subtest: CLI supports only explicitly approved commands and flags
+ok 108 - CLI supports only explicitly approved commands and flags
+  ---
+  duration_ms: 2.194662
+  type: 'test'
+  ...
+# Subtest: Android runner requires Termux ARM64
+ok 109 - Android runner requires Termux ARM64
+  ---
+  duration_ms: 0.126548
+  type: 'test'
+  ...
+# Subtest: doctor without native toolchain reports unavailable
+ok 110 - doctor without native toolchain reports unavailable
+  ---
+  duration_ms: 1.451748
+  type: 'test'
+  ...
+# Subtest: state directory may not be inside source
+ok 111 - state directory may not be inside source
+  ---
+  duration_ms: 2.168993
+  type: 'test'
+  ...
+# Subtest: unavailable tools prevent Gradle invocation
+ok 112 - unavailable tools prevent Gradle invocation
+  ---
+  duration_ms: 4.701757
+  type: 'test'
+  ...
+# Subtest: uncommitted source blocks build before running Gradle
+ok 113 - uncommitted source blocks build before running Gradle
+  ---
+  duration_ms: 5.176849
+  type: 'test'
+  ...
+# Subtest: synthetic Gradle failure is not a successful build
+ok 114 - synthetic Gradle failure is not a successful build
+  ---
+  duration_ms: 2.704399
+  type: 'test'
+  ...
+# Subtest: unverified artifact is rejected and not published
+ok 115 - unverified artifact is rejected and not published
+  ---
+  duration_ms: 2.25445
+  type: 'test'
+  ...
+# Subtest: synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build
+ok 116 - synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build
+  ---
+  duration_ms: 20.994684
+  type: 'test'
+  ...
+# Subtest: owner Android build automatically publishes a hash-checked APK in the dedicated Download folder
+ok 117 - owner Android build automatically publishes a hash-checked APK in the dedicated Download folder
+  ---
+  duration_ms: 10.849484
+  type: 'test'
+  ...
+# Subtest: owner file created during a publication race is never overwritten
+ok 118 - owner file created during a publication race is never overwritten
+  ---
+  duration_ms: 3.186515
+  type: 'test'
+  ...
+# Subtest: a corrupted final Download copy is reported without deleting owner files
+ok 119 - a corrupted final Download copy is reported without deleting owner files
+  ---
+  duration_ms: 6.399111
+  type: 'test'
+  ...
+# Subtest: missing owner Download storage never fakes a published installer copy
+ok 120 - missing owner Download storage never fakes a published installer copy
+  ---
+  duration_ms: 39.65458
+  type: 'test'
+  ...
+# Subtest: unsafe symlink install folder is rejected without modifying the source project
+ok 121 - unsafe symlink install folder is rejected without modifying the source project
+  ---
+  duration_ms: 3.216791
+  type: 'test'
+  ...
+# Subtest: pre-existing conflicting APK is never overwritten by automatic publication
+ok 122 - pre-existing conflicting APK is never overwritten by automatic publication
+  ---
+  duration_ms: 5.076434
+  type: 'test'
+  ...
+# Subtest: rejected signature never generates an owner Download installation APK
+ok 123 - rejected signature never generates an owner Download installation APK
+  ---
+  duration_ms: 2.520075
+  type: 'test'
+  ...
+# Subtest: Gradle failure reports only fresh failing JVM tests, never a false build success
+ok 124 - Gradle failure reports only fresh failing JVM tests, never a false build success
+  ---
+  duration_ms: 2.418064
+  type: 'test'
+  ...
+# Subtest: JUnit diagnostics ignore stale files and symlinks
+ok 125 - JUnit diagnostics ignore stale files and symlinks
+  ---
+  duration_ms: 0.329189
+  type: 'test'
+  ...
+# Subtest: a changed HEAD during Gradle blocks APK publication
+ok 126 - a changed HEAD during Gradle blocks APK publication
+  ---
+  duration_ms: 5.931234
+  type: 'test'
+  ...
+# Subtest: a dirty checkout produced during Gradle blocks APK publication
+ok 127 - a dirty checkout produced during Gradle blocks APK publication
+  ---
+  duration_ms: 1.200934
+  type: 'test'
+  ...
+# Subtest: signature parser recognizes legacy and modern apksigner certificates only
+ok 128 - signature parser recognizes legacy and modern apksigner certificates only
+  ---
+  duration_ms: 0.121721
+  type: 'test'
+  ...
+# Subtest: modern apksigner result is accepted only after executable verification succeeds
+ok 129 - modern apksigner result is accepted only after executable verification succeeds
+  ---
+  duration_ms: 7.047543
+  type: 'test'
+  ...
+# Subtest: genuine apksigner rejection persists diagnostic without publishing APK
+ok 130 - genuine apksigner rejection persists diagnostic without publishing APK
+  ---
+  duration_ms: 4.897618
+  type: 'test'
+  ...
+# Subtest: Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths
+ok 131 - Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths
+  ---
+  duration_ms: 0.192697
+  type: 'test'
+  ...
+# Subtest: ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND
+ok 132 - ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND
+  ---
+  duration_ms: 0.167539
+  type: 'test'
+  ...
+# Subtest: real Samsung JAVA_HOME with trailing slash selects pinned Java 17
+ok 133 - real Samsung JAVA_HOME with trailing slash selects pinned Java 17
+  ---
+  duration_ms: 0.102202
+  type: 'test'
+  ...
+# Subtest: extra trailing separators do not prevent known Termux Java 21 normalization
+ok 134 - extra trailing separators do not prevent known Termux Java 21 normalization
+  ---
+  duration_ms: 0.088972
+  type: 'test'
+  ...
+# Subtest: Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent
+ok 135 - Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent
+  ---
+  duration_ms: 0.08049
+  type: 'test'
+  ...
+# Subtest: owner Java 17 is always first in PATH even if it appears after Java 21
+ok 136 - owner Java 17 is always first in PATH even if it appears after Java 21
+  ---
+  duration_ms: 1.532627
+  type: 'test'
+  ...
+# Subtest: missing Termux tools remain unavailable; never synthesize nonexistent binaries
+ok 137 - missing Termux tools remain unavailable; never synthesize nonexistent binaries
+  ---
+  duration_ms: 0.121842
+  type: 'test'
+  ...
+# Subtest: explicit owner toolchain settings are preserved, even when defaults exist
+ok 138 - explicit owner toolchain settings are preserved, even when defaults exist
+  ---
+  duration_ms: 0.117725
+  type: 'test'
+  ...
+# Subtest: non-Termux and non-ARM64 environments do not receive Android paths
+ok 139 - non-Termux and non-ARM64 environments do not receive Android paths
+  ---
+  duration_ms: 0.126788
+  type: 'test'
+  ...
+# Subtest: mobile build forwards resolved environment to doctor and Gradle without a shell
+ok 140 - mobile build forwards resolved environment to doctor and Gradle without a shell
+  ---
+  duration_ms: 11.130031
+  type: 'test'
+  ...
+# Subtest: status CLI returns successful query exit for historical failed or blocked build reports
+ok 141 - status CLI returns successful query exit for historical failed or blocked build reports
+  ---
+  duration_ms: 670.418008
+  type: 'test'
+  ...
+# Subtest: status CLI fails closed for corrupt report schema; missing report is a successful query
+ok 142 - status CLI fails closed for corrupt report schema; missing report is a successful query
+  ---
+  duration_ms: 212.453981
+  type: 'test'
+  ...
+# Subtest: a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools
+ok 143 - a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools
+  ---
+  duration_ms: 9.757681
+  type: 'test'
+  ...
+# Subtest: a correctly signed APK for the wrong package cannot be published as a Continuum preview
+ok 144 - a correctly signed APK for the wrong package cannot be published as a Continuum preview
+  ---
+  duration_ms: 3.987436
+  type: 'test'
+  ...
+# Subtest: malformed or failed package inspection cannot publish an APK
+ok 145 - malformed or failed package inspection cannot publish an APK
+  ---
+  duration_ms: 7.133191
+  type: 'test'
+  ...
+# Subtest: Android coding job runs the canonical owner TEST pipeline and returns a verifiable receipt
+ok 146 - Android coding job runs the canonical owner TEST pipeline and returns a verifiable receipt
+  ---
+  duration_ms: 2098.946438
+  type: 'test'
+  ...
+# Subtest: a wrong owner expectation is reported as a failed coding job without patch
+ok 147 - a wrong owner expectation is reported as a failed coding job without patch
+  ---
+  duration_ms: 1494.545277
+  type: 'test'
+  ...
+# Subtest: invalid orders, unclean checkouts, busy workers, cancel and stale bases fail closed
+ok 148 - invalid orders, unclean checkouts, busy workers, cancel and stale bases fail closed
+  ---
+  duration_ms: 184.966285
+  type: 'test'
+  ...
+# Subtest: builder CLI accepts coding values only for the fixed coding operations
+ok 149 - builder CLI accepts coding values only for the fixed coding operations
+  ---
+  duration_ms: 1.118873
+  type: 'test'
+  ...
+# Subtest: unmanifested build input is rejected: buildSrc/build.gradle.kts
+ok 150 - unmanifested build input is rejected: buildSrc/build.gradle.kts
+  ---
+  duration_ms: 14.09074
+  type: 'test'
+  ...
+# Subtest: unmanifested build input is rejected: app/src/debug/AndroidManifest.xml
+ok 151 - unmanifested build input is rejected: app/src/debug/AndroidManifest.xml
+  ---
+  duration_ms: 7.194873
+  type: 'test'
+  ...
+# Subtest: unmanifested build input is rejected: app/src/main/java/Injected.kt
+ok 152 - unmanifested build input is rejected: app/src/main/java/Injected.kt
+  ---
+  duration_ms: 45.03732
+  type: 'test'
+  ...
+# Subtest: unmanifested build input is rejected: init.gradle
+ok 153 - unmanifested build input is rejected: init.gradle
+  ---
+  duration_ms: 2.884147
+  type: 'test'
+  ...
+# Subtest: unmanifested build input is rejected: app/extra.gradle.kts
+ok 154 - unmanifested build input is rejected: app/extra.gradle.kts
+  ---
+  duration_ms: 7.640144
+  type: 'test'
+  ...
+# Subtest: oversized source is rejected before reading it into memory
+ok 155 - oversized source is rejected before reading it into memory
+  ---
+  duration_ms: 7.005141
+  type: 'test'
+  ...
+# Subtest: Gradle project cache cannot redirect writes outside the project
+ok 156 - Gradle project cache cannot redirect writes outside the project
+  ---
+  duration_ms: 8.780238
+  type: 'test'
+  ...
+# Subtest: changing private staged bytes between independent APK checks blocks publication
+ok 157 - changing private staged bytes between independent APK checks blocks publication
+  ---
+  duration_ms: 22.229425
+  type: 'test'
+  ...
+# Subtest: Gradle exit zero without fresh JUnit and lint evidence never certifies an APK
+ok 158 - Gradle exit zero without fresh JUnit and lint evidence never certifies an APK
+  ---
+  duration_ms: 15.529749
+  type: 'test'
+  ...
+# Subtest: an already cancelled project build never probes or starts tools
+ok 159 - an already cancelled project build never probes or starts tools
+  ---
+  duration_ms: 1.974014
+  type: 'test'
+  ...
+# Subtest: a linked report directory is refused before Gradle can write through it
+ok 160 - a linked report directory is refused before Gradle can write through it
+  ---
+  duration_ms: 38.488097
+  type: 'test'
+  ...
+# Subtest: unconfirmed process termination retains the shared lease for owner inspection
+ok 161 - unconfirmed process termination retains the shared lease for owner inspection
+  ---
+  duration_ms: 3.805706
+  type: 'test'
+  ...
+# Subtest: ENOSPC while saving a log cannot release an unconfirmed process lease
+ok 162 - ENOSPC while saving a log cannot release an unconfirmed process lease
+  ---
+  duration_ms: 9.188184
+  type: 'test'
+  ...
+# Subtest: M4 creates an isolated app with two screens and offline local persistence
+ok 163 - M4 creates an isolated app with two screens and offline local persistence
+  ---
+  duration_ms: 18.946657
+  type: 'test'
+  ...
+# Subtest: source manifest binds every created source file to a digest
+ok 164 - source manifest binds every created source file to a digest
+  ---
+  duration_ms: 3.955147
+  type: 'test'
+  ...
+# Subtest: repeat create refuses replacement and does not touch owner notes
+ok 165 - repeat create refuses replacement and does not touch owner notes
+  ---
+  duration_ms: 5.726159
+  type: 'test'
+  ...
+# Subtest: empty project query blocks
+ok 166 - empty project query blocks
+  ---
+  duration_ms: 0.280888
+  type: 'test'
+  ...
+# Subtest: corrupted template is never promoted as verified
+ok 167 - corrupted template is never promoted as verified
+  ---
+  duration_ms: 3.051906
+  type: 'test'
+  ...
+# Subtest: removed file is never verified
+ok 168 - removed file is never verified
+  ---
+  duration_ms: 4.546567
+  type: 'test'
+  ...
+# Subtest: symlink source cannot escape trusted project
+ok 169 - symlink source cannot escape trusted project
+  ---
+  duration_ms: 1.736971
+  type: 'test'
+  ...
+# Subtest: external symbolic project destination is never accepted
+ok 170 - external symbolic project destination is never accepted
+  ---
+  duration_ms: 41.702237
+  type: 'test'
+  ...
+# Subtest: symbolic home or parent is rejected
+ok 171 - symbolic home or parent is rejected
+  ---
+  duration_ms: 1.000637
+  type: 'test'
+  ...
+# Subtest: relative paths are forbidden
+ok 172 - relative paths are forbidden
+  ---
+  duration_ms: 0.342559
+  type: 'test'
+  ...
+# Subtest: build reports unavailable when recipe not created
+ok 173 - build reports unavailable when recipe not created
+  ---
+  duration_ms: 0.998234
+  type: 'test'
+  ...
+# Subtest: toolchain unavailable cannot call build tool
+ok 174 - toolchain unavailable cannot call build tool
+  ---
+  duration_ms: 12.83979
+  type: 'test'
+  ...
+# Subtest: failing Gradle tests prevent any APK claim
+ok 175 - failing Gradle tests prevent any APK claim
+  ---
+  duration_ms: 6.73569
+  type: 'test'
+  ...
+# Subtest: a disappearing APK is never reported successful
+ok 176 - a disappearing APK is never reported successful
+  ---
+  duration_ms: 8.090794
+  type: 'test'
+  ...
+# Subtest: false signature is rejected
+ok 177 - false signature is rejected
+  ---
+  duration_ms: 14.445517
+  type: 'test'
+  ...
+# Subtest: foreign package is rejected even if signed
+ok 178 - foreign package is rejected even if signed
+  ---
+  duration_ms: 9.374381
+  type: 'test'
+  ...
+# Subtest: source change during Gradle is blocked and not saved
+ok 179 - source change during Gradle is blocked and not saved
+  ---
+  duration_ms: 43.122715
+  type: 'test'
+  ...
+# Subtest: successful mock Gradle, real SHA verification and signed receipt - not device success
+ok 180 - successful mock Gradle, real SHA verification and signed receipt - not device success
+  ---
+  duration_ms: 22.927382
+  type: 'test'
+  ...
+# Subtest: corrupt preexisting artifact blocks overwrites
+ok 181 - corrupt preexisting artifact blocks overwrites
+  ---
+  duration_ms: 13.465882
+  type: 'test'
+  ...
+# Subtest: build never starts a package installer, app signature and source are validated
+ok 182 - build never starts a package installer, app signature and source are validated
+  ---
+  duration_ms: 11.66098
+  type: 'test'
+  ...
+# Subtest: symlinked existing project parent is refused before source reading
+ok 183 - symlinked existing project parent is refused before source reading
+  ---
+  duration_ms: 1.908627
+  type: 'test'
+  ...
+# Subtest: symlinked nested source ancestors are rejected before build
+ok 184 - symlinked nested source ancestors are rejected before build
+  ---
+  duration_ms: 1.179663
+  type: 'test'
+  ...
+# Subtest: symbolic state parent never receives an APK artifact
+ok 185 - symbolic state parent never receives an APK artifact
+  ---
+  duration_ms: 6.6484
+  type: 'test'
+  ...
+# Subtest: M4 refuses a symlinked Gradle build output before running Gradle
+ok 186 - M4 refuses a symlinked Gradle build output before running Gradle
+  ---
+  duration_ms: 39.837913
+  type: 'test'
+  ...
+# Subtest: M4 refuses a symlinked nested APK output before running Gradle
+ok 187 - M4 refuses a symlinked nested APK output before running Gradle
+  ---
+  duration_ms: 2.688976
+  type: 'test'
+  ...
+# Subtest: M4 refuses a redirected output appearing during a Gradle run
+ok 188 - M4 refuses a redirected output appearing during a Gradle run
+  ---
+  duration_ms: 13.333666
+  type: 'test'
+  ...
+# Subtest: M4 identity checker reads exactly the same private staged APK as apksigner
+ok 189 - M4 identity checker reads exactly the same private staged APK as apksigner
+  ---
+  duration_ms: 23.635384
+  type: 'test'
+  ...
+# Subtest: changing the original Gradle APK after staged signature check cannot alter published bytes
+ok 190 - changing the original Gradle APK after staged signature check cannot alter published bytes
+  ---
+  duration_ms: 16.913335
+  type: 'test'
+  ...
+# Subtest: failed signature validation leaves no private verification-stage residue
+ok 191 - failed signature validation leaves no private verification-stage residue
+  ---
+  duration_ms: 54.462007
+  type: 'test'
+  ...
+# Subtest: lost callback can recover a verified historical receipt but never changed APK bytes
+ok 192 - lost callback can recover a verified historical receipt but never changed APK bytes
+  ---
+  duration_ms: 18.744967
+  type: 'test'
+  ...
+# Subtest: CCC1 independently rejects forged plan, source, execution, evidence and device claims
+ok 193 - CCC1 independently rejects forged plan, source, execution, evidence and device claims
+  ---
+  duration_ms: 75.705282
+  type: 'test'
+  ...
+# Subtest: actual Gradle JUnit shape requires each planned test and ignores CDATA log tags
+ok 194 - actual Gradle JUnit shape requires each planned test and ignores CDATA log tags
+  ---
+  duration_ms: 8.103533
+  type: 'test'
+  ...
+# Subtest: lint errors, fake nested issues and malformed XML are never passing evidence
+ok 195 - lint errors, fake nested issues and malformed XML are never passing evidence
+  ---
+  duration_ms: 0.47754
+  type: 'test'
+  ...
+# Subtest: fresh reports are bound to exact paths; stale and symlinked evidence fails closed
+ok 196 - fresh reports are bound to exact paths; stale and symlinked evidence fails closed
+  ---
+  duration_ms: 4.956035
+  type: 'test'
+  ...
+# Subtest: bounded process executes argv directly and reports its actual exit
+ok 197 - bounded process executes argv directly and reports its actual exit
+  ---
+  duration_ms: 169.275781
+  type: 'test'
+  ...
+# Subtest: timeout kills the process group and never reports success
+ok 198 - timeout kills the process group and never reports success
+  ---
+  duration_ms: 557.36124
+  type: 'test'
+  ...
+# Subtest: owner cancellation is asynchronous and cannot become a successful exit
+ok 199 - owner cancellation is asynchronous and cannot become a successful exit
+  ---
+  duration_ms: 479.58066
+  type: 'test'
+  ...
+# Subtest: the signal that ended the direct child is reported, an exit code is not
+ok 200 - the signal that ended the direct child is reported, an exit code is not
+  ---
+  duration_ms: 284.738167
+  type: 'test'
+  ...
+# Subtest: oversized process logs are bounded and fail closed
+ok 201 - oversized process logs are bounded and fail closed
+  ---
+  duration_ms: 421.361399
+  type: 'test'
+  ...
+# Subtest: cancellation also stops a child that detached like the Gradle daemon
+ok 202 - cancellation also stops a child that detached like the Gradle daemon
+  ---
+  duration_ms: 846.389633
+  type: 'test'
+  ...
+# Subtest: inherited run identity catches a rapidly orphaned detached child on linux
+ok 203 - inherited run identity catches a rapidly orphaned detached child on linux
+  ---
+  duration_ms: 446.200756
+  type: 'test'
+  ...
+# Subtest: inherited run identity catches a rapidly orphaned detached child on android
+ok 204 - inherited run identity catches a rapidly orphaned detached child on android
+  ---
+  duration_ms: 494.145559
+  type: 'test'
+  ...
+# Subtest: an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup
+ok 205 - an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup
+  ---
+  duration_ms: 162.200192
+  type: 'test'
+  ...
+# Subtest: an unreadable process younger than the run blocks a confirmed cleanup
+ok 206 - an unreadable process younger than the run blocks a confirmed cleanup
+  ---
+  duration_ms: 127.067123
+  type: 'test'
+  ...
+# Subtest: unreadable proc stat is not confused with an exited process
+ok 207 - unreadable proc stat is not confused with an exited process
+  ---
+  duration_ms: 109.631931
+  type: 'test'
+  ...
+# Subtest: denied proc access still stops its direct child and returns a bounded unconfirmed timeout
+ok 208 - denied proc access still stops its direct child and returns a bounded unconfirmed timeout
+  ---
+  duration_ms: 408.148052
+  type: 'test'
+  ...
+# Subtest: owner version advances to 0.3.18/19 without a new application ID
+ok 209 - owner version advances to 0.3.18/19 without a new application ID
+  ---
+  duration_ms: 1.297018
+  type: 'test'
+  ...
+# Subtest: release uses existing signer, pinned source, and refuses dirty or unapproved code
+ok 210 - release uses existing signer, pinned source, and refuses dirty or unapproved code
+  ---
+  duration_ms: 0.297612
+  type: 'test'
+  ...
+# Subtest: release never replaces the old APK without byte-checked 0.3.17 rollback
+ok 211 - release never replaces the old APK without byte-checked 0.3.17 rollback
+  ---
+  duration_ms: 1.186233
+  type: 'test'
+  ...
+# Subtest: relevant UI and CCC1 source blobs are explicitly attested
+ok 212 - relevant UI and CCC1 source blobs are explicitly attested
+  ---
+  duration_ms: 0.192096
+  type: 'test'
+  ...
+# Subtest: owner release executes the optional Android widget and lifecycle test source set
+ok 213 - owner release executes the optional Android widget and lifecycle test source set
+  ---
+  duration_ms: 0.479963
+  type: 'test'
+  ...
+# Subtest: verified state produces a local APK with exact digest
+ok 214 - verified state produces a local APK with exact digest
+  ---
+  duration_ms: 48.380139
+  type: 'test'
+  ...
+# Subtest: all failed or unverified status reports fail closed
+ok 215 - all failed or unverified status reports fail closed
+  ---
+  duration_ms: 1.912121
+  type: 'test'
+  ...
+# Subtest: unrelated path and replaced APK bytes cannot be served
+ok 216 - unrelated path and replaced APK bytes cannot be served
+  ---
+  duration_ms: 3.207016
+  type: 'test'
+  ...
+# Subtest: symlinks and wrong signer format are refused
+ok 217 - symlinks and wrong signer format are refused
+  ---
+  duration_ms: 1.61515
+  type: 'test'
+  ...
+# Subtest: loopback Chrome downloads actual APK with content-disposition and no cache
+ok 218 - loopback Chrome downloads actual APK with content-disposition and no cache
+  ---
+  duration_ms: 26.78764
+  type: 'test'
+  ...
+# Subtest: server rejects non-loopback Host, unrelated routes and POST
+ok 219 - server rejects non-loopback Host, unrelated routes and POST
+  ---
+  duration_ms: 11.771614
+  type: 'test'
+  ...
+# Subtest: tampering after startup blocks subsequent download
+ok 220 - tampering after startup blocks subsequent download
+  ---
+  duration_ms: 3.641923
+  type: 'test'
+  ...
+# Subtest: full multi-megabyte APK survives request lifecycle without truncation
+ok 221 - full multi-megabyte APK survives request lifecycle without truncation
+  ---
+  duration_ms: 77.815342
+  type: 'test'
+  ...
+# Subtest: counter plan creates a distinct private Android project and sources
+ok 222 - counter plan creates a distinct private Android project and sources
+  ---
+  duration_ms: 15.459685
+  type: 'test'
+  ...
+# Subtest: unknown or traversal project plans never create any project
+ok 223 - unknown or traversal project plans never create any project
+  ---
+  duration_ms: 0.720732
+  type: 'test'
+  ...
+# Subtest: notes and counter plans coexist without replacement or data crossover
+ok 224 - notes and counter plans coexist without replacement or data crossover
+  ---
+  duration_ms: 7.9595
+  type: 'test'
+  ...
+# Subtest: host SDK profile is explicit and does not imply a Termux toolchain
+ok 225 - host SDK profile is explicit and does not imply a Termux toolchain
+  ---
+  duration_ms: 1.308935
+  type: 'test'
+  ...
+# Subtest: plan permissions, versions, budgets, routes and test contracts cannot be loosened
+ok 226 - plan permissions, versions, budgets, routes and test contracts cannot be loosened
+  ---
+  duration_ms: 2.062255
+  type: 'test'
+  ...
+# Subtest: reviewed lexical source is only an untrusted, byte-bounded model suggestion
+ok 227 - reviewed lexical source is only an untrusted, byte-bounded model suggestion
+  ---
+  duration_ms: 2.293719
+  type: 'test'
+  ...
+# Subtest: rejects unreviewed, revoked, corrupted, and unanchored candidates
+ok 228 - rejects unreviewed, revoked, corrupted, and unanchored candidates
+  ---
+  duration_ms: 4.448351
+  type: 'test'
+  ...
+# Subtest: limits excerpt bytes and rejects oversized or malformed inputs
+ok 229 - limits excerpt bytes and rejects oversized or malformed inputs
+  ---
+  duration_ms: 1.031714
+  type: 'test'
+  ...
+# Subtest: training studio is versioned, bounded, and has all 18 meaningful categories
+ok 230 - training studio is versioned, bounded, and has all 18 meaningful categories
+  ---
+  duration_ms: 1.194775
+  type: 'test'
+  ...
+# Subtest: copy-only studio is safe: inputs are small and expected results explicit
+ok 231 - copy-only studio is safe: inputs are small and expected results explicit
+  ---
+  duration_ms: 2.371735
+  type: 'test'
+  ...
+# Subtest: human dialogue, Austrian everyday speech, grammar and typos have independent tracks
+ok 232 - human dialogue, Austrian everyday speech, grammar and typos have independent tracks
+  ---
+  duration_ms: 0.203042
+  type: 'test'
+  ...
+# Subtest: syntax-specific memory and logic facts are ordered and explicitly revocable
+ok 233 - syntax-specific memory and logic facts are ordered and explicitly revocable
+  ---
+  duration_ms: 0.319045
+  type: 'test'
+  ...
+# Subtest: ungraded open-ended dialogue exercises do not claim to train weights
+ok 234 - ungraded open-ended dialogue exercises do not claim to train weights
+  ---
+  duration_ms: 4.946242
+  type: 'test'
+  ...
+# Subtest: owner UI explicitly copies text and persists only a navigation cursor
+ok 235 - owner UI explicitly copies text and persists only a navigation cursor
+  ---
+  duration_ms: 4.650581
+  type: 'test'
+  ...
+# Subtest: all five bottom destinations open their own category
+ok 236 - all five bottom destinations open their own category
+  ---
+  duration_ms: 2.741184
+  type: 'test'
+  ...
+# Subtest: Fold rail has actual click targets for every visible category
+ok 237 - Fold rail has actual click targets for every visible category
+  ---
+  duration_ms: 4.574279
+  type: 'test'
+  ...
+# Subtest: dashboard cards open the matching owner-controlled centers
+ok 238 - dashboard cards open the matching owner-controlled centers
+  ---
+  duration_ms: 0.246427
+  type: 'test'
+  ...
+# Subtest: category center buttons invoke real handlers and CCC1 has a direct development entry
+ok 239 - category center buttons invoke real handlers and CCC1 has a direct development entry
+  ---
+  duration_ms: 0.475888
+  type: 'test'
+  ...
+# Subtest: signed owner package uses its own builder Activity, not a missing external preview
+ok 240 - signed owner package uses its own builder Activity, not a missing external preview
+  ---
+  duration_ms: 0.204314
+  type: 'test'
+  ...
+# Subtest: unchanged 22 source pins pass
+ok 241 - unchanged 22 source pins pass
+  ---
+  duration_ms: 519.972027
+  type: 'test'
+  ...
+# Subtest: changed protected source fails closed
+ok 242 - changed protected source fails closed
+  ---
+  duration_ms: 412.648524
+  type: 'test'
+  ...
+# Subtest: report-only does not turn a mismatch into approval
+ok 243 - report-only does not turn a mismatch into approval
+  ---
+  duration_ms: 497.165832
+  type: 'test'
+  ...
+# Subtest: symlink is never accepted as an attested regular source
+ok 244 - symlink is never accepted as an attested regular source
+  ---
+  duration_ms: 347.705103
+  type: 'test'
+  ...
+# Subtest: duplicate release pins fail before reporting
+ok 245 - duplicate release pins fail before reporting
+  ---
+  duration_ms: 245.608215
+  type: 'test'
+  ...
+# Subtest: symlinked ancestor cannot launder an unchanged file hash into a trusted path
+ok 246 - symlinked ancestor cannot launder an unchanged file hash into a trusted path
+  ---
+  duration_ms: 578.637002
+  type: 'test'
+  ...
+# Subtest: the report names why each attested source changed, its review role and unattested new APK sources
+ok 247 - the report names why each attested source changed, its review role and unattested new APK sources
+  ---
+  duration_ms: 590.188519
+  type: 'test'
+  ...
+# Subtest: release commands preserve every continued test file, Android task and build option
+ok 248 - release commands preserve every continued test file, Android task and build option
+  ---
+  duration_ms: 498.877686
+  type: 'test'
+  ...
+# Subtest: default signing entrypoint retains v18
+ok 249 - default signing entrypoint retains v18
+  ---
+  duration_ms: 71.186329
+  type: 'test'
+  ...
+# Subtest: explicit v19 requires owner-approved pinned exact commit
+ok 250 - explicit v19 requires owner-approved pinned exact commit
+  ---
+  duration_ms: 143.071118
+  type: 'test'
+  ...
+# Subtest: unknown release version always fails closed
+ok 251 - unknown release version always fails closed
+  ---
+  duration_ms: 87.913554
+  type: 'test'
+  ...
+# Subtest: non-code values cannot override the source pin guard
+ok 252 - non-code values cannot override the source pin guard
+  ---
+  duration_ms: 82.428593
+  type: 'test'
+  ...
+1..252
+# tests 252
+# suites 0
+# pass 252
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16566.365964

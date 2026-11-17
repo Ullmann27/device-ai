@@ -1,0 +1,18 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-concurrency=1",
+    "scripts/continuum-reliability-source-identity.test.mjs",
+    "scripts/continuum-reliability-qa.test.mjs",
+    "scripts/continuum-qa-evidence.test.mjs",
+    "scripts/continuum-architecture-proof.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/174c84456ee3/continuum-c1",
+  "sourceBase": "a15a2b771bb934d998b2f9c9552c30d30400f707",
+  "startedUtc": "2026-11-04T20:05:13.214158+00:00",
+  "finishedUtc": "2026-11-04T20:05:20.079346+00:00",
+  "exitCode": 0,
+  "scope": "Targeted source identity and existing QA evidence/architecture contracts; production worktree contains C1-QA-SOURCE-002."
+}

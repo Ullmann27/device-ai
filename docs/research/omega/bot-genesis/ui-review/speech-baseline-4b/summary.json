@@ -1,0 +1,18 @@
+{
+  "source": "4b881f81ddfbe38729a551d9e460e818c6b3b715",
+  "productionSource": "c7ec853e2ffaa488b92826306f015bfaa67f5bb7",
+  "tests": 3,
+  "failures": 1,
+  "skipped": 0,
+  "seconds": 2.195,
+  "gradleExit": 1,
+  "compilation": "PASS",
+  "sourceAndTestsUnchanged": true,
+  "environment": "Robolectric SDK28 host, real Activity listener, Android TTS shadow; no onCreate/model/audio hardware",
+  "failedAssertions": [
+    {
+      "name": "startInterruptedAfterInitialIdentityCheckCannotReviveAvatarOrReplayOnAttach",
+      "message": "java.lang.AssertionError: Interrupted speech must not emit a new start after stop"
+    }
+  ]
+}

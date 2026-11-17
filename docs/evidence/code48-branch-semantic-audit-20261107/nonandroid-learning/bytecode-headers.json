@@ -1,0 +1,34 @@
+[
+  {
+    "path": "scripts/argon4/__pycache__/bandwidth_model.cpython-313.pyc",
+    "blob": "020079f11083fd4ff8c9a45a3711d9bcb7c3cc53",
+    "bytes": 12365,
+    "headerHex": "f30d0d0a000000008c98e36a6a270000",
+    "flags": 0,
+    "bodyNotLoadedOrExecuted": true
+  },
+  {
+    "path": "scripts/argon4/__pycache__/expert_cache_sim.cpython-313.pyc",
+    "blob": "db0dec72c9427c6287e92d6673d236a4e118c2db",
+    "bytes": 10104,
+    "headerHex": "f30d0d0a00000000f198e36a43170000",
+    "flags": 0,
+    "bodyNotLoadedOrExecuted": true
+  },
+  {
+    "path": "scripts/argon4/__pycache__/stream_bench.cpython-313.pyc",
+    "blob": "1361814cf80eb61597f2b1eb2747b9bada79b79f",
+    "bytes": 7631,
+    "headerHex": "f30d0d0a00000000a598e36a880e0000",
+    "flags": 0,
+    "bodyNotLoadedOrExecuted": true
+  },
+  {
+    "path": "scripts/argon4/__pycache__/test_argon4_f2.cpython-313.pyc",
+    "blob": "c3286c6eb827ea7ef97d10cbc69108671796f0d7",
+    "bytes": 8252,
+    "headerHex": "f30d0d0a000000001799e36adb0d0000",
+    "flags": 0,
+    "bodyNotLoadedOrExecuted": true
+  }
+]

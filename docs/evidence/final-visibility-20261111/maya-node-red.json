@@ -1,0 +1,35 @@
+{
+  "status": "FAIL",
+  "sourceUnchanged": false,
+  "counts": {
+    "total": 2493,
+    "passed": 2454,
+    "failed": 2,
+    "skipped": 37
+  },
+  "diagnostics": [
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.listening resumes only after the bound reply and never over dialogs or approvals",
+      "file": ".github/continuum/continuous-conversation-wiring.test.mjs",
+      "line": 64,
+      "col": 10,
+      "message": "The input did not match the regular expression /voiceSignal\\.activate\\(id\\)\\s*voiceAvatarText = chunk\\.approvedText\\s*if \\(voiceEngine\\?\\.speak\\(chunk\\.approvedText, queueMode, null, id\\) != TextToSpeech\\.SUCCESS\\) return false\\s*continuousConversation\\.assistantSpeechQueued\\(id\\)\\s*return true/. Input:\n\n'private fun speakNextChunk(turn: String, queueMode: Int): Boolean {\\n' +\n  '        val chunk",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "83379c3e93755a01"
+    },
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.assistant TTS is refused while the on-device microphone turn is active",
+      "file": ".github/continuum/m5-voice-duplex-wiring.test.mjs",
+      "line": 60,
+      "col": 10,
+      "message": "The input did not match the regular expression /LocalSpeechInputPolicy\\.maySpeak\\([^)]*microphoneActive\\s*=\\s*voiceListening/. Input:\n\n'= speakReply(message, allowMaya = true)'",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "050450007ce0e9ed"
+    }
+  ],
+  "reason": "Two Android-only speech source-contract assumptions; updated for provider branch and shared microphone guard. Not a release receipt: source changed during run."
+}

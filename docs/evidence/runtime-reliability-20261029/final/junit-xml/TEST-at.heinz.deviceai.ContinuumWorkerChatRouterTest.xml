@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumWorkerChatRouterTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-29T02:59:59" hostname="9d1c4dd98fa0" time="0.017">
+  <properties/>
+  <testcase name="spokenGermanCodingRequestCreatesOnlySafeDraft" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.007"/>
+  <testcase name="regularQuestionsRemainLocalAndNoShellIsInvoked" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.0"/>
+  <testcase name="ownerCanPrepareButNotExecuteADraft" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.0"/>
+  <testcase name="explicitM4NotesRoutesToConfirmationOnly" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.001"/>
+  <testcase name="directStatusHelpAndNavigation" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.001"/>
+  <testcase name="repairAgentQuestionsOpenGuidanceNeverAnAutomaticTool" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.006"/>
+  <testcase name="milestoneCommandsReachReadOnlyStatusAndNativeTestOnly" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.001"/>
+  <testcase name="mobileBuilderNavigatesInsideExistingWorkerChat" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.0"/>
+  <testcase name="explicitProjectPlanningOpensOnlyM5ReviewNotDraftOrShell" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.001"/>
+  <testcase name="emptyAndOversizedDraftsFailClosed" classname="at.heinz.deviceai.ContinuumWorkerChatRouterTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

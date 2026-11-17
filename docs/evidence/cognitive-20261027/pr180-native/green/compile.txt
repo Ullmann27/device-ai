@@ -1,0 +1,3 @@
+app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt:28:17: warning: this call may have inconsistent results because 'AtomicReference' uses identity equality and 'Result<String>?' does not have a consistent identity.
+            if (outcome.compareAndSet(null, result)) completed.countDown()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

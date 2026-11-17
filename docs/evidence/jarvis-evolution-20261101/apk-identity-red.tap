@@ -1,0 +1,79 @@
+TAP version 13
+# Subtest: signed-release claims remain explicitly unverified after successful unsigned QA
+ok 1 - signed-release claims remain explicitly unverified after successful unsigned QA
+  ---
+  duration_ms: 31000.435035
+  type: 'test'
+  ...
+# Subtest: wrong commit, version or release-claim metadata cannot pass
+ok 2 - wrong commit, version or release-claim metadata cannot pass
+  ---
+  duration_ms: 12.947185
+  type: 'test'
+  ...
+# Subtest: missing test transcript and failed JUnit block the architectural receipt
+ok 3 - missing test transcript and failed JUnit block the architectural receipt
+  ---
+  duration_ms: 204.174979
+  type: 'test'
+  ...
+# Subtest: a failed Gradle transcript never becomes a proof
+ok 4 - a failed Gradle transcript never becomes a proof
+  ---
+  duration_ms: 11.046946
+  type: 'test'
+  ...
+# Subtest: rejects skipped required JUnit suite and spoofed test metadata
+ok 5 - rejects skipped required JUnit suite and spoofed test metadata
+  ---
+  duration_ms: 225.041469
+  type: 'test'
+  ...
+# Subtest: rejects fullname and forged error attributes
+ok 6 - rejects fullname and forged error attributes
+  ---
+  duration_ms: 595.465872
+  type: 'test'
+  ...
+# Subtest: rejects red or skipped Node TAP even with present reports
+ok 7 - rejects red or skipped Node TAP even with present reports
+  ---
+  duration_ms: 6.786532
+  type: 'test'
+  ...
+# Subtest: actual backend QA command emits machine-readable TAP on modern Node
+ok 8 - actual backend QA command emits machine-readable TAP on modern Node
+  ---
+  duration_ms: 536.299266
+  type: 'test'
+  ...
+# Subtest: actual APK identity must match source receipt instead of trusting STATUS metadata
+not ok 9 - actual APK identity must match source receipt instead of trusting STATUS metadata
+  ---
+  duration_ms: 1297.7241
+  type: 'test'
+  location: '/workspace/continuum-evolution/scripts/continuum-architecture-proof.test.mjs:127:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-evolution/scripts/continuum-architecture-proof.test.mjs:137:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 8
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 49513.295671

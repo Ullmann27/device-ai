@@ -1,0 +1,21 @@
+{
+  "schema": "independence-native-next-freeze-v1",
+  "case": "dev-u03",
+  "previousReview": "ab87f3f1ca9103c2a5b0133afa115c9c001a5b15",
+  "runtimeFixInspected": false,
+  "modelCallsBeforeFreeze": 0,
+  "files": {
+    "owner.test.mjs": {
+      "bytes": 265,
+      "sha256": "948b530ee774454553172bdbfa14628fffab1e33c77c8681e8bbb788514eb658"
+    },
+    "subject.mjs": {
+      "bytes": 62,
+      "sha256": "606c4bd672923563c93ad18a91a7ccf67e0c82e89700a7b942e81e55fe5e0bac"
+    },
+    "task.json": {
+      "bytes": 715,
+      "sha256": "cf84b6ff7f95cc29f593fd47de2335060f648820e5a7e418bf212844810e2981"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+# Chief-Muster Punkt 4: Gedächtnisschichten (Fassade über LEX2) 2026-11-03 14:36:14 CET
+## RED (Stub)
+> Task :app:testDebugUnitTest FAILED
+ContinuumMemoryLayersTest > journalIsDatedHistoryWithHonestStatus FAILED
+ContinuumMemoryLayersTest > sharedKnowledgeIsReadOnlyAndAnswersOnlyFromConfirmedFacts FAILED
+ContinuumMemoryLayersTest > searchRanksOlderEntriesByKeywordAndTimeAndAbstains FAILED
+ContinuumMemoryLayersTest > hypotheticalsStayUnconfirmedInSearch FAILED
+ContinuumMemoryLayersTest > profileHoldsOnlyDurableConfirmedFacts FAILED
+5 tests completed, 5 failed
+BUILD FAILED in 11s
+## GREEN
+BUILD SUCCESSFUL in 17s
+5/5 PASS: profile, journal, shared (read-only), search (keyword+time, abstains), hypotheticals unconfirmed

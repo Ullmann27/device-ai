@@ -1,0 +1,186 @@
+{
+  "schema": "continuum-harness-native-coding-proof-v1",
+  "implementationCommit": "8b5adb039b0507f56ef38b469444a1c6c444aa12",
+  "fixtureSha256": "6f78bfbb0f1b21e9bd2a501bd6001872b20916814f13056fc6507e27506337b3",
+  "task": {
+    "schema": "continuum-coding-task",
+    "version": 1,
+    "id": "harness-signed-adjustment-20261027",
+    "sourceCommit": "0006ddf699445d77c45201e173918c0e7ec902bb",
+    "kind": "BUGFIX",
+    "goal": "Apply a signed integer ledger adjustment to the balance correctly; preserve existing safe-integer input rejection.",
+    "allowedPaths": [
+      "lib/ledger.mjs"
+    ],
+    "acceptance": [
+      "Positive adjustments increase the balance; negative adjustments decrease it.",
+      "Zero preserves balance.",
+      "Non-safe-integer input must still throw RangeError."
+    ],
+    "chain": "node",
+    "limits": {
+      "maxModelCalls": 2,
+      "maxContextChars": 4096
+    }
+  },
+  "prepared": {
+    "id": "harness-signed-adjustment-20261027",
+    "ccc1TaskId": "t-d05e41eb9c6b048f",
+    "fingerprint": "bc4d673c2e9cafc9b7792a10d81345b77ff2345eb1067207446b0983d7ca00de",
+    "replayed": false
+  },
+  "harness": {
+    "directory": "/workspace/toolchains/continuum-harness-sdk",
+    "entries": {
+      "@deepseek-ai/cordis": "/workspace/toolchains/continuum-harness-sdk/node_modules/@deepseek-ai/cordis/lib/index.js",
+      "@deepseek-ai/dsh-llm": "/workspace/toolchains/continuum-harness-sdk/node_modules/@deepseek-ai/dsh-llm/lib/index.js"
+    },
+    "packages": {
+      "@deepseek-ai/cordis": {
+        "version": "4.0.5",
+        "entrySha256": "6a9394c0877ff45218818c6e815edd038f8057e1a1deb390a8d43ec81c57691e"
+      },
+      "@deepseek-ai/dsh-llm": {
+        "version": "0.2.1-rc.3",
+        "entrySha256": "d18d8ae4c8d961e628708c1e4698e09716a0ebb80e55a672e0bde1029bec1155"
+      }
+    },
+    "lockSha256": "360d967d86d8d26552cbea7a3c1d3fa7dcee528f4fad23038bc9f59a81a31136",
+    "sourceCommitIdentityAttested": false
+  },
+  "configuredModel": "continuum-research-qwen-1.5b",
+  "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+  "elapsedMs": 108752,
+  "proposals": [
+    {
+      "mode": "LOCAL_CODING_PATCH_PROPOSAL_V1",
+      "trusted": false,
+      "autoApply": false,
+      "plan": [
+        "Identify the issue in the code by examining the test failures.",
+        "Analyze the code to understand the logic and identify the problem.",
+        "Determine the cause of the issue by examining the test failures and the code.",
+        "Create a patch to fix the issue.",
+        "Test the patch to ensure it works as expected."
+      ],
+      "hypothesis": "The issue is caused by the incorrect handling of non-safe-integer input in the `applyAdjustment` function.",
+      "patches": [
+        {
+          "file": "lib/ledger.mjs",
+          "oldText": "if (!Number.isSafeInteger(balance) || !Number.isSafeInteger(adjustment)) {\n    throw new RangeError('safe integer inputs required');\n  }",
+          "newText": "if (!Number.isSafeInteger(balance) || !Number.isSafeInteger(adjustment)) {\n    throw new TypeError('safe integer inputs required');\n  }"
+        }
+      ],
+      "localRequests": 1,
+      "context": {
+        "commit": "0006ddf699445d77c45201e173918c0e7ec902bb",
+        "contextSha256": "eb14defccc403e1a6d5849c36e7aa8b4c5f47a3ffb0921ec48a349815fae30b6",
+        "ranges": [
+          {
+            "file": "lib/ledger.mjs",
+            "startLine": 1,
+            "endLine": 7,
+            "sha256": "129f5ff0f7a2d558026d8dce601b96d09e1c0df1c0c73aed4e16c2f01eb3cef0"
+          }
+        ]
+      },
+      "trace": {
+        "schema": "continuum-coding-model-request",
+        "version": 1,
+        "taskId": "mob-a818b69f0ad52f35",
+        "taskFingerprint": "5344579dd832923867067f5bab0ac8351e034a0e5ae1e9403b7b40bade84e480",
+        "sourceCommit": "0006ddf699445d77c45201e173918c0e7ec902bb",
+        "request": 1,
+        "startedAt": "2026-10-27T10:02:19.954Z",
+        "elapsedMs": 46955,
+        "configuredModel": "continuum-research-qwen-1.5b",
+        "verifiedModelExecution": false,
+        "contextSha256": "eb14defccc403e1a6d5849c36e7aa8b4c5f47a3ffb0921ec48a349815fae30b6",
+        "promptSha256": "0c48b6e5dd968d93361a8052933141a948bf5d3dc1f83add00c8db56c95f03d0",
+        "exitCode": 0
+      }
+    }
+  ],
+  "result": {
+    "schema": "continuum-coding-task-result",
+    "version": 1,
+    "id": "harness-signed-adjustment-20261027",
+    "ccc1TaskId": "t-d05e41eb9c6b048f",
+    "taskFingerprint": "bc4d673c2e9cafc9b7792a10d81345b77ff2345eb1067207446b0983d7ca00de",
+    "sourceCommit": "0006ddf699445d77c45201e173918c0e7ec902bb",
+    "chain": "node",
+    "status": "ABSTAINED",
+    "receiptJobs": [
+      "666212f0-4538-43ec-afe2-6287bfe9bb01"
+    ],
+    "receipts": [
+      {
+        "schema": "continuum-mobile-coding-receipt",
+        "version": 1,
+        "job": "666212f0-4538-43ec-afe2-6287bfe9bb01",
+        "operation": "code-repair",
+        "taskId": "mob-a818b69f0ad52f35",
+        "commit": "0006ddf699445d77c45201e173918c0e7ec902bb",
+        "toolchain": {
+          "node": "v24.19.0",
+          "platform": "linux",
+          "arch": "x64",
+          "git": "git version 2.52.0"
+        },
+        "order": {
+          "chain": "node"
+        },
+        "status": "FAILED_REPAIR",
+        "teamleaderOutcome": "NO_VERIFIED_REPAIR",
+        "patch": null,
+        "evidence": null,
+        "commands": [
+          {
+            "phase": "baseline",
+            "exitCode": 1,
+            "passed": false,
+            "executed": 24,
+            "failed": 20,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          }
+        ],
+        "failure": {
+          "code": "NO_VERIFIED_REPAIR",
+          "message": "Repair ended NO_VERIFIED_REPAIR"
+        },
+        "backlog": {
+          "state": "READY",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "error": {
+            "code": "NO_VERIFIED_REPAIR",
+            "message": "NO_VERIFIED_REPAIR"
+          }
+        },
+        "approvedForMerge": false,
+        "apk": null,
+        "installed": false,
+        "deviceVerified": false,
+        "createdAt": "2026-10-27T10:02:19.125Z",
+        "repair": {
+          "outcome": "NO_VERIFIED_REPAIR",
+          "strategy": null,
+          "files": [],
+          "diagnostics": 20,
+          "attempts": 1
+        }
+      }
+    ],
+    "approvedForMerge": false,
+    "deviceVerified": false,
+    "neuralTraining": false
+  },
+  "independent": {
+    "status": "NOT_RUN_NO_VERIFIED_MODEL_CANDIDATE"
+  },
+  "sourceUnchanged": true,
+  "externalInference": false,
+  "modelWeightsUpdated": false,
+  "productionApproved": false
+}

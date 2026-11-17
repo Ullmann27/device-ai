@@ -1,0 +1,38 @@
+✔ baby extracts interaction structure and constraints (1.976965ms)
+✔ baby turns evidence into bounded beliefs and epistemic goals (4.877456ms)
+✔ goal policy balances priority reward and exploration (0.611674ms)
+✔ public web guard blocks local and reserved addresses (5.602109ms)
+✔ html extraction strips active content and preserves public links (1.489089ms)
+✔ legacy overconfident beliefs are downgraded until revalidated (1.308676ms)
+✔ interaction profile and explicit owner rules learn without becoming web beliefs (1.182515ms)
+✔ weak skills autonomously create curriculum goals and competent skills close them (2.550642ms)
+✔ memory retrieval ranks explicit owner rules and grounded beliefs without treating episodes as facts (2.494737ms)
+✔ deep research plan uses distinct focused search queries for interaction and metacognition (0.308085ms)
+✔ html extraction removes navigation chrome before learning (0.240133ms)
+✔ baby memory migration removes navigation noise and merges citation-marker duplicates (0.249106ms)
+✔ memory retrieval reward depends on relevance quality rather than raw hit count (0.727038ms)
+✔ retrospective audit quarantines unrelated historical research without destroying provenance (0.372242ms)
+✔ new off-topic content stays quarantined even with several citation markers (0.317499ms)
+✔ uncited attribution and invalid evidence URLs cannot promote a claim (0.482369ms)
+✔ duplicate consolidation keeps explicitly grounded provenance isolated from legacy rows (1.110217ms)
+✔ grounded duplicate cannot inherit confidence, identity or citations from provisional row (4.685816ms)
+✔ evidence ingestion never grafts unverified citations onto verified same-claim support (1.289627ms)
+✔ unavailable encyclopedia extracts are explicitly classified and never learned (0.982654ms)
+✔ failure reports identify safe operation and may not become accepted after separate stage (0.296247ms)
+✔ research attempts and pending topics remain truthful when a source has failed (0.799538ms)
+✔ issue #76: an interrupt flag never loses the cycle audit, and a failed write carries a fixed cause (0.232922ms)
+✔ safety budget, source isolation and holdout gate are unchanged (0.186021ms)
+✔ trusted naming describes publisher origin only, never fact truth (1.54327ms)
+✔ exact source substring and cryptographic document match are mandatory (0.992358ms)
+✔ two different source domains are corroboration, never verified truth (1.227043ms)
+✔ potential version or negation conflicts get review flags, not silent supersession (9.163608ms)
+✔ active-counterexample search plans are bounded descriptions, not executable requests (1.005098ms)
+✔ invalid input and malformed graph fail closed (1.330299ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 399.704946

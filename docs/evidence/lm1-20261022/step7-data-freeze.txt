@@ -1,0 +1,10 @@
+NEW docs=25 candidates=1288 segments=1278 bytes=242488 droppedOverlap=10 droppedDuplicate=0 sha=2027cbbc274b3c76742da45d03d668195173b9487972d2adf4451b6214cd156b pinned=
+ITEMS pairs=200 sha=6672edb9671cccc02e5b25cedbfb049637c7faa153ee194c704cf5a60c10cade pinned= families={position=40, case=40, compare=40, yesno=40, neighbour=40}
+SAMPLE NEW | trainierbarer CSX1-Extraktor, sichere Enthaltung, modellgebundene und bedingte Kalibrierung; Stand bei ungewohnten Satzformen weiterhin schwach. Neuer Zweig PR 
+SAMPLE NEW | **Entwicklungsauftrag:** Erst nach laufenden Prioritäten als isolierte, lesbare und reproduzierbare Experimente; vorhandene `ContinuumHologramView`-/`ContinuumP
+SAMPLE NEW | Allokation harte UTF-8-Byte-, Klausel-, Token-, Kandidaten- und Zeitschranken setzen; Unterbrechung in Schleifen prüfen. Overflow/NaN/Infinity im Logit/Softmax 
+SAMPLE PAIR position | Nenne das erste Wort der Liste: Tisch, Hund, Tasse. Antwort: → Tisch | Nenne das letzte Wort der Liste: Tisch, Hund, Tasse. Antwort: → Tasse
+SAMPLE PAIR case | Schreibe das Wort in Großbuchstaben: Haus. Antwort: → HAUS | Schreibe das Wort in Kleinbuchstaben: Haus. Antwort: → haus
+SAMPLE PAIR compare | Welche Zahl ist größer: 39 oder 11? Antwort: → 39 | Welche Zahl ist kleiner: 39 oder 11? Antwort: → 11
+SAMPLE PAIR yesno | Ist 7 größer als 6? Antwort: → ja | Ist 7 kleiner als 6? Antwort: → nein
+SAMPLE PAIR neighbour | Welche Zahl kommt nach 8? Antwort: → 9 | Welche Zahl kommt vor 8? Antwort: → 7

@@ -1,0 +1,23 @@
+{
+  "status": "PUBLISHED_APK_BYTES_PACKAGE_VERSION_AND_ORIGINAL_CERTIFICATE_VERIFIED",
+  "checkedAt": "2026-11-03T23:54:19.709848+00:00",
+  "sourceCommit": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+  "versionCode": 40,
+  "versionName": "0.3.39",
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "signerSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+  "apkSha256": "416ff0a388df82532bea73dfb938a8985169d85688743527133be04ca8683d19",
+  "bytes": 84298233,
+  "apkUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-416ff0a388df82532bea73dfb938a8985169d85688743527133be04ca8683d19.apk",
+  "catalogUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/latest.json",
+  "nativeAbis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86",
+    "x86_64"
+  ],
+  "apkSignatureV2": true,
+  "physicalDeviceInstall": "NOT_RUN",
+  "S01ModelAcceptance": "UNRESOLVED_NO_RUN",
+  "localPath": "/workspace/scratch/391c0f6de827/build-env/release-readback/Continuum-Lokal-416ff0a388df82532bea73dfb938a8985169d85688743527133be04ca8683d19.apk"
+}

@@ -1,0 +1,24 @@
+app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt:9:54: error: unresolved reference 'restoredMode'.
+            assertEquals(mode, InternetConsentPolicy.restoredMode(mode.name))
+                                                     ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt:10:72: error: unresolved reference 'restoredMode'.
+            val reopened = InternetConsentPolicy(InternetConsentPolicy.restoredMode(mode.name))
+                                                                       ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt:12:54: error: unresolved reference 'restoredMode'.
+            assertEquals(mode, InternetConsentPolicy.restoredMode(reopened.mode.name))
+                                                     ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt:14:74: error: unresolved reference 'restoredMode'.
+        assertEquals(InternetAccessMode.ALWAYS_ON, InternetConsentPolicy.restoredMode(null))
+                                                                         ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:36:54: error: unresolved reference 'withCurrentConsentRevision'.
+        assertEquals("fresh", TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) {
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:41:36: error: unresolved reference 'withCurrentConsentRevision'.
+            TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) { calls++; "stale" }
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:51:49: error: unresolved reference 'withCurrentConsentRevision'.
+            val answer = TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) {
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:65:36: error: unresolved reference 'withCurrentConsentRevision'.
+            TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) {
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^

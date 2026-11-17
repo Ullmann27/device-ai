@@ -1,0 +1,45 @@
+✔ opt-in verifier rejects a test-passing constant and feeds the counterexample into the same repair loop (1603.902569ms)
+✔ independent research veto blocks completion even after primary tests passed (646.935912ms)
+✔ a throwing optional verifier exhausts the fixed proposal budget without publishing a patch (1107.491054ms)
+✔ a completion I/O failure preserves the owner abort receipt (162.956782ms)
+✔ an existing completion cannot be overwritten or turn a failed delivery into success (464.482431ms)
+✔ unreadable proc cannot turn a live detached child into watchdog success (1918.370392ms)
+✔ repair profile requires a valid completion: confirmed (229.067564ms)
+✔ repair profile requires a valid completion: denied proc (1930.844168ms)
+✔ repair profile requires a valid completion: missing completion (252.483271ms)
+✔ repair profile requires a valid completion: wrong task (217.840711ms)
+✔ a supervisor signal cannot become success when the command exits zero on SIGTERM (446.600889ms)
+✔ a watched step passes streams, exit code and ending signal through unchanged (847.009141ms)
+✔ a spawnSync timeout still reads as a timeout and also ends the detached grandchild (1840.032822ms)
+✔ an owner abort ends a running step and its detached grandchild within seconds (865.337135ms)
+✔ a task aborted before the step starts never runs the command (59.100623ms)
+✔ a watched step stops when the waiting parent is gone (886.854949ms)
+✔ the watchdog refuses incomplete or relative arguments (403.607342ms)
+✔ an abort watch ends a running check profile and the chain never uses its result (905.104497ms)
+✔ actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch (543.300561ms)
+✔ scheduled owner task completes full real Git repair and independent verification (748.353933ms)
+✔ actual passing Git fixture generates no fake repair, patch, or changed source (229.450016ms)
+✔ actual offline Teamleader completes a priority investigation with real Git checks and evidence (519.432191ms)
+✔ bounded process executes argv directly and reports its actual exit (52.969893ms)
+✔ timeout kills the process group and never reports success (434.57816ms)
+✔ owner cancellation is asynchronous and cannot become a successful exit (389.864613ms)
+✔ the signal that ended the direct child is reported, an exit code is not (86.051697ms)
+✔ oversized process logs are bounded and fail closed (324.733626ms)
+✔ cancellation also stops a child that detached like the Gradle daemon (770.978232ms)
+✔ inherited run identity catches a rapidly orphaned detached child on linux (327.829516ms)
+✔ inherited run identity catches a rapidly orphaned detached child on android (338.345672ms)
+✔ an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup (31.366836ms)
+✔ an unreadable process younger than the run blocks a confirmed cleanup (1813.899316ms)
+✔ unreadable proc stat is not confused with an exited process (1800.621909ms)
+✔ denied proc access still stops its direct child and returns a bounded unconfirmed timeout (1883.260302ms)
+✔ a reused root PID cannot hide an earlier detached descendant from cleanup (389.3896ms)
+✔ incomplete proc scans are retried within the cleanup bound: transient (305.856133ms)
+✔ incomplete proc scans are retried within the cleanup bound: persistent (1787.284386ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16485.642387

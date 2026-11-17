@@ -1,0 +1,388 @@
+{
+  "task": "C1-MEMORY-017A-OWN-RECEIPT-REVIEW",
+  "reviewer": "/root/source_audit (C1 subagent; not external C2)",
+  "recordedUtc": "2026-11-04T21:29:51.121407+00:00",
+  "status": "C1_FOCUSED_RECEIPT_VERIFIED",
+  "archive": {
+    "originalPath": "/workspace/scratch/174c84456ee3/continuum-c1/docs/evidence/c1-integration-20261104/memory017a-own-android/android-memory017a-01.tar.xz",
+    "sha256": "30fa945036395fa35708b094f4c21b6262708249f49ee1a682f0a83244f4dceb",
+    "bytes": 8192,
+    "verifiedMembers": [
+      {
+        "path": "android-memory017a-01-active-test.json",
+        "sha256": "5af53a7ac139ea8289d167bbbb51980d0425c956e535777f304014501ddf295a",
+        "bytes": 213,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "android-memory017a-01.log",
+        "sha256": "0d39de33e7b705c88452f5954b03c16469f1d036b1ee36ed19f8214b6efb4409",
+        "bytes": 10513,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "android-memory017a-01.result.json",
+        "sha256": "1f1cb7c34434ca3cbb6800aeb22027ffda1bda848e0b7b196c1a0186b631483c",
+        "bytes": 1969,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "archive_android_gate.py",
+        "sha256": "3ef7baedee1123ac7756a5cbc85b960dcb1fd2ae0a30fb55e2ca1806720b3acf",
+        "bytes": 4561,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cognitive.AiContextCompilerTest.xml",
+        "sha256": "9db4ec3d5a45c3880ae800ea719f5d780f58405f3c27e1bf83ed0f60382f12a6",
+        "bytes": 954,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cognitive.AiContextIntegrityTest.xml",
+        "sha256": "d33dbfe8465f6f02e993c0f28afdff405d0381caf81bbdeed56a03edf4ca4616",
+        "bytes": 1714,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.xml",
+        "sha256": "411c677234429e0eb8b4b2a4f979b8d24b908c09ad7a3c90ad211c331e7c0c95",
+        "bytes": 1358,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest.xml",
+        "sha256": "7f85546e3e94562873390bae848b46b023480e83196b9175d97474f077b6a8e4",
+        "bytes": 1048,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "observe-tests.init.gradle",
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb",
+        "bytes": 1798,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "run_c1_gate_v3.py",
+        "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+        "bytes": 5722,
+        "matchesRecordedIndex": true
+      },
+      {
+        "path": "summary.json",
+        "sha256": "50ab94ed38f9f95a9d1eb249b77a43add8fbb52dca59904932ef011476b3b1ec",
+        "bytes": 6833,
+        "matchesRecordedIndex": true
+      }
+    ]
+  },
+  "source": {
+    "localCommit": "57656c6a5287c37a8f4357dabe6d066e63aec235",
+    "publicCommit": "f13578bdab05279720fe4a3d6ae0126a208c8465",
+    "tree": "440f395289756ac6ec4f6c26f661c38895e24e12",
+    "publicTreeIndependentlyVerifiedInStaticReview": true,
+    "cleanStartRecorded": true,
+    "sourceUnchangedRecorded": true,
+    "bindingMethod": "Pinned HEAD/tree and git status --porcelain before and after, as implemented in the hash-verified runner; sourceUnchanged=true. Not a separate per-file before/after hash manifest.",
+    "staticReviewPath": "C1-MEMORY-017A-static.json"
+  },
+  "execution": {
+    "startedAt": "2026-11-04T21:26:02.339634+00:00",
+    "finishedAt": "2026-11-04T21:26:34.911546+00:00",
+    "exitCode": 0,
+    "processReturnCode": 0,
+    "buildSuccessfulLog": true,
+    "command": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+      "--offline",
+      "--no-daemon",
+      "--no-build-cache",
+      "--max-workers=2",
+      "--console=plain",
+      "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-PdeviceAiMentorPreview=true",
+      "-PcontinuumUiWidgetTests=true",
+      "-PcontinuumLocalStandaloneQa=true",
+      "-PcontinuumStandaloneVersionCode=41",
+      "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-memory017a-01-active-test.json",
+      "-PcontinuumAuditTestClasses=at.heinz.deviceai.cognitive.AiContextCompilerTest,at.heinz.deviceai.cognitive.AiContextIntegrityTest,at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest,at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "-I",
+      "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+      ":app:testDebugUnitTest"
+    ],
+    "runnerSha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+    "bothExpectedLocksRecordedAndRunnerAcquiresBeforeStart": true,
+    "tasks": {
+      ":app:compileDebugKotlin": "EXECUTED",
+      ":app:compileDebugUnitTestKotlin": "EXECUTED",
+      ":app:testDebugUnitTest": "EXECUTED"
+    },
+    "initialTestStatusCleared": true
+  },
+  "independentXmlCounts": {
+    "classes": 4,
+    "tests": 23,
+    "pass": 23,
+    "fail": 0,
+    "skip": 0
+  },
+  "identities": {
+    "sourceMethods": 23,
+    "logStarts": 23,
+    "logEnds": 23,
+    "xmlCases": 23,
+    "allFourCountersIdentical": true,
+    "duplicateCases": false,
+    "allEndStatusesSuccess": true
+  },
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "testCount": 4,
+      "xmlMember": "junit/TEST-at.heinz.deviceai.cognitive.AiContextCompilerTest.xml",
+      "xmlSha256": "9db4ec3d5a45c3880ae800ea719f5d780f58405f3c27e1bf83ed0f60382f12a6",
+      "xmlTimestamp": "2026-11-04T21:26:33",
+      "archiveMtime": 1793827594.3947263,
+      "timestampWithinRun": true
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "testCount": 9,
+      "xmlMember": "junit/TEST-at.heinz.deviceai.cognitive.AiContextIntegrityTest.xml",
+      "xmlSha256": "d33dbfe8465f6f02e993c0f28afdff405d0381caf81bbdeed56a03edf4ca4616",
+      "xmlTimestamp": "2026-11-04T21:26:33",
+      "archiveMtime": 1793827594.3987262,
+      "timestampWithinRun": true
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "testCount": 6,
+      "xmlMember": "junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.xml",
+      "xmlSha256": "411c677234429e0eb8b4b2a4f979b8d24b908c09ad7a3c90ad211c331e7c0c95",
+      "xmlTimestamp": "2026-11-04T21:26:34",
+      "archiveMtime": 1793827594.398006,
+      "timestampWithinRun": true
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest",
+      "testCount": 4,
+      "xmlMember": "junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest.xml",
+      "xmlSha256": "7f85546e3e94562873390bae848b46b023480e83196b9175d97474f077b6a8e4",
+      "xmlTimestamp": "2026-11-04T21:26:34",
+      "archiveMtime": 1793827594.3947263,
+      "timestampWithinRun": true
+    }
+  ],
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "method": "researchSourceTextIsBoundedAsUntrustedEvidence",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "method": "currentContextExcludesContradictedStaleAndSensitiveMemories",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "method": "unrelatedOwnerFactDoesNotEnterPublicKnowledgePromptThroughFunctionWords",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "method": "identityAndGovernanceSurviveTruncationWhileSecretsAreRedacted",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "overflowOmitsTheWholeSelectedMemoryGroupIncludingItsIds",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "finalModelCharacterCapCannotUndoAtomicCompilation",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "completeSmallMemoryIdsMatchVisibleBodiesAndContradictionOverflowBlocks",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "researchEvidenceKeepsItsNegativeSuffixAndBalancedUntrustedFrame",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "secretRedactionAndWholeUnicodeMemoryRespectTheByteLimit",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "lateNegationSurvivesAsPartOfTheWholeMemory",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "requiredRequestCannotBeSilentlyCutBeforeItsNegation",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "secretRedactionCannotConsumeTheResearchClosingBoundary",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "method": "allContradictionsPrecedeOptionalMemoryAndCannotBePartiallyLost",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "method": "standaloneCompleteCorrectionsStayRequiredAndAtomic",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "method": "oversizedForbiddenContradictionDoesNotConsumeMandatoryContextBudget",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "method": "publicOnlyPolicyAlsoExcludesPrivateContradictionAliases",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "method": "aStringSharedByAllowedAndForbiddenRecordsCannotChooseTheAllowedAlias",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "method": "explicitSensitiveAllowanceKeepsTheCompleteContradiction",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "method": "conflictingIdCannotReenterThroughItsOtherwiseAllowedContradictionContent",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest",
+      "method": "sensitiveContradictionIsExcludedWhenTheLossyCallerProjectionIsAbsent",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest",
+      "method": "sensitiveContradictionCannotBypassTheCompilerPrivacyPolicyThroughCallerProjection",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest",
+      "method": "plainAllowedContradictionKeepsItsCompleteLateNegation",
+      "status": "PASS"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest",
+      "method": "allowedContradictionCannotIntroduceRawModelControlTokens",
+      "status": "PASS"
+    }
+  ],
+  "sourceClasses": [
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/AiContextCompilerTest.kt",
+      "blob": "44a79445849ac0660ae705cd6e9b9f0267824de3",
+      "sha256": "b2255b59833a232ce96a2a95f8c2f7ce0d70e190df1ab85cb68cae419a99a9fa",
+      "sourceMethods": [
+        "unrelatedOwnerFactDoesNotEnterPublicKnowledgePromptThroughFunctionWords",
+        "identityAndGovernanceSurviveTruncationWhileSecretsAreRedacted",
+        "currentContextExcludesContradictedStaleAndSensitiveMemories",
+        "researchSourceTextIsBoundedAsUntrustedEvidence"
+      ],
+      "junitClassCount": 4,
+      "usesRobolectricRunWith": false
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/AiContextIntegrityTest.kt",
+      "blob": "3f3ece6e726a87daad870b23ec66da66c19992ca",
+      "sha256": "4ccb538c554e04a1e4c0c6530b5e489de28848280337eb41c819346d958a4b11",
+      "sourceMethods": [
+        "lateNegationSurvivesAsPartOfTheWholeMemory",
+        "overflowOmitsTheWholeSelectedMemoryGroupIncludingItsIds",
+        "requiredRequestCannotBeSilentlyCutBeforeItsNegation",
+        "allContradictionsPrecedeOptionalMemoryAndCannotBePartiallyLost",
+        "researchEvidenceKeepsItsNegativeSuffixAndBalancedUntrustedFrame",
+        "finalModelCharacterCapCannotUndoAtomicCompilation",
+        "completeSmallMemoryIdsMatchVisibleBodiesAndContradictionOverflowBlocks",
+        "secretRedactionAndWholeUnicodeMemoryRespectTheByteLimit",
+        "secretRedactionCannotConsumeTheResearchClosingBoundary"
+      ],
+      "junitClassCount": 9,
+      "usesRobolectricRunWith": false
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest",
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryRegressionTest.kt",
+      "blob": "0c798951d4f19d0ac873330caf2c5b6ce6a29d99",
+      "sha256": "0e7baeb42e93a93e5564a2972be9b5f5898d491fffbb29bda1580c5bc46235ce",
+      "sourceMethods": [
+        "sensitiveContradictionCannotBypassTheCompilerPrivacyPolicyThroughCallerProjection",
+        "allowedContradictionCannotIntroduceRawModelControlTokens",
+        "sensitiveContradictionIsExcludedWhenTheLossyCallerProjectionIsAbsent",
+        "plainAllowedContradictionKeepsItsCompleteLateNegation"
+      ],
+      "junitClassCount": 4,
+      "usesRobolectricRunWith": false
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest",
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt",
+      "blob": "8e0d89fee6ed05af7b32e4ca589c83fb008c5f8d",
+      "sha256": "dcf924b4e15b74adf2492ae0b38260bd79dbc19f6787abbcdafe3640cde049f7",
+      "sourceMethods": [
+        "explicitSensitiveAllowanceKeepsTheCompleteContradiction",
+        "publicOnlyPolicyAlsoExcludesPrivateContradictionAliases",
+        "aStringSharedByAllowedAndForbiddenRecordsCannotChooseTheAllowedAlias",
+        "conflictingIdCannotReenterThroughItsOtherwiseAllowedContradictionContent",
+        "oversizedForbiddenContradictionDoesNotConsumeMandatoryContextBudget",
+        "standaloneCompleteCorrectionsStayRequiredAndAtomic"
+      ],
+      "junitClassCount": 6,
+      "usesRobolectricRunWith": false
+    }
+  ],
+  "frozenNewTestFileMatches": [
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryRegressionTest.kt",
+      "frozenBlob": "0c798951d4f19d0ac873330caf2c5b6ce6a29d99",
+      "executedSourceBlob": "0c798951d4f19d0ac873330caf2c5b6ce6a29d99",
+      "wholeFileIdentical": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt",
+      "frozenBlob": "8e0d89fee6ed05af7b32e4ca589c83fb008c5f8d",
+      "executedSourceBlob": "8e0d89fee6ed05af7b32e4ca589c83fb008c5f8d",
+      "wholeFileIdentical": true
+    }
+  ],
+  "freshness": {
+    "testTaskForcedByHashVerifiedInitScript": true,
+    "xmlSuiteTimestampsWithinExecutionWindow": true,
+    "archivedXmlMtimesWithinExecutionWindow": true,
+    "noStaleXmlObserved": true
+  },
+  "limits": [
+    "Reviewer did not run tests, builds, Gradle, Kotlin, locks or repository mutations.",
+    "This is independent verification of C1 original receipts, not an independent test rerun.",
+    "Four selected ordinary JUnit compiler/integrity classes executed inside the real Android Gradle project. No Activity/Handler/Robolectric class was selected in this focus.",
+    "The full Android source and enabled UI test sources compiled; this does not execute every compiled test class.",
+    "No lint task requested or newly verified in this command. No whole-suite, UI015, Mapper017B, model, GPU, device, APK or release PASS inferred.",
+    "Earlier and later test groups may overlap; counts must not be added.",
+    "No external C2 ACK claimed."
+  ]
+}

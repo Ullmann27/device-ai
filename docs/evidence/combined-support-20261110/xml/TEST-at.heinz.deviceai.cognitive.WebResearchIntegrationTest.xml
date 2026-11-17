@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.WebResearchIntegrationTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-10T21:24:07" hostname="1a6f5c6cf9c0" time="0.022">
+  <properties/>
+  <testcase name="staleSameQuestionDialogCannotApproveNewRequestAndApprovalExpires" classname="at.heinz.deviceai.cognitive.WebResearchIntegrationTest" time="0.001"/>
+  <testcase name="realToolGateAndEngineNeedOneShotOwnerPermissionForSearchAndRead" classname="at.heinz.deviceai.cognitive.WebResearchIntegrationTest" time="0.008"/>
+  <testcase name="ordinaryChatNeverRequestsNetworkAndExplicitToolsDo" classname="at.heinz.deviceai.cognitive.WebResearchIntegrationTest" time="0.0"/>
+  <testcase name="stoppingDuringPrimarySearchRevokesFallbackAndAnyLaterNetworkAccess" classname="at.heinz.deviceai.cognitive.WebResearchIntegrationTest" time="0.009"/>
+  <testcase name="expiredNetworkBudgetCanReturnCollectedEvidenceButCannotFetchAgain" classname="at.heinz.deviceai.cognitive.WebResearchIntegrationTest" time="0.0"/>
+  <testcase name="switchingOffRevokesAlreadyApprovedQueuedRequest" classname="at.heinz.deviceai.cognitive.WebResearchIntegrationTest" time="0.001"/>
+  <testcase name="rawDiscoveryMarkupKeepsLinksAndRejectsUnsafeResultsAndRedirects" classname="at.heinz.deviceai.cognitive.WebResearchIntegrationTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

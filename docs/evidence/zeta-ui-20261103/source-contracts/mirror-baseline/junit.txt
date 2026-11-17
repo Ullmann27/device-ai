@@ -1,0 +1,29 @@
+JUnit version 4.13.2
+.E.E.E.E
+Time: 0.042
+There were 4 failures:
+1) allSixControlsHaveEqualAndReflectedBounds(at.heinz.deviceai.ui.ContinuumCoreMirrorTest)
+java.lang.AssertionError: LABEL_CONNECTED / LABEL_THINKING top expected:<708.72> but was:<476.72>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.ui.ContinuumCoreMirrorTest.allSixControlsHaveEqualAndReflectedBounds(ContinuumCoreMirrorTest.baseline.kt:34)
+2) onlyRightHandCardsReverseElementOrderNotLetters(at.heinz.deviceai.ui.ContinuumCoreMirrorTest)
+java.lang.ClassCastException: class at.heinz.deviceai.ui.CockpitActionTile cannot be cast to class at.heinz.deviceai.ui.CoreLabelElement (at.heinz.deviceai.ui.CockpitActionTile and at.heinz.deviceai.ui.CoreLabelElement are in unnamed module of loader 'app')
+	at at.heinz.deviceai.ui.ContinuumCoreMirrorTest.onlyRightHandCardsReverseElementOrderNotLetters(ContinuumCoreMirrorTest.baseline.kt:111)
+3) portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror(at.heinz.deviceai.ui.ContinuumCoreMirrorTest)
+java.lang.AssertionError: expected:<168.68571> but was:<202.66667>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.ui.ContinuumCoreMirrorTest.portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror(ContinuumCoreMirrorTest.baseline.kt:84)
+4) foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows(at.heinz.deviceai.ui.ContinuumCoreMirrorTest)
+java.lang.AssertionError: LABEL_CONNECTED sphere collision
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ui.ContinuumCoreMirrorTest.foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows(ContinuumCoreMirrorTest.baseline.kt:65)
+
+FAILURES!!!
+Tests run: 4,  Failures: 4
+

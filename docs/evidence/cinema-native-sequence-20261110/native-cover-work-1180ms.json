@@ -1,0 +1,12 @@
+{
+  "source_commit": "9fd5d1455a7b765e32660c1be37a0ffffacaefed",
+  "phase": "work-1180ms",
+  "sha256": "18b9e147a72ca3b09da066d03a68435cafcae0f1b6a0a1ec39c6ab2e7106c120",
+  "width": 412,
+  "height": 915,
+  "backend": "Robolectric API28 native Canvas",
+  "inputs": "Scripted command and reasoning lifecycle; no model inference",
+  "avatar": "Existing 2D fallback",
+  "Filament": "NOT_RUN",
+  "Fold7": "NOT_RUN"
+}

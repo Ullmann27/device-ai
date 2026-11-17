@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:36:36" hostname="04c8b0ba7ea6" time="0.014">
+  <properties/>
+  <testcase name="stableIdsStayExactAndRemainCallableAfterRenaming" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.006"/>
+  <testcase name="unknownExplicitNamesRemainVisibleToTheCallerWithoutCreatingProfiles" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.0"/>
+  <testcase name="colonAddressingRetainsEditableMultiwordNames" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.0"/>
+  <testcase name="oversizedNamesAreNotSilentlyTruncatedOrPartiallyAddressed" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.001"/>
+  <testcase name="missingBodiesAndOrdinaryTextAreNotAddressedMessages" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.0"/>
+  <testcase name="colonWithoutASeparatedBodyDoesNotCaptureUrlsTimesOrPaths" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.0"/>
+  <testcase name="naturalSelectionCommandsHaveNoTaskBodyOrAuthority" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.0"/>
+  <testcase name="completeMultilineRequestsKeepLateRestrictionsForEveryMessageSyntax" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.004"/>
+  <testcase name="duplicateDisplayNamesFailClosedWithoutChangingEitherProfile" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.001"/>
+  <testcase name="explicitMentionsAddressTheNamedBot" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.0"/>
+  <testcase name="existingCommaAddressingAndJarvisSelectionRemainAvailable" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.001"/>
+  <testcase name="addressingNeverRegistersWorkOrGrantsProfileCapabilities" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.0"/>
+  <testcase name="bodyWhitespaceIsPreservedAfterTheAddressSeparator" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.0"/>
+  <testcase name="jarvisMessagesRetainTheWholeBodyAcrossAddressForms" classname="at.heinz.deviceai.chief.ChiefBotAddressRouterTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

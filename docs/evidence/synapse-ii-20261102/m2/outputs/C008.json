@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C008:s3",
+    "decision": "SPAN",
+    "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+    "endExclusive": 35,
+    "start": 18,
+    "text": "Uvhiloza Uvjogeka",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "RULE": {
+    "sourceId": "bc:C008:s3",
+    "decision": "SPAN",
+    "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+    "endExclusive": 35,
+    "start": 18,
+    "text": "Uvhiloza Uvjogeka",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C008:s3",
+    "decision": "SPAN",
+    "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+    "endExclusive": 35,
+    "start": 18,
+    "text": "Uvhiloza Uvjogeka",
+    "offsetEncoding": "UTF-16",
+    "revision": 3
+  },
+  "rawMillis": 88.509333
+}

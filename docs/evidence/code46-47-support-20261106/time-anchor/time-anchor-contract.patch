@@ -1,0 +1,37 @@
+diff --git a/app/src/test/java/at/heinz/deviceai/cognitive/LocalPromptSizeAndStabilityTest.kt b/app/src/test/java/at/heinz/deviceai/cognitive/LocalPromptSizeAndStabilityTest.kt
+index ad782094f..953aff92c 100644
+--- a/app/src/test/java/at/heinz/deviceai/cognitive/LocalPromptSizeAndStabilityTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/cognitive/LocalPromptSizeAndStabilityTest.kt
+@@ -50,10 +50,28 @@ class LocalPromptSizeAndStabilityTest {
+     @Test fun timeAnchorIsInTheRequiredTailNotInTheStaticPrefix() {
+         val source = listOf("app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+             "src/main/java/at/heinz/deviceai/AgentActivity.kt").map(::File).first { it.exists() }.readText()
+-        val body = source.substringAfter("val promptBody = buildString {").substringBefore("val promptCap =")
++        fun section(start: String, end: String): String {
++            val begin = source.indexOf(start)
++            assertTrue("missing source marker: $start", begin >= 0)
++            val finish = source.indexOf(end, begin + start.length)
++            assertTrue("missing source marker: $end", finish >= 0)
++            return source.substring(begin + start.length, finish)
++        }
++        val body = section("val promptBody = buildString {", "val promptCap =")
+         assertFalse("time anchor must not be inside promptBody", body.contains("LocalClockIntent.promptAnchor"))
+-        val assemble = source.substringAfter("LocalPromptFrame.assemble(").substringBefore(") ?: error(")
+-        assertTrue("time anchor must be part of requiredTail", assemble.substringAfter("requiredTail=")
+-            .contains("LocalClockIntent.promptAnchor"))
++        val tail = section("val promptEnd =", "val prompt =")
++        assertTrue("promptEnd must retain the required tail and trusted clock", Regex(
++            """\s*promptTail\s*\+\s*briefInstruction\s*\+\s*"\\n"\s*\+\s*""" +
++                """at\.heinz\.deviceai\.cognitive\.LocalClockIntent\.promptAnchor\(""" +
++                """\s*java\.time\.ZonedDateTime\.now\(\)\s*\)\s*"""
++        ).matches(tail))
++        val assemble = section(
++            "val prompt = at.heinz.deviceai.cognitive.LocalDecisionPromptFrame.assemble(", ") ?: error(")
++        assertTrue("the actual frame must receive the stable prompt body", Regex(
++            """(?:^|,)\s*requiredBody\s*=\s*promptBody\s*(?:,|$)"""
++        ).containsMatchIn(assemble))
++        assertTrue("the actual frame must receive promptEnd as requiredTail", Regex(
++            """(?:^|,)\s*requiredTail\s*=\s*promptEnd\s*(?:,|$)"""
++        ).containsMatchIn(assemble))
+     }
+ }

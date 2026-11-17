@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <!-- Transparent holographic hexagonal brand icon. -->
+    <path android:fillColor="#250B2365"
+        android:pathData="M48,2 L89,26 L89,70 L48,94 L7,70 L7,26 Z"/>
+    <path android:fillColor="#193581"
+        android:strokeColor="#56D5FF"
+        android:strokeWidth="2.8"
+        android:pathData="M48,8 L83,29 L83,68 L48,88 L13,68 L13,29 Z"/>
+    <path android:fillColor="#4F55FF"
+        android:strokeColor="#75C6FF"
+        android:strokeWidth="1.4"
+        android:pathData="M48,16 L76,33 L76,63 L48,80 L20,63 L20,33 Z"/>
+    <path android:fillColor="#142E75"
+        android:strokeColor="#C29DFF"
+        android:strokeWidth="1.6"
+        android:pathData="M48,26 L67,37 L67,59 L48,70 L29,59 L29,37 Z"/>
+    <path android:fillColor="#061A3D"
+        android:pathData="M48,33 L60,41 L60,55 L48,63 L36,55 L36,41 Z"/>
+    <path android:fillColor="#507EFA"
+        android:pathData="M48,33 L60,41 L48,48 L36,41 Z"/>
+    <path android:strokeColor="#64E9FF"
+        android:strokeWidth="1.5"
+        android:pathData="M48,2 L89,26 M7,70 L48,94 M7,26 L48,2"/>
+</vector>

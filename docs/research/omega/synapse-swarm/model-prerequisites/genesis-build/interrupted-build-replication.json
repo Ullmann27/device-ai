@@ -1,0 +1,38 @@
+{
+  "observedUtc": "2026-11-03T20:26:51.651529+00:00",
+  "sourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+  "maxCompileJobs": 2,
+  "stages": [
+    {
+      "stage": "configure",
+      "command": [
+        "/workspace/synapse-local-model/build-tools/cmake-wheel/cmake/data/bin/cmake",
+        "-S",
+        "/workspace/synapse-local-model/llama.cpp",
+        "-B",
+        "/workspace/synapse-local-model/build-cpu",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_SHARED_LIBS=OFF",
+        "-DGGML_BACKEND_DL=OFF",
+        "-DGGML_NATIVE=OFF",
+        "-DGGML_OPENMP=OFF",
+        "-DGGML_BLAS=OFF",
+        "-DGGML_CUDA=OFF",
+        "-DGGML_VULKAN=OFF",
+        "-DLLAMA_BUILD_TESTS=OFF",
+        "-DLLAMA_BUILD_EXAMPLES=OFF",
+        "-DLLAMA_BUILD_SERVER=OFF",
+        "-DLLAMA_BUILD_APP=OFF",
+        "-DLLAMA_BUILD_TOOLS=ON",
+        "-DLLAMA_OPENSSL=OFF",
+        "-DLLAMA_SUBPROCESS=OFF",
+        "-DLLAMA_CONNECT=OFF",
+        "-DLLAMA_LLGUIDANCE=OFF",
+        "-DCMAKE_C_FLAGS=-ffile-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp -fdebug-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp",
+        "-DCMAKE_CXX_FLAGS=-ffile-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp -fdebug-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp"
+      ],
+      "exit": 0,
+      "wallSeconds": 0.9238209430004645
+    }
+  ]
+}

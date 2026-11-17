@@ -1,0 +1,62 @@
+{
+  "local_source": "4ac9c9b94b9fb5e391646e2e99e986db32ec7997",
+  "app_tree": "c85bdbfef719a45eab83e3a73da63ca2a53785ed",
+  "classes": [
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "expandedCanonical",
+        "compact412",
+        "compactDockOwnsNavigation"
+      ],
+      "xml_sha256": "ce821bb2abce5be2c07c83ad82b268f7c59878e34670d81dbafe7e204a7e74b8"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisCinemaReplayUiTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "earlyResultWaitsForConstructionAndStopCancelsIt",
+        "endedPendingOrderCannotRestartAfterReturn",
+        "newOrderWaitsForTheCurrentReturn"
+      ],
+      "xml_sha256": "a60b1848e41ca9a0dcf23422bf00af74f87db5aefbf160e78bb1c68df83b03a6"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "crossingThe600DpBoundaryReassignsNavigationEvenForASmallWidthDelta"
+      ],
+      "xml_sha256": "ddfadcfbe38d0874bdc33a57e355e8e2d821388879ebf77e668b135c86ed4a65"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "spokenTurnsStayOnCockpitAndExplicitChatStillWorks",
+        "composerTouchDuringHandsFreeKeepsTheNextSpokenTurnOnStart"
+      ],
+      "xml_sha256": "b36030dc341bf456847fb0468ffdba87d2657531e6693c708536de8ab8290bc4"
+    }
+  ],
+  "runtime": "Robolectric API28 / native Canvas; no Filament",
+  "total": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

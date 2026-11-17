@@ -1,0 +1,88 @@
+JUnit version 4.13.2
+...E...E..E..E.E.E.E..E.E..E..E.....E..
+Time: 0.22
+There were 12 failures:
+1) aCurrentStatusIncludesOpenWorkFromEarlierDays(at.heinz.deviceai.cognitive.WorkRecallTest)
+java.lang.AssertionError: Was ist gerade offen?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at at.heinz.deviceai.cognitive.WorkRecallTest.aCurrentStatusIncludesOpenWorkFromEarlierDays(WorkRecallTest.kt:73)
+2) changesUseTheRevocationDayAndDecisionsKeepTheirAssertionDay(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.changesUseTheRevocationDayAndDecisionsKeepTheirAssertionDay(WorkDecisionRecallTest.kt:300)
+3) previousKeepsTheSpokenOrderAndShowsNewRevocations(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: Verstanden – die Entscheidung davor:
+• gestern 16:00: Von dir bestätigt: „Wir haben entschieden, die Zusammenfassung auf eine Seite zu kürzen.“
+(Aus dem Arbeitsverlauf und deinen bestätigten Aussagen dieses Geräts – Erinnerung, kein Modelllernen.)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.previousKeepsTheSpokenOrderAndShowsNewRevocations(WorkDecisionRecallTest.kt:289)
+4) spokenDecisionQuestionsNeedNoPunctuationButQuotedQuestionsStayData(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: Was haben wir gestern entschieden expected:<Decisions(period=YESTERDAY, changes=false)> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.spokenDecisionQuestionsNeedNoPunctuationButQuotedQuestionsStayData(WorkDecisionRecallTest.kt:269)
+5) aSavedDraftCannotBeRestartedFromAnOlderFocus(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: expected null, but was:<Resume(item=Item(at=1793886000000, text=Entwurf zu „Projektübersicht.pdf“ erstellt und von dir bearbeitet, noch nicht gespeichert, origin=JOURNAL, episodeId=c, done=false, next=Entwurf prüfen und speichern, revokedAt=null, change=true), episode=Episode(id=c, kind=DOCUMENT, request=Lies diese PDF und erstelle einen Entwurf, startedAt=1793884320000, updatedAt=1793955600000, state=SAVED, source=Projektübersicht.pdf, sourcePages=3, sourceChars=68, coveredChars=68, documentUri=null, draft=Entwurf …, draftUri=content://saved/c, ownerEdits=1, correction=null, correctedAt=null), step=Entwurf prüfen und speichern)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.aSavedDraftCannotBeRestartedFromAnOlderFocus(WorkDecisionRecallTest.kt:216)
+6) aChangesQuestionCanNameTodayOrYesterdayDirectly(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: expected:<Decisions(period=TODAY, changes=true)> but was:<null>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.aChangesQuestionCanNameTodayOrYesterdayDirectly(WorkDecisionRecallTest.kt:316)
+7) negatedQuotedAndConditionalContinuationNeverStartsWork(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: Mach bitte nicht beim letzten offenen Punkt weiter. expected null, but was:<at.heinz.deviceai.cognitive.WorkDecisionRecall$Ask$ContinueOpen@3dd3bcd>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.negatedQuotedAndConditionalContinuationNeverStartsWork(WorkDecisionRecallTest.kt:202)
+8) implementationStatusUsesCurrentRecordsAndRevocations(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: Noch offen:
+• gestern 14:40: Entwurf zu „Projektübersicht.pdf“ erstellt und von dir bearbeitet, noch nicht gespeichert – offen: Entwurf prüfen und speichern
+Nicht prüfbar (deine Aussage, keine Aktion dieses Geräts):
+• gestern 16:00: Von dir bestätigt: „Wir haben entschieden, die Zusammenfassung auf eine Seite zu kürzen.“
+(Aus dem Arbeitsverlauf und deinen bestätigten Aussagen dieses Geräts – Erinnerung, kein Modelllernen.)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.implementationStatusUsesCurrentRecordsAndRevocations(WorkDecisionRecallTest.kt:230)
+9) disappearedRecordsAreNotRepeatedAsCurrentFacts(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.disappearedRecordsAreNotRepeatedAsCurrentFacts(WorkDecisionRecallTest.kt:260)
+10) continuationUsesTheCurrentNextStepWithinTheShownScope(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+org.junit.ComparisonFailure: expected:<Entwurf [neu starte]n> but was:<Entwurf [prüfen und speicher]n>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.continuationUsesTheCurrentNextStepWithinTheShownScope(WorkDecisionRecallTest.kt:244)
+11) anActiveCorrectedDraftIsNeverReportedAsImplemented(at.heinz.deviceai.cognitive.WorkDecisionRecallTest)
+java.lang.AssertionError: expected:<false> but was:<true>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.WorkDecisionRecallTest.anActiveCorrectedDraftIsNeverReportedAsImplemented(WorkDecisionRecallTest.kt:251)
+12) namedWordsAndAcronymsAreStandaloneDefinitions(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError: Was heißt das Wort Haus auf Englisch?
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.namedWordsAndAcronymsAreStandaloneDefinitions(LocalConversationFollowUpPolicyTest.kt:55)
+
+FAILURES!!!
+Tests run: 27,  Failures: 12
+

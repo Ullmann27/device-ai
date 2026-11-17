@@ -1,0 +1,22 @@
+JUnit version 4.13.2
+..........................E..........E..
+Time: 0.203
+There were 2 failures:
+1) definitionBeforeASharedPlanReferenceKeepsOptionalPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.definitionBeforeASharedPlanReferenceKeepsOptionalPriorContext(LocalConversationFollowUpPolicyTest.kt:115)
+2) definitionBeforeAnEnumeratedReferenceKeepsOptionalPriorContext(at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicyTest.definitionBeforeAnEnumeratedReferenceKeepsOptionalPriorContext(LocalConversationFollowUpPolicyTest.kt:121)
+
+FAILURES!!!
+Tests run: 38,  Failures: 2
+
+
+JUNIT_EXIT=1

@@ -1,0 +1,18 @@
+JAR 27f84b6be07cbab7720826be4c11e45b0c23d28fc654af49d031e18ad005706a code=9630fd49 start=2026-10-23T01:38:01Z authorization=owner master order M4/M5 23.10.2026 section 3 (single pre-registered TEST)
+CORPUS commit=1d92db03b87558c0b330dc584fd1f4c025a93c82 docs=97 trainSha=f73f286c36df816447bd0c4800219d257d78d0e5b4c31a665450821c8e6f8af4 validationSha=5f671c8b5da0ae495f75f884fd52d49505d0ee9d5f79b2eda48ed48d53bc6bcb
+SPLIT TRAIN docs=77 segments=2520 bytes=428014
+SPLIT VALIDATION docs=10 segments=485 bytes=82396
+SPLIT TEST docs=10 segments=400 bytes=67245
+FINAL test=0d11bf88f23df23c001c3e77616fe87567b3fa2a03e44f597bee9ef48b787188 segments=400
+BASE unigram testBPB=4.9868
+BASE kn7 testBPB=2.1504
+CDX1 seed=1 epochs=3 testBPB=4.2781
+CDX1 seed=2 epochs=3 testBPB=4.2853
+CDX1 seed=3 epochs=3 testBPB=4.3204
+LM LM1-GM-v512 seed=1 epoch=8 ckpt=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd testBPB=2.4425 valBPB=2.2329
+LM LM1-GM-v512 seed=2 epoch=8 ckpt=ad117ed5901a991941c220482cc486bf4e4dfdf9173e7f66f9cff320ec814eea testBPB=2.4399 valBPB=2.2184
+LM LM1-GM-v512 seed=3 epoch=8 ckpt=44c4d4f30fac9428117837a86b9ddec97994e277aef802342c762acb0bc3507e testBPB=2.4350 valBPB=2.2239
+LM LM1-TM-v512 seed=1 epoch=8 ckpt=e77c39a02da8e24da6a6456c36789a73ee6c96a7863adc20d072018422a0e450 testBPB=3.0509 valBPB=2.8971
+LM LM1-TM-v512 seed=2 epoch=8 ckpt=3ff091fab9a8c8305117b2fb740d8115ee03cc73e41f17f42b24afd0daed8f9b testBPB=3.0555 valBPB=2.9099
+LM LM1-TM-v512 seed=3 epoch=8 ckpt=5abe24160e1180b69f7f154ecc0acea44607d6fbc6b42e2a18902bfd21e54854 testBPB=3.0571 valBPB=2.8950
+exit=0 end=2026-10-23T01:41:33Z

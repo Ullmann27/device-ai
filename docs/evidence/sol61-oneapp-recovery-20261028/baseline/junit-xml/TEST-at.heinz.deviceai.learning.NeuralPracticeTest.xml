@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.NeuralPracticeTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:32" hostname="b50d54a1ac03" time="0.022">
+  <properties/>
+  <testcase name="savedApprovedTrainingExamplesSurviveRoundTrips" classname="at.heinz.deviceai.learning.NeuralPracticeTest" time="0.004"/>
+  <testcase name="explicitManualRehearsalRequiresNeuralCommand" classname="at.heinz.deviceai.learning.NeuralPracticeTest" time="0.0"/>
+  <testcase name="emptyModelHasNoApprovedTrainingData" classname="at.heinz.deviceai.learning.NeuralPracticeTest" time="0.001"/>
+  <testcase name="cancellationCannotPublishUnapprovedWeights" classname="at.heinz.deviceai.learning.NeuralPracticeTest" time="0.003"/>
+  <testcase name="trainingCorpusFingerprintChangesOnlyAfterApprovedNewExamples" classname="at.heinz.deviceai.learning.NeuralPracticeTest" time="0.009"/>
+  <testcase name="boundedRehearsalReportsResultsWithoutFakingSuccess" classname="at.heinz.deviceai.learning.NeuralPracticeTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

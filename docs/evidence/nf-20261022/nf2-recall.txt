@@ -1,0 +1,136 @@
+JAR 3a60683a6a225e6ee70a2ccff8d616737be92e36c5fc9084102ba2723396156e commit=4220c410 start=2026-10-22T21:36:43Z args=recall D-S G-S T-S L-S G-M G-X seeds=1,2,3 steps=3000 threads=3
+NFC1 commit=68b0a33512d18570ddf450e8f9205a60dbee1c66 docs=239 tokenizer=v512 sha=296567efa53d0461a73e548615fc412afc330610ac086b8c4fc2335e74bb6224
+SPLIT DOC TRAIN docs=71 segments=2446 bytes=422773 sha=86ad7f86d8073e349150e45ac86d09d75716fe9b31160c3fa4411f1f54b6cca3
+SPLIT DOC VALIDATION docs=9 segments=395 bytes=60365 sha=e6c7c3f61377fa14f8d496f0225256916fbe29c94e50f980289a5399c2fa90e1
+SPLIT DOC TEST docs=8 segments=251 bytes=43124 sha=3bbb7b5b6fd5195217507cf99365cd0141cd4f7e2620402dbfb7f6bb568ac7dd
+SPLIT CODE TRAIN docs=126 segments=6138 bytes=1306918 sha=78324e710c6cb10359846df5922cbdf6b27caa42eed8b0e44d12084baa6c0c5c
+SPLIT CODE VALIDATION docs=14 segments=318 bytes=66085 sha=68cb72c9a04aa0160d1b1892828d64405c88c5f82b12be9224773c3e4fdb4774
+SPLIT CODE TEST docs=11 segments=475 bytes=100826 sha=ac3881236bac73db6baca830e2e037395a0bf5eca750466bc2407a98522c3b25
+TRAIN D-S seed=1 step=500 nll=3.9333
+TRAIN D-S seed=1 step=1000 nll=3.4831
+TRAIN D-S seed=1 step=1500 nll=3.0215
+TRAIN D-S seed=1 step=2000 nll=3.3013
+TRAIN D-S seed=1 step=2500 nll=3.1023
+TRAIN D-S seed=1 step=3000 nll=3.0152
+RECALL D-S seed=1 params=31528 stateFloats=1024 trainSeconds=78 finalNll=3.0152 acc4=0.310 acc8=0.154 acc16=0.074 acc24=0.048 acc32=0.041
+TRAIN D-S seed=2 step=500 nll=3.8130
+TRAIN D-S seed=2 step=1000 nll=3.5988
+TRAIN D-S seed=2 step=1500 nll=3.2303
+TRAIN D-S seed=2 step=2000 nll=3.1879
+TRAIN D-S seed=2 step=2500 nll=3.2339
+TRAIN D-S seed=2 step=3000 nll=3.0566
+RECALL D-S seed=2 params=31528 stateFloats=1024 trainSeconds=75 finalNll=3.0566 acc4=0.301 acc8=0.160 acc16=0.092 acc24=0.059 acc32=0.044
+TRAIN D-S seed=3 step=500 nll=3.9760
+TRAIN D-S seed=3 step=1000 nll=3.7512
+TRAIN D-S seed=3 step=1500 nll=3.5638
+TRAIN D-S seed=3 step=2000 nll=3.4993
+TRAIN D-S seed=3 step=2500 nll=3.3882
+TRAIN D-S seed=3 step=3000 nll=3.0840
+RECALL D-S seed=3 params=31528 stateFloats=1024 trainSeconds=73 finalNll=3.0840 acc4=0.311 acc8=0.178 acc16=0.088 acc24=0.050 acc32=0.039
+TRAIN G-S seed=1 step=500 nll=4.1769
+TRAIN G-S seed=1 step=1000 nll=4.0886
+TRAIN G-S seed=1 step=1500 nll=3.8932
+TRAIN G-S seed=1 step=2000 nll=3.9128
+TRAIN G-S seed=1 step=2500 nll=3.8419
+TRAIN G-S seed=1 step=3000 nll=3.7334
+RECALL G-S seed=1 params=29280 stateFloats=64 trainSeconds=64 finalNll=3.7334 acc4=0.158 acc8=0.091 acc16=0.052 acc24=0.032 acc32=0.023
+TRAIN G-S seed=2 step=500 nll=4.1296
+TRAIN G-S seed=2 step=1000 nll=4.0799
+TRAIN G-S seed=2 step=1500 nll=4.0536
+TRAIN G-S seed=2 step=2000 nll=4.0129
+TRAIN G-S seed=2 step=2500 nll=3.8999
+TRAIN G-S seed=2 step=3000 nll=3.8680
+RECALL G-S seed=2 params=29280 stateFloats=64 trainSeconds=65 finalNll=3.8680 acc4=0.138 acc8=0.083 acc16=0.047 acc24=0.028 acc32=0.027
+TRAIN G-S seed=3 step=500 nll=4.0855
+TRAIN G-S seed=3 step=1000 nll=4.0796
+TRAIN G-S seed=3 step=1500 nll=4.0055
+TRAIN G-S seed=3 step=2000 nll=3.8146
+TRAIN G-S seed=3 step=2500 nll=3.7504
+TRAIN G-S seed=3 step=3000 nll=3.6372
+RECALL G-S seed=3 params=29280 stateFloats=64 trainSeconds=65 finalNll=3.6372 acc4=0.126 acc8=0.091 acc16=0.055 acc24=0.032 acc32=0.027
+TRAIN T-S seed=1 step=500 nll=3.5686
+TRAIN T-S seed=1 step=1000 nll=3.0306
+TRAIN T-S seed=1 step=1500 nll=2.9554
+TRAIN T-S seed=1 step=2000 nll=3.1274
+TRAIN T-S seed=1 step=2500 nll=3.1209
+TRAIN T-S seed=1 step=3000 nll=3.0789
+RECALL T-S seed=1 params=34336 stateFloats=0 trainSeconds=70 finalNll=3.0789 acc4=0.256 acc8=0.125 acc16=0.097 acc24=0.047 acc32=0.037
+TRAIN T-S seed=2 step=500 nll=3.4070
+TRAIN T-S seed=2 step=1000 nll=3.1639
+TRAIN T-S seed=2 step=1500 nll=3.0268
+TRAIN T-S seed=2 step=2000 nll=3.1076
+TRAIN T-S seed=2 step=2500 nll=3.2100
+TRAIN T-S seed=2 step=3000 nll=3.1749
+RECALL T-S seed=2 params=34336 stateFloats=0 trainSeconds=72 finalNll=3.1749 acc4=0.266 acc8=0.122 acc16=0.089 acc24=0.055 acc32=0.035
+TRAIN T-S seed=3 step=500 nll=3.5480
+TRAIN T-S seed=3 step=1000 nll=3.2724
+TRAIN T-S seed=3 step=1500 nll=3.1242
+TRAIN T-S seed=3 step=2000 nll=3.0710
+TRAIN T-S seed=3 step=2500 nll=3.1124
+TRAIN T-S seed=3 step=3000 nll=2.8547
+RECALL T-S seed=3 params=34336 stateFloats=0 trainSeconds=72 finalNll=2.8547 acc4=0.266 acc8=0.143 acc16=0.103 acc24=0.058 acc32=0.039
+TRAIN L-S seed=1 step=500 nll=3.8937
+TRAIN L-S seed=1 step=1000 nll=3.8096
+TRAIN L-S seed=1 step=1500 nll=3.5546
+TRAIN L-S seed=1 step=2000 nll=3.7711
+TRAIN L-S seed=1 step=2500 nll=3.7414
+TRAIN L-S seed=1 step=3000 nll=3.4861
+RECALL L-S seed=1 params=31528 stateFloats=1024 trainSeconds=73 finalNll=3.4861 acc4=0.210 acc8=0.101 acc16=0.063 acc24=0.050 acc32=0.041
+TRAIN L-S seed=2 step=500 nll=3.8567
+TRAIN L-S seed=2 step=1000 nll=3.6454
+TRAIN L-S seed=2 step=1500 nll=3.5905
+TRAIN L-S seed=2 step=2000 nll=3.6788
+TRAIN L-S seed=2 step=2500 nll=3.7099
+TRAIN L-S seed=2 step=3000 nll=3.7121
+RECALL L-S seed=2 params=31528 stateFloats=1024 trainSeconds=77 finalNll=3.7121 acc4=0.156 acc8=0.081 acc16=0.062 acc24=0.049 acc32=0.040
+TRAIN L-S seed=3 step=500 nll=4.0351
+TRAIN L-S seed=3 step=1000 nll=3.7931
+TRAIN L-S seed=3 step=1500 nll=3.7025
+TRAIN L-S seed=3 step=2000 nll=3.6224
+TRAIN L-S seed=3 step=2500 nll=3.5808
+TRAIN L-S seed=3 step=3000 nll=3.3171
+RECALL L-S seed=3 params=31528 stateFloats=1024 trainSeconds=75 finalNll=3.3171 acc4=0.236 acc8=0.126 acc16=0.081 acc24=0.058 acc32=0.042
+TRAIN G-M seed=1 step=500 nll=4.1679
+TRAIN G-M seed=1 step=1000 nll=3.7829
+TRAIN G-M seed=1 step=1500 nll=3.3363
+TRAIN G-M seed=1 step=2000 nll=3.3784
+TRAIN G-M seed=1 step=2500 nll=3.3112
+TRAIN G-M seed=1 step=3000 nll=3.2478
+RECALL G-M seed=1 params=107712 stateFloats=128 trainSeconds=209 finalNll=3.2478 acc4=0.231 acc8=0.151 acc16=0.076 acc24=0.052 acc32=0.032
+TRAIN G-M seed=2 step=500 nll=4.0616
+TRAIN G-M seed=2 step=1000 nll=3.9202
+TRAIN G-M seed=2 step=1500 nll=3.6605
+TRAIN G-M seed=2 step=2000 nll=3.5385
+TRAIN G-M seed=2 step=2500 nll=3.4534
+TRAIN G-M seed=2 step=3000 nll=3.3363
+RECALL G-M seed=2 params=107712 stateFloats=128 trainSeconds=204 finalNll=3.3363 acc4=0.265 acc8=0.163 acc16=0.082 acc24=0.045 acc32=0.038
+TRAIN G-M seed=3 step=500 nll=4.1229
+TRAIN G-M seed=3 step=1000 nll=3.9254
+TRAIN G-M seed=3 step=1500 nll=3.6945
+TRAIN G-M seed=3 step=2000 nll=3.3556
+TRAIN G-M seed=3 step=2500 nll=3.3134
+TRAIN G-M seed=3 step=3000 nll=3.0948
+RECALL G-M seed=3 params=107712 stateFloats=128 trainSeconds=197 finalNll=3.0948 acc4=0.215 acc8=0.146 acc16=0.074 acc24=0.043 acc32=0.033
+TRAIN G-X seed=1 step=500 nll=4.0710
+TRAIN G-X seed=1 step=1000 nll=3.5297
+TRAIN G-X seed=1 step=1500 nll=2.9079
+TRAIN G-X seed=1 step=2000 nll=3.1318
+TRAIN G-X seed=1 step=2500 nll=3.0373
+TRAIN G-X seed=1 step=3000 nll=2.7940
+RECALL G-X seed=1 params=412032 stateFloats=256 trainSeconds=695 finalNll=2.7940 acc4=0.360 acc8=0.199 acc16=0.091 acc24=0.060 acc32=0.041
+TRAIN G-X seed=2 step=500 nll=4.0461
+TRAIN G-X seed=2 step=1000 nll=3.6889
+TRAIN G-X seed=2 step=1500 nll=3.2059
+TRAIN G-X seed=2 step=2000 nll=3.0875
+TRAIN G-X seed=2 step=2500 nll=3.1100
+TRAIN G-X seed=2 step=3000 nll=2.9371
+RECALL G-X seed=2 params=412032 stateFloats=256 trainSeconds=691 finalNll=2.9371 acc4=0.358 acc8=0.198 acc16=0.092 acc24=0.050 acc32=0.041
+TRAIN G-X seed=3 step=500 nll=3.9804
+TRAIN G-X seed=3 step=1000 nll=3.6972
+TRAIN G-X seed=3 step=1500 nll=3.5145
+TRAIN G-X seed=3 step=2000 nll=3.3251
+TRAIN G-X seed=3 step=2500 nll=3.2671
+TRAIN G-X seed=3 step=3000 nll=3.0179
+RECALL G-X seed=3 params=412032 stateFloats=256 trainSeconds=677 finalNll=3.0179 acc4=0.238 acc8=0.129 acc16=0.075 acc24=0.049 acc32=0.031
+PEAK heapMb=309
+exit=0 end=2026-10-22T22:35:44Z

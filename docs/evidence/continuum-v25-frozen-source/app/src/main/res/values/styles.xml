@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#070D19</item>
+        <item name="android:navigationBarColor">#070D19</item>
+        <item name="android:statusBarColor">#070D19</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorAccent">#3BC5FE</item>
+        <item name="android:colorControlHighlight">#305EDAFF</item>
+        <item name="android:alertDialogTheme">@style/ContinuumDialogTheme</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <!-- Applies to existing confirmation, research, model, memory and developer dialogs;
+         their actions and permission decisions are unchanged. -->
+    <style name="ContinuumDialogTheme" parent="android:style/Theme.Material.Dialog.Alert">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowBackground">@drawable/continuum_dialog_surface</item>
+        <item name="android:colorBackground">#091426</item>
+        <item name="android:textColorPrimary">#F1F5FF</item>
+        <item name="android:textColorSecondary">#B1BFDC</item>
+        <item name="android:colorAccent">#62C8FF</item>
+        <item name="android:colorControlNormal">#A8BEDB</item>
+        <item name="android:colorControlActivated">#62C8FF</item>
+        <item name="android:colorControlHighlight">#305EDAFF</item>
+        <item name="android:buttonBarButtonStyle">@style/ContinuumDialogButton</item>
+    </style>
+    <style name="ContinuumDialogButton" parent="android:style/Widget.Material.Button.Borderless">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/continuum_dialog_button_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+</resources>
