@@ -68,6 +68,18 @@
       "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
       "bytes": 11497,
       "sha256": "60437408f411e7435825930a400b012f16decb79898d9d6743e4adfb651693c1"
+    },
+    {
+      "sourceCommit": "d112106b5ddad13c2f67faf8912ebbc4276d63fe",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "bytes": 542229,
+      "sha256": "efe31ecd262d1ec17c83d84f7352ebd17687aa348672a4c0352257f88d9eb2e7"
+    },
+    {
+      "sourceCommit": "d112106b5ddad13c2f67faf8912ebbc4276d63fe",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumBotRosterDialog.kt",
+      "bytes": 13749,
+      "sha256": "8c3e1c29bc312feb55b92215463f9c0a10b1e1687ef64ba722058132ec272961"
     }
   ]
 }
