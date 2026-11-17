@@ -242,6 +242,9 @@
     }
     setText($('.presence-edition'),'CONTINUUM / LIVE');
     setText($('#state-eyebrow'),'DEIN PERSÖNLICHER KI-RAUM');
+    setText($('.instrument-count'),String(items.length));
+    setText($('#scene-number'),'');
+    setText($('.command-field label'),'DEIN AUFTRAG');
     const running=snapshot?.busy===true || snapshot?.commandPending===true;
     const stop=$('.native-stop-button'), submit=$('.send-button');
     if(stop)stop.hidden=!running;

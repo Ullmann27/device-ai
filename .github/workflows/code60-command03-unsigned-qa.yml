@@ -117,13 +117,15 @@ jobs:
                    'ContinuumSettingsHubUiTest.kt', 'ContinuumCommand03MediaStageUiTest.kt',
                    'Command03HostWebView.kt', 'CockpitHostFramePump.kt']
           paths = [Path('app/src/uiTest/java/at/heinz/deviceai') / name for name in names]
+          paths.append(Path('app/src/test/java/at/heinz/deviceai/ui/Airbus2100CockpitOrchestratorTest.kt'))
           manifest = {'scope':'FOCUSED_HOST_TESTS_ONLY','source_commit':os.environ['GITHUB_SHA'],
                       'files':[{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]}
           Path('command03-test-sources.json').write_text(json.dumps(manifest,indent=2)+'\n')
           selected = ['at.heinz.deviceai.ContinuumCommand03BridgeUiTest',
                       'at.heinz.deviceai.ContinuumCommand03MediaStageUiTest',
                       'at.heinz.deviceai.ContinuumCommand03StageUiTest',
-                      'at.heinz.deviceai.ContinuumSettingsHubUiTest']
+                      'at.heinz.deviceai.ContinuumSettingsHubUiTest',
+                      'at.heinz.deviceai.ui.Airbus2100CockpitOrchestratorTest']
           Path(os.environ['RUNNER_TEMP'],'command03-test-selection.json').write_text(json.dumps(selected))
           PY
             focused_args=(-Dcontinuum.native.testSources="$GITHUB_WORKSPACE/command03-test-sources.json"

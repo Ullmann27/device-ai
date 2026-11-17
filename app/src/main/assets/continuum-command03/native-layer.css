@@ -486,9 +486,8 @@ body[data-design="command03"] .mic-button {border-radius:10px;}
 body[data-design="command03"] .mic-button[aria-pressed="true"] {border-color:#91ffe0;color:#91ffe0;box-shadow:0 0 16px #54ebbd30;}
 body[data-design="command03"] .chat-sidebar {border-radius:12px;}
 body[data-design="command03"] .native-instrument-summary {color:#e5faff;line-height:1.6;}
-body[data-design="command03"] .native-light-paused .native-instrument-art,
 body[data-design="command03"].native-light-paused .native-instrument-art,
-body[data-design="command03"][data-native-light-motion="off"] .native-instrument-art {animation-play-state:paused;}
+body[data-design="command03"][data-native-light-motion="off"] .native-instrument-art {animation-play-state:paused!important;}
 body[data-design="command03"].native-light-paused *,
 body[data-design="command03"].native-light-paused *::before,
 body[data-design="command03"].native-light-paused *::after {animation-play-state:paused!important;}
@@ -520,3 +519,5 @@ body[data-design="command03"] .native-stop-button {
 }
 body[data-design="command03"] .native-stop-button[hidden],
 body[data-design="command03"] .send-button[hidden] {display:none!important;}
+body[data-design="command03"] .center-stage .presence .native-instrument>p {display:block;}
+body[data-design="command03"].native-hologram .timeline-strip {display:none;}
