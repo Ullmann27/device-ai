@@ -1,0 +1,5 @@
+Exception in thread "main" java.lang.IllegalStateException: Free generation regression (3/4 wrong):
+Wo wohnt Mira?: expected=Mira wohnt in Graz., actual=Nora ist Ärztin., EOS=true
+Wo wohnt Lea?: expected=Lea wohnt in Linz., actual=Nora ist Ärztin., EOS=true
+Was trägt Paul?: expected=Paul trägt einen Helm., actual=Nora ist Ärztin., EOS=true
+	at at.heinz.deviceai.learning.Cdx1GenerationQualityRegression.main(Cdx1ConditionerRepairProbe.kt:127)
