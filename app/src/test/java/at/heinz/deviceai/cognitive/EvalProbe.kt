@@ -20,4 +20,11 @@ object EvalProbe {
         OwnerObjectStateLedger().apply { ownerTurns.forEach(::observeOwnerTurn) }.answer(question)
 
     fun clock(utterance: String, now: Instant, zone: ZoneId): String? = OwnerDeviceClockReply.answer(utterance, now, zone)
+
+    fun register(utterance: String): String = ConversationStyle.detect(utterance).name
+
+    fun unfinished(utterance: String): Boolean = OwnerTurnCompletion.looksUnfinished(utterance)
+
+    /** Drive-mode command of a whole utterance while the mode is off. */
+    fun driveCommand(utterance: String): String? = DriveMode().commandFor(utterance)?.name
 }

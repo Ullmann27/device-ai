@@ -3,6 +3,13 @@ package at.heinz.deviceai.evaluation
 import at.heinz.deviceai.BootstrapBrain
 import at.heinz.deviceai.cognitive.ContinuousConversationMode
 import at.heinz.deviceai.cognitive.EvalProbe
+import at.heinz.deviceai.notifications.AnnouncementDecision
+import at.heinz.deviceai.notifications.AnnouncementMode
+import at.heinz.deviceai.notifications.AnnouncementSettings
+import at.heinz.deviceai.notifications.AnnouncementState
+import at.heinz.deviceai.notifications.AppRule
+import at.heinz.deviceai.notifications.IncomingNotification
+import at.heinz.deviceai.notifications.NotificationAnnouncementPolicy
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -77,15 +84,62 @@ class ContinuumEvalDatasetTest {
             failures.joinToString("\n"))
     }
 
+    /**
+     * `regression-voice.jsonl` (Code63 voice round): conversational register, end-of-turn detection, drive-mode
+     * commands and notification announcements, executed against the productive classes.
+     */
+    @Test fun everyVoiceRegressionCaseHoldsOnTheRealCode() {
+        val failures = mutableListOf<String>()
+        val all = cases("regression-voice.jsonl")
+        assertTrue("voice regression set unexpectedly small: ${all.size}", all.size >= 32)
+        all.forEach { case ->
+            val id = case.getString("id")
+            val expect = case.getJSONObject("expect")
+            fun check(ok: Boolean, message: String) { if (!ok) failures += "$id: $message" }
+            when (case.getString("runner")) {
+                "register" -> EvalProbe.register(case.getString("input")).let {
+                    check(it == expect.getString("register"), "register $it, expected ${expect.getString("register")}")
+                }
+                "turn_completion" -> EvalProbe.unfinished(case.getString("input")).let {
+                    check(it == expect.getBoolean("unfinished"), "unfinished=$it, expected ${expect.getBoolean("unfinished")}")
+                }
+                "drive_command" -> {
+                    val wanted = if (expect.isNull("command")) null else expect.getString("command")
+                    val command = EvalProbe.driveCommand(case.getString("input"))
+                    check(command == wanted, "drive command $command, expected $wanted")
+                }
+                "notification" -> {
+                    val mode = AnnouncementMode.valueOf(case.getString("mode"))
+                    val decision = NotificationAnnouncementPolicy().decide(
+                        IncomingNotification(key = id, packageName = case.getString("app"),
+                            appLabel = case.getString("label"), title = case.getString("title"),
+                            text = case.getString("text"), category = null, isOngoing = false,
+                            isGroupSummary = false, postedAtMs = 0L, isOwnPackage = false),
+                        AnnouncementSettings(enabled = true,
+                            apps = mapOf(case.getString("app") to AppRule(mode)), quietWhenNotInConversation = false),
+                        AnnouncementState(conversationActive = true, driveModeActive = false,
+                            assistantSpeaking = false, listening = false, nowMs = 1_000L))
+                    val spoken = (decision as? AnnouncementDecision.Announce)?.spokenText
+                    check((spoken != null) == expect.getBoolean("announced"), "announced=${spoken != null}: $decision")
+                    strings(expect, "contains").forEach { check(spoken?.contains(it) == true, "missing „$it“ in: $spoken") }
+                    strings(expect, "not_contains").forEach { check(spoken?.contains(it) != true, "forbidden „$it“ in: $spoken") }
+                }
+                else -> failures += "$id: unknown runner ${case.getString("runner")}"
+            }
+        }
+        if (failures.isNotEmpty()) fail("${failures.size} of ${all.size} voice regression cases failed:\n" +
+            failures.joinToString("\n"))
+    }
+
     @Test fun everyCaseHasAnIdACategoryAndAFormalCriterion() {
         val seen = mutableSetOf<String>()
-        listOf("regression.jsonl", "model-dev.jsonl", "model-holdout.jsonl").forEach { file ->
+        listOf("regression.jsonl", "regression-voice.jsonl", "model-dev.jsonl", "model-holdout.jsonl").forEach { file ->
             cases(file).forEach { case ->
                 val id = case.getString("id")
                 assertTrue("duplicate id $id", seen.add(id))
                 assertTrue("$id: unknown category", case.getString("category") in CATEGORIES)
                 val expect = case.getJSONObject("expect")
-                if (file == "regression.jsonl") assertTrue("$id: runner", case.getString("runner") in RUNNERS)
+                if (file.startsWith("regression")) assertTrue("$id: runner", case.getString("runner") in RUNNERS)
                 else {
                     assertTrue("$id: criterion", expect.getString("type") in CRITERIA)
                     val turns = case.getJSONArray("turns")
@@ -128,7 +182,8 @@ class ContinuumEvalDatasetTest {
         val CATEGORIES = setOf("long_conversation", "dialect", "ambiguity", "pronoun", "back_reference", "correction",
             "negation", "temporal", "multi_step", "math", "document", "tool_choice", "interruption",
             "incomplete_info", "uncertainty_abstention", "contradiction", "abort_resume")
-        val RUNNERS = setOf("route", "object_state", "clock", "owner_recall", "voice_command")
+        val RUNNERS = setOf("route", "object_state", "clock", "owner_recall", "voice_command",
+            "register", "turn_completion", "drive_command", "notification")
         val CRITERIA = setOf("contains_all", "contains_any", "numeric", "abstain", "asks_back", "tool_call", "no_tool")
     }
 }

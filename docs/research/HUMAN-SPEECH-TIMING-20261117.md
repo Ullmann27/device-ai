@@ -53,6 +53,7 @@ ihre Antwort zu planen, **während** der andere noch spricht.
 | Pausen zwischen gesprochenen Teilen | 200–950 ms: Teilsatz ≈ 230, Satz ≈ 420, Frage ≈ 560, Absatz ≈ 780 ms | mittlere Pausenklasse; nie über 1 s, weil lange Pausen Zögern bedeuten |
 | Pausen nie gleich lang | ±18 % deterministische Streuung | Menschen wiederholen keine Pausenlänge |
 | Tempo folgt dem Ton | ±6 % um das Grundtempo | bleibt ein erkennbarer Sprecher, weit innerhalb der Sprecherspanne |
+| Denkpause ist kein Satzende | endet der erkannte Text hörbar offen („… weil“, „… und“, „ähm“, offenes Komma), wird weiter zugehört und angefügt (`OwnerTurnCompletion`, höchstens zwei Fortsetzungen, 20 s) | eine feste Stille-Schwelle trennt Denkpausen und Gesprächsende nicht; lange Pausen gehören zur spontanen Sprache |
 
 ## 5. Grenzen und offene Punkte
 
@@ -60,9 +61,10 @@ ihre Antwort zu planen, **während** der andere noch spricht.
    Lebenszeichen überbrückt die Stille, verkürzt aber nicht die Zeit bis zur eigentlichen Antwort. Dafür wäre
    satzweises Sprechen während der Erzeugung nötig; das widerspricht derzeit der Regel, nur die geprüfte
    Endantwort zu sprechen, und ist deshalb eine Besitzerentscheidung.
-2. Das Ende einer Nutzeräußerung erkennt die App an 3 s Stille. Die Forschung zeigt, dass eine feste Schwelle
-   Denkpausen und Gesprächsende nicht trennen kann. Eine inhaltliche Prüfung („klingt der Satz fertig?“) ist
-   nicht umgesetzt.
+2. Das Ende einer Nutzeräußerung erkennt die App weiterhin an 3 s Stille. Neu ist nur die Prüfung, ob der
+   erkannte Text offen endet; sie ist bewusst eng (deutsche Sätze enden oft auf Verbpartikel oder Pronomen)
+   und erkennt keine inhaltlich unfertigen Sätze mit geschlossenem Ende. Die 3 s selbst zu verkürzen wäre der
+   größere Schritt zu einem flüssigen Wechsel, braucht aber Gerätetests.
 3. Alle Werte stammen aus Gesprächen zwischen Menschen, teils aus anderen Sprachen und aus Telefon- oder
    Aufgabendialogen. Ob sie sich für eine Sprachausgabe im Auto oder am Telefon gut anfühlen, ist am Gerät
    nicht gemessen (NOT_RUN).

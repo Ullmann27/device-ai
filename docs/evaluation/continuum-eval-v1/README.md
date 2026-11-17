@@ -8,6 +8,7 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | Datei | Fälle | Ausführung | Zweck |
 |---|---|---|---|
 | `regression.jsonl` | 40 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | deterministische Pfade: Werkzeugwahl, Negation/Kontrast, Objektgedächtnis mit Korrekturen, Geräteuhr, bestätigte Erinnerung, Sprachsteuerbefehle |
+| `regression-voice.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Sprachrunde: Gesprächsregister, Satzende-Erkennung, Fahrmodus-Befehle, Benachrichtigungs-Ansagen (Codes, Links, Freigabestufen) |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -17,7 +18,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
 
 - `id`, `category`, `note`
-- `runner`: `route` · `object_state` · `clock` · `owner_recall` · `voice_command`
+- `runner`: `route` · `object_state` · `clock` · `owner_recall` · `voice_command`;
+  in `regression-voice.jsonl` zusätzlich `register` · `turn_completion` · `drive_command` · `notification`
 - Eingabe je Läufer: `input` bzw. `turns` + `question`, `facts`, `now` + `zone`
 - `expect` (formales Kriterium): `computer` (`READY:<APP>:<ZIEL>` oder `NOT_READY`), `tool` (Name oder `null`),
   `forbidden_apps`, `contains`, `not_contains`, `abstain`, `command`
@@ -43,6 +45,9 @@ Dieselben 40 Regressionsfälle, einmal gegen die unveränderten Klassen der Inte
 | nachher | 40 / 40 | – |
 
 Das ist ein Vergleich deterministischer Pfade, **keine** Aussage über die Antwortqualität des lokalen Modells.
+
+Für `regression-voice.jsonl` gibt es keinen Vorher-Wert: die geprüften Bausteine existierten vorher nicht.
+Stand: 32 / 32.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 
