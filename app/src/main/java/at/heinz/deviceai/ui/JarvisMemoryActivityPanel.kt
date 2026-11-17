@@ -50,7 +50,15 @@ data class MemoryActivitySnapshot(
  * Hört auf ContinuumMemoryEvents (addListener) und zählt echte Ereignisse des heutigen Tages (Europe/Vienna):
  * Stundenbalken über alle Ereignisse, Kontext-Updates = MemoryStored. Vor Mitternacht verworfen.
  */
-class MemoryActivityTracker(private val clock: Clock = Clock.system(ZoneId.of("Europe/Vienna"))) : ContinuumMemoryEventListener {
+class MemoryActivityTracker(
+    private val clock: Clock = Clock.system(ZoneId.of("Europe/Vienna")),
+    /**
+     * true only if a producer of learning.MemoryStored is wired. Stand d981fecd: nobody emits learning.MemoryStored
+     * (ContinuumMemoryEventHub emits only RecallHits from EventEmittingRetriever), so "Context updates" shows "—"
+     * instead of a false 0.
+     */
+    private val storedEventsWired: Boolean = false,
+) : ContinuumMemoryEventListener {
     private val lock = Any()
     private var day = -1L
     private val hours = IntArray(24)
@@ -65,7 +73,7 @@ class MemoryActivityTracker(private val clock: Clock = Clock.system(ZoneId.of("E
     }
 
     fun hourlyToday(): IntArray = synchronized(lock) { roll(); hours.copyOf() }
-    fun contextUpdatesToday(): Int = synchronized(lock) { roll(); stored }
+    fun contextUpdatesToday(): Int? = if (!storedEventsWired) null else synchronized(lock) { roll(); stored }
 
     private fun roll() {
         val today = java.time.LocalDate.now(clock).toEpochDay()

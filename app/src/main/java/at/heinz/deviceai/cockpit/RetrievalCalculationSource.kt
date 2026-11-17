@@ -11,6 +11,8 @@ import java.util.logging.Logger
  * [CalculationEmittingRetriever]). Steps/result are the exact values of that computation; labels are fixed German
  * terms, never memory text. Delivery: bounded drop-oldest queue (256) on a named daemon thread that exists only while
  * listeners are registered (same pattern as ContinuumMemoryEventHub); [emit] never blocks.
+ * Contract: when close() removes the last listener, the queue is dropped, the worker is detached and close() waits
+ * (at most [CLOSE_JOIN_MS], never from the worker itself) until that thread has ended; afterwards no dispatch thread exists.
  */
 class RetrievalCalculationSource internal constructor(private val threadName: String) : CalculationEventSource {
     constructor() : this("continuum-calc-events-" + Integer.toHexString(System.identityHashCode(Any())).padStart(8, '0').takeLast(8))
@@ -26,7 +28,14 @@ class RetrievalCalculationSource internal constructor(private val threadName: St
 
     override fun addListener(l: (CockpitAnimationEvent.CalculationShown) -> Unit): AutoCloseable {
         synchronized(lock) { listeners += l; if (worker == null) startWorker() }
-        return AutoCloseable { synchronized(lock) { if (listeners.remove(l) && listeners.isEmpty()) { queue.clear(); lock.notifyAll() } } }
+        return AutoCloseable {
+            val ending: Thread?
+            synchronized(lock) {
+                if (!(listeners.remove(l) && listeners.isEmpty())) return@AutoCloseable
+                queue.clear(); ending = worker; worker = null; lock.notifyAll()
+            }
+            if (ending != null && ending !== Thread.currentThread()) ending.join(CLOSE_JOIN_MS)
+        }
     }
 
     fun hasListeners() = listeners.isNotEmpty()
@@ -50,8 +59,8 @@ class RetrievalCalculationSource internal constructor(private val threadName: St
         while (true) {
             val e: CockpitAnimationEvent.CalculationShown
             synchronized(lock) {
-                while (queue.isEmpty() && listeners.isNotEmpty()) lock.wait()
-                if (listeners.isEmpty()) { worker = null; queue.clear(); lock.notifyAll(); return }
+                while (queue.isEmpty() && worker === Thread.currentThread()) lock.wait()
+                if (worker !== Thread.currentThread()) { lock.notifyAll(); return } // detached by the last close()
                 e = queue.removeFirst(); inFlight = true
             }
             try {
@@ -73,6 +82,7 @@ class RetrievalCalculationSource internal constructor(private val threadName: St
 
     companion object {
         const val DEFAULT_QUEUE_CAPACITY = 256
+        const val CLOSE_JOIN_MS = 1_000L
         const val EXPRESSION = "score = cos(q, d) × w_zeit"
         private val LOG = Logger.getLogger("ContinuumCalculationEvents")
     }
