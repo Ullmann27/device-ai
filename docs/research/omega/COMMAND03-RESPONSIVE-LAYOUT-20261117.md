@@ -11,17 +11,24 @@ overflow and reserves space for the multiline composer.
 
 All 35 original artwork/HTML/JS/CSS assets remain byte-identical. Existing native
 routes, model, tool gates, APK identity, original signing and animation controllers
-are untouched. EXP-15 presentation compatibility is preserved; no experiment or
-model capability is being promoted.
+are untouched. No experiment interface, data schema or model behavior changes.
 
-Local checks: JS syntax and the original 35-asset source lock PASS. Chromium
-launch in the local executor is unavailable (socket policy); this is not a layout
-PASS. The existing scoped workflow now runs the browser/DOM job for this repair
-branch, including real Chromium geometry and screenshots at 17 viewport/resize
-states, multiline input and the instrument drawer. It also checks the unmodified
-baseline for the collapsed RAM card. Results are pending at this checkpoint.
+Verified source: `32a8ed7807e22608800708ee119d07c4e322e8d9`.
+[CI run 44004639205](https://github.com/Ullmann27/device-ai/actions/runs/44004639205)
+completed successfully: 35 original assets unchanged, 45/45 DOM tests and 19/19
+Chromium layout checks. Chromium 151.0.7922.34 ran 17 viewport/resize states from
+320 to 1280 CSS pixels, multiline input, bottom scrolling and the instrument drawer.
+The original baseline reproduced horizontal overflow, the collapsed RAM card,
+hidden settings and an offscreen composer. At 412 CSS pixels the RAM card changes
+from 8 to 186 pixels; page width stays 412 rather than expanding to 548 pixels.
+The 412-pixel, 834-pixel and multiline screenshots were visually inspected.
 
-Next: inspect source-bound CI evidence, repair any remaining geometry failures,
-merge the verified change into PR #851's integration line and use its existing
-APK workflow. Physical Fold7 behavior remains unverified until owner testing.
+Evidence: artifact `Code60-Command03-DOM-evidence`, ID `14293189798`, containing
+the DOM report, layout-results.json and before/after screenshots. The later
+Code61 packaging/documentation commit does not change the tested app assets.
+
+Delivery: PR #858 targets PR #851's integration line. Its existing APK workflow
+builds Code61 (versionCode 61, versionName 0.3.60) with the established package
+and original certificate. Physical Fold7 behavior remains unverified until
+owner testing; browser emulation is not an Android hardware test.
 Rollback: revert this change; no state or data migration is involved.
