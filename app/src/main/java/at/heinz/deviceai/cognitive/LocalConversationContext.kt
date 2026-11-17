@@ -14,6 +14,12 @@ class LocalConversationContext {
                             val responseHasEnd: Boolean = true)
     private var session: String? = null
     private val turns = ArrayDeque<Turn>()
+    /**
+     * Complete owner statements that left the four-turn window in this session. They only fill prompt
+     * space the required dialogue did not use (see [LocalDialoguePromptHistory.withOlderOwnerStatements]);
+     * RAM only, cleared with the turns, never a fact, a memory record or a grant.
+     */
+    private val olderOwnerStatements = ArrayDeque<String>()
     private var explicitFocus:String?=null
     private val situation = LocalConversationSituationTracker()
     /** #758: owner-described object state of this session; survives the four-turn window, never the session. */
@@ -102,7 +108,7 @@ class LocalConversationContext {
             situation.observeOwnerTurn(bounded.request)
             objects.observeOwnerTurn(bounded.request)
         } else objects.markIncomplete()
-        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
+        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) retireOldest()
         // Persist the original raw turn.
         if (notify) runCatching { onTurnRecorded?.invoke(sessionId, bounded) }
     }
@@ -147,7 +153,7 @@ class LocalConversationContext {
         research = digest
         turns.addLast(Turn(data(digest.question, 300), "(Antwort aus Webrecherche; siehe EXTERNE RECHERCHEDATEN)",
             isOwnerTurn = false))
-        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
+        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) retireOldest()
     }
 
     @Synchronized fun hasResearch(sessionId: String): Boolean = session == sessionId && research != null
@@ -208,14 +214,15 @@ class LocalConversationContext {
 
     private fun dropTurns() {
         val hadTurns = turns.isNotEmpty()
-        turns.clear()
+        turns.clear(); olderOwnerStatements.clear()
         situation.reset()
         objects.reset()
         if (hadTurns) session?.let { id -> runCatching { onTurnsInvalidated?.invoke(id) } }
     }
 
     private fun switchTo(sessionId: String) {
-        turns.clear(); situation.reset(); objects.reset(); session = sessionId; explicitFocus = null; research = null
+        turns.clear(); olderOwnerStatements.clear()
+        situation.reset(); objects.reset(); session = sessionId; explicitFocus = null; research = null
         if (document?.sessionId != sessionId) document = null
     }
 
@@ -223,7 +230,8 @@ class LocalConversationContext {
 
     /** End of the process-scoped RAM lifetime (real Activity finish): nothing was invalidated, so nothing is reported. */
     @Synchronized fun forgetForExit() {
-        turns.clear(); situation.reset(); objects.reset(); session = null; explicitFocus = null; research = null
+        turns.clear(); olderOwnerStatements.clear()
+        situation.reset(); objects.reset(); session = null; explicitFocus = null; research = null
         document = null
     }
 
@@ -247,9 +255,16 @@ class LocalConversationContext {
         if (session != sessionId || turns.isEmpty() && explicitFocus==null && research==null) return ""
         if (continuation && !hasContinuation(sessionId)) return ""
         val prefix = historyPrefix(nowMillis, internetMode, ownerForbidsExternalNetwork, onlineApprovalActive)
-        return LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
+        val recent = LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
             requireCompleteOwnerHistory, continuation, prefix, ownerTurnsInTask)
+        // A continuation carries only the answer being continued; older statements stay out of it.
+        return if (continuation) recent else
+            LocalDialoguePromptHistory.withOlderOwnerStatements(recent, olderOwnerStatements.toList(), maxBytes)
     }
+
+    /** Owner statements of this session that are older than the dialogue window (oldest first). */
+    @Synchronized fun olderOwnerStatements(sessionId: String): List<String> =
+        if (session == sessionId) olderOwnerStatements.toList() else emptyList()
 
     @Synchronized fun requiredPromptBytes(sessionId: String, nowMillis: Long = System.currentTimeMillis(),
                                          internetMode: InternetAccessMode = InternetAccessMode.OFF,
@@ -293,6 +308,17 @@ class LocalConversationContext {
             if (!LocalConversationFollowUpPolicy.requestsContinuation(owner)) return true
         }
         return false
+    }
+
+    /** The window stays four turns for every existing consumer; only a short, complete owner statement
+     * is kept for the optional older block. A long or incomplete one is dropped as before. */
+    private fun retireOldest() {
+        val oldest = turns.removeFirst()
+        val statement = oldest.originalUserRequest?.takeIf { oldest.isOwnerTurn }?.trim() ?: return
+        if (statement.isEmpty() || statement.length > LocalDialoguePromptHistory.MAX_OLDER_STATEMENT_CHARACTERS) return
+        if (olderOwnerStatements.lastOrNull() == statement) return
+        olderOwnerStatements.addLast(statement)
+        while (olderOwnerStatements.size > LocalDialoguePromptHistory.MAX_OLDER_STATEMENTS) olderOwnerStatements.removeFirst()
     }
 
     private fun retainedTurns(ownerOnly: Boolean): List<LocalChatTranscriptStore.ContextTurn> =

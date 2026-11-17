@@ -95,13 +95,30 @@ internal object OwnerAppLookupIntent {
         return Intake.Lookup(name, opening = false)
     }
 
+    /**
+     * A resolved contrast may only produce a concrete app lookup. A clarification, a planning hand-off
+     * or a positional reference under a contrast stays refused exactly as before the resolver existed.
+     */
     fun inspect(utterance: String, assistantName: String? = null): Intake? {
+        val contrast = arrayOfNulls<OwnerContrastResolver.Resolution>(1)
+        val intake = inspectResolved(utterance, assistantName, contrast)
+        val applied = contrast[0] ?: return intake
+        val lookup = intake as? Intake.Lookup ?: return null
+        return lookup.takeUnless { applied.rejects(it.query) || isReference(it.query) }
+    }
+
+    private fun inspectResolved(utterance: String, assistantName: String?,
+                                contrastOut: Array<OwnerContrastResolver.Resolution?>): Intake? {
         if (utterance.length !in 5..1_000 || utterance.any { it.isISOControl() || it in "\"„“”«»" }) return null
         var text = stripAddress(utterance.trim(), assistantName)
         text = text.replace(Regex("(?iu)^bitte\\s+"), "")
         // Internal cockpit screens have exactly one owner (OwnerInternalNavigationIntent).
         if (OwnerInternalNavigationIntent.resolve(utterance, assistantName) != null) return null
         readOnlyAppLookup(text)?.let { return it }
+        // An explicit contrast keeps its affirmative request („Öffne nicht WhatsApp, sondern Signal“ opens
+        // Signal). The excluded target is checked again on the final query; any other negation stays refused.
+        val contrast = OwnerContrastResolver.resolve(text)
+        if (contrast != null) { text = contrast.affirmative; contrastOut[0] = contrast }
         if (negation.containsMatchIn(text)) return null
         vague.matchEntire(text)?.let { return Intake.Clarify(it.groupValues[1].trim().take(100)) }
         explicitMessageApp.matchEntire(text)?.let { match ->
