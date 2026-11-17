@@ -1404,6 +1404,8 @@ class AgentActivity : Activity() {
                 onGreeting = { line -> runOnUiThread { recordCockpitDialog(false, line) } }, drift = cameraDrift)),
             cockpitBus.subscribe(airbus),
             cockpitBus.subscribe(at.heinz.deviceai.avatar.CinemaWindowGazeBridge(avatarDirector)),
+            // Before the snapshot push below: the page receives the fact that triggered the push.
+            cockpitBus.subscribe(command03Activity),
             cockpitBus.subscribe { event -> runOnUiThread {
                 if (event is at.heinz.deviceai.cognitive.CockpitWorkEvent)
                     homeView?.showComputerWorkEvent(event)
@@ -2292,6 +2294,19 @@ class AgentActivity : Activity() {
         .put("pageId", scope.pageId).put("viewId", scope.viewId).put("viewRevision", scope.viewRevision)
         .put("sessionId", scope.sessionId)
 
+    private var command03RuntimeSignals = at.heinz.deviceai.avatar.AvatarRuntimeSignals()
+    private val command03Activity = at.heinz.deviceai.ui.Command03ActivityProjection()
+
+    /** Thermal status and power-save state as Android reports them; null where the platform has no value. */
+    private fun command03Quality(): String {
+        val power = getSystemService(POWER_SERVICE) as? android.os.PowerManager
+        val thermal = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q)
+            runCatching { power?.currentThermalStatus }.getOrNull() else null
+        val profile = at.heinz.deviceai.ui.Command03StageSignals.Profile.of(
+            getSharedPreferences("continuum-command03", MODE_PRIVATE).getString("performance_profile", null))
+        return at.heinz.deviceai.ui.Command03StageSignals.quality(thermal, power?.isPowerSaveMode, profile)
+    }
+
     private fun scheduleCommand03HtmlState() {
         if (foregroundLearningActive && command03MainStage != null && !command03HtmlStateScheduled) {
             command03HtmlStateScheduled = true
@@ -2328,6 +2343,9 @@ class AgentActivity : Activity() {
             .put("listening", voiceListening)
             .put("speaking", voiceSpeaking)
             .put("appearance", at.heinz.deviceai.ui.Command03AppearanceSettings.snapshot(this))
+            .put("presence", at.heinz.deviceai.ui.Command03StageSignals.presence(command03RuntimeSignals))
+            .put("quality", command03Quality())
+            .put("activity", command03Activity.snapshot() ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
                 .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
             .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
@@ -6611,14 +6629,45 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this).setTitle("Continuum · Stimme")
             .setItems(arrayOf(
                 (if (mayaSelected()) "● " else "") + MayaSpeech.VOICE_NAME + " · ElevenLabs",
-                "Android · Offline-Stimme"
+                "Android · Offline-Stimme",
+                "Gesprächspause · " + at.heinz.deviceai.cognitive.ContinuousConversationMode
+                    .silenceWindowLabel(conversationSilenceWindowSeconds())
             )) { _, choice ->
-                if (choice == 0) showMayaVoiceSettings() else {
-                    interruptReplySpeech()
-                    getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
-                        .putBoolean("maya_enabled", false).commit()
-                    showOfflineVoicePicker()
+                when (choice) {
+                    0 -> showMayaVoiceSettings()
+                    2 -> showConversationSilenceWindowPicker()
+                    else -> {
+                        interruptReplySpeech()
+                        getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
+                            .putBoolean("maya_enabled", false).commit()
+                        showOfflineVoicePicker()
+                    }
                 }
+            }.setNegativeButton("Schließen", null).show()
+    }
+
+    /** Owner-selected listening window of the hands-free conversation (seconds; 0 = classic short mode). */
+    private fun conversationSilenceWindowSeconds(): Int =
+        at.heinz.deviceai.cognitive.ContinuousConversationMode.silenceWindowSeconds(
+            getSharedPreferences("continuum-voice", MODE_PRIVATE).getInt("conversation_silence_window_s",
+                at.heinz.deviceai.cognitive.ContinuousConversationMode.DEFAULT_SILENCE_WINDOW_S))
+
+    private fun showConversationSilenceWindowPicker() {
+        val choices = at.heinz.deviceai.cognitive.ContinuousConversationMode.SILENCE_WINDOW_CHOICES_S
+        AlertDialog.Builder(this).setTitle("Gesprächspause im Gesprächsmodus")
+            .setSingleChoiceItems(choices.map {
+                at.heinz.deviceai.cognitive.ContinuousConversationMode.silenceWindowLabel(it)
+            }.toTypedArray(), choices.indexOf(conversationSilenceWindowSeconds())) { dialog, index ->
+                val seconds = choices.getOrNull(index) ?: return@setSingleChoiceItems
+                getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
+                    .putInt("conversation_silence_window_s", seconds).apply()
+                // An already running session adopts the new window with its next silent result.
+                continuousConversation.silenceWindowMs = seconds * 1_000L
+                dialog.dismiss()
+                Toast.makeText(this, "Gesprächspause: " +
+                    at.heinz.deviceai.cognitive.ContinuousConversationMode.silenceWindowLabel(seconds) +
+                    ". Das Mikrofon bleibt in dieser Zeit sichtbar aktiv; „Stopp“ oder langes Drücken beendet das Gespräch.",
+                    Toast.LENGTH_LONG).show()
             }.setNegativeButton("Schließen", null).show()
     }
 
@@ -10963,11 +11012,14 @@ class AgentActivity : Activity() {
         hologramView?.setState(state)
         brainScene?.setProcessing(busy)
         pushCockpitState()
-        avatarDirector.onRuntime(at.heinz.deviceai.avatar.AvatarRuntimeSignals(
+        val runtimeSignals = at.heinz.deviceai.avatar.AvatarRuntimeSignals(
             listening = voiceListening, speaking = voiceSpeaking,
             researching = state == ContinuumHologramView.State.RESEARCH,
             learning = state == ContinuumHologramView.State.LEARNING, busy = busy,
-            awaitingApproval = avatarAwaitingApproval, blocked = avatarBlocked))
+            awaitingApproval = avatarAwaitingApproval, blocked = avatarBlocked)
+        // The HTML stage reads the same signals as the avatar director: one event source, two renderers.
+        command03RuntimeSignals = runtimeSignals
+        avatarDirector.onRuntime(runtimeSignals)
     }
 
     private fun interruptReplySpeech() {
@@ -15742,6 +15794,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Bitte warte, bis die aktuelle Antwort fertig ist.", Toast.LENGTH_SHORT).show()
             return
         }
+        continuousConversation.silenceWindowMs = conversationSilenceWindowSeconds() * 1_000L
         if (!continuousConversation.start(sessionId)) return
         refreshConversationMicPresentation()
         Toast.makeText(this, "Gesprächsmodus an: Nach jeder Antwort höre ich wieder zu. " +
@@ -15781,7 +15834,8 @@ class AgentActivity : Activity() {
     /** A recognized hands-free utterance becomes one ordinary chat turn via the Send path. */
     private fun applyConversationSpeech(turnToken: Long, spoken: String) {
         if (isFinishing || isDestroyed) return
-        when (continuousConversation.recognized(turnToken, sessionId, spoken)) {
+        when (continuousConversation.recognized(turnToken, sessionId, spoken,
+            android.os.SystemClock.elapsedRealtime())) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.SEND -> {
                 if (consumeOwnerWorkInterruption(spoken.trim())) return
                 val focused = input.hasFocus() || command03SpeechSelection == command03Binding() && command03SpeechSelection != null
@@ -15820,7 +15874,8 @@ class AgentActivity : Activity() {
         val silence = at.heinz.deviceai.cognitive.ContinuousConversationMode.isSilence(failure)
         val recoverable = at.heinz.deviceai.cognitive.ContinuousConversationMode.isRecoverable(failure)
         when (continuousConversation.listenFailed(turnToken, sessionId, silence, recoverable,
-            at.heinz.deviceai.cognitive.ContinuousConversationMode.recoveryBudget(failure))) {
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.recoveryBudget(failure),
+            android.os.SystemClock.elapsedRealtime())) {
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.RETRY_LISTEN -> {
                 mainHandler.removeCallbacks(conversationListen)
                 mainHandler.postDelayed(conversationListen,

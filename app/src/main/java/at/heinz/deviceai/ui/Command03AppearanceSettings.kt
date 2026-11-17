@@ -17,6 +17,10 @@ object Command03AppearanceSettings {
         .put("neon", prefs(context).getInt("neon_light", DEFAULT_LIGHT).coerceIn(0, 100))
         .put("lightMotion", prefs(context).getBoolean("neon_motion", true))
 
+    /** Owner-selected quality profile of the HTML stage; absent or unknown values mean automatic. */
+    fun performanceProfile(context: Context): Command03StageSignals.Profile =
+        Command03StageSignals.Profile.of(prefs(context).getString("performance_profile", null))
+
     fun show(activity: Activity, onChanged: () -> Unit): AlertDialog {
         val cockpit = ContinuumBentoCockpit
         val box = cockpit.panel(activity, "CONTINUUM · DARSTELLUNG", "Hologramm & Neonlicht",
@@ -56,10 +60,25 @@ object Command03AppearanceSettings {
             }
         }
         box.addView(motion)
+        val profileLabel = cockpit.section(activity, "")
+        fun showProfile() {
+            profileLabel.text = "Leistungsprofil · " + performanceProfile(activity).label
+        }
+        showProfile()
+        box.addView(profileLabel)
+        box.addView(cockpit.action(activity, "LEISTUNGSPROFIL WECHSELN") {
+            val all = Command03StageSignals.Profile.entries
+            val next = all[(all.indexOf(performanceProfile(activity)) + 1) % all.size]
+            prefs(activity).edit().putString("performance_profile", next.name).apply()
+            showProfile()
+            onChanged()
+        }.apply { tag = "command03-performance-profile" })
         box.addView(cockpit.action(activity, "STANDARD WIEDERHERSTELLEN") {
-            prefs(activity).edit().putInt("neon_light", DEFAULT_LIGHT).putBoolean("neon_motion", true).apply()
+            prefs(activity).edit().putInt("neon_light", DEFAULT_LIGHT).putBoolean("neon_motion", true)
+                .remove("performance_profile").apply()
             slider.progress = DEFAULT_LIGHT
             motion.isChecked = true
+            showProfile()
             onChanged()
         })
         lateinit var dialog: AlertDialog
