@@ -35,7 +35,7 @@ const url = `http://127.0.0.1:${server.address().port}`;
 let browser;
 const report = {source:process.env.GITHUB_SHA || null, browser:null, baseline:null, checks:[]};
 try {
-  browser = await chromium.launch({headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader']});
+  browser = await chromium.launch({executablePath:process.env.COMMAND03_CHROMIUM_PATH || undefined,headless:true, args:['--no-sandbox','--enable-unsafe-swiftshader']});
   report.browser = browser.version();
   const context = await browser.newContext({viewport:{width:412,height:915}, isMobile:true,
     hasTouch:true, deviceScaleFactor:1});
@@ -132,6 +132,35 @@ try {
     }).map(button=>button.textContent.trim()));
   assert.deepEqual(blocked,[],'Light layers must not block settings');
   report.appearance={nativePreference:'PASS',reducedMotion:'PASS',settingsHitTargets:'PASS'};
+  await page.setViewportSize({width:834,height:1112});
+  await page.evaluate(()=>window.scrollTo(0,0));
+  for(const [mode,values] of [['idle',{}],['listening',{listening:true}],
+      ['working',{busy:true}],['speaking',{speaking:true}]]) {
+    await page.evaluate(value=>window.ContinuumNative.receive(value),{...state,...values});
+    assert.equal(await page.locator('body').getAttribute('data-state'),mode);
+    assert.doesNotMatch(await page.locator('.presence-system').innerText(),/Argon4|Demonstration|Entwurfswerte/);
+    if(mode==='working') {
+      await page.locator('.native-stop-button').waitFor({state:'visible'});
+      assert.equal(await page.locator('.send-button').isVisible(),false);
+    }
+    await page.screenshot({path:resolve(output,'cinema-'+mode+'-fold.png'),fullPage:true});
+  }
+  await page.evaluate(value=>window.ContinuumNative.receive(value),{...state,busy:true});
+  await page.setViewportSize({width:320,height:740});
+  const stop=await page.locator('.native-stop-button').evaluate(button=>{
+    const r=button.getBoundingClientRect();
+    return {width:r.width,height:r.height,hit:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===button};
+  });
+  assert.ok(stop.width>=44 && stop.height>=44 && stop.hit,'Stop remains touchable at 320px');
+  report.checks.push(await inspect('cinema-busy-320',true));
+  await page.evaluate(value=>window.ContinuumNative.receive(value),{...state,busy:true,appearance:{neon:70,lightMotion:false}});
+  assert.equal(await page.locator('.native-activity .native-instrument-art').evaluate(el=>getComputedStyle(el).animationPlayState),'paused');
+  await page.evaluate(()=>window.dispatchEvent(new Event('pagehide')));
+  assert.equal(await page.locator('.native-activity .native-instrument-art').evaluate(el=>getComputedStyle(el).animationPlayState),'paused');
+  await page.evaluate(()=>window.dispatchEvent(new Event('pageshow')));
+  await page.emulateMedia({reducedMotion:'reduce'});
+  assert.equal(await page.locator('.native-activity .native-instrument-art').evaluate(el=>getComputedStyle(el).animationName),'none');
+  report.cinema={stateLighting:'PASS',demoInstrumentsRemoved:'PASS',stopTouchTarget:'PASS',motionPreference:'PASS'};
   assert.deepEqual(errors, [], 'Unexpected page errors');
   const failures=report.checks.flatMap(check=>check.failures.map(f=>check.label+': '+f));
   console.log(JSON.stringify({baseline:report.baseline?.failures,checks:report.checks.length,failures},null,2));
@@ -141,3 +170,4 @@ try {
   await browser?.close();
   await new Promise(resolve => server.close(resolve));
 }
+
