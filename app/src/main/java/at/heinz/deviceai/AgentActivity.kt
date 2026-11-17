@@ -380,6 +380,7 @@ class AgentActivity : Activity() {
     private var latencyCueIndex = 0
     private var latencyCueTurn = 0L
     private val conversationLatencyCue = Runnable { speakConversationLatencyCue() }
+    private val ownerTurnAssembler = at.heinz.deviceai.cognitive.OwnerTurnAssembler()
     /**
      * Interrupting a spoken reply by voice. Opt-in and off by default: the thresholds are heuristics that
      * have not been calibrated on a device. Only the per-frame level leaves the monitor, never audio.
@@ -15963,6 +15964,7 @@ class AgentActivity : Activity() {
         mainHandler.removeCallbacks(conversationIdleCheck)
         mainHandler.removeCallbacks(conversationLatencyCue)
         mainHandler.removeCallbacks(conversationForegroundRecovery)
+        ownerTurnAssembler.reset()
         if (continuousConversation.active) continuousConversation.stop()
         refreshConversationMicPresentation()
     }
@@ -16057,7 +16059,27 @@ class AgentActivity : Activity() {
     }
 
     /** A recognized hands-free utterance becomes one ordinary chat turn via the Send path. */
-    private fun applyConversationSpeech(turnToken: Long, spoken: String) {
+    private fun applyConversationSpeech(turnToken: Long, recognized: String) {
+        if (isFinishing || isDestroyed) return
+        // A thinking pause is not the end of a turn: an audibly unfinished fragment is kept and joined with
+        // what the owner says next, instead of being answered as half a request.
+        val spoken = if (continuousConversation.listeningTurn(sessionId) != turnToken) recognized
+            else when (val turn = ownerTurnAssembler.onRecognized(recognized, android.os.SystemClock.elapsedRealtime())) {
+                is at.heinz.deviceai.cognitive.OwnerTurnAssembler.Result.Send -> turn.text
+                at.heinz.deviceai.cognitive.OwnerTurnAssembler.Result.Hold -> {
+                    if (continuousConversation.ownerContinues(turnToken, sessionId) ==
+                        at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.RETRY_LISTEN) {
+                        mainHandler.removeCallbacks(conversationListen)
+                        mainHandler.postDelayed(conversationListen, CONVERSATION_RETRY_DELAY_MS)
+                    } else ownerTurnAssembler.reset()
+                    return
+                }
+            }
+        deliverConversationSpeech(turnToken, spoken)
+    }
+
+    /** One complete spoken owner turn of the hands-free conversation. */
+    private fun deliverConversationSpeech(turnToken: Long, spoken: String) {
         if (isFinishing || isDestroyed) return
         when (continuousConversation.recognized(turnToken, sessionId, spoken,
             android.os.SystemClock.elapsedRealtime())) {
@@ -16111,6 +16133,11 @@ class AgentActivity : Activity() {
     private fun onConversationListenFailed(turnToken: Long, failure: at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Failure) {
         val silence = at.heinz.deviceai.cognitive.ContinuousConversationMode.isSilence(failure)
         val recoverable = at.heinz.deviceai.cognitive.ContinuousConversationMode.isRecoverable(failure)
+        // The owner stopped after an unfinished fragment: it is everything that was said, so it is sent now.
+        if (silence) ownerTurnAssembler.onSilence()?.let { fragment ->
+            deliverConversationSpeech(turnToken, fragment)
+            return
+        }
         when (continuousConversation.listenFailed(turnToken, sessionId, silence, recoverable,
             at.heinz.deviceai.cognitive.ContinuousConversationMode.recoveryBudget(failure),
             android.os.SystemClock.elapsedRealtime())) {

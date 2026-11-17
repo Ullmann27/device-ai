@@ -157,6 +157,21 @@ class ContinuousConversationMode {
         return Decision.PAUSE
     }
 
+    /**
+     * The recognizer delivered an audibly unfinished fragment (see [OwnerTurnCompletion]): the owner is
+     * still talking. Listening re-arms at once; this is speech, so it neither counts as a silent round
+     * nor ends the turn. The caller bounds how often it asks ([OwnerTurnAssembler]).
+     */
+    fun ownerContinues(turnToken: Long, sessionId: String): Decision {
+        if (!current(turnToken, sessionId)) return Decision.IGNORE
+        silentAttempts = 0
+        silentSince = null
+        recoveryAttempts = 0
+        coldRecognizerRecommended = false
+        turn++
+        return Decision.RETRY_LISTEN
+    }
+
     /** Delay before the automatic re-arm of [failure]; a service failure waits for the rebinding. */
     internal fun retryDelayMs(failure: LocalSpeechInputPolicy.Failure): Long =
         if (failure == LocalSpeechInputPolicy.Failure.SERVICE_FAILURE) SERVICE_FAILURE_RETRY_DELAY_MS
