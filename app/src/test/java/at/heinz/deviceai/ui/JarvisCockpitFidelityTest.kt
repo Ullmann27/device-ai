@@ -109,7 +109,9 @@ class JarvisCockpitFidelityTest {
         assertTrue(painter.texts.any { it == "Dokument" })
         assertTrue(painter.texts.any { it == "Verarbeitung" })
         assertTrue(painter.texts.any { it == "Zusammenfassung – Entwurf" })
-        assertTrue(painter.texts.any { it == JarvisCockpitPanels.NONE })
+        // Design-Lead 17.11.: vacant windows name the absence honestly instead of a lone "—".
+        assertTrue(painter.texts.any { it == "Kein Dokument geöffnet" })
+        assertTrue(painter.texts.any { it == "Noch kein Entwurf" })
         assertTrue(painter.texts.any { it == "Keine laufenden Prozesse" })
         assertFalse(painter.texts.any { it.contains(".pdf", ignoreCase = true) })
         assertFalse(painter.texts.any { it == "1/4" || it == "1 / 4" })
