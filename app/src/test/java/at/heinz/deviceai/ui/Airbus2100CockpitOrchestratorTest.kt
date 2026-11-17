@@ -394,4 +394,30 @@ class Airbus2100CockpitOrchestratorTest {
         orchestrator.close()
     }
 
+    @Test
+    fun openedDocumentIsNotReplacedByUnscopedRecallHits() {
+        val scenes = mutableListOf<JarvisActionScenes.FuiProfile>()
+        val payloads = mutableListOf<HollywoodFuiLiveData?>()
+        val orchestrator = Airbus2100CockpitOrchestrator(
+            schedule = { _, _ -> }, cancel = {},
+            onSceneProfile = { scenes += it.fuiProfile },
+            onLiveData = { payloads += it },
+            onTelemetry = {}, onHoloCue = {}, onPostMission = {}
+        )
+        orchestrator.render(CockpitAnimationEvent.CommandFlyIn("verbal", 0L, "Bitte PDF lesen"))
+        orchestrator.render(CockpitAnimationEvent.DocumentQuestion(
+            "document-1", 1L, "Akten.pdf", "application/pdf", "Lies diese PDF", pageCount = 4
+        ))
+        val before = requireNotNull(orchestrator.documentSnapshot())
+        val beforeScenes = scenes.size
+        val beforePayloads = payloads.size
+
+        orchestrator.render(CockpitAnimationEvent.RecallHits(MEMORY_TURN, 2L, "q", 3, 0.8f))
+
+        assertEquals(beforeScenes, scenes.size)
+        assertEquals(beforePayloads, payloads.size)
+        assertEquals(before, orchestrator.documentSnapshot())
+        assertTrue(payloads.last() is HollywoodFuiLiveData.Document)
+        orchestrator.close()
+    }
 }
