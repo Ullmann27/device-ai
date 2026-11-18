@@ -227,10 +227,59 @@ class ContinuumEvalDatasetTest {
             failures.joinToString("\n"))
     }
 
+    /**
+     * `regression-send.jsonl` (owner send lane, 18.11.2026): WhatsApp orders yes/no and their wording (dictated,
+     * indirect speech, wish for own wording), recipient resolution on the fictional address book of
+     * `regression-send.contacts.json`, and whole owner turns through the productive director and flow on a fake phone:
+     * standing grant, the two fixed rules, on-screen verification, daily limit, Gmail with and without a saved file.
+     */
+    @Test fun everySendRegressionCaseHoldsOnTheRealCode() {
+        val book = JSONObject(File(root, "regression-send.contacts.json").readText(Charsets.UTF_8))
+        val failures = mutableListOf<String>()
+        val all = cases("regression-send.jsonl")
+        assertTrue("send regression set unexpectedly small: ${all.size}", all.size >= 32)
+        all.forEach { case ->
+            val id = case.getString("id")
+            val expect = case.getJSONObject("expect")
+            fun check(ok: Boolean, message: String) { if (!ok) failures += "$id: $message" }
+            fun text(key: String): String? = if (expect.isNull(key)) null else expect.getString(key)
+            when (case.getString("runner")) {
+                "send_intent" -> at.heinz.deviceai.sending.OwnerSendEvalProbe.intent(case.getString("input")).let { intent ->
+                    check(intent.kind == expect.getString("send"), "send order ${intent.kind}, expected ${expect.getString("send")}")
+                    if (expect.has("recipient")) check(intent.recipient == text("recipient"), "recipient ${intent.recipient}")
+                    if (expect.has("text")) check(intent.text == text("text"), "text ${intent.text}")
+                    if (expect.has("origin")) check(intent.origin == text("origin"), "origin ${intent.origin}")
+                    if (expect.has("unsplit")) check(intent.unsplit == text("unsplit"), "unsplit ${intent.unsplit}")
+                    if (expect.has("draft")) check(intent.draft == expect.getBoolean("draft"), "draft ${intent.draft}")
+                    if (expect.has("model_wish")) check(intent.modelWish == expect.getBoolean("model_wish"), "model wish ${intent.modelWish}")
+                }
+                "send_recipient" -> at.heinz.deviceai.sending.OwnerSendEvalProbe.recipient(case.getString("phrase"), book).let {
+                    check(it == expect.getString("resolution"), "resolution $it, expected ${expect.getString("resolution")}")
+                }
+                "send_flow" -> {
+                    val run = at.heinz.deviceai.sending.OwnerSendEvalProbe.run(book, strings(case, "granted"),
+                        strings(case, "turns"), case.getString("screen"), case.optInt("already_sent", 0))
+                    check(run.pressed == expect.getInt("pressed"), "send control pressed ${run.pressed} times: ${run.lastReply}")
+                    if (expect.has("opened")) check(run.opened == expect.getInt("opened"), "opened ${run.opened} times: ${run.lastReply}")
+                    if (expect.has("model_calls")) check(run.modelCalls == expect.getInt("model_calls"), "model calls ${run.modelCalls}")
+                    if (expect.has("grants_after")) check(run.grantsAfter == strings(expect, "grants_after"), "grants ${run.grantsAfter}")
+                    if (expect.has("handled")) expect.getJSONArray("handled").let { wanted ->
+                        check(run.handled == (0 until wanted.length()).map(wanted::getBoolean), "handled ${run.handled}")
+                    }
+                    strings(expect, "contains").forEach { check(run.lastReply.contains(it), "missing „$it“ in: ${run.lastReply}") }
+                    strings(expect, "not_contains").forEach { check(!run.lastReply.contains(it), "forbidden „$it“ in: ${run.lastReply}") }
+                }
+                else -> failures += "$id: unknown runner ${case.getString("runner")}"
+            }
+        }
+        if (failures.isNotEmpty()) fail("${failures.size} of ${all.size} send regression cases failed:\n" +
+            failures.joinToString("\n"))
+    }
+
     @Test fun everyCaseHasAnIdACategoryAndAFormalCriterion() {
         val seen = mutableSetOf<String>()
         listOf("regression.jsonl", "regression-voice.jsonl", "regression-references.jsonl", "regression-news.jsonl",
-            "model-dev.jsonl", "model-holdout.jsonl").forEach { file ->
+            "regression-send.jsonl", "model-dev.jsonl", "model-holdout.jsonl").forEach { file ->
             cases(file).forEach { case ->
                 val id = case.getString("id")
                 assertTrue("duplicate id $id", seen.add(id))
@@ -281,7 +330,8 @@ class ContinuumEvalDatasetTest {
             "incomplete_info", "uncertainty_abstention", "contradiction", "abort_resume")
         val RUNNERS = setOf("route", "object_state", "clock", "owner_recall", "voice_command",
             "register", "turn_completion", "drive_command", "notification", "reference",
-            "news_intent", "news_follow_up", "news_feed", "export_intent", "file_name", "mail_intent")
+            "news_intent", "news_follow_up", "news_feed", "export_intent", "file_name", "mail_intent",
+            "send_intent", "send_recipient", "send_flow")
         val CRITERIA = setOf("contains_all", "contains_any", "numeric", "abstain", "asks_back", "tool_call", "no_tool")
     }
 }

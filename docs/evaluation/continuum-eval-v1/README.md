@@ -13,6 +13,7 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-news.jsonl` | 64 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Arbeitswerkzeuge (18.11.2026): Nachrichtenauftrag ja/nein (Abgrenzung zu Mitteilungen, Messenger, Benachrichtigungs-Ansage), Themen, Antworten auf die Rückfrage, Feed-Lesen (RSS 2.0, RDF, Atom), Tagesauswahl und Zusammenführen derselben Meldung; Folgeaufträge auf das Ergebnis: Speichern als PDF/Word, Dateinamen (Datum, sichere Zeichen, nie überschreiben), E-Mail-Übergabe (Adresse/Name aus dem Satz); Feeds aus `regression-news.feeds.json` (synthetisch) |
 | `regression-understanding.jsonl` | 74 | **Host, automatisch** (`OwnerUnderstandingRegressionTest`) | Verstehen trotz Fehlhörung: falsch erkannte App-/Produkt-/Modellnamen in Aufträgen, österreichische Formulierungen, Beinahe-Paare mit Rückfrage, gültige Wörter und diktierter Text, die unverändert bleiben müssen; App-Bestand in `regression-understanding.apps.json` |
 | `regression-chains.jsonl` | 47 | **Host, automatisch** (`OwnerTaskChainRegressionTest`) | Aufgabenketten über den echten Orchestrator, ToolGate und Guard mit nachgestelltem Geräte-Backend: Reihenfolge, Argumentübergabe, Erfolgsprüfung stoppt die Kette, Freigabe-Pause und „weiter“, Auswahl, STOP, abgelehnte Modellpläne |
+| `regression-send.jsonl` | 56 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Selbst senden (18.11.2026): WhatsApp-Auftrag ja/nein (Abgrenzung zu Vorlesen, Fragen, Nachrichtenüberblick, App öffnen), Wortlaut (diktiert, indirekte Rede, Dialekt, Wunsch nach eigenem Text), Empfängerauflösung im Adressbuch (eindeutig, mehrdeutig, unbekannt, ohne Ländervorwahl), ganze Besitzerzüge durch Lenkung und Sendeablauf auf einem nachgebauten Gerät: Dauerfreigabe je Kanal, Regel a (nur Diktiertes/Bestätigtes), Regel b (Rückfrage statt Raten), Bildschirmprüfung, Tagesgrenze, Bildschirmtext als Daten, Gmail mit/ohne gespeicherte Datei; Adressbuch aus `regression-send.contacts.json` (frei erfunden). WhatsApp/Gmail selbst sind **nicht** Teil dieses Laufs (Gerät: NOT_RUN) |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -41,6 +42,14 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   `Haus: Schlagzeile | weiteres Haus` der ausgewählten Meldungen; `export_intent` erwartet `export`
   (`PDF` · `DOCX` · `PDF:VIA_WORD` · `NONE`) und optional `name`; `file_name` (`requested`, `title`, `date`, `format`,
   `taken`) erwartet `file_name`; `mail_intent` erwartet `mail` (`ADDRESS:<Adresse>` · `NAME:<Empfänger wie gesagt>` · `NONE`)
+- `regression-send.jsonl`: `send_intent` erwartet `send` (`ORDER` · `REFUSED:NEGATED|SEVERAL|GROUP|TEXT` · `NONE`) und
+  optional `recipient`, `text` (`null` = Wortlaut wird erfragt), `origin` (`DICTATED` · `MINIMAL_TRANSFORM` · `DERIVED`),
+  `unsplit`, `draft`, `model_wish`; `send_recipient` (`phrase`) erwartet `resolution` (`RESOLVED:<Ziffern>` ·
+  `AMBIGUOUS:<Anzahl>` · `NOT_FOUND` · `UNUSABLE`); `send_flow` (`granted` = Kanäle mit Dauerfreigabe, `turns` =
+  Besitzerzüge, dabei `mail-file:<Empfänger>` / `mail-text:<Empfänger>` = Mailauftrag der Arbeitswerkzeuge mit/ohne
+  gespeicherte Datei, `screen` = `OK` · `WRONG_CHAT` · `NO_SEND_CONTROL` · `NOT_CONFIRMED` · `INJECTION`, optional
+  `already_sent`) erwartet `pressed` (Zahl der gedrückten Senden-Knöpfe) und optional `opened`, `model_calls`,
+  `grants_after`, `handled`, `contains`/`not_contains` über die letzte Antwort
 
 Modellfälle (`model-*.jsonl`):
 
