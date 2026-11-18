@@ -14,6 +14,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-understanding.jsonl` | 74 | **Host, automatisch** (`OwnerUnderstandingRegressionTest`) | Verstehen trotz Fehlhörung: falsch erkannte App-/Produkt-/Modellnamen in Aufträgen, österreichische Formulierungen, Beinahe-Paare mit Rückfrage, gültige Wörter und diktierter Text, die unverändert bleiben müssen; App-Bestand in `regression-understanding.apps.json` |
 | `regression-chains.jsonl` | 47 | **Host, automatisch** (`OwnerTaskChainRegressionTest`) | Aufgabenketten über den echten Orchestrator, ToolGate und Guard mit nachgestelltem Geräte-Backend: Reihenfolge, Argumentübergabe, Erfolgsprüfung stoppt die Kette, Freigabe-Pause und „weiter“, Auswahl, STOP, abgelehnte Modellpläne |
 | `regression-send.jsonl` | 56 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Selbst senden (18.11.2026): WhatsApp-Auftrag ja/nein (Abgrenzung zu Vorlesen, Fragen, Nachrichtenüberblick, App öffnen), Wortlaut (diktiert, indirekte Rede, Dialekt, Wunsch nach eigenem Text), Empfängerauflösung im Adressbuch (eindeutig, mehrdeutig, unbekannt, ohne Ländervorwahl), ganze Besitzerzüge durch Lenkung und Sendeablauf auf einem nachgebauten Gerät: Dauerfreigabe je Kanal, Regel a (nur Diktiertes/Bestätigtes), Regel b (Rückfrage statt Raten), Bildschirmprüfung, Tagesgrenze, Bildschirmtext als Daten, Gmail mit/ohne gespeicherte Datei; Adressbuch aus `regression-send.contacts.json` (frei erfunden). WhatsApp/Gmail selbst sind **nicht** Teil dieses Laufs (Gerät: NOT_RUN) |
+| `regression-library.jsonl` | 160 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage (18.11.2026), **Entwicklungssatz**: „Öffne das PDF Argon4“ ja/nein (ohne Namen → Android-Auswahl, Verneinung, Zitat, Web-Formulierung, Zweitauftrag), Name wie gesagt, Spracherkennungs-Varianten (Zahlwort, klein, „öffnet“, „als Wort“, „Fasst/Fast“), Namensvergleich und Rang (genau · Anfang · enthält · Beinahe-Treffer), Antworten auf die Rückfrage, Seitenauftrag mit Speichern, Korrekturen (Seite · Format · andere Datei · Nummer · Name), Stopp, Abgrenzung zu den anderen Lenkungen |
+| `regression-library-check.jsonl` | 74 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (`b058417cd`), wird nicht zum Abstimmen benutzt |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -50,6 +52,15 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   gespeicherte Datei, `screen` = `OK` · `WRONG_CHAT` · `NO_SEND_CONTROL` · `NOT_CONFIRMED` · `INJECTION`, optional
   `already_sent`) erwartet `pressed` (Zahl der gedrückten Senden-Knöpfe) und optional `opened`, `model_calls`,
   `grants_after`, `handled`, `contains`/`not_contains` über die letzte Antwort
+- `regression-library.jsonl` / `regression-library-check.jsonl`: `library_open` erwartet `open` (`OPEN:<Name wie gesagt>` ·
+  `FIND:<Name>` = nur suchen · `NONE`) und optional `folder` (`Download` · `Documents`); `library_match` (`query`,
+  `files` = `Ordner/Name.pdf` oder `Name.pdf`, optional `folder`) erwartet `decision` (`OPEN:<Datei>` · `ASK:<Anzahl>` ·
+  `NEAR:<Datei>` · `NONE`) und optional `first`; `library_choice` (`hits` = `Name|Ordner|Änderungstag`) erwartet
+  `choice` (`PICK:<n>` · `INVALID` · `DROP` · `NONE`); `page_job` erwartet `page_job` (`PAGE:<n|LAST>:<DOCX|PDF|ASK_FORMAT>` ·
+  `UNSUPPORTED` = mehrere Seiten · `NONE`) und optional `name`; `desk_correction` erwartet `correction` (`PAGE:<n|LAST>` ·
+  `FORMAT:<PDF|DOCX>` · `OTHER_FILE` · `PICK:<n>` · `NAME:<Namensteil>` · `NAMED_PDF:<Name>` · `NONE`); `desk_stop`
+  erwartet `stop`; `library_route` erwartet `route` (`DESK_OPEN` · `DESK_PAGE` · `PICKER` · `EXPORT` · `NEWS` · `CHAIN` ·
+  `MAIL` · `COMPUTER` · `OTHER`) in der Reihenfolge der Lenkungen der Activity
 
 Modellfälle (`model-*.jsonl`):
 
@@ -87,6 +98,23 @@ PDF-Datei (Android-`PdfDocument`), das Öffnen und die Übergabe an das Mailprog
 Für `regression-understanding.jsonl` und `regression-chains.jsonl` (18.11.2026) stehen Vorher/Nachher und Messweg in [OWNER-UNDERSTANDING-AND-TASK-CHAIN-20261118.md](../../research/OWNER-UNDERSTANDING-AND-TASK-CHAIN-20261118.md):
 Verstehen 30 / 74 ohne die Schicht (genau die Schutzfälle) → 74 / 74; Ketten 47 / 47, vorher lief für 1 von 29 Ketten dieselbe Werkzeugfolge (rohe Ordnerliste ohne die gefragte Antwort).
 Beide Sätze haben eigene Läufer (`understand`, `chain`) und eigene Testklassen; `ContinuumEvalDatasetTest` bleibt unverändert.
+
+Für `regression-library.jsonl` und `regression-library-check.jsonl` (Dokumentenablage, 18.11.2026) gibt es keinen
+Vorher-Wert: die lokale Suche nach Namen und der Seitenauftrag mit Speichern existierten vorher nicht („Öffne das PDF
+Argon4“ öffnete nur die Android-Auswahl, „Fass Seite 2 zusammen und speichere es als Word“ wurde ohne Speichern im
+Chat beantwortet). Getrennte Daten: Der Prüfsatz wurde zuerst geschrieben und eingecheckt, der Entwicklungssatz
+danach; kein Satz steht in beiden (der Test prüft das). Gemessen am Host:
+
+| Lauf | Entwicklungssatz | Prüfsatz |
+|---|---|---|
+| erster Lauf nach der Umsetzung, vor jeder Anpassung | 146 / 147 | 74 / 74 |
+| nach Behebung (nachgestelltes „… meinte ich“ bei Dateinamen) und Erweiterung um Fehlhörungen und Abgrenzungsfälle | 160 / 160 | 74 / 74 |
+
+Im Prüfsatz gab es keinen Fehlschlag, also auch keine nachträgliche Korrektur an ihm oder wegen ihm. Einordnung: Den
+Prüfsatz hat dieselbe Hand geschrieben wie die Parser, mit der geplanten Auftragsform vor Augen – er belegt, dass
+nicht auf ihn abgestimmt wurde, nicht, dass fremde Formulierungen des Besitzers getroffen werden. Was die
+Spracherkennung am Fold7 wirklich schreibt, ist NOT_RUN; ebenso Speichergang, PDF-Textauszug, Modell-Zusammenfassung
+und das Schreiben nach Download auf dem Gerät.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 
