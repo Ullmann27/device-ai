@@ -200,14 +200,14 @@ class HeatMeasurementActivityUiTest {
         assertTrue(runtime.entries.isEmpty())
         val confirm = ShadowAlertDialog.getLatestAlertDialog()
         val announced = texts(confirm.window!!.decorView).joinToString("\n")
-        assertTrue(announced, "Wärme- und Zeitmessung (kurz): 6 Konfigurationen, 6 Läufe, bis zu 12 Modellantworten." in announced)
+        assertTrue(announced, "Wärme- und Zeitmessung (kurz): 8 Konfigurationen, 8 Läufe, bis zu 16 Modellantworten." in announced)
         assertTrue(announced, "Erwartete Dauer: unbekannt" in announced)
         assertTrue(announced, HeatMeasurement.INPUT_NOTE in announced)
         assertFalse("Nothing starts before the owner confirmed", measurement(a).active)
         confirm.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
         advance()
         assertTrue(measurement(a).active)
-        assertTrue("The start is written into the owner's chat", chat(a).any { it.startsWith("WÄRME- UND ZEITMESSUNG (kurz) gestartet: 6 Läufe") })
+        assertTrue("The start is written into the owner's chat", chat(a).any { it.startsWith("WÄRME- UND ZEITMESSUNG (kurz) gestartet: 8 Läufe") })
         assertNotNull("The line with STOPP is shown", overlay(a))
         assertTrue(a.window.attributes.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON != 0)
 
@@ -218,16 +218,17 @@ class HeatMeasurementActivityUiTest {
         assertTrue(summary, "abgeschlossen" in summary && HeatMeasurement.INPUT_NOTE in summary)
         assertTrue("The chat names the real files: $summary", names.all { it in summary })
 
-        // A and D ran; the native view has no stage to switch, no E2B is imported, the GPU is never switched.
+        // A, D and H ran; the native view has no stage to switch (B, C, G), no E2B is imported, the GPU is never switched.
         val status = objects(report.getJSONArray("configurations")).associate { it.getString("id") to it.getString("status") }
-        assertEquals(mapOf("A" to "RUN", "B" to "NOT_RUN", "C" to "NOT_RUN", "D" to "RUN", "E" to "NOT_RUN", "F" to "NOT_RUN"), status)
+        assertEquals(mapOf("A" to "RUN", "B" to "NOT_RUN", "C" to "NOT_RUN", "D" to "RUN", "E" to "NOT_RUN", "F" to "NOT_RUN",
+            "G" to "NOT_RUN", "H" to "RUN"), status)
         objects(report.getJSONArray("configurations")).filter { it.getString("status") == "NOT_RUN" }
             .forEach { assertTrue(it.getString("id"), it.getString("reason").length > 20) }
         val runs = objects(report.getJSONArray("runs"))
-        assertEquals(listOf("A", "D"), runs.map { it.getString("configuration") })
+        assertEquals(listOf("A", "D", "H"), runs.map { it.getString("configuration") })
         val turns = runs.flatMap { objects(it.getJSONArray("turns")) }
-        assertEquals("Both orders of both runs reached the model and were answered",
-            List(4) { HeatTurnRecorder.COMPLETE }, turns.map { it.getString("outcome") })
+        assertEquals("Both orders of every run reached the model and were answered",
+            List(6) { HeatTurnRecorder.COMPLETE }, turns.map { it.getString("outcome") })
         turns.forEach { turn ->
             assertEquals(turn.toString(), 1, turn.getInt("modelCalls"))
             assertFalse("first token", turn.isNull("firstTokenMs"))
@@ -243,9 +244,17 @@ class HeatMeasurementActivityUiTest {
             assertTrue(turn.getJSONObject("windowFrames").has("status"))
             assertTrue(turn.getJSONArray("samples").length() >= 2)
         }
-        assertEquals("The baseline never uses the kept dialogue; D keeps it and continues the follow-up",
-            listOf("TEXT_ONLY", "TEXT_ONLY", "DIALOGUE_FRESH", "FOLLOW_UP"), runtime.entries)
+        assertEquals("The baseline never uses the kept dialogue; D keeps it and continues the follow-up; H (as in Code68) " +
+            "sends the same orders on the route with all tool schemas",
+            listOf("TEXT_ONLY", "TEXT_ONLY", "DIALOGUE_FRESH", "FOLLOW_UP", "TOOL_PATH", "TOOL_PATH"), runtime.entries)
         assertEquals(listOf(false, true), objects(runs[1].getJSONArray("turns")).map { it.getBoolean("dialogueReused") })
+        assertEquals("toolFreeRoute is false exactly for the turns of H",
+            listOf(true, true, true, true, false, false), turns.map { it.getBoolean("toolFreeRoute") })
+        val comparisons = objects(report.getJSONObject("summary").getJSONArray("comparisons")).associateBy { it.getString("configuration") }
+        assertFalse(comparisons.getValue("H").getJSONArray("reasons").toString(),
+            "PROMPT_SIZE_DIFFERS" in comparisons.getValue("H").getJSONArray("reasons").toString() ||
+                "FACTOR_NOT_EFFECTIVE" in comparisons.getValue("H").getJSONArray("reasons").toString())
+        assertTrue(HeatReport.markdown(report), "### H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen)" in HeatReport.markdown(report))
         runs.forEach { run ->
             val start = run.getJSONObject("startCondition")
             assertFalse("Robolectric reports no thermal status and no battery temperature: not called reached", start.getBoolean("reached"))
@@ -267,10 +276,16 @@ class HeatMeasurementActivityUiTest {
         assertFalse("The stored owner switch was never written", LocalDialogueReuseHost.enabled(app))
         assertEquals(false, call(a, "dialogueReuseOn"))
         assertFalse(measurement(a).stageFullEffects)
+        assertFalse(measurement(a).stageDraftOff)
+        assertFalse("After the measurement a text question takes the tool-free route again", measurement(a).toolSchemasForced)
         assertEquals(0, a.window.attributes.flags and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         assertNull(overlay(a))
         assertEquals(chatBefore, field(a, "sessionId"))
         assertEquals("The loaded model is never swapped without an imported E2B", 0, runtime.lifecycleCalls)
+        // The override is gone for real: the same order, sent by the owner after the measurement, is a text question.
+        send(a, "Erkläre mir in zwei Sätzen, warum der Himmel blau ist.")
+        await("the owner's own turn after the measurement") { runtime.entries.size == 7 && field(a, "busy") == false }
+        assertEquals("TEXT_ONLY", runtime.entries.last())
         assertEquals(false, field(a, "busy"))
         assertTrue("The app has no internet permission to use here", "ohne Internet" in announced)
     }
@@ -328,7 +343,7 @@ class HeatMeasurementActivityUiTest {
         assertEquals(HeatStop.INTERRUPTED, report.getJSONObject("stop").getString("reason"))
         assertFalse(report.getBoolean("complete"))
         assertFalse(report.has("restoreComplete"))
-        assertEquals(5, report.getJSONArray("runs").length())
+        assertEquals(6, report.getJSONArray("runs").length())
         assertTrue(reportDirectory().listFiles().orEmpty().all { it.name in summary })
         assertFalse("The kept runs are handed over once", checkpoint.exists())
         assertTrue("Nothing was measured or sent to the model for this", runtime.entries.isEmpty())
@@ -348,7 +363,7 @@ class HeatMeasurementActivityUiTest {
             assertEquals("KURZ STARTEN", choose.getButton(AlertDialog.BUTTON_POSITIVE).text.toString())
             assertEquals("VOLL STARTEN", choose.getButton(AlertDialog.BUTTON_NEUTRAL).text.toString())
             val announced = texts(choose.window!!.decorView).joinToString("\n")
-            assertTrue(announced, "Wärme- und Zeitmessung (voll): 6 Konfigurationen, 36 Läufe, bis zu 72 Modellantworten." in announced)
+            assertTrue(announced, "Wärme- und Zeitmessung (voll): 8 Konfigurationen, 48 Läufe, bis zu 96 Modellantworten." in announced)
             choose.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
             advance()
             assertFalse(measurement(a).active)

@@ -57,8 +57,9 @@ import java.util.concurrent.TimeUnit
 /**
  * The stage factors of the „Wärme- und Zeitmessung“ with the Command03 stage as the main design under Robolectric:
  * „Bühne aus“ really hides the page for its run, „volle Bewegung“ really sends the page the cloud-brain flag for
- * its run, both are back afterwards, and the page's frame counter is started, read at the release of a turn and
- * stopped. HOST: the page itself is a stand-in that records what Android sends and answers the counter with a
+ * its run, „ohne Antwortentwurf“ (G, as in Code68) really sends the page no draft for its run, „alle
+ * Werkzeugschemas“ (H, as in Code68) really takes the model route with tools for its run, all are back afterwards,
+ * and the page's frame counter is started, read at the release of a turn and stopped. HOST: the page itself is a stand-in that records what Android sends and answers the counter with a
  * fixed synthetic reply – no Chromium, no frame and no heat is involved here.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -98,10 +99,16 @@ class HeatMeasurementStageUiTest {
                 setOf(LocalModelBackend.CPU)))
         override val contextTokens: Int? = 4_096
         override val activeBackend: LocalModelBackend? = LocalModelBackend.CPU
-        /** What the stage looked like while the stand-in model „computed“, one entry per model call. */
+        /** Route and what the stage looked like while the stand-in model „computed“, one entry per model call. */
         val seen: MutableList<String> = Collections.synchronizedList(ArrayList())
-        override fun stream(prompt: String, callback: LocalInferenceCallback) {
-            seen += observe()
+        /** How many scripts the page had received when each model call began. */
+        val marks: MutableList<Int> = Collections.synchronizedList(ArrayList())
+        // The entry with all tool schemas; the tool-free entry below is the one a plain text question takes.
+        override fun stream(prompt: String, callback: LocalInferenceCallback) = answer("TOOLS", prompt, callback)
+        override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) = answer("TEXT", prompt, callback)
+        private fun answer(route: String, prompt: String, callback: LocalInferenceCallback) {
+            marks += RecordingPage.scripts.size
+            seen += route + ":" + observe()
             val answer = if ("am Abend rot" in prompt) "Am Abend legt das Licht einen längeren Weg durch die Luft zurück, dabei bleibt vor allem das rote Licht übrig."
                 else "Das Sonnenlicht wird in der Luft gestreut, und das blaue Licht am stärksten. Darum sieht der Himmel am Tag blau aus."
             callback.onEvent(LocalInferenceEvent.TextDelta(answer))
@@ -176,15 +183,30 @@ class HeatMeasurementStageUiTest {
 
             val report = HeatReport.read(reportDirectory().listFiles().orEmpty().single { it.name.endsWith(".json") }.readText(Charsets.UTF_8))
             val status = objects(report.getJSONArray("configurations")).associate { it.getString("id") to it.getString("status") }
-            assertEquals(mapOf("A" to "RUN", "B" to "RUN", "C" to "RUN", "D" to "RUN", "E" to "NOT_RUN", "F" to "NOT_RUN"), status)
+            assertEquals(mapOf("A" to "RUN", "B" to "RUN", "C" to "RUN", "D" to "RUN", "E" to "NOT_RUN", "F" to "NOT_RUN",
+                "G" to "RUN", "H" to "RUN"), status)
             val runs = objects(report.getJSONArray("runs"))
-            assertEquals(listOf("A", "B", "C", "D"), runs.map { it.getString("configuration") })
+            assertEquals(listOf("A", "B", "C", "D", "G", "H"), runs.map { it.getString("configuration") })
             val turns = runs.flatMap { run -> objects(run.getJSONArray("turns")).map { run.getString("configuration") to it } }
-            assertEquals(List(8) { HeatTurnRecorder.COMPLETE }, turns.map { it.second.getString("outcome") })
+            assertEquals(List(12) { HeatTurnRecorder.COMPLETE }, turns.map { it.second.getString("outcome") })
 
-            assertEquals("While the model computed: A resting, B hidden, C with full motion, D resting", listOf(
-                "VISIBLE/false", "VISIBLE/false", "HIDDEN/false", "HIDDEN/false", "VISIBLE/true", "VISIBLE/true",
-                "VISIBLE/false", "VISIBLE/false"), runtime.seen.toList())
+            assertEquals("While the model computed: A resting, B hidden, C with full motion, D and G resting – all as plain " +
+                "text questions; H resting, on the route with all tool schemas", listOf(
+                "TEXT:VISIBLE/false", "TEXT:VISIBLE/false", "TEXT:HIDDEN/false", "TEXT:HIDDEN/false", "TEXT:VISIBLE/true", "TEXT:VISIBLE/true",
+                "TEXT:VISIBLE/false", "TEXT:VISIBLE/false", "TEXT:VISIBLE/false", "TEXT:VISIBLE/false",
+                "TOOLS:VISIBLE/false", "TOOLS:VISIBLE/false"), runtime.seen.toList())
+            // What the page received during each model call's turn: the answer draft – except in G (as in Code68).
+            val received = synchronized(RecordingPage.scripts) { RecordingPage.scripts.toList() }
+            val marks = runtime.marks.toList()
+            val drafts = marks.indices.map { call ->
+                received.subList(marks[call], marks.getOrElse(call + 1) { received.size }).count { it.startsWith("window.ContinuumNative?.draft(") }
+            }
+            turns.map { it.first }.forEachIndexed { call, configuration ->
+                if (configuration == "G") assertEquals("G: the page gets no draft script at all", 0, drafts[call])
+                else assertTrue("$configuration: the page gets the running answer as a draft", drafts[call] >= 1)
+            }
+            assertFalse(measurement(a).stageDraftOff)
+            assertFalse(measurement(a).toolSchemasForced)
             val flagged = states().map { "\"cloudBrain\":true" in it }
             assertTrue("The page received the cloud-brain flag during C", flagged.any { it })
             assertFalse("and no longer after it", flagged.last())
@@ -196,9 +218,9 @@ class HeatMeasurementStageUiTest {
             // The page's counter: started with every turn, read when the turn was released, stopped at its end.
             val commands = synchronized(RecordingPage.scripts) { RecordingPage.scripts.toList() }
                 .mapNotNull { Regex("frameProbe\\('(start|read|stop)'\\)").find(it)?.groupValues?.get(1) }
-            assertEquals(8, commands.count { it == "start" })
-            assertEquals(8, commands.count { it == "stop" })
-            assertTrue(commands.count { it == "read" } >= 8)
+            assertEquals(12, commands.count { it == "start" })
+            assertEquals(12, commands.count { it == "stop" })
+            assertTrue(commands.count { it == "read" } >= 12)
             turns.forEach { (configuration, turn) ->
                 val frames = turn.getJSONObject("stageFrames")
                 assertEquals(configuration, HeatFrameAccumulator.MEASURED, frames.getString("status"))
@@ -208,22 +230,29 @@ class HeatMeasurementStageUiTest {
                 assertEquals(5, frames.getInt("frameLimit"))
                 // Code69: a visible stage shows the running answer as its draft row – that is the first visible text.
                 // With the stage off (B) nothing is on screen; the record stays the finished answer, marked not shown.
-                assertEquals("A visible stage shows the draft; a hidden one only gets the answer",
-                    if (configuration == "B") HeatTurnRecorder.EVENT_STAGE_MESSAGE else HeatTurnRecorder.EVENT_STAGE_DRAFT,
+                // Without the draft (G, as in Code68) the first text on the visible stage is the finished answer.
+                val answerOnly = configuration == "B" || configuration == "G"
+                assertEquals("A visible stage shows the draft; a hidden one and one without drafts only get the answer",
+                    if (answerOnly) HeatTurnRecorder.EVENT_STAGE_MESSAGE else HeatTurnRecorder.EVENT_STAGE_DRAFT,
                     turn.getString("firstVisibleTextEvent"))
                 assertEquals("…and nobody can see it while the stage is off", configuration != "B", turn.getBoolean("firstVisibleTextShown"))
-                if (configuration == "B") assertEquals(turn.getLong("answerHandoverMs"), turn.getLong("firstVisibleTextMs"))
+                if (answerOnly) assertEquals(turn.getLong("answerHandoverMs"), turn.getLong("firstVisibleTextMs"))
                 else assertTrue("The draft is on screen before the checked answer",
                     turn.getLong("firstVisibleTextMs") <= turn.getLong("answerHandoverMs"))
-                assertEquals(true, turn.getBoolean("toolFreeRoute"))
+                assertEquals("Only H carries the tool schemas", configuration != "H", turn.getBoolean("toolFreeRoute"))
+                assertEquals(1, turn.getInt("modelCalls"))
             }
             assertEquals(true, report.getJSONObject("device").getBoolean("htmlStage"))
             assertTrue(report.getBoolean("restoreComplete"))
-            assertEquals(listOf("Chat", "Bühne", "Thermal-Beobachter", "Messanzeige", "Bildschirm anlassen"),
-                objects(report.getJSONArray("restore")).map { it.getString("what") }.filter { it != "Gespräch im Modell behalten" })
+            assertEquals(listOf("Modellroute (Werkzeugschemas)", "Antwortentwurf der Bühne", "Gespräch im Modell behalten", "Chat", "Bühne",
+                "Thermal-Beobachter", "Messanzeige", "Bildschirm anlassen"), objects(report.getJSONArray("restore")).map { it.getString("what") })
+            assertTrue(objects(report.getJSONArray("restore")).all { it.getBoolean("ok") })
             val comparisons = objects(report.getJSONObject("summary").getJSONArray("comparisons")).associateBy { it.getString("configuration") }
             assertTrue("A page that still delivers frames while it is to be off makes „Bühne aus“ not comparable: the stand-in always answers 7",
                 "FACTOR_NOT_EFFECTIVE" in comparisons.getValue("B").getJSONArray("reasons").toString())
+            assertFalse("G took effect: no draft was the first visible text", "FACTOR_NOT_EFFECTIVE" in comparisons.getValue("G").getJSONArray("reasons").toString())
+            assertFalse("H took effect: no turn went the tool-free route", "FACTOR_NOT_EFFECTIVE" in comparisons.getValue("H").getJSONArray("reasons").toString())
+            assertFalse("H is not held against the prompt-size rule", "PROMPT_SIZE_DIFFERS" in comparisons.getValue("H").getJSONArray("reasons").toString())
         } finally {
             runCatching { measurement(controller.get()).requestStop() }
             runCatching { await("measurement ended", 20) { !measurement(controller.get()).active } }

@@ -121,20 +121,23 @@ class HeatMeasurementReportTest {
         assertEquals(12_000.0, baseline.getDouble("runTotalMsMedian"), 0.0)
         val first = baseline.getJSONObject("roles").getJSONObject("ERSTFRAGE")
         assertEquals(1_500.0, first.getDouble("firstTokenMsMedian"), 0.0)
-        assertEquals(6_000.0, first.getDouble("firstVisibleTextMsMedian"), 0.0)
+        assertEquals("The stage shows the draft with the first text piece", 1_500.0, first.getDouble("firstVisibleTextMsMedian"), 0.0)
         assertEquals(6_000.0, first.getDouble("totalMsMedian"), 0.0)
         assertEquals("120 characters in 4.5 s after the first token", 26.667, first.getDouble("charsPerSecondMedian"), 0.0)
-        assertEquals("[\"${HeatTurnRecorder.EVENT_STAGE_MESSAGE}\"]", first.getJSONArray("firstVisibleTextEvents").toString())
+        assertEquals("[\"${HeatTurnRecorder.EVENT_STAGE_DRAFT}\"]", first.getJSONArray("firstVisibleTextEvents").toString())
+        assertEquals(1, first.getInt("toolFreeTurns"))
         assertEquals(8.5, first.getDouble("windowP50MsMedian"), 0.0)
         assertEquals(20.0 * 1_000 / 6_000, first.getDouble("stageFramesPerSecondMedian"), 1e-3)
 
-        val full = row(report, "C")
-        assertEquals(listOf(1, 0, 1), listOf(full.getInt("turns"), full.getInt("complete"), full.getInt("aborts")))
-        assertEquals(1, full.getJSONObject("abortKinds").getInt(HeatTurnRecorder.STOPPED_BY_THERMAL_GUARD))
-        assertEquals(3.0, full.getDouble("thermalMax"), 0.0)
-        assertTrue("A run with an interrupted answer has no total time", full.isNull("runTotalMsMedian"))
-        assertTrue(full.getJSONObject("roles").getJSONObject("ERSTFRAGE").isNull("totalMsMedian"))
+        val tools = row(report, "H")
+        assertEquals(listOf(1, 0, 1), listOf(tools.getInt("turns"), tools.getInt("complete"), tools.getInt("aborts")))
+        assertEquals(1, tools.getJSONObject("abortKinds").getInt(HeatTurnRecorder.STOPPED_BY_THERMAL_GUARD))
+        assertEquals(3.0, tools.getDouble("thermalMax"), 0.0)
+        assertTrue("A run with an interrupted answer has no total time", tools.isNull("runTotalMsMedian"))
+        assertTrue(tools.getJSONObject("roles").getJSONObject("ERSTFRAGE").isNull("totalMsMedian"))
         assertEquals(0, row(report, "F").getInt("runs"))
+        assertEquals("The short size leaves C out", 0, row(report, "C").getInt("runs"))
+        assertEquals(listOf("NOT_RUN"), reasons(report, "C"))
 
         val off = comparison(report, "B")
         assertTrue(off.getBoolean("comparable"))
@@ -154,19 +157,86 @@ class HeatMeasurementReportTest {
 
         val driver = report.getJSONObject("summary").getJSONObject("costDriver")
         assertEquals("FOUND", driver.getString("status"))
-        assertEquals("C", driver.getString("configuration"))
+        assertEquals("H", driver.getString("configuration"))
         assertEquals("The first metric of the rule decides: interrupted answers", "aborts", driver.getString("metric"))
         assertEquals(1.0, driver.getDouble("delta"), 0.0)
         assertTrue("One run per configuration is a single measurement", driver.getBoolean("singleRuns"))
-        assertEquals("[\"C\"]", driver.getJSONArray("tied").toString())
+        assertEquals("[\"H\"]", driver.getJSONArray("tied").toString())
         assertEquals(HeatReport.COST_RULE, report.getJSONObject("summary").getString("rule"))
     }
 
     @Test fun withoutInterruptedAnswersTheNextMetricOfTheRuleDecides() {
         val driver = HeatSyntheticScenarios.after().getJSONObject("summary").getJSONObject("costDriver")
-        assertEquals(listOf("FOUND", "C", "thermalMaxMedian"),
+        assertEquals(listOf("FOUND", "H", "thermalMaxMedian"),
             listOf(driver.getString("status"), driver.getString("configuration"), driver.getString("metric")))
         assertEquals(1.0, driver.getDouble("delta"), 0.0)
+    }
+
+    @Test fun withoutTheStageDraftTheFirstVisibleTextIsTheFinishedAnswerAndThatIsTheComparisonWithTheBaseline() {
+        val report = HeatSyntheticScenarios.before()
+        val draft = comparison(report, "G")
+        assertEquals(HeatMeasurement.FACTOR_STAGE_NO_ANSWER_DRAFT, draft.getString("factor"))
+        assertTrue(draft.getBoolean("comparable"))
+        val own = row(report, "G").getJSONObject("roles").getJSONObject("ERSTFRAGE")
+        assertEquals("[\"${HeatTurnRecorder.EVENT_STAGE_MESSAGE}\"]", own.getJSONArray("firstVisibleTextEvents").toString())
+        assertEquals(6_000.0, own.getDouble("firstVisibleTextMsMedian"), 0.0)
+        assertEquals("1.5 s with the draft, 6 s without it", 300.0,
+            draft.getJSONObject("delta").getJSONObject("ERSTFRAGE").getDouble("firstVisibleTextMsMedianPercent"), 0.0)
+        assertEquals(0.0, draft.getJSONObject("delta").getJSONObject("ERSTFRAGE").getDouble("totalMsMedianPercent"), 0.0)
+        assertEquals(0.0, draft.getJSONObject("delta").getJSONObject("ERSTFRAGE").getDouble("firstTokenMsMedianPercent"), 0.0)
+        // A run of G in which the stage showed a draft after all did not measure G.
+        objects(report.getJSONArray("runs")).first { it.getString("configuration") == "G" }.getJSONArray("turns").getJSONObject(0)
+            .put("firstVisibleTextEvent", HeatTurnRecorder.EVENT_STAGE_DRAFT)
+        HeatReport.withSummary(report)
+        assertEquals(listOf("FACTOR_NOT_EFFECTIVE"), reasons(report, "G"))
+    }
+
+    @Test fun theOrderWithAllToolSchemasIsComparedAlthoughItsPromptDiffersByDesign() {
+        val report = HeatSyntheticScenarios.after()
+        val tools = comparison(report, "H")
+        assertEquals(HeatMeasurement.FACTOR_TOOL_SCHEMAS, tools.getString("factor"))
+        assertTrue("The prompt is the factor of H: more than 10 % difference is the measurement, not a reason against it",
+            tools.getBoolean("comparable"))
+        val first = tools.getJSONObject("delta").getJSONObject("ERSTFRAGE")
+        assertEquals("900 against 1040 synthetic characters", 15.556, first.getDouble("promptCharactersMedianPercent"), 0.0)
+        assertEquals(166.667, first.getDouble("firstTokenMsMedianPercent"), 0.0)
+        assertEquals(166.667, first.getDouble("firstVisibleTextMsMedianPercent"), 0.0)
+        assertEquals(48.0, first.getDouble("totalMsMedianPercent"), 0.0)
+        assertEquals(48.0, tools.getJSONObject("delta").getDouble("runTotalMsMedianPercent"), 0.0)
+        assertEquals(1.0, tools.getJSONObject("delta").getDouble("thermalMaxMedian"), 0.0)
+        assertEquals(listOf(0, 1), listOf(row(report, "H").getJSONObject("roles").getJSONObject("ERSTFRAGE").getInt("toolFreeTurns"),
+            row(report, "A").getJSONObject("roles").getJSONObject("ERSTFRAGE").getInt("toolFreeTurns")))
+        val text = HeatReport.markdown(report)
+        for (expected in listOf(
+            "## Gegenüber Code68: G und H gegen die Basis A",
+            "### G · Bühne ohne Antwortentwurf (wie Code68)",
+            "| Erstfrage: erster sichtbarer Text ms | 1200 | 5000 | +3800 (+316,67 %) |",
+            "| Erstfrage: Ereignis des ersten sichtbaren Texts | ANSWER_DRAFT_HANDED_TO_STAGE_PAGE | ANSWER_HANDED_TO_STAGE_PAGE | |",
+            "### H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen)",
+            "| Erstfrage: erstes Token ms | 1200 | 3200 | +2000 (+166,67 %) |",
+            "| Erstfrage: erster sichtbarer Text ms | 1200 | 3200 | +2000 (+166,67 %) |",
+            "| Erstfrage: Gesamtzeit ms | 5000 | 7400 | +2400 (+48 %) |",
+            "| Erstfrage: Prompttext an das Modell (Zeichen) | 900 | 1040 | +140 (+15,56 %) |",
+            "| Erstfrage: ohne Werkzeugschemas an das Modell (vollständige Antworten) | 1 von 1 | 0 von 1 | |",
+            "| Abbrüche | 0 | 0 | ±0 |",
+            "| Thermalstufe max (Median je Lauf) | 1 | 2 | +1 |",
+            "die Eingabe an das Modell ist hier absichtlich anders (Prompttext der Erstfrage +15,56 %, dazu alle Werkzeugschemas); " +
+                "die 10-%-Regel gilt für diese Konfiguration nicht",
+            "- G (Bühne ohne Antwortentwurf, wie Code68)",
+            "- H (alle Werkzeugschemas, wie Code68 bei gesprochenen Erklärfragen)"))
+            assertTrue("Missing in the readable report: $expected\n\n$text", expected in text)
+
+        // The same size difference in any other configuration stays a reason against the comparison …
+        objects(report.getJSONArray("runs")).first { it.getString("configuration") == "B" }.getJSONArray("turns").getJSONObject(0)
+            .put("promptCharacters", 1_040)
+        // … and a run of H that went to the model as a plain text question did not measure H.
+        objects(report.getJSONArray("runs")).first { it.getString("configuration") == "H" }.getJSONArray("turns").getJSONObject(1)
+            .put("toolFreeRoute", true)
+        HeatReport.withSummary(report)
+        assertEquals(listOf("PROMPT_SIZE_DIFFERS"), reasons(report, "B"))
+        assertEquals(listOf("FACTOR_NOT_EFFECTIVE"), reasons(report, "H"))
+        assertTrue(HeatReport.markdown(report), "Nicht vergleichbar mit A: der geänderte Faktor hat in den Läufen nicht gewirkt. " +
+            "Die gemessenen Werte stehen trotzdem hier." in HeatReport.markdown(report))
     }
 
     @Test fun aRunThatMissedItsStartConditionMakesTheComparisonNotComparable() {
@@ -185,7 +255,7 @@ class HeatMeasurementReportTest {
         objects(report.getJSONArray("runs")).first { it.getString("configuration") == "A" }.getJSONObject("startCondition").put("reached", false)
         HeatReport.withSummary(report)
         assertTrue("A flagged baseline makes every comparison not comparable",
-            listOf("B", "C", "D", "E").all { "START_CONDITION" in reasons(report, it) })
+            listOf("B", "D", "E", "G", "H").all { "START_CONDITION" in reasons(report, it) })
         assertEquals("NOT_COMPARABLE", report.getJSONObject("summary").getJSONObject("costDriver").getString("status"))
         assertTrue(HeatReport.costDriverText(report), "nicht vergleichbar" in HeatReport.costDriverText(report))
     }
@@ -216,8 +286,12 @@ class HeatMeasurementReportTest {
         val report = HeatSyntheticScenarios.before()
         val baseline = objects(report.getJSONArray("runs")).first { it.getString("configuration") == "A" }
         val runs = JSONArray()
-        for (id in listOf("A", "B", "C", "D", "E")) runs.put(JSONObject(baseline.toString()).put("configuration", id))
+        for (id in listOf("A", "B", "D", "G", "H", "E")) runs.put(JSONObject(baseline.toString()).put("configuration", id))
         report.put("runs", runs)
+        objects(runs).filter { it.getString("configuration") == "G" }.flatMap { objects(it.getJSONArray("turns")) }
+            .forEach { it.put("firstVisibleTextEvent", HeatTurnRecorder.EVENT_STAGE_MESSAGE) }
+        objects(runs).filter { it.getString("configuration") == "H" }.flatMap { objects(it.getJSONArray("turns")) }
+            .forEach { it.put("toolFreeRoute", false) }
         // Make the copied runs satisfy the factor checks without changing a measured value.
         objects(runs).filter { it.getString("configuration") == "B" }.flatMap { objects(it.getJSONArray("turns")) }
             .forEach { it.getJSONObject("stageFrames").put("delivered", 0) }
@@ -252,29 +326,44 @@ class HeatMeasurementReportTest {
             "- Sprachausgabe: aus",
             "## Wärme und Abbrüche je Konfiguration",
             "| A · Basis: Bühne ruht beim Rechnen, Gemma 4 E4B, Gespräch nicht behalten | 1 | 0 | 2 von 2 | 0 | 1 | 1 |",
-            "| C · Bühne mit voller Bewegung beim Rechnen (wie Code67) | 1 | 0 | 0 von 1 | 1 (1× vom Hitzeschutz angehalten) | 3 | 3 |",
+            "| H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen) | 1 | 0 | 0 von 1 | 1 (1× vom Hitzeschutz angehalten) | 3 | 3 |",
+            "| C · Bühne mit voller Bewegung beim Rechnen (wie Code67) | NOT_RUN | – |",
             "| F · GPU-Beschleuniger statt CPU | NOT_RUN | – |",
             "## Zeiten und Bildzeit · Erstfrage",
-            "| A | 1 von 1 | 1500 | 6000 | 6000 | 26,67 | 8,5 / 17 / 17 | 0 % |",
+            "| A | 1 von 1 | 1500 | 1500 | 6000 | 26,67 | 8,5 / 17 / 17 | 0 % |",
+            "| G | 1 von 1 | 1500 | 6000 | 6000 | 26,67 | 8,5 / 17 / 17 | 0 % |",
             "## Zeiten und Bildzeit · Folgefrage",
-            "| C | NOT_RUN | – |",
+            "| H | NOT_RUN | – |",
+            "Als reine Textfrage ohne Werkzeugschemata an das Modell gegeben (vollständige Antworten): A 2 von 2 · B 2 von 2 · " +
+                "D 2 von 2 · E 2 von 2 · G 2 von 2 · H 0 von 0.",
             "## Vergleich mit der Basis A (jeweils ein Faktor)",
             "| B · Bühne aus (Seite unsichtbar) | ja | ±0 | −1 | ",
-            "| F · GPU-Beschleuniger statt CPU | nicht vergleichbar | – | – | – | – | – | – | nicht gelaufen: Synthetisch: GPU wird nicht geschaltet. |",
+            "| G · Bühne ohne Antwortentwurf (wie Code68) | ja | ±0 | ±0 | ±0 | ±0 | ±0 | ±0 | +300 | – |",
+            "| F · GPU-Beschleuniger statt CPU | nicht vergleichbar | – | – | – | – | – | – | – | nicht gelaufen: Synthetisch: GPU wird nicht geschaltet. |",
+            "| C · Bühne mit voller Bewegung beim Rechnen (wie Code67) | nicht vergleichbar | – | – | – | – | – | – | – | nicht gelaufen: " +
+                "Nicht Teil der Kurzmessung: die volle Bühnenbewegung von Code67 wird nur in der vollen Messung gemessen. |",
+            "die Eingabe an das Modell ist hier absichtlich anders (Prompttext der Erstfrage nicht gemessen, dazu alle Werkzeugschemas)",
+            "## Gegenüber Code68: G und H gegen die Basis A",
+            "| Erstfrage: erster sichtbarer Text ms | 1500 | 6000 | +4500 (+300 %) |",
+            "| Erstfrage: erstes Token ms | 1500 | – | – |",
+            "| Abbrüche | 0 | 1 | +1 |",
+            "| Thermalstufe max (Median je Lauf) | 1 | 3 | +2 |",
             "## Größter gemessener Kostentreiber",
             HeatReport.COST_RULE,
-            "Ergebnis: C · Bühne mit voller Bewegung beim Rechnen (wie Code67) – Abbrüche +1 gegenüber der Basis.",
+            "Ergebnis: H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen) – Abbrüche +1 gegenüber der Basis.",
             "Einzelmessung je Konfiguration",
             "## Nicht gelaufen (NOT_RUN)",
             "## Nicht vollständig beantwortete Fragen im Einzelnen",
-            "- Lauf 3 · C · kurz · Erstfrage: vom Hitzeschutz angehalten nach 3000 ms, 60 Zeichen erzeugt, Thermalstufe max 3",
+            "- Lauf 5 · H · kurz · Erstfrage: vom Hitzeschutz angehalten nach 3000 ms, 60 Zeichen erzeugt, Thermalstufe max 3",
             "## Modell laden und entladen (nicht in den Antwortzeiten enthalten)",
             "- E · UNLOAD: 200 ms · in Ordnung",
             "## Wiederherstellung",
             "- Geladenes Modell: zurückgestellt",
             "- Bühne: zurückgestellt",
+            "- Antwortentwurf der Bühne: zurückgestellt",
+            "- Modellroute (Werkzeugschemas): zurückgestellt",
             "## Was die Zahlen bedeuten",
-            "In dieser Messung: " + HeatTurnRecorder.EVENT_STAGE_MESSAGE + ".",
+            "In dieser Messung: " + HeatTurnRecorder.EVENT_STAGE_DRAFT + ", " + HeatTurnRecorder.EVENT_STAGE_MESSAGE + ".",
             "Es steht nirgends ein Schätzwert."))
             assertTrue("Missing in the readable report: $expected\n\n$text", expected in text)
         assertFalse("null" in text)
@@ -284,9 +373,11 @@ class HeatMeasurementReportTest {
         val report = HeatSyntheticScenarios.before()
         val saved = HeatReport.chatSummary(report, listOf("continuum-waermemessung-kurz-x.json", "continuum-waermemessung-kurz-x.md"), "Download-Ordner")
         assertTrue(saved, saved.startsWith("WÄRME- UND ZEITMESSUNG (kurz) · abgeschlossen\n" + HeatMeasurement.INPUT_NOTE + "."))
-        assertTrue(saved, "\nA: 1 Lauf · Abbrüche 0 · Thermalstufe max 1 · Akku +1,2 °C · Erstfrage gesamt 6000 ms, erster sichtbarer Text 6000 ms" in saved)
+        assertTrue(saved, "\nA: 1 Lauf · Abbrüche 0 · Thermalstufe max 1 · Akku +1,2 °C · Erstfrage gesamt 6000 ms, erster sichtbarer Text 1500 ms" in saved)
         assertTrue(saved, "\nF: NOT_RUN" in saved)
-        assertTrue(saved, "Ergebnis: C · " in saved)
+        assertTrue(saved, "\nC: NOT_RUN" in saved)
+        assertTrue(saved, "\nG: 1 Lauf · Abbrüche 0 · Thermalstufe max 1 · Akku +1,2 °C · Erstfrage gesamt 6000 ms, erster sichtbarer Text 6000 ms" in saved)
+        assertTrue(saved, "Ergebnis: H · " in saved)
         assertTrue(saved, "Bericht gespeichert (Download-Ordner): continuum-waermemessung-kurz-x.json und continuum-waermemessung-kurz-x.md" in saved)
         assertFalse("ACHTUNG" in saved)
         val unsaved = HeatReport.chatSummary(report.put("restoreComplete", false).put("stop", JSONObject().put("reason", HeatStop.OWNER_STOP)),

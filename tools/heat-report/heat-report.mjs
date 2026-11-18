@@ -138,6 +138,8 @@ function factorEffective(factor, runs) {
   const turns = runs.flatMap(turnsOf).filter(turn => turn.outcome === COMPLETE);
   if (factor === 'DIALOGUE_REUSE') return turns.some(turn => turn.role === 'FOLGEFRAGE' && turn.dialogueReused === true);
   if (factor === 'STAGE_OFF') return !turns.some(turn => turn.stageFrames?.status === MEASURED && (turn.stageFrames.delivered || 0) > 0);
+  if (factor === 'STAGE_NO_ANSWER_DRAFT') return !turns.some(turn => turn.firstVisibleTextEvent === 'ANSWER_DRAFT_HANDED_TO_STAGE_PAGE');
+  if (factor === 'TOOL_SCHEMAS_IN_PROMPT') return !turns.some(turn => turn.toolFreeRoute === true);
   return true;
 }
 
@@ -153,7 +155,9 @@ function comparison(configuration, own, baseline, runs) {
     if (JSON.stringify(own.chargingStates) !== JSON.stringify(baseline.chargingStates) ||
       JSON.stringify(own.powerSaveStates) !== JSON.stringify(baseline.powerSaveStates)) reasons.push('CONDITIONS_CHANGED');
     const size = own.roles[ROLES[0]].promptCharactersMedian, base = baseline.roles[ROLES[0]].promptCharactersMedian;
-    if (size !== null && base !== null && base > 0 && Math.abs(size - base) / base > 0.10) reasons.push('PROMPT_SIZE_DIFFERS');
+    // The configuration whose one factor is the prompt (all tool schemas) differs in prompt size by design.
+    if ((configuration.factor ?? null) !== 'TOOL_SCHEMAS_IN_PROMPT' && size !== null && base !== null && base > 0 &&
+      Math.abs(size - base) / base > 0.10) reasons.push('PROMPT_SIZE_DIFFERS');
     if (!factorEffective(configuration.factor ?? null, runs.filter(run => run.configuration === configuration.id)))
       reasons.push('FACTOR_NOT_EFFECTIVE');
   }
@@ -165,7 +169,7 @@ function comparison(configuration, own, baseline, runs) {
     delta.runTotalMsMedianPercent = round3(percent(own.runTotalMsMedian, baseline.runTotalMsMedian));
     for (const role of ROLES) {
       delta[role] = {};
-      for (const key of ['firstTokenMsMedian', 'firstVisibleTextMsMedian', 'totalMsMedian'])
+      for (const key of ['firstTokenMsMedian', 'firstVisibleTextMsMedian', 'totalMsMedian', 'promptCharactersMedian'])
         delta[role][key + 'Percent'] = round3(percent(own.roles[role][key], baseline.roles[role][key]));
     }
   }
@@ -281,6 +285,56 @@ function driverText(report, summary) {
     : 'Ergebnis: nicht vergleichbar – keine Konfiguration ist mit der Basis vergleichbar; es wird kein Kostentreiber genannt.';
 }
 
+const promptNote = (configuration, delta) => {
+  if ((configuration?.factor ?? null) !== 'TOOL_SCHEMAS_IN_PROMPT' || !Object.keys(delta).length) return null;
+  const size = number(delta[ROLES[0]], 'promptCharactersMedianPercent');
+  return `die Eingabe an das Modell ist hier absichtlich anders (Prompttext der Erstfrage ${size === null ? 'nicht gemessen' : signed(size) + ' %'}, dazu alle Werkzeugschemas); die 10-%-Regel gilt für diese Konfiguration nicht`;
+};
+
+/** G and H against the baseline: one behaviour each put back to Code68; only values of the report. */
+function code68Section(report, summary) {
+  const rows = new Map(summary.rows.map(entry => [entry.configuration, entry]));
+  const comparisons = new Map(summary.comparisons.map(entry => [entry.configuration, entry]));
+  const base = rows.get(summary.baseline);
+  const back = list(report.configurations).filter(entry => entry.factor === 'STAGE_NO_ANSWER_DRAFT' || entry.factor === 'TOOL_SCHEMAS_IN_PROMPT');
+  if (!base || !back.length) return [];
+  const out = [`### Gegenüber Code68: G und H gegen die Basis ${base.configuration}`, '',
+    `${base.configuration} ist diese App-Version. G und H stellen je genau ein Verhalten auf den Stand von Code68 zurück; „Δ“ ist Code68-Verhalten minus ${base.configuration}.`, ''];
+  for (const configuration of back) {
+    const own = rows.get(configuration.id), tools = configuration.factor === 'TOOL_SCHEMAS_IN_PROMPT';
+    out.push(`#### ${label(configuration)}`, '');
+    if (own.runs === 0 || base.runs === 0) {
+      out.push(`${NOT_RUN}: ${own.runs === 0 ? text(configuration, 'reason') ?? 'ohne Angabe' : 'die Basis ist nicht gelaufen'}`, '');
+      continue;
+    }
+    const reasons = comparisons.get(configuration.id)?.reasons ?? [];
+    if (reasons.length) out.push(`Nicht vergleichbar mit ${base.configuration}: ${reasons.map(reason => reasonText(reason, configuration)).join('; ')}. Die gemessenen Werte stehen trotzdem hier.`, '');
+    const lines = [];
+    const line = (name, a, b, relative) => lines.push([name, plain(a), plain(b), a == null || b == null ? '–'
+      : signed(round3(b - a)) + (relative && a !== 0 ? ` (${signed(round3((b - a) / a * 100))} %)` : '')]);
+    for (const role of ROLES) {
+      const a = base.roles[role], b = own.roles[role], which = ROLE_NAMES[role];
+      if (tools) line(`${which}: erstes Token ms`, a.firstTokenMsMedian, b.firstTokenMsMedian, true);
+      line(`${which}: erster sichtbarer Text ms`, a.firstVisibleTextMsMedian, b.firstVisibleTextMsMedian, true);
+      if (tools) {
+        line(`${which}: Gesamtzeit ms`, a.totalMsMedian, b.totalMsMedian, true);
+        line(`${which}: Prompttext an das Modell (Zeichen)`, a.promptCharactersMedian, b.promptCharactersMedian, true);
+      }
+      lines.push([`${which}: Ereignis des ersten sichtbaren Texts`, a.firstVisibleTextEvents.join(', ') || '–', b.firstVisibleTextEvents.join(', ') || '–', '']);
+      if (tools) lines.push([`${which}: ohne Werkzeugschemas an das Modell (vollständige Antworten)`,
+        `${a.toolFreeTurns} von ${a.complete}`, `${b.toolFreeTurns} von ${b.complete}`, '']);
+    }
+    if (tools) {
+      line('Abbrüche', base.aborts, own.aborts, false);
+      line('Thermalstufe max (Median je Lauf)', base.thermalMaxMedian, own.thermalMaxMedian, false);
+      line('Headroom max (Median je Lauf)', base.headroomMaxMedian, own.headroomMaxMedian, false);
+      line('Akku-Anstieg °C (Median je Lauf)', base.batteryRiseCMedian, own.batteryRiseCMedian, false);
+    }
+    out.push(table(['Kennzahl', base.configuration, configuration.id, 'Δ'], lines), '');
+  }
+  return out;
+}
+
 const RULE = 'Regel: Einzelfaktor-Konfigurationen, die mit der Basis vergleichbar sind, werden über die Mediane je Lauf verglichen; ' +
   'geprüft werden der Reihe nach Abbrüche (≥ 1), höchste Thermalstufe (≥ 1), Thermal-Headroom (≥ 0,05), Anstieg der ' +
   'Akkutemperatur (≥ 0,5 °C), Gesamtzeit je Lauf (≥ 10 %). Die erste Kennzahl mit einer Mindeständerung entscheidet.';
@@ -317,14 +371,16 @@ export function single(report) {
     })), '');
   out.push(`### Vergleich mit der Basis ${summary.baseline ?? '–'} (jeweils ein Faktor)`, '', table(
     ['Konfiguration', 'Vergleichbar', 'Abbrüche Δ', 'Thermalstufe Δ', 'Headroom Δ', 'Akku-Anstieg Δ °C', 'Gesamtzeit je Lauf Δ %',
-      'Erstfrage: erster sichtbarer Text Δ %', 'Hinweis'],
+      'Erstfrage: erstes Token Δ %', 'Erstfrage: erster sichtbarer Text Δ %', 'Hinweis'],
     summary.comparisons.map(entry => {
       const configuration = configurations.find(item => item.id === entry.configuration);
       return [label(configuration), entry.comparable ? 'ja' : 'nicht vergleichbar', signed(entry.delta.aborts),
         signed(entry.delta.thermalMaxMedian), signed(entry.delta.headroomMaxMedian), signed(entry.delta.batteryRiseCMedian),
-        signed(entry.delta.runTotalMsMedianPercent), signed(entry.delta[ROLES[0]]?.firstVisibleTextMsMedianPercent),
-        entry.reasons.map(reason => reasonText(reason, configuration)).join('; ') || '–'];
-    })), '', 'Δ = Konfiguration minus Basis.', '', '### Größter gemessener Kostentreiber', '', RULE, '', driverText(report, summary), '');
+        signed(entry.delta.runTotalMsMedianPercent), signed(entry.delta[ROLES[0]]?.firstTokenMsMedianPercent),
+        signed(entry.delta[ROLES[0]]?.firstVisibleTextMsMedianPercent),
+        [...entry.reasons.map(reason => reasonText(reason, configuration)), promptNote(configuration, entry.delta)].filter(Boolean).join('; ') || '–'];
+    })), '', 'Δ = Konfiguration minus Basis.', '', ...code68Section(report, summary),
+    '### Größter gemessener Kostentreiber', '', RULE, '', driverText(report, summary), '');
   const interrupted = list(report.runs).flatMap(run => turnsOf(run).filter(turn => turn.outcome !== COMPLETE && turn.outcome !== NOT_RUN)
     .map(turn => `- Lauf ${run.index} · ${run.configuration} · ${run.prompt} · ${ROLE_NAMES[turn.role] ?? turn.role}: ${OUTCOMES[turn.outcome] ?? turn.outcome} nach ${plain(turn.totalMs)} ms, Thermalstufe max ${plain(turn.thermal?.max)}`));
   if (interrupted.length) out.push('### Nicht vollständig beantwortete Fragen', '', ...interrupted, '');

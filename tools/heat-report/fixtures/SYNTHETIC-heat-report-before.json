@@ -9,16 +9,18 @@
      "batteryRiseCMedian": -0.4,
      "runTotalMsMedianPercent": -6.667,
      "FOLGEFRAGE": {
+      "promptCharactersMedianPercent": 0,
       "firstTokenMsMedianPercent": 0,
       "totalMsMedianPercent": -6.667,
-      "firstVisibleTextMsMedianPercent": -6.667
+      "firstVisibleTextMsMedianPercent": 273.333
      },
      "thermalMaxMedian": -1,
      "headroomMaxMedian": -0.04,
      "ERSTFRAGE": {
+      "promptCharactersMedianPercent": 0,
       "firstTokenMsMedianPercent": 0,
       "totalMsMedianPercent": -6.667,
-      "firstVisibleTextMsMedianPercent": -6.667
+      "firstVisibleTextMsMedianPercent": 273.333
      },
      "aborts": 0
     },
@@ -26,27 +28,11 @@
     "comparable": true
    },
    {
-    "reasons": [],
+    "reasons": ["NOT_RUN"],
     "configuration": "C",
-    "delta": {
-     "batteryRiseCMedian": 0.1,
-     "runTotalMsMedianPercent": null,
-     "FOLGEFRAGE": {
-      "firstTokenMsMedianPercent": null,
-      "totalMsMedianPercent": null,
-      "firstVisibleTextMsMedianPercent": null
-     },
-     "thermalMaxMedian": 2,
-     "headroomMaxMedian": 0.01,
-     "ERSTFRAGE": {
-      "firstTokenMsMedianPercent": null,
-      "totalMsMedianPercent": null,
-      "firstVisibleTextMsMedianPercent": null
-     },
-     "aborts": 1
-    },
+    "delta": {},
     "factor": "STAGE_FULL_EFFECTS",
-    "comparable": true
+    "comparable": false
    },
    {
     "reasons": [],
@@ -55,13 +41,15 @@
      "batteryRiseCMedian": -0.3,
      "runTotalMsMedianPercent": -25,
      "FOLGEFRAGE": {
+      "promptCharactersMedianPercent": 0,
       "firstTokenMsMedianPercent": -73.333,
       "totalMsMedianPercent": -50,
-      "firstVisibleTextMsMedianPercent": -50
+      "firstVisibleTextMsMedianPercent": -73.333
      },
      "thermalMaxMedian": 0,
      "headroomMaxMedian": -0.03,
      "ERSTFRAGE": {
+      "promptCharactersMedianPercent": 0,
       "firstTokenMsMedianPercent": 0,
       "totalMsMedianPercent": 0,
       "firstVisibleTextMsMedianPercent": 0
@@ -78,6 +66,7 @@
      "batteryRiseCMedian": -0.6,
      "runTotalMsMedianPercent": -46.667,
      "FOLGEFRAGE": {
+      "promptCharactersMedianPercent": 0,
       "firstTokenMsMedianPercent": -46.667,
       "totalMsMedianPercent": -46.667,
       "firstVisibleTextMsMedianPercent": -46.667
@@ -85,6 +74,7 @@
      "thermalMaxMedian": -1,
      "headroomMaxMedian": -0.06,
      "ERSTFRAGE": {
+      "promptCharactersMedianPercent": 0,
       "firstTokenMsMedianPercent": -46.667,
       "totalMsMedianPercent": -46.667,
       "firstVisibleTextMsMedianPercent": -46.667
@@ -100,18 +90,68 @@
     "delta": {},
     "factor": "BACKEND_GPU",
     "comparable": false
+   },
+   {
+    "reasons": [],
+    "configuration": "G",
+    "delta": {
+     "batteryRiseCMedian": 0,
+     "runTotalMsMedianPercent": 0,
+     "FOLGEFRAGE": {
+      "promptCharactersMedianPercent": 0,
+      "firstTokenMsMedianPercent": 0,
+      "totalMsMedianPercent": 0,
+      "firstVisibleTextMsMedianPercent": 300
+     },
+     "thermalMaxMedian": 0,
+     "headroomMaxMedian": 0,
+     "ERSTFRAGE": {
+      "promptCharactersMedianPercent": 0,
+      "firstTokenMsMedianPercent": 0,
+      "totalMsMedianPercent": 0,
+      "firstVisibleTextMsMedianPercent": 300
+     },
+     "aborts": 0
+    },
+    "factor": "STAGE_NO_ANSWER_DRAFT",
+    "comparable": true
+   },
+   {
+    "reasons": [],
+    "configuration": "H",
+    "delta": {
+     "batteryRiseCMedian": 0.1,
+     "runTotalMsMedianPercent": null,
+     "FOLGEFRAGE": {
+      "promptCharactersMedianPercent": null,
+      "firstTokenMsMedianPercent": null,
+      "totalMsMedianPercent": null,
+      "firstVisibleTextMsMedianPercent": null
+     },
+     "thermalMaxMedian": 2,
+     "headroomMaxMedian": 0.01,
+     "ERSTFRAGE": {
+      "promptCharactersMedianPercent": null,
+      "firstTokenMsMedianPercent": null,
+      "totalMsMedianPercent": null,
+      "firstVisibleTextMsMedianPercent": null
+     },
+     "aborts": 1
+    },
+    "factor": "TOOL_SCHEMAS_IN_PROMPT",
+    "comparable": true
    }
   ],
   "rule": "Regel: Jede Konfiguration, die sich in genau einem Faktor von der Basis A unterscheidet und mit ihr vergleichbar ist, wird über die Mediane je Lauf mit A verglichen. Die Kennzahlen werden in dieser Reihenfolge geprüft: 1. Abbrüche (Anzahl), 2. höchste Thermalstufe, 3. höchster Thermal-Headroom, 4. Anstieg der Akkutemperatur, 5. Gesamtzeit je Lauf. Kostentreiber ist der Faktor mit der betragsmäßig größten Änderung in der ersten Kennzahl, in der überhaupt eine Konfiguration die Mindeständerung erreicht (1 Abbruch, 1 Thermalstufe, 0,05 Headroom, 0,5 °C, 10 % Zeit). Erreicht keine Konfiguration eine Mindeständerung, wird kein Kostentreiber genannt.",
   "baseline": "A",
   "costDriver": {
-   "tied": ["C"],
+   "tied": ["H"],
    "singleRuns": true,
-   "configuration": "C",
+   "configuration": "H",
    "metric": "aborts",
    "metricLabel": "Abbrüche",
    "delta": 1,
-   "factor": "STAGE_FULL_EFFECTS",
+   "factor": "TOOL_SCHEMAS_IN_PROMPT",
    "status": "FOUND"
   },
   "rows": [
@@ -129,7 +169,7 @@
       "stageFramesPerSecondMedian": 3.333,
       "windowP50MsMedian": 8.5,
       "promptCharactersMedian": 900,
-      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "firstVisibleTextEvents": ["ANSWER_DRAFT_HANDED_TO_STAGE_PAGE"],
       "stageIntervalP90MsMedian": 200,
       "windowP90MsMedian": 17,
       "turns": 1,
@@ -140,7 +180,7 @@
       "windowOver2VsyncShareMedian": 0,
       "charsPerSecondMedian": 26.667,
       "stageIntervalP99MsMedian": 200,
-      "firstVisibleTextMsMedian": 6000,
+      "firstVisibleTextMsMedian": 1500,
       "complete": 1,
       "toolFreeTurns": 1,
       "windowFramesPerSecondMedian": 0.667
@@ -153,7 +193,7 @@
       "stageFramesPerSecondMedian": 3.333,
       "windowP50MsMedian": 8.5,
       "promptCharactersMedian": 900,
-      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "firstVisibleTextEvents": ["ANSWER_DRAFT_HANDED_TO_STAGE_PAGE"],
       "stageIntervalP90MsMedian": 200,
       "windowP90MsMedian": 17,
       "turns": 1,
@@ -164,7 +204,7 @@
       "windowOver2VsyncShareMedian": 0,
       "charsPerSecondMedian": 26.667,
       "stageIntervalP99MsMedian": 200,
-      "firstVisibleTextMsMedian": 6000,
+      "firstVisibleTextMsMedian": 1500,
       "complete": 1,
       "toolFreeTurns": 1,
       "windowFramesPerSecondMedian": 0.667
@@ -253,7 +293,7 @@
    },
    {
     "configuration": "C",
-    "thermalMaxMedian": 3,
+    "thermalMaxMedian": null,
     "runTotalMsMedian": null,
     "cancelledByOwner": 0,
     "roles": {
@@ -292,7 +332,7 @@
       "firstVisibleTextEvents": [],
       "stageIntervalP90MsMedian": null,
       "windowP90MsMedian": null,
-      "turns": 1,
+      "turns": 0,
       "firstVisibleTextHidden": 0,
       "dialogueReusedTurns": 0,
       "windowFramesMeasured": 0,
@@ -306,18 +346,18 @@
       "windowFramesPerSecondMedian": null
      }
     },
-    "chargingStates": ["false"],
-    "headroomMaxMedian": 0.43,
-    "powerSaveStates": ["false"],
-    "turns": 1,
-    "batteryRiseCMedian": 1.3,
+    "chargingStates": [],
+    "headroomMaxMedian": null,
+    "powerSaveStates": [],
+    "turns": 0,
+    "batteryRiseCMedian": null,
     "withoutModelCall": 0,
-    "thermalMax": 3,
+    "thermalMax": null,
     "startConditionMissed": 0,
     "complete": 0,
-    "aborts": 1,
-    "abortKinds": {"STOPPED_BY_THERMAL_GUARD": 1},
-    "runs": 1
+    "aborts": 0,
+    "abortKinds": {},
+    "runs": 0
    },
    {
     "configuration": "D",
@@ -333,7 +373,7 @@
       "stageFramesPerSecondMedian": 6.667,
       "windowP50MsMedian": 8.5,
       "promptCharactersMedian": 900,
-      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "firstVisibleTextEvents": ["ANSWER_DRAFT_HANDED_TO_STAGE_PAGE"],
       "stageIntervalP90MsMedian": 200,
       "windowP90MsMedian": 17,
       "turns": 1,
@@ -344,7 +384,7 @@
       "windowOver2VsyncShareMedian": 0,
       "charsPerSecondMedian": 46.154,
       "stageIntervalP99MsMedian": 200,
-      "firstVisibleTextMsMedian": 3000,
+      "firstVisibleTextMsMedian": 400,
       "complete": 1,
       "toolFreeTurns": 1,
       "windowFramesPerSecondMedian": 1.333
@@ -357,7 +397,7 @@
       "stageFramesPerSecondMedian": 3.333,
       "windowP50MsMedian": 8.5,
       "promptCharactersMedian": 900,
-      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "firstVisibleTextEvents": ["ANSWER_DRAFT_HANDED_TO_STAGE_PAGE"],
       "stageIntervalP90MsMedian": 200,
       "windowP90MsMedian": 17,
       "turns": 1,
@@ -368,7 +408,7 @@
       "windowOver2VsyncShareMedian": 0,
       "charsPerSecondMedian": 26.667,
       "stageIntervalP99MsMedian": 200,
-      "firstVisibleTextMsMedian": 6000,
+      "firstVisibleTextMsMedian": 1500,
       "complete": 1,
       "toolFreeTurns": 1,
       "windowFramesPerSecondMedian": 0.667
@@ -401,7 +441,7 @@
       "stageFramesPerSecondMedian": 6.25,
       "windowP50MsMedian": 8.5,
       "promptCharactersMedian": 900,
-      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "firstVisibleTextEvents": ["ANSWER_DRAFT_HANDED_TO_STAGE_PAGE"],
       "stageIntervalP90MsMedian": 200,
       "windowP90MsMedian": 17,
       "turns": 1,
@@ -412,7 +452,7 @@
       "windowOver2VsyncShareMedian": 0,
       "charsPerSecondMedian": 50,
       "stageIntervalP99MsMedian": 200,
-      "firstVisibleTextMsMedian": 3200,
+      "firstVisibleTextMsMedian": 800,
       "complete": 1,
       "toolFreeTurns": 1,
       "windowFramesPerSecondMedian": 1.25
@@ -425,7 +465,7 @@
       "stageFramesPerSecondMedian": 6.25,
       "windowP50MsMedian": 8.5,
       "promptCharactersMedian": 900,
-      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "firstVisibleTextEvents": ["ANSWER_DRAFT_HANDED_TO_STAGE_PAGE"],
       "stageIntervalP90MsMedian": 200,
       "windowP90MsMedian": 17,
       "turns": 1,
@@ -436,7 +476,7 @@
       "windowOver2VsyncShareMedian": 0,
       "charsPerSecondMedian": 50,
       "stageIntervalP99MsMedian": 200,
-      "firstVisibleTextMsMedian": 3200,
+      "firstVisibleTextMsMedian": 800,
       "complete": 1,
       "toolFreeTurns": 1,
       "windowFramesPerSecondMedian": 1.25
@@ -522,12 +562,158 @@
     "aborts": 0,
     "abortKinds": {},
     "runs": 0
+   },
+   {
+    "configuration": "G",
+    "thermalMaxMedian": 1,
+    "runTotalMsMedian": 12000,
+    "cancelledByOwner": 0,
+    "roles": {
+     "FOLGEFRAGE": {
+      "firstTokenMsMedian": 1500,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 3.333,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 6000,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 26.667,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 6000,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.667
+     },
+     "ERSTFRAGE": {
+      "firstTokenMsMedian": 1500,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 3.333,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 6000,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 26.667,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 6000,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.667
+     }
+    },
+    "chargingStates": ["false"],
+    "headroomMaxMedian": 0.42,
+    "powerSaveStates": ["false"],
+    "turns": 2,
+    "batteryRiseCMedian": 1.2,
+    "withoutModelCall": 0,
+    "thermalMax": 1,
+    "startConditionMissed": 0,
+    "complete": 2,
+    "aborts": 0,
+    "abortKinds": {},
+    "runs": 1
+   },
+   {
+    "configuration": "H",
+    "thermalMaxMedian": 3,
+    "runTotalMsMedian": null,
+    "cancelledByOwner": 0,
+    "roles": {
+     "FOLGEFRAGE": {
+      "firstTokenMsMedian": null,
+      "windowP99MsMedian": null,
+      "stageIntervalP50MsMedian": null,
+      "stageFramesMeasured": 0,
+      "stageFramesPerSecondMedian": null,
+      "windowP50MsMedian": null,
+      "promptCharactersMedian": null,
+      "firstVisibleTextEvents": [],
+      "stageIntervalP90MsMedian": null,
+      "windowP90MsMedian": null,
+      "turns": 0,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 0,
+      "totalMsMedian": null,
+      "windowOver2VsyncShareMedian": null,
+      "charsPerSecondMedian": null,
+      "stageIntervalP99MsMedian": null,
+      "firstVisibleTextMsMedian": null,
+      "complete": 0,
+      "toolFreeTurns": 0,
+      "windowFramesPerSecondMedian": null
+     },
+     "ERSTFRAGE": {
+      "firstTokenMsMedian": null,
+      "windowP99MsMedian": null,
+      "stageIntervalP50MsMedian": null,
+      "stageFramesMeasured": 0,
+      "stageFramesPerSecondMedian": null,
+      "windowP50MsMedian": null,
+      "promptCharactersMedian": null,
+      "firstVisibleTextEvents": [],
+      "stageIntervalP90MsMedian": null,
+      "windowP90MsMedian": null,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 0,
+      "totalMsMedian": null,
+      "windowOver2VsyncShareMedian": null,
+      "charsPerSecondMedian": null,
+      "stageIntervalP99MsMedian": null,
+      "firstVisibleTextMsMedian": null,
+      "complete": 0,
+      "toolFreeTurns": 0,
+      "windowFramesPerSecondMedian": null
+     }
+    },
+    "chargingStates": ["false"],
+    "headroomMaxMedian": 0.43,
+    "powerSaveStates": ["false"],
+    "turns": 1,
+    "batteryRiseCMedian": 1.3,
+    "withoutModelCall": 0,
+    "thermalMax": 3,
+    "startConditionMissed": 0,
+    "complete": 0,
+    "aborts": 1,
+    "abortKinds": {"STOPPED_BY_THERMAL_GUARD": 1},
+    "runs": 1
    }
   ]
  },
  "restore": [
   {
    "what": "Geladenes Modell",
+   "detail": null,
+   "ok": true
+  },
+  {
+   "what": "Modellroute (Werkzeugschemas)",
+   "detail": null,
+   "ok": true
+  },
+  {
+   "what": "Antwortentwurf der Bühne",
    "detail": null,
    "ok": true
   },
@@ -551,8 +737,10 @@
  "configurations": [
   {
    "settings": {
+    "stageDraft": true,
     "stage": "RESTING",
     "dialogueReuse": false,
+    "toolSchemas": false,
     "model": "BASELINE",
     "backend": "BASELINE"
    },
@@ -572,8 +760,10 @@
   },
   {
    "settings": {
+    "stageDraft": true,
     "stage": "OFF",
     "dialogueReuse": false,
+    "toolSchemas": false,
     "model": "BASELINE",
     "backend": "BASELINE"
    },
@@ -593,29 +783,27 @@
   },
   {
    "settings": {
+    "stageDraft": true,
     "stage": "FULL_EFFECTS",
     "dialogueReuse": false,
+    "toolSchemas": false,
     "model": "BASELINE",
     "backend": "BASELINE"
    },
-   "reason": null,
+   "reason": "Nicht Teil der Kurzmessung: die volle Bühnenbewegung von Code67 wird nur in der vollen Messung gemessen.",
    "modelLifecycle": [],
-   "model": {
-    "fileName": "gemma4-e4b-it.synthetic",
-    "bytes": 1,
-    "threads": 4,
-    "backend": "CPU",
-    "id": "gemma4-e4b-it"
-   },
+   "model": null,
    "id": "C",
    "label": "Bühne mit voller Bewegung beim Rechnen (wie Code67)",
    "factor": "STAGE_FULL_EFFECTS",
-   "status": "RUN"
+   "status": "NOT_RUN"
   },
   {
    "settings": {
+    "stageDraft": true,
     "stage": "RESTING",
     "dialogueReuse": true,
+    "toolSchemas": false,
     "model": "BASELINE",
     "backend": "BASELINE"
    },
@@ -635,8 +823,10 @@
   },
   {
    "settings": {
+    "stageDraft": true,
     "stage": "RESTING",
     "dialogueReuse": false,
+    "toolSchemas": false,
     "model": "GEMMA_E2B",
     "backend": "BASELINE"
    },
@@ -683,8 +873,10 @@
   },
   {
    "settings": {
+    "stageDraft": true,
     "stage": "RESTING",
     "dialogueReuse": false,
+    "toolSchemas": false,
     "model": "BASELINE",
     "backend": "GPU"
    },
@@ -695,6 +887,52 @@
    "label": "GPU-Beschleuniger statt CPU",
    "factor": "BACKEND_GPU",
    "status": "NOT_RUN"
+  },
+  {
+   "settings": {
+    "stageDraft": false,
+    "stage": "RESTING",
+    "dialogueReuse": false,
+    "toolSchemas": false,
+    "model": "BASELINE",
+    "backend": "BASELINE"
+   },
+   "reason": null,
+   "modelLifecycle": [],
+   "model": {
+    "fileName": "gemma4-e4b-it.synthetic",
+    "bytes": 1,
+    "threads": 4,
+    "backend": "CPU",
+    "id": "gemma4-e4b-it"
+   },
+   "id": "G",
+   "label": "Bühne ohne Antwortentwurf (wie Code68)",
+   "factor": "STAGE_NO_ANSWER_DRAFT",
+   "status": "RUN"
+  },
+  {
+   "settings": {
+    "stageDraft": true,
+    "stage": "RESTING",
+    "dialogueReuse": false,
+    "toolSchemas": true,
+    "model": "BASELINE",
+    "backend": "BASELINE"
+   },
+   "reason": null,
+   "modelLifecycle": [],
+   "model": {
+    "fileName": "gemma4-e4b-it.synthetic",
+    "bytes": 1,
+    "threads": 4,
+    "backend": "CPU",
+    "id": "gemma4-e4b-it"
+   },
+   "id": "H",
+   "label": "Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen)",
+   "factor": "TOOL_SCHEMAS_IN_PROMPT",
+   "status": "RUN"
   }
  ],
  "baselineStart": {
@@ -777,7 +1015,7 @@
       "status": "MEASURED"
      },
      "answerHandoverMs": 6000,
-     "firstVisibleTextMs": 6000,
+     "firstVisibleTextMs": 1500,
      "totalMs": 6000,
      "modelCalls": 1,
      "turn": 1,
@@ -836,7 +1074,7 @@
      "answerCharacters": 120,
      "outputTokens": null,
      "outcome": "COMPLETE",
-     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "firstVisibleTextEvent": "ANSWER_DRAFT_HANDED_TO_STAGE_PAGE",
      "generatedCharacters": 120,
      "runtimeTotalMs": 6000,
      "toolFreeRoute": true,
@@ -926,7 +1164,7 @@
       "status": "MEASURED"
      },
      "answerHandoverMs": 6000,
-     "firstVisibleTextMs": 6000,
+     "firstVisibleTextMs": 1500,
      "totalMs": 6000,
      "modelCalls": 1,
      "turn": 2,
@@ -982,7 +1220,7 @@
      "answerCharacters": 120,
      "outputTokens": null,
      "outcome": "COMPLETE",
-     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "firstVisibleTextEvent": "ANSWER_DRAFT_HANDED_TO_STAGE_PAGE",
      "generatedCharacters": 120,
      "runtimeTotalMs": 6000,
      "toolFreeRoute": true,
@@ -1369,170 +1607,8 @@
     "waitedMs": 20000,
     "powerSave": false
    },
-   "configuration": "C",
-   "index": 3,
-   "repetition": 1,
-   "prompt": "kurz",
-   "turns": [
-    {
-     "role": "ERSTFRAGE",
-     "runtimeFirstTokenMs": null,
-     "stageFrames": {
-      "intervalMaxMs": 200,
-      "frameLimit": 15,
-      "frameLimitChanges": [],
-      "pageVisibility": "visible",
-      "delivered": 60,
-      "intervalP99Ms": 200,
-      "pageObservedMs": null,
-      "histogram": {
-       "overflow": 19,
-       "counts": [],
-       "maxMs": 200,
-       "bucketCount": 300,
-       "sumMs": 3800,
-       "bucketMs": 0.5
-      },
-      "observedMs": 3000,
-      "displayTicks": 240,
-      "intervalP90Ms": 200,
-      "intervalP50Ms": 200,
-      "deliveredPerSecond": 20,
-      "perSecond": [],
-      "status": "MEASURED"
-     },
-     "answerHandoverMs": 3000,
-     "firstVisibleTextMs": 3000,
-     "totalMs": 3000,
-     "modelCalls": 1,
-     "turn": 1,
-     "speechOutputMs": null,
-     "windowFrames": {
-      "over2VsyncShare": 0.5,
-      "droppedReports": 0,
-      "frames": 4,
-      "maxMs": 41.5,
-      "p90Ms": 42,
-      "vsyncMs": 16.667,
-      "over2VsyncFrames": 2,
-      "histogram": {
-       "overflow": 0,
-       "counts": [
-        [
-         16,
-         1
-        ],
-        [
-         18,
-         1
-        ],
-        [
-         68,
-         1
-        ],
-        [
-         83,
-         1
-        ]
-       ],
-       "maxMs": 41.5,
-       "bucketCount": 300,
-       "sumMs": 92.7,
-       "bucketMs": 0.5
-      },
-      "p50Ms": 9.5,
-      "observedMs": 3000,
-      "p99Ms": 42,
-      "framesPerSecond": 1.333,
-      "perSecond": [4],
-      "status": "MEASURED"
-     },
-     "promptCharacters": 900,
-     "charsPerSecond": 40,
-     "firstVisibleTextShown": true,
-     "textCharacters": 54,
-     "nativePreviewShown": null,
-     "dialogueReused": null,
-     "thermal": {
-      "max": 3,
-      "start": 0,
-      "changes": [{
-       "tMs": 1500,
-       "status": 3
-      }],
-      "end": 3
-     },
-     "answerCharacters": 60,
-     "outputTokens": null,
-     "outcome": "STOPPED_BY_THERMAL_GUARD",
-     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
-     "generatedCharacters": 60,
-     "runtimeTotalMs": null,
-     "toolFreeRoute": true,
-     "completions": ["FAILED"],
-     "inputTokens": null,
-     "dialogueReuseReason": null,
-     "message": "LOCAL_MODEL_STOPPED_THERMAL",
-     "samples": [
-      {
-       "phase": "ANSWER",
-       "batteryPercent": 80,
-       "headroom": 0.3,
-       "tMs": 0,
-       "thermalStatus": 0,
-       "batteryTempC": 30
-      },
-      {
-       "phase": "ANSWER",
-       "batteryPercent": 80,
-       "headroom": 0.3,
-       "tMs": 2000,
-       "thermalStatus": 3,
-       "batteryTempC": 30
-      },
-      {
-       "phase": "ANSWER",
-       "batteryPercent": 80,
-       "headroom": 0.43,
-       "tMs": 4000,
-       "thermalStatus": 3,
-       "batteryTempC": 31.3
-      }
-     ],
-     "nativePreviewMs": null,
-     "firstTokenMs": 1500,
-     "headroom": {
-      "max": 0.43,
-      "start": 0.3
-     },
-     "batteryTempC": {
-      "max": 31.3,
-      "start": 30,
-      "end": 31.3
-     }
-    },
-    {
-     "role": "FOLGEFRAGE",
-     "turn": 2,
-     "message": "Die vorige Frage dieses Laufs wurde nicht vollständig beantwortet.",
-     "outcome": "NOT_RUN"
-    }
-   ]
-  },
-  {
-   "startCondition": {
-    "reason": null,
-    "batteryPercent": 80,
-    "headroom": 0.3,
-    "reached": true,
-    "charging": false,
-    "thermalStatus": 0,
-    "batteryTempC": 30,
-    "waitedMs": 30000,
-    "powerSave": false
-   },
    "configuration": "D",
-   "index": 4,
+   "index": 3,
    "repetition": 1,
    "prompt": "kurz",
    "turns": [
@@ -1564,7 +1640,7 @@
       "status": "MEASURED"
      },
      "answerHandoverMs": 6000,
-     "firstVisibleTextMs": 6000,
+     "firstVisibleTextMs": 1500,
      "totalMs": 6000,
      "modelCalls": 1,
      "turn": 1,
@@ -1623,7 +1699,7 @@
      "answerCharacters": 120,
      "outputTokens": null,
      "outcome": "COMPLETE",
-     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "firstVisibleTextEvent": "ANSWER_DRAFT_HANDED_TO_STAGE_PAGE",
      "generatedCharacters": 120,
      "runtimeTotalMs": 6000,
      "toolFreeRoute": true,
@@ -1713,7 +1789,7 @@
       "status": "MEASURED"
      },
      "answerHandoverMs": 3000,
-     "firstVisibleTextMs": 3000,
+     "firstVisibleTextMs": 400,
      "totalMs": 3000,
      "modelCalls": 1,
      "turn": 2,
@@ -1769,7 +1845,7 @@
      "answerCharacters": 120,
      "outputTokens": null,
      "outcome": "COMPLETE",
-     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "firstVisibleTextEvent": "ANSWER_DRAFT_HANDED_TO_STAGE_PAGE",
      "generatedCharacters": 120,
      "runtimeTotalMs": 3000,
      "toolFreeRoute": true,
@@ -1829,8 +1905,484 @@
     "waitedMs": 30000,
     "powerSave": false
    },
-   "configuration": "E",
+   "configuration": "G",
+   "index": 4,
+   "repetition": 1,
+   "prompt": "kurz",
+   "turns": [
+    {
+     "role": "ERSTFRAGE",
+     "runtimeFirstTokenMs": 1500,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 6000,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 3.333,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 6000,
+     "firstVisibleTextMs": 6000,
+     "totalMs": 6000,
+     "modelCalls": 1,
+     "turn": 1,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 6000,
+      "p99Ms": 17,
+      "framesPerSecond": 0.667,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 26.667,
+     "firstVisibleTextShown": true,
+     "textCharacters": 54,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 1,
+      "start": 0,
+      "changes": [{
+       "tMs": 3000,
+       "status": 1
+      }],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 6000,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 0,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 2000,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.36,
+       "tMs": 6000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.6
+      },
+      {
+       "phase": "AFTER_ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.36,
+       "tMs": 7000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.6
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1500,
+     "headroom": {
+      "max": 0.36,
+      "start": 0.3
+     },
+     "batteryTempC": {
+      "max": 30.6,
+      "start": 30,
+      "end": 30.6
+     }
+    },
+    {
+     "role": "FOLGEFRAGE",
+     "runtimeFirstTokenMs": 1500,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 6000,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 3.333,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 6000,
+     "firstVisibleTextMs": 6000,
+     "totalMs": 6000,
+     "modelCalls": 1,
+     "turn": 2,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 6000,
+      "p99Ms": 17,
+      "framesPerSecond": 0.667,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 26.667,
+     "firstVisibleTextShown": true,
+     "textCharacters": 68,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 1,
+      "start": 1,
+      "changes": [],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 6000,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.36,
+       "tMs": 0,
+       "thermalStatus": 1,
+       "batteryTempC": 30.6
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.36,
+       "tMs": 2000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.6
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.36,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.6
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.42,
+       "tMs": 6000,
+       "thermalStatus": 1,
+       "batteryTempC": 31.2
+      },
+      {
+       "phase": "AFTER_ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.42,
+       "tMs": 7000,
+       "thermalStatus": 1,
+       "batteryTempC": 31.2
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1500,
+     "headroom": {
+      "max": 0.42,
+      "start": 0.36
+     },
+     "batteryTempC": {
+      "max": 31.2,
+      "start": 30.6,
+      "end": 31.2
+     }
+    }
+   ]
+  },
+  {
+   "startCondition": {
+    "reason": null,
+    "batteryPercent": 80,
+    "headroom": 0.3,
+    "reached": true,
+    "charging": false,
+    "thermalStatus": 0,
+    "batteryTempC": 30,
+    "waitedMs": 30000,
+    "powerSave": false
+   },
+   "configuration": "H",
    "index": 5,
+   "repetition": 1,
+   "prompt": "kurz",
+   "turns": [
+    {
+     "role": "ERSTFRAGE",
+     "runtimeFirstTokenMs": null,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 3000,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 6.667,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 3000,
+     "firstVisibleTextMs": 2400,
+     "totalMs": 3000,
+     "modelCalls": 1,
+     "turn": 1,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0.5,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 41.5,
+      "p90Ms": 42,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 2,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         1
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         68,
+         1
+        ],
+        [
+         83,
+         1
+        ]
+       ],
+       "maxMs": 41.5,
+       "bucketCount": 300,
+       "sumMs": 92.7,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 9.5,
+      "observedMs": 3000,
+      "p99Ms": 42,
+      "framesPerSecond": 1.333,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 1040,
+     "charsPerSecond": 100,
+     "firstVisibleTextShown": true,
+     "textCharacters": 54,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 3,
+      "start": 0,
+      "changes": [{
+       "tMs": 1500,
+       "status": 3
+      }],
+      "end": 3
+     },
+     "answerCharacters": 60,
+     "outputTokens": null,
+     "outcome": "STOPPED_BY_THERMAL_GUARD",
+     "firstVisibleTextEvent": "ANSWER_DRAFT_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 60,
+     "runtimeTotalMs": null,
+     "toolFreeRoute": false,
+     "completions": ["FAILED"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": "LOCAL_MODEL_STOPPED_THERMAL",
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 0,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 2000,
+       "thermalStatus": 3,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.43,
+       "tMs": 4000,
+       "thermalStatus": 3,
+       "batteryTempC": 31.3
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 2400,
+     "headroom": {
+      "max": 0.43,
+      "start": 0.3
+     },
+     "batteryTempC": {
+      "max": 31.3,
+      "start": 30,
+      "end": 31.3
+     }
+    },
+    {
+     "role": "FOLGEFRAGE",
+     "turn": 2,
+     "message": "Die vorige Frage dieses Laufs wurde nicht vollständig beantwortet.",
+     "outcome": "NOT_RUN"
+    }
+   ]
+  },
+  {
+   "startCondition": {
+    "reason": null,
+    "batteryPercent": 80,
+    "headroom": 0.3,
+    "reached": true,
+    "charging": false,
+    "thermalStatus": 0,
+    "batteryTempC": 30,
+    "waitedMs": 30000,
+    "powerSave": false
+   },
+   "configuration": "E",
+   "index": 6,
    "repetition": 1,
    "prompt": "kurz",
    "turns": [
@@ -1862,7 +2414,7 @@
       "status": "MEASURED"
      },
      "answerHandoverMs": 3200,
-     "firstVisibleTextMs": 3200,
+     "firstVisibleTextMs": 800,
      "totalMs": 3200,
      "modelCalls": 1,
      "turn": 1,
@@ -1918,7 +2470,7 @@
      "answerCharacters": 120,
      "outputTokens": null,
      "outcome": "COMPLETE",
-     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "firstVisibleTextEvent": "ANSWER_DRAFT_HANDED_TO_STAGE_PAGE",
      "generatedCharacters": 120,
      "runtimeTotalMs": 3200,
      "toolFreeRoute": true,
@@ -2000,7 +2552,7 @@
       "status": "MEASURED"
      },
      "answerHandoverMs": 3200,
-     "firstVisibleTextMs": 3200,
+     "firstVisibleTextMs": 800,
      "totalMs": 3200,
      "modelCalls": 1,
      "turn": 2,
@@ -2056,7 +2608,7 @@
      "answerCharacters": 120,
      "outputTokens": null,
      "outcome": "COMPLETE",
-     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "firstVisibleTextEvent": "ANSWER_DRAFT_HANDED_TO_STAGE_PAGE",
      "generatedCharacters": 120,
      "runtimeTotalMs": 3200,
      "toolFreeRoute": true,
@@ -2126,8 +2678,9 @@
  "order": [
   "A:kurz:1",
   "B:kurz:1",
-  "C:kurz:1",
   "D:kurz:1",
+  "G:kurz:1",
+  "H:kurz:1",
   "E:kurz:1",
   "F:kurz:1"
  ]

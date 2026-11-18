@@ -14021,13 +14021,15 @@ class AgentActivity : Activity() {
                 // identity, private memory and prior bot conversations are not imported.
                 // A normal explanation must not spend half the native 4096-token window
                 // on 33 registered tool schemas. Device work and tool continuations remain unchanged.
-                val textOnlyTurn = (documentDraftTurn != null && botTask == null &&
+                // Measurement only (configuration H of the owner's „Wärme- und Zeitmessung“): the turn keeps the route
+                // with all tool schemas, as Code68 sent spoken explanation requests. Never set outside such a run.
+                val textOnlyTurn = !heatMeasurement.toolSchemasForced && ((documentDraftTurn != null && botTask == null &&
                     codingPlanning == null && observations.isEmpty() && reflection == null) ||
                     at.heinz.deviceai.cognitive.LocalTextOnlyInferenceRoute.useToolFree(
                         text, observations.isNotEmpty(), reflection != null,
                         botTask != null, codingPlanning != null,
                         priorTextOnlyResponse = previousLocalReply?.textOnly == true &&
-                            localConversationContext.hasContinuation(localSessionId))
+                            localConversationContext.hasContinuation(localSessionId)))
                 textOnlyResponse.set(textOnlyTurn)
                 heatMeasurement.onTurnRoute(textOnlyTurn)
                 val state = if (botTask == null) continuumState else null
@@ -15845,7 +15847,8 @@ class AgentActivity : Activity() {
         heatMeasurement.onPreviewText(text)
         // Command03: the native row above is not on screen there, so the stage shows the same draft in its own feed
         // (at most the first text and then one update per second – see the caller's throttle).
-        val stage = command03MainStage
+        // (Measurement only, configuration G: no draft for the page, as in Code68.)
+        val stage = command03MainStage?.takeUnless { heatMeasurement.stageDraftOff }
         if (stage != null && command03Binding()?.let { scope -> stage.presentDraft(scope, draft) } == true) {
             localStreamStageDraft = true
             heatMeasurement.onStageDraft(stage.isShown)

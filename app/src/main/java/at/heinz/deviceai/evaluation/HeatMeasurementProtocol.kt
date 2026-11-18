@@ -76,6 +76,10 @@ interface HeatMeasurementDevice {
     fun unavailable(configuration: HeatConfiguration): String?
     fun applyStage(mode: HeatStageMode): Boolean
     fun applyDialogueReuse(on: Boolean): Boolean
+    /** False: the stage page gets no draft of the running answer for the following turns (as in Code68). */
+    fun applyStageDraft(on: Boolean): Boolean
+    /** True: the following turns go to the model with all tool schemas, whatever their wording. */
+    fun applyToolSchemas(on: Boolean): Boolean
     /** Loads the model [choice] stands for; the steps are timed. The last step tells whether it is ready. */
     fun swapModel(choice: HeatModelChoice): List<HeatLifecycleStep>
     /** A new empty chat, so that every run starts without dialogue history. */
@@ -118,6 +122,7 @@ class HeatMeasurementProtocol(private val device: HeatMeasurementDevice, private
         var restore: List<HeatRestoreStep> = emptyList()
         try {
             report = header(startedAtEpochMs)
+            plan.configurations.filter { it.id in plan.leftOut }.forEach { notRun(it, plan.leftOut.getValue(it.id)) }
             val blocker = device.blocker()
             if (blocker != null) stop = HeatStop(HeatStop.PRECONDITION, blocker)
             else {
@@ -191,6 +196,12 @@ class HeatMeasurementProtocol(private val device: HeatMeasurementDevice, private
             }
             if (!device.applyDialogueReuse(configuration.dialogueReuse)) {
                 notRun(configuration, "Die Gesprächswiederverwendung ließ sich nicht umschalten."); continue
+            }
+            if (!device.applyStageDraft(configuration.stageDraft)) {
+                notRun(configuration, "Der Antwortentwurf der Bühne ließ sich nicht umschalten."); device.applyStageDraft(true); continue
+            }
+            if (!device.applyToolSchemas(configuration.toolSchemas)) {
+                notRun(configuration, "Die Modellroute ließ sich nicht umschalten."); device.applyToolSchemas(false); continue
             }
             if (configuration.id !in status) {
                 status[configuration.id] = RUN

@@ -27,11 +27,18 @@ object HeatMeasurement {
     const val FACTOR_DIALOGUE_REUSE = "DIALOGUE_REUSE"
     const val FACTOR_MODEL_E2B = "MODEL_E2B"
     const val FACTOR_BACKEND_GPU = "BACKEND_GPU"
+    const val FACTOR_STAGE_NO_ANSWER_DRAFT = "STAGE_NO_ANSWER_DRAFT"
+    const val FACTOR_TOOL_SCHEMAS = "TOOL_SCHEMAS_IN_PROMPT"
 
     /**
-     * A: the defaults of this app version. B–F change one thing each. C sends the stage the same flag a cloud
+     * A: the defaults of this app version. B–H change one thing each. C sends the stage the same flag a cloud
      * brain sends, so it moves fully while the device computes – the stage motion of Code67, at the refresh rate
      * this version asks for (Code67 additionally kept 120 Hz in the profile „Volle Qualität“).
+     *
+     * G and H put ONE behaviour back to what Code68 did, so that a single measurement holds „before“ (G, H) and
+     * „after“ (A) of two changes made after Code68: G – the stage page gets no draft of the running answer, the
+     * first answer text on screen is the finished answer; H – the order goes to the model with all tool schemas,
+     * as Code68 did for spoken explanation requests („Erklär mir …“).
      */
     val CONFIGURATIONS: List<HeatConfiguration> = listOf(
         HeatConfiguration("A", "Basis: Bühne ruht beim Rechnen, Gemma 4 E4B, Gespräch nicht behalten", null,
@@ -45,13 +52,27 @@ object HeatMeasurement {
         HeatConfiguration("E", "Gemma 4 E2B statt E4B", FACTOR_MODEL_E2B,
             HeatStageMode.RESTING, dialogueReuse = false, model = HeatModelChoice.GEMMA_E2B, backend = HeatBackendChoice.BASELINE),
         HeatConfiguration("F", "GPU-Beschleuniger statt CPU", FACTOR_BACKEND_GPU,
-            HeatStageMode.RESTING, dialogueReuse = false, model = HeatModelChoice.BASELINE, backend = HeatBackendChoice.GPU)
+            HeatStageMode.RESTING, dialogueReuse = false, model = HeatModelChoice.BASELINE, backend = HeatBackendChoice.GPU),
+        HeatConfiguration("G", "Bühne ohne Antwortentwurf (wie Code68)", FACTOR_STAGE_NO_ANSWER_DRAFT,
+            HeatStageMode.RESTING, dialogueReuse = false, model = HeatModelChoice.BASELINE, backend = HeatBackendChoice.BASELINE,
+            stageDraft = false),
+        HeatConfiguration("H", "Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen)", FACTOR_TOOL_SCHEMAS,
+            HeatStageMode.RESTING, dialogueReuse = false, model = HeatModelChoice.BASELINE, backend = HeatBackendChoice.BASELINE,
+            toolSchemas = true)
     )
 
     val BASELINE: HeatConfiguration get() = CONFIGURATIONS.first()
 
+    /**
+     * Left out of the short size, with the reason the report states: C repeats what Code67 did and Code68 already
+     * removed; it answers no open question of the short measurement and would add a run and two model answers.
+     */
+    val SHORT_LEAVES_OUT: Map<String, String> = mapOf("C" to
+        "Nicht Teil der Kurzmessung: die volle Bühnenbewegung von Code67 wird nur in der vollen Messung gemessen.")
+
     fun plan(size: HeatSize, prompts: HeatPromptSet): HeatPlan = HeatPlan(size, prompts, CONFIGURATIONS,
-        if (size == HeatSize.KURZ) HeatLimits(cooldownMaxMs = 180_000L) else HeatLimits(cooldownMaxMs = 300_000L))
+        if (size == HeatSize.KURZ) HeatLimits(cooldownMaxMs = 180_000L) else HeatLimits(cooldownMaxMs = 300_000L),
+        leftOut = if (size == HeatSize.KURZ) SHORT_LEAVES_OUT else emptyMap())
 }
 
 enum class HeatSize(val label: String, val repetitions: Int) { KURZ("kurz", 1), VOLL("voll", 2) }
@@ -69,17 +90,25 @@ data class HeatConfiguration(
     val stage: HeatStageMode,
     val dialogueReuse: Boolean,
     val model: HeatModelChoice,
-    val backend: HeatBackendChoice
+    val backend: HeatBackendChoice,
+    /** The stage page shows the running answer as a draft row (this app version); false: as in Code68, it does not. */
+    val stageDraft: Boolean = true,
+    /** True: the order is forced onto the model route with all tool schemas, whatever its wording. */
+    val toolSchemas: Boolean = false
 ) {
     /** Number of settings in which this configuration differs from [other]. */
     fun differences(other: HeatConfiguration): Int = listOf(stage != other.stage, dialogueReuse != other.dialogueReuse,
-        model != other.model, backend != other.backend).count { it }
+        model != other.model, backend != other.backend, stageDraft != other.stageDraft, toolSchemas != other.toolSchemas)
+        .count { it }
+
+    /** The configuration needs the Command03 stage to be the visible design. */
+    val needsStage: Boolean get() = stage != HeatStageMode.RESTING || !stageDraft
 
     /** Loading another model file or engine: its runs stay together so that the model is swapped once. */
     val swapsModel: Boolean get() = model != HeatModelChoice.BASELINE || backend != HeatBackendChoice.BASELINE
 
     fun settingsJson(): JSONObject = JSONObject().put("stage", stage.name).put("dialogueReuse", dialogueReuse)
-        .put("model", model.name).put("backend", backend.name)
+        .put("model", model.name).put("backend", backend.name).put("stageDraft", stageDraft).put("toolSchemas", toolSchemas)
 }
 
 /** One fixed owner order: a short dialogue in a new chat, first question and follow-up. */
@@ -147,10 +176,13 @@ class HeatPlan(
     val size: HeatSize,
     val promptSet: HeatPromptSet,
     val configurations: List<HeatConfiguration>,
-    val limits: HeatLimits
+    val limits: HeatLimits,
+    /** Configurations (by id) this plan does not run, each with the reason the report states for its NOT_RUN. */
+    val leftOut: Map<String, String> = emptyMap()
 ) {
     init {
         val baseline = configurations.first()
+        require(baseline.id !in leftOut && leftOut.keys.all { id -> configurations.any { it.id == id } })
         require(baseline.factor == null) { "The first configuration is the baseline." }
         require(configurations.drop(1).all { it.factor != null && it.differences(baseline) == 1 }) {
             "Every configuration differs from the baseline in exactly one factor."
@@ -163,11 +195,12 @@ class HeatPlan(
 
     /**
      * Order of the runs. Configurations that keep the loaded model alternate order by order and repetition by
-     * repetition (A B C D, A B C D, …), so that a slow drift of the device does not fall on one configuration.
-     * A configuration that needs another model or engine runs as one block afterwards: one swap in, one back.
+     * repetition (A B C D G H, A B C D G H, …), so that a slow drift of the device does not fall on one
+     * configuration. A configuration that needs another model or engine runs as one block afterwards: one swap in,
+     * one back.
      */
     val runs: List<HeatPlannedRun> = run {
-        val (blocks, rounds) = configurations.partition { it.swapsModel }
+        val (blocks, rounds) = configurations.filter { it.id !in leftOut }.partition { it.swapsModel }
         val repetitions = 1..size.repetitions
         repetitions.flatMap { repetition -> prompts.flatMap { prompt -> rounds.map { HeatPlannedRun(it, prompt, repetition) } } } +
             blocks.flatMap { block -> repetitions.flatMap { repetition -> prompts.map { HeatPlannedRun(block, it, repetition) } } }
@@ -196,7 +229,7 @@ class HeatPlan(
     /** The owner sees this before he confirms the start. */
     fun announcement(recentAnswerMs: List<Long>): String = buildString {
         val known = recentAnswerMs.count { it > 0 }
-        append("Wärme- und Zeitmessung (").append(size.label).append("): ").append(configurations.size)
+        append("Wärme- und Zeitmessung (").append(size.label).append("): ").append(configurations.size - leftOut.size)
             .append(" Konfigurationen, ").append(runs.size).append(" Läufe, bis zu ").append(turnCount)
             .append(" Modellantworten. Was auf diesem Gerät nicht laufen kann, wird als NOT_RUN eingetragen.\n")
         val expected = expectedMs(recentAnswerMs)

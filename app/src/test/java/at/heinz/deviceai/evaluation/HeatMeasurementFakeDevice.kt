@@ -38,6 +38,8 @@ internal class HeatMeasurementFakeDevice : HeatMeasurementDevice {
     // What a measurement may change – and must put back.
     var stage = HeatStageMode.RESTING
     var dialogueReuse = false
+    var stageDraft = true
+    var toolSchemas = false
     var model = "gemma4-e4b-it"
     var chat = 0
     private val ledger = HeatOverrideLedger()
@@ -74,7 +76,7 @@ internal class HeatMeasurementFakeDevice : HeatMeasurementDevice {
     private val changes = ArrayList<Pair<Long, Int>>()
 
     /** The settings a restore must bring back; compared before and after a measurement. */
-    fun settings(): String = "$stage/$dialogueReuse/$model"
+    fun settings(): String = "$stage/$dialogueReuse/$model" + (if (stageDraft) "" else "/no-draft") + (if (toolSchemas) "/tools" else "")
 
     override fun nowMs(): Long = now
 
@@ -84,6 +86,8 @@ internal class HeatMeasurementFakeDevice : HeatMeasurementDevice {
         if (running != null && !finished) {
             if (!firstTokenSent && running.modelCall && target >= turnStart + running.firstTokenMs) at(turnStart + running.firstTokenMs) {
                 callback?.onEvent(LocalInferenceEvent.TextDelta("x".repeat(10)))
+                // Like the app: the first text piece goes to the stage page as a draft, when the page gets drafts.
+                if (stageAvailable && stageDraft) recorder.stageDraftSet(shown = stage != HeatStageMode.OFF)
                 firstTokenSent = true
             }
             val half = turnStart + running.durationMs / 2
@@ -145,7 +149,7 @@ internal class HeatMeasurementFakeDevice : HeatMeasurementDevice {
     override fun unavailable(configuration: HeatConfiguration): String? = when {
         configuration.backend == HeatBackendChoice.GPU -> "Synthetisch: GPU wird nicht geschaltet."
         configuration.model == HeatModelChoice.GEMMA_E2B && !e2bImported -> "Synthetisch: Gemma 4 E2B ist nicht importiert."
-        configuration.stage != HeatStageMode.RESTING && !stageAvailable -> "Synthetisch: keine Bühne."
+        configuration.needsStage && !stageAvailable -> "Synthetisch: keine Bühne."
         else -> null
     }
 
@@ -161,6 +165,18 @@ internal class HeatMeasurementFakeDevice : HeatMeasurementDevice {
         val before = dialogueReuse
         if (before != on) ledger.changed("Gespräch im Modell behalten") { dialogueReuse = before }
         dialogueReuse = on
+        return true
+    }
+
+    override fun applyStageDraft(on: Boolean): Boolean {
+        if (on != stageDraft) ledger.changed("Antwortentwurf der Bühne") { stageDraft = true }
+        stageDraft = on
+        return true
+    }
+
+    override fun applyToolSchemas(on: Boolean): Boolean {
+        if (on != toolSchemas) ledger.changed("Modellroute (Werkzeugschemas)") { toolSchemas = false }
+        toolSchemas = on
         return true
     }
 
@@ -197,8 +213,9 @@ internal class HeatMeasurementFakeDevice : HeatMeasurementDevice {
         recorder.bubble(true, text.length, HeatTurnRecorder.EVENT_STAGE_MESSAGE, true)
         if (running.modelCall) {
             recorder.busy(true)
-            recorder.route(withoutTools = true)
-            probe = recorder.probe(900)
+            recorder.route(withoutTools = !toolSchemas)
+            // Synthetic prompt sizes: the route with tool schemas has another prompt text.
+            probe = recorder.probe(if (toolSchemas) 1_040 else 900)
             callback = probe?.observe(LocalInferenceCallback { })
         } else recorder.bubble(false, 40, HeatTurnRecorder.EVENT_STAGE_MESSAGE, true)
     }
@@ -262,12 +279,16 @@ internal object HeatSyntheticScenarios {
         return HeatReport.withSummary(report).put("synthetic", true).put("syntheticNote", NOTE)
     }
 
-    /** The full stage is stopped by the (scripted) thermal guard; the small model and the kept dialogue are faster. */
+    /**
+     * The order with all tool schemas is stopped by the (scripted) thermal guard; the small model and the kept
+     * dialogue are faster; without the stage draft the first visible text is the finished answer.
+     */
     fun before(): JSONObject = measure(1_794_000_000_000L) { phone, followUp ->
         when {
             phone.model == "gemma4-e2b-it" -> HeatMeasurementFakeDevice.Turn(3_200L, 800L, heatsBatteryC = 0.3, thermalStatus = 0)
             phone.stage == HeatStageMode.OFF -> HeatMeasurementFakeDevice.Turn(5_600L, 1_500L, heatsBatteryC = 0.4, thermalStatus = 0)
-            phone.stage == HeatStageMode.FULL_EFFECTS -> HeatMeasurementFakeDevice.Turn(3_000L, 1_500L, characters = 60,
+            phone.stage == HeatStageMode.FULL_EFFECTS -> HeatMeasurementFakeDevice.Turn(6_400L, 1_500L, heatsBatteryC = 0.9, thermalStatus = 2)
+            phone.toolSchemas -> HeatMeasurementFakeDevice.Turn(3_000L, 2_400L, characters = 60,
                 completion = "FAILED", failure = at.heinz.deviceai.localmodel.LocalModelThermalGuard.STOPPED_THERMAL,
                 heatsBatteryC = 1.3, thermalStatus = 3, windowFrameMs = listOf(8.2, 34.0, 41.5, 9.0))
             phone.dialogueReuse && followUp -> HeatMeasurementFakeDevice.Turn(3_000L, 400L, heatsBatteryC = 0.3, thermalStatus = 1, reused = true)
@@ -281,7 +302,8 @@ internal object HeatSyntheticScenarios {
         when {
             phone.model == "gemma4-e2b-it" -> HeatMeasurementFakeDevice.Turn(3_000L, 700L, heatsBatteryC = 0.2, thermalStatus = 1)
             phone.stage == HeatStageMode.OFF -> HeatMeasurementFakeDevice.Turn(4_800L, 1_200L, heatsBatteryC = 0.3, thermalStatus = 1)
-            phone.stage == HeatStageMode.FULL_EFFECTS -> HeatMeasurementFakeDevice.Turn(5_600L, 1_300L, heatsBatteryC = 0.9,
+            phone.stage == HeatStageMode.FULL_EFFECTS -> HeatMeasurementFakeDevice.Turn(5_600L, 1_300L, heatsBatteryC = 0.9, thermalStatus = 2)
+            phone.toolSchemas -> HeatMeasurementFakeDevice.Turn(7_400L, 3_200L, heatsBatteryC = 0.9,
                 thermalStatus = 2, windowFrameMs = listOf(8.2, 17.0, 9.0, 9.1))
             phone.dialogueReuse && followUp -> HeatMeasurementFakeDevice.Turn(2_600L, 300L, heatsBatteryC = 0.2, thermalStatus = 1, reused = true)
             phone.dialogueReuse -> HeatMeasurementFakeDevice.Turn(5_000L, 1_200L, heatsBatteryC = 0.4, thermalStatus = 1, reused = false)

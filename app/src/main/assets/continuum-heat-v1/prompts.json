@@ -2,7 +2,7 @@
   "id": "continuum-heat-v1",
   "version": 1,
   "language": "de",
-  "note": "Feste Besitzeraufträge der Wärme- und Zeitmessung. Jeder Auftrag ist ein kurzes Gespräch aus Erstfrage und Folgefrage in einem neuen Chat. Die Texte werden unverändert an der Sprachübergabe eingespeist (kein Mikrofon). Sie sind so formuliert, dass die App sie als reine Textfrage ohne Werkzeugschemata an das Modell gibt (LocalTextOnlyInferenceRoute) und keine feste Antwortroute sie abfängt; beides prüft HeatMeasurementPlanTest. Änderungen nur mit neuer Version, sonst sind Berichte nicht mehr vergleichbar.",
+  "note": "Feste Besitzeraufträge der Wärme- und Zeitmessung. Jeder Auftrag ist ein kurzes Gespräch aus Erstfrage und Folgefrage in einem neuen Chat. Die Texte werden unverändert an der Sprachübergabe eingespeist (kein Mikrofon). Sie sind so formuliert, dass die App sie als reine Textfrage ohne Werkzeugschemata an das Modell gibt (LocalTextOnlyInferenceRoute) und keine feste Antwortroute sie abfängt; beides prüft HeatMeasurementPlanTest. Nur Konfiguration H der Messung schickt dieselben Texte absichtlich mit allen Werkzeugschemas. Änderungen nur mit neuer Version, sonst sind Berichte nicht mehr vergleichbar.",
   "prompts": [
     {
       "id": "kurz",

@@ -47,11 +47,19 @@ class HeatMeasurementPlanTest {
         assertFalse("The baseline is the default: the dialogue is not kept in the model", baseline.dialogueReuse)
         assertEquals(HeatModelChoice.BASELINE, baseline.model)
         val others = HeatMeasurement.CONFIGURATIONS.drop(1)
-        assertEquals(listOf("B", "C", "D", "E", "F"), others.map { it.id })
+        assertEquals(listOf("B", "C", "D", "E", "F", "G", "H"), others.map { it.id })
         others.forEach { assertEquals(it.id + " changes one thing", 1, it.differences(baseline)) }
         assertEquals(listOf(HeatMeasurement.FACTOR_STAGE_OFF, HeatMeasurement.FACTOR_STAGE_FULL_EFFECTS,
-            HeatMeasurement.FACTOR_DIALOGUE_REUSE, HeatMeasurement.FACTOR_MODEL_E2B, HeatMeasurement.FACTOR_BACKEND_GPU),
+            HeatMeasurement.FACTOR_DIALOGUE_REUSE, HeatMeasurement.FACTOR_MODEL_E2B, HeatMeasurement.FACTOR_BACKEND_GPU,
+            HeatMeasurement.FACTOR_STAGE_NO_ANSWER_DRAFT, HeatMeasurement.FACTOR_TOOL_SCHEMAS),
             others.map { it.factor })
+        assertTrue("The baseline is this app version: the stage shows the answer draft, text questions carry no tool schemas",
+            baseline.stageDraft && !baseline.toolSchemas)
+        assertFalse("G: the stage gets no answer draft, as in Code68", others[5].stageDraft)
+        assertTrue("H: the order carries all tool schemas, as Code68 sent spoken explanation requests", others[6].toolSchemas)
+        assertEquals("STAGE_NO_ANSWER_DRAFT", others[5].factor)
+        assertEquals("TOOL_SCHEMAS_IN_PROMPT", others[6].factor)
+        assertEquals("B, C and G need the stage to be the visible design", listOf("B", "C", "G"), others.filter { it.needsStage }.map { it.id })
         assertEquals(HeatStageMode.OFF, others[0].stage)
         assertEquals(HeatStageMode.FULL_EFFECTS, others[1].stage)
         assertTrue(others[2].dialogueReuse)
@@ -67,19 +75,26 @@ class HeatMeasurementPlanTest {
 
     @Test fun theShortSizeRunsTheFirstOrderOncePerConfiguration() {
         val plan = HeatMeasurement.plan(HeatSize.KURZ, prompts)
-        assertEquals(listOf("A", "B", "C", "D", "E", "F"), plan.runs.map { it.configuration.id })
+        assertEquals("C (what Code67 did) is measured in the full size only", listOf("A", "B", "D", "G", "H", "E", "F"),
+            plan.runs.map { it.configuration.id })
+        assertEquals(setOf("C"), plan.leftOut.keys)
+        assertTrue(plan.leftOut.getValue("C").startsWith("Nicht Teil der Kurzmessung"))
+        assertEquals("The report still lists every configuration", 8, plan.configurations.size)
         assertTrue(plan.runs.all { it.prompt.id == "kurz" && it.repetition == 1 })
-        assertEquals(12, plan.turnCount)
+        assertEquals(14, plan.turnCount)
+        assertTrue("The baseline cannot be left out", runCatching {
+            HeatPlan(HeatSize.KURZ, prompts, HeatMeasurement.CONFIGURATIONS, HeatLimits(), leftOut = mapOf("A" to "x")) }.isFailure)
     }
 
     @Test fun theFullSizeAlternatesTheConfigurationsAndKeepsAModelSwapInOneBlock() {
         val plan = HeatMeasurement.plan(HeatSize.VOLL, prompts)
-        assertEquals(6 * 3 * 2, plan.runs.size)
-        val rounds = plan.runs.take(4 * 3 * 2)
-        assertEquals("A B C D alternate, order by order and repetition by repetition",
-            List(6) { listOf("A", "B", "C", "D") }.flatten(), rounds.map { it.configuration.id })
-        assertEquals(listOf("kurz", "mittel", "lang", "kurz", "mittel", "lang"), rounds.chunked(4).map { it.first().prompt.id })
-        assertEquals(listOf(1, 1, 1, 2, 2, 2), rounds.chunked(4).map { it.first().repetition })
+        assertEquals(8 * 3 * 2, plan.runs.size)
+        assertTrue(plan.leftOut.isEmpty())
+        val rounds = plan.runs.take(6 * 3 * 2)
+        assertEquals("A B C D G H alternate, order by order and repetition by repetition",
+            List(6) { listOf("A", "B", "C", "D", "G", "H") }.flatten(), rounds.map { it.configuration.id })
+        assertEquals(listOf("kurz", "mittel", "lang", "kurz", "mittel", "lang"), rounds.chunked(6).map { it.first().prompt.id })
+        assertEquals(listOf(1, 1, 1, 2, 2, 2), rounds.chunked(6).map { it.first().repetition })
         val blocks = plan.runs.drop(rounds.size)
         assertEquals(List(6) { "E" } + List(6) { "F" }, blocks.map { it.configuration.id })
         assertTrue("A model swap happens once in and once out", blocks.take(6).all { it.configuration.swapsModel })
@@ -96,7 +111,9 @@ class HeatMeasurementPlanTest {
         assertEquals(plan.fixedWaitMs + 20_000L * plan.turnCount, plan.expectedMs(recent))
         val known = plan.announcement(recent)
         assertTrue(known, "gerechnet mit dem Median deiner letzten 3 Antwortzeiten" in known)
-        assertTrue(known, "6 Konfigurationen, 6 Läufe, bis zu 12 Modellantworten. Was auf diesem Gerät nicht laufen kann, wird als NOT_RUN eingetragen." in known)
+        assertTrue(known, "7 Konfigurationen, 7 Läufe, bis zu 14 Modellantworten. Was auf diesem Gerät nicht laufen kann, wird als NOT_RUN eingetragen." in known)
+        assertTrue(HeatMeasurement.plan(HeatSize.VOLL, prompts).announcement(recent),
+            "8 Konfigurationen, 48 Läufe, bis zu 96 Modellantworten." in HeatMeasurement.plan(HeatSize.VOLL, prompts).announcement(recent))
         assertTrue("The owner is told that he can stop", "STOPP beendet die Messung" in known)
         assertTrue(plan.upperBoundMs > plan.fixedWaitMs)
     }

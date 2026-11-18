@@ -41,12 +41,25 @@ class HeatMeasurementProtocolTest {
         assertFalse("The probe never uses the microphone and says so", input.getBoolean("microphone"))
         assertEquals("continuum-heat-v1", input.getString("promptSet"))
 
-        assertEquals(listOf("A", "B", "C", "D", "E"), runs(report).map { it.getString("configuration") })
+        assertEquals(listOf("A", "B", "C", "D", "G", "H", "E"), runs(report).map { it.getString("configuration") })
         val orders = prompts.prompts.first().turns
         assertEquals("Identical orders in every configuration, each differing from A in one setting", listOf(
             "RESTING/false/gemma4-e4b-it", "OFF/false/gemma4-e4b-it", "FULL_EFFECTS/false/gemma4-e4b-it",
-            "RESTING/true/gemma4-e4b-it", "RESTING/false/gemma4-e2b-it").flatMap { setting -> orders.map { "$setting|$it" } },
+            "RESTING/true/gemma4-e4b-it", "RESTING/false/gemma4-e4b-it/no-draft", "RESTING/false/gemma4-e4b-it/tools",
+            "RESTING/false/gemma4-e2b-it").flatMap { setting -> orders.map { "$setting|$it" } },
             device.turnsStarted)
+        val byConfiguration = runs(report).associate { it.getString("configuration") to turns(it) }
+        byConfiguration.forEach { (id, answered) -> answered.forEach { turn ->
+            assertEquals("$id: only H sends the order with all tool schemas", id != "H", turn.getBoolean("toolFreeRoute"))
+            assertEquals("$id: without the stage draft (G) and with the stage off (B) the first text on screen is the answer",
+                if (id == "G" || id == "B") HeatTurnRecorder.EVENT_STAGE_MESSAGE else HeatTurnRecorder.EVENT_STAGE_DRAFT,
+                turn.getString("firstVisibleTextEvent"))
+            assertEquals(if (id == "G" || id == "B") 4_000L else 1_000L, turn.getLong("firstVisibleTextMs"))
+        } }
+        assertEquals(false, configuration(report, "G").getJSONObject("settings").getBoolean("stageDraft"))
+        assertEquals(true, configuration(report, "H").getJSONObject("settings").getBoolean("toolSchemas"))
+        assertEquals(true, configuration(report, "A").getJSONObject("settings").getBoolean("stageDraft"))
+        assertEquals(false, configuration(report, "A").getJSONObject("settings").getBoolean("toolSchemas"))
         runs(report).forEach { run ->
             assertEquals(listOf("ERSTFRAGE", "FOLGEFRAGE"), turns(run).map { it.getString("role") })
             turns(run).forEach { turn ->
@@ -55,11 +68,11 @@ class HeatMeasurementProtocolTest {
                 assertEquals(1_000L, turn.getLong("firstTokenMs"))
             }
         }
-        assertEquals("Every run starts in a new chat", 5, device.log.count { it.startsWith("chat:") })
+        assertEquals("Every run starts in a new chat", 7, device.log.count { it.startsWith("chat:") })
         assertTrue(device.log.indexOf("chat:1") < device.log.indexOfFirst { it.startsWith("turn:") })
-        assertEquals("The report so far is handed over after every run", listOf(1, 2, 3, 4, 5), device.checkpoints)
+        assertEquals("The report so far is handed over after every run", listOf(1, 2, 3, 4, 5, 6, 7), device.checkpoints)
 
-        for (id in listOf("A", "B", "C", "D", "E")) assertEquals(id, HeatMeasurementProtocol.RUN, configuration(report, id).getString("status"))
+        for (id in listOf("A", "B", "C", "D", "E", "G", "H")) assertEquals(id, HeatMeasurementProtocol.RUN, configuration(report, id).getString("status"))
         val gpu = configuration(report, "F")
         assertEquals(HeatMeasurement.NOT_RUN, gpu.getString("status"))
         assertTrue(gpu.getString("reason").isNotBlank())
@@ -73,7 +86,9 @@ class HeatMeasurementProtocolTest {
 
         assertTrue("A planned configuration that is NOT_RUN does not make the measurement incomplete", report.getBoolean("complete"))
         assertTrue(report.isNull("stop"))
-        assertEquals("Stage, dialogue switch and model are back", before, device.settings())
+        assertEquals("Stage, dialogue switch, stage draft, model route and model are back", before, device.settings())
+        assertTrue(device.stageDraft)
+        assertFalse(device.toolSchemas)
         assertEquals(0, device.chat)
         assertEquals(1, device.restores)
         assertTrue(report.getBoolean("restoreComplete"))
@@ -144,8 +159,9 @@ class HeatMeasurementProtocolTest {
         device.e2bImported = false
         device.stageAvailable = false
         val report = measure()
-        assertEquals(listOf("A", "D"), runs(report).map { it.getString("configuration") })
-        for (id in listOf("B", "C", "E", "F")) {
+        assertEquals("H needs no stage: the model route is switched in the turn path", listOf("A", "D", "H"),
+            runs(report).map { it.getString("configuration") })
+        for (id in listOf("B", "C", "E", "F", "G")) {
             assertEquals(id, HeatMeasurement.NOT_RUN, configuration(report, id).getString("status"))
             assertTrue(id, configuration(report, id).getString("reason").startsWith("Synthetisch"))
             assertTrue(configuration(report, id).isNull("model"))
@@ -167,7 +183,7 @@ class HeatMeasurementProtocolTest {
         assertEquals(HeatStop.OWNER_STOP, report.getJSONObject("stop").getString("reason"))
         assertFalse(report.getBoolean("complete"))
         assertEquals(HeatMeasurementProtocol.RUN, configuration(report, "B").getString("status"))
-        for (id in listOf("C", "D", "E", "F")) {
+        for (id in listOf("C", "D", "E", "F", "G", "H")) {
             assertEquals(HeatMeasurement.NOT_RUN, configuration(report, id).getString("status"))
             assertTrue(configuration(report, id).getString("reason"), "endete, bevor" in configuration(report, id).getString("reason"))
         }
@@ -175,6 +191,42 @@ class HeatMeasurementProtocolTest {
         assertEquals(1, device.restores)
         assertTrue(report.getBoolean("restoreComplete"))
         assertEquals(listOf("Chat", "Bühne"), objects(report.getJSONArray("restore")).map { it.getString("what") })
+    }
+
+    @Test fun stopInsideTheCode68ConfigurationsPutsTheStageDraftAndTheModelRouteBack() {
+        // G is the fifth run of this plan (turns 9 and 10), H the sixth (turns 11 and 12).
+        device.stopWhen = { phone -> if (phone.turnsStarted.size == 9) HeatStop(HeatStop.OWNER_STOP) else null }
+        val inDraft = measure()
+        assertEquals("G", runs(inDraft).last().getString("configuration"))
+        assertTrue("The stopped turn really ran without the stage draft", device.turnsStarted.last().contains("/no-draft"))
+        assertTrue(device.stageDraft)
+        assertTrue("Antwortentwurf der Bühne" in objects(inDraft.getJSONArray("restore")).map { it.getString("what") })
+        assertTrue(inDraft.getBoolean("restoreComplete"))
+
+        val phone = HeatMeasurementFakeDevice()
+        phone.stopWhen = { it -> if (it.turnsStarted.size == 11) HeatStop(HeatStop.OWNER_STOP) else null }
+        val inTools = HeatMeasurementProtocol(phone, plan()).run(1_794_000_000_000L) { 1_794_000_600_000L }
+        assertEquals("H", runs(inTools).last().getString("configuration"))
+        assertTrue(phone.turnsStarted.last().endsWith("/tools|" + prompts.prompts.first().turns.first()))
+        assertFalse("No later turn may keep the forced tool route", phone.toolSchemas)
+        assertTrue(phone.stageDraft)
+        assertEquals(listOf("Modellroute (Werkzeugschemas)", "Antwortentwurf der Bühne", "Gespräch im Modell behalten", "Chat", "Bühne"),
+            objects(inTools.getJSONArray("restore")).map { it.getString("what") })
+        assertEquals("RESTING/false/gemma4-e4b-it", phone.settings())
+    }
+
+    @Test fun theShortSizeLeavesTheCode67StageOutAndSaysSoInTheReport() {
+        val report = HeatMeasurementProtocol(device, HeatMeasurement.plan(HeatSize.KURZ, prompts)).run(1_794_000_000_000L) { 1_794_000_600_000L }
+        assertEquals(listOf("A", "B", "D", "G", "H", "E"), runs(report).map { it.getString("configuration") })
+        val full = configuration(report, "C")
+        assertEquals(HeatMeasurement.NOT_RUN, full.getString("status"))
+        assertEquals(HeatMeasurement.SHORT_LEAVES_OUT.getValue("C"), full.getString("reason"))
+        assertTrue("A configuration the plan leaves out does not make the measurement incomplete", report.getBoolean("complete"))
+        assertTrue(device.turnsStarted.none { it.startsWith("FULL_EFFECTS") })
+        val blocked = HeatMeasurementFakeDevice().apply { blocked = "synthetisch blockiert" }
+        val nothing = HeatMeasurementProtocol(blocked, HeatMeasurement.plan(HeatSize.KURZ, prompts)).run(1L) { 2L }
+        assertEquals("Its own reason, not „the measurement ended before“", HeatMeasurement.SHORT_LEAVES_OUT.getValue("C"),
+            configuration(nothing, "C").getString("reason"))
     }
 
     @Test fun leavingTheAppWhileCoolingDownEndsTheMeasurementBeforeTheNextRun() {
@@ -187,7 +239,8 @@ class HeatMeasurementProtocolTest {
     }
 
     @Test fun stopWhileAnotherModelIsLoadedBringsTheBaselineModelBack() {
-        device.stopWhen = { phone -> if (phone.model == "gemma4-e2b-it" && phone.turnsStarted.size == 9) HeatStop(HeatStop.OWNER_STOP) else null }
+        device.stopWhen = { phone -> if (phone.turnsStarted.lastOrNull()?.contains("gemma4-e2b-it") == true)
+            HeatStop(HeatStop.OWNER_STOP) else null }
         val report = measure()
         assertEquals(HeatTurnRecorder.CANCELLED_BY_OWNER, turns(runs(report).last())[0].getString("outcome"))
         assertEquals("gemma4-e4b-it", device.model)
@@ -201,7 +254,7 @@ class HeatMeasurementProtocolTest {
         val slow = turns(runs(report).first { it.getString("configuration") == "C" })
         assertEquals(listOf(HeatTurnRecorder.TIMEOUT, HeatMeasurement.NOT_RUN), slow.map { it.getString("outcome") })
         assertTrue("abort:timeout" in device.log)
-        assertEquals(listOf("A", "B", "C", "D", "E"), runs(report).map { it.getString("configuration") })
+        assertEquals(listOf("A", "B", "C", "D", "G", "H", "E"), runs(report).map { it.getString("configuration") })
         assertTrue(report.isNull("stop"))
     }
 
@@ -213,7 +266,7 @@ class HeatMeasurementProtocolTest {
         assertTrue(small.getString("reason"), "Modellwechsel fehlgeschlagen: LOAD – synthetic load failure" in small.getString("reason"))
         assertEquals(listOf(true, false, true, true), objects(small.getJSONArray("modelLifecycle")).map { it.getBoolean("ok") })
         assertEquals("gemma4-e4b-it", device.model)
-        assertEquals(listOf("A", "B", "C", "D"), runs(report).map { it.getString("configuration") })
+        assertEquals(listOf("A", "B", "C", "D", "G", "H"), runs(report).map { it.getString("configuration") })
         assertTrue(report.isNull("stop"))
     }
 

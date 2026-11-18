@@ -119,6 +119,20 @@ internal class HeatMeasurementController(private val host: HeatMeasurementHost) 
     @Volatile var stageFullEffects = false
         private set
 
+    /**
+     * Read where the answer draft is handed to the stage page: true only inside configuration G of a running
+     * measurement – the page then gets no draft, as in Code68.
+     */
+    @Volatile var stageDraftOff = false
+        private set
+
+    /**
+     * Read where a turn decides its model route: true only inside configuration H of a running measurement – the
+     * turn then goes to the model with all tool schemas, as Code68 sent spoken explanation requests.
+     */
+    @Volatile var toolSchemasForced = false
+        private set
+
     val active: Boolean get() = session != null
 
     // ── hooks of the turn path ───────────────────────────────────────────────────────────────────────────────
@@ -290,7 +304,7 @@ internal class HeatMeasurementController(private val host: HeatMeasurementHost) 
             device = null
             // The protocol restores in its own finally; this covers a failure outside of it.
             runCatching { running.ledger.restoreAll() }
-            stageFullEffects = false
+            stageFullEffects = false; stageDraftOff = false; toolSchemasForced = false
             val saved = report.mapCatching { export(it) }
             // The report is in the owner's Download folder; the working copy of an interrupted run is not needed.
             if (saved.isSuccess) runCatching { checkpointFile().delete() }
@@ -450,7 +464,7 @@ internal class HeatMeasurementController(private val host: HeatMeasurementHost) 
             configuration.backend == HeatBackendChoice.GPU ->
                 "Der GPU-Beschleuniger ist experimentell und auf diesem Gerät von der App nie gemessen worden. " +
                     "Diese Messung schaltet ihn nicht um, weil sie dafür eine gespeicherte Einstellung ändern müsste."
-            configuration.stage != HeatStageMode.RESTING && onUi { host.stage() } == null ->
+            configuration.needsStage && onUi { host.stage() } == null ->
                 "Die Command03-Bühne ist nicht die sichtbare Ansicht; der Bühnenfaktor lässt sich hier nicht schalten."
             configuration.model == HeatModelChoice.GEMMA_E2B && fastModel() == null ->
                 "Gemma 4 E2B ist nicht importiert (Modellzentrum → KLEINER · GEMMA-4-E2B-IMPORT VORAUSFÜLLEN)."
@@ -484,6 +498,22 @@ internal class HeatMeasurementController(private val host: HeatMeasurementHost) 
             }
             true
         } ?: false
+
+        override fun applyStageDraft(on: Boolean): Boolean {
+            if (on == stageDraftOff) {
+                running.ledger.changed("Antwortentwurf der Bühne") { stageDraftOff = false }
+                stageDraftOff = !on
+            }
+            return true
+        }
+
+        override fun applyToolSchemas(on: Boolean): Boolean {
+            if (on != toolSchemasForced) {
+                running.ledger.changed("Modellroute (Werkzeugschemas)") { toolSchemasForced = false }
+                toolSchemasForced = on
+            }
+            return true
+        }
 
         override fun swapModel(choice: HeatModelChoice): List<HeatLifecycleStep> {
             val target = if (choice == HeatModelChoice.BASELINE) running.originalModel
@@ -611,7 +641,7 @@ internal class HeatMeasurementController(private val host: HeatMeasurementHost) 
                 running.pendingText = null
             }
             val steps = running.ledger.restoreAll()
-            stageFullEffects = false
+            stageFullEffects = false; stageDraftOff = false; toolSchemasForced = false
             return steps
         }
 

@@ -67,19 +67,67 @@ test('one report: tables per configuration, NOT_RUN, interruptions and the cost 
     '> **SYNTHETISCHE TESTDATEN – keine Messung.**',
     'Eingabe: identischer Text an der Sprachübergabe, kein Mikrofon',
     '| A · Basis: Bühne ruht beim Rechnen, Gemma 4 E4B, Gespräch nicht behalten | 1 | 0 | 2 von 2 | 0 | 1 | 1 | 0,42 | 1,2 | 12000 |',
-    '| C · Bühne mit voller Bewegung beim Rechnen (wie Code67) | 1 | 0 | 0 von 1 | 1 (1× vom Hitzeschutz angehalten) | 3 | 3 |',
+    '| H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen) | 1 | 0 | 0 von 1 | 1 (1× vom Hitzeschutz angehalten) | 3 | 3 |',
+    '| C · Bühne mit voller Bewegung beim Rechnen (wie Code67) | NOT_RUN | – |',
     '| F · GPU-Beschleuniger statt CPU | NOT_RUN | – |',
-    '| A | 1 von 1 | 1500 | 6000 | 6000 | 26,67 | 8,5 / 17 / 17 | 0 % |',
+    '| A | 1 von 1 | 1500 | 1500 | 6000 | 26,67 | 8,5 / 17 / 17 | 0 % |',
+    '| G | 1 von 1 | 1500 | 6000 | 6000 | 26,67 | 8,5 / 17 / 17 | 0 % |',
     '| B · Bühne aus (Seite unsichtbar) | ja | ±0 | −1 |',
-    '| F · GPU-Beschleuniger statt CPU | nicht vergleichbar | – | – | – | – | – | – | nicht gelaufen: Synthetisch: GPU wird nicht geschaltet. |',
-    'Ergebnis: C · Bühne mit voller Bewegung beim Rechnen (wie Code67) – Abbrüche +1 gegenüber der Basis.',
+    '| G · Bühne ohne Antwortentwurf (wie Code68) | ja | ±0 | ±0 | ±0 | ±0 | ±0 | ±0 | +300 | – |',
+    '| F · GPU-Beschleuniger statt CPU | nicht vergleichbar | – | – | – | – | – | – | – | nicht gelaufen: Synthetisch: GPU wird nicht geschaltet. |',
+    'nicht gelaufen: Nicht Teil der Kurzmessung: die volle Bühnenbewegung von Code67 wird nur in der vollen Messung gemessen.',
+    '### Gegenüber Code68: G und H gegen die Basis A',
+    '| Erstfrage: erster sichtbarer Text ms | 1500 | 6000 | +4500 (+300 %) |',
+    '| Erstfrage: Ereignis des ersten sichtbaren Texts | ANSWER_DRAFT_HANDED_TO_STAGE_PAGE | ANSWER_HANDED_TO_STAGE_PAGE |',
+    '| Erstfrage: erstes Token ms | 1500 | – | – |',
+    '| Abbrüche | 0 | 1 | +1 |',
+    '| Thermalstufe max (Median je Lauf) | 1 | 3 | +2 |',
+    'die Eingabe an das Modell ist hier absichtlich anders (Prompttext der Erstfrage nicht gemessen, dazu alle Werkzeugschemas)',
+    'Ergebnis: H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen) – Abbrüche +1 gegenüber der Basis.',
     'Einzelmessung je Konfiguration',
-    '- Lauf 3 · C · kurz · Erstfrage: vom Hitzeschutz angehalten nach 3000 ms, Thermalstufe max 3'])
+    '- Lauf 5 · H · kurz · Erstfrage: vom Hitzeschutz angehalten nach 3000 ms, Thermalstufe max 3'])
     assert.ok(text.includes(expected), `missing: ${expected}\n\n${text}`);
   assert.ok(!text.includes('weicht von der neu berechneten ab'));
   assert.ok(!/\bnull\b|undefined|NaN/.test(text), text);
   const second = single(after());
-  assert.ok(second.includes('– höchste Thermalstufe (Median je Lauf) +1 gegenüber der Basis.'), second);
+  for (const expected of [
+    'Ergebnis: H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen) – höchste Thermalstufe (Median je Lauf) +1 gegenüber der Basis.',
+    '| Erstfrage: erster sichtbarer Text ms | 1200 | 5000 | +3800 (+316,67 %) |',
+    '| Erstfrage: erstes Token ms | 1200 | 3200 | +2000 (+166,67 %) |',
+    '| Erstfrage: Gesamtzeit ms | 5000 | 7400 | +2400 (+48 %) |',
+    '| Erstfrage: Prompttext an das Modell (Zeichen) | 900 | 1040 | +140 (+15,56 %) |',
+    '| Erstfrage: ohne Werkzeugschemas an das Modell (vollständige Antworten) | 1 von 1 | 0 von 1 |',
+    '| Thermalstufe max (Median je Lauf) | 1 | 2 | +1 |',
+    'die Eingabe an das Modell ist hier absichtlich anders (Prompttext der Erstfrage +15,56 %, dazu alle Werkzeugschemas); die 10-%-Regel gilt für diese Konfiguration nicht'])
+    assert.ok(second.includes(expected), `missing: ${expected}\n\n${second}`);
+  assert.ok(!/\bnull\b|undefined|NaN/.test(second), second);
+});
+
+test('G and H are compared with the baseline on their own terms', () => {
+  // H: the prompt is the factor. More than 10 % difference is the thing measured, not a reason against it.
+  const report = after();
+  assert.deepEqual(comparisonOf(report, 'H'), {configuration: 'H', factor: 'TOOL_SCHEMAS_IN_PROMPT', comparable: true, reasons: [],
+    delta: comparisonOf(report, 'H').delta});
+  assert.equal(comparisonOf(report, 'H').delta.ERSTFRAGE.promptCharactersMedianPercent, 15.556);
+  assert.deepEqual([rowOf(report, 'A').roles.ERSTFRAGE.toolFreeTurns, rowOf(report, 'H').roles.ERSTFRAGE.toolFreeTurns], [1, 0]);
+  // The same size difference anywhere else stays a reason against the comparison.
+  runsOf(report, 'B')[0].turns[0].promptCharacters = 1040;
+  assert.deepEqual(comparisonOf(report, 'B').reasons, ['PROMPT_SIZE_DIFFERS']);
+  // A run of H that went to the model as a plain text question did not measure H.
+  runsOf(report, 'H')[0].turns[1].toolFreeRoute = true;
+  assert.deepEqual(comparisonOf(report, 'H').reasons, ['FACTOR_NOT_EFFECTIVE']);
+  assert.ok(single(report).includes('Nicht vergleichbar mit A: der geänderte Faktor hat in den Läufen nicht gewirkt. Die gemessenen Werte stehen trotzdem hier.'));
+
+  // G: no draft on the stage; the first visible text is the finished answer.
+  const draft = before();
+  assert.deepEqual([comparisonOf(draft, 'G').comparable, comparisonOf(draft, 'G').delta.ERSTFRAGE.firstVisibleTextMsMedianPercent], [true, 300]);
+  assert.deepEqual(rowOf(draft, 'G').roles.ERSTFRAGE.firstVisibleTextEvents, ['ANSWER_HANDED_TO_STAGE_PAGE']);
+  assert.deepEqual(rowOf(draft, 'A').roles.ERSTFRAGE.firstVisibleTextEvents, ['ANSWER_DRAFT_HANDED_TO_STAGE_PAGE']);
+  runsOf(draft, 'G')[0].turns[0].firstVisibleTextEvent = 'ANSWER_DRAFT_HANDED_TO_STAGE_PAGE';
+  assert.deepEqual(comparisonOf(draft, 'G').reasons, ['FACTOR_NOT_EFFECTIVE']);
+  // A configuration the short size leaves out says so.
+  assert.deepEqual(comparisonOf(before(), 'C').reasons, ['NOT_RUN']);
+  assert.equal(rowOf(before(), 'C').runs, 0);
 });
 
 test('a stored summary that does not follow from the runs is pointed out and not used', () => {
@@ -96,12 +144,14 @@ test('two reports: before/after cells with differences', () => {
     '**Vorher** · kurz', '**Nachher** · kurz',
     'Die Berichte sind nach den geprüften Bedingungen vergleichbar.',
     '| A · Basis: Bühne ruht beim Rechnen, Gemma 4 E4B, Gespräch nicht behalten | ja | 1 → 1 (±0) | 0 → 0 (±0) | 1 → 1 (±0) | 1 → 1 (±0) | 0,42 → 0,38 (−0,04) | 1,2 → 0,8 (−0,4) | 12000 → 10000 (−16,67 %) |',
-    '| C · Bühne mit voller Bewegung beim Rechnen (wie Code67) | ja | 1 → 1 (±0) | 1 → 0 (−1) | 3 → 2 (−1) |',
+    '| H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen) | ja | 1 → 1 (±0) | 1 → 0 (−1) | 3 → 2 (−1) |',
+    '| C · Bühne mit voller Bewegung beim Rechnen (wie Code67) | NOT_RUN | – → – |',
     '| F · GPU-Beschleuniger statt CPU | NOT_RUN | – → – |',
-    '| D | ja | 1 → 1 (±0) | 400 → 300 (−25 %) | 3000 → 2600 (−13,33 %) | 3000 → 2600 (−13,33 %) |',
-    '| C | ja | 0 → 1 (+1) | – → 1300 | – → 5600 |',
-    '- Vorher: Ergebnis: C · Bühne mit voller Bewegung beim Rechnen (wie Code67) – Abbrüche +1',
-    '- Nachher: Ergebnis: C · Bühne mit voller Bewegung beim Rechnen (wie Code67) – höchste Thermalstufe (Median je Lauf) +1'])
+    '| D | ja | 1 → 1 (±0) | 400 → 300 (−25 %) | 400 → 300 (−25 %) | 3000 → 2600 (−13,33 %) |',
+    '| G | ja | 1 → 1 (±0) | 1500 → 1200 (−20 %) | 6000 → 5000 (−16,67 %) | 6000 → 5000 (−16,67 %) |',
+    '| H | ja | 0 → 1 (+1) | – → 3200 | – → 3200 | – → 7400 |',
+    '- Vorher: Ergebnis: H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen) – Abbrüche +1',
+    '- Nachher: Ergebnis: H · Auftrag mit allen Werkzeugschemas (wie Code68 bei gesprochenen Erklärfragen) – höchste Thermalstufe (Median je Lauf) +1'])
     assert.ok(text.includes(expected), `missing: ${expected}\n\n${text}`);
   assert.ok(!/\bnull\b|undefined|NaN/.test(text), text);
 });
@@ -156,7 +206,7 @@ test('one configuration is compared only when it ran under its start condition i
 test('inside one report the same reasons against a comparison as in the app', () => {
   const report = before();
   runsOf(report, 'A')[0].startCondition.reached = false;
-  assert.deepEqual(['B', 'C', 'D', 'E'].map(id => comparisonOf(report, id).reasons), Array(4).fill(['START_CONDITION']));
+  assert.deepEqual(['B', 'D', 'E', 'G', 'H'].map(id => comparisonOf(report, id).reasons), Array(5).fill(['START_CONDITION']));
   assert.deepEqual(summarize(report).costDriver, {status: 'NOT_COMPARABLE'});
   assert.ok(single(report).includes('Ergebnis: nicht vergleichbar'));
 
@@ -169,14 +219,19 @@ test('inside one report the same reasons against a comparison as in the app', ()
 
   const equal = before();
   const baseline = runsOf(equal, 'A')[0];
-  equal.runs = ['A', 'B', 'C', 'D', 'E'].map(id => {
+  equal.runs = ['A', 'B', 'D', 'G', 'H', 'E'].map(id => {
     const copy = structuredClone(baseline);
     copy.configuration = id;
-    for (const turn of copy.turns) { if (id === 'B') turn.stageFrames.delivered = 0; if (id === 'D') turn.dialogueReused = true; }
+    for (const turn of copy.turns) {
+      if (id === 'B') turn.stageFrames.delivered = 0;
+      if (id === 'D') turn.dialogueReused = true;
+      if (id === 'G') turn.firstVisibleTextEvent = 'ANSWER_HANDED_TO_STAGE_PAGE';
+      if (id === 'H') turn.toolFreeRoute = false;
+    }
     return copy;
   });
   assert.equal(summarize(equal).costDriver.status, 'NONE');
-  assert.equal(rowOf(equal, 'C').runTotalMsMedian, 12000);
+  assert.equal(rowOf(equal, 'H').runTotalMsMedian, 12000);
 });
 
 test('the command line prints Markdown and refuses what is not a report', () => {

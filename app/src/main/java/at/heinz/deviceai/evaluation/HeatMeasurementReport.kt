@@ -18,7 +18,9 @@ import java.util.Locale
  *    OUTPUT_LIMIT or CANCELLED_BY_APP (a STOPP by the owner and a turn without model call are counted apart);
  *  - per run: highest thermal status and headroom of its turns, battery temperature rise = highest battery
  *    temperature of its turns minus the run's start temperature, total time = sum of its turns when all are complete;
- *  - a configuration is comparable with the baseline only when [comparison] found no reason against it.
+ *  - a configuration is comparable with the baseline only when [comparison] found no reason against it. The rule
+ *    „prompt more than 10 % different in size“ holds for every pair except the configuration whose one factor IS
+ *    the prompt (all tool schemas): there the difference is the thing measured and is stated, not held against it.
  */
 object HeatReport {
     const val COST_RULE = "Regel: Jede Konfiguration, die sich in genau einem Faktor von der Basis A unterscheidet und " +
@@ -159,7 +161,8 @@ object HeatReport {
                 reasons += "CONDITIONS_CHANGED"
             val own = number(row.getJSONObject("roles").getJSONObject(ROLES[0]), "promptCharactersMedian")
             val base = number(baseline.getJSONObject("roles").getJSONObject(ROLES[0]), "promptCharactersMedian")
-            if (own != null && base != null && base > 0 && Math.abs(own - base) / base > 0.10) reasons += "PROMPT_SIZE_DIFFERS"
+            if (factor != HeatMeasurement.FACTOR_TOOL_SCHEMAS && own != null && base != null && base > 0 &&
+                Math.abs(own - base) / base > 0.10) reasons += "PROMPT_SIZE_DIFFERS"
             if (!factorEffective(factor, runs.filter { it.optString("configuration") == id })) reasons += "FACTOR_NOT_EFFECTIVE"
         }
         val delta = JSONObject()
@@ -172,7 +175,7 @@ object HeatReport {
                 val own = row.getJSONObject("roles").getJSONObject(role)
                 val base = baseline.getJSONObject("roles").getJSONObject(role)
                 val part = JSONObject()
-                for (key in listOf("firstTokenMsMedian", "firstVisibleTextMsMedian", "totalMsMedian"))
+                for (key in listOf("firstTokenMsMedian", "firstVisibleTextMsMedian", "totalMsMedian", "promptCharactersMedian"))
                     part.put(key + "Percent", rounded(percent(number(own, key), number(base, key))))
                 delta.put(role, part)
             }
@@ -183,7 +186,9 @@ object HeatReport {
 
     /**
      * Whether the changed factor really took effect in the runs: „Gespräch behalten“ needs at least one follow-up
-     * the runtime really continued, „Bühne aus“ must not have delivered stage frames. Unknown counts as effective.
+     * the runtime really continued, „Bühne aus“ must not have delivered stage frames, „ohne Antwortentwurf“ must not
+     * have shown a draft on the stage, „mit Werkzeugschemas“ must not have taken the tool-free route. Unknown counts
+     * as effective.
      */
     private fun factorEffective(factor: String?, runs: List<JSONObject>): Boolean {
         val turns = runs.flatMap { objects(it.optJSONArray("turns")) }.filter { it.optString("outcome") == HeatTurnRecorder.COMPLETE }
@@ -192,6 +197,8 @@ object HeatReport {
                 it.optString("role") == HeatMeasurementProtocol.ROLE_FOLLOW_UP && !it.isNull("dialogueReused") && it.optBoolean("dialogueReused") }
             HeatMeasurement.FACTOR_STAGE_OFF -> turns.none { turn ->
                 turn.optJSONObject("stageFrames")?.let { it.optString("status") == HeatFrameAccumulator.MEASURED && it.optInt("delivered") > 0 } == true }
+            HeatMeasurement.FACTOR_STAGE_NO_ANSWER_DRAFT -> turns.none { it.optString("firstVisibleTextEvent") == HeatTurnRecorder.EVENT_STAGE_DRAFT }
+            HeatMeasurement.FACTOR_TOOL_SCHEMAS -> turns.none { !it.isNull("toolFreeRoute") && it.optBoolean("toolFreeRoute") }
             else -> true
         }
     }
@@ -303,7 +310,7 @@ object HeatReport {
         val baselineId = text(summary, "baseline") ?: "A"
         append("\n## Vergleich mit der Basis ").append(baselineId).append(" (jeweils ein Faktor)\n\n")
         append("| Konfiguration | Vergleichbar | Abbrüche Δ | Thermalstufe Δ | Headroom Δ | Akku-Anstieg Δ °C | Gesamtzeit je Lauf Δ % | ")
-            .append("Erstfrage: erster sichtbarer Text Δ % | Hinweis |\n|---|---|---|---|---|---|---|---|---|\n")
+            .append("Erstfrage: erstes Token Δ % | Erstfrage: erster sichtbarer Text Δ % | Hinweis |\n|---|---|---|---|---|---|---|---|---|---|\n")
         for (entry in objects(summary.getJSONArray("comparisons"))) {
             val configuration = configurations.first { it.getString("id") == entry.getString("configuration") }
             val delta = entry.getJSONObject("delta")
@@ -312,10 +319,13 @@ object HeatReport {
                 .append(" | ").append(signed(delta, "aborts")).append(" | ").append(signed(delta, "thermalMaxMedian")).append(" | ")
                 .append(signed(delta, "headroomMaxMedian")).append(" | ").append(signed(delta, "batteryRiseCMedian")).append(" | ")
                 .append(signed(delta, "runTotalMsMedianPercent")).append(" | ")
+                .append(signed(delta.optJSONObject(ROLES[0]), "firstTokenMsMedianPercent")).append(" | ")
                 .append(signed(delta.optJSONObject(ROLES[0]), "firstVisibleTextMsMedianPercent")).append(" | ")
-                .append(reasons.joinToString("; ") { reasonText(it, configuration) }.ifEmpty { "–" }).append(" |\n")
+                .append((reasons.map { reasonText(it, configuration) } + listOfNotNull(promptNote(configuration, delta)))
+                    .joinToString("; ").ifEmpty { "–" }).append(" |\n")
         }
         append("\nΔ = Konfiguration minus Basis. Ein Minus heißt: in dieser Konfiguration war der Wert kleiner als in der Basis.\n")
+        append(code68Section(report))
 
         append("\n## Größter gemessener Kostentreiber\n\n").append(COST_RULE).append("\n\n").append(costDriverText(report)).append('\n')
 
@@ -373,11 +383,95 @@ object HeatReport {
                 objects0(row.getJSONObject("roles").getJSONObject(role).getJSONArray("firstVisibleTextEvents")) } }
                 .distinct().sorted().joinToString(", ").ifEmpty { "kein Ereignis aufgezeichnet" }).append(".\n")
         append("- Gesamtzeit: Übergabe des Auftrags bis zur Freigabe durch die App. Modell laden und entladen zählt nicht dazu.\n")
+        append("- G (Bühne ohne Antwortentwurf, wie Code68): die Bühnenseite bekommt während des Rechnens keinen Entwurf; der erste " +
+            "sichtbare Text ist dann die fertige Antwort (${HeatTurnRecorder.EVENT_STAGE_MESSAGE}). Der Unterschied zur Basis ist die " +
+            "Zeit, die der Entwurf früher auf dem Bildschirm ist.\n")
+        append("- H (alle Werkzeugschemas, wie Code68 bei gesprochenen Erklärfragen): derselbe Auftrag geht mit allen Werkzeugschemas " +
+            "an das Modell statt als reine Textfrage. Der Unterschied zur Basis bei erstem Token, erstem sichtbarem Text, Gesamtzeit " +
+            "und Wärme ist der Preis der Werkzeugschemas. Die Eingabe ist hier absichtlich anders; „Prompttext (Zeichen)“ zählt nur " +
+            "den Text – die Schemas selbst gibt die Laufzeit dem Modell zusätzlich mit und stehen nicht in dieser Zahl.\n")
         append("- Fensterbild: Gesamtdauer der Bilder des App-Fensters laut Android (FrameMetrics TOTAL_DURATION), in Klassen von " +
             "0,5 ms; angegeben ist die obere Klassengrenze. „Bilder > 2 Vsync“: Anteil der Bilder, die länger als zwei Bildperioden dauerten.\n")
         append("- Bühnenbilder: Bilder, die der Bildbegrenzer der Bühne wirklich an Szene, Kugel und Avatar weitergegeben hat, " +
             "und der Abstand zwischen ihnen.\n")
         append("- „–“ oder NOT_AVAILABLE: nicht gemessen. NOT_RUN: nicht gelaufen. Es steht nirgends ein Schätzwert.\n")
+    }
+
+    /**
+     * The configuration whose one factor is the prompt itself: its prompt differs from the baseline's by design.
+     * That is said next to the comparison instead of being a reason against it.
+     */
+    private fun promptNote(configuration: JSONObject, delta: JSONObject): String? {
+        if (text(configuration, "factor") != HeatMeasurement.FACTOR_TOOL_SCHEMAS || delta.length() == 0) return null
+        val size = number(delta.optJSONObject(ROLES[0]), "promptCharactersMedianPercent")
+        return "die Eingabe an das Modell ist hier absichtlich anders (Prompttext der Erstfrage " +
+            (size?.let { signedValue(it) + " %" } ?: "nicht gemessen") + ", dazu alle Werkzeugschemas); die 10-%-Regel gilt für diese Konfiguration nicht"
+    }
+
+    /**
+     * „Before and after“ of two changes made after Code68, from one measurement: G and H each put ONE behaviour back
+     * to Code68, A is this app version. Only values of the report; a configuration that did not run says so.
+     */
+    private fun code68Section(report: JSONObject): String = buildString {
+        val summary = report.getJSONObject("summary")
+        val rows = objects(summary.getJSONArray("rows")).associateBy { it.getString("configuration") }
+        val comparisons = objects(summary.getJSONArray("comparisons")).associateBy { it.getString("configuration") }
+        val base = rows[text(summary, "baseline")] ?: return@buildString
+        val back = objects(report.getJSONArray("configurations")).filter {
+            text(it, "factor") == HeatMeasurement.FACTOR_STAGE_NO_ANSWER_DRAFT || text(it, "factor") == HeatMeasurement.FACTOR_TOOL_SCHEMAS }
+        if (back.isEmpty()) return@buildString
+        val baseId = base.getString("configuration")
+        append("\n## Gegenüber Code68: G und H gegen die Basis ").append(baseId).append("\n\n")
+        append(baseId).append(" ist diese App-Version. G und H stellen je genau ein Verhalten auf den Stand von Code68 zurück; ")
+            .append("alles andere bleibt wie in ").append(baseId).append(". „Δ“ ist Code68-Verhalten minus ").append(baseId)
+            .append(": ein Plus heißt, mit dem Code68-Verhalten war der Wert größer.\n")
+        for (configuration in back) {
+            val id = configuration.getString("id")
+            val own = rows.getValue(id)
+            val toolSchemas = text(configuration, "factor") == HeatMeasurement.FACTOR_TOOL_SCHEMAS
+            append("\n### ").append(name(configuration)).append("\n\n")
+            if (own.optInt("runs") == 0 || base.optInt("runs") == 0) {
+                append(HeatMeasurement.NOT_RUN).append(": ").append(if (own.optInt("runs") == 0) text(configuration, "reason") ?: "ohne Angabe"
+                    else "die Basis ist nicht gelaufen").append("\n")
+                continue
+            }
+            val reasons = comparisons[id]?.let { objects0(it.getJSONArray("reasons")) }.orEmpty()
+            if (reasons.isNotEmpty()) append("Nicht vergleichbar mit ").append(baseId).append(": ")
+                .append(reasons.joinToString("; ") { reasonText(it, configuration) }).append(". Die gemessenen Werte stehen trotzdem hier.\n\n")
+            append("| Kennzahl | ").append(baseId).append(" | ").append(id).append(" | Δ |\n|---|---|---|---|\n")
+            fun line(label: String, a: Double?, b: Double?, relative: Boolean) {
+                append("| ").append(label).append(" | ").append(a?.let(::plain) ?: "–").append(" | ").append(b?.let(::plain) ?: "–").append(" | ")
+                if (a == null || b == null) append("–")
+                else {
+                    append(signedValue(HeatHistogram.round(b - a)))
+                    if (relative && a != 0.0) append(" (").append(signedValue(HeatHistogram.round((b - a) / a * 100.0))).append(" %)")
+                }
+                append(" |\n")
+            }
+            for (role in ROLES) {
+                val a = base.getJSONObject("roles").getJSONObject(role)
+                val b = own.getJSONObject("roles").getJSONObject(role)
+                val which = if (role == ROLES[0]) "Erstfrage" else "Folgefrage"
+                if (toolSchemas) line("$which: erstes Token ms", number(a, "firstTokenMsMedian"), number(b, "firstTokenMsMedian"), true)
+                line("$which: erster sichtbarer Text ms", number(a, "firstVisibleTextMsMedian"), number(b, "firstVisibleTextMsMedian"), true)
+                if (toolSchemas) {
+                    line("$which: Gesamtzeit ms", number(a, "totalMsMedian"), number(b, "totalMsMedian"), true)
+                    line("$which: Prompttext an das Modell (Zeichen)", number(a, "promptCharactersMedian"), number(b, "promptCharactersMedian"), true)
+                }
+                append("| ").append(which).append(": Ereignis des ersten sichtbaren Texts | ")
+                    .append(objects0(a.getJSONArray("firstVisibleTextEvents")).joinToString(", ").ifEmpty { "–" }).append(" | ")
+                    .append(objects0(b.getJSONArray("firstVisibleTextEvents")).joinToString(", ").ifEmpty { "–" }).append(" | |\n")
+                if (toolSchemas) append("| ").append(which).append(": ohne Werkzeugschemas an das Modell (vollständige Antworten) | ")
+                    .append(a.optInt("toolFreeTurns")).append(" von ").append(a.optInt("complete")).append(" | ")
+                    .append(b.optInt("toolFreeTurns")).append(" von ").append(b.optInt("complete")).append(" | |\n")
+            }
+            if (toolSchemas) {
+                line("Abbrüche", base.optInt("aborts").toDouble(), own.optInt("aborts").toDouble(), false)
+                line("Thermalstufe max (Median je Lauf)", number(base, "thermalMaxMedian"), number(own, "thermalMaxMedian"), false)
+                line("Headroom max (Median je Lauf)", number(base, "headroomMaxMedian"), number(own, "headroomMaxMedian"), false)
+                line("Akku-Anstieg °C (Median je Lauf)", number(base, "batteryRiseCMedian"), number(own, "batteryRiseCMedian"), false)
+            }
+        }
     }
 
     /** The statement about the largest measured cost driver, from the summary only. */
