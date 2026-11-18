@@ -24,6 +24,19 @@ class OwnerMissionPlannerTest {
         assertEquals(listOf("FILE:NEWEST", "OPEN_FOUND"), codes("Such das neueste PDF in Downloads und öffne es"))
     }
 
+    /** „… zusammen und speichere sie als PDF“ is the export lane's single order – unless there is no briefing to save. */
+    @Test fun newsAndSaveInOneSentenceIsAPlanOnlyWhileTheChatHoldsNoBriefing() {
+        val sentence = "Fass mir die Nachrichten von heute zusammen und speichere sie als PDF"
+        assertNull("With a briefing in the chat it stays the export lane's order", plan(sentence))
+        assertEquals(listOf("NEWS", "EXPORT:PDF"), OwnerMissionPlanner.plan(sentence, "Jarvis", noBriefingYet = true)?.codes)
+        assertEquals(listOf("NEWS", "EXPORT:DOCX"),
+            OwnerMissionPlanner.plan("Fass mir die Nachrichten von heute zusammen und speichere sie als Word-Datei", "Jarvis", noBriefingYet = true)?.codes)
+        // Only that case: other single orders stay single whatever the chat holds.
+        for (single in listOf("Fass Seite 2 zusammen und speichere es als Word", "Speichere das als PDF",
+            "Fass mir die in Word zusammen und speichere sie als PDF", "Fass mir die Nachrichten von heute zusammen"))
+            assertNull(single, OwnerMissionPlanner.plan(single, "Jarvis", noBriefingYet = true))
+    }
+
     @Test fun everyConnectorCutsAndAnOrderKeepsItsOwnConnectors() {
         val expected = listOf("OPEN:Argon4", "PAGE:2:DOCX")
         listOf("Öffne das PDF Argon4 und fass Seite 2 zusammen und speichere es als Word",

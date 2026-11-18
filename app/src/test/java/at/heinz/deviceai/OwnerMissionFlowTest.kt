@@ -87,6 +87,43 @@ class OwnerMissionFlowTest {
         assertEquals(1, h.toolsHost.consents.size)
     }
 
+    @Test fun newsAndSaveInOneSentenceFetchesTheNewsFirstInAFreshChatAndSavesTheBriefingAfterwards() {
+        val sentence = "Fass mir die Nachrichten von heute zusammen und speichere sie als PDF"
+        val h = news()
+        assertEquals("In a fresh chat there is nothing to save yet: the sentence is carried out as it is said", "MISSION", h.owner(sentence))
+        assertEquals("Ich mache das in zwei Schritten: 1. Die Nachrichten von heute zusammenfassen. 2. Als PDF speichern.", h.missionSaid.first())
+        assertEquals(listOf(NEWS_PDF), h.downloads())
+        assertTrue(h.lastSaid, h.lastSaid.startsWith("Fertig – beide Schritte sind erledigt. 1. Nachrichten zusammengefasst ("))
+        assertEquals(1, h.toolsHost.consents.size)
+        // With that briefing in the chat the same sentence is the export lane's order on it, as before: no second fetch.
+        assertEquals("TOOLS", h.owner(sentence))
+        assertEquals(1, h.toolsHost.consents.size)
+        assertEquals(2, h.downloads().size)
+    }
+
+    @Test fun theFirstStepWaitsUntilThePlanHasBeenSpoken() {
+        val h = argon()
+        h.speakingPlan = true
+        assertEquals("MISSION", h.owner(argonOrder))
+        assertEquals("Only the plan has been said; no lane has started", listOf(argonPlan), h.said.map { it.substringAfter(':') })
+        assertTrue(h.deskHost.shown.isEmpty() && h.downloads().isEmpty())
+        assertTrue(h.mission.active)
+        h.announcementSpoken()
+        assertEquals("Argon4.pdf", h.deskHost.shown.single().name)
+        assertEquals(listOf(WORD_2), h.downloads())
+        assertEquals(argonDone, h.lastSaid)
+    }
+
+    @Test fun stopWhileThePlanIsSpokenStartsNoStep() {
+        val h = argon()
+        h.speakingPlan = true
+        assertEquals("MISSION", h.owner(argonOrder))
+        assertTrue(h.interrupt("Stopp"))
+        h.announcementSpoken()
+        assertTrue("Nothing was opened, nothing was written", h.deskHost.shown.isEmpty() && h.downloads().isEmpty())
+        assertTrue(!h.mission.active)
+    }
+
     @Test fun withTheStandingGmailGrantTheSendLaneVerifiesTheDraftWithItsAttachmentAndSendsOnce() {
         val h = news()
         h.sendHost.device.gmailWorks()

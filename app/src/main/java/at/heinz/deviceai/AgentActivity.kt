@@ -211,6 +211,8 @@ class AgentActivity : Activity() {
         private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"
         /** Field P0 Code54: the PDF read in this chat, kept across an Activity recreation (SAF return, process death). */
         private const val OPEN_DOCUMENT_STATE_KEY = "continuum_open_pdf_v1"
+        /** 40 × 300 ms: the longest the first step of an owner mission waits for its spoken plan. */
+        private const val OWNER_MISSION_ANNOUNCEMENT_POLLS = 40
         private const val EARLIER_DOCUMENTS_STATE_KEY = "continuum_earlier_pdfs_v1"
         // Public catalog metadata only, never private model bytes or credentials.
         private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"
@@ -13170,12 +13172,27 @@ class AgentActivity : Activity() {
         }
         override fun stage(event: at.heinz.deviceai.cockpit.CockpitAnimationEvent) = cockpitBus.emit(event)
 
+        /** Step 1 starts when the plan has been spoken; without speech at once, with speech after at most 12 s. */
+        override fun afterAnnouncement(action: () -> Unit) {
+            var left = OWNER_MISSION_ANNOUNCEMENT_POLLS
+            val wait = object : Runnable {
+                override fun run() {
+                    if (isFinishing || isDestroyed) return
+                    if ((voiceSpeaking || voiceUtteranceId != null) && --left >= 0) mainHandler.postDelayed(this, 300L)
+                    else action()
+                }
+            }
+            mainHandler.post(wait)
+        }
+
         override fun desk(order: String): Boolean = ownerDocumentDesk.handle(order)
         override fun deskOpenFound(order: String, name: String, folderHint: String?) = ownerDocumentDesk.openFound(order, name, folderHint)
         override fun deskIntercept(request: String): Boolean = ownerDocumentDesk.intercept(request)
         override fun deskCorrect(request: String): Boolean = ownerDocumentDesk.correct(request)
         override fun openDocumentName(): String? = localConversationContext.document(sessionId)?.name
         override fun work(order: String): Boolean = ownerWorkTools.handle(order)
+        override fun noBriefingYet(): Boolean =
+            ownerWorkTools.deliverable?.kind != at.heinz.deviceai.cognitive.OwnerDeliverable.Kind.NEWS_BRIEFING
         override fun continueOn(result: at.heinz.deviceai.cognitive.OwnerDeliverable): Boolean = ownerWorkTools.continueOn(result)
         override fun offerOpening(result: at.heinz.deviceai.cognitive.OwnerDeliverable, file: OwnerSavedFile): Boolean =
             ownerWorkTools.offerOpening(result, file)

@@ -129,6 +129,13 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
     override fun idle(): Boolean = deskHost.idle()
     override fun later(action: () -> Unit) { queue += action }
 
+    /** true = the plan is still being spoken: what waits for its end is kept until [announcementSpoken]. */
+    var speakingPlan = false
+    private var afterPlan: (() -> Unit)? = null
+    override fun afterAnnouncement(action: () -> Unit) { if (speakingPlan) afterPlan = action else later(action) }
+    /** The spoken plan has ended: the first step may start. */
+    fun announcementSpoken() { speakingPlan = false; afterPlan?.let { queue += it }; afterPlan = null; settle() }
+
     override fun stage(event: CockpitAnimationEvent) {
         when (event) {
             is CockpitAnimationEvent.ProcessTimeline -> steps = event.steps.map { "${it.label}:${it.state.name}" }
@@ -143,6 +150,7 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
     override fun deskCorrect(request: String): Boolean = desk.correct(request)
     override fun openDocumentName(): String? = deskHost.openDocument()?.name
     override fun work(order: String): Boolean = tools.handle(order)
+    override fun noBriefingYet(): Boolean = tools.deliverable?.kind != OwnerDeliverable.Kind.NEWS_BRIEFING
     override fun continueOn(result: OwnerDeliverable): Boolean = tools.continueOn(result)
     override fun offerOpening(result: OwnerDeliverable, file: OwnerSavedFile): Boolean = tools.offerOpening(result, file)
 

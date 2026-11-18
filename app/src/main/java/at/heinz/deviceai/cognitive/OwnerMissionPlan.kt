@@ -126,15 +126,21 @@ internal object OwnerMissionPlanner {
         override val source: Int? get() = null
     }
 
-    /** The plan for [utterance], or null when it is not a clear sequence of at least two lane orders. */
-    fun plan(utterance: String, assistantName: String? = null): OwnerMissionPlan? {
+    /**
+     * The plan for [utterance], or null when it is not a clear sequence of at least two lane orders.
+     * [noBriefingYet]: this chat holds no news briefing. Then „Fass mir die Nachrichten von heute zusammen und
+     * speichere sie als PDF“ – which the export lane reads as one order on the briefing we talk about – has nothing
+     * to save and is planned as what it says: fetch the news, then save them. With a briefing in the chat (the
+     * default) the sentence stays the export lane's single order as before.
+     */
+    fun plan(utterance: String, assistantName: String? = null, noBriefingYet: Boolean = false): OwnerMissionPlan? {
         if (utterance.length !in 16..MAX_CHARS || utterance.any { it.isISOControl() }) return null
         val said = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trim().trimEnd('.', '!', '?', ' ')
         if (!laneWord.containsMatchIn(said) || ':' in said || quote.containsMatchIn(said) || blocked.containsMatchIn(said)) return null
         val cuts = connector.findAll(said).filter { it.range.first > 0 && it.range.last < said.length - 1 }.toList()
         if (cuts.isEmpty() || cuts.size >= MAX_FRAGMENTS) return null
         // A sentence one lane takes as a whole today is that lane's single order, however it could be cut.
-        if (singleOrder(said, assistantName)) return null
+        if (singleOrder(said, assistantName) && !(noBriefingYet && onlyNewsExport(said, assistantName))) return null
         // Fragment i is said[starts[i], ends[i]); a part of the plan is one fragment or several with their connectors.
         val starts = listOf(0) + cuts.map { it.range.last + 1 }
         val ends = cuts.map { it.range.first } + said.length
@@ -173,6 +179,12 @@ internal object OwnerMissionPlanner {
         OwnerPageJobCommand.parse(said, assistantName) != null || OwnerLibraryCommand.parseOpen(said, assistantName) != null ||
             OwnerNewsCommand.parse(said, assistantName) != null || OwnerExportCommand.parse(said, assistantName) != null ||
             OwnerShareCommand.parse(said, assistantName) != null
+
+    /** true = of the whole-sentence parsers only the export lane takes [said], and it names the news. */
+    private fun onlyNewsExport(said: String, assistantName: String?): Boolean =
+        OwnerExportCommand.parse(said, assistantName)?.aboutNews == true &&
+            OwnerPageJobCommand.parse(said, assistantName) == null && OwnerLibraryCommand.parseOpen(said, assistantName) == null &&
+            OwnerNewsCommand.parse(said, assistantName) == null && OwnerShareCommand.parse(said, assistantName) == null
 
     /**
      * The lane order [text] is when it is said alone, tried in the Activity's routing order (document desk, send lane,

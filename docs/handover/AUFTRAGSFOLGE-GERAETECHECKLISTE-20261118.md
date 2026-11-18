@@ -44,7 +44,7 @@ denselben Freigaben und Rückfragen. Für die Einzelschritte gelten deshalb weit
 | N1 | „Fass mir die Nachrichten von heute zusammen, speichere sie als PDF und schick sie per Mail an `<Adresse>`“ | „Ich mache das in drei Schritten: 1. Die Nachrichten von heute zusammenfassen. 2. Als PDF speichern. 3. Per E-Mail an `<Adresse>` schicken.“ Bei „Nachfragen“: der gewohnte Freigabe-Dialog für die Feeds (einmal). Dann Briefing mit Quellen → „Erledigt. ‚Nachrichten von heute `<Datum>`.pdf‘ liegt jetzt in deinem Download-Ordner …“ → Mailprogramm mit PDF im Anhang → „Fertig – alle drei Schritte sind erledigt. 1. Nachrichten zusammengefasst (N Meldungen). 2. ‚Nachrichten von heute `<Datum>`.pdf‘ gespeichert (Download-Ordner). 3. E-Mail an `<Adresse>` im Mailprogramm vorbereitet, diese Datei hängt an – gesendet habe ich nichts.“ | PDF fehlt im Anhang; Mail geht ohne dein Zutun hinaus (darf bei ausgeschaltetem Selbst-Senden **nie** passieren) → sofort melden |
 | N2 | Freigabe-Dialog in N1 mit „Nicht jetzt“ ablehnen | „Die Auftragsfolge endet bei Schritt 1 von 3. Erledigt war noch nichts. Nicht geklappt: 1. Die Nachrichten von heute zusammenfassen – Der Internetzugriff wurde für die Nachrichten nicht freigegeben. Nicht begonnen: 2. Als PDF speichern. 3. Per E-Mail an `<Adresse>` schicken.“ Keine Datei, kein Mailprogramm. | Datei oder Mail trotz Ablehnung → melden |
 | N3 | Internetzugang AUS, dann N1 | Wie N2, Grund: „Internetzugang ist AUS, deshalb habe ich keine Nachrichten abgerufen.“ | – |
-| N4 | „Fass mir die Nachrichten von heute zusammen und speichere sie als PDF“ (nur zwei Teile) | **Kein Plan** – diesen Satz liest der Export heute als einen Auftrag („speichere die Nachrichten als PDF“). Gibt es noch kein Briefing im Gespräch, kommt der bisherige Hinweis. Das ist bekannt und so festgelegt; sag stattdessen den Satz aus N1 oder „Gib mir die Schlagzeilen und dann speichere das als PDF“. | – (bitte melden, wenn dich das stört) |
+| N4 | „Fass mir die Nachrichten von heute zusammen und speichere sie als PDF“ (nur zwei Teile), **in einem frischen Gespräch ohne Briefing** | Plan in zwei Schritten: „1. Die Nachrichten von heute zusammenfassen. 2. Als PDF speichern.“ – Nachrichten werden geholt, danach liegt die PDF im Download-Ordner. Steht schon ein Briefing im Gespräch, liest der Export den Satz wie bisher als **einen** Auftrag und speichert dieses Briefing, ohne neu abzurufen. | Hinweis „… gibt es noch nichts, das ich speichern könnte“ in einem frischen Gespräch → melden |
 
 ## 3. Dritter Ablauf: neuestes PDF suchen und öffnen
 
@@ -138,8 +138,9 @@ Mit Claude als Gehirn wird **kein** Modellplan angefragt (der Planauftrag geht n
 - Verneinungen, Bedingungen („wenn …“), Alternativen („oder“), Anführungszeichen und Doppelpunkte ergeben keinen
   Plan.
 - Die Folge lebt im Arbeitsspeicher der App: Wird Continuum beendet, ist sie weg; schon Gespeichertes bleibt.
-- Vorlesen: Jede neue Meldung unterbricht die vorige (wie überall in der App). Der gesprochene Plan kann deshalb vom
-  Ergebnis des ersten Schritts überholt werden, eine lange Zusammenfassung vom nächsten Schritt; im Gespräch steht
-  alles vollständig. Bitte melden, wenn dich das stört – dann wartet die Folge auf das Ende der Ansage.
+- Vorlesen: Der erste Schritt startet erst, wenn der gesprochene Plan zu Ende gesagt ist (ohne Sprachausgabe sofort,
+  mit Sprachausgabe nach höchstens 12 Sekunden). Zwischen den Schritten gilt weiter: Jede neue Meldung unterbricht die
+  vorige (wie überall in der App) – eine lange Zusammenfassung kann vom nächsten Schritt überholt werden; im Gespräch
+  steht alles vollständig. Ob die Ansage am Fold7 wirklich ausgesprochen wird, bevor Schritt 1 beginnt: NOT_RUN.
 - „Ich meinte die andere Datei“ / „die zweite“ ändert während einer laufenden Folge nichts; als Antwort auf die
   Rückfrage der Ablage funktioniert es wie bisher. „Nein, ich meinte das PDF Xenon5“ stellt die Folge um.

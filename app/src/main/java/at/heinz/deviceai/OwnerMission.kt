@@ -42,6 +42,11 @@ internal interface OwnerMissionHost {
     fun later(action: () -> Unit)
     /** Runs [action] on the UI thread after about [millis]; a host without a clock runs it like [later]. */
     fun afterMillis(millis: Long, action: () -> Unit) = later(action)
+    /**
+     * Runs [action] once the spoken plan has been said – at once when nothing is spoken, and never later than a
+     * bounded wait. Step 1's first message would otherwise cut the announcement off (every reply stops the one before).
+     */
+    fun afterAnnouncement(action: () -> Unit) = later(action)
     /** The mission's own steps for the work window. */
     fun stage(event: CockpitAnimationEvent) {}
 
@@ -57,6 +62,8 @@ internal interface OwnerMissionHost {
     fun openDocumentName(): String?
     /** The work tools' owner entry (news, export, mail, opening the saved file); true = they took [order]. */
     fun work(order: String): Boolean
+    /** true = this chat holds no news briefing the owner could mean with „speichere die Nachrichten …“. */
+    fun noBriefingYet(): Boolean = false
     /** See [OwnerWorkTools.continueOn]. */
     fun continueOn(result: OwnerDeliverable): Boolean
     /** See [OwnerWorkTools.offerOpening]. */
@@ -158,7 +165,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
      * Call on the UI thread on a free lane, before the lanes themselves. false = not a mission; nothing happened.
      */
     fun handle(request: String): Boolean {
-        val plan = OwnerMissionPlanner.plan(request, host.assistantName) ?: return false
+        val plan = OwnerMissionPlanner.plan(request, host.assistantName, host.noBriefingYet()) ?: return false
         val replaced = open() != null
         host.acceptOwnerTurn(request)
         start(plan.request, plan, if (replaced) "Die frühere Auftragsfolge beende ich damit. " else "")
@@ -372,7 +379,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         mission = m
         host.reply(request, if (announce) lead + plan.announcement() else lead)
         host.activity("AUFTRAGSFOLGE · ${m.slots.size} Schritte nacheinander · jeder läuft durch seine eigene Lenkung")
-        host.later { advance(m) }
+        if (announce) host.afterAnnouncement { advance(m) } else host.later { advance(m) }
     }
 
     /** Starts the first step that is still to do, or ends the mission. */
