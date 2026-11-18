@@ -37,13 +37,20 @@ class Command03StageSignalsTest {
     @Test fun qualityLowersOnlyOnRealThermalOrPowerSaveSignals() {
         assertEquals("FULL", Command03StageSignals.quality(null, null, Profile.AUTO))
         assertEquals("FULL", Command03StageSignals.quality(0, false, Profile.AUTO))
-        assertEquals("FULL", Command03StageSignals.quality(1, false, Profile.AUTO))
-        assertEquals("BALANCED", Command03StageSignals.quality(2, false, Profile.AUTO))
+        // Fold7 heat finding (Code64): AUTO steps down one status earlier – before the thermal guard stops the model.
+        assertEquals("BALANCED", Command03StageSignals.quality(1, false, Profile.AUTO))
+        assertEquals("REDUCED", Command03StageSignals.quality(2, false, Profile.AUTO))
         assertEquals("REDUCED", Command03StageSignals.quality(3, false, Profile.AUTO))
         assertEquals("REDUCED", Command03StageSignals.quality(0, true, Profile.AUTO))
         // An out-of-range platform value is not evidence of heat.
         assertEquals("FULL", Command03StageSignals.quality(99, false, Profile.AUTO))
         assertEquals("FULL", Command03StageSignals.quality(-1, null, Profile.AUTO))
+    }
+
+    @Test fun refreshRateIsLoweredUnlessTheOwnerChoseFullQuality() {
+        assertEquals(60f, Command03StageSignals.preferredRefreshRate(Profile.AUTO), 0f)
+        assertEquals(60f, Command03StageSignals.preferredRefreshRate(Profile.SAVER), 0f)
+        assertEquals(0f, Command03StageSignals.preferredRefreshRate(Profile.FULL), 0f)
     }
 
     @Test fun ownerProfilesAreRespectedButCriticalHeatAlwaysReduces() {

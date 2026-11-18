@@ -119,6 +119,16 @@ internal class AnswerContinuationController(
         const val SEGMENT_LIMIT = 4
         /** The request the existing continuation path recognises ([LocalConversationFollowUpPolicy.requestsContinuation]). */
         const val CONTINUE_REQUEST = "weiter"
+        /** PowerManager.THERMAL_STATUS_LIGHT. */
+        private const val THERMAL_LIGHT = 1
+
+        /**
+         * A further generation directly after one that ran into the output limit is the longest compute stretch a
+         * single owner turn can cause. It is only started while Android reports no thermal pressure (status NONE)
+         * or reports no status at all; from LIGHT on the cut answer is shown with the „weiter“ hint and the owner
+         * decides. [status] is PowerManager's thermal status (0..6), never a temperature.
+         */
+        fun thermalAllows(status: Int?): Boolean = status == null || status < THERMAL_LIGHT
         /** How [BoundedAgentOrchestrator] reports an accepted partial text that stopped at the output limit. */
         val OUTPUT_LIMIT_BLOCKER = "Antwort unvollständig: " + LocalGenerationFailureCause.OUTPUT_LIMIT.ownerMessage
     }

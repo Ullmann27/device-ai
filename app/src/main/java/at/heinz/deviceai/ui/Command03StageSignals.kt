@@ -46,6 +46,12 @@ object Command03StageSignals {
      * Quality tier for secondary page effects. [thermalStatus] is PowerManager's status (0 none … 6 shutdown)
      * or null when the platform does not report one; an unknown status never lowers quality by itself.
      * Only expensive secondary effects follow this tier; content, controls, avatar and orb stay visible.
+     *
+     * Owner finding (Fold7, Code64): the device heated up within three or four spoken turns and the thermal guard
+     * stopped the answer. AUTO used to lower the stage only at MODERATE and reduce it at SEVERE – the status at
+     * which [at.heinz.deviceai.localmodel.LocalModelThermalGuard] already stops the model, i.e. too late to help.
+     * AUTO now steps down one status earlier: BALANCED at LIGHT, REDUCED from MODERATE. The page also limits its
+     * frame rate per tier (native-bridge.js, frame governor).
      */
     fun quality(thermalStatus: Int?, powerSave: Boolean?, profile: Profile): String {
         val thermal = thermalStatus?.takeIf { it in 0..6 }
@@ -53,15 +59,22 @@ object Command03StageSignals {
             Profile.SAVER -> "REDUCED"
             Profile.FULL -> if (thermal != null && thermal >= THERMAL_CRITICAL) "REDUCED" else "FULL"
             Profile.AUTO -> when {
-                powerSave == true || (thermal != null && thermal >= THERMAL_SEVERE) -> "REDUCED"
-                thermal != null && thermal >= THERMAL_MODERATE -> "BALANCED"
+                powerSave == true || (thermal != null && thermal >= THERMAL_MODERATE) -> "REDUCED"
+                thermal != null && thermal >= THERMAL_LIGHT -> "BALANCED"
                 else -> "FULL"
             }
         }
     }
 
+    /**
+     * Display refresh rate Continuum asks Android for while it is in front: 60 Hz unless the owner chose full
+     * quality (0 = no preference, the display's own rate, 120 Hz on the Fold7). CSS and compositor animations run
+     * at the display rate, so this halves their work. A request only – Android may keep another rate.
+     */
+    fun preferredRefreshRate(profile: Profile): Float = if (profile == Profile.FULL) 0f else 60f
+
+    private const val THERMAL_LIGHT = 1
     private const val THERMAL_MODERATE = 2
-    private const val THERMAL_SEVERE = 3
     private const val THERMAL_CRITICAL = 4
 }
 

@@ -2,6 +2,39 @@
 (() => {
   'use strict';
   if (window.ContinuumNative) return;
+  // Frame governor (heat). The original scene, orb and avatar redraw on every display frame – up to 120 times a
+  // second on the Fold7 – without a limit of their own, next to the local model. This binding loads before them
+  // and hands their animation-frame callbacks on at most `limit` times per second, with the real frame time, so
+  // every time-based motion keeps its speed. No original file changes. Android's tier and the running work set
+  // the limit (see renderPresence).
+  const frameGovernor = (() => {
+    const request = typeof window.requestAnimationFrame==='function' ? window.requestAnimationFrame.bind(window) : null;
+    if(request===null) return {set() {}, limit:() => null};
+    let limit = 30, waiting = new Map(), serial = 0, armed = false, last = -Infinity;
+    const pump = time => {
+      armed = false;
+      // Without a real frame time (no browser clock) nothing is held back.
+      const timed = typeof time==='number' && Number.isFinite(time);
+      if(!timed || limit===null || time-last >= 1000/limit-2) {
+        if(timed) last = time;
+        const due = waiting;
+        waiting = new Map();
+        for(const callback of due.values()) {
+          try {callback(time);}
+          catch(error) {if(typeof window.reportError==='function')window.reportError(error);else setTimeout(() => {throw error;});}
+        }
+      }
+      if(waiting.size && !armed) {armed = true;request(pump);}
+    };
+    window.requestAnimationFrame = callback => {
+      const id = ++serial;
+      waiting.set(id, callback);
+      if(!armed) {armed = true;request(pump);}
+      return id;
+    };
+    window.cancelAnimationFrame = id => {waiting.delete(id);};
+    return {set(value) {limit = value;}, limit:() => limit};
+  })();
   const routes = new Set(['home','chat','chats','new-chat','files','research',
     'agents','memory','device','settings','settings-voice','settings-model',
     'settings-internet','settings-appearance','voice-input','voice-input-long-press','stop']);
@@ -55,6 +88,10 @@
     SPEAKING:{scene:'speaking',status:'SPRICHT',label:'Ich spreche',detail:'Die Sprachausgabe ist aktiv.'},
     BLOCKED:{scene:'idle',calm:true,status:'BLOCKIERT',label:'Blockiert',detail:'Der Auftrag ist blockiert.'}});
   const qualities = Object.freeze({FULL:'high',BALANCED:'medium',REDUCED:'low'});
+  // Frames per second the stage may draw: [otherwise, while the local model computes]. Speaking keeps the first
+  // value of its tier for the lip movement.
+  const frameLimits = Object.freeze({FULL:[30,15],BALANCED:[20,10],REDUCED:[10,6]});
+  const computing = Object.freeze({THINKING:true,RESEARCHING:true,LEARNING:true});
   const activityKinds = Object.freeze({THINK:'DENKEN',RESEARCH:'RECHERCHE',LEARN:'LERNEN',DEVELOP:'ENTWICKLUNG',
     EXECUTE:'AUSFÜHRUNG',VERIFY:'PRÜFUNG',TOOL:'WERKZEUG',WORKER:'HELFER',MEMORY:'GEDÄCHTNIS',
     DOCUMENT:'DOKUMENT',CALCULATION:'BERECHNUNG',NOTIFICATION:'BENACHRICHTIGUNG'});
@@ -274,6 +311,11 @@
       // Without a tier the original preview setting ("hoch") stays in force.
       window.ContinuumScene?.setQuality?.(quality===null?'high':qualities[quality]);
     }
+    const busy=key===null ? state.busy===true && state.speaking!==true && state.listening!==true : own(computing,key);
+    const frames=frameLimits[quality===null?'FULL':quality][busy?1:0];
+    if(frameGovernor.limit()!==null && frameGovernor.limit()!==frames)frameGovernor.set(frames);
+    if(frameGovernor.limit()!==null && document.body.dataset.frameLimit!==String(frames))
+      document.body.dataset.frameLimit=String(frames);
   }
   function validScope(data) {
     return data && typeof data.sessionId==='string' && typeof data.pageId==='string' &&
