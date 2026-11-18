@@ -308,25 +308,45 @@ class ClaudeModelRuntime internal constructor(
         runCatching { callback.onEvent(event) }
     }
 
-    /** Sends [conversation] and maps the streamed answer to runtime events. Runs on a worker thread. */
-    private fun exchange(run: Run, conversation: Conversation, allowFallbackDowngrade: Boolean = true) {
+    /**
+     * Sends [conversation] and maps the streamed answer to runtime events. Runs on a worker thread. The usage of
+     * the attempt is booked before the caller sees the terminal event.
+     */
+    private fun exchange(run: Run, conversation: Conversation) {
+        val attempt = Attempt()
+        val terminal = outcome(run, conversation, attempt, allowFallbackDowngrade = true)
+        run.stream = null
+        // A response that started but never reported its final usage is still billed for what it produced.
+        val seen = attempt.promptUsage
+        if (!attempt.settled && seen != null) ledger.record(conversation.model.id, conversation.model.id,
+            seen.copy(outputTokens = (run.responseCharacters.get() + 1L) / 2), estimated = true)
+        terminal?.let { finish(run, it) }
+    }
+
+    private class Attempt {
         var streamOpened = false
         var promptUsage: ClaudeTokenUsage? = null
+        /** The final usage of this attempt was booked (or the attempt was booked as an estimate). */
         var settled = false
+    }
+
+    /** The terminal event of one attempt, or null when the run already ended (STOP, character limit). */
+    private fun outcome(run: Run, conversation: Conversation, attempt: Attempt,
+                        allowFallbackDowngrade: Boolean): LocalInferenceEvent? {
         try {
-            val key = apiKey() ?: return finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.NO_API_KEY))
-            if (run.cancelled.get()) return finish(run, LocalInferenceEvent.Cancelled)
+            val key = apiKey() ?: return LocalInferenceEvent.Failed(ClaudeBrainFailure.NO_API_KEY)
+            if (run.cancelled.get()) return LocalInferenceEvent.Cancelled
             val withFallback = conversation.model.serverSideFallback && !fallbackRejected && run.kind != Kind.PROBE
             val opened = client(key).beta().messages().createStreaming(request(conversation, withFallback))
             run.stream = opened
-            streamOpened = true
-            opened.use { stream ->
+            attempt.streamOpened = true
+            return opened.use { stream ->
                 if (run.cancelled.get()) {
                     // STOP arrived before the response: the request may still be billed, so it is estimated.
                     ledger.record(conversation.model.id, conversation.model.id,
                         ClaudeTokenUsage((conversation.approximateCharacters + 2L) / 3, 0), estimated = true)
-                    settled = true
-                    return
+                    attempt.settled = true
+                    return@use null
                 }
                 val accumulator = BetaMessageAccumulator.create()
                 var stopped = false
@@ -334,7 +354,7 @@ class ClaudeModelRuntime internal constructor(
                     accumulator.accumulate(event)
                     event.messageStart().ifPresent { start ->
                         val usage = start.message().usage()
-                        promptUsage = ClaudeTokenUsage(usage.inputTokens(), 0,
+                        attempt.promptUsage = ClaudeTokenUsage(usage.inputTokens(), 0,
                             usage.cacheReadInputTokens().orElse(0L), usage.cacheCreationInputTokens().orElse(0L))
                     }
                     event.contentBlockDelta().ifPresent { delta ->
@@ -343,48 +363,42 @@ class ClaudeModelRuntime internal constructor(
                     if (event.isMessageStop()) stopped = true
                     if (run.cancelled.get() || run.finished.get()) break
                 }
-                if (run.cancelled.get() || run.finished.get()) return
-                if (!stopped) return finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.STREAM_INTERRUPTED))
+                if (run.cancelled.get() || run.finished.get()) return@use null
+                if (!stopped) return@use LocalInferenceEvent.Failed(ClaudeBrainFailure.STREAM_INTERRUPTED)
                 val message = accumulator.message()
                 recordUsage(conversation.model, message)
-                settled = true
+                attempt.settled = true
                 complete(run, conversation, message)
             }
         } catch (failure: RateLimitException) {
-            finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.RATE_LIMITED))
+            return LocalInferenceEvent.Failed(ClaudeBrainFailure.RATE_LIMITED)
         } catch (failure: UnauthorizedException) {
-            finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.INVALID_API_KEY))
+            return LocalInferenceEvent.Failed(ClaudeBrainFailure.INVALID_API_KEY)
         } catch (failure: PermissionDeniedException) {
-            finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.PERMISSION_DENIED))
+            return LocalInferenceEvent.Failed(ClaudeBrainFailure.PERMISSION_DENIED)
         } catch (failure: NotFoundException) {
-            finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.MODEL_UNAVAILABLE))
+            return LocalInferenceEvent.Failed(ClaudeBrainFailure.MODEL_UNAVAILABLE)
         } catch (failure: BadRequestException) {
             val detail = errorMessage(failure)
-            if (!streamOpened && allowFallbackDowngrade && conversation.model.serverSideFallback && !fallbackRejected &&
-                (detail.contains("anthropic-beta") || detail.contains("fallbacks"))) {
+            if (!attempt.streamOpened && allowFallbackDowngrade && conversation.model.serverSideFallback &&
+                !fallbackRejected && (detail.contains("anthropic-beta") || detail.contains("fallbacks"))) {
                 // The account does not have the server-side fallback beta: send the same request once without it.
                 fallbackRejected = true
-                return exchange(run, conversation, allowFallbackDowngrade = false)
+                return outcome(run, conversation, attempt, allowFallbackDowngrade = false)
             }
-            finish(run, LocalInferenceEvent.Failed(badRequestProblem(failure, detail)))
+            return LocalInferenceEvent.Failed(badRequestProblem(failure, detail))
         } catch (failure: InternalServerException) {
-            finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.OVERLOADED))
+            return LocalInferenceEvent.Failed(ClaudeBrainFailure.OVERLOADED)
         } catch (failure: AnthropicServiceException) {
             // Any other non-2xx status and error events inside a stream.
-            finish(run, LocalInferenceEvent.Failed(serviceProblem(failure, streamOpened)))
+            return LocalInferenceEvent.Failed(serviceProblem(failure, attempt.streamOpened))
         } catch (failure: AnthropicIoException) {
-            finish(run, LocalInferenceEvent.Failed(connectionProblem(failure, streamOpened)))
+            return LocalInferenceEvent.Failed(connectionProblem(failure, attempt.streamOpened))
         } catch (failure: AnthropicException) {
-            finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE))
+            return LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE)
         } catch (failure: Exception) {
-            finish(run, LocalInferenceEvent.Failed(
-                if (streamOpened) ClaudeBrainFailure.STREAM_INTERRUPTED else ClaudeBrainFailure.UNEXPECTED_RESPONSE))
-        } finally {
-            run.stream = null
-            // A response that started but never reported its final usage is still billed for what it produced.
-            val seen = promptUsage
-            if (!settled && seen != null) ledger.record(conversation.model.id, conversation.model.id,
-                seen.copy(outputTokens = (run.responseCharacters.get() + 1L) / 2), estimated = true)
+            return LocalInferenceEvent.Failed(if (attempt.streamOpened) ClaudeBrainFailure.STREAM_INTERRUPTED
+                else ClaudeBrainFailure.UNEXPECTED_RESPONSE)
         }
     }
 
@@ -406,30 +420,28 @@ class ClaudeModelRuntime internal constructor(
     }
 
     /** The stop reason decides before any content is used. */
-    private fun complete(run: Run, conversation: Conversation, message: BetaMessage) {
+    private fun complete(run: Run, conversation: Conversation, message: BetaMessage): LocalInferenceEvent {
         lastServedModel = message.model().asString()
-        val stopReason = message.stopReason().orElse(null)
-        when (stopReason) {
-            BetaStopReason.END_TURN, BetaStopReason.STOP_SEQUENCE -> finish(run, completed(run, message))
+        return when (message.stopReason().orElse(null)) {
+            BetaStopReason.END_TURN, BetaStopReason.STOP_SEQUENCE -> completed(run, message)
             BetaStopReason.TOOL_USE -> proposeTools(run, conversation, message)
             // Thinking and answer share the limit; a cut-off tool call is never proposed.
-            BetaStopReason.MAX_TOKENS ->
-                finish(run, LocalInferenceEvent.Failed(LocalModelGenerationPolicy.OUTPUT_TOKEN_LIMIT))
+            BetaStopReason.MAX_TOKENS -> LocalInferenceEvent.Failed(LocalModelGenerationPolicy.OUTPUT_TOKEN_LIMIT)
             // Text that was streamed before a refusal is not an answer; callers discard it.
-            BetaStopReason.REFUSAL -> finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.REFUSAL))
-            BetaStopReason.MODEL_CONTEXT_WINDOW_EXCEEDED ->
-                finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.CONTEXT_TOO_LONG))
+            BetaStopReason.REFUSAL -> LocalInferenceEvent.Failed(ClaudeBrainFailure.REFUSAL)
+            BetaStopReason.MODEL_CONTEXT_WINDOW_EXCEEDED -> LocalInferenceEvent.Failed(ClaudeBrainFailure.CONTEXT_TOO_LONG)
             // pause_turn belongs to server-side tools, which this runtime never declares.
-            else -> finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE))
+            else -> LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE)
         }
     }
 
-    private fun proposeTools(run: Run, conversation: Conversation, message: BetaMessage) {
+    /** Emits the proposal (or its rejection) and returns the turn's terminal event. */
+    private fun proposeTools(run: Run, conversation: Conversation, message: BetaMessage): LocalInferenceEvent {
         val calls = message.content().mapNotNull { it.toolUse().orElse(null) }
         if (!run.kind.withTools || calls.isEmpty())
-            return finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE))
-        if (calls.size > 1) return finish(run, LocalInferenceEvent.Failed(
-            "More than one tool proposal occurred in a single model turn; none are authorized."))
+            return LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE)
+        if (calls.size > 1) return LocalInferenceEvent.Failed(
+            "More than one tool proposal occurred in a single model turn; none are authorized.")
         val call = calls.single()
         val arguments = toArguments(call._input())
         val rejection = when {
@@ -447,7 +459,7 @@ class ClaudeModelRuntime internal constructor(
         }
         emit(run, if (rejection == null) LocalInferenceEvent.ToolProposal(ToolProposal(call.name(), arguments!!))
             else LocalInferenceEvent.ToolProposalRejected(call.name(), rejection, arguments ?: emptyMap()))
-        finish(run, completed(run, message))
+        return completed(run, message)
     }
 
     private fun completed(run: Run, message: BetaMessage): LocalInferenceEvent.Completed {

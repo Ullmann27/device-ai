@@ -38,11 +38,16 @@ internal class MapStorage : SecretStorage {
     }
 }
 
+/** No test may ever reach the real API: without an explicit fake endpoint a request can only hit a closed local port. */
+internal val UNREACHABLE_LOCAL_ENDPOINT = ClaudeModelRuntime.Endpoint(baseUrl = "http://127.0.0.1:1", maxRetries = 0,
+    connectTimeout = java.time.Duration.ofSeconds(1), readTimeout = java.time.Duration.ofSeconds(1),
+    requestTimeout = java.time.Duration.ofSeconds(2))
+
 /** A brain with in-memory stores; [endpoint] points at the local fake endpoint in tests that send requests. */
 internal fun testBrain(
     settings: ClaudeSettingsStore = InMemoryClaudeSettingsStore(),
     storage: MapStorage = MapStorage(),
-    endpoint: ClaudeModelRuntime.Endpoint = ClaudeModelRuntime.Endpoint(),
+    endpoint: ClaudeModelRuntime.Endpoint = UNREACHABLE_LOCAL_ENDPOINT,
     ledger: ClaudeUsageLedger = ClaudeUsageLedger(InMemoryClaudeLedgerStorage())
 ): ClaudeBrain = ClaudeBrain(settings,
     SecretStore("claude_api_key", SoftwareCipher(), storage, ClaudeApiKey::plausible), ledger, endpoint,

@@ -84,10 +84,13 @@ object ClaudeBrainFailure {
             "gewählt ist, starte ich sie nicht, damit nichts unbemerkt in die Cloud geht und kein Guthaben verbraucht wird."
     )
 
-    /** Codes after which switching back to the local brain is the obvious next step. */
+    /**
+     * Codes after which switching back to the local brain is the obvious next step. A refusal is not among them:
+     * Claude works, it declined one request, and its message already names the alternatives.
+     */
     private val OFFER_SWITCH_BACK = setOf(NO_CONSENT, NO_API_KEY, INVALID_API_KEY, PERMISSION_DENIED, NO_CREDIT,
         RATE_LIMITED, OVERLOADED, OFFLINE, TIMEOUT, MODEL_UNAVAILABLE, DATA_RETENTION_REQUIRED, SPEND_LIMIT_REACHED,
-        LOCAL_ONLY_SCREEN_DATA, LOCAL_ONLY_OWNER_VETO, LOCAL_ONLY_MEMORY, LOCAL_ONLY_FEATURE, REFUSAL)
+        LOCAL_ONLY_SCREEN_DATA, LOCAL_ONLY_OWNER_VETO, LOCAL_ONLY_MEMORY, LOCAL_ONLY_FEATURE)
 
     /** A cut connection leaves real answer text behind; after every other failure streamed text is no answer. */
     private val KEEPS_PARTIAL_OUTPUT = setOf(STREAM_INTERRUPTED, TIMEOUT, OVERLOADED)

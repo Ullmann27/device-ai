@@ -81,9 +81,14 @@ class ClaudeBrainTurnUiTest {
     private fun settle(a: AgentActivity) {
         val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(20)
         do {
-            (get(a, "localAgentExecutor") as ExecutorService).submit {}.get(20, TimeUnit.SECONDS)
+            // The agent thread may wait for something the main looper still has to deliver (a dialog decision).
             shadowOf(Looper.getMainLooper()).idle()
-            if (get(a, "activeChatCancellation") == null && !(get(a, "activeLocalRequest") as Boolean)) return
+            val idle = try {
+                (get(a, "localAgentExecutor") as ExecutorService).submit {}.get(200, TimeUnit.MILLISECONDS)
+                true
+            } catch (_: java.util.concurrent.TimeoutException) { false }
+            shadowOf(Looper.getMainLooper()).idle()
+            if (idle && get(a, "activeChatCancellation") == null && !(get(a, "activeLocalRequest") as Boolean)) return
             Thread.sleep(20)
         } while (System.nanoTime() < deadline)
         fail("turn did not finish")
@@ -219,6 +224,80 @@ class ClaudeBrainTurnUiTest {
             ask(a, task)
             assertTrue(chat(a).any { it.contains(ClaudeBrainFailure.ownerMessage(ClaudeBrainFailure.REFUSAL)) })
             assertFalse(chat(a).toString(), chat(a).any { it.contains("Dieser Anfang ist keine Antwort.") })
+            assertEquals(0, local.calls)
+        }
+    }
+
+    @Test fun toolCallFromClaudeStopsAtTheOwnersApprovalDialogAndADeclineGoesBackAsAnError() {
+        val closing = "Ich habe die App nicht gestoppt, weil du die Freigabe abgelehnt hast."
+        endpoint.enqueue(
+            Reply.Stream(listOf(messageStart()) + FakeAnthropicEndpoint.toolUse(0, "toolu_fake_stop", "stop_app",
+                "{\"packageOrName\": \"com.example.app\"}") + stop("tool_use")),
+            Reply.Stream(listOf(messageStart()) + text(0, closing) + stop("end_turn")),
+            // Only used if the answer check asks for one more attempt.
+            Reply.Stream(listOf(messageStart()) + text(0, closing) + stop("end_turn")))
+        val local = LocalFixture("LOKALE ANTWORT")
+        withTurns(claudeBrain(), local) { a ->
+            val order = "Stoppe die App com.example.app."
+            call(a, "runLocal", order, order, null, CognitiveTurnTrace(get(a, "sessionId") as String), null, null)
+            // The proposal waits at the app's own confirmation dialog; nothing runs and nothing more is sent.
+            val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(15)
+            var approval: AlertDialog? = null
+            while (approval == null && System.nanoTime() < deadline) {
+                shadowOf(Looper.getMainLooper()).idle()
+                approval = ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }
+                if (approval == null) Thread.sleep(20)
+            }
+            assertNotNull("Claude's tool call must reach the owner's approval dialog", approval)
+            val shown = shadowOf(approval!!)
+            assertEquals("Aktion freigeben", shown.title.toString())
+            assertTrue(shown.message.toString().contains("App stoppen"))
+            assertTrue(shown.message.toString().contains("com.example.app"))
+            assertEquals(1, endpoint.requests.size)
+            assertTrue(endpoint.requests[0].body.has("tools"))
+
+            approval.getButton(AlertDialog.BUTTON_NEGATIVE).performClick()
+            settle(a)
+            assertTrue(endpoint.requests.size in 2..3)
+            val result = endpoint.requests[1].body.getJSONArray("messages").getJSONObject(2)
+                .getJSONArray("content").getJSONObject(0)
+            assertEquals("toolu_fake_stop", result.getString("tool_use_id"))
+            assertTrue("a declined tool is reported to Claude as an error", result.getBoolean("is_error"))
+            assertFalse(result.getString("content").contains("SUCCEEDED"))
+            assertEquals(0, local.calls)
+            // The app's own outcome line: the tool was declined, and no success is claimed.
+            assertTrue(chat(a).toString(), chat(a).any { it.contains("stop_app meldet REJECTED") })
+            assertTrue(chat(a).none { it.contains("SUCCEEDED") })
+        }
+    }
+
+    private fun recall() = at.heinz.deviceai.cognitive.LocalGroundedRecall.boundedOrNull(
+        "Der Besitzer hat notiert: Der Prüftermin ist am Freitag.", "Bestätigte Erinnerung · Lernkern")!!
+
+    @Test fun confirmedMemoryIsNotSentToClaudeWithoutTheSeparateOptIn() {
+        val local = LocalFixture("LOKALE ANTWORT")
+        val brain = claudeBrain()
+        withTurns(brain, local) { a ->
+            call(a, "runLocal", task, task, recall(), CognitiveTurnTrace(get(a, "sessionId") as String), null, null)
+            settle(a)
+            assertTrue(chat(a).any { it.contains(ClaudeBrainFailure.ownerMessage(ClaudeBrainFailure.LOCAL_ONLY_MEMORY)) })
+            assertTrue(endpoint.requests.isEmpty())
+            assertEquals(0, local.calls)
+        }
+    }
+
+    @Test fun confirmedMemoryGoesToClaudeOnlyAfterTheOwnerOptedIn() {
+        endpoint.enqueue(Reply.Stream(listOf(messageStart()) + text(0, answer) + stop("end_turn")),
+            Reply.Stream(listOf(messageStart()) + text(0, answer) + stop("end_turn")))
+        val local = LocalFixture("LOKALE ANTWORT")
+        val brain = claudeBrain()
+        assertTrue(brain.setShareLocalMemory(true))
+        withTurns(brain, local) { a ->
+            call(a, "runLocal", task, task, recall(), CognitiveTurnTrace(get(a, "sessionId") as String), null, null)
+            settle(a)
+            assertTrue(endpoint.requests.isNotEmpty())
+            assertTrue(endpoint.requests[0].body.getJSONArray("messages").getJSONObject(0).getString("content")
+                .contains("Der Prüftermin ist am Freitag."))
             assertEquals(0, local.calls)
         }
     }

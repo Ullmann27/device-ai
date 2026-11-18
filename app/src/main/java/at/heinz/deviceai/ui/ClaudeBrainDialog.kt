@@ -313,11 +313,17 @@ object ClaudeBrainDialog {
             .setView(field)
             .setNegativeButton("ABBRECHEN") { _, _ -> field.text.clear() }
             .setPositiveButton("SPEICHERN") { _, _ ->
+                val plausible = ClaudeApiKey.plausible(field.text.toString().trim())
                 val stored = brain.saveKey(field.text.toString())
                 field.text.clear()
-                say(if (stored) "Schlüssel verschlüsselt gespeichert. Es wurde nichts gesendet; mit „Verbindung testen“ " +
-                    "prüfst du ihn." else "Das ist kein Anthropic-API-Schlüssel (er beginnt mit „sk-ant-“). " +
-                    "Es wurde nichts gespeichert.")
+                say(when {
+                    stored -> "Schlüssel verschlüsselt gespeichert. Es wurde nichts gesendet; mit „Verbindung testen“ " +
+                        "prüfst du ihn."
+                    !plausible -> "Das ist kein Anthropic-API-Schlüssel (er beginnt mit „sk-ant-“). " +
+                        "Es wurde nichts gespeichert."
+                    else -> "Der Schlüssel konnte auf diesem Gerät nicht verschlüsselt gespeichert werden " +
+                        "(Android-Keystore). Es wurde nichts gespeichert."
+                })
                 done()
             }.create()
         dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)

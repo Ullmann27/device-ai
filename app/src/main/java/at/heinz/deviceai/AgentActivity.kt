@@ -2458,7 +2458,9 @@ class AgentActivity : Activity() {
             .put("maxMessageChars", Command03BridgeContract.MAX_MESSAGE_CHARACTERS)
             .put("draftRevision", command03DraftRevision)
             .put("ackEditRevision", command03DraftLedger.acknowledged)
-            .put("status", workStatusView?.text?.toString()?.take(280) ?: "Bereit")
+            // The stage's status line carries the permanent marker while the cloud brain is selected.
+            .put("status", brainLabel("", at.heinz.deviceai.localmodel.ClaudeBrain.MARKER_CLAUDE + " · ") +
+                (workStatusView?.text?.toString()?.take(280) ?: "Bereit"))
         val draft = deferredCommand03Draft?.takeIf { it.binding == scope }
         if (draft != null) data.put("draft", org.json.JSONObject().put("text", draft.text)
             .put("selectionStart", draft.selectionStart).put("selectionEnd", draft.selectionEnd))
