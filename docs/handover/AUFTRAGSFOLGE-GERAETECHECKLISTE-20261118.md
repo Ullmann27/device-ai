@@ -34,7 +34,7 @@ denselben Freigaben und Rückfragen. Für die Einzelschritte gelten deshalb weit
 |---|---|---|---|
 | A1 | „Öffne das PDF Argon4, fass Seite 2 zusammen, speichere es als Word und schick es per Mail an `<Adresse>`“ | **Eine** Sprechblase mit deinem Satz. Sofort: „Ich mache das in drei Schritten: 1. Das PDF ‚Argon4‘ suchen und öffnen. 2. Seite 2 zusammenfassen und als Word-Datei speichern. 3. Per E-Mail an `<Adresse>` schicken.“ Dann nacheinander, ohne weiteres Wort von dir: „Gefunden: ‚Argon4.pdf‘ … Ich öffne es.“ (Dokument im Arbeitsfenster) → „Seite 2 von ‚Argon4.pdf‘ – Zusammenfassung: … Gespeichert als Word-Datei: ‚Zusammenfassung Argon4 Seite 2 `<Datum>`.docx‘ …“ (**ohne** „Soll ich sie öffnen?“) → dein Mailprogramm öffnet sich mit Empfänger, Betreff, Text und der Word-Datei als Anhang → zurück in Continuum: „Die E-Mail ist vorbereitet … Gesendet habe ich nichts …“ → „Fertig – alle drei Schritte sind erledigt. 1. ‚Argon4.pdf‘ geöffnet (Ordner Download). 2. ‚Zusammenfassung Argon4 Seite 2 `<Datum>`.docx‘ gespeichert (Interner Speicher › Download). 3. E-Mail an `<Adresse>` im Mailprogramm vorbereitet, diese Datei hängt an – gesendet habe ich nichts.“ | Kein Plan, sondern nur der erste Teil läuft oder das Modell antwortet frei → **Wortlaut der Sprechblase** melden. Schritte in falscher Reihenfolge, ein Schritt doppelt, eigene Sprechblasen für Teilaufträge, Mail ohne Anhang, „Fertig“ obwohl etwas fehlt → Screenshot des Gesprächs. |
 | A2 | Arbeitsfenster während A1 beobachten | Abwechselnd die echten Schritte der Lenkung (z. B. „Speicher durchsuchen“, „Seite 2 lesen“, „Zusammenfassen“, „In Downloads speichern“, „Gespeicherte Datei prüfen“) und die Übersicht der Folge („1/3 … erledigt“, „2/3 … läuft“). Nichts erscheint, bevor es gestartet ist. | Schritte, die nie gelaufen sind; Übersicht bleibt auf „läuft“ stehen → Screenshot |
-| A3 | Varianten, jede einzeln: „Öffne das PDF Argon4 und dann fass Seite 2 zusammen und speichere es als Word“ · „Öffne das PDF Argon4. Fass Seite 2 zusammen und speichere es als Word.“ · gesprochen ohne Pausen | Plan mit zwei Schritten, am Ende: „Fertig – alle zwei Schritte sind erledigt. … Soll ich die Datei öffnen?“ – „Ja“ öffnet die Word-Datei. | Wortlaut der Sprechblase melden, wenn kein Plan entsteht |
+| A3 | Varianten, jede einzeln: „Öffne das PDF Argon4 und dann fass Seite 2 zusammen und speichere es als Word“ · „Öffne das PDF Argon4. Fass Seite 2 zusammen und speichere es als Word.“ · gesprochen ohne Pausen | Plan mit zwei Schritten, am Ende: „Fertig – beide Schritte sind erledigt. … Soll ich die Datei öffnen?“ – „Ja“ öffnet die Word-Datei. | Wortlaut der Sprechblase melden, wenn kein Plan entsteht |
 | A4 | Einzelauftrag wie bisher: „Öffne das PDF Argon4“ · „Fass Seite 2 zusammen und speichere es als Word“ | **Kein** „Ich mache das in … Schritten“. Verhalten wie in der Argon4-Checkliste. | Ein Plan wird angesagt → melden |
 
 ## 2. Zweiter Ablauf: Nachrichten → PDF → Mail-Entwurf mit Anhang
@@ -52,7 +52,7 @@ Braucht zusätzlich den Gerätezugriff der Aufgabenketten (Shizuku), wie „Such
 
 | Nr. | Sag / tippe | Erwartet | Fehlerbild |
 |---|---|---|---|
-| D1 | „Such das neueste PDF in Downloads und öffne es“ | „Ich mache das in zwei Schritten: 1. Die neueste Datei suchen (Ordner Downloads lesen). 2. Die gefundene Datei öffnen.“ → Bericht der Kette („Die neueste PDF in Downloads ist ‚…‘ …“) → „Gefunden: ‚…‘ … Ich öffne es.“ → „Fertig – alle zwei Schritte sind erledigt. 1. ‚…‘ gefunden. 2. ‚…‘ geöffnet (Ordner Download).“ | Andere Datei geöffnet als genannt → beide Namen melden |
+| D1 | „Such das neueste PDF in Downloads und öffne es“ | „Ich mache das in zwei Schritten: 1. Die neueste Datei suchen (Ordner Downloads lesen). 2. Die gefundene Datei öffnen.“ → Bericht der Kette („Die neueste PDF in Downloads ist ‚…‘ …“) → „Gefunden: ‚…‘ … Ich öffne es.“ → „Fertig – beide Schritte sind erledigt. 1. ‚…‘ gefunden. 2. ‚…‘ geöffnet (Ordner Download).“ | Andere Datei geöffnet als genannt → beide Namen melden |
 | D2 | Shizuku aus, dann D1 | „Die Auftragsfolge endet bei Schritt 1 von 2. … Nicht geklappt: 1. … – Der Gerätezugriff für die Dateisuche ist nicht bereit; es wurde nichts gesucht. Nicht begonnen: 2. Die gefundene Datei öffnen.“ | – |
 
 ## 4. Pause, fremder Zug, Wiederaufnahme
@@ -110,7 +110,7 @@ Standard: **aus**. Dann passiert bei einem frei formulierten Ziel nichts Neues.
 | Nr. | Sag / tippe | Erwartet | Fehlerbild |
 |---|---|---|---|
 | M1 | „Aufgabenketten mit Modellplan an“, dann: „Mach mir aus Seite 2 vom PDF Argon4 eine Word-Datei, die dann per Mail an `<Adresse>` geht“ | Das Modell schlägt Schritte vor; nach der Prüfung: „Ich würde das in drei Schritten machen: 1. … 2. … 3. … Soll ich das so machen?“ **Nichts läuft.** | Etwas läuft vor deinem Ja → sofort melden |
-| M2 | „Ja“ | Ablauf wie A1. „Nein“ oder jeder andere Satz: „In Ordnung, ich mache nichts davon.“ bzw. der Plan verfällt. | – |
+| M2 | „Ja“ | „In Ordnung, ich fange an.“, dann Ablauf wie A1. „Nein“ oder jeder andere Satz: „In Ordnung, ich mache nichts davon.“ bzw. der Plan verfällt. | – |
 | M3 | Wenn stattdessen eine normale Antwort kommt | Der Vorschlag wurde verworfen (falsches Format, etwas Erfundenes, kein Plan). In der Aktivitätszeile steht „AUFTRAGSFOLGE · Modellplan verworfen · `<Grund>`“. | Grund und deinen Satz melden – das zeigt, was dein Modell aus der Planaufgabe macht |
 | M4 | „Aufgabenketten mit Modellplan aus“ | Wieder wie vorher. | – |
 
@@ -138,5 +138,8 @@ Mit Claude als Gehirn wird **kein** Modellplan angefragt (der Planauftrag geht n
 - Verneinungen, Bedingungen („wenn …“), Alternativen („oder“), Anführungszeichen und Doppelpunkte ergeben keinen
   Plan.
 - Die Folge lebt im Arbeitsspeicher der App: Wird Continuum beendet, ist sie weg; schon Gespeichertes bleibt.
+- Vorlesen: Jede neue Meldung unterbricht die vorige (wie überall in der App). Der gesprochene Plan kann deshalb vom
+  Ergebnis des ersten Schritts überholt werden, eine lange Zusammenfassung vom nächsten Schritt; im Gespräch steht
+  alles vollständig. Bitte melden, wenn dich das stört – dann wartet die Folge auf das Ende der Ansage.
 - „Ich meinte die andere Datei“ / „die zweite“ ändert während einer laufenden Folge nichts; als Antwort auf die
   Rückfrage der Ablage funktioniert es wie bisher. „Nein, ich meinte das PDF Xenon5“ stellt die Folge um.

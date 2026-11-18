@@ -185,7 +185,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 mission = null
                 if (OwnerDeskReply.isYes(request, name)) {
                     host.acceptOwnerTurn(request)
-                    start(m.request, OwnerMissionPlan(m.request, m.slots.map { it.step }), "In Ordnung. ")
+                    // The plan was just said; it is not said again.
+                    start(request, OwnerMissionPlan(m.request, m.slots.map { it.step }), "In Ordnung, ich fange an.", announce = false)
                     return true
                 }
                 if (OwnerDeskReply.isNo(request, name) || OwnerDeskReply.isStop(request, name)) {
@@ -366,10 +367,10 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
 
     // ── Running the plan ────────────────────────────────────────────────────────────────────────────────────
 
-    private fun start(request: String, plan: OwnerMissionPlan, lead: String) {
-        val m = Mission(host.sessionId, request, plan.steps, host.nowMillis())
+    private fun start(request: String, plan: OwnerMissionPlan, lead: String, announce: Boolean = true) {
+        val m = Mission(host.sessionId, plan.request, plan.steps, host.nowMillis())
         mission = m
-        host.reply(request, lead + plan.announcement())
+        host.reply(request, if (announce) lead + plan.announcement() else lead)
         host.activity("AUFTRAGSFOLGE · ${m.slots.size} Schritte nacheinander · jeder läuft durch seine eigene Lenkung")
         host.later { advance(m) }
     }
@@ -758,8 +759,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         val head = when (how) {
             End.COMPLETED -> when {
                 skipped.isNotEmpty() -> "Fertig bis auf das, was du nicht wiederholt haben wolltest."
-                m.corrected -> "Fertig – mit deiner Korrektur sind alle ${OwnerMissionPlanner.count(total)} Schritte erledigt."
-                else -> "Fertig – alle ${OwnerMissionPlanner.count(total)} Schritte sind erledigt."
+                m.corrected -> "Fertig – mit deiner Korrektur sind ${all(total)} Schritte erledigt."
+                else -> "Fertig – ${all(total)} Schritte sind erledigt."
             }
             End.FAILED -> "Die Auftragsfolge endet bei Schritt ${m.current + 1} von $total."
             End.STOPPED -> "Die Auftragsfolge ist gestoppt."
@@ -779,6 +780,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             }).append('.')
         }
     }
+
+    private fun all(steps: Int): String = if (steps == 2) "beide" else "alle ${OwnerMissionPlanner.count(steps)}"
 
     /** The first sentence of a lane's reason; the lane has already said all of it. */
     private fun reason(problem: String?): String {

@@ -111,7 +111,7 @@ class OwnerMissionFlowTest {
         assertTrue(h.mission.active)
         assertEquals("SEND", h.owner("Ja"))
         assertEquals(1, h.sendHost.device.pressed.size)
-        assertTrue(h.lastSaid, h.lastSaid.startsWith("Fertig – alle zwei Schritte sind erledigt."))
+        assertTrue(h.lastSaid, h.lastSaid.startsWith("Fertig – beide Schritte sind erledigt."))
         assertTrue(h.lastSaid, h.lastSaid.endsWith("2. E-Mail an $ANNA über Gmail gesendet, ohne Anhang."))
     }
 
@@ -124,7 +124,7 @@ class OwnerMissionFlowTest {
             h.missionSaid.first())
         assertEquals(listOf("list_files"), h.chainCalls)
         assertEquals("Angebot.pdf", h.deskHost.shown.single().name)
-        assertEquals("Fertig – alle zwei Schritte sind erledigt. 1. „Angebot.pdf“ gefunden. 2. „Angebot.pdf“ geöffnet (Ordner Download).", h.lastSaid)
+        assertEquals("Fertig – beide Schritte sind erledigt. 1. „Angebot.pdf“ gefunden. 2. „Angebot.pdf“ geöffnet (Ordner Download).", h.lastSaid)
     }
 
     @Test fun withoutTheDeviceBridgeTheSearchFailsAndNothingIsOpened() {
@@ -599,7 +599,7 @@ class OwnerMissionFlowTest {
         val h = argon()
         assertEquals("MISSION", h.owner("Öffne das PDF Argon4 und fass Seite 2 zusammen und speichere es als Word"))
         assertEquals(1, h.said.count { it.contains("öffnen?") })
-        assertEquals("Fertig – alle zwei Schritte sind erledigt. 1. „Argon4.pdf“ geöffnet (Ordner Download). 2. „$WORD_2“ gespeichert " +
+        assertEquals("Fertig – beide Schritte sind erledigt. 1. „Argon4.pdf“ geöffnet (Ordner Download). 2. „$WORD_2“ gespeichert " +
             "(Interner Speicher › Download). Soll ich die Datei öffnen?", h.lastSaid)
         assertEquals("TOOLS", h.owner("Ja"))
         assertEquals(WORD_2, h.toolsHost.opened.single().displayName)
@@ -650,6 +650,7 @@ class OwnerMissionFlowTest {
         assertTrue(h.downloads().isEmpty() && h.toolsHost.mails.isEmpty())
         assertFalse(h.mission.active)
         assertEquals("MISSION", h.owner("Ja"))
+        assertTrue(h.said.contains("MISSION:In Ordnung, ich fange an."))
         assertEquals(listOf(WORD_2), h.downloads())
         assertEquals(ANNA, h.toolsHost.mails.single().address)
         assertTrue(h.lastSaid, h.lastSaid.startsWith("Fertig – alle drei Schritte sind erledigt."))

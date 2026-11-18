@@ -364,6 +364,12 @@ internal object OwnerMissionCorrection {
         val meant = named.filter { !ruledOut.containsMatchIn(text.substring(0, it.range.first)) }.singleOrNull() ?: return null
         if (named.size == 2 && named.count { ruledOut.containsMatchIn(text.substring(0, it.range.first)) } != 1) return null
         val whom = meant.groupValues[1]
-        return if ('@' in whom) Change.Recipient(whom, null) else Change.Recipient(null, whom)
+        if ('@' in whom) return Change.Recipient(whom, null)
+        // „an die Datei“, „an Seite 3“: a thing of the order itself is not a person.
+        if (whom.lowercase(Locale.GERMAN).split(Regex("\\s+")).any { it in things }) return null
+        return Change.Recipient(null, whom)
     }
+
+    private val things = setOf("datei", "seite", "seiten", "pdf", "word", "word-datei", "mail", "e-mail", "nachrichten",
+        "zusammenfassung", "dokument", "ordner", "download", "downloads", "anhang", "format")
 }

@@ -152,7 +152,8 @@ class OwnerMissionPlannerTest {
         assertEquals(OwnerMissionCorrection.Change.File("Xenon5"), change("Nein, ich meinte das PDF Xenon5"))
         // An order of its own, two recipients, something else in the sentence, another file without a name: not a change.
         listOf("Schick es an Bernd", "An Bernd und an Anna", "Nicht an Anna, sondern an Bernd und speichere es als PDF",
-            "Ich meinte die andere Datei", "Nein, an alle", "Ich meinte an bernd", "Stopp").forEach { assertNull(it, change(it)) }
+            "Ich meinte die andere Datei", "Nein, an alle", "Ich meinte an bernd", "Ich meinte an die Datei", "Nein, an den Anhang",
+            "Stopp").forEach { assertNull(it, change(it)) }
     }
 
     @Test fun aCorrectedStepIsWordedAnewAndReadBackByItsLane() {
