@@ -131,9 +131,51 @@ class ContinuumEvalDatasetTest {
             failures.joinToString("\n"))
     }
 
+    /**
+     * `regression-references.jsonl` (Code64): documents, pages and paragraphs of one session, executed against the
+     * productive reference registry. The documents are the synthetic fixtures of `regression-references.documents.json`;
+     * a turn `open:<key>` opens one more of them in the middle of the conversation.
+     */
+    @Test fun everyReferenceRegressionCaseHoldsOnTheRealCode() {
+        val fixtures = JSONObject(File(root, "regression-references.documents.json").readText(Charsets.UTF_8))
+        val failures = mutableListOf<String>()
+        val all = cases("regression-references.jsonl")
+        assertTrue("reference regression set unexpectedly small: ${all.size}", all.size >= 20)
+        all.forEach { case ->
+            val id = case.getString("id")
+            val expect = case.getJSONObject("expect")
+            fun check(ok: Boolean, message: String) { if (!ok) failures += "$id: $message" }
+            val session = EvalProbe.ReferenceSession()
+            fun open(key: String) {
+                val document = fixtures.getJSONObject(key)
+                session.open(document.getString("name"), document.getInt("page_count"), strings(document, "pages"),
+                    document.optString("text_state", "EXTRACTED"))
+            }
+            strings(case, "documents").forEach(::open)
+            strings(case, "turns").forEach { if (it.startsWith("open:")) open(it.removePrefix("open:")) else session.say(it) }
+            val outcome = session.resolve(case.getString("input"))
+            fun number(key: String): Int? = if (expect.isNull(key)) null else expect.getInt(key)
+            check(outcome.kind == expect.getString("kind"), "kind ${outcome.kind}, expected ${expect.getString("kind")}: ${outcome.text}")
+            if (expect.has("document")) check(outcome.document == expect.getString("document"), "document ${outcome.document}")
+            if (expect.has("page")) check(outcome.page == number("page"), "page ${outcome.page}")
+            if (expect.has("paragraph")) check(outcome.paragraph == number("paragraph"), "paragraph ${outcome.paragraph}")
+            if (expect.has("intent")) check(outcome.intent == expect.getString("intent"), "intent ${outcome.intent}")
+            if (expect.has("page_assumed")) check(outcome.pageAssumed == expect.getBoolean("page_assumed"), "pageAssumed ${outcome.pageAssumed}")
+            if (expect.has("compared_document")) check(outcome.comparedWith?.document == expect.getString("compared_document"),
+                "compared document ${outcome.comparedWith?.document}")
+            if (expect.has("compared_page")) check(outcome.comparedWith?.page == number("compared_page"),
+                "compared page ${outcome.comparedWith?.page}")
+            strings(expect, "contains").forEach { check(outcome.text.contains(it), "missing „$it“ in: ${outcome.text}") }
+            strings(expect, "not_contains").forEach { check(!outcome.text.contains(it), "forbidden „$it“ in: ${outcome.text}") }
+        }
+        if (failures.isNotEmpty()) fail("${failures.size} of ${all.size} reference regression cases failed:\n" +
+            failures.joinToString("\n"))
+    }
+
     @Test fun everyCaseHasAnIdACategoryAndAFormalCriterion() {
         val seen = mutableSetOf<String>()
-        listOf("regression.jsonl", "regression-voice.jsonl", "model-dev.jsonl", "model-holdout.jsonl").forEach { file ->
+        listOf("regression.jsonl", "regression-voice.jsonl", "regression-references.jsonl", "model-dev.jsonl",
+            "model-holdout.jsonl").forEach { file ->
             cases(file).forEach { case ->
                 val id = case.getString("id")
                 assertTrue("duplicate id $id", seen.add(id))
@@ -183,7 +225,7 @@ class ContinuumEvalDatasetTest {
             "negation", "temporal", "multi_step", "math", "document", "tool_choice", "interruption",
             "incomplete_info", "uncertainty_abstention", "contradiction", "abort_resume")
         val RUNNERS = setOf("route", "object_state", "clock", "owner_recall", "voice_command",
-            "register", "turn_completion", "drive_command", "notification")
+            "register", "turn_completion", "drive_command", "notification", "reference")
         val CRITERIA = setOf("contains_all", "contains_any", "numeric", "abstain", "asks_back", "tool_call", "no_tool")
     }
 }

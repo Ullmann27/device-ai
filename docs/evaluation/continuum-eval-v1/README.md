@@ -9,6 +9,7 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 |---|---|---|---|
 | `regression.jsonl` | 40 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | deterministische Pfade: Werkzeugwahl, Negation/Kontrast, Objektgedächtnis mit Korrekturen, Geräteuhr, bestätigte Erinnerung, Sprachsteuerbefehle |
 | `regression-voice.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Sprachrunde: Gesprächsregister, Satzende-Erkennung, Fahrmodus-Befehle, Benachrichtigungs-Ansagen (Codes, Links, Freigabestufen) |
+| `regression-references.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Code64 Bezugsverwaltung: Dokumente einer Sitzung (Reihenfolge, Name, „das andere“), Seiten- und Absatzfokus, Vergleiche mit zwei Operanden, Rückfrage bei Mehrdeutigkeit, fehlende Seiten/Absätze; Dokumente aus `regression-references.documents.json` (synthetisch) |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -19,10 +20,16 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
 
 - `id`, `category`, `note`
 - `runner`: `route` · `object_state` · `clock` · `owner_recall` · `voice_command`;
-  in `regression-voice.jsonl` zusätzlich `register` · `turn_completion` · `drive_command` · `notification`
-- Eingabe je Läufer: `input` bzw. `turns` + `question`, `facts`, `now` + `zone`
+  in `regression-voice.jsonl` zusätzlich `register` · `turn_completion` · `drive_command` · `notification`;
+  in `regression-references.jsonl` `reference`
+- Eingabe je Läufer: `input` bzw. `turns` + `question`, `facts`, `now` + `zone`;
+  für `reference`: `documents` (Schlüssel der Fixture-Datei, in Öffnungsreihenfolge), `turns` (frühere Nutzerzüge;
+  `open:<Schlüssel>` öffnet mitten im Gespräch ein weiteres Dokument) und `input`
 - `expect` (formales Kriterium): `computer` (`READY:<APP>:<ZIEL>` oder `NOT_READY`), `tool` (Name oder `null`),
-  `forbidden_apps`, `contains`, `not_contains`, `abstain`, `command`
+  `forbidden_apps`, `contains`, `not_contains`, `abstain`, `command`;
+  für `reference`: `kind` (`RESOLVED` · `AMBIGUOUS` · `MISSING` · `NONE`), `document`, `page`, `paragraph`, `intent`
+  (`FOCUS` · `QUOTE` · `QUESTION` · `COMPARISON`), `page_assumed`, `compared_document`, `compared_page`;
+  `contains`/`not_contains` prüfen den aufgelösten Stellentext bzw. die Rückfrage oder Begründung
 
 Modellfälle (`model-*.jsonl`):
 
@@ -48,6 +55,9 @@ Das ist ein Vergleich deterministischer Pfade, **keine** Aussage über die Antwo
 
 Für `regression-voice.jsonl` gibt es keinen Vorher-Wert: die geprüften Bausteine existierten vorher nicht.
 Stand: 32 / 32.
+
+Für `regression-references.jsonl` (Code64, 18.11.2026) gilt dasselbe: die Bezugsverwaltung existierte vorher nicht.
+Stand (Host): 32 / 32.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 

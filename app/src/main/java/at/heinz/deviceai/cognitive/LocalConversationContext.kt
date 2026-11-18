@@ -30,8 +30,10 @@ class LocalConversationContext {
      * Field P0 Code54: the PDF the owner picked and JARVIS read in this session (name, pages, page-attributed text).
      * Bound to its own session id: it survives a topic reset or memory change (the file is still open) but never
      * another session; RAM only, like everything here – never written to disk, never an owner fact.
+     * Code64: the documents of this session with their page and paragraph focus live in [references]; the document
+     * every existing consumer sees is its current one. Cleared exactly where the single reference was cleared.
      */
-    private var document: OwnerDocumentDialogue.Reference? = null
+    private val references = ConversationReferences()
 
     /** Only explicit discourse control, never owner knowledge or tool authorization.
      * Ambiguous/negative corrections erase stale focus rather than guessing a referent.
@@ -89,6 +91,8 @@ class LocalConversationContext {
 
     private fun append(sessionId: String, turn: LocalChatTranscriptStore.ContextTurn, notify: Boolean = true) {
         if (session != sessionId) switchTo(sessionId)
+        // The recorded turn was answered: its frozen document reference must not serve a later request.
+        references.clearTurn()
         val bounded = turn.bounded()
         val previous = turns.lastOrNull()
         val continuation = bounded.requestComplete &&
@@ -158,16 +162,61 @@ class LocalConversationContext {
 
     @Synchronized fun hasResearch(sessionId: String): Boolean = session == sessionId && research != null
 
-    /** The document just read replaces an earlier one; a reference of another session is refused. */
+    /** The document just read becomes the current one (earlier ones stay addressable, see [ConversationReferences]);
+     *  a reference of another session is refused. */
     @Synchronized internal fun recordDocument(sessionId: String, reference: OwnerDocumentDialogue.Reference) {
         require(sessionId.isNotBlank() && reference.sessionId == sessionId)
         if (session != sessionId) switchTo(sessionId)
-        document = reference
+        references.register(reference)
     }
 
     /** The document read in [sessionId], or null – never the document of another session. */
     @Synchronized internal fun document(sessionId: String): OwnerDocumentDialogue.Reference? =
-        document?.takeIf { it.sessionId == sessionId }
+        references.current()?.takeIf { it.sessionId == sessionId }
+
+    /** Code64: the documents read in [sessionId] in the order they were first opened. */
+    @Synchronized internal fun documents(sessionId: String): List<OwnerDocumentDialogue.Reference> =
+        if (references.sessionId == sessionId) references.documents() else emptyList()
+
+    /**
+     * Code64: resolves an owner turn that points at a document, page or paragraph of [sessionId] and commits the
+     * focus. null = not such a reference (nothing changed). A reply is said without the model; otherwise the
+     * resolved passage is frozen for this request and [documentPromptBlock] renders it for the model turn.
+     */
+    @Synchronized internal fun routeDocumentReference(sessionId: String, request: String, assistantName: String? = null,
+                                                      correctionOnly: Boolean = false): ConversationReferences.Route? {
+        require(sessionId.isNotBlank())
+        // Documents of another session are never addressed; the sentence is then judged against an empty registry.
+        val registry = if (references.sessionId == null || references.sessionId == sessionId) references
+            else ConversationReferences()
+        return registry.route(request, assistantName, correctionOnly)
+    }
+
+    /**
+     * The document data of this model turn: the passage [routeDocumentReference] resolved for exactly this request,
+     * else – as before Code64 – the page-attributed excerpt of the current document when the request names it.
+     */
+    @Synchronized internal fun documentPromptBlock(sessionId: String, request: String): String {
+        if (references.sessionId != sessionId) return ""
+        references.promptBlock(request)?.let { return it }
+        if (!OwnerDocumentDialogue.refersToDocument(request)) return ""
+        return references.current()?.let { OwnerDocumentDialogue.promptBlock(it, request) }.orEmpty()
+    }
+
+    /** Code64 saved state: registry marks of [reference] and the earlier documents of [sessionId] (bounded text). */
+    @Synchronized internal fun documentMarks(reference: OwnerDocumentDialogue.Reference): IntArray? =
+        references.marks(reference)
+
+    @Synchronized internal fun earlierDocumentsForState(sessionId: String): List<ConversationReferences.Saved> =
+        if (references.sessionId == sessionId) references.earlierForState() else emptyList()
+
+    /** Puts a document of the saved state back; a reference of another session is refused like in [recordDocument]. */
+    @Synchronized internal fun restoreDocument(sessionId: String, reference: OwnerDocumentDialogue.Reference,
+                                               marks: IntArray?) {
+        require(sessionId.isNotBlank() && reference.sessionId == sessionId)
+        if (session != sessionId) switchTo(sessionId)
+        references.restore(reference, marks)
+    }
 
     /** M2: freshness verdict of this session's research for a follow-up question; null without research. */
     @Synchronized internal fun researchFreshness(sessionId: String, question: String, nowMillis: Long = System.currentTimeMillis()):
@@ -223,7 +272,7 @@ class LocalConversationContext {
     private fun switchTo(sessionId: String) {
         turns.clear(); olderOwnerStatements.clear()
         situation.reset(); objects.reset(); session = sessionId; explicitFocus = null; research = null
-        if (document?.sessionId != sessionId) document = null
+        if (references.sessionId != sessionId) references.clear()
     }
 
     @Synchronized fun clear() { dropTurns(); session = null;explicitFocus=null;research=null }
@@ -232,7 +281,7 @@ class LocalConversationContext {
     @Synchronized fun forgetForExit() {
         turns.clear(); olderOwnerStatements.clear()
         situation.reset(); objects.reset(); session = null; explicitFocus = null; research = null
-        document = null
+        references.clear()
     }
 
     /** Access is supplied by the current turn, never inferred from a saved research digest.
