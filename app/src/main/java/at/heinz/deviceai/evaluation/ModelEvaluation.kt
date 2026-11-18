@@ -185,6 +185,16 @@ object ModelEvalRuntimeMeta {
         .put("contextTokens", contextTokens ?: JSONObject.NULL)
         .put("computeThreads", computeThreads ?: JSONObject.NULL)
 
+    /**
+     * Owner switch „Gespräch im Modell behalten“: its position during the run and the fact that it cannot change
+     * these numbers – every case is an independent prompt in a new native conversation. The dialogue latency
+     * probe ([DialogueLatencyProbe]) is the measurement for that switch.
+     */
+    fun putDialogueReuse(meta: JSONObject, switchOn: Boolean): JSONObject = meta
+        .put("dialogueReuseSwitch", switchOn)
+        .put("casesIndependent", true)
+        .put("dialogueReuseAppliedToCases", false)
+
     /** One summary line from a report's meta; values the run did not record are shown as "–". */
     fun summaryLine(meta: JSONObject?): String {
         fun value(key: String) = if (meta == null || meta.isNull(key)) "–" else meta.get(key).toString()

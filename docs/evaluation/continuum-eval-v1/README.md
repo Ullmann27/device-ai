@@ -117,6 +117,7 @@ des Laufs auf dem Gerät gemessen wurden:
 |---|---|
 | `meta` | Modellkennung, Modell-SHA-256, Dateigröße, gemeldetes Kontextfenster, Rechenthreads, App-Version, Gerät, Android-SDK, Energiesparmodus |
 | `meta.backend`, `meta.backendRequested`, `meta.backendNotice`, `meta.contextTokens` | Backend, auf dem die geladene Engine wirklich rechnet; Stellung des Beschleuniger-Schalters; Hinweis bei einem Rückfall; konfiguriertes natives Kontextfenster (nicht das Maximum der Modelldatei). Unbekanntes ist `null`. `meta.computeThreads` gilt nur für die CPU. |
+| `meta.dialogueReuseSwitch`, `meta.casesIndependent`, `meta.dialogueReuseAppliedToCases` | Stellung des Schalters „Gespräch im Modell behalten“ während des Laufs. Jeder Fall ist ein unabhängiger Prompt in einem neuen nativen Gespräch (`casesIndependent` immer `true`), der Schalter wirkt auf diese Zahlen also nie (`dialogueReuseAppliedToCases` immer `false`). Seine Messung ist die Gesprächs-Zeitprobe im Modellzentrum: Bericht `continuum-eval-dialogue-probe-<zeit>.json`, Schema `continuum-dialogue-latency-probe-v1`, je Zug `reused`, `reuseReason`, `sentBytes`, `firstTextMs`, `totalMs`, `thermalBefore`/`thermalAfter`. |
 | `formal` | bestanden / nicht bestanden für `contains_all`, `contains_any`, `numeric` |
 | `heuristic` | bestanden / nicht bestanden für `abstain`, `asks_back` (am Wortlaut erkannt, stichprobenartig gegenlesen) |
 | `notScored` | Werkzeugwahl-Fälle |
