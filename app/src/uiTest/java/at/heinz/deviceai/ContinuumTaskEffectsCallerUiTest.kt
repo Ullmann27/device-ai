@@ -145,7 +145,9 @@ class ContinuumTaskEffectsCallerUiTest {
         val active = h.sampleMotion()
         assertTrue("Caller events require actual frame callbacks",active.callbackCount > before.callbackCount)
         assertTrue("Caller events require actual phase progress",active.phase > before.phase)
-        assertTrue("Caller events require an actual host Canvas draw",active.drawCount > before.drawCount)
+        assertTrue("Caller events require an actual host Canvas draw: ${active.reason}; " +
+            "avatar=${android.graphics.Rect(h.left, h.top, h.right, h.bottom)} in window ${surface.width}x${surface.height}",
+            active.drawCount > before.drawCount)
         assertEquals("Positive control: the actual host window must be visible",View.VISIBLE,h.windowVisibility)
         try {block(a,h)} finally {
             (get(a,"chiefStatusPool") as? at.heinz.deviceai.chief.ChiefWorkerPool)?.shutdown()
@@ -160,6 +162,9 @@ class ContinuumTaskEffectsCallerUiTest {
         call(a,"setBusy",true);advance()
         assertTrue(pulses(h).isEmpty())
     }
+    // The real Activity needs a real window of the size the fixture lays out: the next platform traversal
+    // restores the window's own size, and in the default 320x470 dp window the avatar starts below the fold.
+    @Config(qualifiers = "w884dp-h760dp-land-mdpi")
     @Test fun authorizedRealRunnerEntryAndExitReachTheVisibleSurface() = withFixture(realUi = true) {a,h ->
         val started=CountDownLatch(1);val finish=AtomicReference<((Result<String>)->Unit)?>()
         set(a,"executor",DeviceToolExecutor(a,{true},{_,cb -> finish.set(cb);started.countDown()},null))
