@@ -156,7 +156,9 @@ internal class ContinuumCommand03OriginalStage(
             .put("sequence", packet.sequence).put("active", packet.active)
             .put("status", if (packet.frame != null && !live) "PAUSED" else packet.status)
             .put("reason", packet.reason)
-        packet.binding?.let { data.put("taskId", it.taskId).put("captureSession", it.captureSession.toString()) }
+        // The monitor's title bar names the bound target: the package Android captures, nothing inferred.
+        packet.binding?.let { data.put("taskId", it.taskId).put("captureSession", it.captureSession.toString())
+            .put("targetPackage", it.targetPackage) }
         packet.sourceEpoch?.let { data.put("sourceEpoch", it) }
         if (live) {
             val encoded = requireNotNull(image)
@@ -164,6 +166,11 @@ internal class ContinuumCommand03OriginalStage(
                 android.util.Base64.encodeToString(encoded.jpeg, android.util.Base64.NO_WRAP))
                 .put("width", encoded.width).put("height", encoded.height)
                 .put("ageMs", packet.ageMs).put("staleAfterMs", packet.staleAfterMs)
+            // Measured geometry of this very frame, so a real dispatched action can be marked on the shown image.
+            packet.sourceSequence?.takeIf { it >= 0 }?.let { data.put("sourceSequence", it) }
+            packet.observationRevision?.takeIf { it >= 0 }?.let { data.put("observationRevision", it) }
+            packet.viewport?.let { data.put("viewport", JSONArray().put(it.left.toDouble()).put(it.top.toDouble())
+                .put(it.right.toDouble()).put(it.bottom.toDouble())) }
             computerFrame = packet.acknowledgement
             computerFrameDeadline = System.nanoTime() + remaining * 1_000_000
         }

@@ -170,6 +170,23 @@
   let workPhase = 'idle', workTurn = false, workReplied = false, workAwaitingReply = false;
   let workSurface = null, workSources = false, workToken = 0, workReturned = true;
   let currentFiles = null, filesDismissed = null, typing = false, lastActivityGaze = null;
+  // Code70 · the three windows say what really happens. Every label names a fact Android reported – a step, a
+  // frame, a dispatched input, a consent that is still open – and nothing here runs on a clock of its own.
+  const workStages = Object.freeze({ACCEPTED:'Auftrag angenommen',FOCUS:'Ziel gewählt',DISPATCHED:'Eingabe ausgelöst',
+    OBSERVED:'Wirkung wird geprüft',VERIFIED:'Schritt geprüft',ASK_OWNER:'Rückfrage an dich',PAUSED:'Arbeit pausiert',
+    STOPPED:'Auftrag gestoppt',ERROR:'Auftrag angehalten',COMPLETED:'Auftrag abgeschlossen'});
+  const actionKinds = Object.freeze({CLICK:'Tippen',SET_TEXT:'Text eingeben',SCROLL:'Scrollen',OPEN_APP:'App öffnen'});
+  const actionStates = Object.freeze({DISPATCHED:'ausgelöst',VERIFIED:'Wirkung bestätigt',
+    UNCONFIRMED:'Wirkung nicht bestätigt'});
+  // Strength of the added window effects: none of them while the device computes ("rest"), then as much as
+  // Android's thermal tier allows. Unknown tier = the full preview, as for the frame limit.
+  const effectTiers = Object.freeze({FULL:'full',BALANCED:'balanced',REDUCED:'light'});
+  const MAX_ACTIONS = 6, MARKER_MS = 2400, GLANCE_MS = 1200, GLANCE_LOCAL_MS = 4000;
+  const packageName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z0-9_]+)+$/;
+  let currentWork = null, workSignature = 'null', actionKey = '', actionSequence = -1;
+  let marker = null, markerTimer = 0, computerRecord = null, lastGlanceAt = -Infinity;
+  let replyLine = null, arrivedLine = null, arrivedSources = null, draftGlanced = false, lastConsent = false;
+  const stepStatesShown = new Map();
   function presenceOf(state) {return own(presences,state?.presence)?presences[state.presence]:null;}
   function sceneOf(state) {
     return presenceOf(state)?.scene ?? (state?.speaking===true?'speaking':state?.listening===true?'listening':
@@ -209,6 +226,53 @@
       label:bounded(value.label.replace(/[\u0000-\u001f\u007f-\u009f]/g,'').trim(),80)};
   }
   function filesOpen() {return !!currentFiles && currentFiles.revision!==filesDismissed;}
+  /**
+   * Android's optional record of the approved computer task: which inputs were really dispatched, where, and
+   * whether their effect was confirmed. Anything malformed is dropped; a coordinate is never assumed.
+   */
+  function computerWorkOf(value) {
+    if(!value || typeof value!=='object')return null;
+    const consentPending=value.consentPending===true;
+    if(typeof value.taskId!=='string' || !/^[A-Za-z0-9._:-]{1,128}$/.test(value.taskId) ||
+      typeof value.captureSession!=='string' || !/^[0-9]{1,19}$/.test(value.captureSession))
+      return consentPending?{consentPending,taskId:null,captureSession:null,stage:null,app:'',goal:'',actions:[]}:null;
+    const actions=[];
+    for(const item of Array.isArray(value.actions)?value.actions.slice(0,64):[]) {
+      if(!item || !Number.isSafeInteger(item.sequence) || item.sequence<=0 || !own(actionKinds,item.kind) ||
+        !own(actionStates,item.state) || actions.some(row=>row.sequence>=item.sequence))continue;
+      const placed=Number.isFinite(item.x) && Number.isFinite(item.y) && item.x>=0 && item.x<=1 && item.y>=0 && item.y<=1;
+      actions.push({sequence:item.sequence,kind:item.kind,state:item.state,x:placed?item.x:null,y:placed?item.y:null,
+        frameSequence:Number.isSafeInteger(item.frameSequence) && item.frameSequence>=0?item.frameSequence:null});
+    }
+    const label=text=>typeof text==='string'?bounded(text.replace(/[\u0000-\u001f\u007f-\u009f]/g,'').trim(),80):'';
+    return {consentPending,taskId:value.taskId,captureSession:value.captureSession,
+      stage:own(workStages,value.stage)?value.stage:null,app:label(value.app),goal:label(value.goal),
+      actions:actions.slice(-MAX_ACTIONS)};
+  }
+  /** The part of the target window a frame shows, in window coordinates, or null when Android measured none. */
+  function viewportOf(value) {
+    return Array.isArray(value) && value.length===4 && value.every(part=>Number.isFinite(part) && part>=0 && part<=1) &&
+      value[0]<value[2] && value[1]<value[3]?value.slice():null;
+  }
+  /** Takes a new record; returns the input that was dispatched since the last one, if any. */
+  function acceptWork(work) {
+    const signature=JSON.stringify(work);
+    if(signature===workSignature)return null;
+    workSignature=signature;currentWork=work;
+    const key=work?.taskId?work.taskId+'|'+work.captureSession:'';
+    if(key!==actionKey) {actionKey=key;actionSequence=-1;clearMarker();}
+    const newest=work?.actions.at(-1);
+    if(!newest || newest.sequence<=actionSequence)return null;
+    actionSequence=newest.sequence;
+    // Only an input that is reported while still open has just happened; an older, settled one is history.
+    return newest.state==='DISPATCHED'?newest:null;
+  }
+  function clearMarker() {clearTimeout(markerTimer);markerTimer=0;marker=null;}
+  /** The record that belongs to the task whose image the monitor shows (or showed). */
+  function workOf(source) {
+    return currentWork?.taskId && source?.taskId===currentWork.taskId &&
+      source.captureSession===currentWork.captureSession?currentWork:null;
+  }
   // The original orb also knows RESEARCH and LEARNING, which the scene's own state
   // list cannot name. Announce them with the scene's own event after the scene has
   // settled; the avatar ignores names outside its list and keeps its valid state.
@@ -239,7 +303,18 @@
   /** Turns the avatar to the element that really shows new content, as operations.js does. */
   function lookAt(target) {
     if(!target?.isConnected || document.visibilityState!=='visible' || presenceOf(snapshot)?.calm)return;
+    lastGlanceAt=performance.now();
     target.dispatchEvent(new CustomEvent('continuum:gaze',{bubbles:true,detail:{target}}));
+  }
+  /**
+   * A glance for events that can follow each other quickly (a dispatched input, the answer being written): at most
+   * one per interval, and rarer while the device computes. It is one eased turn of the head inside the avatar's
+   * frame loop, which runs anyway at the governed rate – no timer, no extra frame and nothing continuous.
+   */
+  function glance(target) {
+    const wait=document.body.dataset.nativeCompute==='local'?GLANCE_LOCAL_MS:GLANCE_MS;
+    if(performance.now()-lastGlanceAt<wait)return false;
+    lookAt(target);return true;
   }
   /** Faces the owner: straight ahead, ending any gaze at a work window. */
   function faceOwner() {
@@ -319,6 +394,8 @@
       workToken++;workTurn=true;workReplied=false;workAwaitingReply=false;workSources=false;workSurface=null;
       // A list from an earlier turn leaves with it; this turn's own answer has a new revision.
       if(filesOpen() && !freshFiles) {filesDismissed=currentFiles.revision;renderFiles();renderFeed();}
+      // So does the record of a live window that ended before this turn.
+      if(computerRecord) {computerRecord=null;renderFeed();}
       setWorkPhase('activation');
       return;
     }
@@ -369,6 +446,11 @@
     const local=computesLocally(state);
     if(local) {if(document.body.dataset.nativeCompute!=='local')document.body.dataset.nativeCompute='local';}
     else if('nativeCompute' in document.body.dataset)delete document.body.dataset.nativeCompute;
+    // The added window effects are opt-in per tier and absent while the device computes (see native-layer.css).
+    // They rest more readily than the Code68 stage does: also while a local turn is still running under another
+    // presence – its answer being spoken, a question to the owner – because the model may still be computing.
+    const effects=local || (state.busy===true && state.cloudBrain!==true)?'rest':quality===null?'full':effectTiers[quality];
+    if(document.body.dataset.nativeEffects!==effects)document.body.dataset.nativeEffects=effects;
     // Without a tier the original preview setting ("hoch") stays in force; local computing always gets "low".
     const sceneQuality=local?'low':quality===null?null:qualities[quality];
     if(sceneQuality!==lastQuality) {
@@ -551,6 +633,17 @@
       light.setAttribute('aria-hidden','true');light.innerHTML='<i></i><i></i><b></b>';
       core.prepend(light);
     }
+    // Code70 · depth. Two still layers without a box in the flow: the avatar's separation from the orb behind it
+    // (between the two, under the corona) and the glass frame on the work window. Neither moves, ever.
+    if(!$('.native-depth-veil')) {
+      const veil=document.createElement('div');veil.className='native-depth-veil';
+      veil.setAttribute('aria-hidden','true');core.prepend(veil);
+    }
+    const shell=$('.workspace-shell');
+    if(shell && !shell.querySelector(':scope>.native-window-frame')) {
+      const frame=document.createElement('div');frame.className='native-window-frame';
+      frame.setAttribute('aria-hidden','true');shell.appendChild(frame);
+    }
   }
   function renderFiles() {
     const workspace=$('#workspace');
@@ -606,6 +699,7 @@
       if(item.dataset.selected!==chosen)item.dataset.selected=chosen;
     }
     if(shown)workspace.classList.remove('native-work-active');
+    renderWindowKind();
   }
   function dismissFiles() {
     if(!filesOpen())return;
@@ -642,11 +736,11 @@
       setText(left.querySelector('p'),snapshot?copy:'Warte auf den Android-Status.');
       let steps=left.querySelector('.native-activity-steps');
       if(!activity) {
-        delete left.dataset.activityKind;delete left.dataset.activityActive;steps?.remove();
+        delete left.dataset.activityKind;delete left.dataset.activityActive;steps?.remove();stepStatesShown.clear();
       } else {
         left.dataset.activityKind=activity.kind.toLowerCase();
         left.dataset.activityActive=String(activity.active);
-        if(!activity.steps.length)steps?.remove();
+        if(!activity.steps.length) {steps?.remove();stepStatesShown.clear();}
         else {
           if(!steps) {
             steps=document.createElement('ol');steps.className='native-activity-steps';
@@ -656,6 +750,9 @@
           if(feedVersions.get(steps)!==activity.revision) {
             steps.replaceChildren(...activity.steps.map(step=>{
               const item=document.createElement('li');item.dataset.state=step.state.toLowerCase();
+              // The step Android just moved to another state is marked for this one rendering.
+              const before=stepStatesShown.get(step.label);
+              if(before!==undefined && before!==step.state)item.dataset.changed='true';
               const name=document.createElement('span');name.className='native-step-label';
               name.textContent=step.label;
               const state=document.createElement('span');state.className='native-step-state';
@@ -663,6 +760,8 @@
               item.append(name,state);return item;
             }));
             feedVersions.set(steps,activity.revision);
+            stepStatesShown.clear();
+            for(const step of activity.steps)stepStatesShown.set(step.label,step.state);
           }
         }
       }
@@ -938,24 +1037,112 @@
       panel.className='projected-computer native-computer-panel';
       panel.setAttribute('aria-label','Projizierter Computer mit aktuellem Android-Gerätebild');
       // The existing projected window and its original CSS own all framing and motion.
-      panel.innerHTML='<div class="projection-lens" aria-hidden="true"></div><div class="op-console-head"><div><span class="op-kicker">PROJIZIERTER COMPUTER</span><h2>Dein Gerätebild.</h2></div><span class="op-mode-label real"></span></div><div class="op-controls"><button type="button" class="secondary-button" data-action="stop-computer">Computer stoppen</button></div><div class="op-browser-frame"><div class="op-browser-chrome"><span class="op-window-id">CONTINUUM · ANDROID</span></div><div class="op-browser-body native-computer-viewport"><div class="op-waiting"><h3>Warte auf ein aktuelles Bild.</h3><p class="native-computer-waiting"></p></div></div><div class="op-browser-status"><span class="status-dot"></span><span class="native-computer-status" role="status"></span></div></div>';
+      panel.innerHTML='<div class="projection-lens" aria-hidden="true"></div><div class="op-console-head"><div><span class="op-kicker">PROJIZIERTER COMPUTER</span><h2>Dein Gerätebild.</h2></div><span class="op-mode-label real" role="status"></span></div><div class="op-controls"><button type="button" class="secondary-button" data-action="stop-computer">Computer stoppen</button></div><div class="op-browser-frame"><div class="op-browser-chrome"><span class="op-window-id">CONTINUUM · ANDROID</span></div><div class="op-browser-body native-computer-viewport"><div class="op-waiting"><h3>Warte auf ein aktuelles Bild.</h3><p class="native-computer-waiting"></p></div><div class="native-computer-screen" hidden></div></div><div class="op-browser-status"><span class="status-dot"></span><span class="native-computer-status" role="status"></span></div></div>';
+      panel.appendChild(actionLog());
       workspace.appendChild(panel);
     }
-    const fresh=displayedFrame && performance.now()<displayedFrame.expiresAt;
-    panel.querySelector('.op-mode-label').textContent=fresh?'GERÄTEBILD':'WARTET';
+    const fresh=!!displayedFrame && performance.now()<displayedFrame.expiresAt;
+    // LIVE is said only while a decoded, unexpired frame of this source is on screen; everything else is named.
+    const [state,label]=fresh?['live','LIVE']:currentComputer.status==='COVERED'?['covered','VERDECKT']:
+      currentComputer.status==='PAUSED'?['paused','PAUSIERT']:
+      currentComputer.shown?['stale','KEIN FRISCHES BILD']:['waiting','WARTET AUF ERSTES BILD'];
+    const badge=panel.querySelector('.op-mode-label');
+    if(badge.textContent!==label)badge.textContent=label;
+    if(panel.dataset.monitorState!==state)panel.dataset.monitorState=state;
+    const work=workOf(currentComputer);
+    // The title bar names the real target: the app of the approved task and the package Android captures.
+    const target=[work?.app,currentComputer.targetPackage].filter(Boolean).join(' · ') || 'CONTINUUM · ANDROID';
+    const title=panel.querySelector('.op-window-id');
+    if(title.textContent!==target)title.textContent=target;
     const reason=currentComputer.reason || 'Noch kein aktuelles Gerätebild verfügbar.';
     panel.querySelector('.native-computer-status').textContent=reason;
     panel.querySelector('.native-computer-waiting').textContent=reason;
-    panel.querySelector('.op-waiting').hidden=!!fresh;
+    panel.querySelector('.op-waiting').hidden=fresh;
+    const screen=panel.querySelector('.native-computer-screen');
+    screen.hidden=!fresh;
     if(computerOpen()) {
       workspace.classList.remove('native-document-active','native-work-active');
-      if(fresh && displayedFrame.image.parentElement!==panel.querySelector('.native-computer-viewport'))
-        panel.querySelector('.native-computer-viewport').appendChild(displayedFrame.image);
+      if(fresh && displayedFrame.image.parentElement!==screen)screen.prepend(displayedFrame.image);
     }
+    renderMarker(screen,fresh?displayedFrame:null,work);
+    renderActionLog(panel.querySelector('.native-computer-work'),work);
     nativeLabels();
   }
-  function retireComputer() {
-    computerGate.ended=true;clearComputerFrames();currentComputer=null;computerVisible=false;
+  /**
+   * Where a dispatched input lies on the shown image. Android measured the target in the coordinates of the
+   * target window; the frame shows the part `view` of that window. No frame geometry, another task, an older
+   * frame than the one the input was dispatched on, or a target outside the shown part: no marker.
+   */
+  function markerPosition(action,frame,work) {
+    if(!action || action.x===null || !frame?.view || !work)return null;
+    if(action.frameSequence!==null && (frame.sourceSequence===null || frame.sourceSequence<action.frameSequence))return null;
+    const [left,top,right,bottom]=frame.view;
+    if(action.x<left || action.x>right || action.y<top || action.y>bottom)return null;
+    return [(action.x-left)/(right-left),(action.y-top)/(bottom-top)];
+  }
+  function renderMarker(screen,frame,work) {
+    const shown=screen.querySelector('.native-computer-marker');
+    const action=marker && work?work.actions.find(row=>row.sequence===marker.sequence):null;
+    const position=markerPosition(action,frame && workOf(frame.data)===work?frame:null,work);
+    if(!position) {shown?.remove();return;}
+    let dot=shown;
+    // One element per input: its single ring plays once when it appears and never again.
+    if(dot?.dataset.sequence!==String(action.sequence)) {
+      dot?.remove();
+      dot=document.createElement('i');dot.className='native-computer-marker';dot.setAttribute('aria-hidden','true');
+      dot.dataset.sequence=String(action.sequence);dot.dataset.kind=action.kind.toLowerCase();
+      screen.appendChild(dot);
+    }
+    if(dot.dataset.state!==action.state.toLowerCase())dot.dataset.state=action.state.toLowerCase();
+    const at=(position[0]*100).toFixed(2)+'% '+(position[1]*100).toFixed(2)+'%';
+    if(dot.dataset.at!==at) {
+      dot.dataset.at=at;
+      [dot.style.left,dot.style.top]=at.split(' ');
+    }
+  }
+  /** The list of what the approved task really did. Text only; it is empty until Android reports an input. */
+  function actionLog() {
+    const host=document.createElement('div');host.className='native-computer-work';host.hidden=true;
+    const stage=document.createElement('p');stage.className='native-computer-stage';stage.setAttribute('role','status');
+    const title=document.createElement('small');title.className='native-computer-log-title';
+    title.textContent='EINGABEN IN DEINEM FREIGEGEBENEN AUFTRAG';
+    const list=document.createElement('ol');list.className='native-computer-log';
+    list.setAttribute('aria-label','Ausgeführte Eingaben');
+    host.append(stage,title,list);return host;
+  }
+  function renderActionLog(host,work) {
+    if(!host)return;
+    const actions=work?.actions ?? [];
+    const line=work?[work.goal,work.stage?workStages[work.stage]:''].filter(Boolean).join(' · '):'';
+    host.hidden=!line && !actions.length;
+    if(host.hidden)return;
+    const stage=host.querySelector('.native-computer-stage');
+    if(stage.textContent!==line)stage.textContent=line;
+    stage.hidden=!line;
+    if(work.stage)stage.dataset.stage=work.stage.toLowerCase().replace(/_/g,'-');else delete stage.dataset.stage;
+    host.querySelector('.native-computer-log-title').hidden=!actions.length;
+    const list=host.querySelector('.native-computer-log'), key=JSON.stringify(actions);
+    list.hidden=!actions.length;
+    if(feedVersions.get(list)===key)return;
+    list.replaceChildren(...actions.map(action=>{
+      const item=document.createElement('li');
+      item.dataset.kind=action.kind.toLowerCase();item.dataset.state=action.state.toLowerCase();
+      const kind=document.createElement('span');kind.className='native-action-kind';kind.textContent=actionKinds[action.kind];
+      const state=document.createElement('span');state.className='native-action-state';
+      state.textContent=actionStates[action.state];
+      item.append(kind,state);return item;
+    }));
+    feedVersions.set(list,key);
+  }
+  /**
+   * Ends the shown source. With a cause ('stopped' by the owner here, 'ended' by Android or the page) the end is
+   * kept as a record – target, cause and what was really done, never a picture – until the next turn starts.
+   */
+  function retireComputer(cause=null,reason='') {
+    if(cause && currentComputer) computerRecord={state:cause,taskId:currentComputer.taskId,
+      captureSession:currentComputer.captureSession,targetPackage:currentComputer.targetPackage,
+      app:workOf(currentComputer)?.app || '',reason};
+    computerGate.ended=true;clearComputerFrames();currentComputer=null;computerVisible=false;clearMarker();
     renderComputer();renderDocument();renderFiles();renderFeed();advanceWork();
   }
   function coverComputer() {
@@ -1040,10 +1227,21 @@
     if(nextGeneration)computerGate.binding=null;
     if(data.active && hasFrame)computerGate.binding=binding;
     acceptLivePacket(data,computerGate);
-    if(!data.active) {retireComputer();return;}
-    if(nextGeneration) {clearComputerFrames();computerVisible=true;}
+    const reason=typeof data.reason==='string'?data.reason.slice(0,240):'';
+    if(!data.active) {retireComputer('ended',reason);return;}
+    // A new source is a new window; the record of an earlier one does not stay beside it.
+    const replaced=nextGeneration && computerRecord!==null;
+    if(nextGeneration) {clearComputerFrames();computerVisible=true;computerRecord=null;}
+    // Task, capture session and target stay those of this generation; a status packet may repeat or omit them.
+    const earlier=currentComputer?.generation===data.generation?currentComputer:null;
+    const named=value=>typeof value==='string' && value.length>0 && value.length<=200?value:null;
     currentComputer={sessionId:data.sessionId,generation:data.generation,sequence:data.sequence,
-      active:true,status:data.status,reason:typeof data.reason==='string'?data.reason.slice(0,240):''};
+      active:true,status:data.status,reason,taskId:named(data.taskId) ?? earlier?.taskId ?? null,
+      captureSession:named(data.captureSession) ?? earlier?.captureSession ?? null,
+      targetPackage:(named(data.targetPackage) && packageName.test(data.targetPackage)?data.targetPackage:null) ??
+        earlier?.targetPackage ?? null,
+      shown:earlier?.shown===true};
+    if(replaced)renderFeed();
     const update=()=>renderComputer();
     if(nextGeneration && typeof window.ContinuumWorkspaceMotion?.transition==='function')
       window.ContinuumWorkspaceMotion.transition(update,{kind:'open',duration:950});
@@ -1056,7 +1254,10 @@
     image.alt='Aktuelles Bild der freigegebenen Android-Quelle';image.width=data.width;image.height=data.height;
     image.dataset.generation=String(data.generation);image.dataset.sequence=String(data.sequence);
     const frame={data,image,expiresAt:performance.now()+data.staleAfterMs-data.ageMs,
-      paints:[],expiry:0,paintQueued:false,acknowledged:false,hiddenNotified:false};
+      paints:[],expiry:0,paintQueued:false,acknowledged:false,hiddenNotified:false,
+      // Geometry Android measured for exactly this frame; without it no input is ever placed on the image.
+      view:viewportOf(data.viewport),
+      sourceSequence:Number.isSafeInteger(data.sourceSequence) && data.sourceSequence>=0?data.sourceSequence:null};
     pendingFrame=frame;
     const failed=reason=>{
       if(pendingFrame!==frame && displayedFrame!==frame)return;
@@ -1085,6 +1286,7 @@
       const appeared=!displayedFrame;
       invalidateFrame(displayedFrame);disposeFrame(displayedFrame);
       displayedFrame=frame;pendingFrame=null;
+      if(currentComputer)currentComputer.shown=true;
       image.onload=null;image.onerror=null;renderComputer();queueFrameAcknowledgement(frame);
       // Once per appearing image; a continuous stream does not hold the avatar's eyes.
       if(appeared)lookAt($('#native-computer-panel'));
@@ -1130,34 +1332,41 @@
     if (snapshot.busy!==true) draftText='';
     const workspace=$('#workspace');
     if (!workspace) return;
-    const show=lines.length>0 || sourceSets.size>0 || snapshot.busy===true ||
+    const show=lines.length>0 || sourceSets.size>0 || snapshot.busy===true || recordState()!==null ||
       (Array.isArray(snapshot.workRows) && snapshot.workRows.length>0);
     workspace.classList.toggle('native-work-active',show && !currentDocument && !computerOpen() &&
       !filesOpen());
-    if (!show) {workspace.querySelector('#native-live-panel')?.remove();renderNativeInstruments();return;}
+    if (!show) {
+      workspace.querySelector('#native-live-panel')?.remove();renderNativeInstruments();renderWindowKind();return;
+    }
     let panel=workspace.querySelector('#native-live-panel');
     if (!panel) {
       panel=document.createElement('section');
       panel.id='native-live-panel';
       panel.className='projected-computer native-live-panel';
-      panel.innerHTML='<div class="op-console-head"><div><span class="op-kicker">CONTINUUM · ANDROID</span><h2>Dein echter Arbeitsraum.</h2></div><span class="op-mode-label">LOKALE DATEN</span></div><div class="native-transcript" aria-live="polite"></div><div class="native-lane-state"></div>';
+      panel.innerHTML='<div class="op-console-head"><div><span class="op-kicker">CONTINUUM · ANDROID</span><h2>Dein echter Arbeitsraum.</h2></div><span class="op-mode-label">LOKALE DATEN</span></div><div class="native-transcript" aria-live="polite"></div><aside class="native-monitor-record" aria-label="Live-Fenster" hidden></aside><div class="native-lane-state"></div>';
       workspace.appendChild(panel);
     }
     panel.querySelector('h2').textContent=snapshot.viewKind==='BOT'?String(snapshot.viewLabel||'Helfer').slice(0,96):'Dein echter Arbeitsraum.';
+    renderWorkBadge(panel);
     const feed=panel.querySelector('.native-transcript');
     const signature=feedRevision+'|'+JSON.stringify(snapshot.workRows);
     if (feedVersions.get(feed)!==signature) {
       const entries=lines.slice(-60).map(line=>{
       const item=document.createElement('article');
       item.className='native-chat-line '+(line.user?'native-owner':'native-assistant');
+      // The answer Android just delivered arrives once; while it is the last line it is this turn's result.
+      if(line===arrivedLine)item.dataset.arrival='reply';
+      if(line===replyLine && line===lines.at(-1))item.dataset.result='true';
       const label=document.createElement('small');label.textContent=line.user?'DU':
         snapshot.viewKind==='BOT'?String(snapshot.viewLabel||'Helfer').slice(0,96):'CONTINUUM';
       const content=document.createElement('p');content.textContent=boundedMessage(line.text);
       item.append(label,content);
-      for(const set of sourceSets.values())if(set.anchor===line)item.appendChild(sourceCard(set));
+      for(const [id,set] of sourceSets)if(set.anchor===line)item.appendChild(sourceCard(set,id===arrivedSources));
       return item;
     });
-    for(const set of sourceSets.values())if(set.anchor===null)entries.push(sourceCard(set));
+    for(const [id,set] of sourceSets)if(set.anchor===null)entries.push(sourceCard(set,id===arrivedSources));
+    arrivedLine=null;arrivedSources=null;
     if (Array.isArray(snapshot.workRows)) snapshot.workRows.slice(0,20).forEach(row=>{
       if(!row || typeof row.label !== 'string' || typeof row.value !== 'string')return;
       const item=document.createElement('article');
@@ -1172,26 +1381,85 @@
       feed.replaceChildren(...entries);feedVersions.set(feed,signature);
       if(pinned)feed.scrollTop=feed.scrollHeight;
     }
-    renderDraft(feed);
+    renderDraft(feed);renderRecord(panel);
     panel.querySelector('.native-lane-state').textContent=snapshot.busy?
       'AUFTRAG WIRD BEARBEITET · STATUS VON ANDROID':
       (snapshot.status||'BEREIT · LOKALER GESPRÄCHSVERLAUF');
     const caption=$('#workspace-footnote');
     if(caption && !currentDocument && !computerOpen() && !filesOpen())
       caption.textContent='Dein Gespräch und deine Arbeitsschritte';
-    renderNativeInstruments();
+    renderNativeInstruments();renderWindowKind();
   }
 
-  function sourceCard(set) {
+  /**
+   * The work window's state, said in its own corner. In this order: a question to the owner, a blocker, the answer
+   * being written, running work with its real step count, a failed step, the delivered answer; otherwise the
+   * plain origin of the content. Every case is a fact from the snapshot, the draft or the reply – never a guess.
+   */
+  function renderWorkBadge(panel=document.querySelector('#native-live-panel')) {
+    const badge=panel?.querySelector('.op-console-head .op-mode-label');
+    if(!badge || !snapshot)return;
+    const presence=own(presences,snapshot.presence)?snapshot.presence:null, steps=currentActivity?.steps ?? [];
+    const running=snapshot.busy===true || currentActivity?.active===true;
+    const [state,label]=presence==='WAITING_FOR_APPROVAL'?['approval','WARTET AUF DEINE FREIGABE']:
+      presence==='BLOCKED'?['blocked','BLOCKIERT']:
+      running && draftText?['writing','ANTWORT ENTSTEHT']:
+      running?['running',steps.length?'LÄUFT · '+steps.filter(step=>step.state==='DONE').length+'/'+steps.length:'LÄUFT']:
+      steps.some(step=>step.state==='FAILED')?['failed','SCHRITT FEHLGESCHLAGEN']:
+      replyLine && replyLine===lines.at(-1)?['answered','ANTWORT GELIEFERT']:['local','LOKALE DATEN'];
+    if(badge.textContent!==label)badge.textContent=label;
+    if(badge.dataset.windowState!==state)badge.dataset.windowState=state;
+  }
+  /** What the live window has to say while no image is shown: an open Android consent, or how it ended. */
+  function recordState() {
+    if(currentWork?.consentPending===true && !computerOpen())return 'consent';
+    return computerRecord?computerRecord.state:null;
+  }
+  function renderRecord(panel) {
+    const host=panel.querySelector('.native-monitor-record');
+    if(!host)return;
+    const state=recordState();
+    if(!state) {
+      if(!host.hidden) {host.hidden=true;host.replaceChildren();delete host.dataset.state;feedVersions.delete(host);}
+      return;
+    }
+    const record=state==='consent'?null:computerRecord, work=record?workOf(record):null;
+    const target=record?[work?.app || record.app,record.targetPackage].filter(Boolean).join(' · '):currentWork.app;
+    const signature=JSON.stringify([state,target,record?.reason,work?.goal,work?.stage,work?.actions]);
+    host.hidden=false;
+    if(feedVersions.get(host)===signature)return;
+    feedVersions.set(host,signature);host.dataset.state=state;
+    const head=document.createElement('div');head.className='native-record-head';
+    const kicker=document.createElement('small');kicker.textContent='LIVE-FENSTER';
+    const badge=document.createElement('span');badge.className='native-record-badge';badge.setAttribute('role','status');
+    badge.textContent=state==='consent'?'WARTET AUF DEINE FREIGABE':state==='stopped'?'GESTOPPT':'BEENDET';
+    head.append(kicker,badge);
+    const parts=[head];
+    if(target) {const name=document.createElement('strong');name.textContent=target;parts.push(name);}
+    const text=document.createElement('p');
+    text.textContent=state==='consent'?
+      'Android fragt nach der Bildschirmfreigabe. Ohne deine Zustimmung wird kein Bild übertragen.':
+      state==='stopped'?'Du hast das Live-Bild gestoppt. Es wird kein Bild mehr übertragen.':
+      (record.reason?record.reason.replace(/[.\s]+$/,'')+'. ':'')+'Es wird kein Bild mehr übertragen.';
+    parts.push(text);
+    if(work) {const log=actionLog();renderActionLog(log,work);parts.push(log);}
+    host.replaceChildren(...parts);
+  }
+  function sourceCard(set,arrived=false) {
     const card=document.createElement('section');card.className='native-source-card';
+    if(arrived)card.dataset.arrival='sources';
     const heading=document.createElement('small');heading.textContent='QUELLEN';card.appendChild(heading);
     for(const item of set.items) {
       const button=document.createElement('button');button.type='button';button.className='native-source-link';
       button.dataset.nativeSource=item.id;
       button.setAttribute('aria-label','Quelle öffnen: '+item.title);
+      // One small screen per source the app really received: its host as the address line, its title below.
+      // There is no excerpt in what Android holds for a source, so none is shown.
+      const host=document.createElement('small');host.className='native-source-host';
+      try {host.textContent=new URL(item.url).hostname;}catch {host.textContent='';}
       const title=document.createElement('strong');title.textContent=item.title;
       const url=document.createElement('span');url.textContent=item.url;
-      button.append(title,url);card.appendChild(button);
+      button.append(host,title,url);card.appendChild(button);
     }
     return card;
   }
@@ -1211,6 +1479,7 @@
     else sourceSets.delete(data.sourceSetId);
     while(sourceSets.size>60)sourceSets.delete(sourceSets.keys().next().value);
     if(items.length && workTurn)workSources=true;
+    if(items.length)arrivedSources=data.sourceSetId;
     feedRevision++;renderFeed();advanceWork();
     if(items.length) {
       const workspace=$('#workspace');
@@ -1295,6 +1564,7 @@
     workspace.classList.remove('native-work-active');
     const foot=$('#workspace-footnote');
     if(foot)foot.textContent='PDF · '+String(doc.name||'Dokument.pdf');
+    renderWindowKind();
   }
   function clearDocument() {
     documentRevision++;currentDocument=null;
@@ -1326,6 +1596,13 @@
     advanceWork();
   }
 
+  /** Which window the workspace really shows: the live window, a result (document), files or the work feed. */
+  function renderWindowKind() {
+    const shown=computerOpen()?'live':currentDocument?'result':filesOpen()?'files':
+      $('#workspace')?.classList.contains('native-work-active')?'work':null;
+    if(shown===null)delete document.body.dataset.nativeWindow;
+    else if(document.body.dataset.nativeWindow!==shown)document.body.dataset.nativeWindow=shown;
+  }
   function nativeLabels() {
     if(!snapshot)return;
     for(const [action,label] of [['open-demo','PDF öffnen'],['research-demo','Recherche öffnen'],
@@ -1339,6 +1616,7 @@
     set('.project-button small','Deine Gespräche');set('.input-hint','LOKAL');
     set('#workspace-meta',computerOpen()?'COMPUTER':currentDocument?'PDF':filesOpen()?'DATEIEN':
       snapshot.busy?'AUFTRAG AKTIV':'LOKAL');
+    renderWindowKind();
     set('#workspace-footnote',computerOpen()?(currentComputer.reason||'Gerätebild · Android'):
       currentDocument?'PDF · '+currentDocument.name:
       filesOpen()?'Dateinamen aus dem Android-Werkzeug':
@@ -1388,6 +1666,8 @@
       lastDraft='';latestDraftRevision=-1;clientEditRevision=0;sentEditRevision=-1;lastScene=null;
       currentActivity=null;lastPresence=null;lastActivityGaze=null;typing=false;
       currentFiles=null;filesDismissed=null;renderFiles();
+      currentWork=null;workSignature='null';actionKey='';actionSequence=-1;clearMarker();computerRecord=null;
+      replyLine=null;arrivedLine=null;arrivedSources=null;draftGlanced=false;lastConsent=false;stepStatesShown.clear();
       workToken++;workTurn=false;workReplied=false;workAwaitingReply=false;workSources=false;
       workSurface=null;workReturned=true;setWorkPhase('idle');
       if(!initial) {
@@ -1404,6 +1684,8 @@
     const files=filesOf(state.files), freshFiles=!!files && files.revision!==currentFiles?.revision;
     if(!files)currentFiles=null;
     else if(freshFiles)currentFiles=files;
+    // The approved computer task: one record per change, and at most one input that was dispatched just now.
+    const workBefore=workSignature, landed=acceptWork(computerWorkOf(state.computerWork));
     const revision=Number.isSafeInteger(state.draftRevision) && state.draftRevision>=0?state.draftRevision:null;
     const newerDraft=revision!==null && revision>latestDraftRevision;
     // Observing a pending revision prevents its consumed text from returning
@@ -1431,6 +1713,17 @@
     else renderFiles();
     renderChats();renderMeters();renderFeed();renderDocument();nativeLabels();renderAppearance(state.appearance);
     renderPresence(state);renderEnergy(state);advanceWork(freshFiles);
+    if(landed) {
+      // Shown where it happened for a short while; the list below the monitor keeps it.
+      marker={sequence:landed.sequence};
+      clearTimeout(markerTimer);
+      markerTimer=setTimeout(()=>{marker=null;markerTimer=0;renderComputer();},MARKER_MS);
+    }
+    if(workSignature!==workBefore)renderComputer();
+    if(landed && computerOpen())glance($('#native-computer-panel'));
+    // Android's consent dialog concerns the owner: face forward once when it opens.
+    const consent=currentWork?.consentPending===true;
+    if(consent!==lastConsent) {lastConsent=consent;if(consent)faceOwner();}
     if(freshFiles && filesOpen())lookAt($('#native-files-panel'));
     // Each real step of a running turn draws one glance to where it is shown.
     if(currentActivity?.active===true && currentActivity.revision!==lastActivityGaze) {
@@ -1482,7 +1775,13 @@
     const text=snapshot?.busy===true?boundedMessage(data.text).slice(-MAX_ANSWER_DRAFT):'';
     if(text===draftText)return;
     draftText=text;
-    if(text && !document.querySelector('#native-live-panel'))renderFeed();else renderDraft();
+    if(text && !document.querySelector('#native-live-panel'))renderFeed();else {renderDraft();renderWorkBadge();}
+    if(!text) {draftGlanced=false;return;}
+    // The answer starts to appear: one look at it for this turn, where it really is on screen.
+    if(draftGlanced)return;
+    draftGlanced=true;
+    const row=document.querySelector('#workspace.native-work-active #native-live-panel .native-draft');
+    if(row)glance(row);
   }
   function boundedMessage(value) {
     const text=typeof value==='string'?value:'';
@@ -1499,9 +1798,10 @@
   }
   function message(line) {
     if(!currentScope(line)||typeof line.user!=='boolean'||typeof line.text!=='string')return;
-    lines.push({user:line.user,text:boundedMessage(line.text)});feedRevision++;
+    const row={user:line.user,text:boundedMessage(line.text)};
+    lines.push(row);feedRevision++;
     if(lines.length>60)lines.shift();pruneSources();
-    if(!line.user)draftText='';
+    if(!line.user) {draftText='';draftGlanced=false;replyLine=arrivedLine=row;}
     renderFeed();
     if(!line.user)replyDelivered();
   }
@@ -1512,7 +1812,7 @@
   }
   function section(name,focusComposer=false) {
     if(!routes.has(name))return;
-    if(name==='stop') {retireComputer();clearNativeSpeech(true);}
+    if(name==='stop') {retireComputer('stopped');clearNativeSpeech(true);}
     else if(name==='device' && currentComputer) {
       computerVisible=true;renderComputer();scheduleVisibilityCheck();
     } else if(computerOpen() && name!=='voice-input' && name!=='voice-input-long-press') {
@@ -1530,9 +1830,12 @@
       $('#command-input')?.focus({preventScroll:true});
   }
   function closeProjection() {
-    if(computerOpen()) {retireComputer();send('route','stop');}
-    else if(currentDocument || !filesOpen())clearDocument();
-    else dismissFiles();
+    if(computerOpen()) {retireComputer('stopped');send('route','stop');}
+    else if(currentDocument)clearDocument();
+    else if(filesOpen())dismissFiles();
+    // The record of an ended live window is closed like a window; nothing else is open then.
+    else if(computerRecord) {computerRecord=null;renderFeed();}
+    else clearDocument();
   }
   function cancelMicPress(suppress=true) {
     if(!micPress)return;
@@ -1664,12 +1967,12 @@
   window.addEventListener('scroll',scheduleVisibilityCheck);
   document.addEventListener('visibilitychange',()=>{
     document.body.classList.toggle('native-light-paused',document.visibilityState!=='visible');
-    if(document.visibilityState!=='visible') {cancelMicPress();retireComputer();clearNativeSpeech(true);}
+    if(document.visibilityState!=='visible') {cancelMicPress();retireComputer('ended');clearNativeSpeech(true);}
     else scheduleVisibilityCheck();
   });
   window.addEventListener('pagehide',()=>{
     document.body.classList.add('native-light-paused');
-    cancelMicPress();retireComputer();clearNativeSpeech(true);
+    cancelMicPress();retireComputer('ended');clearNativeSpeech(true);
   });
   window.addEventListener('pageshow',()=>{
     document.body.classList.toggle('native-light-paused',document.visibilityState!=='visible');

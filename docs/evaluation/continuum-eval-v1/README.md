@@ -16,6 +16,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-send.jsonl` | 56 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Selbst senden (18.11.2026): WhatsApp-Auftrag ja/nein (Abgrenzung zu Vorlesen, Fragen, Nachrichtenüberblick, App öffnen), Wortlaut (diktiert, indirekte Rede, Dialekt, Wunsch nach eigenem Text), Empfängerauflösung im Adressbuch (eindeutig, mehrdeutig, unbekannt, ohne Ländervorwahl), ganze Besitzerzüge durch Lenkung und Sendeablauf auf einem nachgebauten Gerät: Dauerfreigabe je Kanal, Regel a (nur Diktiertes/Bestätigtes), Regel b (Rückfrage statt Raten), Bildschirmprüfung, Tagesgrenze, Bildschirmtext als Daten, Gmail mit/ohne gespeicherte Datei; Adressbuch aus `regression-send.contacts.json` (frei erfunden). WhatsApp/Gmail selbst sind **nicht** Teil dieses Laufs (Gerät: NOT_RUN) |
 | `regression-library.jsonl` | 160 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage (18.11.2026), **Entwicklungssatz**: „Öffne das PDF Argon4“ ja/nein (ohne Namen → Android-Auswahl, Verneinung, Zitat, Web-Formulierung, Zweitauftrag), Name wie gesagt, Spracherkennungs-Varianten (Zahlwort, klein, „öffnet“, „als Wort“, „Fasst/Fast“), Namensvergleich und Rang (genau · Anfang · enthält · Beinahe-Treffer), Antworten auf die Rückfrage, Seitenauftrag mit Speichern, Korrekturen (Seite · Format · andere Datei · Nummer · Name), Stopp, Abgrenzung zu den anderen Lenkungen |
 | `regression-library-check.jsonl` | 74 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (`b058417cd`), wird nicht zum Abstimmen benutzt |
+| `regression-missions.jsonl` | 58 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen (18.11.2026), **Entwicklungssatz**: ein Satz mit mehreren Aufträgen für die Besitzer-Lenkungen → geordneter Plan (Lenkung und Argumente je Schritt) oder `NONE`. Besitzerabläufe (PDF öffnen → Seite zusammenfassen → Word → Mail; Nachrichten → PDF → Mail; neuestes PDF suchen → öffnen), Verbinder (Komma, „und“, „und dann“, „danach“, „anschließend“, „dann“, „zuerst“), Bezüge („es“, „sie“, „die Datei“), unabhängige Aufträge hintereinander; dagegen Einzelaufträge, Fragen, Zitate, Verneinungen, Bedingungen, „und“ in Dateinamen und Nachrichtentexten, Bezüge ohne Erzeuger, fremde Teilaufträge, zu viele Schritte |
+| `regression-missions-check.jsonl` | 49 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Auftragsfolgen vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -61,6 +63,11 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   `FORMAT:<PDF|DOCX>` · `OTHER_FILE` · `PICK:<n>` · `NAME:<Namensteil>` · `NAMED_PDF:<Name>` · `NONE`); `desk_stop`
   erwartet `stop`; `library_route` erwartet `route` (`DESK_OPEN` · `DESK_PAGE` · `PICKER` · `EXPORT` · `NEWS` · `CHAIN` ·
   `MAIL` · `COMPUTER` · `OTHER`) in der Reihenfolge der Lenkungen der Activity
+- `regression-missions.jsonl` / `regression-missions-check.jsonl`: `mission_plan` erwartet `plan` – entweder `NONE` (der Satz
+  behält seine heutige Lenkung) oder die Schritte in Reihenfolge: `OPEN:<Name wie gesagt>` (PDF suchen und öffnen) ·
+  `FIND:<Name>` (nur suchen) · `PAGE:<n|LAST>:<DOCX|PDF|ASK>` (Seite zusammenfassen und speichern) · `NEWS` · `EXPORT:<PDF|DOCX>` ·
+  `MAIL:<Adresse oder Empfänger wie gesagt>` · `FILE:<NEWEST|SEARCH>` (Rezept der Aufgabenketten) · `OPEN_FOUND` (die gefundene
+  Datei öffnen) · `OPEN_SAVED` (die gerade gespeicherte Datei öffnen)
 
 Modellfälle (`model-*.jsonl`):
 
@@ -115,6 +122,30 @@ Prüfsatz hat dieselbe Hand geschrieben wie die Parser, mit der geplanten Auftra
 nicht auf ihn abgestimmt wurde, nicht, dass fremde Formulierungen des Besitzers getroffen werden. Was die
 Spracherkennung am Fold7 wirklich schreibt, ist NOT_RUN; ebenso Speichergang, PDF-Textauszug, Modell-Zusammenfassung
 und das Schreiben nach Download auf dem Gerät.
+
+Für `regression-missions.jsonl` und `regression-missions-check.jsonl` (Auftragsfolgen, 18.11.2026) gibt es keinen
+Vorher-Wert: einen Planer für mehrere Aufträge in einem Satz gab es nicht (der Satz ging als Ganzes an die erste
+Lenkung, die einen Teil erkannte, oder an das Modell). Der Prüfsatz wurde zuerst geschrieben und eingecheckt, der
+Entwicklungssatz danach; kein Satz steht in beiden (der Test prüft das). Gemessen am Host:
+
+| Lauf | Entwicklungssatz | Prüfsatz |
+|---|---|---|
+| erster Lauf nach der Umsetzung, vor jeder Anpassung | 53 / 57 | 47 / 49 |
+| nach der Regel für gleich feine Schnitte und der Korrektur eines Entwicklungsfalls | 58 / 58 | 49 / 49 |
+
+Die vier Fehlschläge im Entwicklungssatz: drei Sätze mit Komma nach dem Dateinamen (darunter der Besitzersatz „Öffne das
+PDF Argon4, fass Seite 2 zusammen, …“) – die Ablage liest „Argon4, fass Seite 2 zusammen“ auch als Dateinamen, zwei
+gleich feine Schnitte galten als mehrdeutig; behoben mit der Regel, dass von gleich feinen Schnitten derjenige gilt,
+der jeden Auftrag am ersten Verbinder beendet, an dem er vollständig ist. Der vierte war ein falsch erwarteter Fall
+(„Schlagzeilen, dann speichere das als PDF“ liest der Export heute als einen Auftrag; er steht jetzt als `NONE` im
+Satz, ein neuer Fall deckt die Form mit „Gib mir die Schlagzeilen und dann …“ ab). Die zwei Fehlschläge im Prüfsatz
+(MISC-001 Komma nach dem Dateinamen, MISC-013 Satzende nach dem Dateinamen) hatten dieselbe Ursache und waren im
+selben Lauf sichtbar; für sie wurde nichts Eigenes geändert, sie bestehen seit der Regel aus dem Entwicklungssatz.
+Kein Satz, der seine Lenkung behalten muss, wurde in einem der beiden Sätze je zu einem Plan. Einordnung wie oben:
+dieselbe Hand hat Prüfsatz und Planer geschrieben. Bewusst als `NONE` festgelegt und im Entwicklungssatz belegt: ein
+Satz, den eine Lenkung heute als einen Auftrag liest („Fass mir die Nachrichten von heute zusammen und speichere sie
+als PDF“ ist ein Export-Auftrag), WhatsApp-Aufträge als Schritt, „schick sie an Anna“ ohne „Mail“ oder Adresse.
+Was auf dem Gerät passiert – Spracherkennung, Dateizugriff, Modell, Mailprogramm, Gmail – ist NOT_RUN.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 

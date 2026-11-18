@@ -142,6 +142,31 @@ class ContinuumCommand03MediaStageUiTest {
         println("COMMAND03_COMPUTER_WIRE:$json")
     }
 
+    @Test fun theMonitorPayloadNamesTheBoundTargetAndCarriesFrameGeometryOnlyWithARealFrame() = withStage { stage, _, _ ->
+        fun sent() = JSONObject(shadowOf(stage).lastEvaluatedJavascript
+            .removePrefix("window.ContinuumNative?.computer(").removeSuffix(");"))
+        stage.presentComputer(packet().copy(sourceSequence = 41, observationRevision = 6,
+            viewport = at.heinz.deviceai.cognitive.LiveTargetBounds(.25f, 0f, 1f, .5f)))
+        val live = sent()
+        assertEquals("com.example.target", live.getString("targetPackage"))
+        assertEquals(41L, live.getLong("sourceSequence"))
+        assertEquals(6L, live.getLong("observationRevision"))
+        val viewport = live.getJSONArray("viewport")
+        assertEquals(listOf(.25, 0.0, 1.0, .5), (0 until viewport.length()).map { viewport.getDouble(it) })
+        // A frame without measured geometry sends none; nothing is assumed to be the full window.
+        stage.presentComputer(packet(sequence = 2))
+        val plain = sent()
+        assertTrue(plain.has("frameDataUri"))
+        assertFalse(plain.has("viewport") || plain.has("sourceSequence") || plain.has("observationRevision"))
+        // A status without an image still names the target, and no geometry at all.
+        stage.presentComputer(Command03ComputerPacket(session, 1, 3, true, "PAUSED", "Pausiert", binding, 0,
+            sourceSequence = 42, viewport = at.heinz.deviceai.cognitive.LiveTargetBounds(0f, 0f, 1f, 1f)))
+        val paused = sent()
+        assertEquals("PAUSED", paused.getString("status"))
+        assertEquals("com.example.target", paused.getString("targetPackage"))
+        assertFalse(paused.has("frameDataUri") || paused.has("viewport") || paused.has("sourceSequence"))
+    }
+
     @Test fun decodeAckAndVisualCallbackNeedASubsequentHardwareDraw() = withStage { stage, shadow, drawn ->
         val packet = packet()
         stage.presentComputer(packet)

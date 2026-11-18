@@ -1,5 +1,7 @@
 package at.heinz.deviceai.sending
 
+import at.heinz.deviceai.OwnerLaneOutcome
+import at.heinz.deviceai.OwnerLaneResult
 import at.heinz.deviceai.OwnerSavedFile
 import at.heinz.deviceai.OwnerWorkGeneration
 import at.heinz.deviceai.WhatsAppDraftPolicy
@@ -39,6 +41,8 @@ internal interface OwnerSendHost {
     /** Shows the diagnosis locally (dialog and app-private file); it is not put into the conversation. */
     fun showDiagnosis(report: String)
     fun appVersion(channel: SendChannel): String?
+    /** How an order of this lane ended (see [OwnerLaneOutcome]); nobody has to listen. */
+    fun outcome(outcome: OwnerLaneOutcome) {}
 }
 
 /**
@@ -71,7 +75,8 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
     }
 
     private class Open(val session: String, val turn: Long, val at: Long, val pending: Pending)
-    private class Next(val text: String, val pending: Pending? = null, val activity: String? = null)
+    /** [sent]: what the send flow really did, when it ran. */
+    private class Next(val text: String, val pending: Pending? = null, val activity: String? = null, val sent: SendOutcome? = null)
 
     private var open: Open? = null
 
@@ -94,6 +99,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             is OwnerSendIntentParser.Result.Refused -> {
                 host.acceptOwnerTurn(request)
                 host.reply(request, parsed.message)
+                host.outcome(OwnerLaneOutcome.Failed(parsed.message))
                 true
             }
             is OwnerSendIntentParser.Result.Order -> {
@@ -119,6 +125,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         if (OwnerSendIntentParser.isCancel(request)) {
             host.acceptOwnerTurn(request)
             host.reply(request, "In Ordnung. Es wurde nichts gesendet.")
+            host.outcome(OwnerLaneOutcome.Stopped)
             return true
         }
         // A new complete order replaces the open question instead of being read as its answer.
@@ -140,7 +147,10 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             is Pending.Wording -> {
                 host.acceptOwnerTurn(request)
                 val text = OwnerSendIntentParser.dictated(request)
-                if (text == null) host.reply(request, OwnerSendIntentParser.REFUSED_TEXT)
+                if (text == null) {
+                    host.reply(request, OwnerSendIntentParser.REFUSED_TEXT)
+                    host.outcome(OwnerLaneOutcome.Failed(OwnerSendIntentParser.REFUSED_TEXT))
+                }
                 // A reply that reads like a question or order to Continuum is not silently taken as the message.
                 else if (OwnerSendIntentParser.addressesContinuum(request)) start(pending.work.copy(text = text, origin = TextOrigin.DERIVED))
                 else start(pending.work.copy(text = text, origin = TextOrigin.DICTATED))
@@ -162,6 +172,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         val channel = if (work is Work.Chat) SendChannel.WHATSAPP else SendChannel.GMAIL
         if (!host.device().installed(channel)) {
             host.reply(request, "${channel.label} ist auf diesem Gerät nicht installiert. Es wurde nichts vorbereitet und nichts gesendet.")
+            host.outcome(OwnerLaneOutcome.Failed("${channel.label} ist auf diesem Gerät nicht installiert. Es wurde nichts gesendet."))
             return
         }
         if (work is Work.Chat && work.recipient == null && work.order.recipient == null && work.order.unsplit == null) {
@@ -175,7 +186,10 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         }
         if (needsContacts && !host.contactsReadable()) {
             host.requestContacts(CONTACTS_EXPLANATION) { granted ->
-                if (granted) run(work) else host.reply(request, CONTACTS_DENIED)
+                if (granted) run(work) else {
+                    host.reply(request, CONTACTS_DENIED)
+                    host.outcome(OwnerLaneOutcome.Failed(CONTACTS_DENIED))
+                }
             }
             return
         }
@@ -187,10 +201,15 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         host.runJob(request, { job -> when (work) { is Work.Chat -> chat(work, job); is Work.Mail -> mail(work, job) } }) { result ->
             result.fold({ next ->
                 next.activity?.let(host::activity)
-                if (next.pending != null) ask(request, next.text, next.pending) else host.reply(request, next.text)
+                if (next.pending != null) ask(request, next.text, next.pending) else {
+                    host.reply(request, next.text)
+                    host.outcome(settled(next))
+                }
             }, { error ->
-                host.reply(request, "Der Sende-Auftrag wurde durch einen Fehler angehalten (${(error.message ?: error.javaClass.simpleName).take(120)}). " +
-                    "Bitte prüfe in der App, ob etwas gesendet wurde; ich wiederhole nichts.")
+                val said = "Der Sende-Auftrag wurde durch einen Fehler angehalten (${(error.message ?: error.javaClass.simpleName).take(120)}). " +
+                    "Bitte prüfe in der App, ob etwas gesendet wurde; ich wiederhole nichts."
+                host.reply(request, said)
+                host.outcome(OwnerLaneOutcome.Failed(said))
             })
         }
     }
@@ -198,6 +217,24 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
     private fun ask(request: String, question: String, pending: Pending) {
         host.reply(request, question)
         open = Open(host.sessionId, host.ownerTurn, host.nowMillis(), pending)
+        host.outcome(OwnerLaneOutcome.NeedsOwner(when (pending) {
+            is Pending.Pick -> OwnerLaneOutcome.Need.CHOICE
+            is Pending.Confirm -> OwnerLaneOutcome.Need.CONFIRMATION
+            is Pending.Recipient, is Pending.Wording -> OwnerLaneOutcome.Need.DETAIL
+        }, question))
+    }
+
+    /** The typed end of an order that asked nothing more: sent, a verified draft, or not done with the lane's reason. */
+    private fun settled(next: Next): OwnerLaneOutcome {
+        val sent = next.sent ?: return OwnerLaneOutcome.Failed(next.text)
+        val state = when (sent.state) {
+            SendOutcome.State.SENT -> OwnerLaneResult.Delivered.State.SENT
+            SendOutcome.State.DRAFT_READY -> OwnerLaneResult.Delivered.State.DRAFT
+            else -> return OwnerLaneOutcome.Failed(next.text)
+        }
+        val plan = sent.plan
+        return OwnerLaneOutcome.Done(OwnerLaneResult.Delivered(plan.channel.label, plan.recipientLabel,
+            (plan as? SendPlan.Mail)?.attachment, state))
     }
 
     // ── WhatsApp ────────────────────────────────────────────────────────────────────────────────────────────
@@ -262,7 +299,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             Pending.Confirm(resolved.copy(text = text, origin = TextOrigin.DERIVED)))
         val plan = SendPlan.WhatsApp(recipient.displayName, recipient.value, text, wantSend)
         val outcome = OwnerSendFlow(host.device(), host.grants(), job::step).run(plan)
-        return Next(OwnerSendReport.text(outcome, draftWanted = work.order.draftOnly), activity = activityLine(outcome))
+        return Next(OwnerSendReport.text(outcome, draftWanted = work.order.draftOnly), activity = activityLine(outcome), sent = outcome)
     }
 
     // ── Gmail ───────────────────────────────────────────────────────────────────────────────────────────────
@@ -301,7 +338,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             Pending.Confirm(work.copy(recipient = recipient, origin = TextOrigin.DERIVED)))
         val plan = SendPlan.Mail(recipient.value, recipient.displayName.takeIf { it != recipient.value }, subject, body, file, send = true)
         val outcome = OwnerSendFlow(host.device(), host.grants(), job::step).run(plan)
-        return Next(OwnerSendReport.text(outcome), activity = activityLine(outcome))
+        return Next(OwnerSendReport.text(outcome), activity = activityLine(outcome), sent = outcome)
     }
 
     private fun notFound(job: OwnerSendJob, asked: String): Next {

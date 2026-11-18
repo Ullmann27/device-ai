@@ -25,7 +25,14 @@ internal data class Command03ComputerPacket(
     val sessionId: String, val generation: Long, val sequence: Long, val active: Boolean,
     val status: String, val reason: String, val binding: LiveFrameBinding? = null,
     val sourceEpoch: Long? = null, val ageMs: Long? = null, val staleAfterMs: Long? = null,
-    val frame: Command03EncodedFrame? = null
+    val frame: Command03EncodedFrame? = null,
+    /**
+     * Geometry of exactly this frame, as its producer measured it: the feed's own sequence number, the observation
+     * revision it was captured at and the part of the target window it shows (normalized window coordinates). The
+     * page needs them to place a real dispatched action on the image it shows; null where the frame carries none.
+     */
+    val sourceSequence: Long? = null, val observationRevision: Long? = null,
+    val viewport: at.heinz.deviceai.cognitive.LiveTargetBounds? = null
 ) {
     val acknowledgement get() = Command03FrameAck(sessionId, generation, sequence)
 }
@@ -162,7 +169,10 @@ internal class Command03ComputerProjection<F : Any>(
                     if (age >= requireNotNull(sampled.binding).staleAfterMillis.coerceAtMost(1_500)) return@ui
                     val packet = Command03ComputerPacket(session, generation, ++sequence, true,
                         LiveMonitorState.LIVE.name, sampled.label, sampled.binding, sampled.sourceEpoch,
-                        age, requireNotNull(sampled.binding).staleAfterMillis.coerceAtMost(1_500), encoded)
+                        age, requireNotNull(sampled.binding).staleAfterMillis.coerceAtMost(1_500), encoded,
+                        sourceSequence = sampled.sequence,
+                        observationRevision = sampled.meta?.observationRevision?.takeIf { it >= 0 },
+                        viewport = sampled.meta?.sourceViewport)
                     pending = Pending(packet.acknowledgement, source, imported)
                     lastFrameAck = packet.acknowledgement
                     lastSourceSequence = sampled.sequence

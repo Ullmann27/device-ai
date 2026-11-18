@@ -1130,4 +1130,39 @@ class ContinuumCommand03BridgeUiTest {
         assertNull(field(a, "command03ComputerFeed"))
         lifecycle.start().resume()
     }
+
+    @Test fun realComputerInputsOnTheCockpitBusReachThePageSnapshotAndNothingIsReportedWithoutThem() = withActivity { _, a ->
+        ready(a)
+        call(a, "syncCommand03HtmlState")
+        assertTrue("No approved task, no record", packet(a, "receive").isNull("computerWork"))
+        // The same events the session controller's workflow emits for a real dispatched tap.
+        val work = at.heinz.deviceai.cognitive.CockpitWorkEmitter("computer-snapshot-fixture", 7,
+            field(a, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus)
+        work.emit(at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.ACCEPTED)
+        work.emit(at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.DISPATCHED, "step-1",
+            at.heinz.deviceai.cognitive.CockpitWorkEvent.Action.CLICK,
+            at.heinz.deviceai.cognitive.CockpitWorkEvent.Target(.25f, .75f), observationRevision = 3, frameSequence = 12)
+        shadowOf(Looper.getMainLooper()).idle()
+        call(a, "syncCommand03HtmlState")
+        val record = packet(a, "receive").getJSONObject("computerWork")
+        assertEquals("computer-snapshot-fixture", record.getString("taskId"))
+        assertEquals("7", record.getString("captureSession"))
+        assertEquals("DISPATCHED", record.getString("stage"))
+        assertFalse("No Android consent is open in this fixture", record.getBoolean("consentPending"))
+        assertFalse("Without the cockpit's panel of this task no app name is made up", record.has("app"))
+        val tap = record.getJSONArray("actions").getJSONObject(0)
+        assertEquals(1, record.getJSONArray("actions").length())
+        assertEquals("CLICK", tap.getString("kind"))
+        assertEquals("DISPATCHED", tap.getString("state"))
+        assertEquals(.25, tap.getDouble("x"), 1e-6)
+        assertEquals(.75, tap.getDouble("y"), 1e-6)
+        assertEquals(12L, tap.getLong("frameSequence"))
+        // The workflow could not verify the effect: the page is told exactly that.
+        work.emit(at.heinz.deviceai.cognitive.CockpitWorkEvent.Stage.PAUSED, "step-1")
+        shadowOf(Looper.getMainLooper()).idle()
+        call(a, "syncCommand03HtmlState")
+        val paused = packet(a, "receive").getJSONObject("computerWork")
+        assertEquals("PAUSED", paused.getString("stage"))
+        assertEquals("UNCONFIRMED", paused.getJSONArray("actions").getJSONObject(0).getString("state"))
+    }
 }
