@@ -67,11 +67,13 @@ object Command03StageSignals {
     }
 
     /**
-     * Display refresh rate Continuum asks Android for while it is in front: 60 Hz unless the owner chose full
-     * quality (0 = no preference, the display's own rate, 120 Hz on the Fold7). CSS and compositor animations run
-     * at the display rate, so this halves their work. A request only – Android may keep another rate.
+     * Display refresh rate Continuum asks Android for while it is in front: 60 Hz in every profile (the Fold7's
+     * own rate is 120 Hz). CSS and compositor animations run at the display rate, so this halves their work.
+     * Until Code67 "full quality" kept 120 Hz; the owner then reported that the device overheated as soon as an
+     * order started with the effects on. A request only – Android may keep another rate.
      */
-    fun preferredRefreshRate(profile: Profile): Float = if (profile == Profile.FULL) 0f else 60f
+    @Suppress("UNUSED_PARAMETER")
+    fun preferredRefreshRate(profile: Profile): Float = 60f
 
     private const val THERMAL_LIGHT = 1
     private const val THERMAL_MODERATE = 2

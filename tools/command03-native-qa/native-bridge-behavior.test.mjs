@@ -1369,7 +1369,12 @@ test('the byte-locked scene and avatar keep valid states while the orb mode surv
     // The scene repeats its coarser state with every light, detail or audio change.
     f.state({busy: true, presence: 'RESEARCHING', appearance: {neon: 100, lightMotion: true}, quality: 'BALANCED'});
     await f.flush();
-    assert.equal(scene.getStatus().intensity, 1);assert.equal(scene.getStatus().quality, .8);
+    // Code68: while the on-device model computes the scene runs on its lowest setting, whatever the tier.
+    assert.equal(scene.getStatus().intensity, 1);assert.equal(scene.getStatus().quality, .6);
+    f.state({busy: true, presence: 'RESEARCHING', appearance: {neon: 100, lightMotion: true}, quality: 'BALANCED',
+      cloudBrain: true});
+    assert.equal(scene.getStatus().quality, .8, 'With a cloud brain the tier\'s own setting applies');
+    f.state({busy: true, presence: 'RESEARCHING', appearance: {neon: 100, lightMotion: true}, quality: 'BALANCED'});
     assert.deepEqual(f.sceneEvents.at(-1), {state: 'research'});
     f.advance(40);scene.setAudioLevel(.5); // beyond the scene's own 33 ms event throttle
     assert.equal(f.sceneEvents.at(-1).state, 'working');
@@ -1488,13 +1493,18 @@ test('the Android quality tier is exposed for styling and mapped to the scene de
     f.state({quality: 'REDUCED'});assert.equal(body.dataset.nativeQuality, 'reduced');
     f.state({quality: 'REDUCED', busy: true});
     assert.deepEqual(f.sceneQualities.slice(before), ['high', 'medium', 'low']);
+    // Code68: local computing lowers the scene once and the tier's setting returns once afterwards.
+    f.state({quality: 'FULL', busy: true});f.state({quality: 'FULL', busy: true, cpu: 71});
+    f.state({quality: 'FULL'});
+    assert.deepEqual(f.sceneQualities.slice(before), ['high', 'medium', 'low', 'high']);
+    f.state({quality: 'REDUCED', busy: true});
     // Nothing is hidden by a tier: content, controls, avatar and orb stay in the document flow.
     for (const selector of ['.avatar-crop', '.orb-zone', '#command-form', '.native-activity', '.native-evidence',
       '.native-holo-field', '.native-stop-button', '.native-settings-shortcuts'])
       assert.notEqual(f.window.getComputedStyle(f.document.querySelector(selector)).display, 'none', selector);
     f.state({quality: 'MELTING'});
     assert.equal('nativeQuality' in body.dataset, false, 'An invalid tier is not kept as a stale attribute');
-    assert.deepEqual(f.sceneQualities.slice(before), ['high', 'medium', 'low', 'high']);
+    assert.deepEqual(f.sceneQualities.slice(before), ['high', 'medium', 'low', 'high', 'low', 'high']);
   } finally {f.close();}
 });
 
@@ -1989,28 +1999,42 @@ test('a snapshot of an older Android without presence, quality, activity and fil
   } finally {f.close();}
 });
 
-test('the frame limit follows Android\'s tier and drops while the local model computes', async () => {
+test('the frame limit follows Android\'s tier and the stage rests while the on-device model computes', async () => {
   const f = await fixture();
   try {
-    const limit = () => f.document.body.dataset.frameLimit;
+    const body = f.document.body, orb = f.document.querySelector('.orb-zone');
+    const limit = () => body.dataset.frameLimit;
     f.state();
     assert.equal(limit(), '30', 'Without a tier the stage draws at most 30 frames a second');
+    assert.equal('nativeCompute' in body.dataset, false);
     f.state({busy: true});
-    assert.equal(limit(), '15', 'An older Android without presence: busy counts as computing');
+    assert.deepEqual([limit(), body.dataset.nativeCompute, orb.dataset.orbMotion], ['5', 'local', 'fixed'],
+      'An older Android without presence: busy counts as computing on the device');
     f.state({busy: true, speaking: true});
-    assert.equal(limit(), '30', 'A spoken answer keeps the lip movement smooth');
-    const expected = {FULL: [30, 15], BALANCED: [20, 10], REDUCED: [10, 6]};
-    for (const [quality, [calm, computing]] of Object.entries(expected)) {
+    assert.deepEqual([limit(), body.dataset.nativeCompute, orb.dataset.orbMotion], ['30', undefined, 'live'],
+      'A spoken answer keeps the lip movement smooth and the orb alive');
+    const calm = {FULL: 30, BALANCED: 20, REDUCED: 10}, local = {FULL: 5, BALANCED: 4, REDUCED: 3},
+      cloud = {FULL: 15, BALANCED: 10, REDUCED: 6};
+    for (const quality of Object.keys(calm)) {
       for (const presence of ['IDLE', 'LISTENING', 'SPEAKING', 'WAITING_FOR_APPROVAL', 'BLOCKED']) {
         f.state({quality, presence});
-        assert.equal(limit(), String(calm), quality + ' ' + presence);
+        assert.equal(limit(), String(calm[quality]), quality + ' ' + presence);
+        assert.equal('nativeCompute' in body.dataset, false, quality + ' ' + presence);
       }
       for (const presence of ['THINKING', 'RESEARCHING', 'LEARNING']) {
         f.state({quality, presence, busy: true});
-        assert.equal(limit(), String(computing), quality + ' ' + presence);
+        assert.deepEqual([limit(), body.dataset.nativeCompute, orb.dataset.orbMotion],
+          [String(local[quality]), 'local', 'fixed'], quality + ' ' + presence + ' on the device');
+        assert.equal(f.sceneQualities.at(-1), 'low', 'The scene runs on its lowest setting while the device computes');
+        f.state({quality, presence, busy: true, cloudBrain: true});
+        assert.deepEqual([limit(), body.dataset.nativeCompute], [String(cloud[quality]), undefined],
+          quality + ' ' + presence + ' in the cloud');
+        assert.equal(orb.dataset.orbMotion, quality === 'REDUCED' ? 'fixed' : 'live');
       }
     }
+    f.state({quality: 'FULL', presence: 'IDLE'});
+    assert.equal(f.sceneQualities.at(-1), 'high', 'After the work the scene returns to the tier\'s setting');
     f.state({quality: 'UNBEKANNT', presence: 'THINKING', busy: true});
-    assert.equal(limit(), '15', 'An unknown tier is treated as full quality, never as unlimited');
+    assert.equal(limit(), '5', 'An unknown tier is treated as full quality, never as unlimited');
   } finally {f.close();}
 });

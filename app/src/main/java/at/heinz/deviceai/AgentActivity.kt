@@ -2457,6 +2457,8 @@ class AgentActivity : Activity() {
             .put("appearance", at.heinz.deviceai.ui.Command03AppearanceSettings.snapshot(this))
             .put("presence", at.heinz.deviceai.ui.Command03StageSignals.presence(command03RuntimeSignals))
             .put("quality", command03Quality())
+            // The stage rests its heavy motion only while the ON-DEVICE model computes.
+            .put("cloudBrain", claudeBrain?.claudeSelected == true)
             .put("activity", command03Activity.snapshot() ?: org.json.JSONObject.NULL)
             .put("files", command03Files.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)

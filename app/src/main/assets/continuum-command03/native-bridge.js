@@ -92,6 +92,17 @@
   // value of its tier for the lip movement.
   const frameLimits = Object.freeze({FULL:[30,15],BALANCED:[20,10],REDUCED:[10,6]});
   const computing = Object.freeze({THINKING:true,RESEARCHING:true,LEARNING:true});
+  // Owner finding (Fold7, Code67): with the effects on, the device overheated as soon as an order started. While
+  // the model computes ON THE DEVICE the stage must leave the processor to it: the orb rests on its still frame,
+  // the scene runs on its lowest setting, and only these few frames a second are drawn; a slow pulse of the corona
+  // (opacity only) shows the thinking. With a cloud brain nothing computes locally and the full motion stays.
+  const localComputeFrames = Object.freeze({FULL:5,BALANCED:4,REDUCED:3});
+  /** True while Android reports work in progress that is computed by the on-device model. */
+  function computesLocally(state) {
+    if(state.cloudBrain===true)return false;
+    return own(presences,state.presence) ? own(computing,state.presence)
+      : state.busy===true && state.speaking!==true && state.listening!==true;
+  }
   const activityKinds = Object.freeze({THINK:'DENKEN',RESEARCH:'RECHERCHE',LEARN:'LERNEN',DEVELOP:'ENTWICKLUNG',
     EXECUTE:'AUSFÜHRUNG',VERIFY:'PRÜFUNG',TOOL:'WERKZEUG',WORKER:'HELFER',MEMORY:'GEDÄCHTNIS',
     DOCUMENT:'DOKUMENT',CALCULATION:'BERECHNUNG',NOTIFICATION:'BENACHRICHTIGUNG'});
@@ -202,7 +213,8 @@
     // switch and the system preference return it to its resting frame.
     const orb=$('.orb-zone');
     if(!orb)return;
-    const motion=state.quality==='REDUCED' || state.appearance?.lightMotion===false || reducedMotion()?'fixed':'live';
+    const motion=state.quality==='REDUCED' || state.appearance?.lightMotion===false || reducedMotion() ||
+      computesLocally(state)?'fixed':'live';
     if(orb.dataset.orbMotion!==motion)orb.dataset.orbMotion=motion;
   }
   /** The measured speech level also drives the orb's corona and the room haze; null removes it. */
@@ -306,13 +318,18 @@
     if(quality===null)delete document.body.dataset.nativeQuality;
     else if(document.body.dataset.nativeQuality!==quality.toLowerCase())
       document.body.dataset.nativeQuality=quality.toLowerCase();
-    if(quality!==lastQuality) {
-      lastQuality=quality;
-      // Without a tier the original preview setting ("hoch") stays in force.
-      window.ContinuumScene?.setQuality?.(quality===null?'high':qualities[quality]);
+    const local=computesLocally(state);
+    if(local) {if(document.body.dataset.nativeCompute!=='local')document.body.dataset.nativeCompute='local';}
+    else if('nativeCompute' in document.body.dataset)delete document.body.dataset.nativeCompute;
+    // Without a tier the original preview setting ("hoch") stays in force; local computing always gets "low".
+    const sceneQuality=local?'low':quality===null?null:qualities[quality];
+    if(sceneQuality!==lastQuality) {
+      lastQuality=sceneQuality;
+      window.ContinuumScene?.setQuality?.(sceneQuality===null?'high':sceneQuality);
     }
     const busy=key===null ? state.busy===true && state.speaking!==true && state.listening!==true : own(computing,key);
-    const frames=frameLimits[quality===null?'FULL':quality][busy?1:0];
+    const tier=quality===null?'FULL':quality;
+    const frames=local?localComputeFrames[tier]:frameLimits[tier][busy?1:0];
     if(frameGovernor.limit()!==null && frameGovernor.limit()!==frames)frameGovernor.set(frames);
     if(frameGovernor.limit()!==null && document.body.dataset.frameLimit!==String(frames))
       document.body.dataset.frameLimit=String(frames);

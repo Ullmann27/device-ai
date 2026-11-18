@@ -47,10 +47,10 @@ class Command03StageSignalsTest {
         assertEquals("FULL", Command03StageSignals.quality(-1, null, Profile.AUTO))
     }
 
-    @Test fun refreshRateIsLoweredUnlessTheOwnerChoseFullQuality() {
+    @Test fun refreshRateIsLoweredInEveryProfile() {
         assertEquals(60f, Command03StageSignals.preferredRefreshRate(Profile.AUTO), 0f)
         assertEquals(60f, Command03StageSignals.preferredRefreshRate(Profile.SAVER), 0f)
-        assertEquals(0f, Command03StageSignals.preferredRefreshRate(Profile.FULL), 0f)
+        assertEquals(60f, Command03StageSignals.preferredRefreshRate(Profile.FULL), 0f)
     }
 
     @Test fun ownerProfilesAreRespectedButCriticalHeatAlwaysReduces() {

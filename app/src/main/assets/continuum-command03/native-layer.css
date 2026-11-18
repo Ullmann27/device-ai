@@ -854,3 +854,16 @@ body[data-design="command03"][data-native-quality="reduced"].native-hologram .wo
  body[data-design="command03"][data-energy="to-avatar"] .native-orb-light i:first-child {opacity:.6;transform:scale(.82);}
  body[data-design="command03"][data-energy="to-orb"] .native-orb-light i:first-child {opacity:.6;transform:scale(1.22);}
 }
+
+
+/* Code68 · local computing. While the on-device model works the stage leaves the processor to it: every travelling
+   or drifting effect rests and one slow pulse of the corona (opacity only, no repaint) shows the thinking. */
+body[data-design="command03"][data-native-compute="local"] .native-orb-light i,
+body[data-design="command03"][data-native-compute="local"] .native-holo-field::before,
+body[data-design="command03"][data-native-compute="local"] .native-holo-field::after,
+body[data-design="command03"][data-native-compute="local"] .avatar-aura,
+body[data-design="command03"][data-native-compute="local"] .native-room-light::after,
+body[data-design="command03"][data-native-compute="local"] .workspace-motion-front::after {animation:none;}
+body[data-design="command03"][data-native-compute="local"] .native-orb-light {
+ animation:native-corona-breathe 1.8s ease-in-out infinite alternate;
+}

@@ -250,7 +250,10 @@ try {
   assert.deepEqual([now.orb,now.scene.state,now.avatar,now.scene.intensity,now.scene.quality,now.quality],
     ['research','working','working',1,.6,'reduced'],'Light and tier changes keep the orb in its research mode');
   assert.deepEqual([now.drift,now.cross,now.shown],['none','none',8],'Reduced eases only secondary light');
-  await receive({busy:true,presence:'LEARNING',appearance:{neon:70,lightMotion:true},quality:'BALANCED',activity});
+  // Code68: the travelling light described from here on is the stage of a cloud brain. While the on-device model
+  // computes, the stage rests (checked further down under "local computing").
+  await receive({busy:true,presence:'LEARNING',appearance:{neon:70,lightMotion:true},quality:'BALANCED',activity,
+    cloudBrain:true});
   now=await live();
   assert.deepEqual([now.orb,now.scene.state,now.avatar,now.text,now.scene.intensity,now.scene.quality,now.quality],
     ['learning','working','working','LERNT',.78,.8,'balanced']);
@@ -409,7 +412,7 @@ try {
   const idleTile=lit.tile, idleWindow=lit.window, idleHaze=lit.haze;
   for(const [presence,shell,duration] of [['LISTENING','native-shell-in','2.6s'],['THINKING','native-shell-out','2.2s'],
     ['RESEARCHING','native-shell-out','1.7s'],['LEARNING','native-shell-out','3s']]) {
-    await send({busy:presence!=='LISTENING',listening:presence==='LISTENING',presence});
+    await send({busy:presence!=='LISTENING',listening:presence==='LISTENING',presence,cloudBrain:true});
     await stage.evaluate(()=>document.querySelector('.presence').scrollIntoView({block:'start'}));
     // The glass eases into the new light; the engine's own clock decides when it has arrived.
     await stage.waitForFunction(([before,expected])=>
@@ -452,7 +455,7 @@ try {
   assert.ok((await utter(4,0,false)).glow<loud.glow,'The level leaves with the speech');
   await stage.emulateMedia({reducedMotion:'no-preference'});
   // Thermal tiers, the owner's switch and the system preference reach every new light.
-  await send({busy:true,presence:'THINKING',quality:'BALANCED'});
+  await send({busy:true,presence:'THINKING',quality:'BALANCED',cloudBrain:true});
   lit=await light();
   assert.deepEqual([lit.orb,lit.shell,lit.shellDisplay,lit.secondDisplay],['live','native-shell-out','block','none']);
   await send({busy:true,presence:'THINKING',quality:'REDUCED'});
@@ -473,6 +476,26 @@ try {
   assert.deepEqual([lit.orb,lit.shell,lit.corona],['fixed','none','none'],'prefers-reduced-motion stops every new animation');
   await stage.emulateMedia({reducedMotion:'no-preference'});
   await send({busy:false,presence:'IDLE'});
+  // Code68 · local computing (owner finding on the Fold7: with the effects on, the device overheated as soon as an
+  // order started). While the on-device model computes, the orb rests, nothing travels or drifts, and one slow
+  // pulse of the corona shows the thinking. The same work with a cloud brain keeps the full motion.
+  for(const presence of ['THINKING','RESEARCHING','LEARNING']) {
+    await send({busy:true,presence});
+    lit=await light();
+    const rest=await stage.evaluate(()=>({compute:document.body.dataset.nativeCompute,limit:document.body.dataset.frameLimit,
+      drift:getComputedStyle(document.querySelector('.native-holo-field'),'::before').animationName,
+      pulse:getComputedStyle(document.querySelector('.native-orb-light')).animationDuration}));
+    assert.deepEqual([lit.orb,lit.shell,lit.corona,rest.pulse,rest.drift,rest.compute,rest.limit],
+      ['fixed','none','native-corona-breathe','1.8s','none','local','5'],presence+': the stage rests while the device computes');
+  }
+  await send({busy:true,presence:'THINKING',cloudBrain:true});
+  lit=await light();
+  assert.deepEqual([lit.orb,lit.shell,await stage.evaluate(()=>document.body.dataset.nativeCompute)],
+    ['live','native-shell-out',undefined],'A cloud brain keeps the full motion');
+  await send({busy:false,presence:'IDLE'});
+  lit=await light();
+  assert.deepEqual([lit.orb,lit.corona,await stage.evaluate(()=>document.body.dataset.frameLimit)],
+    ['live','native-corona-breathe','30'],'After the work the orb is alive again');
   // Work sequence: activation → file window → projected → document → reply → return.
   const files={revision:1,kind:'SEARCH',label:'Argon4',total:14,more:false,names:['Argon4.pdf','Argon4-Notizen.txt',
     'Argon4 Messprotokoll 2026-10-01 Laborhalle Nord (zweite Fassung, geprüft).pdf','Argon-Lieferschein.pdf',
@@ -626,10 +649,11 @@ try {
     for(const [name,values,limit] of [
       ['full-idle',{quality:'FULL',presence:'IDLE'},30],
       ['full-speaking',{quality:'FULL',presence:'SPEAKING',speaking:true},30],
-      ['full-computing',{quality:'FULL',presence:'THINKING',busy:true},15],
-      ['balanced-computing',{quality:'BALANCED',presence:'THINKING',busy:true},10],
+      ['full-computing',{quality:'FULL',presence:'THINKING',busy:true},5],
+      ['full-computing-cloud',{quality:'FULL',presence:'THINKING',busy:true,cloudBrain:true},15],
+      ['balanced-computing',{quality:'BALANCED',presence:'THINKING',busy:true},4],
       ['reduced-idle',{quality:'REDUCED',presence:'IDLE'},10],
-      ['reduced-computing',{quality:'REDUCED',presence:'THINKING',busy:true},6]]) {
+      ['reduced-computing',{quality:'REDUCED',presence:'THINKING',busy:true},3]]) {
       const measured=await rate(values);
       item.rates[name]={limit:measured.limit,deliveredPerSecond:Math.round(measured.perSecond*10)/10};
       if(measured.limit!==limit)item.failures.push(name+': limit '+measured.limit+' instead of '+limit);
