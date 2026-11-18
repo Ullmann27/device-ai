@@ -116,6 +116,20 @@ mit Anhang, Nachrichtenüberblick:
 
 Danach ist das Werkzeug Rezept- und Modellplan-Schritt (`{{1.path}}` als Anhang des nächsten).
 
+**Nachtrag 18.11.2026 – Auftragsfolgen stehen neben den Ketten, nicht in ihnen.** Export, Mail, Nachrichten und die
+Dokumentenablage wurden bewusst **nicht** auf diesem Weg eingehängt. Eine Kette ist Modell und Bewerter eines
+Orchestrator-Laufs über registrierte Werkzeuge mit synchronem Ergebnis hinter dem ToolGate. Die Besitzer-Lenkungen
+sind dagegen Zustandsautomaten über mehrere Besitzerzüge (Rückfrage „welches PDF?“, fehlende Dateifreigabe mit
+Rückkehr aus den Einstellungen, „Soll ich das so senden?“), arbeiten mit eigenen Aufträgen auf der einen Arbeitsspur
+und mit Dauerfreigaben – und die Sende-Lenkung hat mit Absicht keinen Eintrag in der Werkzeugliste, damit kein Modell
+und kein Werkzeugergebnis ein Senden auslösen kann. Als Werkzeug registriert würden sie ihre Rückfragen verlieren und
+für Modell-Werkzeugaufrufe erreichbar. Deshalb gibt es `OwnerMissionDirector` (`OwnerMission.kt`, Planer in
+`cognitive/OwnerMissionPlan.kt`): Er gibt jeden Schritt als Besitzerauftrag an den Einstieg der zuständigen Lenkung
+und hört auf deren typisierte Ergebnisse (`OwnerLaneOutcome`). Die Rezepte der Ketten sind dabei selbst ein möglicher
+Schritt („Such das neueste PDF in Downloads und öffne es“), „weiter“/„abbrechen“ und der Schalter für Modellpläne
+werden mitbenutzt. Sätze und Messung: `regression-missions*.jsonl`, Geräteprüfung:
+[AUFTRAGSFOLGE-GERAETECHECKLISTE-20261118.md](../handover/AUFTRAGSFOLGE-GERAETECHECKLISTE-20261118.md).
+
 ## 3. Zahlen (Host, deterministisch)
 
 | Satz | Fälle | vorher | nachher |
