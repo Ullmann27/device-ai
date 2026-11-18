@@ -325,6 +325,8 @@ class ClaudeModelRuntime internal constructor(
 
     private class Attempt {
         var streamOpened = false
+        /** The request carried the server-side fallback opt-in. */
+        var fallbackSent = false
         var promptUsage: ClaudeTokenUsage? = null
         /** The final usage of this attempt was booked (or the attempt was booked as an estimate). */
         var settled = false
@@ -336,7 +338,9 @@ class ClaudeModelRuntime internal constructor(
         try {
             val key = apiKey() ?: return LocalInferenceEvent.Failed(ClaudeBrainFailure.NO_API_KEY)
             if (run.cancelled.get()) return LocalInferenceEvent.Cancelled
-            val withFallback = conversation.model.serverSideFallback && !fallbackRejected && run.kind != Kind.PROBE
+            val withFallback = allowFallbackDowngrade && conversation.model.serverSideFallback &&
+                !fallbackRejected && run.kind != Kind.PROBE
+            attempt.fallbackSent = withFallback
             val opened = client(key).beta().messages().createStreaming(request(conversation, withFallback))
             run.stream = opened
             attempt.streamOpened = true
@@ -379,14 +383,16 @@ class ClaudeModelRuntime internal constructor(
         } catch (failure: NotFoundException) {
             return LocalInferenceEvent.Failed(ClaudeBrainFailure.MODEL_UNAVAILABLE)
         } catch (failure: BadRequestException) {
-            val detail = errorMessage(failure)
-            if (!attempt.streamOpened && allowFallbackDowngrade && conversation.model.serverSideFallback &&
-                !fallbackRejected && (detail.contains("anthropic-beta") || detail.contains("fallbacks"))) {
-                // The account does not have the server-side fallback beta: send the same request once without it.
-                fallbackRejected = true
-                return outcome(run, conversation, attempt, allowFallbackDowngrade = false)
+            val problem = badRequestProblem(failure, errorMessage(failure))
+            if (problem == ClaudeBrainFailure.BAD_REQUEST && attempt.fallbackSent && !attempt.streamOpened) {
+                // An unexplained 400 while the fallback beta was requested (an account without that beta answers
+                // this way): the same request once without it. A rejected request is not billed. Only when the
+                // plain request is accepted is the opt-in left out from then on.
+                val plain = outcome(run, conversation, attempt, allowFallbackDowngrade = false)
+                if (attempt.streamOpened) fallbackRejected = true
+                return plain
             }
-            return LocalInferenceEvent.Failed(badRequestProblem(failure, detail))
+            return LocalInferenceEvent.Failed(problem)
         } catch (failure: InternalServerException) {
             return LocalInferenceEvent.Failed(ClaudeBrainFailure.OVERLOADED)
         } catch (failure: AnthropicServiceException) {

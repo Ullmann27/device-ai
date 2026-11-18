@@ -369,8 +369,26 @@ class ClaudeModelRuntimeTest {
         failedWith(Reply.Error(400, error("invalid_request_error",
             "In order to access this model, your organization or workspace must have data retention enabled."))))
 
-    @Test fun otherBadRequestKeepsItsOwnCode() = assertEquals(ClaudeBrainFailure.BAD_REQUEST,
-        failedWith(Reply.Error(400, error("invalid_request_error", "messages: something else"))))
+    @Test fun otherBadRequestIsTriedOnceWithoutTheFallbackOptInAndKeepsItsOwnCode() {
+        endpoint.enqueue(Reply.Error(400, error("invalid_request_error", "messages: something else")),
+            Reply.Error(400, error("invalid_request_error", "messages: something else")),
+            Reply.Stream(listOf(messageStart()) + text(0, "ok") + stop("end_turn")))
+        val runtime = runtime()
+        assertEquals(ClaudeBrainFailure.BAD_REQUEST, failure(run { runtime.streamTextOnly(ownerPrompt, it) }))
+        assertEquals(2, endpoint.requests.size)
+        assertTrue(endpoint.requests[0].body.has("fallbacks"))
+        assertFalse(endpoint.requests[1].body.has("fallbacks"))
+        // The plain request failed as well, so the opt-in was not the cause and stays on.
+        assertEquals("ok", texts(run { runtime.streamTextOnly(ownerPrompt, it) }))
+        assertTrue(endpoint.requests[2].body.has("fallbacks"))
+    }
+
+    @Test fun haikuBadRequestIsNotRepeated() {
+        settings.set(settings.get().copy(model = ClaudeModel.HAIKU_5_5))
+        assertEquals(ClaudeBrainFailure.BAD_REQUEST,
+            failedWith(Reply.Error(400, error("invalid_request_error", "messages: something else"))))
+        assertEquals(1, endpoint.requests.size)
+    }
 
     @Test fun errorEventInsideARunningStreamIsMapped() {
         endpoint.enqueue(Reply.Stream(listOf(messageStart()) + text(0, "Teil") +
@@ -602,6 +620,8 @@ class ClaudeModelRuntimeTest {
                 Reply.Stream(listOf(messageStart()) + text(0, "ok") + stop("end_turn")),
                 Reply.Error(401, error("authentication_error", "invalid x-api-key: $TEST_KEY")),
                 Reply.Error(400, error("invalid_request_error", "bad request echoing $TEST_KEY")),
+                // The unexplained 400 is tried once more without the fallback opt-in.
+                Reply.Error(400, error("invalid_request_error", "bad request echoing $TEST_KEY")),
                 Reply.Stream(listOf(messageStart()) + text(0, "Teil"), dropAfter = 2))
             repeat(4) { run { runtime.streamTextOnly(ownerPrompt, it) } }
         } finally {
@@ -613,7 +633,7 @@ class ClaudeModelRuntimeTest {
             console.toString("UTF-8") +
             listOf(ClaudeBrainFailure.INVALID_API_KEY, ClaudeBrainFailure.BAD_REQUEST, ClaudeBrainFailure.STREAM_INTERRUPTED)
                 .joinToString { ClaudeBrainFailure.ownerMessage(it) }
-        assertEquals(4, endpoint.requests.size)
+        assertEquals(5, endpoint.requests.size)
         assertTrue(endpoint.requests.all { it.headers["authorization"] == "Bearer $TEST_KEY" })
         // The key travels in the credential header only, never in a request body.
         assertTrue(endpoint.requests.none { it.body.toString().contains("sk-ant-") })
