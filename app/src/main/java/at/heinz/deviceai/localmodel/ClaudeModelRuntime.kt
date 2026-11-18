@@ -68,11 +68,12 @@ class ClaudeModelRuntime internal constructor(
 
     /**
      * Production uses the SDK's own base URL (api.anthropic.com); [baseUrl] exists for the local fake endpoint of
-     * the JVM tests only. One automatic SDK retry for a transient 429/5xx/connection failure.
+     * the JVM tests only. No automatic SDK retries: a failed request is reported at once and the owner decides
+     * whether to ask again, so nothing is sent a second time in the background (or after STOP).
      */
     data class Endpoint(
         val baseUrl: String? = null,
-        val maxRetries: Int = 1,
+        val maxRetries: Int = 0,
         val connectTimeout: Duration = Duration.ofSeconds(ClaudeGenerationPolicy.CONNECT_TIMEOUT_SECONDS),
         val readTimeout: Duration = Duration.ofSeconds(ClaudeGenerationPolicy.READ_TIMEOUT_SECONDS),
         val requestTimeout: Duration = Duration.ofSeconds(ClaudeGenerationPolicy.REQUEST_TIMEOUT_SECONDS)

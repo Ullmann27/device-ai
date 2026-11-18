@@ -36,7 +36,7 @@ object ClaudeBrainPresentation {
     fun status(settings: ClaudeBrainSettings, keyPresent: Boolean): String = buildString {
         append("Aktives Gehirn: ")
         append(if (settings.claudeSelected) "${ClaudeBrain.MARKER_CLAUDE} · ${settings.model.id}"
-            else "${ClaudeBrain.MARKER_LOCAL} · Modell auf dem Gerät, nichts verlässt das Gerät")
+            else "${ClaudeBrain.MARKER_LOCAL} · das Modell auf dem Gerät antwortet, nichts geht an Claude")
         append("\nAPI-Schlüssel: ").append(ClaudeApiKey.status(keyPresent))
         append("\nZustimmung zur Datenübertragung: ").append(if (settings.consentGiven) "erteilt" else "nicht erteilt")
         append("\nGerätelokale Erinnerungen mitsenden: ").append(if (settings.shareLocalMemory) "ja" else "nein")
@@ -132,7 +132,7 @@ object ClaudeBrainDialog {
             if (host.busy()) return say("Ein Auftrag läuft noch. Beende ihn zuerst mit STOP, dann schalte um.")
             if (brainKind == BrainKind.LOCAL) {
                 if (brain.selectBrain(BrainKind.LOCAL)) {
-                    say("Lokal ist wieder das Gehirn. Ab jetzt verlässt keine Nachricht mehr das Gerät.")
+                    say("Lokal ist wieder das Gehirn. Ab jetzt geht keine Nachricht mehr an Claude.")
                     changed(previous, "GEHIRN · " + ClaudeBrain.MARKER_LOCAL)
                 }
                 return

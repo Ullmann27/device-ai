@@ -145,7 +145,7 @@ class ClaudeBrainDialogUiTest {
         // Activation (before: LOCAL), model change (CLAUDE stays), switch back (before: CLAUDE).
         assertEquals(listOf(BrainKind.LOCAL, BrainKind.CLAUDE, BrainKind.CLAUDE), host.changes)
         assertTrue(dialog.text("claude-brain-status").startsWith("Aktives Gehirn: LOKAL"))
-        assertTrue(dialog.text("claude-brain-message").contains("verlässt keine Nachricht mehr das Gerät"))
+        assertTrue(dialog.text("claude-brain-message").contains("geht keine Nachricht mehr an Claude"))
         assertTrue(host.log.none { it.contains("sk-ant") })
     }
 
@@ -222,6 +222,6 @@ class ClaudeBrainDialogUiTest {
             .startsWith("Verbindung in Ordnung: claude-opus-5-5"))
         assertTrue(ClaudeBrainPresentation.probe(ClaudeModelRuntime.Probe.Failed("CLAUDE_NO_CREDIT")).contains("Guthaben"))
         assertTrue(ClaudeBrainPresentation.status(ClaudeBrainSettings(), keyPresent = false)
-            .contains("nichts verlässt das Gerät"))
+            .contains("nichts geht an Claude"))
     }
 }
