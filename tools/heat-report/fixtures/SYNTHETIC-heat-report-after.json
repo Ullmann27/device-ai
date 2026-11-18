@@ -1,0 +1,2236 @@
+{
+ "schema": "continuum-heat-measurement-v1",
+ "summary": {
+  "comparisons": [
+   {
+    "reasons": [],
+    "configuration": "B",
+    "delta": {
+     "batteryRiseCMedian": -0.2,
+     "runTotalMsMedianPercent": -4,
+     "FOLGEFRAGE": {
+      "firstTokenMsMedianPercent": 0,
+      "totalMsMedianPercent": -4,
+      "firstVisibleTextMsMedianPercent": -4
+     },
+     "thermalMaxMedian": 0,
+     "headroomMaxMedian": -0.02,
+     "ERSTFRAGE": {
+      "firstTokenMsMedianPercent": 0,
+      "totalMsMedianPercent": -4,
+      "firstVisibleTextMsMedianPercent": -4
+     },
+     "aborts": 0
+    },
+    "factor": "STAGE_OFF",
+    "comparable": true
+   },
+   {
+    "reasons": [],
+    "configuration": "C",
+    "delta": {
+     "batteryRiseCMedian": 1,
+     "runTotalMsMedianPercent": 12,
+     "FOLGEFRAGE": {
+      "firstTokenMsMedianPercent": 8.333,
+      "totalMsMedianPercent": 12,
+      "firstVisibleTextMsMedianPercent": 12
+     },
+     "thermalMaxMedian": 1,
+     "headroomMaxMedian": 0.1,
+     "ERSTFRAGE": {
+      "firstTokenMsMedianPercent": 8.333,
+      "totalMsMedianPercent": 12,
+      "firstVisibleTextMsMedianPercent": 12
+     },
+     "aborts": 0
+    },
+    "factor": "STAGE_FULL_EFFECTS",
+    "comparable": true
+   },
+   {
+    "reasons": [],
+    "configuration": "D",
+    "delta": {
+     "batteryRiseCMedian": -0.35,
+     "runTotalMsMedianPercent": -24,
+     "FOLGEFRAGE": {
+      "firstTokenMsMedianPercent": -75,
+      "totalMsMedianPercent": -48,
+      "firstVisibleTextMsMedianPercent": -48
+     },
+     "thermalMaxMedian": 0,
+     "headroomMaxMedian": -0.005,
+     "ERSTFRAGE": {
+      "firstTokenMsMedianPercent": 0,
+      "totalMsMedianPercent": 0,
+      "firstVisibleTextMsMedianPercent": 0
+     },
+     "aborts": 0
+    },
+    "factor": "DIALOGUE_REUSE",
+    "comparable": true
+   },
+   {
+    "reasons": [],
+    "configuration": "E",
+    "delta": {
+     "batteryRiseCMedian": -0.4,
+     "runTotalMsMedianPercent": -40,
+     "FOLGEFRAGE": {
+      "firstTokenMsMedianPercent": -41.667,
+      "totalMsMedianPercent": -40,
+      "firstVisibleTextMsMedianPercent": -40
+     },
+     "thermalMaxMedian": 0,
+     "headroomMaxMedian": -0.04,
+     "ERSTFRAGE": {
+      "firstTokenMsMedianPercent": -41.667,
+      "totalMsMedianPercent": -40,
+      "firstVisibleTextMsMedianPercent": -40
+     },
+     "aborts": 0
+    },
+    "factor": "MODEL_E2B",
+    "comparable": true
+   },
+   {
+    "reasons": ["NOT_RUN"],
+    "configuration": "F",
+    "delta": {},
+    "factor": "BACKEND_GPU",
+    "comparable": false
+   }
+  ],
+  "rule": "Regel: Jede Konfiguration, die sich in genau einem Faktor von der Basis A unterscheidet und mit ihr vergleichbar ist, wird über die Mediane je Lauf mit A verglichen. Die Kennzahlen werden in dieser Reihenfolge geprüft: 1. Abbrüche (Anzahl), 2. höchste Thermalstufe, 3. höchster Thermal-Headroom, 4. Anstieg der Akkutemperatur, 5. Gesamtzeit je Lauf. Kostentreiber ist der Faktor mit der betragsmäßig größten Änderung in der ersten Kennzahl, in der überhaupt eine Konfiguration die Mindeständerung erreicht (1 Abbruch, 1 Thermalstufe, 0,05 Headroom, 0,5 °C, 10 % Zeit). Erreicht keine Konfiguration eine Mindeständerung, wird kein Kostentreiber genannt.",
+  "baseline": "A",
+  "costDriver": {
+   "tied": ["C"],
+   "singleRuns": true,
+   "configuration": "C",
+   "metric": "thermalMaxMedian",
+   "metricLabel": "höchste Thermalstufe (Median je Lauf)",
+   "delta": 1,
+   "factor": "STAGE_FULL_EFFECTS",
+   "status": "FOUND"
+  },
+  "rows": [
+   {
+    "configuration": "A",
+    "thermalMaxMedian": 1,
+    "runTotalMsMedian": 10000,
+    "cancelledByOwner": 0,
+    "roles": {
+     "FOLGEFRAGE": {
+      "firstTokenMsMedian": 1200,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 4,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 5000,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 31.579,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 5000,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.8
+     },
+     "ERSTFRAGE": {
+      "firstTokenMsMedian": 1200,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 4,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 5000,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 31.579,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 5000,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.8
+     }
+    },
+    "chargingStates": ["false"],
+    "headroomMaxMedian": 0.38,
+    "powerSaveStates": ["false"],
+    "turns": 2,
+    "batteryRiseCMedian": 0.8,
+    "withoutModelCall": 0,
+    "thermalMax": 1,
+    "startConditionMissed": 0,
+    "complete": 2,
+    "aborts": 0,
+    "abortKinds": {},
+    "runs": 1
+   },
+   {
+    "configuration": "B",
+    "thermalMaxMedian": 1,
+    "runTotalMsMedian": 9600,
+    "cancelledByOwner": 0,
+    "roles": {
+     "FOLGEFRAGE": {
+      "firstTokenMsMedian": 1200,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": null,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 0,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": null,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 1,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 4800,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 33.333,
+      "stageIntervalP99MsMedian": null,
+      "firstVisibleTextMsMedian": 4800,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.833
+     },
+     "ERSTFRAGE": {
+      "firstTokenMsMedian": 1200,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": null,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 0,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": null,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 1,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 4800,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 33.333,
+      "stageIntervalP99MsMedian": null,
+      "firstVisibleTextMsMedian": 4800,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.833
+     }
+    },
+    "chargingStates": ["false"],
+    "headroomMaxMedian": 0.36,
+    "powerSaveStates": ["false"],
+    "turns": 2,
+    "batteryRiseCMedian": 0.6,
+    "withoutModelCall": 0,
+    "thermalMax": 1,
+    "startConditionMissed": 0,
+    "complete": 2,
+    "aborts": 0,
+    "abortKinds": {},
+    "runs": 1
+   },
+   {
+    "configuration": "C",
+    "thermalMaxMedian": 2,
+    "runTotalMsMedian": 11200,
+    "cancelledByOwner": 0,
+    "roles": {
+     "FOLGEFRAGE": {
+      "firstTokenMsMedian": 1300,
+      "windowP99MsMedian": 17.5,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 10.714,
+      "windowP50MsMedian": 9.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17.5,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 5600,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 27.907,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 5600,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.714
+     },
+     "ERSTFRAGE": {
+      "firstTokenMsMedian": 1300,
+      "windowP99MsMedian": 17.5,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 10.714,
+      "windowP50MsMedian": 9.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17.5,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 5600,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 27.907,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 5600,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.714
+     }
+    },
+    "chargingStates": ["false"],
+    "headroomMaxMedian": 0.48,
+    "powerSaveStates": ["false"],
+    "turns": 2,
+    "batteryRiseCMedian": 1.8,
+    "withoutModelCall": 0,
+    "thermalMax": 2,
+    "startConditionMissed": 0,
+    "complete": 2,
+    "aborts": 0,
+    "abortKinds": {},
+    "runs": 1
+   },
+   {
+    "configuration": "D",
+    "thermalMaxMedian": 1,
+    "runTotalMsMedian": 7600,
+    "cancelledByOwner": 0,
+    "roles": {
+     "FOLGEFRAGE": {
+      "firstTokenMsMedian": 300,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 7.692,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 1,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 2600,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 52.174,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 2600,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 1.538
+     },
+     "ERSTFRAGE": {
+      "firstTokenMsMedian": 1200,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 4,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 5000,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 31.579,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 5000,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 0.8
+     }
+    },
+    "chargingStates": ["false"],
+    "headroomMaxMedian": 0.375,
+    "powerSaveStates": ["false"],
+    "turns": 2,
+    "batteryRiseCMedian": 0.45,
+    "withoutModelCall": 0,
+    "thermalMax": 1,
+    "startConditionMissed": 0,
+    "complete": 2,
+    "aborts": 0,
+    "abortKinds": {},
+    "runs": 1
+   },
+   {
+    "configuration": "E",
+    "thermalMaxMedian": 1,
+    "runTotalMsMedian": 6000,
+    "cancelledByOwner": 0,
+    "roles": {
+     "FOLGEFRAGE": {
+      "firstTokenMsMedian": 700,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 6.667,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 3000,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 52.174,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 3000,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 1.333
+     },
+     "ERSTFRAGE": {
+      "firstTokenMsMedian": 700,
+      "windowP99MsMedian": 17,
+      "stageIntervalP50MsMedian": 200,
+      "stageFramesMeasured": 1,
+      "stageFramesPerSecondMedian": 6.667,
+      "windowP50MsMedian": 8.5,
+      "promptCharactersMedian": 900,
+      "firstVisibleTextEvents": ["ANSWER_HANDED_TO_STAGE_PAGE"],
+      "stageIntervalP90MsMedian": 200,
+      "windowP90MsMedian": 17,
+      "turns": 1,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 1,
+      "totalMsMedian": 3000,
+      "windowOver2VsyncShareMedian": 0,
+      "charsPerSecondMedian": 52.174,
+      "stageIntervalP99MsMedian": 200,
+      "firstVisibleTextMsMedian": 3000,
+      "complete": 1,
+      "toolFreeTurns": 1,
+      "windowFramesPerSecondMedian": 1.333
+     }
+    },
+    "chargingStates": ["false"],
+    "headroomMaxMedian": 0.34,
+    "powerSaveStates": ["false"],
+    "turns": 2,
+    "batteryRiseCMedian": 0.4,
+    "withoutModelCall": 0,
+    "thermalMax": 1,
+    "startConditionMissed": 0,
+    "complete": 2,
+    "aborts": 0,
+    "abortKinds": {},
+    "runs": 1
+   },
+   {
+    "configuration": "F",
+    "thermalMaxMedian": null,
+    "runTotalMsMedian": null,
+    "cancelledByOwner": 0,
+    "roles": {
+     "FOLGEFRAGE": {
+      "firstTokenMsMedian": null,
+      "windowP99MsMedian": null,
+      "stageIntervalP50MsMedian": null,
+      "stageFramesMeasured": 0,
+      "stageFramesPerSecondMedian": null,
+      "windowP50MsMedian": null,
+      "promptCharactersMedian": null,
+      "firstVisibleTextEvents": [],
+      "stageIntervalP90MsMedian": null,
+      "windowP90MsMedian": null,
+      "turns": 0,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 0,
+      "totalMsMedian": null,
+      "windowOver2VsyncShareMedian": null,
+      "charsPerSecondMedian": null,
+      "stageIntervalP99MsMedian": null,
+      "firstVisibleTextMsMedian": null,
+      "complete": 0,
+      "toolFreeTurns": 0,
+      "windowFramesPerSecondMedian": null
+     },
+     "ERSTFRAGE": {
+      "firstTokenMsMedian": null,
+      "windowP99MsMedian": null,
+      "stageIntervalP50MsMedian": null,
+      "stageFramesMeasured": 0,
+      "stageFramesPerSecondMedian": null,
+      "windowP50MsMedian": null,
+      "promptCharactersMedian": null,
+      "firstVisibleTextEvents": [],
+      "stageIntervalP90MsMedian": null,
+      "windowP90MsMedian": null,
+      "turns": 0,
+      "firstVisibleTextHidden": 0,
+      "dialogueReusedTurns": 0,
+      "windowFramesMeasured": 0,
+      "totalMsMedian": null,
+      "windowOver2VsyncShareMedian": null,
+      "charsPerSecondMedian": null,
+      "stageIntervalP99MsMedian": null,
+      "firstVisibleTextMsMedian": null,
+      "complete": 0,
+      "toolFreeTurns": 0,
+      "windowFramesPerSecondMedian": null
+     }
+    },
+    "chargingStates": [],
+    "headroomMaxMedian": null,
+    "powerSaveStates": [],
+    "turns": 0,
+    "batteryRiseCMedian": null,
+    "withoutModelCall": 0,
+    "thermalMax": null,
+    "startConditionMissed": 0,
+    "complete": 0,
+    "aborts": 0,
+    "abortKinds": {},
+    "runs": 0
+   }
+  ]
+ },
+ "restore": [
+  {
+   "what": "Geladenes Modell",
+   "detail": null,
+   "ok": true
+  },
+  {
+   "what": "Gespräch im Modell behalten",
+   "detail": null,
+   "ok": true
+  },
+  {
+   "what": "Chat",
+   "detail": null,
+   "ok": true
+  },
+  {
+   "what": "Bühne",
+   "detail": null,
+   "ok": true
+  }
+ ],
+ "startedAtEpochMs": 1794086400000,
+ "configurations": [
+  {
+   "settings": {
+    "stage": "RESTING",
+    "dialogueReuse": false,
+    "model": "BASELINE",
+    "backend": "BASELINE"
+   },
+   "reason": null,
+   "modelLifecycle": [],
+   "model": {
+    "fileName": "gemma4-e4b-it.synthetic",
+    "bytes": 1,
+    "threads": 4,
+    "backend": "CPU",
+    "id": "gemma4-e4b-it"
+   },
+   "id": "A",
+   "label": "Basis: Bühne ruht beim Rechnen, Gemma 4 E4B, Gespräch nicht behalten",
+   "factor": null,
+   "status": "RUN"
+  },
+  {
+   "settings": {
+    "stage": "OFF",
+    "dialogueReuse": false,
+    "model": "BASELINE",
+    "backend": "BASELINE"
+   },
+   "reason": null,
+   "modelLifecycle": [],
+   "model": {
+    "fileName": "gemma4-e4b-it.synthetic",
+    "bytes": 1,
+    "threads": 4,
+    "backend": "CPU",
+    "id": "gemma4-e4b-it"
+   },
+   "id": "B",
+   "label": "Bühne aus (Seite unsichtbar)",
+   "factor": "STAGE_OFF",
+   "status": "RUN"
+  },
+  {
+   "settings": {
+    "stage": "FULL_EFFECTS",
+    "dialogueReuse": false,
+    "model": "BASELINE",
+    "backend": "BASELINE"
+   },
+   "reason": null,
+   "modelLifecycle": [],
+   "model": {
+    "fileName": "gemma4-e4b-it.synthetic",
+    "bytes": 1,
+    "threads": 4,
+    "backend": "CPU",
+    "id": "gemma4-e4b-it"
+   },
+   "id": "C",
+   "label": "Bühne mit voller Bewegung beim Rechnen (wie Code67)",
+   "factor": "STAGE_FULL_EFFECTS",
+   "status": "RUN"
+  },
+  {
+   "settings": {
+    "stage": "RESTING",
+    "dialogueReuse": true,
+    "model": "BASELINE",
+    "backend": "BASELINE"
+   },
+   "reason": null,
+   "modelLifecycle": [],
+   "model": {
+    "fileName": "gemma4-e4b-it.synthetic",
+    "bytes": 1,
+    "threads": 4,
+    "backend": "CPU",
+    "id": "gemma4-e4b-it"
+   },
+   "id": "D",
+   "label": "Gespräch im Modell behalten",
+   "factor": "DIALOGUE_REUSE",
+   "status": "RUN"
+  },
+  {
+   "settings": {
+    "stage": "RESTING",
+    "dialogueReuse": false,
+    "model": "GEMMA_E2B",
+    "backend": "BASELINE"
+   },
+   "reason": null,
+   "modelLifecycle": [
+    {
+     "ms": 200,
+     "failure": null,
+     "action": "UNLOAD",
+     "ok": true
+    },
+    {
+     "ms": 500,
+     "failure": null,
+     "action": "LOAD",
+     "ok": true
+    },
+    {
+     "ms": 200,
+     "failure": null,
+     "action": "UNLOAD",
+     "ok": true,
+     "restoresBaseline": true
+    },
+    {
+     "ms": 500,
+     "failure": null,
+     "action": "LOAD",
+     "ok": true,
+     "restoresBaseline": true
+    }
+   ],
+   "model": {
+    "fileName": "gemma4-e2b-it.synthetic",
+    "bytes": 1,
+    "threads": 4,
+    "backend": "CPU",
+    "id": "gemma4-e2b-it"
+   },
+   "id": "E",
+   "label": "Gemma 4 E2B statt E4B",
+   "factor": "MODEL_E2B",
+   "status": "RUN"
+  },
+  {
+   "settings": {
+    "stage": "RESTING",
+    "dialogueReuse": false,
+    "model": "BASELINE",
+    "backend": "GPU"
+   },
+   "reason": "Synthetisch: GPU wird nicht geschaltet.",
+   "modelLifecycle": [],
+   "model": null,
+   "id": "F",
+   "label": "GPU-Beschleuniger statt CPU",
+   "factor": "BACKEND_GPU",
+   "status": "NOT_RUN"
+  }
+ ],
+ "baselineStart": {
+  "batteryPercent": 80,
+  "headroom": 0.3,
+  "charging": false,
+  "tMs": 0,
+  "thermalStatus": 0,
+  "batteryTempC": 30,
+  "powerSave": false
+ },
+ "restoreComplete": true,
+ "syntheticNote": "SYNTHETISCHE TESTDATEN aus HeatSyntheticScenarios (Host-Test). Keine Messung, kein Gerät, keine typischen Werte.",
+ "input": {
+  "note": "Eingabe: identischer Text an der Sprachübergabe, kein Mikrofon",
+  "promptSetVersion": 1,
+  "promptSet": "continuum-heat-v1",
+  "kind": "TEXT_AT_SPEECH_HANDOVER",
+  "microphone": false
+ },
+ "synthetic": true,
+ "size": "KURZ",
+ "stop": null,
+ "complete": true,
+ "device": {
+  "dialogueReuseSwitch": false,
+  "appVersion": "synthetic",
+  "androidRelease": "0",
+  "stageProfile": "AUTO",
+  "speechOutput": false,
+  "model": "HOST-TEST-FIXTURE",
+  "androidSdk": 0,
+  "htmlStage": true,
+  "appVersionCode": 0,
+  "manufacturer": "SYNTHETIC"
+ },
+ "runs": [
+  {
+   "startCondition": {
+    "reason": null,
+    "batteryPercent": 80,
+    "headroom": 0.3,
+    "reached": true,
+    "charging": false,
+    "thermalStatus": 0,
+    "batteryTempC": 30,
+    "waitedMs": 20000,
+    "powerSave": false
+   },
+   "configuration": "A",
+   "index": 1,
+   "repetition": 1,
+   "prompt": "kurz",
+   "turns": [
+    {
+     "role": "ERSTFRAGE",
+     "runtimeFirstTokenMs": 1200,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 5000,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 4,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 5000,
+     "firstVisibleTextMs": 5000,
+     "totalMs": 5000,
+     "modelCalls": 1,
+     "turn": 1,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 5000,
+      "p99Ms": 17,
+      "framesPerSecond": 0.8,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 31.579,
+     "firstVisibleTextShown": true,
+     "textCharacters": 54,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 1,
+      "start": 0,
+      "changes": [{
+       "tMs": 2500,
+       "status": 1
+      }],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 5000,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 0,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 2000,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.34,
+       "tMs": 6000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.4
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1200,
+     "headroom": {
+      "max": 0.34,
+      "start": 0.3
+     },
+     "batteryTempC": {
+      "max": 30.4,
+      "start": 30,
+      "end": 30.4
+     }
+    },
+    {
+     "role": "FOLGEFRAGE",
+     "runtimeFirstTokenMs": 1200,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 5000,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 4,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 5000,
+     "firstVisibleTextMs": 5000,
+     "totalMs": 5000,
+     "modelCalls": 1,
+     "turn": 2,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 5000,
+      "p99Ms": 17,
+      "framesPerSecond": 0.8,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 31.579,
+     "firstVisibleTextShown": true,
+     "textCharacters": 68,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 1,
+      "start": 1,
+      "changes": [],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 5000,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.34,
+       "tMs": 0,
+       "thermalStatus": 1,
+       "batteryTempC": 30.4
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.34,
+       "tMs": 2000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.4
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.34,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.4
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.38,
+       "tMs": 6000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.8
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1200,
+     "headroom": {
+      "max": 0.38,
+      "start": 0.34
+     },
+     "batteryTempC": {
+      "max": 30.8,
+      "start": 30.4,
+      "end": 30.8
+     }
+    }
+   ]
+  },
+  {
+   "startCondition": {
+    "reason": null,
+    "batteryPercent": 80,
+    "headroom": 0.3,
+    "reached": true,
+    "charging": false,
+    "thermalStatus": 0,
+    "batteryTempC": 30,
+    "waitedMs": 30000,
+    "powerSave": false
+   },
+   "configuration": "B",
+   "index": 2,
+   "repetition": 1,
+   "prompt": "kurz",
+   "turns": [
+    {
+     "role": "ERSTFRAGE",
+     "runtimeFirstTokenMs": 1200,
+     "stageFrames": {
+      "intervalMaxMs": null,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "hidden",
+      "delivered": 0,
+      "intervalP99Ms": null,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 0,
+       "counts": [],
+       "maxMs": 0,
+       "bucketCount": 300,
+       "sumMs": 0,
+       "bucketMs": 0.5
+      },
+      "observedMs": 4800,
+      "displayTicks": 240,
+      "intervalP90Ms": null,
+      "intervalP50Ms": null,
+      "deliveredPerSecond": 0,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 4800,
+     "firstVisibleTextMs": 4800,
+     "totalMs": 4800,
+     "modelCalls": 1,
+     "turn": 1,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 4800,
+      "p99Ms": 17,
+      "framesPerSecond": 0.833,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 33.333,
+     "firstVisibleTextShown": false,
+     "textCharacters": 54,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 1,
+      "start": 0,
+      "changes": [{
+       "tMs": 2400,
+       "status": 1
+      }],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 4800,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 0,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 2000,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.33,
+       "tMs": 6000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.3
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1200,
+     "headroom": {
+      "max": 0.33,
+      "start": 0.3
+     },
+     "batteryTempC": {
+      "max": 30.3,
+      "start": 30,
+      "end": 30.3
+     }
+    },
+    {
+     "role": "FOLGEFRAGE",
+     "runtimeFirstTokenMs": 1200,
+     "stageFrames": {
+      "intervalMaxMs": null,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "hidden",
+      "delivered": 0,
+      "intervalP99Ms": null,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 0,
+       "counts": [],
+       "maxMs": 0,
+       "bucketCount": 300,
+       "sumMs": 0,
+       "bucketMs": 0.5
+      },
+      "observedMs": 4800,
+      "displayTicks": 240,
+      "intervalP90Ms": null,
+      "intervalP50Ms": null,
+      "deliveredPerSecond": 0,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 4800,
+     "firstVisibleTextMs": 4800,
+     "totalMs": 4800,
+     "modelCalls": 1,
+     "turn": 2,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 4800,
+      "p99Ms": 17,
+      "framesPerSecond": 0.833,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 33.333,
+     "firstVisibleTextShown": false,
+     "textCharacters": 68,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 1,
+      "start": 1,
+      "changes": [],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 4800,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.33,
+       "tMs": 0,
+       "thermalStatus": 1,
+       "batteryTempC": 30.3
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.33,
+       "tMs": 2000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.3
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.33,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.3
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.36,
+       "tMs": 6000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.6
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1200,
+     "headroom": {
+      "max": 0.36,
+      "start": 0.33
+     },
+     "batteryTempC": {
+      "max": 30.6,
+      "start": 30.3,
+      "end": 30.6
+     }
+    }
+   ]
+  },
+  {
+   "startCondition": {
+    "reason": null,
+    "batteryPercent": 80,
+    "headroom": 0.3,
+    "reached": true,
+    "charging": false,
+    "thermalStatus": 0,
+    "batteryTempC": 30,
+    "waitedMs": 30000,
+    "powerSave": false
+   },
+   "configuration": "C",
+   "index": 3,
+   "repetition": 1,
+   "prompt": "kurz",
+   "turns": [
+    {
+     "role": "ERSTFRAGE",
+     "runtimeFirstTokenMs": 1300,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 15,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 60,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 5600,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 10.714,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 5600,
+     "firstVisibleTextMs": 5600,
+     "totalMs": 5600,
+     "modelCalls": 1,
+     "turn": 1,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 17,
+      "p90Ms": 17.5,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         1
+        ],
+        [
+         18,
+         2
+        ],
+        [
+         34,
+         1
+        ]
+       ],
+       "maxMs": 17,
+       "bucketCount": 300,
+       "sumMs": 43.3,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 9.5,
+      "observedMs": 5600,
+      "p99Ms": 17.5,
+      "framesPerSecond": 0.714,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 27.907,
+     "firstVisibleTextShown": true,
+     "textCharacters": 54,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 2,
+      "start": 0,
+      "changes": [{
+       "tMs": 2800,
+       "status": 2
+      }],
+      "end": 2
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 5600,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 0,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 2000,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 4000,
+       "thermalStatus": 2,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.39,
+       "tMs": 6000,
+       "thermalStatus": 2,
+       "batteryTempC": 30.9
+      },
+      {
+       "phase": "AFTER_ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.39,
+       "tMs": 6750,
+       "thermalStatus": 2,
+       "batteryTempC": 30.9
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1300,
+     "headroom": {
+      "max": 0.39,
+      "start": 0.3
+     },
+     "batteryTempC": {
+      "max": 30.9,
+      "start": 30,
+      "end": 30.9
+     }
+    },
+    {
+     "role": "FOLGEFRAGE",
+     "runtimeFirstTokenMs": 1300,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 15,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 60,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 5600,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 10.714,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 5600,
+     "firstVisibleTextMs": 5600,
+     "totalMs": 5600,
+     "modelCalls": 1,
+     "turn": 2,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 17,
+      "p90Ms": 17.5,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         1
+        ],
+        [
+         18,
+         2
+        ],
+        [
+         34,
+         1
+        ]
+       ],
+       "maxMs": 17,
+       "bucketCount": 300,
+       "sumMs": 43.3,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 9.5,
+      "observedMs": 5600,
+      "p99Ms": 17.5,
+      "framesPerSecond": 0.714,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 27.907,
+     "firstVisibleTextShown": true,
+     "textCharacters": 68,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 2,
+      "start": 2,
+      "changes": [],
+      "end": 2
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 5600,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.39,
+       "tMs": 0,
+       "thermalStatus": 2,
+       "batteryTempC": 30.9
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.39,
+       "tMs": 2000,
+       "thermalStatus": 2,
+       "batteryTempC": 30.9
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.39,
+       "tMs": 4000,
+       "thermalStatus": 2,
+       "batteryTempC": 30.9
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.48,
+       "tMs": 6000,
+       "thermalStatus": 2,
+       "batteryTempC": 31.8
+      },
+      {
+       "phase": "AFTER_ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.48,
+       "tMs": 6750,
+       "thermalStatus": 2,
+       "batteryTempC": 31.8
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1300,
+     "headroom": {
+      "max": 0.48,
+      "start": 0.39
+     },
+     "batteryTempC": {
+      "max": 31.8,
+      "start": 30.9,
+      "end": 31.8
+     }
+    }
+   ]
+  },
+  {
+   "startCondition": {
+    "reason": null,
+    "batteryPercent": 80,
+    "headroom": 0.33,
+    "reached": true,
+    "charging": false,
+    "thermalStatus": 0,
+    "batteryTempC": 30.3,
+    "waitedMs": 30000,
+    "powerSave": false
+   },
+   "configuration": "D",
+   "index": 4,
+   "repetition": 1,
+   "prompt": "kurz",
+   "turns": [
+    {
+     "role": "ERSTFRAGE",
+     "runtimeFirstTokenMs": 1200,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 5000,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 4,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 5000,
+     "firstVisibleTextMs": 5000,
+     "totalMs": 5000,
+     "modelCalls": 1,
+     "turn": 1,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 5000,
+      "p99Ms": 17,
+      "framesPerSecond": 0.8,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 31.579,
+     "firstVisibleTextShown": true,
+     "textCharacters": 54,
+     "nativePreviewShown": null,
+     "dialogueReused": false,
+     "thermal": {
+      "max": 1,
+      "start": 0,
+      "changes": [{
+       "tMs": 2500,
+       "status": 1
+      }],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 5000,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": "SYNTHETIC_NOT_REUSED",
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.315,
+       "tMs": 0,
+       "thermalStatus": 0,
+       "batteryTempC": 30.15
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.315,
+       "tMs": 2000,
+       "thermalStatus": 0,
+       "batteryTempC": 30.15
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.315,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.15
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.355,
+       "tMs": 6000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.55
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 1200,
+     "headroom": {
+      "max": 0.355,
+      "start": 0.315
+     },
+     "batteryTempC": {
+      "max": 30.55,
+      "start": 30.15,
+      "end": 30.55
+     }
+    },
+    {
+     "role": "FOLGEFRAGE",
+     "runtimeFirstTokenMs": 300,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 2600,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 7.692,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 2600,
+     "firstVisibleTextMs": 2600,
+     "totalMs": 2600,
+     "modelCalls": 1,
+     "turn": 2,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 2600,
+      "p99Ms": 17,
+      "framesPerSecond": 1.538,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 52.174,
+     "firstVisibleTextShown": true,
+     "textCharacters": 68,
+     "nativePreviewShown": null,
+     "dialogueReused": true,
+     "thermal": {
+      "max": 1,
+      "start": 1,
+      "changes": [],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 2600,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.355,
+       "tMs": 0,
+       "thermalStatus": 1,
+       "batteryTempC": 30.55
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.355,
+       "tMs": 2000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.55
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.375,
+       "tMs": 3750,
+       "thermalStatus": 1,
+       "batteryTempC": 30.75
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 300,
+     "headroom": {
+      "max": 0.375,
+      "start": 0.355
+     },
+     "batteryTempC": {
+      "max": 30.75,
+      "start": 30.55,
+      "end": 30.75
+     }
+    }
+   ]
+  },
+  {
+   "startCondition": {
+    "reason": null,
+    "batteryPercent": 80,
+    "headroom": 0.3,
+    "reached": true,
+    "charging": false,
+    "thermalStatus": 0,
+    "batteryTempC": 30,
+    "waitedMs": 30000,
+    "powerSave": false
+   },
+   "configuration": "E",
+   "index": 5,
+   "repetition": 1,
+   "prompt": "kurz",
+   "turns": [
+    {
+     "role": "ERSTFRAGE",
+     "runtimeFirstTokenMs": 700,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 3000,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 6.667,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 3000,
+     "firstVisibleTextMs": 3000,
+     "totalMs": 3000,
+     "modelCalls": 1,
+     "turn": 1,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 3000,
+      "p99Ms": 17,
+      "framesPerSecond": 1.333,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 52.174,
+     "firstVisibleTextShown": true,
+     "textCharacters": 54,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 1,
+      "start": 0,
+      "changes": [{
+       "tMs": 1500,
+       "status": 1
+      }],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 3000,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 0,
+       "thermalStatus": 0,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.3,
+       "tMs": 2000,
+       "thermalStatus": 1,
+       "batteryTempC": 30
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.32,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.2
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 700,
+     "headroom": {
+      "max": 0.32,
+      "start": 0.3
+     },
+     "batteryTempC": {
+      "max": 30.2,
+      "start": 30,
+      "end": 30.2
+     }
+    },
+    {
+     "role": "FOLGEFRAGE",
+     "runtimeFirstTokenMs": 700,
+     "stageFrames": {
+      "intervalMaxMs": 200,
+      "frameLimit": 5,
+      "frameLimitChanges": [],
+      "pageVisibility": "visible",
+      "delivered": 20,
+      "intervalP99Ms": 200,
+      "pageObservedMs": null,
+      "histogram": {
+       "overflow": 19,
+       "counts": [],
+       "maxMs": 200,
+       "bucketCount": 300,
+       "sumMs": 3800,
+       "bucketMs": 0.5
+      },
+      "observedMs": 3000,
+      "displayTicks": 240,
+      "intervalP90Ms": 200,
+      "intervalP50Ms": 200,
+      "deliveredPerSecond": 6.667,
+      "perSecond": [],
+      "status": "MEASURED"
+     },
+     "answerHandoverMs": 3000,
+     "firstVisibleTextMs": 3000,
+     "totalMs": 3000,
+     "modelCalls": 1,
+     "turn": 2,
+     "speechOutputMs": null,
+     "windowFrames": {
+      "over2VsyncShare": 0,
+      "droppedReports": 0,
+      "frames": 4,
+      "maxMs": 16.9,
+      "p90Ms": 17,
+      "vsyncMs": 16.667,
+      "over2VsyncFrames": 0,
+      "histogram": {
+       "overflow": 0,
+       "counts": [
+        [
+         16,
+         2
+        ],
+        [
+         18,
+         1
+        ],
+        [
+         33,
+         1
+        ]
+       ],
+       "maxMs": 16.9,
+       "bucketCount": 300,
+       "sumMs": 42.5,
+       "bucketMs": 0.5
+      },
+      "p50Ms": 8.5,
+      "observedMs": 3000,
+      "p99Ms": 17,
+      "framesPerSecond": 1.333,
+      "perSecond": [4],
+      "status": "MEASURED"
+     },
+     "promptCharacters": 900,
+     "charsPerSecond": 52.174,
+     "firstVisibleTextShown": true,
+     "textCharacters": 68,
+     "nativePreviewShown": null,
+     "dialogueReused": null,
+     "thermal": {
+      "max": 1,
+      "start": 1,
+      "changes": [],
+      "end": 1
+     },
+     "answerCharacters": 120,
+     "outputTokens": null,
+     "outcome": "COMPLETE",
+     "firstVisibleTextEvent": "ANSWER_HANDED_TO_STAGE_PAGE",
+     "generatedCharacters": 120,
+     "runtimeTotalMs": 3000,
+     "toolFreeRoute": true,
+     "completions": ["COMPLETE"],
+     "inputTokens": null,
+     "dialogueReuseReason": null,
+     "message": null,
+     "samples": [
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.32,
+       "tMs": 0,
+       "thermalStatus": 1,
+       "batteryTempC": 30.2
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.32,
+       "tMs": 2000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.2
+      },
+      {
+       "phase": "ANSWER",
+       "batteryPercent": 80,
+       "headroom": 0.34,
+       "tMs": 4000,
+       "thermalStatus": 1,
+       "batteryTempC": 30.4
+      }
+     ],
+     "nativePreviewMs": null,
+     "firstTokenMs": 700,
+     "headroom": {
+      "max": 0.34,
+      "start": 0.32
+     },
+     "batteryTempC": {
+      "max": 30.4,
+      "start": 30.2,
+      "end": 30.4
+     }
+    }
+   ]
+  }
+ ],
+ "limits": {
+  "settleMs": 3000,
+  "turnTimeoutMs": 240000,
+  "cooldownMinMs": 20000,
+  "cooldownMaxMs": 180000,
+  "speechWaitMaxMs": 120000,
+  "sampleIntervalMs": 2000,
+  "batteryBandC": 1
+ },
+ "endedAtEpochMs": 1794086880000,
+ "order": [
+  "A:kurz:1",
+  "B:kurz:1",
+  "C:kurz:1",
+  "D:kurz:1",
+  "E:kurz:1",
+  "F:kurz:1"
+ ]
+}

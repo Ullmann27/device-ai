@@ -1,0 +1,32 @@
+{
+  "id": "continuum-heat-v1",
+  "version": 1,
+  "language": "de",
+  "note": "Feste Besitzeraufträge der Wärme- und Zeitmessung. Jeder Auftrag ist ein kurzes Gespräch aus Erstfrage und Folgefrage in einem neuen Chat. Die Texte werden unverändert an der Sprachübergabe eingespeist (kein Mikrofon). Sie sind so formuliert, dass die App sie als reine Textfrage ohne Werkzeugschemata an das Modell gibt (LocalTextOnlyInferenceRoute) und keine feste Antwortroute sie abfängt; beides prüft HeatMeasurementPlanTest. Änderungen nur mit neuer Version, sonst sind Berichte nicht mehr vergleichbar.",
+  "prompts": [
+    {
+      "id": "kurz",
+      "label": "kurze Antwort",
+      "turns": [
+        "Erkläre mir in zwei Sätzen, warum der Himmel blau ist.",
+        "Erkläre mir jetzt in einem Satz, warum der Himmel am Abend rot wird."
+      ]
+    },
+    {
+      "id": "mittel",
+      "label": "mittlere Antwort",
+      "turns": [
+        "Erkläre mir in fünf kurzen Punkten, wie ein Kühlschrank funktioniert.",
+        "Erkläre mir den dritten Punkt noch einmal mit einem Beispiel aus dem Alltag."
+      ]
+    },
+    {
+      "id": "lang",
+      "label": "lange Antwort",
+      "turns": [
+        "Erzähle mir eine Geschichte mit ungefähr zweihundert Wörtern über einen Leuchtturmwärter und seinen Hund.",
+        "Erzähle mir in drei Sätzen, wie die Geschichte am nächsten Morgen weitergeht."
+      ]
+    }
+  ]
+}
