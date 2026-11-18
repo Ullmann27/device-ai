@@ -22,127 +22,135 @@
 {"category": "tool_choice", "expect": {"open": "OPEN:Argon4"}, "id": "LIB-022", "input": "Ich möchte das PDF Argon4 lesen", "note": "Wunschform", "runner": "library_open"}
 {"category": "tool_choice", "expect": {"open": "OPEN:Argon4"}, "id": "LIB-023", "input": "Hol mir das PDF Argon4", "note": "holen", "runner": "library_open"}
 {"category": "tool_choice", "expect": {"open": "OPEN:Argon4"}, "id": "LIB-024", "input": "Öffne das P D F Argon4", "note": "Spracherkennung: buchstabiert", "runner": "library_open"}
-{"category": "tool_choice", "expect": {"open": "FIND:Argon4"}, "id": "LIB-025", "input": "Finde das PDF Argon4", "note": "nur suchen", "runner": "library_open"}
-{"category": "tool_choice", "expect": {"open": "FIND:Argon4"}, "id": "LIB-026", "input": "Such mir das PDF Argon4", "note": "nur suchen", "runner": "library_open"}
-{"category": "tool_choice", "expect": {"open": "FIND:Argon4"}, "id": "LIB-027", "input": "Such das PDF Argon4 heraus", "note": "heraussuchen", "runner": "library_open"}
-{"category": "tool_choice", "expect": {"open": "FIND:Argon4"}, "id": "LIB-028", "input": "Ich suche das PDF Argon4", "note": "Aussage", "runner": "library_open"}
-{"category": "tool_choice", "expect": {"folder": "Download", "open": "OPEN:Argon4"}, "id": "LIB-029", "input": "Such das PDF Argon4 im Download-Ordner und öffne es", "note": "Ordner und öffnen", "runner": "library_open"}
-{"category": "tool_choice", "expect": {"folder": "Documents", "open": "OPEN:Argon4"}, "id": "LIB-030", "input": "Öffne das PDF Argon4 aus meinen Dokumenten", "note": "Ordnerhinweis", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-031", "input": "Öffne eine PDF", "note": "ohne Namen: Android-Auswahl bleibt", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-032", "input": "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.", "note": "bisheriger Besitzerablauf", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-033", "input": "Suche mir eine PDF", "note": "Code55: Auswahl statt Websuche", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-034", "input": "Öffne das PDF Argon4 im Internet", "note": "Web-Formulierung", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-035", "input": "Öffne kein PDF", "note": "Verneinung", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-036", "input": "Öffne das PDF „Argon4“", "note": "Zitat", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-037", "input": "Öffne die ausgewählte PDF", "note": "Rückbezug", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-038", "input": "Öffne das zweite PDF", "note": "Bezugsverwaltung", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-039", "input": "Öffne das andere PDF", "note": "Bezugsverwaltung", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-040", "input": "Öffne das PDF nochmal", "note": "kein Name", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-041", "input": "Öffne das PDF bitte", "note": "kein Name", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-042", "input": "Such ein PDF über Quantenphysik", "note": "Thema, kein Dateiname", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-043", "input": "Öffne das PDF von gestern", "note": "Zeitbezug, kein Name", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-044", "input": "Öffne das PDF Argon4 und fass es zusammen", "note": "zweiter Auftrag im Satz", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-045", "input": "Drucke das PDF Argon4", "note": "anderes Verb", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-046", "input": "Öffne das PDF: Argon4", "note": "Doppelpunkt", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-047", "input": "Wie öffne ich ein PDF?", "note": "Frage", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-048", "input": "Öffne das Gedächtniszentrum", "note": "interne Navigation", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-049", "input": "Öffne die neueste PDF in Downloads", "note": "Aufgabenkette", "runner": "library_open"}
-{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-050", "input": "Mach das PDF Argon4", "note": "unvollständig", "runner": "library_open"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Argon4.pdf"}, "files": ["Argon4.pdf"], "id": "LIB-051", "note": "genauer Name", "query": "Argon4", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:ARGON4.PDF"}, "files": ["ARGON4.PDF"], "id": "LIB-052", "note": "Großschreibung", "query": "Argon4", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Argon_4.pdf"}, "files": ["Argon_4.pdf"], "id": "LIB-053", "note": "Unterstrich", "query": "Argon 4", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Argon 4.pdf"}, "files": ["Argon 4.pdf"], "id": "LIB-054", "note": "Zahlwort", "query": "Argon vier", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Argon4 (1).pdf"}, "files": ["Argon4 (1).pdf", "Notiz.pdf"], "id": "LIB-055", "note": "Kopie als einziger Treffer", "query": "argon4", "runner": "library_match"}
-{"category": "ambiguity", "expect": {"decision": "ASK:2"}, "files": ["Argon4.pdf", "Argon 4.pdf"], "id": "LIB-056", "note": "zwei gleichnamige", "query": "Argon4", "runner": "library_match"}
-{"category": "ambiguity", "expect": {"decision": "ASK:2", "first": "Argon4 Datenblatt.pdf"}, "files": ["Messung Argon4.pdf", "Argon4 Datenblatt.pdf", "Xenon.pdf"], "id": "LIB-057", "note": "Anfang vor Namensteil", "query": "Argon4", "runner": "library_match"}
-{"category": "ambiguity", "expect": {"decision": "NEAR:Argon4.pdf"}, "files": ["Argon4.pdf", "Orgel.pdf"], "id": "LIB-058", "note": "Beinahe-Treffer", "query": "Organ4", "runner": "library_match"}
-{"category": "ambiguity", "expect": {"decision": "NEAR:Argon4.pdf"}, "files": ["Argon4.pdf"], "id": "LIB-059", "note": "eine Ziffer daneben", "query": "Argon5", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "NONE"}, "files": [], "id": "LIB-060", "note": "kein PDF auf dem Gerät", "query": "Argon4", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Rechnung.pdf"}, "files": ["Rechnung November.pdf", "Rechnung Oktober.pdf", "Rechnung.pdf"], "id": "LIB-061", "note": "genauer Name gewinnt", "query": "Rechnung", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Uebersicht.pdf"}, "files": ["Uebersicht.pdf"], "id": "LIB-062", "note": "Umlaut", "query": "Übersicht", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Übersicht.pdf"}, "files": ["Übersicht.pdf"], "id": "LIB-063", "note": "Umlaut umgekehrt", "query": "Uebersicht", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Argon4 Datenblatt.pdf"}, "files": ["Argon4 Datenblatt.pdf"], "id": "LIB-064", "note": "Wortreihenfolge", "query": "Datenblatt Argon4", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Argon4.pdf"}, "files": ["Download/Argon4.pdf", "Documents/Argon4.pdf"], "folder": "Download", "id": "LIB-065", "note": "Ordnerhinweis entscheidet", "query": "Argon4", "runner": "library_match"}
-{"category": "ambiguity", "expect": {"decision": "ASK:2"}, "files": ["Mietvertrag_2024.pdf", "Mietvertrag_2023.pdf"], "id": "LIB-066", "note": "zwei Jahrgänge", "query": "Mietvertrag", "runner": "library_match"}
-{"category": "tool_choice", "expect": {"decision": "OPEN:Protokoll 5.pdf"}, "files": ["Protokoll 5.pdf"], "id": "LIB-067", "note": "Zahlwort mit Umlaut", "query": "Protokoll fünf", "runner": "library_match"}
-{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-068", "input": "die zweite", "note": "Besitzerbeispiel", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-069", "input": "Nummer 2", "note": "Besitzerbeispiel", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-070", "input": "2", "note": "Besitzerbeispiel", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:1"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-071", "input": "die erste Datei", "note": "mit Substantiv", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:3"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-072", "input": "das letzte", "note": "letzter Listeneintrag", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:3"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-073", "input": "die neueste", "note": "Besitzerbeispiel", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-074", "input": "die älteste", "note": "nach Datum", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:1"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-075", "input": "Datenblatt", "note": "Namensteil", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:1"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-076", "input": "nimm das Datenblatt", "note": "mit Verb", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-077", "input": "ich meine das zweite", "note": "ich meine", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:3"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-078", "input": "öffne das dritte", "note": "mit Verb", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-079", "input": "zwei", "note": "Zahlwort", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "NONE"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-080", "input": "Argon4", "note": "trifft alle: Frage bleibt offen", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "DROP"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-081", "input": "abbrechen", "note": "verwerfen", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "INVALID"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-082", "input": "die siebte", "note": "gibt es nicht", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "NONE"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-083", "input": "ja", "note": "keine Auswahl", "runner": "library_choice"}
-{"category": "ambiguity", "expect": {"choice": "NONE"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-084", "input": "Was steht in der zweiten?", "note": "Frage, keine Auswahl", "runner": "library_choice"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-085", "input": "Fass Seite 2 zusammen und speichere es als Word", "note": "Besitzerauftrag 18.11.2026", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-086", "input": "Fasse die zweite Seite zusammen und speichere sie als Word-Datei", "note": "Besitzerbeispiel", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:2:PDF"}, "id": "LIB-087", "input": "Fass Seite 2 zusammen und speichere es als PDF", "note": "Besitzerbeispiel", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-088", "input": "Fass Seite 2 zusammen und speichere es in meinen Downloads als Word", "note": "Besitzerbeispiel", "runner": "page_job"}
-{"category": "multi_step", "expect": {"name": "Argon Kurzfassung", "page_job": "PAGE:2:DOCX"}, "id": "LIB-089", "input": "Fass Seite 2 zusammen und speicher das als Word unter dem Namen Argon Kurzfassung", "note": "Besitzerbeispiel", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-090", "input": "Fass Seite zwei zusammen und speichere es als Word", "note": "Zahlwort", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-091", "input": "Jarvis, fass Seite 2 zusammen und speichere es als Word.", "note": "Anrede", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:3:DOCX"}, "id": "LIB-092", "input": "Fass bitte Seite 3 des PDFs zusammen und speichere die Zusammenfassung als Word-Datei", "note": "mit Dokumentbezug", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-093", "input": "Speichere eine Zusammenfassung von Seite 2 als Word", "note": "umgestellt", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:1:PDF"}, "id": "LIB-094", "input": "Fass Seite 1 zusammen und speichere sie als PDF im Download-Ordner", "note": "Ordner am Ende", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "PAGE:2:ASK_FORMAT"}, "id": "LIB-095", "input": "Fass Seite 2 zusammen und speichere es", "note": "Format fehlt: nachfragen", "runner": "page_job"}
-{"category": "multi_step", "expect": {"page_job": "UNSUPPORTED"}, "id": "LIB-096", "input": "Fass Seite 2 und Seite 3 zusammen und speichere es als Word", "note": "zwei Seiten", "runner": "page_job"}
-{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-097", "input": "Was steht auf Seite 2?", "note": "Frage", "runner": "page_job"}
-{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-098", "input": "Speichere das als PDF", "note": "Export des letzten Ergebnisses", "runner": "page_job"}
-{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-099", "input": "Fass mir die Nachrichten von heute zusammen", "note": "Nachrichtenauftrag", "runner": "page_job"}
-{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-100", "input": "Fass Seite 2 zusammen und speichere es als Word und schick es an Anna", "note": "Senden im selben Satz", "runner": "page_job"}
-{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-101", "input": "Fass Seite 2 zusammen und lösche die Datei", "note": "ändernder Befehl", "runner": "page_job"}
-{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-102", "input": "Schau auf Seite 2", "note": "Seitenfokus", "runner": "page_job"}
-{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-103", "input": "Fass das zusammen und speichere es als Word", "note": "ohne Seite: Export", "runner": "page_job"}
-{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-104", "input": "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.", "note": "bisheriger Besitzerablauf", "runner": "page_job"}
-{"category": "correction", "expect": {"correction": "PAGE:3"}, "id": "LIB-105", "input": "Nein, Seite 3", "note": "Besitzerbeispiel", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "PAGE:3"}, "id": "LIB-106", "input": "Nicht Seite 2, sondern Seite 3", "note": "Besitzerbeispiel", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "PAGE:3"}, "id": "LIB-107", "input": "Nein, ich meinte Seite 3", "note": "beides", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "PAGE:LAST"}, "id": "LIB-108", "input": "Ich meinte die letzte Seite", "note": "letzte", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "PAGE:3"}, "id": "LIB-109", "input": "Seite 3 statt Seite 2", "note": "statt", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "PAGE:4"}, "id": "LIB-110", "input": "Doch lieber Seite 4", "note": "doch lieber", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "FORMAT:DOCX"}, "id": "LIB-111", "input": "Nein, als Word", "note": "Format", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "FORMAT:PDF"}, "id": "LIB-112", "input": "Nicht als Word, sondern als PDF", "note": "nicht … sondern", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "OTHER_FILE"}, "id": "LIB-113", "input": "Nein, die andere", "note": "kurz", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "OTHER_FILE"}, "id": "LIB-114", "input": "Ich meinte das andere PDF", "note": "PDF", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "PICK:2"}, "id": "LIB-115", "input": "Ich meinte die zweite", "note": "Besitzerbeispiel", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NAMED_PDF:Xenon5"}, "id": "LIB-116", "input": "Ich meinte das PDF Xenon5", "note": "anderes PDF: neue Suche möglich", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NAME:Argon4 Datenblatt"}, "id": "LIB-117", "input": "Argon4 Datenblatt meinte ich", "note": "nachgestellt", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-118", "input": "Seite 3 bitte", "note": "ohne Korrekturwort", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-119", "input": "Speichere das als PDF", "note": "eigener Auftrag", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-120", "input": "Nein danke", "note": "Ablehnung", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-121", "input": "Nein", "note": "nur nein", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-122", "input": "Ich meinte das nicht so", "note": "ohne Ziel", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-123", "input": "Was meinst du mit Seite 3?", "note": "Frage", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-124", "input": "Nein, das stimmt nicht", "note": "Widerspruch ohne Ziel", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-125", "input": "Zeig mir Seite 3", "note": "eigener Auftrag", "runner": "desk_correction"}
-{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-126", "input": "Nein, ich meinte den letzten Entwurf", "note": "gehört der bestehenden Korrektur des Arbeitsverlaufs", "runner": "desk_correction"}
-{"category": "interruption", "expect": {"stop": true}, "id": "LIB-127", "input": "Stop", "note": "Schreibweise", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": true}, "id": "LIB-128", "input": "Halt", "note": "Besitzerbeispiel", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": true}, "id": "LIB-129", "input": "Abbrechen", "note": "Besitzerbeispiel", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": true}, "id": "LIB-130", "input": "Stopp!", "note": "Satzzeichen", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": true}, "id": "LIB-131", "input": "Jarvis, stopp", "note": "Anrede", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": true}, "id": "LIB-132", "input": "bitte abbrechen", "note": "höflich", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": true}, "id": "LIB-133", "input": "hör auf", "note": "umgangssprachlich", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": true}, "id": "LIB-134", "input": "Stopp bitte", "note": "höflich", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": false}, "id": "LIB-135", "input": "Stopp, das meine ich nicht", "note": "bestehende Arbeitsunterbrechung", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": false}, "id": "LIB-136", "input": "Halt die Datei bereit", "note": "anderes Verb", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": false}, "id": "LIB-137", "input": "Abbrechen kann ich das nicht", "note": "Aussage", "runner": "desk_stop"}
-{"category": "interruption", "expect": {"stop": false}, "id": "LIB-138", "input": "Weiter", "note": "Gegenteil", "runner": "desk_stop"}
-{"category": "tool_choice", "expect": {"route": "DESK_OPEN"}, "id": "LIB-139", "input": "Öffne das PDF Argon4", "note": "neu: lokale Suche", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "DESK_PAGE"}, "id": "LIB-140", "input": "Fass Seite 2 zusammen und speichere es als Word", "note": "neu: Seitenauftrag", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "PICKER"}, "id": "LIB-141", "input": "Öffne eine PDF", "note": "unverändert", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "PICKER"}, "id": "LIB-142", "input": "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.", "note": "unverändert", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "PICKER"}, "id": "LIB-143", "input": "Suche mir eine PDF", "note": "unverändert", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "EXPORT"}, "id": "LIB-144", "input": "Speichere das als Word", "note": "unverändert", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "NEWS"}, "id": "LIB-145", "input": "Fass mir die Nachrichten von heute zusammen", "note": "unverändert", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "CHAIN"}, "id": "LIB-146", "input": "Such die Datei Mietvertrag und sag mir wo sie liegt", "note": "unverändert", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "CHAIN"}, "id": "LIB-147", "input": "Such die neueste PDF in Downloads und sag mir, wie groß sie ist", "note": "unverändert", "runner": "library_route"}
-{"category": "tool_choice", "expect": {"route": "MAIL"}, "id": "LIB-148", "input": "Schick das per Mail an anna.muster@example.org", "note": "unverändert", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"open": "OPEN:Argon4"}, "id": "LIB-025", "input": "Öffnet das PDF Argon4", "note": "Spracherkennung: öffnet statt öffne", "runner": "library_open"}
+{"category": "tool_choice", "expect": {"open": "FIND:Argon4"}, "id": "LIB-026", "input": "Finde das PDF Argon4", "note": "nur suchen", "runner": "library_open"}
+{"category": "tool_choice", "expect": {"open": "FIND:Argon4"}, "id": "LIB-027", "input": "Such mir das PDF Argon4", "note": "nur suchen", "runner": "library_open"}
+{"category": "tool_choice", "expect": {"open": "FIND:Argon4"}, "id": "LIB-028", "input": "Such das PDF Argon4 heraus", "note": "heraussuchen", "runner": "library_open"}
+{"category": "tool_choice", "expect": {"open": "FIND:Argon4"}, "id": "LIB-029", "input": "Ich suche das PDF Argon4", "note": "Aussage", "runner": "library_open"}
+{"category": "tool_choice", "expect": {"folder": "Download", "open": "OPEN:Argon4"}, "id": "LIB-030", "input": "Such das PDF Argon4 im Download-Ordner und öffne es", "note": "Ordner und öffnen", "runner": "library_open"}
+{"category": "tool_choice", "expect": {"folder": "Documents", "open": "OPEN:Argon4"}, "id": "LIB-031", "input": "Öffne das PDF Argon4 aus meinen Dokumenten", "note": "Ordnerhinweis", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-032", "input": "Öffne eine PDF", "note": "ohne Namen: Android-Auswahl bleibt", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-033", "input": "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.", "note": "bisheriger Besitzerablauf", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-034", "input": "Suche mir eine PDF", "note": "Code55: Auswahl statt Websuche", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-035", "input": "Öffne das PDF Argon4 im Internet", "note": "Web-Formulierung", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-036", "input": "Öffne kein PDF", "note": "Verneinung", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-037", "input": "Öffne das PDF „Argon4“", "note": "Zitat", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-038", "input": "Öffne die ausgewählte PDF", "note": "Rückbezug", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-039", "input": "Öffne das zweite PDF", "note": "Bezugsverwaltung", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-040", "input": "Öffne das andere PDF", "note": "Bezugsverwaltung", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-041", "input": "Öffne das PDF nochmal", "note": "kein Name", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-042", "input": "Öffne das PDF bitte", "note": "kein Name", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-043", "input": "Such ein PDF über Quantenphysik", "note": "Thema, kein Dateiname", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-044", "input": "Öffne das PDF von gestern", "note": "Zeitbezug, kein Name", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-045", "input": "Öffne das PDF Argon4 und fass es zusammen", "note": "zweiter Auftrag im Satz", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-046", "input": "Drucke das PDF Argon4", "note": "anderes Verb", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-047", "input": "Öffne das PDF: Argon4", "note": "Doppelpunkt", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-048", "input": "Wie öffne ich ein PDF?", "note": "Frage", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-049", "input": "Öffne das Gedächtniszentrum", "note": "interne Navigation", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-050", "input": "Öffne die neueste PDF in Downloads", "note": "Aufgabenkette", "runner": "library_open"}
+{"category": "negation", "expect": {"open": "NONE"}, "id": "LIB-051", "input": "Mach das PDF Argon4", "note": "unvollständig", "runner": "library_open"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Argon4.pdf"}, "files": ["Argon4.pdf"], "id": "LIB-052", "note": "genauer Name", "query": "Argon4", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:ARGON4.PDF"}, "files": ["ARGON4.PDF"], "id": "LIB-053", "note": "Großschreibung", "query": "Argon4", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Argon_4.pdf"}, "files": ["Argon_4.pdf"], "id": "LIB-054", "note": "Unterstrich", "query": "Argon 4", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Argon 4.pdf"}, "files": ["Argon 4.pdf"], "id": "LIB-055", "note": "Zahlwort", "query": "Argon vier", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Argon4 (1).pdf"}, "files": ["Argon4 (1).pdf", "Notiz.pdf"], "id": "LIB-056", "note": "Kopie als einziger Treffer", "query": "argon4", "runner": "library_match"}
+{"category": "ambiguity", "expect": {"decision": "ASK:2"}, "files": ["Argon4.pdf", "Argon 4.pdf"], "id": "LIB-057", "note": "zwei gleichnamige", "query": "Argon4", "runner": "library_match"}
+{"category": "ambiguity", "expect": {"decision": "ASK:2", "first": "Argon4 Datenblatt.pdf"}, "files": ["Messung Argon4.pdf", "Argon4 Datenblatt.pdf", "Xenon.pdf"], "id": "LIB-058", "note": "Anfang vor Namensteil", "query": "Argon4", "runner": "library_match"}
+{"category": "ambiguity", "expect": {"decision": "NEAR:Argon4.pdf"}, "files": ["Argon4.pdf", "Orgel.pdf"], "id": "LIB-059", "note": "Beinahe-Treffer", "query": "Organ4", "runner": "library_match"}
+{"category": "ambiguity", "expect": {"decision": "NEAR:Argon4.pdf"}, "files": ["Argon4.pdf"], "id": "LIB-060", "note": "eine Ziffer daneben", "query": "Argon5", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "NONE"}, "files": [], "id": "LIB-061", "note": "kein PDF auf dem Gerät", "query": "Argon4", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Rechnung.pdf"}, "files": ["Rechnung November.pdf", "Rechnung Oktober.pdf", "Rechnung.pdf"], "id": "LIB-062", "note": "genauer Name gewinnt", "query": "Rechnung", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Uebersicht.pdf"}, "files": ["Uebersicht.pdf"], "id": "LIB-063", "note": "Umlaut", "query": "Übersicht", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Übersicht.pdf"}, "files": ["Übersicht.pdf"], "id": "LIB-064", "note": "Umlaut umgekehrt", "query": "Uebersicht", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Argon4 Datenblatt.pdf"}, "files": ["Argon4 Datenblatt.pdf"], "id": "LIB-065", "note": "Wortreihenfolge", "query": "Datenblatt Argon4", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Argon4.pdf"}, "files": ["Download/Argon4.pdf", "Documents/Argon4.pdf"], "folder": "Download", "id": "LIB-066", "note": "Ordnerhinweis entscheidet", "query": "Argon4", "runner": "library_match"}
+{"category": "ambiguity", "expect": {"decision": "ASK:2"}, "files": ["Mietvertrag_2024.pdf", "Mietvertrag_2023.pdf"], "id": "LIB-067", "note": "zwei Jahrgänge", "query": "Mietvertrag", "runner": "library_match"}
+{"category": "tool_choice", "expect": {"decision": "OPEN:Protokoll 5.pdf"}, "files": ["Protokoll 5.pdf"], "id": "LIB-068", "note": "Zahlwort mit Umlaut", "query": "Protokoll fünf", "runner": "library_match"}
+{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-069", "input": "die zweite", "note": "Besitzerbeispiel", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-070", "input": "Nummer 2", "note": "Besitzerbeispiel", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-071", "input": "2", "note": "Besitzerbeispiel", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:1"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-072", "input": "die erste Datei", "note": "mit Substantiv", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:3"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-073", "input": "das letzte", "note": "letzter Listeneintrag", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:3"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-074", "input": "die neueste", "note": "Besitzerbeispiel", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-075", "input": "die älteste", "note": "nach Datum", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:1"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-076", "input": "Datenblatt", "note": "Namensteil", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:1"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-077", "input": "nimm das Datenblatt", "note": "mit Verb", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-078", "input": "ich meine das zweite", "note": "ich meine", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:3"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-079", "input": "öffne das dritte", "note": "mit Verb", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "PICK:2"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-080", "input": "zwei", "note": "Zahlwort", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "NONE"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-081", "input": "Argon4", "note": "trifft alle: Frage bleibt offen", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "DROP"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-082", "input": "abbrechen", "note": "verwerfen", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "INVALID"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-083", "input": "die siebte", "note": "gibt es nicht", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "NONE"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-084", "input": "ja", "note": "keine Auswahl", "runner": "library_choice"}
+{"category": "ambiguity", "expect": {"choice": "NONE"}, "hits": ["Argon4 Datenblatt.pdf|Download|2026-11-17", "Argon4 Messprotokoll.pdf|Documents/Labor|2026-10-02", "Argon4 Angebot.pdf|Download|2026-11-18"], "id": "LIB-085", "input": "Was steht in der zweiten?", "note": "Frage, keine Auswahl", "runner": "library_choice"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-086", "input": "Fass Seite 2 zusammen und speichere es als Word", "note": "Besitzerauftrag 18.11.2026", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-087", "input": "Fasse die zweite Seite zusammen und speichere sie als Word-Datei", "note": "Besitzerbeispiel", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:PDF"}, "id": "LIB-088", "input": "Fass Seite 2 zusammen und speichere es als PDF", "note": "Besitzerbeispiel", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-089", "input": "Fass Seite 2 zusammen und speichere es in meinen Downloads als Word", "note": "Besitzerbeispiel", "runner": "page_job"}
+{"category": "multi_step", "expect": {"name": "Argon Kurzfassung", "page_job": "PAGE:2:DOCX"}, "id": "LIB-090", "input": "Fass Seite 2 zusammen und speicher das als Word unter dem Namen Argon Kurzfassung", "note": "Besitzerbeispiel", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-091", "input": "Fass Seite zwei zusammen und speichere es als Word", "note": "Zahlwort", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-092", "input": "Fass Seite 2 zusammen und speichere es als Wort", "note": "Spracherkennung: Wort statt Word", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-093", "input": "Fasst Seite 2 zusammen und speichere es als Word", "note": "Spracherkennung: Fasst statt Fass", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-094", "input": "fast seite 2 zusammen und speicher es als wort-datei", "note": "Spracherkennung: fast / Wort-Datei", "runner": "page_job"}
+{"category": "multi_step", "expect": {"name": "Mein erstes Wort", "page_job": "PAGE:2:DOCX"}, "id": "LIB-095", "input": "Fass Seite 2 zusammen und speichere es als Word unter dem Namen Mein erstes Wort", "note": "der Dateiname wird nicht repariert", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-096", "input": "Jarvis, fass Seite 2 zusammen und speichere es als Word.", "note": "Anrede", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:3:DOCX"}, "id": "LIB-097", "input": "Fass bitte Seite 3 des PDFs zusammen und speichere die Zusammenfassung als Word-Datei", "note": "mit Dokumentbezug", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:DOCX"}, "id": "LIB-098", "input": "Speichere eine Zusammenfassung von Seite 2 als Word", "note": "umgestellt", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:1:PDF"}, "id": "LIB-099", "input": "Fass Seite 1 zusammen und speichere sie als PDF im Download-Ordner", "note": "Ordner am Ende", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "PAGE:2:ASK_FORMAT"}, "id": "LIB-100", "input": "Fass Seite 2 zusammen und speichere es", "note": "Format fehlt: nachfragen", "runner": "page_job"}
+{"category": "multi_step", "expect": {"page_job": "UNSUPPORTED"}, "id": "LIB-101", "input": "Fass Seite 2 und Seite 3 zusammen und speichere es als Word", "note": "zwei Seiten", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-102", "input": "Was steht auf Seite 2?", "note": "Frage", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-103", "input": "Speichere das als PDF", "note": "Export des letzten Ergebnisses", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-104", "input": "Fass mir die Nachrichten von heute zusammen", "note": "Nachrichtenauftrag", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-105", "input": "Fass Seite 2 zusammen und speichere es als Word und schick es an Anna", "note": "Senden im selben Satz", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-106", "input": "Fass Seite 2 zusammen und lösche die Datei", "note": "ändernder Befehl", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-107", "input": "Fass Seite 2 in einem Wort zusammen", "note": "kein Speicherauftrag", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-108", "input": "Fast alle Seiten sind leer", "note": "Aussage", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-109", "input": "Schau auf Seite 2", "note": "Seitenfokus", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-110", "input": "Fass das zusammen und speichere es als Word", "note": "ohne Seite: Export", "runner": "page_job"}
+{"category": "negation", "expect": {"page_job": "NONE"}, "id": "LIB-111", "input": "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.", "note": "bisheriger Besitzerablauf", "runner": "page_job"}
+{"category": "correction", "expect": {"correction": "PAGE:3"}, "id": "LIB-112", "input": "Nein, Seite 3", "note": "Besitzerbeispiel", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "PAGE:3"}, "id": "LIB-113", "input": "Nicht Seite 2, sondern Seite 3", "note": "Besitzerbeispiel", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "PAGE:3"}, "id": "LIB-114", "input": "Nein, ich meinte Seite 3", "note": "beides", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "PAGE:LAST"}, "id": "LIB-115", "input": "Ich meinte die letzte Seite", "note": "letzte", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "PAGE:3"}, "id": "LIB-116", "input": "Seite 3 statt Seite 2", "note": "statt", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "PAGE:4"}, "id": "LIB-117", "input": "Doch lieber Seite 4", "note": "doch lieber", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "FORMAT:DOCX"}, "id": "LIB-118", "input": "Nein, als Word", "note": "Format", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "FORMAT:DOCX"}, "id": "LIB-119", "input": "Ich meinte als Wort", "note": "Spracherkennung: Wort statt Word", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "FORMAT:PDF"}, "id": "LIB-120", "input": "Nicht als Word, sondern als PDF", "note": "nicht … sondern", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "OTHER_FILE"}, "id": "LIB-121", "input": "Nein, die andere", "note": "kurz", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "OTHER_FILE"}, "id": "LIB-122", "input": "Ich meinte das andere PDF", "note": "PDF", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "PICK:2"}, "id": "LIB-123", "input": "Ich meinte die zweite", "note": "Besitzerbeispiel", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NAMED_PDF:Xenon5"}, "id": "LIB-124", "input": "Ich meinte das PDF Xenon5", "note": "anderes PDF: neue Suche möglich", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NAME:Argon4 Datenblatt"}, "id": "LIB-125", "input": "Argon4 Datenblatt meinte ich", "note": "nachgestellt", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-126", "input": "Seite 3 bitte", "note": "ohne Korrekturwort", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-127", "input": "Speichere das als PDF", "note": "eigener Auftrag", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-128", "input": "Nein danke", "note": "Ablehnung", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-129", "input": "Nein", "note": "nur nein", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-130", "input": "Ich meinte das nicht so", "note": "ohne Ziel", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-131", "input": "Was meinst du mit Seite 3?", "note": "Frage", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-132", "input": "Nein, das stimmt nicht", "note": "Widerspruch ohne Ziel", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-133", "input": "Zeig mir Seite 3", "note": "eigener Auftrag", "runner": "desk_correction"}
+{"category": "correction", "expect": {"correction": "NONE"}, "id": "LIB-134", "input": "Nein, ich meinte den letzten Entwurf", "note": "gehört der bestehenden Korrektur des Arbeitsverlaufs", "runner": "desk_correction"}
+{"category": "interruption", "expect": {"stop": true}, "id": "LIB-135", "input": "Stop", "note": "Schreibweise", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": true}, "id": "LIB-136", "input": "Halt", "note": "Besitzerbeispiel", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": true}, "id": "LIB-137", "input": "Abbrechen", "note": "Besitzerbeispiel", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": true}, "id": "LIB-138", "input": "Stopp!", "note": "Satzzeichen", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": true}, "id": "LIB-139", "input": "Jarvis, stopp", "note": "Anrede", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": true}, "id": "LIB-140", "input": "bitte abbrechen", "note": "höflich", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": true}, "id": "LIB-141", "input": "hör auf", "note": "umgangssprachlich", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": true}, "id": "LIB-142", "input": "Stopp bitte", "note": "höflich", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": false}, "id": "LIB-143", "input": "Stopp, das meine ich nicht", "note": "bestehende Arbeitsunterbrechung", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": false}, "id": "LIB-144", "input": "Halt die Datei bereit", "note": "anderes Verb", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": false}, "id": "LIB-145", "input": "Abbrechen kann ich das nicht", "note": "Aussage", "runner": "desk_stop"}
+{"category": "interruption", "expect": {"stop": false}, "id": "LIB-146", "input": "Weiter", "note": "Gegenteil", "runner": "desk_stop"}
+{"category": "tool_choice", "expect": {"route": "DESK_OPEN"}, "id": "LIB-147", "input": "Öffne das PDF Argon4", "note": "neu: lokale Suche", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "DESK_PAGE"}, "id": "LIB-148", "input": "Fass Seite 2 zusammen und speichere es als Word", "note": "neu: Seitenauftrag", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "PICKER"}, "id": "LIB-149", "input": "Öffne eine PDF", "note": "unverändert", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "PICKER"}, "id": "LIB-150", "input": "Lies diese PDF und erstelle mir eine Zusammenfassung als Entwurf.", "note": "unverändert", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "PICKER"}, "id": "LIB-151", "input": "Suche mir eine PDF", "note": "unverändert", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "EXPORT"}, "id": "LIB-152", "input": "Speichere das als Word", "note": "unverändert", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "NEWS"}, "id": "LIB-153", "input": "Fass mir die Nachrichten von heute zusammen", "note": "unverändert", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "CHAIN"}, "id": "LIB-154", "input": "Such die Datei Mietvertrag und sag mir wo sie liegt", "note": "unverändert", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "CHAIN"}, "id": "LIB-155", "input": "Such die neueste PDF in Downloads und sag mir, wie groß sie ist", "note": "unverändert", "runner": "library_route"}
+{"category": "tool_choice", "expect": {"route": "MAIL"}, "id": "LIB-156", "input": "Schick das per Mail an anna.muster@example.org", "note": "unverändert", "runner": "library_route"}

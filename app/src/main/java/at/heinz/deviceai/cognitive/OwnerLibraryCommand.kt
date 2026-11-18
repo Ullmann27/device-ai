@@ -26,7 +26,7 @@ internal object OwnerLibraryCommand {
     private const val PDF = "(?:pdf|p\\s?d\\s?f)(?:[- ]?(?:datei|dokument|file))?"
     private const val DET = "(?:(das|die|den|dem|mein|meine|meinen|meinem|unser|unsere|ein|eine|einen)\\s+)?"
     private const val NAMED = "((?:namens|mit\\s+dem\\s+namen|mit\\s+namen|genannt)\\s+)?"
-    private const val VERBS = "öffne|öffnen|zeig|zeige|lies|lese|mach|mache|such|suche|suchen|finde|find|hol|hole"
+    private const val VERBS = "öffne|öffnen|öffnet|zeig|zeige|lies|lese|mach|mache|such|suche|suchen|finde|find|hol|hole"
     private const val PARTICLE = "(?:\\s+(an|auf|vor|heraus|raus))?"
 
     private val quote = Regex("[\"„“”«»]")
@@ -68,7 +68,7 @@ internal object OwnerLibraryCommand {
     private val generic = setOf("bitte", "mal", "kurz", "eben", "jetzt", "hier", "nochmal", "noch", "einmal", "erneut",
         "wieder", "mir", "uns", "vor", "an", "auf", "zu", "zusammen", "weiter", "datei", "dokument", "pdf", "da", "dort",
         "schnell", "gleich", "danke", "heraus", "raus", "her", "es", "sie", "ihn", "doch", "auch")
-    private val openingVerbs = setOf("öffne", "öffnen", "zeig", "zeige", "lies", "lese", "mach", "mache", "hol", "hole",
+    private val openingVerbs = setOf("öffne", "öffnen", "öffnet", "zeig", "zeige", "lies", "lese", "mach", "mache", "hol", "hole",
         "aufmachen", "anzeigen", "zeigen", "sehen", "ansehen", "lesen", "vorlesen")
 
     fun parseOpen(utterance: String, assistantName: String? = null): Open? {
@@ -200,10 +200,21 @@ internal object OwnerPageJobCommand {
     private val saveVerb = Regex("(?iu)$S(?:speicher\\p{L}*|abspeicher\\p{L}*|abzuspeichern|sichere|sichern|exportier\\p{L}*|ablegen)$E")
     private val naming = Regex("(?iu)[,;]?\\s+(?:unter\\s+dem\\s+(?:namen|titel)|mit\\s+dem\\s+(?:namen|titel)|(?:mit\\s+)?dateiname(?:n)?|" +
         "namens|(?:und\\s+)?nenn(?:e)?\\s+(?:sie|es|ihn|das|die\\s+datei|das\\s+dokument))$E")
+    /** German speech recognition writes the program's name as the German word: „als Wort“, „als Wort-Datei“. */
+    private val heardWord = Regex("(?iu)(${S}als\\s+(?:eine?\\s+)?)wort((?:-?(?:datei|dokument|format))?)$E")
+    /** … and the imperative „Fass“ as „Fasst“ or „Fast“ at the beginning of the order. */
+    private val heardSummarise = Regex("(?iu)^((?:bitte\\s+)?)(?:fasst|fast)(?=\\s+.*${S}zusammen$E)")
+
+    /** [text] with the two usual mishearings of this order repaired; anything else is left as it was said. */
+    fun heard(text: String): String = text.replace(heardWord) { it.groupValues[1] + "Word" + it.groupValues[2] }
+        .replace(heardSummarise) { it.groupValues[1] + "Fass" }
 
     fun parse(utterance: String, assistantName: String? = null): Result? {
         if (utterance.length !in 12..300 || utterance.any { it.isISOControl() }) return null
-        val text = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trimEnd('.', '!', '?', ' ')
+        val said = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trimEnd('.', '!', '?', ' ')
+        // The wished file name is free text: it is never „repaired“.
+        val nameAt = naming.find(said)?.range?.first ?: said.length
+        val text = heard(said.substring(0, nameAt)) + said.substring(nameAt)
         if (!summary.containsMatchIn(text)) return null
         // The wished file name is free text and may itself say „Seite fünf“: pages are only looked for in front of it.
         val split = naming.find(text)?.range?.first ?: text.length
@@ -300,7 +311,7 @@ internal object OwnerDeskCorrection {
 
     fun parse(utterance: String, assistantName: String? = null): Correction? {
         if (utterance.length !in 4..140 || utterance.any { it.isISOControl() }) return null
-        val text = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trimEnd('.', '!', '?', ' ').trim()
+        val text = OwnerPageJobCommand.heard(OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trimEnd('.', '!', '?', ' ').trim())
         if (text.isEmpty()) return null
         val marked = marker.containsMatchIn(text)
         val pages = OwnerPageReference.one.findAll(text).toList()
@@ -410,7 +421,7 @@ internal object OwnerDeskReply {
     fun isYes(utterance: String, assistantName: String? = null): Boolean = yes.matches(plain(utterance, assistantName))
     fun isNo(utterance: String, assistantName: String? = null): Boolean = no.matches(plain(utterance, assistantName))
     fun format(utterance: String, assistantName: String? = null): OwnerExportCommand.Format? =
-        format.matchEntire(plain(utterance, assistantName))?.let {
+        format.matchEntire(OwnerPageJobCommand.heard(plain(utterance, assistantName)).lowercase(Locale.GERMAN))?.let {
             if (it.groupValues[1].startsWith("pdf")) OwnerExportCommand.Format.PDF else OwnerExportCommand.Format.DOCX
         }
 
