@@ -596,6 +596,61 @@ try {
     await large.context().close();
     report.checks.push(item);
   }
+  // Heat (Fold7 finding): the stage hands animation frames to the original scene, orb and avatar at most as often
+  // as Android's tier and the running work allow. Measured in a real browser. The canvases are not painted here so
+  // that this host's software renderer is fast enough for the limit to show at all; the scripts run unchanged.
+  {
+    const item={label:'code65-frame-limit',failures:[],rates:{}};
+    // The first page still draws its full scene in the background and would starve this measurement.
+    await context.close();
+    const governed=await browser.newContext({viewport:{width:834,height:1112},isMobile:true,hasTouch:true,deviceScaleFactor:1});
+    const stage65=await governed.newPage();
+    stage65.on('pageerror',error=>errors.push(error.message));
+    await stage65.addInitScript(()=>document.addEventListener('DOMContentLoaded',()=>{
+      const style=document.createElement('style');style.textContent='canvas{display:none!important}';
+      document.head.appendChild(style);}));
+    await stage65.goto(`${url}/after/index.android.html`,{waitUntil:'load'});
+    await stage65.evaluate(value=>window.ContinuumNative.receive(value),state);
+    await stage65.evaluate(()=>{window.__delivered=0;
+      const loop=()=>{window.__delivered++;requestAnimationFrame(loop);};requestAnimationFrame(loop);});
+    await stage65.waitForTimeout(2000);
+    const rate=async values=>{
+      await stage65.evaluate(value=>window.ContinuumNative.receive(value),{...state,...values});
+      await stage65.waitForTimeout(400);
+      const [count,started]=await stage65.evaluate(()=>[window.__delivered,performance.now()]);
+      await stage65.waitForTimeout(3000);
+      const [after,ended]=await stage65.evaluate(()=>[window.__delivered,performance.now()]);
+      return {limit:Number(await stage65.evaluate(()=>document.body.dataset.frameLimit)),
+        perSecond:(after-count)/((ended-started)/1000)};
+    };
+    for(const [name,values,limit] of [
+      ['full-idle',{quality:'FULL',presence:'IDLE'},30],
+      ['full-speaking',{quality:'FULL',presence:'SPEAKING',speaking:true},30],
+      ['full-computing',{quality:'FULL',presence:'THINKING',busy:true},15],
+      ['balanced-computing',{quality:'BALANCED',presence:'THINKING',busy:true},10],
+      ['reduced-idle',{quality:'REDUCED',presence:'IDLE'},10],
+      ['reduced-computing',{quality:'REDUCED',presence:'THINKING',busy:true},6]]) {
+      const measured=await rate(values);
+      item.rates[name]={limit:measured.limit,deliveredPerSecond:Math.round(measured.perSecond*10)/10};
+      if(measured.limit!==limit)item.failures.push(name+': limit '+measured.limit+' instead of '+limit);
+      // Never more than the limit (one frame of slack per second); the stage keeps moving.
+      if(measured.perSecond>limit+1)item.failures.push(name+': '+measured.perSecond.toFixed(1)+' frames/s above '+limit);
+      if(measured.perSecond<.5)item.failures.push(name+': the stage stopped drawing');
+    }
+    // A cancelled frame is not delivered and a throwing callback does not stop the others.
+    const behaviour=await stage65.evaluate(()=>new Promise(resolve=>{
+      const seen=[];window.addEventListener('error',event=>{event.preventDefault();seen.push('reported');},{once:true});
+      const cancelled=requestAnimationFrame(()=>seen.push('cancelled'));cancelAnimationFrame(cancelled);
+      requestAnimationFrame(()=>{throw new Error('synthetic frame failure');});
+      requestAnimationFrame(time=>{seen.push(typeof time);setTimeout(()=>resolve(seen),50);});}));
+    if(behaviour.includes('cancelled'))item.failures.push('a cancelled frame was delivered');
+    if(!behaviour.includes('number'))item.failures.push('the frame after a throwing callback was not delivered with its time');
+    if(!behaviour.includes('reported'))item.failures.push('a throwing callback was swallowed');
+    errors.splice(0,errors.length,...errors.filter(message=>message!=='synthetic frame failure'));
+    report.code65={frameRates:item.rates};
+    await governed.close();
+    report.checks.push(item);
+  }
   report.code64.result={arrangement:baselineReady?'PASS':'NOT_RUN',orbAnimated:baselineReady?'PASS':'NOT_RUN',
     presenceLight:'PASS',tiers:'PASS',workSequence:'PASS',filesWindow:'PASS',largeFont:'PASS'};
   assert.deepEqual(errors, [], 'Unexpected page errors');

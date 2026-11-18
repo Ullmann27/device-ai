@@ -1796,6 +1796,8 @@ class AgentActivity : Activity() {
                 cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.THERMAL,
                     status >= android.os.PowerManager.THERMAL_STATUS_SEVERE, "Thermal-Status",
                     status.toDouble(), android.os.PowerManager.THERMAL_STATUS_SEVERE.toDouble())
+                // The stage's quality tier follows the status at once, not only with the next unrelated change.
+                scheduleCommand03HtmlState()
             }
             // Android may reject observer registration; keep the rest of the cockpit usable.
             val registered = try {
@@ -2363,6 +2365,13 @@ class AgentActivity : Activity() {
     private val command03Activity = at.heinz.deviceai.ui.Command03ActivityProjection()
     private val command03Files = at.heinz.deviceai.ui.Command03FilesProjection()
 
+    /** PowerManager's thermal status (0..6), or null where the platform reports none. Never a temperature. */
+    private fun currentThermalStatusOrNull(): Int? {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q) return null
+        val power = getSystemService(POWER_SERVICE) as? android.os.PowerManager
+        return runCatching { power?.currentThermalStatus }.getOrNull()
+    }
+
     /** Thermal status and power-save state as Android reports them; null where the platform has no value. */
     private fun command03Quality(): String {
         val power = getSystemService(POWER_SERVICE) as? android.os.PowerManager
@@ -2370,6 +2379,14 @@ class AgentActivity : Activity() {
             runCatching { power?.currentThermalStatus }.getOrNull() else null
         val profile = at.heinz.deviceai.ui.Command03StageSignals.Profile.of(
             getSharedPreferences("continuum-command03", MODE_PRIVATE).getString("performance_profile", null))
+        val refreshRate = at.heinz.deviceai.ui.Command03StageSignals.preferredRefreshRate(profile)
+        runCatching {
+            val attributes = window.attributes
+            if (attributes.preferredRefreshRate != refreshRate) {
+                attributes.preferredRefreshRate = refreshRate
+                window.attributes = attributes
+            }
+        }
         return at.heinz.deviceai.ui.Command03StageSignals.quality(thermal, power?.isPowerSaveMode, profile)
     }
 
@@ -13537,7 +13554,8 @@ class AgentActivity : Activity() {
                         continuation = continuationStatus != null,
                         eligible = keepsPartialForContinuation && textOnlyResponse.get() && groundedRecall == null &&
                             run.taskEvidence?.calls.isNullOrEmpty() && ownerReplyRevision == ownerRevisionAtTurnStart &&
-                            pendingConversationSelection == null,
+                            pendingConversationSelection == null &&
+                            at.heinz.deviceai.cognitive.AnswerContinuationController.thermalAllows(currentThermalStatusOrNull()),
                         segment = at.heinz.deviceai.cognitive.AnswerContinuationController.Segment(
                             run.response, successful, hasPartialResponse, run.blocker))
                     val delivered = continuation as? at.heinz.deviceai.cognitive.AnswerContinuationController.Decision.Deliver

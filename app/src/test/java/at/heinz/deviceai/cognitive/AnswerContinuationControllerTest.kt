@@ -276,4 +276,11 @@ class AnswerContinuationControllerTest {
         assertTrue(runCatching { AnswerContinuationController(maxSegments = 5) }.isFailure)
         assertTrue(LocalConversationFollowUpPolicy.requestsContinuation(AnswerContinuationController.CONTINUE_REQUEST))
     }
+
+    @Test fun aFurtherGenerationStartsOnlyWithoutThermalPressure() {
+        // Fold7 heat finding (Code64): chaining generations is the longest compute stretch of one owner turn.
+        assertTrue(AnswerContinuationController.thermalAllows(null))
+        assertTrue(AnswerContinuationController.thermalAllows(0))
+        for (status in 1..6) assertFalse("status $status", AnswerContinuationController.thermalAllows(status))
+    }
 }

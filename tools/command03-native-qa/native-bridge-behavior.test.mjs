@@ -1988,3 +1988,29 @@ test('a snapshot of an older Android without presence, quality, activity and fil
     assert.equal(f.document.querySelector('#workspace-meta').textContent, 'LOKAL');
   } finally {f.close();}
 });
+
+test('the frame limit follows Android\'s tier and drops while the local model computes', async () => {
+  const f = await fixture();
+  try {
+    const limit = () => f.document.body.dataset.frameLimit;
+    f.state();
+    assert.equal(limit(), '30', 'Without a tier the stage draws at most 30 frames a second');
+    f.state({busy: true});
+    assert.equal(limit(), '15', 'An older Android without presence: busy counts as computing');
+    f.state({busy: true, speaking: true});
+    assert.equal(limit(), '30', 'A spoken answer keeps the lip movement smooth');
+    const expected = {FULL: [30, 15], BALANCED: [20, 10], REDUCED: [10, 6]};
+    for (const [quality, [calm, computing]] of Object.entries(expected)) {
+      for (const presence of ['IDLE', 'LISTENING', 'SPEAKING', 'WAITING_FOR_APPROVAL', 'BLOCKED']) {
+        f.state({quality, presence});
+        assert.equal(limit(), String(calm), quality + ' ' + presence);
+      }
+      for (const presence of ['THINKING', 'RESEARCHING', 'LEARNING']) {
+        f.state({quality, presence, busy: true});
+        assert.equal(limit(), String(computing), quality + ' ' + presence);
+      }
+    }
+    f.state({quality: 'UNBEKANNT', presence: 'THINKING', busy: true});
+    assert.equal(limit(), '15', 'An unknown tier is treated as full quality, never as unlimited');
+  } finally {f.close();}
+});
