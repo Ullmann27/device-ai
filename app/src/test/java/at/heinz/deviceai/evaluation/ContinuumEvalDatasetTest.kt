@@ -205,6 +205,21 @@ class ContinuumEvalDatasetTest {
                     strings(expect, "contains").forEach { check(text.contains(it), "missing „$it“ in:\n$text") }
                     strings(expect, "not_contains").forEach { check(!text.contains(it), "forbidden „$it“ in:\n$text") }
                 }
+                "export_intent" -> {
+                    val (export, name) = EvalProbe.export(case.getString("input"))
+                    check(export == expect.getString("export"), "export $export, expected ${expect.getString("export")}")
+                    if (expect.has("name")) check(name == (if (expect.isNull("name")) null else expect.getString("name")),
+                        "file name said: $name")
+                }
+                "file_name" -> {
+                    val name = EvalProbe.exportFileName(if (case.isNull("requested")) null else case.getString("requested"),
+                        case.getString("title"), java.time.LocalDate.parse(case.getString("date")), case.getString("format"),
+                        strings(case, "taken"))
+                    check(name == expect.getString("file_name"), "file name $name, expected ${expect.getString("file_name")}")
+                }
+                "mail_intent" -> EvalProbe.mail(case.getString("input")).let {
+                    check(it == expect.getString("mail"), "mail order $it, expected ${expect.getString("mail")}")
+                }
                 else -> failures += "$id: unknown runner ${case.getString("runner")}"
             }
         }
@@ -266,7 +281,7 @@ class ContinuumEvalDatasetTest {
             "incomplete_info", "uncertainty_abstention", "contradiction", "abort_resume")
         val RUNNERS = setOf("route", "object_state", "clock", "owner_recall", "voice_command",
             "register", "turn_completion", "drive_command", "notification", "reference",
-            "news_intent", "news_follow_up", "news_feed")
+            "news_intent", "news_follow_up", "news_feed", "export_intent", "file_name", "mail_intent")
         val CRITERIA = setOf("contains_all", "contains_any", "numeric", "abstain", "asks_back", "tool_call", "no_tool")
     }
 }

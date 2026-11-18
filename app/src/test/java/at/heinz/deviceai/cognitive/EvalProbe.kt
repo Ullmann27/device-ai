@@ -56,6 +56,19 @@ object EvalProbe {
         }
     }
 
+    /** Save order on the last result: `PDF`, `DOCX`, `PDF:VIA_WORD` or `NONE`, and the file name the owner said. */
+    fun export(utterance: String): Pair<String, String?> = OwnerExportCommand.parse(utterance)?.let { request ->
+        (request.format.name + if (request.viaWord) ":VIA_WORD" else "") to request.name
+    } ?: ("NONE" to null)
+
+    fun exportFileName(requested: String?, title: String, date: java.time.LocalDate, format: String, taken: List<String>): String =
+        OwnerExportCommand.fileName(requested, title, date, OwnerExportCommand.Format.valueOf(format), taken::contains)
+
+    /** Mail hand-over order: `ADDRESS:<address>`, `NAME:<recipient as said>` or `NONE`. */
+    fun mail(utterance: String): String = OwnerShareCommand.parse(utterance)?.let { request ->
+        request.address?.let { "ADDRESS:$it" } ?: "NAME:${request.recipientName}"
+    } ?: "NONE"
+
     /** [kind]: RESOLVED, AMBIGUOUS, MISSING or NONE; [text]: the resolved passage, the question back or the reason. */
     data class ReferenceOutcome(val kind: String, val document: String? = null, val page: Int? = null,
                                 val paragraph: Int? = null, val text: String = "", val intent: String? = null,
