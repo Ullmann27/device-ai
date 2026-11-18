@@ -46,7 +46,34 @@ class NormalInstallManifestTest {
             "android.permission.POST_NOTIFICATIONS", "android.permission.FOREGROUND_SERVICE",
             "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION", "android.permission.QUERY_ALL_PACKAGES",
             "android.permission.REQUEST_INSTALL_PACKAGES", "android.permission.READ_CONTACTS",
+            // Added deliberately for the document desk (18.11.2026), see the test below.
+            "android.permission.MANAGE_EXTERNAL_STORAGE",
             "com.termux.permission.RUN_COMMAND"))
+    }
+
+    /**
+     * Document desk („Öffne das PDF Argon4“, owner goal 18.11.2026): finding a PDF by name in the shared storage,
+     * offline and inside the app, needs Android's „Zugriff auf alle Dateien“. It is the one permission added for it:
+     * a special access the owner switches on himself in Android's settings and can switch off there – it is never
+     * granted by an install or a dialog of this app. No media or legacy storage permission comes with it, and the
+     * permissions Play Protect's blocking rule names (SMS, notification listener) stay absent. Whether Play Protect
+     * accepts a normally installed build with this declaration is NOT verified by this test – only the device can show
+     * that (see docs/handover/ARGON4-ABLAUF-GERAETECHECKLISTE-20261118.md).
+     */
+    @Test fun allFilesAccessIsTheOnlyPermissionAddedForTheDocumentDesk() {
+        val manifest = source("src/main/AndroidManifest.xml").replace(Regex("<!--[\\s\\S]*?-->"), "")
+        val declared = Regex("<uses-permission\\s+android:name=\"([^\"]+)\"").findAll(manifest).map { it.groupValues[1] }.toList()
+        assertTrue(declared.count { it == "android.permission.MANAGE_EXTERNAL_STORAGE" } == 1)
+        listOf("READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "READ_MEDIA_IMAGES", "READ_MEDIA_VIDEO", "READ_MEDIA_AUDIO",
+            "READ_MEDIA_VISUAL_USER_SELECTED", "ACCESS_MEDIA_LOCATION", "MANAGE_MEDIA", "MANAGE_DOCUMENTS").forEach {
+            assertFalse(it, declared.contains("android.permission.$it"))
+        }
+        assertFalse(manifest.contains("requestLegacyExternalStorage"))
+        // The grant is asked for in Android's own settings page and checked before every walk; no Shizuku is involved.
+        val library = source("src/main/java/at/heinz/deviceai/OwnerDeviceLibrary.kt")
+        assertTrue(library.contains("Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION"))
+        assertTrue(library.contains("Environment.isExternalStorageManager()"))
+        assertFalse(library.contains("ShizukuBridge"))
     }
 
     @Test fun theListenerIsMergedOnlyOnExplicitRequest() {

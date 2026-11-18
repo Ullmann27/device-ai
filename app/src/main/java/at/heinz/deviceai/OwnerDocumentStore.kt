@@ -70,6 +70,36 @@ internal class OwnerDocumentStore(private val context: Context) {
         return OwnerSavedFile(actual, "Download-Ordner", uri.toString(), mime)
     }
 
+    /**
+     * The saved file's bytes, read again from where they were written (at most [maxBytes]); null when the file is not
+     * there or cannot be read. The document desk compares them with what it wrote before it reports a file as saved.
+     */
+    fun readBack(file: OwnerSavedFile, maxBytes: Int = MAX_READ_BACK): ByteArray? = runCatching {
+        val stream = file.uri?.let { context.contentResolver.openInputStream(Uri.parse(it)) }
+            ?: File(legacyDirectory(), file.displayName).takeIf { it.isFile }?.inputStream()
+        stream?.use { input ->
+            val out = java.io.ByteArrayOutputStream()
+            val buffer = ByteArray(16 * 1024)
+            while (out.size() <= maxBytes) {
+                val read = input.read(buffer)
+                if (read < 0) return@use out.toByteArray()
+                out.write(buffer, 0, read)
+            }
+            null
+        }
+    }.getOrNull()
+
+    /** Where the saved file lies, in the words of Android's file manager; null when Android does not say. */
+    fun location(file: OwnerSavedFile): String? {
+        val uri = file.uri?.let(Uri::parse) ?: return null
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return null
+        return runCatching {
+            context.contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.RELATIVE_PATH), null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) cursor.getString(0) else null
+            }
+        }.getOrNull()?.trim('/')?.takeIf { it.isNotEmpty() }?.let { "Interner Speicher › " + it.replace("/", " › ") }
+    }
+
     /** Opens the saved file in the owner's viewer; null = started, otherwise the reason. */
     fun open(file: OwnerSavedFile): String? {
         val uri = file.uri?.let(Uri::parse) ?: return "Für diese Datei gibt es keinen teilbaren Verweis."
@@ -102,6 +132,7 @@ internal class OwnerDocumentStore(private val context: Context) {
 
     companion object {
         const val MAX_MAIL_BODY = 8_000
+        const val MAX_READ_BACK = 8 * 1024 * 1024
 
         /** ACTION_SEND limited to mail apps (mailto selector); the attachment travels as EXTRA_STREAM with a read grant. */
         fun mailIntent(address: String?, subject: String, body: String, attachment: OwnerSavedFile?): Intent {

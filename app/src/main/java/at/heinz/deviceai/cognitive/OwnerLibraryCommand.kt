@@ -60,7 +60,9 @@ internal object OwnerLibraryCommand {
     private val leading = setOf("diese", "dieses", "dieser", "diesen", "dies", "eine", "ein", "einen", "einer", "irgendeine",
         "irgendein", "welche", "welches", "welcher", "das", "die", "der", "den", "dem", "hier", "dort", "da", "dieselbe",
         "von", "vom", "aus", "über", "zu", "zum", "zur", "im", "in", "auf", "mit", "für", "bei", "an", "am", "ab", "nach",
-        "vor", "und", "oder", "ist", "sind", "war", "wird", "was", "wie", "wo", "wegen", "bezüglich", "zum thema")
+        "vor", "und", "oder", "ist", "sind", "war", "wird", "was", "wie", "wo", "wegen", "bezüglich",
+        // „Lies die PDF Seite 3“ speaks about a page of the open document, not about a file called „Seite 3“.
+        "seite", "seiten", "absatz", "kapitel")
     private val pointingAdjective = Regex("(?iu)^(?:ausgewählt|letzt|gleich|selb|vorig|gestrig|erst|zweit|dritt|viert|fünft|" +
         "ander|neu|neuest|neust|aktuell|aktuellst|ganz|gesamt|nächst|vorherig|geöffnet|offen|richtig|falsch)e[nrsm]?$")
     private val joiners = setOf("und", "oder", "sowie", "dann", "danach", "anschließend", "als", "weil", "dass", "damit",

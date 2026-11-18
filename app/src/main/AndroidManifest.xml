@@ -25,6 +25,12 @@
          Asked once at runtime with a plain explanation; read on the device only. No SMS permission and no
          notification listener are declared (see NormalInstallManifestTest). -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Document desk („Öffne das PDF Argon4“): finding a PDF by its name in the owner's shared storage, offline and
+         inside the app. Nothing is read until the owner switches on „Zugriff auf alle Dateien“ for this app in
+         Android's own settings; he can switch it off there at any time. The desk only lists names and opens the
+         chosen PDF read-only (see OwnerDeviceLibrary and NormalInstallManifestTest). -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <uses-permission android:name="com.termux.permission.RUN_COMMAND" />
 
