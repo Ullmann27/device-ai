@@ -68,6 +68,37 @@ class OwnerMissionRegressionTest {
         }
     }
 
+    /**
+     * No utterance of the other evaluation sets becomes a mission: their present routes are correct and must not
+     * move (owner turns of the lanes, the chains, the understanding layer, the voice round and the model sets).
+     */
+    @Test fun noUtteranceOfTheOtherSetsBecomesAMission() {
+        val moved = mutableListOf<String>()
+        var checked = 0
+        fun check(source: String, utterance: String) {
+            checked++
+            OwnerMissionPlanner.plan(utterance, "Jarvis")?.let { moved += "$source „$utterance“ → ${it.codes}" }
+        }
+        root.listFiles { file -> file.name.endsWith(".jsonl") && !file.name.startsWith("regression-missions") }!!.sortedBy { it.name }.forEach { file ->
+            cases(file.name).forEach { case ->
+                val id = file.name + ":" + case.optString("id")
+                listOf("input", "question", "utterance", "request").forEach { key ->
+                    (case.opt(key) as? String)?.takeIf { it.isNotEmpty() }?.let { check(id, it) }
+                }
+                case.optJSONArray("turns")?.let { turns ->
+                    (0 until turns.length()).forEach { index ->
+                        when (val turn = turns.get(index)) {
+                            is String -> check(id, turn)
+                            is JSONObject -> if (turn.optString("role", "user") == "user") turn.optString("text").takeIf { it.isNotEmpty() }?.let { check(id, it) }
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue("too few utterances checked: $checked", checked >= 500)
+        assertTrue("${moved.size} existing utterances would become a mission:\n" + moved.joinToString("\n"), moved.isEmpty())
+    }
+
     /** Separate development and check data: no sentence of one set appears in the other. */
     @Test fun theDevelopmentAndTheCheckSetShareNoSentence() {
         fun inputs(name: String) = cases(name).map { it.getString("input").trim().lowercase() }

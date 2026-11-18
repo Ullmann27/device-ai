@@ -361,6 +361,38 @@ class OwnerMissionFlowTest {
             "„$WORD_2“ – gesendet habe ich nichts (das lässt sich nicht zurücknehmen)."))
     }
 
+    @Test fun anotherNamedPdfAfterTheMissionRedoesItFromTheFirstStep() {
+        val h = argon()
+        h.deskHost.put("Xenon5.pdf", pages = ARGON)
+        h.owner(argonOrder)
+        assertEquals("MISSION", h.owner("Nein, ich meinte das PDF Xenon5"))
+        assertEquals(listOf("Argon4.pdf", "Xenon5.pdf"), h.deskHost.shown.map { it.name })
+        val xenon = "Zusammenfassung Xenon5 Seite 2 18.11.2026.docx"
+        assertEquals(listOf(WORD_2, xenon), h.downloads())
+        // The mail with the first file already exists: it is repeated only after a yes.
+        assertEquals(1, h.toolsHost.mails.size)
+        assertTrue(h.lastSaid, h.lastSaid.startsWith("Schritt 3 war schon erledigt: E-Mail an $ANNA im Mailprogramm vorbereitet, Anhang „$WORD_2“"))
+        assertEquals("MISSION", h.owner("Ja"))
+        assertEquals(xenon, h.toolsHost.mails.last().attachment!!.displayName)
+        assertTrue(h.lastSaid, h.lastSaid.startsWith("Fertig – mit deiner Korrektur sind alle drei Schritte erledigt. 1. „Xenon5.pdf“ geöffnet " +
+            "(Ordner Download). 2. „$xenon“ gespeichert"))
+        assertTrue(h.lastSaid, h.lastSaid.contains("Von vorher gibt es weiterhin: „Argon4.pdf“ geöffnet (Ordner Download); „$WORD_2“ gespeichert"))
+    }
+
+    @Test fun anotherNamedPdfWhileALaterStepRunsEndsThatStepAndStartsOver() {
+        val h = argon()
+        h.deskHost.put("Xenon5.pdf", pages = ARGON)
+        h.deskHost.duringGeneration = { assertTrue(h.interrupt("Nein, ich meinte das PDF Xenon5")) }
+        h.owner(argonOrder)
+        val xenon = "Zusammenfassung Xenon5 Seite 2 18.11.2026.docx"
+        // Nothing of the first PDF was saved or mailed; everything was done with the corrected one.
+        assertEquals(listOf(xenon), h.downloads())
+        assertEquals(xenon, h.toolsHost.mails.single().attachment!!.displayName)
+        assertTrue(h.said.any { it == "MISSION:Verstanden – das PDF „Xenon5“ statt „Argon4“. Gerade läuft Schritt 2; ich breche ihn ab und " +
+            "mache Schritt 1 mit der Änderung neu." })
+        assertTrue(h.lastSaid, h.lastSaid.startsWith("Fertig – mit deiner Korrektur sind alle drei Schritte erledigt. 1. „Xenon5.pdf“ geöffnet"))
+    }
+
     @Test fun aCorrectionThatChangesNothingIsAnsweredAndNothingIsRedone() {
         val h = argon()
         h.owner(argonOrder)
@@ -409,6 +441,25 @@ class OwnerMissionFlowTest {
         assertTrue(h.lastSaid, h.lastSaid.contains("Nicht geklappt: 2. Als PDF speichern – Das Speichern hat nicht geklappt: Kein Speicherplatz."))
         assertTrue(h.lastSaid, h.lastSaid.endsWith("Nicht begonnen: 3. Per E-Mail an $ANNA schicken."))
         assertTrue(h.downloads().isEmpty() && h.toolsHost.mails.isEmpty())
+    }
+
+    @Test fun aDeclinedWebConsentEndsTheNewsMissionAndNothingIsSavedOrMailed() {
+        val h = news(InternetAccessMode.ASK)
+        h.toolsHost.ownerApproves = false
+        assertEquals("MISSION", h.owner(newsOrder))
+        assertTrue(h.toolsHost.fetched.isEmpty())
+        assertEquals("Die Auftragsfolge endet bei Schritt 1 von 3. Erledigt war noch nichts. Nicht geklappt: 1. Die Nachrichten von heute " +
+            "zusammenfassen – Der Internetzugriff wurde für die Nachrichten nicht freigegeben. Nicht begonnen: 2. Als PDF speichern. " +
+            "3. Per E-Mail an $ANNA schicken.", h.lastSaid)
+        assertTrue(h.downloads().isEmpty() && h.toolsHost.mails.isEmpty())
+    }
+
+    @Test fun withTheOneTimeWebConsentTheNewsMissionRunsAfterTheOwnersTap() {
+        val h = news(InternetAccessMode.ASK)
+        assertEquals("MISSION", h.owner(newsOrder))
+        assertEquals(1, h.toolsHost.consents.size)
+        assertEquals(listOf(NEWS_PDF), h.downloads())
+        assertEquals(NEWS_PDF, h.toolsHost.mails.single().attachment!!.displayName)
     }
 
     @Test fun withInternetOffTheNewsMissionEndsAtTheFirstStepWithoutAnyRequest() {
@@ -475,6 +526,21 @@ class OwnerMissionFlowTest {
         assertEquals(1, h.toolsHost.mails.size)
         assertTrue(h.lastSaid, h.lastSaid.contains("Nicht geklappt: 3. Per E-Mail an $ANNA schicken – Das Ergebnis aus Schritt 2 ist nicht " +
             "mehr das, worum es in diesem Gespräch geht."))
+    }
+
+    @Test fun aLaneThatIsOccupiedHoldsTheMissionUntilTheOwnerSaysWeiter() {
+        val h = argon()
+        h.owner("Öffne das PDF Argon4")
+        // Something else occupies the single work lane when the mission wants to start its first step.
+        h.deskHost.busyElsewhere = true
+        assertEquals("MISSION", h.owner("Fass Seite 2 zusammen, speichere es als Word und schick es per Mail an $ANNA"))
+        assertEquals("Gerade läuft noch etwas anderes. Die Auftragsfolge wartet bei Schritt 1 von 2 (Seite 2 zusammenfassen und als " +
+            "Word-Datei speichern). Sag „weiter“, wenn ich dort weitermachen soll.", h.lastSaid)
+        assertTrue(h.downloads().isEmpty())
+        h.deskHost.busyElsewhere = false
+        assertEquals("MISSION", h.owner("weiter"))
+        assertEquals(listOf(WORD_2), h.downloads())
+        assertEquals(WORD_2, h.toolsHost.mails.single().attachment!!.displayName)
     }
 
     @Test fun theTimeLimitEndsTheMissionBetweenTwoSteps() {
