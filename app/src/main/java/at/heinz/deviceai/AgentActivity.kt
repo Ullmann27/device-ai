@@ -292,6 +292,10 @@ class AgentActivity : Activity() {
                                           val textOnly: Boolean = false)
     // Current chat only; model text has no owner-fact authority and is never stored as a memory.
     private var lastLocalReply: LocalReplySnapshot? = null
+    /** Code64: bounded automatic continuation at the local output limit; holds the part generated so far (RAM only). */
+    private val answerContinuation = at.heinz.deviceai.cognitive.AnswerContinuationController()
+    /** Set only for the synchronous re-entry into runLocal by that continuation; runLocal consumes it at once. */
+    private var pendingContinuationStatus: String? = null
     // Process-scoped (RAM only): survives a Fold7 recreation (density/theme/font/keyboard)
     // of the same session; forgotten on a real finish or a different session id.
     private val localConversationContext = at.heinz.deviceai.cognitive.LocalDialogueRetention.context
@@ -12781,6 +12785,16 @@ class AgentActivity : Activity() {
                          codingPlanning: ContinuumCodingPlanning? = null,
                          botTask: ChiefBotTaskTicket? = null) {
         val localSessionId = sessionId
+        // Code64: [continuationStatus] marks a segment that the bounded automatic continuation started itself (see
+        // AnswerContinuationController; handed over through pendingContinuationStatus so that this signature stays
+        // as it is). It runs the unchanged „weiter“ path, but it is not an owner turn: a failed one is never
+        // recorded as an unanswered owner request, and the visible state names the continuation.
+        val continuationStatus = pendingContinuationStatus
+        pendingContinuationStatus = null
+        val ownerRevisionAtTurnStart = ownerReplyRevision
+        fun recordUnansweredOwnerTurn() {
+            if (continuationStatus == null) localConversationContext.recordUnanswered(localSessionId, text)
+        }
         val allowMaya = !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(text)
         val planningEpoch = codingPlanningEpoch
         val internetModeAtTurnStart = internetConsent.mode
@@ -12809,7 +12823,7 @@ class AgentActivity : Activity() {
             addAssistantMessage(groundedRecall?.failureAnswer() ?:
                 "Kein lokales Modell ist bereit. Importiere und lade zuerst eine kompatible .litertlm-Datei.",
                 preserveLocalContext = retainUnanswered, keepCockpit = false, allowMaya = allowMaya)
-            if (retainUnanswered) localConversationContext.recordUnanswered(localSessionId, text)
+            if (retainUnanswered) recordUnansweredOwnerTurn()
             botTask?.let {
                 input.setText(text)
                 finishBotTask(it, "Lokales Modell nicht bereit · Auftrag nicht gestartet")
@@ -12831,14 +12845,15 @@ class AgentActivity : Activity() {
             cockpitTriggers.areaChanged("chat", "home",
                 at.heinz.deviceai.cockpit.TransitionPattern.C_WARP)
         }
-        addToolActivity(if (botTask == null) "Lokales Modell plant …" else "${botTask.profile.displayName} · Auftrag wird geplant")
+        addToolActivity(continuationStatus
+            ?: if (botTask == null) "Lokales Modell plant …" else "${botTask.profile.displayName} · Auftrag wird geplant")
         planCard.visibility = View.GONE
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
         val chiefTurn = at.heinz.deviceai.chief.TurnLifecycle("local-" + turnId)
         activeChiefTurn = chiefTurn
         chiefTurn.acknowledge()?.let {
-            addToolActivity("CHIEF · " + it)
-            cockpitTriggers.commandAcknowledged(chiefTurn.turnId, text)
+            if (continuationStatus == null) addToolActivity("CHIEF · " + it)
+            cockpitTriggers.commandAcknowledged(chiefTurn.turnId, continuationStatus ?: text)
         }
         if (botTask == null && codingPlanning == null && documentDraftTurn == null &&
             activeWorkArea == ContinuumWorkArea.START) {
@@ -12850,7 +12865,7 @@ class AgentActivity : Activity() {
                 hasGroundedEvidence = groundedRecall != null
             )
             scheduleLocalReasoningWorkScene(
-                chiefTurn.turnId, text, presentation.delayMillis, presentation.promptBudget)
+                chiefTurn.turnId, continuationStatus ?: text, presentation.delayMillis, presentation.promptBudget)
         }
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
@@ -13349,6 +13364,8 @@ class AgentActivity : Activity() {
             }
             if (botTask == null && codingPlanning == null)
                 settleToolRuns(startedToolCalls, result, localSessionId, cancellation)
+            // Code64: set when this delivery re-enters the existing „weiter“ path instead of freeing the lane.
+            var resumeContinuation: at.heinz.deviceai.cognitive.AnswerContinuationController.Decision.Continue? = null
             fun deliverResult() {
                 if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return
                 // Cancellation may return before native inference has terminated. The bot
@@ -13375,7 +13392,7 @@ class AgentActivity : Activity() {
                         activeOwnerFactCancellation === cancellation &&
                         !ephemeralScreenRun.get()) {
                         lastLocalReply = null
-                        localConversationContext.recordUnanswered(localSessionId, text)
+                        recordUnansweredOwnerTurn()
                     }
                     setBusy(false)
                     refreshLocalModelUi()
@@ -13409,7 +13426,7 @@ class AgentActivity : Activity() {
                         finishLocalConversationTurn(chiefTurn)
                         lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
-                            localConversationContext.recordUnanswered(localSessionId, text)
+                            recordUnansweredOwnerTurn()
                         botTask?.let { finishBotTask(it, "Internetfreigabe geändert · Antwort verworfen") }
                         addToolActivity("WEB · Internetfreigabe geändert, Antwort verworfen; bitte die Anfrage neu starten")
                         return@onSuccess
@@ -13418,7 +13435,7 @@ class AgentActivity : Activity() {
                         finishLocalConversationTurn(chiefTurn)
                         lastLocalReply = null
                         if (botTask == null && sessionId == localSessionId && !ephemeralScreenRun.get())
-                            localConversationContext.recordUnanswered(localSessionId, text)
+                            recordUnansweredOwnerTurn()
                         botTask?.let { finishBotTask(it, "Freigabe widerrufen · Antwort verworfen") }
                         addToolActivity("WEB · Freigabe widerrufen, lokale Antwort verworfen")
                         return@onSuccess
@@ -13481,7 +13498,24 @@ class AgentActivity : Activity() {
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
                     val keepsPartialForContinuation = hasPartialResponse &&
                         !ephemeralScreenRun.get() && sessionId == localSessionId && documentDraftTurn == null
+                    // Code64: bounded automatic continuation. Only the owner's own text-only turn without tools,
+                    // grounded recall, draft or screen data, in the same chat, with no newer owner message and no
+                    // waiting chat switch; every other case stays exactly as before (Unchanged).
+                    val continuation = answerContinuation.onSegment(localSessionId, ownerReplyRevision, text.take(512),
+                        continuation = continuationStatus != null,
+                        eligible = keepsPartialForContinuation && textOnlyResponse.get() && groundedRecall == null &&
+                            run.taskEvidence?.calls.isNullOrEmpty() && ownerReplyRevision == ownerRevisionAtTurnStart &&
+                            pendingConversationSelection == null,
+                        segment = at.heinz.deviceai.cognitive.AnswerContinuationController.Segment(
+                            run.response, successful, hasPartialResponse, run.blocker))
+                    val delivered = continuation as? at.heinz.deviceai.cognitive.AnswerContinuationController.Decision.Deliver
+                    resumeContinuation = continuation as? at.heinz.deviceai.cognitive.AnswerContinuationController.Decision.Continue
                     val visibleAnswer = when {
+                        // All joined segments as one answer; still cut after the last allowed one: answer first, „weiter“ hint.
+                        delivered != null -> if (delivered.complete) delivered.answer else
+                            at.heinz.deviceai.cognitive.LocalPartialAnswerPresentation.present(delivered.answer, delivered.blocker,
+                                continuationAvailable = !ephemeralScreenRun.get() && sessionId == localSessionId &&
+                                    (keepsPartialForContinuation || localConversationContext.hasContinuation(localSessionId)))
                         hasPartialResponse -> at.heinz.deviceai.cognitive.LocalPartialAnswerPresentation.present(
                             run.response, run.blocker, continuationAvailable = keepsPartialForContinuation)
                         !run.responseComplete -> run.blocker ?: "Keine vollständige Antwort erhalten."
@@ -13495,7 +13529,8 @@ class AgentActivity : Activity() {
                     val draftWindow = if (draftTurn != null) onDocumentDraftReply(draftTurn,
                         if (successful) run.response else "") else null
                     val draftAllowsMaya = allowMaya && (draftTurn?.allowMaya ?: true)
-                    addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession,
+                    // While the continuation runs nothing is shown or spoken: the joined answer follows as one message.
+                    if (resumeContinuation == null) addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession,
                         keepCockpit = draftWindow != null, allowMaya = draftAllowsMaya,
                         speakNow = draftWindow == null)
                     if (draftWindow != null && draftTurn != null) {
@@ -13510,20 +13545,25 @@ class AgentActivity : Activity() {
                             "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
                     if (ephemeralScreenRun.get()) lastLocalReply=null
                     if (keepOwnerSession) {
-                        if (successful || hasPartialResponse) {
+                        // A segment the joiner refused is no part of the answer: the anchor stays the part before it.
+                        if (delivered != null && !delivered.segmentAccepted) lastLocalReply = previousLocalReply
+                        else if (successful || hasPartialResponse) {
                             lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000),
                                 textOnly = textOnlyResponse.get())
                             localConversationContext.record(localSessionId, text, run.response,
                                 responseComplete = run.responseComplete)
-                        } else localConversationContext.recordUnanswered(localSessionId, text)
+                        } else recordUnansweredOwnerTurn()
                     }
                     checkpointContinuumAsync()
-                    avatarBlocked = run.blocker != null
+                    avatarBlocked = run.blocker != null && resumeContinuation == null
                     avatarAwaitingApproval = false
                     refreshHologramState()
-                    addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
+                    addToolActivity(resumeContinuation?.status
+                        ?: if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
                     finishLocalConversationTurn(chiefTurn)
+                    // Code64: a continuation segment failed – the part generated before it is shown first, then the cause.
+                    if (continuationStatus != null) presentHeldAnswerContinuation()
                     if(codingPlanning != null) {
                         addToolActivity("Coding-Entwurf fehlgeschlagen · nichts übergeben oder gestartet")
                         return@onFailure
@@ -13578,10 +13618,20 @@ class AgentActivity : Activity() {
                         keepCockpit = failedDraft != null && workWindowHost.isShowing, allowMaya = allowMaya)
                     // Review #791: an oversized turn must not be appended to the history, or every next prompt overflows too.
                     val tokenOverflow = at.heinz.deviceai.localmodel.LocalModelTokenOverflow.isTokenOverflow(error.message)
-                    if (keepFailedOwnerTurn && !tokenOverflow) localConversationContext.recordUnanswered(localSessionId, text)
+                    if (keepFailedOwnerTurn && !tokenOverflow) recordUnansweredOwnerTurn()
                     addToolActivity(if (requiredContextOverflow)
                         "KONTEXT · vollständig erforderliche Belege passen nicht; keine Modellaktion"
                     else "ERROR · lokale Inferenz")
+                }
+                // Code64: the lane stays busy between segments, so no other turn, chat switch or microphone round
+                // can start in between; STOP, a failure or a changed chat end the continuation through setBusy(false).
+                resumeContinuation?.let { next ->
+                    // The cut segment is not the outcome of the owner's turn: the work state shows work again.
+                    workOutcome = null
+                    refreshWorkPresentation()
+                    pendingContinuationStatus = next.status
+                    runLocal(at.heinz.deviceai.cognitive.AnswerContinuationController.CONTINUE_REQUEST)
+                    return
                 }
                 setBusy(false)
                 refreshLocalModelUi()
@@ -16028,10 +16078,34 @@ class AgentActivity : Activity() {
         refreshHologramState()
         refreshSendButtonPresentation()
         if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
+        // Code64: the lane is free although an automatic continuation was still running (STOP, failure, changed turn).
+        if (!value) presentHeldAnswerContinuation()
         if (!value && pendingConversationSelection != null) {
             mainHandler.removeCallbacks(drainConversationSelectionTask)
             mainHandler.post(drainConversationSelectionTask)
         }
+    }
+
+    /**
+     * Code64: an automatic continuation ended without a deliverable segment. The part that was really generated is
+     * shown – not spoken, the owner or a failure stopped it – with the same presentation as a single cut answer;
+     * „weiter“ is only offered when the session context still holds that part. Another chat never receives it.
+     */
+    private fun presentHeldAnswerContinuation() {
+        val held = answerContinuation.abort() ?: return
+        if (isFinishing || isDestroyed) return
+        if (held.sessionId != sessionId) {
+            addToolActivity("Automatische Fortsetzung verworfen · anderes Gespräch geöffnet")
+            return
+        }
+        val resumable = localConversationContext.hasContinuation(held.sessionId)
+        addAssistantMessage(at.heinz.deviceai.cognitive.LocalPartialAnswerPresentation.present(
+            held.answer, held.blocker, continuationAvailable = resumable),
+            preserveLocalContext = true, keepCockpit = false, speakNow = false)
+        if (resumable) lastLocalReply = LocalReplySnapshot(held.sessionId, held.lastRequest,
+            held.lastSegment.take(2_000), textOnly = true)
+        addToolActivity("Automatische Fortsetzung beendet · ${held.segments} von " +
+            "${at.heinz.deviceai.cognitive.AnswerContinuationController.MAX_SEGMENTS} Abschnitten erzeugt")
     }
 
     private fun refreshSendButtonPresentation() {
