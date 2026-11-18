@@ -47,6 +47,7 @@ class HeatTurnRecorder(private val clock: () -> Long) {
     private val calls = ArrayList<Call>()
     private var previewMs: Long? = null
     private var previewShown = false
+    private var stageDraftMs: Long? = null
     private var answerMs: Long? = null
     private var answerEvent: String? = null
     private var answerShown = false
@@ -66,7 +67,7 @@ class HeatTurnRecorder(private val clock: () -> Long) {
         serial++
         handoverMs = clock()
         acceptedMs = null; sawBusy = false; idleSinceMs = null; endMs = null; calls.clear()
-        previewMs = null; previewShown = false; answerMs = null; answerEvent = null; answerShown = false
+        previewMs = null; previewShown = false; stageDraftMs = null; answerMs = null; answerEvent = null; answerShown = false
         answerCharacters = null; reused = null; reuseReason = null; toolFree = null
         ownerStopped = false; timedOut = false; notAccepted = null
     }
@@ -87,6 +88,12 @@ class HeatTurnRecorder(private val clock: () -> Long) {
         if (state != State.RUNNING || previewMs != null) return
         previewMs = elapsed()
         previewShown = shown
+    }
+
+    /** The answer draft was handed to the stage page while that page is really on screen (Command03). */
+    @Synchronized fun stageDraftSet(shown: Boolean) {
+        if (state != State.RUNNING || !shown || stageDraftMs != null) return
+        stageDraftMs = elapsed()
     }
 
     /** A model call of the turn starts; null while no measured turn is running. */
@@ -172,7 +179,10 @@ class HeatTurnRecorder(private val clock: () -> Long) {
         val first = calls.firstOrNull()
         val last = calls.lastOrNull()
         val thermal = calls.mapNotNull { it.failure }.firstOrNull(LocalModelThermalGuard::isThermal)
-        val visibleFromPreview = previewMs != null && previewShown && (answerMs == null || previewMs!! <= answerMs!!)
+        // The earliest answer text on a surface that is really shown: a draft (native row or stage page) or the answer.
+        val draft = listOfNotNull(previewMs?.takeIf { previewShown }?.let { it to EVENT_NATIVE_PREVIEW },
+            stageDraftMs?.let { it to EVENT_STAGE_DRAFT }).minByOrNull { it.first }
+        val visibleDraft = draft?.takeIf { answerMs == null || it.first <= answerMs!! }
         val outcome: String
         val message: String?
         when {
@@ -202,9 +212,9 @@ class HeatTurnRecorder(private val clock: () -> Long) {
             outcome = outcome, message = message,
             acceptedMs = acceptedMs,
             firstTokenMs = first?.firstTokenMs,
-            firstVisibleTextMs = if (visibleFromPreview) previewMs else answerMs,
-            firstVisibleTextEvent = if (visibleFromPreview) EVENT_NATIVE_PREVIEW else answerEvent,
-            firstVisibleTextShown = if (visibleFromPreview) true else if (answerMs != null) answerShown else null,
+            firstVisibleTextMs = visibleDraft?.first ?: answerMs,
+            firstVisibleTextEvent = visibleDraft?.second ?: answerEvent,
+            firstVisibleTextShown = if (visibleDraft != null) true else if (answerMs != null) answerShown else null,
             nativePreviewMs = previewMs, nativePreviewShown = if (previewMs != null) previewShown else null,
             answerHandoverMs = answerMs,
             totalMs = endMs,
@@ -263,6 +273,7 @@ class HeatTurnRecorder(private val clock: () -> Long) {
             OUTPUT_LIMIT, CANCELLED_BY_APP)
 
         const val EVENT_NATIVE_PREVIEW = "NATIVE_STREAM_PREVIEW_TEXT_SET"
+        const val EVENT_STAGE_DRAFT = "ANSWER_DRAFT_HANDED_TO_STAGE_PAGE"
         const val EVENT_STAGE_MESSAGE = "ANSWER_HANDED_TO_STAGE_PAGE"
         const val EVENT_NATIVE_BUBBLE = "ANSWER_BUBBLE_ADDED_TO_NATIVE_CHAT"
 

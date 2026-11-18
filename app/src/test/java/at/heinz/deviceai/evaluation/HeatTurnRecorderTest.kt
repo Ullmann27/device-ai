@@ -112,6 +112,31 @@ class HeatTurnRecorderTest {
         assertEquals(true, shown.firstVisibleTextShown)
     }
 
+    @Test fun aDraftShownInTheStageIsTheFirstVisibleText() {
+        val (probe, _) = started()
+        val begun = now - 100
+        // Command03: the native row exists but is not on screen; the stage page shows the draft.
+        now = begun + 1_500; recorder.previewTextSet(shown = false); recorder.stageDraftSet(shown = true)
+        now = begun + 2_500; recorder.stageDraftSet(shown = true)
+        probe.finished("COMPLETE", null, 80)
+        now = begun + 6_000; recorder.bubble(false, 80, HeatTurnRecorder.EVENT_STAGE_MESSAGE, true); recorder.busy(false)
+        val shown = recorder.result()
+        assertEquals("The first hand-over counts, not a later update", 1_500L, shown.firstVisibleTextMs)
+        assertEquals(HeatTurnRecorder.EVENT_STAGE_DRAFT, shown.firstVisibleTextEvent)
+        assertEquals(true, shown.firstVisibleTextShown)
+        assertEquals(6_000L, shown.answerHandoverMs)
+
+        val (hiddenProbe, _) = started()
+        val again = now - 100
+        // Measurement „Bühne aus“: the page is invisible, so its draft is not what the owner saw.
+        now = again + 1_200; recorder.stageDraftSet(shown = false)
+        hiddenProbe.finished("COMPLETE", null, 80)
+        now = again + 4_000; recorder.bubble(false, 80, HeatTurnRecorder.EVENT_STAGE_MESSAGE, false); recorder.busy(false)
+        val hidden = recorder.result()
+        assertEquals(4_000L, hidden.firstVisibleTextMs)
+        assertEquals(HeatTurnRecorder.EVENT_STAGE_MESSAGE, hidden.firstVisibleTextEvent)
+    }
+
     @Test fun anAnswerHandedToAHiddenStageSaysSo() {
         val (probe, _) = started()
         probe.finished("COMPLETE", null, 50)

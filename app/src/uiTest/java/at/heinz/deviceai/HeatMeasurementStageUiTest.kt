@@ -206,9 +206,15 @@ class HeatMeasurementStageUiTest {
                 assertEquals(140.5, frames.getDouble("intervalP50Ms"), 0.0)
                 assertEquals(140.2, frames.getDouble("intervalMaxMs"), 0.0)
                 assertEquals(5, frames.getInt("frameLimit"))
-                assertEquals("The answer is handed to the stage page", HeatTurnRecorder.EVENT_STAGE_MESSAGE, turn.getString("firstVisibleTextEvent"))
+                // Code69: a visible stage shows the running answer as its draft row – that is the first visible text.
+                // With the stage off (B) nothing is on screen; the record stays the finished answer, marked not shown.
+                assertEquals("A visible stage shows the draft; a hidden one only gets the answer",
+                    if (configuration == "B") HeatTurnRecorder.EVENT_STAGE_MESSAGE else HeatTurnRecorder.EVENT_STAGE_DRAFT,
+                    turn.getString("firstVisibleTextEvent"))
                 assertEquals("…and nobody can see it while the stage is off", configuration != "B", turn.getBoolean("firstVisibleTextShown"))
-                assertEquals(turn.getLong("answerHandoverMs"), turn.getLong("firstVisibleTextMs"))
+                if (configuration == "B") assertEquals(turn.getLong("answerHandoverMs"), turn.getLong("firstVisibleTextMs"))
+                else assertTrue("The draft is on screen before the checked answer",
+                    turn.getLong("firstVisibleTextMs") <= turn.getLong("answerHandoverMs"))
                 assertEquals(true, turn.getBoolean("toolFreeRoute"))
             }
             assertEquals(true, report.getJSONObject("device").getBoolean("htmlStage"))

@@ -43,6 +43,8 @@ internal class ContinuumCommand03OriginalStage(
         const val INDEX = "https://" + LOCAL_HOST + ASSET_PATH + "index.android.html"
         private val SAFE_PATH = Regex("[A-Za-z0-9_./-]{1,200}")
         private val FRAME_PROBE_COMMANDS = setOf("start", "read", "stop")
+        /** The tail of a running answer the page shows as its draft row (native-bridge.js keeps the same bound). */
+        const val MAX_DRAFT_CHARS = 6_000
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
             "research", "agents", "memory", "device", "settings", "settings-voice", "settings-model",
             "settings-internet", "settings-appearance", "voice-input", "voice-input-long-press", "stop")
@@ -296,6 +298,18 @@ internal class ContinuumCommand03OriginalStage(
         }
         val data = message.toString()
         evaluateJavascript("window.ContinuumNative?.message($data);", null)
+    }
+
+    /**
+     * The answer while the on-device model is still writing it: one provisional row in the page's feed. "" removes
+     * it. Never queued – a draft for a page that is not ready is simply not shown; the checked answer follows as a
+     * [presentMessage]. true = handed to the page.
+     */
+    fun presentDraft(scope: Command03Binding, text: String): Boolean {
+        if (disposed || scope != binding || !pageReady) return false
+        val data = envelope(scope).put("text", Command03BridgeContract.messageText(text.takeLast(MAX_DRAFT_CHARS)))
+        evaluateJavascript("window.ContinuumNative?.draft($data);", null)
+        return true
     }
 
     fun presentSources(sources: JSONObject) {

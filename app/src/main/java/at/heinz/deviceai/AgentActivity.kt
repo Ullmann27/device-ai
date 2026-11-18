@@ -320,6 +320,8 @@ class AgentActivity : Activity() {
     private var activeLocalStreamToken: Any? = null
     private var localStreamPreviewRow: LinearLayout? = null
     private var localStreamPreviewText: TextView? = null
+    /** true while the Command03 page shows the running answer as its draft row. */
+    private var localStreamStageDraft = false
     // Scrolling through a streamed answer is a deliberate owner action:
     // never pull the reader back to the newest text.
     private var streamUserPausedScrolling = false
@@ -15607,6 +15609,13 @@ class AgentActivity : Activity() {
             "\n\n" + draft.take(
                 at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS)
         heatMeasurement.onPreviewText(text)
+        // Command03: the native row above is not on screen there, so the stage shows the same draft in its own feed
+        // (at most the first text and then one update per second – see the caller's throttle).
+        val stage = command03MainStage
+        if (stage != null && command03Binding()?.let { scope -> stage.presentDraft(scope, draft) } == true) {
+            localStreamStageDraft = true
+            heatMeasurement.onStageDraft(stage.isShown)
+        }
         if (!streamUserPausedScrolling) scrollToBottom()
     }
 
@@ -15616,6 +15625,10 @@ class AgentActivity : Activity() {
         localStreamPreviewRow = null
         localStreamPreviewText = null
         activeLocalStreamToken = null
+        if (localStreamStageDraft) {
+            localStreamStageDraft = false
+            command03Binding()?.let { scope -> command03MainStage?.presentDraft(scope, "") }
+        }
     }
 
     private fun renderCloudPlan(calls: List<ToolCallRequest>) {

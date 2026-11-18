@@ -2093,3 +2093,52 @@ test('the frame counter of the heat measurement counts what the governor hands o
     assert.equal(f.navigations.length, 0, 'The counter answers the caller; it sends nothing to Android by itself');
   } finally {f.close();}
 });
+
+test('the running answer is shown as one draft row in the stage and replaced by the checked answer', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    f.state();
+    f.window.ContinuumNative.message({...binding, user: true, text: 'Erkläre mir das'});
+    const feed = () => f.document.querySelector('#native-live-panel .native-transcript');
+    const draft = () => f.document.querySelector('.native-draft');
+    // Not busy: a late draft of a finished turn is never shown.
+    native.draft({...binding, text: 'Verspäteter Entwurf'});
+    assert.equal(draft(), null);
+    f.state({busy: true, presence: 'THINKING'});
+    const owner = feed().querySelector('.native-owner');
+    // Another view's draft is ignored.
+    native.draft({...binding, sessionId: 'other-session', text: 'Fremder Entwurf'});
+    assert.equal(draft(), null);
+    native.draft({...binding, text: 'Das ist'});
+    assert.equal(draft().querySelector('p').textContent, 'Das ist');
+    assert.equal(draft().querySelector('small').textContent, 'CONTINUUM · SCHREIBT …');
+    assert.equal(feed().lastElementChild, draft(), 'The draft is the last row of the feed');
+    const row = draft();
+    native.draft({...binding, text: 'Das ist der zweite Satz.'});
+    assert.equal(draft(), row, 'An update changes the text of the same row');
+    assert.equal(feed().querySelector('.native-owner'), owner, 'An update does not rebuild the feed');
+    assert.equal(row.querySelector('p').textContent, 'Das ist der zweite Satz.');
+    // Markup stays text; only the tail of a very long draft is kept.
+    native.draft({...binding, text: '<img src=x onerror=alert(1)>' + 'a'.repeat(7000)});
+    assert.equal(row.querySelector('img'), null);
+    assert.equal(row.querySelector('p').textContent.length, 6000);
+    // A state update during the turn keeps the draft at the end.
+    f.state({busy: true, presence: 'THINKING', cpu: 31});
+    assert.equal(feed().lastElementChild, draft());
+    // The checked answer replaces it.
+    native.message({...binding, user: false, text: 'Das ist die geprüfte Antwort.'});
+    assert.equal(draft(), null);
+    assert.equal(feed().lastElementChild.querySelector('p').textContent, 'Das ist die geprüfte Antwort.');
+    // An explicit empty draft and the end of the turn both remove it.
+    native.draft({...binding, text: 'Noch ein Entwurf'});
+    assert.notEqual(draft(), null);
+    native.draft({...binding, text: ''});
+    assert.equal(draft(), null);
+    native.draft({...binding, text: 'Abgebrochener Entwurf'});
+    assert.notEqual(draft(), null);
+    f.state({busy: false});
+    assert.equal(draft(), null, 'A draft never outlives its turn');
+    assert.equal(f.navigations.length, 0, 'Showing a draft sends nothing to Android');
+  } finally {f.close();}
+});

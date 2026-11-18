@@ -128,6 +128,9 @@ internal class HeatMeasurementController(private val host: HeatMeasurementHost) 
 
     fun onPreviewText(view: View) { if (session != null) recorder.previewTextSet(view.isShown) }
 
+    /** The answer draft was handed to the Command03 page; [shown]: the stage view is really on screen. */
+    fun onStageDraft(shown: Boolean) { if (session != null) recorder.stageDraftSet(shown) }
+
     fun onBubble(user: Boolean, characters: Int) {
         if (session == null) return
         val stage = host.stage()

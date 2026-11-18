@@ -867,3 +867,8 @@ body[data-design="command03"][data-native-compute="local"] .workspace-motion-fro
 body[data-design="command03"][data-native-compute="local"] .native-orb-light {
  animation:native-corona-breathe 1.8s ease-in-out infinite alternate;
 }
+
+/* The answer while the on-device model is still writing it (native-bridge.js, draft): same row as an answer,
+   visibly provisional; no animation, so it costs nothing while the device computes. */
+body[data-design="command03"] .native-chat-line.native-draft {border-style:dashed;border-color:rgba(120,223,240,.38);}
+body[data-design="command03"] .native-chat-line.native-draft p {opacity:.86;}

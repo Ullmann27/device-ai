@@ -366,7 +366,8 @@ object HeatReport {
         append("- Akkutemperatur: Temperatur des Akkus laut Android, nicht des Prozessors.\n")
         append("- Erstes Token: erstes Textstück des Modells nach der Übergabe des Auftrags.\n")
         append("- Erster sichtbarer Text: der Moment, in dem zum ersten Mal Antworttext an die sichtbare Oberfläche übergeben " +
-            "wurde – entweder der Antwortentwurf in der nativen Ansicht (${HeatTurnRecorder.EVENT_NATIVE_PREVIEW}) oder die fertige " +
+            "wurde – entweder der Antwortentwurf (native Ansicht: ${HeatTurnRecorder.EVENT_NATIVE_PREVIEW}, Bühne: " +
+            "${HeatTurnRecorder.EVENT_STAGE_DRAFT}) oder die fertige " +
             "Antwort (${HeatTurnRecorder.EVENT_STAGE_MESSAGE} bzw. ${HeatTurnRecorder.EVENT_NATIVE_BUBBLE}). In dieser Messung: ")
             .append(objects(summary.getJSONArray("rows")).flatMap { row -> ROLES.flatMap { role ->
                 objects0(row.getJSONObject("roles").getJSONObject(role).getJSONArray("firstVisibleTextEvents")) } }
