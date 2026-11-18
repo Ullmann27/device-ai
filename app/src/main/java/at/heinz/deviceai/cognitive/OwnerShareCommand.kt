@@ -6,6 +6,8 @@ import java.util.Locale
  * Owner wish (18.11.2026): „Schick die Zusammenfassung per Mail an meinen Chef“ / „… an anna@example.org“.
  * Stage 1 only prepares: the owner's own mail app opens with subject, text and the saved file, and he presses send.
  * No account, no password, no contact access, nothing is sent by the app.
+ * Only with the owner's standing „E-Mails über Gmail selbst senden“ grant the same parsed order is handed to the
+ * send lane (sending/OwnerSendDirector), which may resolve a name in the contacts and press send in Gmail.
  *
  * The recipient is taken from the owner's own sentence and from nowhere else (see [ExternalContentActionGuard]):
  * an address is passed on, a name („meinen Chef“) is only repeated back – the address field stays empty.

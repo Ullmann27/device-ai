@@ -94,6 +94,11 @@ internal interface OwnerWorkToolsHost {
     fun openFile(file: OwnerSavedFile): String?
     /** Opens the owner's mail app with the prepared message; null = started, otherwise the reason. Sends nothing. */
     fun composeMail(address: String?, subject: String, body: String, attachment: OwnerSavedFile?): String?
+    /**
+     * The owner's standing „E-Mails über Gmail selbst senden“ grant: true = the send lane took the order over
+     * (verifies the Gmail draft on screen, sends, reports). false = no grant; the hand-over below stays as it was.
+     */
+    fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean = false
 }
 
 /** What the Activity lends a running file job. */
@@ -402,6 +407,8 @@ internal class OwnerWorkTools(
         lastDeliverable = host.sessionId to target
         val attachment = saved?.takeIf { it.session == host.sessionId && it.of === target && it.file.uri != null }?.file
         val title = target.title + " " + OwnerDeliverable.SHORT_DATE.format(target.date)
+        if (host.sendMailYourself(at.heinz.deviceai.sending.OwnerMailHandover(request, command.address,
+                command.recipientName, title, target.plainText, attachment))) return
         host.activity("E-MAIL · Übergabe an das Mailprogramm · nichts wird gesendet")
         val problem = host.composeMail(command.address, title, target.plainText, attachment)
         if (problem != null) {

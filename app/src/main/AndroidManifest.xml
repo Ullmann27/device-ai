@@ -21,6 +21,10 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- Owner send orders („Schreib Anna auf WhatsApp …“): a name is resolved to exactly one address-book entry.
+         Asked once at runtime with a plain explanation; read on the device only. No SMS permission and no
+         notification listener are declared (see NormalInstallManifestTest). -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-permission android:name="com.termux.permission.RUN_COMMAND" />
 

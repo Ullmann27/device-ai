@@ -175,6 +175,7 @@ class AgentActivity : Activity() {
         private const val READINESS_CAMERA_PERMISSION_REQUEST = 2242
         private const val READINESS_MIC_PERMISSION_REQUEST = 2243
         private const val READINESS_SPEECH_REQUEST = 2244
+        private const val OWNER_SEND_CONTACTS_PERMISSION_CODE = 2251
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
@@ -4640,6 +4641,7 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.OPENROUTER -> showOpenRouterApiKeyDialog()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SYSTEM -> showSystemCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.AUTONOMY -> showAutonomyControl()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SELF_SEND -> showOwnerSendSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SHIZUKU -> showShizukuConnectionDialog()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.DIAGNOSTICS -> showDiagnosticsCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.UPDATES ->
@@ -8096,6 +8098,10 @@ class AgentActivity : Activity() {
         if (clarifiedAppName == null && clarifiedComputer == null && !botRoutingChecked &&
             routeBotInput(input.text.toString())) return
         if (selectedBot == null) deliverRoutineMessages()
+        // Owner send lane: „Schreib Anna auf WhatsApp, …“ and the answers to its own questions. Deterministic, fail
+        // closed, before the computer lane (which only ever prepared drafts in the split screen).
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && ownerSend.handle(request)) return
         if (clarifiedAppName == null && selectedBot == null && tryStartComputerRequest(request, clarifiedComputer)) return
         // Owner work tools: „Fass mir die Nachrichten von heute zusammen“, then „speichere das als PDF“ / „schick das
         // per Mail an …“. Deterministic and fail closed; before the clock, document and research lanes can guess.
@@ -12761,6 +12767,92 @@ class AgentActivity : Activity() {
 
         override fun composeMail(address: String?, subject: String, body: String, attachment: OwnerSavedFile?): String? =
             documents.composeMail(address, subject, body, attachment)
+
+        override fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean = ownerSend.mail(order)
+    }
+
+    // ── Owner send lane (WhatsApp / Gmail on the standing owner grant) – logic in sending/OwnerSendDirector.kt ──
+
+    /** Host tests replace the device boundary and the address book; null = the real phone. */
+    internal var ownerSendDeviceOverride: at.heinz.deviceai.sending.OwnerSendDevice? = null
+    internal var ownerSendContactsOverride: at.heinz.deviceai.sending.OwnerSendContactSource? = null
+    private var pendingOwnerSendContacts: ((Boolean) -> Unit)? = null
+    internal val ownerSendGrants by lazy {
+        at.heinz.deviceai.sending.OwnerSendGrants(at.heinz.deviceai.sending.OwnerSendPreferences(this)) { java.time.LocalDate.now() }
+    }
+    private val ownerSendPhone by lazy { at.heinz.deviceai.sending.AndroidOwnerSendDevice(this) }
+    internal val ownerSend by lazy { at.heinz.deviceai.sending.OwnerSendDirector(OwnerSendAdapter()) }
+
+    private fun ownerSendContactsReadable(): Boolean = ownerSendContactsOverride != null ||
+        checkSelfPermission(android.Manifest.permission.READ_CONTACTS) == android.content.pm.PackageManager.PERMISSION_GRANTED
+
+    private fun showOwnerSendSettings() {
+        at.heinz.deviceai.sending.OwnerSendSettingsDialog.show(this, ownerSendGrants,
+            accessibilityOn = { (ownerSendDeviceOverride ?: ownerSendPhone).accessibilityOn() },
+            contactsReadable = ::ownerSendContactsReadable,
+            startDiagnosis = { if (!busy) ownerSend.handle("Sende-Diagnose") },
+            lastDiagnosis = { at.heinz.deviceai.sending.AndroidOwnerSendDevice.lastDiagnosis(this) })
+    }
+
+    private inner class OwnerSendAdapter : at.heinz.deviceai.sending.OwnerSendHost {
+        private val work = OwnerWorkToolsAdapter()
+        override val sessionId: String get() = work.sessionId
+        override val ownerTurn: Long get() = work.ownerTurn
+        override val assistantName: String? get() = work.assistantName
+        override fun acceptOwnerTurn(request: String) = work.acceptOwnerTurn(request)
+
+        override fun reply(request: String, text: String) {
+            // Only the owner's own sentence and a fixed label enter the model context: no contact data, no screen text.
+            localConversationContext.recordNonModel(sessionId, request,
+                "(Sende-Auftrag deterministisch bearbeitet; Empfängerdaten und Bildschirminhalt nicht im Verlauf)")
+            addAssistantMessage(text.take(8_000), preserveLocalContext = true,
+                keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        }
+
+        override fun activity(line: String) = addToolActivity(line)
+        override fun contactsReadable(): Boolean = ownerSendContactsReadable()
+
+        override fun requestContacts(explanation: String, done: (Boolean) -> Unit) {
+            AlertDialog.Builder(this@AgentActivity).setTitle("Kontakte lesen").setMessage(explanation)
+                .setNegativeButton("Nicht jetzt") { _, _ -> done(false) }
+                .setPositiveButton("Weiter") { _, _ ->
+                    pendingOwnerSendContacts = done
+                    requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), OWNER_SEND_CONTACTS_PERMISSION_CODE)
+                }
+                .setOnCancelListener { done(false) }.show()
+        }
+
+        override fun contacts(): at.heinz.deviceai.sending.OwnerSendContactSource =
+            ownerSendContactsOverride ?: at.heinz.deviceai.sending.AndroidOwnerSendContacts(this@AgentActivity)
+        override fun device(): at.heinz.deviceai.sending.OwnerSendDevice = ownerSendDeviceOverride ?: ownerSendPhone
+        override fun grants(): at.heinz.deviceai.sending.OwnerSendGrants = ownerSendGrants
+        override fun modelReady(): Boolean = work.modelReady()
+        override fun nowMillis(): Long = android.os.SystemClock.elapsedRealtime()
+        override fun appVersion(channel: at.heinz.deviceai.sending.SendChannel): String? = ownerSendPhone.appVersion(channel)
+
+        override fun <T> runJob(request: String, work: (at.heinz.deviceai.sending.OwnerSendJob) -> T, done: (Result<T>) -> Unit) =
+            this.work.runFileJob(request, { job ->
+                work(object : at.heinz.deviceai.sending.OwnerSendJob {
+                    override fun step(key: String, label: String, state: at.heinz.deviceai.cockpit.StepState) =
+                        job.step(key, label, state, at.heinz.deviceai.cockpit.CockpitAction.EXECUTE)
+
+                    /** Only for „schreib ihr was Nettes“; the result is always shown to the owner before any send. */
+                    override fun generate(prompt: String): OwnerWorkGeneration {
+                        at.heinz.deviceai.localmodel.ClaudeTurnGate.refusal(claudeBrain, request, false)
+                            ?.let { return OwnerWorkGeneration("", it, false) }
+                        val generation = generateLocal(promptCharacters = prompt.length, hardDeadlineMillis = 60_000,
+                            maxOutputBytes = 1_500) { callback -> localRuntime.streamTextOnly(prompt, callback) }
+                        return OwnerWorkGeneration(generation.response, generation.failure,
+                            generation.completion == LocalGenerationCompletion.COMPLETE)
+                    }
+                })
+            }, done)
+
+        /** Stays on the device: an app-private file and a dialog, not part of the conversation. */
+        override fun showDiagnosis(report: String) {
+            at.heinz.deviceai.sending.AndroidOwnerSendDevice.saveDiagnosis(this@AgentActivity, report)
+            if (foregroundLearningActive) at.heinz.deviceai.sending.OwnerSendSettingsDialog.showDiagnosis(this@AgentActivity, report)
+        }
     }
 
     private fun runCloud(message: String?, outputs: List<ToolOutput>) = runCloud(message, outputs, command03ViewOwner())
@@ -17761,6 +17853,13 @@ class AgentActivity : Activity() {
         if (requestCode == READINESS_CAMERA_PERMISSION_REQUEST || requestCode == READINESS_MIC_PERMISSION_REQUEST) {
             // Permission is not a new start gesture; a late callback never opens either sensor.
             refreshReadinessGuide()
+            return
+        }
+        if (requestCode == OWNER_SEND_CONTACTS_PERMISSION_CODE) {
+            val done = pendingOwnerSendContacts
+            pendingOwnerSendContacts = null
+            done?.invoke(!isFinishing && !isDestroyed &&
+                grantResults.firstOrNull() == android.content.pm.PackageManager.PERMISSION_GRANTED)
             return
         }
         if(requestCode==LOCAL_SPEECH_PERMISSION_REQUEST){
