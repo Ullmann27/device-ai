@@ -143,6 +143,8 @@ async function fixture({realAvatar = false, realScene = false} = {}) {
     speechFrames, speechResults, get speechClears() {return speechClears;}, decodings,
     intensities, sceneQualities, audioLevels, gazes, sceneEvents, flush,
     advance(ms) {now += ms;},
+    // What the page has asked the clock for and not yet received: 'timer', 'timer:repeat' or 'raf' per entry.
+    pendingWork() {return [...scheduled.values()].map(entry => entry.type + (entry.repeat ? ':repeat' : ''));},
     async decode(index = decodings.length - 1, succeeds = true) {
       const pending = decodings[index];assert.ok(pending, 'The production adapter requested image decoding');
       if (succeeds) {
@@ -2141,4 +2143,539 @@ test('the running answer is shown as one draft row in the stage and replaced by 
     assert.equal(draft(), null, 'A draft never outlives its turn');
     assert.equal(f.navigations.length, 0, 'Showing a draft sends nothing to Android');
   } finally {f.close();}
+});
+
+// ───────── Code70 · the windows say what really happens ─────────
+// Fixtures carry only what Android's snapshot and frame packets may carry; nothing is derived in the tests.
+const workRecord = (extra = {}) => ({consentPending: false, taskId: 'computer-task', captureSession: '7',
+  stage: 'DISPATCHED', app: 'Dateien', goal: 'Download-Ordner öffnen', actions: [], ...extra});
+const dispatched = (sequence, extra = {}) => ({sequence, kind: 'CLICK', state: 'DISPATCHED', x: .5, y: .25,
+  frameSequence: 12, observationRevision: 4, ...extra});
+const liveFrame = (extra = {}) => computerFrame({taskId: 'computer-task', captureSession: '7',
+  targetPackage: 'com.example.files', viewport: [.25, 0, .75, 1], sourceSequence: 12, observationRevision: 4, ...extra});
+const monitor = f => f.document.querySelector('#native-computer-panel');
+const pointer = f => f.document.querySelector('#native-computer-panel .native-computer-marker');
+const record = f => f.document.querySelector('#native-live-panel .native-monitor-record');
+const logRows = host => [...host.querySelectorAll('.native-computer-log li')].map(item =>
+  [item.dataset.kind, item.dataset.state, item.querySelector('.native-action-kind').textContent,
+    item.querySelector('.native-action-state').textContent]);
+const working = {busy: true, presence: 'THINKING', cloudBrain: true};
+
+test('the live window names its real target and says LIVE only while a fresh frame of the source is shown', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    const badge = () => [monitor(f).querySelector('.op-mode-label').textContent, monitor(f).dataset.monitorState];
+    const title = () => monitor(f).querySelector('.op-window-id').textContent;
+    f.state({...working, computerWork: workRecord()});
+    native.computer({...binding, generation: 1, sequence: 1, active: true, status: 'WAITING',
+      reason: 'Warte auf erstes echtes Bild', taskId: 'computer-task', captureSession: '7',
+      targetPackage: 'com.example.files'});
+    assert.deepEqual(badge(), ['WARTET AUF ERSTES BILD', 'waiting']);
+    assert.equal(title(), 'Dateien · com.example.files', 'App of the approved task and the package Android captures');
+    native.computer(liveFrame({sequence: 2}));
+    assert.deepEqual(badge(), ['WARTET AUF ERSTES BILD', 'waiting'], 'An undecoded frame is not a live picture');
+    await f.decode();
+    assert.deepEqual(badge(), ['LIVE', 'live']);
+    assert.equal(monitor(f).querySelector('.native-computer-screen').hidden, false);
+    assert.equal(monitor(f).querySelector('.native-computer-image').parentElement,
+      monitor(f).querySelector('.native-computer-screen'), 'The image sits in the box that also carries the markers');
+    // The stream stops delivering: the picture leaves and the window says so instead of pretending.
+    await f.timers(1501);
+    assert.deepEqual(badge(), ['KEIN FRISCHES BILD', 'stale']);
+    assert.equal(monitor(f).querySelector('.native-computer-image'), null);
+    assert.equal(monitor(f).querySelector('.native-computer-screen').hidden, true);
+    native.computer({...binding, generation: 1, sequence: 3, active: true, status: 'PAUSED', reason: 'Pausiert – kein frisches Bild'});
+    assert.deepEqual(badge(), ['PAUSIERT', 'paused']);
+    assert.equal(title(), 'Dateien · com.example.files', 'A status packet without names keeps those of its generation');
+    native.computer({...binding, generation: 1, sequence: 4, active: true, status: 'COVERED', reason: 'Verdeckt'});
+    assert.deepEqual(badge(), ['VERDECKT', 'covered']);
+    native.computer(liveFrame({sequence: 5, sourceSequence: 13}));await f.decode();
+    assert.deepEqual(badge(), ['LIVE', 'live'], 'A new real frame is live again');
+    // A record of another task never lends its app name; a malformed package is not shown at all.
+    f.state({...working, computerWork: workRecord({taskId: 'another-task'})});
+    assert.equal(title(), 'com.example.files');
+    native.computer({...binding, generation: 2, sequence: 1, active: true, status: 'WAITING', reason: 'Warte',
+      taskId: 'another-task', captureSession: '7', targetPackage: '<b>kein.paket</b>'});
+    assert.equal(title(), 'Dateien', 'Only the app of the matching record remains');
+    assert.equal(monitor(f).querySelector('b'), null);
+    f.state({...working});
+    assert.equal(title(), 'CONTINUUM · ANDROID', 'Without a real name the neutral title stays');
+  } finally {f.close();}
+});
+
+test('a dispatched input is marked on the shown frame at the coordinate Android measured, once, and then listed', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    f.state({...working, computerWork: workRecord()});
+    native.computer(liveFrame());await f.decode();
+    assert.equal(pointer(f), null, 'No input, no marker');
+    assert.equal(monitor(f).querySelector('.native-computer-work').hidden, false, 'Goal and stage of the task are text');
+    assert.equal(monitor(f).querySelector('.native-computer-stage').textContent, 'Download-Ordner öffnen · Eingabe ausgelöst');
+    assert.deepEqual(logRows(monitor(f)), []);
+    assert.equal(monitor(f).querySelector('.native-computer-log').hidden, true, 'No empty list is shown');
+    f.advance(1300);
+    const gazes = f.gazes.length;
+    f.state({...working, computerWork: workRecord({actions: [dispatched(3)]})});
+    const mark = pointer(f);
+    assert.ok(mark, 'The input Android just dispatched is shown on the image');
+    // The frame shows the window part x .25–.75; the target x .5, y .25 of the window lies at 50 % / 25 % of it.
+    assert.deepEqual([parseFloat(mark.style.left), parseFloat(mark.style.top), mark.dataset.at, mark.dataset.kind,
+      mark.dataset.state], [50, 25, '50.00% 25.00%', 'click', 'dispatched']);
+    assert.equal(mark.parentElement, monitor(f).querySelector('.native-computer-image').parentElement);
+    assert.equal(mark.getAttribute('aria-hidden'), 'true');
+    assert.equal(mark.textContent, '');
+    assert.equal(f.gazes.length, gazes + 1);
+    assert.equal(f.gazes.at(-1).target, monitor(f), 'The avatar looks at the monitor when an input lands');
+    assert.deepEqual(logRows(monitor(f)), [['click', 'dispatched', 'Tippen', 'ausgelöst']]);
+    // The effect is confirmed: the same marker changes its state; that is no second input and no second glance.
+    f.state({...working, computerWork: workRecord({stage: 'VERIFIED', actions: [dispatched(3, {state: 'VERIFIED'})]})});
+    assert.equal(pointer(f), mark);
+    assert.equal(mark.dataset.state, 'verified');
+    assert.equal(f.gazes.length, gazes + 1);
+    assert.deepEqual(logRows(monitor(f)), [['click', 'verified', 'Tippen', 'Wirkung bestätigt']]);
+    // The marker leaves after its short time while the stream goes on; the list keeps what was done.
+    native.computer(liveFrame({sequence: 2, sourceSequence: 13}));await f.decode();
+    assert.equal(pointer(f), mark, 'The next frame of the same window keeps the marker in place');
+    f.advance(1200);
+    native.computer(liveFrame({sequence: 3, sourceSequence: 14}));await f.decode();
+    await f.timers(1300);
+    assert.equal(pointer(f), null);
+    assert.ok(monitor(f).querySelector('.native-computer-image'), 'The picture itself is still live');
+    assert.deepEqual(logRows(monitor(f)), [['click', 'verified', 'Tippen', 'Wirkung bestätigt']]);
+    // A repeated snapshot is no new input.
+    f.state({...working, computerWork: workRecord({stage: 'VERIFIED', actions: [dispatched(3, {state: 'VERIFIED'})]})});
+    assert.equal(pointer(f), null);
+    assert.equal(f.navigations.filter(url => !['/frame-presented', '/frame-hidden'].includes(url.pathname)).length, 0,
+      'Showing an input sends nothing to Android');
+  } finally {f.close();}
+});
+
+test('no marker is placed without measured geometry, on an older frame, outside the shown part or for another task', async () => {
+  const cases = [
+    ['a frame without a measured viewport', liveFrame({viewport: undefined}), dispatched(3)],
+    ['a malformed viewport', liveFrame({viewport: [.75, 0, .25, 1]}), dispatched(3)],
+    ['a target outside the shown part of the window', liveFrame(), dispatched(3, {x: .1})],
+    ['a frame older than the one the input was dispatched on', liveFrame({sourceSequence: 11}), dispatched(3)],
+    ['a frame without its sequence', liveFrame({sourceSequence: undefined}), dispatched(3)],
+    ['an input without a measured target', liveFrame(), dispatched(3, {kind: 'SET_TEXT', x: undefined, y: undefined})],
+    ['a coordinate outside 0..1', liveFrame(), dispatched(3, {y: 1.2})],
+    ['a frame of another capture session', liveFrame({captureSession: '8'}), dispatched(3)]];
+  for (const [name, frame, action] of cases) {
+    const f = await fixture();
+    try {
+      f.state({...working, computerWork: workRecord()});
+      f.window.ContinuumNative.computer(frame);await f.decode();
+      f.state({...working, computerWork: workRecord({actions: [action]})});
+      assert.ok(monitor(f).querySelector('.native-computer-image'), name + ': the frame itself is shown');
+      assert.equal(pointer(f), null, name);
+    } finally {f.close();}
+  }
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    // The input was dispatched on frame 20; the page still shows frame 12. The marker waits for the right picture.
+    f.state({...working, computerWork: workRecord()});
+    native.computer(liveFrame());await f.decode();
+    f.state({...working, computerWork: workRecord({actions: [dispatched(3, {frameSequence: 20})]})});
+    assert.equal(pointer(f), null);
+    native.computer(liveFrame({sequence: 2, sourceSequence: 20}));await f.decode();
+    assert.ok(pointer(f), 'It appears with the frame it belongs to');
+    // An input that is already settled when the page first sees it is history: listed, not replayed.
+    const g = await fixture();
+    try {
+      g.state({...working, computerWork: workRecord({stage: 'VERIFIED', actions: [dispatched(3, {state: 'VERIFIED'})]})});
+      g.window.ContinuumNative.computer(liveFrame());await g.decode();
+      assert.equal(pointer(g), null);
+      assert.deepEqual(logRows(monitor(g)), [['click', 'verified', 'Tippen', 'Wirkung bestätigt']]);
+    } finally {g.close();}
+  } finally {f.close();}
+});
+
+test('the list of inputs is bounded text: kinds, states, unconfirmed effects; malformed entries never appear', async () => {
+  const f = await fixture();
+  try {
+    f.state({...working, computerWork: workRecord({stage: 'PAUSED', goal: '<img src=x onerror=alert(1)>', actions: [
+      dispatched(1, {kind: 'SCROLL', state: 'VERIFIED', x: undefined, y: undefined}),
+      dispatched(2, {kind: 'SET_TEXT', state: 'UNCONFIRMED', x: undefined, y: undefined}),
+      dispatched(2, {kind: 'CLICK'}),                       // not newer than its predecessor
+      dispatched(4, {kind: 'DELETE_EVERYTHING'}),           // unknown kind
+      dispatched(5, {state: 'DONE'}),                       // unknown state
+      {sequence: 'six', kind: 'CLICK', state: 'VERIFIED'},  // malformed
+      null,
+      dispatched(7, {kind: 'OPEN_APP', state: 'VERIFIED'})]})});
+    f.window.ContinuumNative.computer(liveFrame());await f.decode();
+    assert.deepEqual(logRows(monitor(f)), [['scroll', 'verified', 'Scrollen', 'Wirkung bestätigt'],
+      ['set_text', 'unconfirmed', 'Text eingeben', 'Wirkung nicht bestätigt'],
+      ['open_app', 'verified', 'App öffnen', 'Wirkung bestätigt']]);
+    const stage = monitor(f).querySelector('.native-computer-stage');
+    assert.equal(stage.textContent, '<img src=x onerror=alert(1)> · Arbeit pausiert');
+    assert.equal(stage.dataset.stage, 'paused');
+    assert.equal(monitor(f).querySelector('.native-computer-work img'), null, 'Markup stays text');
+    assert.match(monitor(f).querySelector('.native-computer-log-title').textContent, /FREIGEGEBENEN AUFTRAG/);
+    // More than six: the newest six. An unknown stage is not named.
+    f.state({...working, computerWork: workRecord({stage: 'DREAMING', goal: '',
+      actions: Array.from({length: 9}, (_, index) => dispatched(index + 1, {state: 'VERIFIED'}))})});
+    assert.equal(logRows(monitor(f)).length, 6);
+    assert.equal(monitor(f).querySelector('.native-computer-stage').hidden, true);
+    // A malformed record is no record.
+    for (const broken of [{taskId: 'computer-task'}, {taskId: 'a b', captureSession: '7'},
+      {taskId: 'computer-task', captureSession: 'seven'}, 'text', 7, []]) {
+      f.state({...working, computerWork: broken});
+      assert.equal(monitor(f).querySelector('.native-computer-work').hidden, true, JSON.stringify(broken));
+    }
+  } finally {f.close();}
+});
+
+test('an ended or stopped live window stays as a record without a picture until the next turn', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    const done = workRecord({stage: 'COMPLETED', actions: [dispatched(3, {state: 'VERIFIED'})]});
+    f.state({busy: true, presence: 'THINKING', computerWork: workRecord({actions: [dispatched(3)]})});
+    native.message({...binding, user: true, text: 'Öffne den Download-Ordner'});
+    assert.equal(record(f).hidden, true, 'No record without a real end');
+    assert.equal(record(f).childElementCount, 0);
+    native.computer(liveFrame());await f.decode();
+    native.computer({...binding, generation: 1, sequence: 2, active: false, status: 'ENDED', reason: 'Live-Bild angehalten'});
+    assert.equal(monitor(f), null, 'The monitor itself is gone with its source');
+    assert.equal(f.document.querySelector('.native-computer-image'), null);
+    const shown = record(f);
+    assert.equal(shown.hidden, false);
+    assert.equal(shown.dataset.state, 'ended');
+    assert.equal(shown.querySelector('.native-record-badge').textContent, 'BEENDET');
+    assert.equal(shown.querySelector('strong').textContent, 'Dateien · com.example.files');
+    assert.equal(shown.querySelector('p').textContent, 'Live-Bild angehalten. Es wird kein Bild mehr übertragen.');
+    assert.equal(shown.querySelector('img,canvas,video'), null, 'A record never keeps a picture');
+    assert.deepEqual(logRows(shown), [['click', 'dispatched', 'Tippen', 'ausgelöst']]);
+    assert.ok(f.document.querySelector('#workspace').classList.contains('native-work-active'), 'It is shown in the work window');
+    // The task's own end and the reply keep it; its inputs follow Android's record.
+    f.state({busy: false, presence: 'IDLE', computerWork: done});
+    native.message({...binding, user: false, text: 'Der Download-Ordner ist geöffnet.'});
+    assert.equal(record(f).hidden, false);
+    assert.equal(record(f).querySelector('.native-computer-stage').textContent, 'Download-Ordner öffnen · Auftrag abgeschlossen');
+    assert.deepEqual(logRows(record(f)), [['click', 'verified', 'Tippen', 'Wirkung bestätigt']]);
+    f.state({busy: false, presence: 'IDLE', cpu: 41, computerWork: done});
+    assert.equal(record(f).querySelector('.native-record-badge').textContent, 'BEENDET', 'Periodic snapshots keep it');
+    // The next turn starts: the record of the previous one leaves.
+    f.state({busy: true, presence: 'THINKING', computerWork: done});
+    assert.equal(record(f).hidden, true);
+    assert.equal(record(f).childElementCount, 0);
+  } finally {f.close();}
+  const g = await fixture();
+  try {
+    const native = g.window.ContinuumNative;
+    g.state({busy: true, presence: 'THINKING', computerWork: workRecord()});
+    native.computer(liveFrame());await g.decode();
+    // The owner's Stop, as Android confirms it to the page.
+    native.section({...binding, name: 'stop'});
+    assert.equal(monitor(g), null);
+    assert.equal(record(g).dataset.state, 'stopped');
+    assert.equal(record(g).querySelector('.native-record-badge').textContent, 'GESTOPPT');
+    assert.match(record(g).querySelector('p').textContent, /^Du hast das Live-Bild gestoppt\./);
+    // Closing the window closes the record; nothing is sent for it.
+    const sent = g.navigations.length;
+    g.click(g.document.querySelector('#close-button'));
+    assert.equal(record(g)?.hidden ?? true, true);
+    assert.equal(g.navigations.length, sent);
+    // A new source starts a new window and never inherits an old record; a view change keeps none either.
+    native.computer(liveFrame({generation: 2}));await g.decode();
+    native.computer({...binding, generation: 2, sequence: 2, active: false, status: 'ENDED', reason: 'Aufnahme beendet'});
+    assert.equal(record(g).dataset.state, 'ended');
+    native.computer(liveFrame({generation: 3}));
+    assert.equal(record(g)?.hidden ?? true, true, 'A new generation is a new window');
+    native.computer({...binding, generation: 3, sequence: 2, active: false, status: 'ENDED', reason: 'Aufnahme beendet'});
+    assert.equal(record(g).hidden, false);
+    g.state({sessionId: anotherSession});
+    assert.equal(g.document.querySelector('.native-monitor-record:not([hidden])'), null);
+    // A source that never was on screen leaves no record.
+    g.window.ContinuumNative.computer({...binding, sessionId: anotherSession, viewId: anotherView, viewRevision: 2,
+      generation: 1, sequence: 1, active: false, status: 'ENDED', reason: 'Nie gezeigt'});
+    assert.equal(g.document.querySelector('.native-monitor-record:not([hidden])'), null);
+  } finally {g.close();}
+});
+
+test('Android\'s open capture consent is shown as waiting for the owner, who is faced once', async () => {
+  const f = await fixture();
+  try {
+    f.state({busy: true, presence: 'THINKING'});
+    assert.equal(f.gazes.length, 0);
+    f.state({busy: true, presence: 'THINKING', computerWork: {consentPending: true}});
+    const shown = record(f);
+    assert.equal(shown.hidden, false);
+    assert.equal(shown.dataset.state, 'consent');
+    assert.equal(shown.querySelector('.native-record-badge').textContent, 'WARTET AUF DEINE FREIGABE');
+    assert.match(shown.querySelector('p').textContent, /Ohne deine Zustimmung wird kein Bild übertragen/);
+    assert.equal(shown.querySelector('strong'), null, 'No target is named before Android reports one');
+    assert.equal(shown.querySelector('img,canvas,video'), null);
+    assert.equal(f.gazes.length, 1);assert.ok(forward(f.gazes[0]), 'A consent concerns the owner');
+    f.state({busy: true, presence: 'THINKING', cpu: 44, computerWork: {consentPending: true}});
+    assert.equal(f.gazes.length, 1, 'A repeated snapshot is no new reason');
+    // Consent given and the source started: the monitor replaces the note.
+    f.state({busy: true, presence: 'THINKING', computerWork: workRecord({consentPending: false, stage: 'ACCEPTED'})});
+    assert.equal(record(f).hidden, true);
+    f.window.ContinuumNative.computer(liveFrame());await f.decode();
+    assert.equal(monitor(f).dataset.monitorState, 'live');
+    // Anything but an explicit true is no consent.
+    for (const value of ['true', 1, null]) {
+      const g = await fixture();
+      try {
+        g.state({busy: true, presence: 'THINKING', computerWork: {consentPending: value}});
+        assert.equal(g.document.querySelector('.native-monitor-record:not([hidden])'), null, String(value));
+      } finally {g.close();}
+    }
+  } finally {f.close();}
+});
+
+test('the work window states its real state: running with step count, answer being written, approval, failure, delivery', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    const badge = () => {
+      const node = f.document.querySelector('#native-live-panel .op-console-head .op-mode-label');
+      return [node.textContent, node.dataset.windowState];
+    };
+    f.state();
+    native.message({...binding, user: true, text: 'Suche die Unterlagen'});
+    assert.deepEqual(badge(), ['LOKALE DATEN', 'local']);
+    f.state({busy: true, presence: 'THINKING'});
+    assert.deepEqual(badge(), ['LÄUFT', 'running'], 'Without steps no count is made up');
+    const steps = [{label: 'Gedächtnis durchsucht', state: 'DONE'}, {label: 'Websuche', state: 'ACTIVE'},
+      {label: 'Ergebnis prüfen', state: 'WAITING'}];
+    f.state({busy: true, presence: 'RESEARCHING', activity: activityPacket({steps})});
+    assert.deepEqual(badge(), ['LÄUFT · 1/3', 'running']);
+    native.draft({...binding, text: 'Die Unterlagen'});
+    assert.deepEqual(badge(), ['ANTWORT ENTSTEHT', 'writing']);
+    native.draft({...binding, text: ''});
+    assert.deepEqual(badge(), ['LÄUFT · 1/3', 'running']);
+    f.state({busy: true, presence: 'WAITING_FOR_APPROVAL', activity: activityPacket({steps})});
+    assert.deepEqual(badge(), ['WARTET AUF DEINE FREIGABE', 'approval']);
+    f.state({busy: true, presence: 'BLOCKED', activity: activityPacket({steps})});
+    assert.deepEqual(badge(), ['BLOCKIERT', 'blocked']);
+    const finished = steps.map(step => ({...step, state: 'DONE'}));
+    native.message({...binding, user: false, text: 'Die Unterlagen liegen im Ordner Heizung.'});
+    f.state({busy: false, presence: 'IDLE', activity: activityPacket({revision: 2, active: false, steps: finished})});
+    assert.deepEqual(badge(), ['ANTWORT GELIEFERT', 'answered']);
+    const reply = f.document.querySelector('#native-live-panel .native-assistant');
+    assert.equal(reply.dataset.result, 'true', 'The delivered answer is this turn\'s result while it is the last line');
+    f.state({busy: false, presence: 'IDLE', activity: activityPacket({revision: 3, active: false,
+      steps: [finished[0], {label: 'Websuche', state: 'FAILED'}, finished[2]]})});
+    assert.deepEqual(badge(), ['SCHRITT FEHLGESCHLAGEN', 'failed'], 'A failed step is not hidden behind the answer');
+    // The owner's next line: the answer is no longer the last one, the result mark leaves.
+    native.message({...binding, user: true, text: 'Danke'});
+    f.state({busy: false, presence: 'IDLE'});
+    assert.deepEqual(badge(), ['LOKALE DATEN', 'local']);
+    assert.equal(f.document.querySelector('#native-live-panel [data-result]'), null);
+    // A restored transcript is history, not a delivery.
+    native.transcript({...binding, entries: [{user: true, text: 'Frage'}, {user: false, text: 'Alte Antwort'}]});
+    assert.deepEqual(badge(), ['LOKALE DATEN', 'local']);
+    assert.equal(f.document.querySelector('#native-live-panel [data-result],#native-live-panel [data-arrival]'), null);
+  } finally {f.close();}
+});
+
+test('sources form a wall of small screens: one tile per delivered source with its host, title and address', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    f.state();
+    native.sources({...binding, sourceSetId, items: [
+      {id: sourceId, title: 'Förderung Wärmepumpe', url: 'https://www.land-oberoesterreich.gv.at/foerderungen?x=1'},
+      {id: '66666666-6666-4666-8666-666666666667', title: '<b>Bundesförderung</b>', url: 'http://umweltfoerderung.at/privat'}]});
+    const card = f.document.querySelector('#native-live-panel .native-source-card');
+    const tiles = [...card.querySelectorAll('.native-source-link')];
+    assert.equal(tiles.length, 2, 'One tile per source, none added');
+    assert.deepEqual(tiles.map(tile => tile.querySelector('.native-source-host').textContent),
+      ['www.land-oberoesterreich.gv.at', 'umweltfoerderung.at'], 'The host is taken from the real address');
+    assert.deepEqual(tiles.map(tile => tile.querySelector('strong').textContent), ['Förderung Wärmepumpe', '<b>Bundesförderung</b>']);
+    assert.equal(tiles[1].querySelector('b'), null, 'Markup stays text');
+    assert.equal(card.querySelector('img,iframe,canvas,p'), null, 'No page is drawn and no excerpt exists');
+    assert.equal(card.dataset.arrival, 'sources', 'Marked once on arrival');
+    // The next rebuild of the feed shows the same wall without replaying its arrival.
+    native.message({...binding, user: true, text: 'Weiter'});
+    assert.equal(f.document.querySelector('#native-live-panel .native-source-card').dataset.arrival, undefined);
+    assert.equal(f.document.querySelectorAll('#native-live-panel .native-source-link').length, 2);
+  } finally {f.close();}
+});
+
+test('window effects are opt-in per tier and absent while the device computes; marks for one pass are set once', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative, body = f.document.body;
+    const effects = () => body.dataset.nativeEffects;
+    f.state();
+    assert.equal(effects(), 'full', 'Without a tier the full preview, as for the frame limit');
+    for (const [quality, tier] of [['FULL', 'full'], ['BALANCED', 'balanced'], ['REDUCED', 'light'], ['UNBEKANNT', 'full']]) {
+      for (const presence of ['IDLE', 'LISTENING', 'SPEAKING', 'WAITING_FOR_APPROVAL', 'BLOCKED']) {
+        f.state({quality, presence});
+        assert.equal(effects(), tier, quality + ' ' + presence);
+      }
+      for (const presence of ['THINKING', 'RESEARCHING', 'LEARNING']) {
+        f.state({quality, presence, busy: true});
+        assert.deepEqual([effects(), body.dataset.nativeCompute], ['rest', 'local'], quality + ' ' + presence + ' on the device');
+        f.state({quality, presence, busy: true, cloudBrain: true});
+        assert.equal(effects(), tier, quality + ' ' + presence + ' in the cloud');
+      }
+    }
+    f.state({busy: true});
+    assert.equal(effects(), 'rest', 'An older Android without presence: busy counts as computing on the device');
+    // A local turn that is still running under another presence: the Code68 stage keeps its tested behaviour
+    // (alive for the lip movement), the added window effects stay off because the model may still compute.
+    for (const [presence, extra] of [['SPEAKING', {speaking: true}], ['LISTENING', {listening: true}],
+      ['WAITING_FOR_APPROVAL', {}], ['BLOCKED', {}]]) {
+      f.state({quality: 'FULL', presence, busy: true, ...extra});
+      assert.deepEqual([effects(), body.dataset.nativeCompute, body.dataset.frameLimit], ['rest', undefined, '30'], presence);
+      f.state({quality: 'FULL', presence, busy: true, cloudBrain: true, ...extra});
+      assert.equal(effects(), 'full', presence + ' with a cloud brain');
+    }
+    // Which window the workspace really shows.
+    f.state();
+    assert.equal(body.dataset.nativeWindow, undefined);
+    native.message({...binding, user: true, text: 'Frage'});
+    assert.equal(body.dataset.nativeWindow, 'work');
+    native.document({...binding, documentId, name: 'Argon4.pdf', pageCount: 3});
+    assert.equal(body.dataset.nativeWindow, 'result');
+    native.clearDocument(binding);
+    f.state({files: filesPacket()});
+    assert.equal(body.dataset.nativeWindow, 'files');
+    f.state();
+    native.computer(liveFrame());
+    assert.equal(body.dataset.nativeWindow, 'live');
+    native.computer({...binding, generation: 1, sequence: 2, active: false, status: 'ENDED', reason: 'Ende'});
+    assert.equal(body.dataset.nativeWindow, 'work');
+    // A step whose state Android changed is marked for exactly that rendering.
+    const changed = () => stepRows(f).map((row, index) =>
+      f.document.querySelectorAll('.native-activity-steps li')[index].dataset.changed === 'true');
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket()});
+    assert.deepEqual(changed(), [false, false], 'A first list has no change');
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket({revision: 2,
+      steps: [{label: 'Gedächtnis durchsucht', state: 'DONE'}, {label: 'Websuche', state: 'DONE'}, {label: 'Prüfung', state: 'ACTIVE'}]})});
+    assert.deepEqual(changed(), [false, true, false], 'Only the step that moved; a new step is not a change');
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket({revision: 3,
+      steps: [{label: 'Gedächtnis durchsucht', state: 'DONE'}, {label: 'Websuche', state: 'DONE'}, {label: 'Prüfung', state: 'ACTIVE'}]})});
+    assert.deepEqual(changed(), [false, false, false]);
+    // The delivered answer arrives once.
+    native.message({...binding, user: false, text: 'Antwort'});
+    assert.equal(f.document.querySelector('#native-live-panel .native-assistant').dataset.arrival, 'reply');
+    native.message({...binding, user: true, text: 'Noch eine Frage'});
+    assert.equal(f.document.querySelector('#native-live-panel [data-arrival]'), null);
+    // The depth layer and the window frame carry nothing and are mounted once.
+    for (const selector of ['.native-depth-veil', '.workspace-shell>.native-window-frame']) {
+      assert.equal(f.document.querySelectorAll(selector).length, 1, selector);
+      const layer = f.document.querySelector(selector);
+      assert.equal(layer.getAttribute('aria-hidden'), 'true');
+      assert.equal(layer.textContent, '');
+      assert.equal(layer.querySelector('canvas,img,svg'), null);
+    }
+    assert.equal(f.document.querySelector('.native-depth-veil').parentElement, f.document.querySelector('.presence-core'));
+    assert.equal(f.document.querySelectorAll('canvas').length, f.document.querySelectorAll('#scene-canvas').length,
+      'The binding adds no canvas of its own');
+  } finally {f.close();}
+});
+
+test('glances for quickly repeating events are rate-limited, rarer while the device computes, and start nothing continuous', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    const land = (sequence, values = working) => f.state({...values, computerWork: workRecord({
+      actions: Array.from({length: sequence}, (_, index) => dispatched(index + 1, {state: index + 1 === sequence ? 'DISPATCHED' : 'VERIFIED'}))})});
+    const stream = async sequence => {native.computer(liveFrame({sequence, sourceSequence: 11 + sequence}));await f.decode();};
+    f.state({...working, computerWork: workRecord()});
+    await stream(1);
+    assert.equal(f.gazes.length, 1, 'The appearing picture');
+    land(1);
+    assert.equal(f.gazes.length, 1, 'An input right after another glance does not jerk the head again');
+    f.advance(1200);await stream(2);land(2);
+    assert.equal(f.gazes.length, 2);assert.equal(f.gazes[1].target, monitor(f));
+    f.advance(400);land(3);f.advance(400);land(4);
+    assert.equal(f.gazes.length, 2, 'Inputs in quick succession share one glance');
+    f.advance(400);await stream(3);land(5);
+    assert.equal(f.gazes.length, 3);
+    // A glance is an event for the avatar's own frame loop. The page asks the clock for nothing because of it:
+    // what is pending are the one-shot timers of the frame lease and the marker, never a repeating one.
+    const before = f.pendingWork();
+    f.advance(1200);await stream(4);
+    const pending = f.pendingWork().filter(kind => kind !== 'raf');
+    land(6);
+    assert.equal(f.gazes.length, 4);
+    assert.deepEqual(f.pendingWork().filter(kind => kind !== 'raf'), pending, 'The glance and its marker reuse the one marker timer');
+    assert.equal(f.pendingWork().includes('timer:repeat'), false);
+    assert.equal(before.includes('timer:repeat'), false);
+    // While the on-device model computes the same events move the head far less often: at most once in four
+    // seconds, counted from the last glance, instead of once in 1.2 seconds.
+    const local = {busy: true, presence: 'THINKING'};
+    f.advance(1300);await stream(5);land(7, local);
+    assert.equal(f.document.body.dataset.nativeCompute, 'local');
+    f.advance(1300);await stream(6);land(8, local);
+    f.advance(1300);await stream(7);land(9, local);
+    assert.equal(f.gazes.length, 4, 'Three inputs within four seconds of the last glance: the head rests');
+    assert.ok(pointer(f), 'The marker itself is shown either way');
+    f.advance(1300);await stream(8);land(10, local);
+    assert.equal(f.gazes.length, 5);assert.equal(f.gazes[4].target, monitor(f));
+    assert.equal(f.pendingWork().includes('timer:repeat'), false);
+  } finally {f.close();}
+  // The answer being written draws one look per turn, and only where it really is on screen.
+  const g = await fixture();
+  try {
+    const native = g.window.ContinuumNative;
+    g.state();
+    native.message({...binding, user: true, text: 'Erkläre mir das'});
+    g.state({busy: true, presence: 'THINKING'});
+    native.draft({...binding, text: 'Das'});
+    assert.equal(g.gazes.length, 1);
+    assert.equal(g.gazes[0].target, g.document.querySelector('.native-draft'));
+    for (const text of ['Das ist', 'Das ist der', 'Das ist der Anfang']) {g.advance(5000);native.draft({...binding, text});}
+    assert.equal(g.gazes.length, 1, 'The growing text is not followed word by word');
+    native.message({...binding, user: false, text: 'Das ist die Antwort.'});
+    assert.equal(g.gazes.length, 2);assert.ok(forward(g.gazes[1]), 'The delivered answer turns her to the owner');
+    // Behind an open document the draft row is not on screen: nothing to look at.
+    native.document({...binding, documentId, name: 'Argon4.pdf', pageCount: 3});
+    const looks = g.gazes.length;
+    g.state({busy: true, presence: 'THINKING'});
+    g.advance(5000);
+    native.draft({...binding, text: 'Im Dokument'});
+    assert.equal(g.gazes.length, looks);
+  } finally {g.close();}
+});
+
+test('heat contract of the window styles: no backdrop-filter, no filter, motion only in the full and balanced tiers', () => {
+  const css = readFileSync(resolve(assetRoot, 'native-layer.css'), 'utf8');
+  const bridge = readFileSync(resolve(assetRoot, 'native-bridge.js'), 'utf8');
+  assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g, ''), /backdrop-filter/,
+    'The Android layer never blurs what lies behind a panel');
+  assert.doesNotMatch(bridge, /backdrop-filter|backdropFilter|createElement\('canvas'\)|getContext\(/,
+    'The binding creates no canvas and sets no blur');
+  const start = css.indexOf('Code70 · cinematic windows');
+  assert.ok(start > 0, 'The section exists');
+  const section = css.slice(start).replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.doesNotMatch(section, /(^|[;{\s])filter\s*:/, 'No filter in the window section');
+  assert.doesNotMatch(section, /transition\s*:(?!\s*none)/, 'The window section adds no transition');
+  // Keyframes: transform and opacity only.
+  const frames = [...section.matchAll(/@keyframes\s+([\w-]+)\s*\{((?:[^{}]*\{[^{}]*\})*)\s*\}/g)];
+  assert.deepEqual(frames.map(match => match[1]).sort(),
+    ['native-live-lamp', 'native-marker-ping', 'native-row-arrive', 'native-step-settle', 'native-tile-arrive']);
+  for (const [, name, body] of frames) {
+    const properties = [...body.matchAll(/([\w-]+)\s*:/g)].map(match => match[1]);
+    assert.ok(properties.length > 0 && properties.every(property => property === 'transform' || property === 'opacity'),
+      name + ' animates ' + properties.join(', '));
+  }
+  // Every rule that starts an animation is limited to the full or balanced tier by each of its selectors.
+  const rules = [...section.replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*\s*\}/g, '')
+    .matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => [match[1].trim(), match[2]]);
+  let moving = 0;
+  for (const [selectors, body] of rules) {
+    const animation = /animation\s*:\s*([^;]+)/.exec(body)?.[1];
+    if (!animation || /^none\b/.test(animation.trim())) continue;
+    moving++;
+    for (const selector of selectors.split(',')) {
+      assert.match(selector, /\[data-native-effects="(full|balanced)"\]/, 'Unconditional animation: ' + selector.trim());
+      assert.doesNotMatch(selector, /\[data-native-effects="(rest|light)"\]/);
+      if (/infinite/.test(animation))
+        assert.match(selector, /\[data-native-effects="full"\].*\[data-monitor-state="live"\]/,
+          'A loop runs in the full tier only, on a monitor that really is live: ' + selector.trim());
+    }
+    if (!/infinite/.test(animation)) assert.match(animation, /\s1(\s|$)/, 'Finite: ' + animation);
+  }
+  assert.ok(moving >= 5, 'The rules were found');
+  assert.equal(rules.filter(([, body]) => /infinite/.test(body)).length, 1, 'Exactly one loop exists in the section');
 });

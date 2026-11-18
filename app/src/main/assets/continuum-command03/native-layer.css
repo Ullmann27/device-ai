@@ -872,3 +872,259 @@ body[data-design="command03"][data-native-compute="local"] .native-orb-light {
    visibly provisional; no animation, so it costs nothing while the device computes. */
 body[data-design="command03"] .native-chat-line.native-draft {border-style:dashed;border-color:rgba(120,223,240,.38);}
 body[data-design="command03"] .native-chat-line.native-draft p {opacity:.86;}
+
+/* ───────── Code70 · cinematic windows. Arrangement, sizes and flow are those of Code64/Code69: every rule below
+   is paint only (colour, border colour, shadow, gradient) or belongs to an element that exists only while a real
+   Android event is shown (a frame, a dispatched input, an ended source, a source list).
+   Heat contract, checked in tools/command03-native-qa:
+   · no backdrop-filter and no filter anywhere in this section, no new canvas;
+   · every animation here needs body[data-native-effects="full"] or ="balanced". The bridge sets "rest" while the
+     on-device model computes and "light" in Android's reduced tier, so nothing of this section moves then;
+   · every animation is finite (one pass on a real event) except the lamp of a monitor that really is LIVE, which
+     runs in "full" only; all of them use transform and opacity only;
+   · blurred shadows, wide gradients and the depth layer of this section are limited to "full"/"balanced" as well:
+     while the device computes, the panels that repaint with the growing answer get no shadow, gradient or layer
+     they did not have before – only flat colours of small labels and one-pixel corner marks. ───────── */
+
+/* Glass frame of the work window: four corner marks inside the existing shell, cyan above, violet below. */
+body[data-design="command03"] .native-window-frame {
+ --frame-a:rgba(var(--cinema-key,112,231,255),.5);--frame-b:rgba(var(--cinema-fill,164,119,255),.42);
+ position:absolute;inset:7px;z-index:2;pointer-events:none;border-radius:9px;
+ background:
+  linear-gradient(var(--frame-a),var(--frame-a)) left top/22px 1px no-repeat,
+  linear-gradient(var(--frame-a),var(--frame-a)) left top/1px 22px no-repeat,
+  linear-gradient(var(--frame-a),var(--frame-a)) right top/22px 1px no-repeat,
+  linear-gradient(var(--frame-a),var(--frame-a)) right top/1px 22px no-repeat,
+  linear-gradient(var(--frame-b),var(--frame-b)) left bottom/22px 1px no-repeat,
+  linear-gradient(var(--frame-b),var(--frame-b)) left bottom/1px 22px no-repeat,
+  linear-gradient(var(--frame-b),var(--frame-b)) right bottom/22px 1px no-repeat,
+  linear-gradient(var(--frame-b),var(--frame-b)) right bottom/1px 22px no-repeat;
+}
+/* An open window is framed more firmly; a result carries the violet light, the live window the cyan one. */
+body[data-design="command03"][data-native-window] .native-window-frame {
+ --frame-a:rgba(var(--cinema-key,112,231,255),.95);--frame-b:rgba(var(--cinema-fill,164,119,255),.85);
+}
+body[data-design="command03"][data-native-window="result"] .native-window-frame {
+ --frame-a:rgba(var(--cinema-fill,164,119,255),.95);--frame-b:rgba(var(--cinema-key,112,231,255),.8);
+}
+body[data-design="command03"][data-native-window="live"] .native-window-frame {--frame-a:rgba(131,237,255,.98);}
+/* Glass sheen and a second, inner pane edge: only where the tier leaves room for it. */
+body[data-design="command03"][data-native-effects="full"] .native-window-frame,
+body[data-design="command03"][data-native-effects="balanced"] .native-window-frame {
+ box-shadow:inset 0 0 0 1px rgba(var(--cinema-key,112,231,255),.07);
+}
+body[data-design="command03"][data-native-effects="full"] .native-window-frame::before {
+ content:"";position:absolute;inset:0;border-radius:inherit;
+ background:linear-gradient(118deg,rgba(214,247,255,.075),rgba(214,247,255,.02) 16%,transparent 30%),
+  linear-gradient(298deg,rgba(190,145,255,.05),transparent 22%);
+}
+
+/* Depth: the avatar's separation from the orb behind it. A still shade under the corona, between the two. */
+body[data-design="command03"] .native-depth-veil {display:none;}
+body[data-design="command03"][data-native-effects="full"] .native-depth-veil,
+body[data-design="command03"][data-native-effects="balanced"] .native-depth-veil {
+ display:block;position:absolute;left:50%;top:38.8%;height:58%;aspect-ratio:1;z-index:1;pointer-events:none;
+ transform:translate(-50%,-50%);
+ background:radial-gradient(ellipse 36% 30% at 50% 78%,rgba(2,7,16,.62),rgba(2,7,16,.28) 62%,transparent 100%),
+  radial-gradient(circle,transparent 52%,rgba(2,7,16,.3) 74%,transparent 96%);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-depth-veil {opacity:.6;}
+
+/* The work window's state in its own corner (see renderWorkBadge). */
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="running"] {
+ border-color:rgba(var(--cinema-key,112,231,255),.6);color:rgb(var(--cinema-key,112,231,255));
+ background:rgba(var(--cinema-key,112,231,255),.08);
+}
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="writing"] {
+ border-color:#be91ff99;color:#dcc6ff;background:#be91ff14;
+}
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="approval"] {
+ border-color:#ffc880b0;color:#ffd9a6;background:#ffc88014;
+}
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="blocked"],
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="failed"] {
+ border-color:#ff9d8cb0;color:#ffc2b6;background:#ff9d8c14;
+}
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="answered"] {
+ border-color:#7fe3b899;color:#b4f0d5;background:#7fe3b812;
+}
+/* This turn's result: the delivered answer while it is the last line. */
+body[data-design="command03"] .native-chat-line[data-result="true"] {
+ border-color:rgba(131,237,255,.5);
+ background:linear-gradient(#83edff,#83edff) left top/2px 100% no-repeat,linear-gradient(125deg,#0b2538d9,#0e1a2fe6);
+}
+
+/* Live window: the existing projected browser reads as a monitor – bezel, title with the real target, state. */
+body[data-design="command03"] #native-computer-panel .op-browser-frame {
+ border-radius:10px;border-color:rgba(131,237,255,.5);background:#020a14;
+ box-shadow:inset 0 0 0 3px #0a1b2a,inset 0 0 0 4px rgba(131,237,255,.14),0 6px 0 #020712cc,0 7px 0 #5e87a340;
+}
+body[data-design="command03"][data-native-effects="full"] #native-computer-panel .op-browser-frame,
+body[data-design="command03"][data-native-effects="balanced"] #native-computer-panel .op-browser-frame {
+ box-shadow:inset 0 0 0 3px #0a1b2a,inset 0 0 0 4px rgba(131,237,255,.14),0 6px 0 #020712cc,0 7px 0 #5e87a340,
+  0 18px 34px #0008,0 0 22px rgba(131,237,255,calc(.14 * var(--native-neon,.7)));
+}
+body[data-design="command03"] #native-computer-panel .op-browser-chrome {
+ gap:10px;background:linear-gradient(100deg,#17384a,#0b1c29 60%,#1a1c3c);border-bottom-color:rgba(131,237,255,.3);
+}
+/* The original hides the window title on phones; the real target is shown at every width. */
+body[data-design="command03"] #native-computer-panel .op-window-id {
+ display:block;color:#d7f4fb;font-size:11px;line-height:1.45;letter-spacing:.06em;white-space:normal;
+ overflow-wrap:anywhere;min-width:0;
+}
+body[data-design="command03"] #native-computer-panel .op-mode-label {border-color:#ffc880a8;color:#ffd9a6;background:#ffc88012;}
+body[data-design="command03"] #native-computer-panel[data-monitor-state="live"] .op-mode-label {
+ border-color:#7fe3b8b0;color:#b9f5da;background:#7fe3b814;
+}
+body[data-design="command03"] #native-computer-panel[data-monitor-state="covered"] .op-mode-label {
+ border-color:#ff9d8cb0;color:#ffc2b6;background:#ff9d8c14;
+}
+body[data-design="command03"] #native-computer-panel .op-browser-status .status-dot {background:#ffc880;}
+body[data-design="command03"] #native-computer-panel[data-monitor-state="live"] .op-browser-status .status-dot {background:#7fe3b8;}
+body[data-design="command03"] #native-computer-panel[data-monitor-state="covered"] .op-browser-status .status-dot {background:#ff9d8c;}
+@keyframes native-live-lamp {from{opacity:.45}to{opacity:1}}
+body[data-design="command03"][data-native-effects="full"] #native-computer-panel[data-monitor-state="live"] .op-browser-status .status-dot {
+ animation:native-live-lamp 1.4s ease-in-out infinite alternate;
+}
+/* The image and the inputs dispatched on it share one box, so a marker sits on the pixel Android measured. */
+body[data-design="command03"] .native-computer-screen {position:relative;display:inline-flex;max-width:100%;line-height:0;}
+body[data-design="command03"] .native-computer-screen[hidden] {display:none!important;}
+body[data-design="command03"] .native-computer-marker {
+ position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;pointer-events:none;
+ color:#ffd27a;border:2px solid currentColor;box-shadow:0 0 0 1px #000a,inset 0 0 0 1px #000a;
+ background:radial-gradient(circle,currentColor 0 3px,transparent 4px);
+}
+body[data-design="command03"] .native-computer-marker[data-kind="set_text"] {border-radius:5px;width:30px;margin-left:-15px;}
+body[data-design="command03"] .native-computer-marker[data-kind="scroll"] {border-radius:9px;width:20px;height:34px;margin:-17px 0 0 -10px;}
+body[data-design="command03"] .native-computer-marker[data-state="verified"] {color:#7fe3b8;}
+body[data-design="command03"] .native-computer-marker[data-state="unconfirmed"] {color:#ff9d8c;border-style:dashed;}
+body[data-design="command03"] .native-computer-marker::after {
+ content:"";position:absolute;inset:-2px;border-radius:inherit;border:2px solid currentColor;opacity:0;
+}
+@keyframes native-marker-ping {from{transform:scale(.6);opacity:.9}to{transform:scale(2.3);opacity:0}}
+body[data-design="command03"][data-native-effects="full"] .native-computer-marker::after,
+body[data-design="command03"][data-native-effects="balanced"] .native-computer-marker::after {
+ animation:native-marker-ping .7s ease-out 1 both;
+}
+/* What the approved task really did, as text. */
+body[data-design="command03"] .native-computer-work {display:grid;gap:7px;min-width:0;margin-top:14px;}
+body[data-design="command03"] .native-computer-work[hidden],
+body[data-design="command03"] .native-computer-work [hidden] {display:none!important;}
+body[data-design="command03"] .native-computer-stage {
+ margin:0;color:#e2f5f8;font:500 13px/1.5 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-computer-stage[data-stage="ask-owner"],
+body[data-design="command03"] .native-computer-stage[data-stage="paused"] {color:#ffd9a6;}
+body[data-design="command03"] .native-computer-stage[data-stage="error"] {color:#ffc2b6;}
+body[data-design="command03"] .native-computer-log-title {
+ color:#78dff0;font:600 10px/1.4 Manrope,system-ui,sans-serif;letter-spacing:.13em;
+}
+body[data-design="command03"] .native-computer-log {
+ list-style:none;margin:0;padding:0;display:grid;gap:6px;min-width:0;
+ grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));
+}
+body[data-design="command03"] .native-computer-log li {
+ display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 9px;min-width:0;padding:7px 11px 7px 24px;position:relative;
+ border-radius:8px;border:1px solid #76d9fa3a;background:#0b2538c7;
+ color:#e2f5f8;font:500 12px/1.45 Manrope,system-ui,sans-serif;
+}
+body[data-design="command03"] .native-computer-log li::before {
+ content:"";position:absolute;left:10px;top:13px;width:7px;height:7px;border-radius:50%;background:#ffd27a;
+}
+body[data-design="command03"] .native-computer-log li[data-state="verified"]::before {background:#7fe3b8;}
+body[data-design="command03"] .native-computer-log li[data-state="unconfirmed"]::before {background:#ff9d8c;}
+body[data-design="command03"] .native-action-kind {min-width:0;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-action-state {
+ margin-left:auto;font:600 10px/1.45 'Space Grotesk',sans-serif;letter-spacing:.07em;text-transform:uppercase;color:#ffe0a8;
+}
+body[data-design="command03"] .native-computer-log li[data-state="verified"] .native-action-state {color:#9fe8c8;}
+body[data-design="command03"] .native-computer-log li[data-state="unconfirmed"] .native-action-state {color:#ffb5a6;}
+
+/* The live window without an image: an open Android consent, or how the source ended. Never a picture. */
+body[data-design="command03"] .native-monitor-record {
+ display:grid;gap:7px;min-width:0;margin:6px 0 4px;padding:12px 14px;border-radius:12px;
+ border:1px solid #8fb3c655;background:linear-gradient(125deg,#0b2538d9,#0e1a2fe6);
+}
+body[data-design="command03"] .native-monitor-record[hidden] {display:none!important;}
+body[data-design="command03"] .native-monitor-record[data-state="consent"] {border-color:#ffc88099;}
+body[data-design="command03"] .native-record-head {
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;min-width:0;
+}
+body[data-design="command03"] .native-record-head small {
+ color:#78dff0;font:600 10px/1.4 Manrope,system-ui,sans-serif;letter-spacing:.14em;
+}
+body[data-design="command03"] .native-record-badge {
+ font:600 10px/1.4 'Space Grotesk',sans-serif;letter-spacing:.09em;padding:5px 8px;border-radius:4px;
+ border:1px solid #8fb3c680;color:#cfe3ee;background:#8fb3c614;
+}
+body[data-design="command03"] .native-monitor-record[data-state="consent"] .native-record-badge {
+ border-color:#ffc880b0;color:#ffd9a6;background:#ffc88014;
+}
+body[data-design="command03"] .native-monitor-record>strong {
+ color:#ecfaff;font:500 15px/1.35 'Space Grotesk',sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-monitor-record>p {
+ margin:0;color:#bedce7;font:400 13px/1.55 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-monitor-record .native-computer-work {margin-top:2px;}
+
+/* Sources as a wall of small screens in the work window: one per source Android delivered – its host as the
+   address line, its title, its address. No page is drawn and no excerpt is invented. */
+body[data-design="command03"] .native-source-host {
+ display:block;color:#cdb6ff;font:600 10px/1.4 'Space Grotesk',sans-serif;letter-spacing:.05em;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-source-host:empty {display:none;}
+body[data-design="command03"] #native-live-panel .native-source-card {
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,172px),1fr));gap:8px;
+}
+body[data-design="command03"] #native-live-panel .native-source-card>small {grid-column:1/-1;}
+body[data-design="command03"] #native-live-panel .native-source-link {
+ gap:0;padding:0;min-height:88px;overflow:hidden;border-radius:8px;border-color:#a58bff55;background:#04101ddb;
+}
+body[data-design="command03"] #native-live-panel .native-source-host {
+ padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ background:linear-gradient(100deg,#1d2a4b,#101a30);border-bottom:1px solid #8f7fd04d;
+}
+body[data-design="command03"] #native-live-panel .native-source-link strong {
+ display:block;padding:8px 10px 3px;font:500 12px/1.45 Manrope,system-ui,sans-serif;color:#e7f6fa;
+}
+body[data-design="command03"] #native-live-panel .native-source-link span {
+ display:block;padding:0 10px 8px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* Motion: one finite pass when Android reports the event, in "full" and "balanced" only. */
+@keyframes native-step-settle {from{transform:translateX(7px);opacity:.35}to{transform:none;opacity:1}}
+@keyframes native-row-arrive {from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-tile-arrive {from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+body[data-design="command03"][data-native-effects="full"] .native-activity-steps li[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-activity-steps li[data-changed="true"] {
+ animation:native-step-settle .42s cubic-bezier(.2,.7,.2,1) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-chat-line[data-arrival="reply"],
+body[data-design="command03"][data-native-effects="balanced"] .native-chat-line[data-arrival="reply"],
+body[data-design="command03"][data-native-effects="full"] .native-monitor-record:not([hidden]),
+body[data-design="command03"][data-native-effects="balanced"] .native-monitor-record:not([hidden]) {
+ animation:native-row-arrive .38s cubic-bezier(.2,.7,.2,1) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-source-card[data-arrival="sources"] .native-source-link {
+ animation:native-tile-arrive .36s cubic-bezier(.2,.7,.2,1) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-source-card[data-arrival="sources"] .native-source-link:nth-of-type(2) {animation-delay:.05s;}
+body[data-design="command03"][data-native-effects="full"] .native-source-card[data-arrival="sources"] .native-source-link:nth-of-type(n+3) {animation-delay:.1s;}
+/* The owner's switch and the system preference stop every one of them. */
+body[data-design="command03"][data-native-light-motion="off"] .native-activity-steps li,
+body[data-design="command03"][data-native-light-motion="off"] .native-chat-line,
+body[data-design="command03"][data-native-light-motion="off"] .native-monitor-record,
+body[data-design="command03"][data-native-light-motion="off"] .native-source-link,
+body[data-design="command03"][data-native-light-motion="off"] .native-computer-marker::after,
+body[data-design="command03"][data-native-light-motion="off"] #native-computer-panel .op-browser-status .status-dot {
+ animation:none!important;
+}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-activity-steps li,
+ body[data-design="command03"] .native-chat-line,
+ body[data-design="command03"] .native-monitor-record,
+ body[data-design="command03"] .native-source-link,
+ body[data-design="command03"] .native-computer-marker::after,
+ body[data-design="command03"] #native-computer-panel .op-browser-status .status-dot {animation:none!important;}
+}
