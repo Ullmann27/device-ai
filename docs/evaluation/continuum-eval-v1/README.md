@@ -87,3 +87,47 @@ Trainingssatz (die 34 Dev-Fälle sind ein Mess-, kein Trainingssatz), GPU-Rechen
 die Lizenzprüfung der Gemma-Nutzungsbedingungen für abgeleitete Gewichte und ein geprüfter Weg, einen Adapter
 in das auf dem Gerät verwendete `.litertlm`-Format zu überführen. Ohne Gerätemessung der Ausgangslage ist
 zudem nicht belegt, dass Fine-Tuning der wirksamste nächste Schritt wäre.
+
+## Messlauf am Gerät (Code64)
+
+Die App enthält den Entwicklungs- und den Holdout-Satz unverändert als Assets (`continuum-eval-v1/`; ein Test
+prüft die Byte-Gleichheit mit diesem Ordner). Gestartet wird der Lauf im Modellzentrum:
+
+- **4 · EVALUATION · ENTWICKLUNGSSATZ** – beliebig oft, zum Abstimmen.
+- **5 · EVALUATION · HOLDOUT** – nur für den Abschlussvergleich; Ergebnisse nicht zum Abstimmen verwenden.
+
+Umfang des Laufs (steht auch in jedem Bericht als `scope`): Rohmodell mit dem Gespräch in einem Prompt, ohne
+Continuum-Gedächtnis, ohne deterministische Pfade, ohne Werkzeuge. Werkzeugwahl-Fälle werden deshalb als
+„nicht bewertbar“ geführt und sind über `regression*.jsonl` am Host abgedeckt.
+
+Der Bericht (`Download/Continuum/continuum-eval-<satz>-<zeit>.json`) enthält ausschließlich Werte, die während
+des Laufs auf dem Gerät gemessen wurden:
+
+| Feld | Bedeutung |
+|---|---|
+| `meta` | Modellkennung, Modell-SHA-256, Dateigröße, gemeldetes Kontextfenster, Rechenthreads, App-Version, Gerät, Android-SDK, Energiesparmodus |
+| `formal` | bestanden / nicht bestanden für `contains_all`, `contains_any`, `numeric` |
+| `heuristic` | bestanden / nicht bestanden für `abstain`, `asks_back` (am Wortlaut erkannt, stichprobenartig gegenlesen) |
+| `notScored` | Werkzeugwahl-Fälle |
+| `latencyMs` | Median und 95 %-Wert der Gesamtzeit und der Zeit bis zum ersten Text |
+| `tokensPerSecondMean` | nur wenn die Laufzeit Ausgabe-Tokens meldet, sonst `null` |
+| `inputTokensMax` | größte von der Laufzeit gemeldete Prompt-Tokenzahl |
+| `outputLimitReached` | Antworten, die am Ausgabelimit endeten |
+| `thermalStatus`, `batteryPercent`, `availableRamBytesMin`, `jvmHeapUsedBytesMax` | Android-Messwerte während des Laufs |
+| `results[]` | je Fall: Urteil, Begründung, Antwort (gekürzt), Zeiten, Tokenzahlen, Thermalstatus davor/danach |
+
+Der Lauf endet von selbst bei kritischer Gerätewärme (`THERMAL_CRITICAL`) und kann mit Stopp abgebrochen werden;
+ein dabei laufender Fall wird nicht gezählt.
+
+### Protokoll für einen Modellvergleich
+
+1. Gerät: Akku über 50 %, nicht am Ladegerät, Energiesparen aus, fünf Minuten abgekühlt, Continuum im Vordergrund.
+2. Modell A laden, Entwicklungssatz laufen lassen, Bericht sichern. Fünf Minuten Pause. Wiederholen (zwei Läufe je
+   Modell, um Streuung zu sehen).
+3. Dasselbe mit Modell B bzw. einer anderen Quantisierung – gleiche App-Version, gleiche Reihenfolge.
+4. Erst wenn die Entscheidung auf dem Entwicklungssatz gefallen ist: je Modell genau ein Holdout-Lauf.
+5. Ein Modellwechsel ist nur begründet, wenn das neue Modell im Holdout formal besser ist **und** bei
+   Antwortzeit, Thermalstatus und Speicher nicht schlechter abschneidet.
+
+Stand: kein Gerätelauf durchgeführt (NOT_RUN). Es gibt deshalb weder einen Vergleich von Modellen oder
+Quantisierungen noch eine Aussage, ob Fine-Tuning sinnvoll wäre.

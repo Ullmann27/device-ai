@@ -10090,6 +10090,12 @@ class AgentActivity : Activity() {
                 runLocalSmokeTest(direct = true)
             }
         }, matchWidth(top = 10))
+        // Code64: real measurements instead of impressions. Runs the shipped evaluation cases on this device.
+        box.addView(cockpit.section(this, "MESSEN · ANTWORTQUALITÄT, ZEIT, WÄRME"), matchWidth(top = 11))
+        cockpit.grid(this, box, listOf(
+            cockpit.action(this, "4 · EVALUATION · ENTWICKLUNGSSATZ") { startModelEvaluation("dev", "model-dev.jsonl") },
+            cockpit.action(this, "5 · EVALUATION · HOLDOUT") { startModelEvaluation("holdout", "model-holdout.jsonl") }
+        ), 2)
         box.addView(cockpit.section(this, "ANDERE MODELLE · MANUELL"), matchWidth(top = 11))
         val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
             showModelImportDialog()
@@ -12502,6 +12508,148 @@ class AgentActivity : Activity() {
      * separating native model inference from the regular agent pipeline.
      * No network, speech capture or autonomous training can start here.
      */
+    private fun startModelEvaluation(setName: String, asset: String) {
+        if (busy) {
+            Toast.makeText(this, "Ein anderer Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        modelCenterDialog?.dismiss()
+        activeWorkArea = ContinuumWorkArea.CHAT
+        conversationActive = true
+        refreshWorkAreaSelection()
+        refreshConversationLayout()
+        runModelEvaluation(setName, asset)
+    }
+
+    /**
+     * Runs docs/evaluation/continuum-eval-v1 (shipped as assets) against the loaded local model and exports a
+     * report with what this device really measured. Raw model only: no tools, no memory, one fresh prompt per
+     * case. The run takes several minutes, can be stopped with the normal stop control and ends by itself
+     * when Android reports critical heat.
+     */
+    private fun runModelEvaluation(setName: String, asset: String) {
+        val model = localRuntime.loadedModel
+        if (model == null || localRuntime.state != LocalModelState.READY) {
+            addAssistantMessage("MODELL-EVALUATION · Kein geladenes Modell im Zustand BEREIT. Bitte zuerst ein Modell laden.")
+            refreshLocalModelUi()
+            return
+        }
+        val cases = runCatching {
+            assets.open("continuum-eval-v1/$asset").bufferedReader(Charsets.UTF_8).useLines {
+                at.heinz.deviceai.evaluation.ModelEvalCase.parseAll(it)
+            }
+        }.getOrElse {
+            addAssistantMessage("MODELL-EVALUATION · Der Fallsatz $asset konnte nicht gelesen werden.")
+            return
+        }
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        activeChatCancellation = cancellation
+        activeLocalRequest = true
+        localRuntimeError = null
+        setBusy(true)
+        addToolActivity("MODELL-EVALUATION · $setName · ${cases.size} Fälle · Rohmodell ohne Werkzeuge")
+        addAssistantMessage("MODELL-EVALUATION gestartet: ${cases.size} Fälle ($setName). Das dauert einige Minuten. " +
+            "Das Gerät bitte liegen lassen; mit Stopp kannst du abbrechen.", preserveLocalContext = false)
+        val power = getSystemService(POWER_SERVICE) as? android.os.PowerManager
+        val battery = getSystemService(BATTERY_SERVICE) as? android.os.BatteryManager
+        val meta = org.json.JSONObject()
+            .put("modelId", model.id).put("modelVersion", model.version).put("modelSha256", model.sha256)
+            .put("modelBytes", model.byteCount).put("modelMaxContextTokens", model.capabilities.maxContextTokens)
+            .put("computeThreads", localRuntime.computeThreads ?: org.json.JSONObject.NULL)
+            .put("app", BuildConfig.APPLICATION_ID).put("appVersion", BuildConfig.VERSION_NAME)
+            .put("appVersionCode", BuildConfig.VERSION_CODE)
+            .put("device", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
+            .put("androidSdk", android.os.Build.VERSION.SDK_INT)
+            .put("powerSaveMode", power?.isPowerSaveMode ?: org.json.JSONObject.NULL)
+            .put("startedAtEpochMs", System.currentTimeMillis())
+        localAgentExecutor.execute {
+            val outcome = runCatching {
+                at.heinz.deviceai.evaluation.ModelEvalRunner(
+                    generate = { prompt ->
+                        check(localRuntime.loadedModel == model) { "Model identity changed during evaluation." }
+                        var metrics: at.heinz.deviceai.localmodel.LocalInferenceMetrics? = null
+                        val started = System.nanoTime()
+                        // A stop during a case ends the run; the interrupted case is not counted (see the runner).
+                        val generated = runCatching {
+                            generateLocal(cancellation, promptCharacters = prompt.length,
+                                runtimeCompletedObserver = { metrics = it }) { callback ->
+                                localRuntime.streamTextOnly(prompt, callback)
+                            }
+                        }.getOrElse { failure ->
+                            LocalGeneration("", null, emptyList(), failure.message ?: failure.javaClass.simpleName)
+                        }
+                        val wall = (System.nanoTime() - started).coerceAtLeast(0L) / 1_000_000L
+                        at.heinz.deviceai.evaluation.ModelEvalGeneration(
+                            text = generated.response,
+                            completed = generated.completion == LocalGenerationCompletion.COMPLETE,
+                            outputLimit = generated.completion == LocalGenerationCompletion.OUTPUT_LIMIT,
+                            failure = generated.failure?.take(200),
+                            firstTextMs = metrics?.firstTokenLatencyMillis,
+                            totalMs = metrics?.totalLatencyMillis ?: wall,
+                            textChunks = metrics?.streamedChunks ?: 0,
+                            inputTokens = metrics?.inputTokens, outputTokens = metrics?.outputTokens)
+                    },
+                    sample = {
+                        val resources = localModelResourceSnapshot()
+                        val runtime = Runtime.getRuntime()
+                        at.heinz.deviceai.evaluation.ModelEvalDeviceSample(
+                            thermalStatus = resources?.thermalStatus,
+                            batteryPercent = battery?.getIntProperty(
+                                android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY)?.takeIf { it in 0..100 },
+                            availableRamBytes = resources?.availableRamBytes,
+                            jvmHeapUsedBytes = runtime.totalMemory() - runtime.freeMemory())
+                    },
+                    cancelled = { runCatching { cancellation.throwIfCancelled() }.isFailure || isFinishing || isDestroyed },
+                    onProgress = { done, total, caseId ->
+                        runOnUiThread { if (!isFinishing && !isDestroyed && caseId.isNotEmpty())
+                            addToolActivity("MODELL-EVALUATION · ${done + 1}/$total · $caseId") }
+                    }
+                ).run(setName, cases, meta)
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (activeChatCancellation === cancellation) activeChatCancellation = null
+                activeLocalRequest = false
+                outcome.fold(onSuccess = { report ->
+                    val saved = exportModelEvaluationReport(setName, report)
+                    addAssistantMessage(at.heinz.deviceai.evaluation.ModelEvalRunner.summary(report) + "\n\n" +
+                        (saved?.let { "Bericht gespeichert: $it" } ?: "Der Bericht konnte nicht als Datei gespeichert werden."),
+                        preserveLocalContext = false)
+                    addToolActivity("MODELL-EVALUATION · abgeschlossen")
+                }, onFailure = { failure ->
+                    addAssistantMessage("MODELL-EVALUATION FEHLGESCHLAGEN · " +
+                        (failure.message?.take(200) ?: failure.javaClass.simpleName), preserveLocalContext = false)
+                    addToolActivity("MODELL-EVALUATION · fehlgeschlagen")
+                })
+                setBusy(false)
+                refreshLocalModelUi()
+            }
+        }
+    }
+
+    /** Writes the report to Download/Continuum (Android 10+) or the app's own files; returns the visible location. */
+    private fun exportModelEvaluationReport(setName: String, report: org.json.JSONObject): String? = runCatching {
+        val name = "continuum-eval-$setName-" +
+            java.text.SimpleDateFormat("yyyyMMdd-HHmmss", Locale.ROOT).format(java.util.Date()) + ".json"
+        val bytes = report.toString(2).toByteArray(Charsets.UTF_8)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            val values = android.content.ContentValues().apply {
+                put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, name)
+                put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "application/json")
+                put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH,
+                    android.os.Environment.DIRECTORY_DOWNLOADS + "/Continuum")
+            }
+            val uri = checkNotNull(contentResolver.insert(
+                android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, values))
+            checkNotNull(contentResolver.openOutputStream(uri)).use { it.write(bytes) }
+            "Download/Continuum/$name"
+        } else {
+            val directory = java.io.File(filesDir, "evaluation").apply { mkdirs() }
+            java.io.File(directory, name).writeBytes(bytes)
+            "App-Speicher/evaluation/$name"
+        }
+    }.getOrNull()
+
     private fun runLocalSmokeTest(direct:Boolean=false) {
         // A new diagnostic revokes any prior same-session success until this
         // attempt completes. Nothing survives a restart or different model SHA.
