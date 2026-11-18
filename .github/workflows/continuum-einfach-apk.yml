@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   build:
-    name: Code69 – APK bauen, kein manueller SHA-Eintrag
+    name: Code70 – APK bauen, kein manueller SHA-Eintrag
     if: github.repository == 'Ullmann27/device-ai'
     runs-on: ubuntu-24.04
     timeout-minutes: 100
@@ -49,13 +49,13 @@ jobs:
           test "$GITHUB_REF" = "refs/heads/integrate/continuum-command03-android-20261115"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
-          gradle --no-daemon --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=69 -PcontinuumLocalRenderUnsigned=true             :app:assembleRelease
+          gradle --no-daemon --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=70 -PcontinuumLocalRenderUnsigned=true             :app:assembleRelease
           test -s app/build/outputs/apk/release/app-release-unsigned.apk
           mkdir -p output
           cp app/build/outputs/apk/release/app-release-unsigned.apk output/Continuum-Unsigned.apk
-          printf 'source_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=69\nversionName=0.3.68\n'             "$GITHUB_SHA" > output/SOURCE.txt
+          printf 'source_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=70\nversionName=0.3.69\n'             "$GITHUB_SHA" > output/SOURCE.txt
           "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging output/Continuum-Unsigned.apk > output/BADGING.txt
-          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='69' versionName='0.3.68'" output/BADGING.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='70' versionName='0.3.69'" output/BADGING.txt
           grep -Fxq "native-code: 'arm64-v8a'" output/BADGING.txt
           if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify output/Continuum-Unsigned.apk >/dev/null 2>&1; then
             echo "::error::Unexpected signing state" >&2
@@ -71,7 +71,7 @@ jobs:
           retention-days: 14
 
   originalsignieren:
-    name: Code69 – mit Besitzerfreigabe originalsignieren und Download veröffentlichen
+    name: Code70 – mit Besitzerfreigabe originalsignieren und Download veröffentlichen
     needs: build
     if: github.repository == 'Ullmann27/device-ai'
     runs-on: ubuntu-24.04
@@ -127,23 +127,23 @@ jobs:
           tools="$ANDROID_HOME/build-tools/35.0.0"
           "$tools/zipalign" -P 16 -f 4 unsigned/Continuum-Unsigned.apk "$dir/aligned.apk"
           mkdir -p release
-          "$tools/apksigner" sign --ks "$dir/original.p12"             --ks-type PKCS12 --ks-key-alias continuum-local             --ks-pass env:SIGN_PASS --key-pass env:SIGN_PASS             --out release/Continuum-Code69.apk "$dir/aligned.apk"
+          "$tools/apksigner" sign --ks "$dir/original.p12"             --ks-type PKCS12 --ks-key-alias continuum-local             --ks-pass env:SIGN_PASS --key-pass env:SIGN_PASS             --out release/Continuum-Code70.apk "$dir/aligned.apk"
           unset SIGN_PASS
-          "$tools/zipalign" -c -P 16 -v 4 release/Continuum-Code69.apk > /dev/null
-          "$tools/apksigner" verify --verbose --print-certs release/Continuum-Code69.apk > "$dir/verified.txt"
+          "$tools/zipalign" -c -P 16 -v 4 release/Continuum-Code70.apk > /dev/null
+          "$tools/apksigner" verify --verbose --print-certs release/Continuum-Code70.apk > "$dir/verified.txt"
           grep -Fxq 'Signer #1 certificate SHA-256 digest: 6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23' "$dir/verified.txt"
           grep -Fxq 'Verified using v2 scheme (APK Signature Scheme v2): true' "$dir/verified.txt"
-          "$tools/aapt2" dump badging release/Continuum-Code69.apk > release/BADGING.txt
-          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='69' versionName='0.3.68'" release/BADGING.txt
+          "$tools/aapt2" dump badging release/Continuum-Code70.apk > release/BADGING.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='70' versionName='0.3.69'" release/BADGING.txt
           grep -Fxq "native-code: 'arm64-v8a'" release/BADGING.txt
-          (cd release && sha256sum Continuum-Code69.apk > SHA256SUMS.txt)
-          printf 'repo=%s\nsource_sha=%s\npackage=%s\nversionCode=%s\noriginal_certificate_sha256=%s\nFold7=NOT_RUN\n'             "$GITHUB_REPOSITORY" "$GITHUB_SHA" "at.heinz.deviceai.continuumlocal" "69" "$cert"             > release/BUILD-INFO.txt
+          (cd release && sha256sum Continuum-Code70.apk > SHA256SUMS.txt)
+          printf 'repo=%s\nsource_sha=%s\npackage=%s\nversionCode=%s\noriginal_certificate_sha256=%s\nFold7=NOT_RUN\n'             "$GITHUB_REPOSITORY" "$GITHUB_SHA" "at.heinz.deviceai.continuumlocal" "70" "$cert"             > release/BUILD-INFO.txt
       - name: Signierte Continuum-APK bereitstellen – keine zweite Pipeline
         shell: bash
         run: |
           set -euo pipefail
-          TAG="continuum-einfach-code69-${GITHUB_RUN_ID}"
-          gh release create "$TAG"             release/Continuum-Code69.apk release/SHA256SUMS.txt release/BUILD-INFO.txt             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA"             --title "Device AI Continuum – Code69 Android-Test-APK"             --notes "Code69 aus dem separaten Repository Ullmann27/device-ai. Originalsignatur und bisherige Continuum-Paketkennung geprüft. Erstellt aus dem bestehenden Integrationszweig. Geschützte Besitzerfreigabe gilt weiterhin. Neu: (1) Dokumentenablage – „Öffne das PDF Argon4“ sucht offline nach dem Namen, zeigt echte Treffer, fragt bei mehreren nach und öffnet die Datei; „Fass Seite 2 zusammen und speichere es als Word“ legt die DOCX im Download-Ordner ab; Korrekturen („Ich meinte Seite 3“), fehlende Datei, fehlende Freigabe und Stopp. Dafür einmalig „Zugriff auf alle Dateien“ in Android erlauben (neue Berechtigung MANAGE_EXTERNAL_STORAGE). (2) Wärme- und Zeitmessung zum Selbststarten mit Berichtsdatei im Download-Ordner. (3) Laufende Antwort als Entwurfszeile in der Bühne. (4) Gesprochene Erklärfragen ohne Werkzeugschemas ans Modell. Enthält weiterhin alle Funktionen aus Code69. Auf dem Fold7 nicht geprüft: Installation mit der neuen Berechtigung, alle neuen Abläufe, Wirkung auf Zeit und Temperatur."             --prerelease --latest=false
+          TAG="continuum-einfach-code70-${GITHUB_RUN_ID}"
+          gh release create "$TAG"             release/Continuum-Code70.apk release/SHA256SUMS.txt release/BUILD-INFO.txt             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA"             --title "Device AI Continuum – Code70 Android-Test-APK"             --notes "Code70 aus dem separaten Repository Ullmann27/device-ai. Originalsignatur und bisherige Continuum-Paketkennung geprüft. Erstellt aus dem bestehenden Integrationszweig. Geschützte Besitzerfreigabe gilt weiterhin. Neu gegenüber Code69: (1) Auftragsfolge – mehrteilige Aufträge wie „Öffne das PDF Argon4, fass Seite 2 zusammen, speichere es als Word und schick es per Mail an …“ werden als Plan angesagt, Schritt für Schritt ausgeführt und geprüft; Pause bei Rückfragen, Korrekturen, Stopp, Abschlussbericht. Ein vom Modell vorgeschlagener Plan ist ab Werk aus und läuft nie ohne ausdrückliches Ja. (2) Bühne: Arbeits-, Live- und Ergebnisfenster gerahmt und an echte App-Ereignisse gebunden; virtueller Monitor mit Ziel-App, LIVE nur bei frischem Bild, Tippmarke an der gemessenen Stelle und Eingabeprotokoll; Quellen als Kachelwand; Blick des Avatars folgt der Arbeit. Beim lokalen Rechnen kommt keine neue Dauerbewegung dazu. Enthält alle Funktionen aus Code69 (Dokumentenablage, Wärme- und Zeitmessung, Antwortentwurf in der Bühne). Auf dem Fold7 nicht geprüft: alle neuen Abläufe, Aussehen und Wirkung auf Zeit und Temperatur."             --prerelease --latest=false
           gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url --jq .url
       - name: Signierte APK zusätzlich in GitHub Actions sichern
         if: always()
