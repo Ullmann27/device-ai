@@ -19,7 +19,8 @@ internal data class OwnerDeliverable(
     val note: String? = null,
     val createdAtMillis: Long = 0L
 ) {
-    enum class Kind { NEWS_BRIEFING, ASSISTANT_REPLY }
+    /** [PAGE_SUMMARY]: one page of the owner's PDF, summarised and saved by the document desk. */
+    enum class Kind { NEWS_BRIEFING, ASSISTANT_REPLY, PAGE_SUMMARY }
 
     init { require(title.isNotBlank() && paragraphs.any { it.isNotBlank() }) }
 
