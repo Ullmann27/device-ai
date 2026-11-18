@@ -21,6 +21,17 @@ internal object NewsBriefing {
     /** Why the briefing is not a model summary. */
     enum class Fallback { MODEL_NOT_READY, THERMAL, MODEL_FAILED, OUTPUT_REJECTED }
 
+    /**
+     * Which brain wrote (or should have written) the summary. The owner's optional cloud brain answers through the
+     * same runtime interface; its text is never called local – in the chat, in the saved document or in the log.
+     */
+    enum class Brain(val subject: String, val summaryOf: String, val notReady: String, val logLabel: String) {
+        LOCAL("Das lokale Modell", "Zusammenfassung des lokalen Modells", "Das lokale Modell ist gerade nicht geladen.",
+            "lokale Zusammenfassung"),
+        CLOUD("Claude (Cloud)", "Zusammenfassung von Claude (Cloud)", "Claude (Cloud) ist gerade nicht bereit.",
+            "Zusammenfassung von Claude (Cloud)")
+    }
+
     data class Prompt(val text: String, val stories: List<NewsStory>)
 
     /** A finished briefing: what is shown and spoken, what can be saved, and its sources. */
@@ -104,25 +115,26 @@ internal object NewsBriefing {
     }
 
     fun modelBriefing(text: String, prompt: Prompt, selection: NewsSelection, request: OwnerNewsCommand.Request,
-                      date: LocalDate, nowMillis: Long): Result {
-        val notes = notes(selection, prompt.stories.size)
+                      date: LocalDate, nowMillis: Long, brain: Brain = Brain.LOCAL): Result {
+        val notes = notes(selection, prompt.stories.size, brain)
         val shown = listOfNotNull(text, notes.takeIf { it.isNotEmpty() }, closingQuestion(request)).joinToString("\n\n")
         val sources = prompt.stories.flatMap { it.sources }
         val paragraphs = text.split(Regex("\\n\\s*\\n")).map { it.trim() }.filter { it.isNotEmpty() } +
             listOfNotNull(notes.takeIf { it.isNotEmpty() })
         return Result(shown, OwnerDeliverable(OwnerDeliverable.Kind.NEWS_BRIEFING, documentTitle(request), date, paragraphs,
-            sources, "Zusammenfassung des lokalen Modells aus den unten genannten Meldungen", nowMillis), true, sources,
+            sources, brain.summaryOf + " aus den unten genannten Meldungen", nowMillis), true, sources,
             prompt.stories)
     }
 
     /** Headlines and teasers exactly as the outlets wrote them – readable, but explicitly not a summary. */
     fun headlineBriefing(selection: NewsSelection, request: OwnerNewsCommand.Request, reason: Fallback,
-                         date: LocalDate, nowMillis: Long): Result {
+                         date: LocalDate, nowMillis: Long, brain: Brain = Brain.LOCAL): Result {
         val why = when (reason) {
-            Fallback.MODEL_NOT_READY -> "Das lokale Modell ist gerade nicht geladen."
+            Fallback.MODEL_NOT_READY -> brain.notReady
+            // Only the on-device runtime is thermally guarded.
             Fallback.THERMAL -> "Das Gerät ist gerade zu warm, deshalb rechne ich jetzt nicht mit dem lokalen Modell."
-            Fallback.MODEL_FAILED -> "Das lokale Modell hat gerade keine Zusammenfassung geliefert."
-            Fallback.OUTPUT_REJECTED -> "Die Zusammenfassung des lokalen Modells habe ich verworfen, weil sie nicht " +
+            Fallback.MODEL_FAILED -> brain.subject + " hat gerade keine Zusammenfassung geliefert."
+            Fallback.OUTPUT_REJECTED -> "Die " + brain.summaryOf + " habe ich verworfen, weil sie nicht " +
                 "sauber zu den Quellen gepasst hat."
         }
         val lead = "$why Du bekommst deshalb die Schlagzeilen" +
@@ -135,7 +147,7 @@ internal object NewsBriefing {
                 .orEmpty()
             origin + ": " + sentence(story.title) + (if (story.teaser.isNotBlank()) " " + sentence(story.teaser) else "") + also
         }
-        val notes = notes(selection, selection.stories.size)
+        val notes = notes(selection, selection.stories.size, brain)
         val shown = (listOf(lead) + lines + listOfNotNull(notes.takeIf { it.isNotEmpty() }, closingQuestion(request)))
             .joinToString("\n\n")
         val sources = selection.stories.flatMap { it.sources }
@@ -200,13 +212,13 @@ internal object NewsBriefing {
         reason.replace(Regex("https?://\\S+"), "").replace(Regex("\\s+"), " ").trim().trimEnd('.').take(max)
             .ifEmpty { "unbekannter Fehler" }
 
-    private fun notes(selection: NewsSelection, used: Int): String = buildList {
+    private fun notes(selection: NewsSelection, used: Int, brain: Brain): String = buildList {
         if (selection.failedOutlets.isNotEmpty())
             add("Nicht erreicht habe ich diesmal: " + selection.failedOutlets.joinToString(", ") { it.first } + ".")
         if (selection.includesLastEvening)
             add("Weil heute erst wenig gemeldet wurde, sind auch Meldungen von gestern Abend dabei.")
         if (selection.includesUndated) add("Manche Meldungen tragen in der Quelle kein Datum.")
-        if (used < selection.stories.size) add("Für das lokale Modell habe ich auf $used Meldungen gekürzt.")
+        if (used < selection.stories.size) add("Für " + brain.subject.replaceFirst("Das ", "das ") + " habe ich auf $used Meldungen gekürzt.")
     }.joinToString(" ")
 
     private fun failures(selection: NewsSelection, open: String, close: String): String =

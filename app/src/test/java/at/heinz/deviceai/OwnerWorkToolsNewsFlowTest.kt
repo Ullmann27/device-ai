@@ -88,6 +88,27 @@ class OwnerWorkToolsNewsFlowTest {
         assertTrue(host.lines("ACTIVITY:").last().endsWith("Schlagzeilen ohne Modell"))
     }
 
+    @Test fun aSummaryOfTheCloudBrainIsNeverCalledLocal() {
+        val host = answering(briefing).apply { cloud = true }
+        val tools = tools(host)
+        assertTrue(tools.handle(order))
+        assertTrue(host.lines("SAY:").single().startsWith(briefing))
+        assertEquals("Zusammenfassung von Claude (Cloud) aus den unten genannten Meldungen", tools.deliverable!!.note)
+        assertTrue(host.lines("ACTIVITY:").last().endsWith("8 Quellen · Zusammenfassung von Claude (Cloud)"))
+        val notReady = OwnerWorkToolsHarness(modelLoaded = false).apply { cloud = true }
+        assertTrue(tools(notReady).handle(order))
+        assertTrue(notReady.lines("SAY:").single().startsWith("Claude (Cloud) ist gerade nicht bereit. Du bekommst deshalb"))
+        val failed = OwnerWorkToolsHarness(model = { OwnerWorkGeneration("", "CLAUDE_NETWORK", false) }).apply { cloud = true }
+        assertTrue(tools(failed).handle(order))
+        assertTrue(failed.lines("SAY:").single().startsWith("Claude (Cloud) hat gerade keine Zusammenfassung geliefert."))
+        val meta = answering("Um Nachrichten zusammenfassen zu können, müsstest du eine Funktion entwickeln.").apply { cloud = true }
+        assertTrue(tools(meta).handle(order))
+        assertTrue(meta.lines("SAY:").single().startsWith("Die Zusammenfassung von Claude (Cloud) habe ich verworfen"))
+        (listOf(host, notReady, failed, meta)).forEach { harness ->
+            assertFalse(harness.log.toString(), harness.log.any { it.contains("lokale", ignoreCase = true) })
+        }
+    }
+
     @Test fun heatFailureOrAnUngroundedAnswerFallBackToHeadlinesWithTheRealReason() {
         val hot = OwnerWorkToolsHarness(model = { OwnerWorkGeneration("", LocalModelThermalGuard.PAUSED_THERMAL, false) })
         assertTrue(tools(hot).handle(order))

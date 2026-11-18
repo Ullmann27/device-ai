@@ -34,7 +34,7 @@ internal data class OwnerWorkGeneration(val text: String, val failure: String?, 
 internal interface OwnerWorkWebJob {
     /** Reads the feeds through the ToolGate under the job's web grant; throws when the grant was revoked. */
     fun readFeeds(feeds: List<NewsFeed>): List<NewsFeedResult>
-    /** Blocking generation on the active local runtime (text only, no tools). */
+    /** Blocking generation on the active runtime – the on-device model or the owner's cloud brain (text only, no tools). */
     fun generate(prompt: String): OwnerWorkGeneration
     /** A real work step for the stage and the cockpit timeline. */
     fun step(key: String, label: String, state: StepState, action: CockpitAction? = null)
@@ -71,6 +71,8 @@ internal interface OwnerWorkToolsHost {
     fun <T> runWebJob(session: ApprovedWebResearchSession, request: String, work: (OwnerWorkWebJob) -> T,
                       done: (Result<T>) -> Unit)
     fun modelReady(): Boolean
+    /** true while the owner's cloud brain answers instead of the on-device model: its text is never called local. */
+    fun cloudBrain(): Boolean = false
     /** UTF-8 bytes a text-only task may have for the loaded model. */
     fun promptBudgetBytes(): Int
     fun showSources(sources: List<NewsSourceRef>)
@@ -198,7 +200,8 @@ internal class OwnerWorkTools(
 
     private sealed interface Outcome {
         data class Message(val text: String) : Outcome
-        data class Briefing(val result: NewsBriefing.Result, val selection: NewsSelection) : Outcome
+        data class Briefing(val result: NewsBriefing.Result, val selection: NewsSelection,
+                            val brain: NewsBriefing.Brain = NewsBriefing.Brain.LOCAL) : Outcome
     }
 
     /** Off the UI thread: Quellen abrufen → Meldungen auswählen → Zusammenfassen. */
@@ -224,9 +227,11 @@ internal class OwnerWorkTools(
         }
         job.step(STEP_SELECT, "Meldungen auswählen", StepState.DONE)
         job.step(STEP_SUMMARY, "Zusammenfassen", StepState.ACTIVE, CockpitAction.THINK)
+        val brain = if (host.cloudBrain()) NewsBriefing.Brain.CLOUD else NewsBriefing.Brain.LOCAL
         fun headlines(reason: NewsBriefing.Fallback): Outcome {
             job.step(STEP_SUMMARY, "Schlagzeilen zusammenstellen", StepState.DONE)
-            return Outcome.Briefing(NewsBriefing.headlineBriefing(selection, command, reason, date, time.toEpochMilli()), selection)
+            return Outcome.Briefing(NewsBriefing.headlineBriefing(selection, command, reason, date, time.toEpochMilli(), brain),
+                selection, brain)
         }
         if (!host.modelReady()) return headlines(NewsBriefing.Fallback.MODEL_NOT_READY)
         val prompt = NewsBriefing.prompt(selection.stories, command, date,
@@ -238,7 +243,8 @@ internal class OwnerWorkTools(
         val accepted = NewsBriefing.accept(request, generated.text, prompt, date)
             ?: return headlines(NewsBriefing.Fallback.OUTPUT_REJECTED)
         job.step(STEP_SUMMARY, "Zusammenfassen", StepState.DONE)
-        return Outcome.Briefing(NewsBriefing.modelBriefing(accepted, prompt, selection, command, date, time.toEpochMilli()), selection)
+        return Outcome.Briefing(NewsBriefing.modelBriefing(accepted, prompt, selection, command, date, time.toEpochMilli(), brain),
+            selection, brain)
     }
 
     private fun publish(request: String, command: OwnerNewsCommand.Request, outcome: Outcome) {
@@ -254,7 +260,7 @@ internal class OwnerWorkTools(
                 briefed = Briefed(host.sessionId, host.ownerTurn, result.stories, now().toEpochMilli())
                 NewsBriefing.dialogueDigest(result, command, result.deliverable.createdAtMillis)?.let(host::rememberResearch)
                 host.activity("NACHRICHTEN · ${briefed?.stories?.size ?: 0} Meldungen · ${result.sources.size} Quellen · " +
-                    if (result.modelSummary) "lokale Zusammenfassung" else "Schlagzeilen ohne Modell")
+                    if (result.modelSummary) outcome.brain.logLabel else "Schlagzeilen ohne Modell")
             }
         }
     }

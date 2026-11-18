@@ -48,6 +48,9 @@ internal class OwnerWorkToolsHarness(
     val digests = mutableListOf<ResearchDialogueHandoff.Digest>()
     val researched = mutableListOf<WebToolRequest>()
     var cancelDuringGeneration = false
+    /** true = the owner's cloud brain is selected instead of the on-device model. */
+    var cloud = false
+    override fun cloudBrain(): Boolean = cloud
 
     override var sessionId = "chat-1"
     override var ownerTurn = 0L

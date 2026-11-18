@@ -12449,6 +12449,9 @@ class AgentActivity : Activity() {
                 }
 
                 override fun generate(prompt: String): OwnerWorkGeneration {
+                    // Claude brain: an owner sentence that must stay on the device is not sent; headlines instead.
+                    at.heinz.deviceai.localmodel.ClaudeTurnGate.refusal(claudeBrain, request, false)
+                        ?.let { return OwnerWorkGeneration("", it, false) }
                     val generation = generateLocal(promptCharacters = prompt.length, hardDeadlineMillis = 150_000,
                         maxOutputBytes = 6_000) { callback -> localRuntime.streamTextOnly(prompt, callback) }
                     return OwnerWorkGeneration(generation.response, generation.failure,
@@ -12480,6 +12483,8 @@ class AgentActivity : Activity() {
         }
 
         override fun modelReady(): Boolean = ::localRuntime.isInitialized && localModelReady()
+
+        override fun cloudBrain(): Boolean = claudeBrain?.claudeSelected == true
 
         override fun promptBudgetBytes(): Int = localRuntime.toolFreePromptUtf8Bytes ?: 6_000
 
