@@ -307,6 +307,8 @@ dependencies {
     implementation("com.google.ai.edge.litertlm:litertlm-android:0.18.0")
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // Optional owner-selected cloud brain (ClaudeModelRuntime). Official Anthropic Java SDK; it uses the OkHttp above.
+    implementation("com.anthropic:anthropic-java:3.3.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303") // Android JSON API implementation for actual JVM fetch tests.
