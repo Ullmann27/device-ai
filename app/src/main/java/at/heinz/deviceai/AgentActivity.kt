@@ -210,6 +210,7 @@ class AgentActivity : Activity() {
         private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"
         /** Field P0 Code54: the PDF read in this chat, kept across an Activity recreation (SAF return, process death). */
         private const val OPEN_DOCUMENT_STATE_KEY = "continuum_open_pdf_v1"
+        private const val EARLIER_DOCUMENTS_STATE_KEY = "continuum_earlier_pdfs_v1"
         // Public catalog metadata only, never private model bytes or credentials.
         private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"
         private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"
@@ -1008,6 +1009,12 @@ class AgentActivity : Activity() {
         )
         outState.putString("ctx3_chat_id_v1",sessionId)
         localConversationContext.document(sessionId)?.let { outState.putBundle(OPEN_DOCUMENT_STATE_KEY, openDocumentState(it)) }
+        // Code64: the earlier documents of this chat (bounded text) so „das erste Dokument“ survives a rebuilt view.
+        outState.putBundle(EARLIER_DOCUMENTS_STATE_KEY, Bundle().apply {
+            localConversationContext.earlierDocumentsForState(sessionId).forEachIndexed { index, saved ->
+                putBundle(index.toString(), openDocumentState(saved.reference).apply { putIntArray("registry", saved.marks) })
+            }
+        })
         outState.putInt("continuum_pdf_code_v1", nextDocumentRequestCode)
         pendingDocumentSelection?.takeIf(::currentDocumentSelection)?.let { selection ->
             outState.putBundle("continuum_pdf_selection_v1", Bundle().apply {
@@ -2812,20 +2819,28 @@ class AgentActivity : Activity() {
         val pages = reference.pageTexts
         if (pages != null) putStringArrayList("pageTexts", ArrayList(pages)) else putString("text", reference.text)
         putLong("revision", reference.ownerRevision)
+        // Code64: place in this chat's document order and the page/paragraph focus (session reference registry).
+        localConversationContext.documentMarks(reference)?.let { putIntArray("registry", it) }
     }
 
     private fun restoreOpenDocument(state: Bundle?) {
-        val saved = state?.getBundle(OPEN_DOCUMENT_STATE_KEY) ?: return
+        val current = state?.getBundle(OPEN_DOCUMENT_STATE_KEY) ?: return
         // A configuration change keeps the RAM binding; another chat never receives this document.
-        if (saved.getString("session") != sessionId || localConversationContext.document(sessionId) != null) return
-        val restored = runCatching {
-            at.heinz.deviceai.cognitive.OwnerDocumentDialogue.Reference(sessionId, saved.getString("episode"),
-                saved.getString("uri"), saved.getString("name") ?: return, saved.getInt("pages", -1), saved.getString("size"),
-                at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.valueOf(saved.getString("state") ?: return),
-                saved.getInt("textPages", -1), saved.getInt("textChars", -1), saved.getStringArrayList("pageTexts"),
-                saved.getString("text").orEmpty(), saved.getLong("revision", 0L))
-        }.getOrNull() ?: return
-        localConversationContext.recordDocument(sessionId, restored)
+        if (current.getString("session") != sessionId || localConversationContext.document(sessionId) != null) return
+        // Code64: earlier documents of this chat first, then the current one – each at its saved place.
+        val earlier = state?.getBundle(EARLIER_DOCUMENTS_STATE_KEY)
+        val all = earlier?.keySet().orEmpty().mapNotNull { earlier?.getBundle(it) }
+            .filter { it.getString("session") == sessionId } + current
+        for (saved in all) {
+            val restored = runCatching {
+                at.heinz.deviceai.cognitive.OwnerDocumentDialogue.Reference(sessionId, saved.getString("episode"),
+                    saved.getString("uri"), saved.getString("name") ?: return, saved.getInt("pages", -1), saved.getString("size"),
+                    at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.valueOf(saved.getString("state") ?: return),
+                    saved.getInt("textPages", -1), saved.getInt("textChars", -1), saved.getStringArrayList("pageTexts"),
+                    saved.getString("text").orEmpty(), saved.getLong("revision", 0L))
+            }.getOrNull() ?: return
+            localConversationContext.restoreDocument(sessionId, restored, saved.getIntArray("registry"))
+        }
     }
 
     private fun readSelectedDocument(returned: ReturnedDocument) {
@@ -7776,6 +7791,32 @@ class AgentActivity : Activity() {
         addToolActivity("DOKUMENT · aus der gelesenen PDF beantwortet · kein Modell-, Web- oder Dateiauswahl-Aufruf")
     }
 
+    /**
+     * Code64: an owner turn that points at a document, page or paragraph of this chat (session reference registry).
+     * true = handled: a fixed reply (focus change, quotation, question back, passage that does not exist), an answer
+     * from the read file, or the local model turn started with exactly the resolved passage as its document data.
+     * false = no such reference; nothing changed and the existing routes decide.
+     */
+    private fun routeDocumentReference(request: String, correctionOnly: Boolean = false): Boolean {
+        val assistantName = at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+            continuumState?.archive?.identityState?.chosenName)
+        val route = localConversationContext.routeDocumentReference(sessionId, request, assistantName, correctionOnly)
+            ?: return false
+        val reply = route.reply ?: route.resolved?.let { resolved ->
+            at.heinz.deviceai.cognitive.OwnerDocumentDialogue.answer(resolved.document, request, assistantName)
+                ?: if (!localModelReady()) at.heinz.deviceai.cognitive.OwnerDocumentDialogue.withoutModel(resolved.document)
+                else null
+        }
+        if (reply != null) {
+            answerFromDocument(request, reply)
+            return true
+        }
+        input.text.clear()
+        addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        runLocal(request)
+        return true
+    }
+
     private fun clarifyAppRequest(request: String, question: String, nameOpening: Boolean? = null) {
         appNameClarification.clear()
         computerClarification.clear()
@@ -7896,6 +7937,9 @@ class AgentActivity : Activity() {
         val correction = at.heinz.deviceai.cognitive.OwnerCorrectionIntent.parse(input.text.toString().trim())
         if (correction != null && !botLookupPending) {
             val spoken = input.text.toString().trim()
+            // Code64: with several documents in THIS chat, „das andere/erste Dokument“ is resolved in the session
+            // registry (asked back when ambiguous) before the work journal picks its latest other episode.
+            if (!busy && routeDocumentReference(spoken, correctionOnly = true)) return
             input.text.clear()
             addUserMessage(spoken, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
             applyOwnerCorrection(correction, spoken)
@@ -7978,6 +8022,9 @@ class AgentActivity : Activity() {
         val recall = at.heinz.deviceai.cognitive.WorkRecall.parse(request)
         val document = at.heinz.deviceai.cognitive.OwnerDocumentIntent.parse(request,
             continuumState?.archive?.identityState?.chosenName)
+        // Code64: „Schau auf Seite drei“, „der zweite Absatz“, „vergleich das mit dem ersten Dokument“ – resolved
+        // against the documents of this chat before any other route can guess what is meant.
+        if (recall == null && routeDocumentReference(request)) return
         localConversationContext.document(sessionId)?.takeIf {
             at.heinz.deviceai.cognitive.OwnerDocumentDialogue.reuseOpenSummary(request,
                 continuumState?.archive?.identityState?.chosenName)
@@ -12821,11 +12868,10 @@ class AgentActivity : Activity() {
             localConversationContext.objectStateBlock(localSessionId, text) else ""
         // Field P0 Code54: a question about the PDF read in this session gets its read facts, page by page, as
         // required data (frozen for this turn). A document draft already carries the document's own text.
-        val documentBlock = if (botTask == null && codingPlanning == null && documentDraftTurn == null &&
-            at.heinz.deviceai.cognitive.OwnerDocumentDialogue.refersToDocument(text))
-            localConversationContext.document(localSessionId)?.let {
-                at.heinz.deviceai.cognitive.OwnerDocumentDialogue.promptBlock(it, text)
-            }.orEmpty() else ""
+        // Code64: when the session registry resolved this request, the block names exactly that document, page and
+        // paragraph and carries the resolved passage (bounded, see ConversationReferences.MAX_BLOCK_BYTES).
+        val documentBlock = if (botTask == null && codingPlanning == null && documentDraftTurn == null)
+            localConversationContext.documentPromptBlock(localSessionId, text) else ""
         val agentTask = if (botTask != null) text else codingPlanning?.ownerGoal ?: followUpFrame.task
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
