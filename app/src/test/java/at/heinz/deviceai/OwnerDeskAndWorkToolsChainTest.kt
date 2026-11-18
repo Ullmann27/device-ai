@@ -85,7 +85,6 @@ class OwnerDeskAndWorkToolsChainTest {
     @Test fun aFormatCorrectionReachesTheLaneThatSavedLast() {
         val (chat, desk, tools) = chat()
         // After a save of the work tools the correction is theirs …
-        tools.served.clear()
         tools.foreignTurn("Erklär mir die Photosynthese", "Die Photosynthese wandelt Lichtenergie in chemische Energie um. Pflanzen " +
             "bilden dabei aus Wasser und Kohlendioxid Zucker und geben Sauerstoff ab.")
         assertEquals("TOOLS", chat.say("Speichere das als PDF"))
@@ -133,8 +132,9 @@ class OwnerDeskAndWorkToolsChainTest {
         val mail = host.mails.single()
         assertEquals("anna.muster@example.org", mail.address)
         assertEquals("Nachrichten von heute 18.11.2026", mail.subject)
-        assertEquals(pdfName, mail.attachment!!.displayName)
-        assertEquals("application/pdf", mail.attachment!!.mime)
+        val attached = checkNotNull(mail.attachment)
+        assertEquals(pdfName, attached.displayName)
+        assertEquals("application/pdf", attached.mime)
         assertTrue(mail.body.contains("Die Nationalbank von Musterstadt") && mail.body.contains("Quellen"))
         assertTrue(host.lines("REPLY:").last().endsWith("Gesendet habe ich nichts – du musst im Mailprogramm nur noch auf Senden tippen."))
         assertTrue("the send lane did nothing", sendHost.device.opened.isEmpty() && sendHost.device.pressed.isEmpty())
@@ -148,8 +148,9 @@ class OwnerDeskAndWorkToolsChainTest {
         val plan = sendHost.device.opened.single() as SendPlan.Mail
         assertEquals("anna.muster@example.org", plan.address)
         assertEquals("Nachrichten von heute 18.11.2026", plan.subject)
-        assertEquals(pdfName, plan.attachment!!.displayName)
-        assertTrue(plan.attachment!!.uri!!.startsWith("content://"))
+        val attached = checkNotNull(plan.attachment)
+        assertEquals(pdfName, attached.displayName)
+        assertTrue(checkNotNull(attached.uri).startsWith("content://"))
         assertTrue(plan.send)
         assertEquals(1, sendHost.device.pressed.size)
         assertTrue(sendHost.lastReply, sendHost.lastReply.startsWith("Gesendet an anna.muster@example.org (Gmail)"))
