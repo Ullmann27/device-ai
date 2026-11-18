@@ -117,6 +117,10 @@ internal interface OwnerDocumentDeskHost {
     fun adopt(result: OwnerDeliverable, file: OwnerSavedFile) {}
     /** „Ich meinte als PDF“ after a save of the work tools; true = they took the turn over. */
     fun exportAgain(request: String, format: OwnerExportCommand.Format): Boolean = false
+    /** How an order of this lane ended (see [OwnerLaneOutcome]); nobody has to listen. */
+    fun outcome(outcome: OwnerLaneOutcome) {}
+    /** false while a sequence of orders goes on right after a save: „Soll ich sie öffnen?“ is then not asked in between. */
+    fun offerToOpen(): Boolean = true
 }
 
 /**
@@ -165,6 +169,8 @@ internal class OwnerDocumentDesk(
     val jobRunning: Boolean get() = running != null
 
     private fun mark() { subjectThrough = host.ownerTurn }
+    private fun failed(reason: String) = host.outcome(OwnerLaneOutcome.Failed(reason))
+    private fun needs(need: OwnerLaneOutcome.Need, question: String) = host.outcome(OwnerLaneOutcome.NeedsOwner(need, question))
     private fun millis() = now().toEpochMilli()
     private fun ask(build: (String, Long, Long) -> Question) { question = build(host.sessionId, host.ownerTurn, millis()) }
 
@@ -237,6 +243,27 @@ internal class OwnerDocumentDesk(
         return handled
     }
 
+    /**
+     * „… und öffne es“ after another owner lane found a file: the real [name] of that file is searched and opened
+     * through the same grant, search and matcher as „Öffne das PDF …“. [request] is the owner's own sub-order.
+     */
+    fun openFound(request: String, name: String, folderHint: String?) {
+        host.acceptOwnerTurn(request)
+        question = null
+        startSearch(Search(request, name.replace(Regex("(?i)\\.pdf$"), "").trim(), openWhenClear = true, folderHint = folderHint))
+        mark()
+    }
+
+    /**
+     * A correction of the desk's last page order or search that reaches it after other lanes worked in between
+     * (a sequence of owner orders). Same handling as right after the desk's own turn; false = nothing to correct.
+     */
+    fun correct(request: String): Boolean {
+        if (!host.idle() || running != null) return false
+        val correction = OwnerDeskCorrection.parse(request, host.assistantName) ?: return false
+        return correctOwnWork(request, correction).also { if (it) mark() }
+    }
+
     private fun route(request: String): Boolean {
         val name = host.assistantName
         if (answer(request, name)) return true
@@ -264,6 +291,7 @@ internal class OwnerDocumentDesk(
             else -> {
                 host.say("Der Zugriff auf alle Dateien ist weiterhin nicht erlaubt. Ich habe nichts durchsucht. $PICKER_OFFER")
                 ask { session, turn, at -> Question.Picker(session, turn, at, pending.request) }
+                failed("Der Zugriff auf alle Dateien ist weiterhin nicht erlaubt; ich habe nichts durchsucht.")
             }
         }
         mark()
@@ -288,12 +316,14 @@ internal class OwnerDocumentDesk(
                         host.activity("DOKUMENTE · Android-Einstellung „Zugriff auf alle Dateien“ geöffnet · die Suche wartet")
                         host.reply(request, "Ich öffne die Android-Einstellung. Schalte dort „Zugriff auf alle Dateien zulassen“ " +
                             "für Continuum ein und komm zurück – dann suche ich „${search.query}“ sofort weiter.")
+                        needs(OwnerLaneOutcome.Need.GRANT, "Schalte „Zugriff auf alle Dateien zulassen“ für Continuum ein.")
                     } else {
                         host.pendingSearch = null
                         host.reply(request, "Die Einstellung ließ sich nicht öffnen: ${NewsBriefing.clean(problem, 140)}. Du findest " +
                             "sie unter Einstellungen › Apps › Spezieller Zugriff › Zugriff auf alle Dateien. Durchsucht habe ich nichts. " +
                             PICKER_OFFER)
                         ask { session, turn, at -> Question.Picker(session, turn, at, search.request) }
+                        failed("Die Android-Einstellung für den Dateizugriff ließ sich nicht öffnen; ich habe nichts durchsucht.")
                     }
                     return true
                 }
@@ -302,6 +332,7 @@ internal class OwnerDocumentDesk(
                     host.reply(request, "In Ordnung – ich öffne nichts und habe nichts durchsucht. Du kannst die Datei auch selbst " +
                         "auswählen. $PICKER_OFFER")
                     ask { session, turn, at -> Question.Picker(session, turn, at, asked.search.request) }
+                    host.outcome(OwnerLaneOutcome.Stopped)
                     return true
                 }
                 return false
@@ -344,6 +375,7 @@ internal class OwnerDocumentDesk(
                         host.acceptOwnerTurn(request)
                         host.reply(request, "In Ordnung, ich öffne nichts. $PICKER_OFFER")
                         ask { session, turn, at -> Question.Picker(session, turn, at, request) }
+                        host.outcome(OwnerLaneOutcome.Stopped)
                         return true
                     }
                 }
@@ -351,12 +383,14 @@ internal class OwnerDocumentDesk(
                     host.acceptOwnerTurn(request)
                     host.reply(request, "Welches davon? Nenn mir die Nummer oder einen Teil des Namens.")
                     ask { session, turn, at -> Question.Hits(session, turn, at, asked.found, asked.files, asked.confirm) }
+                    needs(OwnerLaneOutcome.Need.CHOICE, "Welches davon? Nenn mir die Nummer oder einen Teil des Namens.")
                     return true
                 }
                 if (!asked.confirm && immediate && OwnerDeskReply.isNo(request, name)) {
                     host.acceptOwnerTurn(request)
                     question = null
                     host.reply(request, "In Ordnung, ich öffne keines davon.")
+                    host.outcome(OwnerLaneOutcome.Stopped)
                     return true
                 }
                 when (val picked = OwnerLibraryChoice.parse(request, asked.files, name)) {
@@ -368,11 +402,13 @@ internal class OwnerDocumentDesk(
                         host.acceptOwnerTurn(request)
                         host.reply(request, "Diese Auswahl gibt es nicht. Ich habe ${asked.files.size} Treffer genannt – welchen meinst du?")
                         ask { session, turn, at -> Question.Hits(session, turn, at, asked.found, asked.files, asked.confirm) }
+                        needs(OwnerLaneOutcome.Need.CHOICE, "Ich habe ${asked.files.size} Treffer genannt – welchen meinst du?")
                     }
                     OwnerLibraryChoice.Answer.Drop -> {
                         host.acceptOwnerTurn(request)
                         question = null
                         host.reply(request, "In Ordnung, ich öffne keines davon.")
+                        host.outcome(OwnerLaneOutcome.Stopped)
                     }
                     // Anything else leaves the question open and is routed normally.
                     null -> return false
@@ -399,6 +435,7 @@ internal class OwnerDocumentDesk(
             if (late) {
                 (outcome as? SearchOutcome.Decided)?.opened?.pdf?.let(host::discardPdf)
                 host.say("Gestoppt. Ich habe nichts geöffnet.")
+                host.outcome(OwnerLaneOutcome.Stopped)
             } else publishSearch(order, outcome)
         }
     }
@@ -472,10 +509,12 @@ internal class OwnerDocumentDesk(
                 host.activity("DOKUMENTE · „Zugriff auf alle Dateien“ fehlt · nichts durchsucht")
                 host.reply(request, GRANT_MISSING)
                 ask { session, turn, at -> Question.Grant(session, turn, at, order) }
+                needs(OwnerLaneOutcome.Need.GRANT, GRANT_MISSING)
             }
             SearchOutcome.Unsupported -> {
                 host.reply(request, "Die Suche im Gerätespeicher gibt es erst ab Android 11. Ich habe nichts durchsucht. $PICKER_OFFER")
                 ask { session, turn, at -> Question.Picker(session, turn, at, request) }
+                failed("Die Suche im Gerätespeicher gibt es erst ab Android 11; ich habe nichts durchsucht.")
             }
             is SearchOutcome.Decided -> when (val decision = outcome.decision) {
                 OwnerLibraryMatcher.Decision.None -> {
@@ -484,6 +523,7 @@ internal class OwnerDocumentDesk(
                     host.reply(request, "Ein PDF namens „${order.query}“ habe ich nicht gefunden. ${searched(outcome.scan)} " +
                         "Wenn die Datei woanders liegt oder anders heißt, kannst du sie selbst auswählen. $PICKER_OFFER")
                     ask { session, turn, at -> Question.Picker(session, turn, at, request) }
+                    failed("Ein PDF namens „${order.query}“ habe ich nicht gefunden. ${searched(outcome.scan)}")
                 }
                 is OwnerLibraryMatcher.Decision.Near -> {
                     val files = decision.hits.map { it.file }
@@ -493,6 +533,7 @@ internal class OwnerDocumentDesk(
                         if (files.size == 1) "Ähnlich heißt: ${OwnerLibraryMatcher.describe(files.single(), zone())}. Meinst du das?"
                         else "Ähnlich heißen:\n${numbered(files)}\nMeinst du eines davon?")
                     ask { session, turn, at -> Question.Hits(session, turn, at, found, files, confirm = files.size == 1) }
+                    needs(OwnerLaneOutcome.Need.CHOICE, "Ein PDF namens „${order.query}“ gibt es nicht, nur ähnliche Namen. Welches meinst du?")
                 }
                 is OwnerLibraryMatcher.Decision.Ask -> {
                     val files = decision.hits.take(OwnerLibraryMatcher.MAX_LISTED).map { it.file }
@@ -503,6 +544,7 @@ internal class OwnerDocumentDesk(
                         (if (more > 0) "Dazu kommen $more weitere – nenn mir dafür einen genaueren Namen. " else "") +
                         "Welches soll ich öffnen? Sag zum Beispiel „das zweite“ oder einen Teil des Namens.")
                     ask { session, turn, at -> Question.Hits(session, turn, at, found, files, confirm = false) }
+                    needs(OwnerLaneOutcome.Need.CHOICE, "Zu „${order.query}“ gibt es ${decision.hits.size} PDFs. Welches soll ich öffnen?")
                 }
                 is OwnerLibraryMatcher.Decision.Open -> {
                     val files = (listOf(decision.hit) + decision.others).take(OwnerLibraryMatcher.MAX_LISTED).map { it.file }
@@ -520,10 +562,12 @@ internal class OwnerDocumentDesk(
                             host.reply(request, "Zu „${order.query}“ habe ich ${files.size} PDFs gefunden:\n${numbered(files)}\n" +
                                 "Der erste Treffer heißt genau so. Welches soll ich öffnen? Sag zum Beispiel „das erste“ oder einen Teil des Namens.")
                             ask { session, turn, at -> Question.Hits(session, turn, at, found, files, confirm = false) }
+                            host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FilesFound(order.query, files.map { it.name })))
                         }
                         opened == null -> {
                             host.reply(request, "Gefunden: ${OwnerLibraryMatcher.describe(file, zone())}. Soll ich es öffnen?")
                             ask { session, turn, at -> Question.Hits(session, turn, at, found, listOf(file), confirm = true) }
+                            host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FilesFound(order.query, listOf(file.name))))
                         }
                         opened.pdf != null -> {
                             found.opened = file
@@ -531,9 +575,14 @@ internal class OwnerDocumentDesk(
                             host.activity("DOKUMENTE · geöffnet · ${file.name}")
                             host.say("Gefunden: ${OwnerLibraryMatcher.describe(file, zone())}. Ich öffne es.$others")
                             host.showPdf(request, opened.pdf)
+                            host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.DocumentOpened(file.name, file.folderLabel,
+                                opened.pdf.pageCount, order.query)))
                         }
-                        else -> host.say("Gefunden: ${OwnerLibraryMatcher.describe(file, zone())}. Öffnen ließ es sich aber nicht: " +
-                            "${opened.problem}. An der Datei wurde nichts verändert.$others")
+                        else -> {
+                            host.say("Gefunden: ${OwnerLibraryMatcher.describe(file, zone())}. Öffnen ließ es sich aber nicht: " +
+                                "${opened.problem}. An der Datei wurde nichts verändert.$others")
+                            failed("„${file.name}“ ließ sich nicht öffnen: ${opened.problem}.")
+                        }
                     }
                 }
             }
@@ -546,13 +595,22 @@ internal class OwnerDocumentDesk(
         host.activity("DOKUMENTE · öffne ${file.name}")
         launch(request, Running(host.sessionId, null), "Gestoppt. Ich habe nichts geöffnet.", { job -> openWork(job, file) }) { opened, late ->
             when {
-                late -> { opened.pdf?.let(host::discardPdf); host.say("Gestoppt. Ich habe nichts geöffnet.") }
+                late -> {
+                    opened.pdf?.let(host::discardPdf)
+                    host.say("Gestoppt. Ich habe nichts geöffnet.")
+                    host.outcome(OwnerLaneOutcome.Stopped)
+                }
                 opened.pdf != null -> {
                     found?.opened = file
                     host.say("Ich öffne ${OwnerLibraryMatcher.describe(file, zone())}.")
                     host.showPdf(request, opened.pdf)
+                    host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.DocumentOpened(file.name, file.folderLabel,
+                        opened.pdf.pageCount, found?.query)))
                 }
-                else -> host.say("„${file.name}“ ließ sich nicht öffnen: ${opened.problem}. An der Datei wurde nichts verändert.")
+                else -> {
+                    host.say("„${file.name}“ ließ sich nicht öffnen: ${opened.problem}. An der Datei wurde nichts verändert.")
+                    failed("„${file.name}“ ließ sich nicht öffnen: ${opened.problem}.")
+                }
             }
         }
     }
@@ -592,13 +650,17 @@ internal class OwnerDocumentDesk(
         host.acceptOwnerTurn(request)
         question = null
         when (parsed) {
-            OwnerPageJobCommand.Result.SeveralPages -> host.reply(request, "Im Moment fasse ich pro Auftrag genau eine Seite " +
-                "zusammen und speichere sie. Ich habe nichts zusammengefasst und nichts gespeichert. Welche Seite soll es sein?")
+            OwnerPageJobCommand.Result.SeveralPages -> {
+                host.reply(request, "Im Moment fasse ich pro Auftrag genau eine Seite " +
+                    "zusammen und speichere sie. Ich habe nichts zusammengefasst und nichts gespeichert. Welche Seite soll es sein?")
+                failed("Pro Auftrag fasse ich genau eine Seite zusammen; ich habe nichts zusammengefasst und nichts gespeichert.")
+            }
             is OwnerPageJobCommand.Result.Order -> {
                 val order = PageOrder(parsed.page, parsed.format, parsed.name)
                 if (order.format == null) {
                     host.reply(request, "Als was soll ich die Zusammenfassung speichern – als Word-Datei oder als PDF?")
                     ask { session, turn, at -> Question.FormatOf(session, turn, at, order) }
+                    needs(OwnerLaneOutcome.Need.DETAIL, "Als was soll ich die Zusammenfassung speichern – als Word-Datei oder als PDF?")
                 } else startPage(request, order, replaces = null)
             }
         }
@@ -614,6 +676,7 @@ internal class OwnerDocumentDesk(
         if (document == null) {
             host.reply(request, "Im Moment ist kein PDF geöffnet. Sag zum Beispiel „Öffne das PDF Argon4“ – danach fasse ich " +
                 "dir die Seite zusammen und speichere sie. Ich habe nichts gespeichert.")
+            failed("Im Moment ist kein PDF geöffnet; ich habe nichts gespeichert.")
             return
         }
         val page = if (wanted.page == OwnerPageReference.LAST) document.pageCount else wanted.page
@@ -621,6 +684,7 @@ internal class OwnerDocumentDesk(
         if (page < 1 || (document.pageCount > 0 && page > document.pageCount)) {
             lastPage = PageDone(host.sessionId, order, document.name, document.uri, null, null)
             host.reply(request, missingPage(document.name, document.pageCount, page))
+            failed(missingPage(document.name, document.pageCount, page))
             return
         }
         // The same page of the same file in another format: the accepted summary is reused, not generated again.
@@ -739,35 +803,44 @@ internal class OwnerDocumentDesk(
             PageOutcome.NoText -> {
                 remember(null, null)
                 host.say("Seite $page von „${document.name}“ hat keinen auslesbaren Text – zum Beispiel ein Scan. $nothing")
+                failed("Seite $page von „${document.name}“ hat keinen auslesbaren Text.")
             }
             PageOutcome.NeedsAndroid15 -> {
                 remember(null, null)
                 host.say("Den Text einer PDF-Seite kann ich erst ab Android 15 auslesen. $nothing")
+                failed("Den Text einer PDF-Seite kann ich erst ab Android 15 auslesen.")
             }
             is PageOutcome.Missing -> {
                 remember(null, null)
                 host.say(missingPage(document.name, outcome.pageCount, page))
+                failed(missingPage(document.name, outcome.pageCount, page))
             }
             is PageOutcome.ReadFailed -> {
                 remember(null, null)
                 host.say("Seite $page von „${document.name}“ ließ sich nicht lesen: ${outcome.reason}. $nothing")
+                failed("Seite $page von „${document.name}“ ließ sich nicht lesen: ${outcome.reason}.")
             }
             is PageOutcome.NoModel -> {
                 remember(null, null)
                 host.say("Seite $page von „${document.name}“ habe ich gelesen (${OwnerPageSummary.count(outcome.chars)} Zeichen). Für " +
                     "die Zusammenfassung brauche ich aber das Sprachmodell, und im Moment ist keines geladen. $nothing Lade das " +
                     "Modell in der Modellverwaltung und gib mir den Auftrag dann noch einmal.")
+                failed("Für die Zusammenfassung ist kein Sprachmodell geladen; es wurde nichts gespeichert.")
             }
             is PageOutcome.ModelFailed -> {
                 remember(null, null)
-                host.say(if (LocalModelThermalGuard.isThermal(outcome.problem)) LocalModelThermalGuard.ownerMessage(outcome.problem) +
+                val said = if (LocalModelThermalGuard.isThermal(outcome.problem)) LocalModelThermalGuard.ownerMessage(outcome.problem) +
                     " Es wurde nichts gespeichert." else "Das Sprachmodell hat für Seite $page keine brauchbare Zusammenfassung " +
-                    "geliefert" + (outcome.problem?.let { " (${NewsBriefing.clean(it, 120)})" } ?: "") + ". Es wurde nichts gespeichert.")
+                    "geliefert" + (outcome.problem?.let { " (${NewsBriefing.clean(it, 120)})" } ?: "") + ". Es wurde nichts gespeichert."
+                host.say(said)
+                failed(said)
             }
             is PageOutcome.SaveFailed -> {
                 remember(outcome.summary, null)
                 host.say("Die Zusammenfassung von Seite $page steht, aber das Speichern hat nicht geklappt: ${outcome.reason}. " +
                     "Es wurde keine Datei angelegt.\n\n${outcome.summary.text}")
+                failed("Die Zusammenfassung von Seite $page steht, aber das Speichern hat nicht geklappt: ${outcome.reason}. " +
+                    "Es wurde keine Datei angelegt.")
             }
             is PageOutcome.Saved -> {
                 remember(outcome.summary, outcome.file)
@@ -796,12 +869,13 @@ internal class OwnerDocumentDesk(
                     "${OwnerPageSummary.count(outcome.summary.totalChars)} Zeichen der Seite."
                 val author = if (outcome.summary.cloud) " Zusammengefasst hat Claude (Cloud), nicht das Modell auf dem Gerät." else ""
                 val lateNote = if (late) " Diese Datei war schon gespeichert, bevor der Abbruch ankam." else ""
-                val offer = if (openable && !late) " Soll ich sie öffnen?" else ""
+                val offer = if (openable && !late && host.offerToOpen()) " Soll ich sie öffnen?" else ""
                 host.say(if (sameSummary) "Erledigt – dieselbe Zusammenfassung von Seite $page jetzt als ${format.label}: $place" +
                     "$unchecked$previous$lateNote$offer"
                 else "Seite $page von „${document.name}“" + (replaces?.takeIf { it.order.page != page }?.let { " – statt Seite ${it.order.page}" } ?: "") +
                     " – Zusammenfassung:\n\n${outcome.summary.text}$basis\n\nGespeichert als ${format.label}: $place$author" +
                     "$unchecked$previous$lateNote$offer")
+                host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FileSaved(file, outcome.result, outcome.location, outcome.verified)))
             }
         }
     }
@@ -853,6 +927,7 @@ internal class OwnerDocumentDesk(
                         host.reply(request, "Zu „${found.query}“ gab es ${found.files.size} Treffer:\n${numbered(found.files)}\n" +
                             "Welchen meinst du?")
                         ask { s, turn, at -> Question.Hits(s, turn, at, found, found.files, confirm = false) }
+                        needs(OwnerLaneOutcome.Need.CHOICE, "Zu „${found.query}“ gab es ${found.files.size} Treffer. Welchen meinst du?")
                     }
                 }
                 return true
@@ -936,11 +1011,16 @@ internal class OwnerDocumentDesk(
                     (value as? SearchOutcome.Decided)?.opened?.pdf?.let(host::discardPdf)
                     (value as? Opened)?.pdf?.let(host::discardPdf)
                     host.activity("DOKUMENTE · gestoppt")
-                    if (next == null) host.say(stopped)
+                    // A corrected order follows right away: only that one ends the owner's order.
+                    if (next == null) { host.say(stopped); host.outcome(OwnerLaneOutcome.Stopped) }
                 }
-                else -> host.say("Das hat nicht geklappt: " +
-                    NewsBriefing.clean(result.exceptionOrNull()?.let { it.message ?: it.javaClass.simpleName } ?: "unbekannter Fehler", 160) +
-                    ". Es wurde nichts gespeichert.")
+                else -> {
+                    val said = "Das hat nicht geklappt: " +
+                        NewsBriefing.clean(result.exceptionOrNull()?.let { it.message ?: it.javaClass.simpleName } ?: "unbekannter Fehler", 160) +
+                        ". Es wurde nichts gespeichert."
+                    host.say(said)
+                    failed(said)
+                }
             }
             if (end != OwnerDeskJobEnd.SESSION_CHANGED) next?.invoke()
         }

@@ -65,6 +65,9 @@ class OwnerTaskChain(
 
     private val results = ChainResults { step, key -> done.firstOrNull { it.step.id == step }?.values?.get(key) }
 
+    /** A value a verified step handed on („name“ of step „list“), for whoever continues on this chain's result. */
+    @Synchronized fun value(step: String, key: String): String? = results.value(step, key)
+
     /** Wraps the caller's approval provider so the chain knows that a rejection was a missing owner yes. */
     fun approvals(delegate: AgentToolApprovalProvider): AgentToolApprovalProvider = AgentToolApprovalProvider { proposal, risk ->
         val index = synchronized(this) { done.size }

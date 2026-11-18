@@ -99,6 +99,10 @@ internal interface OwnerWorkToolsHost {
      * (verifies the Gmail draft on screen, sends, reports). false = no grant; the hand-over below stays as it was.
      */
     fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean = false
+    /** How an order of this lane ended (see [OwnerLaneOutcome]); nobody has to listen. */
+    fun outcome(outcome: OwnerLaneOutcome) {}
+    /** false while a sequence of orders goes on right after a save: „Soll ich sie öffnen?“ is then not asked in between. */
+    fun offerToOpen(): Boolean = true
 }
 
 /** What the Activity lends a running file job. */
@@ -142,6 +146,29 @@ internal class OwnerWorkTools(
         subjectThrough = host.ownerTurn
         saved = Saved(host.sessionId, result, file)
         openOffer = if (offerToOpen && file.uri != null) OpenOffer(host.sessionId, host.ownerTurn, file) else null
+    }
+
+    /**
+     * A sequence of owner orders continues on [result] (a step's real outcome): true when it still is this chat's
+     * deliverable – it is then what „das“ and „sie“ of the next order mean, and the offer to open the saved file is
+     * over, because the sequence goes on instead of waiting for that answer. false = something newer took its place.
+     */
+    fun continueOn(result: OwnerDeliverable): Boolean {
+        if (deliverable !== result) return false
+        subjectThrough = host.ownerTurn
+        openOffer = null
+        return true
+    }
+
+    /**
+     * The sequence that saved [file] has ended with that save: the offer to open it is made now. false = [result] is
+     * no longer this chat's deliverable, or the file cannot be handed to a viewer.
+     */
+    fun offerOpening(result: OwnerDeliverable, file: OwnerSavedFile): Boolean {
+        if (deliverable !== result || file.uri == null) return false
+        subjectThrough = host.ownerTurn
+        openOffer = OpenOffer(host.sessionId, host.ownerTurn, file)
+        return true
     }
 
     /**
@@ -208,6 +235,7 @@ internal class OwnerWorkTools(
         if (mode == InternetAccessMode.OFF) {
             host.activity("WEB · AUS · keine Anfrage gesendet")
             host.reply(request, OwnerNewsCommand.offlineReply())
+            host.outcome(OwnerLaneOutcome.Failed(OwnerNewsCommand.offlineReply()))
             return
         }
         val feeds = NewsFeedCatalog.feedsFor(command.sections)
@@ -218,10 +246,15 @@ internal class OwnerWorkTools(
             explanation = "Für die Nachrichten lese ich die öffentlichen Feeds von $outlets. Es wird nur gelesen: " +
                 "keine Suchanfrage, kein Konto und nichts aus deinem Auftrag wird übertragen. ",
             notGranted = "Nachrichten nicht abgerufen: Der Internetzugriff wurde für diese Anfrage nicht freigegeben.") { session ->
-            if (session == null) host.activity("WEB · nicht freigegeben · keine Anfrage gesendet")
-            else host.runWebJob(session, request, { job -> brief(job, request, command, feeds) }) { result ->
+            if (session == null) {
+                host.activity("WEB · nicht freigegeben · keine Anfrage gesendet")
+                host.outcome(OwnerLaneOutcome.Failed("Der Internetzugriff wurde für die Nachrichten nicht freigegeben."))
+            } else host.runWebJob(session, request, { job -> brief(job, request, command, feeds) }) { result ->
                 result.onSuccess { publish(request, command, it) }
-                    .onFailure { host.say(NewsBriefing.failed(it.message)) }
+                    .onFailure {
+                        host.say(NewsBriefing.failed(it.message))
+                        host.outcome(OwnerLaneOutcome.Failed(NewsBriefing.failed(it.message)))
+                    }
             }
         }
     }
@@ -277,7 +310,10 @@ internal class OwnerWorkTools(
 
     private fun publish(request: String, command: OwnerNewsCommand.Request, outcome: Outcome) {
         when (outcome) {
-            is Outcome.Message -> host.reply(request, outcome.text)
+            is Outcome.Message -> {
+                host.reply(request, outcome.text)
+                host.outcome(OwnerLaneOutcome.Failed(outcome.text))
+            }
             is Outcome.Briefing -> {
                 val result = outcome.result
                 host.say(result.text)
@@ -289,6 +325,8 @@ internal class OwnerWorkTools(
                 NewsBriefing.dialogueDigest(result, command, result.deliverable.createdAtMillis)?.let(host::rememberResearch)
                 host.activity("NACHRICHTEN · ${briefed?.stories?.size ?: 0} Meldungen · ${result.sources.size} Quellen · " +
                     if (result.modelSummary) outcome.brain.logLabel else "Schlagzeilen ohne Modell")
+                host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.Briefing(result.deliverable, result.stories.size,
+                    result.sources.size, result.modelSummary)))
             }
         }
     }
@@ -335,6 +373,7 @@ internal class OwnerWorkTools(
         if (target == null) {
             host.reply(request, "In diesem Gespräch gibt es noch nichts, das ich speichern könnte. Sag zum Beispiel " +
                 "„Fass mir die Nachrichten von heute zusammen“ – danach speichere ich sie dir als PDF oder Word-Datei.")
+            host.outcome(OwnerLaneOutcome.Failed("In diesem Gespräch gibt es noch nichts, das ich speichern könnte."))
             return
         }
         lastDeliverable = host.sessionId to target
@@ -367,14 +406,17 @@ internal class OwnerWorkTools(
             result.onSuccess { exported ->
                 val file = exported.file
                 saved = Saved(host.sessionId, target, file)
-                val openable = file.uri != null
+                val openable = file.uri != null && host.offerToOpen()
                 openOffer = if (openable) OpenOffer(host.sessionId, host.ownerTurn, file) else null
                 host.say(savedMessage(target, command, exported, openable))
                 host.activity("EXPORT · gespeichert · ${file.displayName}")
+                host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FileSaved(file, target, null, null)))
             }.onFailure { error ->
-                host.say("Das Speichern hat nicht geklappt: " + NewsBriefing.clean(error.message ?: error.javaClass.simpleName, 160) +
-                    ". Es wurde keine Datei angelegt.")
+                val failed = "Das Speichern hat nicht geklappt: " + NewsBriefing.clean(error.message ?: error.javaClass.simpleName, 160) +
+                    ". Es wurde keine Datei angelegt."
+                host.say(failed)
                 host.activity("EXPORT · fehlgeschlagen")
+                host.outcome(OwnerLaneOutcome.Failed(failed))
             }
         }
     }
@@ -414,8 +456,10 @@ internal class OwnerWorkTools(
         } ?: return false
         host.acceptOwnerTurn(request)
         val problem = host.openFile(file)
-        host.reply(request, if (problem == null) "„${file.displayName}“ ist geöffnet."
-            else "Öffnen hat nicht geklappt: ${NewsBriefing.clean(problem, 160)}. Die Datei liegt weiter im Download-Ordner.")
+        val said = if (problem == null) "„${file.displayName}“ ist geöffnet."
+            else "Öffnen hat nicht geklappt: ${NewsBriefing.clean(problem, 160)}. Die Datei liegt weiter im Download-Ordner."
+        host.reply(request, said)
+        host.outcome(if (problem == null) OwnerLaneOutcome.Done(OwnerLaneResult.FileOpened(file)) else OwnerLaneOutcome.Failed(said))
         return true
     }
 
@@ -426,6 +470,7 @@ internal class OwnerWorkTools(
         host.acceptOwnerTurn(request)
         if (target == null) {
             host.reply(request, "In diesem Gespräch gibt es noch nichts, das ich verschicken könnte. Es wurde nichts vorbereitet.")
+            host.outcome(OwnerLaneOutcome.Failed("In diesem Gespräch gibt es noch nichts, das ich verschicken könnte."))
             return
         }
         lastDeliverable = host.sessionId to target
@@ -436,7 +481,9 @@ internal class OwnerWorkTools(
         host.activity("E-MAIL · Übergabe an das Mailprogramm · nichts wird gesendet")
         val problem = host.composeMail(command.address, title, target.plainText, attachment)
         if (problem != null) {
-            host.reply(request, "Die E-Mail konnte ich nicht vorbereiten: ${NewsBriefing.clean(problem, 160)}. Es wurde nichts gesendet.")
+            val failed = "Die E-Mail konnte ich nicht vorbereiten: ${NewsBriefing.clean(problem, 160)}. Es wurde nichts gesendet."
+            host.reply(request, failed)
+            host.outcome(OwnerLaneOutcome.Failed(failed))
             return
         }
         val file = if (attachment != null) ", „${attachment.displayName}“ hängt an"
@@ -445,6 +492,8 @@ internal class OwnerWorkTools(
             ?: " Für „${command.recipientName}“ habe ich keine Adresse – trag sie bitte im Mailprogramm ein; auf deine Kontakte greife ich nicht zu."
         host.reply(request, "Die E-Mail ist vorbereitet: Betreff „$title“, der Text steht drin$file.$to " +
             "Gesendet habe ich nichts – du musst im Mailprogramm nur noch auf Senden tippen.")
+        host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.Delivered("Mailprogramm", command.address ?: command.recipientName.orEmpty(),
+            attachment, OwnerLaneResult.Delivered.State.HANDED_OVER)))
     }
 
     private companion object {
