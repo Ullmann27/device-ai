@@ -10,6 +10,10 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression.jsonl` | 40 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | deterministische Pfade: Werkzeugwahl, Negation/Kontrast, Objektgedächtnis mit Korrekturen, Geräteuhr, bestätigte Erinnerung, Sprachsteuerbefehle |
 | `regression-voice.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Sprachrunde: Gesprächsregister, Satzende-Erkennung, Fahrmodus-Befehle, Benachrichtigungs-Ansagen (Codes, Links, Freigabestufen) |
 | `regression-references.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Code64 Bezugsverwaltung: Dokumente einer Sitzung (Reihenfolge, Name, „das andere“), Seiten- und Absatzfokus, Vergleiche mit zwei Operanden, Rückfrage bei Mehrdeutigkeit, fehlende Seiten/Absätze; Dokumente aus `regression-references.documents.json` (synthetisch) |
+| `regression-news.jsonl` | 64 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Arbeitswerkzeuge (18.11.2026): Nachrichtenauftrag ja/nein (Abgrenzung zu Mitteilungen, Messenger, Benachrichtigungs-Ansage), Themen, Antworten auf die Rückfrage, Feed-Lesen (RSS 2.0, RDF, Atom), Tagesauswahl und Zusammenführen derselben Meldung; Folgeaufträge auf das Ergebnis: Speichern als PDF/Word, Dateinamen (Datum, sichere Zeichen, nie überschreiben), E-Mail-Übergabe (Adresse/Name aus dem Satz); Feeds aus `regression-news.feeds.json` (synthetisch) |
+| `regression-understanding.jsonl` | 74 | **Host, automatisch** (`OwnerUnderstandingRegressionTest`) | Verstehen trotz Fehlhörung: falsch erkannte App-/Produkt-/Modellnamen in Aufträgen, österreichische Formulierungen, Beinahe-Paare mit Rückfrage, gültige Wörter und diktierter Text, die unverändert bleiben müssen; App-Bestand in `regression-understanding.apps.json` |
+| `regression-chains.jsonl` | 47 | **Host, automatisch** (`OwnerTaskChainRegressionTest`) | Aufgabenketten über den echten Orchestrator, ToolGate und Guard mit nachgestelltem Geräte-Backend: Reihenfolge, Argumentübergabe, Erfolgsprüfung stoppt die Kette, Freigabe-Pause und „weiter“, Auswahl, STOP, abgelehnte Modellpläne |
+| `regression-send.jsonl` | 56 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Selbst senden (18.11.2026): WhatsApp-Auftrag ja/nein (Abgrenzung zu Vorlesen, Fragen, Nachrichtenüberblick, App öffnen), Wortlaut (diktiert, indirekte Rede, Dialekt, Wunsch nach eigenem Text), Empfängerauflösung im Adressbuch (eindeutig, mehrdeutig, unbekannt, ohne Ländervorwahl), ganze Besitzerzüge durch Lenkung und Sendeablauf auf einem nachgebauten Gerät: Dauerfreigabe je Kanal, Regel a (nur Diktiertes/Bestätigtes), Regel b (Rückfrage statt Raten), Bildschirmprüfung, Tagesgrenze, Bildschirmtext als Daten, Gmail mit/ohne gespeicherte Datei; Adressbuch aus `regression-send.contacts.json` (frei erfunden). WhatsApp/Gmail selbst sind **nicht** Teil dieses Laufs (Gerät: NOT_RUN) |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -21,7 +25,8 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
 - `id`, `category`, `note`
 - `runner`: `route` · `object_state` · `clock` · `owner_recall` · `voice_command`;
   in `regression-voice.jsonl` zusätzlich `register` · `turn_completion` · `drive_command` · `notification`;
-  in `regression-references.jsonl` `reference`
+  in `regression-references.jsonl` `reference`;
+  in `regression-news.jsonl` `news_intent` · `news_follow_up` · `news_feed` · `export_intent` · `file_name` · `mail_intent`
 - Eingabe je Läufer: `input` bzw. `turns` + `question`, `facts`, `now` + `zone`;
   für `reference`: `documents` (Schlüssel der Fixture-Datei, in Öffnungsreihenfolge), `turns` (frühere Nutzerzüge;
   `open:<Schlüssel>` öffnet mitten im Gespräch ein weiteres Dokument) und `input`
@@ -30,6 +35,21 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   für `reference`: `kind` (`RESOLVED` · `AMBIGUOUS` · `MISSING` · `NONE`), `document`, `page`, `paragraph`, `intent`
   (`FOCUS` · `QUOTE` · `QUESTION` · `COMPARISON`), `page_assumed`, `compared_document`, `compared_page`;
   `contains`/`not_contains` prüfen den aufgelösten Stellentext bzw. die Rückfrage oder Begründung
+- `regression-news.jsonl`: `news_intent` erwartet `news` (`GENERAL` · `TOPICS:<Thema>|<Thema>` · `NONE`);
+  `news_follow_up` (`immediate`, `briefed` = Wörter der genannten Schlagzeilen) erwartet `follow_up`
+  (`TOPICS:…` · `STORY:<n>` · `ASK` · `DECLINE` · `NONE`); `news_feed` (`feeds` = Schlüssel der Feed-Datei, `now`,
+  `zone`) erwartet `count`, `first`, `contains`, `not_contains` über die Zeilen
+  `Haus: Schlagzeile | weiteres Haus` der ausgewählten Meldungen; `export_intent` erwartet `export`
+  (`PDF` · `DOCX` · `PDF:VIA_WORD` · `NONE`) und optional `name`; `file_name` (`requested`, `title`, `date`, `format`,
+  `taken`) erwartet `file_name`; `mail_intent` erwartet `mail` (`ADDRESS:<Adresse>` · `NAME:<Empfänger wie gesagt>` · `NONE`)
+- `regression-send.jsonl`: `send_intent` erwartet `send` (`ORDER` · `REFUSED:NEGATED|SEVERAL|GROUP|TEXT` · `NONE`) und
+  optional `recipient`, `text` (`null` = Wortlaut wird erfragt), `origin` (`DICTATED` · `MINIMAL_TRANSFORM` · `DERIVED`),
+  `unsplit`, `draft`, `model_wish`; `send_recipient` (`phrase`) erwartet `resolution` (`RESOLVED:<Ziffern>` ·
+  `AMBIGUOUS:<Anzahl>` · `NOT_FOUND` · `UNUSABLE`); `send_flow` (`granted` = Kanäle mit Dauerfreigabe, `turns` =
+  Besitzerzüge, dabei `mail-file:<Empfänger>` / `mail-text:<Empfänger>` = Mailauftrag der Arbeitswerkzeuge mit/ohne
+  gespeicherte Datei, `screen` = `OK` · `WRONG_CHAT` · `NO_SEND_CONTROL` · `NOT_CONFIRMED` · `INJECTION`, optional
+  `already_sent`) erwartet `pressed` (Zahl der gedrückten Senden-Knöpfe) und optional `opened`, `model_calls`,
+  `grants_after`, `handled`, `contains`/`not_contains` über die letzte Antwort
 
 Modellfälle (`model-*.jsonl`):
 
@@ -58,6 +78,15 @@ Stand: 32 / 32.
 
 Für `regression-references.jsonl` (Code64, 18.11.2026) gilt dasselbe: die Bezugsverwaltung existierte vorher nicht.
 Stand (Host): 32 / 32.
+
+Für `regression-news.jsonl` (Arbeitswerkzeuge, 18.11.2026) gibt es ebenfalls keinen Vorher-Wert: Nachrichtenauftrag,
+Feed-Leser und Auswahl existierten vorher nicht (Feldbefund: das lokale Modell antwortete mit einer Meta-Erklärung,
+ohne ein Web-Werkzeug zu benutzen). Stand (Host): 64 / 64. Geprüft sind die deterministischen Pfade; ob die
+Zusammenfassung des lokalen Modells auf dem Gerät menschlich klingt, ist NOT_RUN, ebenso das Schreiben der
+PDF-Datei (Android-`PdfDocument`), das Öffnen und die Übergabe an das Mailprogramm auf dem Gerät.
+Für `regression-understanding.jsonl` und `regression-chains.jsonl` (18.11.2026) stehen Vorher/Nachher und Messweg in [OWNER-UNDERSTANDING-AND-TASK-CHAIN-20261118.md](../../research/OWNER-UNDERSTANDING-AND-TASK-CHAIN-20261118.md):
+Verstehen 30 / 74 ohne die Schicht (genau die Schutzfälle) → 74 / 74; Ketten 47 / 47, vorher lief für 1 von 29 Ketten dieselbe Werkzeugfolge (rohe Ordnerliste ohne die gefragte Antwort).
+Beide Sätze haben eigene Läufer (`understand`, `chain`) und eigene Testklassen; `ContinuumEvalDatasetTest` bleibt unverändert.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 
@@ -117,6 +146,7 @@ des Laufs auf dem Gerät gemessen wurden:
 |---|---|
 | `meta` | Modellkennung, Modell-SHA-256, Dateigröße, gemeldetes Kontextfenster, Rechenthreads, App-Version, Gerät, Android-SDK, Energiesparmodus |
 | `meta.backend`, `meta.backendRequested`, `meta.backendNotice`, `meta.contextTokens` | Backend, auf dem die geladene Engine wirklich rechnet; Stellung des Beschleuniger-Schalters; Hinweis bei einem Rückfall; konfiguriertes natives Kontextfenster (nicht das Maximum der Modelldatei). Unbekanntes ist `null`. `meta.computeThreads` gilt nur für die CPU. |
+| `meta.dialogueReuseSwitch`, `meta.casesIndependent`, `meta.dialogueReuseAppliedToCases` | Stellung des Schalters „Gespräch im Modell behalten“ während des Laufs. Jeder Fall ist ein unabhängiger Prompt in einem neuen nativen Gespräch (`casesIndependent` immer `true`), der Schalter wirkt auf diese Zahlen also nie (`dialogueReuseAppliedToCases` immer `false`). Seine Messung ist die Gesprächs-Zeitprobe im Modellzentrum: Bericht `continuum-eval-dialogue-probe-<zeit>.json`, Schema `continuum-dialogue-latency-probe-v1`, je Zug `reused`, `reuseReason`, `sentBytes`, `firstTextMs`, `totalMs`, `thermalBefore`/`thermalAfter`. |
 | `formal` | bestanden / nicht bestanden für `contains_all`, `contains_any`, `numeric` |
 | `heuristic` | bestanden / nicht bestanden für `abstain`, `asks_back` (am Wortlaut erkannt, stichprobenartig gegenlesen) |
 | `notScored` | Werkzeugwahl-Fälle |

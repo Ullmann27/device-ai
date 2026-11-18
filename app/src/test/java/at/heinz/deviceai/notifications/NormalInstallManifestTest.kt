@@ -26,6 +26,29 @@ class NormalInstallManifestTest {
         assertFalse(manifest.contains("android.permission.RECEIVE_SMS"))
     }
 
+    /**
+     * Owner send orders („Schreib Anna auf WhatsApp …“) resolve a name in the address book. READ_CONTACTS is the one
+     * permission added for them and is allowed; it is not in Play Protect's blocking rule. Sending itself goes through
+     * WhatsApp and Gmail, so no SMS, call, account or contact-write permission may come with it. The exact set is
+     * pinned: a further permission has to be added here deliberately.
+     */
+    @Test fun readContactsIsTheOnlyPermissionAddedForOwnerSendOrders() {
+        val manifest = source("src/main/AndroidManifest.xml").replace(Regex("<!--[\\s\\S]*?-->"), "")
+        val declared = Regex("<uses-permission\\s+android:name=\"([^\"]+)\"").findAll(manifest).map { it.groupValues[1] }.toList()
+        assertTrue(declared.count { it == "android.permission.READ_CONTACTS" } == 1)
+        listOf("WRITE_CONTACTS", "SEND_SMS", "READ_SMS", "RECEIVE_SMS", "RECEIVE_MMS", "READ_CALL_LOG", "CALL_PHONE",
+            "GET_ACCOUNTS", "READ_PHONE_STATE", "BIND_NOTIFICATION_LISTENER_SERVICE").forEach {
+            assertFalse(it, declared.contains("android.permission.$it"))
+        }
+        assertTrue("unexpected permission set: $declared", declared.toSet() == setOf(
+            "android.permission.INTERNET", "android.permission.RECORD_AUDIO", "android.permission.CAMERA",
+            "android.permission.ACCESS_NETWORK_STATE", "android.permission.RECEIVE_BOOT_COMPLETED",
+            "android.permission.POST_NOTIFICATIONS", "android.permission.FOREGROUND_SERVICE",
+            "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION", "android.permission.QUERY_ALL_PACKAGES",
+            "android.permission.REQUEST_INSTALL_PACKAGES", "android.permission.READ_CONTACTS",
+            "com.termux.permission.RUN_COMMAND"))
+    }
+
     @Test fun theListenerIsMergedOnlyOnExplicitRequest() {
         val overlay = source("src/notificationAccess/AndroidManifest.xml")
         assertTrue(overlay.contains("at.heinz.deviceai.notifications.ContinuumNotificationListener"))

@@ -77,6 +77,8 @@ object LocalModelHost {
                 start(callback) { native.stream(prompt, it) }
             override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) =
                 start(callback) { native.streamTextOnly(prompt, it) }
+            override fun streamDialogue(request: LocalDialogueRequest, callback: LocalInferenceCallback) =
+                start(callback) { native.streamDialogue(request, it) }
             override fun streamThinking(prompt: String, callback: LocalInferenceCallback) =
                 start(callback) { native.streamThinking(prompt, it) }
             override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) =

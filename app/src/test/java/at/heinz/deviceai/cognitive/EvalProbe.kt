@@ -28,6 +28,47 @@ object EvalProbe {
     /** Drive-mode command of a whole utterance while the mode is off. */
     fun driveCommand(utterance: String): String? = DriveMode().commandFor(utterance)?.name
 
+    /** News order: `GENERAL`, `TOPICS:<label>|<label>` or `NONE`. */
+    fun news(utterance: String): String = OwnerNewsCommand.parse(utterance)?.let(::newsRequest) ?: "NONE"
+
+    /** Reply to the closing question of a briefing: `TOPICS:…`, `STORY:<n>`, `ASK`, `DECLINE` or `NONE`. */
+    fun newsFollowUp(utterance: String, immediate: Boolean, briefedWords: List<String>): String =
+        when (val reply = OwnerNewsCommand.parseFollowUp(utterance, null, immediate, briefedWords.toSet())) {
+            is OwnerNewsCommand.FollowUp.Topics -> newsRequest(reply.request)
+            is OwnerNewsCommand.FollowUp.Story -> "STORY:${reply.number}"
+            OwnerNewsCommand.FollowUp.AskWhich -> "ASK"
+            OwnerNewsCommand.FollowUp.Decline -> "DECLINE"
+            null -> "NONE"
+        }
+
+    private fun newsRequest(request: OwnerNewsCommand.Request): String =
+        if (request.unspecific) "GENERAL" else "TOPICS:" + request.topics.joinToString("|") { it.label }
+
+    /**
+     * The stories the productive parser and selector choose for [order] from raw feeds (key = feed id of the
+     * catalogue): one line per story, `outlet: headline` plus ` | outlet` for every merged report of another house.
+     */
+    fun newsSelection(order: String, feeds: Map<String, String>, now: Instant, zone: ZoneId): List<String>? {
+        val request = OwnerNewsCommand.parse(order) ?: return null
+        val results = feeds.map { (id, raw) -> NewsFeedResult(NewsFeedCatalog.feeds.first { it.id == id }, NewsFeedParser.parse(raw)) }
+        return NewsSelector.select(results, request, now, zone).stories.map { story ->
+            story.outlet + ": " + story.title + story.alsoReportedBy.joinToString("") { " | " + it.outlet }
+        }
+    }
+
+    /** Save order on the last result: `PDF`, `DOCX`, `PDF:VIA_WORD` or `NONE`, and the file name the owner said. */
+    fun export(utterance: String): Pair<String, String?> = OwnerExportCommand.parse(utterance)?.let { request ->
+        (request.format.name + if (request.viaWord) ":VIA_WORD" else "") to request.name
+    } ?: ("NONE" to null)
+
+    fun exportFileName(requested: String?, title: String, date: java.time.LocalDate, format: String, taken: List<String>): String =
+        OwnerExportCommand.fileName(requested, title, date, OwnerExportCommand.Format.valueOf(format), taken::contains)
+
+    /** Mail hand-over order: `ADDRESS:<address>`, `NAME:<recipient as said>` or `NONE`. */
+    fun mail(utterance: String): String = OwnerShareCommand.parse(utterance)?.let { request ->
+        request.address?.let { "ADDRESS:$it" } ?: "NAME:${request.recipientName}"
+    } ?: "NONE"
+
     /** [kind]: RESOLVED, AMBIGUOUS, MISSING or NONE; [text]: the resolved passage, the question back or the reason. */
     data class ReferenceOutcome(val kind: String, val document: String? = null, val page: Int? = null,
                                 val paragraph: Int? = null, val text: String = "", val intent: String? = null,

@@ -41,6 +41,40 @@ class CockpitAnimationTriggersTest {
         assertEquals(steps.values.toList(), only<CockpitAnimationEvent.ProcessTimeline>().last().steps)
     }
 
+    /** News briefing: Quellen abrufen → Meldungen auswählen → Zusammenfassen as real steps the stage shows. */
+    @Test fun workStepsOfADeterministicChainAreAddedOnceAndOnlyChangeState() {
+        val stage = at.heinz.deviceai.ui.Command03ActivityProjection()
+        bus.subscribe(stage)
+        triggers.commandAcknowledged("t1", "Fass mir die Nachrichten von heute zusammen")
+        triggers.workStep("t1", "news-fetch", "Quellen abrufen", StepState.ACTIVE, CockpitAction.RESEARCH)
+        triggers.workStep("t1", "news-fetch", "Quellen abrufen", StepState.DONE)
+        triggers.workStep("t1", "news-select", "Meldungen auswählen", StepState.DONE)
+        triggers.workStep("t1", "news-summary", "Zusammenfassen", StepState.ACTIVE, CockpitAction.THINK)
+        assertEquals(listOf("Auftrag angenommen", "Bearbeitung", "Quellen abrufen", "Meldungen auswählen", "Zusammenfassen"),
+            triggers.timeline("t1").map { it.label })
+        assertEquals(listOf(StepState.DONE, StepState.ACTIVE, StepState.DONE, StepState.DONE, StepState.ACTIVE),
+            triggers.timeline("t1").map { it.state })
+        // A start is announced once per step, with the step as the same fact.
+        assertEquals(listOf(CockpitAction.RESEARCH to "step:news-fetch", CockpitAction.THINK to "step:news-summary"),
+            only<CockpitAnimationEvent.ActionStarted>().map { it.action to it.stepKey })
+        val shown = stage.snapshot()!!
+        assertEquals("Denkt nach", shown.getString("title"))
+        assertEquals("Zusammenfassen", shown.getString("detail"))
+        assertTrue(shown.getBoolean("active"))
+        val steps = shown.getJSONArray("steps")
+        assertEquals("Quellen abrufen", steps.getJSONObject(2).getString("label"))
+        assertEquals("ACTIVE", steps.getJSONObject(4).getString("state"))
+        triggers.workStep("t1", "news-summary", "Zusammenfassen", StepState.DONE)
+        triggers.turnEnded("t1", delivered = true)
+        assertEquals(false, stage.snapshot()!!.getBoolean("active"))
+        // A blank label, an unknown turn and an ended turn add nothing.
+        val before = events.size
+        triggers.workStep("t1", "late", "Zu spät", StepState.ACTIVE, CockpitAction.TOOL)
+        triggers.workStep("unknown", "x", "Schritt", StepState.ACTIVE)
+        triggers.workStep("t1", "blank", " ", StepState.ACTIVE)
+        assertEquals(before, events.size)
+    }
+
     @Test fun approvalAndBlockedMilestonesAreVisibleSteps() {
         triggers.commandAcknowledged("t1", "Datei löschen")
         triggers.milestone("t1", TurnMilestone.APPROVAL_NEEDED)

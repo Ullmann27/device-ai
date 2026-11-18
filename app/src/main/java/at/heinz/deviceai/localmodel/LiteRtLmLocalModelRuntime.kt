@@ -78,6 +78,18 @@ interface LocalModelRuntime {
     val tokenAwarePromptUtf8Bytes: Int? get() = null
     val toolFreePromptUtf8Bytes: Int? get() = null
     fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) = stream(prompt, callback)
+    /**
+     * Owner switch „Gespräch im Modell behalten“ (experimental, off by default): a plain text dialogue turn that
+     * MAY continue the native conversation kept under the request's key. A runtime that cannot keep a
+     * conversation (this default) answers exactly like [streamTextOnly] from the complete prompt and says so in
+     * the receipt. A wrapper that gates generations must override this like the other generation entries.
+     */
+    fun streamDialogue(request: LocalDialogueRequest, callback: LocalInferenceCallback) {
+        request.receipt.dispatched(reused = false, reason = LocalDialogueReuse.RUNTIME_WITHOUT_REUSE, tokensBefore = null)
+        streamTextOnly(request.freshPrompt, callback)
+    }
+    /** Ends a kept native dialogue conversation, if this runtime holds one; a no-op otherwise. */
+    fun releaseDialogue() {}
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
@@ -155,6 +167,11 @@ class LiteRtLmLocalModelRuntime(
     private var startupConversationUnused = false
     private var conversationContextInvalid = false
     private var inferenceConversation: Conversation? = null
+    // Owner switch „Gespräch im Modell behalten“: the idle tool-free conversation of the last completed dialogue
+    // turn and its key. Non-null only between two generations; every generation entry takes or releases it first.
+    private var keptDialogue: Conversation? = null
+    private var keptDialogueKey: String? = null
+    private var dialogueEpoch = 0
     private var inferenceActive = false
     private var activeInferenceProfile: LocalInferenceProfileRecorder? = null
     private var pendingUnload: ((Result<Unit>) -> Unit)? = null
@@ -323,6 +340,95 @@ class LiteRtLmLocalModelRuntime(
             payloadBytes = prompt.toByteArray(Charsets.UTF_8).size)
     }
 
+    override fun streamDialogue(request: LocalDialogueRequest, callback: LocalInferenceCallback) {
+        fun requireBounded(prompt: String) = require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS &&
+            prompt.toByteArray(Charsets.UTF_8).size <= LocalToolContinuation.MAX_INPUT_BYTES)
+        requireBounded(request.freshPrompt)
+        request.followUp?.let(::requireBounded)
+        val effectivePrompt = LocalQwenPromptPolicy.directUserPrompt(
+            loadedModel?.id, request.freshPrompt, MAX_PROMPT_CHARACTERS)
+        // The same isolated tool-free conversation as streamTextOnly; it is only not closed after a completed
+        // answer, and a later request with the same key may append its follow-up instead of the full prompt.
+        streamMessage(Message.user(Contents.of(effectivePrompt)), effectivePrompt.length, callback, true,
+            payloadBytes = effectivePrompt.toByteArray(Charsets.UTF_8).size, textOnlyDialogue = true,
+            dialogue = request)
+    }
+
+    override fun releaseDialogue() {
+        synchronized(lock) {
+            // An in-flight dialogue turn is not retained; a key that was released can never be continued.
+            dialogueEpoch++
+            keptDialogueKey = null
+            val stale = keptDialogue ?: return
+            // Outside READY the explicit unload (or the next generation entry) owns the handle.
+            if (state != LocalModelState.READY) return
+            if (runCatching { if (stale.isAlive) stale.close() }.isSuccess) keptDialogue = null
+            else state = LocalModelState.FAILED
+        }
+    }
+
+    /**
+     * Under [lock] while READY, before a generation selects its conversation. Returns the kept dialogue
+     * conversation and the output budget when [request] may append its follow-up; in every other case a kept
+     * conversation is closed first (fail closed), so the native peak is the same as without the switch.
+     */
+    private fun takeKeptDialogue(
+        request: LocalDialogueRequest?, profile: LocalInferenceProfileRecorder
+    ): Pair<Conversation, Int>? {
+        val kept = keptDialogue
+        val followUp = request?.followUp
+        var existing: Int? = null
+        var output: Int? = null
+        val refusal = when {
+            request == null || followUp == null -> null
+            kept == null || keptDialogueKey != request.conversationKey ||
+                !runCatching { kept.isAlive }.getOrDefault(false) -> LocalDialogueReuse.RUNTIME_NO_KEPT_CONVERSATION
+            else -> {
+                existing = runCatching { kept.getTokenCount() }.getOrNull()
+                output = LocalDialogueReuse.outputTokens(followUp.toByteArray(Charsets.UTF_8).size, existing,
+                    configuredContextTokens,
+                    LocalModelGenerationPolicy.maxTextOnlyOutputTokens(loadedModel?.id, configuredContextTokens))
+                if (output == null) LocalDialogueReuse.RUNTIME_CONTEXT_NEAR_LIMIT else null
+            }
+        }
+        val admitted = output
+        if (request != null && kept != null && admitted != null) {
+            keptDialogue = null
+            request.receipt.dispatched(reused = true, reason = null, tokensBefore = existing)
+            return kept to admitted
+        }
+        if (kept != null) {
+            try {
+                profile.measure(LocalInferenceStage.PREVIOUS_CONVERSATION_RELEASE_ENTER,
+                    LocalInferenceStage.PREVIOUS_CONVERSATION_RELEASE_EXIT) {
+                    if (kept.isAlive) kept.close()
+                }
+            } catch (failure: Exception) {
+                // The handle stays owned for an explicit unload; no second conversation next to an unreleased one.
+                profile.mark(LocalInferenceStage.INVOCATION_THROW)
+                state = LocalModelState.FAILED
+                throw failure
+            }
+            keptDialogue = null
+        }
+        keptDialogueKey = null
+        request?.receipt?.dispatched(reused = false, reason = refusal, tokensBefore = existing)
+        return null
+    }
+
+    /** Keeps the conversation of a completed dialogue turn open under the request's key; false: close it as before. */
+    private fun retainDialogue(request: LocalDialogueRequest, finished: Conversation, epoch: Int): Boolean =
+        synchronized(lock) {
+            if (dialogueEpoch != epoch || pendingUnload != null || state != LocalModelState.GENERATING ||
+                keptDialogue != null) return false
+            val tokens = runCatching { finished.getTokenCount() }.getOrNull()
+            if (!LocalNativePromptBudget.completeContext(tokens, configuredContextTokens)) return false
+            keptDialogue = finished
+            keptDialogueKey = request.conversationKey
+            request.receipt.retained(tokens)
+            true
+        }
+
     override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {
         if (synchronized(lock) { conversationContextInvalid }) {
             deliver(callback, LocalInferenceEvent.Failed("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))
@@ -345,7 +451,8 @@ class LiteRtLmLocalModelRuntime(
         isolatedThinking: Boolean,
         freshPrompt: Boolean = false,
         payloadBytes: Int,
-        textOnlyDialogue: Boolean = false
+        textOnlyDialogue: Boolean = false,
+        dialogue: LocalDialogueRequest? = null
     ) {
         val profile = inferenceProfiler.begin(when {
             textOnlyDialogue -> LocalInferenceKind.CHAT
@@ -354,6 +461,9 @@ class LiteRtLmLocalModelRuntime(
             else -> LocalInferenceKind.TOOL_CONTINUATION
         })
         val activeConversation: Conversation
+        // Output budget of an appended follow-up; null for every generation that starts from a complete prompt.
+        val reuseOutput: Int?
+        val dialogueEpochAtStart: Int
         val startNanos = System.nanoTime()
         val inputTokens: Int?
         val generationCancelled = AtomicBoolean(false)
@@ -362,7 +472,10 @@ class LiteRtLmLocalModelRuntime(
         synchronized(lock) {
             check(state == LocalModelState.READY) { "A local model is not ready." }
             profile.mark(LocalInferenceStage.CONVERSATION_SELECTION_ENTER)
-            activeConversation = if (isolatedThinking) {
+            val keptForFollowUp = takeKeptDialogue(dialogue, profile)
+            reuseOutput = keptForFollowUp?.second
+            dialogueEpochAtStart = dialogueEpoch
+            activeConversation = keptForFollowUp?.first ?: if (isolatedThinking) {
                 profile.measure(LocalInferenceStage.CONVERSATION_CREATE_ENTER,
                     LocalInferenceStage.CONVERSATION_CREATE_EXIT) {
                     checkNotNull(engine).createConversation(
@@ -427,6 +540,10 @@ class LiteRtLmLocalModelRuntime(
                 runCatching { activeConversation.getTokenCount() }.getOrNull()
             }
         }
+        val appendedFollowUp = dialogue?.followUp?.takeIf { reuseOutput != null }
+        val outgoing = appendedFollowUp?.let { Message.user(Contents.of(it)) } ?: message
+        val outgoingCharacters = appendedFollowUp?.length ?: promptCharacters
+        val outgoingBytes = appendedFollowUp?.toByteArray(Charsets.UTF_8)?.size ?: payloadBytes
         // Serializes streamed chunks, terminal events and visible callback delivery.
         val terminalOverrideRequested = AtomicBoolean(false)
         val responseCharacters = intArrayOf(0)
@@ -465,7 +582,10 @@ class LiteRtLmLocalModelRuntime(
 
         fun finish(event: LocalInferenceEvent) {
             if (!finished.compareAndSet(false, true)) return
-            if (isolatedThinking) {
+            // A completed, uncancelled dialogue turn keeps its conversation; everything else closes it as before.
+            val retained = dialogue != null && event is LocalInferenceEvent.Completed &&
+                !generationCancelled.get() && retainDialogue(dialogue, activeConversation, dialogueEpochAtStart)
+            if (isolatedThinking && !retained) {
                 // Keep the isolated conversation owned until its close completes.
                 // Unload waits for finishInference before closing the parent engine.
                 background.execute {
@@ -494,7 +614,8 @@ class LiteRtLmLocalModelRuntime(
         }
 
         try {
-            val renderedBytes = runCatching {
+            // A follow-up was admitted under the lock with the strict byte bound; it is not rendered again.
+            val renderedBytes = if (reuseOutput != null) null else runCatching {
                 LocalNativePromptBudget.renderedUtf8Estimate(activeConversation.renderMessageIntoString(message))
             }.getOrNull()
             // Worker prefix is in its rendered input.
@@ -503,7 +624,8 @@ class LiteRtLmLocalModelRuntime(
             val requestedOutput = if (textOnlyDialogue)
                 LocalModelGenerationPolicy.maxTextOnlyOutputTokens(loadedModel?.id, configuredContextTokens)
                 else LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
-            val budget = LocalNativePromptBudget.plan(payloadBytes, renderedBytes, inputTokens, prefix,
+            val budget = if (reuseOutput != null) LocalNativePromptBudget.Plan(outgoingBytes, reuseOutput, false)
+                else LocalNativePromptBudget.plan(payloadBytes, renderedBytes, inputTokens, prefix,
                 configuredContextTokens, requestedOutput,
                 fresh = freshPrompt || isolatedThinking)
             if (budget == null) {
@@ -518,7 +640,7 @@ class LiteRtLmLocalModelRuntime(
             }
             profile.mark(LocalInferenceStage.NATIVE_DISPATCH_ENTER)
             activeConversation.sendMessageAsync(
-                message,
+                outgoing,
                 object : MessageCallback {
                     override fun onMessage(message: com.google.ai.edge.litertlm.Message) {
                         try {
@@ -605,7 +727,7 @@ class LiteRtLmLocalModelRuntime(
                                 finish(
                                     LocalInferenceEvent.Completed(
                                         LocalInferenceMetrics(
-                                            promptCharacters = promptCharacters,
+                                            promptCharacters = outgoingCharacters,
                                             responseCharacters = responseCharacters[0],
                                             streamedChunks = chunks[0],
                                             inputTokens = benchmark?.lastPrefillTokenCount
@@ -727,11 +849,14 @@ class LiteRtLmLocalModelRuntime(
             // must leave handles available for a later explicit unload attempt.
             Triple(conversation, inferenceConversation, engine)
         }
+        val oldDialogue = synchronized(lock) { keptDialogue }
         val result = runCatching {
             val (oldConversation, oldInference, oldEngine) = resources
             if (oldInference != null && oldInference !== oldConversation && oldInference.isAlive) {
                 oldInference.close()
             }
+            if (oldDialogue != null && oldDialogue !== oldConversation && oldDialogue !== oldInference &&
+                oldDialogue.isAlive) oldDialogue.close()
             if (oldConversation?.isAlive == true) oldConversation.close()
             if (oldEngine?.isInitialized() == true) oldEngine.close()
             Unit
@@ -742,6 +867,8 @@ class LiteRtLmLocalModelRuntime(
                 startupConversationUnused = false
                 conversationContextInvalid = false
                 inferenceConversation = null
+                keptDialogue = null
+                keptDialogueKey = null
                 activeInferenceProfile = null
                 activeCancellation = null
                 activeStart = null
