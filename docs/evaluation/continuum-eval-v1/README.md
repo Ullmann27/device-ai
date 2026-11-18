@@ -116,11 +116,13 @@ des Laufs auf dem Gerät gemessen wurden:
 | Feld | Bedeutung |
 |---|---|
 | `meta` | Modellkennung, Modell-SHA-256, Dateigröße, gemeldetes Kontextfenster, Rechenthreads, App-Version, Gerät, Android-SDK, Energiesparmodus |
+| `meta.backend`, `meta.backendRequested`, `meta.backendNotice`, `meta.contextTokens` | Backend, auf dem die geladene Engine wirklich rechnet; Stellung des Beschleuniger-Schalters; Hinweis bei einem Rückfall; konfiguriertes natives Kontextfenster (nicht das Maximum der Modelldatei). Unbekanntes ist `null`. `meta.computeThreads` gilt nur für die CPU. |
 | `formal` | bestanden / nicht bestanden für `contains_all`, `contains_any`, `numeric` |
 | `heuristic` | bestanden / nicht bestanden für `abstain`, `asks_back` (am Wortlaut erkannt, stichprobenartig gegenlesen) |
 | `notScored` | Werkzeugwahl-Fälle |
 | `latencyMs` | Median und 95 %-Wert der Gesamtzeit und der Zeit bis zum ersten Text |
-| `tokensPerSecondMean` | nur wenn die Laufzeit Ausgabe-Tokens meldet, sonst `null` |
+| `tokensPerSecondMean` | nur wenn die Laufzeit Ausgabe-Tokens meldet, sonst `null` (LiteRT-LM 0.18.0 meldet sie nur im Benchmark-Modus, den die App nicht einschaltet; siehe `docs/research/LOCAL-MODEL-SPEED-20261118.md`, Abschnitt 2.7) |
+| `charactersPerSecondMean` | Zeichen pro Sekunde nach dem ersten Text; immer gemessen und in der Zusammenfassung gezeigt |
 | `inputTokensMax` | größte von der Laufzeit gemeldete Prompt-Tokenzahl |
 | `outputLimitReached` | Antworten, die am Ausgabelimit endeten |
 | `thermalStatus`, `batteryPercent`, `availableRamBytesMin`, `jvmHeapUsedBytesMax` | Android-Messwerte während des Laufs |

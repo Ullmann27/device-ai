@@ -17,6 +17,7 @@ object ContinuumSettingsHub {
         VOICE_SETUP("Darstellung & Stimme", "Sprache, Ton & Gespräch", "Mikrofon, Hörtest und Startbegleitung"),
         FACE("Darstellung & Stimme", "Kamera & Gesicht", "Blick, lokale Wiedererkennung und Freigaben"),
         MODEL("KI & Gedächtnis", "Lokales KI-Modell", "Modell auswählen, laden und verwalten"),
+        BRAIN("KI & Gedächtnis", "Gehirn: Lokal oder Claude", "Modell auf dem Gerät oder Claude in der Cloud"),
         MEMORY("KI & Gedächtnis", "Gedächtnis & Fakten", "Erinnerungen ansehen, berichtigen und löschen"),
         LEARNING("KI & Gedächtnis", "Lernen & Training", "Lernzentrum und vorhandene Trainingsoptionen"),
         PERSONAL("KI & Gedächtnis", "Personalisierung", "Persönliche Fakten und Lernzugänge"),

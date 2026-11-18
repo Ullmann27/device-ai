@@ -161,6 +161,41 @@ data class ModelEvalGeneration(
     val outputTokens: Int? = null
 )
 
+/**
+ * Runtime facts of a run as the loaded engine reported them, so that reports of different backends, context
+ * windows and thread budgets stay attributable. Unknown values are written as JSON null, never guessed.
+ */
+object ModelEvalRuntimeMeta {
+    /**
+     * [backend] is the backend the loaded engine really runs on (may differ from [requestedBackend] after a
+     * fallback, explained by [backendNotice]); [contextTokens] is the configured native window, not the model's
+     * advertised maximum; [computeThreads] applies to the CPU backend only.
+     */
+    fun put(
+        meta: JSONObject,
+        backend: String?,
+        requestedBackend: String?,
+        backendNotice: String?,
+        contextTokens: Int?,
+        computeThreads: Int?
+    ): JSONObject = meta
+        .put("backend", backend ?: JSONObject.NULL)
+        .put("backendRequested", requestedBackend ?: JSONObject.NULL)
+        .put("backendNotice", backendNotice?.take(300) ?: JSONObject.NULL)
+        .put("contextTokens", contextTokens ?: JSONObject.NULL)
+        .put("computeThreads", computeThreads ?: JSONObject.NULL)
+
+    /** One summary line from a report's meta; values the run did not record are shown as "–". */
+    fun summaryLine(meta: JSONObject?): String {
+        fun value(key: String) = if (meta == null || meta.isNull(key)) "–" else meta.get(key).toString()
+        val fallback = if (meta != null && !meta.isNull("backendRequested") && !meta.isNull("backend") &&
+            meta.getString("backendRequested") != meta.getString("backend"))
+            " (angefordert: " + meta.getString("backendRequested") + ")" else ""
+        return "Laufzeit: Backend " + value("backend") + fallback + " · Kontextfenster " + value("contextTokens") +
+            " Token · CPU-Threads " + value("computeThreads")
+    }
+}
+
 /** Values Android reported at one moment; null where the platform gave none. */
 data class ModelEvalDeviceSample(
     val thermalStatus: Int?,
@@ -306,6 +341,9 @@ class ModelEvalRunner(
                 "Antwortzeit gesamt: Median ${value(latency, "totalP50")} ms, 95 % ${value(latency, "totalP95")} ms\n" +
                 "Bis zum ersten Text: Median ${value(latency, "firstTextP50")} ms\n" +
                 "Tokens pro Sekunde (Mittel): ${value(report, "tokensPerSecondMean")}\n" +
+                // The runtime reports token counts only in its benchmark mode; characters are always measured.
+                "Zeichen pro Sekunde nach dem ersten Text (Mittel): ${value(report, "charactersPerSecondMean")}\n" +
+                ModelEvalRuntimeMeta.summaryLine(report.optJSONObject("meta")) + "\n" +
                 "Am Ausgabelimit abgeschnitten: ${report.getInt("outputLimitReached")}\n" +
                 "Thermalstatus: ${value(report.getJSONObject("thermalStatus"), "min")} bis ${value(report.getJSONObject("thermalStatus"), "max")}\n" +
                 "Umfang: Rohmodell mit Gespräch im Prompt, ohne Continuum-Gedächtnis und Werkzeuge."

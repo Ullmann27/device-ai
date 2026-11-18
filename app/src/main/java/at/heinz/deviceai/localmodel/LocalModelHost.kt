@@ -24,18 +24,40 @@ object LocalModelHost {
     }
 
     @Volatile private var host: Host? = null
+    @Volatile private var claudeBrain: ClaudeBrain? = null
+
+    /**
+     * The optional cloud brain of this process: owner settings, encrypted key, monthly counter and runtime.
+     * LOCAL stays the default; nothing here sends anything until the owner selected Claude and confirmed.
+     */
+    fun brain(context: Context): ClaudeBrain = claudeBrain ?: synchronized(this) {
+        claudeBrain ?: context.applicationContext.let { app ->
+            ClaudeBrain(PreferencesClaudeSettingsStore(app), ClaudeApiKey.store(app),
+                ClaudeUsageLedger(PreferencesClaudeLedgerStorage(app)))
+        }.also { claudeBrain = it }
+    }
 
     fun get(context: Context): Host = host ?: synchronized(this) {
         host ?: context.applicationContext.let { app ->
             val catalog = LocalModelCatalog(File(app.filesDir, "local-models"), NativeLiteRtModelInspector())
             val power = app.getSystemService(Context.POWER_SERVICE) as? PowerManager
+            // Owner switch CPU | GPU (experimental, off by default) with its crash-loop guard.
+            val acceleration = LocalModelAccelerationHost.controller(app)
             val runtime = LiteRtLmLocalModelRuntime(catalog, File(app.cacheDir, "litertlm"),
                 cpuThreadCount = { inferenceThreads(app, power) },
                 contextCapacitySelector = { modelLimit ->
                     LocalModelContextWindow.choose(modelLimit, app.localModelResourceSnapshot(),
                         runCatching { power?.isPowerSaveMode }.getOrNull())
-                })
-            Host(catalog, thermallyGuarded(app, runtime, power))
+                }, acceleration = acceleration)
+            // The owner's "Gehirn" setting decides per call; the thermal and memory guards wrap only the
+            // on-device runtime, because Claude computes nothing on the device. STOP reaches both.
+            val brain = brain(app)
+            val selectable = SelectableModelRuntime(
+                thermallyGuarded(app, LocalModelAccelerationGuard.wrap(runtime, acceleration), power), brain.runtime) {
+                brain.claudeSelected
+            }
+            brain.onBrainChanged = { selectable.cancel() }
+            Host(catalog, selectable)
         }.also { host = it }
     }
 

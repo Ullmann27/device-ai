@@ -9,6 +9,12 @@ package at.heinz.deviceai.localmodel
  * temperature in °C — Android does not expose the owner's "35 °C" to apps) and the owner's cooling preference.
  *
  * Pure Kotlin; no Android dependency. Changing the thread count requires a model reload (engine config).
+ *
+ * Correction 18.11.2026 (docs/research/LOCAL-MODEL-SPEED-20261118.md, read from the LiteRT-LM v0.18.0 source
+ * `runtime/executor/llm_executor_settings.cc`): the native CPU default is 4 threads, not one worker per core, so
+ * BALANCED on an 8-core device equals that default and only COOL (2 threads) is below it. The Snapdragon 8 Elite
+ * product brief lists Prime and Performance cores only (no efficiency cores). LiteRT-LM exposes the thread count
+ * but no core affinity; which cores Android schedules the workers on is not controlled here and not measured.
  */
 object LocalModelComputeBudget {
     /** BALANCED: about half the cores. COOL: a quarter, at most two threads; slower but much cooler. */
