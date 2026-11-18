@@ -101,6 +101,57 @@ class ModelEvaluationTest {
         assertTrue(ModelEvalRunner.summary(report).contains("Formal bewertet: 1 bestanden, 1 nicht bestanden"))
     }
 
+    @Test fun theReportNamesTheBackendThatReallyRanAndNeverGuessesMissingRuntimeFacts() {
+        val one = listOf(case("numeric", "4"))
+        fun report(meta: JSONObject) = ModelEvalRunner(
+            generate = { ModelEvalGeneration("Das sind 4.", true, false, null, 400, 2_400, 5) },
+            sample = { ModelEvalDeviceSample(0, 80, 5_000_000_000L, 1_000L) }, cancelled = { false }).run("dev", one, meta)
+
+        // CPU engine with the cool two-thread budget and the 4K window.
+        val cpu = report(ModelEvalRuntimeMeta.put(JSONObject().put("modelId", "gemma4-e4b-it"),
+            backend = "CPU", requestedBackend = "CPU", backendNotice = null, contextTokens = 4_096, computeThreads = 2))
+        assertEquals("CPU", cpu.getJSONObject("meta").getString("backend"))
+        assertEquals(4_096, cpu.getJSONObject("meta").getInt("contextTokens"))
+        assertEquals(2, cpu.getJSONObject("meta").getInt("computeThreads"))
+        assertTrue(cpu.getJSONObject("meta").isNull("backendNotice"))
+        assertEquals("gemma4-e4b-it", cpu.getJSONObject("meta").getString("modelId"))
+        assertTrue(ModelEvalRunner.summary(cpu).contains("Laufzeit: Backend CPU · Kontextfenster 4096 Token · CPU-Threads 2"))
+
+        // GPU was requested but the engine fell back: the report says what ran, what was asked for and why.
+        val fallback = report(ModelEvalRuntimeMeta.put(JSONObject(), backend = "CPU", requestedBackend = "GPU",
+            backendNotice = "GPU-Start fehlgeschlagen. " + "x".repeat(400), contextTokens = 4_096, computeThreads = 2))
+        assertEquals("GPU", fallback.getJSONObject("meta").getString("backendRequested"))
+        assertEquals(300, fallback.getJSONObject("meta").getString("backendNotice").length)
+        assertTrue(ModelEvalRunner.summary(fallback).contains("Backend CPU (angefordert: GPU)"))
+
+        // GPU engine: the CPU thread budget does not apply and is reported as unknown, not as a number.
+        val gpu = report(ModelEvalRuntimeMeta.put(JSONObject(), backend = "GPU", requestedBackend = "GPU",
+            backendNotice = null, contextTokens = 4_096, computeThreads = null))
+        assertTrue(gpu.getJSONObject("meta").isNull("computeThreads"))
+        assertTrue(ModelEvalRunner.summary(gpu).contains("Laufzeit: Backend GPU · Kontextfenster 4096 Token · CPU-Threads –"))
+
+        // A runtime that reports nothing (or an older report without these fields) stays "unknown".
+        val unknown = report(ModelEvalRuntimeMeta.put(JSONObject(), null, null, null, null, null))
+        assertTrue(unknown.getJSONObject("meta").isNull("backend"))
+        assertTrue(unknown.getJSONObject("meta").isNull("contextTokens"))
+        assertTrue(ModelEvalRunner.summary(unknown).contains("Laufzeit: Backend – · Kontextfenster – Token · CPU-Threads –"))
+        assertTrue(ModelEvalRunner.summary(report(JSONObject())).contains("Laufzeit: Backend –"))
+        assertEquals("Laufzeit: Backend – · Kontextfenster – Token · CPU-Threads –", ModelEvalRuntimeMeta.summaryLine(null))
+    }
+
+    @Test fun theSummaryShowsCharactersPerSecondBecauseTokenCountsMayBeMissing() {
+        // 26 characters in the 2 000 ms after the first text; the runtime reported no token counts.
+        val report = ModelEvalRunner(
+            generate = { ModelEvalGeneration("Das sind zusammen genau 4.", true, false, null, 400, 2_400, 5) },
+            sample = { ModelEvalDeviceSample(0, 80, 5_000_000_000L, 1_000L) }, cancelled = { false })
+            .run("dev", listOf(case("numeric", "4")), JSONObject())
+        assertTrue(report.isNull("tokensPerSecondMean"))
+        assertEquals(13.0, report.getDouble("charactersPerSecondMean"), 0.001)
+        val summary = ModelEvalRunner.summary(report)
+        assertTrue(summary.contains("Tokens pro Sekunde (Mittel): –"))
+        assertTrue(summary.contains("Zeichen pro Sekunde nach dem ersten Text (Mittel): 13.0"))
+    }
+
     @Test fun cancellationAndCriticalHeatStopTheRunAndAreReported() {
         val cases = List(5) { case("numeric", "1") }
         var calls = 0

@@ -12726,6 +12726,13 @@ class AgentActivity : Activity() {
             .put("androidSdk", android.os.Build.VERSION.SDK_INT)
             .put("powerSaveMode", power?.isPowerSaveMode ?: org.json.JSONObject.NULL)
             .put("startedAtEpochMs", System.currentTimeMillis())
+        // The backend the engine really runs on, the switch position and the configured window keep runs attributable.
+        at.heinz.deviceai.evaluation.ModelEvalRuntimeMeta.put(meta,
+            backend = localRuntime.activeBackend?.name,
+            requestedBackend = at.heinz.deviceai.localmodel.LocalModelAccelerationHost.controller(this).requested.name,
+            backendNotice = localRuntime.backendNotice,
+            contextTokens = localRuntime.contextTokens,
+            computeThreads = localRuntime.computeThreads)
         localAgentExecutor.execute {
             val outcome = runCatching {
                 at.heinz.deviceai.evaluation.ModelEvalRunner(
