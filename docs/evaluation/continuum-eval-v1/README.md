@@ -11,6 +11,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-voice.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Sprachrunde: Gesprächsregister, Satzende-Erkennung, Fahrmodus-Befehle, Benachrichtigungs-Ansagen (Codes, Links, Freigabestufen) |
 | `regression-references.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Code64 Bezugsverwaltung: Dokumente einer Sitzung (Reihenfolge, Name, „das andere“), Seiten- und Absatzfokus, Vergleiche mit zwei Operanden, Rückfrage bei Mehrdeutigkeit, fehlende Seiten/Absätze; Dokumente aus `regression-references.documents.json` (synthetisch) |
 | `regression-news.jsonl` | 64 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Arbeitswerkzeuge (18.11.2026): Nachrichtenauftrag ja/nein (Abgrenzung zu Mitteilungen, Messenger, Benachrichtigungs-Ansage), Themen, Antworten auf die Rückfrage, Feed-Lesen (RSS 2.0, RDF, Atom), Tagesauswahl und Zusammenführen derselben Meldung; Folgeaufträge auf das Ergebnis: Speichern als PDF/Word, Dateinamen (Datum, sichere Zeichen, nie überschreiben), E-Mail-Übergabe (Adresse/Name aus dem Satz); Feeds aus `regression-news.feeds.json` (synthetisch) |
+| `regression-understanding.jsonl` | 74 | **Host, automatisch** (`OwnerUnderstandingRegressionTest`) | Verstehen trotz Fehlhörung: falsch erkannte App-/Produkt-/Modellnamen in Aufträgen, österreichische Formulierungen, Beinahe-Paare mit Rückfrage, gültige Wörter und diktierter Text, die unverändert bleiben müssen; App-Bestand in `regression-understanding.apps.json` |
+| `regression-chains.jsonl` | 47 | **Host, automatisch** (`OwnerTaskChainRegressionTest`) | Aufgabenketten über den echten Orchestrator, ToolGate und Guard mit nachgestelltem Geräte-Backend: Reihenfolge, Argumentübergabe, Erfolgsprüfung stoppt die Kette, Freigabe-Pause und „weiter“, Auswahl, STOP, abgelehnte Modellpläne |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -73,6 +75,9 @@ Feed-Leser und Auswahl existierten vorher nicht (Feldbefund: das lokale Modell a
 ohne ein Web-Werkzeug zu benutzen). Stand (Host): 64 / 64. Geprüft sind die deterministischen Pfade; ob die
 Zusammenfassung des lokalen Modells auf dem Gerät menschlich klingt, ist NOT_RUN, ebenso das Schreiben der
 PDF-Datei (Android-`PdfDocument`), das Öffnen und die Übergabe an das Mailprogramm auf dem Gerät.
+Für `regression-understanding.jsonl` und `regression-chains.jsonl` (18.11.2026) stehen Vorher/Nachher und Messweg in [OWNER-UNDERSTANDING-AND-TASK-CHAIN-20261118.md](../../research/OWNER-UNDERSTANDING-AND-TASK-CHAIN-20261118.md):
+Verstehen 30 / 74 ohne die Schicht (genau die Schutzfälle) → 74 / 74; Ketten 47 / 47, vorher lief für 1 von 29 Ketten dieselbe Werkzeugfolge (rohe Ordnerliste ohne die gefragte Antwort).
+Beide Sätze haben eigene Läufer (`understand`, `chain`) und eigene Testklassen; `ContinuumEvalDatasetTest` bleibt unverändert.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 
