@@ -10225,6 +10225,36 @@ class AgentActivity : Activity() {
                 else "Gespeichert. Wirkt beim nächsten Laden des Modells.", Toast.LENGTH_LONG).show()
         }
         box.addView(coolingAction, matchWidth(top = 6))
+        // Optional LiteRT-LM GPU start: off by default, never run on a device by this project, falls back to CPU.
+        box.addView(cockpit.section(this, "BESCHLEUNIGER · CPU (STANDARD) | GPU (EXPERIMENTELL)"), matchWidth(top = 11))
+        val acceleratorStatus = textView(acceleratorStatusText(), 12f, MUTED).apply {
+            background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
+            setPadding(dp(13), dp(12), dp(13), dp(12))
+        }
+        box.addView(acceleratorStatus, matchWidth(top = 8))
+        lateinit var acceleratorAction: android.widget.TextView
+        acceleratorAction = cockpit.action(this, at.heinz.deviceai.localmodel.LocalModelAcceleration.actionLabel(
+            at.heinz.deviceai.localmodel.LocalModelAccelerationHost.controller(this).requested)) {
+            val accelerator = at.heinz.deviceai.localmodel.LocalModelAccelerationHost.controller(this)
+            fun switchTo(next: at.heinz.deviceai.localmodel.LocalModelBackend) {
+                val saved = runCatching { accelerator.request(next) }.isSuccess
+                acceleratorStatus.text = acceleratorStatusText()
+                acceleratorAction.text = at.heinz.deviceai.localmodel.LocalModelAcceleration.actionLabel(accelerator.requested)
+                Toast.makeText(this, if (!saved) "Die Einstellung konnte nicht gespeichert werden."
+                    else if (localRuntime.loadedModel != null)
+                        "Gespeichert. Wirkt beim nächsten Laden des Modells (Modell entladen und neu laden)."
+                    else "Gespeichert. Wirkt beim nächsten Laden des Modells.", Toast.LENGTH_LONG).show()
+            }
+            if (accelerator.requested == at.heinz.deviceai.localmodel.LocalModelBackend.GPU)
+                switchTo(at.heinz.deviceai.localmodel.LocalModelBackend.CPU)
+            else AlertDialog.Builder(this)
+                .setTitle(at.heinz.deviceai.localmodel.LocalModelAcceleration.CONFIRM_TITLE)
+                .setMessage(at.heinz.deviceai.localmodel.LocalModelAcceleration.CONFIRM_MESSAGE)
+                .setNegativeButton("Abbrechen", null)
+                .setPositiveButton("GPU VERSUCHEN") { _, _ -> switchTo(at.heinz.deviceai.localmodel.LocalModelBackend.GPU) }
+                .show()
+        }
+        box.addView(acceleratorAction, matchWidth(top = 6))
         box.addView(cockpit.section(this, "OPTIONAL · NUR NACH AUSDRÜCKLICHER FREIGABE"), matchWidth(top = 10))
         box.addView(cockpit.action(this, "GROQ-MENTOR · EXTERNE EINZELFRAGE") {
             modelCenterDialog?.dismiss()
@@ -10855,7 +10885,10 @@ class AgentActivity : Activity() {
         val loaded = localRuntime.computeThreads
         val thermal = if (android.os.Build.VERSION.SDK_INT >= 29) power?.currentThermalStatus else null
         return at.heinz.deviceai.localmodel.LocalModelComputeBudget.describe(planned, cores, mode) +
-            (if (loaded != null) " Aktuell geladen mit $loaded Threads." else " Kein Modell geladen.") +
+            (if (loaded != null) " Aktuell geladen mit $loaded Threads."
+            else if (localRuntime.activeBackend == at.heinz.deviceai.localmodel.LocalModelBackend.GPU)
+                " Aktuell auf der GPU geladen; das Thread-Budget gilt nur für die CPU."
+            else " Kein Modell geladen.") +
             "\nAndroid-Thermalstufe jetzt: " + (thermal?.toString() ?: "unbekannt") +
             " (0 = kühl … 3 = stark erwärmt; Android liefert Apps keine Gradzahl). " +
             "Ab Stufe 3 wird eine laufende Antwort angehalten und nichts automatisch neu gestartet."
@@ -10865,6 +10898,16 @@ class AgentActivity : Activity() {
         if (at.heinz.deviceai.localmodel.LocalModelHost.coolingMode(this) ==
             at.heinz.deviceai.localmodel.LocalModelComputeBudget.CoolingMode.COOL)
             "KÜHLMODUS AUS · AUSGEWOGEN NUTZEN" else "KÜHLMODUS AN · WENIGER WÄRME, LANGSAMER"
+
+    /** Switch position, the backend of the engine that is loaded right now and the last fallback notice. */
+    private fun acceleratorStatusText(): String {
+        val accelerator = at.heinz.deviceai.localmodel.LocalModelAccelerationHost.controller(this)
+        return at.heinz.deviceai.localmodel.LocalModelAcceleration.statusText(
+            requested = accelerator.requested,
+            active = localRuntime.activeBackend,
+            loadedModelBackends = localRuntime.loadedModel?.capabilities?.supportedBackends,
+            notice = accelerator.notice)
+    }
 
     private fun showModelVersions() {
         onLearningIo({ modelVersionsText() }) { result ->
@@ -14854,6 +14897,14 @@ class AgentActivity : Activity() {
                         ContinuumGemmaRestorePolicy.KEY_ENABLED,
                         ContinuumGemmaRestorePolicy.isSelectedOriginal(loaded)
                     ).apply()
+                    // Accelerator switch: say so when the model did not start on the requested backend.
+                    localRuntime.backendNotice?.let { notice ->
+                        addToolActivity(notice)
+                        Toast.makeText(this, notice, Toast.LENGTH_LONG).show()
+                    }
+                    if (localRuntime.activeBackend == at.heinz.deviceai.localmodel.LocalModelBackend.GPU)
+                        addToolActivity("Lokales Modell rechnet auf der GPU (" +
+                            at.heinz.deviceai.localmodel.LocalModelAcceleration.EXPERIMENTAL + ")")
                 }
                 refreshLocalModelUi()
             }

@@ -29,13 +29,15 @@ object LocalModelHost {
         host ?: context.applicationContext.let { app ->
             val catalog = LocalModelCatalog(File(app.filesDir, "local-models"), NativeLiteRtModelInspector())
             val power = app.getSystemService(Context.POWER_SERVICE) as? PowerManager
+            // Owner switch CPU | GPU (experimental, off by default) with its crash-loop guard.
+            val acceleration = LocalModelAccelerationHost.controller(app)
             val runtime = LiteRtLmLocalModelRuntime(catalog, File(app.cacheDir, "litertlm"),
                 cpuThreadCount = { inferenceThreads(app, power) },
                 contextCapacitySelector = { modelLimit ->
                     LocalModelContextWindow.choose(modelLimit, app.localModelResourceSnapshot(),
                         runCatching { power?.isPowerSaveMode }.getOrNull())
-                })
-            Host(catalog, thermallyGuarded(app, runtime, power))
+                }, acceleration = acceleration)
+            Host(catalog, thermallyGuarded(app, LocalModelAccelerationGuard.wrap(runtime, acceleration), power))
         }.also { host = it }
     }
 

@@ -146,6 +146,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Optional (required="false"): lets the experimental LiteRT-LM GPU backend open the device's OpenCL
+             driver on Android 12+. Listed in the LiteRT-LM Kotlin guide; without them the GPU start fails and
+             the model loads on the CPU. Nothing is loaded unless the owner switches the GPU on. -->
+        <uses-native-library android:name="libvndksupport.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL.so" android:required="false" />
     </application>
 
 </manifest>

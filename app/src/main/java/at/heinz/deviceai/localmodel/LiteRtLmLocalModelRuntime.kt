@@ -66,6 +66,12 @@ interface LocalModelRuntime {
     val inferenceProfiles: List<LocalInferenceProfile> get() = emptyList()
     /** CPU threads the loaded engine was configured with; null when unknown or not loaded. */
     val computeThreads: Int? get() = null
+    /** Backend the loaded engine really runs on; null when unknown or not loaded. */
+    val activeBackend: LocalModelBackend? get() = null
+    /** Native context window (tokens) the loaded engine was configured with; null when unknown or not loaded. */
+    val contextTokens: Int? get() = null
+    /** Owner-facing sentence when the last load did not start on the requested backend; null otherwise. */
+    val backendNotice: String? get() = null
     /** Transport limit, not an exact tokenizer budget. */
     val maxPromptUtf8Bytes: Int? get() = null
     /** Prompt bytes that fit the loaded engine's window after its measured preface; null when unknown. */
@@ -92,10 +98,12 @@ class LiteRtLmLocalModelRuntime(
     private val catalog: LocalModelCatalog,
     private val cacheDirectory: File,
     private val systemPrompt: String = "You are Device AI, an on-device assistant.",
-    /** Evaluated at load time (thermal budget, owner cooling mode); null keeps the LiteRT-LM default (all cores). */
+    /** Evaluated at load time (thermal budget, owner cooling mode); null keeps the LiteRT-LM default (4 threads in 0.18.0). */
     private val cpuThreadCount: () -> Int? = { null },
     /** Read-only load-time capacity choice; the conservative 4K remains the default. */
-    private val contextCapacitySelector: (Int) -> Int = LocalNativePromptBudget::contextCapacity
+    private val contextCapacitySelector: (Int) -> Int = LocalNativePromptBudget::contextCapacity,
+    /** Owner switch CPU | GPU (experimental, native GPU start NOT_RUN on a device); null keeps CPU only. */
+    private val acceleration: LocalModelAccelerationController? = null
 ) : LocalModelRuntime {
     private val background = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "device-ai-local-model").apply { isDaemon = true }
@@ -116,6 +124,16 @@ class LiteRtLmLocalModelRuntime(
     @Volatile
     override var computeThreads: Int? = null
         private set
+
+    @Volatile
+    override var activeBackend: LocalModelBackend? = null
+        private set
+
+    @Volatile
+    override var backendNotice: String? = null
+        private set
+
+    override val contextTokens: Int? get() = configuredContextTokens.takeIf { it > 0 && loadedModel != null }
 
     @Volatile private var configuredContextTokens = 0
     @Volatile private var prefaceTokenCount: Int? = null
@@ -186,62 +204,30 @@ class LiteRtLmLocalModelRuntime(
                 val contextCapacity = requestedContext.takeIf {
                     it in conservative..maxSafeContext
                 } ?: conservative
-                val newEngine = Engine(
-                    EngineConfig(
-                        modelPath = file.absolutePath,
-                        backend = Backend.CPU(threadCount = threads),
-                        maxNumTokens = contextCapacity,
-                        cacheDir = cacheDirectory.absolutePath
-                    )
-                )
-                var createdConversation: Conversation? = null
-                try {
-                    newEngine.initialize()
-                    val prefixConversation = newEngine.createConversation(
-                        ConversationConfig(
-                            systemInstruction = Contents.of(systemPrompt),
-                            tools = ToolRegistry.all().map(::registeredToolProvider),
-                            automaticToolCalling = false,
-                            prefillPrefaceOnInit = true,
-                            maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
-                        )
-                    )
-                    createdConversation = prefixConversation
-                    val prefixTokens = prefixConversation.getTokenCount()
-                    check(prefixTokens in 0..contextCapacity) { "LOCAL_MODEL_PREFACE_COUNT_UNVERIFIED" }
-                    prefixConversation.close()
-                    createdConversation = null
-                    val newConversation = newEngine.createConversation(ConversationConfig(
-                        systemInstruction = Contents.of(systemPrompt),
-                        tools = ToolRegistry.all().map(::registeredToolProvider),
-                        automaticToolCalling = false,
-                        maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
-                    ))
-                    createdConversation = newConversation
-                    synchronized(lock) {
-                        engine = newEngine
-                        conversation = newConversation
-                        startupConversationUnused = true
-                        conversationContextInvalid = false
-                        loadedModel = model
-                        computeThreads = threads
-                        configuredContextTokens = contextCapacity
-                        prefaceTokenCount = prefixTokens
-                        state = LocalModelState.READY
-                    }
-                } catch (failure: Throwable) {
-                    val releasedConversation = runCatching {
-                        createdConversation?.takeIf { it.isAlive }?.close()
-                    }
-                    val releasedEngine = if (releasedConversation.isSuccess) runCatching {
-                        if (newEngine.isInitialized()) newEngine.close()
-                    } else Result.failure(releasedConversation.exceptionOrNull()!!)
-                    if (releasedConversation.isFailure || releasedEngine.isFailure) synchronized(lock) {
-                        engine = newEngine
-                        conversation = createdConversation
-                        loadedModel = model
-                    }
-                    throw failure
+                // The owner's accelerator switch decides here; without it (tests, other hosts) this is CPU only.
+                // A failed GPU attempt that could not release its handles keeps them owned (see startEngine)
+                // and must not be followed by a second multi-GB engine.
+                val attempt = { target: LocalModelBackend ->
+                    startEngine(model, file, if (target == LocalModelBackend.GPU) Backend.GPU()
+                        else Backend.CPU(threadCount = threads), contextCapacity)
+                }
+                val started = acceleration?.load(capabilities.supportedBackends,
+                    fallbackAllowed = { synchronized(lock) { engine == null && conversation == null } },
+                    attempt = attempt)
+                    ?: LocalModelAcceleration.Loaded(attempt(LocalModelBackend.CPU), LocalModelBackend.CPU, null)
+                synchronized(lock) {
+                    engine = started.value.engine
+                    conversation = started.value.conversation
+                    startupConversationUnused = true
+                    conversationContextInvalid = false
+                    loadedModel = model
+                    activeBackend = started.backend
+                    // The CPU thread budget is not applied to a GPU engine.
+                    computeThreads = threads.takeIf { started.backend == LocalModelBackend.CPU }
+                    backendNotice = started.ownerNotice()
+                    configuredContextTokens = contextCapacity
+                    prefaceTokenCount = started.value.prefaceTokens
+                    state = LocalModelState.READY
                 }
                 model
             }
@@ -249,6 +235,62 @@ class LiteRtLmLocalModelRuntime(
                 synchronized(lock) { state = LocalModelState.FAILED }
             }
             callback(result)
+        }
+    }
+
+    private class StartedEngine(val engine: Engine, val conversation: Conversation, val prefaceTokens: Int)
+
+    /**
+     * One initialized engine on [backend] with its measured preface and a pristine chat conversation.
+     * A failure releases what this attempt created; if that release fails, the handles stay owned by the
+     * runtime (FAILED until an explicit unload) exactly as before the accelerator switch existed.
+     */
+    private fun startEngine(model: ImportedLocalModel, file: File, backend: Backend, contextCapacity: Int): StartedEngine {
+        val newEngine = Engine(
+            EngineConfig(
+                modelPath = file.absolutePath,
+                backend = backend,
+                maxNumTokens = contextCapacity,
+                cacheDir = cacheDirectory.absolutePath
+            )
+        )
+        var createdConversation: Conversation? = null
+        try {
+            newEngine.initialize()
+            val prefixConversation = newEngine.createConversation(
+                ConversationConfig(
+                    systemInstruction = Contents.of(systemPrompt),
+                    tools = ToolRegistry.all().map(::registeredToolProvider),
+                    automaticToolCalling = false,
+                    prefillPrefaceOnInit = true,
+                    maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
+                )
+            )
+            createdConversation = prefixConversation
+            val prefixTokens = prefixConversation.getTokenCount()
+            check(prefixTokens in 0..contextCapacity) { "LOCAL_MODEL_PREFACE_COUNT_UNVERIFIED" }
+            prefixConversation.close()
+            createdConversation = null
+            val newConversation = newEngine.createConversation(ConversationConfig(
+                systemInstruction = Contents.of(systemPrompt),
+                tools = ToolRegistry.all().map(::registeredToolProvider),
+                automaticToolCalling = false,
+                maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
+            ))
+            return StartedEngine(newEngine, newConversation, prefixTokens)
+        } catch (failure: Throwable) {
+            val releasedConversation = runCatching {
+                createdConversation?.takeIf { it.isAlive }?.close()
+            }
+            val releasedEngine = if (releasedConversation.isSuccess) runCatching {
+                if (newEngine.isInitialized()) newEngine.close()
+            } else Result.failure(releasedConversation.exceptionOrNull()!!)
+            if (releasedConversation.isFailure || releasedEngine.isFailure) synchronized(lock) {
+                engine = newEngine
+                conversation = createdConversation
+                loadedModel = model
+            }
+            throw failure
         }
     }
 
@@ -706,6 +748,8 @@ class LiteRtLmLocalModelRuntime(
                 engine = null
                 loadedModel = null
                 computeThreads = null
+                activeBackend = null
+                backendNotice = null
                 configuredContextTokens = 0
                 prefaceTokenCount = null
             }
