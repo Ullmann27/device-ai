@@ -418,7 +418,15 @@ class AgentActivity : Activity() {
     }
     private var voiceReady = false
     private var voiceInitialized = false
+    /** The Android engine reported that it could not start; a later voice refresh cannot repair that. */
+    private var voiceEngineFailed = false
     private var voiceEnabled = false
+    private fun localVoiceState() = at.heinz.deviceai.cognitive.LocalVoiceAvailability.state(
+        voiceInitialized, !voiceEngineFailed, voiceReady)
+    /** What the owner is told while the offline voice cannot speak; null when it can. */
+    private fun localVoiceNotice(): String? = at.heinz.deviceai.cognitive.LocalVoiceAvailability.ownerNotice(
+        localVoiceState(), at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.fromTag(
+            if (::bootstrapMemory.isInitialized) bootstrapMemory.voiceLanguage else "de").label)
     private var mayaSpeech: MayaSpeech? = null
     private var ownerReplyAllowsMaya = true
     private var ownerReplyRevision = 0L
@@ -6647,12 +6655,18 @@ class AgentActivity : Activity() {
     private fun onLocalVoiceInitialized(status: Int, allowRegularGreeting: Boolean) {
         if (voiceInitialized || isFinishing || isDestroyed) return
         voiceInitialized = true
-        if (status == TextToSpeech.SUCCESS) {
+        voiceEngineFailed = status != TextToSpeech.SUCCESS
+        if (!voiceEngineFailed) {
             installVoiceProgressListener()
             refreshOfflineVoice()
             if (readinessWelcomePending) maybePlayReadinessWelcome()
             else if (allowRegularGreeting && voiceReady && voiceEnabled)
                 speakBootstrap("Hallo. Device AI ist bereit.")
+        }
+        // Sound is switched on but nothing can speak: say why once, instead of answering silently from now on.
+        if (voiceEnabled && !replyVoiceReady()) localVoiceNotice()?.let { notice ->
+            Toast.makeText(this, notice, Toast.LENGTH_LONG).show()
+            addToolActivity("SPRACHAUSGABE · $notice")
         }
         refreshReadinessGuide()
     }
@@ -6923,8 +6937,10 @@ class AgentActivity : Activity() {
 
     private fun showOfflineVoicePicker() {
         val engine = voiceEngine
-        if (engine == null || !voiceInitialized) {
-            Toast.makeText(this, "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show(); return
+        if (engine == null || !voiceInitialized || voiceEngineFailed) {
+            // A failed engine has no voices to choose from: name the cause instead of an empty list.
+            Toast.makeText(this, localVoiceNotice() ?: "Android-Sprachausgabe ist noch nicht bereit.",
+                Toast.LENGTH_LONG).show(); return
         }
         val selection = at.heinz.deviceai.cognitive.JarvisVoiceSelection
         val language = at.heinz.deviceai.cognitive.JarvisVoiceSelection.Language.fromTag(bootstrapMemory.voiceLanguage)
@@ -7445,7 +7461,7 @@ class AgentActivity : Activity() {
             if (voiceEnabled) {
                 if (replyVoiceReady()) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
                 else Toast.makeText(this@AgentActivity,
-                    "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
+                    localVoiceNotice() ?: "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
             } else { interruptReplySpeech() }
         }
         voiceButton?.setOnLongClickListener { showVoicePicker(); true }
@@ -11425,12 +11441,7 @@ class AgentActivity : Activity() {
                         voiceProgressListener?.onRangeStart(id, start, end, frame)
                     }
                     override fun finished(id: String) { voiceProgressListener?.onDone(id) }
-                    override fun failed(id: String) {
-                        Toast.makeText(this@AgentActivity,
-                            "Maya konnte nicht sprechen. Die Antwort bleibt im Chat. Prüfe Schlüssel, Credits und Internet.",
-                            Toast.LENGTH_LONG).show()
-                        voiceProgressListener?.onError(id, TextToSpeech.ERROR_NETWORK)
-                    }
+                    override fun failed(id: String) = onMayaPieceFailed(id)
                 }).also { mayaSpeech = it }
             if (!engine.speak(id, chunk.approvedText, key) {
                 internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
@@ -11440,6 +11451,27 @@ class AgentActivity : Activity() {
         // Rebinding keeps hands-free listening closed until the last piece of this reply has finished.
         continuousConversation.assistantSpeechQueued(id)
         return true
+    }
+
+    /**
+     * Maya could not speak piece [id]. A ready, installed offline voice says that piece and the rest of the
+     * reply; local speech does not depend on the network voice. Without it the reply stays text, as before.
+     */
+    private fun onMayaPieceFailed(id: String) {
+        if (id == voiceUtteranceId && speechUsesMaya && voiceEnabled && foregroundLearningActive &&
+            voiceAvatarText.isNotBlank() &&
+            at.heinz.deviceai.cognitive.LocalVoiceAvailability.mayContinueFailedNetworkReply(
+                localVoiceState(), voiceEngine?.voice?.isNetworkConnectionRequired) &&
+            voiceEngine?.speak(voiceAvatarText, TextToSpeech.QUEUE_FLUSH, null, id) == TextToSpeech.SUCCESS) {
+            speechUsesMaya = false
+            Toast.makeText(this, "Maya konnte nicht sprechen. Die Android-Offline-Stimme spricht weiter.",
+                Toast.LENGTH_LONG).show()
+            return
+        }
+        Toast.makeText(this,
+            "Maya konnte nicht sprechen. Die Antwort bleibt im Chat. Prüfe Schlüssel, Credits und Internet.",
+            Toast.LENGTH_LONG).show()
+        voiceProgressListener?.onError(id, TextToSpeech.ERROR_NETWORK)
     }
 
     /** After a piece finished normally: true when the next piece of the same reply was queued. */
