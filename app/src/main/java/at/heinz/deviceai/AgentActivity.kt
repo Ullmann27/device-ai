@@ -2458,7 +2458,7 @@ class AgentActivity : Activity() {
             .put("presence", at.heinz.deviceai.ui.Command03StageSignals.presence(command03RuntimeSignals))
             .put("quality", command03Quality())
             // The stage rests its heavy motion only while the ON-DEVICE model computes.
-            .put("cloudBrain", claudeBrain?.claudeSelected == true)
+            .put("cloudBrain", claudeBrain?.claudeSelected == true || heatMeasurement.stageFullEffects)
             .put("activity", command03Activity.snapshot() ?: org.json.JSONObject.NULL)
             .put("files", command03Files.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
@@ -8016,6 +8016,8 @@ class AgentActivity : Activity() {
     }
 
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        // „Continuum Wärmemessung“ and, while it runs, „Stopp“; a no-op for every other text.
+        if (heatMeasurement.consumeInput(input.text.toString())) return
         if (pendingConversationSelection != null) return
         if (consumeOwnerWorkInterruption()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
@@ -10461,6 +10463,10 @@ class AgentActivity : Activity() {
             cockpit.action(this, "4 · EVALUATION · ENTWICKLUNGSSATZ") { startModelEvaluation("dev", "model-dev.jsonl") },
             cockpit.action(this, "5 · EVALUATION · HOLDOUT") { startModelEvaluation("holdout", "model-holdout.jsonl") }
         ), 2)
+        box.addView(cockpit.action(this, "6 · WÄRME- UND ZEITMESSUNG · KURZ ODER VOLL") {
+            modelCenterDialog?.dismiss()
+            heatMeasurement.open()
+        }, matchWidth(top = 6))
         box.addView(cockpit.section(this, "ANDERE MODELLE · MANUELL"), matchWidth(top = 11))
         val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
             showModelImportDialog()
@@ -13509,6 +13515,56 @@ class AgentActivity : Activity() {
         }
     }
 
+    /**
+     * Owner-started „Wärme- und Zeitmessung“ (evaluation/HeatMeasurement*.kt). This block only hands the measurement
+     * what this Activity already has; protocol, sensors, report and every decision live in the evaluation package.
+     * Its overrides (stage, „Gespräch im Modell behalten“) exist in memory only and are put back after every run.
+     */
+    private val heatMeasurement = at.heinz.deviceai.evaluation.HeatMeasurementController(
+        object : at.heinz.deviceai.evaluation.HeatMeasurementHost {
+            override val activity: Activity get() = this@AgentActivity
+            override fun foreground() = foregroundLearningActive && !isFinishing && !isDestroyed
+            override fun busy() = busy
+            override fun otherWorkPending() = botLookupPending || modelImportActive || modelUnloading ||
+                pendingConversationSelection != null || selectedBot != null
+            override fun cloudBrainSelected() = claudeBrain?.claudeSelected == true
+            override fun runtime() = localRuntime
+            override fun importedModels() = modelCatalog.all()
+            override fun modelChanged() {
+                botConversation.invalidate()
+                resetM2NativeProof()
+                localRuntimeError = null
+                refreshLocalModelUi()
+            }
+            override fun stage() = command03MainStage?.takeIf { usesCommand03HtmlDesign() && it.isAttachedToWindow }
+            override fun pushStageState() = syncCommand03HtmlState()
+            override fun dialogueReuseOn() = this@AgentActivity.dialogueReuseOn()
+            override fun overrideDialogueReuse(on: Boolean) {
+                dialogueReuseSwitch = on
+                if (!on) {
+                    dialogueReuse.invalidate(at.heinz.deviceai.localmodel.LocalDialogueReuseController.Reason.SWITCH_OFF)
+                    runCatching { localRuntime.releaseDialogue() }
+                }
+            }
+            override fun speechOutputOn() = voiceEnabled && replyVoiceReady()
+            override fun speaking() = voiceSpeaking || voiceUtteranceId != null
+            override fun handsFreeActive() = continuousConversation.active
+            override fun endHandsFree() = endContinuousConversation("Gesprächsmodus für die Wärmemessung beendet.")
+            override fun sessionId(): String = this@AgentActivity.sessionId
+            override fun newChat() = newCentralConversation()
+            override fun selectChat(id: String) = selectStoredConversation(id)
+            override fun submit(text: String) { input.setText(text); sendCurrentInput() }
+            override fun clearInput() { if (::input.isInitialized) input.text.clear() }
+            override fun stopTurn() = cancelLocalRequest()
+            override fun say(text: String) = addAssistantMessage(text, preserveLocalContext = true, keepCockpit = false,
+                speakNow = false)
+            override fun status(line: String) = addToolActivity(line)
+            override fun recentAnswerMs(): List<Long> = responseTimesMs.toList()
+            override fun stageProfile(): String = at.heinz.deviceai.ui.Command03StageSignals.Profile.of(
+                getSharedPreferences("continuum-command03", MODE_PRIVATE).getString("performance_profile", null)).name
+            override fun coolingMode(): String = at.heinz.deviceai.localmodel.LocalModelHost.coolingMode(this@AgentActivity).name
+        })
+
     private fun runLocalSmokeTest(direct:Boolean=false) {
         // A new diagnostic revokes any prior same-session success until this
         // attempt completes. Nothing survives a restart or different model SHA.
@@ -13737,6 +13793,7 @@ class AgentActivity : Activity() {
                         priorTextOnlyResponse = previousLocalReply?.textOnly == true &&
                             localConversationContext.hasContinuation(localSessionId))
                 textOnlyResponse.set(textOnlyTurn)
+                heatMeasurement.onTurnRoute(textOnlyTurn)
                 val state = if (botTask == null) continuumState else null
                 cancellation.throwIfCancelled()
                 val boundedInternetMode = if (ownerForbidsExternalNetwork)
@@ -14550,6 +14607,7 @@ class AgentActivity : Activity() {
             is at.heinz.deviceai.localmodel.LocalDialogueReuseController.Decision.Fresh -> decision.request ?: run {
                 // Nothing is kept for a call that runs as before (this also frees it while Claude answers).
                 runCatching { localRuntime.releaseDialogue() }
+                heatMeasurement.onDialogueReuse(false, decision.reason.name)
                 val line = "GESPRÄCH IM MODELL · nicht verwendet · " + decision.reason.ownerText +
                     " · " + decision.reason.name
                 runOnUiThread { if (!isFinishing && !isDestroyed) addToolActivity(line) }
@@ -14562,6 +14620,7 @@ class AgentActivity : Activity() {
     private fun noteDialogueReuseGeneration(
         request: at.heinz.deviceai.localmodel.LocalDialogueRequest, generation: LocalGeneration
     ) {
+        heatMeasurement.onDialogueReuse(request.receipt.reused, request.receipt.reason)
         val outcome = when {
             generation.completion == LocalGenerationCompletion.COMPLETE && generation.failure == null &&
                 generation.proposal == null && generation.rejectedToolResponses.isEmpty() ->
@@ -15189,6 +15248,7 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest(preserveContinuousMode: Boolean, announceDraftStop: Boolean) {
+        heatMeasurement.onStopControl()
         // A stopped generation cannot be continued natively; the next dialogue turn starts fresh.
         dialogueReuse.invalidate(at.heinz.deviceai.localmodel.LocalDialogueReuseController.Reason.STOPPED)
         cancelSpeechInputScope(preserveContinuousMode)
@@ -15343,6 +15403,8 @@ class AgentActivity : Activity() {
         var lastPreviewNanos = generationStartedNanos
         var lastRuntimeProgressNanos = generationStartedNanos
         val previewToken = Any()
+        // Null unless the owner's „Wärme- und Zeitmessung“ is running; then it only observes this call.
+        val heatProbe = heatMeasurement.generationProbe(promptCharacters)
         fun elapsedMillis() = (System.nanoTime() - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
         fun capturedGeneration(
             overrideCompletion: at.heinz.deviceai.cognitive.LocalGenerationCompletion? = null,
@@ -15359,7 +15421,7 @@ class AgentActivity : Activity() {
             } else LocalGeneration(snapshot.response, accepted,
                 if (completion == LocalGenerationCompletion.COMPLETE) rejectedResponses.toList() else emptyList(),
                 overrideFailure ?: snapshot.failure, completion)
-        }
+        }.also { heatProbe?.finished(it.completion.name, it.failure, it.response.length) }
         runOnUiThread {
             if (!isFinishing && !isDestroyed && activeChatCancellation === cancellation) {
                 val stillActive = try {
@@ -15456,7 +15518,7 @@ class AgentActivity : Activity() {
                 cancellation?.throwIfCancelled()
                 turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED)
                 localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF, it.sha256) }
-                start(callback)
+                start(heatProbe?.observe(callback) ?: callback)
             }
             started.exceptionOrNull()?.let { error ->
                 if (error is java.util.concurrent.CancellationException) throw error
@@ -15508,6 +15570,7 @@ class AgentActivity : Activity() {
             return capturedGeneration()
         } catch (cancelled: java.util.concurrent.CancellationException) {
             synchronized(eventLock) { capture.cancel(cancelled.message) }
+            heatProbe?.finished(LocalGenerationCompletion.CANCELLED.name, cancelled.message, null)
             runCatching { localRuntime.cancel() }
             throw cancelled
         } finally {
@@ -15543,6 +15606,7 @@ class AgentActivity : Activity() {
             " · Laufzeit: " + elapsedMillis + " ms · Textblöcke: " + chunks +
             "\n\n" + draft.take(
                 at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS)
+        heatMeasurement.onPreviewText(text)
         if (!streamUserPausedScrolling) scrollToBottom()
     }
 
@@ -17064,6 +17128,7 @@ class AgentActivity : Activity() {
         command03VisibleMessages.addLast(user to Command03BridgeContract.messageText(value))
         while (command03VisibleMessages.size > 60) command03VisibleMessages.removeFirst()
         command03Binding()?.let { scope -> command03MainStage?.presentMessage(scope, user, value) }
+        heatMeasurement.onBubble(user, value.length)
         scrollToBottom()
     }
 
@@ -17134,6 +17199,7 @@ class AgentActivity : Activity() {
             workTool = null
         }
         busy = value
+        heatMeasurement.onBusy(value)
         presentCommand03Document()
         scheduleCommand03HtmlState()
         botRosterDialog?.refreshRuntimeStatus()

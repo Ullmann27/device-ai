@@ -197,7 +197,8 @@ class HeatPlan(
     fun announcement(recentAnswerMs: List<Long>): String = buildString {
         val known = recentAnswerMs.count { it > 0 }
         append("Wärme- und Zeitmessung (").append(size.label).append("): ").append(configurations.size)
-            .append(" Konfigurationen, ").append(runs.size).append(" Läufe, ").append(turnCount).append(" Modellantworten.\n")
+            .append(" Konfigurationen, ").append(runs.size).append(" Läufe, bis zu ").append(turnCount)
+            .append(" Modellantworten. Was auf diesem Gerät nicht laufen kann, wird als NOT_RUN eingetragen.\n")
         val expected = expectedMs(recentAnswerMs)
         if (expected != null) append("Erwartete Dauer: etwa ").append(minutes(expected)).append(" Minuten (gerechnet mit dem Median deiner letzten ")
             .append(known).append(if (known == 1) " Antwortzeit" else " Antwortzeiten").append(" in dieser Sitzung, ohne Abkühlzeiten über ")

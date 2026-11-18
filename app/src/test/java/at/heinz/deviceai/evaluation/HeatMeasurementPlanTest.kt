@@ -96,7 +96,7 @@ class HeatMeasurementPlanTest {
         assertEquals(plan.fixedWaitMs + 20_000L * plan.turnCount, plan.expectedMs(recent))
         val known = plan.announcement(recent)
         assertTrue(known, "gerechnet mit dem Median deiner letzten 3 Antwortzeiten" in known)
-        assertTrue(known, "6 Konfigurationen, 6 Läufe, 12 Modellantworten" in known)
+        assertTrue(known, "6 Konfigurationen, 6 Läufe, bis zu 12 Modellantworten. Was auf diesem Gerät nicht laufen kann, wird als NOT_RUN eingetragen." in known)
         assertTrue("The owner is told that he can stop", "STOPP beendet die Messung" in known)
         assertTrue(plan.upperBoundMs > plan.fixedWaitMs)
     }
