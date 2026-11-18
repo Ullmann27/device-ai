@@ -605,3 +605,70 @@ Unverändert: Hitzeschutz, Ladeprüfung, Thread-Budget, die LiteRT-LM-Version un
   Qualcomm-Produktblatt (PDF, SM8750-AB). Dass das Fold7 den „Snapdragon 8 Elite for Galaxy“ mit 12 GB hat,
   stammt aus dem Auftrag, nicht aus einer von mir gelesenen Samsung-Seite.
 - Ob das Fold7 Gemma 4 über AICore anbietet, ist nicht geprüft.
+
+---
+
+## 12. Nachtrag: Stufe 2 aus Abschnitt 9 als abgeschalteter Schalter umgesetzt (18.11.2026, Folgeauftrag)
+
+Abschnitt 9, Stufe 2 ist umgesetzt – als Besitzerschalter im Modellzentrum, **standardmäßig aus**:
+„Gespräch im Modell behalten (schneller, experimentell – am Gerät ungeprüft)“. **Am Gerät NOT_RUN.** Mit Schalter
+aus sind Prompt und Aufrufweg unverändert. Stufe 1 und 3 sind weiterhin nicht umgesetzt.
+
+**Was der Schalter tut.** Nur bei aufeinanderfolgenden reinen Textfragen des Besitzers im selben Chat bleibt die
+werkzeugfreie native Konversation nach einer vollständig beendeten Antwort offen; die nächste solche Frage hängt
+nur die neue Nachricht (mit Stilzeile, Zeitanker und – nur wenn sie sich geändert haben – den Erinnerungsdaten
+dieses Zuges) an. Alles andere läuft wie bisher in einer frischen Konversation und beendet die behaltene:
+Werkzeug-, Bot-, Coding-, Dokument-, Recherche-, Bildschirm- und Erinnerungsabrufzüge, Fortsetzungen („weiter“),
+von der App aufgelöste Bezüge, Claude als Gehirn. Verworfen wird außerdem bei Stopp, Fehler, Hitzeschutz,
+Ausgabegrenze, zurückgehaltener oder nicht unverändert gezeigter Antwort, Chat-, Modell- oder Backendwechsel,
+geänderten Erinnerungen/Identität/Internetmodus, jeder Eingabe, die nicht über dieses Gespräch lief, nach sechs
+Zügen und sobald weniger als 1 024 Antwort-Token frei blieben (ein Byte der neuen Nachricht wird dabei als ein
+Token gezählt). Code: [`LocalDialogueReuseController.kt`](../../app/src/main/java/at/heinz/deviceai/localmodel/LocalDialogueReuseController.kt)
+(Entscheidung), [`LocalDialogueReusePrompt.kt`](../../app/src/main/java/at/heinz/deviceai/localmodel/LocalDialogueReusePrompt.kt)
+(Inhalt eines Folgezugs), `LiteRtLmLocalModelRuntime.streamDialogue` (Behalten, Anhängen, Schließen).
+
+Die offene Entscheidung aus Abschnitt 9 bleibt bestehen und steht im Bestätigungsdialog: Frühere Fragen und
+Antworten stehen ungekürzt im nativen Kontext und werden nicht mehr je Zug neu gefiltert. Ein Zug, dessen Text der
+Verlaufsfilter (`LocalConversationPromptFirewall`) nicht weitergäbe, beendet die behaltene Konversation.
+
+**Host-Befund** (Klasse Host; Quelltext [`RuntimeDialogueReuseProbe.java`](local-model-speed-20261118/RuntimeDialogueReuseProbe.java),
+Rohausgabe [`host-runtime-dialogue-reuse-qwen3-0.6b.txt`](local-model-speed-20261118/host-runtime-dialogue-reuse-qwen3-0.6b.txt)).
+Anders als die Proben in Abschnitt 4 treibt diese Probe die **Klassen der App** (`LiteRtLmLocalModelRuntime`,
+`DialogueLatencyProbe`) gegen litertlm-jvm 0.18.0, CPU, 2 Threads, Fenster 4 096, Modell Qwen3 0.6B.
+
+| Beobachtung (Lauf C, Benchmark-Schalter nur in der Probe gesetzt) | vollständiger Prompt | angehängter Folgezug |
+|---|---|---|
+| eingelesene Token | 649 (sechsmal gleich) | 132 |
+| geschriebene Token (bei Qwen3 überwiegend verdecktes Nachdenken) | 259 | 232 |
+| Zeit bis zum ersten sichtbaren Text | 29,4 – 33,4 s | 28,4 s |
+| Gesamtzeit | 36,5 – 41,2 s | 31,8 s |
+
+Lesart: Die Laufzeit der App liest im Folgezug nur noch 132 statt 649 Token ein (exakt, lastunabhängig). **Die
+Zeitersparnis ist bei diesem Modell am Host klein**, weil Qwen3 0.6B vor jeder Antwort rund 200 Token verdeckt
+„nachdenkt“ und dieses Schreiben (rund 26 s) die Zeit bestimmt; das Einlesen von 649 Token kostet hier nur wenige
+Sekunden. Der Faktor aus Abschnitt 4.1 (höchstens 24 Antwort-Token) zeigt sich im Ablauf der App deshalb nicht. Was
+am Fold7 mit Gemma 4 E4B herauskommt, hängt vom dortigen Verhältnis Einlesen zu Schreiben ab und ist nicht gemessen.
+
+Die Gesprächs-Zeitprobe selbst (sechs Züge ohne, sechs mit Behalten; Lauf A): mit Behalten wurden 5 von 6 Zügen
+angehängt, gesendet wurden 354 – 382 statt 2 494 – 4 142 Bytes; Summe der Gesamtzeiten 237 s statt 366 s, wobei
+im Durchgang ohne Behalten eine Antwort leer blieb und allein 129 s dauerte (ohne die Züge 1 und 6: 166 s statt
+205 s). Lauf B mit dem Qwen-Schalter `/no_think` ist für Zeiten unbrauchbar (5 bzw. 3 von 6 Antworten leer).
+Nebenbefund: Die native Tokenzahl sinkt zwischen zwei Zügen wieder (z. B. 908 + 132 + 232 ≠ 1 078), LiteRT-LM
+nimmt das verdeckte Nachdenken früherer Züge also aus dem Kontext; eingelesen wurden trotzdem nur 132 Token.
+
+Regeln der Laufzeit, am Host mit echter Engine geprüft (alle bestanden, dreimal): vollständig beendeter Zug wird
+behalten; Folgezug wird angehängt; ein gestoppter Zug wird nicht behalten und derselbe Schlüssel danach aus dem
+vollständigen Prompt beantwortet; ein anderer Schlüssel, ein anderer Generierungsaufruf und `releaseDialogue()`
+beenden die behaltene Konversation; Entladen gibt die Engine frei.
+
+Gemma 4 E2B konnte am Host nicht wiederholt werden: Die Probe braucht Datei, Katalogkopie und Gewichte-Cache
+(zusammen rund 6 GB), frei waren 3 GB.
+
+**Messung am Gerät.** Modellzentrum → „GESPRÄCHS-ZEITPROBE · 6 ZÜGE OHNE UND MIT BEHALTEN (EXPERIMENTELL)“ führt
+die sechs Züge aus Abschnitt 8.4 mit einem festen Stellvertreter-Prompt zweimal aus (erst neues Gespräch je Zug,
+dann behaltenes Gespräch, unabhängig von der Schalterstellung) und schreibt
+`Download/Continuum/continuum-eval-dialogue-probe-<zeit>.json`: je Zug `reused`, `reuseReason`, `sentBytes`,
+`firstTextMs`, `totalMs`, `thermalBefore`/`thermalAfter`, native Tokenzahl vor und nach dem Zug. Der zweite
+Durchgang startet auf dem erwärmten Gerät; für eine belastbare Aussage nach dem Abkühlen wiederholen. Der echte
+Gesprächspfad wird wie in Abschnitt 8.4 gemessen, einmal mit Schalter aus und einmal an; das Arbeitsfenster zeigt
+je Zug „GESPRÄCH IM MODELL · weiterverwendet …“ oder den Grund, warum neu aufgebaut wurde.
