@@ -401,6 +401,12 @@ class AgentActivity : Activity() {
     private var latencyCueTurn = 0L
     private val conversationLatencyCue = Runnable { speakConversationLatencyCue() }
     private val ownerTurnAssembler = at.heinz.deviceai.cognitive.OwnerTurnAssembler()
+    /** Understanding despite misrecognised names (cognitive/OwnerUnderstanding.kt); the labels are read lazily. */
+    private val ownerUnderstanding = at.heinz.deviceai.cognitive.OwnerUnderstandingIntake()
+    private val installedAppLabels by lazy { InstalledAppLabels(this) }
+    /** A paused owner task chain of this session (cognitive/OwnerTaskChain.kt) and when it paused; memory only. */
+    private var pausedTaskChain: Pair<String, at.heinz.deviceai.cognitive.OwnerTaskChain>? = null
+    private var pausedTaskChainAt = 0L
     /**
      * Interrupting a spoken reply by voice. Opt-in and off by default: the thresholds are heuristics that
      * have not been calibrated on a device. Only the per-frame level leaves the monitor, never audio.
@@ -7976,6 +7982,35 @@ class AgentActivity : Activity() {
         return true
     }
 
+    /**
+     * Owner-turn intake hook of the understanding layer: a misrecognised known name in the input is repaired in place
+     * before any routing reads it (speech and typed input alike). True when the turn was answered with the one
+     * clarifying question instead; then nothing else runs.
+     */
+    private fun applyOwnerUnderstanding(): Boolean {
+        val heard = input.text.toString().trim()
+        if (heard.isEmpty() || busy || botLookupPending || selectedBot != null || neuralCoach.isActive()) return false
+        val name = at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(continuumState?.archive?.identityState?.chosenName)
+        val session = sessionId
+        return when (val decision = ownerUnderstanding.onOwnerTurn(session, heard, name) {
+            at.heinz.deviceai.cognitive.OwnerUnderstandingLexicon.build(installedAppLabels.labels(),
+                localConversationContext.documents(session).map { it.name },
+                localConversationContext.priorUserTurns(session), name)
+        }) {
+            is at.heinz.deviceai.cognitive.OwnerUnderstandingIntake.Decision.Proceed -> {
+                if (decision.changed) { input.setText(decision.text); input.setSelection(input.text.length) }
+                false
+            }
+            is at.heinz.deviceai.cognitive.OwnerUnderstandingIntake.Decision.Ask -> {
+                input.text.clear()
+                addUserMessage(heard, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+                addNonModelReply(heard, decision.question, at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+                addToolActivity("VERSTEHEN · zwei ähnliche Namen · Rückfrage statt Raten")
+                true
+            }
+        }
+    }
+
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
         if (pendingConversationSelection != null) return
         if (consumeOwnerWorkInterruption()) return
@@ -7989,6 +8024,7 @@ class AgentActivity : Activity() {
             return
         }
         if (consumePendingResearchChatReply()) { appNameClarification.clear(); computerClarification.clear(); return }
+        if (!botRoutingChecked && applyOwnerUnderstanding()) return
         // Exact status submissions stay read-only even while a model/bot is busy. The
         // Send button's explicit Stop/cancel behavior remains in its existing click handler.
         if (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(input.text.toString(), neuralCoach.isActive()) ==
@@ -8065,6 +8101,7 @@ class AgentActivity : Activity() {
         // per Mail an …“. Deterministic and fail closed; before the clock, document and research lanes can guess.
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
             ownerWorkTools.handle(request)) return
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && tryStartOwnerTaskChain(request)) return
         at.heinz.deviceai.cognitive.OwnerDeviceClockReply.answer(
             OwnerAppLookupIntent.stripAddress(request, continuumState?.archive?.identityState?.chosenName),
             java.time.Instant.now(), java.time.ZoneId.systemDefault())?.let { answer ->
@@ -9304,6 +9341,184 @@ class AgentActivity : Activity() {
     }
 
     private enum class NeuralSave { NOT_NEEDED, SAVED, CANCELLED, CHANGED_MEANWHILE, FAILED }
+
+    /**
+     * Owner task chain hook: „weiter“/a pick for a paused chain, a recognised multi-step recipe, or – only when the
+     * owner switched model plans on – a model-proposed plan. True when the turn is handled here. Logic and wording live
+     * in cognitive/OwnerTaskChain*.kt; this function only connects them to the gate, the approval dialog and the chat.
+     */
+    private fun tryStartOwnerTaskChain(request: String): Boolean {
+        if (neuralCoach.isActive()) return false
+        val name = at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(continuumState?.archive?.identityState?.chosenName)
+        val preferences = getSharedPreferences("continuum-task-chain", MODE_PRIVATE)
+        fun taken() { input.text.clear(); addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START) }
+        at.heinz.deviceai.cognitive.OwnerTaskChainSwitch.parse(request)?.let { on ->
+            preferences.edit().putBoolean("model_plans", on).apply()
+            taken()
+            addNonModelReply(request, if (on) "Modellpläne für Aufgabenketten sind an. Bei einem mehrstufigen Geräteauftrag schlägt " +
+                "das geladene Modell die Schritte vor; ich prüfe den Plan und jeden Schritt, bevor etwas läuft." else
+                "Modellpläne für Aufgabenketten sind aus. Die festen Schrittfolgen bleiben aktiv.",
+                at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+            return true
+        }
+        pausedTaskChain?.takeIf { it.first == sessionId &&
+            android.os.SystemClock.elapsedRealtime() - pausedTaskChainAt <= 10 * 60_000L }?.let { (_, chain) ->
+            val paused = chain.outcome() as? at.heinz.deviceai.cognitive.OwnerTaskChain.Outcome.Paused
+            when (val command = at.heinz.deviceai.cognitive.OwnerTaskChainContinuation.parse(request,
+                paused?.pause == at.heinz.deviceai.cognitive.OwnerTaskChain.Pause.NEEDS_CHOICE, name)) {
+                is at.heinz.deviceai.cognitive.OwnerTaskChainContinuation.Command.Continue -> {
+                    taken()
+                    if (chain.resume(command.choice)) { pausedTaskChain = null; runOwnerTaskChain(request, chain) }
+                    else {
+                        val still = chain.outcome()
+                        if (still !is at.heinz.deviceai.cognitive.OwnerTaskChain.Outcome.Paused) pausedTaskChain = null
+                        addNonModelReply(request, (if (still is at.heinz.deviceai.cognitive.OwnerTaskChain.Outcome.Paused)
+                            "Diese Auswahl gibt es nicht. " else "") + (still?.report ?: "Die Aufgabe ist nicht mehr offen."),
+                            at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+                    }
+                    return true
+                }
+                at.heinz.deviceai.cognitive.OwnerTaskChainContinuation.Command.Drop -> {
+                    pausedTaskChain = null
+                    taken()
+                    addNonModelReply(request, "Gut, die angehaltene Aufgabe ist verworfen. Die schon erledigten Schritte bleiben, wie sie sind.",
+                        at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+                    return true
+                }
+                null -> Unit
+            }
+        }
+        at.heinz.deviceai.cognitive.OwnerTaskChainRecipes.recognise(request, name)?.let { plan ->
+            taken()
+            startOwnerTaskChain(request, plan)
+            return true
+        }
+        if (!preferences.getBoolean("model_plans", false) || !localModelReady() ||
+            !at.heinz.deviceai.cognitive.OwnerTaskChainSwitch.wantsModelPlan(request, name)) return false
+        // One bounded, tool-free generation through the runtime interface (local model or Claude). The text is data:
+        // an invalid plan is named and dropped, and the request then takes its ordinary model turn.
+        taken()
+        dialogueReuse.invalidate(at.heinz.deviceai.localmodel.LocalDialogueReuseController.Reason.NOT_TEXT_ONLY)
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        val planSession = sessionId
+        activeChatCancellation = cancellation
+        activeLocalRequest = true
+        setBusy(true)
+        addToolActivity("AUFGABENKETTE · das Modell schlägt Schritte vor · der Plan wird geprüft, bevor etwas läuft")
+        localAgentExecutor.execute {
+            val proposed = runCatching { at.heinz.deviceai.localmodel.RuntimeChainPlanSource(localRuntime, cancelled = {
+                runCatching { cancellation.throwIfCancelled() }.isFailure }).propose(
+                at.heinz.deviceai.cognitive.OwnerChainPlanCodec.prompt(request)) }.getOrNull()
+            runOnUiThread {
+                if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return@runOnUiThread
+                activeChatCancellation = null
+                activeLocalRequest = false
+                setBusy(false)
+                if (sessionId != planSession || runCatching { cancellation.throwIfCancelled() }.isFailure) return@runOnUiThread
+                when (val parsed = proposed?.let { at.heinz.deviceai.cognitive.OwnerChainPlanCodec.parse(request, it) }) {
+                    is at.heinz.deviceai.cognitive.OwnerChainPlanValidator.Result.Valid -> startOwnerTaskChain(request, parsed.plan)
+                    else -> {
+                        addToolActivity("AUFGABENKETTE · Modellplan verworfen · " + ((parsed as?
+                            at.heinz.deviceai.cognitive.OwnerChainPlanValidator.Result.Rejected)?.reason ?: "kein Plan erhalten").take(120))
+                        runLocal(request)
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    private fun startOwnerTaskChain(request: String, plan: at.heinz.deviceai.cognitive.ChainPlan) {
+        if (plan.steps.any { at.heinz.deviceai.cognitive.OwnerChainStepCatalog.needsDeviceBridge(it.tool) } &&
+            !(::bridge.isInitialized && bridge.isReady())) {
+            addToolActivity("GERÄTEZUGRIFF NICHT BEREIT · Aufgabenkette nicht gestartet")
+            addAssistantMessage(ContinuumUiCopy.deviceBridgeMissing())
+            return
+        }
+        runOwnerTaskChain(request, at.heinz.deviceai.cognitive.OwnerTaskChain(plan, request))
+    }
+
+    /** One run of [chain] through the unchanged orchestrator, ToolGate and confirmation dialog; [request] is the shown turn. */
+    private fun runOwnerTaskChain(request: String, chain: at.heinz.deviceai.cognitive.OwnerTaskChain) {
+        activeLocalRequest = true
+        setBusy(true)
+        addToolActivity("AUFGABENKETTE · ${chain.stepCount} Schritt(e) nacheinander · jeder wird am Ergebnis geprüft")
+        val actionSessionId = sessionId
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        val gate = createToolGate(ownerTurn = chain.ownerTask)
+        val startedToolCalls = java.util.concurrent.ConcurrentHashMap<String, String>()
+        chain.observer = at.heinz.deviceai.cognitive.OwnerTaskChainStage("chain-" + UUID.randomUUID().toString(), cockpitBus::emit)
+        val orchestrator = BoundedAgentOrchestrator(
+            model = chain,
+            memories = { emptyList() },
+            toolGate = gate,
+            evaluator = chain,
+            // A chain is an owner task, not a learning example: nothing is promoted from it.
+            experienceStore = InMemoryExperienceStore(),
+            evaluationConfirmsOutcome = false,
+            approvalProvider = chain.approvals(AgentToolApprovalProvider { proposal, risk ->
+                cancellation.throwIfCancelled()
+                val latch = CountDownLatch(1)
+                var approval = AgentToolApproval(false)
+                runOnUiThread {
+                    if (isFinishing || isDestroyed || sessionId != actionSessionId ||
+                        runCatching { cancellation.throwIfCancelled() }.isFailure) { latch.countDown(); return@runOnUiThread }
+                    showStructuredToolConfirmation(proposal, risk == Risk.DESTRUCTIVE) { approved ->
+                        approval = AgentToolApproval(approved, approved && risk == Risk.DESTRUCTIVE)
+                        latch.countDown()
+                    }
+                }
+                val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(120)
+                while (!latch.await(10, TimeUnit.MILLISECONDS)) {
+                    cancellation.throwIfCancelled()
+                    if (System.nanoTime() >= deadline) return@AgentToolApprovalProvider AgentToolApproval(false)
+                }
+                cancellation.throwIfCancelled()
+                approval
+            }),
+            limits = at.heinz.deviceai.cognitive.OwnerTaskChain.limits(chain.plan),
+            callIdPrefix = "chain-" + UUID.randomUUID().toString(),
+            cancellation = cancellation,
+            onToolStarted = { callId, toolName ->
+                chain.toolStarted()
+                recordToolStarted(startedToolCalls, callId, toolName)
+            }
+        )
+        activeBootstrapGate = gate
+        activeChatCancellation = cancellation
+        activeOwnerFactCancellation = cancellation
+        activeOrchestrator = orchestrator
+        localAgentExecutor.execute {
+            val settled = chain.runWith(orchestrator)
+            settleToolRuns(startedToolCalls, settled.run, actionSessionId, cancellation)
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (activeBootstrapGate !== gate || activeChatCancellation !== cancellation) return@runOnUiThread
+                activeBootstrapGate = null
+                activeChatCancellation = null
+                activeOrchestrator = null
+                activeLocalRequest = false
+                setBusy(false)
+                if (sessionId != actionSessionId) return@runOnUiThread
+                val outcome = settled.outcome
+                if (outcome is at.heinz.deviceai.cognitive.OwnerTaskChain.Outcome.Paused) {
+                    pausedTaskChain = actionSessionId to chain
+                    pausedTaskChainAt = android.os.SystemClock.elapsedRealtime()
+                }
+                // STOP was the owner's word: the chain stays paused for „weiter“, but nothing is said over it.
+                if (runCatching { cancellation.throwIfCancelled() }.isFailure) {
+                    addToolActivity("AUFGABENKETTE · angehalten nach ${chain.completedSteps()} von ${chain.stepCount} Schritten · „weiter“ setzt fort")
+                    return@runOnUiThread
+                }
+                addNonModelReply(request, outcome.report, at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+                addToolActivity(when (outcome) {
+                    is at.heinz.deviceai.cognitive.OwnerTaskChain.Outcome.Completed -> "AUFGABENKETTE · alle Schritte geprüft und erledigt"
+                    is at.heinz.deviceai.cognitive.OwnerTaskChain.Outcome.Failed -> "AUFGABENKETTE · bei Schritt ${outcome.step + 1} beendet · nichts Weiteres ausgeführt"
+                    is at.heinz.deviceai.cognitive.OwnerTaskChain.Outcome.Paused -> "AUFGABENKETTE · angehalten bei Schritt ${outcome.step + 1} · „weiter“ setzt fort"
+                })
+            }
+        }
+    }
 
     private fun executeBootstrapReadOnly(request: String, decision: BootstrapDecision) {
         val name = checkNotNull(decision.tool)
@@ -16610,6 +16825,8 @@ class AgentActivity : Activity() {
     /** [keepCockpit]: the result is already shown in an open cockpit work window – record it without leaving START. */
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,
                                     allowMaya: Boolean = ownerReplyAllowsMaya, speakNow: Boolean = true) {
+        // „Ich habe „Thermux“ als Termux verstanden.“ – stated once, in front of the answer to the repaired turn.
+        @Suppress("NAME_SHADOWING") val value = ownerUnderstanding.withNotice(sessionId, value)
         recordCockpitDialog(false, value)
         // Rendering a normal assistant reply never owns session invalidation. Callers pass false only
         // after a semantic policy decided that older dialogue is stale (for example a confirmed memory change).
