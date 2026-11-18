@@ -10141,6 +10141,7 @@ class AgentActivity : Activity() {
         box.addView(cockpit.section(this, "UNSERE AUSGEWÄHLTEN MODELLE"), matchWidth(top = 12))
         val selectedStatus = textView(
             ContinuumSelectedModels.gemmaStatus(installedModels, localRuntime.loadedModel) +
+                "\n\n" + ContinuumSelectedModels.fastStatus(installedModels, localRuntime.loadedModel) +
                 "\n\n" + ContinuumSelectedModels.REMOTE_STATUS +
                 "\n\n" + ContinuumSelectedModels.RETIREMENT_GATE,
             13f, MUTED
@@ -10160,6 +10161,19 @@ class AgentActivity : Activity() {
             },
             cockpit.action(this, "2 · GEMMA-IMPORT VORAUSFÜLLEN") {
                 showModelImportDialog(useSelectedGemma = true)
+            }
+        ), 2)
+        // Smaller Gemma 4 E2B for a speed comparison; same import path and SHA-256 check, nothing is downloaded here.
+        cockpit.grid(this, box, listOf(
+            cockpit.action(this, "KLEINER · GEMMA-4-E2B-QUELLE ÖFFNEN") {
+                runCatching {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ContinuumSelectedModels.FAST_SOURCE)))
+                }.onFailure {
+                    Toast.makeText(this, "Die Modellseite konnte nicht geöffnet werden.", Toast.LENGTH_LONG).show()
+                }
+            },
+            cockpit.action(this, "KLEINER · GEMMA-4-E2B-IMPORT VORAUSFÜLLEN") {
+                showModelImportDialog(useSelectedGemma = false, useFastGemma = true)
             }
         ), 2)
         // A READY model is not proof that native generation works.
@@ -14660,7 +14674,11 @@ class AgentActivity : Activity() {
         }.joinToString("\n")
     }
 
-    private fun showModelImportDialog(useSelectedGemma: Boolean = false) {
+    private fun showModelImportDialog(useSelectedGemma: Boolean = false) =
+        showModelImportDialog(useSelectedGemma, useFastGemma = false)
+
+    /** [useFastGemma] prefills the smaller Gemma 4 E2B instead; the one-argument entry point stays as it was. */
+    private fun showModelImportDialog(useSelectedGemma: Boolean, useFastGemma: Boolean) {
         val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
         val fields = cockpit.panel(this, "DEVICE AI · MODELLIMPORT",
             "Modell sicher auswählen",
@@ -14699,6 +14717,11 @@ class AgentActivity : Activity() {
                     "ist damit noch nicht bewiesen.",
                 12f, MUTED
             ), matchWidth(top = 8))
+        } else if (useFastGemma) {
+            id.setText(ContinuumSelectedModels.FAST_ID)
+            version.setText(ContinuumSelectedModels.FAST_VERSION)
+            digest.setText(ContinuumSelectedModels.FAST_SHA256)
+            fields.addView(textView(ContinuumSelectedModels.FAST_IMPORT_NOTE, 12f, MUTED), matchWidth(top = 8))
         }
         val warning = textView("", 12.5f, AMBER)
         fields.addView(warning, matchWidth(top = 10))
@@ -14979,6 +15002,7 @@ class AgentActivity : Activity() {
         val card = modelCardText ?: return
         selectedModelStatusText?.text =
             ContinuumSelectedModels.gemmaStatus(models, loaded) +
+                "\n\n" + ContinuumSelectedModels.fastStatus(models, loaded) +
                 "\n\n" + ContinuumSelectedModels.REMOTE_STATUS +
                 "\n\n" + ContinuumSelectedModels.RETIREMENT_GATE
         val shown = loaded ?: models.firstOrNull()
