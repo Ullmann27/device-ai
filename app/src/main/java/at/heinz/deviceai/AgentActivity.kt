@@ -2342,6 +2342,7 @@ class AgentActivity : Activity() {
 
     private var command03RuntimeSignals = at.heinz.deviceai.avatar.AvatarRuntimeSignals()
     private val command03Activity = at.heinz.deviceai.ui.Command03ActivityProjection()
+    private val command03Files = at.heinz.deviceai.ui.Command03FilesProjection()
 
     /** Thermal status and power-save state as Android reports them; null where the platform has no value. */
     private fun command03Quality(): String {
@@ -2392,6 +2393,7 @@ class AgentActivity : Activity() {
             .put("presence", at.heinz.deviceai.ui.Command03StageSignals.presence(command03RuntimeSignals))
             .put("quality", command03Quality())
             .put("activity", command03Activity.snapshot() ?: org.json.JSONObject.NULL)
+            .put("files", command03Files.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
                 .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
             .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
@@ -12365,7 +12367,12 @@ class AgentActivity : Activity() {
                     finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
                 } else {
                     actualStart()
-                    DeviceToolExecutorRunner(executor).execute(request)
+                    DeviceToolExecutorRunner(executor).execute(request).also { output ->
+                        // Names of a real file tool answer for the HTML stage; bounded, never a path.
+                        if (effectContext != null &&
+                            command03Files.accept(effectContext.session, request.name, request.arguments, output))
+                            runOnUiThread { scheduleCommand03HtmlState() }
+                    }
                 }
             }
             } catch (failure: Throwable) {
