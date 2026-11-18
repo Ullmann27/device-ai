@@ -240,6 +240,9 @@ object LocalModelAccelerationGuard {
         override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) =
             guarded(callback) { delegate.streamTextOnly(prompt, it) }
 
+        override fun streamDialogue(request: LocalDialogueRequest, callback: LocalInferenceCallback) =
+            guarded(callback) { delegate.streamDialogue(request, it) }
+
         override fun streamThinking(prompt: String, callback: LocalInferenceCallback) =
             guarded(callback) { delegate.streamThinking(prompt, it) }
 

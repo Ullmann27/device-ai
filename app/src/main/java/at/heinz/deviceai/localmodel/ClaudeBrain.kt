@@ -46,6 +46,13 @@ internal class SelectableModelRuntime(
     override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) =
         active.streamTextOnly(prompt, callback)
 
+    // Keeping the native conversation is an on-device ability only: the Claude runtime answers through the
+    // interface default (complete prompt, nothing kept), and a release always reaches the on-device runtime.
+    override fun streamDialogue(request: LocalDialogueRequest, callback: LocalInferenceCallback) =
+        active.streamDialogue(request, callback)
+
+    override fun releaseDialogue() = local.releaseDialogue()
+
     override fun streamThinking(prompt: String, callback: LocalInferenceCallback) =
         active.streamThinking(prompt, callback)
 
