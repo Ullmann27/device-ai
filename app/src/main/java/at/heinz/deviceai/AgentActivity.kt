@@ -245,6 +245,8 @@ class AgentActivity : Activity() {
     private lateinit var backend: AgentBackendClient
     private lateinit var modelCatalog: LocalModelCatalog
     private lateinit var localRuntime: LocalModelRuntime
+    /** Optional cloud brain (owner setting „Gehirn“). Null until onCreate and in tests that drive single methods. */
+    private var claudeBrain: at.heinz.deviceai.localmodel.ClaudeBrain? = null
     private lateinit var receiptStore: FileToolExecutionReceiptStore
     // opened on localAgentExecutor (Keystore and file I/O), see initializeContinuum
     @Volatile private var continuumStore: ContinuumRuntimeStore? = null
@@ -254,6 +256,15 @@ class AgentActivity : Activity() {
         AiContextCompiler(
             AiContextPolicy(maxBytes = 13_500, memoryLimit = 8, researchSourceLimit = 4,
                 nativeToolCatalog = true, includeToolCatalog = false)
+        ).withRecallObserver(ContinuumMemoryRecallPublisher(filesDir))
+    }
+    /** Claude brain without the memory opt-in: DEVICE_LOCAL_ONLY records are never compiled into a prompt. */
+    private val cloudContextCompiler by lazy {
+        AiContextCompiler(
+            AiContextPolicy(maxBytes = 13_500, memoryLimit = 8, researchSourceLimit = 4,
+                nativeToolCatalog = true, includeToolCatalog = false,
+                allowedPrivacy = setOf(at.heinz.deviceai.cognitive.PrivacyClass.PUBLIC,
+                    at.heinz.deviceai.cognitive.PrivacyClass.PRIVATE))
         ).withRecallObserver(ContinuumMemoryRecallPublisher(filesDir))
     }
 
@@ -761,6 +772,7 @@ class AgentActivity : Activity() {
             localRuntime = host.runtime
             modelImports = host.imports
         }
+        claudeBrain = at.heinz.deviceai.localmodel.LocalModelHost.brain(this)
         receiptStore = FileToolExecutionReceiptStore(java.io.File(filesDir, "tool-receipts"))
         initializeContinuum()
         bridge = ShizukuBridge(this) { message ->
@@ -1759,7 +1771,9 @@ class AgentActivity : Activity() {
             practiceEnabled = NeuralPracticeScheduler(this).enabled,
             autoStudyEnabled = at.heinz.deviceai.learning.ContinuumDualCoreAutoStudy.isEnabled(this),
             curiosityPending = neuralCuriosityRadar.peek() != null,
-            responseTimesMs = responseTimesMs.toList()
+            responseTimesMs = responseTimesMs.toList(),
+            brainMode = if (claudeBrain?.claudeSelected == true)
+                at.heinz.deviceai.ui.ClaudeBrainPresentation.DASHBOARD_MODE else null
         )
         onLearningIo({ dashboardCollector.collect(live) to diagnostics.open() }) { result ->
             dashboardCollecting = false
@@ -1861,7 +1875,8 @@ class AgentActivity : Activity() {
         cameraSessionActive = readinessCameraEnabled && foregroundLearningActive,
         cameraTracking = readinessCameraEnabled && foregroundLearningActive &&
             readinessCamera?.state == CameraTrackingState.TRACKING,
-        localOnly = internetConsent.mode.name == "OFF"
+        // Not "local only" while the owner's cloud brain answers.
+        localOnly = internetConsent.mode.name == "OFF" && claudeBrain?.claudeSelected != true
     )
 
     private fun memoryActivitySnapshot(stats: at.heinz.deviceai.learning.ContinuumMemoryStats?) =
@@ -4600,6 +4615,7 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.VOICE_SETUP -> showReadinessGuide()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.FACE -> showOwnerFaceControls()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.MODEL -> showModelCenter()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.BRAIN -> showClaudeBrainSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.MEMORY -> showMemoryCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.LEARNING -> showLearningCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.PERSONAL -> showNexusPersonalization()
@@ -10131,6 +10147,12 @@ class AgentActivity : Activity() {
         val box = cockpit.panel(this, "DEVICE AI · MODELLE", "KI-Sprachmodell",
             "Lokale Sprachmodelle sind optional. SWB1 und bestätigte Erinnerungen funktionieren ohne importiertes Modell. " +
                 "Externe Groq-Anfragen benötigen weiterhin jede separate Gerätefreigabe.")
+        box.addView(cockpit.section(this, "GEHIRN · LOKAL ODER CLAUDE (CLOUD)"), matchWidth(top = 10))
+        box.addView(cockpit.action(this, "GEHIRN WÄHLEN · " +
+            (claudeBrain?.marker() ?: at.heinz.deviceai.localmodel.ClaudeBrain.MARKER_LOCAL), primary = true) {
+            modelCenterDialog?.dismiss()
+            showClaudeBrainSettings()
+        }, matchWidth(top = 6))
         box.addView(cockpit.section(this, "LOKALER SPRACHKERN · TATSÄCHLICHER LADESTATUS"), matchWidth(top = 10))
         val card = textView("Modellstatus wird geprüft …", 13f, TEXT).apply {
             background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
@@ -10201,7 +10223,9 @@ class AgentActivity : Activity() {
             showModelImportDialog()
         }
         val action = cockpit.action(this, "2 · MODELL LADEN") {
-            if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
+            // The local load/unload lifecycle is not offered while Claude is the brain.
+            if (claudeBrain?.claudeSelected == true) { modelCenterDialog?.dismiss(); showClaudeBrainSettings() }
+            else if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
         }
         cockpit.grid(this, box, listOf(importButton, action), 2)
         // Fold7 heat (#642): the CPU backend no longer uses every core; the owner can trade speed for heat.
@@ -12692,6 +12716,7 @@ class AgentActivity : Activity() {
      * when Android reports critical heat.
      */
     private fun runModelEvaluation(setName: String, asset: String) {
+        if (refuseLocalMeasurementForClaude()) return
         val model = localRuntime.loadedModel
         if (model == null || localRuntime.state != LocalModelState.READY) {
             addAssistantMessage("MODELL-EVALUATION · Kein geladenes Modell im Zustand BEREIT. Bitte zuerst ein Modell laden.")
@@ -12825,6 +12850,7 @@ class AgentActivity : Activity() {
         // A new diagnostic revokes any prior same-session success until this
         // attempt completes. Nothing survives a restart or different model SHA.
         if (direct) resetM2NativeProof()
+        if (refuseLocalMeasurementForClaude()) return
         if (localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY) {
             addAssistantMessage("MODELLTEST · Kein geladenes Modell im Zustand BEREIT.")
             refreshLocalModelUi()
@@ -12925,6 +12951,11 @@ class AgentActivity : Activity() {
             botTask?.let { finishBotTask(it, "Auftrag zu groß · nicht gestartet") }
             return
         }
+        // Claude brain: a turn that must stay on the device is refused here, before anything is built or sent.
+        at.heinz.deviceai.localmodel.ClaudeTurnGate.refusal(claudeBrain, text, groundedRecall != null)?.let { problem ->
+            refuseClaudeTurn(problem, turnTrace, botTask, allowMaya)
+            return
+        }
         val imported = localRuntime.loadedModel
         if (imported == null || localRuntime.state != LocalModelState.READY) {
             turnTrace.event(TraceStage.MODEL_NOT_READY)
@@ -12959,7 +12990,8 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.cockpit.TransitionPattern.C_WARP)
         }
         addToolActivity(continuationStatus
-            ?: if (botTask == null) "Lokales Modell plant …" else "${botTask.profile.displayName} · Auftrag wird geplant")
+            ?: if (botTask == null) brainLabel("Lokales Modell plant …", "Claude (Cloud) plant …")
+                else "${botTask.profile.displayName} · Auftrag wird geplant")
         planCard.visibility = View.GONE
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
         val chiefTurn = at.heinz.deviceai.chief.TurnLifecycle("local-" + turnId)
@@ -13059,6 +13091,7 @@ class AgentActivity : Activity() {
                 // Optional read-only decision context; refresh after queued document writes.
                 // Never supply owner records to assigned bots or coding-only planning.
                 val decisionDigest = if (botTask == null && codingPlanning == null &&
+                    claudeBrain?.mayUseLocalOnlyMemory != false &&
                     sessionId == localSessionId && !documentIoExecutor.isShutdown) {
                     runCatching {
                         val episodes = documentIoExecutor
@@ -13203,7 +13236,7 @@ class AgentActivity : Activity() {
                     else 0
                 val fixedPromptBytes = (buildPromptBody("") + promptEnd).toByteArray(Charsets.UTF_8).size
                 val compiledContext = state?.let { runtimeState ->
-                    contextCompiler.compile(
+                    (if (claudeBrain?.mayUseLocalOnlyMemory == false) cloudContextCompiler else contextCompiler).compile(
                         AiContextInput(
                             seed = runtimeState.seed,
                             genome = runtimeState.archive.genome,
@@ -13221,6 +13254,7 @@ class AgentActivity : Activity() {
                     )
                 }
                 val advisory = if (!textOnlyTurn && botTask == null && observations.isEmpty() &&
+                    claudeBrain?.claudeSelected != true &&
                     reflection == null && submittedToolObservationCount == 0) {
                     ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })
                         .also { activeReasoningRouter = it }
@@ -13273,6 +13307,8 @@ class AgentActivity : Activity() {
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 val ownerDialogueOutput = botTask == null && codingPlanning == null
                 fun requireUsableGeneration(value: LocalGeneration) {
+                    if (at.heinz.deviceai.localmodel.ClaudeBrainFailure.discardsPartialOutput(value.failure))
+                        error(value.failure!!)
                     if (value.completion == LocalGenerationCompletion.COMPLETE) value.failure?.let { error(it) }
                     else check(ownerDialogueOutput && value.response.isNotBlank() &&
                         value.completion != LocalGenerationCompletion.CANCELLED) {
@@ -13356,11 +13392,12 @@ class AgentActivity : Activity() {
                 }
                 check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
                 if (ownerDialogueOutput && generation.proposal == null) AgentModelOutput.ownerDialogue(
-                    "litertlm:${imported.id}@${imported.version}", generation.response, generation.completion,
-                    generation.failure)
+                    at.heinz.deviceai.localmodel.ClaudeTurnGate.modelReference(imported), generation.response,
+                    generation.completion, generation.failure)
                 else {
                     check(generation.completion == LocalGenerationCompletion.COMPLETE) { "LOCAL_GENERATION_INCOMPLETE" }
-                    AgentModelOutput("litertlm:${imported.id}@${imported.version}", generation.response, generation.proposal)
+                    AgentModelOutput(at.heinz.deviceai.localmodel.ClaudeTurnGate.modelReference(imported),
+                        generation.response, generation.proposal)
                 }
             },
             // the same confirmed owner facts the chat answers from, plus the agent's own memories
@@ -13654,9 +13691,10 @@ class AgentActivity : Activity() {
                             "$scope Du kannst ihn bearbeiten oder als Datei speichern. " +
                                 "Welche Stelle möchtest du zuerst gemeinsam mit mir prüfen?", draftAllowsMaya)
                     }
-                    if(successful && groundedRecall!=null)addToolActivity(
+                    if(successful && groundedRecall!=null)addToolActivity(brainLabel(
                         "LOKALE MODELLSCHLUSSFOLGERUNG · ${imported.id}@${imported.version} · " +
-                            "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
+                            "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt",
+                        "CLAUDE-SCHLUSSFOLGERUNG (CLOUD) · ${imported.id} · nicht unabhängig bestätigt"))
                     if (ephemeralScreenRun.get()) lastLocalReply=null
                     if (keepOwnerSession) {
                         // A segment the joiner refused is no part of the answer: the anchor stays the part before it.
@@ -13673,7 +13711,8 @@ class AgentActivity : Activity() {
                     avatarAwaitingApproval = false
                     refreshHologramState()
                     addToolActivity(resumeContinuation?.status
-                        ?: if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
+                        ?: brainLabel("Lokal", "Claude (Cloud)") +
+                            if (run.blocker == null) " fertig · Experience evaluiert" else " beendet · ${run.blocker}")
                 }.onFailure { error ->
                     finishLocalConversationTurn(chiefTurn)
                     // Code64: a continuation segment failed – the part generated before it is shown first, then the cause.
@@ -13727,6 +13766,8 @@ class AgentActivity : Activity() {
                         at.heinz.deviceai.localmodel.LocalModelThermalGuard.ownerMessage(error.message)
                     else if (at.heinz.deviceai.localmodel.LocalModelTokenOverflow.isTokenOverflow(error.message))
                         at.heinz.deviceai.localmodel.LocalModelTokenOverflow.ownerMessage(error.message)
+                    else if (at.heinz.deviceai.localmodel.ClaudeBrainFailure.isClaude(error.message))
+                        at.heinz.deviceai.localmodel.ClaudeBrainFailure.ownerMessage(error.message)
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn,
                         keepCockpit = failedDraft != null && workWindowHost.isShowing, allowMaya = allowMaya)
@@ -13735,7 +13776,10 @@ class AgentActivity : Activity() {
                     if (keepFailedOwnerTurn && !tokenOverflow) recordUnansweredOwnerTurn()
                     addToolActivity(if (requiredContextOverflow)
                         "KONTEXT · vollständig erforderliche Belege passen nicht; keine Modellaktion"
+                    else if (at.heinz.deviceai.localmodel.ClaudeBrainFailure.isClaude(error.message))
+                        at.heinz.deviceai.localmodel.ClaudeBrainFailure.logLine(error.message)
                     else "ERROR · lokale Inferenz")
+                    offerLocalBrainAfterClaudeFailure(error.message)
                 }
                 // Code64: the lane stays busy between segments, so no other turn, chat switch or microphone round
                 // can start in between; STOP, a failure or a changed chat end the continuation through setBusy(false).
@@ -15057,6 +15101,8 @@ class AgentActivity : Activity() {
             else "● MODELL $label"
         localBadge.setTextColor(if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) GREEN else color)
         localBadge.background = rounded(PANEL, 14, BORDER)
+        // Permanent marker while Claude is the brain; the rest of this method describes the local model only.
+        if (showClaudeBrainMarker()) return
         val card = modelCardText ?: return
         selectedModelStatusText?.text =
             ContinuumSelectedModels.gemmaStatus(models, loaded) +
@@ -15208,6 +15254,92 @@ class AgentActivity : Activity() {
             if (ready) Color.rgb(38, 99, 70) else Color.rgb(100, 75, 30)
         )
         if (!ready) shizukuBadge.contentDescription = message
+    }
+
+    // ------------------------------------------------------------------
+    // Optional Claude brain (owner setting „Gehirn“). Logic lives in localmodel/Claude*.kt and
+    // ui/ClaudeBrainDialog.kt; these are the activity's hooks only.
+    // ------------------------------------------------------------------
+    private fun showClaudeBrainSettings() {
+        val brain = claudeBrain ?: return
+        at.heinz.deviceai.ui.ClaudeBrainDialog.show(this, brain, object : at.heinz.deviceai.ui.ClaudeBrainDialog.Host {
+            override fun busy() = busy
+            override fun log(line: String) = addToolActivity(line)
+            override fun brainChanged(previous: at.heinz.deviceai.localmodel.BrainKind) = onClaudeBrainChanged(previous)
+        })
+    }
+
+    /** After a switch or a settings change: markers follow at once; back on LOCAL the saved Gemma is loaded again. */
+    private fun onClaudeBrainChanged(previous: at.heinz.deviceai.localmodel.BrainKind) {
+        val brain = claudeBrain ?: return
+        botConversation.invalidate()
+        localRuntimeError = null
+        if (previous == at.heinz.deviceai.localmodel.BrainKind.CLAUDE && !brain.claudeSelected)
+            restoreOriginalGemmaOnOpen()
+        refreshLocalModelUi()
+        pushCockpitState()
+    }
+
+    /** Activity-log wording: an answer from the cloud brain is never called local. */
+    private fun brainLabel(local: String, cloud: String): String =
+        if (claudeBrain?.claudeSelected == true) cloud else local
+
+    /** True while Claude is the brain: the status badge and the model card say so instead of naming a local model. */
+    private fun showClaudeBrainMarker(): Boolean {
+        val brain = claudeBrain?.takeIf { it.claudeSelected } ?: run {
+            localBadge.contentDescription = "Lokaler Startkern: Status und Sprachmodell erklären"
+            return false
+        }
+        localBadge.text = at.heinz.deviceai.ui.ClaudeBrainPresentation.BADGE
+        localBadge.setTextColor(AMBER)
+        localBadge.contentDescription = "Gehirn: Claude in der Cloud, Modell ${brain.settings.model.id}. Antworten verlassen das Gerät."
+        modelCardText?.text = at.heinz.deviceai.ui.ClaudeBrainPresentation.status(brain.settings, brain.hasKey()) +
+            "\n\nDas lokale Sprachmodell wird nicht verwendet, solange Claude gewählt ist."
+        localActionButton?.let { button ->
+            button.text = "GEHIRN WECHSELN"
+            button.isEnabled = !busy
+        }
+        return true
+    }
+
+    /** A turn that must stay on the device was not sent; say so and keep it out of the conversation context. */
+    private fun refuseClaudeTurn(problem: String, turnTrace: CognitiveTurnTrace, botTask: ChiefBotTaskTicket?,
+                                 allowMaya: Boolean) {
+        turnTrace.event(TraceStage.MODEL_NOT_READY)
+        publishCognitiveTrace(turnTrace, TraceOutcome.BLOCKED)
+        setBusy(false)
+        addAssistantMessage(at.heinz.deviceai.localmodel.ClaudeBrainFailure.ownerMessage(problem),
+            preserveLocalContext = true, keepCockpit = false, allowMaya = allowMaya)
+        addToolActivity(at.heinz.deviceai.localmodel.ClaudeBrainFailure.logLine(problem))
+        botTask?.let { finishBotTask(it, "Nicht an Claude gesendet · Auftrag nicht gestartet") }
+        offerLocalBrainAfterClaudeFailure(problem)
+        refreshLocalModelUi()
+    }
+
+    /** Claude could not answer: offer the switch back. Nothing is switched without the owner's tap. */
+    private fun offerLocalBrainAfterClaudeFailure(problem: String?) {
+        val brain = claudeBrain ?: return
+        if (isFinishing || isDestroyed || !brain.claudeSelected ||
+            !at.heinz.deviceai.localmodel.ClaudeBrainFailure.offersSwitchBack(problem)) return
+        AlertDialog.Builder(this)
+            .setTitle("Claude kann gerade nicht antworten")
+            .setMessage(at.heinz.deviceai.localmodel.ClaudeBrainFailure.ownerMessage(problem))
+            .setNegativeButton("BEI CLAUDE BLEIBEN", null)
+            .setNeutralButton("GEHIRN-EINSTELLUNGEN") { _, _ -> showClaudeBrainSettings() }
+            .setPositiveButton("AUF LOKAL UMSCHALTEN") { _, _ ->
+                if (!busy && brain.selectBrain(at.heinz.deviceai.localmodel.BrainKind.LOCAL)) {
+                    addToolActivity("GEHIRN · " + at.heinz.deviceai.localmodel.ClaudeBrain.MARKER_LOCAL)
+                    onClaudeBrainChanged(at.heinz.deviceai.localmodel.BrainKind.CLAUDE)
+                }
+            }.show()
+    }
+
+    /** Local measurements of the on-device model never run against the cloud brain. */
+    private fun refuseLocalMeasurementForClaude(): Boolean {
+        if (claudeBrain?.claudeSelected != true) return false
+        addAssistantMessage(at.heinz.deviceai.localmodel.ClaudeBrainFailure.ownerMessage(
+            at.heinz.deviceai.localmodel.ClaudeBrainFailure.LOCAL_ONLY_FEATURE))
+        return true
     }
 
     private fun updateCloudBadge() {

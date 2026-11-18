@@ -16,11 +16,6 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
-import java.security.SecureRandom
-import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
-import javax.crypto.spec.GCMParameterSpec
 
 /** Request shaping, local-only gates, the price table, the monthly limit, the secret store and the brain switch. */
 class ClaudeBrainPolicyTest {
@@ -270,35 +265,6 @@ class ClaudeBrainPolicyTest {
 
     // ---- secret store -----------------------------------------------------------------------------------------
 
-    /** Real AES-GCM with an in-memory key: the store's logic on the JVM. The Android Keystore itself is not here. */
-    private class SoftwareCipher : SecretCipher {
-        private var key: SecretKey? = KeyGenerator.getInstance("AES").apply { init(256) }.generateKey()
-        var destroyed = 0
-        override fun encrypt(plain: ByteArray): SecretCipher.Sealed {
-            val iv = ByteArray(12).also(SecureRandom()::nextBytes)
-            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-            cipher.init(Cipher.ENCRYPT_MODE, checkNotNull(key), GCMParameterSpec(128, iv))
-            return SecretCipher.Sealed(iv, cipher.doFinal(plain))
-        }
-        override fun decrypt(sealed: SecretCipher.Sealed): ByteArray {
-            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-            cipher.init(Cipher.DECRYPT_MODE, checkNotNull(key), GCMParameterSpec(128, sealed.iv))
-            return cipher.doFinal(sealed.data)
-        }
-        override fun destroyKey() { destroyed++; key = null }
-    }
-
-    private class MapStorage : SecretStorage {
-        val values = linkedMapOf<String, String>()
-        var failWrites = false
-        override fun read(name: String): String? = values[name]
-        override fun write(values: Map<String, String?>): Boolean {
-            if (failWrites) return false
-            values.forEach { (key, value) -> if (value == null) this.values.remove(key) else this.values[key] = value }
-            return true
-        }
-    }
-
     private val testKey = FakeAnthropicEndpoint.TEST_KEY
 
     @Test fun secretIsStoredEncryptedReadBackAndNeverPartOfAnyDescription() {
@@ -387,8 +353,7 @@ class ClaudeBrainPolicyTest {
         LocalModelCapabilities(true, false, false, false, true, 32_768, null, setOf(LocalModelBackend.CPU)))
 
     private fun brain(settings: ClaudeSettingsStore = InMemoryClaudeSettingsStore(), storage: MapStorage = MapStorage()) =
-        ClaudeBrain(settings, SecretStore("claude_api_key", SoftwareCipher(), storage, ClaudeApiKey::plausible),
-            ClaudeUsageLedger(InMemoryClaudeLedgerStorage()), now = { 1_700_000_000_000L })
+        testBrain(settings, storage)
 
     @Test fun everyCallGoesToTheSelectedBrainAndSwitchingBackNeedsNoRestart() {
         val local = RecordingRuntime("local", gemma)
