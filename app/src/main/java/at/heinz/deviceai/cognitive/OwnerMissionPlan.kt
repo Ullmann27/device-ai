@@ -91,9 +91,9 @@ internal class OwnerMissionPlan(val request: String, val steps: List<OwnerMissio
  * Fail closed. The sentence is cut at its connectors (comma, „und“, „und dann“, „danach“, „anschließend“, „dann“, a
  * sentence end) and every part must be an order one existing lane parser takes when it is said alone – in the
  * Activity's own routing order, so a part means in a mission what it means alone. One part that no lane knows, a
- * negation, a quote, a condition, an alternative, a sentence the send lane would read as message text, more than
- * [MAX_STEPS] steps or two equally fine ways to cut the sentence: no plan, and the sentence keeps today's route.
- * A sentence that is one order is not a plan either.
+ * reference without a step that produces what it means, a negation, a quote, a condition, an alternative, a sentence
+ * that one lane reads as a whole today (also the send or the computer lane, whose tail may be message text) or more
+ * than [MAX_STEPS] steps: no plan, and the sentence keeps today's route. A single order is not a plan either.
  */
 internal object OwnerMissionPlanner {
     const val MAX_STEPS = 6

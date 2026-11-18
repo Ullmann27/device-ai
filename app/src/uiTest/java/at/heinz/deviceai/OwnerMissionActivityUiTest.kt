@@ -107,7 +107,14 @@ class OwnerMissionActivityUiTest {
         private val pending = AtomicReference<LocalInferenceCallback?>()
         val running: Boolean get() = pending.get() != null
 
-        private fun answer(prompt: String) = if (prompt.contains("Seite 3 des Dokuments")) SUMMARY_3 else SUMMARY_2
+        /** What the model answers to the plan instruction of a free-form goal. */
+        @Volatile var plan = "KEIN PLAN"
+
+        private fun answer(prompt: String) = when {
+            prompt.startsWith("Zerlege den Auftrag") -> plan
+            prompt.contains("Seite 3 des Dokuments") -> SUMMARY_3
+            else -> SUMMARY_2
+        }
         private fun finish(callback: LocalInferenceCallback, prompt: String) {
             state = LocalModelState.READY
             callback.onEvent(LocalInferenceEvent.TextDelta(answer(prompt)))
@@ -343,6 +350,41 @@ class OwnerMissionActivityUiTest {
         assertEquals(listOf<Any?>(word2), names())
         assertTrue(started().any { it.action == Intent.ACTION_SEND })
         assertTrue(said(activity, "Fertig – ")!!.startsWith("Fertig – alle drei Schritte sind erledigt. 1. „Argon4.pdf“ geöffnet (Ordner Download)."))
+    }
+
+    @Test fun aModelProposedPlanIsOnlySpokenAndNothingRunsBeforeTheOwnersYes() = withActivity { activity, _ ->
+        val goal = "Mach mir aus Seite 2 vom PDF Argon4 eine Word-Datei, die dann per Mail an $anna geht"
+        val proposal = "1. Öffne das PDF Argon4\n2. Fass Seite 2 zusammen und speichere es als Word\n3. Schick das per Mail an $anna"
+        // The owner's switch is off by default: the goal takes its ordinary turn and no plan is asked of the model.
+        runtime.plan = proposal
+        type(activity, goal)
+        until(activity, "the ordinary turn ended") { free(activity) }
+        assertTrue(runtime.prompts.none { it.startsWith("Zerlege den Auftrag") })
+        assertEquals(0, files.scans)
+
+        activity.getSharedPreferences("continuum-task-chain", Context.MODE_PRIVATE).edit().putBoolean("model_plans", true).commit()
+        // A plan with a recipient the owner did not say is dropped; nothing is proposed and nothing runs.
+        runtime.plan = proposal.replace(anna, "mallory@example.net")
+        type(activity, goal)
+        until(activity, "the plan was checked") { runtime.prompts.count { it.startsWith("Zerlege den Auftrag") } == 1 && free(activity) }
+        assertFalse(chat(activity).any { it.contains("Soll ich das so machen?") })
+        assertEquals(0, files.scans)
+
+        // A valid plan is only spoken …
+        runtime.plan = proposal
+        type(activity, goal)
+        until(activity, "the plan was proposed") { chat(activity).any { it.endsWith("Soll ich das so machen?") } && free(activity) }
+        assertEquals("Ich würde das in drei Schritten machen: 1. Das PDF „Argon4“ suchen und öffnen. 2. Seite 2 zusammenfassen und als " +
+            "Word-Datei speichern. 3. Per E-Mail an $anna schicken. Soll ich das so machen?", chat(activity).last { it.endsWith("Soll ich das so machen?") })
+        assertEquals(0, files.scans)
+        assertTrue(names().isEmpty())
+        assertTrue(started().none { it.action == Intent.ACTION_SEND })
+        assertFalse(activity.ownerMission.active)
+        // … and runs after the yes, every step through its own lane.
+        type(activity, "Ja")
+        until(activity, "the mission reported its end") { said(activity, "Fertig – ") != null && free(activity) }
+        assertEquals(listOf<Any?>(word2), names())
+        assertEquals(listOf(anna), started().single { it.action == Intent.ACTION_SEND }.getStringArrayExtra(Intent.EXTRA_EMAIL)!!.toList())
     }
 
     private companion object {

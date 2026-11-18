@@ -462,6 +462,23 @@ class OwnerMissionFlowTest {
         assertEquals(NEWS_PDF, h.toolsHost.mails.single().attachment!!.displayName)
     }
 
+    @Test fun aLongReasonAndALongSummaryStayTheLanesOwnAndTheReportStaysShort() {
+        // A long summary is the desk's message; the mission's report names the file, not the text.
+        val long = (1..40).joinToString(" ") { "Satz $it der Zusammenfassung beschreibt den Abruf der Erinnerungen genauer." }
+        val h = argon()
+        h.deskHost.model = { OwnerWorkGeneration(long, null, true) }
+        h.owner(argonOrder)
+        assertTrue(h.said.any { it.startsWith("DESK:Seite 2 von „Argon4.pdf“") && it.length > 2_000 })
+        assertEquals(argonDone, h.lastSaid)
+        // A long failure reason is said in full by its lane once; the report keeps its first sentence.
+        val failing = news()
+        failing.toolsHost.saveProblem = "Der Datenträger meldet einen Fehler. " + "Weitere Einzelheiten folgen hier. ".repeat(60)
+        failing.owner(newsOrder)
+        assertTrue(failing.lastSaid, failing.lastSaid.contains("Nicht geklappt: 2. Als PDF speichern – Das Speichern hat nicht geklappt: " +
+            "Der Datenträger meldet einen Fehler. Nicht begonnen: 3. Per E-Mail an $ANNA schicken."))
+        assertTrue(failing.lastSaid.length < 600)
+    }
+
     @Test fun withInternetOffTheNewsMissionEndsAtTheFirstStepWithoutAnyRequest() {
         val h = news(InternetAccessMode.OFF)
         assertEquals("MISSION", h.owner(newsOrder))

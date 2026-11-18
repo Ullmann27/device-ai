@@ -13165,6 +13165,9 @@ class AgentActivity : Activity() {
         override fun activity(line: String) = addToolActivity(line)
         override fun idle(): Boolean = !busy && !botLookupPending && !isFinishing && !isDestroyed
         override fun later(action: () -> Unit) { mainHandler.post { if (!isFinishing && !isDestroyed) action() } }
+        override fun afterMillis(millis: Long, action: () -> Unit) {
+            mainHandler.postDelayed({ if (!isFinishing && !isDestroyed) action() }, millis)
+        }
         override fun stage(event: at.heinz.deviceai.cockpit.CockpitAnimationEvent) = cockpitBus.emit(event)
 
         override fun desk(order: String): Boolean = ownerDocumentDesk.handle(order)

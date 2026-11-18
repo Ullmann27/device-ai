@@ -40,6 +40,8 @@ internal interface OwnerMissionHost {
     fun idle(): Boolean
     /** Runs [action] on the UI thread after everything that is being handled right now has finished. */
     fun later(action: () -> Unit)
+    /** Runs [action] on the UI thread after about [millis]; a host without a clock runs it like [later]. */
+    fun afterMillis(millis: Long, action: () -> Unit) = later(action)
     /** The mission's own steps for the work window. */
     fun stage(event: CockpitAnimationEvent) {}
 
@@ -250,7 +252,17 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         val m = open()?.takeIf { it.phase == Phase.RUNNING } ?: return
         m.stopping = true
         host.activity("AUFTRAGSFOLGE · Stopp des Besitzers · die restlichen Schritte entfallen")
-        host.later { if (mission === m && m.stopping && host.idle()) end(m, End.STOPPED) }
+        stopWhenFree(m)
+    }
+
+    /**
+     * A stopped step normally ends with its lane's own report, and that ends the mission. A job that was dropped
+     * without a word leaves the lane free: then the mission reports by itself – now, or a moment later.
+     */
+    private fun stopWhenFree(m: Mission) {
+        val check = { if (mission === m && m.stopping && host.idle()) end(m, End.STOPPED) }
+        host.later(check)
+        host.afterMillis(STOP_CHECK_MILLIS, check)
     }
 
     /**
@@ -488,7 +500,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             // The running job is asked to end; its lane says what was not done, then the mission reports.
             m.stopping = true
             host.cancelRunning()
-            host.later { if (mission === m && m.stopping && host.idle()) end(m, End.STOPPED) }
+            stopWhenFree(m)
         } else end(m, End.STOPPED)
         return true
     }
@@ -617,8 +629,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 val running = m.slots[busy].step
                 val wait = running is OwnerMissionStep.Mail || running is OwnerMissionStep.Export || running is OwnerMissionStep.OpenSaved
                 host.reply(request, "Verstanden – $what. " + (if (busy == index) "Schritt $number läuft gerade" else
-                    "Gerade läuft Schritt ${busy + 1}") + (if (wait) "; sobald er fertig ist" else "; ich breche ihn ab und") +
-                    " mache " + (if (busy == index) "ihn" else "Schritt $number") + " mit der Änderung neu.")
+                    "Gerade läuft Schritt ${busy + 1}") + (if (wait) "; sobald er fertig ist, mache ich " else "; ich breche ihn ab und mache ") +
+                    (if (busy == index) "ihn" else "Schritt $number") + " mit der Änderung neu.")
                 if (!wait) host.cancelRunning()
             }
             else -> {
@@ -797,6 +809,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         /** Lane orders of one mission, repeated and resumed ones included. */
         const val MAX_RUNS = 2 * OwnerMissionPlanner.MAX_STEPS
         private const val MAX_REASON = 220
+        private const val STOP_CHECK_MILLIS = 4_000L
         const val OPEN_SAVED_ORDER = "Öffne die gespeicherte Datei"
     }
 }
