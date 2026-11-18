@@ -12972,7 +12972,9 @@ class AgentActivity : Activity() {
         }
 
         override fun cancelJob() {
-            if (ownerDeskCancellation == null) return
+            val token = ownerDeskCancellation ?: return
+            // The job's own mark first, so it ends whatever branch the general STOP below takes.
+            token.cancel()
             cancelLocalRequest(preserveContinuousMode = continuousConversation.active, announceDraftStop = false)
         }
 
