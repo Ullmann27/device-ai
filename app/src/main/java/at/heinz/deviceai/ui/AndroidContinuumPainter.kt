@@ -30,7 +30,7 @@ class AndroidContinuumPainter(private val assets: AssetManager) : ContinuumPaint
         if (right <= left || bottom <= top || alpha <= 0f) return true
         if (!assetPath.startsWith("jarvis-reference/") || ".." in assetPath) return false
         val bitmap = if (rasters.containsKey(assetPath)) rasters[assetPath] else {
-            if (rasters.size >= 8) return false
+            if (rasters.size >= MAX_RASTERS) return false
             runCatching { assets.open(assetPath).use { BitmapFactory.decodeStream(it) } }.getOrNull()
                 .also { rasters[assetPath] = it }
         } ?: return false

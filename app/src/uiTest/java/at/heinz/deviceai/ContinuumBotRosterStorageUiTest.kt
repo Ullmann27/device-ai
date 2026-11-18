@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import at.heinz.deviceai.chief.ChiefBotProfileStore
+import at.heinz.deviceai.chief.RealStorageWriteFailure
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -25,7 +26,6 @@ import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.attribute.PosixFilePermissions
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicReference
@@ -180,19 +180,35 @@ class ContinuumBotRosterStorageUiTest {
     }
 
     @Test fun realReadonlyDirectoryFailureDoesNotShowSeededProfilesOrReplaceRegistry() {
+        // Every host: the kernel path limit refuses the store's temp file for any uid, so the
+        // roster's own seeding write really fails behind an intact three-profile registry.
+        val seeded = File(parent, "seeded")
+        ChiefBotProfileStore(seeded).seedDefaults(3)
+        val limited = RealStorageWriteFailure.moveToTempNameLimit(seeded, parent)
+        val limitedStore = ChiefBotProfileStore(limited)
+        val limitedRegistry = File(limited, "bot-profiles-v1.bin")
+        val limitedBytes = limitedRegistry.readBytes()
+        open(limitedStore)
+        assertDiagnostic("BOT_STORE_IO_ERROR")
+        assertTrue(text().contains("Bestehende Daten werden nicht automatisch ersetzt."))
+        assertArrayEquals(limitedBytes, limitedRegistry.readBytes())
+        assertEquals(3, limitedStore.page().items.size)
+        roster!!.close()
+
+        // Mode bits deny the same write only where the kernel applies them to this process.
         val dir = File(parent, "bots")
         val store = ChiefBotProfileStore(dir)
         store.seedDefaults(3)
         val registry = File(dir, "bot-profiles-v1.bin")
         val bytes = registry.readBytes()
-        val mode = Files.getPosixFilePermissions(dir.toPath())
-        try {
-            Files.setPosixFilePermissions(dir.toPath(), PosixFilePermissions.fromString("r-x------"))
-            open(store)
-            assertDiagnostic("BOT_STORE_ACCESS_DENIED")
-            assertArrayEquals(bytes, registry.readBytes())
-            assertEquals(3, store.page().items.size)
-        } finally { Files.setPosixFilePermissions(dir.toPath(), mode) }
+        RealStorageWriteFailure.makeReadOnly(dir).use { readOnly ->
+            if (readOnly.enforcedForThisProcess) {
+                open(store)
+                assertDiagnostic("BOT_STORE_ACCESS_DENIED")
+                assertArrayEquals(bytes, registry.readBytes())
+                assertEquals(3, store.page().items.size)
+            }
+        }
     }
 
     @Test fun unsafeBotRootLinkShowsSafetyDiagnosticWithoutOutsideWrite() {

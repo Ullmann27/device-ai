@@ -109,6 +109,8 @@ class Airbus2100CockpitOrchestrator(
             // Other bus subscribers retain the event for the original memory/orb visualisation.
             is CockpitAnimationEvent.DocumentLearned -> Unit
             is CockpitAnimationEvent.RecallHits -> {
+                // MEMORY_TURN recall is unscoped: it must not replace an opened document world.
+                if (document.hasDocument) return
                 promote(Phase.TOOL_ACTIVE, scene(JarvisActionScenes.Kind.MEMORY))
                 onLiveData(HollywoodFuiLiveData.evidence(event.count, event.topScore, "Recall"))
             }

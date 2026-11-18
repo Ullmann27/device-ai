@@ -246,10 +246,10 @@ internal object OwnerDocumentDialogue {
             "einer Seite oder den gelesenen Text einer Seite ($read)."
     }
 
-    private fun pagesText(count: Int) = if (count == 1) "1 Seite" else "$count Seiten"
+    internal fun pagesText(count: Int) = if (count == 1) "1 Seite" else "$count Seiten"
 
     /** Why page [page] has no usable text, or null when it has. */
-    private fun unreadable(reference: Reference, page: Int): String? {
+    internal fun unreadable(reference: Reference, page: Int): String? {
         val quoted = "„${reference.name}“"
         return when {
             page > reference.pageCount -> "$quoted hat nur ${pagesText(reference.pageCount)} – eine Seite $page gibt es nicht."
@@ -344,7 +344,7 @@ internal object OwnerDocumentDialogue {
     }
 
     /** Control characters out, block delimiters neutralized: document text cannot close or forge the data frame. */
-    private fun clean(value: String, limit: Int, keepLines: Boolean = false): String = value.take(limit)
+    internal fun clean(value: String, limit: Int, keepLines: Boolean = false): String = value.take(limit)
         .map { when { it == '\n' && keepLines -> '\n'; it == '[' -> '('; it == ']' -> ')'; it.isISOControl() -> ' '; else -> it } }
         .joinToString("")
         .replace(Regex("(?i)ENDE\\s+DOKUMENTDATEN"), "Ende Dokument-Daten")

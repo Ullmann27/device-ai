@@ -85,7 +85,6 @@ class ContinuumReferenceCockpitUiTest {
     private val tileTargets = listOf(
         "chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system"
     )
-    private val railTargets = listOf("home") + tileTargets
     private val appearanceChoices = listOf(
         "Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau", "Kompakt · Kugel"
     )
@@ -333,8 +332,13 @@ class ContinuumReferenceCockpitUiTest {
     private fun assertHomeHasNoFixedRail(home: ContinuumHomeView) {
         if (!home.jarvisShellStage) return
         val shell = requireNotNull(home.jarvisShell.currentShell())
-        if (shell.workstation) assertEquals("Workstation rail follows the 600dp cutoff",
-            shell.width >= 600f, shell[JarvisShellLayout.Slot.NAV_RAIL] != null)
+        if (home.isConversationPresence) {
+            // During a conversation the Home is only the mounted presence strip above the real chat, which owns
+            // the one visible rail (asserted in assertRailGeometry): the strip itself carries no navigation slot.
+            for (slot in listOf(JarvisShellLayout.Slot.NAV_RAIL, JarvisShellLayout.Slot.BOTTOM_NAV, JarvisShellLayout.Slot.TILES))
+                assertNull("Conversation presence exposes no $slot: ${shell.boxes.keys}", shell[slot])
+        } else if (shell.workstation) assertEquals("Workstation rail follows the 600dp cutoff: width=${shell.width}, " +
+            "slots=${shell.boxes.keys}", shell.width >= 600f, shell[JarvisShellLayout.Slot.NAV_RAIL] != null)
         else assertNull("Compact shell retains full hero width", shell[JarvisShellLayout.Slot.NAV_RAIL])
         assertTrue("No invisible rail duplicates remain", descendants(home).none {
             it.tag?.toString()?.startsWith("jarvis-rail:") == true
@@ -502,7 +506,8 @@ class ContinuumReferenceCockpitUiTest {
         advanceFrames(64L)
         measure(root, root.width, root.height)
         val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
-        assertTrue("Systemstatus title must be visible", labels.any { it.equals("Systemstatus", true) })
+        assertTrue("Systemstatus title must be visible: surface=${work.tag}, labels=$labels",
+            labels.any { it.equals("Systemstatus", true) })
         assertFalse("Actual status replaces loading", labels.any { it.contains("Status wird gelesen") })
         assertTrue("Real build version must be present",
             labels.any { it == "Device AI ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})" })
@@ -520,6 +525,22 @@ class ContinuumReferenceCockpitUiTest {
         assertTrue("Close dismisses the cockpit work area",
             descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
         currentHome(activity).setForegroundActive(false)
+    }
+
+    /**
+     * „Gerät“ opens the Android-Computer centre. Systemstatus stays one real action away: the centre's own
+     * „SYSTEMSTATUS UND FREIGABEN“ replaces it with the status surface, which is then verified and closed.
+     */
+    private fun followComputerCentreToSystemStatusAndClose(activity: AgentActivity) {
+        val label = "SYSTEMSTATUS UND FREIGABEN"
+        val surface = assertCentreSurface(activity, "Android-Computer")
+        if (surface.tag == "jarvis-work-window") {
+            val action = descendants(surface).filterIsInstance<TextView>()
+                .filter { it.isShown && it.isClickable && it.text.toString() == label }
+            assertEquals("Exactly one real '$label' action in Android-Computer", 1, action.size)
+            tap(activity.window.decorView, action.single())
+        } else tapDialogItem(assertDialog("Android-Computer"), label)
+        closeSystemWorkWindow(activity)
     }
 
     private fun tapSystemWorkItem(activity: AgentActivity, label: String) {
@@ -785,14 +806,14 @@ class ContinuumReferenceCockpitUiTest {
                 "agents" to "Mein KI-Team",
                 "agents-panel" to "Mein KI-Team",
                 "tasks" to "Entwicklungsaufgaben",
-                "device" to "Systemstatus"
+                "device" to "Android-Computer"
             )) {
                 val panel = if (target == "agents-panel")
                     descendants(home).singleOrNull { it.tag == "jarvis-panel:ROW_AGENTS" } else null
                 if (panel != null) tap(activity.window.decorView, panel)
                 else tapDestination(activity, if (target == "agents-panel") "agents" else target)
                 when (title) {
-                    "Systemstatus" -> closeSystemWorkWindow(activity)
+                    "Android-Computer" -> followComputerCentreToSystemStatusAndClose(activity)
                     "Gedächtniszentrum" -> closeCentreThroughDecor(activity, title)
                     else -> closeDialogThroughDecor(assertDialog(title))
                 }
@@ -801,8 +822,11 @@ class ContinuumReferenceCockpitUiTest {
             // Preserve the old development/draft requirement independently of today's Tasks backlog destination.
             closeDialogThroughDecor(openCodingDraftThroughDecor(activity))
             tap(root, shellControl(activity, "jarvis-header:settings"))
+            // Since Code62 the header opens the settings hub; the personalisation dialog is its own entry there.
+            tapDialogItem(assertDialog("Alle Einstellungen"), "Personalisierung\nPersönliche Fakten und Lernzugänge")
             closeDialogThroughDecor(assertDialog("Deine KI personalisieren"))
-            tap(root, destination(activity, "learning"))
+            // Learning is listed in More: its real route is the More menu, as for every other More entry.
+            tapDestination(activity, "learning")
             val learning = assertCentreSurface(activity, "Lernzentrum")
             val details = descendants(learning).filterIsInstance<TextView>()
                 .single { it.isClickable && it.text.toString() == "LERNKERN · DETAILS" }
@@ -917,6 +941,8 @@ class ContinuumReferenceCockpitUiTest {
         val originalHeight = avatar.height
         val originalContentHeight = home.height
         val originalConversationTop = shellControl(activity, "jarvis-input:conversation").top
+        val originalDialogTop = shellControl(activity, "jarvis-dialog:conversation").top
+        val originalStatusTop = tagged(home, "jarvis-panel:STATUS").top
         assertTrue(avatar.isNativeHeadEnabled())
         assertFalse(avatar.isNative3dEnabled())
         chooseAppearance(activity, "Kugel · Original")
@@ -930,10 +956,19 @@ class ContinuumReferenceCockpitUiTest {
         chooseAppearance(activity, "Kompakt · Kugel")
         assertFalse(avatar.isNativeHeadEnabled())
         assertTrue("Compact frees vertical room for conversation", avatar.height < originalHeight)
-        assertTrue("Compact moves the actual conversation input upward while the three Cinema top cards stay anchored",
-            shellControl(activity, "jarvis-input:conversation").top < originalConversationTop)
-        // Cinema fills the available viewport even after compacting; shorter hero and
-        // higher live input are the actual user-visible improvement, without overflow.
+        val conversationInput = shellControl(activity, "jarvis-input:conversation")
+        if (conversationInput === field(activity, "input")) {
+            // The workstation has one editor, pinned below the scrolling stage: compacting cannot move it.
+            // The room it frees shows as the status band rising directly under the shorter scene.
+            assertEquals("The pinned editor keeps its place", originalConversationTop, conversationInput.top)
+            assertTrue("Compact brings the content below the scene upward",
+                tagged(currentHome(activity), "jarvis-panel:STATUS").top < originalStatusTop)
+        } else assertTrue("Compact moves the actual conversation input upward",
+            conversationInput.top < originalConversationTop)
+        assertEquals("The Cinema cards above the scene stay anchored", originalDialogTop,
+            shellControl(activity, "jarvis-dialog:conversation").top)
+        // Cinema fills the available viewport even after compacting; the shorter hero and the content
+        // rising beneath it are the actual user-visible improvement, without overflow.
         assertTrue("Compact must never increase scrollable content",
             currentHome(activity).height <= originalContentHeight)
         assertEquals("The renderer follows the same smaller slot", avatar.height, currentHome(activity).avatarSlotRect.height())
@@ -1104,7 +1139,8 @@ class ContinuumReferenceCockpitUiTest {
                     assertEquals(ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
                     returnHomeThroughDecor(activity)
                 }
-                "device", "system" -> closeSystemWorkWindow(activity)
+                "device" -> followComputerCentreToSystemStatusAndClose(activity)
+                "system" -> closeSystemWorkWindow(activity)
                 "memory", "logic", "web", "learning" -> closeCentreThroughDecor(activity, mapOf(
                     "memory" to "Gedächtniszentrum", "logic" to "Logik und Planung",
                     "web" to "Web und Quellen", "learning" to "Lernzentrum"
@@ -1123,18 +1159,26 @@ class ContinuumReferenceCockpitUiTest {
         val draft = "Kurzes Fenster: ungesendeter Entwurf bleibt erhalten."
         (field(activity, "input") as EditText).setText(draft)
         measure(activity.window.decorView, 840, 320)
-        val rail = field(activity, "railView") as View
+        // Since the workstation layout the conversation owns the native history rail: new chat, the stored
+        // conversations, projects and the start page. The former eleven-destination menu rail is gone; those
+        // destinations were all reached through the deck above.
+        val rail = field(activity, "conversationRail") as View
         assertTrue("Conversation owns its separate visible rail", rail.isShown)
-        val frame = rail.parent as ViewGroup
-        val controls = (0 until frame.childCount).map { frame.getChildAt(it) }.filter { it.isClickable }
-        assertRailGeometry(controls, railTargets)
-        val system = controls.single { it.tag == "system" }
-        tap(activity.window.decorView, system)
-        tapDialogItem(assertDialog("Systemstatus"), "MEHR · ARBEITSBEREICHE")
-        tapDialogItem(assertDialog("Mehr"), "Entwicklerwerkzeuge")
-        closeDialogThroughDecor(assertDialog("Entwicklungszentrum"))
-        assertEquals(ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
-        returnHomeThroughDecor(activity)
+        val list = descendants(rail).single { it.tag == "continuum-conversation-rail" } as ViewGroup
+        val controls = (0 until list.childCount).map { list.getChildAt(it) }.filter { it.isClickable }
+        val stored = (field(activity, "conversationIndex") as List<*>).map {
+            "continuum-chat:" + (it as at.heinz.deviceai.ui.ContinuumChatHistory.Entry).id
+        }
+        assertRailGeometry(controls,
+            listOf("continuum-new-chat") + stored + listOf("continuum-chat-projects", "continuum-chat-home"))
+        tap(activity.window.decorView, controls.single { it.tag == "continuum-chat-projects" })
+        closeDialogThroughDecor(assertDialog("Entwicklungsaufgaben"))
+        assertEquals("A rail destination keeps the conversation open", ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
+        assertFalse("A rail destination must not submit a task", field(activity, "busy") as Boolean)
+        // The rail's own start-page control leads back to the cockpit.
+        tap(activity.window.decorView, descendants(rail).single { it.tag == "continuum-chat-home" })
+        measure(activity.window.decorView, 840, 320)
+        assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         assertEquals(draft, (field(activity, "input") as EditText).text.toString())
         assertSame(avatar, field(activity, "hologramView"))
         assertSame(currentHome(activity), avatar.parent)

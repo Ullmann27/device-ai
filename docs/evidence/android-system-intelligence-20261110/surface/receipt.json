@@ -1,0 +1,25 @@
+{
+  "source_commit": "2863f010b044319871d820ba1ffd8f4fa4d61b4a",
+  "junit_exit": 0,
+  "sources": {
+    "/workspace/scratch/cc2ab95db73d/device-ai-system/app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt": "f4cfdb0d52a3dfd5672067c97fccce24b044a0ea9ced8ac3a56c5a7ccf81db39",
+    "/workspace/scratch/cc2ab95db73d/device-ai-system/app/src/main/java/at/heinz/deviceai/ui/SystemDiagnosisHologramView.kt": "4f9f6ac703adcb9e399f9fabbeb9e399588189d8e37a3c542a18566bf7591590",
+    "/workspace/scratch/cc2ab95db73d/system-surface-check/SystemSurfaceCaptureTest.kt": "8ad423a50b095b9dd0965506c53317c3cdd1304d9fba474299c260a57122a5c3"
+  },
+  "dependency_appjar_sha256": "be9175e80abc0898c2edc2d3a2c94a90daee4f4c391761550ac532b6c7740283",
+  "images": {
+    "system-measured-fixture.png": "62f5359682250fb0e75cec4fca90c71812a6cf703a24d9f7b33fc4e04119c6b6",
+    "system-unknown.png": "d22f50238177317a37dd5ed57faf76c488b28900ebb5f94e1f796d3826864f53"
+  },
+  "renderer": "Actual SystemDiagnosisHologramView source compiled directly; Robolectric API28 native Canvas; cached unrelated app classes",
+  "scope": "isolated data surface, no Activity or Cinema integration",
+  "inputs": "explicit synthetic fixture; no device data",
+  "Fold7": "NOT_RUN",
+  "GPU": "NOT_RUN",
+  "Filament": "NOT_RUN",
+  "source_blobs": {
+    "app/src/main/java/at/heinz/deviceai/systemintelligence/SystemDiagnosis.kt": "f633c251f6d5523e9f35df64a8b87cba590d8ac7",
+    "app/src/main/java/at/heinz/deviceai/ui/SystemDiagnosisHologramView.kt": "a299e56ae95e7194b3f3dc8afc9eb49e682bdeb8"
+  },
+  "published_tree_equivalent": "1223dc82ab6c8482d3f5be44bf2863cd2425ee8e"
+}

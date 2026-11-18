@@ -11,7 +11,12 @@ enum class TraceStage {
     MODEL_NOT_READY, GATED_FALLBACK, LOCAL_MODEL_SYNTHESIS, TOOL_PROPOSED, TOOL_EXECUTED,
     CORRECTION_SCOPE, CLARIFICATION, TEST_DOUBLE_CALL,
     TASK_REF, TASK_RECEIVED, PLAN_CREATED, APPROVAL_REQUESTED, TOOL_EXECUTION_STARTED,
-    OUTCOME_CHECK_STARTED, OUTCOME_CONFIRMED, OUTCOME_UNCONFIRMED
+    OUTCOME_CHECK_STARTED, OUTCOME_CONFIRMED, OUTCOME_UNCONFIRMED,
+    // SHADOW claim audit of a local-model answer against this turn's retrieval (LocalModelClaimAudit); metadata only.
+    // Appended at the end: the codec stores names, so older persisted traces keep decoding unchanged.
+    CLAIM_AUDIT_SUPPORTED, CLAIM_AUDIT_UNSUPPORTED, CLAIM_AUDIT_SKIPPED,
+    // the retrieval itself states two incompatible values for the same thing (M12); still metadata only
+    CLAIM_AUDIT_CONFLICT
 }
 enum class TraceOutcome { MEMORY_EXACT, MODEL_INTERPRETATION, ACTION_VERIFIED, BLOCKED, FAILED, CANCELLED, CLARIFY, WORKING_CONTEXT }
 enum class TraceFeedback { NONE, CONFIRMED, CORRECTED, REVOKED }

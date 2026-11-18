@@ -40,7 +40,7 @@ class Java2DContinuumPainter(private val g: Graphics2D, private val assetRoot: F
         if (right <= left || bottom <= top || alpha <= 0f) return true
         if (!assetPath.startsWith("jarvis-reference/") || ".." in assetPath) return false
         val image = if (rasters.containsKey(assetPath)) rasters[assetPath] else {
-            if (rasters.size >= 8) return false
+            if (rasters.size >= MAX_RASTERS) return false
             runCatching { javax.imageio.ImageIO.read(File(assetRoot, assetPath)) }.getOrNull().also { rasters[assetPath] = it }
         } ?: return false
         val oldComposite = g.composite

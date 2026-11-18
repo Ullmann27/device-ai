@@ -64,7 +64,11 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
         val sizeChanged = wp != cachedW || hp != cachedH
         if (shader != null && Build.VERSION.SDK_INT >= 33) {
             bg.setPosition(0, 0, wp, hp)
-            shader.drawBackground(bg.beginRecording(), wp.toFloat(), hp.toFloat(), density, timeMs)
+            val rc = bg.beginRecording()
+            shader.drawBackground(rc, wp.toFloat(), hp.toFloat(), density, timeMs)
+            rc.save(); rc.scale(density, density); painter.begin(rc)
+            ContinuumBlenderAssets.drawBackground(painter, w, h)
+            painter.begin(canvas); rc.restore()
             bg.endRecording()
         } else if (sizeChanged) {
             bg.setPosition(0, 0, wp, hp)

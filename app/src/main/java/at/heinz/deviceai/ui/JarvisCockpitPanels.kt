@@ -26,10 +26,26 @@ object JarvisCockpitPanels {
         val cap = p.capHeight(Type.heading)
         val y = b.top + 10f + cap
         icon(b.left + 16f, y - cap / 2f)
-        p.drawText(fit(p, text, Type.heading, b.width - 52f), b.left + 30f, y, Type.heading, Fill.Solid(Colors.text))
-        ContinuumIcons.draw(p, Icon.CHEVRON_RIGHT, b.right - 12f, y - cap / 2f, 9f, Fill.Solid(Colors.cyan), 1.4f)
+        // Design-Lead 17.11.: narrow phone windows (S26/Xiaomi, ~130 dp) drop the chevron and shrink
+        // before ellipsis, so "Dokument" / "Verarbeitung" stay whole instead of "Dokume…".
+        val narrow = b.width < NARROW_TITLE_DP
+        val room = b.width - if (narrow) 36f else 52f
+        val variants = if (narrow) listOfNotNull(text, NARROW_TITLES[text]) else listOf(text)
+        val (shown, style) = JarvisCockpitGridContent.firstFitting(p, variants, Type.heading, room,
+            minScale = if (narrow) .64f else .74f)
+        p.drawText(shown, b.left + 30f, y, style, Fill.Solid(Colors.text))
+        if (!narrow) ContinuumIcons.draw(p, Icon.CHEVRON_RIGHT, b.right - 12f, y - cap / 2f, 9f, Fill.Solid(Colors.cyan), 1.4f)
         return y
     }
+
+    /** Whole short titles for the narrowest columns (Fold7 cover), used only when the long one cannot fit. */
+    val NARROW_TITLES = mapOf("Verarbeitung" to "Ablauf", "Aktueller Ablauf" to "Ablauf")
+
+    /** Below this window width the title row has no room for the chevron. */
+    const val NARROW_TITLE_DP = 170f
+
+    /** "Zusammenfassung – Entwurf" cannot be read in a phone column; the short form keeps the meaning. */
+    fun draftTitle(width: Float) = if (width < NARROW_TITLE_DP) "Entwurf" else "Zusammenfassung – Entwurf"
 
     private fun rowsTop(p: ContinuumPainter, titleBaseline: Float) = titleBaseline + 8f
 
@@ -67,6 +83,11 @@ object JarvisCockpitPanels {
     fun taskRows(s: ContinuumDashboardState): List<Row> = ContinuumCockpitPresentation.processRows(s.cockpit)
 
     fun drawTaskFlow(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
+        if (s.cockpit.steps.isEmpty() && s.cockpit.openWork.isEmpty()) {
+            val y0 = title(p, b, "Aktueller Ablauf") { x, y -> ContinuumIcons.draw(p, Icon.REFRESH, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f) }
+            JarvisVacantHologram.draw(p, b, rowsTop(p, y0), JarvisVacantHologram.Kind.PROCESS)
+            return
+        }
         drawStepList(p, b, "Aktueller Ablauf", taskRows(s))
     }
 
@@ -79,7 +100,12 @@ object JarvisCockpitPanels {
     }
 
     fun drawWorkProcess(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
-        if (isProcessVacant(s)) JarvisVisualDepth.recedeVacantPanel(p, b)
+        if (isProcessVacant(s)) {
+            JarvisVisualDepth.recedeVacantPanel(p, b)
+            val y0 = title(p, b, "Verarbeitung") { x, y -> ContinuumIcons.draw(p, Icon.REFRESH, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f) }
+            JarvisVacantHologram.draw(p, b, rowsTop(p, y0), JarvisVacantHologram.Kind.PROCESS)
+            return
+        }
         drawStepList(p, b, "Verarbeitung", workProcessRows(s))
     }
 
@@ -117,7 +143,7 @@ object JarvisCockpitPanels {
         var y = rowsTop(p, y0)
         if (vis == null) {
             JarvisVisualDepth.recedeVacantPanel(p, b)
-            p.drawText(NONE, b.left + 16f, y + p.capHeight(st), st, Fill.Solid(Colors.textSecondary))
+            JarvisVacantHologram.draw(p, b, y, JarvisVacantHologram.Kind.DOCUMENT)
             return
         }
         val nameStyle = Type.heading
@@ -157,7 +183,7 @@ object JarvisCockpitPanels {
             return
         }
         val y0 = if (workstation) CockpitWorkstationChrome.panelHeader(p, b, "Entwurf", Icon.CODE)
-        else title(p, b, "Zusammenfassung – Entwurf") { x, y ->
+        else title(p, b, draftTitle(b.width)) { x, y ->
             ContinuumIcons.draw(p, Icon.CODE, x, y, 13f, Fill.Solid(Colors.cyanSoft), 1.3f)
         }
         val vis = DocumentBlueprintView.visible(s.document)
@@ -165,7 +191,7 @@ object JarvisCockpitPanels {
         var y = rowsTop(p, y0)
         if (vis == null || !vis.showsDraft) {
             JarvisVisualDepth.recedeVacantPanel(p, b)
-            p.drawText(NONE, b.left + 16f, y + p.capHeight(st), st, Fill.Solid(Colors.textSecondary))
+            JarvisVacantHologram.draw(p, b, y, JarvisVacantHologram.Kind.DRAFT)
             return
         }
         val lines = listOf(

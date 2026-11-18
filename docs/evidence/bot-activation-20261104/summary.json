@@ -1,0 +1,43 @@
+{
+  "schema": "continuum-bot-activation-reviewed-results",
+  "version": 1,
+  "reviewedAt": "2026-11-04T18:45:42.011486+00:00",
+  "testedCheckout": "000d413bd5745694d5ff6a8e9e6046af5b591db3",
+  "productionSource": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "applicationTree": "eaeda092326c11676543385eedd2ac86e0e4f194",
+  "continuumControlTree": "51bb34cfa24c327b6889104564dce7a12dadf6a8",
+  "groups": [
+    {
+      "name": "assignment-and-report",
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "service-and-loop",
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "avatar-pure-jvm",
+      "passed": 57,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "totalPassed": 105,
+  "productionChanges": false,
+  "newLiveModelCalls": 0,
+  "realOwnerTasksSubmitted": 0,
+  "liveContinuumWorkersStarted": 0,
+  "threeAssistantHelpersActuallyStarted": true,
+  "androidDeviceVerified": false,
+  "sourceAndOutputCrosscheck": "PASS",
+  "taskPlanExecutionBinding": "All prepared domain tasks target e101e393 exactly. A different later checkout requires a fresh source-bound review; do not silently reuse or rebind grants.",
+  "limits": [
+    "Contract fixtures and pure JVM tests do not establish live owner-service activation or general model quality.",
+    "No Android end-to-end interruption callback, GPU/Filament pixels, camera or Fold7 test was run.",
+    "No S01 replay or resource-barrier reconciliation was performed."
+  ]
+}

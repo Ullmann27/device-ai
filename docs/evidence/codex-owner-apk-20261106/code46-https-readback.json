@@ -1,0 +1,17 @@
+{
+  "status": "HTTPS_BYTES_AND_METADATA_VERIFIED_SIGNATURE_PENDING",
+  "verified_at_utc": "2026-11-06T19:01:44.595Z",
+  "source_commit": "577f0931e7937ffcac02dc855a540f093facdb3b",
+  "versionCode": 46,
+  "versionName": "0.3.45",
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "manifest_url": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/latest.json",
+  "manifest_sha256": "6b238e9ae2b326ae9d24ff9c10d9a49c71c62c2cfc997fc8612716cb69dd694c",
+  "apk_url": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759.apk",
+  "apk_bytes": 101876503,
+  "apk_sha256": "0930614bbcc8e53d75283dfe47a53a73e758430a99af3698f31b88446babc759",
+  "original_certificate_expected": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+  "apk_local_path": "/workspace/scratch/249ad98ddc15/final-code46-download/Continuum-Lokal-0.3.45-Code46.apk",
+  "build_info_matches": true,
+  "redirects_followed": false
+}

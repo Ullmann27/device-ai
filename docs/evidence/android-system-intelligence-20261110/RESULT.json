@@ -1,0 +1,62 @@
+{
+  "status": "HOST_VERIFIED_PROTOTYPE_DEVICE_NOT_RUN",
+  "source_local": "b00ff926dc5f0fe66a8fd75ecd5d110053cb1e7c",
+  "source_published": "02120f079ce1bdb1d3311f16f88d1a51bb7fbe09",
+  "tree": "5d054bfd1214d4175424454b01d109ce6fe743e1",
+  "application_main_tree": "7129fd7fc165f40c07b58a768b93348cab5851fb",
+  "cinema_parent": "c972f56ccc4caa2f1807bcaf1d4665347c66c629",
+  "verification": {
+    "full_main_and_unit_source_compilation": "PASS",
+    "targeted_android_jvm": {
+      "pass": 155,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "node_wiring": {
+      "pass": 26,
+      "fail": 0
+    },
+    "python_fold7_lab": {
+      "pass": 60,
+      "device_io": "MOCKED",
+      "receipt": "../android-system-performance-20261110/charging-receipt.json"
+    },
+    "native_activity_frames": 9,
+    "isolated_surface_frames": 2,
+    "surface_native_test": 1,
+    "full_repository_test_suite": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "physical_fold7": "NOT_RUN",
+    "shizuku_device": "NOT_RUN",
+    "filament_gpu": "NOT_RUN",
+    "before_after_device": "NOT_RUN",
+    "measured_speedup": "NOT_ESTABLISHED",
+    "apk_sign_install_release": "NOT_RUN"
+  },
+  "negative_evidence": "red-native/capture-run.json",
+  "corrective_scope": "Initial 152-test run had four failures. Both failed render fixtures and both obsolete STOP assertions passed in final selected 155-test run. Eight initially passing unrelated navigation tests were not repeated. Agent subset tests overlap final suites; do not add them twice.",
+  "integration_wait": "Shared Gradle slot was respected. Final native runner used blocking acquisition of the same lock with bounded wait; product/test code unchanged during runs.",
+  "visual_review": [
+    "native-green/system-inner-diagnosis.png",
+    "native-green/system-cover-diagnosis.png",
+    "surface/system-measured-fixture.png",
+    "surface/system-unknown.png"
+  ],
+  "artifacts_sha256": {
+    "compile.json": "4443e86ddba919cd88dd202bf960492753b6b696750e7a58dedcdf6a75855b32",
+    "compile.txt": "68a68c47c45baa377ddb98ac79053713d9fad4434885166188a73dae243cbbbb",
+    "node.txt": "1d3bdc9378d9c13258fadff449205b00e7f5a31682d68c963d1b6e8bf8ba2306",
+    "native-green/capture-run.json": "336ae48e4aa6dcd47eb3978224b99dbda1be1af327c14458d94d5b53bceab355",
+    "native-green/run.txt": "cf3189e6cb4cd6659ab8d9fa92f4052806a63a0c4b59d4adb024990129daf310",
+    "native-green/stop-32ms.png": "7842605cfdc83d69810e2cd36db91fbfd9e87f3bfd1151c5f8056229c0f80f30",
+    "native-green/stop-352ms.png": "6fb556d500e691fbcdc6abd80a911acfe29fa415b28d6cacb425ee3160b9462c",
+    "native-green/stop-returned.png": "d9dec00eddc5a60dabff6a145d9a772bcee422c9ee58e74aa1f735f18738d0f3",
+    "native-green/system-cover-data-surface.png": "57b0ea27109b05e38cffa308b272d33afa5b146c3e7256c28b36fc4317f77e4a",
+    "native-green/system-cover-diagnosis.png": "df6362eeddbcf7594de01733c43437c75845545f4892e072f43194551b706b66",
+    "native-green/system-cover-unknown.png": "30e312661b1268bb2ea3522d4b5e9a24dd0e524cdc3956c5d8863b0eeeaf8c3f",
+    "native-green/system-inner-data-surface.png": "57b0ea27109b05e38cffa308b272d33afa5b146c3e7256c28b36fc4317f77e4a",
+    "native-green/system-inner-diagnosis.png": "ed560acc6e044ed6f227d2d610278428d6d86ca98803469f85b1a9f151a35e7e",
+    "native-green/system-inner-unknown.png": "e56ef08902ed7481db07bfc87dbc2bd2127b5d062a7102ddcba9bc4e68fa4ba4"
+  }
+}

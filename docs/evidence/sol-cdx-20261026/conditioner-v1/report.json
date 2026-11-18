@@ -1,0 +1,3326 @@
+{
+  "schema": "CDX1_CONDITIONER_REPAIR_RESULT_V1",
+  "encoderSha256": "4947838b85557eb35b4fe12c88b7eb6b1bf1393833b5f5bfd60bd0e797c50462",
+  "productionPromotion": false,
+  "ownerWeightsModified": false,
+  "arms": [
+    {
+      "name": "raw",
+      "stages": [
+        {
+          "devLoss": 5.549306373298494,
+          "sha256": "74656e10b84133aa5cd14fc5938aa3146d02580ce9eb605605fdca81a2d142e1",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "dev-wording-01",
+              "text": "��2�u^�j�2����\u0003��B�\u0012����uu9%�_��\nu&�#�R�f�9��He2uj&\u001fӻ���rs?x�?",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "dev-wording-02",
+              "text": "��2�u^�-�2\t�x��_��99�)H�-u`�#ja`}�u��x<���{!�{7�(7�� j�u\r\n\u0010���?E",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "dev-wording-03",
+              "text": "�<2��r\u00125!�`u9�-�}`{��?�K\u00197�+F�9\u0012H@��u��e��\u001b��x%\u0003\t:�`�u`uL����\u001b-u",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "dev-wording-04",
+              "text": "��2�u^�-�2\t�x�ӷ��9\u0012��p<-uZ9�:���-uz�`79��2E-{m`9�%_}�S��͟��Tu�",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "dev-wording-05",
+              "text": "��2�u^�j���\t��!\t9-�Hu`�u������i����9\u0012\u00129��9u9���\t\u0017&���s���-z���S/",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "dev-wording-06",
+              "text": "��2�u^��9�-2\\�^�����`uu�---�#�Ώ���\u0017#x�2�9(\u0003\u0002uL�j2\u0003���ꖹ-\u001b?r�/%",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "dev-wording-07",
+              "text": "��2�u^�j�2����\u0003���\u0010�G`H7���(�[��.�R9\u00069�`�u\u0017�u�2u���9\u0017< #�9u��\u0010",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "dev-wording-08",
+              "text": "��2�u^�-�2\t�x�ӷ��9\u0012��p<-uZ9�:��5S�����T9���Կ�u�7�qR�L��\b���\"�",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": false,
+              "id": "dev-changed-01",
+              "text": "��79u͞`(u�/`���������uS����u��%7�9 ����\b����\"9�`����`�7���\t�\u001b�9",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Graz.",
+              "ended": false,
+              "id": "dev-changed-02",
+              "text": "�<2��r\u00125!���\b�ڨ�9�\u000f�\u0003�\u0014ϻ\u000b���)_`������Z�T_�����HԒ\n\u0003��?��ue�x\u0001�",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Köchin.",
+              "ended": false,
+              "id": "dev-changed-03",
+              "text": "�<2��r\u00125!���\b� �K���7�b��jSim���Տ[�\u001b\u00035�\u0019�����`r%�Z7�!њ2h�'as�?",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Schal.",
+              "ended": false,
+              "id": "dev-changed-04",
+              "text": "�<2��r\u00125!-�y��\u0005�KR���`�Sij���@��\n��\b�u%ò9:/s��b��� ��S���Φ99�",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 64,
+              "expected": "Omar wohnt in Bern.",
+              "ended": false,
+              "id": "dev-new-01",
+              "text": "�<2��r\u00125!���\b� �79�H\t�`-u\u001du�s7I6z\u0018@bSi\b����F99\u0012�e\bNu�\u001e!�`u�{K���",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 64,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": false,
+              "id": "dev-new-02",
+              "text": "����u^�j/\t�e\u0010u��μ�j������`u�%H��\u001b-�eje������9�%H`7\u0010`��`�u�7u��\u001b",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 64,
+              "expected": "Bela ist Maler.",
+              "ended": false,
+              "id": "dev-new-03",
+              "text": "�<2��r\u00125!���\b�5� ��HS⒨\bҡ}��x�u��85���>Ճ�Ⓙ�Tu59�99ܿ`uSu���",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 64,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": false,
+              "id": "dev-new-04",
+              "text": "��79u��`u����99`�``9u����Sx�u(7���`9u��`�7u�7��7u`uu�����������7",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-01",
+              "text": "�<2��r\u00125!-�y��\u0005ϻu�a\u0006���S�u��h �a5u�uec�`\t`8�-r_m�Z��\t}�uj\n�Φ��",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-02",
+              "text": "�<2��r\u00125!-�y��\u0005�K:��2a`\t����\u001b�/��\n�\u00127�N\u000e��\u0002�\u0017��/_��R?ղ\n���iϻ�",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-03",
+              "text": "�<2��r\u00125!���\b�5� �ڶ��T\u000eH�&�&���u�N9 ݬ2_�\u0017#�`R��9F�9ܻ�#4�ue�7I",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-04",
+              "text": "��2�u^�-�2\t�x��\u0012��99�)H�-u`�#ja`}�u��-<��\u001c�%)���\nuj�\u001f�N`��x�u�",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 21.213476,
+          "trainLoss": 5.549392709124249,
+          "updates": 0,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "train-mira",
+              "text": "��2�u^�j�2����\u0003���\u0010�G`H7��S���u��99`:``9uՃ8�-\u001b�\u0012�k^�\t�\u001b\"9x��^9",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "train-lea",
+              "text": "�<2��r\u00125!���\b�5� �ڶ��T\u000eH���zj� �\u0019S���\nu�a%u)Ee�\t#)�H��\n�ܿ�dS9",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "train-nora",
+              "text": "�<2��r\u00125!�G�97�_}ɨ�ϻ0Nar�ɰ���}�k�a\t#�`�2\u0012���Ms_�ܿ�#�h�F�\n�_#",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "train-paul",
+              "text": "��2�u^�-�2\t�x�ӷ��9\u0012��p<-uZ9�:��9u�ue\b7u��-2�ω#N9��9u�u`�u�7�7H",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        },
+        {
+          "devLoss": 2.2658350709123964,
+          "sha256": "9662f026df9d65d05d91f3d49539111c469149f8c8e007af6a4a68e0065e8145",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 17,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 17,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 17,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 430.776517,
+          "trainLoss": 0.2520098680698633,
+          "updates": 6000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        },
+        {
+          "devLoss": 2.804244682483393,
+          "sha256": "339d8acc1065ce8620d776052ecc309e690c83221eef3d224c7b983767ff7be2",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 17,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 17,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 17,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 789.682476,
+          "trainLoss": 0.09295936022533326,
+          "updates": 30000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        },
+        {
+          "devLoss": 3.1673508596132085,
+          "sha256": "9873559eeada031b2ada29a032ce64550e97bce75d55b53f56b2e4f87099cfba",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 17,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 17,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 17,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 2626.229106,
+          "trainLoss": 0.08793743557900505,
+          "updates": 120000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unit_l2",
+      "stages": [
+        {
+          "devLoss": 5.5503292311574,
+          "sha256": "74656e10b84133aa5cd14fc5938aa3146d02580ce9eb605605fdca81a2d142e1",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "dev-wording-01",
+              "text": "��79��``7u�7`�7��7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "dev-wording-02",
+              "text": "��79���`7u�7`�7��7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "dev-wording-03",
+              "text": "�`79`�``�u�7`�7��7u�7`�7��7u�7`�7��7u�7`�7��7u�7`�7��7u�7`�7��7u",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "dev-wording-04",
+              "text": "��7`�u`�u��`�7u�7���`�u��7����`�u��`�7u�7���`�u��7����`�u��`�7u�",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "dev-wording-05",
+              "text": "�`7``�`�7����������7��7�7�79�`�`��`�7��7��7�`�u��`�7��7��7�`�u��",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "dev-wording-06",
+              "text": "��79���`7u�7`�7��7u�7��7u�7��7u�7��7u�7��7u�7��7u�7��7u�7��7u�7�",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "dev-wording-07",
+              "text": "�`79`�``�u�7`�7��7u�7`�7`�7��7u�7`�7`�7��7u�7`�7`�7��7u�7`�7`�7�",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "dev-wording-08",
+              "text": "�`7`��`�7u�7���`�u��7����`�u��`�7������u�7��7���`�7u�7���`�u��7�",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": false,
+              "id": "dev-changed-01",
+              "text": "�`79`�``�u�7u����u����7���79��``9u��`�7u�7��7u`�`�7`�7��7u�7`�7�",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Graz.",
+              "ended": false,
+              "id": "dev-changed-02",
+              "text": "��7����7�7�7��7�7�7�7��7�7�7�7��7�7�7�7��7�7�7�7��7�7�7�7��7�7�7",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Köchin.",
+              "ended": false,
+              "id": "dev-changed-03",
+              "text": "��7���7���7���7���7���7���7���7���7���7���7���7���7���7���7���7�",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Schal.",
+              "ended": false,
+              "id": "dev-changed-04",
+              "text": "S�SSSSS\"S\"u�\u0010�S�SSSSSSS\"u�����SSSSSSS\"u�����SSSSSSS\"u�����SSSSSS",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 64,
+              "expected": "Omar wohnt in Bern.",
+              "ended": false,
+              "id": "dev-new-01",
+              "text": "��7����7�7�79���`�uu�7��7���7���7���7���7���7���7���7���7���7���",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 64,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": false,
+              "id": "dev-new-02",
+              "text": "�`7``�`��`�`�7`�7��7u�7`�7`�u��u��`�`�7��7`�u�������7��7�7�`�7`�",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 64,
+              "expected": "Bela ist Maler.",
+              "ended": false,
+              "id": "dev-new-03",
+              "text": "�`7``�`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`�7`",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 64,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": false,
+              "id": "dev-new-04",
+              "text": "�`7``�`��`�`�7`�7`�u`�u��`�`�7`�7`�u`�u��`�`�7`�7`�u`�u��`�`�7`�",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-01",
+              "text": "��79��``7u�7`�7��7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-02",
+              "text": "\"�7\"�SS�SuS������\"����������������������������������������������",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-03",
+              "text": "��7�`�`����7u�7������u�7��7�7�7�7��7�7�7�7��7�7�7�7��7�7�7�7��7�",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-04",
+              "text": "��7�`�u��`�7��7�����7u�7������u�7��7�7�7�7����`�u�7��7�����7u�7�",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 5.811725,
+          "trainLoss": 5.550527229826878,
+          "updates": 0,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "train-mira",
+              "text": "�`79`�``�u��`�7��7����`�u�7������u�7��7������u�7��7������u�7��7�",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "train-lea",
+              "text": "��79���`7u�7`�7��7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u�7u",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "train-nora",
+              "text": "��77��7`7u`77��``7u�7`�7��7u�7`�7��7u�7`�7��7u�7`�7��7u�7`�7��7u",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "train-paul",
+              "text": "��7`�u`�u��`�7�����uu�������������������������������������������",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        },
+        {
+          "devLoss": 2.2297804891399093,
+          "sha256": "d956ed509fc76429e2dd9405ca96b2c002367e02ed51448c1acea14c27db4156",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 17,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 17,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 17,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 255.057034,
+          "trainLoss": 0.26298528783633607,
+          "updates": 6000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        },
+        {
+          "devLoss": 2.7685511779323635,
+          "sha256": "d5bb29dbeb091e1d1277aa9ac8e4f041de5775c3c3faf62c7dbd38afc1ec5a1e",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 17,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 17,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 17,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 676.428931,
+          "trainLoss": 0.09256676550714385,
+          "updates": 30000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        },
+        {
+          "devLoss": 3.075265914592557,
+          "sha256": "02577b7fd9f5235f92a46f2f6b924626a68bc8e04f659f0bf4f04185852e3df1",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 17,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 17,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 17,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 2508.49455,
+          "trainLoss": 0.08512354030490821,
+          "updates": 120000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 17,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 18,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "train_mean_centered_x32",
+      "stages": [
+        {
+          "devLoss": 5.549951439371945,
+          "sha256": "74656e10b84133aa5cd14fc5938aa3146d02580ce9eb605605fdca81a2d142e1",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "dev-wording-01",
+              "text": "q��\u001c\u001cHHj�jj#\u001c9����j\u001cj�H\u001c�\u001cj\u001cj\u001cH\u001cH\u001cj�j\u001cj\u001cj\u001cH\u001cH\u001cj�j\u001cj\u001cj\u001cH\u001cH\u001cj�j\u001cj\u001c",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "dev-wording-02",
+              "text": "q���vvv�vvvvvKlvv}vvvvv�vvvvvKlvv}vvvvv�vvvvvKlvv}vvvvv�vvvvvKlv",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "dev-wording-03",
+              "text": "�<M*#\u000e�lF\u001e���\u001e�\u000e�\u000e�l0lm�m�\u001e��<\u009f�*�'�\u000e�\u000e�)0�#\u000e�����#m�\u000e�l��0�#m�",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "dev-wording-04",
+              "text": "�-e��e�[C嗷�ee�ee&�\fe�pe��C�z�C�pS-CC������[CC����p��zC&�\f�z��-",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "dev-wording-05",
+              "text": "``7`9``9``9`��`�`�7���������������������������������������������",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "dev-wording-06",
+              "text": "v��vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "dev-wording-07",
+              "text": "�`�9�9``9`99`�``9�!7`99E9``9��9E``��9E``\u001b`9�`�``7�!9�`7�`9`99`�`",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "dev-wording-08",
+              "text": "\"`�\"u\"``�`�`��`��`�`��`�`��`��`�`��`�`��`��`�`��`�`��`��`�`��`�`",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": false,
+              "id": "dev-changed-01",
+              "text": "``9999````99`9``9`99`9``9`99`9``9`99`9``9`99`9``9`99`9``9`99`9``",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Graz.",
+              "ended": false,
+              "id": "dev-changed-02",
+              "text": "����������������������������������������������������������������",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Köchin.",
+              "ended": false,
+              "id": "dev-changed-03",
+              "text": "����������������������������������������������������������������",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Schal.",
+              "ended": false,
+              "id": "dev-changed-04",
+              "text": "����������������������������������������������������������������",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 64,
+              "expected": "Omar wohnt in Bern.",
+              "ended": false,
+              "id": "dev-new-01",
+              "text": "���������������ǔ������������ǔ������������ǔ������������ǔ�����",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 64,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": false,
+              "id": "dev-new-02",
+              "text": "�`7``�`��`�`��`�`��`�`��`�`��`�`��`�`��`�`��`�`��`�`��`�`��`�`��",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 64,
+              "expected": "Bela ist Maler.",
+              "ended": false,
+              "id": "dev-new-03",
+              "text": "��M�������������������������������������������������������������",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 64,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": false,
+              "id": "dev-new-04",
+              "text": "````````````````````````````````````````````````````````````````",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-01",
+              "text": "��MNm���Nr�'my'mm�mNm�Nm�cm'vmNmy��yyccm�m\u0019m�m�y�cm�mm��yv�cM�v�",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-02",
+              "text": "����������������������������������������������������������������",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-03",
+              "text": "����������������������������������������������������������������",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "UNBEKANNT",
+              "ended": false,
+              "id": "dev-negative-04",
+              "text": "��7�����7u�7������u�7��7�7�7�7��������7��7�7�7�7��������7��7�7�7",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 3.616762,
+          "trainLoss": 5.550094004394891,
+          "updates": 0,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 64,
+              "expected": "Mira wohnt in Graz.",
+              "ended": false,
+              "id": "train-mira",
+              "text": "~`7``�`9�`�``�u�7`����u�����������������������������������������",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 64,
+              "expected": "Lea wohnt in Linz.",
+              "ended": false,
+              "id": "train-lea",
+              "text": "���vv��r�����������vv�����������vv�����������vv�����������vv����",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 64,
+              "expected": "Nora ist Ärztin.",
+              "ended": false,
+              "id": "train-nora",
+              "text": "����������������������������������������������������������������",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 64,
+              "expected": "Paul trägt einen Helm.",
+              "ended": false,
+              "id": "train-paul",
+              "text": "\"`S`uS`�S`�`��`�S��u�S`�S�S`�S�\"\"\"\"u\"�`�`�����u�S�S�S\"u\"u��`�`��",
+              "stratum": "train",
+              "exactCorrect": false
+            }
+          ]
+        },
+        {
+          "devLoss": 2.442646725326585,
+          "sha256": "273fd73ba10522c8a97b0a2f2251d8df91f8ceae544af2033b3c5be4c5150bb7",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 19,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 8,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "La Ginz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 8,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "La Grnz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 18,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Lau wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 23,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 8,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "La Ginz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 19,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 23,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 23,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 18,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 23,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 23,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 8,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "La Ginz.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 19,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 220.54374,
+          "trainLoss": 0.1375599930708464,
+          "updates": 6000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 19,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 8,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "La Linz.",
+              "stratum": "train",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 23,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "train",
+              "exactCorrect": true
+            }
+          ]
+        },
+        {
+          "devLoss": 3.0778088693025762,
+          "sha256": "7097efec621f81fcd35ef58561489ecbbc9e72e9f6f9da54efde359c4be5cc76",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 19,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 18,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 18,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 19,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 19,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 18,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 19,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 19,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 23,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 18,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 23,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 23,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 18,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 19,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 720.562473,
+          "trainLoss": 0.008824893588919303,
+          "updates": 30000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 19,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 18,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 23,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "train",
+              "exactCorrect": true
+            }
+          ]
+        },
+        {
+          "devLoss": 3.525597770936268,
+          "sha256": "40035c3b4f67cddeed650ef39b4b559299783e54ad8aadd79e5693cc1babd05c",
+          "dev": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "In welcher Stadt wohnt Mira?",
+              "bytes": 19,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-01",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo lebt Lea?",
+              "bytes": 18,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-02",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Welchen Beruf hat Nora?",
+              "bytes": 18,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-03",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was hat Paul auf?",
+              "bytes": 19,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-04",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Miras Wohnort ist Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 19,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "dev-wording-05",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Lea lebt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 18,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "dev-wording-06",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Nora ist von Beruf Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 19,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "dev-wording-07",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul hat einen Helm auf.",
+              "question": "Was trägt Paul?",
+              "bytes": 19,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "dev-wording-08",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "known_fact_new_wording",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Bonn.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 23,
+              "expected": "Mira wohnt in Bonn.",
+              "ended": true,
+              "id": "dev-changed-01",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 17,
+              "expected": "Lea wohnt in Graz.",
+              "ended": true,
+              "id": "dev-changed-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet als Köchin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Köchin.",
+              "ended": true,
+              "id": "dev-changed-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Schal.",
+              "question": "Was trägt Paul?",
+              "bytes": 17,
+              "expected": "Paul trägt einen Schal.",
+              "ended": true,
+              "id": "dev-changed-04",
+              "text": "Nora ist Ärztin.",
+              "stratum": "known_entity_changed_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Omar wohnt in Bern.",
+              "question": "Wo wohnt Omar?",
+              "bytes": 18,
+              "expected": "Omar wohnt in Bern.",
+              "ended": true,
+              "id": "dev-new-01",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Jana wohnt in Ulm.",
+              "question": "Wo wohnt Jana?",
+              "bytes": 23,
+              "expected": "Jana wohnt in Ulm.",
+              "ended": true,
+              "id": "dev-new-02",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Bela arbeitet als Maler.",
+              "question": "Was arbeitet Bela?",
+              "bytes": 17,
+              "expected": "Bela ist Maler.",
+              "ended": true,
+              "id": "dev-new-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Ida trägt eine Mütze.",
+              "question": "Was trägt Ida?",
+              "bytes": 23,
+              "expected": "Ida trägt eine Mütze.",
+              "ended": true,
+              "id": "dev-new-04",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "unseen_entity_and_fact",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 18,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-01",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Wo wohnt Paul?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-02",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Nora arbeitet nicht als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-03",
+              "text": "Nora ist Ärztin.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            },
+            {
+              "evidence": "Lea wohnt nicht in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 19,
+              "expected": "UNBEKANNT",
+              "ended": true,
+              "id": "dev-negative-04",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "unsupported",
+              "exactCorrect": false
+            }
+          ],
+          "trainingMillis": 2436.929432,
+          "trainLoss": 0.0016195619115934813,
+          "updates": 120000,
+          "train": [
+            {
+              "evidence": "Mira wohnt in Graz.",
+              "question": "Wo wohnt Mira?",
+              "bytes": 19,
+              "expected": "Mira wohnt in Graz.",
+              "ended": true,
+              "id": "train-mira",
+              "text": "Mira wohnt in Graz.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Lea wohnt in Linz.",
+              "question": "Wo wohnt Lea?",
+              "bytes": 18,
+              "expected": "Lea wohnt in Linz.",
+              "ended": true,
+              "id": "train-lea",
+              "text": "Lea wohnt in Linz.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Nora arbeitet als Ärztin.",
+              "question": "Was arbeitet Nora?",
+              "bytes": 17,
+              "expected": "Nora ist Ärztin.",
+              "ended": true,
+              "id": "train-nora",
+              "text": "Nora ist Ärztin.",
+              "stratum": "train",
+              "exactCorrect": true
+            },
+            {
+              "evidence": "Paul trägt einen Helm.",
+              "question": "Was trägt Paul?",
+              "bytes": 23,
+              "expected": "Paul trägt einen Helm.",
+              "ended": true,
+              "id": "train-paul",
+              "text": "Paul trägt einen Helm.",
+              "stratum": "train",
+              "exactCorrect": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sourceCommit": "1f18e6bc008508225216f58fbaaa7c0f5d192f40",
+  "protocolSha256": "71ab75cd85528e7b32313b480d9396612014ca91b67b46c0f4d5aca0b47b7c90",
+  "status": "MEASURED_HOST_RESEARCH_ONLY"
+}

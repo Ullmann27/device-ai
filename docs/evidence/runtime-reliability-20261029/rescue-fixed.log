@@ -1,0 +1,34 @@
+✔ two process captures validate all 256 records without exposing contents or changing originals (270.492522ms)
+✔ safe counts distinguish canonical owner facts from source observations and other record types (225.204346ms)
+✔ a valid Kotlin ledger retains a leading UTF8 BOM in its record identity (230.314846ms)
+✔ preserving BOM data retains strict malformed UTF8 refusal (208.445799ms)
+✔ multiple devices require explicit selection (82.815875ms)
+✔ explicit selection stays bound to one listed local device (225.899842ms)
+✔ no device is failure (72.028037ms)
+✔ unauthorized device is rejected before run-as (76.530051ms)
+✔ offline device is rejected before run-as (69.729718ms)
+✔ nonlocal wireless device is rejected (68.23426ms)
+✔ owner-selected remote or injected serial never reaches adb (158.123279ms)
+✔ owner-connected loopback transport is supported without connect/pair (220.610534ms)
+✔ nondebuggable package fails without trying root or permissions (102.543646ms)
+✔ run-as must return an application uid (111.701652ms)
+✔ run-as must start inside the historical private package (137.688255ms)
+✔ symlink source is rejected before captures (168.461448ms)
+✔ failed partial capture is retained and never reported as rescued (189.736474ms)
+✔ changing source across captures fails and retains both copies (219.766989ms)
+✔ truncated identical captures fail schema validation (217.433238ms)
+✔ oversized subprocess output fails with bounded capture (198.729424ms)
+✔ identical corrupt checksums never give success (217.200206ms)
+✔ valid archive checksum cannot hide a forged record identity (213.794229ms)
+✔ count metadata cannot silently accept a different generation (250.564336ms)
+✔ output-parent symlink is rejected (42.369094ms)
+✔ shared home permissions are rejected before reading device data (45.785475ms)
+✔ unknown arguments are rejected before touching adb (37.67934ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4129.014547

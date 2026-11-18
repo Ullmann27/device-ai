@@ -1,0 +1,363 @@
+{
+  "sourceCommit": "1f18e6bc008508225216f58fbaaa7c0f5d192f40",
+  "protocolSha256": "71ab75cd85528e7b32313b480d9396612014ca91b67b46c0f4d5aca0b47b7c90",
+  "selectedByFrozenDevRule": {
+    "arm": "train_mean_centered_x32",
+    "updates": 30000,
+    "sha256": "7097efec621f81fcd35ef58561489ecbbc9e72e9f6f9da54efde359c4be5cc76",
+    "trainCorrect": 4,
+    "trainTotal": 4,
+    "devStrata": {
+      "known_fact_new_wording": {
+        "correct": 4,
+        "total": 8
+      },
+      "known_entity_changed_fact": {
+        "correct": 0,
+        "total": 4
+      },
+      "unseen_entity_and_fact": {
+        "correct": 0,
+        "total": 4
+      },
+      "unsupported": {
+        "correct": 0,
+        "total": 4
+      }
+    },
+    "trainLoss": 0.008824893588919303,
+    "devLoss": 3.0778088693025762
+  },
+  "allStages": [
+    {
+      "arm": "raw",
+      "updates": 0,
+      "sha256": "74656e10b84133aa5cd14fc5938aa3146d02580ce9eb605605fdca81a2d142e1",
+      "trainCorrect": 0,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 0,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 5.549392709124249,
+      "devLoss": 5.549306373298494
+    },
+    {
+      "arm": "raw",
+      "updates": 6000,
+      "sha256": "9662f026df9d65d05d91f3d49539111c469149f8c8e007af6a4a68e0065e8145",
+      "trainCorrect": 1,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 2,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.2520098680698633,
+      "devLoss": 2.2658350709123964
+    },
+    {
+      "arm": "raw",
+      "updates": 30000,
+      "sha256": "339d8acc1065ce8620d776052ecc309e690c83221eef3d224c7b983767ff7be2",
+      "trainCorrect": 1,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 2,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.09295936022533326,
+      "devLoss": 2.804244682483393
+    },
+    {
+      "arm": "raw",
+      "updates": 120000,
+      "sha256": "9873559eeada031b2ada29a032ce64550e97bce75d55b53f56b2e4f87099cfba",
+      "trainCorrect": 1,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 2,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.08793743557900505,
+      "devLoss": 3.1673508596132085
+    },
+    {
+      "arm": "unit_l2",
+      "updates": 0,
+      "sha256": "74656e10b84133aa5cd14fc5938aa3146d02580ce9eb605605fdca81a2d142e1",
+      "trainCorrect": 0,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 0,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 5.550527229826878,
+      "devLoss": 5.5503292311574
+    },
+    {
+      "arm": "unit_l2",
+      "updates": 6000,
+      "sha256": "d956ed509fc76429e2dd9405ca96b2c002367e02ed51448c1acea14c27db4156",
+      "trainCorrect": 1,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 2,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.26298528783633607,
+      "devLoss": 2.2297804891399093
+    },
+    {
+      "arm": "unit_l2",
+      "updates": 30000,
+      "sha256": "d5bb29dbeb091e1d1277aa9ac8e4f041de5775c3c3faf62c7dbd38afc1ec5a1e",
+      "trainCorrect": 1,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 2,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.09256676550714385,
+      "devLoss": 2.7685511779323635
+    },
+    {
+      "arm": "unit_l2",
+      "updates": 120000,
+      "sha256": "02577b7fd9f5235f92a46f2f6b924626a68bc8e04f659f0bf4f04185852e3df1",
+      "trainCorrect": 2,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 2,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.08512354030490821,
+      "devLoss": 3.075265914592557
+    },
+    {
+      "arm": "train_mean_centered_x32",
+      "updates": 0,
+      "sha256": "74656e10b84133aa5cd14fc5938aa3146d02580ce9eb605605fdca81a2d142e1",
+      "trainCorrect": 0,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 0,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 5.550094004394891,
+      "devLoss": 5.549951439371945
+    },
+    {
+      "arm": "train_mean_centered_x32",
+      "updates": 6000,
+      "sha256": "273fd73ba10522c8a97b0a2f2251d8df91f8ceae544af2033b3c5be4c5150bb7",
+      "trainCorrect": 3,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 2,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.1375599930708464,
+      "devLoss": 2.442646725326585
+    },
+    {
+      "arm": "train_mean_centered_x32",
+      "updates": 30000,
+      "sha256": "7097efec621f81fcd35ef58561489ecbbc9e72e9f6f9da54efde359c4be5cc76",
+      "trainCorrect": 4,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 4,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.008824893588919303,
+      "devLoss": 3.0778088693025762
+    },
+    {
+      "arm": "train_mean_centered_x32",
+      "updates": 120000,
+      "sha256": "40035c3b4f67cddeed650ef39b4b559299783e54ad8aadd79e5693cc1babd05c",
+      "trainCorrect": 4,
+      "trainTotal": 4,
+      "devStrata": {
+        "known_fact_new_wording": {
+          "correct": 4,
+          "total": 8
+        },
+        "known_entity_changed_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unseen_entity_and_fact": {
+          "correct": 0,
+          "total": 4
+        },
+        "unsupported": {
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "trainLoss": 0.0016195619115934813,
+      "devLoss": 3.525597770936268
+    }
+  ],
+  "independentTest": "NOT_RUN; parent will author after final candidate freeze",
+  "limits": [
+    "Known-fact wording gain only; all changed-fact/new-entity/unsupported DEV fail",
+    "No novel-fact generalization or production promotion"
+  ],
+  "archivedRaw6000ExactlyMatchesPreviousBinary": true
+}

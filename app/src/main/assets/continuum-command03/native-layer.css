@@ -325,3 +325,532 @@ body[data-design="command03"].native-light-paused .native-holo-field::after {ani
  body[data-design="command03"] .native-holo-field::after {animation:none;}
  body[data-design="command03"] .native-setting-shortcut {transition:none;}
 }
+
+/* Cinema63: one existing scene. */
+body[data-design="command03"].native-hologram {
+ --cinema-key:112,231,255;--cinema-fill:164,119,255;
+ --cinema-glass:rgba(9,23,38,.92);
+ background-color:#020710;
+}
+body[data-design="command03"][data-state="listening"] {--cinema-key:103,255,214;}
+body[data-design="command03"][data-state="working"] {--cinema-key:187,157,255;}
+body[data-design="command03"][data-state="speaking"] {--cinema-key:137,235,255;--cinema-fill:232,172,101;}
+body[data-design="command03"] .room-architecture {
+ opacity:.8;pointer-events:none;
+ background:linear-gradient(90deg,#01050b99,transparent 22% 78%,#01050b99),
+  radial-gradient(ellipse at 50% 32%,rgba(42,84,139,.2),transparent 68%);
+}
+body[data-design="command03"] .room-architecture::before {
+ content:"";position:absolute;inset:11% 9% 8%;border:1px solid #729eb529;
+ clip-path:polygon(12% 0,88% 0,100% 15%,100% 85%,88% 100%,12% 100%,0 85%,0 15%);
+ background:linear-gradient(90deg,#7cc9e318,transparent 13% 87%,#a58bff12),
+  linear-gradient(0deg,#5f8cb718,transparent 22% 90%,#81d4f324);
+}
+body[data-design="command03"] .masthead {position:relative;border-bottom-color:#8ce3ff30;}
+body[data-design="command03"] .masthead::after {
+ content:"";position:absolute;bottom:-1px;left:0;width:92px;height:2px;
+ background:#a1eeff;box-shadow:0 0 15px #69dcff88;pointer-events:none;
+}
+body[data-design="command03"] .brand b {color:#e1f5ff;letter-spacing:.2em;}
+body[data-design="command03"] .brand strong {color:#9ab9d4;}
+body[data-design="command03"] .plugin-toolbar .floating-dock {
+ border-radius:12px;padding:6px;border-color:#85cae63b;
+ background:linear-gradient(170deg,#172d40ef,#06111ff5 55%,#11172bf0);
+ box-shadow:inset 0 1px #e1f6ff24,0 10px 24px #0005;
+}
+body[data-design="command03"] .nav-button {border-radius:7px;}
+body[data-design="command03"] .native-setting-shortcut {border-radius:9px;}
+body[data-design="command03"] .presence-topline {border-bottom:0;min-height:40px;}
+body[data-design="command03"] .presence-topline .eyebrow {color:#9ac7d9;letter-spacing:.16em;}
+body[data-design="command03"] .presence-edition {color:#be9fea;font-size:10px;}
+body[data-design="command03"] .presence-system {
+ padding:15px 0 8px;isolation:isolate;
+ background:radial-gradient(ellipse at 50% 45%,rgba(var(--cinema-key),.055),transparent 62%);
+}
+body[data-design="command03"] .presence-system::before {
+ content:"";position:absolute;z-index:-1;inset:0;border-radius:20px;
+ border:1px solid #a6deff18;pointer-events:none;
+ background:linear-gradient(115deg,#bbe9ff06,transparent 24% 76%,#b497ff08);
+ box-shadow:inset 0 1px #beeaff10,0 20px 70px #0004;
+}
+body[data-design="command03"] .presence-core::before {
+ inset:20px 3% 80px;border-color:rgba(var(--cinema-key),.24);
+ background:linear-gradient(rgba(var(--cinema-key),.7),rgba(var(--cinema-key),.7)) left top/32px 2px no-repeat,
+  linear-gradient(rgba(var(--cinema-fill),.5),rgba(var(--cinema-fill),.5)) right bottom/32px 2px no-repeat;
+}
+body[data-design="command03"] .native-holo-field {
+ inset:3% -3% 15%;border-radius:50%;
+ background:radial-gradient(ellipse at 50% 32%,rgba(var(--cinema-key),.18),transparent 59%),
+  radial-gradient(ellipse at 66% 70%,rgba(var(--cinema-fill),.24),transparent 65%);
+}
+body[data-design="command03"] .native-holo-field::before {border-color:rgba(var(--cinema-key),.6);}
+body[data-design="command03"] .native-projection-base {
+ position:absolute;left:4%;right:4%;bottom:74px;height:94px;pointer-events:none;z-index:1;
+ opacity:var(--native-neon);isolation:isolate;
+ background:radial-gradient(ellipse at 50% 65%,rgba(var(--cinema-key),.22),transparent 66%);
+}
+body[data-design="command03"] .native-projection-base i {
+ position:absolute;inset:20% 0 10%;border-radius:50%;border:1px solid rgba(var(--cinema-key),.52);
+ background:linear-gradient(180deg,#132b3d44,#030b16b0);
+ box-shadow:0 4px 0 #030a15,0 5px 0 #628ca244,0 11px 18px #0009,inset 0 1px #d8faff44;
+}
+body[data-design="command03"] .native-projection-base i:nth-child(2) {
+ inset:27% 8% 22%;background:transparent;border-color:rgba(var(--cinema-fill),.65);
+ box-shadow:0 0 16px rgba(var(--cinema-fill),.17),inset 0 0 12px rgba(var(--cinema-key),.12);
+}
+body[data-design="command03"] .native-projection-base i:nth-child(3) {
+ inset:34% 18% 33%;background:radial-gradient(ellipse,rgba(var(--cinema-key),.22),transparent 70%);
+ box-shadow:0 0 24px rgba(var(--cinema-key),.15);
+}
+body[data-design="command03"] .native-projection-base span {
+ position:absolute;inset:-190% 12% 40%;z-index:-1;
+ clip-path:polygon(29% 0,71% 0,100% 100%,0 100%);
+ background:linear-gradient(0deg,rgba(var(--cinema-key),.12),transparent 85%);
+}
+body[data-design="command03"] .core-status {
+ top:8px;padding:8px 15px;border-radius:20px;color:rgb(var(--cinema-key));
+ border-color:rgba(var(--cinema-key),.36);background:#04121de8;
+ box-shadow:0 0 22px rgba(var(--cinema-key),calc(.13 * var(--native-neon))),inset 0 1px #d4faff16;
+}
+body[data-design="command03"] .core-status .status-dot {background:rgb(var(--cinema-key));}
+body[data-design="command03"] .center-stage .presence-orbit .avatar-caption {
+ bottom:19px;border:1px solid #a4ddff22;border-radius:20px;padding:8px 12px;
+ background:linear-gradient(120deg,#071323ed,#152540e8);color:#e4f8ff;
+}
+body[data-design="command03"] .presence-wing {gap:16px;}
+/* Replace preview instruments with facts. */
+body[data-design="command03"].native-hologram [data-presence-left]>:not(.native-instrument),
+body[data-design="command03"].native-hologram [data-presence-right]>:not(.native-instrument),
+body[data-design="command03"].native-hologram #instrument-content>.rail-card {display:none!important;}
+body[data-design="command03"] .native-instrument,
+body[data-design="command03"] .native-telemetry-panel {
+ position:relative;min-width:0;width:100%;border:1px solid #76d9fa55;border-radius:12px;
+ background:linear-gradient(132deg,#a6e7ff10,transparent 32%),
+  linear-gradient(170deg,#142b3de8,#071222f5 53%,#10172bf5);
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,0 5px 0 #020712aa,0 6px 0 #5e87a32b,
+  0 15px 30px #0006,0 0 24px rgba(var(--cinema-key),calc(.08 * var(--native-neon)));
+}
+body[data-design="command03"] .native-instrument {min-height:260px;padding:16px;display:flex;flex-direction:column;}
+body[data-design="command03"] .native-instrument::before {
+ content:"";position:absolute;top:-1px;left:18px;right:50%;height:2px;background:rgb(var(--cinema-key));
+ box-shadow:0 0 13px rgba(var(--cinema-key),.6);pointer-events:none;opacity:var(--native-neon);
+}
+body[data-design="command03"] .native-evidence {border-color:#c3a0ff60;}
+body[data-design="command03"] .native-evidence::before {background:rgb(var(--cinema-fill));}
+body[data-design="command03"] .native-instrument h3 {
+ font:600 11px/1.5 'Space Grotesk',sans-serif;color:#baddeb;letter-spacing:.14em;margin:0;
+}
+body[data-design="command03"] .native-instrument>strong {
+ font:500 clamp(17px,2cqi,22px)/1.3 'Space Grotesk',sans-serif;color:#ecfaff;
+ overflow-wrap:anywhere;margin:4px 0 7px;
+}
+body[data-design="command03"] .native-instrument>p {
+ font:400 12px/1.65 Manrope,sans-serif;color:#a9c8d8;margin:0;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-instrument-art {height:98px;display:flex;align-items:center;justify-content:center;}
+body[data-design="command03"] .native-instrument-art svg {
+ width:100%;max-width:210px;height:90px;stroke:rgba(var(--cinema-key),.62);stroke-width:.8;
+ background:radial-gradient(ellipse at center,rgba(var(--cinema-key),.09),transparent 65%);
+}
+body[data-design="command03"] .native-evidence .native-instrument-art svg {stroke:rgba(var(--cinema-fill),.65);}
+body[data-design="command03"] .native-activity[data-mode="working"] .native-instrument-art {
+ animation:native-status-breathe 2.8s ease-in-out infinite alternate;
+}
+@keyframes native-status-breathe {from{opacity:.5;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+body[data-design="command03"] .native-instrument-links {margin-top:auto;}
+body[data-design="command03"] .native-instrument-links .native-source-link {
+ font-size:12px;margin-top:7px;max-height:88px;overflow:auto;line-height:1.5;
+}
+body[data-design="command03"] .native-telemetry-panel {padding:15px;border-radius:10px;}
+body[data-design="command03"] .center-stage .presence-copy {
+ padding:20px 4px 18px;margin-top:12px;border-bottom-color:#82bed82b;
+}
+body[data-design="command03"] .center-stage .presence-copy h1 {
+ color:#e8f8ff;text-shadow:0 0 32px rgba(var(--cinema-key),.13);
+}
+body[data-design="command03"] .workspace-shell {
+ border-radius:14px;border-color:#a2dfff70;
+ background:linear-gradient(135deg,#9fdfff0d,transparent 36%),linear-gradient(160deg,#142b3cef,#060f1df7 55%,#11182def);
+ box-shadow:inset 0 1px #d8f6ff44,0 22px 64px #0009,0 0 28px rgba(var(--cinema-key),calc(.1 * var(--native-neon)));
+}
+body[data-design="command03"] .workspace-topline {background:linear-gradient(90deg,#153b4e5e,#131b3100);border-radius:14px 14px 0 0;}
+body[data-design="command03"] .workspace-backplate {border-radius:13px;}
+body[data-design="command03"] .native-chat-line {
+ border-radius:12px;border-color:#82cde82e;background:linear-gradient(125deg,#0b2538d9,#0e1a2fe6);
+}
+body[data-design="command03"] .native-chat-line.native-owner {background:linear-gradient(125deg,#23274ae6,#1b1b38e6);border-color:#ae96f64a;}
+body[data-design="command03"] .native-chat-line p {font-size:15px;line-height:1.65;}
+body[data-design="command03"] .command-bar {border-radius:16px;box-shadow:0 12px 35px #000a,inset 0 1px #dbfaff38;}
+body[data-design="command03"] .send-button {border-radius:10px;background:linear-gradient(145deg,#75dceb,#5470ce);color:#04111f;border-color:#c7f6ff;}
+body[data-design="command03"] .mic-button {border-radius:10px;}
+body[data-design="command03"] .mic-button[aria-pressed="true"] {border-color:#91ffe0;color:#91ffe0;box-shadow:0 0 16px #54ebbd30;}
+body[data-design="command03"] .chat-sidebar {border-radius:12px;}
+body[data-design="command03"] .native-instrument-summary {color:#e5faff;line-height:1.6;}
+body[data-design="command03"].native-light-paused .native-instrument-art,
+body[data-design="command03"][data-native-light-motion="off"] .native-instrument-art {animation-play-state:paused!important;}
+body[data-design="command03"].native-light-paused *,
+body[data-design="command03"].native-light-paused *::before,
+body[data-design="command03"].native-light-paused *::after {animation-play-state:paused!important;}
+@container presence-orbit (min-width:750px) {
+ body[data-design="command03"] .presence-wing-left {padding-left:10px;}
+ body[data-design="command03"] .presence-wing-right {padding-right:10px;}
+}
+@container presence-orbit (max-width:749px) {
+ body[data-design="command03"] .presence-system {padding:12px 0 16px;}
+ body[data-design="command03"] .presence-system::before {inset:0 0 auto;height:390px;}
+ body[data-design="command03"] .native-instrument {min-height:234px;padding:14px;}
+ body[data-design="command03"] .native-projection-base {left:12%;right:12%;bottom:65px;height:74px;}
+}
+@container presence-orbit (max-width:449px) {
+ body[data-design="command03"] .presence-system::before {height:365px;}
+ body[data-design="command03"] .native-instrument {min-height:224px;padding:12px;}
+ body[data-design="command03"] .native-instrument h3 {font-size:10px;letter-spacing:.1em;}
+ body[data-design="command03"] .native-instrument-art {height:82px;}
+ body[data-design="command03"] .presence-topline {gap:8px;flex-wrap:wrap;}
+ body[data-design="command03"] .presence-edition {font-size:9px;}
+}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-instrument-art {animation:none!important;}
+}
+body[data-design="command03"] .native-stop-button {
+ flex:none;min-width:44px;width:44px;height:44px;min-height:44px;border-radius:10px;
+ border:1px solid #ffc48e;color:#ffe0c1;background:linear-gradient(145deg,#713e30,#40243a);
+ font-size:20px;box-shadow:inset 0 1px #ffe1b433;
+}
+body[data-design="command03"] .native-stop-button[hidden],
+body[data-design="command03"] .send-button[hidden] {display:none!important;}
+body[data-design="command03"] .center-stage .presence .native-instrument>p {display:block;}
+body[data-design="command03"].native-hologram .timeline-strip {display:none;}
+
+/* Android presence: a question or a blocker is calm amber, never the work pulse. */
+body[data-design="command03"][data-presence="waiting-for-approval"] {--cinema-key:255,200,128;--cinema-fill:232,172,101;}
+body[data-design="command03"][data-presence="blocked"] {--cinema-key:255,160,124;--cinema-fill:208,124,132;}
+
+/* Real activity from Android inside the existing activity card. */
+body[data-design="command03"] .native-activity-steps {
+ list-style:none;margin:10px 0 0;padding:9px 0 0;display:grid;gap:6px;min-width:0;
+ border-top:1px solid #8ccfe626;container-type:inline-size;
+}
+body[data-design="command03"] .native-activity-steps li {
+ display:grid;grid-template-columns:7px minmax(0,1fr) auto;align-items:baseline;column-gap:8px;min-width:0;
+ font:400 12px/1.45 Manrope,sans-serif;color:#a9c8d8;
+}
+body[data-design="command03"] .native-activity-steps li::before {
+ content:"";width:7px;height:7px;border-radius:50%;align-self:center;box-sizing:border-box;
+ background:#6f93a8;
+}
+body[data-design="command03"] .native-step-label {min-width:0;overflow-wrap:anywhere;hyphens:auto;}
+body[data-design="command03"] .native-step-state {
+ font:600 10px/1.45 'Space Grotesk',sans-serif;letter-spacing:.08em;text-transform:uppercase;
+ white-space:nowrap;color:#8fb3c6;
+}
+body[data-design="command03"] .native-activity-steps li[data-state="active"] {color:#ecfaff;}
+body[data-design="command03"] .native-activity-steps li[data-state="active"]::before {background:rgb(var(--cinema-key));}
+body[data-design="command03"] .native-activity-steps li[data-state="active"] .native-step-state {color:rgb(var(--cinema-key));}
+body[data-design="command03"] .native-activity-steps li[data-state="done"]::before {background:#7fe3b8;}
+body[data-design="command03"] .native-activity-steps li[data-state="done"] .native-step-state {color:#9fe8c8;}
+body[data-design="command03"] .native-activity-steps li[data-state="waiting"]::before {background:#ffc880;}
+body[data-design="command03"] .native-activity-steps li[data-state="waiting"] .native-step-state {color:#ffd49c;}
+body[data-design="command03"] .native-activity-steps li[data-state="blocked"]::before,
+body[data-design="command03"] .native-activity-steps li[data-state="failed"]::before {background:#ff9d8c;}
+body[data-design="command03"] .native-activity-steps li[data-state="blocked"] .native-step-state,
+body[data-design="command03"] .native-activity-steps li[data-state="failed"] .native-step-state {color:#ffb5a6;}
+body[data-design="command03"] .native-activity-steps li[data-state="unverified"]::before {
+ background:transparent;border:1px solid #9db9c8;
+}
+/* Narrow wing columns: the state sits under its step instead of squeezing it. */
+@container (max-width:239px) {
+ body[data-design="command03"] .native-activity-steps li {grid-template-columns:7px minmax(0,1fr);}
+ body[data-design="command03"] .native-activity-steps li::before {align-self:start;margin-top:5px;}
+ body[data-design="command03"] .native-step-state {grid-column:2;}
+}
+/* A finished turn keeps its last real result without the work pulse. */
+body[data-design="command03"] .native-activity[data-activity-active="false"] .native-instrument-art {
+ animation:none;opacity:.72;
+}
+
+/* Android thermal tier: only secondary light is eased. Content, controls, avatar and orb stay. */
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .avatar-aura,
+body[data-design="command03"][data-native-quality="reduced"] .workspace-motion-front::after {animation:none;}
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::after {box-shadow:none;}
+body[data-design="command03"][data-native-quality="reduced"] .native-instrument,
+body[data-design="command03"][data-native-quality="reduced"] .native-telemetry-panel {
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,0 5px 0 #020712aa,0 6px 0 #5e87a32b;
+}
+body[data-design="command03"][data-native-quality="reduced"] .workspace-shell {
+ box-shadow:inset 0 1px #d8f6ff44,0 10px 24px #0008;
+}
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .workspace {
+ box-shadow:inset 0 1px rgba(202,252,255,.25),0 8px 20px rgba(0,4,19,.5);
+}
+body[data-design="command03"][data-native-quality="reduced"] .presence-system::before {box-shadow:inset 0 1px #beeaff10;}
+body[data-design="command03"][data-native-quality="reduced"] .center-stage .presence-copy h1 {text-shadow:none;}
+
+/* ───────── Code64 · one room. The Command03 arrangement is unchanged: the original orb stays behind
+   the original avatar and no box in this section has a size or a position of its own in the flow.
+   Everything below is light: where it comes from (the orb), how strong it is (the real presence and
+   the measured speech level) and what it falls on (floor, haze, the glass of tiles, window, composer).
+   Hierarchy: orb and face first, corona and floor second, glass edges third; text stays the brightest
+   small thing on every panel. ───────── */
+body[data-design="command03"].native-hologram {
+ /* Share of the orb's light in the room. The values follow the original orb's own energy per mode
+    (.18 ready, .42 listening, .78 thinking, .62 research, .52 learning) as .3 + energy × .7. */
+ --orb-light:.43;
+}
+body[data-design="command03"][data-energy="to-avatar"] {--orb-light:.59;}
+body[data-design="command03"][data-energy="to-orb"] {--orb-light:.85;}
+body[data-design="command03"][data-presence="researching"] {--orb-light:.73;}
+body[data-design="command03"][data-presence="learning"] {--orb-light:.66;}
+body[data-design="command03"][data-energy="speech"] {--orb-light:.4;}
+body[data-design="command03"][data-energy="hold"] {--orb-light:.36;}
+
+/* Haze, floor and horizon: the space between the centre and the panels. The layer hangs on the
+   centre block, reaches behind the tiles beside it and stays behind everything in the block. */
+body[data-design="command03"] .native-room-light {
+ --room-l:calc(var(--orb-light) + .5 * var(--native-speech,0));--floor-b:121px;--glow-w:30%;--band-w:60%;
+ position:absolute;top:0;bottom:0;left:-62%;right:-62%;z-index:-1;pointer-events:none;opacity:var(--native-neon);
+ background:
+  linear-gradient(90deg,transparent,rgba(var(--cinema-key),calc(.5 * var(--room-l))) 34%,
+   rgba(var(--cinema-key),calc(.85 * var(--room-l))) 50%,rgba(var(--cinema-key),calc(.5 * var(--room-l))) 66%,
+   transparent) 0 calc(100% - var(--floor-b))/100% 1px no-repeat,
+  radial-gradient(ellipse 58% 100% at 50% 0,rgba(var(--cinema-key),calc(.2 * var(--room-l))),transparent 72%)
+   0 calc(100% - (var(--floor-b) - 74px))/100% 74px no-repeat,
+  radial-gradient(ellipse var(--glow-w) 50% at 50% 38.8%,rgba(var(--cinema-key),calc(.2 * var(--room-l))),transparent 72%),
+  radial-gradient(ellipse var(--band-w) 24% at 50% 38.8%,rgba(var(--cinema-fill),calc(.13 * var(--room-l))),transparent 74%);
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+ mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+ transition:opacity .6s ease;
+}
+/* Floor in perspective under the figure: it runs on behind the tiles. */
+body[data-design="command03"] .native-room-light::after {
+ content:"";position:absolute;left:24%;right:24%;top:calc(100% - var(--floor-b));height:150px;
+ transform:perspective(260px) rotateX(64deg);transform-origin:50% 0;
+ background:repeating-linear-gradient(90deg,rgba(var(--cinema-key),.2) 0 1px,transparent 1px 46px),
+  repeating-linear-gradient(0deg,rgba(var(--cinema-key),.16) 0 1px,transparent 1px 22px);
+ -webkit-mask-image:radial-gradient(ellipse 50% 86% at 50% 0,#000 8%,transparent 74%);
+ mask-image:radial-gradient(ellipse 50% 86% at 50% 0,#000 8%,transparent 74%);
+ opacity:calc(.35 + .5 * var(--room-l));
+}
+
+/* The orb's corona, between the orb and the avatar in front of it. No second orb: a rim of light
+   on the original shell and two thin shells that carry the direction of the exchange. */
+body[data-design="command03"] .native-orb-light {
+ position:absolute;left:50%;top:38.8%;height:58%;aspect-ratio:1;z-index:1;pointer-events:none;
+ transform:translate(-50%,-50%);opacity:var(--native-neon);
+}
+body[data-design="command03"] .native-orb-light b {
+ position:absolute;inset:-22%;border-radius:50%;
+ background:radial-gradient(circle,transparent 61%,rgba(var(--cinema-key),.15) 70%,
+  rgba(var(--cinema-fill),.06) 82%,transparent 97%);
+ opacity:calc(.25 + .75 * var(--orb-light) + .55 * var(--native-speech,0));
+ transform:scale(calc(1 + .12 * var(--native-speech,0)));
+ transition:opacity .09s linear,transform .09s linear;
+}
+body[data-design="command03"] .native-orb-light i {
+ position:absolute;inset:0;border-radius:50%;border:1px solid rgba(var(--cinema-key),.62);
+ box-shadow:0 0 12px rgba(var(--cinema-key),.3),inset 0 0 12px rgba(var(--cinema-key),.16);
+ opacity:0;
+}
+@keyframes native-corona-breathe {from{opacity:.55}to{opacity:1}}
+@keyframes native-shell-in {from{transform:scale(1.42);opacity:0}22%{opacity:.75}to{transform:scale(.66);opacity:0}}
+@keyframes native-shell-out {from{transform:scale(.7);opacity:0}22%{opacity:.75}to{transform:scale(1.46);opacity:0}}
+/* Ready: a slow breath of the corona, nothing travels. */
+body[data-design="command03"][data-energy="idle"] .native-orb-light {
+ animation:native-corona-breathe 5.2s ease-in-out infinite alternate;
+}
+/* Listening: light closes in on the avatar. */
+body[data-design="command03"][data-energy="to-avatar"] .native-orb-light i {
+ animation:native-shell-in 2.6s cubic-bezier(.3,.1,.4,1) infinite;
+}
+/* Thinking, research, learning: light leaves for the orb's shell. */
+body[data-design="command03"][data-energy="to-orb"] .native-orb-light i {
+ animation:native-shell-out 2.2s cubic-bezier(.2,.5,.4,1) infinite;
+}
+body[data-design="command03"][data-presence="researching"] .native-orb-light i {animation-duration:1.7s;}
+body[data-design="command03"][data-presence="learning"] .native-orb-light i {animation-duration:3s;}
+body[data-design="command03"][data-energy="to-avatar"] .native-orb-light i:nth-child(2) {animation-delay:-1.3s;}
+body[data-design="command03"][data-energy="to-orb"] .native-orb-light i:nth-child(2) {animation-delay:-1.1s;}
+body[data-design="command03"][data-presence="researching"] .native-orb-light i:nth-child(2) {animation-delay:-.85s;}
+body[data-design="command03"][data-presence="learning"] .native-orb-light i:nth-child(2) {animation-delay:-1.5s;}
+/* Speaking has no clock: the corona is the measured speech level (see b above). */
+/* Waiting for approval, blocked: one still amber shell. */
+body[data-design="command03"][data-energy="hold"] .native-orb-light i:first-child {
+ opacity:.5;transform:scale(1.08);border-style:dashed;box-shadow:none;
+}
+
+/* Glass that stands in this light. Each panel is lit on the side that faces the orb and casts its
+   shadow away from it; beside the centre that is sideways, below it downward. */
+body[data-design="command03"] .presence-wing-left {--lit:to left;--rim:-1px 0;--cast:-14px;}
+body[data-design="command03"] .presence-wing-right {--lit:to right;--rim:1px 0;--cast:14px;}
+body[data-design="command03"].native-hologram .presence-wing .native-instrument,
+body[data-design="command03"].native-hologram .presence-wing .native-telemetry-panel {
+ background:linear-gradient(var(--lit),rgba(var(--cinema-key),calc(.1 * var(--orb-light))),transparent 42%),
+  linear-gradient(132deg,#a6e7ff10,transparent 32%),
+  linear-gradient(170deg,#142b3de8,#071222f5 53%,#10172bf5);
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,
+  inset var(--rim) rgba(var(--cinema-key),calc(.2 + .6 * var(--orb-light))),
+  0 5px 0 #020712aa,0 6px 0 #5e87a32b,var(--cast) 20px 34px #000a,
+  0 0 24px rgba(var(--cinema-key),calc(.08 * var(--native-neon)));
+ transition:box-shadow .6s ease;
+}
+body[data-design="command03"].native-hologram .presence-wing .native-evidence {
+ background:linear-gradient(var(--lit),rgba(var(--cinema-key),calc(.1 * var(--orb-light))),transparent 42%),
+  linear-gradient(132deg,#c7a6ff10,transparent 32%),
+  linear-gradient(170deg,#142b3de8,#071222f5 53%,#10172bf5);
+}
+/* The work window and the composer stand in front of and below the orb: lit from above. */
+body[data-design="command03"].native-hologram .workspace-shell {
+ background:radial-gradient(ellipse 60% 120px at 50% 0,rgba(var(--cinema-key),calc(.12 * var(--orb-light))),transparent 100%),
+  linear-gradient(135deg,#9fdfff0d,transparent 36%),linear-gradient(160deg,#142b3cef,#060f1df7 55%,#11182def);
+ box-shadow:inset 0 1px rgba(var(--cinema-key),calc(.25 + .5 * var(--orb-light))),inset 0 2px #d8f6ff1c,
+  0 30px 70px #000a,0 0 28px rgba(var(--cinema-key),calc(.1 * var(--native-neon)));
+ transition:box-shadow .6s ease,border-color .6s ease;
+}
+body[data-design="command03"].native-hologram .command-bar {
+ box-shadow:inset 0 1px rgba(var(--cinema-key),calc(.2 + .35 * var(--orb-light))),0 14px 38px #000b,
+  0 0 24px rgba(73,201,255,calc(.17 * var(--native-neon)));
+}
+
+/* Work sequence. Each phase is set by the bridge from a real Android event; nothing here moves. */
+@keyframes native-core-ignite {from{transform:scale(.8);opacity:.9}to{transform:scale(1.7);opacity:0}}
+body[data-design="command03"][data-work-phase="activation"] .native-orb-light::after,
+body[data-design="command03"][data-work-phase="opening"] .native-orb-light::after {
+ content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(var(--cinema-key),.85);
+ box-shadow:0 0 26px rgba(var(--cinema-key),.45);opacity:0;
+ animation:native-core-ignite 1.3s cubic-bezier(.2,.7,.2,1) 1 both;
+}
+/* Projection from the centre down to the work window while one is opening or open. */
+body[data-design="command03"].native-hologram .center-stage .presence.presence-orbit::after {
+ content:"";position:absolute;left:50%;top:52%;bottom:-12px;width:min(74%,620px);z-index:-1;
+ transform:translateX(-50%);pointer-events:none;opacity:0;transition:opacity .7s ease;
+ clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);
+ background:linear-gradient(180deg,transparent,rgba(var(--cinema-key),.16) 38%,rgba(var(--cinema-key),.07));
+}
+body[data-design="command03"].native-hologram[data-work-phase="opening"] .center-stage .presence.presence-orbit::after,
+body[data-design="command03"].native-hologram[data-work-phase="projected"] .center-stage .presence.presence-orbit::after {
+ opacity:var(--native-neon);
+}
+@keyframes native-window-arrive {
+ from{box-shadow:inset 0 2px rgba(var(--cinema-key),.95),0 -18px 46px rgba(var(--cinema-key),.34),0 30px 70px #000a}
+}
+body[data-design="command03"].native-hologram[data-work-phase="opening"] .workspace-shell {
+ animation:native-window-arrive 1.1s ease-out 1;
+}
+body[data-design="command03"].native-hologram[data-work-phase="opening"] .workspace-shell,
+body[data-design="command03"].native-hologram[data-work-phase="projected"] .workspace-shell {
+ border-color:rgba(var(--cinema-key),.8);
+}
+body[data-design="command03"][data-work-phase="projected"] .workspace-topline .workspace-led {
+ background:rgb(var(--cinema-key));box-shadow:0 0 12px rgba(var(--cinema-key),.8);
+}
+/* The stage recedes one step while content is projected: the window carries the key light. */
+body[data-design="command03"][data-work-phase="projected"] .native-holo-field::before,
+body[data-design="command03"][data-work-phase="projected"] .native-holo-field::after {border-color:rgba(var(--cinema-key),.3);}
+/* Return to the main stage: one eased swell of the corona; the bridge waits for exactly this animation. */
+@keyframes native-work-return {from{opacity:.35}to{opacity:1}}
+body[data-design="command03"][data-work-phase="settling"] .native-orb-light {
+ animation:native-work-return 1.2s cubic-bezier(.2,.7,.2,1) 1;
+}
+
+/* Holographic file window: the names Android's file tool really returned, in the existing workspace. */
+body[data-design="command03"] #workspace.native-files-active:not(.native-document-active):not(.native-computer-active)>:not(#native-files-panel) {display:none!important;}
+body[data-design="command03"] #workspace:not(.native-files-active)>#native-files-panel {display:none!important;}
+body[data-design="command03"] .native-files-panel {
+ width:100%;min-width:0;display:flex;flex-direction:column;gap:12px;
+}
+body[data-design="command03"] .native-files-heading {
+ display:flex;flex-direction:column;gap:5px;padding:8px 2px 12px;border-bottom:1px solid rgba(110,226,248,.25);
+}
+body[data-design="command03"] .native-files-kicker {
+ color:#67d4e8;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.13em;
+}
+body[data-design="command03"] .center-stage .workspace-shell .workspace-body .native-files-title {
+ color:#e7f9ff;font:600 clamp(18px,2.1vw,25px)/1.25 'Space Grotesk',system-ui,sans-serif;margin:0;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-files-count {
+ color:#bedce7;font:500 13px/1.5 Manrope,system-ui,sans-serif;margin:0;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-files-list {
+ list-style:none;margin:0;padding:0;display:grid;gap:7px;min-width:0;
+ grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));
+}
+body[data-design="command03"] .native-files-list li {
+ display:grid;grid-template-columns:18px minmax(0,1fr) auto;align-items:center;column-gap:10px;min-width:0;
+ min-height:44px;padding:8px 12px;border-radius:9px;border:1px solid transparent;
+ background:linear-gradient(125deg,#0b2538e0,#0e1a2fe8) padding-box,
+  linear-gradient(140deg,rgba(112,231,255,.55),rgba(112,231,255,.08) 34%,rgba(164,119,255,.3)) border-box;
+ color:#e2f5f8;font:500 13px/1.45 Manrope,system-ui,sans-serif;
+}
+body[data-design="command03"] .native-file-glyph {
+ width:14px;height:18px;border:1px solid #83edff;border-radius:2px;opacity:.85;
+ background:linear-gradient(#83edff,#83edff) 3px 6px/7px 1px no-repeat,linear-gradient(#83edff,#83edff) 3px 10px/7px 1px no-repeat;
+}
+body[data-design="command03"] .native-file-name {min-width:0;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-file-kind {
+ font:600 10px/1.4 'Space Grotesk',sans-serif;letter-spacing:.08em;color:#9fdcec;
+ padding:2px 6px;border:1px solid #76d9fa55;border-radius:5px;white-space:nowrap;
+}
+body[data-design="command03"] .native-files-list li[data-selected="true"] {
+ background:linear-gradient(125deg,#12405ae8,#152a4ce8) padding-box,
+  linear-gradient(140deg,#b9f6ff,rgba(112,231,255,.5)) border-box;
+ box-shadow:0 0 18px rgba(112,231,255,.22);
+}
+body[data-design="command03"] .native-files-note {
+ margin:0;color:#8db8c9;font:400 12px/1.5 Manrope,system-ui,sans-serif;
+}
+
+/* Where the tiles stand below the centre, the light reaches them from above. */
+@container presence-orbit (max-width:749px) {
+ body[data-design="command03"] .native-room-light {left:-8px;right:-8px;--floor-b:102px;--glow-w:66%;--band-w:100%;}
+ body[data-design="command03"] .native-room-light::after {left:6%;right:6%;}
+ body[data-design="command03"] .presence-wing-left,
+ body[data-design="command03"] .presence-wing-right {--lit:to bottom;--rim:0 1px;--cast:0px;}
+ body[data-design="command03"] .native-room-light::after {height:110px;}
+}
+
+/* Owner switch, hidden page, thermal tier and system preference ease every new light. */
+body[data-design="command03"][data-native-light-motion="off"] .native-orb-light,
+body[data-design="command03"][data-native-light-motion="off"] .native-orb-light * {animation-play-state:paused!important;}
+body[data-design="command03"][data-native-quality="balanced"] .native-orb-light i:nth-child(2),
+body[data-design="command03"][data-native-quality="reduced"] .native-orb-light i,
+body[data-design="command03"][data-native-quality="reduced"] .native-room-light::after {display:none;}
+body[data-design="command03"][data-native-quality="balanced"] .native-orb-light i {box-shadow:none;}
+body[data-design="command03"][data-native-quality="reduced"] .native-orb-light,
+body[data-design="command03"][data-native-quality="reduced"] .native-orb-light::after,
+body[data-design="command03"][data-native-quality="reduced"].native-hologram[data-work-phase="opening"] .workspace-shell {
+ animation:none!important;
+}
+/* Reduced: the haze keeps the presence level but no longer follows every speech frame. */
+body[data-design="command03"][data-native-quality="reduced"] .native-room-light {
+ --room-l:var(--orb-light);-webkit-mask-image:none;mask-image:none;transition:none;
+}
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .presence-wing .native-instrument,
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .presence-wing .native-telemetry-panel {
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,
+  inset var(--rim) rgba(var(--cinema-key),calc(.2 + .6 * var(--orb-light))),0 5px 0 #020712aa,0 6px 0 #5e87a32b;
+ transition:none;
+}
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .workspace-shell {
+ box-shadow:inset 0 1px rgba(var(--cinema-key),calc(.25 + .5 * var(--orb-light))),0 10px 24px #0008;transition:none;
+}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-orb-light,
+ body[data-design="command03"] .native-orb-light i,
+ body[data-design="command03"] .native-orb-light::after,
+ body[data-design="command03"].native-hologram[data-work-phase="opening"] .workspace-shell {animation:none!important;}
+ body[data-design="command03"] .native-orb-light b,
+ body[data-design="command03"] .native-room-light,
+ body[data-design="command03"].native-hologram .presence-wing .native-instrument,
+ body[data-design="command03"].native-hologram .presence-wing .native-telemetry-panel,
+ body[data-design="command03"].native-hologram .workspace-shell,
+ body[data-design="command03"].native-hologram .center-stage .presence.presence-orbit::after {transition:none!important;}
+ /* Without motion the direction stays readable as one still shell: inside for listening, outside for work. */
+ body[data-design="command03"][data-energy="to-avatar"] .native-orb-light i:first-child {opacity:.6;transform:scale(.82);}
+ body[data-design="command03"][data-energy="to-orb"] .native-orb-light i:first-child {opacity:.6;transform:scale(1.22);}
+}

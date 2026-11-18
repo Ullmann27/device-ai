@@ -1,0 +1,18 @@
+{
+  "source": "753067835c3b33ff850f5c3e8d079d9dcd5eb742",
+  "artifactId": 14013635800,
+  "archiveSha256": "31fc1241c047332c0ab8c4ca255968d885bd1df1ff34be9faaa1bb5ca0d2deb0",
+  "archiveBytes": 315552160,
+  "entries": 1668,
+  "uncompressedBytes": 318640810,
+  "largestEntryBytes": 2331093,
+  "junitSuites": 894,
+  "junit": {
+    "tests": 5383,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 17
+  },
+  "unknownSkips": 0,
+  "integrity": "PASS"
+}

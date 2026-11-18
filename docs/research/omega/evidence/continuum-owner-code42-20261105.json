@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 1,
+  "status": "ORIGINAL_SIGNED_APK_PUBLISHED_AND_DOWNLOADED_VERIFIED",
+  "recordedAt": "2026-11-05T09:14:00.537018+00:00",
+  "sourceCommit": "8a903fbebe605716b6163da35e1c3b2129af40a4",
+  "sourceTree": "61e93e760ad52bcc52d23ac4079fd8645b74bdf3",
+  "catalog": {
+    "schema": 1,
+    "channel": "OWNER_RELEASE",
+    "packageName": "at.heinz.deviceai.continuumlocal",
+    "versionCode": 42,
+    "versionName": "0.3.41",
+    "apkUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-a1d56eb87b9224df383cdf9368c0406302c28e36d43ce9b2c4e16a5283be0efe.apk",
+    "apkSha256": "a1d56eb87b9224df383cdf9368c0406302c28e36d43ce9b2c4e16a5283be0efe",
+    "byteLength": 101712663,
+    "sourceCommit": "8a903fbebe605716b6163da35e1c3b2129af40a4",
+    "signerSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+    "approved": true,
+    "notes": "Originalsigniertes, vom Besitzer freigegebenes Continuum Lokal Update. Installation nur nach Android-Bestätigung."
+  },
+  "apkAudit": {
+    "byteLength": 101712663,
+    "sha256": "a1d56eb87b9224df383cdf9368c0406302c28e36d43ce9b2c4e16a5283be0efe",
+    "sourceCommit": "8a903fbebe605716b6163da35e1c3b2129af40a4",
+    "deviceTested": false,
+    "personalEnrollmentTested": false,
+    "package": {
+      "name": "at.heinz.deviceai.continuumlocal",
+      "versionCode": "42",
+      "versionName": "0.3.41"
+    },
+    "packageMatches": true,
+    "sdk": {
+      "minimum": 26,
+      "target": 36
+    },
+    "sdkMatches": true,
+    "zipAligned16k": true,
+    "abis": [
+      "arm64-v8a"
+    ],
+    "nativeLibraries": {
+      "lib/arm64-v8a/libc++_shared.so": {
+        "machine": 183,
+        "loadSegments": [
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          }
+        ],
+        "aligned16k": true,
+        "sha256": "4397241b4bd20a8e579bfb41d21107857e12985f6a01ca0c2a5f83380d1270b4"
+      },
+      "lib/arm64-v8a/libfilament-jni.so": {
+        "machine": 183,
+        "loadSegments": [
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          }
+        ],
+        "aligned16k": true,
+        "sha256": "d75914906f58575b70012edc4848fad5981d57de4a776d6486cdfabbf1c90da4"
+      },
+      "lib/arm64-v8a/libgltfio-jni.so": {
+        "machine": 183,
+        "loadSegments": [
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          }
+        ],
+        "aligned16k": true,
+        "sha256": "d0646ee3858dc865bc861529ce817fe4a667806c36a5c1fab67d7e2f1fcd9a2b"
+      },
+      "lib/arm64-v8a/liblitertlm_jni.so": {
+        "machine": 183,
+        "loadSegments": [
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          }
+        ],
+        "aligned16k": true,
+        "sha256": "4a94a3f955ad7c58cbcdfc5cb4ff566187bb9e8c5bc2c4056b4e226646c7e8fd"
+      },
+      "lib/arm64-v8a/libopencv_java4.so": {
+        "machine": 183,
+        "loadSegments": [
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          },
+          {
+            "alignment": 16384,
+            "congruent16k": true
+          }
+        ],
+        "aligned16k": true,
+        "sha256": "d331aac20d0a76981ea652f7df7978e3b82ccc46d5926dc7c394d33c813694ab"
+      }
+    },
+    "models": [
+      {
+        "asset": "assets/faceid/face_detection_yunet_2023mar.onnx",
+        "bytes": 232589,
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "matchesPin": true
+      },
+      {
+        "asset": "assets/faceid/face_recognition_sface_2021dec.onnx",
+        "bytes": 38696353,
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "matchesPin": true
+      }
+    ],
+    "noticesPresent": true,
+    "noticesMatchSource": true,
+    "modelManifestMatchesLock": true,
+    "glbAssets": [
+      {
+        "asset": "assets/avatar3d/continuum-avatar.glb",
+        "bytes": 12038416,
+        "sha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a"
+      }
+    ],
+    "referenceHeadPresent": true,
+    "signerSha256": [
+      "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23"
+    ],
+    "originalSignatureVerified": true,
+    "artifactChecksPassed": true
+  },
+  "deployment": {
+    "id": "dep-dbm43j6pb74c73998hk0",
+    "status": "live",
+    "sourceCommit": "8a903fbebe605716b6163da35e1c3b2129af40a4",
+    "finishedAt": "2026-11-05T09:10:54.211678Z",
+    "service": "continuum-owner-v23-release-preflight",
+    "branch": "research/continuum-m8-render-signed-release-20261031"
+  },
+  "publisherQaMarker": [
+    {
+      "id": "b695d61a-5d48-4754-9c22-8a0e49195c91",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_OWNER_PRESIGN_QA_PASS SHA=8a903fbebe605716b6163da35e1c3b2129af40a4 PACKAGE=at.heinz.deviceai.continuumlocal CODE=42 UNSIGNED_NOT_PUBLISHED",
+      "timestamp": "2026-11-05T09:08:56.16581548Z"
+    }
+  ],
+  "publisherFinalLog": [
+    {
+      "id": "c241add1-f5ae-4ee3-8817-71b3577c4fae",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:lintReportRelease",
+      "timestamp": "2026-11-05T09:10:50.009052051Z"
+    },
+    {
+      "id": "2ac33011-3cb3-4088-ab3e-e637f44661d2",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "> Task :app:lintRelease",
+      "timestamp": "2026-11-05T09:10:50.009080713Z"
+    },
+    {
+      "id": "c7b7c1ea-5463-430d-a85d-081a176ec063",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "[Incubating] Problems report is available at: file:///opt/render/project/src/build/reports/problems/problems-report.html",
+      "timestamp": "2026-11-05T09:10:50.080614996Z"
+    },
+    {
+      "id": "7e0891c8-96b4-4973-989d-3a23e5df8885",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "",
+      "timestamp": "2026-11-05T09:10:50.080630206Z"
+    },
+    {
+      "id": "ed9cac5a-a0b2-4a3a-8e9c-b478844f542f",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "BUILD SUCCESSFUL in 1m 53s",
+      "timestamp": "2026-11-05T09:10:50.080642531Z"
+    },
+    {
+      "id": "2b5db21d-39eb-4396-9586-0e93dd6be62b",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "55 actionable tasks: 14 executed, 41 up-to-date",
+      "timestamp": "2026-11-05T09:10:50.080663229Z"
+    },
+    {
+      "id": "599e74ce-1c1f-414f-aa5b-999628b5b567",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_OWNER_CATALOG_ANDROID_COMPATIBLE source=8a903fbebe605716b6163da35e1c3b2129af40a4 versionCode=42 apkSha256=a1d56eb87b9224df383cdf9368c0406302c28e36d43ce9b2c4e16a5283be0efe",
+      "timestamp": "2026-11-05T09:10:51.858043892Z"
+    },
+    {
+      "id": "d60e3ce3-7b22-43dd-8614-4777a45fc0d4",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "CONTINUUM_OWNER_RENDER_SIGNED_STAGED_FOR_PINNED_HOST",
+      "timestamp": "2026-11-05T09:10:51.861000698Z"
+    },
+    {
+      "id": "0c213c18-d3b5-40b7-a137-3e0ed60773ec",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mUsing Node.js version 24.22.1 via environment variable NODE_VERSION\u001b[22m",
+      "timestamp": "2026-11-05T09:10:51.991228504Z"
+    },
+    {
+      "id": "24eaf9d7-993e-4f18-a49b-6f3f9bbd72cf",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34;1m==>\u001b[0;22m \u001b[1mDocs on specifying a Node.js version: https://render.com/docs/node-version\u001b[22m",
+      "timestamp": "2026-11-05T09:10:51.991230952Z"
+    },
+    {
+      "id": "e20f892e-36f7-4e6a-b6f8-3371e7809284",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[34m\u001b[1m==>\u001b(B\u001b[m \u001b[1mUploading build...\u001b(B\u001b[m",
+      "timestamp": "2026-11-05T09:10:53.011072209Z"
+    },
+    {
+      "id": "1361efaa-4a84-444c-bcc7-f84b038e6f14",
+      "labels": [
+        {
+          "name": "resource",
+          "value": "srv-dbf1tr2vcj2c73ehpfog"
+        },
+        {
+          "name": "level",
+          "value": "info"
+        },
+        {
+          "name": "type",
+          "value": "app"
+        }
+      ],
+      "message": "\u001b[32m\u001b[1m==>\u001b(B\u001b[m \u001b[1mYour site is live 🎉\u001b(B\u001b[m",
+      "timestamp": "2026-11-05T09:10:53.779387378Z"
+    }
+  ],
+  "runtimeCorrection": {
+    "deploy": "dep-dbm411t6e07s73b38m30",
+    "source": "8a903fbebe605716b6163da35e1c3b2129af40a4",
+    "runtime": "26.13.0",
+    "diagnostic": "UNSUPPORTED_NODE_LTS",
+    "failedSuites": [
+      ".github/continuum/branch-bots-cli.test.mjs",
+      "scripts/continuum-release-host-preflight.test.mjs"
+    ],
+    "resolution": "Pin NODE_VERSION=24.22.1; preserve source and all gates."
+  },
+  "nodeVersion": "24.22.1",
+  "sourceGateEvidence": "continuum-avatar-source-qa-20261105.json",
+  "sourceTestCounts": {
+    "android": {
+      "passed": 3133,
+      "failed": 0,
+      "skipped": 19
+    },
+    "node": {
+      "passed": 2373,
+      "failed": 0,
+      "skipped": 31
+    },
+    "backend": {
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0
+    },
+    "debugLintIssues": 0
+  },
+  "sourceGateDelta": {
+    "testCommit": "5a50af1129248a7031ff3c803e5de8540a65f197",
+    "equivalentRemote": "0628c38ba96b9012887f209425aa5c0a7e69944e",
+    "finalDelta": "documentation only",
+    "changedPaths": [
+      "docs/research/omega/CONTINUUM-AVATAR-COMPLETE-20261105.md",
+      "docs/research/omega/CONTINUUM-OWNER-FACE-MODELS-20261105.md",
+      "docs/research/omega/evidence/continuum-avatar-source-qa-20261105.json",
+      "docs/research/omega/evidence/continuum-owner-face-models-20261105.json"
+    ]
+  },
+  "deviceInstallTested": false,
+  "fold7CameraTested": false,
+  "personalEnrollmentTested": false,
+  "audibleSpeechTested": false,
+  "filamentDeviceRenderingTested": false,
+  "authenticationAuthorityFromFaceMatch": false
+}

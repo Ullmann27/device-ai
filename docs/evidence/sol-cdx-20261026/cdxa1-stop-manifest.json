@@ -1,0 +1,37 @@
+{
+  "schema": "CDXA1_OWNER_STOP_MANIFEST_V1",
+  "sourceCommit": "536c33ec",
+  "status": "UNTRAINED_UNVERIFIED_ANSWER_QUALITY",
+  "training": "NOT_RUN",
+  "candidateWeights": "NONE",
+  "independentTest": "UNOPENED_UNCONSUMED",
+  "unitChecks": {
+    "passed": 7,
+    "failed": 0,
+    "seconds": 0.051,
+    "numericalDerivativeComparisons": 48,
+    "scope": "Authored unit cases only, no corpus quality/test prediction"
+  },
+  "files": [
+    {
+      "file": "experimental/brain/cdxa1_pointer.py",
+      "bytes": 13899,
+      "sha256": "c719c95b0a52933116140888bff1560c8e6b50411d53f66368a73274f05a2ebb"
+    },
+    {
+      "file": "experimental/brain/test_cdxa1_pointer.py",
+      "bytes": 4408,
+      "sha256": "bfca42e0825f2af73caaa2f541fb9e76754016c51253c59ca858cddd52156b23"
+    },
+    {
+      "file": "experimental/brain/cdxa1_protocol.py",
+      "bytes": 8601,
+      "sha256": "da7a19244d53923f77e5223a2237ab01481efe44b06cff35a41b8c4820312903"
+    },
+    {
+      "file": "config/research/cdxa1-pointer-v1.json",
+      "bytes": 38975,
+      "sha256": "c0d2172e06f74debdb5a7f658b01a7fc60b74740cfc9fbf285c95980fbc4b489"
+    }
+  ]
+}

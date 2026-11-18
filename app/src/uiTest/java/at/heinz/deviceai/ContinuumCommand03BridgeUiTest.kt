@@ -249,7 +249,9 @@ class ContinuumCommand03BridgeUiTest {
         val picker = ShadowAlertDialog.getLatestAlertDialog()
         assertFalse(dialog.isShowing)
         assertEquals("Continuum · Stimme", shadowOf(picker).title.toString())
-        assertEquals(2, picker.listView.adapter.count)
+        // Maya, Android offline voice, and the Code63 entry for conversation, drive mode and announcements.
+        assertEquals(3, picker.listView.adapter.count)
+        assertEquals("Gespräch, Fahrmodus und Ansagen", picker.listView.adapter.getItem(2).toString())
         assertFalse(a.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).getBoolean("voice_enabled", true))
         picker.dismiss()
     }
@@ -296,7 +298,12 @@ class ContinuumCommand03BridgeUiTest {
         all(hub.window!!.decorView).single { it.tag == "continuum-setting:PERSONAL" }.performClick()
         val personal = ShadowAlertDialog.getLatestAlertDialog()
         measure(personal.window!!.decorView, 392, 780)
-        assertEquals("Deine KI personalisieren", shadowOf(personal).title.toString())
+        // The Nullpunkt repair (55a3fe015) moved title and privacy note into a custom header so the three
+        // choices stay visible below it; a custom title leaves the platform title empty.
+        val header = all(personal.window!!.decorView).filterIsInstance<TextView>().map { it.text.toString() }
+        assertTrue("Personalisation title must be visible: $header", "Deine KI personalisieren" in header)
+        assertTrue("Privacy note must stay visible: $header",
+            header.any { it.contains("nicht automatisch trainiert oder ins Internet übertragen") })
         assertEquals(3, personal.listView.adapter.count)
         assertTrue("All personalisation choices must be visible", personal.listView.isShown)
         personal.dismiss()

@@ -72,6 +72,23 @@ internal object OwnerComputerIntentParser {
             .replace(Regex("(?iu)^bitte\\s+"), "").trim()
         if (text.isEmpty()) return Result.NotComputerCommand
         val command = text.substringBefore(':')
+        // „Öffne nicht WhatsApp, sondern Chrome“: the owner named what to open and what to leave closed.
+        // Only an unambiguous plain open of the wanted app is accepted; it still needs the normal
+        // approval. Everything else keeps the fail-closed negation handling below.
+        OwnerContrastResolver.resolve(text)?.let { contrast ->
+            when (val wanted = parseCommand(contrast.affirmative, contextApp)) {
+                is Result.Ready -> {
+                    val plainOpen = wanted.intent.goal == ComputerGoal.OPEN ||
+                        wanted.intent.goal == ComputerGoal.OPEN_DOWNLOADS
+                    val excluded = wanted.intent.app.aliases.any { contrast.rejects(it) }
+                    return if (plainOpen && !excluded) wanted
+                        else Result.Unsupported("Der Auftrag nennt dieselbe App als gewünscht und als ausgeschlossen. Es wird nichts geöffnet.")
+                }
+                // Not one of the fixed computer apps: the later app lanes decide with the same contrast.
+                Result.NotComputerCommand -> return Result.NotComputerCommand
+                else -> Unit
+            }
+        }
         if (negation.containsMatchIn(command)) {
             val affirmative = negation.replace(command, " ").replace(Regex("\\s+"), " ").trim()
             val candidate = if (':' in text) affirmative + ":" + text.substringAfter(':') else affirmative
@@ -87,7 +104,9 @@ internal object OwnerComputerIntentParser {
         parseMessage(text, contextApp)?.let { return it }
         text = text.trimEnd('.', '?', '!').trim()
         Regex("(?iu)^(?:öffne|oeffne|starte|open|wechsle\\s+zu|wechsel\\s+zu)\\s+(.+)$").matchEntire(text)?.let { match ->
-            val rest = match.groupValues[1].replace(Regex("(?iu)^bitte\\s+"), "")
+            // Courtesy words carry no second step: „Öffne WhatsApp bitte“ is a plain open.
+            val rest = match.groupValues[1].replace(Regex("(?iu)^(?:(?:bitte|mal|kurz)\\s+)+"), "")
+                .replace(Regex("(?iu)(?:\\s+(?:bitte|mal|kurz))+$"), "")
             if (downloadsOpen.matches(rest)) {
                 return Result.Ready(OwnerComputerIntent(ComputerApp.FILES, ComputerGoal.OPEN_DOWNLOADS))
             }

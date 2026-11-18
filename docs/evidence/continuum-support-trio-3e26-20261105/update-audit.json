@@ -1,0 +1,332 @@
+{
+  "schema": "continuum-owner-update-audit-v1",
+  "observedAtUtc": "2026-11-05 07:24:40 UTC",
+  "repository": "Ullmann27/device-ai",
+  "source": {
+    "pullRequest": 544,
+    "commit": "7ecdafac328700295da393ce44bbe22eb8b21aee",
+    "url": "https://github.com/Ullmann27/device-ai/pull/544",
+    "status": "DRAFT_SOURCE_AUDIT_ONLY"
+  },
+  "executed": {
+    "sourceReads": true,
+    "renderReadOnlyCalls": true,
+    "builds": false,
+    "androidTests": false,
+    "signing": false,
+    "secretsRead": false,
+    "deploys": false,
+    "environmentChanges": false,
+    "installation": false
+  },
+  "channel": {
+    "manifestUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/latest.json",
+    "apkUrlTemplate": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-{apkSha256}.apk",
+    "manifestReadback": "UNAVAILABLE_VIA_WEB_TOOL",
+    "liveVersionCode": null,
+    "liveApkSha256": null,
+    "installedFold7VersionCode": null,
+    "sourceIds": [
+      "catalog",
+      "manifest",
+      "stage",
+      "render_release"
+    ]
+  },
+  "matrix": [
+    {
+      "id": "package",
+      "required": "at.heinz.deviceai.continuumlocal",
+      "enforcement": "Publisher binary badging; policy checks installed package and manifest; updater checks downloaded APK package.",
+      "status": "CODE_VERIFIED_NEW_APK_NOT_VERIFIED",
+      "sources": [
+        "policy",
+        "updater",
+        "manifest",
+        "render_release"
+      ]
+    },
+    {
+      "id": "signer",
+      "required": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+      "enforcement": "Publisher checks original certificate and APK v2 verification. Android checks exactly one current signer for both installed app and downloaded APK. Manifest generator rejects multiple signers.",
+      "status": "CODE_VERIFIED_ORIGINAL_KEY_AVAILABILITY_NOT_INSPECTED_NEW_APK_NOT_VERIFIED",
+      "sources": [
+        "policy",
+        "updater",
+        "manifest",
+        "render_release"
+      ]
+    },
+    {
+      "id": "version",
+      "required": {
+        "manifestMin": 29,
+        "renderFutureMin": 39,
+        "max": 9999,
+        "versionNameRule": "0.3.{versionCode-1}",
+        "mustExceed": [
+          "published live versionCode",
+          "installed app versionCode"
+        ],
+        "chosenVersionCode": null
+      },
+      "enforcement": "Render validates current live catalog and requires strict increase; Android checks strict increase before download and on the actual APK.",
+      "status": "CODE_VERIFIED_LIVE_AND_INSTALLED_BASELINES_UNKNOWN",
+      "sources": [
+        "catalog",
+        "policy",
+        "updater",
+        "render_release"
+      ]
+    },
+    {
+      "id": "transport_and_bytes",
+      "required": "Pinned HTTPS host; no redirects; manifest <=8192 bytes; APK 1000000..2000000000 bytes; exact downloaded size and SHA256; immutable digest filename.",
+      "enforcement": "Catalog, policy, HttpsURLConnection and streaming SHA256 check; Android archive inspection before installer handoff.",
+      "status": "CODE_VERIFIED_CURRENT_PUBLIC_BYTES_NOT_VERIFIED",
+      "sources": [
+        "catalog",
+        "policy",
+        "updater",
+        "manifest",
+        "stage"
+      ]
+    },
+    {
+      "id": "freeze_and_approval",
+      "required": [
+        "CONTINUUM_RELEASE_FREEZE_LIFTED_BY_OWNER == Git HEAD",
+        "CONTINUUM_RELEASE_APPROVED_SHA == Git HEAD",
+        "CONTINUUM_RELEASE_HOST == pinned host",
+        "RENDER_SERVICE_NAME == continuum-owner-v23-release-preflight"
+      ],
+      "enforcement": "Future Render release script fails before signing unless all match. Runtime variable values intentionally not requested.",
+      "status": "REQUIRED_RUNTIME_STATE_NOT_INSPECTED",
+      "sources": [
+        "entrypoint",
+        "render_release"
+      ]
+    },
+    {
+      "id": "source_binding",
+      "required": "Exact reviewed source; clean tracked/executable source; stable HEAD through QA and assembly; manifest sourceCommit; staging receipt ties source, version, signer and APK SHA256.",
+      "enforcement": "Publisher/source gates and staging receipt. Android checks sourceCommit format only; source provenance must be established by build evidence.",
+      "status": "CODE_VERIFIED_EXACT_NEW_HEAD_BUILD_EVIDENCE_MISSING",
+      "sources": [
+        "local_gate",
+        "stage",
+        "render_release",
+        "render_qa",
+        "policy"
+      ]
+    },
+    {
+      "id": "qa",
+      "required": [
+        "special Node contracts",
+        "critical and full-node runs plus fresh SHA-bound receipts",
+        "compileDebugKotlin",
+        "testDebugUnitTest with UI widget tests",
+        "lintDebug",
+        "fresh complete Android JUnit proof",
+        "five mandatory owner suites with minimum cases and zero skips/failures",
+        "original-package unsigned assembleRelease and bundleRelease",
+        "unsigned APK package/version/size checks and confirmation APK is unsigned",
+        "later signed lintRelease and assembleRelease"
+      ],
+      "mandatoryAndroidMinimumCases": {
+        "ShizukuBridgeLifecycleTest": 14,
+        "ShizukuConnectionDialogTest": 2,
+        "ContinuumControlsTest": 7,
+        "OwnerChatIntentRouterTest": 5,
+        "HybridMemoryRetrieverTest": 6
+      },
+      "status": "REQUIRED_NOT_EXECUTED_BY_THIS_AUDIT",
+      "sources": [
+        "render_qa",
+        "render_release"
+      ]
+    },
+    {
+      "id": "publication_and_device",
+      "required": "Successful existing-channel publication plus HTTPS readback of manifest and immutable APK; separate real Fold7 install/update and behavior acceptance.",
+      "enforcement": "Code stages artifacts; updater delegates actual installation to Android PackageInstaller.",
+      "status": "NEW_CANDIDATE_NOT_PUBLISHED_OR_DEVICE_VERIFIED",
+      "sources": [
+        "render_release",
+        "stage",
+        "updater"
+      ]
+    }
+  ],
+  "render": {
+    "workspace": {
+      "id": "tea-d7qe6dosfn5c73e2rnag",
+      "name": "My Workspace",
+      "accessibleWorkspaceCount": 1,
+      "selection": "Explicit request-scoped workspaceId; deprecated select_workspace discovered but not needed."
+    },
+    "publisher": {
+      "id": "srv-dbf1tr2vcj2c73ehpfog",
+      "name": "continuum-owner-v23-release-preflight",
+      "type": "static_site",
+      "url": "https://continuum-owner-v23-release-preflight.onrender.com",
+      "branch": "research/continuum-m8-render-signed-release-20261031",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "buildCommand": "bash scripts/render-continuum-m8-owner-release.sh",
+      "publishPath": "continuum-m8-owner-release",
+      "buildPlan": "starter",
+      "latestDeploy": {
+        "id": "dep-dblbct6gekts73fte14g",
+        "status": "live",
+        "sourceCommit": "a8e58ae09f6f1a8f43bd0a6f3b30b7e81bb79be6",
+        "finishedAt": "2026-11-04T04:51:07.038382Z"
+      },
+      "candidateHeadDeployed": false
+    },
+    "unifiedQa": {
+      "id": "srv-dbkbtgqjnfac73a6incg",
+      "name": "continuum-unified-research-apk-20261102",
+      "branch": "integration/continuum-all-systems-apk-qa-20261102",
+      "autoDeploy": "no",
+      "suspended": "not_suspended",
+      "runtimePlan": "free",
+      "buildPlan": "starter",
+      "buildCommand": "bash scripts/render-continuum-integration-qa.sh",
+      "latestDeploy": {
+        "id": "dep-dbkdilcipgvc73c99oq0",
+        "status": "live",
+        "sourceCommit": "14e950703c3eddf92bc95ff291898ada648f18dd",
+        "finishedAt": "2026-11-02T18:54:01.087143Z"
+      },
+      "candidateHeadDeployed": false
+    },
+    "historicalM8Qa": {
+      "id": "srv-dbispec9v7es738gj0ug",
+      "name": "continuum-m8-android-qa-20261031",
+      "autoDeploy": "no",
+      "latestDeploy": {
+        "id": "dep-dbispsflk1mc73fkrk00",
+        "status": "live",
+        "sourceCommit": "861d2faed694fc1869050cf5ed81a593701801f5",
+        "finishedAt": "2026-10-31T11:18:48.312976Z"
+      }
+    },
+    "caveat": "Render live status proves deployment state, not APK bytes, signature or QA success. No service/environment modifications, builds or deploys performed."
+  },
+  "auditNotes": [
+    {
+      "id": "historical_version_floors",
+      "detail": "Raw local builder accepts 26+, local owner gate 27+, catalog/manifest generator 29+, future Render lane 39+. A new release must satisfy the strictest relevant gate and exceed both published and installed versions; no target version was selected.",
+      "sources": [
+        "local_builder",
+        "local_gate",
+        "catalog",
+        "manifest",
+        "render_release"
+      ]
+    },
+    {
+      "id": "local_release_mode",
+      "detail": "The local gate uses CONTINUUM_OWNER_LOCAL_APPROVED_SHA, runs full regressions before signing and requires the Fold7 Termux original-key path. It does not read the Render freeze-lift variable. The raw local builder and local staging generator do not themselves query the live catalog.",
+      "sources": [
+        "local_gate",
+        "local_builder",
+        "stage",
+        "manifest"
+      ]
+    },
+    {
+      "id": "execution_workspace_discontinuity",
+      "detail": "Previously available scratch checkout, evidence directories and toolchain/cache paths were observed absent after completed root executions. The cause was not established. This audit ran no Android build and does not claim that the former toolchain remains available."
+    }
+  ],
+  "blockers": [
+    "Final combined production head and its complete SHA-bound Android/QA/release evidence remain unverified by this audit.",
+    "Current manifest and immutable APK HTTPS readback unavailable via the web tool; current published version and hash remain unknown.",
+    "Installed Fold7 version and original signer must be verified on device separately.",
+    "Original signing material availability and exact-head freeze/approval runtime state were not inspected.",
+    "No current usable local Android toolchain or new original-signed APK established after the execution workspace discontinuity.",
+    "Existing Render publisher and QA deployments refer to older commits, not the audited #544 head; this audit was scoped to read-only checks and performed no execution or publication."
+  ],
+  "rootEvidenceBoundary": {
+    "reportedBy": "/root",
+    "evidenceCommit": "385d6e8aa912284f1a9781e5665a623df945d9c9",
+    "testedSourceCommit": "89ae402d88b80ca5c48ab241e20c0369b7db517d",
+    "node": {
+      "pass": 2360,
+      "fail": 0,
+      "skip": 37
+    },
+    "backend": {
+      "pass": 64,
+      "fail": 0,
+      "dependencyDeviation": "express-rate-limit 8.7.3 present versus package-lock 8.7.1"
+    },
+    "transferToAuditedHead": false,
+    "rerunByThisAudit": false
+  },
+  "sourceBaseUrl": "https://github.com/Ullmann27/device-ai/blob/7ecdafac328700295da393ce44bbe22eb8b21aee/",
+  "sources": [
+    {
+      "id": "catalog",
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdateCatalog.kt",
+      "gitBlob": "a08838caccbb2dab596108c42d09f4af961f402a"
+    },
+    {
+      "id": "policy",
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumSignedUpdatePolicy.kt",
+      "gitBlob": "eed9416ec95bc212a3ec0cadb52774503288fb6f"
+    },
+    {
+      "id": "updater",
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt",
+      "gitBlob": "bb818a37c799c202f5d791ea9663229289fb47d4"
+    },
+    {
+      "id": "manifest",
+      "path": "scripts/continuum-owner-update-manifest.mjs",
+      "gitBlob": "7c75e26cca1b675ee0e119a9cf19d9b9d7abc31a"
+    },
+    {
+      "id": "stage",
+      "path": "scripts/continuum-owner-release-stage.mjs",
+      "gitBlob": "19250191d9bd7969d91582d1b21e0766e08a9310"
+    },
+    {
+      "id": "render_release",
+      "path": "scripts/render-continuum-owner-continuous-release.sh",
+      "gitBlob": "204bb40b87346d0ca7f798ae66a40264731aed32"
+    },
+    {
+      "id": "render_qa",
+      "path": "scripts/render-continuum-owner-continuous-qa.sh",
+      "gitBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b"
+    },
+    {
+      "id": "entrypoint",
+      "path": "scripts/render-continuum-m8-owner-release.sh",
+      "gitBlob": "2fd86f973ecff06d912fdc27c897f9ba1bf84d39"
+    },
+    {
+      "id": "local_gate",
+      "path": "scripts/continuum-fold7-owner-update-gate.sh",
+      "gitBlob": "73e122b6aaac4210664668426233d5787dfa7991"
+    },
+    {
+      "id": "local_builder",
+      "path": "scripts/continuum-fold7-standalone-apk.sh",
+      "gitBlob": "18d07a5982591e4e2115f7f060a7df8f869d16d0"
+    }
+  ],
+  "followupSourceBoundary": {
+    "observedCandidateCommit": "08aa76e8393bfedfeb1274c4e292b7e2a3139d15",
+    "parentCommit": "7ecdafac328700295da393ce44bbe22eb8b21aee",
+    "method": "Root inspected the complete 50-file GitHub commit change list; none of the 10 audited release/update source paths changed from the audited parent to this candidate.",
+    "auditedFilesChanged": [],
+    "testResultsTransferred": false,
+    "newCandidateBuildVerified": false
+  }
+}
