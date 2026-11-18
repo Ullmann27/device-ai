@@ -8061,6 +8061,10 @@ class AgentActivity : Activity() {
             routeBotInput(input.text.toString())) return
         if (selectedBot == null) deliverRoutineMessages()
         if (clarifiedAppName == null && selectedBot == null && tryStartComputerRequest(request, clarifiedComputer)) return
+        // Owner work tools: „Fass mir die Nachrichten von heute zusammen“, then „speichere das als PDF“ / „schick das
+        // per Mail an …“. Deterministic and fail closed; before the clock, document and research lanes can guess.
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            ownerWorkTools.handle(request)) return
         at.heinz.deviceai.cognitive.OwnerDeviceClockReply.answer(
             OwnerAppLookupIntent.stripAddress(request, continuumState?.archive?.identityState?.chosenName),
             java.time.Instant.now(), java.time.ZoneId.systemDefault())?.let { answer ->
@@ -12064,16 +12068,20 @@ class AgentActivity : Activity() {
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
         invalidated:()->Unit = {},
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) =
-        confirmWebRequest(call, mode, false, invalidated, completed)
+        confirmWebRequest(call, mode, false, invalidated, completed = completed)
 
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
         requireIdle: Boolean,
         invalidated:()->Unit = {},
+        // Work tools (news feeds): what this grant is used for, and the notice when it is not given.
+        explanation: String? = null,
+        notGranted: String? = null,
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
         val presentationRevision = ++researchApprovalPresentationRevision
         val presentationSession = sessionId
         var noticeEmitted = false
-        fun notExecuted(message: String = "Recherche nicht ausgeführt: Es liegt keine aktuelle Freigabe für diese Anfrage vor.") {
+        fun notExecuted(message: String = notGranted
+            ?: "Recherche nicht ausgeführt: Es liegt keine aktuelle Freigabe für diese Anfrage vor.") {
             if (noticeEmitted || sessionId != presentationSession ||
                 researchApprovalPresentationRevision != presentationRevision ||
                 isFinishing || isDestroyed) return
@@ -12147,7 +12155,7 @@ class AgentActivity : Activity() {
         }
         approvalDialog = AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
-            .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
+            .setMessage((explanation ?: if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
                 "Diese Suchfrage wird an öffentliche Suchanbieter übertragen. Externe Webquellen werden unabhängig geprüft. "
                 else "Diese eine HTTPS-Quelle wird gelesen; sichere öffentliche Weiterleitungen sind begrenzt erlaubt. ")+
                 "Gilt nur für diese Anfrage, ohne Gerätefreigabe oder automatische Folgeaufträge.\n\n"+call.question)
@@ -12369,6 +12377,120 @@ class AgentActivity : Activity() {
                 setBusy(false)
                 refreshLocalModelUi()
             }
+        }
+    }
+
+    // ── Owner work tools (news briefing; export and mail hand-over of its result) ───────────────────────────────
+    // Thin adapter only: recognition, wording and the work chain live in OwnerWorkTools and cognitive/News*.
+    private val ownerWorkTools by lazy { OwnerWorkTools(OwnerWorkToolsAdapter()) }
+
+    private inner class OwnerWorkToolsAdapter : OwnerWorkToolsHost {
+        override val sessionId: String get() = this@AgentActivity.sessionId
+        override val ownerTurn: Long get() = ownerReplyRevision
+        override val assistantName: String? get() = at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+            continuumState?.archive?.identityState?.chosenName)
+
+        override fun internetMode(): at.heinz.deviceai.cognitive.InternetAccessMode {
+            restoreInternetMode()
+            return internetConsent.mode
+        }
+
+        override fun acceptOwnerTurn(request: String) {
+            input.text.clear()
+            researchArmed = false
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        }
+
+        override fun reply(request: String, text: String, kind: at.heinz.deviceai.cognitive.NonModelReplyKind) =
+            addNonModelReply(request, text, kind)
+
+        override fun say(text: String) = addAssistantMessage(text.take(8_000), preserveLocalContext = true)
+
+        override fun activity(line: String) = addToolActivity(line)
+
+        override fun confirmWeb(call: at.heinz.deviceai.cognitive.WebToolRequest, explanation: String?, notGranted: String?,
+            completed: (at.heinz.deviceai.cognitive.ApprovedWebResearchSession?) -> Unit) {
+            val owner = this@AgentActivity.sessionId
+            confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true, explanation = explanation,
+                notGranted = notGranted) { session ->
+                if (session != null && (busy || this@AgentActivity.sessionId != owner || !foregroundLearningActive ||
+                        isFinishing || isDestroyed)) {
+                    session.cancel()
+                    completed(null)
+                } else completed(session)
+            }
+        }
+
+        override fun startResearch(session: at.heinz.deviceai.cognitive.ApprovedWebResearchSession) = runResearch(session)
+
+        /** Same lane, cancellation and stale-result rules as [runResearch]; the steps are real cockpit events. */
+        override fun <T> runWebJob(session: at.heinz.deviceai.cognitive.ApprovedWebResearchSession, request: String,
+            work: (OwnerWorkWebJob) -> T, done: (Result<T>) -> Unit) {
+            if (busy || localAgentExecutor.isShutdown || !foregroundLearningActive || isFinishing || isDestroyed ||
+                !session.isAuthorized()) { session.cancel(); return }
+            val owner = this@AgentActivity.sessionId
+            val cancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
+            val turn = at.heinz.deviceai.chief.TurnLifecycle("work-" + UUID.randomUUID())
+            activeChiefTurn = turn
+            turn.acknowledge()?.let { cockpitTriggers.commandAcknowledged(turn.turnId, request) }
+            activeWebResearchSession = session
+            activeResearchCancellation = cancellation
+            activeLocalRequest = true
+            setBusy(true)
+            val job = object : OwnerWorkWebJob {
+                override fun readFeeds(feeds: List<at.heinz.deviceai.cognitive.NewsFeed>): List<at.heinz.deviceai.cognitive.NewsFeedResult> {
+                    val runner = ApprovedNewsFeedToolRunner(session, feeds, ApprovedNewsFeedToolRunner.transport {
+                        session.checkActive(); check(!cancellation.isCancelled()) { "Nachrichtenabruf abgebrochen" }
+                    })
+                    val gate = ToolGate(ToolPolicy(timeoutMillis = 30_000), runner, receiptStore = receiptStore)
+                    val execution = gate.execute(session.call.proposal().invocation("news-" + UUID.randomUUID()), userConfirmed = true)
+                    check(execution.record.status == ToolExecutionStatus.SUCCEEDED) { execution.record.decisionReason }
+                    return checkNotNull(runner.results) { "Internetfreigabe widerrufen" }
+                }
+
+                override fun generate(prompt: String): OwnerWorkGeneration {
+                    val generation = generateLocal(promptCharacters = prompt.length, hardDeadlineMillis = 150_000,
+                        maxOutputBytes = 6_000) { callback -> localRuntime.streamTextOnly(prompt, callback) }
+                    return OwnerWorkGeneration(generation.response, generation.failure,
+                        generation.completion == LocalGenerationCompletion.COMPLETE)
+                }
+
+                override fun step(key: String, label: String, state: at.heinz.deviceai.cockpit.StepState,
+                    action: at.heinz.deviceai.cockpit.CockpitAction?) = cockpitTriggers.workStep(turn.turnId, key, label, state, action)
+
+                override fun cancelled(): Boolean = cancellation.isCancelled() || !session.isAuthorized()
+            }
+            localAgentExecutor.execute {
+                val result = runCatching { work(job).also { session.checkAuthorized() } }
+                runOnUiThread {
+                    if (isFinishing || isDestroyed) return@runOnUiThread
+                    if (activeResearchCancellation !== cancellation) return@runOnUiThread
+                    activeResearchCancellation = null
+                    activeWebResearchSession = null
+                    activeLocalRequest = false
+                    val current = this@AgentActivity.sessionId == owner && foregroundLearningActive &&
+                        !cancellation.isCancelled() && session.isAuthorized()
+                    if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = current && result.isSuccess)
+                    if (current) done(result)
+                    else addToolActivity("NACHRICHTEN · abgebrochen oder Freigabe widerrufen · Ergebnis verworfen")
+                    setBusy(false)
+                    refreshLocalModelUi()
+                }
+            }
+        }
+
+        override fun modelReady(): Boolean = ::localRuntime.isInitialized && localModelReady()
+
+        override fun promptBudgetBytes(): Int = localRuntime.toolFreePromptUtf8Bytes ?: 6_000
+
+        override fun showSources(sources: List<at.heinz.deviceai.cognitive.NewsSourceRef>) =
+            sources.distinctBy { it.link }.chunked(8).forEach { part ->
+                addCitations(part.map { AgentCitation(title = it.outlet + ": " + it.title, url = it.link) })
+            }
+
+        override fun rememberResearch(digest: at.heinz.deviceai.cognitive.ResearchDialogueHandoff.Digest) {
+            localConversationContext.recordResearch(this@AgentActivity.sessionId, digest)
+            addToolActivity("NACHRICHTEN · Ergebnis als Gesprächskontext übernommen (ungeprüft)")
         }
     }
 

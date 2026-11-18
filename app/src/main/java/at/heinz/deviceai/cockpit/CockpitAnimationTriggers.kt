@@ -59,6 +59,26 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         }
     }
 
+    /**
+     * A named step of a deterministic work chain that really runs (news briefing: Quellen abrufen → Meldungen
+     * auswählen → Zusammenfassen; file export). The first call adds the step, later calls with the same [key] only
+     * change its state. [action] additionally shows the start on the matching control. Unknown or ended turns
+     * are ignored, exactly like tool steps.
+     */
+    fun workStep(turnId: String, key: String, label: String, state: StepState, action: CockpitAction? = null) {
+        val stepKey = "step:" + clean(key, 32)
+        val text = clean(label, 48)
+        if (text.isEmpty()) return
+        var added = false
+        if (!update(turnId) { list ->
+                val index = list.indexOfFirst { it.key == stepKey }
+                if (index >= 0) list[index] = list[index].copy(label = text, state = state)
+                else { list += ProcessStep(stepKey, text, state); added = true }
+            }) return
+        if (added && action != null && state == StepState.ACTIVE)
+            bus.emit(CockpitAnimationEvent.ActionStarted(turnId, clock(), action, text, stepKey = stepKey))
+    }
+
     fun workerStarted(workerId: String, goal: String) {
         val steps = synchronized(this) {
             if (workerId in ended || workerId in timelines) return

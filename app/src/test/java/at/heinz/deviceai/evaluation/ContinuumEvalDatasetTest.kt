@@ -172,10 +172,50 @@ class ContinuumEvalDatasetTest {
             failures.joinToString("\n"))
     }
 
+    /**
+     * `regression-news.jsonl` (work tools, 18.11.2026): news orders and the replies to the closing question, feed
+     * parsing, day selection and merging on the synthetic feeds of `regression-news.feeds.json`, and the follow-up
+     * orders on the result (save as PDF/Word, file names, mail hand-over) – executed against the productive classes.
+     */
+    @Test fun everyNewsRegressionCaseHoldsOnTheRealCode() {
+        val feeds = JSONObject(File(root, "regression-news.feeds.json").readText(Charsets.UTF_8))
+        val failures = mutableListOf<String>()
+        val all = cases("regression-news.jsonl")
+        assertTrue("news regression set unexpectedly small: ${all.size}", all.size >= 24)
+        all.forEach { case ->
+            val id = case.getString("id")
+            val expect = case.getJSONObject("expect")
+            fun check(ok: Boolean, message: String) { if (!ok) failures += "$id: $message" }
+            when (case.getString("runner")) {
+                "news_intent" -> EvalProbe.news(case.getString("input")).let {
+                    check(it == expect.getString("news"), "news order $it, expected ${expect.getString("news")}")
+                }
+                "news_follow_up" -> EvalProbe.newsFollowUp(case.getString("input"), case.getBoolean("immediate"),
+                    strings(case, "briefed")).let {
+                    check(it == expect.getString("follow_up"), "follow-up $it, expected ${expect.getString("follow_up")}")
+                }
+                "news_feed" -> {
+                    val stories = EvalProbe.newsSelection(case.getString("input"),
+                        strings(case, "feeds").associateWith(feeds::getString), Instant.parse(case.getString("now")),
+                        ZoneId.of(case.getString("zone")))
+                    check(stories != null, "not recognised as a news order")
+                    val text = stories.orEmpty().joinToString("\n")
+                    if (expect.has("count")) check(stories?.size == expect.getInt("count"), "stories ${stories?.size}: $text")
+                    if (expect.has("first")) check(stories?.firstOrNull() == expect.getString("first"), "first story: ${stories?.firstOrNull()}")
+                    strings(expect, "contains").forEach { check(text.contains(it), "missing „$it“ in:\n$text") }
+                    strings(expect, "not_contains").forEach { check(!text.contains(it), "forbidden „$it“ in:\n$text") }
+                }
+                else -> failures += "$id: unknown runner ${case.getString("runner")}"
+            }
+        }
+        if (failures.isNotEmpty()) fail("${failures.size} of ${all.size} news regression cases failed:\n" +
+            failures.joinToString("\n"))
+    }
+
     @Test fun everyCaseHasAnIdACategoryAndAFormalCriterion() {
         val seen = mutableSetOf<String>()
-        listOf("regression.jsonl", "regression-voice.jsonl", "regression-references.jsonl", "model-dev.jsonl",
-            "model-holdout.jsonl").forEach { file ->
+        listOf("regression.jsonl", "regression-voice.jsonl", "regression-references.jsonl", "regression-news.jsonl",
+            "model-dev.jsonl", "model-holdout.jsonl").forEach { file ->
             cases(file).forEach { case ->
                 val id = case.getString("id")
                 assertTrue("duplicate id $id", seen.add(id))
@@ -225,7 +265,8 @@ class ContinuumEvalDatasetTest {
             "negation", "temporal", "multi_step", "math", "document", "tool_choice", "interruption",
             "incomplete_info", "uncertainty_abstention", "contradiction", "abort_resume")
         val RUNNERS = setOf("route", "object_state", "clock", "owner_recall", "voice_command",
-            "register", "turn_completion", "drive_command", "notification", "reference")
+            "register", "turn_completion", "drive_command", "notification", "reference",
+            "news_intent", "news_follow_up", "news_feed")
         val CRITERIA = setOf("contains_all", "contains_any", "numeric", "abstain", "asks_back", "tool_call", "no_tool")
     }
 }

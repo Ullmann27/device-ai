@@ -10,6 +10,7 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression.jsonl` | 40 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | deterministische Pfade: Werkzeugwahl, Negation/Kontrast, Objektgedächtnis mit Korrekturen, Geräteuhr, bestätigte Erinnerung, Sprachsteuerbefehle |
 | `regression-voice.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Sprachrunde: Gesprächsregister, Satzende-Erkennung, Fahrmodus-Befehle, Benachrichtigungs-Ansagen (Codes, Links, Freigabestufen) |
 | `regression-references.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Code64 Bezugsverwaltung: Dokumente einer Sitzung (Reihenfolge, Name, „das andere“), Seiten- und Absatzfokus, Vergleiche mit zwei Operanden, Rückfrage bei Mehrdeutigkeit, fehlende Seiten/Absätze; Dokumente aus `regression-references.documents.json` (synthetisch) |
+| `regression-news.jsonl` | 41 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Arbeitswerkzeuge (18.11.2026): Nachrichtenauftrag ja/nein (Abgrenzung zu Mitteilungen, Messenger, Benachrichtigungs-Ansage), Themen, Antworten auf die Rückfrage, Feed-Lesen (RSS 2.0, RDF, Atom), Tagesauswahl und Zusammenführen derselben Meldung; Feeds aus `regression-news.feeds.json` (synthetisch) |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -21,7 +22,8 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
 - `id`, `category`, `note`
 - `runner`: `route` · `object_state` · `clock` · `owner_recall` · `voice_command`;
   in `regression-voice.jsonl` zusätzlich `register` · `turn_completion` · `drive_command` · `notification`;
-  in `regression-references.jsonl` `reference`
+  in `regression-references.jsonl` `reference`;
+  in `regression-news.jsonl` `news_intent` · `news_follow_up` · `news_feed`
 - Eingabe je Läufer: `input` bzw. `turns` + `question`, `facts`, `now` + `zone`;
   für `reference`: `documents` (Schlüssel der Fixture-Datei, in Öffnungsreihenfolge), `turns` (frühere Nutzerzüge;
   `open:<Schlüssel>` öffnet mitten im Gespräch ein weiteres Dokument) und `input`
@@ -30,6 +32,11 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   für `reference`: `kind` (`RESOLVED` · `AMBIGUOUS` · `MISSING` · `NONE`), `document`, `page`, `paragraph`, `intent`
   (`FOCUS` · `QUOTE` · `QUESTION` · `COMPARISON`), `page_assumed`, `compared_document`, `compared_page`;
   `contains`/`not_contains` prüfen den aufgelösten Stellentext bzw. die Rückfrage oder Begründung
+- `regression-news.jsonl`: `news_intent` erwartet `news` (`GENERAL` · `TOPICS:<Thema>|<Thema>` · `NONE`);
+  `news_follow_up` (`immediate`, `briefed` = Wörter der genannten Schlagzeilen) erwartet `follow_up`
+  (`TOPICS:…` · `STORY:<n>` · `ASK` · `DECLINE` · `NONE`); `news_feed` (`feeds` = Schlüssel der Feed-Datei, `now`,
+  `zone`) erwartet `count`, `first`, `contains`, `not_contains` über die Zeilen
+  `Haus: Schlagzeile | weiteres Haus` der ausgewählten Meldungen
 
 Modellfälle (`model-*.jsonl`):
 
@@ -58,6 +65,11 @@ Stand: 32 / 32.
 
 Für `regression-references.jsonl` (Code64, 18.11.2026) gilt dasselbe: die Bezugsverwaltung existierte vorher nicht.
 Stand (Host): 32 / 32.
+
+Für `regression-news.jsonl` (Arbeitswerkzeuge, 18.11.2026) gibt es ebenfalls keinen Vorher-Wert: Nachrichtenauftrag,
+Feed-Leser und Auswahl existierten vorher nicht (Feldbefund: das lokale Modell antwortete mit einer Meta-Erklärung,
+ohne ein Web-Werkzeug zu benutzen). Stand (Host): 41 / 41. Geprüft sind die deterministischen Pfade; ob die
+Zusammenfassung des lokalen Modells auf dem Gerät menschlich klingt, ist NOT_RUN.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 
