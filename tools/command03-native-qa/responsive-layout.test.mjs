@@ -19,7 +19,16 @@ try {
     execFileSync('git', ['show', `${baselineRef}:app/src/main/assets/continuum-command03/${name}`],
       {cwd: resolve(root, '../../../../..'), maxBuffer: 8 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe']})]));
 } catch (error) {baselineError = String(error.message).split('\n')[0].slice(0, 200);}
-const mime = {'.html':'text/html', '.css':'text/css', '.js':'application/javascript',
+// Code70: bridge and layer of Code69. Its stage while the on-device model computes is the tested resting state;
+// the window effects added afterwards must leave exactly that state as it was.
+const restRef = process.env.COMMAND03_REST_BASELINE_REF || '717375cc1';
+let restFiles = null, restError = '';
+try {
+  restFiles = Object.fromEntries(['native-bridge.js', 'native-layer.css'].map(name => [name,
+    execFileSync('git', ['show', `${restRef}:app/src/main/assets/continuum-command03/${name}`],
+      {cwd: resolve(root, '../../../../..'), maxBuffer: 8 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe']})]));
+} catch (error) {restError = String(error.message).split('\n')[0].slice(0, 200);}
+const mime ={'.html':'text/html', '.css':'text/css', '.js':'application/javascript',
   '.png':'image/png', '.ttf':'font/ttf', '.glb':'model/gltf-binary'};
 const scope = {sessionId:'12345678-1234-1234-1234-123456789abc',
   pageId:'11111111-1111-4111-8111-111111111111',
@@ -31,10 +40,11 @@ const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
     const before = url.pathname.startsWith('/before/');
-    const relative = decodeURIComponent(url.pathname.replace(/^\/(before|after|base)\//, ''));
+    const relative = decodeURIComponent(url.pathname.replace(/^\/(before|after|base|rest)\//, ''));
     const path = resolve(root, relative);
     if (!path.startsWith(root + sep)) {res.writeHead(403).end();return;}
-    const bytes = url.pathname.startsWith('/base/') && baselineFiles?.[relative] ? baselineFiles[relative] :
+    const earlier = url.pathname.startsWith('/base/') ? baselineFiles : url.pathname.startsWith('/rest/') ? restFiles : null;
+    const bytes = earlier?.[relative] ? earlier[relative] :
       await readFile(before && relative==='native-layer.css' && baseline ? baseline : path);
     res.writeHead(200, {'Content-Type':mime[extname(path)] || 'application/octet-stream',
       'Cache-Control':'no-store'}).end(bytes);
@@ -301,7 +311,7 @@ try {
   const comparedStates=width=>Object.entries(roomStates).filter(([name])=>name==='working' || width===412 || width===834);
   async function openRoom(version,width,height,values,options={}) {
     const roomContext=await browser.newContext({viewport:{width,height},isMobile:true,hasTouch:true,
-      deviceScaleFactor:1,reducedMotion:options.reducedMotion||'no-preference'});
+      deviceScaleFactor:options.scale||1,reducedMotion:options.reducedMotion||'no-preference'});
     const room=await roomContext.newPage();
     room.on('pageerror',error=>errors.push(version+': '+error.message));
     await room.goto(`${url}/${version}/index.android.html`,{waitUntil:'load'});
@@ -619,6 +629,441 @@ try {
     await large.context().close();
     report.checks.push(item);
   }
+  // ───────── Code70: cinematic windows on real events (begin) ─────────
+  // The work window, the live window (monitor) and the result window in a real browser engine: Chat, Stop and
+  // Settings stay reachable on phone and Fold7 (closed, open, keyboard, rotated), a dispatched input sits on the
+  // pixel Android measured, and the stage that rests while the on-device model computes is exactly the Code69 one.
+  {
+    const shots=process.env.COMMAND03_SHOTS_OUTPUT?resolve(process.env.COMMAND03_SHOTS_OUTPUT):null;
+    if(shots)await mkdir(shots,{recursive:true});
+    report.code70={restBaseline:restFiles?restRef:'NOT_RUN: '+restError,shots:shots?[]:'NOT_REQUESTED'};
+    if(!restFiles && process.env.COMMAND03_REQUIRE_BASELINE==='1')
+      assert.fail('Baseline '+restRef+' is not readable from git: '+restError);
+    const steps70={revision:31,kind:'RESEARCH',active:true,title:'Recherchiert',detail:'Förderprogramme für Wärmepumpen',
+      steps:[['Gedächtnis durchsucht','DONE'],['Dateisuche in „Dokumente/Heizung“','DONE'],
+        ['Websuche: Landesförderung Oberösterreich','ACTIVE'],['Ergebnis gegen zweite Quelle prüfen','WAITING']]
+        .map(([label,state])=>({label,state}))};
+    const sources70={...scope,sourceSetId:'55555555-5555-4555-8555-555555555557',items:[
+      ['Förderung Wärmepumpe – Land Oberösterreich','https://www.land-oberoesterreich.gv.at/foerderungen/waermepumpe'],
+      ['Raus aus Öl und Gas: Bundesförderung','https://www.umweltfoerderung.at/privatpersonen/raus-aus-oel'],
+      ['Heizungstausch – Voraussetzungen','https://www.oesterreich.gv.at/themen/bauen_wohnen/heizungstausch']]
+      .map(([title,url],index)=>({id:'66666666-6666-4666-8666-66666666667'+index,title,url}))};
+    const tap={sequence:6,kind:'CLICK',state:'DISPATCHED',x:.3,y:.19,frameSequence:12,observationRevision:4};
+    const work70={consentPending:false,taskId:'computer-synthetic',captureSession:'7',stage:'DISPATCHED',app:'Dateien',
+      goal:'Download-Ordner öffnen',actions:[{sequence:3,kind:'SCROLL',state:'VERIFIED',frameSequence:8,observationRevision:2},tap]};
+    const put=(room,values)=>room.evaluate(packet=>window.ContinuumNative.receive(packet),{...state,status:'Bereit',...values});
+    const say=(room,user,text)=>room.evaluate(packet=>window.ContinuumNative.message(packet),{...scope,user,text});
+    const frames=room=>room.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done))));
+    // A synthetic picture drawn in the page (no device image exists on this host). Like the real feed, the stream
+    // keeps delivering; a picture that is not renewed leaves after its lease.
+    const startStream=(room,generation=1)=>room.evaluate(async([scope,generation])=>{
+      const canvas=document.createElement('canvas');canvas.width=360;canvas.height=640;
+      const c=canvas.getContext('2d');
+      c.fillStyle='#f4f6fa';c.fillRect(0,0,360,640);c.fillStyle='#1b6ef3';c.fillRect(0,0,360,64);
+      c.fillStyle='#fff';c.font='600 20px sans-serif';c.fillText('Dateien',20,40);
+      ['Downloads','Dokumente','Bilder','Musik','Videos'].forEach((name,index)=>{
+        c.fillStyle='#fff';c.fillRect(16,88+index*84,328,68);c.fillStyle='#20242c';c.font='15px sans-serif';
+        c.fillText(name,36,128+index*84);});
+      c.fillStyle='#8a93a3';c.font='12px sans-serif';c.fillText('SYNTHETISCHES TESTBILD · kein Gerätebild',20,620);
+      const packet={...scope,generation,sequence:1,active:true,status:'LIVE',reason:'Live',taskId:'computer-synthetic',
+        captureSession:'7',targetPackage:'com.google.android.documentsui',sourceEpoch:generation,ageMs:10,staleAfterMs:1500,
+        frameDataUri:canvas.toDataURL('image/jpeg',.82),width:360,height:640,viewport:[0,0,1,1],sourceSequence:12,
+        observationRevision:4};
+      let sequence=1;
+      const next=()=>window.ContinuumNative.computer({...packet,sequence:++sequence,sourceSequence:11+sequence});
+      window.ContinuumNative.computer(packet);
+      clearInterval(window.__stream);window.__stream=setInterval(next,350);
+      await window.ContinuumWorkspaceMotion.whenSettled();
+      const started=performance.now();
+      while(!document.querySelector('.native-computer-image') && performance.now()-started<8000)
+        await new Promise(done=>setTimeout(done,50));
+    },[scope,generation]);
+    const stopStream=room=>room.evaluate(()=>clearInterval(window.__stream));
+    const endStream=(room,generation=1)=>room.evaluate(([scope,generation])=>{
+      clearInterval(window.__stream);
+      window.ContinuumNative.computer({...scope,generation,sequence:100000,active:false,status:'ENDED',reason:'Live-Bild angehalten'});
+    },[scope,generation]);
+    const cloud={busy:true,presence:'THINKING',cloudBrain:true,status:'Computer-Auftrag läuft'};
+    const local={busy:true,presence:'THINKING',status:'Antwort wird berechnet'};
+    // Each state is built from the packets Android would send, in their order.
+    const states70={
+      idle:async room=>{await put(room,{presence:'IDLE'});},
+      working:async room=>{
+        await put(room,{busy:true,presence:'RESEARCHING',cloudBrain:true,status:'Recherche läuft',activity:steps70});
+        await say(room,true,'Welche Förderung gibt es für Wärmepumpen in Oberösterreich?');
+        await room.evaluate(packet=>window.ContinuumNative.sources(packet),sources70);
+      },
+      live:async room=>{
+        await put(room,{...cloud,computerWork:{...work70,stage:'VERIFIED',actions:[work70.actions[0]]}});
+        await say(room,true,'Öffne den Download-Ordner in Dateien.');
+        await startStream(room);
+        await put(room,{...cloud,computerWork:work70});
+      },
+      ended:async room=>{
+        await states70.live(room);
+        await endStream(room);
+        await put(room,{presence:'IDLE',computerWork:{...work70,stage:'COMPLETED',
+          actions:work70.actions.map(action=>({...action,state:'VERIFIED'}))}});
+        await say(room,false,'Der Download-Ordner ist geöffnet. Darin liegen 14 Dateien.');
+      },
+      result:async room=>{
+        await put(room,{busy:true,presence:'THINKING',cloudBrain:true,status:'Dokument wird gelesen',
+          activity:{...steps70,kind:'DOCUMENT',title:'Dokument wird gelesen',detail:'Argon4.pdf · 3 Seiten'}});
+        await say(room,true,'Öffne Argon4 und fasse die Messreihe zusammen.');
+        await room.evaluate(packet=>window.ContinuumNative.document(packet),{...scope,
+          documentId:'33333333-3333-4333-8333-333333333337',name:'Argon4.pdf',pageCount:3,textState:'EXTRACTED',
+          text:'Argon4 – Messprotokoll.\nDie Messreihe vom 1. Oktober zeigt stabile Werte.',canDraft:true});
+        await room.evaluate(()=>window.ContinuumWorkspaceMotion.whenSettled());
+      },
+      rest:async room=>{
+        await states70.working(room);
+        await put(room,{...local,activity:{...steps70,revision:32,kind:'THINK',title:'Denkt nach'}});
+        await room.evaluate(packet=>window.ContinuumNative.draft(packet),
+          {...scope,text:'Für Oberösterreich gibt es eine Landesförderung; zusätzlich fördert der Bund den Tausch'});
+      }};
+    const busyStates=new Set(['working','live','result','rest']);
+    const devices70=[['phone',412,915],['phone-keyboard',412,480],['fold-closed',344,882],['fold-closed-keyboard',344,460],
+      ['fold-closed-rotated',882,344],['fold-open',834,1112],['fold-open-keyboard',834,640],['fold-open-rotated',1112,834]];
+    /** Reachability and containment of everything the windows add, at the current size of the same page. */
+    const inspect70=(room,busy)=>room.evaluate(busy=>{
+      // Every reading follows its scroll in the same task: the live stream replaces its picture several times a
+      // second and a picture that arrives or leaves changes the height of the monitor above the composer.
+      const failures=[];
+      const root=document.documentElement, name=node=>(typeof node?.className==='string' && node.className.split(' ')[0]) || node?.tagName;
+      if(root.scrollWidth>root.clientWidth+1)failures.push('root horizontal overflow');
+      scrollTo(200,scrollY);
+      if(scrollX!==0)failures.push('page can pan horizontally');
+      // Chat, Stop (or Send) and Settings: on screen at their own centre, never under a window or a light layer.
+      const controls=['#command-input','#listen-button',busy?'.native-stop-button':'.send-button',
+        '.header-tools>[data-action="settings"]','.native-setting-shortcut','#close-button'];
+      for(const selector of controls) {
+        const found=[...document.querySelectorAll(selector)];
+        if(!found.length)failures.push(selector+': missing');
+        for(const control of found) {
+          if(control.hidden || getComputedStyle(control).display==='none') {failures.push(selector+': not shown');continue;}
+          control.scrollIntoView({block:'center',inline:'center'});
+          const r=control.getBoundingClientRect();
+          if(r.width<=0 || r.height<=0) {failures.push(selector+': no box');continue;}
+          if(r.x<-1 || r.right>innerWidth+1 || r.y<-1 || r.bottom>innerHeight+1)failures.push(selector+': outside the viewport');
+          const top=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);
+          if(top!==control && !control.contains(top))failures.push(selector+': covered by '+name(top));
+          else if(!control.matches('#command-input') && (r.width<43.5 || r.height<43.5))failures.push(selector+': smaller than 44px');
+        }
+      }
+      if(busy && getComputedStyle(document.querySelector('.send-button')).display!=='none')failures.push('Send shown beside Stop');
+      // Nothing a window adds leaves the workspace sideways or collapses.
+      const body=document.querySelector('#workspace').getBoundingClientRect();
+      for(const selector of ['#native-live-panel','#native-computer-panel','#native-document-panel','.native-window-frame',
+        '#workspace .op-mode-label','.op-window-id','.native-computer-screen','.native-computer-image',
+        '.native-computer-marker','.native-computer-work','.native-computer-stage','.native-computer-log li',
+        '.native-action-kind','.native-action-state','.native-monitor-record','.native-record-badge',
+        '.native-monitor-record>strong','.native-monitor-record>p','#native-live-panel .native-source-link',
+        '#native-live-panel .native-source-host','.native-chat-line','.native-draft']) {
+        for(const node of document.querySelectorAll(selector)) {
+          if(!node.getClientRects().length)continue;
+          const r=node.getBoundingClientRect();
+          if(r.width<=0 || r.height<=0)failures.push(selector+': collapsed');
+          if(r.x<body.x-9 || r.right>body.right+9)failures.push(selector+': outside the work window');
+          if(r.x<-1 || r.right>root.clientWidth+1)failures.push(selector+': outside the viewport');
+        }
+      }
+      // The work window never ends under the composer: scrolled to the end, its lower edge is above it.
+      scrollTo(0,root.scrollHeight);
+      const shell=document.querySelector('.workspace-shell').getBoundingClientRect();
+      const composer=document.querySelector('#command-form').getBoundingClientRect();
+      if(composer.y<-1 || composer.bottom>innerHeight+1 || composer.x<-1 || composer.right>root.clientWidth+1)
+        failures.push('composer outside the viewport at the end of the page');
+      if(shell.bottom>composer.top+1 && shell.top<composer.bottom)failures.push('work window ends under the composer by '+
+        Math.round(shell.bottom-composer.top)+' px');
+      scrollTo(0,0);
+      return failures;
+    },busy);
+    /** The marker's centre against the pixel Android measured, and the image still topmost there. */
+    const markerAt=(room,x,y)=>room.evaluate(async([x,y])=>{
+      // A marker needs a fresh picture; on a busy host the next frame of the stream may still be on its way.
+      const started=performance.now();
+      while(!document.querySelector('.native-computer-marker') && performance.now()-started<2000)
+        await new Promise(done=>setTimeout(done,40));
+      document.querySelector('.native-computer-marker')?.scrollIntoView({block:'center'});
+      await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));
+      // Read in one go: the stream replaces the picture several times a second.
+      const dot=document.querySelector('.native-computer-marker'), image=document.querySelector('.native-computer-image');
+      if(!dot || !image)return {missing:!dot?'marker':'image'};
+      const a=image.getBoundingClientRect(), b=dot.getBoundingClientRect(), cx=b.x+b.width/2, cy=b.y+b.height/2;
+      return {dx:cx-(a.x+x*a.width),dy:cy-(a.y+y*a.height),topmost:document.elementFromPoint(cx,cy)===image,
+        ring:getComputedStyle(dot,'::after').animationName,state:dot.dataset.state,pointer:getComputedStyle(dot).pointerEvents};
+    },[x,y]);
+    for(const name of Object.keys(states70)) {
+      const room=await openRoom('after',devices70[0][1],devices70[0][2],{presence:'IDLE'});
+      await states70[name](room);
+      for(const [device,width,height] of devices70) {
+        // Rotation, folding and the keyboard change the size of the page that is already showing this state.
+        await room.setViewportSize({width,height});
+        await room.evaluate(()=>window.dispatchEvent(new Event('resize')));
+        await frames(room);
+        const item={label:`code70-${name}-${device}-${width}x${height}`,failures:[]};
+        if(name==='live') {
+          // The marker left after its short time; a new real input brings one for this size.
+          await put(room,{...cloud,computerWork:{...work70,actions:[work70.actions[0],{...tap,sequence:6+devices70.findIndex(row=>row[0]===device)+1}]}});
+          const at=await markerAt(room,tap.x,tap.y);
+          if(at.missing)item.failures.push('no '+at.missing+' in the live window');
+          else {
+            if(Math.abs(at.dx)>1.5 || Math.abs(at.dy)>1.5)item.failures.push('marker '+at.dx.toFixed(1)+'/'+at.dy.toFixed(1)+' px off the measured pixel');
+            if(!at.topmost || at.pointer!=='none')item.failures.push('the marker covers the picture for the visibility check');
+          }
+          // Target, state and the list of inputs are readable at this size, not only present in the page.
+          const readable=await room.evaluate(()=>['.op-window-id','.op-mode-label','.native-computer-stage','.native-computer-log li']
+            .map(selector=>{
+              const node=document.querySelector('#native-computer-panel '+selector), r=node?.getBoundingClientRect();
+              return [selector,node?.textContent ?? null,!!r && r.width>0 && r.height>0];}));
+          for(const [selector,text,visible] of readable)
+            if(!visible || !text)item.failures.push(selector+': not readable in the live window');
+          if(readable[0][1]!=='Dateien · com.google.android.documentsui')item.failures.push('title is '+readable[0][1]);
+        }
+        item.failures.push(...await inspect70(room,busyStates.has(name)));
+        report.checks.push(item);
+      }
+      await stopStream(room);
+      await room.context().close();
+    }
+    // What the windows say, read from the real page.
+    {
+      const room=await openRoom('after',834,1112,{presence:'IDLE'});
+      await states70.live(room);
+      const read=()=>room.evaluate(()=>{
+        const panel=document.querySelector('#native-computer-panel'), text=selector=>document.querySelector(selector)?.textContent ?? null;
+        return {badge:panel?.querySelector('.op-mode-label').textContent ?? null,state:panel?.dataset.monitorState ?? null,
+          title:text('#native-computer-panel .op-window-id'),stage:text('#native-computer-panel .native-computer-stage'),
+          log:[...document.querySelectorAll('#native-computer-panel .native-computer-log li')].map(item=>item.textContent),
+          image:!!document.querySelector('.native-computer-image'),window:document.body.dataset.nativeWindow,
+          record:document.querySelector('.native-monitor-record:not([hidden])')?.innerText ?? null,
+          lamp:panel?getComputedStyle(panel.querySelector('.op-browser-status .status-dot')).animationName:null};});
+      let shown=await read();
+      assert.deepEqual([shown.badge,shown.state,shown.title,shown.stage,shown.image,shown.window],
+        ['LIVE','live','Dateien · com.google.android.documentsui','Download-Ordner öffnen · Eingabe ausgelöst',true,'live']);
+      assert.deepEqual(shown.log,['ScrollenWirkung bestätigt','Tippenausgelöst']);
+      assert.equal(shown.lamp,'native-live-lamp','Full tier, cloud brain, real frames: the live lamp runs');
+      // The stream stops delivering. Nothing ended it, so the window stays – and says that the picture is gone.
+      await stopStream(room);
+      await room.waitForFunction(()=>document.querySelector('#native-computer-panel')?.dataset.monitorState==='stale',null,{timeout:10000});
+      shown=await read();
+      assert.deepEqual([shown.badge,shown.image],['KEIN FRISCHES BILD',false],'A stale stream is shown as such');
+      assert.notEqual(shown.lamp,'native-live-lamp','No live lamp without a live picture');
+      // The source delivers again (a new capture generation, as after a real interruption).
+      await startStream(room,2);
+      assert.equal((await read()).badge,'LIVE');
+      await endStream(room,2);
+      shown=await read();
+      assert.deepEqual([shown.badge,shown.image,shown.window],[null,false,'work'],'An ended source keeps no monitor and no picture');
+      assert.match(shown.record,/LIVE-FENSTER\s+BEENDET[\s\S]*Dateien · com\.google\.android\.documentsui[\s\S]*Live-Bild angehalten\. Es wird kein Bild mehr übertragen\./);
+      await put(room,{...cloud,computerWork:{consentPending:true}});
+      assert.match((await read()).record,/WARTET AUF DEINE FREIGABE/);
+      report.code70.windowStates='PASS';
+      await room.context().close();
+    }
+    // Heat. While the on-device model computes, the stage must be the Code69 resting stage: the same looping
+    // animations, the same frame limit, the same paint on every panel that existed before, no new canvas, no blur
+    // of the background – with every window of this section filled and its events arriving.
+    const added=['native-step-settle','native-row-arrive','native-tile-arrive','native-marker-ping','native-live-lamp'];
+    const motion=room=>room.evaluate(added=>{
+      const label=animation=>{
+        const target=animation.effect?.target;
+        return (animation.animationName || 'transition')+'@'+((typeof target?.className==='string' && target.className.split(' ')[0]) ||
+          target?.tagName)+(animation.effect?.pseudoElement || '');};
+      const running=document.getAnimations().filter(animation=>animation.playState==='running');
+      const endless=animation=>animation.effect?.getComputedTiming().iterations===Infinity;
+      const paint=selector=>{
+        const node=document.querySelector(selector);if(!node)return null;
+        const style=getComputedStyle(node), moving=style.animationName!=='none';
+        // A running animation's momentary opacity and transform depend on the clock; its name is the fact.
+        return [style.boxShadow,style.backgroundImage,style.filter,moving?'animated':style.transform,
+          moving?'animated':style.opacity,style.animationName,style.transitionProperty];};
+      return {endless:[...new Set(running.filter(endless).map(label))].sort(),
+        addedRunning:[...new Set(running.filter(animation=>added.includes(animation.animationName)).map(label))].sort(),
+        canvases:document.querySelectorAll('canvas').length,
+        blurred:[...document.querySelectorAll('body,body *')].filter(node=>{
+          const style=getComputedStyle(node);
+          return (style.backdropFilter || 'none')!=='none' || (style.webkitBackdropFilter || 'none')!=='none';}).length,
+        veil:getComputedStyle(document.querySelector('.native-depth-veil') || document.body).display,
+        limit:document.body.dataset.frameLimit,compute:document.body.dataset.nativeCompute,effects:document.body.dataset.nativeEffects,
+        paint:Object.fromEntries(['.workspace-shell','#native-live-panel','.native-chat-line.native-owner','.native-draft',
+          '.native-transcript','.presence-wing-left .native-instrument','.native-activity-steps li','.native-telemetry-panel',
+          '#command-form','.native-orb-light','.native-room-light','.native-holo-field','.core-status','.avatar-crop',
+          '.orb-zone','.presence-system'].map(selector=>[selector,paint(selector)]))};
+    },added);
+    // The same packets for both versions; the Code69 page ignores what it does not know.
+    const restStage=async(version,width,height,quality,monitor)=>{
+      const room=await openRoom(version,width,height,{presence:'IDLE',quality});
+      await put(room,{busy:true,presence:'RESEARCHING',cloudBrain:true,quality,activity:steps70});
+      await say(room,true,'Welche Förderung gibt es für Wärmepumpen in Oberösterreich?');
+      await room.evaluate(packet=>window.ContinuumNative.sources(packet),sources70);
+      await say(room,false,'Es gibt eine Landesförderung.');
+      await say(room,true,'Und vom Bund?');
+      const computing={...local,quality,activity:{...steps70,revision:33,kind:'THINK',title:'Denkt nach',
+        steps:steps70.steps.map((step,index)=>index===2?{...step,state:'DONE'}:index===3?{...step,state:'ACTIVE'}:step)}};
+      await put(room,computing);
+      if(monitor) {
+        await put(room,{...computing,computerWork:{...work70,actions:[work70.actions[0]]}});
+        await startStream(room);
+        await put(room,{...computing,computerWork:work70});
+      } else await room.evaluate(packet=>window.ContinuumNative.draft(packet),{...scope,text:'Der Bund fördert den Tausch'});
+      await frames(room);
+      // The glass eases into the light of the new state (Code64); the comparison reads the settled paint.
+      await room.waitForFunction(()=>!document.getAnimations().some(animation=>
+        animation.constructor.name==='CSSTransition' && animation.playState==='running'),null,{timeout:20000});
+      return room;
+    };
+    const literal=['native-corona-breathe@native-orb-light','native-status-breathe@native-instrument-art',
+      'status-pulse@status-dot','transfer@I','workspace-side-signal@SPAN'];
+    report.code70.rest={};
+    for(const [width,height] of [[834,1112],[412,915]]) {
+      // Every tier on the unfolded display; the phone in the tier a cool device starts in.
+      for(const [quality,limit] of [['FULL','5'],['BALANCED','4'],['REDUCED','3']].filter(([quality])=>width===834 || quality==='FULL')) {
+        for(const monitor of [false,true]) {
+          const item={label:`code70-rest-${monitor?'monitor':'answer'}-${quality.toLowerCase()}-${width}x${height}`,failures:[]};
+          const now=await restStage('after',width,height,quality,monitor), current=await motion(now);
+          if(current.compute!=='local' || current.effects!=='rest')item.failures.push('not the resting stage: '+current.compute+'/'+current.effects);
+          if(current.limit!==limit)item.failures.push('frame limit '+current.limit+' instead of '+limit);
+          if(current.addedRunning.length)item.failures.push('window animations run while the device computes: '+current.addedRunning.join());
+          if(current.blurred)item.failures.push(current.blurred+' elements blur their background');
+          if(current.veil!=='none')item.failures.push('the depth layer is painted while the device computes');
+          // Reduced has no looping light at all; the list is that of Code69 for the tier.
+          const expected=quality==='REDUCED'?literal.filter(name=>!name.startsWith('native-corona')):literal;
+          if(JSON.stringify(current.endless)!==JSON.stringify(expected))
+            item.failures.push('looping animations '+JSON.stringify(current.endless)+' instead of '+JSON.stringify(expected));
+          // One event of each kind while computing: a step moves, a draft grows, an input lands. Nothing starts.
+          await put(now,{...local,quality,activity:{...steps70,revision:34,kind:'THINK',title:'Denkt nach',
+            steps:steps70.steps.map(step=>({...step,state:'DONE'}))},
+            ...(monitor?{computerWork:{...work70,actions:[work70.actions[0],{...tap,sequence:9}]}}:{})});
+          if(!monitor)await now.evaluate(packet=>window.ContinuumNative.draft(packet),{...scope,text:'Der Bund fördert den Tausch mit einem Zuschuss'});
+          const after=await motion(now);
+          if(after.addedRunning.length)item.failures.push('an event started '+after.addedRunning.join()+' while the device computes');
+          if(JSON.stringify(after.endless)!==JSON.stringify(current.endless))item.failures.push('an event changed the looping animations');
+          if(monitor) {
+            const at=await markerAt(now,tap.x,tap.y);
+            if(at.missing)item.failures.push('the input is not marked while the device computes');
+            else if(at.ring!=='none')item.failures.push('the marker ring animates while the device computes');
+          }
+          if(restFiles) {
+            const before=await restStage('rest',width,height,quality,monitor), original=await motion(before);
+            if(JSON.stringify(original.endless)!==JSON.stringify(current.endless))
+              item.failures.push('looping animations differ from '+restRef+': '+JSON.stringify(original.endless)+' → '+JSON.stringify(current.endless));
+            if(original.canvases!==current.canvases)item.failures.push('canvases '+original.canvases+' → '+current.canvases);
+            if(original.blurred!==current.blurred)item.failures.push('background blur '+original.blurred+' → '+current.blurred);
+            if(original.limit!==current.limit)item.failures.push('frame limit '+original.limit+' → '+current.limit);
+            for(const [selector,value] of Object.entries(original.paint))
+              if(JSON.stringify(value)!==JSON.stringify(current.paint[selector]))
+                item.failures.push(selector+': paint changed while the device computes '+JSON.stringify(value)+' → '+JSON.stringify(current.paint[selector]));
+            await stopStream(before);
+            await before.context().close();
+          }
+          report.code70.rest[item.label]={endless:current.endless,limit:current.limit,canvases:current.canvases};
+          await stopStream(now);
+          await now.context().close();
+          report.checks.push(item);
+        }
+      }
+    }
+    // Outside the resting stage the added motion follows Android's tier: one finite pass per real event in
+    // "full" and "balanced", the live lamp in "full" only, nothing in the reduced tier.
+    for(const [quality,tier,finite,lamp] of [['FULL','full',true,true],['BALANCED','balanced',true,false],['REDUCED','light',false,false]]) {
+      const item={label:'code70-tier-'+tier,failures:[]};
+      const room=await openRoom('after',834,1112,{presence:'IDLE',quality});
+      await put(room,{...cloud,quality,activity:steps70,computerWork:{...work70,actions:[work70.actions[0]]}});
+      await say(room,true,'Öffne den Download-Ordner in Dateien.');
+      await startStream(room);
+      const passes=()=>room.evaluate(added=>document.getAnimations().filter(animation=>added.includes(animation.animationName))
+        .map(animation=>[animation.animationName,animation.effect.getComputedTiming().iterations,animation.playState]),added);
+      // A real input lands on a picture that has just arrived; its ring is read in the call that delivers it.
+      const landing=await room.evaluate(async([packet,added])=>{
+        const shown=()=>document.querySelector('.native-computer-image')?.dataset.sequence;
+        const first=shown(), started=performance.now();
+        while(shown()===first && performance.now()-started<8000)await new Promise(done=>setTimeout(done,20));
+        window.ContinuumNative.receive(packet);
+        return {effects:document.body.dataset.nativeEffects,marker:!!document.querySelector('.native-computer-marker'),
+          passes:document.getAnimations().filter(animation=>added.includes(animation.animationName))
+            .map(animation=>[animation.animationName,animation.effect.getComputedTiming().iterations])};
+      },[{...state,...cloud,quality,activity:steps70,computerWork:work70},added]);
+      if(landing.effects!==tier)item.failures.push('tier '+landing.effects+' instead of '+tier);
+      if(!landing.marker)item.failures.push('the landed input has no marker');
+      const ring=landing.passes.filter(([name])=>name==='native-marker-ping');
+      if(finite && (ring.length!==1 || ring[0][1]!==1))item.failures.push('the input ring is not one finite pass: '+JSON.stringify(ring));
+      if(!finite && ring.length)item.failures.push('the input ring runs in the reduced tier');
+      const lit=landing.passes.filter(([name])=>name==='native-live-lamp');
+      if(lamp!==(lit.length===1 && lit[0][1]===Infinity))item.failures.push('live lamp: '+JSON.stringify(lit));
+      if(landing.passes.some(([name,iterations])=>name!=='native-live-lamp' && iterations!==1))
+        item.failures.push('an event animation is not finite: '+JSON.stringify(landing.passes));
+      // A step moves and the answer arrives: one pass each, then nothing of them is left running.
+      await endStream(room);
+      const arrival=await room.evaluate(([step,message,added])=>{
+        window.ContinuumNative.receive(step);window.ContinuumNative.message(message);
+        return document.getAnimations().filter(animation=>added.includes(animation.animationName))
+          .map(animation=>[animation.animationName,animation.effect.getComputedTiming().iterations]);
+      },[{...state,...cloud,quality,activity:{...steps70,revision:35,steps:steps70.steps.map((step,index)=>
+        index===2?{...step,state:'DONE'}:index===3?{...step,state:'ACTIVE'}:step)}},
+        {...scope,user:false,text:'Der Download-Ordner ist geöffnet.'},added]);
+      const names=[...new Set(arrival.map(([name])=>name))].sort();
+      if(finite && !(names.includes('native-step-settle') && names.includes('native-row-arrive')))
+        item.failures.push('step and answer did not get their one pass: '+names.join());
+      if(!finite && names.length)item.failures.push('motion in the reduced tier: '+names.join());
+      if(arrival.some(([,iterations])=>iterations!==1))item.failures.push('an arrival is not finite');
+      await room.waitForFunction(added=>!document.getAnimations().some(animation=>added.includes(animation.animationName) &&
+        animation.playState==='running'),added,{timeout:10000}).catch(()=>item.failures.push('a window animation keeps running'));
+      // The owner's switch and the system preference stop every one of them, also in the full tier.
+      if(tier==='full') {
+        for(const [label,prepare,restore] of [
+          ['light motion off',()=>put(room,{...cloud,quality,appearance:{neon:70,lightMotion:false}}),
+            ()=>put(room,{...cloud,quality,appearance:{neon:70,lightMotion:true}})],
+          ['prefers-reduced-motion',()=>room.emulateMedia({reducedMotion:'reduce'}),()=>room.emulateMedia({reducedMotion:'no-preference'})]]) {
+          await prepare();
+          await startStream(room,label==='light motion off'?2:3);
+          await put(room,{...cloud,quality,appearance:{neon:70,lightMotion:label!=='light motion off'},
+            computerWork:{...work70,actions:[work70.actions[0],{...tap,sequence:label==='light motion off'?20:30}]}});
+          await say(room,false,'Noch eine Antwort.');
+          const still=await passes();
+          if(still.length)item.failures.push(label+': '+JSON.stringify(still));
+          await endStream(room,label==='light motion off'?2:3);
+          await restore();
+        }
+      }
+      await room.context().close();
+      report.checks.push(item);
+    }
+    // Evidence for the owner: the five states on phone and unfolded Fold at twice the density. Host render with
+    // synthetic state and a synthetic picture; no device was involved.
+    if(shots) {
+      for(const [device,width,height] of [['phone',412,915],['fold-open',834,1112]]) {
+        for(const [name,file] of [['idle','1-idle'],['working','2-working-with-steps'],['live','3-live-monitor-with-action-marker'],
+          ['result','4-result-document'],['rest','5-local-compute-rest']]) {
+          const room=await openRoom('after',width,height,{presence:'IDLE'},{scale:2});
+          await states70[name](room);
+          // A marker stays for a short while only and a large capture takes longer on this host: the same
+          // synthetic input is reported again, as a new one, until the picture is taken.
+          if(name==='live')await room.evaluate(([packet,tap])=>{
+            let sequence=40;
+            const land=()=>window.ContinuumNative.receive({...packet,computerWork:{...packet.computerWork,
+              actions:[packet.computerWork.actions[0],{...tap,sequence:++sequence}]}});
+            land();window.__landing=setInterval(land,800);
+          },[{...state,status:'Computer-Auftrag läuft',...cloud,computerWork:work70},tap]);
+          // The whole page in one picture: the window is made as tall as the page, the composer stays at its end.
+          const tall=await room.evaluate(()=>document.documentElement.scrollHeight);
+          await room.setViewportSize({width,height:Math.min(Math.max(height,tall),4200)});
+          await room.evaluate(()=>{window.dispatchEvent(new Event('resize'));scrollTo(0,0);});
+          await room.waitForTimeout(700);
+          await frames(room);
+          const path=resolve(shots,`${file}-${device}.png`);
+          await room.screenshot({path});
+          if(name==='live')await room.evaluate(()=>clearInterval(window.__landing));
+          report.code70.shots.push(path);
+          await stopStream(room);
+          await room.context().close();
+        }
+      }
+    }
+    report.code70.result={reachability:'PASS',marker:'PASS',restingStage:restFiles?'PASS':'PASS (literal list; Code69 comparison NOT_RUN)',
+      tiers:'PASS'};
+  }
+  // ───────── Code70 (end) ─────────
   // Heat (Fold7 finding): the stage hands animation frames to the original scene, orb and avatar at most as often
   // as Android's tier and the running work allow. Measured in a real browser. The canvases are not painted here so
   // that this host's software renderer is fast enough for the limit to show at all; the scripts run unchanged.
