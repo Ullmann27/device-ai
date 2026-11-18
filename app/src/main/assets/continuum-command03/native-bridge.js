@@ -9,16 +9,59 @@
   // the limit (see renderPresence).
   const frameGovernor = (() => {
     const request = typeof window.requestAnimationFrame==='function' ? window.requestAnimationFrame.bind(window) : null;
-    if(request===null) return {set() {}, limit:() => null};
+    if(request===null) return {set() {}, limit:() => null, probe:() => null};
     let limit = 30, waiting = new Map(), serial = 0, armed = false, last = -Infinity;
+    // Frame counter of the owner's „Wärme- und Zeitmessung“. Off (null) unless Android starts it; it only counts
+    // what this governor really hands on and never changes what is drawn. Intervals between delivered frames are
+    // kept in 0.5 ms classes up to 150 ms (same layout as the Android report), the rest with its exact maximum.
+    const PROBE_BUCKET_MS = .5, PROBE_BUCKETS = 300, PROBE_SECONDS = 900;
+    let probe = null;
+    const probeNow = () => typeof performance==='object' && typeof performance.now==='function' ? performance.now() : Date.now();
+    const probeCommands = {
+      start() {
+        probe = {startedAt:probeNow(), ticks:0, delivered:0, first:null, previous:null, counts:new Map(), overflow:0,
+          maxMs:0, sumMs:0, perSecond:[], limitChanges:[]};
+        return true;
+      },
+      read() {
+        if(probe===null) return null;
+        return {schema:'continuum-stage-frame-probe-v1', delivered:probe.delivered, ticks:probe.ticks, limit,
+          observedMs:Math.round(probeNow()-probe.startedAt),
+          limitChanges:probe.limitChanges.slice(), perSecond:probe.perSecond.slice(),
+          visibility:typeof document.visibilityState==='string' ? document.visibilityState : 'unknown',
+          histogram:{bucketMs:PROBE_BUCKET_MS, bucketCount:PROBE_BUCKETS,
+            counts:[...probe.counts.entries()].sort((a,b) => a[0]-b[0]), overflow:probe.overflow,
+            maxMs:Math.round(probe.maxMs*1000)/1000, sumMs:Math.round(probe.sumMs*1000)/1000}};
+      },
+      stop() {const result = probeCommands.read();probe = null;return result;}
+    };
+    const probeDelivered = time => {
+      if(probe.previous!==null) {
+        const gap = time-probe.previous, index = Math.floor(gap/PROBE_BUCKET_MS);
+        if(gap>=0) {
+          if(index>=PROBE_BUCKETS) probe.overflow++;
+          else probe.counts.set(index, (probe.counts.get(index)||0)+1);
+          if(gap>probe.maxMs) probe.maxMs = gap;
+          probe.sumMs += gap;
+        }
+      } else probe.first = time;
+      probe.previous = time;probe.delivered++;
+      const second = Math.floor((time-probe.first)/1000);
+      if(second>=0 && second<PROBE_SECONDS) {
+        while(probe.perSecond.length<=second) probe.perSecond.push(0);
+        probe.perSecond[second]++;
+      }
+    };
     const pump = time => {
       armed = false;
       // Without a real frame time (no browser clock) nothing is held back.
       const timed = typeof time==='number' && Number.isFinite(time);
+      if(probe!==null && timed) probe.ticks++;
       if(!timed || limit===null || time-last >= 1000/limit-2) {
         if(timed) last = time;
         const due = waiting;
         waiting = new Map();
+        if(probe!==null && timed && due.size) probeDelivered(time);
         for(const callback of due.values()) {
           try {callback(time);}
           catch(error) {if(typeof window.reportError==='function')window.reportError(error);else setTimeout(() => {throw error;});}
@@ -33,7 +76,12 @@
       return id;
     };
     window.cancelAnimationFrame = id => {waiting.delete(id);};
-    return {set(value) {limit = value;}, limit:() => limit};
+    return {set(value) {
+      if(probe!==null && value!==limit && probe.limitChanges.length<64)
+        probe.limitChanges.push([Math.round(probeNow()-probe.startedAt), value]);
+      limit = value;
+    }, limit:() => limit,
+      probe:command => Object.prototype.hasOwnProperty.call(probeCommands, command) ? probeCommands[command]() : null};
   })();
   const routes = new Set(['home','chat','chats','new-chat','files','research',
     'agents','memory','device','settings','settings-voice','settings-model',
@@ -48,7 +96,7 @@
     listen:'voice-input',cancel:'stop','memory-source':'memory'});
   const layoutActions = new Set(['expand','toggle-chats','toggle-instruments','close-panels']);
   const chatId = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
-  const DEFAULT_COMMAND_LIMIT = 11500, MAX_MESSAGE = 68096, MAX_DRAFT = 262144, HISTORY = 36;
+  const DEFAULT_COMMAND_LIMIT = 11500, MAX_MESSAGE = 68096, MAX_DRAFT = 262144, MAX_ANSWER_DRAFT = 6000, HISTORY = 36;
   const $ = selector => document.querySelector(selector);
   // Keep the approved composer slot and attributes. A real textarea is required
   // because HTML input.value silently removes line breaks during native restore.
@@ -1078,6 +1126,8 @@
   }
   function renderFeed() {
     if (!snapshot) return;
+    // A draft never outlives its turn, whatever was or was not delivered.
+    if (snapshot.busy!==true) draftText='';
     const workspace=$('#workspace');
     if (!workspace) return;
     const show=lines.length>0 || sourceSets.size>0 || snapshot.busy===true ||
@@ -1122,6 +1172,7 @@
       feed.replaceChildren(...entries);feedVersions.set(feed,signature);
       if(pinned)feed.scrollTop=feed.scrollHeight;
     }
+    renderDraft(feed);
     panel.querySelector('.native-lane-state').textContent=snapshot.busy?
       'AUFTRAG WIRD BEARBEITET · STATUS VON ANDROID':
       (snapshot.status||'BEREIT · LOKALER GESPRÄCHSVERLAUF');
@@ -1333,7 +1384,7 @@
       cancelMicPress();retireComputer();clearNativeSpeech(true);
       Object.assign(computerGate,{generation:0,sequence:-1,ended:false,binding:null});
       Object.assign(speechGate,{generation:0,sequence:-1,ended:false,utteranceId:null});
-      lines=[];sourceSets.clear();feedRevision++;clearDocument();pendingCommand=null;
+      lines=[];draftText='';sourceSets.clear();feedRevision++;clearDocument();pendingCommand=null;
       lastDraft='';latestDraftRevision=-1;clientEditRevision=0;sentEditRevision=-1;lastScene=null;
       currentActivity=null;lastPresence=null;lastActivityGaze=null;typing=false;
       currentFiles=null;filesDismissed=null;renderFiles();
@@ -1407,6 +1458,32 @@
     // so an immediate return to the classic view retains it without another key.
     if(dirtyDraft)syncDraft();
   }
+  // The answer while the on-device model is still writing it. One row at the end of the feed, labelled as a
+  // draft, text-only updates (no rebuild of the feed); the checked answer (message) or the end of the turn removes it.
+  let draftText='';
+  function renderDraft(feed=document.querySelector('#native-live-panel .native-transcript')) {
+    if(!feed)return;
+    let row=feed.querySelector('.native-draft');
+    if(!draftText) {row?.remove();return;}
+    const pinned=feed.scrollHeight-feed.scrollTop-feed.clientHeight<40;
+    if(!row) {
+      row=document.createElement('article');
+      row.className='native-chat-line native-assistant native-draft';
+      const label=document.createElement('small');label.textContent='CONTINUUM · SCHREIBT …';
+      row.append(label,document.createElement('p'));
+    }
+    if(feed.lastElementChild!==row)feed.appendChild(row);
+    const content=row.querySelector('p');
+    if(content.textContent!==draftText)content.textContent=draftText;
+    if(pinned)feed.scrollTop=feed.scrollHeight;
+  }
+  function draft(data) {
+    if(!currentScope(data)||typeof data.text!=='string')return;
+    const text=snapshot?.busy===true?boundedMessage(data.text).slice(-MAX_ANSWER_DRAFT):'';
+    if(text===draftText)return;
+    draftText=text;
+    if(text && !document.querySelector('#native-live-panel'))renderFeed();else renderDraft();
+  }
   function boundedMessage(value) {
     const text=typeof value==='string'?value:'';
     const bounded=text.slice(0,MAX_MESSAGE);
@@ -1417,12 +1494,14 @@
     const rows=data.entries.filter(e=>e&&typeof e.user==='boolean'&&typeof e.text==='string')
       .map(e=>({user:e.user,text:boundedMessage(e.text)}));
     lines=(data.append===true?lines.concat(rows):rows).slice(-60);pruneSources();feedRevision++;
+    if(data.append!==true)draftText='';
     renderFeed();
   }
   function message(line) {
     if(!currentScope(line)||typeof line.user!=='boolean'||typeof line.text!=='string')return;
     lines.push({user:line.user,text:boundedMessage(line.text)});feedRevision++;
     if(lines.length>60)lines.shift();pruneSources();
+    if(!line.user)draftText='';
     renderFeed();
     if(!line.user)replyDelivered();
   }
@@ -1491,9 +1570,11 @@
     send('route','voice-input-long-press');
   });
   window.addEventListener('blur',()=>cancelMicPress());
-  window.ContinuumNative=Object.freeze({receive,transcript,message,
+  window.ContinuumNative=Object.freeze({receive,transcript,message,draft,
     section:data=>{if(currentScope(data))section(data.name,data.focusComposer===true);},document:documentOpened,
-    clearDocument:data=>{if(currentScope(data))clearDocument();},commandResult,computer,speech,sources});
+    clearDocument:data=>{if(currentScope(data))clearDocument();},commandResult,computer,speech,sources,
+    // Measurement only: 'start' | 'read' | 'stop' of the frame counter above; anything else answers null.
+    frameProbe:command=>frameGovernor.probe(command)});
   document.addEventListener('click',e=>{
     if(e.target.closest('#listen-button') && suppressMicClick) {
       suppressMicClick=false;e.preventDefault();e.stopImmediatePropagation();return;

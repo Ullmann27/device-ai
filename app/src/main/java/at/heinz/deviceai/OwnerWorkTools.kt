@@ -134,6 +134,29 @@ internal class OwnerWorkTools(
     val deliverable: OwnerDeliverable? get() = lastDeliverable?.takeIf { it.first == host.sessionId }?.second
 
     /**
+     * A result another owner lane produced and saved in this chat (the document desk's page summary). From now on it
+     * is what „öffne die gespeicherte Datei“, „ja“ after the offer and „schick das per Mail an …“ refer to.
+     */
+    fun adopt(result: OwnerDeliverable, file: OwnerSavedFile, offerToOpen: Boolean) {
+        lastDeliverable = host.sessionId to result
+        subjectThrough = host.ownerTurn
+        saved = Saved(host.sessionId, result, file)
+        openOffer = if (offerToOpen && file.uri != null) OpenOffer(host.sessionId, host.ownerTurn, file) else null
+    }
+
+    /**
+     * „Ich meinte als PDF“ directly after a save: the same result once more in [format]. false = the last turn was
+     * not a save of this lane; nothing happened.
+     */
+    fun exportAgain(request: String, format: OwnerExportCommand.Format): Boolean {
+        val last = saved?.takeIf { it.session == host.sessionId } ?: return false
+        if (subjectThrough != host.ownerTurn || deliverable !== last.of) return false
+        export(request, OwnerExportCommand.Request(format, null, viaWord = false, aboutNews = false, original = request), subject = true)
+        subjectThrough = host.ownerTurn
+        return true
+    }
+
+    /**
      * true = [request] was an order for a work tool and is completely handled (a reply was or will be given).
      * Call on the UI thread while no other job runs. false = not a work-tool order; nothing happened.
      */
@@ -361,6 +384,7 @@ internal class OwnerWorkTools(
         val what = when (target.kind) {
             OwnerDeliverable.Kind.NEWS_BRIEFING -> ""
             OwnerDeliverable.Kind.ASSISTANT_REPLY -> " Darin steht meine letzte Antwort aus diesem Gespräch."
+            OwnerDeliverable.Kind.PAGE_SUMMARY -> " Darin steht die Seitenzusammenfassung aus diesem Gespräch."
         }
         val shape = listOfNotNull(
             exported.pages?.let { if (it == 1) "1 Seite" else "$it Seiten" } ?: command.format.label,

@@ -661,6 +661,27 @@ try {
       if(measured.perSecond>limit+1)item.failures.push(name+': '+measured.perSecond.toFixed(1)+' frames/s above '+limit);
       if(measured.perSecond<.5)item.failures.push(name+': the stage stopped drawing');
     }
+    // The frame counter of the owner's heat measurement reports what the governor handed on in a real browser:
+    // the same frames the counting loop above received, never more than the limit allows.
+    await stage65.evaluate(value=>window.ContinuumNative.receive(value),{...state,quality:'FULL',presence:'THINKING',busy:true});
+    await stage65.waitForTimeout(400);
+    const probeStarted=await stage65.evaluate(()=>{window.__probeBase=window.__delivered;return window.ContinuumNative.frameProbe('start');});
+    await stage65.waitForTimeout(3000);
+    const probe=await stage65.evaluate(()=>({stats:window.ContinuumNative.frameProbe('stop'),seen:window.__delivered-window.__probeBase,
+      after:window.ContinuumNative.frameProbe('read')}));
+    if(probeStarted!==true)item.failures.push('frame counter did not start');
+    if(probe.stats?.schema!=='continuum-stage-frame-probe-v1')item.failures.push('frame counter returned no statistics');
+    else {
+      const intervals=probe.stats.histogram.counts.reduce((sum,entry)=>sum+entry[1],0)+probe.stats.histogram.overflow;
+      if(Math.abs(probe.stats.delivered-probe.seen)>1)item.failures.push('frame counter: '+probe.stats.delivered+' counted, '+probe.seen+' delivered');
+      if(probe.stats.delivered<2 || probe.stats.delivered>5*3.4+1)item.failures.push('frame counter: '+probe.stats.delivered+' frames in about 3 s at a limit of 5');
+      if(probe.stats.limit!==5)item.failures.push('frame counter: limit '+probe.stats.limit);
+      if(probe.stats.ticks<probe.stats.delivered)item.failures.push('frame counter: fewer display frames than delivered frames');
+      if(intervals!==probe.stats.delivered-1)item.failures.push('frame counter: '+intervals+' intervals for '+probe.stats.delivered+' frames');
+      if(probe.stats.visibility!=='visible')item.failures.push('frame counter: page visibility '+probe.stats.visibility);
+      item.frameCounter={delivered:probe.stats.delivered,seen:probe.seen,displayFrames:probe.stats.ticks,limit:probe.stats.limit};
+    }
+    if(probe.after!==null)item.failures.push('frame counter kept counting after stop');
     // A cancelled frame is not delivered and a throwing callback does not stop the others.
     const behaviour=await stage65.evaluate(()=>new Promise(resolve=>{
       const seen=[];window.addEventListener('error',event=>{event.preventDefault();seen.push('reported');},{once:true});

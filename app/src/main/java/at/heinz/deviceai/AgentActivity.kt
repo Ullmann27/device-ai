@@ -320,6 +320,8 @@ class AgentActivity : Activity() {
     private var activeLocalStreamToken: Any? = null
     private var localStreamPreviewRow: LinearLayout? = null
     private var localStreamPreviewText: TextView? = null
+    /** true while the Command03 page shows the running answer as its draft row. */
+    private var localStreamStageDraft = false
     // Scrolling through a streamed answer is a deliberate owner action:
     // never pull the reader back to the newest text.
     private var streamUserPausedScrolling = false
@@ -946,6 +948,7 @@ class AgentActivity : Activity() {
             pendingDocumentFailure = null
             delivery.run()
         }
+        resumeOwnerDocumentDesk()
         mainHandler.post { maybeAskForConversationCamera() }
         refreshBotTeam()
         if (continuousConversation.foregroundRecoveryPending) {
@@ -2458,7 +2461,7 @@ class AgentActivity : Activity() {
             .put("presence", at.heinz.deviceai.ui.Command03StageSignals.presence(command03RuntimeSignals))
             .put("quality", command03Quality())
             // The stage rests its heavy motion only while the ON-DEVICE model computes.
-            .put("cloudBrain", claudeBrain?.claudeSelected == true)
+            .put("cloudBrain", claudeBrain?.claudeSelected == true || heatMeasurement.stageFullEffects)
             .put("activity", command03Activity.snapshot() ?: org.json.JSONObject.NULL)
             .put("files", command03Files.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
@@ -2601,6 +2604,7 @@ class AgentActivity : Activity() {
         val addressed = OwnerAppLookupIntent.stripAddress(spoken,
             continuumState?.archive?.identityState?.chosenName)
         if (at.heinz.deviceai.cognitive.OwnerCorrectionIntent.interruptsWork(addressed)) return true
+        if (ownerDocumentDesk.controlsRunningJob(spoken)) return true
         if (pendingResearchChatApproval != null &&
             at.heinz.deviceai.cognitive.ResearchConsentReply.parse(spoken) != null) return true
         return ContinuumWorkerChatRouter.parse(text) == ContinuumWorkerChatCommand.ChiefStatus ||
@@ -7532,6 +7536,7 @@ class AgentActivity : Activity() {
             contentDescription = "Nachricht senden"
             setOnClickListener {
                 if (consumeOwnerWorkInterruption()) return@setOnClickListener
+                if (interceptOwnerDocumentDesk()) return@setOnClickListener
                 if (consumePendingResearchChatReply()) return@setOnClickListener
                 val chiefStatus = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
                     ContinuumWorkerChatCommand.ChiefStatus
@@ -8016,8 +8021,11 @@ class AgentActivity : Activity() {
     }
 
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        // „Continuum Wärmemessung“ and, while it runs, „Stopp“; a no-op for every other text.
+        if (heatMeasurement.consumeInput(input.text.toString())) return
         if (pendingConversationSelection != null) return
         if (consumeOwnerWorkInterruption()) return
+        if (interceptOwnerDocumentDesk()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
             setOf("stopp", "stop", "computer stoppen", "live-bild stoppen")) {
             val stopRequest = input.text.toString().trim()
@@ -8100,6 +8108,11 @@ class AgentActivity : Activity() {
         if (clarifiedAppName == null && clarifiedComputer == null && !botRoutingChecked &&
             routeBotInput(input.text.toString())) return
         if (selectedBot == null) deliverRoutineMessages()
+        // Owner document desk: „Öffne das PDF Argon4“ (local search by name), „Fass Seite 2 zusammen und speichere es
+        // als Word“ and the answers to its own questions. Deterministic, fail closed; a request without a file name
+        // („Öffne eine PDF“) is not taken and keeps Android's picker below.
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && ownerDocumentDesk.handle(request)) return
         // Owner send lane: „Schreib Anna auf WhatsApp, …“ and the answers to its own questions. Deterministic, fail
         // closed, before the computer lane (which only ever prepared drafts in the split screen).
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
@@ -10461,6 +10474,10 @@ class AgentActivity : Activity() {
             cockpit.action(this, "4 · EVALUATION · ENTWICKLUNGSSATZ") { startModelEvaluation("dev", "model-dev.jsonl") },
             cockpit.action(this, "5 · EVALUATION · HOLDOUT") { startModelEvaluation("holdout", "model-holdout.jsonl") }
         ), 2)
+        box.addView(cockpit.action(this, "6 · WÄRME- UND ZEITMESSUNG · KURZ ODER VOLL") {
+            modelCenterDialog?.dismiss()
+            heatMeasurement.open()
+        }, matchWidth(top = 6))
         box.addView(cockpit.section(this, "ANDERE MODELLE · MANUELL"), matchWidth(top = 11))
         val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
             showModelImportDialog()
@@ -12773,6 +12790,231 @@ class AgentActivity : Activity() {
         override fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean = ownerSend.mail(order)
     }
 
+    // ── Owner document desk („Öffne das PDF Argon4“, „Fass Seite 2 zusammen und speichere es als Word“) ─────────
+    // Thin adapter only: recognition, ranking, wording and the job steps live in OwnerDocumentDesk and
+    // cognitive/OwnerLibrary*; storage and PDF reading in OwnerDeviceLibrary.
+
+    /** Host tests replace the storage and PDF boundary; null = the real phone. */
+    internal var ownerDeskFilesOverride: OwnerDeskFiles? = null
+    private val ownerDeskPhoneFiles by lazy { OwnerDeviceLibrary(this) }
+    internal val ownerDocumentDesk by lazy { OwnerDocumentDesk(OwnerDocumentDeskAdapter()) }
+    private var ownerDeskCancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null
+    private var ownerDeskGrantPoll: Runnable? = null
+    private fun ownerDeskPreferences() = getSharedPreferences("continuum-document-desk", MODE_PRIVATE)
+
+    /** Document desk control that may arrive while its job runs: the stop word and „Ich meinte Seite 3“. */
+    private fun interceptOwnerDocumentDesk(spoken: String = input.text.toString().trim()): Boolean =
+        spoken.isNotEmpty() && selectedBot == null && !botLookupPending && !neuralCoach.isActive() &&
+            ownerDocumentDesk.intercept(spoken)
+
+    /** The app is in front (again): a search that waited for „Zugriff auf alle Dateien“ continues by itself. */
+    private fun resumeOwnerDocumentDesk() {
+        if (!ownerDeskPreferences().contains("pending_query")) return
+        mainHandler.post { if (foregroundLearningActive && !isFinishing && !isDestroyed) ownerDocumentDesk.onResumed() }
+    }
+
+    /**
+     * In a split screen Android's settings page opens beside the app and this Activity is never resumed again; the
+     * grant together with the window focus coming back is then the sign that the owner returned. Bounded to five
+     * minutes. Only the granted case continues from here – „still not allowed“ is said on a real return (onResume).
+     */
+    private fun pollOwnerDeskGrant() {
+        ownerDeskGrantPoll?.let(mainHandler::removeCallbacks)
+        var left = 150
+        val poll = object : Runnable {
+            override fun run() {
+                if (isFinishing || isDestroyed || --left < 0 || !ownerDeskPreferences().contains("pending_query")) {
+                    ownerDeskGrantPoll = null
+                    return
+                }
+                if (foregroundLearningActive && hasWindowFocus() && !busy &&
+                    (ownerDeskFilesOverride ?: ownerDeskPhoneFiles).access() == OwnerLibraryAccess.GRANTED) ownerDocumentDesk.onResumed()
+                mainHandler.postDelayed(this, 2_000L)
+            }
+        }
+        ownerDeskGrantPoll = poll
+        mainHandler.postDelayed(poll, 2_000L)
+    }
+
+    private inner class OwnerDocumentDeskAdapter : OwnerDocumentDeskHost {
+        private val work = OwnerWorkToolsAdapter()
+        private val store by lazy { OwnerDocumentStore(this@AgentActivity) }
+        private fun files(): OwnerDeskFiles = ownerDeskFilesOverride ?: ownerDeskPhoneFiles
+        private fun stay() = activeWorkArea == ContinuumWorkArea.START
+
+        override val sessionId: String get() = work.sessionId
+        override val ownerTurn: Long get() = work.ownerTurn
+        override val assistantName: String? get() = work.assistantName
+        override fun acceptOwnerTurn(request: String) = work.acceptOwnerTurn(request)
+
+        override fun reply(request: String, text: String) {
+            val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(localConversationContext, sessionId,
+                request, at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+            addAssistantMessage(text.take(8_000), preserveLocalContext = keep, keepCockpit = stay())
+        }
+
+        override fun say(text: String) = addAssistantMessage(text.take(8_000), preserveLocalContext = true, keepCockpit = stay())
+        override fun activity(line: String) = addToolActivity(line)
+        override fun idle(): Boolean = !busy && !botLookupPending && !isFinishing && !isDestroyed
+        override fun access(): OwnerLibraryAccess = files().access()
+
+        override fun openAccessSettings(): String? {
+            val pages = files().accessSettings()
+            if (pages.isEmpty()) return "Diese Android-Version hat die Einstellung nicht"
+            if (pages.none { page -> runCatching { startActivity(page) }.isSuccess }) return "Android hat die Seite nicht geöffnet"
+            pollOwnerDeskGrant()
+            return null
+        }
+
+        override fun openPicker(request: String) = openPdfDocumentPicker(false, request)
+
+        /** App-private and short-lived: only the owner's own sentence and the file name he said, cleared when used. */
+        override var pendingSearch: OwnerDeskPendingSearch?
+            get() = ownerDeskPreferences().let { saved ->
+                val query = saved.getString("pending_query", null) ?: return@let null
+                OwnerDeskPendingSearch(saved.getString("pending_session", "").orEmpty(), saved.getString("pending_request", "").orEmpty(),
+                    query, saved.getBoolean("pending_open", true), saved.getString("pending_folder", null),
+                    saved.getLong("pending_at", 0L))
+            }
+            set(value) {
+                val editor = ownerDeskPreferences().edit()
+                if (value == null) editor.clear() else editor.putString("pending_query", value.query)
+                    .putString("pending_session", value.session).putString("pending_request", value.request.take(300))
+                    .putBoolean("pending_open", value.openWhenClear).putString("pending_folder", value.folderHint)
+                    .putLong("pending_at", value.atMillis)
+                editor.apply()
+            }
+
+        /**
+         * One desk job on the single busy lane. STOP uses the existing cancellation of a chat turn; the lane stays
+         * busy until the worker really returned, and only then [done] tells the desk how it ended.
+         */
+        override fun <T> runJob(request: String, work: (OwnerDeskJob) -> T, done: (Result<T>, OwnerDeskJobEnd) -> Unit) {
+            if (busy || localAgentExecutor.isShutdown || isFinishing || isDestroyed) {
+                done(Result.failure(IllegalStateException("Ein anderer Auftrag läuft bereits")), OwnerDeskJobEnd.FINISHED)
+                return
+            }
+            val owner = sessionId
+            val token = at.heinz.deviceai.cognitive.DeliberationCancellation()
+            val turn = at.heinz.deviceai.chief.TurnLifecycle("desk-" + UUID.randomUUID())
+            activeChiefTurn = turn
+            turn.acknowledge()?.let { cockpitTriggers.commandAcknowledged(turn.turnId, request) }
+            ownerDeskCancellation = token
+            activeChatCancellation = token
+            activeLocalRequest = true
+            setBusy(true)
+            fun stopped() = runCatching { token.throwIfCancelled() }.isFailure
+            val pageWidthPx = (resources.displayMetrics.density * 360f).toInt()
+            val job = object : OwnerDeskJob {
+                override fun step(key: String, label: String, state: at.heinz.deviceai.cockpit.StepState,
+                    action: at.heinz.deviceai.cockpit.CockpitAction?) = cockpitTriggers.workStep(turn.turnId, key, label, state, action)
+
+                override fun cancelled(): Boolean = stopped()
+
+                override fun scan(progress: (Int) -> Unit): OwnerLibraryScan = files().scan(::stopped, progress)
+
+                override fun readPdf(file: at.heinz.deviceai.cognitive.OwnerLibraryFile): OwnerDeskPdf {
+                    val (uri, document) = files().readDocument(file, pageWidthPx, ::stopped)
+                    return OwnerDeskPdf(document.name, uri, document.pageCount, when (document.textState) {
+                        PdfDocumentIntake.TextState.EXTRACTED -> at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.EXTRACTED
+                        PdfDocumentIntake.TextState.NO_TEXT_LAYER -> at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.NO_TEXT_LAYER
+                        PdfDocumentIntake.TextState.NEEDS_ANDROID_15 ->
+                            at.heinz.deviceai.cognitive.OwnerDocumentDialogue.TextState.NEEDS_ANDROID_15
+                    }, document.text.length, document)
+                }
+
+                /** The page from the file itself; what the reader kept only when the file cannot be read again. */
+                override fun readPage(document: OwnerDeskDocument, page: Int): OwnerDeskPage {
+                    val direct = document.uri?.let { uri -> runCatching { files().readPage(uri, page) } }
+                    direct?.getOrNull()?.takeIf { it !is OwnerDeskPage.NeedsAndroid15 }?.let { return it }
+                    val kept = document.keptPage(page)?.trim().orEmpty()
+                    return when {
+                        kept.isNotEmpty() -> OwnerDeskPage.Text(kept)
+                        direct == null -> OwnerDeskPage.NoText
+                        else -> direct.getOrElse { OwnerDeskPage.Failed(it.message ?: it.javaClass.simpleName) }
+                    }
+                }
+
+                override fun generate(prompt: String, progress: (Int) -> Unit): OwnerWorkGeneration {
+                    // Claude brain: an owner sentence that must stay on the device is not sent; nothing is saved then.
+                    at.heinz.deviceai.localmodel.ClaudeTurnGate.refusal(claudeBrain, request, false)
+                        ?.let { return OwnerWorkGeneration("", it, false) }
+                    // A task of its own on the runtime: a kept native dialogue cannot be continued afterwards.
+                    dialogueReuse.invalidate(at.heinz.deviceai.localmodel.LocalDialogueReuseController.Reason.DOCUMENT_DRAFT)
+                    val generation = generateLocal(cancellation = token, promptCharacters = prompt.length,
+                        hardDeadlineMillis = at.heinz.deviceai.cognitive.OwnerPageSummary.DEADLINE_MILLIS,
+                        maxOutputBytes = at.heinz.deviceai.cognitive.OwnerPageSummary.MAX_OUTPUT_BYTES,
+                        runtimeProgressObserver = { characters, _, _ -> progress(characters) }) { callback ->
+                        localRuntime.streamTextOnly(prompt, callback)
+                    }
+                    return OwnerWorkGeneration(generation.response, generation.failure,
+                        generation.completion == LocalGenerationCompletion.COMPLETE)
+                }
+            }
+            localAgentExecutor.execute {
+                val result = runCatching { work(job) }
+                runOnUiThread {
+                    if (isFinishing || isDestroyed) return@runOnUiThread
+                    if (ownerDeskCancellation === token) ownerDeskCancellation = null
+                    val ended = stopped()
+                    val ours = activeChatCancellation === token
+                    if (ours) { activeChatCancellation = null; activeLocalRequest = false }
+                    if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = result.isSuccess && !ended,
+                        outcomeVerified = result.isSuccess && !ended)
+                    if (ours) { setBusy(false); refreshLocalModelUi() }
+                    done(result, when {
+                        this@AgentActivity.sessionId != owner -> OwnerDeskJobEnd.SESSION_CHANGED
+                        ended -> OwnerDeskJobEnd.STOPPED
+                        else -> OwnerDeskJobEnd.FINISHED
+                    })
+                }
+            }
+        }
+
+        override fun cancelJob() {
+            val token = ownerDeskCancellation ?: return
+            // The job's own mark first, so it ends whatever branch the general STOP below takes.
+            token.cancel()
+            cancelLocalRequest(preserveContinuousMode = continuousConversation.active, announceDraftStop = false)
+        }
+
+        /** Names of the real hits for the HTML stage (the files record of a file search); bounded, never content. */
+        override fun showHits(query: String, files: List<at.heinz.deviceai.cognitive.OwnerLibraryFile>) {
+            if (command03Files.accept(sessionId, "find_files", mapOf("query" to query, "limit" to 250),
+                    files.joinToString("\n") { it.path })) scheduleCommand03HtmlState()
+        }
+
+        /** The existing reading path from here on: work window, journal episode and the document bound to this chat. */
+        override fun showPdf(request: String, pdf: OwnerDeskPdf) {
+            val document = pdf.payload as? PdfDocumentIntake.Document ?: return
+            supersedeDocumentRequest()
+            pendingDocumentDraft = false
+            pendingDocumentRequest = request
+            presentDocumentScene(document, pdf.uri)
+        }
+
+        override fun discardPdf(pdf: OwnerDeskPdf) { (pdf.payload as? PdfDocumentIntake.Document)?.firstPage?.recycle() }
+
+        override fun openDocument(): OwnerDeskDocument? = localConversationContext.document(sessionId)?.let { reference ->
+            OwnerDeskDocument(reference.name, reference.pageCount, reference.documentUri) { page -> reference.pageText(page) }
+        }
+
+        override fun modelReady(): Boolean = work.modelReady()
+        override fun cloudBrain(): Boolean = work.cloudBrain()
+        override fun promptBudgetBytes(): Int = work.promptBudgetBytes()
+        override fun renderPdf(blocks: List<at.heinz.deviceai.cognitive.OwnerDocumentLayout.TextBlock>): Pair<ByteArray, Int> =
+            work.renderPdf(blocks)
+        override fun downloadNameTaken(displayName: String): Boolean = work.downloadNameTaken(displayName)
+        override fun saveDownload(displayName: String, mime: String, bytes: ByteArray): OwnerSavedFile =
+            work.saveDownload(displayName, mime, bytes)
+        override fun readBack(file: OwnerSavedFile): ByteArray? = store.readBack(file)
+        override fun location(file: OwnerSavedFile): String? = store.location(file)
+        override fun adopt(result: at.heinz.deviceai.cognitive.OwnerDeliverable, file: OwnerSavedFile) =
+            ownerWorkTools.adopt(result, file, offerToOpen = true)
+        override fun exportAgain(request: String, format: at.heinz.deviceai.cognitive.OwnerExportCommand.Format): Boolean =
+            ownerWorkTools.exportAgain(request, format)
+    }
+
     // ── Owner send lane (WhatsApp / Gmail on the standing owner grant) – logic in sending/OwnerSendDirector.kt ──
 
     /** Host tests replace the device boundary and the address book; null = the real phone. */
@@ -13509,6 +13751,56 @@ class AgentActivity : Activity() {
         }
     }
 
+    /**
+     * Owner-started „Wärme- und Zeitmessung“ (evaluation/HeatMeasurement*.kt). This block only hands the measurement
+     * what this Activity already has; protocol, sensors, report and every decision live in the evaluation package.
+     * Its overrides (stage, „Gespräch im Modell behalten“) exist in memory only and are put back after every run.
+     */
+    private val heatMeasurement = at.heinz.deviceai.evaluation.HeatMeasurementController(
+        object : at.heinz.deviceai.evaluation.HeatMeasurementHost {
+            override val activity: Activity get() = this@AgentActivity
+            override fun foreground() = foregroundLearningActive && !isFinishing && !isDestroyed
+            override fun busy() = busy
+            override fun otherWorkPending() = botLookupPending || modelImportActive || modelUnloading ||
+                pendingConversationSelection != null || selectedBot != null
+            override fun cloudBrainSelected() = claudeBrain?.claudeSelected == true
+            override fun runtime() = localRuntime
+            override fun importedModels() = modelCatalog.all()
+            override fun modelChanged() {
+                botConversation.invalidate()
+                resetM2NativeProof()
+                localRuntimeError = null
+                refreshLocalModelUi()
+            }
+            override fun stage() = command03MainStage?.takeIf { usesCommand03HtmlDesign() && it.isAttachedToWindow }
+            override fun pushStageState() = syncCommand03HtmlState()
+            override fun dialogueReuseOn() = this@AgentActivity.dialogueReuseOn()
+            override fun overrideDialogueReuse(on: Boolean) {
+                dialogueReuseSwitch = on
+                if (!on) {
+                    dialogueReuse.invalidate(at.heinz.deviceai.localmodel.LocalDialogueReuseController.Reason.SWITCH_OFF)
+                    runCatching { localRuntime.releaseDialogue() }
+                }
+            }
+            override fun speechOutputOn() = voiceEnabled && replyVoiceReady()
+            override fun speaking() = voiceSpeaking || voiceUtteranceId != null
+            override fun handsFreeActive() = continuousConversation.active
+            override fun endHandsFree() = endContinuousConversation("Gesprächsmodus für die Wärmemessung beendet.")
+            override fun sessionId(): String = this@AgentActivity.sessionId
+            override fun newChat() = newCentralConversation()
+            override fun selectChat(id: String) = selectStoredConversation(id)
+            override fun submit(text: String) { input.setText(text); sendCurrentInput() }
+            override fun clearInput() { if (::input.isInitialized) input.text.clear() }
+            override fun stopTurn() = cancelLocalRequest()
+            override fun say(text: String) = addAssistantMessage(text, preserveLocalContext = true, keepCockpit = false,
+                speakNow = false)
+            override fun status(line: String) = addToolActivity(line)
+            override fun recentAnswerMs(): List<Long> = responseTimesMs.toList()
+            override fun stageProfile(): String = at.heinz.deviceai.ui.Command03StageSignals.Profile.of(
+                getSharedPreferences("continuum-command03", MODE_PRIVATE).getString("performance_profile", null)).name
+            override fun coolingMode(): String = at.heinz.deviceai.localmodel.LocalModelHost.coolingMode(this@AgentActivity).name
+        })
+
     private fun runLocalSmokeTest(direct:Boolean=false) {
         // A new diagnostic revokes any prior same-session success until this
         // attempt completes. Nothing survives a restart or different model SHA.
@@ -13729,14 +14021,17 @@ class AgentActivity : Activity() {
                 // identity, private memory and prior bot conversations are not imported.
                 // A normal explanation must not spend half the native 4096-token window
                 // on 33 registered tool schemas. Device work and tool continuations remain unchanged.
-                val textOnlyTurn = (documentDraftTurn != null && botTask == null &&
+                // Measurement only (configuration H of the owner's „Wärme- und Zeitmessung“): the turn keeps the route
+                // with all tool schemas, as Code68 sent spoken explanation requests. Never set outside such a run.
+                val textOnlyTurn = !heatMeasurement.toolSchemasForced && ((documentDraftTurn != null && botTask == null &&
                     codingPlanning == null && observations.isEmpty() && reflection == null) ||
                     at.heinz.deviceai.cognitive.LocalTextOnlyInferenceRoute.useToolFree(
                         text, observations.isNotEmpty(), reflection != null,
                         botTask != null, codingPlanning != null,
                         priorTextOnlyResponse = previousLocalReply?.textOnly == true &&
-                            localConversationContext.hasContinuation(localSessionId))
+                            localConversationContext.hasContinuation(localSessionId)))
                 textOnlyResponse.set(textOnlyTurn)
+                heatMeasurement.onTurnRoute(textOnlyTurn)
                 val state = if (botTask == null) continuumState else null
                 cancellation.throwIfCancelled()
                 val boundedInternetMode = if (ownerForbidsExternalNetwork)
@@ -14550,6 +14845,7 @@ class AgentActivity : Activity() {
             is at.heinz.deviceai.localmodel.LocalDialogueReuseController.Decision.Fresh -> decision.request ?: run {
                 // Nothing is kept for a call that runs as before (this also frees it while Claude answers).
                 runCatching { localRuntime.releaseDialogue() }
+                heatMeasurement.onDialogueReuse(false, decision.reason.name)
                 val line = "GESPRÄCH IM MODELL · nicht verwendet · " + decision.reason.ownerText +
                     " · " + decision.reason.name
                 runOnUiThread { if (!isFinishing && !isDestroyed) addToolActivity(line) }
@@ -14562,6 +14858,7 @@ class AgentActivity : Activity() {
     private fun noteDialogueReuseGeneration(
         request: at.heinz.deviceai.localmodel.LocalDialogueRequest, generation: LocalGeneration
     ) {
+        heatMeasurement.onDialogueReuse(request.receipt.reused, request.receipt.reason)
         val outcome = when {
             generation.completion == LocalGenerationCompletion.COMPLETE && generation.failure == null &&
                 generation.proposal == null && generation.rejectedToolResponses.isEmpty() ->
@@ -15189,6 +15486,7 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest(preserveContinuousMode: Boolean, announceDraftStop: Boolean) {
+        heatMeasurement.onStopControl()
         // A stopped generation cannot be continued natively; the next dialogue turn starts fresh.
         dialogueReuse.invalidate(at.heinz.deviceai.localmodel.LocalDialogueReuseController.Reason.STOPPED)
         cancelSpeechInputScope(preserveContinuousMode)
@@ -15343,6 +15641,8 @@ class AgentActivity : Activity() {
         var lastPreviewNanos = generationStartedNanos
         var lastRuntimeProgressNanos = generationStartedNanos
         val previewToken = Any()
+        // Null unless the owner's „Wärme- und Zeitmessung“ is running; then it only observes this call.
+        val heatProbe = heatMeasurement.generationProbe(promptCharacters)
         fun elapsedMillis() = (System.nanoTime() - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
         fun capturedGeneration(
             overrideCompletion: at.heinz.deviceai.cognitive.LocalGenerationCompletion? = null,
@@ -15359,7 +15659,7 @@ class AgentActivity : Activity() {
             } else LocalGeneration(snapshot.response, accepted,
                 if (completion == LocalGenerationCompletion.COMPLETE) rejectedResponses.toList() else emptyList(),
                 overrideFailure ?: snapshot.failure, completion)
-        }
+        }.also { heatProbe?.finished(it.completion.name, it.failure, it.response.length) }
         runOnUiThread {
             if (!isFinishing && !isDestroyed && activeChatCancellation === cancellation) {
                 val stillActive = try {
@@ -15456,7 +15756,7 @@ class AgentActivity : Activity() {
                 cancellation?.throwIfCancelled()
                 turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED)
                 localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF, it.sha256) }
-                start(callback)
+                start(heatProbe?.observe(callback) ?: callback)
             }
             started.exceptionOrNull()?.let { error ->
                 if (error is java.util.concurrent.CancellationException) throw error
@@ -15508,6 +15808,7 @@ class AgentActivity : Activity() {
             return capturedGeneration()
         } catch (cancelled: java.util.concurrent.CancellationException) {
             synchronized(eventLock) { capture.cancel(cancelled.message) }
+            heatProbe?.finished(LocalGenerationCompletion.CANCELLED.name, cancelled.message, null)
             runCatching { localRuntime.cancel() }
             throw cancelled
         } finally {
@@ -15543,6 +15844,15 @@ class AgentActivity : Activity() {
             " · Laufzeit: " + elapsedMillis + " ms · Textblöcke: " + chunks +
             "\n\n" + draft.take(
                 at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS)
+        heatMeasurement.onPreviewText(text)
+        // Command03: the native row above is not on screen there, so the stage shows the same draft in its own feed
+        // (at most the first text and then one update per second – see the caller's throttle).
+        // (Measurement only, configuration G: no draft for the page, as in Code68.)
+        val stage = command03MainStage?.takeUnless { heatMeasurement.stageDraftOff }
+        if (stage != null && command03Binding()?.let { scope -> stage.presentDraft(scope, draft) } == true) {
+            localStreamStageDraft = true
+            heatMeasurement.onStageDraft(stage.isShown)
+        }
         if (!streamUserPausedScrolling) scrollToBottom()
     }
 
@@ -15552,6 +15862,10 @@ class AgentActivity : Activity() {
         localStreamPreviewRow = null
         localStreamPreviewText = null
         activeLocalStreamToken = null
+        if (localStreamStageDraft) {
+            localStreamStageDraft = false
+            command03Binding()?.let { scope -> command03MainStage?.presentDraft(scope, "") }
+        }
     }
 
     private fun renderCloudPlan(calls: List<ToolCallRequest>) {
@@ -17064,6 +17378,7 @@ class AgentActivity : Activity() {
         command03VisibleMessages.addLast(user to Command03BridgeContract.messageText(value))
         while (command03VisibleMessages.size > 60) command03VisibleMessages.removeFirst()
         command03Binding()?.let { scope -> command03MainStage?.presentMessage(scope, user, value) }
+        heatMeasurement.onBubble(user, value.length)
         scrollToBottom()
     }
 
@@ -17134,6 +17449,7 @@ class AgentActivity : Activity() {
             workTool = null
         }
         busy = value
+        heatMeasurement.onBusy(value)
         presentCommand03Document()
         scheduleCommand03HtmlState()
         botRosterDialog?.refreshRuntimeStatus()
@@ -17455,8 +17771,11 @@ class AgentActivity : Activity() {
                     }
                 }
             }
-            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.STOP ->
+            at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.STOP -> {
+                // „Stopp“ also ends a running document-desk job (search, page summary); it says what was not done.
+                ownerDocumentDesk.stop(spoken.trim())
                 endContinuousConversation("Gesprächsmodus beendet.")
+            }
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.PAUSE ->
                 pauseContinuousConversationNotice("Auf deinen Wunsch.")
             at.heinz.deviceai.cognitive.ContinuousConversationMode.Decision.RETRY_LISTEN ->

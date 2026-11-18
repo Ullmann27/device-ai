@@ -135,8 +135,12 @@ object OwnerTaskChainRecipes {
                 "Ordner der Datei lesen", success = ChainSuccess.ContainsHandedOver("find", "path", ChainArgument.Part.LEAF),
                 gives = listOf(ChainExtract.ListingEntry("find", "path")))
         )) { r ->
-            "Gefunden: „${r.value("folder", "name")}“ in ${OwnerChainValues.part(r.value("find", "path").orEmpty(), ChainArgument.Part.PARENT)} – " +
-                "${r.value("folder", "size")}, ${when_(r, "folder")}. Geöffnet habe ich sie nicht; dafür gibt es noch kein freigegebenes Werkzeug."
+            val name = r.value("folder", "name").orEmpty()
+            // A PDF can be opened by the document desk („Öffne das PDF …“); for other file types nothing opens them yet.
+            val opening = if (name.endsWith(".pdf", ignoreCase = true)) "Sag „Öffne das PDF ${name.dropLast(4).trim()}“, dann öffne ich sie hier."
+                else "Für diesen Dateityp gibt es noch kein freigegebenes Werkzeug zum Öffnen."
+            "Gefunden: „$name“ in ${OwnerChainValues.part(r.value("find", "path").orEmpty(), ChainArgument.Part.PARENT)} – " +
+                "${r.value("folder", "size")}, ${when_(r, "folder")}. Geöffnet habe ich sie nicht. $opening"
         }
     }
 

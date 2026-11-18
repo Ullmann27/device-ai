@@ -2038,3 +2038,107 @@ test('the frame limit follows Android\'s tier and the stage rests while the on-d
     assert.equal(limit(), '5', 'An unknown tier is treated as full quality, never as unlimited');
   } finally {f.close();}
 });
+
+test('the frame counter of the heat measurement counts what the governor hands on and is off unless Android starts it', async () => {
+  const f = await fixture();
+  try {
+    // The page's own scripts reach the clock double directly; the governed function is the one the binding installed.
+    const native = f.window.ContinuumNative, raf = f.window.requestAnimationFrame;
+    f.state({quality: 'FULL', presence: 'IDLE'});
+    assert.equal(f.document.body.dataset.frameLimit, '30');
+    assert.equal(native.frameProbe('read'), null, 'Not started: nothing is counted');
+    assert.equal(native.frameProbe('stop'), null);
+    for (const unknown of ['', 'reset', 'constructor', 'toString', undefined])
+      assert.equal(native.frameProbe(unknown), null, 'Only start, read and stop exist');
+    let drawn = 0;
+    const loop = () => {drawn++;raf(loop);};
+    raf(loop);
+    for (let frame = 0; frame < 10; frame++) await f.paint();
+    const earlier = drawn;
+    assert.ok(earlier > 0, 'The stand-in scene draws through the governor');
+    assert.equal(native.frameProbe('start'), true);
+    // 125 display frames of 16 ms = 2000 ms at a limit of 30 frames a second: every second display frame is handed on.
+    for (let frame = 0; frame < 125; frame++) await f.paint();
+    const calm = native.frameProbe('read');
+    assert.equal(calm.schema, 'continuum-stage-frame-probe-v1');
+    assert.equal(calm.delivered, drawn - earlier, 'Exactly the frames the scene really received, none from before the start');
+    assert.ok(calm.delivered >= 62 && calm.delivered <= 63, String(calm.delivered));
+    assert.equal(calm.ticks, 125, 'Every display frame the page saw');
+    assert.deepEqual([calm.limit, calm.observedMs, calm.visibility], [30, 2000, 'visible']);
+    assert.deepEqual(JSON.parse(JSON.stringify(calm.histogram)), {bucketMs: .5, bucketCount: 300,
+      counts: [[64, calm.delivered - 1]], overflow: 0, maxMs: 32, sumMs: 32 * (calm.delivered - 1)},
+      'Every interval between two delivered frames was 32 ms');
+    assert.equal(calm.perSecond.reduce((sum, value) => sum + value, 0), calm.delivered);
+    assert.equal(calm.limitChanges.length, 0);
+    // The on-device model computes: 5 frames a second. An interval above 150 ms is kept with its exact maximum.
+    f.state({quality: 'FULL', presence: 'THINKING', busy: true});
+    assert.equal(f.document.body.dataset.frameLimit, '5');
+    for (let frame = 0; frame < 125; frame++) await f.paint();
+    const resting = native.frameProbe('stop');
+    assert.equal(resting.delivered, drawn - earlier);
+    const slow = resting.delivered - calm.delivered;
+    assert.ok(slow >= 9 && slow <= 10, String(slow));
+    assert.deepEqual([resting.ticks, resting.limit, resting.observedMs], [250, 5, 4000]);
+    assert.equal(JSON.stringify(resting.limitChanges), '[[2000,5]]', 'A change of the limit during the run is kept with its time');
+    assert.deepEqual([resting.histogram.overflow, resting.histogram.maxMs], [slow, 208]);
+    assert.equal(JSON.stringify(resting.histogram.counts), JSON.stringify(calm.histogram.counts));
+    assert.equal(resting.perSecond.reduce((sum, value) => sum + value, 0), resting.delivered);
+    assert.equal(native.frameProbe('read'), null, 'Stopped: the counter is gone');
+    const afterStop = drawn;
+    for (let frame = 0; frame < 26; frame++) await f.paint();
+    assert.ok(drawn > afterStop, 'Counting never changes what is drawn');
+    assert.equal(native.frameProbe('start'), true);
+    assert.equal(native.frameProbe('read').delivered, 0, 'A new start begins at zero');
+    assert.equal(native.frameProbe('stop').delivered, 0);
+    assert.equal(f.navigations.length, 0, 'The counter answers the caller; it sends nothing to Android by itself');
+  } finally {f.close();}
+});
+
+test('the running answer is shown as one draft row in the stage and replaced by the checked answer', async () => {
+  const f = await fixture();
+  try {
+    const native = f.window.ContinuumNative;
+    f.state();
+    f.window.ContinuumNative.message({...binding, user: true, text: 'Erkläre mir das'});
+    const feed = () => f.document.querySelector('#native-live-panel .native-transcript');
+    const draft = () => f.document.querySelector('.native-draft');
+    // Not busy: a late draft of a finished turn is never shown.
+    native.draft({...binding, text: 'Verspäteter Entwurf'});
+    assert.equal(draft(), null);
+    f.state({busy: true, presence: 'THINKING'});
+    const owner = feed().querySelector('.native-owner');
+    // Another view's draft is ignored.
+    native.draft({...binding, sessionId: 'other-session', text: 'Fremder Entwurf'});
+    assert.equal(draft(), null);
+    native.draft({...binding, text: 'Das ist'});
+    assert.equal(draft().querySelector('p').textContent, 'Das ist');
+    assert.equal(draft().querySelector('small').textContent, 'CONTINUUM · SCHREIBT …');
+    assert.equal(feed().lastElementChild, draft(), 'The draft is the last row of the feed');
+    const row = draft();
+    native.draft({...binding, text: 'Das ist der zweite Satz.'});
+    assert.equal(draft(), row, 'An update changes the text of the same row');
+    assert.equal(feed().querySelector('.native-owner'), owner, 'An update does not rebuild the feed');
+    assert.equal(row.querySelector('p').textContent, 'Das ist der zweite Satz.');
+    // Markup stays text; only the tail of a very long draft is kept.
+    native.draft({...binding, text: '<img src=x onerror=alert(1)>' + 'a'.repeat(7000)});
+    assert.equal(row.querySelector('img'), null);
+    assert.equal(row.querySelector('p').textContent.length, 6000);
+    // A state update during the turn keeps the draft at the end.
+    f.state({busy: true, presence: 'THINKING', cpu: 31});
+    assert.equal(feed().lastElementChild, draft());
+    // The checked answer replaces it.
+    native.message({...binding, user: false, text: 'Das ist die geprüfte Antwort.'});
+    assert.equal(draft(), null);
+    assert.equal(feed().lastElementChild.querySelector('p').textContent, 'Das ist die geprüfte Antwort.');
+    // An explicit empty draft and the end of the turn both remove it.
+    native.draft({...binding, text: 'Noch ein Entwurf'});
+    assert.notEqual(draft(), null);
+    native.draft({...binding, text: ''});
+    assert.equal(draft(), null);
+    native.draft({...binding, text: 'Abgebrochener Entwurf'});
+    assert.notEqual(draft(), null);
+    f.state({busy: false});
+    assert.equal(draft(), null, 'A draft never outlives its turn');
+    assert.equal(f.navigations.length, 0, 'Showing a draft sends nothing to Android');
+  } finally {f.close();}
+});
