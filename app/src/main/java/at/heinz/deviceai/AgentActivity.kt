@@ -1502,6 +1502,7 @@ class AgentActivity : Activity() {
             cockpitBus.subscribe(at.heinz.deviceai.avatar.CinemaWindowGazeBridge(avatarDirector)),
             // Before the snapshot push below: the page receives the fact that triggered the push.
             cockpitBus.subscribe(command03Activity),
+            cockpitBus.subscribe(command03ComputerWork),
             cockpitBus.subscribe { event -> runOnUiThread {
                 if (event is at.heinz.deviceai.cognitive.CockpitWorkEvent)
                     homeView?.showComputerWorkEvent(event)
@@ -2398,6 +2399,7 @@ class AgentActivity : Activity() {
     private var command03RuntimeSignals = at.heinz.deviceai.avatar.AvatarRuntimeSignals()
     private val command03Activity = at.heinz.deviceai.ui.Command03ActivityProjection()
     private val command03Files = at.heinz.deviceai.ui.Command03FilesProjection()
+    private val command03ComputerWork = at.heinz.deviceai.ui.Command03ComputerWorkProjection()
 
     /** PowerManager's thermal status (0..6), or null where the platform reports none. Never a temperature. */
     private fun currentThermalStatusOrNull(): Int? {
@@ -2466,6 +2468,9 @@ class AgentActivity : Activity() {
             .put("cloudBrain", claudeBrain?.claudeSelected == true || heatMeasurement.stageFullEffects)
             .put("activity", command03Activity.snapshot() ?: org.json.JSONObject.NULL)
             .put("files", command03Files.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
+            // What the approved computer task really did (tap target, text, scroll, confirmed or not) for the monitor.
+            .put("computerWork", command03ComputerWork.snapshot(scope.sessionId, homeView?.state?.computer,
+                computerController?.awaitingConsent == true) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
                 .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
             .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
