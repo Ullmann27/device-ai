@@ -479,12 +479,22 @@ try {
     'argon4_rohdaten_export_final_wirklich_final_v7.csv','Argon4.docx','Foto Argon4 Anlage.jpg','Argon4 Wartung.xlsx',
     'Argon4 Angebot.pdf','Argon4 Rechnung.pdf','Argon4 Protokoll.txt','Argon4 Skizze.png']};
   const work={busy:true,presence:'THINKING',activity:{...activity,revision:21,kind:'DOCUMENT'}};
-  const sequence=[];
-  await send(work);sequence.push((await light()).phase);
+  // Every phase change is recorded inside the page. Sampling the attribute from the test process missed a
+  // short phase whenever the host was busy (seen: "opening:files" already over at the first read).
+  await stage.evaluate(()=>{
+    const seen=[];
+    const read=()=>{
+      const phase=document.body.dataset.workPhase||'idle', surface=document.body.dataset.workSurface||'';
+      const value=(phase==='opening'||phase==='projected')?phase+':'+surface:phase;
+      if(seen[seen.length-1]!==value)seen.push(value);
+    };
+    new MutationObserver(read).observe(document.body,
+      {attributes:true,attributeFilter:['data-work-phase','data-work-surface']});
+    window.__workPhaseLog=seen;
+  });
+  await send(work);
   await send({...work,files});
-  lit=await light();sequence.push(lit.phase+':'+lit.surface);
   await stage.evaluate(()=>window.ContinuumWorkspaceMotion.whenSettled());
-  lit=await light();sequence.push(lit.phase+':'+lit.surface);
   await stage.waitForFunction(()=>Number(getComputedStyle(document.querySelector('.presence.presence-orbit'),'::after').opacity)>.5,
     null,{timeout:20000}); // the projection reaches the open work window
   const fileWindow=async(page,label)=>{
@@ -517,17 +527,14 @@ try {
   await stage.evaluate(packet=>window.ContinuumNative.document(packet),{...scope,
     documentId:'33333333-3333-4333-8333-333333333333',name:'Argon4.pdf',pageCount:3,textState:'EXTRACTED',
     text:'Argon4 – Messprotokoll.\nDie Messreihe vom 1. Oktober zeigt stabile Werte.',canDraft:true});
-  lit=await light();sequence.push(lit.phase+':'+lit.surface);
   await stage.evaluate(()=>window.ContinuumWorkspaceMotion.whenSettled());
-  lit=await light();sequence.push(lit.phase+':'+lit.surface);
   await stage.screenshot({path:resolve(output,'code64-work-document-834x1112.png')});
   await stage.evaluate(packet=>window.ContinuumNative.message(packet),{...scope,user:false,text:'Zusammenfassung: stabile Werte.'});
   const returnStarted=Date.now();
   await send({busy:false,presence:'IDLE',activity:{...work.activity,revision:22,active:false},files});
-  sequence.push((await light()).phase);
   await stage.waitForFunction(()=>document.body.dataset.workPhase==='idle',null,{timeout:30000});
   const returned=Date.now()-returnStarted;
-  sequence.push('idle');
+  const sequence=await stage.evaluate(()=>window.__workPhaseLog.slice());
   assert.deepEqual(sequence,['activation','opening:files','projected:files','opening:document','projected:document',
     'settling','idle'],'The stage shows exactly the sequence Android reported');
   assert.ok(returned>=900,'The return lasts as long as its own animation ('+returned+' ms), not a fixed cut');
