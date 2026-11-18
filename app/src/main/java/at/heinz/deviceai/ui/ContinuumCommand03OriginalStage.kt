@@ -42,6 +42,7 @@ internal class ContinuumCommand03OriginalStage(
         const val ASSET_PATH = "/assets/continuum-command03/"
         const val INDEX = "https://" + LOCAL_HOST + ASSET_PATH + "index.android.html"
         private val SAFE_PATH = Regex("[A-Za-z0-9_./-]{1,200}")
+        private val FRAME_PROBE_COMMANDS = setOf("start", "read", "stop")
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
             "research", "agents", "memory", "device", "settings", "settings-voice", "settings-model",
             "settings-internet", "settings-appearance", "voice-input", "voice-input-long-press", "stop")
@@ -303,6 +304,19 @@ internal class ContinuumCommand03OriginalStage(
             queuedSources[sources.optString("sourceSetId")] = sources
             while (queuedSources.size > 60) queuedSources.remove(queuedSources.keys.first())
         } else evaluateJavascript("window.ContinuumNative?.sources($sources);", null)
+    }
+
+    /**
+     * Owner's „Wärme- und Zeitmessung“ only: starts, reads or stops the page's frame counter (native-bridge.js,
+     * frame governor). Native asks, the page answers with numbers; no new channel from JavaScript to Android.
+     * [result] receives the page's JSON answer, or null when the page is not ready or has no such counter.
+     */
+    fun frameProbe(command: String, result: (String?) -> Unit) {
+        if (disposed || !pageReady || command !in FRAME_PROBE_COMMANDS) { result(null); return }
+        evaluateJavascript("(window.ContinuumNative && window.ContinuumNative.frameProbe) ? " +
+            "window.ContinuumNative.frameProbe('$command') : null;") { answer ->
+            result(answer?.takeUnless { it == "null" || it.isBlank() })
+        }
     }
 
     fun cancelComposerFocus() { focusRevision++; queuedSection = null }

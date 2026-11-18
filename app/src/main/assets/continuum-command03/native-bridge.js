@@ -9,16 +9,59 @@
   // the limit (see renderPresence).
   const frameGovernor = (() => {
     const request = typeof window.requestAnimationFrame==='function' ? window.requestAnimationFrame.bind(window) : null;
-    if(request===null) return {set() {}, limit:() => null};
+    if(request===null) return {set() {}, limit:() => null, probe:() => null};
     let limit = 30, waiting = new Map(), serial = 0, armed = false, last = -Infinity;
+    // Frame counter of the owner's „Wärme- und Zeitmessung“. Off (null) unless Android starts it; it only counts
+    // what this governor really hands on and never changes what is drawn. Intervals between delivered frames are
+    // kept in 0.5 ms classes up to 150 ms (same layout as the Android report), the rest with its exact maximum.
+    const PROBE_BUCKET_MS = .5, PROBE_BUCKETS = 300, PROBE_SECONDS = 900;
+    let probe = null;
+    const probeNow = () => typeof performance==='object' && typeof performance.now==='function' ? performance.now() : Date.now();
+    const probeCommands = {
+      start() {
+        probe = {startedAt:probeNow(), ticks:0, delivered:0, first:null, previous:null, counts:new Map(), overflow:0,
+          maxMs:0, sumMs:0, perSecond:[], limitChanges:[]};
+        return true;
+      },
+      read() {
+        if(probe===null) return null;
+        return {schema:'continuum-stage-frame-probe-v1', delivered:probe.delivered, ticks:probe.ticks, limit,
+          observedMs:Math.round(probeNow()-probe.startedAt),
+          limitChanges:probe.limitChanges.slice(), perSecond:probe.perSecond.slice(),
+          visibility:typeof document.visibilityState==='string' ? document.visibilityState : 'unknown',
+          histogram:{bucketMs:PROBE_BUCKET_MS, bucketCount:PROBE_BUCKETS,
+            counts:[...probe.counts.entries()].sort((a,b) => a[0]-b[0]), overflow:probe.overflow,
+            maxMs:Math.round(probe.maxMs*1000)/1000, sumMs:Math.round(probe.sumMs*1000)/1000}};
+      },
+      stop() {const result = probeCommands.read();probe = null;return result;}
+    };
+    const probeDelivered = time => {
+      if(probe.previous!==null) {
+        const gap = time-probe.previous, index = Math.floor(gap/PROBE_BUCKET_MS);
+        if(gap>=0) {
+          if(index>=PROBE_BUCKETS) probe.overflow++;
+          else probe.counts.set(index, (probe.counts.get(index)||0)+1);
+          if(gap>probe.maxMs) probe.maxMs = gap;
+          probe.sumMs += gap;
+        }
+      } else probe.first = time;
+      probe.previous = time;probe.delivered++;
+      const second = Math.floor((time-probe.first)/1000);
+      if(second>=0 && second<PROBE_SECONDS) {
+        while(probe.perSecond.length<=second) probe.perSecond.push(0);
+        probe.perSecond[second]++;
+      }
+    };
     const pump = time => {
       armed = false;
       // Without a real frame time (no browser clock) nothing is held back.
       const timed = typeof time==='number' && Number.isFinite(time);
+      if(probe!==null && timed) probe.ticks++;
       if(!timed || limit===null || time-last >= 1000/limit-2) {
         if(timed) last = time;
         const due = waiting;
         waiting = new Map();
+        if(probe!==null && timed && due.size) probeDelivered(time);
         for(const callback of due.values()) {
           try {callback(time);}
           catch(error) {if(typeof window.reportError==='function')window.reportError(error);else setTimeout(() => {throw error;});}
@@ -33,7 +76,12 @@
       return id;
     };
     window.cancelAnimationFrame = id => {waiting.delete(id);};
-    return {set(value) {limit = value;}, limit:() => limit};
+    return {set(value) {
+      if(probe!==null && value!==limit && probe.limitChanges.length<64)
+        probe.limitChanges.push([Math.round(probeNow()-probe.startedAt), value]);
+      limit = value;
+    }, limit:() => limit,
+      probe:command => Object.prototype.hasOwnProperty.call(probeCommands, command) ? probeCommands[command]() : null};
   })();
   const routes = new Set(['home','chat','chats','new-chat','files','research',
     'agents','memory','device','settings','settings-voice','settings-model',
@@ -1493,7 +1541,9 @@
   window.addEventListener('blur',()=>cancelMicPress());
   window.ContinuumNative=Object.freeze({receive,transcript,message,
     section:data=>{if(currentScope(data))section(data.name,data.focusComposer===true);},document:documentOpened,
-    clearDocument:data=>{if(currentScope(data))clearDocument();},commandResult,computer,speech,sources});
+    clearDocument:data=>{if(currentScope(data))clearDocument();},commandResult,computer,speech,sources,
+    // Measurement only: 'start' | 'read' | 'stop' of the frame counter above; anything else answers null.
+    frameProbe:command=>frameGovernor.probe(command)});
   document.addEventListener('click',e=>{
     if(e.target.closest('#listen-button') && suppressMicClick) {
       suppressMicClick=false;e.preventDefault();e.stopImmediatePropagation();return;

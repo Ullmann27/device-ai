@@ -2038,3 +2038,58 @@ test('the frame limit follows Android\'s tier and the stage rests while the on-d
     assert.equal(limit(), '5', 'An unknown tier is treated as full quality, never as unlimited');
   } finally {f.close();}
 });
+
+test('the frame counter of the heat measurement counts what the governor hands on and is off unless Android starts it', async () => {
+  const f = await fixture();
+  try {
+    // The page's own scripts reach the clock double directly; the governed function is the one the binding installed.
+    const native = f.window.ContinuumNative, raf = f.window.requestAnimationFrame;
+    f.state({quality: 'FULL', presence: 'IDLE'});
+    assert.equal(f.document.body.dataset.frameLimit, '30');
+    assert.equal(native.frameProbe('read'), null, 'Not started: nothing is counted');
+    assert.equal(native.frameProbe('stop'), null);
+    for (const unknown of ['', 'reset', 'constructor', 'toString', undefined])
+      assert.equal(native.frameProbe(unknown), null, 'Only start, read and stop exist');
+    let drawn = 0;
+    const loop = () => {drawn++;raf(loop);};
+    raf(loop);
+    for (let frame = 0; frame < 10; frame++) await f.paint();
+    const earlier = drawn;
+    assert.ok(earlier > 0, 'The stand-in scene draws through the governor');
+    assert.equal(native.frameProbe('start'), true);
+    // 125 display frames of 16 ms = 2000 ms at a limit of 30 frames a second: every second display frame is handed on.
+    for (let frame = 0; frame < 125; frame++) await f.paint();
+    const calm = native.frameProbe('read');
+    assert.equal(calm.schema, 'continuum-stage-frame-probe-v1');
+    assert.equal(calm.delivered, drawn - earlier, 'Exactly the frames the scene really received, none from before the start');
+    assert.ok(calm.delivered >= 62 && calm.delivered <= 63, String(calm.delivered));
+    assert.equal(calm.ticks, 125, 'Every display frame the page saw');
+    assert.deepEqual([calm.limit, calm.observedMs, calm.visibility], [30, 2000, 'visible']);
+    assert.deepEqual(JSON.parse(JSON.stringify(calm.histogram)), {bucketMs: .5, bucketCount: 300,
+      counts: [[64, calm.delivered - 1]], overflow: 0, maxMs: 32, sumMs: 32 * (calm.delivered - 1)},
+      'Every interval between two delivered frames was 32 ms');
+    assert.equal(calm.perSecond.reduce((sum, value) => sum + value, 0), calm.delivered);
+    assert.equal(calm.limitChanges.length, 0);
+    // The on-device model computes: 5 frames a second. An interval above 150 ms is kept with its exact maximum.
+    f.state({quality: 'FULL', presence: 'THINKING', busy: true});
+    assert.equal(f.document.body.dataset.frameLimit, '5');
+    for (let frame = 0; frame < 125; frame++) await f.paint();
+    const resting = native.frameProbe('stop');
+    assert.equal(resting.delivered, drawn - earlier);
+    const slow = resting.delivered - calm.delivered;
+    assert.ok(slow >= 9 && slow <= 10, String(slow));
+    assert.deepEqual([resting.ticks, resting.limit, resting.observedMs], [250, 5, 4000]);
+    assert.equal(JSON.stringify(resting.limitChanges), '[[2000,5]]', 'A change of the limit during the run is kept with its time');
+    assert.deepEqual([resting.histogram.overflow, resting.histogram.maxMs], [slow, 208]);
+    assert.equal(JSON.stringify(resting.histogram.counts), JSON.stringify(calm.histogram.counts));
+    assert.equal(resting.perSecond.reduce((sum, value) => sum + value, 0), resting.delivered);
+    assert.equal(native.frameProbe('read'), null, 'Stopped: the counter is gone');
+    const afterStop = drawn;
+    for (let frame = 0; frame < 26; frame++) await f.paint();
+    assert.ok(drawn > afterStop, 'Counting never changes what is drawn');
+    assert.equal(native.frameProbe('start'), true);
+    assert.equal(native.frameProbe('read').delivered, 0, 'A new start begins at zero');
+    assert.equal(native.frameProbe('stop').delivered, 0);
+    assert.equal(f.navigations.length, 0, 'The counter answers the caller; it sends nothing to Android by itself');
+  } finally {f.close();}
+});
