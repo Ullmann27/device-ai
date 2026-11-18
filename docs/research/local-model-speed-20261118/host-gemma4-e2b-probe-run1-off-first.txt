@@ -1,0 +1,25 @@
+DOWNLOAD gemma-4-E2B-it.litertlm -> 200 2588147712
+SHA256 181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c
+HOST 4 cores, load 4.62 3.07 2.14
+SPECULATIVE_OFF engineInitMs=3290
+SPECULATIVE_OFF prompt=1 prefillTokens=45 decodeTokens=74 prefillTokPerSec=80.0 decodeTokPerSec=10.68 wallMs=7528
+SPECULATIVE_OFF prompt=1 answer=Gerne, hier ist die Erkl?rung:  Der Himmel erscheint blau, weil die Sonne Licht ausstrahlt, das auf die Erdatmosph?re trifft. Die Atmosph?re besteht aus winzigen Molek?len, die das blaue Licht st?rker streuen als die anderen Farben. Dadurch wird das blau gefiltert und erreicht unser Auge, was den Himmel blau erscheinen l?sst.
+SPECULATIVE_OFF prompt=2 prefillTokens=54 decodeTokens=96 prefillTokPerSec=120.6 decodeTokPerSec=13.07 wallMs=7798
+SPECULATIVE_OFF prompt=2 answer=Hier sind verschiedene h?flichere Formulierungen, je nachdem, wie formell oder direkt Sie klingen m?chten:  **Option 1: Freundlich und nachfragend (Empfohlen f?r den ersten Versuch)**  > "Guten Tag, ich wollte mich erkundigen, wann ich mit der Rechnung rechnen kann. Ich warte schon seit zwei Wochen darauf."  **Option 2: Etwas direkter, aber immer noch h?flich (Gut, wenn
+SPECULATIVE_OFF prompt=3 prefillTokens=102 decodeTokens=74 prefillTokPerSec=245.5 decodeTokPerSec=13.63 wallMs=5848
+SPECULATIVE_OFF prompt=3 answer=Gerne, hier ist die Zusammenfassung:  Die Stadtbibliothek verl?ngert ab Montag ihre ?ffnungszeiten auf werktags von 8 bis 20 Uhr und samstags von 9 bis 14 Uhr, um der gestiegenen Nachfrage nach Lernpl?tzen gerecht zu werden. Die Ausleihe von Medien bleibt wie gewohnt kostenlos.
+SPECULATIVE_ON engineInitMs=372
+SPECULATIVE_ON prompt=1 prefillTokens=45 decodeTokens=73 prefillTokPerSec=106.3 decodeTokPerSec=12.86 wallMs=6101
+SPECULATIVE_ON prompt=1 answer=Gerne, hier ist die Erkl?rung:  Der Himmel erscheint blau, weil die Sonne Licht ausstrahlt, das auf die Erdatmosph?re trifft. Die Atmosph?re besteht aus winzigen Molek?len, die das blaue Licht st?rker streuen als die anderen Farben. Dadurch wird das blau gefiltert und erreicht unser Auge, was den Himmel blau erscheinen l?sst.
+SPECULATIVE_ON prompt=2 prefillTokens=54 decodeTokens=98 prefillTokPerSec=135.5 decodeTokPerSec=14.96 wallMs=6953
+SPECULATIVE_ON prompt=2 answer=Hier sind verschiedene h?flichere Formulierungen, je nachdem, wie formell oder direkt Sie klingen m?chten:  **Option 1: Freundlich und nachfragend (Empfohlen f?r den ersten Versuch)**  > "Guten Tag, ich wollte mich erkundigen, wann ich mit der Rechnung rechnen kann. Ich warte schon seit zwei Wochen darauf."  **Option 2: Etwas direkter, aber immer noch h?flich (Gut, wenn Sie eine
+SPECULATIVE_ON prompt=3 prefillTokens=102 decodeTokens=73 prefillTokPerSec=231.9 decodeTokPerSec=16.26 wallMs=4933
+SPECULATIVE_ON prompt=3 answer=Gerne, hier ist die Zusammenfassung:  Die Stadtbibliothek verl?ngert ab Montag ihre ?ffnungszeiten auf werktags von 8 bis 20 Uhr und samstags von 9 bis 14 Uhr, um der gestiegenen Nachfrage nach Lernpl?tzen gerecht zu werden. Die Ausleihe von Medien bleibt wie gewohnt kostenlos.
+SAME_TEXT prompt=1 -> true
+SAME_TEXT prompt=2 -> false
+SAME_TEXT prompt=3 -> true
+TOOL_PROBE question="Wie ist das Wetter in Wien?" toolCalls=1 [get_weather{city=Wien}] text=
+TOOL_PROBE question="Was ist die Hauptstadt von ?sterreich?" toolCalls=0 [] text=Die Hauptstadt von ?sterreich ist **Wien**.
+PROBE_EXIT=0
+HOST load after 3.62 3.03 2.17
+DELETED downloaded model file (wrapper script line, corrected afterwards: the runtime caches were not small - see report section 4.3 - and were removed after the runs)
