@@ -734,11 +734,19 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         // Extremely short transient windows still expose scrollable content with usable controls.
         val available = heightDp.coerceAtLeast(160f)
         val viewport = (available - externalBottomBarHeightDp).coerceAtLeast(160f)
-        if (configuredHeight == available && jarvisShell.viewportHeightDp == viewport) return
+        // A measure pass may clamp the shell viewport below the available height (compact content that is
+        // shorter than the scroll viewport is measured against that viewport). The clamp is no change of the
+        // window: answering it with a layout request from the Activity's layout callback repeated the layout
+        // on every frame and left the request chain broken, so a later presentation change was never laid out.
+        if (configuredHeight == available && viewportSourceHeightDp == available) return
         configuredHeight = available
+        viewportSourceHeightDp = available
         jarvisShell.viewportHeightDp = viewport
         requestLayout()
     }
+
+    /** The available height the shell viewport was last derived from, by a measure pass or an explicit update. */
+    private var viewportSourceHeightDp = Float.NaN
 
     val wide: Boolean get() = layoutSpec?.wide == true
     val referenceCockpit: Boolean get() = layoutSpec?.referenceCockpit == true
@@ -819,6 +827,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             else -> maxOf(160f, contentHeight / density)
         } - externalBottomBarHeightDp
         jarvisShell.viewportHeightDp = viewport.coerceAtLeast(160f)
+        viewportSourceHeightDp = configuredHeight
         val presenceHeight = conversationPresenceHeightDp
         val h = if (jarvisShellStage && width / density >= 240f && presenceHeight != null)
             (CinematicWorkstationLayout.conversationPresence(width / density, presenceHeight,
