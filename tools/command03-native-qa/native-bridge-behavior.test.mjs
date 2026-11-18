@@ -1611,3 +1611,380 @@ test('activity bounds: over-long strings, more than six steps and malformed part
     assert.equal(card.querySelector('h3').textContent, 'AKTIVITÄT · RECHERCHE');
   } finally {f.close();}
 });
+
+// ───────── Code64: animated original orb, one room, real work sequence, files, attention ─────────
+const phase = f => f.document.body.dataset.workPhase;
+const surface = f => f.document.body.dataset.workSurface;
+const filesPacket = (extra = {}) => ({revision: 1, kind: 'SEARCH', label: 'Argon4', total: 3, more: false,
+  names: ['Argon4.pdf', 'Argon4 Messprotokoll.pdf', 'Argon4-Notizen.txt'], ...extra});
+const fileRows = f => [...f.document.querySelectorAll('#native-files-panel .native-files-list li')]
+  .map(item => item.querySelector('.native-file-name').textContent);
+const forward = gaze => gaze.target === gaze.target.window && gaze.detail.x === 0 && gaze.detail.y === 0;
+/** Lets the original workspace flight (rAF backend in this DOM) reach its end. */
+async function land(f) {
+  for (let i = 0; i < 4; i++) {f.advance(600);await f.paint();}
+}
+
+test('the arrangement is untouched: the orb stays behind the avatar and only light layers are added', async () => {
+  const f = await fixture();
+  try {
+    f.state();
+    const core = f.document.querySelector('.presence-core');
+    const order = [...core.children].map(node => node.className.split(' ')[0]);
+    assert.ok(order.indexOf('orb-zone') < order.indexOf('avatar-zone'), 'The orb precedes the avatar as in the original page');
+    assert.deepEqual(order.filter(name => !name.startsWith('native-')),
+      ['orb-zone', 'avatar-zone', 'core-status', 'avatar-linkbar'], 'No original child moved or left the core');
+    assert.equal(f.document.querySelector('.avatar-crop').dataset.avatarFit, undefined, 'The avatar framing is the original one');
+    assert.equal(f.document.body.dataset.nativeStage, undefined);
+    assert.equal(f.document.querySelector('.native-energy-link'), null, 'No link between two separated figures exists');
+    for (const selector of ['.native-room-light', '.native-orb-light']) {
+      const layer = f.document.querySelector(selector);
+      assert.ok(layer, selector);
+      assert.equal(layer.getAttribute('aria-hidden'), 'true');
+      assert.equal(layer.textContent, '', 'A light layer carries no text and no value');
+      assert.equal(layer.querySelector('canvas,img,svg'), null, 'No second orb is drawn');
+    }
+    assert.equal(f.document.querySelector('.native-room-light').parentElement, core);
+    assert.equal(f.document.querySelector('.native-orb-light').parentElement, core);
+    f.state({cpu: 44});
+    assert.equal(f.document.querySelectorAll('.native-room-light,.native-orb-light').length, 2, 'Layers are mounted once');
+  } finally {f.close();}
+});
+
+test('the original orb leaves its resting picture and returns to it only on real preferences', async () => {
+  const f = await fixture();
+  try {
+    const orb = f.document.querySelector('.orb-zone');
+    assert.equal(orb.dataset.orbMotion, 'live', 'The page declared "fixed"; the orb script animates once it reads "live"');
+    f.state();assert.equal(orb.dataset.orbMotion, 'live');
+    f.state({quality: 'BALANCED'});assert.equal(orb.dataset.orbMotion, 'live');
+    f.state({quality: 'REDUCED'});assert.equal(orb.dataset.orbMotion, 'fixed', 'A reduced thermal tier rests the orb');
+    f.state({quality: 'FULL'});assert.equal(orb.dataset.orbMotion, 'live');
+    f.state({appearance: {neon: 70, lightMotion: false}});
+    assert.equal(orb.dataset.orbMotion, 'fixed', 'The owner switched light motion off');
+    f.state({appearance: {neon: 70, lightMotion: true}});assert.equal(orb.dataset.orbMotion, 'live');
+    f.window.matchMedia = () => ({matches: true, addEventListener() {}, removeEventListener() {}});
+    f.state({cpu: 12});assert.equal(orb.dataset.orbMotion, 'fixed', 'The system preference for reduced motion rests the orb');
+  } finally {f.close();}
+});
+
+test('the light exchange around the orb follows the presence Android reported', async () => {
+  const f = await fixture();
+  try {
+    const energy = () => f.document.body.dataset.energy;
+    assert.equal(energy(), undefined, 'Nothing is shown as a state before Android sent one');
+    for (const [presence, expected] of [['IDLE', 'idle'], ['LISTENING', 'to-avatar'], ['THINKING', 'to-orb'],
+      ['RESEARCHING', 'to-orb'], ['LEARNING', 'to-orb'], ['SPEAKING', 'speech'], ['WAITING_FOR_APPROVAL', 'hold'],
+      ['BLOCKED', 'hold']]) {
+      f.state({presence, busy: true});
+      assert.equal(energy(), expected, presence);
+    }
+    // Snapshots of an older Android carry only the three booleans.
+    f.state();assert.equal(energy(), 'idle');
+    f.state({listening: true});assert.equal(energy(), 'to-avatar');
+    f.state({busy: true});assert.equal(energy(), 'to-orb');
+    f.state({speaking: true});assert.equal(energy(), 'speech');
+    f.state({presence: 'DANCING', busy: true});assert.equal(energy(), 'to-orb', 'An unknown presence falls back to the booleans');
+    const css = readFileSync(resolve(assetRoot, 'native-layer.css'), 'utf8');
+    assert.match(css, /\[data-energy="hold"\] \.native-orb-light i:first-child \{[^}]*border-style:dashed/,
+      'Approval and blocker hold one still shell');
+    assert.doesNotMatch(css.match(/\[data-energy="hold"\][^{]*\{[^}]*\}/g).join(''), /animation:native-shell/,
+      'A held state has no flow');
+    assert.doesNotMatch(css.match(/\[data-energy="speech"\][^{]*\{[^}]*\}/g).join(''), /animation/,
+      'Speaking is driven by the measured level, not by a clock');
+  } finally {f.close();}
+});
+
+test('the measured speech level drives corona and room haze and leaves with the speech', async () => {
+  const f = await fixture();
+  try {
+    f.state({speaking: true, presence: 'SPEAKING'});
+    const layers = ['.native-orb-light', '.native-room-light'].map(selector => f.document.querySelector(selector));
+    const level = () => layers.map(layer => layer.style.getPropertyValue('--native-speech'));
+    assert.deepEqual(level(), ['', ''], 'No speech frame, no level');
+    f.window.ContinuumNative.speech(speechFrame({jawOpen: .456}));
+    assert.deepEqual(level(), ['0.46', '0.46']);
+    f.window.ContinuumNative.speech(speechFrame({sequence: 2, jawOpen: 0}));
+    assert.deepEqual(level(), ['0', '0'], 'Silence inside an utterance is a real zero');
+    f.window.ContinuumNative.speech(speechFrame({sequence: 3, jawOpen: 7}));
+    assert.deepEqual(level(), ['0', '0'], 'An invalid frame changes nothing');
+    f.window.ContinuumNative.speech(speechFrame({sequence: 4, jawOpen: .8}));
+    await f.timers(150);
+    assert.deepEqual(level(), ['', ''], 'An expired pose leaves no level behind');
+    f.window.ContinuumNative.speech(speechFrame({sequence: 5, jawOpen: .5}));
+    f.window.ContinuumNative.speech({...binding, generation: 1, sequence: 6, active: false});
+    assert.deepEqual(level(), ['', '']);
+  } finally {f.close();}
+});
+
+test('the work sequence advances only on Android events: activation, opening, projected, settling, idle', async () => {
+  const f = await fixture();
+  try {
+    assert.equal(phase(f), 'idle');
+    f.state();assert.equal(phase(f), 'idle');
+    f.state({busy: true, presence: 'THINKING'});
+    assert.equal(phase(f), 'activation');assert.equal(surface(f), undefined);
+    await f.timers(60000);await f.paint();
+    assert.equal(phase(f), 'activation', 'Time alone never advances the sequence');
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket()});
+    assert.equal(phase(f), 'activation', 'Progress without a work window stays at the core');
+    // The file tool answered: the window opens with the original flight and counts as projected when it lands.
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket(), files: filesPacket()});
+    assert.deepEqual([phase(f), surface(f)], ['opening', 'files']);
+    assert.ok(f.window.ContinuumWorkspaceMotion.isAnimating());
+    await land(f);
+    assert.deepEqual([phase(f), surface(f)], ['projected', 'files']);
+    // Android opened a document.
+    f.window.ContinuumNative.document({...binding, documentId, name: 'Argon4.pdf', pageCount: 3});
+    assert.deepEqual([phase(f), surface(f)], ['opening', 'document']);
+    await land(f);
+    assert.deepEqual([phase(f), surface(f)], ['projected', 'document']);
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket({revision: 2}), files: filesPacket()});
+    assert.deepEqual([phase(f), surface(f)], ['projected', 'document'], 'Analysis progress keeps the projection');
+    // The reply arrives, then Android reports the turn as finished while it still speaks.
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Zusammenfassung: …'});
+    assert.equal(phase(f), 'projected', 'A reply alone does not end a running turn');
+    f.state({busy: false, speaking: true, presence: 'SPEAKING', activity: activityPacket({revision: 3, active: false}),
+      files: filesPacket()});
+    assert.deepEqual([phase(f), surface(f)], ['settling', 'document']);
+    await f.timers(60000);
+    assert.equal(phase(f), 'settling', 'The return waits for the end of the spoken reply, not for a timer');
+    f.state({presence: 'IDLE', activity: activityPacket({revision: 3, active: false}), files: filesPacket()});
+    assert.deepEqual([phase(f), surface(f)], ['idle', undefined]);
+    assert.ok(f.document.querySelector('#native-document-panel'), 'The opened document stays with the owner');
+    assert.equal(f.document.querySelector('#native-files-panel'), null, 'The file window left with its turn');
+  } finally {f.close();}
+});
+
+test('the return waits for the stage return animation and a finished turn without a reply returns at once', async () => {
+  const f = await fixture();
+  try {
+    let finish;
+    const light = f.document.querySelector('.native-orb-light');
+    const running = [];
+    light.getAnimations = () => running;
+    f.state({busy: true});
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Antwort'});
+    running.push({animationName: 'native-corona-breathe', finished: new Promise(() => {})},
+      {animationName: 'native-work-return', finished: new Promise(resolve => {finish = resolve;})});
+    f.state();
+    assert.equal(phase(f), 'settling');
+    await f.flush();await f.timers(5000);
+    assert.equal(phase(f), 'settling', 'Only the return animation ends the return');
+    finish();await f.flush();
+    assert.equal(phase(f), 'idle');
+    // Stopped, failed or blocked: nothing was delivered, so there is nothing to wait for.
+    running.length = 0;
+    f.state({busy: true});assert.equal(phase(f), 'activation');
+    f.state();assert.equal(phase(f), 'idle');
+    // The reply may reach the page after the finished flag: it still gets its return.
+    let late;
+    running.push({animationName: 'native-work-return', finished: new Promise((_, reject) => {late = reject;})});
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Späte Antwort'});
+    assert.equal(phase(f), 'settling');
+    late(new Error('cancelled'));await f.flush();
+    assert.equal(phase(f), 'idle', 'A cancelled animation also ends the return');
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Noch eine Nachricht'});
+    assert.equal(phase(f), 'idle', 'A message outside a turn starts no sequence');
+    // A new turn during a pending return wins; the old completion is ignored.
+    running.length = 0;
+    let stale;
+    running.push({animationName: 'native-work-return', finished: new Promise(resolve => {stale = resolve;})});
+    f.state({busy: true});f.window.ContinuumNative.message({...binding, user: false, text: 'A'});f.state();
+    assert.equal(phase(f), 'settling');
+    f.state({busy: true});assert.equal(phase(f), 'activation');
+    stale();await f.flush();
+    assert.equal(phase(f), 'activation');
+  } finally {f.close();}
+});
+
+test('sources and device frames are work windows of their turn and a view change returns to the main stage', async () => {
+  const f = await fixture();
+  try {
+    const item = {id: sourceId, title: 'Quelle', url: 'https://example.org/evidence'};
+    f.state();
+    f.window.ContinuumNative.sources({...binding, sourceSetId, items: [item]});
+    assert.equal(phase(f), 'idle', 'Sources outside a turn open no sequence');
+    f.state({busy: true, presence: 'RESEARCHING'});
+    assert.equal(phase(f), 'activation', 'Sources of an earlier turn are not this turn\'s window');
+    f.window.ContinuumNative.sources({...binding, sourceSetId: anotherDocument, items: [{...item, id: documentId}]});
+    assert.equal(surface(f), 'sources');
+    await land(f);
+    assert.deepEqual([phase(f), surface(f)], ['projected', 'sources']);
+    f.window.ContinuumNative.computer(computerFrame());
+    assert.deepEqual([phase(f), surface(f)], ['opening', 'computer']);
+    await land(f);
+    assert.deepEqual([phase(f), surface(f)], ['projected', 'computer']);
+    f.window.ContinuumNative.computer({...binding, generation: 1, sequence: 2, active: false, status: 'ENDED'});
+    await land(f);
+    assert.deepEqual([phase(f), surface(f)], ['projected', 'sources'], 'The remaining real window is shown as such');
+    f.state({sessionId: anotherSession, busy: false});
+    assert.deepEqual([phase(f), surface(f)], ['idle', undefined]);
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Alte Antwort'});
+    assert.equal(phase(f), 'idle', 'A reply for the left view moves nothing');
+  } finally {f.close();}
+});
+
+test('the file window shows only names Android sent: bounded, text only, never a path', async () => {
+  const f = await fixture();
+  try {
+    const workspace = f.document.querySelector('#workspace');
+    f.state();
+    assert.equal(f.document.querySelector('#native-files-panel'), null);
+    f.state({busy: true, files: filesPacket()});
+    const panel = f.document.querySelector('#native-files-panel');
+    assert.ok(panel && workspace.classList.contains('native-files-active'));
+    assert.equal(workspace.classList.contains('native-work-active'), false);
+    assert.equal(panel.querySelector('.native-files-kicker').textContent, 'DATEISUCHE · ANDROID-WERKZEUG');
+    assert.equal(panel.querySelector('.native-files-title').textContent, '„Argon4“');
+    assert.equal(panel.querySelector('.native-files-count').textContent, '3 Dateien gefunden');
+    assert.deepEqual(fileRows(f), ['Argon4.pdf', 'Argon4 Messprotokoll.pdf', 'Argon4-Notizen.txt']);
+    assert.deepEqual([...panel.querySelectorAll('.native-file-kind')].map(node => node.textContent), ['PDF', 'PDF', 'TXT']);
+    assert.equal(f.document.querySelector('#workspace-meta').textContent, 'DATEIEN');
+    assert.equal(f.gazes.at(-1).target, panel, 'The avatar looks at the list that really appeared');
+    const first = panel.querySelector('li');
+    f.state({busy: true, cpu: 55, files: filesPacket({names: ['Anders.pdf'], total: 1})});
+    assert.equal(panel.querySelector('li'), first, 'An unchanged revision keeps what is shown');
+    // More than twelve names, paths, markup, control characters and non-strings.
+    const many = Array.from({length: 30}, (_, index) => 'Datei ' + (index + 1) + '.txt');
+    f.state({busy: true, files: filesPacket({revision: 2, total: 250, more: true, names: many})});
+    assert.equal(fileRows(f).length, 12);assert.equal(fileRows(f)[11], 'Datei 12.txt');
+    assert.equal(panel.querySelector('.native-files-count').textContent,
+      'Mindestens 250 Dateien gefunden · 12 angezeigt · Suchgrenze erreicht');
+    f.state({busy: true, files: filesPacket({revision: 3, total: 9, label: '<b>x</b>', names: [
+      '/sdcard/Download/geheim.pdf', '..\\windows\\pfad.txt', '<img src=x onerror=alert(1)>.pdf', 'Bericht\u0007 2026.pdf',
+      7, null, '   ', 'x'.repeat(300) + '.pdf', {name: 'objekt.pdf'}]})});
+    assert.deepEqual(fileRows(f), ['<img src=x onerror=alert(1)>.pdf', 'Bericht 2026.pdf', 'x'.repeat(96)]);
+    assert.equal(panel.querySelector('img,b,script'), null, 'Names and label are text, never markup');
+    assert.equal(panel.querySelector('.native-files-title').textContent, '„<b>x</b>“');
+    assert.equal(panel.querySelector('.native-files-count').textContent, '9 Dateien gefunden · 3 angezeigt');
+    assert.doesNotMatch(panel.textContent, /sdcard|windows/);
+    f.state({busy: true, files: filesPacket({revision: 4, kind: 'FOLDER', label: 'Download', total: 0, names: []})});
+    assert.equal(panel.querySelector('.native-files-kicker').textContent, 'ORDNER · ANDROID-WERKZEUG');
+    assert.equal(panel.querySelector('.native-files-title').textContent, 'Download');
+    assert.equal(panel.querySelector('.native-files-count').textContent, 'Keine Einträge im Ordner');
+    assert.deepEqual(fileRows(f), []);
+    f.state({busy: true, files: filesPacket({revision: 5, total: 0, names: []})});
+    assert.equal(panel.querySelector('.native-files-count').textContent, 'Keine Datei gefunden');
+    // Anything malformed withdraws the window instead of showing a guess.
+    let revision = 5;
+    for (const broken of [{revision: -1}, {revision: 1.5}, {revision: '7'}, {kind: 'TREE'}, {kind: 'constructor'},
+      {label: null}, {total: -1}, {total: 1.5}, {total: 100001}, {total: 2}, {names: 'Argon4.pdf'}, {names: null}]) {
+      f.state({busy: true, files: filesPacket({revision: ++revision, ...broken})});
+      assert.equal(f.document.querySelector('#native-files-panel'), null, JSON.stringify(broken));
+      assert.equal(workspace.classList.contains('native-files-active'), false);
+    }
+    for (const broken of ['Argon4.pdf', 3, true, []]) {
+      f.state({busy: true, files: broken});
+      assert.equal(f.document.querySelector('#native-files-panel'), null);
+    }
+  } finally {f.close();}
+});
+
+test('the file window is closable, marks the document Android opened and never crosses a view', async () => {
+  const f = await fixture();
+  try {
+    const workspace = f.document.querySelector('#workspace');
+    f.state({busy: true, files: filesPacket()});
+    assert.deepEqual([...f.document.querySelectorAll('.native-files-list li')].map(item => item.dataset.selected),
+      ['false', 'false', 'false'], 'No choice is shown before Android opened a file');
+    f.window.ContinuumNative.document({...binding, documentId, name: 'Argon4 Messprotokoll.pdf', pageCount: 2});
+    assert.deepEqual([...f.document.querySelectorAll('.native-files-list li')].map(item => item.dataset.selected),
+      ['false', 'true', 'false']);
+    assert.ok(workspace.classList.contains('native-document-active'));
+    assert.equal(workspace.classList.contains('native-files-active'), false, 'The document covers the list');
+    f.click(f.document.querySelector('#close-button'));
+    assert.equal(f.document.querySelector('#native-document-panel'), null);
+    assert.ok(workspace.classList.contains('native-files-active'), 'Closing the document shows the list again');
+    f.click(f.document.querySelector('#close-button'));
+    assert.equal(f.document.querySelector('#native-files-panel'), null, 'The owner closed the list');
+    f.state({busy: true, cpu: 20, files: filesPacket()});
+    assert.equal(f.document.querySelector('#native-files-panel'), null, 'A closed revision stays closed');
+    f.state({busy: true, files: filesPacket({revision: 2})});
+    assert.ok(f.document.querySelector('#native-files-panel'), 'A new answer opens a new list');
+    // The next turn starts without the previous list; its own answer has a new revision.
+    f.state({files: filesPacket({revision: 2})});
+    f.state({busy: true, files: filesPacket({revision: 2})});
+    assert.equal(f.document.querySelector('#native-files-panel'), null);
+    f.state({busy: true, files: filesPacket({revision: 3, names: ['Neu.pdf'], total: 1})});
+    assert.deepEqual(fileRows(f), ['Neu.pdf']);
+    f.state({busy: true, files: null});
+    assert.equal(f.document.querySelector('#native-files-panel'), null, 'null withdraws the list');
+    f.state({busy: true, files: filesPacket({revision: 4})});
+    f.state({sessionId: anotherSession});
+    assert.equal(f.document.querySelector('#native-files-panel'), null);
+    assert.equal(workspace.classList.contains('native-files-active'), false);
+  } finally {f.close();}
+});
+
+test('attention follows real events: the owner speaking or typing, the open work window, each step, the reply', async () => {
+  const f = await fixture();
+  try {
+    f.state({presence: 'IDLE'});
+    assert.equal(f.gazes.length, 0);
+    f.state({presence: 'LISTENING', listening: true});
+    assert.equal(f.gazes.length, 1);assert.ok(forward(f.gazes[0]), 'Listening faces the owner');
+    f.state({presence: 'LISTENING', listening: true, cpu: 33});
+    assert.equal(f.gazes.length, 1, 'A repeated snapshot is no new reason');
+    f.state({presence: 'IDLE'});
+    // Typing: once when the owner starts, not per key.
+    f.input('S');f.input('Su');f.input('Suche');
+    assert.equal(f.gazes.length, 2);assert.ok(forward(f.gazes[1]));
+    f.input('');f.input('N');
+    assert.equal(f.gazes.length, 3, 'An emptied field and a new start is a new start');
+    f.document.querySelector('#command-input').dispatchEvent(new f.window.Event('blur'));
+    f.input('Noch');
+    assert.equal(f.gazes.length, 4);
+    // Work: each real step draws one glance to where it is shown.
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket()});
+    assert.equal(f.gazes.length, 5);
+    assert.equal(f.gazes[4].target, f.document.querySelector('[data-presence-left] .native-activity'));
+    f.state({busy: true, presence: 'THINKING', cpu: 61, activity: activityPacket()});
+    assert.equal(f.gazes.length, 5, 'The same step is no new glance');
+    f.window.ContinuumNative.document({...binding, documentId, name: 'Argon4.pdf', pageCount: 3});
+    assert.equal(f.gazes.length, 6);assert.equal(f.gazes[5].target, f.document.querySelector('#native-document-panel'));
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket({revision: 2})});
+    assert.equal(f.gazes.length, 7);
+    assert.equal(f.gazes[6].target, f.document.querySelector('#native-document-panel'), 'The next step is read in the open window');
+    // A finished or calm state gives no work glance; the reply turns her to the owner.
+    f.state({busy: true, presence: 'WAITING_FOR_APPROVAL', activity: activityPacket({revision: 3})});
+    assert.equal(f.gazes.length, 8);assert.ok(forward(f.gazes[7]), 'Only the calm forward gaze');
+    f.state({busy: true, presence: 'THINKING', activity: activityPacket({revision: 4, active: false})});
+    assert.equal(f.gazes.length, 8);
+    f.window.ContinuumNative.message({...binding, user: true, text: 'Frage'});
+    assert.equal(f.gazes.length, 8, 'The owner\'s own line is no reply');
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Antwort'});
+    assert.equal(f.gazes.length, 9);assert.ok(forward(f.gazes[8]));
+    Object.defineProperty(f.document, 'visibilityState', {value: 'hidden', configurable: true});
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Unsichtbar'});
+    f.input('');f.input('x');
+    assert.equal(f.gazes.length, 9, 'A hidden page moves nothing');
+  } finally {f.close();}
+});
+
+test('a snapshot of an older Android without presence, quality, activity and files renders as before', async () => {
+  const f = await fixture();
+  try {
+    const workspace = f.document.querySelector('#workspace');
+    f.state();
+    f.window.ContinuumNative.message({...binding, user: true, text: 'Hallo'});
+    f.state({busy: true});
+    assert.deepEqual([f.document.body.dataset.presence, f.document.body.dataset.nativeQuality], [undefined, undefined]);
+    assert.equal(f.document.body.dataset.state, 'working');
+    assert.equal(f.document.querySelector('#orb-status').textContent, 'ARBEITET');
+    assert.equal(f.document.querySelector('.native-activity strong').textContent, 'In Bearbeitung');
+    assert.equal(f.document.querySelector('.native-activity-steps'), null);
+    assert.equal(f.document.querySelector('#native-files-panel'), null);
+    assert.ok(workspace.classList.contains('native-work-active'));
+    assert.equal(workspace.classList.contains('native-files-active'), false);
+    assert.equal(f.document.querySelector('#workspace-meta').textContent, 'AUFTRAG AKTIV');
+    assert.deepEqual(f.scenes.slice(-2), ['idle', 'working']);
+    assert.equal(f.gazes.length, 0, 'No presence, no activity: no gaze was invented');
+    assert.equal(phase(f), 'activation');
+    f.window.ContinuumNative.message({...binding, user: false, text: 'Antwort'});
+    f.state();
+    assert.equal(phase(f), 'idle');
+    assert.equal(f.document.querySelector('#orb-status').textContent, 'BEREIT');
+    assert.equal(f.document.querySelector('#workspace-meta').textContent, 'LOKAL');
+  } finally {f.close();}
+});
