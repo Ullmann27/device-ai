@@ -13,12 +13,18 @@ import at.heinz.deviceai.cognitive.NewsSelector
 import at.heinz.deviceai.cognitive.NewsSourceRef
 import at.heinz.deviceai.cognitive.NewsStory
 import at.heinz.deviceai.cognitive.NonModelReplyKind
+import at.heinz.deviceai.cognitive.OwnerAppLookupIntent
 import at.heinz.deviceai.cognitive.OwnerDeliverable
+import at.heinz.deviceai.cognitive.OwnerDocumentDocx
+import at.heinz.deviceai.cognitive.OwnerDocumentLayout
+import at.heinz.deviceai.cognitive.OwnerExportCommand
 import at.heinz.deviceai.cognitive.OwnerNewsCommand
+import at.heinz.deviceai.cognitive.OwnerShareCommand
 import at.heinz.deviceai.cognitive.ResearchDialogueHandoff
 import at.heinz.deviceai.cognitive.WebToolRequest
 import java.time.Instant
 import java.time.ZoneId
+import java.util.Locale
 import java.util.concurrent.CancellationException
 
 /** One local generation as the work tools see it: the text, or why there is none. */
@@ -70,7 +76,31 @@ internal interface OwnerWorkToolsHost {
     fun showSources(sources: List<NewsSourceRef>)
     /** Hands the result to the local dialogue context as external, unverified data. */
     fun rememberResearch(digest: ResearchDialogueHandoff.Digest)
+
+    // ── Export and hand-over of the result ──────────────────────────────────────────────────────────────────
+    /** The last assistant answer shown in this chat as plain text, or null. */
+    fun lastAssistantReply(): String?
+    /** Runs [work] off the UI thread as the single busy job; [done] on the UI thread. */
+    fun <T> runFileJob(request: String, work: (OwnerWorkFileJob) -> T, done: (Result<T>) -> Unit)
+    /** The blocks as an A4 PDF: bytes and page count. Called inside a file job. */
+    fun renderPdf(blocks: List<OwnerDocumentLayout.TextBlock>): Pair<ByteArray, Int>
+    /** true when the owner's Download folder already holds a file of that name written by this app. */
+    fun downloadNameTaken(displayName: String): Boolean
+    /** Writes the whole file into the owner's Download folder or throws with the reason. Called inside a file job. */
+    fun saveDownload(displayName: String, mime: String, bytes: ByteArray): OwnerSavedFile
+    /** Opens the file in the owner's viewer; null = started, otherwise the reason. */
+    fun openFile(file: OwnerSavedFile): String?
+    /** Opens the owner's mail app with the prepared message; null = started, otherwise the reason. Sends nothing. */
+    fun composeMail(address: String?, subject: String, body: String, attachment: OwnerSavedFile?): String?
 }
+
+/** What the Activity lends a running file job. */
+internal interface OwnerWorkFileJob {
+    fun step(key: String, label: String, state: StepState, action: CockpitAction? = null)
+}
+
+/** A file this app wrote for the owner. [uri]: content URI other apps may be granted to read; null when there is none. */
+internal data class OwnerSavedFile(val displayName: String, val folder: String, val uri: String?, val mime: String)
 
 /**
  * Owner work tools (18.11.2026): the news briefing, and on its result „speichere das als PDF/Word“ and „schick das
@@ -83,9 +113,15 @@ internal class OwnerWorkTools(
     private val zone: () -> ZoneId = ZoneId::systemDefault
 ) {
     private class Briefed(val session: String, val turn: Long, val stories: List<NewsStory>, val atMillis: Long)
+    private class Saved(val session: String, val of: OwnerDeliverable, val file: OwnerSavedFile)
+    private class OpenOffer(val session: String, val turn: Long, val file: OwnerSavedFile)
 
     private var briefed: Briefed? = null
     private var lastDeliverable: Pair<String, OwnerDeliverable>? = null
+    /** The owner turn up to which the deliverable was the subject without another lane in between. */
+    private var subjectThrough = -1L
+    private var saved: Saved? = null
+    private var openOffer: OpenOffer? = null
 
     /** The last deliverable of the current chat, if any. */
     val deliverable: OwnerDeliverable? get() = lastDeliverable?.takeIf { it.first == host.sessionId }?.second
@@ -95,8 +131,22 @@ internal class OwnerWorkTools(
      * Call on the UI thread while no other job runs. false = not a work-tool order; nothing happened.
      */
     fun handle(request: String): Boolean {
+        val subject = deliverable != null && subjectThrough == host.ownerTurn
+        val handled = route(request, subject)
+        // A work-tool turn keeps its result the subject of the conversation; a turn of any other lane ends that.
+        if (handled && deliverable != null) subjectThrough = host.ownerTurn
+        return handled
+    }
+
+    private fun route(request: String, subject: Boolean): Boolean {
         val name = host.assistantName
         OwnerNewsCommand.parse(request, name)?.let { startBriefing(request, it); return true }
+        OwnerExportCommand.parse(request, name)?.let { export(request, it, subject); return true }
+        OwnerShareCommand.parse(request, name)?.let { share ->
+            // „Schick das an Anna“ without „Mail“ is only a mail order while the result is what we talk about.
+            if (share.mailNamed || subject) { mail(request, share, subject); return true }
+        }
+        if (answerOpenOffer(request)) return true
         return handleFollowUp(request, name)
     }
 
@@ -199,6 +249,8 @@ internal class OwnerWorkTools(
                 host.say(result.text)
                 host.showSources(result.sources)
                 lastDeliverable = host.sessionId to result.deliverable
+                subjectThrough = host.ownerTurn
+                openOffer = null
                 briefed = Briefed(host.sessionId, host.ownerTurn, result.stories, now().toEpochMilli())
                 NewsBriefing.dialogueDigest(result, command, result.deliverable.createdAtMillis)?.let(host::rememberResearch)
                 host.activity("NACHRICHTEN · ${briefed?.stories?.size ?: 0} Meldungen · ${result.sources.size} Quellen · " +
@@ -227,7 +279,146 @@ internal class OwnerWorkTools(
         }
     }
 
+    // ── „Speichere das als PDF/Word“ ────────────────────────────────────────────────────────────────────────
+
+    /**
+     * What „das“ means: the result we are talking about; the news when the owner names them; otherwise the last
+     * assistant answer of the chat. Null when there is nothing worth keeping.
+     */
+    private fun subjectOf(aboutNews: Boolean, subject: Boolean): OwnerDeliverable? {
+        val current = deliverable
+        if (current != null && (subject || aboutNews)) return current
+        val time = now()
+        return host.lastAssistantReply()
+            ?.let { OwnerDeliverable.ofReply(it, time.atZone(zone()).toLocalDate(), time.toEpochMilli()) } ?: current
+    }
+
+    private class Exported(val file: OwnerSavedFile, val pages: Int?)
+
+    private fun export(request: String, command: OwnerExportCommand.Request, subject: Boolean) {
+        val target = subjectOf(command.aboutNews, subject)
+        host.acceptOwnerTurn(request)
+        if (target == null) {
+            host.reply(request, "In diesem Gespräch gibt es noch nichts, das ich speichern könnte. Sag zum Beispiel " +
+                "„Fass mir die Nachrichten von heute zusammen“ – danach speichere ich sie dir als PDF oder Word-Datei.")
+            return
+        }
+        lastDeliverable = host.sessionId to target
+        val format = command.format
+        host.activity("EXPORT · ${format.label} · Download-Ordner")
+        host.runFileJob(request, { job ->
+            job.step(STEP_BUILD, "Dokument aufbauen", StepState.ACTIVE, CockpitAction.TOOL)
+            val blocks = OwnerDocumentLayout.blocks(target)
+            val (bytes, pages) = try {
+                when (format) {
+                    OwnerExportCommand.Format.PDF -> host.renderPdf(blocks).let { it.first to it.second as Int? }
+                    OwnerExportCommand.Format.DOCX -> OwnerDocumentDocx.write(blocks) to null
+                }
+            } catch (error: Exception) {
+                job.step(STEP_BUILD, "Dokument aufbauen", StepState.FAILED)
+                throw error
+            }
+            job.step(STEP_BUILD, "Dokument aufbauen", StepState.DONE)
+            job.step(STEP_SAVE, "Im Download-Ordner speichern", StepState.ACTIVE)
+            try {
+                val name = OwnerExportCommand.fileName(command.name, target.title, target.date, format, host::downloadNameTaken)
+                Exported(host.saveDownload(name, format.mime, bytes), pages).also {
+                    job.step(STEP_SAVE, "Im Download-Ordner speichern", StepState.DONE)
+                }
+            } catch (error: Exception) {
+                job.step(STEP_SAVE, "Im Download-Ordner speichern", StepState.FAILED)
+                throw error
+            }
+        }) { result ->
+            result.onSuccess { exported ->
+                val file = exported.file
+                saved = Saved(host.sessionId, target, file)
+                val openable = file.uri != null
+                openOffer = if (openable) OpenOffer(host.sessionId, host.ownerTurn, file) else null
+                host.say(savedMessage(target, command, exported, openable))
+                host.activity("EXPORT · gespeichert · ${file.displayName}")
+            }.onFailure { error ->
+                host.say("Das Speichern hat nicht geklappt: " + NewsBriefing.clean(error.message ?: error.javaClass.simpleName, 160) +
+                    ". Es wurde keine Datei angelegt.")
+                host.activity("EXPORT · fehlgeschlagen")
+            }
+        }
+    }
+
+    private fun savedMessage(target: OwnerDeliverable, command: OwnerExportCommand.Request, exported: Exported, openable: Boolean): String {
+        val file = exported.file
+        val what = when (target.kind) {
+            OwnerDeliverable.Kind.NEWS_BRIEFING -> ""
+            OwnerDeliverable.Kind.ASSISTANT_REPLY -> " Darin steht meine letzte Antwort aus diesem Gespräch."
+        }
+        val shape = listOfNotNull(
+            exported.pages?.let { if (it == 1) "1 Seite" else "$it Seiten" } ?: command.format.label,
+            "mit Quellenliste".takeIf { target.sources.isNotEmpty() }).joinToString(", ")
+        val place = if (file.uri != null) "„${file.displayName}“ liegt jetzt in deinem Download-Ordner ($shape)."
+            else "„${file.displayName}“ ist gespeichert ($shape), aber nicht im Download-Ordner: Auf dieser Android-Version " +
+                "darf ich dort nicht schreiben. Die Datei liegt im ${file.folder}."
+        val word = if (command.viaWord) " Word selbst habe ich dafür nicht geöffnet – ich habe das Dokument direkt erstellt. " +
+            "Mit „als Word-Datei speichern“ bekommst du zusätzlich die Word-Fassung." else ""
+        return "Erledigt. $place$what$word" + if (openable) " Soll ich sie öffnen?" else ""
+    }
+
+    /** The owner's answer to „Soll ich sie öffnen?“, or an explicit „öffne die gespeicherte Datei“. */
+    private fun answerOpenOffer(request: String): Boolean {
+        val text = OwnerAppLookupIntent.stripAddress(request.trim(), host.assistantName).lowercase(Locale.GERMAN)
+            .replace(Regex("[^\\p{L}\\p{N} -]+"), " ").replace(Regex("\\s+"), " ").trim()
+        val offer = openOffer?.takeIf { it.session == host.sessionId && it.turn == host.ownerTurn }
+        val file = when {
+            offer != null && openYes.matches(text) -> offer.file
+            openSaved.matches(text) -> saved?.takeIf { it.session == host.sessionId && it.file.uri != null }?.file
+            offer != null && openNo.matches(text) -> {
+                host.acceptOwnerTurn(request)
+                host.reply(request, "Alles klar, sie bleibt im Download-Ordner.")
+                return true
+            }
+            else -> null
+        } ?: return false
+        host.acceptOwnerTurn(request)
+        val problem = host.openFile(file)
+        host.reply(request, if (problem == null) "„${file.displayName}“ ist geöffnet."
+            else "Öffnen hat nicht geklappt: ${NewsBriefing.clean(problem, 160)}. Die Datei liegt weiter im Download-Ordner.")
+        return true
+    }
+
+    // ── „Schick das per Mail an …“ (hand-over only) ─────────────────────────────────────────────────────────
+
+    private fun mail(request: String, command: OwnerShareCommand.Request, subject: Boolean) {
+        val target = subjectOf(aboutNews = false, subject = subject)
+        host.acceptOwnerTurn(request)
+        if (target == null) {
+            host.reply(request, "In diesem Gespräch gibt es noch nichts, das ich verschicken könnte. Es wurde nichts vorbereitet.")
+            return
+        }
+        lastDeliverable = host.sessionId to target
+        val attachment = saved?.takeIf { it.session == host.sessionId && it.of === target && it.file.uri != null }?.file
+        val title = target.title + " " + OwnerDeliverable.SHORT_DATE.format(target.date)
+        host.activity("E-MAIL · Übergabe an das Mailprogramm · nichts wird gesendet")
+        val problem = host.composeMail(command.address, title, target.plainText, attachment)
+        if (problem != null) {
+            host.reply(request, "Die E-Mail konnte ich nicht vorbereiten: ${NewsBriefing.clean(problem, 160)}. Es wurde nichts gesendet.")
+            return
+        }
+        val file = if (attachment != null) ", „${attachment.displayName}“ hängt an"
+            else ", ohne Anhang – gespeichert ist das Dokument noch nicht (sag „speichere das als PDF“, dann hänge ich es beim nächsten Mal an)"
+        val to = command.address?.let { " Empfänger: $it." }
+            ?: " Für „${command.recipientName}“ habe ich keine Adresse – trag sie bitte im Mailprogramm ein; auf deine Kontakte greife ich nicht zu."
+        host.reply(request, "Die E-Mail ist vorbereitet: Betreff „$title“, der Text steht drin$file.$to " +
+            "Gesendet habe ich nichts – du musst im Mailprogramm nur noch auf Senden tippen.")
+    }
+
     private companion object {
+        const val STEP_BUILD = "export-build"
+        const val STEP_SAVE = "export-save"
+        val openYes = Regex("^(?:ja|jo|ja bitte|bitte|gern|gerne|ja gern|ja gerne|klar|ja klar|mach|ja mach|ok|okay|" +
+            "(?:ja )?(?:bitte )?öffne(?:n)?(?: sie| es| die datei| das dokument| das pdf)?(?: bitte)?|mach (?:sie |es )?auf|" +
+            "zeig (?:sie |es )?(?:mir|her)(?: bitte)?)$")
+        val openNo = Regex("^(?:nein|nö|nee|nein danke|danke|danke nein|passt|später|nicht nötig|lass|lass es)$")
+        val openSaved = Regex("^(?:bitte )?(?:öffne|zeig(?:e)?)(?: mir)? (?:die|das) (?:gerade |eben |soeben )?gespeicherte " +
+            "(?:datei|pdf|pdf-datei|word-datei|dokument|zusammenfassung)(?: bitte)?$")
         const val FOLLOW_UP_MILLIS = 30 * 60_000L
         const val STEP_FETCH = "news-fetch"
         const val STEP_SELECT = "news-select"

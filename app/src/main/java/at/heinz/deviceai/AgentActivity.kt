@@ -12492,6 +12492,55 @@ class AgentActivity : Activity() {
             localConversationContext.recordResearch(this@AgentActivity.sessionId, digest)
             addToolActivity("NACHRICHTEN · Ergebnis als Gesprächskontext übernommen (ungeprüft)")
         }
+
+        private val documents by lazy { OwnerDocumentStore(this@AgentActivity) }
+
+        override fun lastAssistantReply(): String? = command03VisibleMessages.lastOrNull { !it.first }?.second
+
+        /** Short local file work on the busy lane with a real step timeline; no model, no network. */
+        override fun <T> runFileJob(request: String, work: (OwnerWorkFileJob) -> T, done: (Result<T>) -> Unit) {
+            if (busy || localAgentExecutor.isShutdown || isFinishing || isDestroyed) {
+                done(Result.failure(IllegalStateException("Ein anderer Auftrag läuft bereits")))
+                return
+            }
+            val owner = this@AgentActivity.sessionId
+            val turn = at.heinz.deviceai.chief.TurnLifecycle("work-" + UUID.randomUUID())
+            activeChiefTurn = turn
+            turn.acknowledge()?.let { cockpitTriggers.commandAcknowledged(turn.turnId, request) }
+            activeLocalRequest = true
+            setBusy(true)
+            val job = object : OwnerWorkFileJob {
+                override fun step(key: String, label: String, state: at.heinz.deviceai.cockpit.StepState,
+                    action: at.heinz.deviceai.cockpit.CockpitAction?) = cockpitTriggers.workStep(turn.turnId, key, label, state, action)
+            }
+            localAgentExecutor.execute {
+                val result = runCatching { work(job) }
+                runOnUiThread {
+                    if (isFinishing || isDestroyed) return@runOnUiThread
+                    activeLocalRequest = false
+                    if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = result.isSuccess,
+                        outcomeVerified = result.isSuccess)
+                    // A written file exists whichever chat is open now; the result is reported where it was ordered.
+                    if (this@AgentActivity.sessionId == owner) done(result)
+                    else addToolActivity("EXPORT · Sitzung gewechselt · " + if (result.isSuccess) "Datei wurde gespeichert" else "nicht gespeichert")
+                    setBusy(false)
+                    refreshLocalModelUi()
+                }
+            }
+        }
+
+        override fun renderPdf(blocks: List<at.heinz.deviceai.cognitive.OwnerDocumentLayout.TextBlock>): Pair<ByteArray, Int> =
+            OwnerDocumentPdf.render(blocks).let { it.bytes to it.pages }
+
+        override fun downloadNameTaken(displayName: String): Boolean = documents.nameTaken(displayName)
+
+        override fun saveDownload(displayName: String, mime: String, bytes: ByteArray): OwnerSavedFile =
+            documents.save(displayName, mime, bytes)
+
+        override fun openFile(file: OwnerSavedFile): String? = documents.open(file)
+
+        override fun composeMail(address: String?, subject: String, body: String, attachment: OwnerSavedFile?): String? =
+            documents.composeMail(address, subject, body, attachment)
     }
 
     private fun runCloud(message: String?, outputs: List<ToolOutput>) = runCloud(message, outputs, command03ViewOwner())

@@ -12,6 +12,7 @@ import at.heinz.deviceai.cognitive.NewsFeedResult
 import at.heinz.deviceai.cognitive.NewsSourceRef
 import at.heinz.deviceai.cognitive.NewsTestFeeds
 import at.heinz.deviceai.cognitive.NonModelReplyKind
+import at.heinz.deviceai.cognitive.OwnerDocumentLayout
 import at.heinz.deviceai.cognitive.ResearchDialogueHandoff
 import at.heinz.deviceai.cognitive.ResearchDocument
 import at.heinz.deviceai.cognitive.ResearchMode
@@ -119,4 +120,60 @@ internal class OwnerWorkToolsHarness(
     override fun promptBudgetBytes(): Int = 6_000
     override fun showSources(sources: List<NewsSourceRef>) { this.sources += sources; log += "SOURCES:${sources.size}" }
     override fun rememberResearch(digest: ResearchDialogueHandoff.Digest) { digests += digest }
+
+    // ── Download folder, viewer and mail app as in-memory stand-ins ─────────────────────────────────────────
+    class Mail(val address: String?, val subject: String, val body: String, val attachment: OwnerSavedFile?)
+
+    /** The owner's Download folder: display name → bytes. */
+    val downloads = linkedMapOf<String, ByteArray>()
+    val opened = mutableListOf<OwnerSavedFile>()
+    val mails = mutableListOf<Mail>()
+    var saveProblem: String? = null
+    var openProblem: String? = null
+    var mailProblem: String? = null
+    /** false = an Android version without MediaStore downloads: saved in the app folder, no shareable URI. */
+    var mediaStore = true
+    /** An answer of another lane (the model) that the work tools did not produce. */
+    fun foreignTurn(question: String, answer: String) { ownerTurn++; log += "USER:$question"; log += "SAY:$answer" }
+
+    override fun lastAssistantReply(): String? = spokenInOrder().lastOrNull()
+    private fun spokenInOrder(): List<String> = log.filter { it.startsWith("SAY:") || it.startsWith("REPLY:") }
+        .map { it.substringAfter(':') }
+
+    override fun <T> runFileJob(request: String, work: (OwnerWorkFileJob) -> T, done: (Result<T>) -> Unit) {
+        val job = object : OwnerWorkFileJob {
+            override fun step(key: String, label: String, state: StepState, action: CockpitAction?) {
+                log += "STEP:$key:$label:${state.name}" + (action?.let { ":${it.name}" } ?: "")
+            }
+        }
+        done(runCatching { work(job) })
+    }
+
+    /** No Android here: the real block model and the real pagination, lines measured as 90 characters wide. */
+    override fun renderPdf(blocks: List<OwnerDocumentLayout.TextBlock>): Pair<ByteArray, Int> {
+        val bottoms = blocks.map { block ->
+            val lines = block.text.chunked(90).size.coerceAtLeast(1)
+            List(lines) { (it + 1) * block.style.size * OwnerDocumentLayout.LINE_SPACING }
+        }
+        val pages = OwnerDocumentLayout.paginate(blocks, bottoms)
+        return ("%PDF-TEST\n" + blocks.joinToString("\n") { it.text }).toByteArray(Charsets.UTF_8) to pages.size
+    }
+
+    override fun downloadNameTaken(displayName: String): Boolean = displayName in downloads
+
+    override fun saveDownload(displayName: String, mime: String, bytes: ByteArray): OwnerSavedFile {
+        saveProblem?.let { throw java.io.IOException(it) }
+        check(displayName !in downloads) { "Datei existiert bereits" }
+        downloads[displayName] = bytes
+        return if (mediaStore) OwnerSavedFile(displayName, "Download-Ordner", "content://media/external/downloads/${downloads.size}", mime)
+            else OwnerSavedFile(displayName, "App-Ordner Android/data/at.heinz.deviceai/files/Download", null, mime)
+    }
+
+    override fun openFile(file: OwnerSavedFile): String? { opened += file; return openProblem }
+
+    override fun composeMail(address: String?, subject: String, body: String, attachment: OwnerSavedFile?): String? {
+        mailProblem?.let { return it }
+        mails += Mail(address, subject, body, attachment)
+        return null
+    }
 }
