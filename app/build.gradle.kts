@@ -267,6 +267,12 @@ android {
 
     testOptions { unitTests.isIncludeAndroidResources = continuumUiWidgetTests }
     if (continuumUiWidgetTests) sourceSets.getByName("test").java.srcDir("src/uiTest/java")
+    // Notification announcements need a NotificationListenerService in the manifest. Play Protect blocks the normal
+    // installation of an APK that declares one, so it is merged only on request; such a build is installed with adb.
+    if (providers.gradleProperty("continuumNotificationAccess").orNull == "true") {
+        for (buildType in listOf("debug", "release"))
+            sourceSets.getByName(buildType).manifest.srcFile("src/notificationAccess/AndroidManifest.xml")
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

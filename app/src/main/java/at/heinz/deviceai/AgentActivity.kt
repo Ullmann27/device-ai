@@ -6788,6 +6788,8 @@ class AgentActivity : Activity() {
                     " (experimentell, am Gerät noch nicht abgestimmt)",
                 "Fahrmodus · " + if (driveMode.active) "an" else "aus",
                 "Benachrichtigungen ansagen · " + when {
+                    !at.heinz.deviceai.notifications.NotificationAnnouncementSettings.isSupported(this) ->
+                        "in dieser Installation nicht enthalten"
                     !access -> "Android-Zugriff fehlt"
                     !announcements.enabled -> "aus"
                     else -> announcements.apps.count {
@@ -6815,6 +6817,11 @@ class AgentActivity : Activity() {
 
     private fun showNotificationAnnouncementSettings() {
         val store = at.heinz.deviceai.notifications.NotificationAnnouncementSettings
+        if (!store.isSupported(this)) {
+            AlertDialog.Builder(this).setTitle("Benachrichtigungen ansagen")
+                .setMessage(store.UNSUPPORTED_NOTICE).setPositiveButton("Verstanden", null).show()
+            return
+        }
         val settings = store.load(this)
         val access = store.isAccessGranted(this)
         AlertDialog.Builder(this).setTitle("Benachrichtigungen ansagen")

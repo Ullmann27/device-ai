@@ -71,6 +71,25 @@ object NotificationAnnouncementSettings {
         AnnouncementMode.FULL -> "Inhalt vorlesen"
     }
 
+    /**
+     * True when this build declares the notification listener at all. The normal owner build does not: Google Play
+     * Protect stops the installation of an APK from browser or file manager when it declares one. Without the
+     * declaration Android offers no notification access for this app, so nothing may promise announcements.
+     */
+    fun isSupported(context: Context): Boolean = try {
+        context.packageManager.getServiceInfo(
+            android.content.ComponentName(context, ContinuumNotificationListener::class.java), 0)
+        true
+    } catch (_: android.content.pm.PackageManager.NameNotFoundException) {
+        false
+    } catch (_: RuntimeException) {
+        false
+    }
+
+    const val UNSUPPORTED_NOTICE = "Ansagen von Benachrichtigungen sind in dieser Installation nicht enthalten. " +
+        "Android (Google Play Protect) blockiert sonst die normale Installation der App. " +
+        "Alles andere im Gespräch und im Fahrmodus funktioniert unverändert."
+
     /** True when the owner granted notification access to this app's listener in Android settings. */
     fun isAccessGranted(context: Context): Boolean {
         val enabled = try {
