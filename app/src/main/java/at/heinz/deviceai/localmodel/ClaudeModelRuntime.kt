@@ -63,7 +63,13 @@ class ClaudeModelRuntime internal constructor(
     private val ledger: ClaudeUsageLedger,
     private val endpoint: Endpoint = Endpoint(),
     private val tools: () -> List<ClaudeToolCatalog.Definition> = { ClaudeToolCatalog.definitions() },
-    private val nanoTime: () -> Long = System::nanoTime
+    private val nanoTime: () -> Long = System::nanoTime,
+    /**
+     * Constant blocks of the system frame for the owner's own chat turn, most stable first: what the app can do
+     * ([ClaudeAbilityCatalogue]) and how the owner wants to be talked to. Null or blank = no such block. Read once
+     * when a turn starts; a tool conversation keeps the frame it started with.
+     */
+    private val ownerFrame: () -> List<String?> = { emptyList() }
 ) : LocalModelRuntime {
 
     /**
@@ -99,11 +105,14 @@ class ClaudeModelRuntime internal constructor(
         val system: List<BetaTextBlockParam>,
         val tools: List<BetaTool>,
         val messages: List<BetaMessageParam>,
-        /** tool_use blocks of the last assistant turn that still need a tool_result: id to tool name. */
-        val pendingToolUses: List<Pair<String, String>>,
+        /** tool_use blocks of the last assistant turn that still need a tool_result, in the order they arrived. */
+        val pendingToolUses: List<PendingToolUse>,
         val rounds: Int,
         val approximateCharacters: Int
     )
+
+    /** [proposed]: the one call of the turn that went to the app as a proposal; the others are answered as not run. */
+    private class PendingToolUse(val id: String, val name: String, val proposed: Boolean)
 
     private class Run(val kind: Kind, val callback: LocalInferenceCallback, val promptCharacters: Int,
                       val startNanos: Long) {
@@ -243,7 +252,7 @@ class ClaudeModelRuntime internal constructor(
         ClaudeLocalOnlyGuard.promptRefusal(prompt)?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
         val current = settings()
         preflight(current.model)?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
-        val frame = ClaudePromptFrame.frame(prompt, kind.isolatedWorker)
+        val frame = ClaudePromptFrame.frame(prompt, kind.isolatedWorker) { ownerFrame().filterNotNull() }
         val declared = if (kind.withTools) tools() else emptyList()
         val conversation = Conversation(
             model = current.model,
@@ -254,7 +263,7 @@ class ClaudeModelRuntime internal constructor(
             messages = listOf(BetaMessageParam.ofUser(frame.user)),
             pendingToolUses = emptyList(),
             rounds = 0,
-            approximateCharacters = prompt.length + ClaudePromptFrame.RUNTIME_PREFACE.length +
+            approximateCharacters = frame.user.length + frame.systemBlocks.sumOf { it.length } +
                 declared.sumOf { definition -> definition.description.length + definition.arguments.sumOf { it.description.length + 40 } })
         workers.execute { exchange(run, conversation) }
     }
@@ -314,14 +323,29 @@ class ClaudeModelRuntime internal constructor(
      * the attempt is booked before the caller sees the terminal event.
      */
     private fun exchange(run: Run, conversation: Conversation) {
-        val attempt = Attempt()
-        val terminal = outcome(run, conversation, attempt, allowFallbackDowngrade = true)
-        run.stream = null
-        // A response that started but never reported its final usage is still billed for what it produced.
-        val seen = attempt.promptUsage
-        if (!attempt.settled && seen != null) ledger.record(conversation.model.id, conversation.model.id,
-            seen.copy(outputTokens = (run.responseCharacters.get() + 1L) / 2), estimated = true)
-        terminal?.let { finish(run, it) }
+        var current = conversation
+        var resumed = 0
+        while (true) {
+            val attempt = Attempt()
+            val terminal = outcome(run, current, attempt, allowFallbackDowngrade = true)
+            run.stream = null
+            // A response that started but never reported its final usage is still billed for what it produced.
+            val seen = attempt.promptUsage
+            if (!attempt.settled && seen != null) ledger.record(current.model.id, current.model.id,
+                seen.copy(outputTokens = (run.responseCharacters.get() + 1L) / 2), estimated = true)
+            val paused = attempt.paused
+            if (terminal != null || paused == null) { terminal?.let { finish(run, it) }; return }
+            // stop_reason pause_turn: the API ended a long turn early. The same turn is sent again with what the
+            // model said so far and nothing added; the API continues where it stopped. Bounded, and every
+            // continuation passes the same gates as a first request (consent, key, monthly limit, model).
+            if (run.cancelled.get() || run.finished.get()) return
+            if (resumed >= ClaudeGenerationPolicy.MAX_PAUSE_CONTINUATIONS)
+                return finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE))
+            preflight(current.model, requireConsent = run.kind != Kind.PROBE)
+                ?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
+            resumed++
+            current = paused
+        }
     }
 
     private class Attempt {
@@ -331,6 +355,8 @@ class ClaudeModelRuntime internal constructor(
         var promptUsage: ClaudeTokenUsage? = null
         /** The final usage of this attempt was booked (or the attempt was booked as an estimate). */
         var settled = false
+        /** stop_reason pause_turn: the conversation to send next so the API continues this turn. */
+        var paused: Conversation? = null
     }
 
     /** The terminal event of one attempt, or null when the run already ended (STOP, character limit). */
@@ -373,6 +399,13 @@ class ClaudeModelRuntime internal constructor(
                 val message = accumulator.message()
                 recordUsage(conversation.model, message)
                 attempt.settled = true
+                if (message.stopReason().orElse(null) == BetaStopReason.PAUSE_TURN) {
+                    lastServedModel = message.model().asString()
+                    attempt.paused = Conversation(conversation.model, conversation.effort, conversation.maxTokens,
+                        conversation.system, conversation.tools, conversation.messages + assistantTurn(message),
+                        emptyList(), conversation.rounds, conversation.approximateCharacters + run.responseCharacters.get())
+                    return@use null
+                }
                 complete(run, conversation, message)
             }
         } catch (failure: RateLimitException) {
@@ -437,19 +470,24 @@ class ClaudeModelRuntime internal constructor(
             // Text that was streamed before a refusal is not an answer; callers discard it.
             BetaStopReason.REFUSAL -> LocalInferenceEvent.Failed(ClaudeBrainFailure.REFUSAL)
             BetaStopReason.MODEL_CONTEXT_WINDOW_EXCEEDED -> LocalInferenceEvent.Failed(ClaudeBrainFailure.CONTEXT_TOO_LONG)
-            // pause_turn belongs to server-side tools, which this runtime never declares.
+            // pause_turn is continued in [exchange] before this is reached; anything else is unknown here.
             else -> LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE)
         }
     }
 
-    /** Emits the proposal (or its rejection) and returns the turn's terminal event. */
+    /**
+     * Emits the proposal (or its rejection) and returns the turn's terminal event.
+     *
+     * The request asks for at most one call per turn (`disable_parallel_tool_use`). Should a turn carry several all
+     * the same, the app still handles exactly one: the first is proposed like any single call – validation,
+     * ToolGate and the owner's approval decide – and every further call is answered in the same user message as not
+     * run ([SKIPPED_TOOL_RESULT]), so the conversation stays valid and the model can ask again, one call at a time.
+     */
     private fun proposeTools(run: Run, conversation: Conversation, message: BetaMessage): LocalInferenceEvent {
         val calls = message.content().mapNotNull { it.toolUse().orElse(null) }
         if (!run.kind.withTools || calls.isEmpty())
             return LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE)
-        if (calls.size > 1) return LocalInferenceEvent.Failed(
-            "More than one tool proposal occurred in a single model turn; none are authorized.")
-        val call = calls.single()
+        val call = calls.first()
         val arguments = toArguments(call._input())
         val rejection = when {
             call.name() in ClaudeLocalOnlyGuard.LOCAL_ONLY_TOOLS ->
@@ -462,7 +500,8 @@ class ClaudeModelRuntime internal constructor(
             if (!run.cancelled.get() && !run.finished.get()) toolConversation = Conversation(
                 conversation.model, conversation.effort, conversation.maxTokens, conversation.system,
                 conversation.tools, conversation.messages + assistantTurn(message),
-                listOf(call.id() to call.name()), conversation.rounds, conversation.approximateCharacters)
+                calls.mapIndexed { index, pending -> PendingToolUse(pending.id(), pending.name(), proposed = index == 0) },
+                conversation.rounds, conversation.approximateCharacters)
         }
         emit(run, if (rejection == null) LocalInferenceEvent.ToolProposal(ToolProposal(call.name(), arguments!!))
             else LocalInferenceEvent.ToolProposalRejected(call.name(), rejection, arguments ?: emptyMap()))
@@ -559,15 +598,17 @@ class ClaudeModelRuntime internal constructor(
         return BetaMessageParam.ofAssistantOfContentBlockParams(kept.map(BetaContentBlock::toParam))
     }
 
-    private fun toolResultMessage(pending: List<Pair<String, String>>, responses: List<LocalToolResponse>): BetaMessageParam {
+    /** One user message with a tool_result for every tool_use of the assistant turn, in the order of the calls. */
+    private fun toolResultMessage(pending: List<PendingToolUse>, responses: List<LocalToolResponse>): BetaMessageParam {
         val unused = responses.toMutableList()
         val blocks = mutableListOf<BetaContentBlockParam>()
-        pending.forEach { (id, name) ->
-            val response = unused.firstOrNull { it.toolName == name } ?: unused.firstOrNull().takeIf { pending.size == 1 }
+        pending.forEach { call ->
+            // Only the proposed call can have a result; it is the single one the app was handed.
+            val response = if (!call.proposed) null else unused.firstOrNull { it.toolName == call.name } ?: unused.firstOrNull()
             if (response != null) unused.remove(response)
             blocks += BetaContentBlockParam.ofToolResult(BetaToolResultBlockParam.builder()
-                .toolUseId(id)
-                .content(response?.response ?: "{\"status\":\"FAILED\",\"reason\":\"No result was produced.\"}")
+                .toolUseId(call.id)
+                .content(response?.response ?: if (call.proposed) NO_TOOL_RESULT else SKIPPED_TOOL_RESULT)
                 .isError(response == null || !succeeded(response.response))
                 .build())
         }
@@ -665,6 +706,10 @@ class ClaudeModelRuntime internal constructor(
         const val CANCELLED = "CLAUDE_CANCELLED"
         const val CLOUD_VERSION = "cloud"
         private const val PROBE_TEXT = "Antworte nur mit dem Wort OK."
+        internal const val NO_TOOL_RESULT = "{\"status\":\"FAILED\",\"reason\":\"No result was produced.\"}"
+        /** The answer to every tool call of a turn beyond the first: it was not run, and why. */
+        internal const val SKIPPED_TOOL_RESULT = "{\"status\":\"NOT_RUN\",\"reason\":\"Only one tool call per turn is " +
+            "handled; this call was not run. Request it again on its own if it is still needed.\"}"
 
         private val DESCRIPTORS: Map<ClaudeModel, ImportedLocalModel> = ClaudeModel.entries.associateWith { model ->
             ImportedLocalModel(

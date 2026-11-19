@@ -42,6 +42,10 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
     var bridgeReady = true
     val chainCalls = mutableListOf<String>()
     var modelPlansOn = false
+    /** The cloud brain proposes: one sentence may then also be mapped to a single lane order. */
+    var cloudBrain = false
+    /** false = the owner ruled the cloud out in this sentence: it must not reach the plan model. */
+    var planAllowed: (String) -> Boolean = { true }
     var modelPlan: (String) -> String? = { null }
     val planPrompts = mutableListOf<String>()
     val ordinaryTurns = mutableListOf<String>()
@@ -100,6 +104,8 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
             send.handle(text) -> "SEND"
             tools.handle(text) -> "TOOLS"
             mission.proposeFromModel(text) -> "MISSION"
+            // Where the Activity would start a free model turn: the cloud brain may map the sentence to one order.
+            mission.proposeOrderFromModel(text) -> "MISSION"
             // Any other lane or the model: the turn is shown and answered elsewhere.
             else -> { toolsHost.foreignTurn(text, "Das beantworte ich dir gleich."); said += "OTHER:Das beantworte ich dir gleich."; "OTHER" }
         }
@@ -179,6 +185,10 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
 
     override fun cancelRunning() = deskHost.cancelJob()
     override fun modelPlans(): Boolean = modelPlansOn
+    override fun modelOrders(): Boolean = cloudBrain
+    override fun mayPlan(request: String): Boolean = planAllowed(request)
+    override fun holdSubject() = tools.holdSubject()
+    override fun workOnHeld(order: String): Boolean = tools.handleOnHeld(order)
     override fun proposePlan(request: String, prompt: String, done: (String?) -> Unit) { planPrompts += prompt; done(modelPlan(request)) }
     override fun answerWithoutPlan(request: String) { ordinaryTurns += request }
 

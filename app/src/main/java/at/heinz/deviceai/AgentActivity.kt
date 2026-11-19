@@ -794,6 +794,7 @@ class AgentActivity : Activity() {
             modelImports = host.imports
         }
         claudeBrain = at.heinz.deviceai.localmodel.LocalModelHost.brain(this)
+        wireOwnerTalkToCloudBrain()
         receiptStore = FileToolExecutionReceiptStore(java.io.File(filesDir, "tool-receipts"))
         initializeContinuum()
         bridge = ShizukuBridge(this) { message ->
@@ -961,6 +962,8 @@ class AgentActivity : Activity() {
         }
         resumeOwnerDocumentDesk()
         codingAgents.attach()
+        // The owner is back after a real pause: one personal greeting – in the foreground, once per return (OwnerTalk).
+        mainHandler.post { if (foregroundLearningActive && !isFinishing && !isDestroyed) ownerTalk.onReturn() }
         mainHandler.post { maybeAskForConversationCamera() }
         refreshBotTeam()
         if (continuousConversation.foregroundRecoveryPending) {
@@ -970,6 +973,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        ownerTalk.onLeave()
         at.heinz.deviceai.notifications.ContinuumNotificationBus.unsubscribe(notificationSubscriber)
         at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.foregroundPresenterActive = false
         pauseIncomingMessages()
@@ -3359,6 +3363,8 @@ class AgentActivity : Activity() {
      * Android's save dialog. Null when the START cockpit cannot host it – the chat then carries the draft alone.
      */
     private fun presentDraftScene(turn: DocumentDraftTurn, response: String): at.heinz.deviceai.ui.JarvisWorkWindow? {
+        // „Erstelle bitte eine PDF“ after this draft means the draft (work tools); who wrote an older one is not known.
+        ownerWorkTools.noteDocumentDraft(turn.name, response, turn.prompt.complete)
         val home = homeView?.takeIf { activeWorkArea == ContinuumWorkArea.START && it.isShown } ?: return null
         val basis = if (turn.prompt.complete) "Grundlage: der vollständige gelesene Text (${turn.prompt.totalChars} Zeichen)."
             else "Grundlage: die ersten ${turn.prompt.coveredChars} von ${turn.prompt.totalChars} gelesenen Zeichen – der Rest ist nicht enthalten."
@@ -3456,6 +3462,7 @@ class AgentActivity : Activity() {
         }
         workEpisodeId = turn.episodeId
         val window = presentDraftScene(turn, response)
+        ownerWorkTools.noteDocumentDraft(turn.name, response, turn.prompt.complete, cloud = claudeBrain?.claudeSelected == true)
         turn.episodeId?.let { episodeId ->
             val documentTurnId = "document-$episodeId"
             cockpitTriggers.documentPipelineStep(
@@ -3531,6 +3538,7 @@ class AgentActivity : Activity() {
                 if (edited != target.text.toString()) recordWork(workEpisodeId) {
                     it.copy(draft = edited.trim(), ownerEdits = it.ownerEdits + 1)
                 }
+                if (edited != target.text.toString()) ownerWorkTools.reviseDocumentDraft(edited)
                 target.text = edited
             }
             .setNegativeButton("ABBRECHEN", null)
@@ -4658,6 +4666,7 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.HOLOGRAM -> showCommand03AppearanceSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.VOICE -> showVoicePicker()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.VOICE_SETUP -> showReadinessGuide()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.TONE -> showOwnerTalkSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.FACE -> showOwnerFaceControls()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.MODEL -> showModelCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.BRAIN -> showClaudeBrainSettings()
@@ -6741,7 +6750,8 @@ class AgentActivity : Activity() {
             refreshOfflineVoice()
             if (readinessWelcomePending) maybePlayReadinessWelcome()
             else if (allowRegularGreeting && voiceReady && voiceEnabled)
-                speakBootstrap("Hallo. Device AI ist bereit.")
+                // The personal greeting that was just shown is what the voice says first, once it is ready.
+                speakBootstrap(ownerTalk.recentGreeting() ?: "Hallo. Device AI ist bereit.")
         }
         // Sound is switched on but nothing can speak: say why once, instead of answering silently from now on.
         if (voiceEnabled && !replyVoiceReady()) localVoiceNotice()?.let { notice ->
@@ -8051,6 +8061,11 @@ class AgentActivity : Activity() {
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
         // „Continuum Wärmemessung“ and, while it runs, „Stopp“; a no-op for every other text.
         if (heatMeasurement.consumeInput(input.text.toString())) return
+        // Field finding 19.11.2026: keyboard dots where spaces belong („Erstelle.bitte eine pdf und zeig sie mir.dann“) are
+        // repaired once, before any route reads the turn; file names, addresses, numbers and abbreviations stay.
+        if (selectedBot == null && !neuralCoach.isActive()) at.heinz.deviceai.cognitive.OwnerInputRepair
+            .strayDots(input.text.toString()).takeIf { it != input.text.toString() }
+            ?.let { input.setText(it); input.setSelection(input.text.length) }
         if (pendingConversationSelection != null) return
         if (consumeOwnerWorkInterruption()) return
         if (interceptOwnerMission()) return
@@ -8143,6 +8158,10 @@ class AgentActivity : Activity() {
         // Owner mission: one sentence that is a sequence of orders for the lanes below („Öffne das PDF Argon4, fass
         // Seite 2 zusammen, speichere es als Word und schick es per Mail an …“). Fail closed: a sentence that is one
         // order, or has a part no lane knows, is not taken and keeps its route below.
+        // Owner conversation manner: „Sprich persönlich mit mir“, „Nenn mich …“, „Begrüß mich nicht mehr“ and, in the
+        // personal tone, a plain greeting – fixed replies of the app. Any other sentence is not taken.
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && ownerTalk.handle(request)) return
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
             computerController?.active != true && ownerMission.handle(request)) return
         // Owner document desk: „Öffne das PDF Argon4“ (local search by name), „Fass Seite 2 zusammen und speichere es
@@ -8734,9 +8753,14 @@ class AgentActivity : Activity() {
             runReviewedBootstrapDecision(request)
             return
         }
-        presentBootstrapDecision(request, BootstrapBrain.decide(request, emptyList(), bootstrapMemory.learnedCommands(),
+        val bootstrapDecision = BootstrapBrain.decide(request, emptyList(), bootstrapMemory.learnedCommands(),
             identityDescription = at.heinz.deviceai.cognitive.LocalAssistantIdentity.selfDescription(
-                continuumState?.archive?.identityState?.chosenName, localRuntime.loadedModel, localRuntime.state)))
+                continuumState?.archive?.identityState?.chosenName, localRuntime.loadedModel, localRuntime.state))
+        // Cloud brain: a sentence that would now become a free model turn although a fixed flow of the app can do it
+        // is mapped to that flow first – one order, validated, with the flow's own approvals (OwnerMissionDirector).
+        if (bootstrapDecision.kind == BootstrapKind.REPLY && bootstrapDecision.allowNeuralRecall && selectedBot == null &&
+            !neuralCoach.isActive() && computerController?.active != true && ownerMission.proposeOrderFromModel(request)) return
+        presentBootstrapDecision(request, bootstrapDecision)
     }
 
     private fun presentBootstrapDecision(request: String, decision: BootstrapDecision, requestRecorded: Boolean = false) {
@@ -13332,6 +13356,50 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.notifications.IncomingMessages.clearCard(item)
     }
 
+    // ── Owner conversation manner (tone, name, greeting) – logic in OwnerTalk.kt and cognitive/OwnerConversationTone.kt,
+    // cognitive/OwnerGreeting.kt. Thin adapter only: fixed replies of the app, no model turn, no tool, no plan.
+    private val ownerTalkStore by lazy { OwnerTalkPreferences(this) }
+    internal val ownerTalk by lazy { OwnerTalk(OwnerTalkAdapter(), ownerTalkStore) }
+
+    private inner class OwnerTalkAdapter : OwnerTalkHost {
+        override val sessionId: String get() = this@AgentActivity.sessionId
+        override val assistantName: String? get() = at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+            continuumState?.archive?.identityState?.chosenName)
+        override fun nowMillis(): Long = System.currentTimeMillis()
+        override fun zone(): java.time.ZoneId = java.time.ZoneId.systemDefault()
+        override fun acceptOwnerTurn(request: String) = showOwnerLaneTurn(request)
+        override fun reply(request: String, text: String) =
+            addNonModelReply(request, text, at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+        override fun greet(text: String) = addHomeGreeting(text)
+        override fun activity(line: String) = addToolActivity(line)
+        /** Nothing is open and nobody is listening or speaking in the hands-free mode: only then the app greets by itself. */
+        override fun quiet(): Boolean = foregroundLearningActive && !busy && !botLookupPending && selectedBot == null &&
+            !neuralCoach.isActive() && !ownerMission.active && pausedTaskChain == null && pendingConversationSelection == null &&
+            computerController?.active != true && !continuousConversation.active && !voiceListening &&
+            centerDialog?.isShowing != true && readinessDialog?.isShowing != true && !isFinishing && !isDestroyed
+        override fun confirmedFacts(): List<String> = if (::bootstrapMemory.isInitialized) bootstrapMemory.facts() else emptyList()
+        override fun cloudBrain(): Boolean = claudeBrain?.claudeSelected == true
+    }
+
+    /**
+     * The cloud brain reads the tone from the same store as the on-device prompt. The provider holds the application
+     * context only; the owner's name goes into its instructions only under his own switch for that (or his existing
+     * opt-in for memory that is marked „nur auf dem Gerät“).
+     */
+    private fun wireOwnerTalkToCloudBrain() {
+        val brain = claudeBrain ?: return
+        val store = OwnerTalkPreferences(applicationContext)
+        val memory = BootstrapMemoryStore(applicationContext)
+        brain.ownerStyle = { OwnerTalk.cloudBlock(store, { memory.facts() }) { store.nameToCloud || brain.settings.shareLocalMemory } }
+    }
+
+    private fun showOwnerTalkSettings() {
+        centerDialog?.dismiss()
+        val dialog = at.heinz.deviceai.ui.OwnerTalkSettingsDialog.show(this, ownerTalkStore, ownerTalk)
+        centerDialog = dialog
+        dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
+    }
+
     // ── Owner missions („Auftragsfolge“) – logic in OwnerMission.kt and cognitive/OwnerMissionPlan*.kt ──────────
     // Thin adapter only: a mission hands every step to the owner entry of its lane above and listens to the lanes'
     // typed outcomes; it has no way of its own to read, write, open or send anything.
@@ -13414,9 +13482,25 @@ class AgentActivity : Activity() {
             cancelLocalRequest(preserveContinuousMode = continuousConversation.active, announceDraftStop = false)
         }
 
-        /** The owner's switch of the task chains, and only the model on the device: a plan request is not sent out. */
-        override fun modelPlans(): Boolean = getSharedPreferences("continuum-task-chain", MODE_PRIVATE)
-            .getBoolean("model_plans", false) && claudeBrain?.claudeSelected != true && ::localRuntime.isInitialized && localModelReady()
+        /**
+         * The owner's switch of the task chains. Unset, it is off for the model on the device (as before: time and heat)
+         * and on for the cloud brain the owner selected himself – a plan is one short text request, and nothing of it
+         * runs before his „Ja“. His own „Modellpläne aus“ switches it off for both.
+         */
+        override fun modelPlans(): Boolean = getSharedPreferences("continuum-task-chain", MODE_PRIVATE).let { saved ->
+            at.heinz.deviceai.cognitive.OwnerMissionModelPlan.switchedOn(
+                if (saved.contains("model_plans")) saved.getBoolean("model_plans", false) else null,
+                claudeBrain?.claudeSelected == true)
+        } && ::localRuntime.isInitialized && localModelReady()
+
+        override fun modelOrders(): Boolean = claudeBrain?.claudeSelected == true
+
+        /** A sentence in which the owner rules out internet or cloud is never sent to the cloud brain for a plan. */
+        override fun mayPlan(request: String): Boolean =
+            at.heinz.deviceai.localmodel.ClaudeTurnGate.refusal(claudeBrain, request, false) == null
+
+        override fun holdSubject() = ownerWorkTools.holdSubject()
+        override fun workOnHeld(order: String): Boolean = ownerWorkTools.handleOnHeld(order)
 
         /** One bounded, tool-free generation, as for a chain plan; the text is data for the plan check. */
         override fun proposePlan(request: String, prompt: String, done: (String?) -> Unit) {
@@ -14638,11 +14722,14 @@ class AgentActivity : Activity() {
                 // with all tool schemas, as Code68 sent spoken explanation requests. Never set outside such a run.
                 val textOnlyTurn = !heatMeasurement.toolSchemasForced && ((documentDraftTurn != null && botTask == null &&
                     codingPlanning == null && observations.isEmpty() && reflection == null) ||
-                    at.heinz.deviceai.cognitive.LocalTextOnlyInferenceRoute.useToolFree(
-                        text, observations.isNotEmpty(), reflection != null,
-                        botTask != null, codingPlanning != null,
-                        priorTextOnlyResponse = previousLocalReply?.textOnly == true &&
-                            localConversationContext.hasContinuation(localSessionId)))
+                    // The cloud brain keeps its tools unless the turn plainly cannot need one; on the device unchanged.
+                    at.heinz.deviceai.cognitive.CloudBrainToolRoute.toolFree(claudeBrain?.claudeSelected == true, text,
+                        at.heinz.deviceai.cognitive.LocalTextOnlyInferenceRoute.useToolFree(
+                            text, observations.isNotEmpty(), reflection != null,
+                            botTask != null, codingPlanning != null,
+                            priorTextOnlyResponse = previousLocalReply?.textOnly == true &&
+                                localConversationContext.hasContinuation(localSessionId)),
+                        at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(continuumState?.archive?.identityState?.chosenName)))
                 textOnlyResponse.set(textOnlyTurn)
                 heatMeasurement.onTurnRoute(textOnlyTurn)
                 val state = if (botTask == null) continuumState else null
@@ -14789,7 +14876,11 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
                     "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
                         "Keine zusätzlichen internen Denkschritte behaupten."
-                else "") + conversationStyle
+                else "") + conversationStyle +
+                    // The owner's tone setting for the on-device model: one short line ("" in „Sachlich“, for a bot,
+                    // a coding plan or a document draft, and with the cloud brain, which has it in its system frame).
+                    (if (botTask == null && codingPlanning == null && documentDraftTurn == null)
+                        ownerTalk.localLine(at.heinz.deviceai.cognitive.ConversationStyle.detect(text)) else "")
                 // Required owner request and selected evidence are atomic. Do not
                 // cut a negation to fit optional history or advisory text.
                 val promptEnd = promptTail + briefInstruction + "\n" +
@@ -17781,6 +17872,7 @@ class AgentActivity : Activity() {
         computerClarification.clear()
         ownerReplyRevision++
         documentReadGeneration++
+        if (selectedBot == null) ownerTalk.noteOwnerTurn(value)
         val allowsMaya = !at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalSpeech(value)
         ownerReplyAllowsMaya = allowsMaya && (!busy || ownerReplyAllowsMaya)
         recordCockpitDialog(true, value)
@@ -17850,6 +17942,9 @@ class AgentActivity : Activity() {
         // „Ich habe „Thermux“ als Termux verstanden.“ – stated once, in front of the answer to the repaired turn.
         @Suppress("NAME_SHADOWING") val value = ownerUnderstanding.withNotice(sessionId, value)
         if (value.trimEnd().endsWith("?")) { incomingQuestionTurn = ownerReplyRevision; incomingQuestionAt = android.os.SystemClock.elapsedRealtime() }
+        // First sign of life after a pause that was already an order: one short greeting clause in front of the answer,
+        // as a line of its own (it is not part of the answer) – never before a question or a failure (OwnerTalk).
+        val returnClause = ownerTalk.returnClause(sessionId, value)
         recordCockpitDialog(false, value)
         // Rendering a normal assistant reply never owns session invalidation. Callers pass false only
         // after a semantic policy decided that older dialogue is stale (for example a confirmed memory change).
@@ -17867,17 +17962,18 @@ class AgentActivity : Activity() {
             refreshConversationLayout()
             (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         }
-        addHomeGreeting(value, allowMaya = allowMaya, speakNow = speakNow)
+        returnClause?.let { addBubble(it, user = false) }
+        addHomeGreeting(value, allowMaya = allowMaya, speakNow = speakNow, spokenLead = returnClause)
     }
 
     /** Startup/session greetings remain available in chat without taking space
      * from the home dashboard. Every actual action result opens the conversation. */
     private fun addHomeGreeting(value: String, persist: Boolean = true, allowMaya: Boolean = ownerReplyAllowsMaya,
-                                speakNow: Boolean = true) {
+                                speakNow: Boolean = true, spokenLead: String? = null) {
         // Code55: the bubble is plain text – no raw Markdown markers on screen or in speech.
         val shown = at.heinz.deviceai.cognitive.ChatReplyFormatter.plain(value)
         addBubble(shown, user = false, persist = persist)
-        if (speakNow) speakReply(shown, allowMaya)
+        if (speakNow) speakReply(if (spokenLead == null) shown else "$spokenLead $shown", allowMaya)
     }
 
     /**

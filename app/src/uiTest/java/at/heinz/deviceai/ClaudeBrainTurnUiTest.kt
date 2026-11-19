@@ -50,11 +50,13 @@ class ClaudeBrainTurnUiTest {
         override val loadedModel = ImportedLocalModel("local-fixture", "v1", "a".repeat(64), 1,
             LocalModelCapabilities(true, false, false, false, true, 32_768, null, setOf(LocalModelBackend.CPU)))
         var calls = 0
+        val prompts = mutableListOf<String>()
         override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) =
             error("Unexpected model load")
         override fun unload(callback: (Result<Unit>) -> Unit) = error("Unexpected model unload")
         override fun stream(prompt: String, callback: LocalInferenceCallback) {
             calls++
+            prompts += prompt
             callback.onEvent(LocalInferenceEvent.TextDelta(reply))
             callback.onEvent(LocalInferenceEvent.Completed(LocalInferenceMetrics(0, 0, 0, null, null, null, 1)))
         }
@@ -149,10 +151,17 @@ class ClaudeBrainTurnUiTest {
             assertEquals("claude-opus-5-5", body.getString("model"))
             val user = body.getJSONArray("messages").getJSONObject(0).getString("content")
             assertTrue(user.contains(task))
-            // The activity's fixed instruction block went to `system`, byte for byte.
+            // The activity's fixed instruction block went to `system`, byte for byte. Since 19.11.2026 two more
+            // constant blocks follow it: what the app can do, and which model runs (for the direct question only).
             val system = body.getJSONArray("system")
-            assertEquals(2, system.length())
+            assertEquals(4, system.length())
             assertTrue(system.getJSONObject(1).getString("text").endsWith(ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS))
+            assertEquals(at.heinz.deviceai.localmodel.ClaudeAbilityCatalogue.text(), system.getJSONObject(2).getString("text"))
+            assertEquals(at.heinz.deviceai.localmodel.ClaudeAbilityCatalogue.runningOn(at.heinz.deviceai.localmodel.ClaudeModel.OPUS_5_5),
+                system.getJSONObject(3).getString("text"))
+            // With the cloud brain an explanation keeps the registered tools (the model decides, never forced).
+            assertTrue(body.has("tools"))
+            assertEquals("auto", body.getJSONObject("tool_choice").getString("type"))
             assertFalse(user.contains(ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS))
             // Nothing on screen or in the log shows the key.
             assertTrue((chat(a) + (get(a, "activityText") as TextView).text.toString()).none { it.contains("sk-ant") })
@@ -268,6 +277,56 @@ class ClaudeBrainTurnUiTest {
             // The app's own outcome line: the tool was declined, and no success is claimed.
             assertTrue(chat(a).toString(), chat(a).any { it.contains("stop_app meldet REJECTED") })
             assertTrue(chat(a).none { it.contains("SUCCEEDED") })
+        }
+    }
+
+    // ---- owner wish 19.11.2026: one tone for both brains ------------------------------------------------------
+
+    private fun talkPreferences(a: AgentActivity) = a.applicationContext.getSharedPreferences("continuum-owner-talk", 0)
+
+    @Test fun thePersonalToneReachesTheCloudBrainAsAConstantBlockAndTheNameOnlyWithTheOwnersSwitch() {
+        repeat(6) { endpoint.enqueue(Reply.Stream(listOf(messageStart()) + text(0, answer) + stop("end_turn"))) }
+        val brain = claudeBrain()
+        withTurns(brain, LocalFixture("LOKALE ANTWORT")) { a ->
+            talkPreferences(a).edit().clear().putString("name", "Heinz").putString("name_statement", "Nenn mich Heinz")
+                .putLong("name_at", 1L).commit()
+            call(a, "wireOwnerTalkToCloudBrain")
+            ask(a, task)
+            ask(a, "Erkläre kurz, was ein Mock ist.")
+            val before = endpoint.requests.size
+            val first = endpoint.requests.first().body.getJSONArray("system")
+            val second = endpoint.requests.last().body.getJSONArray("system")
+            assertEquals(5, first.length())
+            val tone = first.getJSONObject(4).getString("text")
+            assertEquals(at.heinz.deviceai.cognitive.OwnerToneStyle.claudeBlock(
+                at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL, null), tone)
+            assertFalse("his name stays on the device without his switch", first.toString().contains("Heinz"))
+            // Byte-stable from turn to turn, and the on-device line is not sent a second time in the user message.
+            assertEquals(first.toString(), second.toString())
+            assertFalse(endpoint.requests.any { it.body.getJSONArray("messages").toString().contains("PERSÖNLICHER TON") })
+            talkPreferences(a).edit().putBoolean("name_to_cloud", true).commit()
+            ask(a, "Erkläre kurz, was ein Stub ist.")
+            assertTrue(endpoint.requests.size > before)
+            assertTrue(endpoint.requests.last().body.getJSONArray("system").getJSONObject(4).getString("text").contains("„Heinz“"))
+            // „Sachlich“: no tone block at all.
+            talkPreferences(a).edit().putString("tone", "FACTUAL").commit()
+            assertNull(brain.ownerStyle())
+        }
+    }
+
+    @Test fun theOnDeviceModelGetsTheSameToneAsOneShortLineAndNoneInSachlich() {
+        val local = LocalFixture("Lokal: Ein Test prüft, ob ein Ergebnis einer Erwartung entspricht.")
+        withTurns(testBrain(), local) { a ->
+            talkPreferences(a).edit().clear().putString("name", "Heinz").putString("name_statement", "Nenn mich Heinz")
+                .putLong("name_at", 1L).commit()
+            ask(a, "Was hältst du von Tests?")
+            val personal = local.prompts.last()
+            assertTrue(personal, personal.contains("PERSÖNLICHER TON – nur die Art zu reden: Sprich mit Heinz wie ein alter Freund"))
+            assertEquals(1, Regex("PERSÖNLICHER TON").findAll(personal).count())
+            talkPreferences(a).edit().putString("tone", "FACTUAL").commit()
+            ask(a, "Was hältst du von Mocks?")
+            assertFalse(local.prompts.last().contains("PERSÖNLICHER TON"))
+            assertTrue(endpoint.requests.isEmpty())
         }
     }
 

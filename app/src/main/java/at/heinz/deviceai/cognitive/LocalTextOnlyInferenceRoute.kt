@@ -71,3 +71,24 @@ internal object LocalTextOnlyInferenceRoute {
         return !deviceTopics.containsMatchIn(greetingWithMorning.replace(text, ""))
     }
 }
+
+/**
+ * The same decision for the owner's cloud brain (owner goal 19.11.2026: the cloud brain must be able to operate every
+ * tool). [LocalTextOnlyInferenceRoute] withholds the tool schemas from an explanation or a question because they cost
+ * time and heat on the phone. That reason does not exist in the cloud, and a tool-free round takes away tools a
+ * question may need: „Wie viel Speicher ist frei?“ starts like a text question.
+ */
+internal object CloudBrainToolRoute {
+    private val smallTalk = Regex("(?iu)^\\s*(?:danke|dankeschön|danke schön|danke dir|vielen dank|gute nacht|tschüss|servus|" +
+        "bis später|bis morgen|bis dann|wie geht(?:'s|’s|s| es)(?: dir)?(?: heute)?|alles klar|passt|super|na)[\\s,.!?]*$")
+
+    /**
+     * [localToolFree]: what [LocalTextOnlyInferenceRoute.useToolFree] decided. For the on-device model that decision
+     * stands unchanged. For the cloud brain a turn is tool-free only when it plainly cannot need a tool – a greeting,
+     * thanks or a goodbye; every other owner turn declares the registered tools (the same list in the same order on
+     * every turn, so the cached request prefix holds) and leaves the choice to the model (`tool_choice` auto).
+     */
+    fun toolFree(cloudBrain: Boolean, request: String, localToolFree: Boolean, assistantName: String? = null): Boolean =
+        if (!cloudBrain) localToolFree
+        else localToolFree && (OwnerGreeting.isGreeting(request, assistantName) || smallTalk.matches(request))
+}

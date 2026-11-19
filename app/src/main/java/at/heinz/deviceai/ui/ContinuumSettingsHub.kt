@@ -15,6 +15,7 @@ object ContinuumSettingsHub {
         HOLOGRAM("Darstellung & Stimme", "Hologramm & Neonlicht", "Lichtstärke und sanfte Lichtbewegung"),
         VOICE("Darstellung & Stimme", "Stimme auswählen", "Maya / ElevenLabs oder Android offline"),
         VOICE_SETUP("Darstellung & Stimme", "Sprache, Ton & Gespräch", "Mikrofon, Hörtest und Startbegleitung"),
+        TONE("Darstellung & Stimme", "Gesprächston", "Persönlich oder sachlich, Anrede und Begrüßung"),
         FACE("Darstellung & Stimme", "Kamera & Gesicht", "Blick, lokale Wiedererkennung und Freigaben"),
         MODEL("KI & Gedächtnis", "Lokales KI-Modell", "Modell auswählen, laden und verwalten"),
         BRAIN("KI & Gedächtnis", "Gehirn: Lokal oder Claude", "Modell auf dem Gerät oder Claude in der Cloud"),

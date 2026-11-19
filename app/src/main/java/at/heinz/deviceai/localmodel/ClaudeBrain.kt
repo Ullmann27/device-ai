@@ -83,7 +83,20 @@ class ClaudeBrain internal constructor(
     /** Set by [LocalModelHost]: stops a running generation of whichever runtime loses the selection. */
     @Volatile internal var onBrainChanged: (BrainKind) -> Unit = {}
 
-    val runtime = ClaudeModelRuntime(settings = { current }, apiKey = ::loadedKey, ledger = ledger, endpoint = endpoint)
+    /**
+     * How the owner wants to be talked to, as one constant block for the system frame (null = none). Set once by
+     * the app from the same style source the on-device prompt uses, so the brain does not change the manner. The
+     * provider must not hold an Activity: this object lives as long as the process.
+     */
+    @Volatile var ownerStyle: () -> String? = { null }
+
+    /**
+     * The constant blocks of the owner's chat turn, most stable first: what the app can do, which model answers
+     * (for the direct question only), how to talk. None of them changes between two turns.
+     */
+    val runtime = ClaudeModelRuntime(settings = { current }, apiKey = ::loadedKey, ledger = ledger, endpoint = endpoint,
+        ownerFrame = { listOf(ClaudeAbilityCatalogue.text(), ClaudeAbilityCatalogue.runningOn(current.model),
+            runCatching { ownerStyle() }.getOrNull()) })
 
     val settings: ClaudeBrainSettings get() = current
 

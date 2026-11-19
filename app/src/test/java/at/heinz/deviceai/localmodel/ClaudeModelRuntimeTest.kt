@@ -271,13 +271,31 @@ class ClaudeModelRuntimeTest {
         assertTrue(toolResult.getBoolean("is_error"))
     }
 
-    @Test fun twoToolCallsInOneTurnAuthorizeNothing() {
+    /**
+     * Changed deliberately on 19.11.2026 (owner goal: the cloud brain must be able to operate every tool; API rule:
+     * every tool_use of a turn is answered in one user message). Before, a second call ended the turn as a failure
+     * and the conversation with it. Now exactly one call – the first – is proposed, through the same validation, gate
+     * and approval as any single call; the second is never proposed and never run, and is answered as not run.
+     */
+    @Test fun ofTwoToolCallsInOneTurnOnlyTheFirstIsProposedAndTheSecondIsNeverAuthorized() {
         endpoint.enqueue(Reply.Stream(listOf(messageStart()) + toolUse(0, "toolu_a", "get_battery_info", "{}") +
-            toolUse(1, "toolu_b", "get_device_info", "{}") + stop("tool_use")))
+            toolUse(1, "toolu_b", "get_device_info", "{}") + stop("tool_use")),
+            Reply.Stream(listOf(messageStart()) + text(0, "Der Akku steht bei 80 Prozent.") + stop("end_turn")))
         val runtime = runtime()
         val events = run { runtime.stream(toolPrompt, it) }
-        assertTrue(events.none { it is LocalInferenceEvent.ToolProposal })
-        assertEquals("More than one tool proposal occurred in a single model turn; none are authorized.", failure(events))
+        assertEquals(listOf(at.heinz.deviceai.ToolProposal("get_battery_info", emptyMap())),
+            events.filterIsInstance<LocalInferenceEvent.ToolProposal>().map { it.proposal })
+        assertTrue(events.none { it is LocalInferenceEvent.ToolProposalRejected })
+        assertTrue(events.last() is LocalInferenceEvent.Completed)
+        val observation = LocalToolContinuation.encode("get_battery_info", "SUCCEEDED", "level=80")!!
+        assertEquals("Der Akku steht bei 80 Prozent.", texts(run { runtime.respondToTools(listOf(observation), it) }))
+        // One user message answers both calls; the second was not run and says so as an error.
+        val results = endpoint.requests[1].body.getJSONArray("messages").getJSONObject(2).getJSONArray("content")
+        assertEquals(listOf("toolu_a", "toolu_b"), (0 until results.length()).map { results.getJSONObject(it).getString("tool_use_id") })
+        assertFalse(results.getJSONObject(0).optBoolean("is_error", false))
+        assertTrue(results.getJSONObject(1).getBoolean("is_error"))
+        assertEquals(ClaudeModelRuntime.SKIPPED_TOOL_RESULT, results.getJSONObject(1).getString("content"))
+        assertEquals(2, endpoint.requests.size)
     }
 
     @Test fun aToolCallCutOffAtTheOutputLimitIsNeverProposed() {
