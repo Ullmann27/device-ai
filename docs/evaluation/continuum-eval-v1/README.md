@@ -133,6 +133,19 @@ nicht auf ihn abgestimmt wurde, nicht, dass fremde Formulierungen des Besitzers 
 Spracherkennung am Fold7 wirklich schreibt, ist NOT_RUN; ebenso Speichergang, PDF-Textauszug, Modell-Zusammenfassung
 und das Schreiben nach Download auf dem Gerät.
 
+Für `regression-devicetools.jsonl` und `regression-devicetools-check.jsonl` (Gerätewerkzeuge, 19.11.2026) gibt es keinen
+Vorher-Wert: Gerätesuche, Cloud-Freigaben und die Entscheidung vor dem Start eines Werkzeugs gab es nicht. Beide Sätze
+wurden vor der Umsetzung geschrieben und eingecheckt; kein Fall steht in beiden (der Test prüft das). Gemessen am Host
+(`DeviceToolRegressionTest`): erster Lauf nach der Umsetzung, vor jeder Anpassung – Entwicklungssatz **125 / 125**,
+Prüfsatz **94 / 94**. Läufer: `device_search` (`expect.first`/`total`/`contains`/`absent`/`near`), `consent_command`
+(`expect.command`), `gate` (`expect.decision`: `RUN:NATIVE` · `RUN:BRIDGE` · `RUN:OTHER` · `REFUSED:<Grund>`),
+`preapproval` (`PREAPPROVED` · `ASK`), `chain_plan` (`VALID` · `REJECTED`), `chain_run` (wie `regression-chains.jsonl`),
+`document_blocks` (`H:` · `L:` · `P:`), `page_range`. Geräteverhalten: NOT_RUN.
+In den Kettenfällen heißt der Besitzersatz `owner_task` statt `input`: er ist der Auftrag, mit dem ein Modellplan geprüft
+wird, kein gelenkter Satz (`OwnerMissionRegressionTest` prüft jedes `input` des Ordners gegen die Auftragsfolgen, und
+„Such die Datei … und zeig sie mir“ ist in der App eine Auftragsfolge der Dokumentenablage). Diese Umbenennung des
+Schlüssels ist die einzige Änderung an beiden Sätzen nach der Umsetzung; kein Fall und keine Erwartung wurden berührt.
+
 Für `regression-missions.jsonl` und `regression-missions-check.jsonl` (Auftragsfolgen, 18.11.2026) gibt es keinen
 Vorher-Wert: einen Planer für mehrere Aufträge in einem Satz gab es nicht (der Satz ging als Ganzes an die erste
 Lenkung, die einen Teil erkannte, oder an das Modell). Der Prüfsatz wurde zuerst geschrieben und eingecheckt, der
