@@ -43,6 +43,14 @@ internal sealed interface OwnerLaneResult {
     /** A saved file was handed to the owner's viewer. */
     data class FileOpened(val file: OwnerSavedFile) : OwnerLaneResult
 
+    /**
+     * The storage lane checked or cleaned the storage ([mode]: the lane's mode name). Every number is measured:
+     * [freeBefore]/[freeAfter] by Android's volume figures (null = not readable), [removedBytes] is the sum of the sizes
+     * of the [removedFiles] files that were really removed or trashed; [offered]: files offered for the owner's choice.
+     */
+    data class Storage(val mode: String, val freeBefore: Long?, val freeAfter: Long?, val removedFiles: Int, val removedBytes: Long,
+                       val offered: Int) : OwnerLaneResult
+
     /** A message or mail for [to]. [state] says how far it really got. */
     data class Delivered(val channel: String, val to: String, val attachment: OwnerSavedFile?, val state: State) : OwnerLaneResult {
         enum class State {
