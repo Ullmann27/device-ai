@@ -200,6 +200,19 @@ class OwnerMissionRegressionTest {
         assertEquals("utterances read as a partial order:\n" + detail.joinToString("\n"), KNOWN_PARTIAL_UTTERANCES, partial)
     }
 
+    /** UND-075 and UND-077 as the app hands them to the lanes, after the heard app name was repaired. */
+    @Test fun theRepairedFormsAreStillRead() {
+        val expected = cases("regression-understanding.jsonl").filter { it.getString("id") in setOf("UND-075", "UND-077") }
+            .associate { it.getString("id") to it.getJSONObject("expect").getString("text") }
+        assertEquals(2, expected.size)
+        val send = checkNotNull(OwnerMissionPlanner.read(expected.getValue("UND-075"), "Jarvis"))
+        assertEquals(OwnerSentenceReading.Kind.PLAN, send.kind)
+        assertEquals(listOf("SEND:WHATSAPP:meinem Vater"), send.codes)
+        val link = checkNotNull(OwnerMissionPlanner.read(expected.getValue("UND-077"), "Jarvis"))
+        assertEquals(OwnerSentenceReading.Kind.PARTIAL, link.kind)
+        assertEquals(listOf("APP:CHROME"), link.rest.map { it.code })
+    }
+
     private fun others(partialOnly: Boolean = false, check: (String, String) -> Unit) {
         // The computer sets (19.11.2026) are sentences with several orders by design; OwnerComputerRegressionTest reads them.
         root.listFiles { file -> file.name.endsWith(".jsonl") && !file.name.startsWith("regression-missions") &&
@@ -291,14 +304,20 @@ class OwnerMissionRegressionTest {
          *  - „schick es an Anna“ behind a save or a summary – sending is no step of a sequence yet (BRF-113, LIBC-048,
          *    LIB-107, NEWS-EXP-011, TLK-MAK-016);
          *  - a storage order that needs the owner's choice, followed by a second one (CHN-030);
-         *  - the three understanding rows of this work, whose heard form („Watsapp“, „Krom“) is repaired before any
-         *    lane sees the sentence (UND-075…077): they are sentences with a second order by design.
+         *  - the understanding row UND-076 of this work, a sentence with a second order by design („Such in Watsapp
+         *    nach Anna und schreib ihr Hallo“).
+         * UND-075 and UND-077 are no longer in this list (19.11.2026, decision of the lead): as they stand here, with the
+         * heard form („Öffne Watsapp und schreib …“, „Öffne Krom und schick …“), they name an app no lane knows, and
+         * such a sentence is the app lane's – it asks which message for whom, and the partial answer must not take the
+         * turn before it (OwnerSentenceReadingTest.aSentenceTheAppLaneAnswersItselfKeepsItsRoute). In the app the name
+         * is repaired first; the repaired sentences are read as before („Öffne WhatsApp und schreib …“ is one send
+         * step, „Öffne Chrome und schick Anna den Link“ the partial answer), which theRepairedFormsAreStillRead pins.
          */
         val KNOWN_PARTIAL_UTTERANCES: Set<String> = sortedSetOf("model-holdout.jsonl:HO-MULTI-01",
             "regression-briefing-check.jsonl:BRC-111", "regression-briefing.jsonl:BRF-113", "regression-chains.jsonl:CHN-030",
             "regression-library-check.jsonl:LIBC-021", "regression-library-check.jsonl:LIBC-048", "regression-library.jsonl:LIB-107",
             "regression-library.jsonl:LIB-108", "regression-news.jsonl:NEWS-EXP-011", "regression-talk-check.jsonl:TLKC-ORD-004",
-            "regression-talk.jsonl:TLK-MAK-016", "regression-talk.jsonl:TLK-ORD-005", "regression-understanding.jsonl:UND-075",
-            "regression-understanding.jsonl:UND-076", "regression-understanding.jsonl:UND-077", "regression.jsonl:REG-TOOL-004")
+            "regression-talk.jsonl:TLK-MAK-016", "regression-talk.jsonl:TLK-ORD-005",
+            "regression-understanding.jsonl:UND-076", "regression.jsonl:REG-TOOL-004")
     }
 }

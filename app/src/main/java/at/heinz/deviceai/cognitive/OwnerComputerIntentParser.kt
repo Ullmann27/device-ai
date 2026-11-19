@@ -80,14 +80,38 @@ internal object OwnerComputerIntentParser {
     private val searchLabel = Regex("(?iu)^(?:und\\s+)?(?:suche|such)(?:\\s+nach)?(?:\\s+(.+))?$")
     private val negation = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:nicht|keinesfalls|niemals|kein(?:e|en|em|er|es)?)(?![\\p{L}\\p{N}_])")
 
-    fun parse(raw: String, contextApp: ComputerApp? = null): Result {
-        if (raw.length !in 1..2_000 || raw.any { it.isISOControl() && it != '\n' }) return Result.NotComputerCommand
+    /** [raw] as the lane reads it: spaces folded in front of a colon, courtesy in front removed; null = not readable. */
+    private fun normalise(raw: String): String? {
+        if (raw.length !in 1..2_000 || raw.any { it.isISOControl() && it != '\n' }) return null
         val colon = raw.indexOf(':')
-        var text = if (colon < 0) raw.trim().replace(Regex("\\s+"), " ") else
+        val text = if (colon < 0) raw.trim().replace(Regex("\\s+"), " ") else
             raw.substring(0, colon).trim().replace(Regex("\\s+"), " ") + ":" + raw.substring(colon + 1)
-        text = text.replace(Regex("(?iu)^(?:kannst du|könntest du|koenntest du)\\s+(?:bitte\\s+)?"), "")
-            .replace(Regex("(?iu)^bitte\\s+"), "").trim()
-        if (text.isEmpty()) return Result.NotComputerCommand
+        return text.replace(Regex("(?iu)^(?:kannst du|könntest du|koenntest du)\\s+(?:bitte\\s+)?"), "")
+            .replace(Regex("(?iu)^bitte\\s+"), "").trim().ifEmpty { null }
+    }
+
+    private val messageVerb = Regex("(?iu)^(?:bereite|verfasse|schreibe|schreib|sende|schicke)(?![\\p{L}\\p{N}_])")
+
+    /**
+     * true = [raw] is worded as this lane's order to prepare or send a message – the form [parseMessage] reads,
+     * whatever it then answers (a plan, a question about the app, the recipient or the text, a refusal). For readers
+     * that have to say what KIND of order a clause is: such an order is about a message, not about another app.
+     */
+    fun isMessageOrder(raw: String): Boolean = normalise(raw)?.let(messageVerb::containsMatchIn) == true
+
+    /**
+     * true = [raw] is an order of this lane with a FURTHER order behind it: the sentences [parse] hands on
+     * (NotComputerCommand) so that the planner reads them, and that were this lane's refusal before (a dead end).
+     * false for every sentence that never was this lane's – „Öffne Signal und schreibe Lisa eine Nachricht“.
+     */
+    fun handsOn(raw: String): Boolean {
+        if (parse(raw) != Result.NotComputerCommand) return false
+        val text = normalise(raw) ?: return false
+        return parseCommand(text, null, alone = true) != Result.NotComputerCommand
+    }
+
+    fun parse(raw: String, contextApp: ComputerApp? = null): Result {
+        val text = normalise(raw) ?: return Result.NotComputerCommand
         val command = text.substringBefore(':')
         // „Öffne nicht WhatsApp, sondern Chrome“: the owner named what to open and what to leave closed.
         // Only an unambiguous plain open of the wanted app is accepted; it still needs the normal
@@ -179,7 +203,7 @@ internal object OwnerComputerIntentParser {
     }
 
     private fun parseMessage(text: String, contextApp: ComputerApp?, alone: Boolean): Result? {
-        if (!Regex("(?iu)^(?:bereite|verfasse|schreibe|schreib|sende|schicke)(?![\\p{L}\\p{N}_])").containsMatchIn(text)) return null
+        if (!messageVerb.containsMatchIn(text)) return null
         val colon = text.indexOf(':')
         val command = if (colon < 0) text else text.substring(0, colon)
         val draft = if (colon < 0) null else text.substring(colon + 1).trim()

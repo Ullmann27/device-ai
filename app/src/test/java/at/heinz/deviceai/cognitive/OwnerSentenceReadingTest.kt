@@ -247,6 +247,52 @@ class OwnerSentenceReadingTest {
         assertFalse(OwnerDocumentIntent.isPresentationOnly("zeige mir die Datei"))
     }
 
+    /**
+     * The partial answer is for a sentence that would otherwise end in a free model turn or a dead end – never for one
+     * a lane later in the route answers itself. „Öffne Signal und schreibe Lisa eine Nachricht“ is the app lane's:
+     * Signal is no app of the computer lane and no channel of the send lane, and the app lane asks which message for
+     * whom (OwnerAppPlanningContextUiTest.planningClarificationKeepsTheCompleteOriginalOnce, 19.11.2026).
+     */
+    @Test fun aSentenceTheAppLaneAnswersItselfKeepsItsRoute() {
+        for (sentence in listOf("Öffne Signal und schreibe Lisa eine Nachricht.", "Starte Threema und schick Lisa eine Nachricht")) {
+            val reading = read(sentence)
+            assertEquals(sentence, "APP", reading.whole)
+            assertEquals(sentence, Kind.NONE, reading.kind)
+            assertNull(sentence, reading.plan)
+            assertFalse(sentence, OwnerComputerIntentParser.handsOn(sentence))
+        }
+        // A sentence the computer lane handed on used to be that lane's refusal, a dead end: it is read here.
+        for (sentence in listOf("Öffne Facebook und schreib Elena einen Geburtstagsgruß", "Suche in WhatsApp nach Anna und schreib ihr Hallo",
+            "Öffne Word und bearbeite den Vertrag")) {
+            assertTrue(sentence, OwnerComputerIntentParser.handsOn(sentence))
+            assertFalse(sentence, read(sentence).whole == "APP")
+        }
+        assertEquals(Kind.PARTIAL, read("Öffne Facebook und schreib Elena einen Geburtstagsgruß").kind)
+        // The app lane's hand-over to the model is no answer of its own: such a sentence may still be read here.
+        assertNull(read("Öffne Spotify und fass mir die Nachrichten von heute zusammen").whole)
+        // An order of the computer lane itself is not „handed on“.
+        for (sentence in listOf("Öffne WhatsApp", "Öffne WhatsApp und suche Anna", "Wie spät ist es?"))
+            assertFalse(sentence, OwnerComputerIntentParser.handsOn(sentence))
+    }
+
+    /**
+     * „Schreibe Lisa eine Nachricht“ names no app, so the send lane does not take it and the computer lane would ask
+     * „In welcher App …?“. Every answer of the computer lane used to be read as „another app“: the owner who wanted a
+     * message written was told about searching in another app, and the message was not mentioned at all.
+     */
+    @Test fun aMessageOrderOfTheComputerLaneIsAnOrderToWriteNotAnotherApp() {
+        val reading = read("Fass mir die Nachrichten von heute zusammen und schreibe Lisa eine Nachricht")
+        assertEquals(Kind.PARTIAL, reading.kind)
+        assertEquals(listOf("NEWS", "LATER:SEND"), reading.codes)
+        val said = OwnerMissionPartial.text(reading.open, reading.rest)
+        assertTrue(said, said.contains(OwnerClauseAbility.SEND.cannot))
+        assertFalse(said, said.contains(OwnerClauseAbility.APP.cannot))
+        for (order in listOf("Schreibe Lisa eine Nachricht", "bitte sende eine Nachricht an Lisa", "Bereite eine Nachricht an Anna vor"))
+            assertTrue(order, OwnerComputerIntentParser.isMessageOrder(order))
+        for (order in listOf("Öffne WhatsApp", "Suche in WhatsApp nach Anna", "Öffne WhatsApp und suche Anna"))
+            assertFalse(order, OwnerComputerIntentParser.isMessageOrder(order))
+    }
+
     @Test fun inputOutsideTheBoundsIsNotRead() {
         assertNull(OwnerMissionPlanner.read("", "Jarvis"))
         assertNull(OwnerMissionPlanner.read("Öffne das PDF Argon4,\u0000 schreib Anna", "Jarvis"))

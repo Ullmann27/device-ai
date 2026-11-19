@@ -609,9 +609,11 @@ internal object OwnerMissionPlanner {
             return OwnerClauseReading.Later(OwnerClauseAbility.SEND, transparent = true)
         when (val computer = OwnerComputerIntentParser.parse(order)) {
             OwnerComputerIntentParser.Result.NotComputerCommand -> Unit
-            is OwnerComputerIntentParser.Result.Ready -> return OwnerClauseReading.Later(OwnerClauseAbility.APP,
-                transparent = computer.intent.goal == ComputerGoal.OPEN || computer.intent.goal == ComputerGoal.OPEN_DOWNLOADS)
-            else -> return OwnerClauseReading.Later(OwnerClauseAbility.APP)
+            // „Schreibe Lisa eine Nachricht“ – the computer lane would prepare a draft or ask in which app: an order to
+            // write someone, and the partial answer has to say so instead of „in einer anderen App suchen“.
+            else -> return if (OwnerComputerIntentParser.isMessageOrder(order)) OwnerClauseReading.Later(OwnerClauseAbility.SEND, transparent = true)
+                else OwnerClauseReading.Later(OwnerClauseAbility.APP, transparent = computer is OwnerComputerIntentParser.Result.Ready &&
+                    (computer.intent.goal == ComputerGoal.OPEN || computer.intent.goal == ComputerGoal.OPEN_DOWNLOADS))
         }
         at.heinz.deviceai.briefing.ContinuumBriefingCommands.parse(order, assistantName)?.let { command ->
             return when (command) {
@@ -672,8 +674,20 @@ internal object OwnerMissionPlanner {
         OwnerChatIntentRouter.route(said) != null -> "LOCAL"
         OwnerInternalNavigationIntent.resolve(said, assistantName) != null -> "NAVIGATION"
         OwnerResearchCommand.parse(said, assistantName) != null -> "RESEARCH"
+        // The app lane answers the sentence itself – it looks the app up, or asks its own question about an app and a
+        // message („Öffne Signal und schreibe Lisa eine Nachricht“ → which message, for whom?). Not a sentence the
+        // computer lane handed on: that one used to end as the lane's refusal, and reading it here is what replaced it.
+        appLaneAnswers(said, assistantName) && !OwnerComputerIntentParser.handsOn(said) -> "APP"
         else -> null
     }
+
+    /** true = the app lane has an answer of its own for [said]; a planning hand-over to the model is none. */
+    private fun appLaneAnswers(said: String, assistantName: String?): Boolean =
+        when (val intake = OwnerAppLookupIntent.inspect(said, assistantName)) {
+            is OwnerAppLookupIntent.Intake.Lookup, is OwnerAppLookupIntent.Intake.Clarify -> true
+            is OwnerAppLookupIntent.Intake.Planning -> intake.clarification != null
+            null -> false
+        }
 
     /**
      * true = one of the lanes' whole-sentence parsers takes [said] as it is („Fass Seite 2 zusammen und speichere es
