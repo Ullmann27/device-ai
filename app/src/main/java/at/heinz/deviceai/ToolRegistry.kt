@@ -6,15 +6,32 @@ data class ToolSpec(
     val description: String,
     val risk: Risk,
     val required: Set<String> = emptySet(),
-    val optional: Set<String> = emptySet()
+    val optional: Set<String> = emptySet(),
+    /** Which brain is told about this tool; the ToolGate treats every registered tool alike. */
+    val surface: ToolSurface = ToolSurface.EVERY_MODEL
 ) {
     /** Typed schema for every declared argument; derived from the argument name so all tools stay consistent. */
     val schema: Map<String, ArgSchema> get() = (required + optional).associateWith { ArgSchema.forArgument(it) }
 }
 
+/**
+ * Where a tool is declared. The on-device model has a 4 096-token window of which the tool declarations already take
+ * more than half (LocalNativePromptBudget); every declaration there costs prompt room. [SYSTEM_CENTRE] tools can only
+ * be started from the system centre itself and are never dispatched for a model, so no model needs their schema.
+ */
+enum class ToolSurface {
+    /** Declared to the on-device model and to a large-context brain. */
+    EVERY_MODEL,
+    /** Declared only to a large-context brain (Claude); the on-device window has no room for it. */
+    LARGE_CONTEXT_MODEL,
+    /** Started by the system centre's own buttons only; registered for the gate, receipts and labels. */
+    SYSTEM_CENTRE
+}
+
 /** Typed argument schema (chief pattern point 3). */
 sealed interface ArgSchema {
-    data class Text(val maxLength: Int) : ArgSchema
+    /** [multiline]: line breaks and tabs are part of the text (a document's content); other control characters never. */
+    data class Text(val maxLength: Int, val multiline: Boolean = false) : ArgSchema
     data class Integer(val min: Long, val max: Long) : ArgSchema
     object Flag : ArgSchema
     object SharedPath : ArgSchema
@@ -24,7 +41,7 @@ sealed interface ArgSchema {
     /** Returns a German rejection reason, or null when the value conforms. */
     fun check(value: Any?): String? = when (this) {
         is Text -> if (value !is String) "muss Text sein" else if (value.length > maxLength) "ist länger als $maxLength Zeichen"
-            else if (value.any { it.isISOControl() }) "enthält Steuerzeichen" else null
+            else if (value.any { it.isISOControl() && !(multiline && (it == '\n' || it == '\r' || it == '\t')) }) "enthält Steuerzeichen" else null
         is Integer -> {
             val n = when (value) { is Number -> value.toLong().takeIf { value.toDouble() % 1.0 == 0.0 }; is String -> value.trim().toLongOrNull(); else -> null }
             if (n == null) "muss eine ganze Zahl sein" else if (n < min || n > max) "muss zwischen $min und $max liegen" else null
@@ -57,9 +74,15 @@ sealed interface ArgSchema {
             "lines" -> Integer(1, 600)
             "limit" -> Integer(1, 250)
             "seconds" -> Integer(1, 60)
+            "offset" -> Integer(0, 5_000_000)
             "query" -> Text(500)
             "packageOrName" -> Text(256)
             "page", "filter" -> Text(200)
+            "title" -> Text(160)
+            "name" -> Text(100)
+            "format", "scope", "pages" -> Text(24)
+            "content" -> Text(24_000, multiline = true)
+            "text" -> Text(4_000, multiline = true)
             else -> Text(1_000)
         }
     }
@@ -72,13 +95,13 @@ object ToolRegistry {
         ToolSpec("get_device_info", "Geräteinformationen", "Liest Modell, Android-Version und Build-Daten.", Risk.READ_ONLY),
         ToolSpec("get_battery_info", "Akku prüfen", "Liest den aktuellen Batteriestatus.", Risk.READ_ONLY),
         ToolSpec("get_storage_info", "Speicher prüfen", "Misst Gesamtgröße und nutzbaren Speicher des App-Datenträgers, ohne Dateien zu durchsuchen.", Risk.READ_ONLY),
-        ToolSpec("diagnose_device", "Handy analysieren", "Lokale Android-Momentaufnahme mit Messgrenzen; nur im Systemzentrum. Optional zusätzlich die nur lesende Vorschau der eigenen Diagnoseablage.", Risk.READ_ONLY, optional = setOf("includeOwnCachePreview")),
-        ToolSpec("save_system_snapshot", "Messung lokal sichern", "Speichert genau die angezeigte technische Momentaufnahme als eigenen Diagnosebericht.", Risk.CONFIRM, required = setOf("snapshotId")),
-        ToolSpec("get_system_capabilities", "Zugriffswege prüfen", "Prüft die tatsächliche Shizuku-Identität; erteilt keine Rechte.", Risk.READ_ONLY),
-        ToolSpec("preview_own_cache", "Bereinigungsvorschau", "Prüft nur regenerierbare eigene Diagnoseberichte; schützt Modell- und Updatecache.", Risk.READ_ONLY),
-        ToolSpec("cleanup_own_cache", "Diagnosecache bereinigen", "Entfernt genau die angezeigten technischen Berichte mit Rücknahme; keine persönlichen Dateien.", Risk.DESTRUCTIVE, required = setOf("previewId", "planDigest")),
-        ToolSpec("restore_own_cache", "Bereinigung zurücknehmen", "Stellt die letzte freigegebene Diagnosecache-Bereinigung wieder her.", Risk.CONFIRM, required = setOf("undoId")),
-        ToolSpec("analyze_granted_storage", "Freigegebene Dateien prüfen", "Liest ausschließlich ausdrücklich ausgewählte lokale Dateien; Inhaltsduplikate, keine Löschung.", Risk.READ_ONLY, required = setOf("scopeToken")),
+        ToolSpec("diagnose_device", "Handy analysieren", "Lokale Android-Momentaufnahme mit Messgrenzen; nur im Systemzentrum. Optional zusätzlich die nur lesende Vorschau der eigenen Diagnoseablage.", Risk.READ_ONLY, optional = setOf("includeOwnCachePreview"), surface = ToolSurface.SYSTEM_CENTRE),
+        ToolSpec("save_system_snapshot", "Messung lokal sichern", "Speichert genau die angezeigte technische Momentaufnahme als eigenen Diagnosebericht.", Risk.CONFIRM, required = setOf("snapshotId"), surface = ToolSurface.SYSTEM_CENTRE),
+        ToolSpec("get_system_capabilities", "Zugriffswege prüfen", "Prüft die tatsächliche Shizuku-Identität; erteilt keine Rechte.", Risk.READ_ONLY, surface = ToolSurface.SYSTEM_CENTRE),
+        ToolSpec("preview_own_cache", "Bereinigungsvorschau", "Prüft nur regenerierbare eigene Diagnoseberichte; schützt Modell- und Updatecache.", Risk.READ_ONLY, surface = ToolSurface.SYSTEM_CENTRE),
+        ToolSpec("cleanup_own_cache", "Diagnosecache bereinigen", "Entfernt genau die angezeigten technischen Berichte mit Rücknahme; keine persönlichen Dateien.", Risk.DESTRUCTIVE, required = setOf("previewId", "planDigest"), surface = ToolSurface.SYSTEM_CENTRE),
+        ToolSpec("restore_own_cache", "Bereinigung zurücknehmen", "Stellt die letzte freigegebene Diagnosecache-Bereinigung wieder her.", Risk.CONFIRM, required = setOf("undoId"), surface = ToolSurface.SYSTEM_CENTRE),
+        ToolSpec("analyze_granted_storage", "Freigegebene Dateien prüfen", "Liest ausschließlich ausdrücklich ausgewählte lokale Dateien; Inhaltsduplikate, keine Löschung.", Risk.READ_ONLY, required = setOf("scopeToken"), surface = ToolSurface.SYSTEM_CENTRE),
         ToolSpec("list_installed_apps", "Apps auflisten", "Listet installierte Apps.", Risk.READ_ONLY, optional = setOf("userOnly")),
         ToolSpec("find_app", "App anhand Name suchen", "Sucht ausschließlich lokal nach installierten Start-Apps. Liefert Paketnamen als Vorschlag, startet nichts; Start benötigt neue Bestätigung.", Risk.READ_ONLY, required = setOf("query")),
         ToolSpec("get_app_info", "App-Info lesen", "Liest Paket- und Versionsinformationen.", Risk.READ_ONLY, required = setOf("packageOrName")),
@@ -99,12 +122,30 @@ object ToolRegistry {
         ToolSpec("take_screenshot", "Screenshot erstellen", "Erstellt auf ausdrücklichen Nutzerauftrag einen Screenshot.", Risk.CONFIRM),
         ToolSpec("record_screen", "Bildschirm aufnehmen", "Nimmt den Bildschirm für eine begrenzte Zeit auf.", Risk.CONFIRM, optional = setOf("seconds")),
         ToolSpec("open_android_settings", "Android-Einstellungen öffnen", "Öffnet eine Android-Einstellungsseite.", Risk.CONFIRM, required = setOf("page")),
-        ToolSpec("get_network_summary", "Netzwerk prüfen", "Liest eine kompakte Netzwerkübersicht.", Risk.READ_ONLY)
+        ToolSpec("get_network_summary", "Netzwerk prüfen", "Liest eine kompakte Netzwerkübersicht.", Risk.READ_ONLY),
+        // In-process device tools (19.11.2026). They need no Shizuku bridge; see docs/research/WERKZEUG-AUDIT-20261119.md.
+        ToolSpec("search_device", "Gerät durchsuchen", "Sucht installierte Apps, Dateien und Ordner nach Namen (auch Typ wie pdf); liefert je Treffer Pfad oder Paket.", Risk.READ_ONLY, required = setOf("query"), optional = setOf("scope", "limit")),
+        ToolSpec("read_file", "Datei lesen", "Liest den Text einer Datei (Textformate, PDF-Textebene, DOCX) begrenzt; pages wählt PDF-Seiten wie 2-4, offset setzt fort.", Risk.READ_ONLY, required = setOf("path"), optional = setOf("pages", "offset")),
+        ToolSpec("create_document", "Dokument erstellen", "Legt aus Titel und Inhalt (Zeile mit # = Überschrift, mit - = Listenpunkt) eine neue Datei im Download-Ordner an; format pdf oder docx.", Risk.CONFIRM, required = setOf("title", "content"), optional = setOf("format", "name")),
+        ToolSpec("open_file", "Datei anzeigen", "Zeigt eine Datei in der passenden Android-App; nur wenn der Besitzer das Anzeigen oder Öffnen verlangt hat.", Risk.READ_ONLY, required = setOf("path")),
+        ToolSpec("list_recent_files", "Neueste Dateien", "Listet die zuletzt geänderten Dateien; filter grenzt auf einen Typ wie pdf oder bilder ein.", Risk.READ_ONLY, optional = setOf("filter", "limit"), surface = ToolSurface.LARGE_CONTEXT_MODEL),
+        ToolSpec("get_folder_overview", "Ordnerübersicht", "Zählt Unterordner, Dateien, Dateitypen und Größe eines Ordners; ohne path für den ganzen Speicher.", Risk.READ_ONLY, optional = setOf("path"), surface = ToolSurface.LARGE_CONTEXT_MODEL),
+        ToolSpec("search_file_text", "In Dateien suchen", "Sucht einen Text in den Textdateien eines Ordners und zeigt die Fundzeilen.", Risk.READ_ONLY, required = setOf("query"), optional = setOf("path", "limit"), surface = ToolSurface.LARGE_CONTEXT_MODEL),
+        ToolSpec("read_clipboard", "Zwischenablage lesen", "Liest nach Bestätigung den Text der Zwischenablage.", Risk.CONFIRM, surface = ToolSurface.LARGE_CONTEXT_MODEL),
+        ToolSpec("write_clipboard", "In Zwischenablage kopieren", "Legt nach Bestätigung einen Text in die Zwischenablage.", Risk.CONFIRM, required = setOf("text"), surface = ToolSurface.LARGE_CONTEXT_MODEL),
+        ToolSpec("share_file", "Datei teilen", "Öffnet nach Bestätigung Androids Teilen-Dialog für eine Datei; das Ziel wählt der Besitzer dort selbst.", Risk.CONFIRM, required = setOf("path"), surface = ToolSurface.LARGE_CONTEXT_MODEL)
     )
 
     private val byName = allSpecs.associateBy { it.name }
 
     fun all(): List<ToolSpec> = allSpecs
+
+    /** What the on-device model is told about: every tool it can call that fits its window. */
+    fun onDeviceModel(): List<ToolSpec> = allSpecs.filter { it.surface == ToolSurface.EVERY_MODEL }
+
+    /** The longest text an argument of this name may carry; 4 096 for everything but a declared long text. */
+    fun maxTextLength(argument: String): Int =
+        ((ArgSchema.forArgument(argument) as? ArgSchema.Text)?.maxLength ?: 0).coerceAtLeast(4_096)
 
     fun get(name: String): ToolSpec? = byName[name]
 

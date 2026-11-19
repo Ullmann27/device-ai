@@ -66,6 +66,7 @@ internal object ClaudeToolCatalog {
     /** Same mapping as LiteRtLmLocalModelRuntime.registeredToolProvider. */
     fun jsonType(argument: String): String = when {
         argument in setOf("lines", "limit", "seconds") -> "integer"
+        argument == "offset" -> "integer"
         argument == "userOnly" -> "boolean"
         argument == "roots" -> "array"
         else -> "string"
