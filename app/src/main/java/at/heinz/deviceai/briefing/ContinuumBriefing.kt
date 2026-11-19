@@ -212,6 +212,7 @@ internal class ContinuumBriefingDirector(
         if (local.hour < settings.offerFromHour) return null
         val day = local.toLocalDate()
         if (settings.lastOfferDay == day || settings.lastBriefingDay == day) return null
+        if (!host.allowDailyOffer()) return null
         return OFFER_TEXT
     }
 
@@ -304,12 +305,14 @@ internal class ContinuumBriefingDirector(
         pendingDaily?.takeIf { it.open }?.let {
             if (ContinuumNextSteps.isYes(request, name)) {
                 clearPending()
+                host.offerAnswered(daily = true, accepted = true)
                 host.acceptOwnerTurn(request)
                 startBriefing(request, withNews = false)
                 return true
             }
             if (ContinuumNextSteps.isNo(request, name)) {
                 clearPending()
+                host.offerAnswered(daily = true, accepted = false)
                 host.acceptOwnerTurn(request)
                 host.answer(request, "In Ordnung. Sag einfach „Gib mir mein Briefing“, wenn du es doch möchtest.")
                 return true
@@ -321,6 +324,7 @@ internal class ContinuumBriefingDirector(
                 is ContinuumNextSteps.Choice.Pick -> {
                     val offer = pending.offers[choice.index]
                     clearPending()
+                    host.offerAnswered(daily = false, accepted = true)
                     // The chosen order takes the owner's turn: it is shown and handled as if he had said it.
                     host.clearInput()
                     host.activity("NÄCHSTER SCHRITT · vom Besitzer gewählt · „${offer.order}“")
@@ -335,6 +339,7 @@ internal class ContinuumBriefingDirector(
                 }
                 ContinuumNextSteps.Choice.Decline -> {
                     clearPending()
+                    host.offerAnswered(daily = false, accepted = false)
                     host.acceptOwnerTurn(request)
                     host.answer(request, "In Ordnung.")
                     return true
@@ -379,8 +384,8 @@ internal class ContinuumBriefingDirector(
         val report = systemReport()
         val checks = ContinuumSystemCheck.snapshot()
         val storage = checks.firstOrNull { it.key == ContinuumSystemCheck.STORAGE }?.state
-        val offers = if (storage == ContinuumSystemCheck.State.WARN || storage == ContinuumSystemCheck.State.FAIL)
-            listOf(diagnosisOffer()) else emptyList()
+        val offers = host.allowOffers(if (storage == ContinuumSystemCheck.State.WARN || storage == ContinuumSystemCheck.State.FAIL)
+            listOf(diagnosisOffer()) else emptyList())
         val spoken = listOfNotNull(report, ContinuumNextSteps.question(offers)).joinToString(" ")
         host.activity("SYSTEMCHECK · " + checks.size + " Prüfungen · " + ContinuumSystemCheck.problems(checks).size +
             " auffällig · nur gelesen, kein Modell- oder Netzaufruf")
@@ -394,7 +399,7 @@ internal class ContinuumBriefingDirector(
         val quiet = !host.idle() || host.speaking() || questionOpen()
         val warning = watch.observe(facts, host.ownerName(), now().toEpochMilli(), quiet,
             loadReduced = host.loadReducedByHeat(facts), webJobRunning = host.webJobRunning()) ?: return
-        val offers = if (warning.offer == ContinuumBriefingBoard.OfferKind.DIAGNOSIS) listOf(diagnosisOffer()) else emptyList()
+        val offers = host.allowOffers(if (warning.offer == ContinuumBriefingBoard.OfferKind.DIAGNOSIS) listOf(diagnosisOffer()) else emptyList())
         ContinuumBriefingText.systemCard(ContinuumSystemCheck.run(facts))?.let(ContinuumBriefingBoard::put)
         host.activity("HINWEIS · " + warning.condition.name + " · aus dem Gerätezustand, einmal je Anlass")
         host.answer(null, listOfNotNull(warning.text, ContinuumNextSteps.question(offers)).joinToString(" "))
@@ -597,13 +602,14 @@ internal class ContinuumBriefingDirector(
             ContinuumSystemCheck.run(host.systemFacts()), newsFollows)
         val cards = ContinuumBriefingText.cards(parts)
         ContinuumBriefingBoard.publish(cards)
-        val offers = if (newsFollows) emptyList() else nextSteps(parts)
+        val offers = if (newsFollows) emptyList() else host.allowOffers(nextSteps(parts))
         val spoken = listOfNotNull(ContinuumBriefingText.spoken(parts) +
             (if (wantsNews && !newsFollows) " Nachrichten gibt es keine: Der Internetzugang ist ausgeschaltet." else ""),
             ContinuumNextSteps.question(offers)).joinToString(" ")
         host.activity("BRIEFING · Kalender, Wetter und Offenes · nur Gelesenes · " + cards.size + " Karten")
         host.answer(request, spoken, spoken + "\n\n" + ContinuumBriefingBoard.chat(cards))
         offer(offers)
+        host.briefingGiven()
         if (newsFollows) {
             val session = host.sessionId
             val turn = host.ownerTurn

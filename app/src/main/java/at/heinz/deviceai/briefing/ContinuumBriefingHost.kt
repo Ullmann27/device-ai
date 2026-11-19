@@ -184,4 +184,13 @@ internal interface ContinuumBriefingHost {
      * Nobody has to listen: the default drops it, and the lane behaves exactly the same.
      */
     fun outcome(outcome: at.heinz.deviceai.OwnerLaneOutcome) {}
+    // ── The owner's initiative policy (default: everything as the lane decides by itself) ─────────────────────────
+    /** false = the once-per-day briefing offer may not be made now (the owner's level, a recent no, the caps). */
+    fun allowDailyOffer(): Boolean = true
+    /** The next steps that may be offered now; an empty list = the answer comes without the question. */
+    fun allowOffers(offers: List<ContinuumBriefingBoard.Offer>): List<ContinuumBriefingBoard.Offer> = offers
+    /** The owner answered one of this lane's own offers. [daily]: the briefing offer; otherwise the next steps. */
+    fun offerAnswered(daily: Boolean, accepted: Boolean) {}
+    /** A briefing was given just now. */
+    fun briefingGiven() {}
 }
