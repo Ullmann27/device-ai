@@ -144,6 +144,8 @@ internal class FakeSendHost(
     var day: LocalDate = LocalDate.of(2026, 11, 18)
 ) : OwnerSendHost {
     val grants = OwnerSendGrants(store) { day }
+    val relationStore = FakeSendStore()
+    val relations = OwnerRelations(relationStore) { java.time.Instant.parse("2026-11-19T08:00:00Z") }
     val accepted = ArrayList<String>()
     val replies = ArrayList<String>()
     val activities = ArrayList<String>()
@@ -174,6 +176,7 @@ internal class FakeSendHost(
     override fun contacts(): OwnerSendContactSource = contacts
     override fun device(): OwnerSendDevice = device
     override fun grants(): OwnerSendGrants = grants
+    override fun relations(): OwnerRelations = relations
     override fun modelReady() = model
     override fun <T> runJob(request: String, work: (OwnerSendJob) -> T, done: (Result<T>) -> Unit) = done(runCatching {
         work(object : OwnerSendJob {

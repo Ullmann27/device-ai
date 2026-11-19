@@ -13209,6 +13209,9 @@ class AgentActivity : Activity() {
     internal val ownerSendGrants by lazy {
         at.heinz.deviceai.sending.OwnerSendGrants(at.heinz.deviceai.sending.OwnerSendPreferences(this)) { java.time.LocalDate.now() }
     }
+    internal val ownerRelations by lazy {
+        at.heinz.deviceai.sending.OwnerRelations(at.heinz.deviceai.sending.OwnerRelationPreferences(this))
+    }
     private val ownerSendPhone by lazy { at.heinz.deviceai.sending.AndroidOwnerSendDevice(this) }
     internal val ownerSend by lazy { at.heinz.deviceai.sending.OwnerSendDirector(OwnerSendAdapter()) }
 
@@ -13220,7 +13223,8 @@ class AgentActivity : Activity() {
             accessibilityOn = { (ownerSendDeviceOverride ?: ownerSendPhone).accessibilityOn() },
             contactsReadable = ::ownerSendContactsReadable,
             startDiagnosis = { if (!busy) ownerSend.handle("Sende-Diagnose") },
-            lastDiagnosis = { at.heinz.deviceai.sending.AndroidOwnerSendDevice.lastDiagnosis(this) })
+            lastDiagnosis = { at.heinz.deviceai.sending.AndroidOwnerSendDevice.lastDiagnosis(this) },
+            relations = ownerRelations)
     }
 
     private inner class OwnerSendAdapter : at.heinz.deviceai.sending.OwnerSendHost {
@@ -13260,6 +13264,7 @@ class AgentActivity : Activity() {
             ownerSendContactsOverride ?: at.heinz.deviceai.sending.AndroidOwnerSendContacts(this@AgentActivity)
         override fun device(): at.heinz.deviceai.sending.OwnerSendDevice = ownerSendDeviceOverride ?: ownerSendPhone
         override fun grants(): at.heinz.deviceai.sending.OwnerSendGrants = ownerSendGrants
+        override fun relations(): at.heinz.deviceai.sending.OwnerRelations = ownerRelations
         override fun modelReady(): Boolean = work.modelReady()
         override fun nowMillis(): Long = android.os.SystemClock.elapsedRealtime()
         override fun appVersion(channel: at.heinz.deviceai.sending.SendChannel): String? = ownerSendPhone.appVersion(channel)

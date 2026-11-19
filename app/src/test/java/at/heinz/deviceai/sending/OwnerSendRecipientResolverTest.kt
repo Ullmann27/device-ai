@@ -31,7 +31,9 @@ class OwnerSendRecipientResolverTest {
         assertEquals("430005550104", resolved("meiner Mama").value)
         assertEquals("430005550101", resolved("beispiel anna").value)
         // No number is marked mobile: the only number is used; WhatsApp itself then shows whether it exists.
-        assertEquals("430005550105", resolved("Oma").value)
+        // Changed 19.11.2026: said by its name – „Oma“ alone is a relation and never matches „Festnetz Oma“ by a word.
+        assertEquals("430005550105", resolved("Festnetz Oma").value)
+        assertTrue(OwnerSendRecipientResolver.whatsapp("Oma", book) is Resolution.NotFound)
         // Two address-book entries of the same person with the same number are one recipient.
         assertEquals("430005550109", resolved("Berta").value)
     }

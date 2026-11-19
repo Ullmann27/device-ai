@@ -37,7 +37,13 @@ internal data class OwnerSendOrder(
     val draftOnly: Boolean = false,
     val unsplit: String? = null,
     val modelBrief: String? = null,
-    val original: String
+    val original: String,
+    /**
+     * [unsplit] came from a tail that no separator („:“, „,“, „dass“) divides from where a recipient could stand
+     * („Schick auf WhatsApp meinem Chef ich komme später“). When neither a relation nor a contact name stands in
+     * front, the whole tail is the text – and is confirmed once, because recipient words may be in it.
+     */
+    val looseText: Boolean = false
 )
 
 /**
@@ -148,6 +154,15 @@ internal object OwnerSendIntentParser {
             val toWhom = Regex("(?iu)^\\s*(?:an|für|fuer)\\s+(?!\\s)").find(tail)
             if (toWhom == null) {
                 val family = splitFamily(tail)
+                val loose = tail.trim()
+                if (family == null && loose.isNotEmpty() && loose.first() !in ":,;" &&
+                    !Regex("(?iu)^(?:dass|daß|ob)(?![\\p{L}\\p{N}_])").containsMatchIn(loose)) {
+                    // No separator between a possible recipient and the text: the contacts and relations decide.
+                    if (group.containsMatchIn(loose.substringBefore(' '))) return Result.Refused(REFUSED_GROUP)
+                    if (WhatsAppDraftPolicy.validated(loose) == null) return Result.Refused(REFUSED_TEXT)
+                    return Result.Order(OwnerSendOrder(null, null, TextOrigin.DICTATED, draftOnly, loose, null,
+                        utterance.trim(), looseText = true))
+                }
                 if (family == null) message = tail
                 else {
                     val remainder = family.second.trimStart()
@@ -213,6 +228,23 @@ internal object OwnerSendIntentParser {
     fun recipientAnswer(raw: String): String? {
         val name = raw.trim().trimEnd('.', '!').replace(recipientAnswerLead, "")
         return if (addressesContinuum(name) || isYes(name) || isChannelAnswer(name)) null else cleanRecipient(name)
+    }
+
+    private val notThisButThat = Regex("(?iu)^(?:nein[,.!]?\\s+)?(?:ich\\s+meinte\\s+)?nicht\\s+(?:an\\s+)?(.{1,60}?)\\s*[,;]\\s*" +
+        "(?:sondern\\s+)?(?:an\\s+)?(.{1,60}?)[.!]?$")
+    private val thatNotThis = Regex("(?iu)^(?:nein[,.!]?\\s+)?(?:an\\s+)?(.{1,60}?)\\s*[,;]\\s*nicht\\s+(?:an\\s+)?(.{1,60}?)[.!]?$")
+
+    /**
+     * „Nicht Papa, Mama“, „Nein, nicht an Anna, sondern an Thomas“, „Mama, nicht Papa“: the recipient the owner
+     * names instead, or null. Only for an open question of the send lane; the message itself stays as it was.
+     */
+    fun correctedRecipient(raw: String): String? {
+        val text = raw.trim()
+        val (wanted, rejected) = notThisButThat.matchEntire(text)?.let { it.groupValues[2] to it.groupValues[1] }
+            ?: thatNotThis.matchEntire(text)?.let { it.groupValues[1] to it.groupValues[2] } ?: return null
+        // Both sides must read like recipients: „Später, nicht jetzt“ is message text, not a correction.
+        if (startsWithNegation(wanted) || recipientAnswer(rejected) == null) return null
+        return recipientAnswer(wanted)
     }
 
     fun isCancel(raw: String): Boolean = cancel.matches(raw.trim())

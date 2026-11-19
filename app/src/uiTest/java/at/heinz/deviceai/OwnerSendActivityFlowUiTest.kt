@@ -174,8 +174,17 @@ class OwnerSendActivityFlowUiTest {
         say(activity, "Whatsapp")
         assertTrue(activity.ownerSend.awaitingAnswer)
         say(activity, "ich habe dir zum dreimal gesagt der Name heißt Thomas Muster")
+        // Changed 19.11.2026 (review B3): the named contact is offered to be remembered as the father, and the first
+        // send through the relation is confirmed once, also with the standing grant.
+        assertTrue(chat(activity).last() == "Soll ich mir merken, dass Thomas Muster dein Vater ist?")
+        assertTrue(device.opened.isEmpty())
+        say(activity, "Ja")
+        assertTrue(chat(activity).last().endsWith("Soll ich das so senden?"))
+        assertTrue(device.pressed.isEmpty())
+        say(activity, "Ja")
         assertEquals(listOf(SendPlan.WhatsApp("Thomas Muster", "430005550103", "Guten Morgen", send = true)), device.opened)
         assertEquals(1, device.pressed.size)
+        assertEquals(1L, activity.ownerRelations.get(at.heinz.deviceai.sending.OwnerRelation.VATER)?.contactId)
     }
 
     @Test fun withTheGmailGrantTheMailOrderIsTakenOverAndModelTextWaitsForAClearYes() = withActivity { activity, device ->
