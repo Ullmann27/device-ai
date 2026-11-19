@@ -9621,6 +9621,7 @@ class AgentActivity : Activity() {
         val request = input.text.toString().trim()
         if (request.isEmpty() || busy || botLookupPending || neuralCoach.isActive()) return false
         if (consumeCloudToolCommand(request)) return true
+        if (consumeInternetAccessCommand(request)) return true
         val reply = deviceTools.command(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
             continuumState?.archive?.identityState?.chosenName)) ?: return false
         input.text.clear()
@@ -17596,6 +17597,48 @@ class AgentActivity : Activity() {
         addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
         addNonModelReply(request, reply, at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
         addToolActivity("CLOUD-WERKZEUGE · Schalter-Befehl ausgeführt · kein Modellaufruf")
+        return true
+    }
+
+    /** The offer „Soll ich ihn auf ‚Immer an' stellen?“ waits for exactly the owner's next turn in this chat. */
+    private var internetAccessOffer: Pair<String, Long>? = null
+
+    /**
+     * The owner talks about Continuum's own internet access (cognitive/OwnerInternetAccess): the answer names the real
+     * setting; widening it is offered and done only after his „Ja“, narrowing it is done at once. No model turn.
+     */
+    private fun consumeInternetAccessCommand(request: String): Boolean {
+        fun state() = at.heinz.deviceai.cognitive.OwnerInternetAccess.State(internetConsent.mode,
+            claudeBrain?.claudeSelected == true, claudeBrain?.cloudWebReady == true)
+        fun say(text: String, line: String) {
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            addNonModelReply(request, text, at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+            addToolActivity(line)
+        }
+        val offered = internetAccessOffer
+        internetAccessOffer = null
+        if (offered != null && offered.first == sessionId && android.os.SystemClock.elapsedRealtime() - offered.second in 0..120_000L) {
+            when (at.heinz.deviceai.cognitive.OwnerInternetAccess.answer(request)) {
+                true -> {
+                    setInternetMode(at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+                    say(at.heinz.deviceai.cognitive.OwnerInternetAccess.allowed(state()),
+                        "INTERNETZUGANG · auf „Immer an“ gestellt · nach deinem Ja · kein Modellaufruf")
+                    return true
+                }
+                false -> {
+                    say(at.heinz.deviceai.cognitive.OwnerInternetAccess.KEPT, "INTERNETZUGANG · unverändert · kein Modellaufruf")
+                    return true
+                }
+                null -> Unit
+            }
+        }
+        val ask = at.heinz.deviceai.cognitive.OwnerInternetAccess.parse(request) ?: return false
+        val reply = at.heinz.deviceai.cognitive.OwnerInternetAccess.reply(ask, state())
+        reply.set?.let(::setInternetMode)
+        say(reply.text, "INTERNETZUGANG · " + (if (reply.set != null) "eingeschränkt auf deinen Befehl" else "Stand genannt") +
+            " · kein Modellaufruf")
+        if (reply.offer) internetAccessOffer = sessionId to android.os.SystemClock.elapsedRealtime()
         return true
     }
 

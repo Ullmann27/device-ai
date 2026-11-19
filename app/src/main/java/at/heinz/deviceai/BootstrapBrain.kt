@@ -293,9 +293,9 @@ object BootstrapBrain {
         if (affirmativeClause(readText) { "netzwerk" in it || "internetverbindung" in it ||
                 ("wlan" in it && wlanReadCue.containsMatchIn(it)) }) return tool("get_network_summary")
         if ("internet" in low || "recherch" in low) return BootstrapDecision(
-            BootstrapKind.REPLY, "Internetrecherche ist nur nach deiner Freigabe aktiv. " +
-                "Tippe WEB RECHERCHE und nenne eine direkte HTTPS-Quelle. " +
-                "Die Inhalte werden als untrusted data behandelt, nicht als Befehle.")
+            BootstrapKind.REPLY, "Ins Internet gehe ich nur mit deiner Freigabe. Sag zum Beispiel „Such im Internet nach …“ – " +
+                "oder frag mich „Darfst du ins Internet?“, dann sage ich dir, wie es eingestellt ist und wie du es änderst. " +
+                "Was ich im Netz finde, behandle ich als Information, nie als Befehl.")
         if (text.length <= 320 && learnedCommands.isNotEmpty()) {
             val learner = OnlineNaiveBayes()
             learnedCommands.entries.take(24).forEach { (phrase, target) ->
