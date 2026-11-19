@@ -350,6 +350,12 @@ try {
     }
     scrollTo(0,0);return blocked;
   });
+  async function measureSettledWorkspace(room) {
+    await room.locator('.workspace-shell').evaluate(node => Promise.allSettled(
+      node.getAnimations().filter(animation => animation.playState === 'running' &&
+        Number.isFinite(animation.effect?.getComputedTiming().endTime)).map(animation => animation.finished)));
+    return measure(room);
+  }
   const baselineReady=baselineFiles!==null;
   if(!baselineReady && process.env.COMMAND03_REQUIRE_BASELINE==='1')
     assert.fail('Baseline '+baselineRef+' is not readable from git: '+baselineError);
@@ -358,14 +364,14 @@ try {
     for(const [name,values] of comparedStates(width)) {
       const item={label:`code64-boxes-${name}-${width}x${height}`,failures:[]};
       const now=await openRoom('after',width,height,values);
-      const current=await measure(now);
+      const current=await measureSettledWorkspace(now);
       if(current.scroll>current.viewport+1)item.failures.push('root horizontal overflow');
       for(const selector of ['.avatar-zone','.orb-zone','.native-activity','.native-evidence','#command-form'])
         if(!current.boxes[selector] || current.boxes[selector][2]<=0 || current.boxes[selector][3]<=0)
           item.failures.push(selector+': missing box');
       if(baselineReady) {
         const before=await openRoom('base',width,height,values);
-        const original=await measure(before);
+        const original=await measureSettledWorkspace(before);
         for(const selector of boxSelectors) {
           const a=original.boxes[selector], b=current.boxes[selector];
           if(!a || !b) {if(a!==b)item.failures.push(selector+': exists only in one version');continue;}
