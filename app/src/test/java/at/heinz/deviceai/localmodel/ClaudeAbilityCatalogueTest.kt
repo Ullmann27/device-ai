@@ -83,7 +83,9 @@ class ClaudeAbilityCatalogueTest {
         assertEquals(catalogue, ClaudeAbilityCatalogue.text())
         assertEquals(ClaudeAbilityCatalogue.text(ClaudeToolCatalog.definitions()), catalogue)
         assertFalse(Regex("\\d{1,2}\\.\\d{1,2}\\.20\\d{2}|\\d{1,2}:\\d{2}").containsMatchIn(catalogue))
-        assertTrue(catalogue.length.toString(), catalogue.length in 1_500..6_000)
+        // Bound against runaway growth, raised from 6 000 with the storage and mail lanes (19.11.2026): the text is a
+        // cached, byte-stable prefix, so its size costs once per cache write, not per turn.
+        assertTrue(catalogue.length.toString(), catalogue.length in 1_500..7_500)
         // One constant line names the running model – per selected model, not per turn.
         assertEquals("AKTUELLES GEHIRN (nur für die direkte Frage danach): Continuum antwortet gerade über die Cloud mit dem " +
             "Modell Claude Opus 5.5 von Anthropic (claude-opus-5-5). Das Modell auf dem Gerät ist an dieser Antwort nicht beteiligt.",

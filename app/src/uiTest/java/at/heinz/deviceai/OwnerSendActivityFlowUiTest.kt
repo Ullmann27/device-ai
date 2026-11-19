@@ -195,9 +195,9 @@ class OwnerSendActivityFlowUiTest {
         say(activity, "Fass mir die Nachrichten von heute zusammen")
         AgentActivity::class.java.getDeclaredMethod("addAssistantMessage", String::class.java, Boolean::class.javaPrimitiveType,
             Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType,
-            at.heinz.deviceai.cognitive.OwnerChatLine.Kind::class.java).apply { isAccessible = true }
+            at.heinz.deviceai.cognitive.OwnerChatLine.Kind::class.java, Boolean::class.javaPrimitiveType).apply { isAccessible = true }
             .invoke(activity, "Die Photosynthese wandelt Lichtenergie in chemische Energie um. Pflanzen bilden dabei aus " +
-                "Wasser und Kohlendioxid Zucker.", true, false, false, false, at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER)
+                "Wasser und Kohlendioxid Zucker.", true, false, false, false, at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER, true)
         activity.ownerSendGrants.change(SendChannel.GMAIL, true, OwnerSendOwnerTap())
         app.clearNextStartedActivities()
         say(activity, "Schick das per Mail an anna.muster@example.org")

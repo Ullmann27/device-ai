@@ -200,8 +200,8 @@ class OwnerWorkToolsDeviceUiTest {
         // A result in the chat: a model answer, shown through the Activity's own path for it (no model runs here).
         AgentActivity::class.java.getDeclaredMethod("addAssistantMessage", String::class.java, Boolean::class.javaPrimitiveType,
             Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType,
-            at.heinz.deviceai.cognitive.OwnerChatLine.Kind::class.java).apply { isAccessible = true }
-            .invoke(activity, ANSWER, true, false, false, false, at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER)
+            at.heinz.deviceai.cognitive.OwnerChatLine.Kind::class.java, Boolean::class.javaPrimitiveType).apply { isAccessible = true }
+            .invoke(activity, ANSWER, true, false, false, false, at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER, true)
         idle()
         say(activity, "Speichere das als PDF")
         assertTrue(chat(activity).toString(), chat(activity).any {
