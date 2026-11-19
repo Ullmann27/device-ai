@@ -8230,6 +8230,10 @@ class AgentActivity : Activity() {
         // order, or has a part no lane knows, is not taken and keeps its route below.
         // Owner conversation manner: „Sprich persönlich mit mir“, „Nenn mich …“, „Begrüß mich nicht mehr“ and, in the
         // personal tone, a plain greeting – fixed replies of the app. Any other sentence is not taken.
+        // A question an owner lane has just asked gets the answer before any whole-sentence lane („Guten Morgen“ after
+        // „Was soll ich Papa schreiben?“ is the message, not a greeting). Not its answer: the turn keeps its route.
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && ownerOpenQuestions.serve(request)) return
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
             computerController?.active != true && ownerTalk.handle(request)) return
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
@@ -12814,6 +12818,7 @@ class AgentActivity : Activity() {
         override fun outcome(outcome: OwnerLaneOutcome) {
             continuumBriefing.laneOutcome(outcome)
             ownerMission.laneOutcome(OwnerMissionLane.WORK, outcome)
+            ownerOpenQuestions.noteOutcome(OwnerMissionLane.WORK.name, outcome)
         }
         override fun offerToOpen(): Boolean = !ownerMission.active
 
@@ -13034,6 +13039,7 @@ class AgentActivity : Activity() {
         override fun outcome(outcome: OwnerLaneOutcome) {
             continuumBriefing.laneOutcome(outcome)
             ownerMission.laneOutcome(OwnerMissionLane.DESK, outcome)
+            ownerOpenQuestions.noteOutcome(OwnerMissionLane.DESK.name, outcome)
         }
         override fun offerToOpen(): Boolean = !ownerMission.active
 
@@ -13214,6 +13220,13 @@ class AgentActivity : Activity() {
     internal val ownerSendGrants by lazy {
         at.heinz.deviceai.sending.OwnerSendGrants(at.heinz.deviceai.sending.OwnerSendPreferences(this)) { java.time.LocalDate.now() }
     }
+    /** Open questions of the owner lanes, served before the whole-sentence lanes (see [OwnerOpenQuestions]). */
+    private val ownerOpenQuestions by lazy {
+        OwnerOpenQuestions(session = { sessionId }, turn = { ownerReplyRevision })
+            .lane(OwnerMissionLane.SEND.name, awaiting = { ownerSend.awaitingAnswer }) { ownerSend.handle(it) }
+            .lane(OwnerMissionLane.DESK.name) { ownerDocumentDesk.handle(it) }
+            .lane(OwnerMissionLane.WORK.name, awaiting = { ownerWorkTools.awaitingAnswer }) { ownerWorkTools.handle(it) }
+    }
     internal val ownerRelations by lazy {
         at.heinz.deviceai.sending.OwnerRelations(at.heinz.deviceai.sending.OwnerRelationPreferences(this))
     }
@@ -13241,6 +13254,7 @@ class AgentActivity : Activity() {
         override fun outcome(outcome: OwnerLaneOutcome) {
             continuumBriefing.laneOutcome(outcome)
             ownerMission.laneOutcome(OwnerMissionLane.SEND, outcome)
+            ownerOpenQuestions.noteOutcome(OwnerMissionLane.SEND.name, outcome)
             incomingSendOutcome(outcome)
         }
 

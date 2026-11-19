@@ -155,6 +155,9 @@ internal class OwnerWorkTools(
         if (text.isNotBlank()) draft = Draft(last.session, last.turn, last.name, text.trim(), last.complete, last.cloud, last.atMillis)
     }
 
+    /** true while „Soll ich sie öffnen?“ of this lane waits for the owner's very next turn. */
+    val awaitingAnswer: Boolean get() = openOffer?.let { it.session == host.sessionId && it.turn == host.ownerTurn } == true
+
     /** The last deliverable of the current chat, if any. */
     val deliverable: OwnerDeliverable? get() = lastDeliverable?.takeIf { it.first == host.sessionId }?.second
 
