@@ -24,6 +24,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-devicetools-check.jsonl` | 94 | **Host, automatisch** (`DeviceToolRegressionTest`) | Gerätewerkzeuge, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Fällen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): Prüfsätze für die Gerätewerkzeuge vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `regression-incoming.jsonl` | 130 | **Host, automatisch** (`IncomingMessageRegressionTest`) | Eingehende Nachrichten melden (19.11.2026), **Entwicklungssatz**: Absender, Betreff, Text und App einer frei erfundenen Nachricht → melden · nicht melden · unklar, jeweils mit Grund. Gerichte und Behörden (Bezirksgericht, Landesgericht, Staatsanwaltschaft, Finanzamt/FinanzOnline, Magistrat, BH, ÖGK, PVA, AMS, Gemeinde, Polizei, gv.at; auch deutsche), Institute (Bank, Versicherung, Schule, Ordination/Klinik, Kanzlei/Notar, Steuerberatung, Hausverwaltung, Inkasso), amtliche Sachen im Betreff (Bescheid, Ladung, Mahnung, Zahlungserinnerung, Kündigung, RSa/RSb, Aktenzeichen, Frist), Werbung (Rabatt, Gutschein, Newsletter, Sale, „jetzt sichern“, Marketing-Adressen, Institute mit Werbung, „Gerichte der Woche“), Sammelmeldungen sozialer Netzwerke, Personen (Kontakt, Personenname mit und ohne Titel), Messenger (Kontakt, unbekannte Nummer, Geschäftskonto, Gruppe aus/an), Besitzerlisten „immer melden“/„nie melden“, unklare Fälle (Paket, Rechnung, Sicherheitswarnung) |
 | `regression-incoming-check.jsonl` | 78 | **Host, automatisch** (`IncomingMessageRegressionTest`) | Eingehende Nachrichten melden, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Absendern und Betreffen; vor dem Klassifikator geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für eingehende Nachrichten vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
+| `regression-briefing.jsonl` | 94 | **Host, automatisch** (`ContinuumBriefingRegressionTest`) | Systemstart-Bericht und Tagesbriefing (19.11.2026), **Entwicklungssatz**: welcher Satz ist ein Auftrag für Systemcheck, Briefing (mit/ohne Nachrichtenteil), Termine heute/morgen, Wetter (gespeicherter oder genannter Ort), Ortseinstellung, Anruf über die Wähltastatur, das tägliche Briefing-Angebot und den Nachrichtenteil – und welcher Satz behält seine heutige Lenkung (`NONE`: Dokument- und Filmfragen, Nachrichtenaufträge, Geräteuhr, Gruß, Fähigkeitenliste, Systemdiagnose, Sendeaufträge, Dokumentenablage, Routinen, Arbeitsjournal, Verneinung, Zitat, wiedergegebene Rede, Kalender schreiben); dazu die Antwort auf die Folgeangebote („Entscheide du die Aktion“) |
+| `regression-briefing-check.jsonl` | 86 | **Host, automatisch** (`ContinuumBriefingRegressionTest`) | Systemstart-Bericht und Tagesbriefing, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): Sätze für Briefing und Systemstart vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -86,6 +88,15 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   (`ANNOUNCE` · `SILENT` · `UNCLEAR`) und `reason` (`OWNER_ALWAYS` · `OWNER_NEVER` · `GROUP_CHAT` · `CONTACT` · `AUTHORITY` ·
   `INSTITUTION` · `OFFICIAL_MATTER` · `PROMOTION` · `SOCIAL_DIGEST` · `GROUP_MESSAGE` · `DIRECT_MESSAGE` · `PERSONAL_NAME` ·
   `UNCLEAR`); beides muss stimmen. Es gibt keine Eingabesätze des Besitzers in diesen Dateien
+- `regression-briefing.jsonl` / `regression-briefing-check.jsonl`: `briefing_route` erwartet `route` – `SYSTEM_CHECK` ·
+  `BRIEFING` · `BRIEFING:NEWS` (Nachrichtenteil für dieses eine Mal) · `APPOINTMENTS:<TODAY|TOMORROW>` ·
+  `WEATHER:<TODAY|TOMORROW>` bzw. `WEATHER:<Tag>@<Ort wie gesagt>` · `PLACE:<Ort>` (Ortseinstellung für das Wetter) ·
+  `CALL:<Name oder Nummer wie gesagt>` (Wähltastatur öffnen) · `OFFER:<Stunde|ON|OFF>` (tägliches Briefing-Angebot) ·
+  `NEWS_PART:<ON|OFF>` · `NONE` (der Satz behält seine heutige Lenkung); optional `keeps` = die Lenkung, die den Satz
+  heute nachweislich annimmt (`NEWS` · `CLOCK` · `GREETING` · `CAPABILITIES` · `DIAGNOSIS` · `SEND` · `DESK` · `ROUTINE` ·
+  `RECALL`) – der Test prüft sie am echten Parser dieser Lenkung. `briefing_choice` (`offers` = die angebotenen
+  nächsten Schritte in Reihenfolge: `APPOINTMENTS` · `MESSAGE` · `WORK` · `NEWS` · `DIAGNOSIS` · `WEATHER`) erwartet
+  `choice` (`PICK:<n>` · `ASK` = Ja bei mehreren Angeboten · `DECLINE` · `NONE` = keine Antwort auf das Angebot)
 
 Modellfälle (`model-*.jsonl`):
 
