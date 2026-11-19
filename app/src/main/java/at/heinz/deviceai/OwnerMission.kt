@@ -1169,7 +1169,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost,
         if (how != End.COMPLETED && mission === m) mission = null
         settled(m, when (how) {
             End.COMPLETED -> OwnerMissionSettled.How.COMPLETED
-            End.FAILED -> OwnerMissionSettled.How.FAILED
+            // An unconfirmed send is not done and must never be taken up again by „Mach da weiter“.
+            End.FAILED, End.UNCONFIRMED -> OwnerMissionSettled.How.FAILED
             End.STOPPED, End.TIME -> OwnerMissionSettled.How.STOPPED
         })
         host.activity("AUFTRAGSFOLGE · " + when (how) {

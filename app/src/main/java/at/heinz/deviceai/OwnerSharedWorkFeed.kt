@@ -153,6 +153,10 @@ internal class OwnerSharedWorkFeed(private val record: OwnerSharedWorkRecord, pr
         OwnerMissionLane.SEND -> "Sende-Lenkung"
         OwnerMissionLane.CHAIN -> "Aufgabenkette"
         OwnerMissionLane.DEEPCLEAN -> "Speicher-Lenkung"
+        OwnerMissionLane.MAIL -> "Gmail-Lenkung"
+        OwnerMissionLane.BRIEFING -> "Briefing-Lenkung"
+        OwnerMissionLane.APP -> "App-Lenkung"
+        OwnerMissionLane.RESEARCH -> "Recherche"
     }
 
     companion object {
