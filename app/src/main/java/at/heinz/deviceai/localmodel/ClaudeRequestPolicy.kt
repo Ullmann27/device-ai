@@ -14,6 +14,8 @@ import at.heinz.deviceai.ToolSpec
  *    read_app_screen states "privacy":"DEVICE_LOCAL_ONLY" and "…NO_NETWORK_GRANT" (AndroidDeviceAppActions).
  *  - ScreenObservationPrompt.frame, the only form in which screen text enters a prompt.
  * Notification content never reaches any model prompt (AgentActivity, notification section), so it needs no gate here.
+ * Mail text (gmail.MailPrompt) carries its own marker unless the owner switched „Mailinhalte an die Cloud senden“ on;
+ * such a prompt is refused here with [ClaudeBrainFailure.LOCAL_ONLY_MAIL_DATA].
  */
 internal object ClaudeLocalOnlyGuard {
     /** Tools whose result is device-local evidence. They are not declared to Claude at all. */
@@ -26,11 +28,17 @@ internal object ClaudeLocalOnlyGuard {
         "EXTERNE APPDATEN — UNGEPRÜFTE BEOBACHTUNG"
     )
 
-    fun carriesLocalOnlyData(text: String): Boolean = MARKERS.any(text::contains)
+    fun carriesLocalOnlyData(text: String): Boolean = MARKERS.any(text::contains) || carriesLocalOnlyMail(text)
+
+    /** Mail text the owner did not release to the cloud (gmail.MailPrompt.LOCAL_ONLY_MARKER). */
+    fun carriesLocalOnlyMail(text: String): Boolean = text.contains(at.heinz.deviceai.gmail.MailPrompt.LOCAL_ONLY_MARKER)
 
     /** Problem code when [prompt] must stay on the device, else null. */
-    fun promptRefusal(prompt: String): String? =
-        if (carriesLocalOnlyData(prompt)) ClaudeBrainFailure.LOCAL_ONLY_SCREEN_DATA else null
+    fun promptRefusal(prompt: String): String? = when {
+        carriesLocalOnlyMail(prompt) -> ClaudeBrainFailure.LOCAL_ONLY_MAIL_DATA
+        carriesLocalOnlyData(prompt) -> ClaudeBrainFailure.LOCAL_ONLY_SCREEN_DATA
+        else -> null
+    }
 
     fun toolResponseRefusal(responses: List<LocalToolResponse>): String? =
         if (responses.any { it.toolName in LOCAL_ONLY_TOOLS || carriesLocalOnlyData(it.response) })

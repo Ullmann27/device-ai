@@ -155,12 +155,16 @@ class ClaudeAbilityCatalogueTest {
                 "system" -> SystemIntelligenceCommands.isDiagnosisRequest(sentence)
                 "storage" -> at.heinz.deviceai.deepclean.DeepCleanCommands.parse(sentence, name) != null
                 "open_saved" -> openSavedIsTaken(sentence)
+                // Gmail lane: a follow-up form ("Was steht da wegen Fristen?") is taken with a mail open in the chat.
+                "mail_connect", "mail_read", "mail_summary", "mail_draft", "mail_send" ->
+                    at.heinz.deviceai.gmail.OwnerMailCommands.route(sentence, name, at.heinz.deviceai.gmail.MailContext(list = true, mail = true)) != null
                 else -> error("no check for ${ability.key}")
             }
             assertTrue("${ability.key}: „$sentence“ is not taken by its lane", taken)
         }
         assertEquals(setOf("pdf_search", "pdf_open", "page_summary", "news", "export", "open_saved", "mail", "send", "mission",
-            "newest_file", "computer", "research", "system", "storage"), OwnerLaneCatalogue.abilities.map { it.key }.toSet())
+            "newest_file", "computer", "research", "system", "storage", "mail_connect", "mail_read", "mail_summary", "mail_draft",
+            "mail_send"), OwnerLaneCatalogue.abilities.map { it.key }.toSet())
     }
 
     private fun openSavedIsTaken(sentence: String): Boolean {
@@ -175,7 +179,8 @@ class ClaudeAbilityCatalogueTest {
         val prompt = OwnerMissionModelPlan.orderPrompt("Kannst du mir bitte mal das Argon-Dokument aufmachen")
         // The send lane, the live computer and the web research are never a mapped order: only the owner's own
         // wording starts them.
-        for (key in listOf("send", "computer", "research", "system", "storage")) assertFalse(key, OwnerLaneCatalogue.abilities.single { it.key == key }.mapped)
+        for (key in listOf("send", "computer", "research", "system", "storage", "mail_connect", "mail_read", "mail_summary", "mail_draft",
+                "mail_send")) assertFalse(key, OwnerLaneCatalogue.abilities.single { it.key == key }.mapped)
         assertFalse(prompt.contains("WhatsApp") || prompt.contains("Schreib "))
         for (form in listOf("Such das PDF <Name>", "Öffne das PDF <Name>", "Fass Seite <Zahl> zusammen und speichere es als <Word oder PDF>",
             "Fass mir die Nachrichten von heute zusammen", "Speichere das als <PDF oder Word-Datei>", "Schick das per Mail an <Adresse oder Name>",

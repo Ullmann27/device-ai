@@ -58,7 +58,19 @@ internal object OwnerLaneCatalogue {
                 "Wie viel Platz habe ich wieder?"),
             "automatisch nur Continuums eigene, eindeutig entbehrliche Zwischendateien; alles andere nur nach Auswahl des " +
                 "Besitzers und über Androids eigenen Papierkorb-Dialog; persönliche Dateien, Modelle und Gedächtnis nie",
-            mapped = false))
+            mapped = false),
+        // Gmail lane (19.11.2026): the owner's own Google account through Google's consent; mail text is third-party data.
+        Ability("mail_connect", "Das Gmail-Konto des Besitzers verbinden, den Verbindungsstatus nennen oder trennen",
+            listOf("Verbinde Gmail", "Trenne Gmail"), "Googles eigene Freigabeseite; nur in der original signierten App", mapped = false),
+        Ability("mail_read", "Neue oder gesuchte Mails im verbundenen Gmail zeigen und vorlesen",
+            listOf("Zeig mir neue Mails", "Suche Mails von <Name>", "Lies die Mail vor"), "Leserecht bei Google; nur lesend", mapped = false),
+        Ability("mail_summary", "Mails zusammenfassen, die wichtigsten nach festen Punkten nennen und Fristen wörtlich zitieren",
+            listOf("Fass meine wichtigsten Mails zusammen", "Was steht da wegen Fristen?"),
+            "Mailtext geht nur mit der eigenen Freigabe des Besitzers an die Cloud, sonst Modell auf dem Gerät", mapped = false),
+        Ability("mail_draft", "Einen Mail-Entwurf in Gmail anlegen oder auf die gezeigte Mail antworten",
+            listOf("Schreib einen Entwurf an <Name>: <Text>"), "Entwurfsrecht bei Google; gesendet wird nichts", mapped = false),
+        Ability("mail_send", "Den Entwurf über Gmail senden",
+            listOf("Schick die Mail ab"), "eigenes Senderecht bei Google und Bestätigung von Empfänger, Betreff und Text", mapped = false))
 
     /** One line per ability for a prompt: what it is, how the owner says it, what guards it. */
     fun lines(): List<String> = abilities.map { ability ->

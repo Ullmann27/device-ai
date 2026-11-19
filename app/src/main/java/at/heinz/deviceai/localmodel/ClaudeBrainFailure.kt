@@ -31,6 +31,8 @@ object ClaudeBrainFailure {
     const val LOCAL_ONLY_MEMORY = "CLAUDE_LOCAL_ONLY_MEMORY"
     /** The turn contains a notification or message of someone else that the app read out on the device. */
     const val LOCAL_ONLY_MESSAGE_CONTENT = "CLAUDE_LOCAL_ONLY_MESSAGE_CONTENT"
+    /** Mail text without the owner's switch „Mailinhalte an die Cloud senden“; it was not sent. */
+    const val LOCAL_ONLY_MAIL_DATA = "CLAUDE_LOCAL_ONLY_MAIL_DATA"
     /** Features that are labelled as local measurements of the on-device model. */
     const val LOCAL_ONLY_FEATURE = "CLAUDE_LOCAL_ONLY_FEATURE"
     /**
@@ -92,6 +94,8 @@ object ClaudeBrainFailure {
         LOCAL_ONLY_MEMORY to "Für diese Frage bräuchte mein Cloud-Gehirn eine bestätigte Erinnerung, die als „nur auf dem " +
             "Gerät“ markiert ist. Ich habe sie nicht gesendet. Du kannst das Mitsenden solcher Erinnerungen unter " +
             "„Modelle → Gehirn“ ausdrücklich erlauben.",
+        LOCAL_ONLY_MAIL_DATA to "Mailinhalte gehen ohne deine eigene Freigabe nicht in die Cloud; diese Anfrage wurde nicht " +
+            "gesendet. Erlauben kannst du es unter Einstellungen → Verbindungen → Google Gmail.",
         LOCAL_ONLY_FEATURE to "Diese Funktion misst das lokale Modell auf dem Gerät. Solange Claude als Gehirn " +
             "gewählt ist, starte ich sie nicht, damit nichts unbemerkt in die Cloud geht und kein Guthaben verbraucht wird.",
         CLOUD_TOOL_WITHDRAWN to "Die Freigabe für die Websuche oder die Code-Ausführung über die Cloud gilt nicht mehr " +
@@ -108,7 +112,8 @@ object ClaudeBrainFailure {
      */
     private val OFFER_SWITCH_BACK = setOf(NO_CONSENT, NO_API_KEY, INVALID_API_KEY, PERMISSION_DENIED, NO_CREDIT,
         RATE_LIMITED, OVERLOADED, OFFLINE, TIMEOUT, MODEL_UNAVAILABLE, DATA_RETENTION_REQUIRED, SPEND_LIMIT_REACHED,
-        LOCAL_ONLY_SCREEN_DATA, LOCAL_ONLY_MESSAGE_CONTENT, LOCAL_ONLY_OWNER_VETO, LOCAL_ONLY_MEMORY, LOCAL_ONLY_FEATURE)
+        LOCAL_ONLY_SCREEN_DATA, LOCAL_ONLY_MESSAGE_CONTENT, LOCAL_ONLY_OWNER_VETO, LOCAL_ONLY_MEMORY, LOCAL_ONLY_FEATURE,
+        LOCAL_ONLY_MAIL_DATA)
 
     /** A cut connection leaves real answer text behind; after every other failure streamed text is no answer. */
     private val KEEPS_PARTIAL_OUTPUT = setOf(STREAM_INTERRUPTED, TIMEOUT, OVERLOADED)
