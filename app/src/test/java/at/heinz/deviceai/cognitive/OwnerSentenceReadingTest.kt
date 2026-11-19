@@ -202,6 +202,34 @@ class OwnerSentenceReadingTest {
         assertEquals(Kind.PLAN, read("Öffne das PDF Argon4, fass Seite 2 zusammen, speichere es als Word und schick es per Mail an anna@example.org").kind)
     }
 
+    /**
+     * „… und zeige mir jeden Arbeitsschritt“ behind a document order is how the document route shows its work
+     * ([OwnerDocumentIntent] takes it off the sentence itself and opens Android's picker). The planner used to read it
+     * as an order nobody knows and answered „ganz kann ich das noch nicht erledigen“ instead of opening the picker
+     * (ContinuumPdfSceneAcceptanceUiTest, 19.11.2026).
+     */
+    @Test fun thePresentationTailOfADocumentOrderIsNoSecondOrder() {
+        for (sentence in listOf(
+            "öffne meine PDF Argon 4 Forschungsexperiment und zeige mir jeden Arbeitsschritt",
+            "Öffne diese PDF und zeig mir alle Arbeitsschritte.",
+            "Lies diese PDF, zeige mir jeden einzelnen Arbeitsschritt bitte")) {
+            val reading = read(sentence)
+            assertNotNull(sentence, OwnerDocumentIntent.parse(sentence, "Jarvis"))
+            assertEquals(sentence, "DOCUMENT", reading.whole)
+            assertEquals(sentence, Kind.NONE, reading.kind)
+        }
+        // Only that tail, and only behind an order the document route takes: any other second order is still read
+        // as an order, so nothing is dropped without a word.
+        val printed = read("Öffne das PDF Argon4, druck es aus und zeige mir jeden Arbeitsschritt")
+        assertNull(printed.whole)
+        assertEquals(Kind.PARTIAL, printed.kind)
+        val news = read("Fass mir die Nachrichten von heute zusammen und zeige mir jeden Arbeitsschritt")
+        assertFalse("DOCUMENT" == news.whole)
+        assertTrue(OwnerDocumentIntent.isPresentationOnly("zeige mir jeden Arbeitsschritt"))
+        assertFalse(OwnerDocumentIntent.isPresentationOnly("zeige mir jeden Arbeitsschritt und lösche die Datei"))
+        assertFalse(OwnerDocumentIntent.isPresentationOnly("zeige mir die Datei"))
+    }
+
     @Test fun inputOutsideTheBoundsIsNotRead() {
         assertNull(OwnerMissionPlanner.read("", "Jarvis"))
         assertNull(OwnerMissionPlanner.read("Öffne das PDF Argon4,\u0000 schreib Anna", "Jarvis"))

@@ -476,6 +476,10 @@ internal object OwnerMissionPlanner {
         // orders. With any other second order the picker would open and the rest would be dropped without a word.
         OwnerDocumentIntent.parse(said, assistantName)?.wantsDraft == true && orders.size == 2 &&
             (orders[1].reading as? OwnerClauseReading.Later)?.ability == OwnerClauseAbility.SUMMARY -> "DOCUMENT"
+        // „Öffne meine PDF … und zeige mir jeden Arbeitsschritt“: the tail says how that route shows its work – the
+        // route takes it off the sentence itself and shows the steps. Nothing is dropped, so it is no second order.
+        orders.size == 2 && OwnerDocumentIntent.isPresentationOnly(orders[1].text) &&
+            OwnerDocumentIntent.parse(said, assistantName) != null -> "DOCUMENT"
         OwnerChatIntentRouter.route(said) != null -> "LOCAL"
         OwnerInternalNavigationIntent.resolve(said, assistantName) != null -> "NAVIGATION"
         OwnerResearchCommand.parse(said, assistantName) != null -> "RESEARCH"

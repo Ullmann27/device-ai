@@ -50,11 +50,17 @@ internal object OwnerDocumentIntent {
     )
     private val joinedObject = Regex("(?iu)\\s+(?:und|sowie|oder)\\s+")
     // Presentation never authorizes another tool.
-    private val presentationTail = Regex(
-        "(?iu)(?:\\s+und\\s+|[.!?,;]\\s*)(?:bitte\\s+)?zeig(?:e)?\\s+(?:mir\\s+)?" +
-            "(?:jeden\\s+(?:einzelnen\\s+)?arbeitsschritt|(?:alle|die)\\s+(?:einzelnen\\s+)?arbeitsschritte)" +
-            "(?:\\s+bitte)?[.!?]*$"
-    )
+    private const val PRESENTATION = "(?:bitte\\s+)?zeig(?:e)?\\s+(?:mir\\s+)?" +
+        "(?:jeden\\s+(?:einzelnen\\s+)?arbeitsschritt|(?:alle|die)\\s+(?:einzelnen\\s+)?arbeitsschritte)" +
+        "(?:\\s+bitte)?[.!?]*"
+    private val presentationTail = Regex("(?iu)(?:\\s+und\\s+|[.!?,;]\\s*)$PRESENTATION$")
+    private val presentationClause = Regex("(?iu)^$PRESENTATION$")
+
+    /**
+     * true = [clause] is only „zeige mir jeden Arbeitsschritt“: how this route shows its work, which [parse] takes off
+     * the sentence itself. Said behind a document order it is no second order (mission planner, 19.11.2026).
+     */
+    fun isPresentationOnly(clause: String): Boolean = presentationClause.matches(clause.trim())
     private val earlier = Regex(
         "(?iu)$START(ausgewählte|ausgewählten|letzte|letzten|gleiche|gleichen|dieselbe|selbe|selben|vorige|vorigen|gestrige|gestrigen)$END" +
             "\\s+$START(pdf|pdf-datei|pdf-dokument|dokument)$END"
