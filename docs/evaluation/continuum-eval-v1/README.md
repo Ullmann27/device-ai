@@ -22,6 +22,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-coding-agents-check.jsonl` | 51 | **Host, automatisch** (`CodingAgentOrderRegressionTest`) | Coding-Agenten, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor dem Parser eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Coding-Agenten-Aufträge vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `regression-devicetools.jsonl` | 125 | **Host, automatisch** (`DeviceToolRegressionTest`) | Gerätewerkzeuge (19.11.2026), **Entwicklungssatz**: Gerätesuche über Apps, Dateien und Ordner (Rang genau · Anfang · enthält, Zahlwörter, Umlaute, Typwörter, Ordnernamen, Beinahe-Treffer), Schaltbefehle für die Cloud-Freigaben (Namen · Inhalte) und „Dokumente ohne Rückfrage“, Entscheidung vor dem Start eines Werkzeugs (im Prozess · Shizuku-Brücke · abgelehnt mit Grund: Brücke läuft nicht, Dateizugriff fehlt, Cloud-Freigabe fehlt, nur Systemzentrum, Anzeigen nicht verlangt, Dokumentgrenze), Vorab-Freigabe eines Dokuments, Modellpläne mit den neuen Werkzeugen (gültig/abgelehnt), Kettenläufe über den echten Orchestrator und das ToolGate mit nachgestelltem Backend in den echten Ausgabeformaten, Dokument-Auszeichnung (Überschrift · Liste · Absatz), Seitenbereiche; Geräte-Bestand in `regression-devicetools.fixture.json` (frei erfunden) |
 | `regression-devicetools-check.jsonl` | 94 | **Host, automatisch** (`DeviceToolRegressionTest`) | Gerätewerkzeuge, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Fällen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): Prüfsätze für die Gerätewerkzeuge vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
+| `regression-incoming.jsonl` | 130 | **Host, automatisch** (`IncomingMessageRegressionTest`) | Eingehende Nachrichten melden (19.11.2026), **Entwicklungssatz**: Absender, Betreff, Text und App einer frei erfundenen Nachricht → melden · nicht melden · unklar, jeweils mit Grund. Gerichte und Behörden (Bezirksgericht, Landesgericht, Staatsanwaltschaft, Finanzamt/FinanzOnline, Magistrat, BH, ÖGK, PVA, AMS, Gemeinde, Polizei, gv.at; auch deutsche), Institute (Bank, Versicherung, Schule, Ordination/Klinik, Kanzlei/Notar, Steuerberatung, Hausverwaltung, Inkasso), amtliche Sachen im Betreff (Bescheid, Ladung, Mahnung, Zahlungserinnerung, Kündigung, RSa/RSb, Aktenzeichen, Frist), Werbung (Rabatt, Gutschein, Newsletter, Sale, „jetzt sichern“, Marketing-Adressen, Institute mit Werbung, „Gerichte der Woche“), Sammelmeldungen sozialer Netzwerke, Personen (Kontakt, Personenname mit und ohne Titel), Messenger (Kontakt, unbekannte Nummer, Geschäftskonto, Gruppe aus/an), Besitzerlisten „immer melden“/„nie melden“, unklare Fälle (Paket, Rechnung, Sicherheitswarnung) |
+| `regression-incoming-check.jsonl` | 78 | **Host, automatisch** (`IncomingMessageRegressionTest`) | Eingehende Nachrichten melden, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Absendern und Betreffen; vor dem Klassifikator geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für eingehende Nachrichten vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -78,6 +80,12 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   `UNKNOWN:<wie gesagt>` (genannt, nicht freigegeben) · `NO_REPOS` (nichts freigegeben). Optional `task`: der Wortlaut,
   der als Auftrag übergeben wird. `repos` ist die Freigabeliste des Falls; fehlt sie, gilt
   `Ullmann27/device-ai`, `Ullmann27/continuum-web`. Anrede des Assistenten im Läufer: „Jarvis“
+- `regression-incoming.jsonl` / `regression-incoming-check.jsonl`: `incoming_importance` bekommt `package` (App), `sender`,
+  `subject` (nur E-Mail), `text`, optional `contact` (Absender steht in den Kontakten), `group` + `conversation`
+  (Gruppenchat), `groups_on` (Besitzerschalter Gruppen), `always` / `never` (Besitzerlisten) und erwartet `verdict`
+  (`ANNOUNCE` · `SILENT` · `UNCLEAR`) und `reason` (`OWNER_ALWAYS` · `OWNER_NEVER` · `GROUP_CHAT` · `CONTACT` · `AUTHORITY` ·
+  `INSTITUTION` · `OFFICIAL_MATTER` · `PROMOTION` · `SOCIAL_DIGEST` · `GROUP_MESSAGE` · `DIRECT_MESSAGE` · `PERSONAL_NAME` ·
+  `UNCLEAR`); beides muss stimmen. Es gibt keine Eingabesätze des Besitzers in diesen Dateien
 
 Modellfälle (`model-*.jsonl`):
 
@@ -185,6 +193,27 @@ voneinander entstanden sind die beiden Sätze aber nicht. Nach den Messungen wur
 prüft zusätzlich, dass kein Satz der übrigen Sätze dieses Ordners zu einem Coding-Agenten-Auftrag wird und dass nie ein
 Repository außerhalb der Freigabeliste des Falls vorgeschlagen wird. Was die Spracherkennung am Fold7 aus „Coding-Agent“
 macht, ist NOT_RUN; ebenso jeder Lauf bei Anthropic und jede Antwort von GitHub.
+Für `regression-incoming.jsonl` und `regression-incoming-check.jsonl` (Eingehende Nachrichten melden, 19.11.2026) gibt
+es keinen Vorher-Wert: eine Einordnung nach Wichtigkeit gab es nicht (die bisherigen Ansagen kannten nur „App
+freigegeben oder nicht“). Der Prüfsatz wurde zuerst geschrieben und eingecheckt, der Entwicklungssatz danach, beide vor
+dem Klassifikator; kein Fall steht in beiden (der Test prüft das). Gemessen am Host:
+
+| Lauf | Entwicklungssatz | Prüfsatz |
+|---|---|---|
+| erster Lauf nach der Umsetzung, vor jeder Anpassung | 129 / 130 | 78 / 78 |
+| nach der Korrektur für „Ihr Bescheid“ | 130 / 130 | 78 / 78 |
+
+Der eine Fehlschlag im Entwicklungssatz (INC-059 „Ihr Bescheid ist abrufbar“): die Ausnahme für die Alltagswendung „gib
+ihr Bescheid“ hatte auch das Anredewort „Ihr“ getroffen; behoben, indem „Bescheid geben/sagen“ als Wendung erkannt
+und vor der Suche nach amtlichen Begriffen entfernt wird. Im Prüfsatz gab es keinen Fehlschlag, also auch keine
+Korrektur an ihm oder wegen ihm. Einordnung, ausdrücklich: Prüfsatz, Entwicklungssatz und Regeln stammen aus derselben
+Hand und wurden hintereinander geschrieben – die Regelidee stand beim Schreiben des Prüfsatzes schon fest. 78 / 78 belegt
+deshalb, dass nicht nachträglich auf den Prüfsatz abgestimmt wurde, **nicht**, dass echte Absender und Betreffe des
+Besitzers so gut getroffen werden. Die Wortlisten sind endlich (österreichisch/deutsch); ein Institut, das sie nicht
+kennen, endet als „unklar“ und wird in der Voreinstellung kurz gemeldet, nicht verschwiegen. Was eine Benachrichtigung
+von WhatsApp oder Gmail auf dem Fold7 wirklich enthält (Absendername statt Adresse, Betreff, Gruppen-Kennzeichen) und ob
+das Signal ohne Benachrichtigungsdienst überhaupt mit Inhalt ankommt, ist NOT_RUN
+(`docs/handover/NACHRICHTENEINGANG-GERAETECHECKLISTE-20261119.md`).
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 
