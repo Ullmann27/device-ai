@@ -26,6 +26,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-incoming-check.jsonl` | 78 | **Host, automatisch** (`IncomingMessageRegressionTest`) | Eingehende Nachrichten melden, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Absendern und Betreffen; vor dem Klassifikator geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für eingehende Nachrichten vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `regression-briefing.jsonl` | 94 | **Host, automatisch** (`ContinuumBriefingRegressionTest`) | Systemstart-Bericht und Tagesbriefing (19.11.2026), **Entwicklungssatz**: welcher Satz ist ein Auftrag für Systemcheck, Briefing (mit/ohne Nachrichtenteil), Termine heute/morgen, Wetter (gespeicherter oder genannter Ort), Ortseinstellung, Anruf über die Wähltastatur, das tägliche Briefing-Angebot und den Nachrichtenteil – und welcher Satz behält seine heutige Lenkung (`NONE`: Dokument- und Filmfragen, Nachrichtenaufträge, Geräteuhr, Gruß, Fähigkeitenliste, Systemdiagnose, Sendeaufträge, Dokumentenablage, Routinen, Arbeitsjournal, Verneinung, Zitat, wiedergegebene Rede, Kalender schreiben); dazu die Antwort auf die Folgeangebote („Entscheide du die Aktion“) |
 | `regression-briefing-check.jsonl` | 86 | **Host, automatisch** (`ContinuumBriefingRegressionTest`) | Systemstart-Bericht und Tagesbriefing, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): Sätze für Briefing und Systemstart vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
+| `regression-talk.jsonl` | 194 | **Host, automatisch** (`OwnerTalkRegressionTest`) | Gesprächssatz (19.11.2026), **Entwicklungssatz**: Gesprächston-Befehl („Sprich persönlich mit mir“ / „Sprich wieder sachlich“), „Nenn mich …“ und Widerruf, reiner Gruß ja/nein, Schalter der Begrüßung, Pause aus zwei Zeitstempeln (Stufen und Rundung), Reparatur verirrter Tastaturpunkte, „Erstelle eine PDF“ ohne Zeigewort, Satz als Auftragsfolge, was das Cloud-Gehirn auf einen Auftrag abbilden darf (und was verworfen wird), direkte Frage nach dem laufenden Modell, Suche der Ablage in der Wunschform, zerlegter Name als ähnlicher Treffer. Enthält die zwei Besitzer-Feldfälle vom Fold7 (`category: field`) |
+| `regression-talk-check.jsonl` | 114 | **Host, automatisch** (`OwnerTalkRegressionTest`) | Gesprächssatz, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; wird nicht zum Abstimmen benutzt |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -164,6 +166,29 @@ In den Kettenfällen heißt der Besitzersatz `owner_task` statt `input`: er ist 
 wird, kein gelenkter Satz (`OwnerMissionRegressionTest` prüft jedes `input` des Ordners gegen die Auftragsfolgen, und
 „Such die Datei … und zeig sie mir“ ist in der App eine Auftragsfolge der Dokumentenablage). Diese Umbenennung des
 Schlüssels ist die einzige Änderung an beiden Sätzen nach der Umsetzung; kein Fall und keine Erwartung wurden berührt.
+Für `regression-talk.jsonl` und `regression-talk-check.jsonl` (Gesprächssatz, 19.11.2026): Läufer `tone_command`
+(`tone`: `PERSONAL` · `FACTUAL` · `NONE`), `name_command` (`name`: `SET:<Name>` · `FORGET` · `NONE`), `greeting`
+(`YES` · `NO`), `greeting_switch` (`ON` · `OFF` · `NONE`), `absence` (`last`, `now`, `zone` → `NONE` · `BRIEF` · die
+gesprochene Dauer), `input_repair` (`text`), `make_export` (`PDF` · `DOCX` · `NONE`), `owner_order` (Satz nach der
+Punktreparatur → Plan wie bei den Auftragsfolgen oder `NONE`), `order_wanted` (würde das Cloud-Gehirn gefragt),
+`order_mapping` (`model` = Modelltext → `RUN:<Plan>` ohne Rückfrage · `ASK:<Plan>` erst nach „Ja“ · `REJECTED`),
+`identity_question` (`YES` · `NO`), `desk_search` (`FIND:<Name>` · `OPEN:<Name>` · `NONE`), `near_name` (`files` →
+`EXACT:` · `NEAR:<Datei>` · `NONE`).
+
+Die ersten 136 + 80 Fälle wurden vor jeder Umsetzung geschrieben und eingecheckt (`f541508c9`). Die weiteren 58 + 34
+Fälle kamen in der Fortsetzung dazu: `greeting_switch`, `identity_question`, `desk_search` und `near_name` vor dem
+Code, den sie prüfen; `absence` nach dem gesicherten Zwischenstand, der die Pause schon berechnete. Kein Fall steht in
+beiden Sätzen (der Test prüft das). Gemessen am Host, echtes Modell und Gerät `NOT_RUN`:
+
+| Lauf | Entwicklungssatz | Prüfsatz |
+|---|---|---|
+| erster Lauf auf dem gesicherten Zwischenstand (136 + 80 Fälle) | 135 / 136 | 80 / 80 |
+| erste Ausführung der neuen Fälle nach ihrer Umsetzung (58 + 34 Fälle) | 58 / 58 | 34 / 34 |
+| Endstand | 194 / 194 | 114 / 114 |
+
+Der eine Fehler des ersten Laufs war `TLK-MAP-010` (Feldfall b): „Such das PDF a und 4 Experimente“ wurde wegen des
+„und“ im Namen nicht als Suchauftrag erkannt. Behoben am Code – eine reine Suche darf ein „und“ im Namen tragen, wenn
+danach nichts wie ein zweiter Auftrag aussieht –, der Fall selbst blieb unverändert. Kein Prüffall wurde angepasst.
 
 Für `regression-missions.jsonl` und `regression-missions-check.jsonl` (Auftragsfolgen, 18.11.2026) gibt es keinen
 Vorher-Wert: einen Planer für mehrere Aufträge in einem Satz gab es nicht (der Satz ging als Ganzes an die erste
