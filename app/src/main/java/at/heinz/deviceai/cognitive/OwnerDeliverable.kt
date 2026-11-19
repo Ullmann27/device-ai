@@ -19,8 +19,11 @@ internal data class OwnerDeliverable(
     val note: String? = null,
     val createdAtMillis: Long = 0L
 ) {
-    /** [PAGE_SUMMARY]: one page of the owner's PDF, summarised and saved by the document desk. */
-    enum class Kind { NEWS_BRIEFING, ASSISTANT_REPLY, PAGE_SUMMARY }
+    /**
+     * [PAGE_SUMMARY]: one page of the owner's PDF, summarised and saved by the document desk.
+     * [DOCUMENT_DRAFT]: the summary draft of the PDF that is open in this chat, as it was last shown or edited.
+     */
+    enum class Kind { NEWS_BRIEFING, ASSISTANT_REPLY, PAGE_SUMMARY, DOCUMENT_DRAFT }
 
     init { require(title.isNotBlank() && paragraphs.any { it.isNotBlank() }) }
 
@@ -41,6 +44,29 @@ internal data class OwnerDeliverable(
     companion object {
         val LONG_DATE: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE, d. MMMM yyyy", Locale.GERMAN)
         val SHORT_DATE: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.GERMAN)
+
+        /**
+         * The summary draft of the owner's PDF [documentName] as a deliverable: the PDF's name is in the title and in
+         * the source line, which also says who wrote the draft and whether it rests on the whole text. Null when the
+         * draft holds nothing worth keeping.
+         */
+        fun ofDocumentDraft(documentName: String, text: String, complete: Boolean, cloud: Boolean?, date: LocalDate,
+                            createdAtMillis: Long): OwnerDeliverable? {
+            val paragraphs = text.split(Regex("\\n\\s*\\n")).map { it.trim() }.filter { it.isNotEmpty() }
+            if (paragraphs.sumOf { it.length } < 40) return null
+            val name = documentName.trim().take(120).ifEmpty { "Dokument" }
+            val base = name.replace(Regex("(?i)\\.pdf$"), "").trim().ifEmpty { "Dokument" }
+            // Who wrote the draft is said only when it is known; a draft shown again from the work journal names nobody.
+            val author = when (cloud) {
+                true -> ", zusammengefasst vom Cloud-Gehirn"
+                false -> ", zusammengefasst vom Sprachmodell auf dem Gerät"
+                null -> " einer Zusammenfassung"
+            }
+            val basis = if (complete) "" else " Grundlage ist ein Textauszug des Dokuments; der Rest ist nicht enthalten."
+            return OwnerDeliverable(Kind.DOCUMENT_DRAFT, "Zusammenfassung ${base.take(60).trim()}", date, paragraphs,
+                note = "Quelle: „$name“ · Entwurf$author · gespeichert am ${SHORT_DATE.format(date)} · " +
+                    "vor der Verwendung prüfen.$basis", createdAtMillis = createdAtMillis)
+        }
 
         /** Any other assistant answer of the chat as a deliverable; null when there is nothing worth keeping. */
         fun ofReply(text: String, date: LocalDate, createdAtMillis: Long): OwnerDeliverable? {

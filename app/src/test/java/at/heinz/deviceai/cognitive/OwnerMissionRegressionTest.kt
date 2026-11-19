@@ -81,6 +81,10 @@ class OwnerMissionRegressionTest {
         }
         root.listFiles { file -> file.name.endsWith(".jsonl") && !file.name.startsWith("regression-missions") }!!.sortedBy { it.name }.forEach { file ->
             cases(file.name).forEach { case ->
+                // The talk sets (19.11.2026) state themselves which sentences are a sequence of lane orders: their
+                // `owner_order` cases expect a plan and are held to it by OwnerTalkRegressionTest. Every other case
+                // of those sets – and every `owner_order` case that expects NONE – is checked here like all the rest.
+                if (case.optString("runner") == "owner_order" && case.getJSONObject("expect").opt("plan") is org.json.JSONArray) return@forEach
                 val id = file.name + ":" + case.optString("id")
                 listOf("input", "question", "utterance", "request").forEach { key ->
                     (case.opt(key) as? String)?.takeIf { it.isNotEmpty() }?.let { check(id, it) }

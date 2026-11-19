@@ -49,7 +49,23 @@ internal object OwnerLibraryCommand {
     private val polite = Regex("(?iu)^(?:(?:kannst|könntest|würdest|magst)\\s+du|ich\\s+(?:möchte|will|würde\\s+gern(?:e)?))\\s+" +
         "$COURTESY$DET$PDF\\s+$NAMED(.+?)\\s+(öffnen|aufmachen|anzeigen|zeigen|sehen|ansehen|lesen|vorlesen|suchen|" +
         "heraussuchen|raussuchen|finden)(?:\\s+bitte)?$")
-    private val where = Regex("(?iu)^(?:wo\\s+(?:ist|liegt|steckt|finde\\s+ich)|ich\\s+suche)\\s+$COURTESY$DET$PDF\\s+$NAMED(.+)$")
+    private const val WISH = "ich\\s+(?:suche|such|brauche|bräuchte|braeuchte)"
+    private const val WHICH = "(?:die|das|der|welche|welches)"
+    private val where = Regex("(?iu)^(?:wo\\s+(?:ist|liegt|steckt|finde\\s+ich)|$WISH)\\s+$COURTESY$DET$PDF\\s+$NAMED(.+)$")
+    /**
+     * Field finding 19.11.2026 (spoken): „ich schaue meinen Standort Ordner ich suche eine PDF die heißt a und 4
+     * Experimente“. The name follows „heißt“ to the end of the sentence; a few spoken words may come before „ich suche“.
+     * It is a search by name on the device (the hits are shown, nothing is opened by itself).
+     */
+    private val called = Regex("(?iu)^(?:(?:[\\p{L}\\p{N}-]+,?\\s+){0,8})?$WISH\\s+$COURTESY$DET$PDF\\s*,?\\s+$WHICH\\s+hei(?:ß|ss)t\\s+(.+)$")
+    /** „Ich brauche das PDF, das Steuerbescheid 2025 heißt“. */
+    private val calledAfter = Regex("(?iu)^$WISH\\s+$COURTESY$DET$PDF\\s*,?\\s+$WHICH\\s+(.+?)\\s+hei(?:ß|ss)t$")
+    private val searchVerbs = setOf("such", "suche", "suchen", "finde", "find")
+    /** Words that start a second order: a name said in a search may contain „und“, but not one of these after it. */
+    private val orderVerbs = setOf("öffne", "öffnen", "zeig", "zeige", "lies", "lese", "mach", "mache", "such", "suche", "finde", "find",
+        "hol", "hole", "fass", "fasse", "speicher", "speichere", "erklär", "erkläre", "sag", "sage", "schreib", "schreibe",
+        "übersetz", "übersetze", "vergleich", "vergleiche", "druck", "drucke", "starte", "start", "ruf", "rufe", "spiel", "spiele",
+        "stell", "stelle", "erstell", "erstelle", "merk", "merke", "prüf", "prüfe", "nenn", "nenne", "gib", "leg", "lege")
     private val nameFirst = Regex("(?iu)^($VERBS)\\s+$COURTESY(?:das|die|den|mein|meine)\\s+" +
         "([\\p{L}\\p{N}][\\p{L}\\p{N} _.+&-]{0,59}?)[- ]$PDF$PARTICLE$")
 
@@ -90,7 +106,8 @@ internal object OwnerLibraryCommand {
             val verbWord = verb.lowercase(Locale.GERMAN)
             // „Mach … auf“ is the only meaning of „mach“ here; the other particles belong to their own verbs.
             if (verbWord.startsWith("mach") && particle != "auf") return null
-            val name = name(raw) ?: return null
+            // A pure search may carry a name with „und“ in it („Such das PDF Max und Moritz“); an order to open may not.
+            val name = name(raw, lenient = !opens && particle == null && verbWord in searchVerbs) ?: return null
             return Open(name, opens || verbWord in openingVerbs, folder)
         }
         /** The verb particle at the end of a free name („Zeig mir das PDF Argon4 an“). */
@@ -121,10 +138,14 @@ internal object OwnerLibraryCommand {
             val name = name(rest) ?: return null
             return Open(name, opens || verb.lowercase(Locale.GERMAN) in openingVerbs, folder)
         }
+        (called.matchEntire(text) ?: calledAfter.matchEntire(text))?.let { match ->
+            val name = name(match.groupValues[2], lenient = !opens) ?: return null
+            return Open(name, opens, folder)
+        }
         where.matchEntire(text)?.let { match ->
             val (determiner, named, rest) = match.destructured
             if (determiner.startsWith("ein", ignoreCase = true) && named.isEmpty()) return null
-            val name = name(rest) ?: return null
+            val name = name(rest, lenient = !opens) ?: return null
             return Open(name, opens, folder)
         }
         nameFirst.matchEntire(text)?.let { match ->
@@ -135,14 +156,23 @@ internal object OwnerLibraryCommand {
         return null
     }
 
-    /** The file name in [raw], or null when what follows the order is not a name. */
-    private fun name(raw: String): String? {
+    /**
+     * The file name in [raw], or null when what follows the order is not a name. [lenient]: the sentence is a pure
+     * search, so one „und“ inside the name is accepted when nothing after it looks like a second order.
+     */
+    private fun name(raw: String, lenient: Boolean = false): String? {
         val name = raw.replace(trailingCourtesy, "").trim().replace(pdfSuffix, "").trim().trim(',', ';', '-', '–').trim()
         if (name.length !in 1..60 || !nameShape.matches(name)) return null
         val words = name.lowercase(Locale.GERMAN).split(Regex("\\s+")).map { it.trim(',', '.') }.filter { it.isNotEmpty() }
         if (words.isEmpty() || words.size > 6) return null
         if (words.first() in leading || pointingAdjective.matches(words.first())) return null
-        if (words.any { it in joiners } || words.all { it in generic }) return null
+        if (words.all { it in generic }) return null
+        if (words.any { it in joiners }) {
+            val at = words.indexOf("und")
+            val tail = if (at < 0) emptyList() else words.drop(at + 1)
+            if (!lenient || at <= 0 || words.count { it in joiners } != 1 || tail.size !in 1..3 ||
+                tail.any { it in generic || it in leading || it in orderVerbs }) return null
+        }
         return name
     }
 }

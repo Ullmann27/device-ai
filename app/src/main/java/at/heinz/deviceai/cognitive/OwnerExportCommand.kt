@@ -22,7 +22,9 @@ internal object OwnerExportCommand {
      * [name]: the file name the owner said, in his spelling, or null. [viaWord]: he asked to write it „in Word“ and
      * keep it as PDF. [aboutNews]: he named the news explicitly, not just „das“.
      */
-    data class Request(val format: Format, val name: String?, val viaWord: Boolean, val aboutNews: Boolean, val original: String)
+    data class Request(val format: Format, val name: String?, val viaWord: Boolean, val aboutNews: Boolean, val original: String,
+                       /** „Erstelle mir eine PDF“ without a word that points at a result ([parseMake]). */
+                       val unpointed: Boolean = false)
 
     private val saveVerbs = setOf("speicher", "speichere", "speichern", "speicherst", "abspeichern", "sichere", "sichern",
         "exportiere", "exportier", "exportieren", "ablegen", "leg", "lege", "abzuspeichern")
@@ -104,6 +106,36 @@ internal object OwnerExportCommand {
         val format = if (pdf || !word) Format.PDF else Format.DOCX
         return Request(format, name?.take(120), viaWord = pdf && word, aboutNews = words.any { it in newsWords } ||
             name?.contains("nachrichten", ignoreCase = true) == true, original = utterance.trim())
+    }
+
+    private val makeOnlyVerbs = setOf("mach", "mache", "machen", "machst", "erstell", "erstelle", "erstellen", "erstellst",
+        "erzeug", "erzeuge", "erzeugen")
+    private val makeArticles = setOf("ein", "eine", "einen")
+    private val makeReferences = setOf("davon", "daraus", "dazu", "hiervon", "hieraus", "datei", "dokument")
+    private val makeFillers = setOf("bitte", "mir", "mal", "noch", "auch", "gleich", "jetzt", "kannst", "könntest",
+        "koenntest", "würdest", "du", "einfach", "doch", "kurz", "schnell", "uns", "dann", "ja")
+    private val makeTarget = Regex("(?:^| )(?:ein|eine|einen) (" + (pdfWords + wordWords).joinToString("|") + ")(?= |$)")
+
+    /**
+     * Field finding 19.11.2026: „Erstelle bitte eine pdf“, „Mach mir eine Word-Datei dazu“ – the order to make a file
+     * of what the chat is about, said without a word that points at it. [parse] keeps refusing this form („of
+     * what?“); the caller that knows the chat decides: with a subject worth keeping it is saved, without one the
+     * owner is asked what should go into the file. Closed vocabulary: one make verb, an article with the format and
+     * polite fillers – „Erstelle eine PDF über Katzen“ or „Mach die PDF auf“ are not this order.
+     */
+    fun parseMake(utterance: String, assistantName: String? = null): Request? {
+        if (utterance.length !in 8..120 || utterance.any { it.isISOControl() }) return null
+        val text = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trimEnd('.', '!', '?', ' ')
+        if (linkOrPath.containsMatchIn(text)) return null
+        val words = text.lowercase(Locale.GERMAN).replace(Regex("[’'`´]"), "").replace(Regex("[^\\p{L}\\p{N}-]+"), " ")
+            .split(' ').map { it.trim('-') }.filter { it.isNotEmpty() }
+        if (words.size !in 3..12) return null
+        val known = makeOnlyVerbs + makeArticles + makeReferences + makeFillers + pdfWords + wordWords
+        if (words.any { it !in known } || words.count { it in makeOnlyVerbs } != 1) return null
+        val targets = makeTarget.findAll(words.joinToString(" ")).map { it.groupValues[1] }.toList()
+        if (targets.size != 1) return null
+        val format = if (targets.single() in pdfWords) Format.PDF else Format.DOCX
+        return Request(format, null, viaWord = false, aboutNews = false, original = utterance.trim(), unpointed = true)
     }
 
     private fun isPlace(candidate: String): Boolean =

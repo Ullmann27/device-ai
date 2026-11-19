@@ -113,7 +113,7 @@ internal object OwnerMissionPlanner {
     private val openIt = Regex("(?iu)^(?:öffne|öffnen|zeig|zeige)\\s+(?:mir\\s+)?(?:es|sie|ihn|das|die|diese|dieses|" +
         "(?:die|diese)\\s+(?:gefundene\\s+|gespeicherte\\s+|neue\\s+)?(?:datei|pdf|pdf-datei)|" +
         "(?:das|dieses)\\s+(?:gefundene\\s+|gespeicherte\\s+|neue\\s+)?(?:pdf|dokument|ergebnis))" +
-        "(?:\\s+(?:mir|bitte|mal|gleich|an|auf))*$|^mach(?:e)?\\s+(?:es|sie|ihn|das|die|die\\s+datei|das\\s+pdf)\\s+(?:bitte\\s+)?auf$")
+        "(?:\\s+(?:mir|bitte|mal|gleich|an|auf|dann|danach|anschließend|anschliessend))*$|^mach(?:e)?\\s+(?:es|sie|ihn|das|die|die\\s+datei|das\\s+pdf)\\s+(?:bitte\\s+)?auf$")
     private val findRecipes = setOf(OwnerTaskChainRecipes.NEWEST_FILE, OwnerTaskChainRecipes.FILE_SEARCH)
     private val counts = listOf("zwei", "drei", "vier", "fünf", "sechs")
 
@@ -178,7 +178,7 @@ internal object OwnerMissionPlanner {
     private fun singleOrder(said: String, assistantName: String?): Boolean =
         OwnerPageJobCommand.parse(said, assistantName) != null || OwnerLibraryCommand.parseOpen(said, assistantName) != null ||
             OwnerNewsCommand.parse(said, assistantName) != null || OwnerExportCommand.parse(said, assistantName) != null ||
-            OwnerShareCommand.parse(said, assistantName) != null
+            OwnerExportCommand.parseMake(said, assistantName) != null || OwnerShareCommand.parse(said, assistantName) != null
 
     /** true = of the whole-sentence parsers only the export lane takes [said], and it names the news. */
     private fun onlyNewsExport(said: String, assistantName: String?): Boolean =
@@ -204,7 +204,9 @@ internal object OwnerMissionPlanner {
         if (OwnerSendIntentParser.parse(order, assistantName) != null) return null
         if (OwnerComputerIntentParser.parse(order) != OwnerComputerIntentParser.Result.NotComputerCommand) return null
         OwnerNewsCommand.parse(order, assistantName)?.let { return OwnerMissionStep.News(order, it.topicLabel) }
-        OwnerExportCommand.parse(order, assistantName)?.let { return OwnerMissionStep.Export(order, it.format, it.name) }
+        // „Erstelle eine PDF“ without a pointing word is the same order on what the chat is about (field finding 19.11.2026).
+        (OwnerExportCommand.parse(order, assistantName) ?: OwnerExportCommand.parseMake(order, assistantName))
+            ?.let { return OwnerMissionStep.Export(order, it.format, it.name) }
         OwnerShareCommand.parse(order, assistantName)?.let { share ->
             // Without „Mail“ and without an address the channel is not said: not a step of a plan.
             return if (share.mailNamed || share.address != null) OwnerMissionStep.Mail(order, share.address, share.recipientName) else null
