@@ -104,4 +104,52 @@ class Command03FilesProjectionTest {
         assertTrue(names(projection)[0].endsWith("…"))
         assertEquals("ab.txt", names(projection)[1])
     }
+
+    /** The exact answer shape of `find_app` (AndroidInstalledAppLookup). */
+    private fun appAnswer(total: Int, vararg labels: String, schema: String = "CONTINUUM_APP_DISCOVERY_V1"): String {
+        val candidates = org.json.JSONArray()
+        labels.forEachIndexed { index, label ->
+            candidates.put(org.json.JSONObject().put("packageName", "com.example.app$index").put("label", label))
+        }
+        return org.json.JSONObject().put("schema", schema).put("readOnly", true).put("totalMatches", total)
+            .put("candidates", candidates).toString()
+    }
+
+    @Test fun anInstalledAppSearchShowsTheLabelsAndroidMatchedAndNeverAPackageName() {
+        val projection = Command03FilesProjection()
+        assertTrue(projection.accept(session, "find_app", mapOf("query" to "Kamera"), appAnswer(3, "Kamera", "Kamera Assistent")))
+        val record = projection.snapshot(session)!!
+        assertEquals("APPS", record.getString("kind"))
+        assertEquals("Kamera", record.getString("label"))
+        assertEquals("The tool's own match count, not the number of shown labels", 3, record.getInt("total"))
+        assertFalse(record.getBoolean("more"))
+        assertEquals(listOf("Kamera", "Kamera Assistent"), names(projection))
+        assertFalse("No package name leaves the app", record.toString().contains("com.example"))
+    }
+
+    @Test fun anAppSearchWithoutHitsIsARecordWithoutNamesAndAForeignAnswerIsNone() {
+        val projection = Command03FilesProjection()
+        assertTrue(projection.accept(session, "find_app", mapOf("query" to "Gibtesnicht"), appAnswer(0)))
+        assertEquals(0, projection.snapshot(session)!!.getInt("total"))
+        assertEquals(emptyList<String>(), names(projection))
+        val before = projection.snapshot(session)!!.getLong("revision")
+        // Not the tool's schema, not JSON, a count below the labels: nothing is shown and the last record stays.
+        assertFalse(projection.accept(session, "find_app", mapOf("query" to "x"), appAnswer(1, "X", schema = "OTHER")))
+        assertFalse(projection.accept(session, "find_app", mapOf("query" to "x"), "Kamera\nUhr"))
+        assertFalse(projection.accept(session, "find_app", mapOf("query" to "x"), appAnswer(1, "A", "B")))
+        assertFalse("Another app tool is not a hit list", projection.accept(session, "list_installed_apps", emptyMap(), "com.a\ncom.b"))
+        assertEquals(before, projection.snapshot(session)!!.getLong("revision"))
+    }
+
+    @Test fun appLabelsAreBoundedPlainTextWithoutDuplicates() {
+        val projection = Command03FilesProjection()
+        val labels = (1..20).map { "App $it" } + listOf("App 1", "a\u0007b", "x/y", "  ")
+        assertTrue(projection.accept(session, "find_app", mapOf("query" to "App"), appAnswer(40, *labels.toTypedArray())))
+        val shown = names(projection)
+        assertEquals(Command03FilesProjection.MAX_NAMES, shown.size)
+        assertEquals("App 1", shown[0])
+        assertEquals(shown.distinct(), shown)
+        assertTrue(projection.accept(session, "find_app", mapOf("query" to "ab"), appAnswer(2, "a\u0007b", "x/y")))
+        assertEquals("Control characters are removed and a label that could be a path is not shown", listOf("ab"), names(projection))
+    }
 }

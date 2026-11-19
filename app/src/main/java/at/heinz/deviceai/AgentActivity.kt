@@ -2427,6 +2427,8 @@ class AgentActivity : Activity() {
     private val command03ComputerWork = at.heinz.deviceai.ui.Command03ComputerWorkProjection()
     /** The stage's order rail: the open mission's steps, otherwise the running turn's steps (real events only). */
     private val command03Orders = at.heinz.deviceai.ui.Command03OrdersProjection { sessionId }
+    /** Start-up checks and info cards of the stage: empty until their providers hand real items over. */
+    private val command03Board = at.heinz.deviceai.ui.Command03StageBoard()
 
     /** PowerManager's thermal status (0..6), or null where the platform reports none. Never a temperature. */
     private fun currentThermalStatusOrNull(): Int? {
@@ -2500,6 +2502,8 @@ class AgentActivity : Activity() {
             // owner's internet mode, Android's thermal status and the battery reading of the dashboard sample.
             .put("tactical", at.heinz.deviceai.ui.Command03TacticalStrip.snapshot(claudeBrain?.claudeSelected == true,
                 internetConsent.mode.name, currentThermalStatusOrNull(), system?.batteryPercent, system?.charging))
+            .put("systemCheck", command03Board.systemCheck())
+            .put("briefingCards", command03Board.briefingCards())
             // What the approved computer task really did (tap target, text, scroll, confirmed or not) for the monitor.
             .put("computerWork", command03ComputerWork.snapshot(scope.sessionId, homeView?.state?.computer,
                 computerController?.awaitingConsent == true) ?: org.json.JSONObject.NULL)

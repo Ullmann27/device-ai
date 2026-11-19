@@ -1165,4 +1165,46 @@ class ContinuumCommand03BridgeUiTest {
         assertEquals("PAUSED", paused.getString("stage"))
         assertEquals("UNCONFIRMED", paused.getJSONArray("actions").getJSONObject(0).getString("state"))
     }
+
+    @Test fun thePageSnapshotCarriesTheOrderRailTheStatusStripAndEmptyStartUpListsUntilRealOnesExist() = withActivity { _, a ->
+        ready(a)
+        call(a, "syncCommand03HtmlState")
+        val idle = packet(a, "receive")
+        assertTrue("No step was reported, so there is no order", idle.isNull("orders"))
+        assertEquals("No provider handed checks over", "[]", idle.getJSONArray("systemCheck").toString())
+        assertEquals("No provider handed cards over", "[]", idle.getJSONArray("briefingCards").toString())
+        val strip = idle.getJSONObject("tactical")
+        assertTrue(strip.getString("brain") in setOf("LOCAL", "CLAUDE"))
+        assertTrue(strip.isNull("internet") || strip.getString("internet") in setOf("OFF", "ASK", "ALWAYS_ON"))
+        for (key in listOf("thermal", "battery", "charging")) assertTrue("$key is a reading or null, never absent", strip.has(key))
+        // A real turn on the activity's cockpit bus: its command and one running step.
+        val bus = field(a, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus
+        bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.CommandFlyIn("rail-fixture", 1L, "Wie wird das Wetter morgen?"))
+        bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.ProcessTimeline("rail-fixture", 2L, listOf(
+            at.heinz.deviceai.cockpit.ProcessStep("ack", "Auftrag angenommen", at.heinz.deviceai.cockpit.StepState.DONE),
+            at.heinz.deviceai.cockpit.ProcessStep("web", "Websuche", at.heinz.deviceai.cockpit.StepState.ACTIVE))))
+        shadowOf(Looper.getMainLooper()).idle()
+        call(a, "syncCommand03HtmlState")
+        val orders = packet(a, "receive").getJSONObject("orders")
+        assertEquals("TURN", orders.getString("source"))
+        assertEquals("Wie wird das Wetter morgen?", orders.getString("title"))
+        assertTrue(orders.getBoolean("active"))
+        assertTrue(orders.isNull("outcome"))
+        assertEquals(1, orders.getJSONArray("items").length())
+        val step = orders.getJSONArray("items").getJSONObject(0)
+        assertEquals("Websuche", step.getString("label"))
+        assertEquals("ACTIVE", step.getString("state"))
+        assertFalse("A turn id never leaves the app", orders.toString().contains("rail-fixture"))
+        // Checks and cards a provider hands over reach the same snapshot.
+        val board = field(a, "command03Board") as at.heinz.deviceai.ui.Command03StageBoard
+        assertTrue(board.setSystemCheck(listOf(at.heinz.deviceai.ui.Command03StageBoard.Check("voice", "Stimme",
+            at.heinz.deviceai.ui.Command03StageBoard.CheckState.WARN, "Sprachausgabe aus"))))
+        assertTrue(board.setBriefingCards(listOf(at.heinz.deviceai.ui.Command03StageBoard.Card("weather",
+            at.heinz.deviceai.ui.Command03StageBoard.CardKind.WEATHER, "Wetter", listOf("Linz · 4 °C")))))
+        call(a, "syncCommand03HtmlState")
+        val filled = packet(a, "receive")
+        assertEquals("WARN", filled.getJSONArray("systemCheck").getJSONObject(0).getString("state"))
+        assertEquals("weather", filled.getJSONArray("briefingCards").getJSONObject(0).getString("kind"))
+        assertEquals("info", filled.getJSONArray("briefingCards").getJSONObject(0).getString("state"))
+    }
 }

@@ -11,6 +11,8 @@ import org.json.JSONObject
  * The record carries file names only (never a path), at most [MAX_NAMES] of them, and the number of
  * result lines the tool actually returned. Nothing is synthesized: an output that does not have the
  * tool's exact line format produces no record, and a record is bound to the session that ran the tool.
+ *
+ * The same record carries the hits of the installed-app search (`find_app`, kind "APPS"): app labels only.
  */
 class Command03FilesProjection {
     private class Record(val session: String, val revision: Long, val kind: String, val label: String,
@@ -25,6 +27,7 @@ class Command03FilesProjection {
         val next = when (tool) {
             "find_files" -> found(session, arguments, output)
             "list_files" -> listed(session, arguments, output)
+            "find_app" -> apps(session, arguments, output)
             else -> null
         } ?: return false
         record = next
@@ -69,6 +72,24 @@ class Command03FilesProjection {
             names.take(MAX_NAMES).map { bounded(it, MAX_NAME) }.filter { it.isNotEmpty() })
     }
 
+    /**
+     * `find_app`: the launcher apps Android's package manager really matched (CONTINUUM_APP_DISCOVERY_V1). The
+     * record carries their visible labels only – no package name, no icon – and the tool's own match count.
+     * Any other shape, or a label that is not plain text, produces no record.
+     */
+    private fun apps(session: String, arguments: Map<String, Any?>, output: String): Record? {
+        val answer = runCatching { JSONObject(output) }.getOrNull() ?: return null
+        if (answer.optString("schema") != APP_SCHEMA) return null
+        val candidates = answer.optJSONArray("candidates") ?: return null
+        val labels = (0 until candidates.length()).map { index ->
+            candidates.optJSONObject(index)?.optString("label").orEmpty().filter { !it.isISOControl() }.trim()
+        }.filter { it.isNotEmpty() && '/' !in it && '\\' !in it }.distinct()
+        val total = answer.optInt("totalMatches", -1)
+        if (total < labels.size) return null
+        return Record(session, ++revision, "APPS", bounded(arguments["query"]?.toString().orEmpty(), MAX_LABEL),
+            total, false, labels.take(MAX_NAMES).map { bounded(it, MAX_NAME) })
+    }
+
     private fun bounded(text: String, max: Int): String {
         val clean = text.filter { !it.isISOControl() }.trim()
         if (clean.length <= max) return clean
@@ -81,6 +102,7 @@ class Command03FilesProjection {
         const val MAX_NAMES = 12
         const val MAX_NAME = 96
         const val MAX_LABEL = 80
+        private const val APP_SCHEMA = "CONTINUUM_APP_DISCOVERY_V1"
         private val LONG_ENTRY =
             Regex("""([-dlbcps])[-rwxsStT]{9}\S*\s+\d+\s+\S+\s+\S+\s+\S+\s+\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}\s+(.+)""")
     }
