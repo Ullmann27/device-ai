@@ -53,7 +53,8 @@ class OwnerSendMissionEntryTest {
         // Resolved recipient, channel, verified draft – in that order, before the press; a name, never a number.
         assertEquals(listOf(OwnerSendProgress.RecipientResolved("Thomas Muster"), OwnerSendProgress.ChannelChosen("WhatsApp"),
             OwnerSendProgress.DraftVerified), h.progress)
-        assertTrue(h.progress.none { it.toString().contains("660") || it.toString().contains("melde") })
+        // The number in any spelling – not the bare „660“, which an object's hash in toString() can contain by chance.
+        assertTrue(h.progress.none { it.toString().contains("1234567") || it.toString().contains("+43") || it.toString().contains("melde") })
     }
 
     @Test fun withoutTheGrantOnlyADraftIsPreparedAndTheGuardIsNeverAsked() {

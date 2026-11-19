@@ -118,7 +118,10 @@ class OwnerMissionPhase2FlowTest {
         assertEquals("COMPLETED", journal.getString("ended"))
         assertEquals("SENT", journal.getJSONArray("steps").getJSONObject(3).getString("state"))
         val stored = h.journalStore.document!!
-        assertFalse(stored, stored.contains("Unterlagen") || stored.contains("Anna bittet") || stored.contains("Thomas Muster") || stored.contains("660"))
+        assertFalse(stored, stored.contains("Unterlagen") || stored.contains("Anna bittet") || stored.contains("Thomas Muster") ||
+            // The contact's phone number in any spelling. Not the bare „660“: the journal's random mission id and its
+            // hashes are hex strings that contain those three digits by chance (it failed that way on GitHub).
+            stored.contains("1234567") || stored.contains("+43 660") || stored.contains("43660"))
         // No mail data in what the sequence itself said.
         assertTrue(h.missionSaid.none { it.contains("Anna") || it.contains("Recht") || it.contains("Unterlagen") })
     }
