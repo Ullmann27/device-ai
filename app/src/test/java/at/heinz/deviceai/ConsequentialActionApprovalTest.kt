@@ -15,7 +15,9 @@ class ConsequentialActionApprovalTest {
         "source" to "/storage/emulated/0/Download/a.txt", "destination" to "/storage/emulated/0/Documents/a.txt",
         "query" to "wetter wien", "url" to "https://example.org/", "page" to "wifi", "seconds" to 5,
         "snapshotId" to "snapshot-fixture", "previewId" to "preview-fixture",
-        "planDigest" to "0".repeat(64), "undoId" to "undo-fixture"
+        "planDigest" to "0".repeat(64), "undoId" to "undo-fixture",
+        // In-process device tools (19.11.2026): a document to create and a text for the clipboard.
+        "title" to "Einkauf", "content" to "# Markt\n- Milch", "text" to "Notiz"
     )
 
     private fun proposalFor(spec: ToolSpec): ToolProposal {

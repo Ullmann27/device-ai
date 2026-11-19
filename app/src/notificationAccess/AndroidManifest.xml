@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Optional overlay, merged only with -PcontinuumNotificationAccess=true. An APK that declares a notification
+     listener is blocked by Google Play Protect when it is installed from a browser, messenger or file manager, so
+     the normal owner build leaves it out. A build with this overlay has to be installed with adb. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Explicit Android notification-access opt-in; announces only apps the owner enabled. -->
+        <service android:name="at.heinz.deviceai.notifications.ContinuumNotificationListener"
+            android:exported="true" android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter>
+        </service>
+    </application>
+</manifest>

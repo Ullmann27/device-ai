@@ -68,10 +68,45 @@ class PdfDocumentIntake(private val resolver: ContentResolver) {
         }
     }
 
+    /** One page read on its own ([readPage]). Only [Text] carries text; the others say why there is none. */
+    sealed interface PageRead {
+        data class Text(val text: String) : PageRead
+        data object NoText : PageRead
+        data object NeedsAndroid15 : PageRead
+        data class Missing(val pageCount: Int) : PageRead
+    }
+
+    /**
+     * The text layer of page [page] (1-based) alone, straight from the file – for a page the bounded [read] did not
+     * keep in full. At most [MAX_PAGE_CHARS] characters, cleaned like [boundedText]. Call it off the UI thread.
+     */
+    fun readPage(uri: Uri, page: Int): PageRead {
+        val descriptor = resolver.openFileDescriptor(uri, "r") ?: throw IOException("Die Datei lässt sich nicht öffnen.")
+        descriptor.use { fd ->
+            PdfRenderer(fd).use { pdf ->
+                val count = pdf.pageCount
+                if (page !in 1..count) return PageRead.Missing(count)
+                if (Build.VERSION.SDK_INT < 35) return PageRead.NeedsAndroid15
+                val text = pageText(pdf, page - 1)
+                return if (text.isBlank()) PageRead.NoText else PageRead.Text(text)
+            }
+        }
+    }
+
+    @RequiresApi(35)
+    private fun pageText(pdf: PdfRenderer, index: Int): String =
+        boundedText(sequenceOf(pdf.openPage(index).use { page -> page.textContents.joinToString("\n") { it.text } }), MAX_PAGE_CHARS)
+
     private fun meta(uri: Uri): Pair<String, Long?> {
         var name: String? = null
         var size: Long? = null
-        runCatching {
+        // A file read by path (the document desk's local search) has no provider to ask: name and size are the file's own.
+        if (uri.scheme == "file") uri.path?.let { path ->
+            val file = java.io.File(path)
+            name = file.name
+            size = file.length().takeIf { it > 0L }
+        }
+        else runCatching {
             resolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)?.use { c ->
                 if (c.moveToFirst()) {
                     val n = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -114,6 +149,7 @@ class PdfDocumentIntake(private val resolver: ContentResolver) {
     companion object {
         const val MAX_TEXT_CHARS = 12_000
         const val MAX_TEXT_PAGES = 30
+        const val MAX_PAGE_CHARS = 20_000
         const val MAX_PAGE_WIDTH_PX = 1_600
         const val MAX_PAGE_HEIGHT_PX = 2_400
 

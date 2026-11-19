@@ -450,7 +450,10 @@ class BoundedAgentOrchestrator(
                             val priorReceipt = toolGate.recordProposal(invocation)
                             val requiresReview = priorReceipt != null &&
                                 priorReceipt.state !in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)
-                            val approvalRequested = risk != Risk.READ_ONLY && !requiresReview
+                            // A call the gate would refuse anyway (bridge not running, grant or consent missing) is
+                            // never put before the owner for approval; the gate itself rejects it below.
+                            val refusedBeforeDispatch = !requiresReview && toolGate.refusalBeforeDispatch(invocation.request) != null
+                            val approvalRequested = risk != Risk.READ_ONLY && !requiresReview && !refusedBeforeDispatch
                             val approval = if (!approvalRequested) {
                                 AgentToolApproval(false)
                             } else {
@@ -502,6 +505,25 @@ class BoundedAgentOrchestrator(
                                         "output-sha256=${callProofs.last().outputSha256 ?: "none"}")
                             }
                             transition(AgentState.OBSERVE_RESULT, "Tool result status: ${lastRecord.status}.")
+                            execution.refusal?.let { refusal ->
+                                // Nothing was dispatched and nothing is uncertain: a precondition is missing (Shizuku
+                                // not running, Android grant or owner consent missing). The turn ends with exactly
+                                // that reason and the way out – no model paraphrase, no retry, nothing blocked.
+                                emit(CognitiveWorkState.BLOCKED, invocation.id)
+                                return finishThinking(AgentRunResult(refusal.message, AgentState.OBSERVE_RESULT, audit.toList(),
+                                    null, refusal.message, proof()))
+                            }
+                            if (lastRecord.outcomeUncertain && risk == Risk.READ_ONLY && !requiresReview &&
+                                !execution.replayed && !execution.journalUnavailableBeforeDispatch) {
+                                // Field finding Fold7 (19.11.2026): a file search that failed after its start was
+                                // reported as „Werkzeugausgang UNKNOWN … bis zur Besitzerprüfung blockiert“, twice,
+                                // with no way out. A read-only tool only reads: an unknown end leaves no effect
+                                // behind and needs no owner review. The turn ends with what really happened.
+                                val failed = ReadOnlyToolFailure.message(proposal.toolName, lastRecord.status)
+                                emit(CognitiveWorkState.BLOCKED, invocation.id)
+                                return finishThinking(AgentRunResult(failed, AgentState.OBSERVE_RESULT, audit.toList(),
+                                    null, failed, proof()))
+                            }
                             if (lastRecord.outcomeUncertain || requiresReview || execution.replayed) {
                                 // Do not let a model reissue an unresolved effect under
                                 // a new call id or turn a replay into fresh experience.

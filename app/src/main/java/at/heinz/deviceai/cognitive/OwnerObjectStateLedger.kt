@@ -86,6 +86,38 @@ internal class OwnerObjectStateLedger {
         return body.takeIf { updated }
     }
 
+    /**
+     * „Nein, ich meinte blau.“ / „Nein, blau.“ / „Korrektur: Sie ist blau.“ – a correction that names only
+     * the new colour. It used to be dropped as an unsupported sentence, so the old colour kept being
+     * reported as the current one (owner case „Werkzeugkiste“).
+     *
+     * The colour is bound only when exactly one object can be meant: the single colour stated in the
+     * directly preceding owner message, or – when that message stated none – the only coloured object
+     * of the conversation. With several possible objects nothing is chosen: the candidates of the
+     * preceding message are marked uncertain and the correction is listed as not assigned, so the
+     * answer asks for the object instead of presenting a superseded value as current.
+     */
+    private fun ellipticalCorrectionBody(text: String): String? {
+        if (incomplete || items.isEmpty() || text.length > 160) return null
+        val match = ellipticalCorrection.matchEntire(text.trim()) ?: return null
+        if (match.groupValues[1].isEmpty() && match.groupValues[2].isEmpty()) return null
+        val word = tokens(match.groupValues[3]).singleOrNull() ?: return null
+        if (color(word.low) == null) return null
+        val coloured = items.values.flatMap { item ->
+            item.slots.values.filter { it.attr == Attr.COLOR }.map { item to it }
+        }
+        val adjacent = coloured.filter { (_, slot) -> slot.events.lastOrNull()?.message == message }
+        val target = adjacent.singleOrNull() ?: coloured.singleOrNull()?.takeIf { adjacent.isEmpty() }
+        if (target != null) return "${target.first.noun} ist ${word.raw}"
+        if (coloured.isNotEmpty()) {
+            adjacent.forEach { (_, slot) ->
+                slot.uncertain = "Korrektur „${word.raw}“ ohne eindeutigen Gegenstand – bitte nenne den Gegenstand"
+            }
+            rememberUnresolved("Korrektur „${word.raw}“ (Nachricht ${message + 1}) ohne eindeutigen Gegenstand")
+        }
+        return null
+    }
+
     private fun copy(): OwnerObjectStateLedger = OwnerObjectStateLedger().also { c ->
         items.forEach { (k, v) -> c.items[k] = v.copy() }
         c.message = message; c.incomplete = incomplete; c.unresolved += unresolved
@@ -378,7 +410,7 @@ internal class OwnerObjectStateLedger {
         val statement = original.replaceFirst(
             Regex("""(?iu)^(?:merke|merk)\s+dir\s+für\s+(?:dieses|unser)\s+gespräch\s*:\s*(?=\p{L})"""), ""
         )
-        val clean = objectCorrectionBody(statement) ?: statement
+        val clean = objectCorrectionBody(statement) ?: ellipticalCorrectionBody(statement) ?: statement
         if (quotedOrReported.containsMatchIn(clean)) return
         message++
         val toks = tokens(clean)
@@ -1012,6 +1044,11 @@ internal class OwnerObjectStateLedger {
     private companion object {
         val objectCorrection = Regex(
             "(?iu)^(?:nein[,!:]?\\s+)?(?:ich (?:meinte|meine)|gemeint war)\\s+(.+)$")
+        /** Group 1: rejection cue, group 2: „ich meinte/sondern …“, group 3: the bare new value. */
+        val ellipticalCorrection = Regex(
+            "(?iu)^((?:nein|nee|nö|falsch|quatsch|korrektur|berichtigung|sorry|entschuldigung|stimmt\\s+nicht|doch\\s+nicht)" +
+                "\\s*[,!.:;–-]?\\s+)?((?:ich\\s+(?:meinte|meine|wollte\\s+sagen)|gemeint\\s+war|sondern|vielmehr|eigentlich)" +
+                "\\s*[,:]?\\s+)?(?:(?:sie|er|es|die|der|das)\\s+ist\\s+)?(\\p{L}+)\\s*[.!]*$")
         val correctionActions = setOf("öffne", "öffnen", "starte", "installiere", "lösche", "sende", "schicke",
             "schick", "suche", "recherchiere", "ignoriere", "kopiere", "kaufe", "bestelle")
         val correctionQualification = Regex(

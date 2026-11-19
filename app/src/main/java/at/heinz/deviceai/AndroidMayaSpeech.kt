@@ -14,12 +14,22 @@ import java.util.Base64
 import javax.net.ssl.HttpsURLConnection
 
 internal class ElevenLabsPcmRequest(
-    private val connection: HttpsURLConnection = URL(ENDPOINT).openConnection() as HttpsURLConnection
+    private val connection: HttpsURLConnection = URL(ENDPOINT).openConnection() as HttpsURLConnection,
+    /** Voice, model and prosody of this request; the default is exactly the former Maya request. */
+    private val spec: at.heinz.deviceai.voice.ElevenLabsSpec = FORMER
 ) : MayaSpeech.Request {
     companion object {
         const val ENDPOINT = "https://api.elevenlabs.io/v1/text-to-speech/" +
             MayaSpeech.VOICE_ID + "/with-timestamps?output_format=pcm_24000"
         const val MAX_JSON_BYTES = (MayaSpeech.MAX_PCM_BYTES + 2) / 3 * 4 + 128_000
+        val FORMER = at.heinz.deviceai.voice.VoiceProfiles.elevenLabs(at.heinz.deviceai.voice.VoiceProfileSelection())
+
+        /** The with-timestamps endpoint of [spec]'s voice (same billing per character as plain synthesis). */
+        fun endpoint(spec: at.heinz.deviceai.voice.ElevenLabsSpec): String =
+            "https://api.elevenlabs.io/v1/text-to-speech/" + spec.voiceId + "/with-timestamps?output_format=pcm_24000"
+
+        fun forSpec(spec: at.heinz.deviceai.voice.ElevenLabsSpec) =
+            ElevenLabsPcmRequest(URL(endpoint(spec)).openConnection() as HttpsURLConnection, spec)
     }
     @Volatile private var closed = false
 
@@ -38,9 +48,7 @@ internal class ElevenLabsPcmRequest(
             setRequestProperty("Content-Type", "application/json")
             setRequestProperty("Accept", "application/json")
         }
-        val body = JSONObject().put("text", text).put("model_id", "eleven_multilingual_v2")
-            .put("voice_settings", JSONObject().put("stability", 0.5).put("similarity_boost", 0.75)
-                .put("style", 0.0).put("use_speaker_boost", true)).toString().toByteArray(Charsets.UTF_8)
+        val body = at.heinz.deviceai.voice.VoiceProfiles.requestBody(text, spec).toString().toByteArray(Charsets.UTF_8)
         connection.setFixedLengthStreamingMode(body.size)
         check(!closed && allowed())
         connection.outputStream.use { check(!closed && allowed()); it.write(body) }

@@ -83,10 +83,45 @@ class OwnerComputerIntentParserTest {
         assertTrue(OwnerComputerIntentParser.parse("Schreibe Anna auf WhatsApp") is OwnerComputerIntentParser.Result.Ask)
     }
 
+    /**
+     * A tail the lane cannot carry out never falls back to a plain opening. Since 19.11.2026 (review finding B5) a tail
+     * that is a FURTHER order – a connector and an imperative – is no refusal of this lane any more: the sentence is
+     * handed on (NotComputerCommand), so the planner reads both orders instead of the turn ending here.
+     */
     @Test fun unsupportedTailNeverFallsBackToOpening() {
-        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp und lösche Anna") is OwnerComputerIntentParser.Result.Unsupported)
-        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp und suche Anna und sende Hallo") is OwnerComputerIntentParser.Result.Unsupported)
+        for (request in listOf("Öffne WhatsApp und lösche Anna", "Öffne WhatsApp und suche Anna und sende Hallo")) {
+            assertSame(request, OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse(request))
+        }
         assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp nicht") is OwnerComputerIntentParser.Result.Unsupported)
+        // A tail without an order verb is still this lane's refusal.
+        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp und Facebook") is OwnerComputerIntentParser.Result.Unsupported)
+        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp mit dem Chat von Anna") is OwnerComputerIntentParser.Result.Unsupported)
+    }
+
+    /** Review finding B5: a second order is neither a dead end nor search text. */
+    @Test fun aFurtherOrderInTheSentenceHandsItOnInsteadOfEndingTheTurnOrTypingIt() {
+        for (request in listOf(
+            "Öffne bitte WhatsApp und schreib meinem Vater guten Morgen.",
+            "Suche in WhatsApp nach Anna und schreib ihr Hallo",
+            "Öffne WhatsApp und suche Anna, dann schick ihr das PDF",
+            "Suche in Gmail nach Rechnung und danach speicher sie als PDF",
+            "Öffne Excel und erstell eine Tabelle",
+            "Öffne Kamera und mach ein Foto",
+            "Öffne Chrome und suche Wetter Wien und schick es Anna",
+            "Schreib Anna und ruf dann Bernd an auf WhatsApp"
+        )) assertSame(request, OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse(request))
+        // The lane's own orders are untouched: „und“ without an imperative belongs to the search text.
+        assertEquals("Anna", ready("Öffne WhatsApp und suche Anna").query)
+        assertEquals("Anna und Bernd", ready("Suche in WhatsApp nach Anna und Bernd").query)
+        assertEquals("Rechnung und Mahnung", ready("Suche in Gmail nach Rechnung und Mahnung").query)
+        assertEquals("Angebot und Suche", ready("Suche in Gmail nach Angebot und Suche").query)
+        // Dictated text after the colon is text, whatever it says.
+        assertEquals("Hallo und öffne dann Chrome", ready("Schreib Anna auf WhatsApp: Hallo und öffne dann Chrome").draft)
+        // A negated order of this lane stays a refusal, also with a second order behind it.
+        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp nicht und schreib Anna") is OwnerComputerIntentParser.Result.Unsupported)
+        // No query of this lane ever carries an order.
+        for (request in listOf("Suche in WhatsApp nach Anna und Bernd", "Öffne Kontakte und such nach Bernd Beispiel"))
+            assertFalse(request, OwnerVerbLexicon.hasFurtherOrder(checkNotNull(ready(request).query)))
     }
 
     @Test fun ordinaryConversationIsNotAComputerOrder() {
@@ -101,9 +136,15 @@ class OwnerComputerIntentParserTest {
     }
 
     @Test fun allRequestedAppsCanOpenWithoutPretendingEditors() {
-        for (app in ComputerApp.entries) assertEquals(app, ready("Öffne ${app.discoveryQuery}").app)
+        // Gmail is the one target without a plain open of its own: see gmailIsATargetForSearchWhileItsPlainOpenStaysWithTheAppLane.
+        for (app in ComputerApp.entries) {
+            if (app == ComputerApp.GMAIL) assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+                OwnerComputerIntentParser.parse("Öffne ${app.discoveryQuery}"))
+            else assertEquals(app, ready("Öffne ${app.discoveryQuery}").app)
+        }
         assertEquals(ComputerGoal.OPEN_DOWNLOADS, ready("Öffne den Download-Ordner").goal)
-        assertTrue(OwnerComputerIntentParser.parse("Öffne Word und bearbeite den Vertrag") is OwnerComputerIntentParser.Result.Unsupported)
+        // „bearbeite den Vertrag“ is a further order (19.11.2026): never an editor of this lane, and no dead end.
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse("Öffne Word und bearbeite den Vertrag"))
     }
 
     @Test fun systemAndEverydayAppsUseTheExistingOwnerApprovalPath() {
@@ -148,8 +189,9 @@ class OwnerComputerIntentParserTest {
         }
         assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
             OwnerComputerIntentParser.parse("Wechsle zu irgendeiner anderen App"))
-        assertTrue(OwnerComputerIntentParser.parse("Wechsle zu Chrome und lösche Daten")
-            is OwnerComputerIntentParser.Result.Unsupported)
+        // A further order after the switch is handed on (19.11.2026); it never becomes a plan of this lane.
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+            OwnerComputerIntentParser.parse("Wechsle zu Chrome und lösche Daten"))
     }
 
     @Test fun ambiguityAndOversizedTextDoNotProduceExecutablePlans() {
@@ -194,8 +236,14 @@ class OwnerComputerIntentParserTest {
                 "Wechsle keinesfalls zu ${app.discoveryQuery}",
                 "Nicht ${app.discoveryQuery} öffnen",
                 "Suche in ${app.discoveryQuery} nicht nach Anna"
-            )) assertTrue(request, OwnerComputerIntentParser.parse(request)
-                is OwnerComputerIntentParser.Result.Unsupported)
+            )) {
+                val parsed = OwnerComputerIntentParser.parse(request)
+                // A negated order never becomes a plan. Gmail's plain open is not this lane's order at all, so its
+                // negation is not either – the app lane decides with the same negation; its search is refused here.
+                if (app == ComputerApp.GMAIL && !request.startsWith("Suche")) assertSame(request,
+                    OwnerComputerIntentParser.Result.NotComputerCommand, parsed)
+                else assertTrue(request, parsed is OwnerComputerIntentParser.Result.Unsupported)
+            }
         }
         assertTrue(OwnerComputerIntentParser.parse("Schreibe keine Nachricht an Anna in WhatsApp: Hallo")
             !is OwnerComputerIntentParser.Result.Ready)
@@ -211,6 +259,33 @@ class OwnerComputerIntentParserTest {
                     is OwnerComputerIntentParser.Result.Unsupported)
             }
         }
+    }
+
+    @Test fun theNewAppRoutesUseTheExistingScopedComputerPlans() {
+        assertEquals(ComputerApp.TIKTOK, ready("Öffne Tik Tok").app)
+        assertEquals(ComputerApp.SMS, ready("Öffne SMS-App").app)
+        assertEquals(ComputerGoal.SEARCH, ready("Suche in Gmail nach Beispiel").goal)
+        assertEquals(ComputerApp.CONTACTS, ready("Suche in Kontakte nach Beispiel").app)
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+            OwnerComputerIntentParser.parse("Schick das per Gmail an anna@example.org"))
+        assertTrue(OwnerComputerIntentParser.parse("Sende eine Nachricht an Anna per SMS: Hallo")
+            is OwnerComputerIntentParser.Result.Unsupported)
+    }
+
+    /**
+     * Gmail is a target for work inside the app (a search). Its plain open keeps the app lane, which starts the
+     * installed app directly and where a name that speech recognition broke is repaired first (UND-006, UND-018).
+     */
+    @Test fun gmailIsATargetForSearchWhileItsPlainOpenStaysWithTheAppLane() {
+        for (plain in listOf("Öffne Gmail", "Öffne G Mail", "Kannst du Gmail öffnen", "Gmail öffnen", "Starte Gmail bitte"))
+            assertSame(plain, OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse(plain))
+        assertEquals(ComputerApp.GMAIL, ready("Suche in Gmail nach Beispiel").app)
+        ready("Öffne Gmail und suche nach Rechnung").let {
+            assertEquals(ComputerApp.GMAIL, it.app); assertEquals(ComputerGoal.SEARCH, it.goal)
+        }
+        // The other new targets open as the Code71 order set them.
+        assertEquals(ComputerGoal.OPEN, ready("Öffne Tik Tok").goal)
+        assertEquals(ComputerGoal.OPEN, ready("Öffne SMS-App").goal)
     }
 
     @Test fun draftBodyNegationDoesNotCancelTheOwnerCommand() {

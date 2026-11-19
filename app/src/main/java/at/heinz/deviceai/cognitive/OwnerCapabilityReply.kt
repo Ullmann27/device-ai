@@ -15,7 +15,9 @@ internal data class OwnerCapabilitySnapshot(
     val failedTasks: Int? = null,
     val builderRunning: Boolean? = null,
     val selectedBot: Boolean? = null,
-    val botTurnActive: Boolean? = null
+    val botTurnActive: Boolean? = null,
+    /** true while the owner's cloud brain answers: the overview then names no on-device model as the one in use. */
+    val cloudBrain: Boolean = false
 ) {
     enum class ModelState { UNKNOWN, NOT_LOADED, LOADING, READY, GENERATING, UNLOADING, FAILED }
 }
@@ -47,7 +49,7 @@ internal object OwnerCapabilityReply {
     }
 
     /** Only the model line: which local model is actually loaded, never a guess. */
-    fun describeModel(s: OwnerCapabilitySnapshot): String = when (s.modelState) {
+    fun describeModel(s: OwnerCapabilitySnapshot): String = if (s.cloudBrain) OwnerBrainIdentity.CAPABILITY_LINE else when (s.modelState) {
             OwnerCapabilitySnapshot.ModelState.UNKNOWN -> "Lokales Sprachmodell: Laufzeitstatus unbekannt."
             OwnerCapabilitySnapshot.ModelState.NOT_LOADED -> "Lokales Sprachmodell: keines geladen. Der Startkern ersetzt kein frei formulierendes Sprachmodell."
             OwnerCapabilitySnapshot.ModelState.LOADING -> "Lokales Sprachmodell: wird geladen und ist noch nicht bereit."

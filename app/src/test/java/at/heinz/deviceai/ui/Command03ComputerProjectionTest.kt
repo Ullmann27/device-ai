@@ -148,6 +148,27 @@ class Command03ComputerProjectionTest {
         assertTrue(projection.drawn(latestFrame().acknowledgement, true))
     }
 
+    @Test fun aFramePacketCarriesTheMeasuredGeometryOfExactlyThatFrameAndAStatusPacketCarriesNone() {
+        val crop = LiveTargetBounds(.1f, .2f, .9f, .8f)
+        assertTrue(holder.offer(LiveFrameMeta(7, now, 320, 240, binding.targetPackage, 12, false,
+            observationRevision = 5, sourceViewport = crop), 1) is LiveFrameOffer.Accepted)
+        val sourceSequence = holder.status(now).sequence
+        projection.tick(true); finishEncoding()
+        val frame = latestFrame()
+        assertEquals(sourceSequence, frame.sourceSequence)
+        assertEquals(5L, frame.observationRevision)
+        assertEquals(crop, frame.viewport)
+        assertEquals("com.example.target", frame.binding?.targetPackage)
+        // Without a fresh frame only the state is reported: no geometry of an older image is repeated.
+        now += 1_600_000_000
+        projection.tick(true)
+        val status = packets.last()
+        assertNull(status.frame)
+        assertNull(status.sourceSequence)
+        assertNull(status.viewport)
+        assertNull(status.observationRevision)
+    }
+
     @Test fun malformedOrOversizeEncodedImagesNeverSatisfyTheTransportBudget() {
         assertFalse(Command03EncodedFrame(641, 240, byteArrayOf(-1, -40, -1, -39)).valid())
         assertFalse(Command03EncodedFrame(320, 240, ByteArray(131_073)).valid())

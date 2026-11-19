@@ -1,0 +1,75 @@
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-001", "input": "Jarvis, mach bitte mein Handy sauber", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-002", "input": "Bereinige mal mein Smartphone", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-003", "input": "Könntest du mein Telefon aufräumen?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-004", "input": "Entferne bitte die überflüssigen Dateien", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-005", "input": "Lösch den ganzen Datenmüll", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-006", "input": "Räum endlich mal mein Handy auf", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-007", "input": "Mach mal Platz auf meinem Handy", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-008", "input": "Bereinige bitte den Speicher", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-009", "input": "Putz mein Handy", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-010", "input": "Säubere meinen Handyspeicher", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-011", "input": "Kannst du mein Handy entrümpeln?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN"}, "id": "DCC-012", "input": "Lösch die alten unnötigen Dateien", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-013", "input": "Was verbraucht so viel Speicher?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-014", "input": "Schau mal, was auf meinem Handy so viel Platz wegnimmt", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-015", "input": "Wieso ist mein Speicher schon wieder voll?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-016", "input": "Überprüf meinen Speicherplatz", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-017", "input": "Was belegt so viel Speicherplatz?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-018", "input": "Speicher prüfen", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-019", "input": "Untersuch meinen Speicher", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-020", "input": "Schau nach, warum mein Handy so voll ist", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DEEP_CLEAN"}, "id": "DCC-021", "input": "Mach bitte eine Tiefenreinigung", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DEEP_CLEAN"}, "id": "DCC-022", "input": "Führ eine gründliche Bereinigung durch", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DEEP_CLEAN"}, "id": "DCC-023", "input": "Säubere mein Handy gründlich", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCC-024", "input": "Starte eine Tiefenanalyse", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCC-025", "input": "Such nach doppelten Dateien", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCC-026", "input": "Finde die Platzfresser", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "OPTIMISE"}, "id": "DCC-027", "input": "Optimiere bitte mein Smartphone", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "OPTIMISE"}, "id": "DCC-028", "input": "Mach mein Telefon wieder schneller", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "OPTIMISE"}, "id": "DCC-029", "input": "Warum ist mein Handy gerade so träge?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "OPTIMISE"}, "id": "DCC-030", "input": "Könntest du mein Handy optimieren?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "TARGETED:APKS"}, "id": "DCC-031", "input": "Lösch die APKs", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "TARGETED:DUPLICATES"}, "id": "DCC-032", "input": "Entferne die doppelten Downloads", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "TARGETED:PARTIAL"}, "id": "DCC-033", "input": "Lösch die unvollständigen Downloads", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "TARGETED:NAME:video 2.mp4"}, "id": "DCC-034", "input": "Lösch die Datei Video 2.mp4", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "TARGETED:PARTIAL|NO_DELETE"}, "id": "DCC-035", "input": "Zeig mir die abgebrochenen Downloads", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "REPORT"}, "id": "DCC-036", "input": "Wie viel Speicher ist frei geworden?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "REPORT"}, "id": "DCC-037", "input": "Wieviel hast du gelöscht?", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "RESTORE"}, "id": "DCC-038", "input": "Mach das Löschen rückgängig", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "RESTORE"}, "id": "DCC-039", "input": "Hol das Gelöschte zurück", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "PANEL"}, "id": "DCC-040", "input": "Zeig mir die Speicherbereinigung", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-041", "input": "Bereinige mein Handy, aber lösch noch nichts", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "ANALYSE"}, "id": "DCC-042", "input": "Räum mein Handy auf, nur prüfen", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCC-043", "input": "Mach eine Tiefenbereinigung, nur schauen", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN|KEEP:PHOTOS"}, "id": "DCC-044", "input": "Bereinige mein Handy, behalte die Bilder", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN|KEEP:VIDEOS"}, "id": "DCC-045", "input": "Mach mein Handy sauber, aber lass die Videos da", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DEEP_CLEAN|KEEP:DOWNLOADS"}, "id": "DCC-046", "input": "Tiefenbereinigung, aber die Downloads bleiben", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "SAFE_CLEAN|KEEP:DOCUMENTS"}, "id": "DCC-047", "input": "Bereinige meinen Speicher bis auf die PDFs", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "DECLINE"}, "id": "DCC-048", "input": "Räum mein Handy nicht auf", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "CLARIFY"}, "id": "DCC-049", "input": "Lösch alle meine Dateien", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "CLARIFY"}, "id": "DCC-050", "input": "Lösch die Videos", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "mixed", "expect": {"route": "CLARIFY"}, "id": "DCC-051", "input": "Aufräumen", "note": "zurückgehaltener Prüfsatz", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-052", "input": "Lösch die SMS", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-053", "input": "Räum die Garage auf", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-054", "input": "Putz die Brille", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"keeps": "DIAGNOSIS", "route": "NONE"}, "id": "DCC-055", "input": "Systemdiagnose machen", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"keeps": "CACHE_PREVIEW", "route": "NONE"}, "id": "DCC-056", "input": "Bereinige meinen Cache bitte", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-057", "input": "Wie räume ich meinen Speicher auf?", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-058", "input": "Sie sagte, mach dein Handy sauber", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-059", "input": "Lösch das Foto im Chat", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-060", "input": "Mach den Papierkorb leer", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-061", "input": "Lösch meinen Verlauf", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-062", "input": "Optimiere den Text", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-063", "input": "Was ist ein Cache?", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-064", "input": "Mach die Datei kleiner", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCC-065", "input": "Lösch die Kontakte von Max", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "reply", "expect": {"reply": "PICK:2"}, "id": "DCC-066", "input": "die zweite", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "PICK:1,2,4"}, "id": "DCC-067", "input": "1, 2 und 4", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "ALL"}, "id": "DCC-068", "input": "alle davon", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "NONE_OF_THEM"}, "id": "DCC-069", "input": "gar keine", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "STOP"}, "id": "DCC-070", "input": "halt", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "YES"}, "id": "DCC-071", "input": "ja bitte", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "NO"}, "id": "DCC-072", "input": "lieber nicht", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "SHOW:LARGE"}, "id": "DCC-073", "input": "zeig mir die größten", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "KEEP:VIDEOS"}, "id": "DCC-074", "input": "behalte die Videos", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "COUNT:4"}, "id": "DCC-075", "input": "die vier", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}

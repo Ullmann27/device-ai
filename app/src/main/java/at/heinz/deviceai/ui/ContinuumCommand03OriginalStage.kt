@@ -42,9 +42,14 @@ internal class ContinuumCommand03OriginalStage(
         const val ASSET_PATH = "/assets/continuum-command03/"
         const val INDEX = "https://" + LOCAL_HOST + ASSET_PATH + "index.android.html"
         private val SAFE_PATH = Regex("[A-Za-z0-9_./-]{1,200}")
+        private val FRAME_PROBE_COMMANDS = setOf("start", "read", "stop")
+        /** The tail of a running answer the page shows as its draft row (native-bridge.js keeps the same bound). */
+        const val MAX_DRAFT_CHARS = 6_000
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
             "research", "agents", "memory", "device", "settings", "settings-voice", "settings-model",
-            "settings-internet", "settings-appearance", "voice-input", "voice-input-long-press", "stop")
+            "settings-internet", "settings-appearance", "voice-input", "voice-input-long-press", "stop",
+            // Code73: the work scene's storage action opens the native panel „Speicher & Bereinigung“.
+            "storage-clean")
         private fun denied(): WebResourceResponse = WebResourceResponse(
             "text/plain", "UTF-8", 403, "Forbidden", emptyMap(),
             ByteArrayInputStream(ByteArray(0))
@@ -153,7 +158,9 @@ internal class ContinuumCommand03OriginalStage(
             .put("sequence", packet.sequence).put("active", packet.active)
             .put("status", if (packet.frame != null && !live) "PAUSED" else packet.status)
             .put("reason", packet.reason)
-        packet.binding?.let { data.put("taskId", it.taskId).put("captureSession", it.captureSession.toString()) }
+        // The monitor's title bar names the bound target: the package Android captures, nothing inferred.
+        packet.binding?.let { data.put("taskId", it.taskId).put("captureSession", it.captureSession.toString())
+            .put("targetPackage", it.targetPackage) }
         packet.sourceEpoch?.let { data.put("sourceEpoch", it) }
         if (live) {
             val encoded = requireNotNull(image)
@@ -161,6 +168,11 @@ internal class ContinuumCommand03OriginalStage(
                 android.util.Base64.encodeToString(encoded.jpeg, android.util.Base64.NO_WRAP))
                 .put("width", encoded.width).put("height", encoded.height)
                 .put("ageMs", packet.ageMs).put("staleAfterMs", packet.staleAfterMs)
+            // Measured geometry of this very frame, so a real dispatched action can be marked on the shown image.
+            packet.sourceSequence?.takeIf { it >= 0 }?.let { data.put("sourceSequence", it) }
+            packet.observationRevision?.takeIf { it >= 0 }?.let { data.put("observationRevision", it) }
+            packet.viewport?.let { data.put("viewport", JSONArray().put(it.left.toDouble()).put(it.top.toDouble())
+                .put(it.right.toDouble()).put(it.bottom.toDouble())) }
             computerFrame = packet.acknowledgement
             computerFrameDeadline = System.nanoTime() + remaining * 1_000_000
         }
@@ -297,12 +309,37 @@ internal class ContinuumCommand03OriginalStage(
         evaluateJavascript("window.ContinuumNative?.message($data);", null)
     }
 
+    /**
+     * The answer while the on-device model is still writing it: one provisional row in the page's feed. "" removes
+     * it. Never queued – a draft for a page that is not ready is simply not shown; the checked answer follows as a
+     * [presentMessage]. true = handed to the page.
+     */
+    fun presentDraft(scope: Command03Binding, text: String): Boolean {
+        if (disposed || scope != binding || !pageReady) return false
+        val data = envelope(scope).put("text", Command03BridgeContract.messageText(text.takeLast(MAX_DRAFT_CHARS)))
+        evaluateJavascript("window.ContinuumNative?.draft($data);", null)
+        return true
+    }
+
     fun presentSources(sources: JSONObject) {
         if (disposed || !current(sources)) return
         if (!pageReady) {
             queuedSources[sources.optString("sourceSetId")] = sources
             while (queuedSources.size > 60) queuedSources.remove(queuedSources.keys.first())
         } else evaluateJavascript("window.ContinuumNative?.sources($sources);", null)
+    }
+
+    /**
+     * Owner's „Wärme- und Zeitmessung“ only: starts, reads or stops the page's frame counter (native-bridge.js,
+     * frame governor). Native asks, the page answers with numbers; no new channel from JavaScript to Android.
+     * [result] receives the page's JSON answer, or null when the page is not ready or has no such counter.
+     */
+    fun frameProbe(command: String, result: (String?) -> Unit) {
+        if (disposed || !pageReady || command !in FRAME_PROBE_COMMANDS) { result(null); return }
+        evaluateJavascript("(window.ContinuumNative && window.ContinuumNative.frameProbe) ? " +
+            "window.ContinuumNative.frameProbe('$command') : null;") { answer ->
+            result(answer?.takeUnless { it == "null" || it.isBlank() })
+        }
     }
 
     fun cancelComposerFocus() { focusRevision++; queuedSection = null }

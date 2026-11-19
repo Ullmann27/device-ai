@@ -267,6 +267,12 @@ android {
 
     testOptions { unitTests.isIncludeAndroidResources = continuumUiWidgetTests }
     if (continuumUiWidgetTests) sourceSets.getByName("test").java.srcDir("src/uiTest/java")
+    // Notification announcements need a NotificationListenerService in the manifest. Play Protect blocks the normal
+    // installation of an APK that declares one, so it is merged only on request; such a build is installed with adb.
+    if (providers.gradleProperty("continuumNotificationAccess").orNull == "true") {
+        for (buildType in listOf("debug", "release"))
+            sourceSets.getByName(buildType).manifest.srcFile("src/notificationAccess/AndroidManifest.xml")
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -307,6 +313,12 @@ dependencies {
     implementation("com.google.ai.edge.litertlm:litertlm-android:0.18.0")
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // Optional owner-selected cloud brain (ClaudeModelRuntime). Official Anthropic Java SDK; it uses the OkHttp above.
+    implementation("com.anthropic:anthropic-java:3.3.0")
+    // Gmail connection (gmail/AndroidGmail.kt): Google's recommended Android AuthorizationClient. No client id or secret
+    // in the app – Google matches the Android OAuth client by package name and signing SHA-1. Latest stable on
+    // Google's Maven (19.11.2026). No google-services plugin is needed for this API.
+    implementation("com.google.android.gms:play-services-auth:22.0.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303") // Android JSON API implementation for actual JVM fetch tests.

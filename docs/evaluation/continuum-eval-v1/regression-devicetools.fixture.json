@@ -1,0 +1,179 @@
+{
+ "note": "Frei erfundener Geräte-Bestand für regression-devicetools*.jsonl; keine echten Daten.",
+ "apps": [
+  {
+   "label": "WhatsApp",
+   "package": "com.whatsapp"
+  },
+  {
+   "label": "Chrome",
+   "package": "com.android.chrome"
+  },
+  {
+   "label": "YouTube",
+   "package": "com.google.android.youtube"
+  },
+  {
+   "label": "Samsung Notes",
+   "package": "com.samsung.android.app.notes"
+  },
+  {
+   "label": "Galerie",
+   "package": "com.sec.android.gallery3d"
+  },
+  {
+   "label": "Eigene Dateien",
+   "package": "com.sec.android.app.myfiles"
+  },
+  {
+   "label": "Experimente Labor",
+   "package": "at.example.experimente"
+  },
+  {
+   "label": "Kamera",
+   "package": "com.sec.android.app.camera"
+  },
+  {
+   "label": "Kalender",
+   "package": "com.samsung.android.calendar"
+  },
+  {
+   "label": "Rechner",
+   "package": "com.sec.android.app.popupcalculator"
+  },
+  {
+   "label": "Spotify",
+   "package": "com.spotify.music"
+  },
+  {
+   "label": "Signal",
+   "package": "org.thoughtcrime.securesms"
+  },
+  {
+   "label": "Continuum Lokal",
+   "package": "at.heinz.deviceai.continuumlocal"
+  },
+  {
+   "label": "ÖBB Tickets",
+   "package": "at.oebb.ts"
+  },
+  {
+   "label": "Müller Foto",
+   "package": "de.mueller.foto"
+  },
+  {
+   "label": "Shizuku",
+   "package": "moe.shizuku.privileged.api"
+  },
+  {
+   "label": "Adobe Acrobat",
+   "package": "com.adobe.reader"
+  },
+  {
+   "label": "Gmail",
+   "package": "com.google.android.gm"
+  }
+ ],
+ "files": [
+  {
+   "path": "Download/Experimente.pdf",
+   "size": 1258291,
+   "modified": "2026-11-17T14:02"
+  },
+  {
+   "path": "Download/Neuro-Experimente 2026.pdf",
+   "size": 845000,
+   "modified": "2026-11-10T09:00"
+  },
+  {
+   "path": "Download/experimente_notizen.txt",
+   "size": 2100,
+   "modified": "2026-11-18T08:00"
+  },
+  {
+   "path": "Documents/Labor/Argon4.pdf",
+   "size": 2400000,
+   "modified": "2026-11-12T10:30"
+  },
+  {
+   "path": "Documents/Labor/Argon-4 Datenblatt.docx",
+   "size": 310000,
+   "modified": "2026-11-05T16:45"
+  },
+  {
+   "path": "Documents/Rechnung November.pdf",
+   "size": 220000,
+   "modified": "2026-11-16T10:30"
+  },
+  {
+   "path": "Documents/Rechnung Oktober.pdf",
+   "size": 215000,
+   "modified": "2026-10-15T11:00"
+  },
+  {
+   "path": "Documents/Verträge/Mietvertrag Müller.pdf",
+   "size": 530000,
+   "modified": "2026-03-02T12:00"
+  },
+  {
+   "path": "Download/continuum-0.3.69.apk",
+   "size": 512000000,
+   "modified": "2026-11-17T20:00"
+  },
+  {
+   "path": "Download/continuum-0.3.70.apk",
+   "size": 515000000,
+   "modified": "2026-11-18T21:00"
+  },
+  {
+   "path": "DCIM/Camera/IMG_20261118_101500.jpg",
+   "size": 4200000,
+   "modified": "2026-11-18T10:15"
+  },
+  {
+   "path": "Pictures/Screenshots/Screenshot_20261117-213000.png",
+   "size": 310000,
+   "modified": "2026-11-17T21:30"
+  },
+  {
+   "path": "Movies/Urlaub Kroatien.mp4",
+   "size": 1900000000,
+   "modified": "2026-08-20T18:00"
+  },
+  {
+   "path": "Music/Podcast Folge 12.mp3",
+   "size": 48000000,
+   "modified": "2026-09-01T07:00"
+  },
+  {
+   "path": "Documents/Steuer/Steuererklärung 2025.xlsx",
+   "size": 88000,
+   "modified": "2026-04-11T19:20"
+  },
+  {
+   "path": "Download/einkaufsliste.txt",
+   "size": 420,
+   "modified": "2026-11-19T07:10"
+  },
+  {
+   "path": "Documents/Notizen/todo.md",
+   "size": 1500,
+   "modified": "2026-11-14T22:00"
+  },
+  {
+   "path": "Download/Müller Angebot.pdf",
+   "size": 190000,
+   "modified": "2026-11-13T09:40"
+  },
+  {
+   "path": "Documents/Labor/Messprotokoll 7.pdf",
+   "size": 640000,
+   "modified": "2026-11-11T15:00"
+  },
+  {
+   "path": "Download/Präsentation Quartal 3.pptx",
+   "size": 5200000,
+   "modified": "2026-10-01T10:00"
+  }
+ ]
+}

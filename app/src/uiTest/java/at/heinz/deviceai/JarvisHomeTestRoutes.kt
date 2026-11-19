@@ -80,8 +80,9 @@ internal object JarvisHomeTestRoutes {
     fun expectedDirectTargets(root: View) = if (requireNotNull(home(root).jarvisShell.currentShell()).hasFeatureTiles)
         features else dockTargets
 
-    fun navigate(root: View, target: String) {
-        if (target !in moreTargets) { touch(root, destination(root, target)); return }
+    /** Returns the More menu this route had to open, or null for a direct destination. */
+    fun navigate(root: View, target: String): android.app.AlertDialog? {
+        if (target !in moreTargets) { touch(root, destination(root, target)); return null }
         val more = descendants(home(root)).single { it.tag == "jarvis-header:more" }
         assertTrue("More is an actionable visible accessibility control", more.isShown && more.isEnabled && more.isClickable)
         assertTrue("More dispatches its native click", more.performClick())
@@ -96,6 +97,7 @@ internal object JarvisHomeTestRoutes {
         assertTrue(index >= 0)
         val row = index + 1
         assertTrue("The actual menu dispatches $target", list.performItemClick(null, row, list.adapter.getItemId(row)))
+        return dialog
     }
 
     /** Eight dock destinations, legacy cards. */

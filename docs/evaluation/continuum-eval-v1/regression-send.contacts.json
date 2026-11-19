@@ -1,0 +1,77 @@
+{
+  "phones": [
+    {
+      "id": 1,
+      "name": "Anna Beispiel",
+      "number": "+43 000 555 0101",
+      "e164": "+430005550101",
+      "mobile": true
+    },
+    {
+      "id": 2,
+      "name": "Anna Muster",
+      "number": "+43 000 555 0102",
+      "e164": "+430005550102",
+      "mobile": true
+    },
+    {
+      "id": 3,
+      "name": "Thomas Muster",
+      "number": "+43 000 555 0103",
+      "e164": "+430005550103",
+      "mobile": true
+    },
+    {
+      "id": 3,
+      "name": "Thomas Muster",
+      "number": "+43 000 555 0199",
+      "e164": "+430005550199",
+      "mobile": false
+    },
+    {
+      "id": 4,
+      "name": "Mama",
+      "number": "0000 555 0104",
+      "e164": "+430005550104",
+      "mobile": true
+    },
+    {
+      "id": 6,
+      "name": "Karl Ohnevorwahl",
+      "number": "0000 555 0106",
+      "e164": null,
+      "mobile": true
+    },
+    {
+      "id": 7,
+      "name": "Doppel Nummer",
+      "number": "+43 000 555 0107",
+      "e164": "+430005550107",
+      "mobile": true
+    },
+    {
+      "id": 7,
+      "name": "Doppel Nummer",
+      "number": "+43 000 555 0108",
+      "e164": "+430005550108",
+      "mobile": true
+    }
+  ],
+  "mails": [
+    {
+      "id": 1,
+      "name": "Anna Beispiel",
+      "address": "anna.beispiel@example.org"
+    },
+    {
+      "id": 2,
+      "name": "Anna Muster",
+      "address": "anna.muster@example.org"
+    },
+    {
+      "id": 3,
+      "name": "Thomas Muster",
+      "address": "thomas.muster@example.org"
+    }
+  ]
+}

@@ -102,6 +102,8 @@ object ContinuumUiCopy {
             "Deine Eingabe bleibt stehen."
 
     fun modelFailure(problem: String?): String = when {
+        at.heinz.deviceai.localmodel.ClaudeBrainFailure.isClaude(problem) ->
+            at.heinz.deviceai.localmodel.ClaudeBrainFailure.ownerMessage(problem)
         problem == at.heinz.deviceai.localmodel.LocalModelHost.PAUSED_MEMORY ->
             "Keine neue Modellantwort gestartet: Android meldet zu wenig Arbeitsspeicher. " +
                 "Schließe andere Apps und frage erneut."

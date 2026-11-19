@@ -143,22 +143,40 @@ class ChiefBotStorageBoundaryTest {
     }
 
     @Test fun failedFilesystemWriteRetainsRegistryAndSafeDiagnostic() = withRoot { parent ->
+        // Do not emulate IOException. Every host: the kernel path limit refuses the random temp
+        // file while the seeded registry and lock stay reachable (no uid can bypass it).
+        val seeded = File(parent, "seeded")
+        ChiefBotProfileStore(seeded).seedDefaults()
+        val limited = RealStorageWriteFailure.moveToTempNameLimit(seeded, parent)
+        val limitedStore = ChiefBotProfileStore(limited)
+        val limitedFile = File(limited, "bot-profiles-v1.bin")
+        val limitedBefore = limitedFile.readBytes()
+        try { limitedStore.seedDefaults(20); fail("Expected a real temp-file creation failure") }
+        catch (failure: java.nio.file.FileSystemException) {
+            assertFalse(failure is java.nio.file.AccessDeniedException)
+            assertEquals("BOT_STORE_IO_ERROR", ChiefBotProfileStore.diagnosticCode(failure))
+        }
+        assertArrayEquals(limitedBefore, limitedFile.readBytes())
+        assertEquals(3, limitedStore.page().items.size)
+        assertEquals(setOf("bot-profiles-v1.bin", ".bot-profiles.lock"), limited.list()!!.toSet())
+
+        // POSIX mode applies even to creation of the random temp file, but only for a process
+        // the kernel does not exempt from mode bits; the probe decides that, not the uid.
         val owned = File(parent, "bots")
         val store = ChiefBotProfileStore(owned)
         store.seedDefaults()
         val file = File(owned, "bot-profiles-v1.bin")
         val before = file.readBytes()
-        // POSIX mode applies even to creation of the random temp file. Do not emulate IOException.
-        val original = Files.getPosixFilePermissions(owned.toPath())
-        try {
-            Files.setPosixFilePermissions(owned.toPath(), java.nio.file.attribute.PosixFilePermissions.fromString("r-x------"))
-            try { store.seedDefaults(20); fail("Expected a real read-only-directory write failure") }
-            catch (failure: java.nio.file.AccessDeniedException) {
-                assertEquals("BOT_STORE_ACCESS_DENIED", ChiefBotProfileStore.diagnosticCode(failure))
+        RealStorageWriteFailure.makeReadOnly(owned).use { readOnly ->
+            if (readOnly.enforcedForThisProcess) {
+                try { store.seedDefaults(20); fail("Expected a real read-only-directory write failure") }
+                catch (failure: java.nio.file.AccessDeniedException) {
+                    assertEquals("BOT_STORE_ACCESS_DENIED", ChiefBotProfileStore.diagnosticCode(failure))
+                }
+                assertArrayEquals(before, file.readBytes())
+                assertEquals(3, store.page().items.size)
             }
-            assertArrayEquals(before, file.readBytes())
-            assertEquals(3, store.page().items.size)
-        } finally { Files.setPosixFilePermissions(owned.toPath(), original) }
+        }
     }
 
     @Test fun diagnosticsNeverEchoArbitraryOwnerPathsOrText() {

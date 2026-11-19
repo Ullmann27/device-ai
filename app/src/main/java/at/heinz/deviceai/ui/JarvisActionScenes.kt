@@ -85,7 +85,9 @@ object JarvisActionScenes {
     fun toolKind(name: String): Kind = when (name) {
         "launch_app", "find_app", "get_app_info", "list_installed_apps", "restart_app", "stop_app",
         "install_apk", "uninstall_app", "find_latest_apk", "read_app_screen" -> Kind.APP
-        "list_files", "find_files", "get_large_files", "move_file", "delete_file" -> Kind.FILES
+        "list_files", "find_files", "get_large_files", "move_file", "delete_file", "search_device", "read_file",
+        "create_document", "open_file", "list_recent_files", "get_folder_overview", "search_file_text", "share_file",
+        "read_clipboard", "write_clipboard" -> Kind.FILES
         "take_screenshot", "record_screen" -> Kind.SCREEN
         "get_battery_info", "get_device_info", "get_network_summary", "get_storage_info", "list_processes",
         "diagnose_device", "get_system_capabilities", "preview_own_cache", "cleanup_own_cache",

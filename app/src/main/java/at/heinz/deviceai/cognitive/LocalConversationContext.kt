@@ -14,6 +14,12 @@ class LocalConversationContext {
                             val responseHasEnd: Boolean = true)
     private var session: String? = null
     private val turns = ArrayDeque<Turn>()
+    /**
+     * Complete owner statements that left the four-turn window in this session. They only fill prompt
+     * space the required dialogue did not use (see [LocalDialoguePromptHistory.withOlderOwnerStatements]);
+     * RAM only, cleared with the turns, never a fact, a memory record or a grant.
+     */
+    private val olderOwnerStatements = ArrayDeque<String>()
     private var explicitFocus:String?=null
     private val situation = LocalConversationSituationTracker()
     /** #758: owner-described object state of this session; survives the four-turn window, never the session. */
@@ -24,8 +30,10 @@ class LocalConversationContext {
      * Field P0 Code54: the PDF the owner picked and JARVIS read in this session (name, pages, page-attributed text).
      * Bound to its own session id: it survives a topic reset or memory change (the file is still open) but never
      * another session; RAM only, like everything here – never written to disk, never an owner fact.
+     * Code64: the documents of this session with their page and paragraph focus live in [references]; the document
+     * every existing consumer sees is its current one. Cleared exactly where the single reference was cleared.
      */
-    private var document: OwnerDocumentDialogue.Reference? = null
+    private val references = ConversationReferences()
 
     /** Only explicit discourse control, never owner knowledge or tool authorization.
      * Ambiguous/negative corrections erase stale focus rather than guessing a referent.
@@ -83,6 +91,8 @@ class LocalConversationContext {
 
     private fun append(sessionId: String, turn: LocalChatTranscriptStore.ContextTurn, notify: Boolean = true) {
         if (session != sessionId) switchTo(sessionId)
+        // The recorded turn was answered: its frozen document reference must not serve a later request.
+        references.clearTurn()
         val bounded = turn.bounded()
         val previous = turns.lastOrNull()
         val continuation = bounded.requestComplete &&
@@ -102,7 +112,7 @@ class LocalConversationContext {
             situation.observeOwnerTurn(bounded.request)
             objects.observeOwnerTurn(bounded.request)
         } else objects.markIncomplete()
-        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
+        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) retireOldest()
         // Persist the original raw turn.
         if (notify) runCatching { onTurnRecorded?.invoke(sessionId, bounded) }
     }
@@ -147,21 +157,66 @@ class LocalConversationContext {
         research = digest
         turns.addLast(Turn(data(digest.question, 300), "(Antwort aus Webrecherche; siehe EXTERNE RECHERCHEDATEN)",
             isOwnerTurn = false))
-        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) turns.removeFirst()
+        while (turns.size > LocalDialogueContextLimits.MAX_TURNS) retireOldest()
     }
 
     @Synchronized fun hasResearch(sessionId: String): Boolean = session == sessionId && research != null
 
-    /** The document just read replaces an earlier one; a reference of another session is refused. */
+    /** The document just read becomes the current one (earlier ones stay addressable, see [ConversationReferences]);
+     *  a reference of another session is refused. */
     @Synchronized internal fun recordDocument(sessionId: String, reference: OwnerDocumentDialogue.Reference) {
         require(sessionId.isNotBlank() && reference.sessionId == sessionId)
         if (session != sessionId) switchTo(sessionId)
-        document = reference
+        references.register(reference)
     }
 
     /** The document read in [sessionId], or null – never the document of another session. */
     @Synchronized internal fun document(sessionId: String): OwnerDocumentDialogue.Reference? =
-        document?.takeIf { it.sessionId == sessionId }
+        references.current()?.takeIf { it.sessionId == sessionId }
+
+    /** Code64: the documents read in [sessionId] in the order they were first opened. */
+    @Synchronized internal fun documents(sessionId: String): List<OwnerDocumentDialogue.Reference> =
+        if (references.sessionId == sessionId) references.documents() else emptyList()
+
+    /**
+     * Code64: resolves an owner turn that points at a document, page or paragraph of [sessionId] and commits the
+     * focus. null = not such a reference (nothing changed). A reply is said without the model; otherwise the
+     * resolved passage is frozen for this request and [documentPromptBlock] renders it for the model turn.
+     */
+    @Synchronized internal fun routeDocumentReference(sessionId: String, request: String, assistantName: String? = null,
+                                                      correctionOnly: Boolean = false): ConversationReferences.Route? {
+        require(sessionId.isNotBlank())
+        // Documents of another session are never addressed; the sentence is then judged against an empty registry.
+        val registry = if (references.sessionId == null || references.sessionId == sessionId) references
+            else ConversationReferences()
+        return registry.route(request, assistantName, correctionOnly)
+    }
+
+    /**
+     * The document data of this model turn: the passage [routeDocumentReference] resolved for exactly this request,
+     * else – as before Code64 – the page-attributed excerpt of the current document when the request names it.
+     */
+    @Synchronized internal fun documentPromptBlock(sessionId: String, request: String): String {
+        if (references.sessionId != sessionId) return ""
+        references.promptBlock(request)?.let { return it }
+        if (!OwnerDocumentDialogue.refersToDocument(request)) return ""
+        return references.current()?.let { OwnerDocumentDialogue.promptBlock(it, request) }.orEmpty()
+    }
+
+    /** Code64 saved state: registry marks of [reference] and the earlier documents of [sessionId] (bounded text). */
+    @Synchronized internal fun documentMarks(reference: OwnerDocumentDialogue.Reference): IntArray? =
+        references.marks(reference)
+
+    @Synchronized internal fun earlierDocumentsForState(sessionId: String): List<ConversationReferences.Saved> =
+        if (references.sessionId == sessionId) references.earlierForState() else emptyList()
+
+    /** Puts a document of the saved state back; a reference of another session is refused like in [recordDocument]. */
+    @Synchronized internal fun restoreDocument(sessionId: String, reference: OwnerDocumentDialogue.Reference,
+                                               marks: IntArray?) {
+        require(sessionId.isNotBlank() && reference.sessionId == sessionId)
+        if (session != sessionId) switchTo(sessionId)
+        references.restore(reference, marks)
+    }
 
     /** M2: freshness verdict of this session's research for a follow-up question; null without research. */
     @Synchronized internal fun researchFreshness(sessionId: String, question: String, nowMillis: Long = System.currentTimeMillis()):
@@ -208,23 +263,25 @@ class LocalConversationContext {
 
     private fun dropTurns() {
         val hadTurns = turns.isNotEmpty()
-        turns.clear()
+        turns.clear(); olderOwnerStatements.clear()
         situation.reset()
         objects.reset()
         if (hadTurns) session?.let { id -> runCatching { onTurnsInvalidated?.invoke(id) } }
     }
 
     private fun switchTo(sessionId: String) {
-        turns.clear(); situation.reset(); objects.reset(); session = sessionId; explicitFocus = null; research = null
-        if (document?.sessionId != sessionId) document = null
+        turns.clear(); olderOwnerStatements.clear()
+        situation.reset(); objects.reset(); session = sessionId; explicitFocus = null; research = null
+        if (references.sessionId != sessionId) references.clear()
     }
 
     @Synchronized fun clear() { dropTurns(); session = null;explicitFocus=null;research=null }
 
     /** End of the process-scoped RAM lifetime (real Activity finish): nothing was invalidated, so nothing is reported. */
     @Synchronized fun forgetForExit() {
-        turns.clear(); situation.reset(); objects.reset(); session = null; explicitFocus = null; research = null
-        document = null
+        turns.clear(); olderOwnerStatements.clear()
+        situation.reset(); objects.reset(); session = null; explicitFocus = null; research = null
+        references.clear()
     }
 
     /** Access is supplied by the current turn, never inferred from a saved research digest.
@@ -247,9 +304,16 @@ class LocalConversationContext {
         if (session != sessionId || turns.isEmpty() && explicitFocus==null && research==null) return ""
         if (continuation && !hasContinuation(sessionId)) return ""
         val prefix = historyPrefix(nowMillis, internetMode, ownerForbidsExternalNetwork, onlineApprovalActive)
-        return LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
+        val recent = LocalDialoguePromptHistory.render(retainedTurns(ownerOnly = false), maxBytes,
             requireCompleteOwnerHistory, continuation, prefix, ownerTurnsInTask)
+        // A continuation carries only the answer being continued; older statements stay out of it.
+        return if (continuation) recent else
+            LocalDialoguePromptHistory.withOlderOwnerStatements(recent, olderOwnerStatements.toList(), maxBytes)
     }
+
+    /** Owner statements of this session that are older than the dialogue window (oldest first). */
+    @Synchronized fun olderOwnerStatements(sessionId: String): List<String> =
+        if (session == sessionId) olderOwnerStatements.toList() else emptyList()
 
     @Synchronized fun requiredPromptBytes(sessionId: String, nowMillis: Long = System.currentTimeMillis(),
                                          internetMode: InternetAccessMode = InternetAccessMode.OFF,
@@ -293,6 +357,17 @@ class LocalConversationContext {
             if (!LocalConversationFollowUpPolicy.requestsContinuation(owner)) return true
         }
         return false
+    }
+
+    /** The window stays four turns for every existing consumer; only a short, complete owner statement
+     * is kept for the optional older block. A long or incomplete one is dropped as before. */
+    private fun retireOldest() {
+        val oldest = turns.removeFirst()
+        val statement = oldest.originalUserRequest?.takeIf { oldest.isOwnerTurn }?.trim() ?: return
+        if (statement.isEmpty() || statement.length > LocalDialoguePromptHistory.MAX_OLDER_STATEMENT_CHARACTERS) return
+        if (olderOwnerStatements.lastOrNull() == statement) return
+        olderOwnerStatements.addLast(statement)
+        while (olderOwnerStatements.size > LocalDialoguePromptHistory.MAX_OLDER_STATEMENTS) olderOwnerStatements.removeFirst()
     }
 
     private fun retainedTurns(ownerOnly: Boolean): List<LocalChatTranscriptStore.ContextTurn> =

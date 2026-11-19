@@ -119,6 +119,27 @@ class WorkflowReviewTest {
         assertEquals(ComputerGoal.SEARCH, intent.goal)
         assertFalse(ComputerPlanStep.REQUIRE_SEND_APPROVAL in intent.steps)
         assertFalse(ComputerPlanStep.SET_DRAFT in intent.steps)
-        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp und suche Anna und sende Hallo") is OwnerComputerIntentParser.Result.Unsupported)
+        // Changed 19.11.2026 (review finding B5, pinned as COM-004 in regression-computer.jsonl): a sentence with a
+        // further order is no refusal of this lane any more, it is handed on so that the planner reads both orders.
+        // What this test protects is unchanged and is proven on both sides of that hand-over.
+        val further = "Öffne WhatsApp und suche Anna und sende Hallo"
+        // 1. The computer lane makes no plan of its own from it: no search that types the order, no draft, no send.
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse(further))
+        for (tail in listOf("und sende Hallo", "und schick ihr Hallo", "und schreib ihr Hallo", ", dann sende ihr Hallo",
+            "und danach schicke Hallo")) {
+            val handedOn = OwnerComputerIntentParser.parse("Öffne WhatsApp und suche Anna $tail")
+            assertFalse("$tail: $handedOn", handedOn is OwnerComputerIntentParser.Result.Ready)
+        }
+        // 2. The send lane does not take the sentence as a message of its own.
+        assertNull(at.heinz.deviceai.sending.OwnerSendIntentParser.parse(further))
+        // 3. The planner that reads it next recognises the send order and carries out nothing: no plan, no step, and
+        //    nothing left to offer – a send is never a step of a sequence, it stays with the send lane and its approval.
+        val reading = checkNotNull(OwnerMissionPlanner.read(further))
+        assertNull(reading.plan)
+        assertTrue(reading.codes.toString(), "LATER:SEND" in reading.codes)
+        assertTrue(reading.clauses.none { it.step != null })
+        assertTrue(reading.rest.isEmpty())
+        assertEquals(OwnerSentenceReading.Kind.PARTIAL, reading.kind)
+        assertTrue(OwnerMissionPartial.text(reading.open, reading.rest).endsWith(OwnerMissionPartial.NOTHING_DONE))
     }
 }

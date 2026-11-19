@@ -42,7 +42,9 @@ class ContinuumBotRosterDialog(
     private val onAssign: ((ChiefBotTaskRequest) -> Boolean)? = null,
     private val team: ChiefBotTeam? = null,
     private val onTeamSubmit: ((String, String, Long, SharedOwnerKnowledgeGrant?, ChiefFollowupReview?) -> Boolean)? = null,
-    private val onTeamStop: ((String) -> Unit)? = null
+    private val onTeamStop: ((String) -> Unit)? = null,
+    /** Opens „Coding-Agenten (Claude, Cloud)“. They are not part of the local team and are labelled as such. */
+    private val onCloudAgents: (() -> Unit)? = null
 ) {
     private var dialog: AlertDialog? = null
     private var taskDialog: ContinuumBotTaskDialog? = null
@@ -212,6 +214,12 @@ class ContinuumBotRosterDialog(
                 body.addView(action("Teamaufträge und Ergebnisse") { if (live(token)) showTeam() })
                 body.addView(ui.label("Profile sind keine Kompetenzbelege. Zwei freigegebene Spezialisten arbeiten " +
                     "nacheinander mit einem lokalen Modell.", 13f, JarvisDesign.Colors.textSecondary))
+            }
+            onCloudAgents?.let { open ->
+                body.addView(ui.label("NICHT LOKAL · CLOUD", 12f, JarvisDesign.Colors.warn))
+                body.addView(action(at.heinz.deviceai.codingagents.CodingAgentTexts.TITLE) { if (live(token)) open() }
+                    .apply { tag = "bot-roster-cloud-agents" })
+                body.addView(ui.label(at.heinz.deviceai.codingagents.CodingAgentTexts.ROSTER_NOTE, 13f, JarvisDesign.Colors.textSecondary))
             }
             val search = ui.editor().apply {
                 hint = "Name, Rolle oder Arbeitsstil suchen"

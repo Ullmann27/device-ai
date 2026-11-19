@@ -48,7 +48,9 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
         val practiceEnabled: Boolean,
         val autoStudyEnabled: Boolean,
         val curiosityPending: Boolean,
-        val responseTimesMs: List<Long>
+        val responseTimesMs: List<Long>,
+        /** Set while the owner's optional cloud brain answers (e.g. "CONTINUUM · CLOUD"); null = on-device. */
+        val brainMode: String? = null
     )
 
     private val files: File = context.filesDir
@@ -164,7 +166,8 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 // The start core keeps 8 turns on disk but answers with the topic of the last turn only
                 // (ContinuumMemoryDialogue: history.lastOrNull()?.topic); a loaded model's window is not reported.
                 context = if (live.modelName != null) null else "1 Zug (Thema)",
-                mode = if (live.modelName != null) "Lokales Sprachmodell" else "Startkern ohne Sprachmodell",
+                mode = live.brainMode
+                    ?: if (live.modelName != null) "Lokales Sprachmodell" else "Startkern ohne Sprachmodell",
                 lastUpdate = timeline.maxByOrNull { it.third }?.let { ContinuumDashboardState.ago(now - it.third) }
             ),
             learning = ContinuumDashboardState.LearningStatus(

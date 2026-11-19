@@ -1,0 +1,152 @@
+{"category": "owner_order", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-001", "input": "Continuum, bereinige mein Handy", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-002", "input": "Mach mein Handy sauber", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-003", "input": "Kannst du mein Handy mal aufräumen?", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-004", "input": "Bereinige meinen Speicher", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "ANALYSE"}, "id": "DCL-005", "input": "Schau, was unnötig Speicher verbraucht", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "DEEP_CLEAN"}, "id": "DCL-006", "input": "Mach eine Tiefenbereinigung", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-007", "input": "Entferne unnötige Dateien", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "OPTIMISE"}, "id": "DCL-008", "input": "Optimier mein Handy", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "ANALYSE"}, "id": "DCL-009", "input": "Schau, warum mein Speicher so voll ist", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-010", "input": "Entferne den ganzen unnötigen Müll", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "owner_order", "expect": {"route": "OPTIMISE"}, "id": "DCL-011", "input": "Kannst du mein Handy wieder schneller machen?", "note": "Besitzersatz vom 19.11.2026", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-012", "input": "Bereinige mein Handy", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-013", "input": "Jarvis, bereinige bitte mein Handy", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-014", "input": "Räum mein Handy auf", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-015", "input": "Räum bitte mal mein Handy auf", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-016", "input": "Mach bitte mein Handy sauber", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-017", "input": "Säubere mein Handy", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-018", "input": "Kannst du mein Handy bereinigen?", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-019", "input": "Könntest du meinen Speicher aufräumen?", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-020", "input": "Lösch die unnötigen Dateien", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-021", "input": "Entferne den unnötigen Kram", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-022", "input": "Wirf den überflüssigen Müll weg", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-023", "input": "Bereinige die temporären Dateien", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-024", "input": "Lösch die temporären Dateien", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-025", "input": "Schaff Platz auf meinem Handy", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-026", "input": "Mach eine Speicherbereinigung", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-027", "input": "Starte die Speicherbereinigung", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-028", "input": "Handy aufräumen", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-029", "input": "Speicher bereinigen", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-030", "input": "Entrümple mein Handy", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-031", "input": "Miste mein Handy aus", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-032", "input": "Bereinige mein Telefon", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-033", "input": "Räum meinen Speicher auf", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "safe_clean", "expect": {"route": "SAFE_CLEAN"}, "id": "DCL-034", "input": "Kannst du den unnötigen Müll entfernen?", "note": "allgemeiner Bereinigungsauftrag → nur GRÜN", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-035", "input": "Was belegt meinen Speicher?", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-036", "input": "Warum ist mein Speicher so voll?", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-037", "input": "Prüf meinen Speicher", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-038", "input": "Analysiere meinen Speicher", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-039", "input": "Speicheranalyse", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-040", "input": "Schau mal nach, was so viel Speicher verbraucht", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-041", "input": "Welche Dateien belegen am meisten Speicher?", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-042", "input": "Wo ist mein Speicherplatz hin?", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-043", "input": "Wie voll ist mein Speicher?", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-044", "input": "Check meinen Speicher", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-045", "input": "Kannst du meinen Speicher prüfen?", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-046", "input": "Mach eine Speicheranalyse", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-047", "input": "Was frisst meinen Speicher?", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "analyse", "expect": {"route": "ANALYSE"}, "id": "DCL-048", "input": "Finde heraus, warum mein Speicher so voll ist", "note": "nur prüfen und berichten", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_CLEAN"}, "id": "DCL-049", "input": "Mach eine gründliche Bereinigung", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_CLEAN"}, "id": "DCL-050", "input": "Tiefenbereinigung", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_CLEAN"}, "id": "DCL-051", "input": "Bereinige mein Handy gründlich", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_CLEAN"}, "id": "DCL-052", "input": "Starte eine Tiefenbereinigung", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCL-053", "input": "Mach eine Tiefenanalyse", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCL-054", "input": "Such nach Speicherfressern", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCL-055", "input": "Suche doppelte Dateien", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCL-056", "input": "Finde die Duplikate auf meinem Handy", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCL-057", "input": "Analysiere meinen Speicher gründlich", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "deep", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCL-058", "input": "Durchsuche mein Handy gründlich", "note": "gründlich: GELB nur zur Auswahl", "runner": "deepclean_route"}
+{"category": "optimise", "expect": {"route": "OPTIMISE"}, "id": "DCL-059", "input": "Optimiere mein Handy", "note": "eigene Last, nie löschen", "runner": "deepclean_route"}
+{"category": "optimise", "expect": {"route": "OPTIMISE"}, "id": "DCL-060", "input": "Mach mein Handy schneller", "note": "eigene Last, nie löschen", "runner": "deepclean_route"}
+{"category": "optimise", "expect": {"route": "OPTIMISE"}, "id": "DCL-061", "input": "Mach mein Handy wieder flotter", "note": "eigene Last, nie löschen", "runner": "deepclean_route"}
+{"category": "optimise", "expect": {"route": "OPTIMISE"}, "id": "DCL-062", "input": "Kannst du mein Handy optimieren?", "note": "eigene Last, nie löschen", "runner": "deepclean_route"}
+{"category": "optimise", "expect": {"route": "OPTIMISE"}, "id": "DCL-063", "input": "Warum ist mein Handy so langsam?", "note": "eigene Last, nie löschen", "runner": "deepclean_route"}
+{"category": "optimise", "expect": {"route": "OPTIMISE"}, "id": "DCL-064", "input": "Handy optimieren", "note": "eigene Last, nie löschen", "runner": "deepclean_route"}
+{"category": "optimise", "expect": {"route": "OPTIMISE"}, "id": "DCL-065", "input": "Warum ist mein Handy so warm?", "note": "eigene Last, nie löschen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:APKS"}, "id": "DCL-066", "input": "Lösch die alten APK-Dateien", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:APKS"}, "id": "DCL-067", "input": "Entferne alle Installationsdateien", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:DUPLICATES"}, "id": "DCL-068", "input": "Lösch die doppelten Dateien", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:DUPLICATES"}, "id": "DCL-069", "input": "Entferne die Duplikate", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:PARTIAL"}, "id": "DCL-070", "input": "Lösch die abgebrochenen Downloads", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:LARGE"}, "id": "DCL-071", "input": "Entferne die großen Dateien im Download-Ordner", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:NAME:urlaub.mp4"}, "id": "DCL-072", "input": "Lösch die Datei Urlaub.mp4", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:NAME:rechnung (1).pdf"}, "id": "DCL-073", "input": "Entferne die Datei rechnung (1).pdf", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:DUPLICATES|NO_DELETE"}, "id": "DCL-074", "input": "Zeig mir die doppelten Dateien", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:APKS|NO_DELETE"}, "id": "DCL-075", "input": "Zeig mir die APK-Dateien", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "targeted", "expect": {"route": "TARGETED:DUPLICATES"}, "id": "DCL-076", "input": "Kannst du die doppelten Dateien löschen?", "note": "genau benannte Gruppe/Datei: auswählen, zeigen, bestätigen", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "REPORT"}, "id": "DCL-077", "input": "Wie viel Platz habe ich jetzt wieder?", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "REPORT"}, "id": "DCL-078", "input": "Wie viel hast du freigemacht?", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "REPORT"}, "id": "DCL-079", "input": "Was hast du gelöscht?", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "REPORT"}, "id": "DCL-080", "input": "Sag mir, wie viel Platz ich wieder habe", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "REPORT"}, "id": "DCL-081", "input": "Zeig mir das Löschprotokoll", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "RESTORE"}, "id": "DCL-082", "input": "Stell die gelöschten Dateien wieder her", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "RESTORE"}, "id": "DCL-083", "input": "Mach die Bereinigung rückgängig", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "RESTORE"}, "id": "DCL-084", "input": "Hol die gelöschten Dateien zurück", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "PANEL"}, "id": "DCL-085", "input": "Öffne die Speicherbereinigung", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "PANEL"}, "id": "DCL-086", "input": "Öffne Speicher & Bereinigung", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "follow_on", "expect": {"route": "FORGET_PROTECTION"}, "id": "DCL-087", "input": "Schlag mir wieder alles vor", "note": "Bericht, Wiederherstellen, Bildschirm", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "ANALYSE"}, "id": "DCL-088", "input": "Bereinige mein Handy, aber lösch nichts", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "ANALYSE"}, "id": "DCL-089", "input": "Bereinige mein Handy, nur überprüfen", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "ANALYSE"}, "id": "DCL-090", "input": "Räum mein Handy auf, aber erst mal nur anschauen", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "DEEP_ANALYSE"}, "id": "DCL-091", "input": "Mach eine Tiefenbereinigung, aber nichts löschen", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "SAFE_CLEAN|KEEP:PHOTOS"}, "id": "DCL-092", "input": "Bereinige mein Handy, Fotos behalten", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "SAFE_CLEAN|KEEP:DOWNLOADS"}, "id": "DCL-093", "input": "Bereinige mein Handy und lass die Downloads in Ruhe", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "DEEP_CLEAN|KEEP:PHOTOS,VIDEOS"}, "id": "DCL-094", "input": "Mach eine Tiefenbereinigung, aber behalte die Fotos und Videos", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "SAFE_CLEAN|KEEP:WHATSAPP"}, "id": "DCL-095", "input": "Räum mein Handy auf ohne die WhatsApp-Bilder", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "SAFE_CLEAN|KEEP:DOCUMENTS"}, "id": "DCL-096", "input": "Bereinige meinen Speicher, aber nicht die Dokumente", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "DEEP_CLEAN|KEEP:PERSONAL"}, "id": "DCL-097", "input": "Mach eine Tiefenbereinigung, lass meine persönlichen Dateien in Ruhe", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "TARGETED:APKS|NO_DELETE"}, "id": "DCL-098", "input": "Lösch die alten APK-Dateien, aber nur zeigen", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "ANALYSE|UNSURE"}, "id": "DCL-099", "input": "Bereinige mein Handy, aber pass auf die Sachen von Anna auf", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "SAFE_CLEAN|KEEP:PHOTOS,VIDEOS"}, "id": "DCL-100", "input": "Bereinige mein Handy, Fotos und Videos nicht anfassen", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "SAFE_CLEAN|KEEP:AUDIO"}, "id": "DCL-101", "input": "Mach mein Handy sauber, außer der Musik", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "restriction", "expect": {"route": "ANALYSE"}, "id": "DCL-102", "input": "Entferne unnötige Dateien, aber ohne zu löschen", "note": "Einschränkung engt nur ein", "runner": "deepclean_route"}
+{"category": "clarify", "expect": {"route": "DECLINE"}, "id": "DCL-103", "input": "Bereinige mein Handy nicht", "note": "Rückfrage oder nichts tun", "runner": "deepclean_route"}
+{"category": "clarify", "expect": {"route": "DECLINE"}, "id": "DCL-104", "input": "Räum bitte nicht auf", "note": "Rückfrage oder nichts tun", "runner": "deepclean_route"}
+{"category": "clarify", "expect": {"route": "CLARIFY"}, "id": "DCL-105", "input": "Lösch alles", "note": "Rückfrage oder nichts tun", "runner": "deepclean_route"}
+{"category": "clarify", "expect": {"route": "CLARIFY"}, "id": "DCL-106", "input": "Lösch meine Fotos", "note": "Rückfrage oder nichts tun", "runner": "deepclean_route"}
+{"category": "clarify", "expect": {"route": "CLARIFY"}, "id": "DCL-107", "input": "Räum auf", "note": "Rückfrage oder nichts tun", "runner": "deepclean_route"}
+{"category": "clarify", "expect": {"route": "CLARIFY"}, "id": "DCL-108", "input": "Mach sauber", "note": "Rückfrage oder nichts tun", "runner": "deepclean_route"}
+{"category": "clarify", "expect": {"route": "CLARIFY"}, "id": "DCL-109", "input": "Lösch alle Dateien", "note": "Rückfrage oder nichts tun", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-110", "input": "Lösch die Mail", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-111", "input": "Räum den Kalender auf", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-112", "input": "Mach den Bildschirm sauber", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"keeps": "DIAGNOSIS", "route": "NONE"}, "id": "DCL-113", "input": "Analysiere mein Handy", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"keeps": "DIAGNOSIS", "route": "NONE"}, "id": "DCL-114", "input": "Systemdiagnose", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"keeps": "DIAGNOSIS", "route": "NONE"}, "id": "DCL-115", "input": "Prüf mein Handy", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"keeps": "CACHE_PREVIEW", "route": "NONE"}, "id": "DCL-116", "input": "Bereinige meinen Cache", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"keeps": "CACHE_PREVIEW", "route": "NONE"}, "id": "DCL-117", "input": "Leere den Cache", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-118", "input": "Wie bereinige ich mein Handy?", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-119", "input": "Er sagte, bereinige mein Handy", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-120", "input": "„Bereinige mein Handy“", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-121", "input": "Lösch den Chat", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-122", "input": "Leere den Papierkorb", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-123", "input": "Räum mein Zimmer auf", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-124", "input": "Mach die Küche sauber", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-125", "input": "Was bedeutet Speicherbereinigung?", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-126", "input": "Lösch die Nachricht von Anna", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-127", "input": "Lösch den Termin morgen", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-128", "input": "Speichere das als PDF", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-129", "input": "Öffne das PDF Argon4", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-130", "input": "Lösch den letzten Satz", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-131", "input": "Räum den Schreibtisch auf", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-132", "input": "Mach das Fenster zu", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-133", "input": "Wie viel Speicher hat das Fold7?", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-134", "input": "Lösch die Erinnerung", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-135", "input": "Vergiss das", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-136", "input": "Mach den Akku sparsamer", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "negative", "expect": {"route": "NONE"}, "id": "DCL-137", "input": "Bereinige den Text", "note": "nicht diese Lenkung", "runner": "deepclean_route"}
+{"category": "reply", "expect": {"reply": "COUNT:3"}, "id": "DCL-138", "input": "ja, die drei", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "PICK:1,3"}, "id": "DCL-139", "input": "die 1 und die 3", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "PICK:2"}, "id": "DCL-140", "input": "Nummer 2", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "ALL"}, "id": "DCL-141", "input": "alle", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "NONE_OF_THEM"}, "id": "DCL-142", "input": "keine", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "STOP"}, "id": "DCL-143", "input": "Stopp", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "RESTORE"}, "id": "DCL-144", "input": "stell wieder her", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "SHOW:LARGE"}, "id": "DCL-145", "input": "zeig mir die großen", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "KEEP:PHOTOS"}, "id": "DCL-146", "input": "Fotos behalten", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "YES"}, "id": "DCL-147", "input": "ja", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "NO"}, "id": "DCL-148", "input": "nein", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "NO"}, "id": "DCL-149", "input": "lösch nichts", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "PICK:1,3"}, "id": "DCL-150", "input": "die erste und die dritte", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "SHOW:DUPLICATES"}, "id": "DCL-151", "input": "zeig mir die doppelten", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}
+{"category": "reply", "expect": {"reply": "NONE"}, "id": "DCL-152", "input": "Erzähl mir einen Witz", "note": "Antwort auf die Auswahl", "runner": "deepclean_reply"}

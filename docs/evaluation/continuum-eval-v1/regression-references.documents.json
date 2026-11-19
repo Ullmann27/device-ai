@@ -1,0 +1,33 @@
+{
+ "argon4": {
+  "name": "Argon4.pdf",
+  "page_count": 4,
+  "pages": [
+   "Argon4 Dossier\n\nArgon4 beschreibt ein lokales Gedächtnis mit zeitlicher Ordnung.\n\nDer zweite Absatz der ersten Seite nennt drei Bausteine: Speicher, Abruf und Korrektur.",
+   "Seite zwei erklärt den Abruf.\n\nTreffer werden nach Aktualität gewichtet.",
+   "Zeitliche Korrekturen\n\nEine spätere Aussage ersetzt eine frühere nur, wenn sie ausdrücklich als Korrektur markiert ist.\n\nBitemporale Einträge behalten den Zeitpunkt der Aussage und den Zeitpunkt der Gültigkeit getrennt.\n\nWidersprüche ohne Markierung werden zurückgefragt und nie still entschieden.",
+   ""
+  ]
+ },
+ "mietvertrag": {
+  "name": "Mietvertrag_2024.pdf",
+  "page_count": 2,
+  "pages": [
+   "Mietvertrag\n\nDie Miete beträgt 850 Euro und ist am dritten Werktag fällig.\n\nDie Kündigungsfrist beträgt drei Monate zum Monatsende.",
+   "Die Kaution beträgt zwei Monatsmieten.\n\nSchönheitsreparaturen trägt der Mieter nur bei Auszug."
+  ]
+ },
+ "notiz": {
+  "name": "Notiz.pdf",
+  "page_count": 1,
+  "pages": [
+   "Einkauf: Brot, Milch, Kaffee."
+  ]
+ },
+ "scan": {
+  "name": "Scan.pdf",
+  "page_count": 3,
+  "pages": [],
+  "text_state": "NO_TEXT_LAYER"
+ }
+}

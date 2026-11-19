@@ -11,6 +11,8 @@ enum class LocalGenerationFailureCause(val ownerMessage: String) {
     STALLED("Das lokale Modell hat längere Zeit keinen neuen Text ausgegeben."),
     CONTEXT_UNVERIFIED("Der Modellkontext konnte nicht zuverlässig übernommen werden."),
     RUNTIME_FAILED("Die lokale Modelllaufzeit meldete einen Fehler. Die genaue Ursache ist ohne Geräteprotokoll nicht bestätigt."),
+    /** The optional cloud brain (Claude) stopped delivering; never worded as a local runtime fault. */
+    CLOUD_INTERRUPTED("Die Verbindung zur Cloud ist abgebrochen; die Antwort ist unvollständig."),
     UNKNOWN("Die lokale Generierung wurde nicht vollständig abgeschlossen. Die genaue Ursache ist nicht bestätigt.");
 
     companion object {
@@ -25,7 +27,8 @@ enum class LocalGenerationFailureCause(val ownerMessage: String) {
                     LocalModelThermalGuard.STOPPED_THERMAL -> THERMAL_STOPPED
                     "LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL" -> CONTEXT_UNVERIFIED
                     null, "" -> UNKNOWN
-                    else -> RUNTIME_FAILED
+                    else -> if (at.heinz.deviceai.localmodel.ClaudeBrainFailure.isClaude(failure)) CLOUD_INTERRUPTED
+                        else RUNTIME_FAILED
                 }
                 LocalGenerationCompletion.CANCELLED, LocalGenerationCompletion.COMPLETE -> UNKNOWN
             }

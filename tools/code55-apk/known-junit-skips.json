@@ -9,5 +9,11 @@
   ],
   "at.heinz.deviceai.learning.Cre1InferenceEncoderTest": [
     "trainedNodeCheckpointMatchesKotlinFeaturesAndScores"
+  ],
+  "at.heinz.deviceai.cognitive.NewsFeedParserTest": [
+    "parsesRealFeedFilesWhenProvided"
+  ],
+  "at.heinz.deviceai.cognitive.NewsSelectorTest": [
+    "selectsFromRealFeedFilesWhenProvided"
   ]
 }

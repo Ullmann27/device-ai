@@ -1,0 +1,138 @@
+HOST output of RuntimeDialogueReuseProbe.java (x86_64 Linux, 4 shared cores, litertlm-jvm 0.18.0, CPU, 2 threads, window 4096).
+Model: Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm, SHA-256 bf1aba9ce8d963124407353c6aa4cbf72eba78db21ae133de983eac672ce83e0.
+NOT a device measurement. The probe drives the app's own LiteRtLmLocalModelRuntime and DialogueLatencyProbe classes.
+Native library log lines (W0000/I0000) are removed; nothing else is edited. Run A printed umlauts as '?' (console encoding).
+Qwen3 writes hidden reasoning before every answer: its time to the first visible text is mostly that reasoning,
+and an answer that spends the whole output budget on it comes back empty.
+
+===== RUN A: probe as the model-centre button runs it (part 1) and runtime rules (part 2) =====
+ 11:22:40 up 57 min,  0 user,  load average: 1.34, 1.67, 1.39
+LOAD state=READY backend=CPU contextTokens=4096 threads=2 toolFreePromptBytes=8448
+PASS model loaded
+PROBE fresh_per_turn turn 1/6
+PROBE fresh_per_turn turn 2/6
+PROBE fresh_per_turn turn 3/6
+PROBE fresh_per_turn turn 4/6
+PROBE fresh_per_turn turn 5/6
+PROBE fresh_per_turn turn 6/6
+PROBE kept_conversation turn 1/6
+PROBE kept_conversation turn 2/6
+PROBE kept_conversation turn 3/6
+PROBE kept_conversation turn 4/6
+PROBE kept_conversation turn 5/6
+PROBE kept_conversation turn 6/6
+REPORT {"schema":"continuum-dialogue-latency-probe-v1","stopReason":null,"note":"Fester Probedialog mit Stellvertreter-Prompt, nicht das Gespr?ch des Besitzers. Der zweite Durchgang startet auf dem vom ersten erw?rmten Ger?t.","passes":[{"mode":"fresh_per_turn","thermalStart":null,"emptyAnswers":1,"totalMsSum":366249,"turnsRun":6,"stoppedEarly":false,"reusedTurns":0,"firstTextMsSum":null,"thermalEnd":null,"turns":[{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":31773,"responseCharacters":157,"turn":1,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":27134,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2114,"sentBytes":2114,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":57278,"responseCharacters":369,"turn":2,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":46255,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2494,"sentBytes":2494,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":41693,"responseCharacters":229,"turn":3,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":32105,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2933,"sentBytes":2933,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":47293,"responseCharacters":238,"turn":4,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":37863,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3231,"sentBytes":3231,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":59116,"responseCharacters":505,"turn":5,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":39339,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3556,"sentBytes":3556,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":129096,"responseCharacters":0,"turn":6,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":4142,"sentBytes":4142,"reused":false}]},{"mode":"kept_conversation","thermalStart":null,"emptyAnswers":0,"totalMsSum":237079,"turnsRun":6,"stoppedEarly":false,"reusedTurns":5,"firstTextMsSum":194338,"thermalEnd":null,"turns":[{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":33319,"responseCharacters":157,"turn":1,"completed":true,"nativeTokensAfter":877,"nativeTokensBefore":null,"firstTextMs":28414,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2114,"sentBytes":2114,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":37471,"responseCharacters":294,"turn":2,"completed":true,"nativeTokensAfter":1118,"nativeTokensBefore":877,"firstTextMs":27293,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2494,"sentBytes":382,"reused":true},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":41343,"responseCharacters":321,"turn":3,"completed":true,"nativeTokensAfter":1370,"nativeTokensBefore":1118,"firstTextMs":31035,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2867,"sentBytes":354,"reused":true},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":53312,"responseCharacters":189,"turn":4,"completed":true,"nativeTokensAfter":1695,"nativeTokensBefore":1370,"firstTextMs":47417,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3260,"sentBytes":356,"reused":true},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":33476,"responseCharacters":183,"turn":5,"completed":true,"nativeTokensAfter":1710,"nativeTokensBefore":1695,"firstTextMs":27282,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3539,"sentBytes":374,"reused":true},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":38158,"responseCharacters":146,"turn":6,"completed":true,"nativeTokensAfter":1933,"nativeTokensBefore":1710,"firstTextMs":32897,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3805,"sentBytes":367,"reused":true}]}],"meta":{"modelSha256":"bf1aba9ce8d963124407353c6aa4cbf72eba78db21ae133de983eac672ce83e0","host":true,"model":"qwen3-0.6b.litertlm","contextTokens":4096,"computeThreads":2},"syntheticDialogue":true,"turnsPerPass":6,"complete":true,"order":["fresh_per_turn","kept_conversation"]}
+GESPR?CHS-ZEITPROBE (fester Probedialog, 6 Z?ge je Durchgang)
+
+Ohne (neues Gespr?ch je Zug, bisheriges Verhalten) ? 6 Z?ge
+Erster Text je Zug (ms): 27134 / 46255 / 32105 / 37863 / 39339 / ?
+Gesamtzeit je Zug (ms): 31773 / 57278 / 41693 / 47293 / 59116 / 129096
+Gesendete Bytes je Zug: 2114 / 2494 / 2933 / 3231 / 3556 / 4142
+Summe Gesamtzeit: 366249 ms ? Thermalstufe ? ? ?
+Leere Antworten des Modells: 1
+
+Mit behaltenem Gespr?ch ? 6 Z?ge ? davon weiterverwendet: 5
+Erster Text je Zug (ms): 28414 / 27293 / 31035 / 47417 / 27282 / 32897
+Gesamtzeit je Zug (ms): 33319 / 37471 / 41343 / 53312 / 33476 / 38158
+Gesendete Bytes je Zug: 2114 / 382 / 354 / 356 / 374 / 367
+Summe Gesamtzeit: 237079 ms ? Thermalstufe ? ? ?
+
+Der zweite Durchgang startet auf dem vom ersten erw?rmten Ger?t. F?r eine belastbare Aussage die Probe nach dem Abk?hlen wiederholen.
+INFO probe complete=true
+A1 COMPLETED reused=false reason=null tokensBefore=null retained=true tokensAfter=908
+PASS a completed dialogue turn is retained
+A2 COMPLETED reused=true reason=null tokensBefore=908 retained=true tokensAfter=1078
+PASS the follow-up is appended to the kept conversation
+A3 CANCELLED reused=true reason=null tokensBefore=1078 retained=false tokensAfter=null
+PASS a stopped turn was appended but is not retained
+A4 COMPLETED reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS after a stop the same key is answered from the complete prompt
+B1 COMPLETED reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS another key never continues a kept conversation
+B2 textOnly=COMPLETED then COMPLETED reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS another generation entry ends the kept conversation
+B3 COMPLETED reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS an explicit release ends the kept conversation
+UNLOAD state=EMPTY
+PASS unload releases the engine with a kept conversation
+exit=0
+ 11:38:05 up  1:13,  0 user,  load average: 1.90, 1.92, 1.74
+
+===== RUN B: same, every prompt's clock line ends with Qwen3's soft switch /no_think (host only, the app never adds it) =====
+ 11:47:35 up  1:22,  0 user,  load average: 1.39, 1.50, 1.58
+LOAD state=READY backend=CPU contextTokens=4096 threads=2 toolFreePromptBytes=8448
+PASS model loaded
+PROBE clock suffix='/no_think'
+PROBE fresh_per_turn turn 1/6
+PROBE fresh_per_turn turn 2/6
+PROBE fresh_per_turn turn 3/6
+PROBE fresh_per_turn turn 4/6
+PROBE fresh_per_turn turn 5/6
+PROBE fresh_per_turn turn 6/6
+PROBE kept_conversation turn 1/6
+PROBE kept_conversation turn 2/6
+PROBE kept_conversation turn 3/6
+PROBE kept_conversation turn 4/6
+PROBE kept_conversation turn 5/6
+PROBE kept_conversation turn 6/6
+REPORT {"schema":"continuum-dialogue-latency-probe-v1","stopReason":null,"note":"Fester Probedialog mit Stellvertreter-Prompt, nicht das Gespräch des Besitzers. Der zweite Durchgang startet auf dem vom ersten erwärmten Gerät.","passes":[{"mode":"fresh_per_turn","thermalStart":null,"emptyAnswers":5,"totalMsSum":557374,"turnsRun":6,"stoppedEarly":false,"reusedTurns":0,"firstTextMsSum":null,"thermalEnd":null,"turns":[{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":122790,"responseCharacters":0,"turn":1,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2124,"sentBytes":2124,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":124593,"responseCharacters":0,"turn":2,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2360,"sentBytes":2360,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":31794,"responseCharacters":752,"turn":3,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":7884,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2441,"sentBytes":2441,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":29599,"responseCharacters":0,"turn":4,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3262,"sentBytes":3262,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":124214,"responseCharacters":0,"turn":5,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3363,"sentBytes":3363,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":124384,"responseCharacters":0,"turn":6,"completed":true,"nativeTokensAfter":null,"nativeTokensBefore":null,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3457,"sentBytes":3457,"reused":false}]},{"mode":"kept_conversation","thermalStart":null,"emptyAnswers":3,"totalMsSum":205511,"turnsRun":6,"stoppedEarly":false,"reusedTurns":5,"firstTextMsSum":null,"thermalEnd":null,"turns":[{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":124572,"responseCharacters":0,"turn":1,"completed":true,"nativeTokensAfter":1684,"nativeTokensBefore":null,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2124,"sentBytes":2124,"reused":false},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":18434,"responseCharacters":0,"turn":2,"completed":true,"nativeTokensAfter":921,"nativeTokensBefore":1684,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2360,"sentBytes":392,"reused":true},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":13010,"responseCharacters":263,"turn":3,"completed":true,"nativeTokensAfter":1013,"nativeTokensBefore":921,"firstTextMs":5203,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2441,"sentBytes":364,"reused":true},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":13188,"responseCharacters":0,"turn":4,"completed":true,"nativeTokensAfter":1223,"nativeTokensBefore":1013,"firstTextMs":null,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2776,"sentBytes":366,"reused":true},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":22121,"responseCharacters":546,"turn":5,"completed":true,"nativeTokensAfter":1444,"nativeTokensBefore":1223,"firstTextMs":4800,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":2877,"sentBytes":384,"reused":true},{"thermalAfter":null,"reuseReason":null,"availableRamBytesAfter":null,"totalMs":14186,"responseCharacters":237,"turn":6,"completed":true,"nativeTokensAfter":1654,"nativeTokensBefore":1444,"firstTextMs":6250,"batteryPercentAfter":null,"failure":null,"thermalBefore":null,"fullPromptBytes":3509,"sentBytes":377,"reused":true}]}],"meta":{"modelSha256":"bf1aba9ce8d963124407353c6aa4cbf72eba78db21ae133de983eac672ce83e0","host":true,"model":"qwen3-0.6b.litertlm","contextTokens":4096,"computeThreads":2},"syntheticDialogue":true,"turnsPerPass":6,"complete":true,"order":["fresh_per_turn","kept_conversation"]}
+GESPRÄCHS-ZEITPROBE (fester Probedialog, 6 Züge je Durchgang)
+
+Ohne (neues Gespräch je Zug, bisheriges Verhalten) · 6 Züge
+Erster Text je Zug (ms): – / – / 7884 / – / – / –
+Gesamtzeit je Zug (ms): 122790 / 124593 / 31794 / 29599 / 124214 / 124384
+Gesendete Bytes je Zug: 2124 / 2360 / 2441 / 3262 / 3363 / 3457
+Summe Gesamtzeit: 557374 ms · Thermalstufe – → –
+Leere Antworten des Modells: 5
+
+Mit behaltenem Gespräch · 6 Züge · davon weiterverwendet: 5
+Erster Text je Zug (ms): – / – / 5203 / – / 4800 / 6250
+Gesamtzeit je Zug (ms): 124572 / 18434 / 13010 / 13188 / 22121 / 14186
+Gesendete Bytes je Zug: 2124 / 392 / 364 / 366 / 384 / 377
+Summe Gesamtzeit: 205511 ms · Thermalstufe – → –
+Leere Antworten des Modells: 3
+
+Der zweite Durchgang startet auf dem vom ersten erwärmten Gerät. Für eine belastbare Aussage die Probe nach dem Abkühlen wiederholen.
+INFO probe complete=true
+A1 COMPLETED reused=false reason=null tokensBefore=null retained=true tokensAfter=908
+PASS a completed dialogue turn is retained
+A2 COMPLETED reused=true reason=null tokensBefore=908 retained=true tokensAfter=1078
+PASS the follow-up is appended to the kept conversation
+A3 CANCELLED reused=true reason=null tokensBefore=1078 retained=false tokensAfter=null
+PASS a stopped turn was appended but is not retained
+A4 COMPLETED reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS after a stop the same key is answered from the complete prompt
+B1 COMPLETED reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS another key never continues a kept conversation
+B2 textOnly=COMPLETED then COMPLETED reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS another generation entry ends the kept conversation
+B3 COMPLETED reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS an explicit release ends the kept conversation
+UNLOAD state=EMPTY
+PASS unload releases the engine with a kept conversation
+exit=0
+ 12:05:36 up  1:40,  0 user,  load average: 1.93, 1.92, 1.84
+
+===== RUN C: part 2 only, LiteRT-LM benchmark flag set by the probe so the runtime reports tokens read/written per turn =====
+ 12:06:32 up  1:41,  0 user,  load average: 0.71, 1.57, 1.72
+LOAD state=READY backend=CPU contextTokens=4096 threads=2 toolFreePromptBytes=8448
+PASS model loaded
+PROBE clock suffix='' benchmarkFlag=true
+A1 COMPLETED readTokens=649 writtenTokens=259 firstTextMs=29364 totalMs=36479 chars=194 reused=false reason=null tokensBefore=null retained=true tokensAfter=908
+PASS a completed dialogue turn is retained
+A2 COMPLETED readTokens=132 writtenTokens=232 firstTextMs=28442 totalMs=31806 chars=71 reused=true reason=null tokensBefore=908 retained=true tokensAfter=1078
+PASS the follow-up is appended to the kept conversation
+A3 CANCELLED readTokens=null writtenTokens=null firstTextMs=null totalMs=28194 chars=2 reused=true reason=null tokensBefore=1078 retained=false tokensAfter=null
+PASS a stopped turn was appended but is not retained
+A4 COMPLETED readTokens=649 writtenTokens=259 firstTextMs=33356 totalMs=40722 chars=194 reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS after a stop the same key is answered from the complete prompt
+B1 COMPLETED readTokens=649 writtenTokens=259 firstTextMs=33126 totalMs=40907 chars=194 reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS another key never continues a kept conversation
+B2 textOnly=COMPLETED readTokens=649 writtenTokens=259 firstTextMs=33280 totalMs=41234 chars=194 then COMPLETED readTokens=649 writtenTokens=259 firstTextMs=32133 totalMs=39598 chars=194 reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS another generation entry ends the kept conversation
+B3 COMPLETED readTokens=649 writtenTokens=259 firstTextMs=32634 totalMs=40082 chars=194 reused=false reason=RUNTIME_NO_KEPT_CONVERSATION tokensBefore=null retained=true tokensAfter=908
+PASS an explicit release ends the kept conversation
+UNLOAD state=EMPTY
+PASS unload releases the engine with a kept conversation
+exit=0
+ 12:12:00 up  1:47,  0 user,  load average: 1.86, 1.79, 1.78
