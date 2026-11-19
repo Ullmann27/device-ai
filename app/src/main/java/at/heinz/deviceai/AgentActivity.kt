@@ -926,6 +926,8 @@ class AgentActivity : Activity() {
         mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
         mainHandler.removeCallbacks(dashboardRefresh)
         mainHandler.post(dashboardRefresh)
+        mainHandler.removeCallbacks(continuumWatchTick)
+        mainHandler.postDelayed(continuumWatchTick, at.heinz.deviceai.briefing.ContinuumBriefingDirector.WATCH_MILLIS)
         refreshReadinessGuide()
         // Setup is visible on first open; microphone and camera still need their own actions.
         if (!readinessIntroShown && !getSharedPreferences("continuum-readiness", MODE_PRIVATE)
@@ -1041,6 +1043,7 @@ class AgentActivity : Activity() {
         }
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.removeCallbacks(dashboardRefresh)
+        mainHandler.removeCallbacks(continuumWatchTick)
         super.onPause()
     }
 
@@ -8151,6 +8154,10 @@ class AgentActivity : Activity() {
         // closed, before the computer lane (which only ever prepared drafts in the split screen).
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
             computerController?.active != true && ownerSend.handle(request)) return
+        // Briefing lane: „Systemcheck“, „Was steht heute an?“, „Ruf Anna an“ and the answers to its own questions.
+        // Deterministic, whole-utterance, fail closed; an order of the news lane stays a news order.
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && continuumBriefing.handle(request)) return
         if (clarifiedAppName == null && selectedBot == null && tryStartComputerRequest(request, clarifiedComputer)) return
         // Owner work tools: „Fass mir die Nachrichten von heute zusammen“, then „speichere das als PDF“ / „schick das
         // per Mail an …“. Deterministic and fail closed; before the clock, document and research lanes can guess.
@@ -12700,7 +12707,10 @@ class AgentActivity : Activity() {
         }
 
         override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.WORK, request)
-        override fun outcome(outcome: OwnerLaneOutcome) = ownerMission.laneOutcome(OwnerMissionLane.WORK, outcome)
+        override fun outcome(outcome: OwnerLaneOutcome) {
+            continuumBriefing.laneOutcome(outcome)
+            ownerMission.laneOutcome(OwnerMissionLane.WORK, outcome)
+        }
         override fun offerToOpen(): Boolean = !ownerMission.active
 
         override fun reply(request: String, text: String, kind: at.heinz.deviceai.cognitive.NonModelReplyKind) =
@@ -12916,7 +12926,10 @@ class AgentActivity : Activity() {
         override val ownerTurn: Long get() = work.ownerTurn
         override val assistantName: String? get() = work.assistantName
         override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.DESK, request)
-        override fun outcome(outcome: OwnerLaneOutcome) = ownerMission.laneOutcome(OwnerMissionLane.DESK, outcome)
+        override fun outcome(outcome: OwnerLaneOutcome) {
+            continuumBriefing.laneOutcome(outcome)
+            ownerMission.laneOutcome(OwnerMissionLane.DESK, outcome)
+        }
         override fun offerToOpen(): Boolean = !ownerMission.active
 
         override fun reply(request: String, text: String) {
@@ -13117,6 +13130,7 @@ class AgentActivity : Activity() {
         override val assistantName: String? get() = work.assistantName
         override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.SEND, request)
         override fun outcome(outcome: OwnerLaneOutcome) {
+            continuumBriefing.laneOutcome(outcome)
             ownerMission.laneOutcome(OwnerMissionLane.SEND, outcome)
             incomingSendOutcome(outcome)
         }
@@ -13427,6 +13441,269 @@ class AgentActivity : Activity() {
         }
 
         override fun answerWithoutPlan(request: String) = runLocal(request)
+    }
+
+    // ── Briefing lane (system start report, daily briefing, „Ruf Anna an“, truthful warnings) ──────────────────
+    // Thin adapter only: recognition, wording, cards and every decision live in the package
+    // at.heinz.deviceai.briefing; the Activity lends its existing paths (owner turn, non-model reply, web consent,
+    // single busy lane, contact source of the send lane) and three read-only Android boundaries.
+
+    /** Host tests replace the calendar, the dialer, the device state and the weather transport; null = the real phone. */
+    internal var continuumCalendarOverride: at.heinz.deviceai.briefing.ContinuumCalendarSource? = null
+    internal var continuumDialOverride: ((String) -> String?)? = null
+    internal var continuumSystemFactsOverride: (() -> at.heinz.deviceai.briefing.ContinuumSystemFacts)? = null
+    internal var continuumWeatherNetworkOverride: at.heinz.deviceai.cognitive.ResearchHttpEnvironment? = null
+    /** „Offene Nachrichten“: the list another part of the app provides; the default knows none. */
+    internal var continuumOpenMessages: at.heinz.deviceai.briefing.ContinuumOpenMessages =
+        at.heinz.deviceai.briefing.ContinuumOpenMessages.NONE
+    /** How the owner is addressed in reports and warnings; null = without a name. */
+    internal var continuumOwnerName: () -> String? = { at.heinz.deviceai.briefing.ContinuumBriefingDirector.DEFAULT_OWNER_NAME }
+    private val continuumDevice by lazy { at.heinz.deviceai.briefing.AndroidContinuumDevice(this) }
+    private val continuumBriefingStore by lazy { at.heinz.deviceai.briefing.ContinuumBriefingPreferences(this) }
+    private var pendingContinuumCalendar: ((Boolean) -> Unit)? = null
+    internal val continuumBriefing by lazy {
+        at.heinz.deviceai.briefing.ContinuumBriefingDirector(ContinuumBriefingAdapter())
+    }
+
+    /** Greeting chain: the truthful system start report of this moment as text to say; it says nothing itself. */
+    internal fun systemStartReport(): String = continuumBriefing.systemReport()
+
+    /** Greeting chain: the once-per-day offer text to say, or null. A plain „ja“ of the owner then starts the briefing. */
+    internal fun briefingOffer(): String? = if (selectedBot != null || neuralCoach.isActive()) null else continuumBriefing.briefingOffer()
+
+    /** Greeting chain: starts the daily briefing now, without an owner turn. */
+    internal fun runBriefing() { if (!busy && selectedBot == null && !neuralCoach.isActive()) continuumBriefing.runBriefing() }
+
+    /** Stage: the owner tapped the next-step offer [offerId] of [at.heinz.deviceai.briefing.ContinuumBriefingBoard.offers]. */
+    internal fun chooseContinuumOffer(offerId: String): Boolean = !busy && continuumBriefing.choose(offerId)
+
+    /** The watcher's observation, once a minute while Continuum is in front; it says at most one warning. */
+    private val continuumWatchTick = object : Runnable {
+        override fun run() {
+            if (!foregroundLearningActive || isFinishing || isDestroyed) return
+            if (selectedBot == null && !neuralCoach.isActive()) runCatching { continuumBriefing.watchTick() }
+            mainHandler.postDelayed(this, at.heinz.deviceai.briefing.ContinuumBriefingDirector.WATCH_MILLIS)
+        }
+    }
+
+    private fun continuumCalendarPermissionResult(requestCode: Int, grantResults: IntArray): Boolean {
+        if (requestCode != at.heinz.deviceai.briefing.AndroidContinuumDevice.CALENDAR_PERMISSION_REQUEST) return false
+        val done = pendingContinuumCalendar
+        pendingContinuumCalendar = null
+        done?.invoke(!isFinishing && !isDestroyed &&
+            grantResults.firstOrNull() == android.content.pm.PackageManager.PERMISSION_GRANTED)
+        return true
+    }
+
+    private inner class ContinuumBriefingAdapter : at.heinz.deviceai.briefing.ContinuumBriefingHost {
+        private val work = OwnerWorkToolsAdapter()
+        private val send = OwnerSendAdapter()
+        private fun stay() = activeWorkArea == ContinuumWorkArea.START
+        override val sessionId: String get() = work.sessionId
+        override val ownerTurn: Long get() = work.ownerTurn
+        override val assistantName: String? get() = work.assistantName
+        override fun ownerName(): String? = continuumOwnerName()
+        override fun acceptOwnerTurn(request: String) = showOwnerLaneTurn(request)
+        override fun clearInput() { input.text.clear() }
+
+        override fun answer(request: String?, spoken: String, shown: String) {
+            // Only the owner's own sentence and a fixed label enter the model context: no calendar entry, contact or
+            // device value. The whole answer is shown; only its spoken part is read aloud.
+            val keep = request == null || at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(
+                localConversationContext, sessionId, request, at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+            addAssistantMessage(shown.take(8_000), preserveLocalContext = keep, keepCockpit = stay(), speakNow = false)
+            speakReply(at.heinz.deviceai.cognitive.ChatReplyFormatter.plain(spoken.take(4_000)), ownerReplyAllowsMaya)
+        }
+
+        override fun activity(line: String) = addToolActivity(line)
+        override fun idle(): Boolean = !busy && !botLookupPending && pendingResearchChatApproval == null &&
+            !ownerMission.active && computerController?.active != true && foregroundLearningActive && !isFinishing && !isDestroyed
+        override fun speaking(): Boolean = voiceSpeaking || voiceUtteranceId != null || voiceListening
+        override fun later(action: () -> Unit) { mainHandler.post { if (!isFinishing && !isDestroyed) action() } }
+
+        override fun afterSpeech(action: () -> Unit) {
+            var left = at.heinz.deviceai.briefing.ContinuumBriefingDirector.SPEECH_POLLS
+            val wait = object : Runnable {
+                override fun run() {
+                    if (isFinishing || isDestroyed) return
+                    if ((voiceSpeaking || voiceUtteranceId != null) && --left >= 0) mainHandler.postDelayed(this, 300L)
+                    else action()
+                }
+            }
+            mainHandler.post(wait)
+        }
+
+        override fun submit(order: String) {
+            if (!::input.isInitialized || isFinishing || isDestroyed) return
+            input.setText(order)
+            sendCurrentInput()
+        }
+
+        override fun systemFacts(): at.heinz.deviceai.briefing.ContinuumSystemFacts {
+            continuumSystemFactsOverride?.let { return it() }
+            val battery = continuumDevice.battery()
+            val storage = continuumDevice.storage()
+            val brain = if (claudeBrain?.claudeSelected == true)
+                at.heinz.deviceai.briefing.ContinuumSystemFacts.Brain.Cloud(claudeBrain?.hasKey() == true)
+            else at.heinz.deviceai.briefing.AndroidContinuumDevice.localBrain(
+                if (::localRuntime.isInitialized) localRuntime.state else null,
+                if (::localRuntime.isInitialized) localRuntime.loadedModel?.id else null)
+            return at.heinz.deviceai.briefing.ContinuumSystemFacts(
+                brain = brain,
+                speechInputAvailable = continuumDevice.speechRecognition(),
+                microphoneGranted = continuumDevice.microphoneGranted(),
+                speechOutputEnabled = voiceEnabled,
+                speechOutputReady = if (voiceInitialized || mayaAvailable()) replyVoiceReady() else null,
+                internetMode = work.internetMode(),
+                networkOnline = continuumDevice.online(),
+                allFilesAccess = when (runCatching { (ownerDeskFilesOverride ?: ownerDeskPhoneFiles).access() }.getOrNull()) {
+                    OwnerLibraryAccess.GRANTED -> true
+                    OwnerLibraryAccess.MISSING -> false
+                    else -> null
+                },
+                accessibilityOn = runCatching { (ownerSendDeviceOverride ?: ownerSendPhone).accessibilityOn() }.getOrNull(),
+                shizukuReady = if (::bridge.isInitialized) bridge.isReady() else null,
+                batteryPercent = battery.percent,
+                charging = battery.charging,
+                thermalStatus = currentThermalStatusOrNull(),
+                storageFreeBytes = storage?.first,
+                storageTotalBytes = storage?.second,
+                openWork = openWork,
+                openMessages = runCatching { continuumOpenMessages.open()?.size }.getOrNull(),
+                running = buildList {
+                    if (ownerMission.active) add("eine Auftragsfolge") else if (busy) add("ein Auftrag")
+                })
+        }
+
+        /** The stage quality really is lower than it would be on a cool device (Command03StageSignals, AUTO profile). */
+        override fun loadReducedByHeat(facts: at.heinz.deviceai.briefing.ContinuumSystemFacts): Boolean {
+            val power = getSystemService(POWER_SERVICE) as? android.os.PowerManager
+            val saving = runCatching { power?.isPowerSaveMode }.getOrNull()
+            val profile = at.heinz.deviceai.ui.Command03StageSignals.Profile.of(
+                getSharedPreferences("continuum-command03", MODE_PRIVATE).getString("performance_profile", null))
+            return at.heinz.deviceai.ui.Command03StageSignals.quality(facts.thermalStatus, saving, profile) !=
+                at.heinz.deviceai.ui.Command03StageSignals.quality(0, saving, profile)
+        }
+
+        override fun webJobRunning(): Boolean = activeWebResearchSession != null
+
+        override fun calendar(): at.heinz.deviceai.briefing.ContinuumCalendarSource =
+            continuumCalendarOverride ?: at.heinz.deviceai.briefing.AndroidContinuumCalendar(this@AgentActivity)
+
+        override fun requestCalendar(explanation: String, done: (Boolean) -> Unit) {
+            AlertDialog.Builder(this@AgentActivity).setTitle("Kalender lesen").setMessage(explanation)
+                .setNegativeButton("Nicht jetzt") { _, _ -> done(false) }
+                .setPositiveButton("Weiter") { _, _ ->
+                    pendingContinuumCalendar = done
+                    requestPermissions(arrayOf(android.Manifest.permission.READ_CALENDAR),
+                        at.heinz.deviceai.briefing.AndroidContinuumDevice.CALENDAR_PERMISSION_REQUEST)
+                }
+                .setOnCancelListener { done(false) }.show()
+        }
+
+        override fun internetMode(): at.heinz.deviceai.cognitive.InternetAccessMode = work.internetMode()
+
+        override fun confirmWeb(call: at.heinz.deviceai.cognitive.WebToolRequest, explanation: String?, notGranted: String?,
+            completed: (at.heinz.deviceai.cognitive.ApprovedWebResearchSession?) -> Unit) =
+            work.confirmWeb(call, explanation, notGranted, completed)
+
+        /** Same lane, cancellation and stale-result rules as the news job; [done] is always called. */
+        override fun readWeather(session: at.heinz.deviceai.cognitive.ApprovedWebResearchSession, request: String,
+            weather: at.heinz.deviceai.briefing.ContinuumWeatherRequest,
+            done: (Result<at.heinz.deviceai.briefing.ContinuumWeatherRead>) -> Unit) {
+            if (busy || localAgentExecutor.isShutdown || !foregroundLearningActive || isFinishing || isDestroyed ||
+                !session.isAuthorized()) {
+                session.cancel()
+                done(Result.failure(IllegalStateException("Ein anderer Auftrag läuft bereits")))
+                return
+            }
+            val owner = this@AgentActivity.sessionId
+            val cancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
+            val turn = at.heinz.deviceai.chief.TurnLifecycle("briefing-" + UUID.randomUUID())
+            activeChiefTurn = turn
+            turn.acknowledge()?.let { cockpitTriggers.commandAcknowledged(turn.turnId, request) }
+            activeWebResearchSession = session
+            activeResearchCancellation = cancellation
+            activeLocalRequest = true
+            setBusy(true)
+            localAgentExecutor.execute {
+                val result = runCatching {
+                    cockpitTriggers.workStep(turn.turnId, "weather", "Wetter abrufen", at.heinz.deviceai.cockpit.StepState.ACTIVE,
+                        at.heinz.deviceai.cockpit.CockpitAction.RESEARCH)
+                    val grantCheck = { session.checkActive(); check(!cancellation.isCancelled()) { "Wetterabruf abgebrochen" } }
+                    val transport = continuumWeatherNetworkOverride?.let {
+                        at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider(it,
+                            at.heinz.deviceai.briefing.ApprovedWeatherToolRunner.policy, accessCheck = grantCheck)
+                    } ?: at.heinz.deviceai.briefing.ApprovedWeatherToolRunner.transport(grantCheck)
+                    val runner = at.heinz.deviceai.briefing.ApprovedWeatherToolRunner(session, weather, transport)
+                    val gate = ToolGate(ToolPolicy(timeoutMillis = 30_000), runner, receiptStore = receiptStore)
+                    val execution = gate.execute(session.call.proposal().invocation("weather-" + UUID.randomUUID()), userConfirmed = true)
+                    check(execution.record.status == ToolExecutionStatus.SUCCEEDED) { execution.record.decisionReason }
+                    checkNotNull(runner.result) { "Internetfreigabe widerrufen" }.also { session.checkAuthorized() }
+                }
+                runOnUiThread {
+                    if (isFinishing || isDestroyed) return@runOnUiThread
+                    if (activeResearchCancellation !== cancellation) return@runOnUiThread
+                    activeResearchCancellation = null
+                    activeWebResearchSession = null
+                    activeLocalRequest = false
+                    val current = this@AgentActivity.sessionId == owner && foregroundLearningActive &&
+                        !cancellation.isCancelled() && session.isAuthorized()
+                    val read = result.getOrNull() is at.heinz.deviceai.briefing.ContinuumWeatherRead.Report
+                    cockpitTriggers.workStep(turn.turnId, "weather", "Wetter abrufen", if (current && read)
+                        at.heinz.deviceai.cockpit.StepState.DONE else at.heinz.deviceai.cockpit.StepState.FAILED, null)
+                    if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = current && read)
+                    setBusy(false)
+                    refreshLocalModelUi()
+                    if (current) done(result)
+                    else {
+                        addToolActivity("WETTER · abgebrochen oder Freigabe widerrufen · Ergebnis verworfen")
+                        done(Result.failure(java.util.concurrent.CancellationException("Wetterabruf abgebrochen")))
+                    }
+                }
+            }
+        }
+
+        /** Short local read on the busy lane with a real step; no model, no network. [done] is always called. */
+        override fun <T> runJob(request: String, label: String, work: () -> T, done: (Result<T>) -> Unit) {
+            if (busy || localAgentExecutor.isShutdown || isFinishing || isDestroyed) {
+                done(Result.failure(IllegalStateException("Ein anderer Auftrag läuft bereits")))
+                return
+            }
+            val owner = this@AgentActivity.sessionId
+            val turn = at.heinz.deviceai.chief.TurnLifecycle("briefing-" + UUID.randomUUID())
+            activeChiefTurn = turn
+            turn.acknowledge()?.let { cockpitTriggers.commandAcknowledged(turn.turnId, request) }
+            activeLocalRequest = true
+            setBusy(true)
+            localAgentExecutor.execute {
+                cockpitTriggers.workStep(turn.turnId, "read", label, at.heinz.deviceai.cockpit.StepState.ACTIVE, null)
+                val result = runCatching { work() }
+                cockpitTriggers.workStep(turn.turnId, "read", label, if (result.isSuccess)
+                    at.heinz.deviceai.cockpit.StepState.DONE else at.heinz.deviceai.cockpit.StepState.FAILED, null)
+                runOnUiThread {
+                    if (isFinishing || isDestroyed) return@runOnUiThread
+                    activeLocalRequest = false
+                    if (turn.deliver()) cockpitTriggers.turnEnded(turn.turnId, delivered = result.isSuccess,
+                        outcomeVerified = result.isSuccess)
+                    setBusy(false)
+                    refreshLocalModelUi()
+                    done(if (this@AgentActivity.sessionId == owner) result
+                        else Result.failure(java.util.concurrent.CancellationException("Sitzung gewechselt")))
+                }
+            }
+        }
+
+        override fun openWork(): List<String> = openWork
+        override fun openMessages(): at.heinz.deviceai.briefing.ContinuumOpenMessages = continuumOpenMessages
+        override fun contactsReadable(): Boolean = send.contactsReadable()
+        override fun requestContacts(explanation: String, done: (Boolean) -> Unit) = send.requestContacts(explanation, done)
+        override fun contacts(): at.heinz.deviceai.sending.OwnerSendContactSource = send.contacts()
+        override fun dial(number: String): String? {
+            continuumDialOverride?.let { return it(number) }
+            return continuumDevice.dial(number)
+        }
+        override fun store(): at.heinz.deviceai.briefing.ContinuumBriefingStore = continuumBriefingStore
     }
 
     private fun runCloud(message: String?, outputs: List<ToolOutput>) = runCloud(message, outputs, command03ViewOwner())
@@ -18518,6 +18795,7 @@ class AgentActivity : Activity() {
             refreshReadinessGuide()
             return
         }
+        if (continuumCalendarPermissionResult(requestCode, grantResults)) return
         if (requestCode == OWNER_SEND_CONTACTS_PERMISSION_CODE) {
             val done = pendingOwnerSendContacts
             pendingOwnerSendContacts = null
