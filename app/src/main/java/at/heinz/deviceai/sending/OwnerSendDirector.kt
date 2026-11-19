@@ -121,6 +121,30 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         return true
     }
 
+    /**
+     * The answer the owner dictated and confirmed in the incoming-message conversation; [request] is his yes to the
+     * repeated wording. Same lane and same rules as an order he spoke himself: [recipient] (the sender's name as the
+     * notification showed it – data, never a command) is only ever matched against the contacts, so it resolves to
+     * one address-book entry or to this lane's question; the standing grant decides between sending and a draft, the
+     * screen is checked and the daily limit holds. false = not taken and nothing prepared (unusable text or name,
+     * or Gmail without its grant – a mail is never handed to another app as a half-filled draft from here).
+     */
+    fun reply(request: String, channel: SendChannel, recipient: String, subject: String, text: String): Boolean {
+        val words = OwnerSendIntentParser.dictated(text) ?: return false
+        val name = recipient.replace(Regex("[^\\p{L}\\p{N}.'’ -]+"), " ").replace(Regex(" {2,}"), " ").trim()
+        if (name.isEmpty() || name.length > 80 || name.none { it.isLetter() }) return false
+        if (channel == SendChannel.GMAIL && (!host.grants().enabled(channel) || !host.device().installed(channel))) return false
+        open = null
+        host.acceptOwnerTurn(request)
+        start(when (channel) {
+            SendChannel.WHATSAPP -> Work.Chat(request, OwnerSendOrder(name, words, TextOrigin.OWNER_CONFIRMED, original = request),
+                null, words, TextOrigin.OWNER_CONFIRMED)
+            SendChannel.GMAIL -> Work.Mail(request, OwnerMailHandover(request, null, name, subject.take(200), words, null),
+                null, TextOrigin.OWNER_CONFIRMED)
+        })
+        return true
+    }
+
     private fun answer(request: String, pending: Pending, newOrder: Boolean): Boolean {
         if (OwnerSendIntentParser.isCancel(request)) {
             host.acceptOwnerTurn(request)
