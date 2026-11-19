@@ -45,8 +45,12 @@ internal class OwnerSharedWorkFeed(private val record: OwnerSharedWorkRecord, pr
             is OwnerLaneResult.Delivered -> note(entry(SharedWorkKind.SEND,
                 if (result.state == OwnerLaneResult.Delivered.State.SENT) SharedWorkAction.SENT else SharedWorkAction.PREPARED,
                 listOf(result.to, result.channel).filter { it.isNotBlank() }.joinToString(" über ")))
-            // A search, a found file or a file handed to the viewer is a step on the way, not a piece of work.
-            is OwnerLaneResult.FilesFound, is OwnerLaneResult.FileFound, is OwnerLaneResult.FileOpened -> Unit
+            is OwnerLaneResult.PageSummarised -> note(entry(SharedWorkKind.DOCUMENT, SharedWorkAction.SUMMARISED,
+                "${result.document} (Seite ${result.page})"))
+            is OwnerLaneResult.Agenda -> note(entry(SharedWorkKind.BRIEFING, SharedWorkAction.CHECKED, "Termine ${result.span}"))
+            // A search, a found file or a file handed to the viewer is a step on the way, not a piece of work. A result
+            // type this feed does not know yet is not noted either – nothing is ever guessed into the record.
+            else -> Unit
         }
     }
 
