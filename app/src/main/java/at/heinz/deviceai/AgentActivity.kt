@@ -951,6 +951,7 @@ class AgentActivity : Activity() {
             delivery.run()
         }
         resumeOwnerDocumentDesk()
+        codingAgents.attach()
         mainHandler.post { maybeAskForConversationCamera() }
         refreshBotTeam()
         if (continuousConversation.foregroundRecoveryPending) {
@@ -1080,6 +1081,7 @@ class AgentActivity : Activity() {
         closeCommand03HtmlStage()
         pendingCommand03Input?.let { finishCommand03Input(it, false, "unavailable", restoreDraft = false) }
         mainHandler.removeCallbacks(command03InputTick)
+        codingAgents.detach()
         cancelPendingConversationSelection()
         conversationIndexRevision++
         conversationListDialog?.dismiss()
@@ -2613,6 +2615,7 @@ class AgentActivity : Activity() {
         if (at.heinz.deviceai.cognitive.OwnerCorrectionIntent.interruptsWork(addressed)) return true
         if (ownerMission.controls(spoken)) return true
         if (ownerDocumentDesk.controlsRunningJob(spoken)) return true
+        if (codingAgents.controls(spoken)) return true
         if (pendingResearchChatApproval != null &&
             at.heinz.deviceai.cognitive.ResearchConsentReply.parse(spoken) != null) return true
         return ContinuumWorkerChatRouter.parse(text) == ContinuumWorkerChatCommand.ChiefStatus ||
@@ -3975,6 +3978,7 @@ class AgentActivity : Activity() {
             botProfiles, backlogExecutor,
             onSelect = { selectBot(it.agentId) }, runtimeStatus = ::botRuntimeStatus,
             onContextChanging = ::botContextChanging, onAssign = ::submitBotTask,
+            onCloudAgents = { codingAgents.openPanel() },
             team = team, onTeamSubmit = ::submitBotTeam,
             onTeamStop = { id ->
                 team.invalidate()
@@ -7547,6 +7551,8 @@ class AgentActivity : Activity() {
                 if (interceptOwnerMission()) return@setOnClickListener
                 if (interceptOwnerDocumentDesk()) return@setOnClickListener
                 if (consumePendingResearchChatReply()) return@setOnClickListener
+                // „Erlauben“, „Ablehnen“ and „Stopp den Coding-Agenten“ reach the cloud agent while the lane is busy.
+                if (busy && codingAgents.controls(input.text.toString()) && interceptCodingAgents()) return@setOnClickListener
                 val chiefStatus = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
                     ContinuumWorkerChatCommand.ChiefStatus
                 if (busy && activeLocalRequest && !chiefStatus && !isRoutineControlWhileBusy()) cancelLocalRequest()
@@ -8047,6 +8053,7 @@ class AgentActivity : Activity() {
             return
         }
         if (consumePendingResearchChatReply()) { appNameClarification.clear(); computerClarification.clear(); return }
+        if (interceptCodingAgents()) return
         if (!botRoutingChecked && applyOwnerUnderstanding()) return
         // Exact status submissions stay read-only even while a model/bot is busy. The
         // Send button's explicit Stop/cancel behavior remains in its existing click handler.
@@ -13131,6 +13138,21 @@ class AgentActivity : Activity() {
             if (foregroundLearningActive) at.heinz.deviceai.sending.OwnerSendSettingsDialog.showDiagnosis(this@AgentActivity, report)
         }
     }
+
+    // ── Coding agents (Claude Managed Agents, cloud) – all logic in the package codingagents ────────────────────
+    // Thin hook only: the conversation, the activity log and the work window are handed over as functions. The
+    // agents run at Anthropic, never on the busy lane, and have no tool into this device.
+    internal val codingAgents by lazy {
+        at.heinz.deviceai.codingagents.CodingAgentScreen(this, cockpitTriggers,
+            say = { addAssistantMessage(it.take(8_000), preserveLocalContext = true, keepCockpit = activeWorkArea == ContinuumWorkArea.START) },
+            log = ::addToolActivity, idle = { !busy && !botLookupPending }, ownerTurn = ::showOwnerLaneTurn,
+            assistantName = { continuumState?.archive?.identityState?.chosenName })
+    }
+
+    /** An order for the cloud coding agents, the answer to their one confirmation, an approval or their stop. */
+    private fun interceptCodingAgents(spoken: String = input.text.toString().trim()): Boolean =
+        spoken.isNotEmpty() && selectedBot == null && !botLookupPending && !neuralCoach.isActive() &&
+            codingAgents.take(spoken)
 
     // ── Owner missions („Auftragsfolge“) – logic in OwnerMission.kt and cognitive/OwnerMissionPlan*.kt ──────────
     // Thin adapter only: a mission hands every step to the owner entry of its lane above and listens to the lanes'
