@@ -307,7 +307,11 @@ class SystemIntelligenceUiTest {
             val gate = gateMethod.invoke(activity, "Analysiere", null, { false }, null, null) as ToolGate
             val unauthorized = ToolCallRequest("unbound", SystemIntelligenceCommands.DIAGNOSE, emptyMap())
             val result = gate.execute(ToolInvocation(unauthorized.callId, unauthorized))
-            assertEquals(ToolExecutionStatus.FAILED, result.record.status)
+            // Since 19.11.2026 a system-centre tool that the centre did not start itself is refused BEFORE dispatch
+            // (devicetools precheck, plain reason for the owner) instead of failing after its start.
+            assertEquals(ToolExecutionStatus.REJECTED, result.record.status)
+            assertEquals("SYSTEM_CENTRE_ONLY", result.refusal?.code)
+            assertFalse(result.record.outcomeUncertain)
             assertSame(sample, executor.lastDiagnosis)
             val confirm = AgentActivity::class.java.getDeclaredMethod("confirmSystemChange",
                 ToolCallRequest::class.java, String::class.java, Boolean::class.javaPrimitiveType).apply { isAccessible = true }

@@ -238,6 +238,10 @@ class AgentActivity : Activity() {
     private lateinit var bridge: ShizukuBridge
     private var shizukuConnectionDialog: ShizukuConnectionDialog? = null
     private lateinit var executor: DeviceToolExecutor
+    /** Device tool layer (devicetools/): precheck per turn, cloud consents, document switch, switch commands. */
+    private val deviceTools by lazy {
+        at.heinz.deviceai.devicetools.DeviceToolAccess(this, { executor }) { claudeBrain?.claudeSelected == true }
+    }
     private var activeSystemGate: ToolGate? = null
     private var systemGeneration = 0L
     private var systemPickerSession: String? = null
@@ -8043,6 +8047,7 @@ class AgentActivity : Activity() {
         if (consumeOwnerWorkInterruption()) return
         if (interceptOwnerMission()) return
         if (interceptOwnerDocumentDesk()) return
+        if (consumeDeviceToolCommand()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
             setOf("stopp", "stop", "computer stoppen", "live-bild stoppen")) {
             val stopRequest = input.text.toString().trim()
@@ -8722,7 +8727,8 @@ class AgentActivity : Activity() {
     }
 
     private fun presentBootstrapDecision(request: String, decision: BootstrapDecision, requestRecorded: Boolean = false) {
-        if (decision.kind == BootstrapKind.DEVICE_TOOL && decision.tool != "get_storage_info" && !bridge.isReady()) {
+        // Only what Android gives an app no API for needs Shizuku; everything else runs in-process (devicetools/).
+        if (decision.kind == BootstrapKind.DEVICE_TOOL && deviceTools.blockedByMissingBridge(decision.tool)) {
             addToolActivity("GERÄTEZUGRIFF NICHT BEREIT · Auftrag nicht ausgeführt")
             addAssistantMessage(ContinuumUiCopy.deviceBridgeMissing())
             return
@@ -9387,6 +9393,27 @@ class AgentActivity : Activity() {
     private enum class NeuralSave { NOT_NEEDED, SAVED, CANCELLED, CHANGED_MEANWHILE, FAILED }
 
     /**
+     * Device tool switches, typed or spoken („Dateinamen an Claude erlauben“, „Dokumente ohne Rückfrage anlegen an“,
+     * „Werkzeugfreigaben zeigen“, „Dateizugriff einrichten“). Exact command shapes only; grammar and wording live in
+     * devicetools/DeviceToolSettings.kt. No model turn, nothing is sent.
+     */
+    private fun consumeDeviceToolCommand(): Boolean {
+        val request = input.text.toString().trim()
+        if (request.isEmpty() || busy || botLookupPending || neuralCoach.isActive()) return false
+        val reply = deviceTools.command(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+            continuumState?.archive?.identityState?.chosenName)) ?: return false
+        input.text.clear()
+        addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        val opened = !reply.openFileAccessSettings ||
+            OwnerDeviceLibrary(this).accessSettings().any { page -> runCatching { startActivity(page) }.isSuccess }
+        addNonModelReply(request, if (opened) reply.text else "Die Android-Einstellung ließ sich nicht öffnen. Du findest sie unter " +
+            "Einstellungen › Apps › Spezieller Zugriff › Zugriff auf alle Dateien.",
+            at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+        addToolActivity("WERKZEUGE · Freigabe-Befehl ausgeführt · kein Modellaufruf")
+        return true
+    }
+
+    /**
      * Owner task chain hook: „weiter“/a pick for a paused chain, a recognised multi-step recipe, or – only when the
      * owner switched model plans on – a model-proposed plan. True when the turn is handled here. Logic and wording live
      * in cognitive/OwnerTaskChain*.kt; this function only connects them to the gate, the approval dialog and the chat.
@@ -9505,7 +9532,7 @@ class AgentActivity : Activity() {
             // A chain is an owner task, not a learning example: nothing is promoted from it.
             experienceStore = InMemoryExperienceStore(),
             evaluationConfirmsOutcome = false,
-            approvalProvider = chain.approvals(AgentToolApprovalProvider { proposal, risk ->
+            approvalProvider = chain.approvals(deviceTools.approvals(chain.ownerTask, AgentToolApprovalProvider { proposal, risk ->
                 cancellation.throwIfCancelled()
                 val latch = CountDownLatch(1)
                 var approval = AgentToolApproval(false)
@@ -9524,7 +9551,7 @@ class AgentActivity : Activity() {
                 }
                 cancellation.throwIfCancelled()
                 approval
-            }),
+            })),
             limits = at.heinz.deviceai.cognitive.OwnerTaskChain.limits(chain.plan),
             callIdPrefix = "chain-" + UUID.randomUUID().toString(),
             cancellation = cancellation,
@@ -13429,9 +13456,15 @@ class AgentActivity : Activity() {
 
     private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null,
                                ephemeralScreenContext:()->Boolean = {false},
-                               botTask: ChiefBotTaskTicket? = null, systemCallId: String? = null): ToolGate {
+                               botTask: ChiefBotTaskTicket? = null, systemCallId: String? = null): ToolGate =
+        buildToolGate(ownerTurn, consentRevisionAtTurnStart, ephemeralScreenContext, botTask, systemCallId, modelTurn = false)
+
+    /** [modelTurn]: the tool results of this gate go back to the active brain (device tool privacy, see devicetools/). */
+    private fun buildToolGate(ownerTurn: String?, consentRevisionAtTurnStart: Long?, ephemeralScreenContext:()->Boolean,
+                              botTask: ChiefBotTaskTicket?, systemCallId: String?, modelTurn: Boolean): ToolGate {
         // Capture at gate creation: a late old runner cannot borrow a subsequent turn's scope.
         val effectContext = currentTaskEffectContext
+        val deviceTurn = deviceTools.turn(ownerTurn.orEmpty(), modelTurn, systemCallId)
         val presentationGeneration = workPresentationGeneration
         val cockpitLifecycle = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }
         val cockpitTurn = cockpitLifecycle?.turnId
@@ -13499,7 +13532,7 @@ class AgentActivity : Activity() {
                     finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
                 } else {
                     actualStart()
-                    DeviceToolExecutorRunner(executor).execute(request).also { output ->
+                    deviceTurn.run(request) { DeviceToolExecutorRunner(executor).execute(request) }.also { output ->
                         // Names of a real file tool answer for the HTML stage; bounded, never a path.
                         if (effectContext != null &&
                             command03Files.accept(effectContext.session, request.name, request.arguments, output))
@@ -13525,7 +13558,7 @@ class AgentActivity : Activity() {
                     }
                 }
             }
-        },receiptStore=receiptStore
+        },receiptStore=receiptStore, precheck = deviceTurn
         )
     }
 
@@ -13597,7 +13630,7 @@ class AgentActivity : Activity() {
             return
         }
         val spec = ToolRegistry.get(proposal.toolName)
-        val message = "${spec?.label ?: proposal.toolName}\nRisk: ${spec?.risk?.name ?: "UNKNOWN"}\n\n" +
+        val message = deviceTools.confirmationText(proposal) ?: "${spec?.label ?: proposal.toolName}\nRisk: ${spec?.risk?.name ?: "UNKNOWN"}\n\n" +
             "Reason: ${spec?.description ?: "Tool is not registered."}\n\n" +
             "Arguments:\n${safeArgumentSummary(proposal.arguments)}"
         val explicitApproval = {
@@ -14558,8 +14591,7 @@ class AgentActivity : Activity() {
                 { at.heinz.deviceai.learning.ContinuumThinkingMemory(filesDir,
                     ContinuumLearningCore.withAutomaticRecovery(filesDir)) }
             } else null,
-            toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart,
-                ephemeralScreenContext = ephemeralScreenRun::get, botTask = botTask),
+            toolGate = buildToolGate(text, internetRevisionAtTurnStart, ephemeralScreenRun::get, botTask, null, modelTurn = true),
             evaluator = AgentEvaluator { response, _ ->
                 if(codingPlanning != null) Evaluation(codingPlanning.decode(response) != null,0.0,
                     "Requirements candidate only; no outcome or authorization verified.")
@@ -14582,7 +14614,7 @@ class AgentActivity : Activity() {
             turnTrace = turnTrace,
             // Historical runs are injected only as UNVERIFIED device-local hints.
             recallPriorExperiences = botTask == null && codingPlanning == null,
-            approvalProvider = AgentToolApprovalProvider { proposal, risk ->
+            approvalProvider = deviceTools.approvals(text, AgentToolApprovalProvider { proposal, risk ->
                 cancellation.throwIfCancelled()
                 botTask?.let(::requireBotTaskCurrent)
                 if (risk == Risk.READ_ONLY) return@AgentToolApprovalProvider AgentToolApproval(false)
@@ -14615,7 +14647,7 @@ class AgentActivity : Activity() {
                 cancellation.throwIfCancelled()
                 botTask?.let(::requireBotTaskCurrent)
                 approval
-            },
+            }),
             checkpointStore = if(codingPlanning == null && botTask == null) FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")) else null,
             callIdPrefix = "local-$turnId",
             cancellation = cancellation,
