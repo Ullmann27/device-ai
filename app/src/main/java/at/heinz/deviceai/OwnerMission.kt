@@ -1,6 +1,9 @@
 package at.heinz.deviceai
 
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
+import at.heinz.deviceai.cockpit.MissionOrder
+import at.heinz.deviceai.cockpit.MissionOrderState
+import at.heinz.deviceai.cockpit.MissionOrdersEvent
 import at.heinz.deviceai.cockpit.ProcessStep
 import at.heinz.deviceai.cockpit.StepState
 import at.heinz.deviceai.cognitive.ChainArgument
@@ -901,6 +904,20 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             })
         }
         if (steps.isNotEmpty()) host.stage(CockpitAnimationEvent.ProcessTimeline(m.turnId, host.nowMillis(), steps))
+        // The same overview with the exact outcome of every started step, for the order rail of the stage.
+        if (steps.isNotEmpty()) host.stage(MissionOrdersEvent(m.turnId, host.nowMillis(), m.slots.size,
+            m.slots.withIndex().mapNotNull { (index, slot) ->
+                val state = when (slot.state) {
+                    State.PENDING -> null
+                    State.RUNNING -> MissionOrderState.RUNNING
+                    State.WAITING -> MissionOrderState.WAITING
+                    State.DONE -> MissionOrderState.DONE
+                    State.FAILED -> MissionOrderState.FAILED
+                    State.STOPPED -> MissionOrderState.STOPPED
+                    State.SKIPPED -> MissionOrderState.SKIPPED
+                }
+                state?.let { MissionOrder(index, label(slot.step), it) }
+            }))
     }
 
     internal companion object {

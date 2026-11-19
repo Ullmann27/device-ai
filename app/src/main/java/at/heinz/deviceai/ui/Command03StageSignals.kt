@@ -5,6 +5,7 @@ import at.heinz.deviceai.cockpit.CockpitAction
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
 import at.heinz.deviceai.cockpit.CockpitAnimationRenderer
 import at.heinz.deviceai.cockpit.MEMORY_TURN
+import at.heinz.deviceai.cockpit.MissionOrdersEvent
 import at.heinz.deviceai.cockpit.ProcessStep
 import at.heinz.deviceai.cockpit.StepState
 import org.json.JSONArray
@@ -102,6 +103,9 @@ class Command03ActivityProjection : CockpitAnimationRenderer {
             is CockpitAnimationEvent.ActionStarted ->
                 set(event.turnId, event.action.name, actionTitle(event.action), event.detail, active = true)
             is CockpitAnimationEvent.ProcessTimeline -> {
+                // A mission's overview of itself is shown as the order rail ([Command03OrdersProjection]); here it
+                // would replace the timeline of the lane that is doing the step ("latest emitter wins").
+                if (MissionOrdersEvent.isOverview(event)) return
                 val window = stepWindow(event.steps)
                 if (turnId != event.turnId) set(event.turnId, CockpitAction.EXECUTE.name, "Arbeitsschritte", "",
                     active = event.steps.any { it.state == StepState.ACTIVE || it.state == StepState.WAITING })

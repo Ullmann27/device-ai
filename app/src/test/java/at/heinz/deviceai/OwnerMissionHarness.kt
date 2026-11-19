@@ -36,6 +36,8 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
     /** The mission's own step display, as it was last sent to the work window. */
     var steps: List<String> = emptyList()
     var stageEnded: Boolean? = null
+    /** Every event the mission handed to the stage, in order. */
+    val staged = mutableListOf<CockpitAnimationEvent>()
     var now = 1_000_000L
     /** The device behind the task chains: tool name → output; a missing tool fails like a device that is not there. */
     val device = HashMap<String, String>()
@@ -143,6 +145,7 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
     fun announcementSpoken() { speakingPlan = false; afterPlan?.let { queue += it }; afterPlan = null; settle() }
 
     override fun stage(event: CockpitAnimationEvent) {
+        staged += event
         when (event) {
             is CockpitAnimationEvent.ProcessTimeline -> steps = event.steps.map { "${it.label}:${it.state.name}" }
             is CockpitAnimationEvent.TurnEnded -> stageEnded = event.delivered

@@ -1527,6 +1527,7 @@ class AgentActivity : Activity() {
             // Before the snapshot push below: the page receives the fact that triggered the push.
             cockpitBus.subscribe(command03Activity),
             cockpitBus.subscribe(command03ComputerWork),
+            cockpitBus.subscribe(command03Orders),
             cockpitBus.subscribe { event -> runOnUiThread {
                 if (event is at.heinz.deviceai.cognitive.CockpitWorkEvent)
                     homeView?.showComputerWorkEvent(event)
@@ -2424,6 +2425,8 @@ class AgentActivity : Activity() {
     private val command03Activity = at.heinz.deviceai.ui.Command03ActivityProjection()
     private val command03Files = at.heinz.deviceai.ui.Command03FilesProjection()
     private val command03ComputerWork = at.heinz.deviceai.ui.Command03ComputerWorkProjection()
+    /** The stage's order rail: the open mission's steps, otherwise the running turn's steps (real events only). */
+    private val command03Orders = at.heinz.deviceai.ui.Command03OrdersProjection { sessionId }
 
     /** PowerManager's thermal status (0..6), or null where the platform reports none. Never a temperature. */
     private fun currentThermalStatusOrNull(): Int? {
@@ -2492,6 +2495,11 @@ class AgentActivity : Activity() {
             .put("cloudBrain", claudeBrain?.claudeSelected == true || heatMeasurement.stageFullEffects)
             .put("activity", command03Activity.snapshot() ?: org.json.JSONObject.NULL)
             .put("files", command03Files.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
+            .put("orders", command03Orders.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
+            // Readouts of the status strip: the selected brain (not the heat measurement's effect switch), the
+            // owner's internet mode, Android's thermal status and the battery reading of the dashboard sample.
+            .put("tactical", at.heinz.deviceai.ui.Command03TacticalStrip.snapshot(claudeBrain?.claudeSelected == true,
+                internetConsent.mode.name, currentThermalStatusOrNull(), system?.batteryPercent, system?.charging))
             // What the approved computer task really did (tap target, text, scroll, confirmed or not) for the monitor.
             .put("computerWork", command03ComputerWork.snapshot(scope.sessionId, homeView?.state?.computer,
                 computerController?.awaitingConsent == true) ?: org.json.JSONObject.NULL)
