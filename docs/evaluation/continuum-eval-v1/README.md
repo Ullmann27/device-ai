@@ -18,6 +18,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-library-check.jsonl` | 74 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (`b058417cd`), wird nicht zum Abstimmen benutzt |
 | `regression-missions.jsonl` | 58 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen (18.11.2026), **Entwicklungssatz**: ein Satz mit mehreren Aufträgen für die Besitzer-Lenkungen → geordneter Plan (Lenkung und Argumente je Schritt) oder `NONE`. Besitzerabläufe (PDF öffnen → Seite zusammenfassen → Word → Mail; Nachrichten → PDF → Mail; neuestes PDF suchen → öffnen), Verbinder (Komma, „und“, „und dann“, „danach“, „anschließend“, „dann“, „zuerst“), Bezüge („es“, „sie“, „die Datei“), unabhängige Aufträge hintereinander; dagegen Einzelaufträge, Fragen, Zitate, Verneinungen, Bedingungen, „und“ in Dateinamen und Nachrichtentexten, Bezüge ohne Erzeuger, fremde Teilaufträge, zu viele Schritte |
 | `regression-missions-check.jsonl` | 49 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Auftragsfolgen vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
+| `regression-coding-agents.jsonl` | 56 | **Host, automatisch** (`CodingAgentOrderRegressionTest`) | Coding-Agenten (19.11.2026), **Entwicklungssatz**: welche Sätze ein Auftrag für die Cloud-Coding-Agenten sind, für welches Repository der Freigabeliste und welcher Art (Coding-Auftrag / Sicherheitsprüfung) – Auftragsformen des Besitzers („Coding-Agent: …“, „Lass den Agenten in <Repo> …“, „Der Coding-Agent soll …“, „Gib dem Coding-Agenten den Auftrag …“), Repository-Auflösung (genannt, als Link, Besitzer/Name, keines genannt bei einem oder mehreren freigegebenen, fremdes Konto, nicht freigegeben), Bereich öffnen, Stopp, Status; dagegen Fragen, Aussagen, Zitate, Verneinungen, Bedingungen, eingebettete Aufträge, bloßes „Agent“ ohne Repository (lokales Team) |
+| `regression-coding-agents-check.jsonl` | 51 | **Host, automatisch** (`CodingAgentOrderRegressionTest`) | Coding-Agenten, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor dem Parser eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Coding-Agenten-Aufträge vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -68,6 +70,12 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   `FIND:<Name>` (nur suchen) · `PAGE:<n|LAST>:<DOCX|PDF|ASK>` (Seite zusammenfassen und speichern) · `NEWS` · `EXPORT:<PDF|DOCX>` ·
   `MAIL:<Adresse oder Empfänger wie gesagt>` · `FILE:<NEWEST|SEARCH>` (Rezept der Aufgabenketten) · `OPEN_FOUND` (die gefundene
   Datei öffnen) · `OPEN_SAVED` (die gerade gespeicherte Datei öffnen)
+- `regression-coding-agents.jsonl` / `regression-coding-agents-check.jsonl`: `coding_order` erwartet `order` – `NONE` (der
+  Satz behält seine heutige Lenkung) · `PANEL` · `STOP` · `STATUS` · oder `<CODE|SECURITY>:<Ziel>` mit Ziel `<Besitzer/Name>`
+  (genannt und freigegeben) · `ONLY:<Besitzer/Name>` (keines genannt, genau eines freigegeben) · `ASK` (Rückfrage) ·
+  `UNKNOWN:<wie gesagt>` (genannt, nicht freigegeben) · `NO_REPOS` (nichts freigegeben). Optional `task`: der Wortlaut,
+  der als Auftrag übergeben wird. `repos` ist die Freigabeliste des Falls; fehlt sie, gilt
+  `Ullmann27/device-ai`, `Ullmann27/continuum-web`. Anrede des Assistenten im Läufer: „Jarvis“
 
 Modellfälle (`model-*.jsonl`):
 
@@ -146,6 +154,22 @@ dieselbe Hand hat Prüfsatz und Planer geschrieben. Bewusst als `NONE` festgeleg
 Satz, den eine Lenkung heute als einen Auftrag liest („Fass mir die Nachrichten von heute zusammen und speichere sie
 als PDF“ ist ein Export-Auftrag), WhatsApp-Aufträge als Schritt, „schick sie an Anna“ ohne „Mail“ oder Adresse.
 Was auf dem Gerät passiert – Spracherkennung, Dateizugriff, Modell, Mailprogramm, Gmail – ist NOT_RUN.
+
+Für `regression-coding-agents.jsonl` und `regression-coding-agents-check.jsonl` (Coding-Agenten, 19.11.2026) gibt es
+keinen Vorher-Wert: eine Lenkung für Cloud-Coding-Agenten gab es nicht. Gemessen am Host, erster und einziger Lauf:
+
+| Lauf | Entwicklungssatz | Prüfsatz |
+|---|---|---|
+| erster Lauf, Parser unverändert | 56 / 56 | 51 / 51 |
+
+Einordnung, damit die Zahl nicht mehr sagt, als sie belegt: Der Prüfsatz wurde vor dem Parser eingecheckt. Der Parser
+stammt aus einem abgebrochenen Arbeitsgang derselben Hand und wurde unverändert übernommen; ob er dort schon gegen den
+Prüfsatz gelaufen ist, ist nicht belegt. Der Entwicklungssatz wurde erst danach geschrieben, in Kenntnis des
+Prüfsatzes (dessen Schema daraus abgelesen wurde); kein Satz steht in beiden (der Test prüft das), unabhängig
+voneinander entstanden sind die beiden Sätze aber nicht. Nach den Messungen wurde am Parser nichts geändert. Der Test
+prüft zusätzlich, dass kein Satz der übrigen Sätze dieses Ordners zu einem Coding-Agenten-Auftrag wird und dass nie ein
+Repository außerhalb der Freigabeliste des Falls vorgeschlagen wird. Was die Spracherkennung am Fold7 aus „Coding-Agent“
+macht, ist NOT_RUN; ebenso jeder Lauf bei Anthropic und jede Antwort von GitHub.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 
