@@ -164,6 +164,20 @@ class OwnerSendActivityFlowUiTest {
         assertTrue(device.opened.isEmpty() && device.pressed.isEmpty())
     }
 
+    @Test fun theReportedWhatsAppTurnAndItsClarificationStayInTheSendLane() = withActivity { activity, device ->
+        activity.ownerSendContactsOverride = book
+        activity.ownerSendGrants.change(SendChannel.WHATSAPP, true, OwnerSendOwnerTap())
+        device.whatsAppWorks()
+        say(activity, "schreib bitte in WhatsApp meinen Papa guten Morgen")
+        assertTrue(chat(activity).any { it.startsWith("Ich habe keinen Kontakt „meinen Papa“ gefunden.") })
+        assertTrue(device.pressed.isEmpty())
+        say(activity, "Whatsapp")
+        assertTrue(activity.ownerSend.awaitingAnswer)
+        say(activity, "ich habe dir zum dreimal gesagt der Name heißt Thomas Muster")
+        assertEquals(listOf(SendPlan.WhatsApp("Thomas Muster", "430005550103", "Guten Morgen", send = true)), device.opened)
+        assertEquals(1, device.pressed.size)
+    }
+
     @Test fun withTheGmailGrantTheMailOrderIsTakenOverAndModelTextWaitsForAClearYes() = withActivity { activity, device ->
         val app = shadowOf(RuntimeEnvironment.getApplication())
         device.gmailWorks()

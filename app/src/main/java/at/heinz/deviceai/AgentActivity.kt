@@ -430,6 +430,9 @@ class AgentActivity : Activity() {
     private val driveMode = at.heinz.deviceai.cognitive.DriveMode()
     private val notificationPolicy = at.heinz.deviceai.notifications.NotificationAnnouncementPolicy()
     private val notificationQueue = at.heinz.deviceai.notifications.AnnouncementQueue()
+    private class PendingNotificationRead(val session: String, val revision: Long, val at: Long,
+        val offer: at.heinz.deviceai.notifications.ReadOffer)
+    private var pendingNotificationRead: PendingNotificationRead? = null
     private var announcementUtteranceId: String? = null
     /** Bounded retry for announcements that waited while something else held the voice channel. */
     private val notificationRetry = object : Runnable {
@@ -445,7 +448,11 @@ class AgentActivity : Activity() {
         }
         // A removed notification may come again with the same text (next message in the same chat).
         override fun onNotificationRemoved(key: String) {
-            runOnUiThread { notificationQueue.remove(key); notificationPolicy.forget(key) }
+            runOnUiThread {
+                notificationQueue.remove(key)
+                notificationPolicy.forget(key)
+                if (pendingNotificationRead?.offer?.key == key) pendingNotificationRead = null
+            }
         }
     }
     private var voiceReady = false
@@ -6896,7 +6903,11 @@ class AgentActivity : Activity() {
                     1 -> {
                         val enabled = !settings.enabled
                         store.setEnabled(this, enabled)
-                        if (!enabled) { notificationQueue.clear(); notificationPolicy.reset() }
+                        if (!enabled) {
+                            notificationQueue.clear()
+                            notificationPolicy.reset()
+                            pendingNotificationRead = null
+                        }
                         Toast.makeText(this, if (!enabled) "Ansagen sind aus. Es wird nichts mehr gelesen."
                             else if (access) "Ansagen sind an – nur für Apps, die du auswählst. Sicherheitscodes werden nie vorgelesen."
                             else "Ansagen sind an, aber der Android-Zugriff fehlt noch.", Toast.LENGTH_LONG).show()
@@ -8126,6 +8137,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        if (selectedBot == null && !neuralCoach.isActive() && tryReadNotification(request)) return
         if (selectedBot == null && OwnerRoutineCommands.parse(request) != null) {
             if (!botRoutingChecked && routeBotInput(input.text.toString())) return
             if (handleOwnerRoutineRequest(request)) return
@@ -13285,7 +13297,21 @@ class AgentActivity : Activity() {
         spoken.isNotEmpty() && selectedBot == null && !botLookupPending && !neuralCoach.isActive() &&
             // An approval or a send-lane question that opened meanwhile gets the owner's answer first.
             pendingResearchChatApproval == null && !avatarAwaitingApproval && !ownerSend.awaitingAnswer &&
-            incomingMessages.handle(spoken)
+            // The notification listener asked „Darf ich sie vorlesen?“ after this lane's own question: „Lies vor“ is
+            // the answer to the question that was asked last (tryReadNotification takes it further down).
+            !answersNewerReadOffer(spoken) && incomingMessages.handle(spoken)
+
+    /** The listener announcement's read offer while it still counts for the owner's very next turn; null otherwise. */
+    private fun openNotificationReadOffer(): PendingNotificationRead? = pendingNotificationRead?.takeIf {
+        it.session == sessionId && it.revision == ownerReplyRevision &&
+            android.os.SystemClock.elapsedRealtime() - it.at in 0..at.heinz.deviceai.notifications.ReadOffer.MAX_AGE_MS
+    }
+
+    private fun answersNewerReadOffer(spoken: String): Boolean {
+        val offer = openNotificationReadOffer() ?: return false
+        return at.heinz.deviceai.notifications.ReadOffer.accepts(spoken) &&
+            (incomingMessages.questionAt ?: Long.MIN_VALUE) <= offer.at
+    }
 
     /** The quiet moment between two recogniser rounds or after a reply; true = a question is being spoken now. */
     private fun offerIncomingMessage(recognizerRoundEnded: Boolean): Boolean {
@@ -13319,8 +13345,12 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.notifications.IncomingMessages.settingsChanged(this@AgentActivity)
         }
 
-        /** No job, no approval, no question of another lane, no mission step, nothing typed, nobody speaking. */
+        /**
+         * No job, no approval, no question of another lane, no mission step, nothing typed, nobody speaking – and no
+         * read offer of the notification listener that still waits for the owner's answer (one question at a time).
+         */
         override fun quiet(): Boolean = foregroundLearningActive && !isFinishing && !isDestroyed && !busy &&
+            openNotificationReadOffer() == null &&
             !botLookupPending && !avatarAwaitingApproval && pendingResearchChatApproval == null &&
             pendingConversationSelection == null && selectedBot == null && !neuralCoach.isActive() &&
             computerController?.active != true && !ownerSend.awaitingAnswer && !ownerMission.active &&
@@ -18681,6 +18711,10 @@ class AgentActivity : Activity() {
         announcement: at.heinz.deviceai.notifications.AnnouncementDecision.Announce,
         recognizerRoundEnded: Boolean = false): Boolean {
         if ((voiceListening && !recognizerRoundEnded) || voiceSpeaking || voiceUtteranceId != null) return false
+        announcement.readOffer?.let {
+            pendingNotificationRead = PendingNotificationRead(sessionId, ownerReplyRevision,
+                android.os.SystemClock.elapsedRealtime(), it)
+        }
         command03Activity.notification(announcement.displayTitle, announcement.displayDetail)
         pushCockpitState()
         // The log names the app only; the content is not written anywhere.
@@ -18703,6 +18737,30 @@ class AgentActivity : Activity() {
         return true
     }
 
+    private fun tryReadNotification(request: String): Boolean {
+        val pending = pendingNotificationRead ?: return false
+        if (!at.heinz.deviceai.notifications.ReadOffer.accepts(request)) return false
+        pendingNotificationRead = null
+        val store = at.heinz.deviceai.notifications.NotificationAnnouncementSettings
+        val settings = store.load(this)
+        val now = android.os.SystemClock.elapsedRealtime()
+        val offer = pending.offer
+        val allowed = pending.session == sessionId && pending.revision == ownerReplyRevision &&
+            now - pending.at in 0..at.heinz.deviceai.notifications.ReadOffer.MAX_AGE_MS && settings.enabled &&
+            settings.apps[offer.packageName]?.mode == at.heinz.deviceai.notifications.AnnouncementMode.ASK &&
+            store.isAccessGranted(this)
+        showOwnerLaneTurn(request)
+        if (allowed) {
+            presentNotificationAnnouncement(at.heinz.deviceai.notifications.AnnouncementDecision.Announce(
+                offer.spokenText, "Benachrichtigung", offer.spokenText))
+            announcementUtteranceId?.let(continuousConversation::assistantSpeechQueued)
+        } else {
+            addAssistantMessage("Die Benachrichtigung ist nicht mehr zum Vorlesen freigegeben.",
+                preserveLocalContext = true, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        }
+        return true
+    }
+
     /** Speaks what waited while the owner or the assistant was talking. True when an announcement started. */
     private fun speakQueuedNotifications(recognizerRoundEnded: Boolean = false): Boolean {
         if (offerIncomingMessage(recognizerRoundEnded)) return true
@@ -18716,10 +18774,12 @@ class AgentActivity : Activity() {
         val announcements = notificationPolicy.decideAll(waiting, settings, state)
             .filterIsInstance<at.heinz.deviceai.notifications.AnnouncementDecision.Announce>()
         if (announcements.isEmpty()) return false
-        val last = announcements.last()
+        val offer = announcements.lastOrNull { it.readOffer != null }
+        val spoken = announcements.filter { it.readOffer == null || it === offer }
+        val last = offer ?: spoken.last()
         val combined = at.heinz.deviceai.notifications.AnnouncementDecision.Announce(
-            spokenText = announcements.joinToString(" ") { it.spokenText },
-            displayTitle = last.displayTitle, displayDetail = last.displayDetail)
+            spokenText = spoken.joinToString(" ") { it.spokenText },
+            displayTitle = last.displayTitle, displayDetail = last.displayDetail, readOffer = last.readOffer)
         return presentNotificationAnnouncement(combined, recognizerRoundEnded) && announcementUtteranceId != null
     }
 

@@ -125,11 +125,13 @@ internal object OwnerSendRecipientResolver {
      * names at least one contact is the recipient, the rest is the text. Null when no leading run names a contact.
      */
     fun split(unsplit: String, names: List<String>): Pair<String, String>? {
-        val words = unsplit.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
+        val words = Regex("\\S+").findAll(unsplit).take(4).toList()
         for (count in minOf(4, words.size) downTo 1) {
-            val query = asked(words.take(count).joinToString(" "))
+            val boundary = words[count - 1].range.last + 1
+            val prefix = unsplit.substring(0, boundary).trim()
+            val query = asked(prefix)
             if (query.isNotEmpty() && names.any { matches(query, it) })
-                return words.take(count).joinToString(" ") to words.drop(count).joinToString(" ")
+                return prefix to unsplit.substring(boundary).trimStart()
         }
         return null
     }

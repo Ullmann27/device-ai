@@ -47,7 +47,12 @@ internal class DriveBackgroundAnnouncer(context: Context) : ContinuumNotificatio
         }
         // „Eingehende Nachrichten melden“ speaks its own short sentence for this app: one voice, not two.
         if (IncomingMessages.speaksInBackground(appContext, notification.packageName)) return
-        val decision = policy.decide(notification, NotificationAnnouncementSettings.load(appContext),
+        val settings = NotificationAnnouncementSettings.load(appContext)
+        // „Vor dem Vorlesen fragen“ needs the chat in front for the owner's answer; here only the app is named.
+        val backgroundSettings = if (settings.apps[notification.packageName]?.mode == AnnouncementMode.ASK) {
+            settings.copy(apps = settings.apps + (notification.packageName to AppRule(AnnouncementMode.APP_ONLY)))
+        } else settings
+        val decision = policy.decide(notification, backgroundSettings,
             AnnouncementState(conversationActive = false, driveModeActive = true,
                 // The engine queues; the policy's own rate limit bounds how much can pile up.
                 assistantSpeaking = false, listening = false, nowMs = SystemClock.elapsedRealtime()))

@@ -74,7 +74,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         data class Confirm(val work: Work) : Pending
     }
 
-    private class Open(val session: String, val turn: Long, val at: Long, val pending: Pending)
+    private class Open(val session: String, val turn: Long, val at: Long, val pending: Pending, val question: String)
     /** [sent]: what the send flow really did, when it ran. */
     private class Next(val text: String, val pending: Pending? = null, val activity: String? = null, val sent: SendOutcome? = null)
 
@@ -92,7 +92,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             host.nowMillis() - it.at in 0..PENDING_MILLIS }
         open = null
         val parsed = OwnerSendIntentParser.parse(request, host.assistantName)
-        if (waiting != null && answer(request, waiting.pending, parsed != null)) return true
+        if (waiting != null && answer(request, waiting, parsed != null)) return true
         if (DIAGNOSIS.matches(request.trim())) { diagnose(request); return true }
         return when (parsed) {
             null -> false
@@ -145,7 +145,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         return true
     }
 
-    private fun answer(request: String, pending: Pending, newOrder: Boolean): Boolean {
+    private fun answer(request: String, waiting: Open, newOrder: Boolean): Boolean {
         if (OwnerSendIntentParser.isCancel(request)) {
             host.acceptOwnerTurn(request)
             host.reply(request, "In Ordnung. Es wurde nichts gesendet.")
@@ -154,6 +154,12 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         }
         // A new complete order replaces the open question instead of being read as its answer.
         if (newOrder) return false
+        val pending = waiting.pending
+        if (pending !is Pending.Confirm && OwnerSendIntentParser.isChannelAnswer(request)) {
+            host.acceptOwnerTurn(request)
+            ask(request, waiting.question, pending)
+            return true
+        }
         when (pending) {
             is Pending.Recipient -> {
                 val name = OwnerSendIntentParser.recipientAnswer(request) ?: return false
@@ -161,7 +167,10 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
                 start(pending.work.copy(order = pending.work.order.copy(recipient = name, unsplit = null)))
             }
             is Pending.Pick -> {
-                val chosen = OwnerSendRecipientResolver.pick(request, pending.candidates) ?: return false
+                val chosen = OwnerSendRecipientResolver.pick(request, pending.candidates)
+                    ?: OwnerSendIntentParser.recipientAnswer(request)?.let {
+                        OwnerSendRecipientResolver.pick(it, pending.candidates)
+                    } ?: return false
                 host.acceptOwnerTurn(request)
                 start(when (val work = pending.work) {
                     is Work.Chat -> work.copy(recipient = chosen)
@@ -240,7 +249,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
 
     private fun ask(request: String, question: String, pending: Pending) {
         host.reply(request, question)
-        open = Open(host.sessionId, host.ownerTurn, host.nowMillis(), pending)
+        open = Open(host.sessionId, host.ownerTurn, host.nowMillis(), pending, question)
         host.outcome(OwnerLaneOutcome.NeedsOwner(when (pending) {
             is Pending.Pick -> OwnerLaneOutcome.Need.CHOICE
             is Pending.Confirm -> OwnerLaneOutcome.Need.CONFIRMATION
@@ -275,7 +284,12 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             if (phrase == null) {
                 val unsplit = checkNotNull(work.order.unsplit)
                 val parts = OwnerSendRecipientResolver.split(unsplit, rows.map { it.displayName }.distinct())
+                    ?: OwnerSendIntentParser.splitFamily(unsplit)
                     ?: return notFound(job, unsplit.substringBefore(' '))
+                if (OwnerSendIntentParser.startsWithNegation(parts.second)) return Next(OwnerSendIntentParser.REFUSED_NEGATED)
+                if (OwnerSendIntentParser.hasAdditionalRecipient(parts.second)) {
+                    return Next(OwnerSendIntentParser.REFUSED_SEVERAL)
+                }
                 val content = OwnerSendIntentParser.body(parts.second) ?: return Next(OwnerSendIntentParser.REFUSED_TEXT)
                 phrase = parts.first; text = content.text; origin = content.origin; brief = content.modelBrief
             }
@@ -287,7 +301,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
                     job.step(OwnerSendFlow.STEP_CONTACT, "Rückfrage: welcher Kontakt", StepState.WAITING)
                     return Next(which(found), Pending.Pick(found.candidates, settled))
                 }
-                is Resolution.NotFound -> return notFound(job, found.asked)
+                is Resolution.NotFound -> return notFound(job, found.asked, settled)
                 is Resolution.Unusable -> {
                     job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt ohne nutzbare Nummer", StepState.BLOCKED)
                     return Next(found.reason)
@@ -365,10 +379,10 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         return Next(OwnerSendReport.text(outcome), activity = activityLine(outcome), sent = outcome)
     }
 
-    private fun notFound(job: OwnerSendJob, asked: String): Next {
+    private fun notFound(job: OwnerSendJob, asked: String, work: Work.Chat? = null): Next {
         job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt nicht gefunden", StepState.BLOCKED)
         return Next("Ich habe keinen Kontakt „$asked“ gefunden. Nenn mir den Namen so, wie er in deinen Kontakten steht. " +
-            "Es wurde nichts vorbereitet und nichts gesendet.")
+            "Es wurde nichts vorbereitet und nichts gesendet.", work?.let { Pending.Recipient(it) })
     }
 
     private fun which(found: Resolution.Ambiguous): String {

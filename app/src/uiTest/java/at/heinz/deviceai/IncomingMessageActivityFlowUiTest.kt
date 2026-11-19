@@ -7,13 +7,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.provider.Settings
+import at.heinz.deviceai.notifications.AnnouncementMode
+import at.heinz.deviceai.notifications.AnnouncementSettings
+import at.heinz.deviceai.notifications.AppRule
 import at.heinz.deviceai.notifications.ContinuumNotificationBus
+import at.heinz.deviceai.notifications.ContinuumNotificationListener
 import at.heinz.deviceai.notifications.IncomingMessagePreferences
 import at.heinz.deviceai.notifications.IncomingMessageSettings
 import at.heinz.deviceai.notifications.IncomingMessages
 import at.heinz.deviceai.notifications.IncomingNotification
 import at.heinz.deviceai.notifications.IncomingOwnerProfile
 import at.heinz.deviceai.notifications.IncomingState
+import at.heinz.deviceai.notifications.NotificationAnnouncementSettings
 import at.heinz.deviceai.notifications.NotificationDetails
 import at.heinz.deviceai.notifications.NotificationMessage
 import at.heinz.deviceai.notifications.NotificationSource
@@ -26,6 +32,8 @@ import at.heinz.deviceai.sending.SendPlan
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -72,6 +80,7 @@ class IncomingMessageActivityFlowUiTest {
     }
 
     @After fun release() {
+        NotificationAnnouncementSettings.save(RuntimeEnvironment.getApplication(), AnnouncementSettings())
         IncomingMessages.resetForTest()
         ContinuumNotificationBus.resetForTest()
     }
@@ -194,5 +203,64 @@ class IncomingMessageActivityFlowUiTest {
         pass(15)
         assertTrue(chat(activity).toString(), chat(activity).contains("Während ich dich nicht stören sollte, kam eine Nachricht von " +
             "Thomas Muster auf WhatsApp – soll ich sie dir vorlesen?"))
+    }
+
+    // ── Two sources that may ask „vorlesen?“: this lane, and the notification listener's „Vor dem Vorlesen fragen“ ──
+
+    private val otherApp = "org.example.messenger"
+
+    /** The owner set another app to „Vor dem Vorlesen fragen“ in the optional notification-access variant. */
+    private fun listenerAsksBeforeReading() {
+        val app = RuntimeEnvironment.getApplication()
+        NotificationAnnouncementSettings.save(app, AnnouncementSettings(enabled = true,
+            apps = mapOf(otherApp to AppRule(AnnouncementMode.ASK)), quietWhenNotInConversation = false))
+        Settings.Secure.putString(app.contentResolver, "enabled_notification_listeners",
+            app.packageName + "/" + ContinuumNotificationListener::class.java.name)
+    }
+
+    /** As the notification listener publishes it: a message of the other app. */
+    private fun otherAppMessage(text: String, time: Long) = ContinuumNotificationBus.publish(IncomingNotification(
+        "0|$otherApp|1|Berta|10", otherApp, "Beispielchat", "Berta Beispiel", text, "msg", isOngoing = false, isGroupSummary = false,
+        postedAtMs = time, isOwnPackage = false))
+
+    @Test fun liesVorAnswersTheReadQuestionThatWasAskedLast() = withActivity { activity, _ ->
+        listenerAsksBeforeReading()
+        arrive("Thomas Muster", incomingText, 1_000L)
+        pass(8)
+        assertEquals(IncomingState.OFFERED, IncomingMessages.inbox.open().single().state)
+        assertNull(field(activity, "pendingNotificationRead"))
+
+        // After this lane's question the listener announces the other app's message and offers to read it.
+        otherAppMessage("Bin gleich da", 2_000L)
+        idle()
+        assertNotNull("the listener's read offer is open", field(activity, "pendingNotificationRead"))
+
+        say(activity, "Lies vor")
+        assertNull("the offer that was made last took the answer", field(activity, "pendingNotificationRead"))
+        assertTrue(chat(activity).toString(), chat(activity).contains("Lies vor"))
+        assertFalse("the other question's message is not read instead", chat(activity).any { it.contains("Thomas Muster schreibt") })
+        assertFalse(chat(activity).any { it.contains("nicht mehr zum Vorlesen freigegeben") })
+        // The WhatsApp message was not read and not lost: it stays in the open list.
+        assertFalse(IncomingMessages.inbox.open().single().read)
+    }
+
+    @Test fun thisLaneAsksNothingWhileTheListenersReadOfferWaitsAndWithoutOneLiesVorIsItsOwnYes() = withActivity { activity, _ ->
+        listenerAsksBeforeReading()
+        otherAppMessage("Bin gleich da", 1_000L)
+        idle()
+        assertNotNull(field(activity, "pendingNotificationRead"))
+        arrive("Thomas Muster", incomingText, 2_000L)
+        pass(8)
+        assertFalse("one question at a time", chat(activity).any { it.contains("Nachricht von Thomas Muster") })
+
+        say(activity, "Lies vor")
+        assertNull(field(activity, "pendingNotificationRead"))
+        assertFalse(chat(activity).any { it.contains("Thomas Muster schreibt") })
+
+        // The listener's offer is answered: now this lane asks, and „Lies vor“ is the yes to its own question.
+        pass(30)
+        assertTrue(chat(activity).toString(), chat(activity).any { it.contains("Nachricht von Thomas Muster auf WhatsApp") })
+        say(activity, "Lies vor")
+        assertTrue(chat(activity).toString(), chat(activity).contains("Thomas Muster schreibt: „$incomingText“ Möchtest du antworten?"))
     }
 }

@@ -69,6 +69,7 @@ object NotificationAnnouncementSettings {
         AnnouncementMode.APP_ONLY -> "Nur App nennen"
         AnnouncementMode.SENDER -> "App und Absender nennen"
         AnnouncementMode.FULL -> "Inhalt vorlesen"
+        AnnouncementMode.ASK -> "Vor dem Vorlesen fragen"
     }
 
     /**

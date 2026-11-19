@@ -101,7 +101,12 @@ class OwnerComputerIntentParserTest {
     }
 
     @Test fun allRequestedAppsCanOpenWithoutPretendingEditors() {
-        for (app in ComputerApp.entries) assertEquals(app, ready("Öffne ${app.discoveryQuery}").app)
+        // Gmail is the one target without a plain open of its own: see gmailIsATargetForSearchWhileItsPlainOpenStaysWithTheAppLane.
+        for (app in ComputerApp.entries) {
+            if (app == ComputerApp.GMAIL) assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+                OwnerComputerIntentParser.parse("Öffne ${app.discoveryQuery}"))
+            else assertEquals(app, ready("Öffne ${app.discoveryQuery}").app)
+        }
         assertEquals(ComputerGoal.OPEN_DOWNLOADS, ready("Öffne den Download-Ordner").goal)
         assertTrue(OwnerComputerIntentParser.parse("Öffne Word und bearbeite den Vertrag") is OwnerComputerIntentParser.Result.Unsupported)
     }
@@ -194,8 +199,14 @@ class OwnerComputerIntentParserTest {
                 "Wechsle keinesfalls zu ${app.discoveryQuery}",
                 "Nicht ${app.discoveryQuery} öffnen",
                 "Suche in ${app.discoveryQuery} nicht nach Anna"
-            )) assertTrue(request, OwnerComputerIntentParser.parse(request)
-                is OwnerComputerIntentParser.Result.Unsupported)
+            )) {
+                val parsed = OwnerComputerIntentParser.parse(request)
+                // A negated order never becomes a plan. Gmail's plain open is not this lane's order at all, so its
+                // negation is not either – the app lane decides with the same negation; its search is refused here.
+                if (app == ComputerApp.GMAIL && !request.startsWith("Suche")) assertSame(request,
+                    OwnerComputerIntentParser.Result.NotComputerCommand, parsed)
+                else assertTrue(request, parsed is OwnerComputerIntentParser.Result.Unsupported)
+            }
         }
         assertTrue(OwnerComputerIntentParser.parse("Schreibe keine Nachricht an Anna in WhatsApp: Hallo")
             !is OwnerComputerIntentParser.Result.Ready)
@@ -211,6 +222,33 @@ class OwnerComputerIntentParserTest {
                     is OwnerComputerIntentParser.Result.Unsupported)
             }
         }
+    }
+
+    @Test fun theNewAppRoutesUseTheExistingScopedComputerPlans() {
+        assertEquals(ComputerApp.TIKTOK, ready("Öffne Tik Tok").app)
+        assertEquals(ComputerApp.SMS, ready("Öffne SMS-App").app)
+        assertEquals(ComputerGoal.SEARCH, ready("Suche in Gmail nach Beispiel").goal)
+        assertEquals(ComputerApp.CONTACTS, ready("Suche in Kontakte nach Beispiel").app)
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+            OwnerComputerIntentParser.parse("Schick das per Gmail an anna@example.org"))
+        assertTrue(OwnerComputerIntentParser.parse("Sende eine Nachricht an Anna per SMS: Hallo")
+            is OwnerComputerIntentParser.Result.Unsupported)
+    }
+
+    /**
+     * Gmail is a target for work inside the app (a search). Its plain open keeps the app lane, which starts the
+     * installed app directly and where a name that speech recognition broke is repaired first (UND-006, UND-018).
+     */
+    @Test fun gmailIsATargetForSearchWhileItsPlainOpenStaysWithTheAppLane() {
+        for (plain in listOf("Öffne Gmail", "Öffne G Mail", "Kannst du Gmail öffnen", "Gmail öffnen", "Starte Gmail bitte"))
+            assertSame(plain, OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse(plain))
+        assertEquals(ComputerApp.GMAIL, ready("Suche in Gmail nach Beispiel").app)
+        ready("Öffne Gmail und suche nach Rechnung").let {
+            assertEquals(ComputerApp.GMAIL, it.app); assertEquals(ComputerGoal.SEARCH, it.goal)
+        }
+        // The other new targets open as the Code71 order set them.
+        assertEquals(ComputerGoal.OPEN, ready("Öffne Tik Tok").goal)
+        assertEquals(ComputerGoal.OPEN, ready("Öffne SMS-App").goal)
     }
 
     @Test fun draftBodyNegationDoesNotCancelTheOwnerCommand() {
