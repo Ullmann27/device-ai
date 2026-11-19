@@ -1,0 +1,80 @@
+{"category": "tone", "expect": {"tone": "PERSONAL"}, "id": "TLKC-TON-001", "input": "Red bitte persönlich mit mir", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "PERSONAL"}, "id": "TLKC-TON-002", "input": "Kannst du lockerer mit mir sprechen", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "PERSONAL"}, "id": "TLKC-TON-003", "input": "Sei nicht so förmlich zu mir", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "PERSONAL"}, "id": "TLKC-TON-004", "input": "Sprich mit mir wie ein alter Freund", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "PERSONAL"}, "id": "TLKC-TON-005", "input": "Ton persönlich", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "FACTUAL"}, "id": "TLKC-TON-006", "input": "Bitte wieder sachlich reden", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "FACTUAL"}, "id": "TLKC-TON-007", "input": "Stell den Ton wieder auf sachlich", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "FACTUAL"}, "id": "TLKC-TON-008", "input": "Sprich ab jetzt sachlicher mit mir", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "PERSONAL"}, "id": "TLKC-TON-009", "input": "Rede mit mir wie ein Kumpel", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "FACTUAL"}, "id": "TLKC-TON-010", "input": "Sei wieder förmlicher", "note": "", "runner": "tone_command"}
+{"category": "tone", "expect": {"tone": "FACTUAL"}, "id": "TLKC-TON-011", "input": "Continuum, sprich wieder sachlich", "note": "mit Anrede", "runner": "tone_command"}
+{"category": "negation", "expect": {"tone": "NONE"}, "id": "TLKC-TON-012", "input": "Erkläre mir das bitte ganz sachlich", "note": "", "runner": "tone_command"}
+{"category": "negation", "expect": {"tone": "NONE"}, "id": "TLKC-TON-013", "input": "Schreib den Brief persönlicher", "note": "", "runner": "tone_command"}
+{"category": "negation", "expect": {"tone": "NONE"}, "id": "TLKC-TON-014", "input": "Ist der Ton im Video zu leise?", "note": "", "runner": "tone_command"}
+{"category": "negation", "expect": {"tone": "NONE"}, "id": "TLKC-TON-015", "input": "Persönlich finde ich das gut", "note": "", "runner": "tone_command"}
+{"category": "negation", "expect": {"tone": "NONE"}, "id": "TLKC-TON-016", "input": "Formuliere das förmlicher", "note": "Text, nicht Gesprächston", "runner": "tone_command"}
+{"category": "negation", "expect": {"tone": "NONE"}, "id": "TLKC-TON-017", "input": "Sprich lauter", "note": "", "runner": "tone_command"}
+{"category": "name", "expect": {"name": "SET:Franz"}, "id": "TLKC-NAM-001", "input": "Nenn mich bitte Franz", "note": "", "runner": "name_command"}
+{"category": "name", "expect": {"name": "SET:Heinz"}, "id": "TLKC-NAM-002", "input": "Du darfst mich Heinz nennen", "note": "", "runner": "name_command"}
+{"category": "name", "expect": {"name": "SET:Heinz"}, "id": "TLKC-NAM-003", "input": "Ich heiße Heinz Ullmann", "note": "Anrede ist der Vorname", "runner": "name_command"}
+{"category": "name", "expect": {"name": "SET:Heinz"}, "id": "TLKC-NAM-004", "input": "Sag bitte Heinz zu mir", "note": "", "runner": "name_command"}
+{"category": "name", "expect": {"name": "SET:Anna"}, "id": "TLKC-NAM-005", "input": "Mein Name ist Anna", "note": "", "runner": "name_command"}
+{"category": "name", "expect": {"name": "SET:Meister"}, "id": "TLKC-NAM-006", "input": "Nenn mich Meister", "note": "", "runner": "name_command"}
+{"category": "name", "expect": {"name": "FORGET"}, "id": "TLKC-NAM-007", "input": "Vergiss meinen Namen wieder", "note": "", "runner": "name_command"}
+{"category": "name", "expect": {"name": "FORGET"}, "id": "TLKC-NAM-008", "input": "Sprich mich bitte nicht mehr mit meinem Namen an", "note": "", "runner": "name_command"}
+{"category": "negation", "expect": {"name": "NONE"}, "id": "TLKC-NAM-009", "input": "Nenn mir drei Vornamen", "note": "", "runner": "name_command"}
+{"category": "negation", "expect": {"name": "NONE"}, "id": "TLKC-NAM-010", "input": "Wie nennt man das?", "note": "", "runner": "name_command"}
+{"category": "negation", "expect": {"name": "NONE"}, "id": "TLKC-NAM-011", "input": "Ich heiße dich willkommen", "note": "willkommen heißen", "runner": "name_command"}
+{"category": "negation", "expect": {"name": "NONE"}, "id": "TLKC-NAM-012", "input": "Ich bin der Besitzer", "note": "", "runner": "name_command"}
+{"category": "negation", "expect": {"name": "NONE"}, "id": "TLKC-NAM-013", "input": "Nenn mich nicht so", "note": "kein Name; nicht geraten", "runner": "name_command"}
+{"category": "negation", "expect": {"name": "NONE"}, "id": "TLKC-NAM-014", "input": "Wie ist dein Name?", "note": "", "runner": "name_command"}
+{"category": "greeting", "expect": {"greeting": "YES"}, "id": "TLKC-GRU-001", "input": "Hi", "note": "", "runner": "greeting"}
+{"category": "greeting", "expect": {"greeting": "YES"}, "id": "TLKC-GRU-002", "input": "Servus Jarvis", "note": "", "runner": "greeting"}
+{"category": "greeting", "expect": {"greeting": "YES"}, "id": "TLKC-GRU-003", "input": "Guten Tag", "note": "", "runner": "greeting"}
+{"category": "greeting", "expect": {"greeting": "YES"}, "id": "TLKC-GRU-004", "input": "Hallo du", "note": "", "runner": "greeting"}
+{"category": "greeting", "expect": {"greeting": "YES"}, "id": "TLKC-GRU-005", "input": "Bin wieder da", "note": "", "runner": "greeting"}
+{"category": "greeting", "expect": {"greeting": "YES"}, "id": "TLKC-GRU-006", "input": "Da bin ich wieder", "note": "", "runner": "greeting"}
+{"category": "greeting", "expect": {"greeting": "YES"}, "id": "TLKC-GRU-007", "input": "Guten Abend", "note": "", "runner": "greeting"}
+{"category": "greeting", "expect": {"greeting": "YES"}, "id": "TLKC-GRU-008", "input": "Mahlzeit", "note": "", "runner": "greeting"}
+{"category": "negation", "expect": {"greeting": "NO"}, "id": "TLKC-GRU-009", "input": "Hallo Jarvis, wie wird das Wetter?", "note": "", "runner": "greeting"}
+{"category": "negation", "expect": {"greeting": "NO"}, "id": "TLKC-GRU-010", "input": "Guten Morgen, öffne das PDF Argon4", "note": "", "runner": "greeting"}
+{"category": "negation", "expect": {"greeting": "NO"}, "id": "TLKC-GRU-011", "input": "Grüß Anna von mir", "note": "", "runner": "greeting"}
+{"category": "negation", "expect": {"greeting": "NO"}, "id": "TLKC-GRU-012", "input": "Tschüss", "note": "Abschied", "runner": "greeting"}
+{"category": "negation", "expect": {"greeting": "NO"}, "id": "TLKC-GRU-013", "input": "Hallo sagt man in Wien selten", "note": "Aussage", "runner": "greeting"}
+{"category": "negation", "expect": {"greeting": "NO"}, "id": "TLKC-GRU-014", "input": "Hey Jarvis, stopp", "note": "Steuerwort", "runner": "greeting"}
+{"category": "negation", "expect": {"greeting": "NO"}, "id": "TLKC-GRU-015", "input": "Vielen Dank", "note": "", "runner": "greeting"}
+{"category": "repair", "expect": {"text": "Zeig mir die Nachrichten"}, "id": "TLKC-REP-001", "input": "Zeig.mir die Nachrichten", "note": "", "runner": "input_repair"}
+{"category": "repair", "expect": {"text": "Fass bitte Seite 2 zusammen"}, "id": "TLKC-REP-002", "input": "Fass.bitte Seite 2 zusammen", "note": "", "runner": "input_repair"}
+{"category": "repair", "expect": {"text": "Schick das per Mail an anna@example.org"}, "id": "TLKC-REP-003", "input": "Schick.das per Mail an anna@example.org", "note": "Adresse bleibt, Punkt davor wird Leerzeichen", "runner": "input_repair"}
+{"category": "negation", "expect": {"text": "Speichere es als Notiz.docx"}, "id": "TLKC-REP-004", "input": "Speichere es als Notiz.docx", "note": "", "runner": "input_repair"}
+{"category": "negation", "expect": {"text": "Um 14.30 Uhr anrufen"}, "id": "TLKC-REP-005", "input": "Um 14.30 Uhr anrufen", "note": "", "runner": "input_repair"}
+{"category": "negation", "expect": {"text": "Geh auf www.wien.gv.at"}, "id": "TLKC-REP-006", "input": "Geh auf www.wien.gv.at", "note": "", "runner": "input_repair"}
+{"category": "negation", "expect": {"text": "Frag Dr.Huber nach dem Termin"}, "id": "TLKC-REP-007", "input": "Frag Dr.Huber nach dem Termin", "note": "Abkürzung mit Name bleibt", "runner": "input_repair"}
+{"category": "negation", "expect": {"text": "Öffne das PDF Argon4."}, "id": "TLKC-REP-008", "input": "Öffne das PDF Argon4.", "note": "Satzpunkt am Ende bleibt", "runner": "input_repair"}
+{"category": "export", "expect": {"export": "PDF"}, "id": "TLKC-MAK-001", "input": "Mach bitte eine PDF", "note": "", "runner": "make_export"}
+{"category": "export", "expect": {"export": "DOCX"}, "id": "TLKC-MAK-002", "input": "Erstelle mir eine Word-Datei", "note": "", "runner": "make_export"}
+{"category": "export", "expect": {"export": "PDF"}, "id": "TLKC-MAK-003", "input": "Mach mir ein PDF dazu", "note": "", "runner": "make_export"}
+{"category": "export", "expect": {"export": "PDF"}, "id": "TLKC-MAK-004", "input": "Könntest du mir eine PDF machen", "note": "", "runner": "make_export"}
+{"category": "negation", "expect": {"export": "NONE"}, "id": "TLKC-MAK-005", "input": "Erstelle ein Bild", "note": "", "runner": "make_export"}
+{"category": "negation", "expect": {"export": "NONE"}, "id": "TLKC-MAK-006", "input": "Mach das PDF zu", "note": "", "runner": "make_export"}
+{"category": "negation", "expect": {"export": "NONE"}, "id": "TLKC-MAK-007", "input": "Erstelle eine PDF mit meinem Lebenslauf", "note": "Inhalt verlangt", "runner": "make_export"}
+{"category": "negation", "expect": {"export": "NONE"}, "id": "TLKC-MAK-008", "input": "Lies die PDF vor", "note": "", "runner": "make_export"}
+{"category": "negation", "expect": {"export": "NONE"}, "id": "TLKC-MAK-009", "input": "Wie mache ich eine PDF?", "note": "Frage", "runner": "make_export"}
+{"category": "mission", "expect": {"plan": ["EXPORT:PDF", "OPEN_SAVED"]}, "id": "TLKC-ORD-001", "input": "Mach.mir eine pdf und öffne sie.dann", "note": "Feldform mit anderen Wörtern", "runner": "owner_order"}
+{"category": "mission", "expect": {"plan": ["EXPORT:DOCX", "OPEN_SAVED"]}, "id": "TLKC-ORD-002", "input": "Erstelle ein Word-Dokument und zeig es mir", "note": "", "runner": "owner_order"}
+{"category": "mission", "expect": {"plan": ["EXPORT:PDF", "OPEN_SAVED"]}, "id": "TLKC-ORD-003", "input": "Mach eine PDF davon, dann öffne sie", "note": "", "runner": "owner_order"}
+{"category": "negation", "expect": {"plan": "NONE"}, "id": "TLKC-ORD-004", "input": "Mach eine PDF und drucke sie", "note": "Drucken ist kein Auftrag einer Lenkung", "runner": "owner_order"}
+{"category": "negation", "expect": {"plan": "NONE"}, "id": "TLKC-ORD-005", "input": "Erstelle eine PDF oder eine Word-Datei und zeig sie mir", "note": "Alternative", "runner": "owner_order"}
+{"category": "mapping", "expect": {"wanted": true}, "id": "TLKC-WNT-001", "input": "Könntest du mir bitte die Argon-Datei aufmachen", "note": "", "runner": "order_wanted"}
+{"category": "mapping", "expect": {"wanted": true}, "id": "TLKC-WNT-002", "input": "Mach mir aus dem Text bitte ein Word-Dokument", "note": "", "runner": "order_wanted"}
+{"category": "negation", "expect": {"wanted": false}, "id": "TLKC-WNT-003", "input": "Wie wird das Wetter morgen?", "note": "", "runner": "order_wanted"}
+{"category": "negation", "expect": {"wanted": false}, "id": "TLKC-WNT-004", "input": "Erklär mir, was eine Word-Datei ist", "note": "Erklärung, kein Auftrag an eine Lenkung", "runner": "order_wanted"}
+{"category": "negation", "expect": {"wanted": false}, "id": "TLKC-WNT-005", "input": "Speichere das auf keinen Fall als PDF", "note": "Verneinung", "runner": "order_wanted"}
+{"category": "mapping", "expect": {"order": "RUN:OPEN:Argon"}, "id": "TLKC-MAP-001", "input": "Könntest du mir bitte die Argon-Datei aufmachen", "model": "1. Öffne das PDF Argon", "note": "", "runner": "order_mapping"}
+{"category": "mapping", "expect": {"order": "RUN:EXPORT:DOCX"}, "id": "TLKC-MAP-002", "input": "Mach mir aus dem Text bitte ein Word-Dokument", "model": "1. Speichere das als Word-Datei", "note": "", "runner": "order_mapping"}
+{"category": "negation", "expect": {"order": "REJECTED"}, "id": "TLKC-MAP-003", "input": "Mach mir aus dem Text bitte ein Word-Dokument", "model": "1. Speichere das als Word-Datei unter dem Namen Geheimplan", "note": "Dateiname nicht gesagt", "runner": "order_mapping"}
+{"category": "negation", "expect": {"order": "REJECTED"}, "id": "TLKC-MAP-004", "input": "Könntest du mir bitte die Argon-Datei aufmachen", "model": "1. Öffne das PDF Argon\n2. Schick das per Mail an anna@example.org", "note": "zweiter Schritt nicht gesagt", "runner": "order_mapping"}
+{"category": "negation", "expect": {"order": "REJECTED"}, "id": "TLKC-MAP-005", "input": "Könntest du mir bitte die Argon-Datei aufmachen", "model": "", "note": "leere Antwort", "runner": "order_mapping"}
+{"category": "negation", "expect": {"order": "REJECTED"}, "id": "TLKC-MAP-006", "input": "Könntest du mir bitte die Argon-Datei aufmachen", "model": "1. Öffne das PDF Argon aus dem Download-Ordner", "note": "Ordner nicht gesagt", "runner": "order_mapping"}
+{"category": "mapping", "expect": {"order": "ASK:NEWS → EXPORT:PDF → MAIL:Anna"}, "id": "TLKC-MAP-007", "input": "Die Nachrichten sollen bitte als PDF an Anna per Mail gehen", "model": "1. Fass mir die Nachrichten von heute zusammen\n2. Speichere das als PDF\n3. Schick das per Mail an Anna", "note": "", "runner": "order_mapping"}
