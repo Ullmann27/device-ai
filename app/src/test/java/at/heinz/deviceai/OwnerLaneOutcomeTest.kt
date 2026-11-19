@@ -120,6 +120,60 @@ class OwnerLaneOutcomeTest {
         assertTrue(inner.lines("SAY:").last().endsWith("Soll ich sie öffnen?"))
     }
 
+    /**
+     * 19.11.2026: the host's answer to [OwnerWorkToolsHost.offerToOpen] became the owner's initiative rule, which
+     * counts every offer against a cap. The lanes ask that question more than once per save, and the desk used to ask
+     * it on every turn it saw (its „is a sequence going on?“ read it), so offers were counted that nobody had heard and
+     * the real one was then withheld. Asking is free; only the question that was said is reported, once.
+     */
+    @Test fun theOpenOfferIsReportedOnlyWhenItIsSaidAndAskingCountsNothing() {
+        val inner = OwnerWorkToolsHarness(model = { OwnerWorkGeneration(briefing, null, true) })
+        var asked = 0
+        var offered = 0
+        var allowed = true
+        val host = object : OwnerWorkToolsHost by inner {
+            override fun offerToOpen(): Boolean { asked++; return allowed }
+            override fun openOffered() { offered++ }
+        }
+        val lane = OwnerWorkTools(host, now = { NewsTestFeeds.NOW }, zone = { NewsTestFeeds.ZONE })
+        // Turns that save nothing offer nothing.
+        lane.handle("Speichere das als PDF")
+        lane.handle("Fass mir die Nachrichten von heute zusammen")
+        assertEquals(0, offered)
+        lane.handle("Speichere das als PDF")
+        assertTrue(inner.lines("SAY:").last().endsWith("Soll ich sie öffnen?"))
+        assertEquals(1, offered)
+        // Not allowed: the question is not said and nothing is reported.
+        allowed = false
+        lane.handle("Speichere das als Word-Datei")
+        assertEquals(false, inner.lines("SAY:").last().contains("Soll ich sie öffnen?"))
+        assertEquals(1, offered)
+
+        // The desk: opening, searching and a question count nothing; the save reports its one offer.
+        var deskAsked = 0
+        var deskOffered = 0
+        val deskInner = OwnerDocumentDeskHarness().apply {
+            put("Argon4.pdf", pages = ARGON)
+            model = { OwnerWorkGeneration(SUMMARY_2, null, true) }
+        }
+        val deskHost = object : OwnerDocumentDeskHost by deskInner {
+            override fun offerToOpen(): Boolean { deskAsked++; return true }
+            override fun openOffered() { deskOffered++ }
+            // A host that does not answer the sequence question itself: the interface's own default.
+            override fun inSequence(): Boolean = super.inSequence()
+        }
+        val desk = OwnerDocumentDesk(deskHost, now = { OwnerDocumentDeskHarness.NOW }, zone = { OwnerDocumentDeskHarness.ZONE })
+        assertEquals(false, desk.handle("Wie spät ist es?"))
+        assertTrue(desk.handle("Öffne das PDF Argon4"))
+        assertTrue(desk.handle("Fass Seite 3 zusammen und speichere es"))
+        // Whether a sequence goes on is the desk host's own question – it is not read from the offer rule.
+        assertEquals(0, deskAsked)
+        assertEquals(0, deskOffered)
+        assertTrue(desk.handle("als Word"))
+        assertTrue(deskInner.spoken.last().endsWith("Soll ich sie öffnen?"))
+        assertEquals(1, deskOffered)
+    }
+
     @Test fun theDeskReportsTheOpenedPdfTheSavedSummaryItsQuestionsAndItsFailures() {
         val (host, lane) = desk()
         assertTrue(lane.handle("Öffne das PDF Argon4"))

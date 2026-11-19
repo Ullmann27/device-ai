@@ -1646,3 +1646,300 @@ body[data-design="command03"][data-native-light-motion="off"] #workspace>[data-n
  body[data-design="command03"] #workspace>[data-native-enter],
  body[data-design="command03"] #workspace>[data-native-enter]>* {animation:none!important;}
 }
+
+/* ───────── Code73 · the avatar in the room and the work scenes (owner's order of 19.11.2026).
+   1. The bust no longer ends in a cut. The original 3D model ends in a flat plane at its own y = 0; the bridge
+      measures where that plane and the neck stand in the avatar's frame (placeBust: the same orthographic framing
+      the original avatar computes) and this section fades the figure out above it along a curved contour: chest and
+      shoulders turn transparent and pass into fine light lines, motes and a ring platform where the body ends.
+      The model, its rig and its own animation (gaze, blinking, idle saccades, breathing, viseme mouth) are not
+      touched: the dissolve is a still mask on the original avatar's frame plus still light layers.
+   2. Work scenes: one holographic work window below the avatar that shows exactly one real lane at a time (the
+      snapshot's `scene`): storage clean, mail, send or web research.
+   Heat contract, checked in tools/command03-native-qa:
+   · no backdrop-filter, no filter, no transition, no will-change and no new canvas in this section;
+   · the dissolve, the platform and the light lines stand still in every tier; their brightness follows the presence
+     level and the measured speech level Android already reports (custom properties, no clock);
+   · every animation needs body[data-native-effects="full"] or ="balanced" in each of its selectors, is one pass on a
+     real event (a scene opens, a card arrives, a phase changes, a figure is measured) and animates transform and
+     opacity only. There is no loop in this section;
+   · the final state of every element is its state without animation. ───────── */
+body[data-design="command03"] {
+ --bust-neck:58%;--bust-chest:66%;--bust-cut:79%;--bust-shoulder:37%;--bust-head:38%;--bust-headw:11%;
+}
+/* The dissolve. Above the neck the figure is whole; below it an ellipse around the neck that reaches out to the
+   shoulders and ends just above the model's lower plane: its contour is a curve, never a line. */
+body[data-design="command03"].native-hologram .avatar-zone .avatar-crop {
+ -webkit-mask-image:linear-gradient(180deg,#000 0,#000 var(--bust-neck),transparent calc(var(--bust-neck) + 7%)),
+  radial-gradient(ellipse calc(var(--bust-shoulder) * .95) calc((var(--bust-cut) - var(--bust-neck)) * .97) at 50% var(--bust-neck),
+   #000 0,#000 40%,rgba(0,0,0,.84) 56%,rgba(0,0,0,.5) 72%,rgba(0,0,0,.18) 87%,transparent 100%);
+ mask-image:linear-gradient(180deg,#000 0,#000 var(--bust-neck),transparent calc(var(--bust-neck) + 7%)),
+  radial-gradient(ellipse calc(var(--bust-shoulder) * .95) calc((var(--bust-cut) - var(--bust-neck)) * .97) at 50% var(--bust-neck),
+   #000 0,#000 40%,rgba(0,0,0,.84) 56%,rgba(0,0,0,.5) 72%,rgba(0,0,0,.18) 87%,transparent 100%);
+ -webkit-mask-composite:source-over;mask-composite:add;
+ -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+}
+/* The light the body passes into: one layer behind the figure (the platform's far half and the halo around the
+   head), one in front of it (light lines, motes and the platform's near half). */
+body[data-design="command03"] .native-bust {
+ --bust-l:calc(.55 + .45 * var(--orb-light,.43));
+ position:absolute;inset:0;pointer-events:none;opacity:var(--native-neon,1);
+}
+body[data-design="command03"] .native-bust-back {z-index:0;}
+body[data-design="command03"] .native-bust-front {z-index:1;}
+body[data-design="command03"] .native-bust-front~.avatar-caption {z-index:2;}
+body[data-design="command03"] .native-bust i {position:absolute;display:block;}
+/* Platform: rings at the height where the body ends, a little wider than the shoulders. */
+body[data-design="command03"] .native-bust .native-bust-ring {
+ left:calc(50% - var(--bust-shoulder) * 1.32);width:calc(var(--bust-shoulder) * 2.64);aspect-ratio:5.2;
+ top:var(--bust-cut);transform:translateY(-50%);border-radius:50%;
+}
+body[data-design="command03"] .native-bust .native-bust-ring.native-bust-inner {
+ left:calc(50% - var(--bust-shoulder) * .98);width:calc(var(--bust-shoulder) * 1.96);
+}
+body[data-design="command03"] .native-bust-back .native-bust-ring {
+ border:1px solid rgba(var(--cinema-key),calc(.22 * var(--bust-l)));
+ background:radial-gradient(ellipse 50% 50%,rgba(var(--cinema-key),calc(.2 * var(--bust-l))),rgba(var(--cinema-fill),calc(.1 * var(--bust-l))) 58%,transparent 72%);
+ box-shadow:0 0 18px rgba(var(--cinema-key),calc(.16 * var(--bust-l)));
+}
+body[data-design="command03"] .native-bust-back .native-bust-ring.native-bust-inner {
+ border-color:rgba(var(--cinema-fill),calc(.42 * var(--bust-l)));background:none;box-shadow:none;
+}
+/* The near half of the platform crosses in front of the dissolving chest. */
+body[data-design="command03"] .native-bust-front .native-bust-ring {
+ border:1.5px solid rgba(var(--cinema-key),calc(.72 * var(--bust-l)));border-top-color:transparent;
+ box-shadow:0 7px 16px -6px rgba(var(--cinema-key),calc(.5 * var(--bust-l))),inset 0 -5px 12px -6px rgba(var(--cinema-key),calc(.45 * var(--bust-l)));
+ -webkit-mask-image:linear-gradient(180deg,transparent 46%,#000 62%);mask-image:linear-gradient(180deg,transparent 46%,#000 62%);
+}
+body[data-design="command03"] .native-bust-front .native-bust-ring.native-bust-inner {
+ border-color:transparent transparent rgba(var(--cinema-fill),calc(.7 * var(--bust-l)));box-shadow:none;
+}
+/* Light lines: chest and shoulders run out into fine threads that converge on the platform's centre, densest where
+   the body fades and gone above and below it (rays of one cone, so they never form a grid with the floor). */
+body[data-design="command03"] .native-bust .native-bust-lines {
+ left:calc(50% - var(--bust-shoulder) * 1.06);width:calc(var(--bust-shoulder) * 2.12);
+ top:var(--bust-chest);height:calc(var(--bust-cut) - var(--bust-chest) + 3%);
+ background:
+  repeating-conic-gradient(from 151deg at 50% 150%,transparent 0 1.1deg,rgba(var(--cinema-key),.62) 1.1deg 1.28deg,transparent 1.28deg 2.3deg),
+  repeating-conic-gradient(from 150deg at 50% 175%,transparent 0 1.7deg,rgba(205,180,255,.5) 1.7deg 1.84deg,transparent 1.84deg 3.1deg),
+  repeating-conic-gradient(from 152deg at 50% 128%,transparent 0 2.6deg,rgba(226,250,255,.55) 2.6deg 2.78deg,transparent 2.78deg 4.4deg);
+ background-size:100% 100%,100% 82%,100% 64%;background-position:0 0,0 100%,0 100%;background-repeat:no-repeat;
+ -webkit-mask-image:radial-gradient(ellipse 50% 78% at 50% 44%,#000 8%,rgba(0,0,0,.55) 46%,transparent 100%);
+ mask-image:radial-gradient(ellipse 50% 78% at 50% 44%,#000 8%,rgba(0,0,0,.55) 46%,transparent 100%);
+ opacity:calc(.5 * var(--bust-l));
+}
+/* Motes: the particles of the dissolve, on three grids so that no row reads as a line. */
+body[data-design="command03"] .native-bust .native-bust-motes {
+ left:calc(50% - var(--bust-shoulder) * 1.2);width:calc(var(--bust-shoulder) * 2.4);
+ top:calc(var(--bust-neck) + 3%);height:calc(var(--bust-cut) - var(--bust-neck) + 4%);
+ background:
+  radial-gradient(circle at 30% 40%,rgba(226,250,255,.95) 0 .8px,transparent 1.5px) 0 0/23px 17px,
+  radial-gradient(circle at 70% 60%,rgba(var(--cinema-key),.9) 0 .9px,transparent 1.7px) 7px 5px/31px 26px,
+  radial-gradient(circle at 50% 50%,rgba(var(--cinema-fill),.85) 0 1px,transparent 1.9px) 13px 11px/47px 37px;
+ -webkit-mask-image:radial-gradient(ellipse 50% 56% at 50% 64%,#000 18%,rgba(0,0,0,.4) 62%,transparent 100%);
+ mask-image:radial-gradient(ellipse 50% 56% at 50% 64%,#000 18%,rgba(0,0,0,.4) 62%,transparent 100%);
+ opacity:calc(.62 * var(--bust-l));
+}
+/* Halo: two thin tilted rings around the upper head, behind it, so that the head hides their middle. They take
+   the measured speech level as the orb's corona does. */
+body[data-design="command03"] .native-bust .native-bust-halo {
+ left:calc(50% - var(--bust-headw) * 1.95);width:calc(var(--bust-headw) * 3.9);aspect-ratio:3.7;top:var(--bust-head);
+ border-radius:50%;border:1px solid rgba(214,248,255,calc(.5 * var(--bust-l) + .4 * var(--native-speech,0)));
+ box-shadow:0 0 7px rgba(var(--cinema-key),calc(.5 * var(--bust-l) + .3 * var(--native-speech,0))),
+  inset 0 0 6px rgba(var(--cinema-key),calc(.3 * var(--bust-l)));
+ transform:translateY(-50%) rotate(-6deg);
+}
+body[data-design="command03"] .native-bust .native-bust-halo.native-bust-inner {
+ left:calc(50% - var(--bust-headw) * 1.6);width:calc(var(--bust-headw) * 3.2);aspect-ratio:3.3;top:calc(var(--bust-head) - 4.5%);
+ border-color:rgba(var(--cinema-fill),calc(.6 * var(--bust-l) + .4 * var(--native-speech,0)));
+ box-shadow:0 0 6px rgba(var(--cinema-fill),calc(.4 * var(--bust-l)));transform:translateY(-50%) rotate(7deg);
+}
+/* Reduced tier: threads, motes and platform stay; the halo leaves. */
+body[data-design="command03"][data-native-quality="reduced"] .native-bust-halo {display:none;}
+
+/* Work scene: a glass plate with two cut corners directly below the avatar, joined to its platform by a cone of
+   light. Its parts are rows of one grid; a part without data is hidden by the bridge, never left empty. */
+body[data-design="command03"] .native-scene {
+ --scene:var(--tac-cyan);
+ position:relative;z-index:4;display:grid;gap:10px;min-width:0;margin:6px 0 14px;padding:12px 14px 12px 15px;
+ border:1px solid rgba(131,237,255,.34);border-left:3px solid var(--scene);color:var(--tac-ink);
+ background:var(--tac-edges) right top/11px 11px no-repeat,var(--tac-edges) left bottom/11px 11px no-repeat,
+  radial-gradient(ellipse 70% 90px at 50% 0,rgba(var(--cinema-key),.13),transparent 100%),
+  linear-gradient(160deg,#10283bf2,#061220f7 58%,#120f2cf2);
+ box-shadow:inset 0 1px rgba(214,248,255,.2),0 18px 40px #0009,0 0 26px rgba(var(--cinema-key),calc(.1 * var(--native-neon,1)));
+ clip-path:var(--tac-cut);transform-origin:50% 0;
+}
+/* Its row in the presence grid: the whole width, below the avatar; the tiles move one row down while it is there. */
+body[data-design="command03"] .presence-system>.native-scene {grid-column:1/-1;grid-row:2;align-self:start;}
+@container presence-orbit (max-width:649px) {
+ body[data-design="command03"][data-native-scene] .presence-system>.presence-wing {grid-row:3;}
+}
+@container presence-orbit (max-width:359px) {
+ body[data-design="command03"][data-native-scene] .presence-system>.presence-wing-left {grid-row:3;}
+ body[data-design="command03"][data-native-scene] .presence-system>.presence-wing-right {grid-row:4;}
+}
+body[data-design="command03"] .native-scene[data-tone="waiting"] {--scene:var(--tac-amber);}
+body[data-design="command03"] .native-scene[data-tone="done"] {--scene:var(--tac-green);}
+body[data-design="command03"] .native-scene[data-tone="failed"] {--scene:var(--tac-red);}
+body[data-design="command03"] .native-scene[data-tone="stopped"] {--scene:var(--tac-slate);}
+body[data-design="command03"] .native-scene [hidden] {display:none!important;}
+/* The light it arises from: a cone from the platform above into the plate's upper edge. */
+body[data-design="command03"] .native-scene-glow {
+ position:absolute;left:18%;right:18%;top:0;height:46px;pointer-events:none;
+ background:linear-gradient(180deg,rgba(var(--cinema-key),.2),transparent);
+ clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);opacity:var(--native-neon,1);
+}
+body[data-design="command03"] .native-scene-head {display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;min-width:0;position:relative;}
+body[data-design="command03"] .native-scene-kind {
+ color:var(--tac-cyan);font:700 12px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.2em;
+}
+body[data-design="command03"] .native-scene-sub {color:var(--tac-dim);font-size:12px;min-width:0;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-phase {
+ margin-left:auto;padding:4px 8px;border:1px solid var(--scene);color:var(--scene);
+ font:600 11px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;white-space:nowrap;
+}
+body[data-design="command03"] .native-scene-close {
+ display:grid;place-items:center;width:44px;height:44px;margin:-8px -8px -8px 0;padding:0;border:0;background:none;
+ color:var(--tac-dim);font-size:22px;line-height:1;cursor:pointer;
+}
+body[data-design="command03"] .native-scene-close:focus-visible,
+body[data-design="command03"] .native-scene-action:focus-visible {outline:2px solid var(--tac-cyan);outline-offset:2px;}
+/* The device storage as Android measured it: a gauge of the used part; after a clean the earlier part behind it. */
+body[data-design="command03"] .native-scene-storage {display:grid;gap:5px;min-width:0;}
+body[data-design="command03"] .native-scene-storage-label {color:var(--tac-dim);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.16em;}
+body[data-design="command03"] .native-scene-storage-note {color:var(--tac-ink);font-size:12px;}
+body[data-design="command03"] .native-scene-gauge {
+ position:relative;display:block;height:14px;overflow:hidden;border:1px solid rgba(131,237,255,.4);
+ background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(131,237,255,.14) 9px 10px),#04101b;
+}
+body[data-design="command03"] .native-scene-gauge i,
+body[data-design="command03"] .native-scene-bar i,
+body[data-design="command03"] .native-scene-card-fill i,
+body[data-design="command03"] .native-scene-sysbar-track i {
+ position:absolute;inset:0;display:block;transform-origin:0 50%;transform:scaleX(0);
+}
+body[data-design="command03"] .native-scene-gauge .native-scene-used {
+ z-index:1;
+ background:linear-gradient(90deg,rgba(var(--cinema-fill),.85),rgba(var(--cinema-key),.9));
+}
+body[data-design="command03"] .native-scene-gauge .native-scene-before {
+ background:repeating-linear-gradient(135deg,rgba(255,200,128,.55) 0 3px,transparent 3px 6px);border-right:1px solid var(--tac-amber);
+}
+body[data-design="command03"] .native-scene-query {margin:0;color:var(--tac-ink);font-size:13px;overflow-wrap:anywhere;position:relative;}
+/* Safety levels: GREEN is the light of what may go; it lights while it is being cleaned. */
+body[data-design="command03"] .native-scene-levels {display:flex;flex-wrap:wrap;gap:5px;margin:0;padding:0;list-style:none;}
+body[data-design="command03"] .native-scene-level {
+ --shade:var(--tac-slate);display:grid;gap:1px;padding:5px 8px;border-left:2px solid var(--shade);background:var(--tac-cell);min-width:0;
+}
+body[data-design="command03"] .native-scene-level[data-shade="green"] {--shade:var(--tac-green);}
+body[data-design="command03"] .native-scene-level[data-shade="yellow"] {--shade:var(--tac-amber);}
+body[data-design="command03"] .native-scene-level[data-shade="red"] {--shade:var(--tac-red);}
+body[data-design="command03"] .native-scene-level[data-active="true"] {background:rgba(127,227,184,.16);box-shadow:inset 0 0 0 1px rgba(127,227,184,.55);}
+body[data-design="command03"] .native-scene-level-name {color:var(--shade);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;}
+body[data-design="command03"] .native-scene-level-value {color:var(--tac-ink);font-size:12px;}
+/* Cards: one per item of the lane's real list. */
+body[data-design="command03"] .native-scene-cards {
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,138px),1fr));gap:5px;margin:0;padding:0;list-style:none;min-width:0;
+}
+body[data-design="command03"] .native-scene-card {
+ --tone:var(--tac-cyan);position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;min-width:0;
+ padding:6px 8px 7px;border:1px solid rgba(131,237,255,.18);border-left:2px solid var(--tone);background:#081a29e6;
+}
+body[data-design="command03"] .native-scene-card[data-tone="violet"] {--tone:var(--tac-violet);}
+body[data-design="command03"] .native-scene-card[data-tone="green"] {--tone:var(--tac-green);}
+body[data-design="command03"] .native-scene-card[data-tone="yellow"] {--tone:var(--tac-amber);}
+body[data-design="command03"] .native-scene-card[data-tone="red"] {--tone:var(--tac-red);}
+body[data-design="command03"] .native-scene-card[data-tone="slate"] {--tone:var(--tac-slate);}
+body[data-design="command03"] .native-scene-card-mark {grid-column:1/-1;color:var(--tone);font:600 9px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;}
+body[data-design="command03"] .native-scene-card-mark:empty {display:none;}
+body[data-design="command03"] .native-scene-card-title {grid-column:1/-1;min-width:0;font-size:12.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-card-value {justify-self:end;color:var(--tone);font:600 12px/1.2 'Space Grotesk',system-ui,sans-serif;white-space:nowrap;}
+body[data-design="command03"] .native-scene-card-meta {min-width:0;color:var(--tac-dim);font-size:11px;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-card-fill {position:absolute;left:0;right:0;bottom:0;height:2px;display:block;}
+body[data-design="command03"] .native-scene-card-fill i {background:var(--tone);opacity:.75;}
+body[data-design="command03"] .native-scene-more {margin:-4px 0 0;color:var(--tac-dim);font-size:11px;}
+/* Progress of real completed steps. */
+body[data-design="command03"] .native-scene-progress {display:grid;gap:4px;}
+body[data-design="command03"] .native-scene-progress-label {font:600 12px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.06em;color:var(--scene);}
+body[data-design="command03"] .native-scene-bar {position:relative;display:block;height:5px;overflow:hidden;background:#0a2234;}
+body[data-design="command03"] .native-scene-bar i {background:linear-gradient(90deg,var(--scene),#e6fbff);}
+/* Figures side by side: before, after, change, removed – each with what it is. */
+body[data-design="command03"] .native-scene-figures {display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:6px;margin:0;}
+body[data-design="command03"] .native-scene-figure {display:grid;gap:1px;padding:6px 8px;background:var(--tac-cell);min-width:0;}
+body[data-design="command03"] .native-scene-figure dd {margin:0;}
+body[data-design="command03"] .native-scene-figure-label {color:var(--tac-dim);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;}
+body[data-design="command03"] .native-scene-figure-value {color:var(--tac-ink);font:600 15px/1.25 'Space Grotesk',system-ui,sans-serif;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-figure-note {color:var(--tac-dim);font-size:10px;}
+body[data-design="command03"] .native-scene-notice {margin:0;padding:6px 9px;border-left:2px solid var(--tac-amber);background:rgba(255,200,128,.08);font-size:12px;line-height:1.4;}
+body[data-design="command03"] .native-scene-result {margin:0;font-size:13px;line-height:1.45;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-actions {display:flex;flex-wrap:wrap;gap:8px;}
+body[data-design="command03"] .native-scene-action {
+ min-height:44px;padding:8px 14px;border:1px solid var(--tac-amber);border-radius:0;background:rgba(255,200,128,.1);
+ color:var(--tac-ink);font:600 13px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;touch-action:manipulation;
+}
+/* Foot: system readouts (bars of real readings) and the brain's four steps. */
+body[data-design="command03"] .native-scene-foot {
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px 14px;padding-top:9px;
+ border-top:1px solid rgba(131,237,255,.16);
+}
+body[data-design="command03"] .native-scene-system,
+body[data-design="command03"] .native-scene-brain {display:grid;gap:4px;margin:0;padding:0;list-style:none;min-width:0;}
+body[data-design="command03"] .native-scene-sysbar {display:grid;grid-template-columns:86px minmax(30px,1fr) auto;align-items:center;gap:7px;min-width:0;}
+body[data-design="command03"] .native-scene-sysbar-name {color:var(--tac-dim);font:600 9px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;}
+body[data-design="command03"] .native-scene-sysbar-track {position:relative;display:block;height:4px;overflow:hidden;background:#0a2234;}
+body[data-design="command03"] .native-scene-sysbar-track i {background:linear-gradient(90deg,rgba(var(--cinema-fill),.9),var(--tac-cyan));}
+body[data-design="command03"] .native-scene-sysbar-value {color:var(--tac-ink);font:600 11px/1.2 'Space Grotesk',system-ui,sans-serif;white-space:nowrap;}
+body[data-design="command03"] .native-scene-brain {grid-template-columns:repeat(4,minmax(0,1fr));align-content:center;}
+body[data-design="command03"] .native-scene-brain-step {
+ padding:5px 2px;border-bottom:2px solid #1d3a4c;color:#6f8b9c;text-align:center;
+ font:600 9px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.1em;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-scene-brain-step[data-lit="true"] {border-bottom-color:var(--tac-cyan);color:var(--tac-cyan);background:rgba(131,237,255,.07);}
+
+/* Motion: one pass per mark, set by the bridge on a real event, in the full and balanced tiers only. */
+@keyframes native-scene-in-rise {from{transform:translateY(-26px) scaleY(.12);opacity:0}45%{opacity:.85}to{transform:none;opacity:1}}
+@keyframes native-scene-in-card {from{transform:translateY(12px) scale(.94);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-scene-in-fade {from{opacity:0}to{opacity:1}}
+@keyframes native-scene-out-sink {from{transform:none;opacity:1}to{transform:translateY(-18px) scaleY(.2);opacity:0}}
+@keyframes native-scene-out-card {from{transform:none;opacity:1}to{transform:translateX(24px);opacity:0}}
+@keyframes native-scene-mark-stamp {from{transform:scale(1.5);opacity:0}60%{transform:scale(.95);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-scene-mark-flash {from{opacity:.25}to{opacity:1}}
+body[data-design="command03"][data-native-effects="full"] .native-scene[data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene[data-native-enter] {
+ animation:native-scene-in-rise .62s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene [data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene [data-native-enter] {
+ animation:native-scene-in-card .42s var(--tac-mech) calc(var(--tac-i,0) * 70ms + 120ms) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene .native-scene-result[data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene .native-scene-result[data-native-enter] {
+ animation:native-scene-in-fade .5s ease-out 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene[data-native-leaving="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene[data-native-leaving="true"] {
+ animation:native-scene-out-sink .36s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene-card[data-native-leaving="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-card[data-native-leaving="true"] {
+ animation:native-scene-out-card .3s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene-phase[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-phase[data-changed="true"] {
+ animation:native-scene-mark-stamp .42s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene-level[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-level[data-changed="true"],
+body[data-design="command03"][data-native-effects="full"] .native-scene-query[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-query[data-changed="true"],
+body[data-design="command03"][data-native-effects="full"] .native-scene-brain-step[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-brain-step[data-changed="true"] {
+ animation:native-scene-mark-flash .2s ease-in-out 3 alternate both;
+}
+/* The owner's switch and the system preference stop every one of them. */
+body[data-design="command03"][data-native-light-motion="off"] .native-scene,
+body[data-design="command03"][data-native-light-motion="off"] .native-scene * {animation:none!important;}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-scene,
+ body[data-design="command03"] .native-scene * {animation:none!important;}
+}

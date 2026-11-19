@@ -3180,7 +3180,10 @@ test('heat contract of the tactical section: no blur, no filter, no transition; 
   const css = readFileSync(resolve(assetRoot, 'native-layer.css'), 'utf8');
   const start = css.indexOf('Code71 · tactical command centre');
   assert.ok(start > css.indexOf('Code70 · cinematic windows'), 'The section exists, after the window section');
-  const section = css.slice(start).replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[^{]*?\*\//, '');
+  // The section ends where the next one (Code73, with its own contract below) begins.
+  const end = css.indexOf('/* ───────── Code73', start);
+  assert.ok(end > start, 'The tactical section is followed by the bust and scene section');
+  const section = css.slice(start, end).replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[^{]*?\*\//, '');
   assert.doesNotMatch(section, /backdrop-filter/);
   assert.doesNotMatch(section, /(^|[;{\s])filter\s*:/, 'No filter in the tactical section');
   assert.doesNotMatch(section, /transition\s*:(?!\s*none)/, 'The tactical section adds no transition');
@@ -3237,4 +3240,380 @@ test('heat contract of the tactical section: no blur, no filter, no transition; 
   const tacticalCode = bridge.slice(bridge.indexOf('Code71 · tactical command centre ─'));
   assert.doesNotMatch(tacticalCode.slice(0, tacticalCode.indexOf('const workspace=$(')), /setInterval|setTimeout|requestAnimationFrame/,
     'The tactical code has no clock of its own');
+});
+
+// ───────── Code73 · the bust in the room and the work scenes ─────────
+const GB73 = 1e9, MB73 = 1e6;
+const clean73 = (phase, extra = {}) => ({schema: 'continuum.deepclean.v1', runId: 'run-7', mode: 'DEEP_CLEAN', phase,
+  progress: {done: 0, total: 0, unit: 'files'}, categories: [], levels: {GREEN: {count: 0, bytes: 0}, YELLOW: {count: 0, bytes: 0},
+    RED: {count: 0, bytes: 0}, EXCLUDED: {count: 0, bytes: 0}}, before: null, after: null,
+  removed: {files: 0, bytes: 0, source: 'sum_of_removed_file_sizes'}, choice: {count: 0, bytes: 0}, sharedAccess: 'GRANTED',
+  updatedAtMs: 2000, ...extra});
+const categories73 = [{key: 'WHATSAPP', label: 'WhatsApp-Medien', count: 1834, bytes: 6420000000},
+  {key: 'APK', label: 'Installationspakete (APK)', count: 7, bytes: 612000000},
+  {key: 'OWN_CACHE', label: 'Eigener Zwischenspeicher von Continuum', count: 388, bytes: 43100000}];
+const levels73 = {GREEN: {count: 2602, bytes: 715000000}, YELLOW: {count: 155, bytes: 3490000000}, RED: {count: 0, bytes: 0},
+  EXCLUDED: {count: 41, bytes: 200000000}};
+const before73 = {freeBytes: 38600000000, totalBytes: 512000000000, atMs: 1000};
+const scene73 = kind => ({kind, since: 77});
+const read73 = f => {
+  const scene = f.document.querySelector('#native-scene');
+  if (!scene) return null;
+  const text = selector => {const node = scene.querySelector(selector);return node && !node.closest('[hidden]') ? node.textContent : null;};
+  return {kind: scene.dataset.kind, phase: text('.native-scene-phase'), sub: text('.native-scene-sub'), progress: text('.native-scene-progress-label'),
+    bar: scene.querySelector('.native-scene-bar').hidden ? null : scene.querySelector('.native-scene-fill').style.transform,
+    storage: text('.native-scene-storage-note'), notice: text('.native-scene-notice'), result: text('.native-scene-result'),
+    query: text('.native-scene-query'),
+    levels: [...scene.querySelectorAll('.native-scene-level')].map(chip => chip.dataset.level + (chip.dataset.active === 'true' ? '*' : '') +
+      ' ' + chip.querySelector('.native-scene-level-value').textContent),
+    cards: [...scene.querySelectorAll('.native-scene-card')].map(card => [card.querySelector('.native-scene-card-mark').textContent,
+      card.querySelector('.native-scene-card-title').textContent, card.querySelector('.native-scene-card-meta').textContent,
+      card.querySelector('.native-scene-card-value').textContent].filter(Boolean).join(' | ')),
+    figures: [...scene.querySelectorAll('.native-scene-figure')].map(row => [...row.children].map(node => node.textContent).join(' | ')),
+    action: [...scene.querySelectorAll('.native-scene-action')].map(button => button.textContent + ' → ' + button.dataset.route)};
+};
+
+test('the bust dissolves where the original model really ends: measured from the avatar frame, two still light layers', async () => {
+  const f = await fixture();
+  try {
+    f.state();
+    const zone = f.document.querySelector('.avatar-zone'), crop = zone.querySelector('.avatar-crop');
+    const back = zone.querySelector(':scope>.native-bust-back'), front = zone.querySelector(':scope>.native-bust-front');
+    assert.ok(back && front, 'Both light layers exist');
+    assert.equal(back.nextElementSibling, crop, 'Platform and halo stand behind the figure');
+    assert.equal(crop.nextElementSibling, front, 'Threads, motes and the near platform stand in front of it');
+    assert.deepEqual([...front.children].map(node => node.className),
+      ['native-bust-lines', 'native-bust-motes', 'native-bust-ring', 'native-bust-ring native-bust-inner']);
+    assert.equal(back.getAttribute('aria-hidden'), 'true');
+    // jsdom has no layout: without a measured frame nothing is guessed.
+    assert.equal(zone.style.getPropertyValue('--bust-cut'), '');
+    // The unfolded Fold7: the original avatar's frame of 350 × 433 px ("contain" widens its camera to 0.3713).
+    Object.defineProperties(crop, {clientWidth: {value: 350, configurable: true}, clientHeight: {value: 433, configurable: true}});
+    f.window.dispatchEvent(new f.window.Event('resize'));
+    const vars = () => ['--bust-neck', '--bust-chest', '--bust-cut', '--bust-shoulder', '--bust-head', '--bust-headw']
+      .map(name => zone.style.getPropertyValue(name));
+    assert.deepEqual(vars(), ['58.76%', '65.49%', '78.96%', '43.00%', '32.49%', '14.17%']);
+    assert.deepEqual([front.style.width, front.style.height], ['350px', '433px']);
+    // A phone frame wider than the camera keeps its height: the model's lower plane sits near the frame's bottom.
+    Object.defineProperties(crop, {clientWidth: {value: 348, configurable: true}, clientHeight: {value: 298, configurable: true}});
+    f.window.dispatchEvent(new f.window.CustomEvent('continuum:avatarchange', {detail: {mode: 'original-webgl'}}));
+    assert.equal(zone.style.getPropertyValue('--bust-cut'), '91.85%');
+    // The speech level that drives the corona also reaches the halo layer, and leaves with the speech.
+    f.state({speaking: true, presence: 'SPEAKING'});
+    f.window.ContinuumNative.speech(speechFrame({jawOpen: .456}));
+    assert.equal(back.style.getPropertyValue('--native-speech'), '0.46');
+    await f.timers(150);
+    assert.equal(back.style.getPropertyValue('--native-speech'), '');
+  } finally {f.close();}
+});
+
+test('the dissolve is a curved still mask on the original frame: no straight cut, no animation, no filter', () => {
+  const css = readFileSync(resolve(assetRoot, 'native-layer.css'), 'utf8');
+  const section = css.slice(css.indexOf('/* ───────── Code73')).replace(/\/\*[\s\S]*?\*\//g, '');
+  const mask = /\.avatar-zone \.avatar-crop \{([^}]*)\}/.exec(section)?.[1];
+  assert.ok(mask, 'The original frame gets the dissolve');
+  // Above the neck the figure is whole; below it only the ellipse around the neck: its contour is curved and it is
+  // transparent before the model's own lower plane, at every frame size (both are measured custom properties).
+  assert.match(mask, /mask-image:linear-gradient\(180deg,#000 0,#000 var\(--bust-neck\),transparent calc\(var\(--bust-neck\) \+ 7%\)\),\s*radial-gradient\(ellipse/);
+  assert.match(mask, /calc\(\(var\(--bust-cut\) - var\(--bust-neck\)\) \* \.97\) at 50% var\(--bust-neck\)/);
+  assert.match(mask, /transparent 100%\)/);
+  assert.match(mask, /mask-composite:add/);
+  assert.doesNotMatch(mask, /animation|transition|filter/);
+  for (const part of ['native-bust-lines', 'native-bust-motes', 'native-bust-ring', 'native-bust-halo'])
+    for (const [, body] of section.matchAll(new RegExp('\\.' + part + '[^{]*\\{([^}]*)\\}', 'g')))
+      assert.doesNotMatch(body, /animation|transition/, part + ' stands still');
+});
+
+test('the storage scene follows the real deepClean record through scan, classify, clean, choice and done', async () => {
+  const f = await fixture();
+  try {
+    const run = (deepClean, extra = {}) => f.state({busy: true, cloudBrain: true, presence: 'THINKING', deepClean, scene: scene73('deepclean'), ...extra});
+    f.state();
+    assert.equal(f.document.querySelector('#native-scene'), null, 'No record, no scene');
+    // 1 · 8 · scanning: files seen, no total, so a counter and no bar; the measured storage appears.
+    run(clean73('SCAN', {progress: {done: 3184, total: 0, unit: 'files'}, before: before73, categories: categories73.slice(0, 1)}));
+    let shown = read73(f);
+    assert.equal(f.document.querySelector('.presence-system>.presence-core').nextElementSibling.id, 'native-scene',
+      'The window stands directly below the avatar');
+    assert.equal(f.document.body.dataset.nativeScene, 'deepclean');
+    assert.deepEqual([shown.kind, shown.phase, shown.sub, shown.progress, shown.bar], ['deepclean', 'SCANNT', 'Tiefenbereinigung',
+      '3.184 Dateien geprüft', null]);
+    assert.equal(shown.storage, '473 GB belegt · 38,6 GB frei (gemessen)');
+    assert.equal(f.document.querySelector('.native-scene-storage-label').textContent, 'GERÄTESPEICHER · 512 GB');
+    assert.equal(f.document.querySelector('.native-scene-used').style.transform, 'scaleX(0.9246)');
+    assert.deepEqual(shown.cards, ['WhatsApp-Medien | 1.834 Dateien | 6,4 GB']);
+    // 3 · 4 · 5 · categories by size with their measured bytes, safety levels with what they hold.
+    run(clean73('CLASSIFY', {progress: {done: 4977, total: 0, unit: 'files'}, before: before73, categories: categories73, levels: levels73}));
+    shown = read73(f);
+    assert.deepEqual(shown.cards, ['WhatsApp-Medien | 1.834 Dateien | 6,4 GB', 'Installationspakete (APK) | 7 Dateien | 612 MB',
+      'Eigener Zwischenspeicher von Continuum | 388 Dateien | 43,1 MB']);
+    assert.deepEqual(shown.levels, ['GREEN 2.602 Dateien · 715 MB', 'YELLOW 155 Dateien · 3,5 GB', 'EXCLUDED 41 Dateien · 200 MB'],
+      'An empty level is not shown');
+    assert.equal(f.document.querySelector('.native-scene-card .native-scene-card-fill>i').style.transform, 'scaleX(1.0000)');
+    // 6 · 8 · cleaning: GREEN lights, the bar is the real share of removed GREEN files.
+    run(clean73('CLEAN', {progress: {done: 1460, total: 2602, unit: 'files'}, before: before73, categories: categories73, levels: levels73,
+      removed: {files: 1460, bytes: 402000000}}));
+    shown = read73(f);
+    assert.deepEqual([shown.phase, shown.progress, shown.bar], ['BEREINIGT', '1.460 von 2.602 Dateien entfernt', 'scaleX(0.5611)']);
+    assert.equal(shown.levels[0], 'GREEN* 2.602 Dateien · 715 MB');
+    assert.deepEqual(shown.figures, ['FREI VORHER | 38,6 GB | gemessen', 'ENTFERNT | 1.460 Dateien · 402 MB | Summe der Dateigrößen']);
+    // 7 · the owner's choice: what waits, and a button that opens the native panel – nothing is removed by the page.
+    run(clean73('CHOICE', {progress: {done: 2602, total: 2602}, before: before73, categories: categories73, levels: levels73,
+      removed: {files: 2602, bytes: 715000000}, choice: {count: 155, bytes: 3490000000}}));
+    shown = read73(f);
+    assert.equal(shown.phase, 'WARTET AUF DICH');
+    assert.equal(shown.notice, '155 Dateien (3,5 GB) warten auf deine Auswahl. Nichts davon wird ohne dich entfernt.');
+    assert.deepEqual(shown.action, ['Auswahl öffnen → storage-clean']);
+    const routes = () => f.navigations.filter(url => url.pathname === '/route').map(url => url.searchParams.get('value'));
+    f.click(f.document.querySelector('.native-scene-action'));
+    assert.deepEqual(routes(), ['storage-clean'], 'The native panel opens; the stage starts nothing else');
+    // 9 · 10 · done: measured free space before and after, its change, and the removed files as the sum of their sizes.
+    run(clean73('DONE', {progress: {done: 2602, total: 2602}, before: before73, after: {freeBytes: 39330000000, totalBytes: 512000000000, atMs: 9000},
+      categories: categories73, levels: levels73, removed: {files: 2602, bytes: 715000000}}), {busy: false, presence: 'IDLE'});
+    shown = read73(f);
+    assert.deepEqual(shown.figures, ['FREI VORHER | 38,6 GB | gemessen', 'FREI NACHHER | 39,3 GB | gemessen',
+      'ÄNDERUNG | + 730 MB | freier Speicher, gemessen', 'ENTFERNT | 2.602 Dateien · 715 MB | Summe der Dateigrößen']);
+    assert.deepEqual([shown.phase, shown.result, shown.progress, shown.action], ['ABGESCHLOSSEN', 'Bereinigung abgeschlossen.', null, []]);
+    assert.equal(shown.storage, '473 GB belegt · 39,3 GB frei (nachher, gemessen)');
+    assert.equal(f.document.querySelector('.native-scene-before').hidden, false, 'The earlier used part stays visible behind it');
+    // The record leaves: so does the window, and the tiles take their row back.
+    f.state({deepClean: null, scene: null});
+    assert.equal(f.document.querySelector('#native-scene'), null);
+    assert.equal('nativeScene' in f.document.body.dataset, false);
+  } finally {f.close();}
+});
+
+test('stopped, failed, a read-only analysis and missing shared access are said as they are; malformed records show nothing', async () => {
+  const f = await fixture();
+  try {
+    const run = deepClean => f.state({deepClean, scene: scene73('deepclean')});
+    run(clean73('STOPPED', {removed: {files: 12, bytes: 3400000}}));
+    assert.deepEqual([read73(f).phase, read73(f).result], ['GESTOPPT', 'Gestoppt. Was bis dahin entfernt wurde, steht oben.']);
+    assert.deepEqual(read73(f).figures, ['ENTFERNT | 12 Dateien · 3,4 MB | Summe der Dateigrößen']);
+    assert.equal(f.document.querySelector('#native-scene').dataset.tone, 'stopped');
+    run(clean73('FAILED'));
+    assert.deepEqual([read73(f).phase, read73(f).result], ['FEHLGESCHLAGEN', 'Fehlgeschlagen. Es wird nichts weiter entfernt.']);
+    run(clean73('DONE', {mode: 'ANALYSE', sharedAccess: 'MISSING'}));
+    assert.deepEqual([read73(f).sub, read73(f).result], ['Analyse', 'Analyse abgeschlossen – nichts wurde gelöscht.']);
+    assert.equal(read73(f).notice, 'Gemeinsamer Speicher nicht freigegeben – geprüft wurden nur Continuums eigene Dateien.');
+    assert.equal(read73(f).storage, null, 'No measured volume, no storage gauge');
+    for (const broken of [{...clean73('SCAN'), schema: 'other'}, {...clean73('SCAN'), phase: 'IDLE'}, 'SCAN', 7]) {
+      run(broken);
+      assert.equal(f.document.querySelector('#native-scene'), null, JSON.stringify(broken));
+    }
+    // Categories are bounded and text only: markup is shown as text, a bad key or a negative size is dropped.
+    run(clean73('CLASSIFY', {categories: [{key: 'OTHER', label: '<img src=x onerror=alert(1)>', count: 1, bytes: 5},
+      {key: 'bad key', label: 'X', count: 1, bytes: 1}, {key: 'APK', label: 'APK', count: 1, bytes: -4}]}));
+    assert.deepEqual(read73(f).cards, ['<img src=x onerror=alert(1)> | 1 Datei | 5 Bytes']);
+    assert.equal(f.document.querySelector('#native-scene img'), null);
+  } finally {f.close();}
+});
+
+test('the mail scene shows the mail lane\'s real record: search, cards with German dates, summary, draft – text only', async () => {
+  const f = await fixture();
+  try {
+    const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 5).getTime();
+    const tuesday = new Date(2026, 10, 17, 9, 30).getTime();
+    const cards = [{index: 1, sender: 'Werkstatt Huber', subject: 'Ihr Fahrzeug ist abholbereit', dateMillis: today, state: 'UNREAD'},
+      {index: 2, sender: 'Bank Austria', subject: '<b>Kontoauszug</b>', dateMillis: tuesday, state: 'READ', snippet: 'never shown'},
+      {index: 3, sender: 'Michael Gruber', subject: 'Angebot', dateMillis: tuesday, state: 'SELECTED'}];
+    const mail = (phase, extra = {}) => ({version: 1, revision: 4, phase, query: 'Werkstatt', found: 3, read: 0, progress: null,
+      cards: [], result: null, updatedAtMillis: 5000, ...extra});
+    const run = (record, extra = {}) => f.state({busy: true, cloudBrain: true, presence: 'THINKING', mailWork: record, scene: scene73('mail'), ...extra});
+    run(mail('SEARCH', {cards: cards.slice(0, 1)}));
+    let shown = read73(f);
+    assert.deepEqual([shown.kind, shown.phase, shown.query], ['mail', 'SUCHT', 'Suche: „Werkstatt“']);
+    assert.equal(f.document.querySelector('#native-scene').dataset.searching, 'true');
+    assert.deepEqual(shown.cards, ['01 · UNGELESEN | Ihr Fahrzeug ist abholbereit | Werkstatt Huber | 14:05']);
+    assert.deepEqual(shown.figures, ['GEFUNDEN | 3', 'GELESEN | 0']);
+    run(mail('READ', {cards, read: 1, progress: {done: 1, total: 3}, unknown: {nested: true}}));
+    shown = read73(f);
+    assert.deepEqual(shown.cards, ['01 · UNGELESEN | Ihr Fahrzeug ist abholbereit | Werkstatt Huber | 14:05',
+      '02 | <b>Kontoauszug</b> | Bank Austria | Di., 17.11.', '03 · AUSGEWÄHLT | Angebot | Michael Gruber | Di., 17.11.']);
+    assert.equal(f.document.querySelector('#native-scene b'), null, 'A subject is text, never markup');
+    assert.doesNotMatch(f.document.querySelector('#native-scene').textContent, /never shown/, 'Unknown fields are ignored');
+    assert.deepEqual([shown.progress, shown.bar], ['1 von 3', 'scaleX(0.3333)']);
+    run(mail('SUMMARIZE', {cards, read: 3, progress: {done: 3, total: 3}}));
+    assert.equal(read73(f).notice, 'Die Zusammenfassung entsteht aus den gelesenen Nachrichten.');
+    assert.equal(read73(f).result, null, 'No summary is shown before the lane has one');
+    run(mail('DRAFT', {cards, read: 3, found: null, result: 'Entwurf an die Werkstatt: Ich hole das Auto um 17 Uhr.'}));
+    shown = read73(f);
+    assert.deepEqual([shown.phase, shown.notice, shown.result], ['ENTWURF · NICHT GESENDET',
+      'Der Entwurf ist nicht gesendet. Gesendet wird nur nach deiner Bestätigung.'.replace('deiner Bestätigung', 'deinem Ja'),
+      'Entwurf an die Werkstatt: Ich hole das Auto um 17 Uhr.']);
+    assert.deepEqual(shown.figures, ['GELESEN | 3'], 'Without a count from the lane there is no "found" figure');
+    run(mail('DONE', {cards, read: 3, result: 'Auto abholbereit bis 18 Uhr.'}), {busy: false, presence: 'IDLE'});
+    assert.deepEqual([read73(f).phase, read73(f).result], ['ERLEDIGT', 'Auto abholbereit bis 18 Uhr.']);
+    run(mail('ARCHIVE'));
+    assert.equal(f.document.querySelector('#native-scene'), null, 'An unknown phase is no scene');
+  } finally {f.close();}
+});
+
+test('the director\'s scene decides: one scene, none for the existing work windows, and the owner may close it', async () => {
+  const f = await fixture();
+  try {
+    const record = clean73('SCAN', {before: before73});
+    // An older Android without `scene`: the storage record is shown.
+    f.state({deepClean: record});
+    assert.equal(read73(f).kind, 'deepclean');
+    // The director names the computer task: the live monitor owns the stage, no scene is drawn.
+    f.state({deepClean: record, scene: {kind: 'computer', since: 3}});
+    assert.equal(f.document.querySelector('#native-scene'), null);
+    // An explicit null wins over a present record; an unknown kind is nothing.
+    f.state({deepClean: record, scene: null});
+    assert.equal(f.document.querySelector('#native-scene'), null);
+    f.state({deepClean: record, scene: {kind: 'hologram', since: 3}});
+    assert.equal(f.document.querySelector('#native-scene'), null);
+    // The director names a lane whose record is missing: nothing is invented for it.
+    f.state({scene: scene73('mail')});
+    assert.equal(f.document.querySelector('#native-scene'), null);
+    // The owner closes the window: it stays away for this scene, and a later scene comes back.
+    f.state({deepClean: record, scene: scene73('deepclean')});
+    f.click(f.document.querySelector('.native-scene-close'));
+    assert.equal(f.document.querySelector('#native-scene'), null);
+    f.state({deepClean: {...record, progress: {done: 5000, total: 0}}, scene: scene73('deepclean')});
+    assert.equal(f.document.querySelector('#native-scene'), null);
+    f.state({deepClean: record, scene: {kind: 'deepclean', since: 900}});
+    assert.equal(read73(f).kind, 'deepclean');
+    assert.deepEqual(f.navigations.filter(url => url.pathname === '/route'), [], 'Closing is local; nothing is sent');
+  } finally {f.close();}
+});
+
+test('send and web scenes come from the send lane\'s record and the research activity with its delivered sources', async () => {
+  const f = await fixture();
+  try {
+    const turn = {revision: 1, source: 'TURN', key: 't4', title: 'Schreib Anna', total: 2, active: true, outcome: null,
+      items: [{key: 'a', number: 1, label: 'Empfänger gefunden', state: 'DONE'}, {key: 'b', number: 2, label: 'Nachricht vorbereiten', state: 'ACTIVE'}]};
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', orders: turn, sendWork: {phase: 'RUNNING', channel: null, to: null, detail: null, at: 5},
+      scene: scene73('send')});
+    let shown = read73(f);
+    assert.deepEqual([shown.kind, shown.phase, shown.cards], ['send', 'BEREITET VOR', ['Empfänger gefunden | ERLEDIGT', 'Nachricht vorbereiten | LÄUFT']]);
+    f.state({presence: 'WAITING_FOR_APPROVAL', orders: turn, sendWork: {phase: 'WAITING', at: 6}, scene: scene73('send')});
+    assert.deepEqual([read73(f).phase, read73(f).notice], ['WARTET AUF DICH', 'Gesendet wird erst nach deiner Bestätigung.']);
+    f.state({sendWork: {phase: 'SENT', channel: 'WhatsApp', to: 'Anna', detail: null, at: 7}, scene: scene73('send')});
+    shown = read73(f);
+    assert.deepEqual([shown.phase, shown.sub, shown.figures], ['GESENDET · BESTÄTIGT', 'WhatsApp', ['AN | Anna | WhatsApp']]);
+    // Web: the research activity's steps and the sources the app really received.
+    const activity = {revision: 3, kind: 'RESEARCH', title: 'Wetter Linz', detail: 'Sucht', active: true,
+      steps: [{label: 'Websuche', state: 'DONE'}, {label: 'Quelle lesen', state: 'ACTIVE'}]};
+    f.state({busy: true, cloudBrain: true, presence: 'RESEARCHING', activity, scene: scene73('web')});
+    shown = read73(f);
+    assert.deepEqual([shown.kind, shown.phase, shown.sub, shown.progress, shown.cards], ['web', 'RECHERCHIERT', 'Wetter Linz', '1 von 2 Schritten', []]);
+    f.window.ContinuumNative.sources({...binding, sourceSetId, items: [{id: sourceId, title: 'Prognose', url: 'https://www.geosphere.at/wetter'}]});
+    assert.deepEqual(read73(f).cards, ['Prognose | www.geosphere.at'], 'A delivered source arrives as a card at once');
+  } finally {f.close();}
+});
+
+test('readouts and brain steps in the scene foot come from readings Android sent; nothing without them', async () => {
+  const f = await fixture();
+  try {
+    const bars = () => [...f.document.querySelectorAll('.native-scene-sysbar')].map(row => row.dataset.bar + ' ' +
+      row.querySelector('.native-scene-sysbar-value').textContent + ' ' + row.querySelector('.native-scene-sysbar-track>i').style.transform);
+    const lit = () => [...f.document.querySelectorAll('.native-scene-brain-step')].filter(step => step.dataset.lit === 'true').map(step => step.textContent);
+    f.state({cpu: 12, ram: 84, tactical: {brain: 'CLAUDE', battery: 0, charging: true}, deepClean: clean73('SCAN', {before: before73}),
+      scene: scene73('deepclean')});
+    assert.deepEqual(bars(), ['cpu 12 % scaleX(0.1200)', 'ram 84 % scaleX(0.8400)', 'storage 473 GB von 512 GB scaleX(0.9200)',
+      'battery 0 % · LÄDT scaleX(0.0000)']);
+    assert.deepEqual(lit(), ['HANDELN'], 'The storage lane works; no order was taken in this chat');
+    f.state({cpu: null, ram: 150, tactical: null, deepClean: clean73('SCAN'), scene: scene73('deepclean')});
+    assert.deepEqual(bars(), [], 'No reading, no bar: nothing is estimated');
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', deepClean: clean73('SCAN'), scene: scene73('deepclean'),
+      orders: {revision: 1, source: 'TURN', key: 't1', title: 'X', total: 1, active: true, outcome: null,
+        items: [{key: 'a', number: 1, label: 'Speicher prüfen', state: 'ACTIVE'}]},
+      activity: {revision: 1, kind: 'VERIFY', title: 'Prüft', detail: '', active: true, steps: []}});
+    assert.deepEqual(lit(), ['VERSTEHEN', 'DENKEN', 'HANDELN', 'PRÜFEN']);
+  } finally {f.close();}
+});
+
+test('the avatar looks at the scene when it opens and faces the owner when it waits or ends', async () => {
+  const f = await fixture();
+  try {
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', deepClean: clean73('SCAN'), scene: scene73('deepclean')});
+    const scene = f.document.querySelector('#native-scene');
+    assert.equal(f.gazes.at(-1).target, scene, 'One look at the window that opened');
+    const count = f.gazes.length;
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', deepClean: clean73('SCAN', {progress: {done: 9, total: 0}}), scene: scene73('deepclean')});
+    assert.equal(f.gazes.length, count, 'A counter that moves is no reason to look again');
+    f.advance(5000);
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', deepClean: clean73('CLASSIFY', {categories: categories73}), scene: scene73('deepclean')});
+    assert.equal(f.gazes.at(-1).target, scene, 'New categories draw one glance');
+    f.state({busy: false, presence: 'IDLE', deepClean: clean73('DONE'), scene: scene73('deepclean')});
+    assert.deepEqual(f.gazes.at(-1).detail, {x: 0, y: 0, durationMs: 2200}, 'The finished lane: the avatar faces the owner');
+  } finally {f.close();}
+});
+
+test('scenes respect the heat contract: no marks while the device computes or in the reduced tier, final state without motion, no clock', async () => {
+  const marks = f => [...f.document.querySelectorAll('#native-scene[data-native-enter],#native-scene [data-native-enter],#native-scene [data-changed]')]
+    .map(node => node.className.split(' ')[0]);
+  for (const [name, values, moves] of [
+    ['full', {busy: true, cloudBrain: true, presence: 'THINKING'}, true],
+    ['balanced', {busy: true, cloudBrain: true, presence: 'THINKING', quality: 'BALANCED'}, true],
+    ['local computing', {busy: true, presence: 'THINKING'}, false],
+    ['reduced tier', {busy: true, cloudBrain: true, presence: 'THINKING', quality: 'REDUCED'}, false],
+    ['light motion off', {busy: true, cloudBrain: true, presence: 'THINKING', appearance: {neon: 70, lightMotion: false}}, false]]) {
+    const f = await fixture();
+    try {
+      f.state(values);
+      const pending = f.pendingWork().length;
+      f.state({...values, deepClean: clean73('SCAN', {before: before73, categories: categories73.slice(0, 1)}), scene: scene73('deepclean')});
+      f.state({...values, deepClean: clean73('CLEAN', {before: before73, categories: categories73, levels: levels73,
+        progress: {done: 10, total: 20}}), scene: scene73('deepclean')});
+      const shown = marks(f);
+      if (moves) assert.ok(shown.includes('native-scene') && shown.includes('native-scene-card') && shown.includes('native-scene-phase'), name + ': ' + shown);
+      else assert.deepEqual(shown, [], name);
+      // The content is complete either way.
+      assert.deepEqual([read73(f).cards.length, read73(f).bar, read73(f).levels.length], [3, 'scaleX(0.5000)', 3], name);
+      assert.equal(f.pendingWork().length, pending, name + ': the scene asked the clock for nothing');
+      // Motion ends (the device starts computing): every mark is settled at once.
+      if (moves) {
+        f.state({busy: true, presence: 'THINKING', deepClean: clean73('CLEAN', {before: before73, categories: categories73, levels: levels73,
+          progress: {done: 10, total: 20}}), scene: scene73('deepclean')});
+        assert.deepEqual(marks(f), [], name + ': settled when the device starts to compute');
+      }
+    } finally {f.close();}
+  }
+});
+
+test('heat contract of the bust and scene section: no blur, filter, transition or loop; transform and opacity; full and balanced only', () => {
+  const css = readFileSync(resolve(assetRoot, 'native-layer.css'), 'utf8');
+  const start = css.indexOf('/* ───────── Code73');
+  assert.ok(start > css.indexOf('Code71 · tactical command centre'), 'The section exists, after the tactical one');
+  const section = css.slice(start).replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.doesNotMatch(section, /backdrop-filter|will-change|infinite/);
+  assert.doesNotMatch(section, /(^|[;{\s])filter\s*:/, 'No filter in this section');
+  assert.doesNotMatch(section, /transition\s*:(?!\s*none)/, 'No transition in this section');
+  const frames = [...section.matchAll(/@keyframes\s+([\w-]+)\s*\{((?:[^{}]*\{[^{}]*\})*)\s*\}/g)];
+  assert.ok(frames.length >= 6, 'The keyframes were found: ' + frames.length);
+  for (const [, name, body] of frames) {
+    assert.match(name, /^native-scene-(in|out|mark)-/, name);
+    const properties = [...body.matchAll(/([\w-]+)\s*:/g)].map(match => match[1]);
+    assert.ok(properties.length > 0 && properties.every(property => property === 'transform' || property === 'opacity'), name + ' animates ' + properties);
+  }
+  const rules = [...section.replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*\s*\}/g, '').replace(/@(media|container)[^{]*\{/g, '')
+    .matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => [match[1].trim(), match[2]]);
+  let moving = 0;
+  for (const [selectors, body] of rules) {
+    const animation = /animation\s*:\s*([^;]+)/.exec(body)?.[1];
+    if (!animation || /^none\b/.test(animation.trim())) continue;
+    moving++;
+    for (const selector of selectors.split(','))
+      assert.match(selector, /\[data-native-effects="(full|balanced)"\]/, 'Unconditional animation: ' + selector.trim());
+    assert.match(animation, /\s[1-3](\s|$)/, 'Finite: ' + animation);
+    const name = /native-scene-[\w-]+/.exec(animation)[0];
+    if (name.includes('-in-')) assert.match(selectors, /\[data-native-enter/, selectors);
+    if (name.includes('-out-')) assert.match(selectors, /\[data-native-leaving="true"\]/, selectors);
+    if (name.includes('-mark-')) assert.match(selectors, /\[data-changed="true"\]/, selectors);
+  }
+  assert.ok(moving >= 6, 'The moving rules were found: ' + moving);
+  // No existing surface is restyled while the device computes, except the avatar frame's still mask and the scene grid row.
+  for (const [selectors] of rules) for (const selector of selectors.split(',')) {
+    if (/native-(bust|scene)|^\s*body\[data-design="command03"\]\s*$/.test(selector)) continue;
+    assert.match(selector, /\.avatar-zone \.avatar-crop|\[data-native-scene\] \.presence-system>\.presence-wing/, 'Restyled: ' + selector.trim());
+  }
+  const bridge = readFileSync(resolve(assetRoot, 'native-bridge.js'), 'utf8');
+  const code = bridge.slice(bridge.indexOf('// ───────── Code73 · work scenes'), bridge.indexOf('// A mark is for one pass'));
+  assert.ok(code.length > 1000);
+  assert.doesNotMatch(code, /setInterval|setTimeout|requestAnimationFrame|innerHTML/, 'The scene code has no clock and writes no markup');
+  const bust = bridge.slice(bridge.indexOf('// ───────── Code73 · the bust in the room'), bridge.indexOf("window.addEventListener('continuum:avatarchange'"));
+  assert.doesNotMatch(bust, /setInterval|setTimeout|requestAnimationFrame|innerHTML/, 'The bust code has no clock');
 });

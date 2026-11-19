@@ -102,8 +102,14 @@ internal interface OwnerWorkToolsHost {
     fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean = false
     /** How an order of this lane ended (see [OwnerLaneOutcome]); nobody has to listen. */
     fun outcome(outcome: OwnerLaneOutcome) {}
-    /** false while a sequence of orders goes on right after a save: „Soll ich sie öffnen?“ is then not asked in between. */
+    /**
+     * true = „Soll ich sie öffnen?“ may be asked after a save right now (false while a sequence of orders goes on, or
+     * when the owner wants no offers). A question only: the lanes ask it more than once for one save, so the answer must
+     * not count or change anything. What was really asked is reported once with [openOffered].
+     */
     fun offerToOpen(): Boolean = true
+    /** „Soll ich sie öffnen?“ was said just now. */
+    fun openOffered() {}
 }
 
 /** What the Activity lends a running file job. */
@@ -173,6 +179,33 @@ internal class OwnerWorkTools(
     }
 
     /**
+     * A typed result another owner lane produced and showed in this chat – the Gmail lane's summary, a research
+     * dossier, the desk's page summary that was not saved. From now on it is what „speichere das als PDF“ and „schick
+     * das per Mail an …“ mean: the document gets this result's own title and source line, not a draft label.
+     */
+    fun adoptDeliverable(result: OwnerDeliverable) {
+        lastDeliverable = host.sessionId to result
+        subjectThrough = host.ownerTurn
+        openOffer = null
+    }
+
+    /**
+     * [handle] for a step of a sequence that works on exactly [result] – the result object of the step it depends on,
+     * handed over by the sequence itself. Whatever the chat showed in between is not looked at.
+     */
+    fun handleOn(request: String, result: OwnerDeliverable): Boolean {
+        if (deliverable !== result) adoptDeliverable(result) else subjectThrough = host.ownerTurn
+        return handle(request)
+    }
+
+    /** A step of a sequence opens exactly [file] – the file an earlier step of that sequence saved. */
+    fun openSaved(request: String, file: OwnerSavedFile): Boolean {
+        host.acceptOwnerTurn(request)
+        open(request, file)
+        return true
+    }
+
+    /**
      * A sequence of owner orders continues on [result] (a step's real outcome): true when it still is this chat's
      * deliverable – it is then what „das“ and „sie“ of the next order mean, and the offer to open the saved file is
      * over, because the sequence goes on instead of waiting for that answer. false = something newer took its place.
@@ -222,6 +255,14 @@ internal class OwnerWorkTools(
      * „das“ still means what it meant when he said it and not a line the app showed in between.
      */
     fun holdSubject() { held = Held(host.sessionId, host.ownerTurn, host.lastAssistantLine()) }
+
+    /**
+     * true = an order on the held moment („Speichere das als PDF“ after the owner's yes to a suggestion) would mean the
+     * answer that was held – it is a result worth keeping, and no result of this lane is the subject in its place.
+     */
+    val heldIsSubject: Boolean get() = held?.let {
+        it.session == host.sessionId && it.reply?.kind?.worthKeeping == true && !(deliverable != null && subjectThrough == it.turn)
+    } == true
 
     /** [handle] for an order of the sentence [holdSubject] was called for; without one it is [handle]. */
     fun handleOnHeld(request: String): Boolean =
@@ -485,6 +526,7 @@ internal class OwnerWorkTools(
                 val openable = file.uri != null && host.offerToOpen()
                 openOffer = if (openable) OpenOffer(host.sessionId, host.ownerTurn, file) else null
                 host.say(savedMessage(target, command, exported, openable))
+                if (openable) host.openOffered()
                 host.activity("EXPORT · gespeichert · ${file.displayName}")
                 host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FileSaved(file, target, null, null)))
             }.onFailure { error ->
@@ -504,6 +546,8 @@ internal class OwnerWorkTools(
             OwnerDeliverable.Kind.ASSISTANT_REPLY -> " Darin steht meine letzte Antwort aus diesem Gespräch."
             OwnerDeliverable.Kind.PAGE_SUMMARY -> " Darin steht die Seitenzusammenfassung aus diesem Gespräch."
             OwnerDeliverable.Kind.DOCUMENT_DRAFT -> " Darin steht der Entwurf der Zusammenfassung aus diesem Gespräch; das PDF steht als Quelle dabei."
+            OwnerDeliverable.Kind.MAIL_SUMMARY -> " Darin steht die Zusammenfassung deiner E-Mails aus diesem Gespräch."
+            OwnerDeliverable.Kind.RESEARCH -> " Darin steht das Ergebnis der Recherche."
         }
         val shape = listOfNotNull(
             exported.pages?.let { if (it == 1) "1 Seite" else "$it Seiten" } ?: command.format.label,
@@ -532,12 +576,16 @@ internal class OwnerWorkTools(
             else -> null
         } ?: return false
         host.acceptOwnerTurn(request)
+        open(request, file)
+        return true
+    }
+
+    private fun open(request: String, file: OwnerSavedFile) {
         val problem = host.openFile(file)
         val said = if (problem == null) "„${file.displayName}“ ist geöffnet."
             else "Öffnen hat nicht geklappt: ${NewsBriefing.clean(problem, 160)}. Die Datei liegt weiter im Download-Ordner."
         host.reply(request, said)
         host.outcome(if (problem == null) OwnerLaneOutcome.Done(OwnerLaneResult.FileOpened(file)) else OwnerLaneOutcome.Failed(said))
-        return true
     }
 
     // ── „Schick das per Mail an …“ (hand-over only) ─────────────────────────────────────────────────────────

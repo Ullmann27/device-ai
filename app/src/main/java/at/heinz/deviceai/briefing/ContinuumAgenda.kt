@@ -60,6 +60,78 @@ internal object ContinuumAgenda {
     fun dayWindow(date: LocalDate, zone: ZoneId): Pair<Long, Long> =
         date.atStartOfDay(zone).toInstant().toEpochMilli() to date.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
 
+    /**
+     * The days [span] means on [today], first to last, both included (owner sentence 19.11.2026: „Welche Termine habe
+     * ich diese Woche?“). „Diese Woche“ is what is still to come of it – today until Sunday; „nächste Woche“ is the
+     * whole week from Monday to Sunday.
+     */
+    fun dates(span: AgendaSpan, today: LocalDate): ClosedRange<LocalDate> = when (span) {
+        AgendaSpan.TODAY -> today..today
+        AgendaSpan.TOMORROW -> today.plusDays(1)..today.plusDays(1)
+        AgendaSpan.THIS_WEEK -> today..today.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY))
+        AgendaSpan.NEXT_WEEK -> today.with(java.time.temporal.TemporalAdjusters.next(java.time.DayOfWeek.MONDAY)).let { it..it.plusDays(6) }
+    }
+
+    /** Start of the first day to the start of the day after the last one: one read through the existing calendar path. */
+    fun window(dates: ClosedRange<LocalDate>, zone: ZoneId): Pair<Long, Long> =
+        dates.start.atStartOfDay(zone).toInstant().toEpochMilli() to
+            dates.endInclusive.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
+
+    /** One [Day] per date of [dates], in order; an event over midnight is on both of its days. */
+    fun days(events: List<ContinuumCalendarEvent>, dates: ClosedRange<LocalDate>, zone: ZoneId, now: Instant): List<Day> =
+        generateSequence(dates.start) { it.plusDays(1) }.takeWhile { !it.isAfter(dates.endInclusive) }
+            .map { day(events, it, zone, now) }.toList()
+
+    /** „Donnerstag“, and with [today] given „heute“ / „morgen“ for those two days. */
+    fun dayName(date: LocalDate, today: LocalDate? = null): String = when (date) {
+        today -> "heute"
+        today?.plusDays(1) -> "morgen"
+        else -> date.format(DateTimeFormatter.ofPattern("EEEE", Locale.GERMAN))
+    }
+
+    /** „am Donnerstag“, „heute“, „morgen“ – as part of a sentence. */
+    fun onDay(date: LocalDate, today: LocalDate?): String = dayName(date, today).let { if (it == "heute" || it == "morgen") it else "am $it" }
+
+    /**
+     * The appointments of several days as they are spoken: what is still ahead, day by day, in order. [label]:
+     * „Diese Woche“ or „Nächste Woche“. Events that are over are counted, not read out. Only what the calendar holds.
+     */
+    fun spokenWeek(days: List<Day>, label: String, today: LocalDate): String {
+        val ahead = days.sumOf { it.ahead.size }
+        val allDay = days.sumOf { it.allDay.size }
+        val over = days.sumOf { it.ended }
+        if (ahead == 0 && allDay == 0) return if (over == 0) "$label steht nichts im Kalender." else
+            "$label steht nichts mehr an – " + (if (over == 1) "ein Termin ist" else ContinuumSystemCheck.count(over, "ein Termin", "Termine") + " sind") +
+                " schon vorbei."
+        return buildString {
+            if (ahead > 0) {
+                append(label).append(" hast du ").append(if (ahead == 1) "einen Termin" else ContinuumSystemCheck.count(ahead, "einen Termin", "Termine"))
+                append(": ")
+                append(days.filter { it.ahead.isNotEmpty() }.joinToString("; ") { day ->
+                    onDay(day.date, today) + " " + ContinuumSystemCheck.list(day.ahead.map { spokenEntry(it, day.date, withPlace = true) })
+                })
+                append('.')
+            }
+            if (allDay > 0) {
+                if (isNotEmpty()) append(' ')
+                // An event over several days is named once, with its first day.
+                append("Ganztägig: ").append(ContinuumSystemCheck.list(days.flatMap { day -> day.allDay.map { title(it) to day.date } }
+                    .distinctBy { it.first }.take(MAX_WEEK_ALL_DAY).map { (name, date) -> name + " (" + dayName(date, today) + ")" })).append('.')
+            }
+            if (over > 0 && ahead > 0) append(if (over == 1) " Ein Termin ist schon vorbei." else
+                " " + ContinuumSystemCheck.count(over, "Ein Termin", "Termine").replaceFirstChar { it.titlecase(Locale.GERMAN) } + " sind schon vorbei.")
+        }
+    }
+
+    /** Card lines for several days: „Do 09:00 Zahnarzt“. */
+    fun weekLines(days: List<Day>, limit: Int = 8): List<String> {
+        val short = DateTimeFormatter.ofPattern("EE", Locale.GERMAN)
+        val all = days.flatMap { day -> lines(day, Int.MAX_VALUE).map { day.date.format(short).trimEnd('.') + " " + it } }
+        return if (all.size <= limit) all else all.take(limit - 1) + "+ ${all.size - (limit - 1)} weitere"
+    }
+
+    const val MAX_WEEK_ALL_DAY = 6
+
     fun title(event: ContinuumCalendarEvent): String = linkOrControl.replace(event.title, " ").replace(Regex("\\s+"), " ")
         .trim().trimEnd('.', ',', ';', ':').take(MAX_TITLE).trim().ifEmpty { "Termin ohne Titel" }
 

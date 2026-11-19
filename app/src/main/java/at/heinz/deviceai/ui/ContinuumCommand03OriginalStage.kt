@@ -47,7 +47,9 @@ internal class ContinuumCommand03OriginalStage(
         const val MAX_DRAFT_CHARS = 6_000
         private val ROUTES = setOf("home", "chat", "chats", "new-chat", "files",
             "research", "agents", "memory", "device", "settings", "settings-voice", "settings-model",
-            "settings-internet", "settings-appearance", "voice-input", "voice-input-long-press", "stop")
+            "settings-internet", "settings-appearance", "voice-input", "voice-input-long-press", "stop",
+            // Code73: the work scene's storage action opens the native panel „Speicher & Bereinigung“.
+            "storage-clean")
         private fun denied(): WebResourceResponse = WebResourceResponse(
             "text/plain", "UTF-8", 403, "Forbidden", emptyMap(),
             ByteArrayInputStream(ByteArray(0))

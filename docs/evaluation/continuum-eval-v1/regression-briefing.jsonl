@@ -92,3 +92,24 @@
 {"category": "next_step", "expect": {"choice": "NONE"}, "id": "BRF-092", "input": "die vierte", "note": "gibt es nicht", "offers": ["APPOINTMENTS", "NEWS"], "runner": "briefing_choice"}
 {"category": "next_step", "expect": {"choice": "PICK:2"}, "id": "BRF-093", "input": "die Nachrichten", "note": "Mehrzahl = Nachrichtenüberblick", "offers": ["APPOINTMENTS", "NEWS"], "runner": "briefing_choice"}
 {"category": "next_step", "expect": {"choice": "PICK:1"}, "id": "BRF-094", "input": "ja bitte", "note": "ein Angebot nach einer Warnung", "offers": ["DIAGNOSIS"], "runner": "briefing_choice"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRF-095", "input": "Schau, welche Termine ich diese Woche habe, und sag mir, ob ich etwas vergessen könnte.", "note": "Architekturkritik 19.11.2026, Satz 4", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRF-096", "input": "Was steht diese Woche an?", "note": "Besitzerform", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:THIS_WEEK"}, "id": "BRF-097", "input": "Wo habe ich diese Woche noch Zeit?", "note": "Besitzerform", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRF-098", "input": "Welche Termine habe ich diese Woche?", "note": "Woche = heute bis Sonntag", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:NEXT_WEEK"}, "id": "BRF-099", "input": "Welche Termine habe ich nächste Woche?", "note": "Montag bis Sonntag", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:NEXT_WEEK"}, "id": "BRF-100", "input": "Was steht kommende Woche an?", "note": "kommende = nächste", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:NEXT_WEEK"}, "id": "BRF-101", "input": "Habe ich nächste Woche etwas vergessen?", "note": "Prüfung nur aus Regeln und Terminen", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:NEXT_WEEK"}, "id": "BRF-102", "input": "Schau, welche Termine ich nächste Woche habe, und sag mir, ob ich etwas vergessen könnte", "note": "der Besitzersatz für die nächste Woche", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRF-103", "input": "Prüf meine Termine", "note": "ohne Zeitraum: diese Woche", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRF-104", "input": "Überschneiden sich diese Woche Termine?", "note": "Überschneidung", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:NEXT_WEEK"}, "id": "BRF-105", "input": "Wo habe ich nächste Woche noch Zeit?", "note": "freie Blöcke", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:TODAY"}, "id": "BRF-106", "input": "Wann habe ich heute noch Zeit?", "note": "ein Tag", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:THIS_WEEK"}, "id": "BRF-107", "input": "Zeig mir meine freien Zeiten für diese Woche", "note": "Auftragsform", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRF-108", "input": "Wochenüberblick", "note": "ein Wort", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-109", "input": "Was steht diese Woche in der Zeitung?", "note": "kein Kalenderbezug", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-110", "input": "Verschieb meine Termine von dieser Woche", "note": "Kalender ändern", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-111", "input": "Wie viel Zeit habe ich diese Woche am Handy verbracht?", "note": "Bildschirmzeit, nicht Kalender", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-112", "input": "Diese Woche habe ich etwas vergessen", "note": "Aussage", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-113", "input": "Schau, welche Termine ich diese Woche habe, und schick sie Anna", "note": "zweiter Auftrag", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-114", "input": "Habe ich etwas vergessen?", "note": "ohne Zeitraum und ohne Terminwort", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-115", "input": "Was steht diese Woche im Fernsehen an?", "note": "nicht der Kalender", "runner": "briefing_route"}

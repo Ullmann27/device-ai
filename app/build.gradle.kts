@@ -315,6 +315,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // Optional owner-selected cloud brain (ClaudeModelRuntime). Official Anthropic Java SDK; it uses the OkHttp above.
     implementation("com.anthropic:anthropic-java:3.3.0")
+    // Gmail connection (gmail/AndroidGmail.kt): Google's recommended Android AuthorizationClient. No client id or secret
+    // in the app – Google matches the Android OAuth client by package name and signing SHA-1. Latest stable on
+    // Google's Maven (19.11.2026). No google-services plugin is needed for this API.
+    implementation("com.google.android.gms:play-services-auth:22.0.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303") // Android JSON API implementation for actual JVM fetch tests.

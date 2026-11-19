@@ -19,6 +19,30 @@ class ContinuumBriefingCommandTest {
             "Mein Ort ist " + "x".repeat(70)).forEach { assertNull(it, route(it)) }
     }
 
+    /** The calendar over a week (19.11.2026): the list, the check, the free time – each a whole sentence, nothing guessed. */
+    @Test fun theWeekTheCheckAndTheFreeTimeAreTheirOwnOrders() {
+        assertEquals(ContinuumBriefingCommand.Agenda(AgendaSpan.THIS_WEEK, AgendaAsk.CHECK),
+            ContinuumBriefingCommands.parse("Schau, welche Termine ich diese Woche habe, und sag mir, ob ich etwas vergessen könnte.", "Jarvis"))
+        assertEquals("APPOINTMENTS:THIS_WEEK", route("Was steht diese Woche an?"))
+        assertEquals("FREE_TIME:THIS_WEEK", route("Wo habe ich diese Woche noch Zeit?"))
+        assertEquals("APPOINTMENTS:NEXT_WEEK", route("Jarvis, welche Termine habe ich nächste Woche?"))
+        assertEquals("APPOINTMENTS:NEXT_WEEK", route("Welche Termine habe ich in der kommenden Woche"))
+        assertEquals("AGENDA_CHECK:NEXT_WEEK", route("Sag mir bitte, ob ich nächste Woche etwas vergessen habe"))
+        assertEquals("AGENDA_CHECK:THIS_WEEK", route("Check meinen Kalender"))
+        assertEquals("AGENDA_CHECK:TOMORROW", route("Gibt es morgen Terminkonflikte?"))
+        assertEquals("FREE_TIME:TOMORROW", route("Wann bin ich morgen frei?"))
+        // The plain list of a day stays what it was.
+        assertEquals("APPOINTMENTS:TODAY", route("Welche Termine habe ich heute?"))
+        assertEquals("APPOINTMENTS:TOMORROW", route("Habe ich morgen Termine?"))
+        assertEquals("BRIEFING", route("Was steht heute an?"))
+        // One word too many, another person's calendar, a change of the calendar, a statement: not an order of this lane.
+        listOf("Was steht diese Woche an und was davon ist wichtig?", "Welche Termine hat Anna diese Woche?",
+            "Verschieb meine Termine von dieser Woche", "Diese Woche habe ich etwas vergessen", "Habe ich etwas vergessen?",
+            "Habe ich heute etwas vergessen?", "Wo habe ich diese Woche meinen Schlüssel verloren?", "Habe ich diese Woche Zeit für dich?",
+            "Wie viel Zeit habe ich diese Woche am Handy verbracht?", "Schau, welche Termine ich diese Woche habe, und schick sie Anna",
+            "Er sagte: Welche Termine habe ich diese Woche?").forEach { assertNull(it, route(it)) }
+    }
+
     @Test fun aCallNeedsAPersonOrANumberAndNothingElseInTheSentence() {
         assertEquals("CALL:Anna", route("Ruf doch mal Anna an"))
         assertEquals("CALL:+43 664 1234567", route("Ruf +43 664 1234567 an"))

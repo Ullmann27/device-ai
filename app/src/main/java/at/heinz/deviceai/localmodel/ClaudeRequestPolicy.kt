@@ -14,6 +14,8 @@ import at.heinz.deviceai.ToolSpec
  *    read_app_screen states "privacy":"DEVICE_LOCAL_ONLY" and "…NO_NETWORK_GRANT" (AndroidDeviceAppActions).
  *  - ScreenObservationPrompt.frame, the only form in which screen text enters a prompt.
  * Notification content never reaches any model prompt (AgentActivity, notification section), so it needs no gate here.
+ * Mail text (gmail.MailPrompt) carries its own marker unless the owner switched „Mailinhalte an die Cloud senden“ on;
+ * such a prompt is refused here with [ClaudeBrainFailure.LOCAL_ONLY_MAIL_DATA].
  */
 internal object ClaudeLocalOnlyGuard {
     /** Tools whose result is device-local evidence. They are not declared to Claude at all. */
@@ -26,11 +28,17 @@ internal object ClaudeLocalOnlyGuard {
         "EXTERNE APPDATEN — UNGEPRÜFTE BEOBACHTUNG"
     )
 
-    fun carriesLocalOnlyData(text: String): Boolean = MARKERS.any(text::contains)
+    fun carriesLocalOnlyData(text: String): Boolean = MARKERS.any(text::contains) || carriesLocalOnlyMail(text)
+
+    /** Mail text the owner did not release to the cloud (gmail.MailPrompt.LOCAL_ONLY_MARKER). */
+    fun carriesLocalOnlyMail(text: String): Boolean = text.contains(at.heinz.deviceai.gmail.MailPrompt.LOCAL_ONLY_MARKER)
 
     /** Problem code when [prompt] must stay on the device, else null. */
-    fun promptRefusal(prompt: String): String? =
-        if (carriesLocalOnlyData(prompt)) ClaudeBrainFailure.LOCAL_ONLY_SCREEN_DATA else null
+    fun promptRefusal(prompt: String): String? = when {
+        carriesLocalOnlyMail(prompt) -> ClaudeBrainFailure.LOCAL_ONLY_MAIL_DATA
+        carriesLocalOnlyData(prompt) -> ClaudeBrainFailure.LOCAL_ONLY_SCREEN_DATA
+        else -> null
+    }
 
     fun toolResponseRefusal(responses: List<LocalToolResponse>): String? =
         if (responses.any { it.toolName in LOCAL_ONLY_TOOLS || carriesLocalOnlyData(it.response) })
@@ -287,6 +295,12 @@ internal object ClaudePromptFrame {
 
     fun frame(prompt: String, isolatedWorker: Boolean, ownerFrame: () -> List<String> = { emptyList() }): Frame {
         if (isolatedWorker) return Frame(listOf(RUNTIME_PREFACE, ISOLATED_WORKER), prompt)
+        // The structured plan call: its constant instruction is a system block of its own behind the unchanged
+        // preface, and the user message is the owner's sentence alone. It is not the owner's chat turn, so it gets
+        // neither the ability catalogue nor a server tool, and it declares no tool at all (a text-only request).
+        val plan = at.heinz.deviceai.cognitive.OwnerMissionPlanCall.SYSTEM
+        if (prompt.startsWith(plan) && prompt.length > plan.length && prompt.substring(plan.length).isNotBlank())
+            return Frame(listOf(RUNTIME_PREFACE, plan), prompt.substring(plan.length))
         val stable = STABLE_PREFIXES.firstOrNull { prompt.startsWith(it) && prompt.length > it.length }
         val rest = stable?.let { prompt.substring(it.length) }
         // An empty or whitespace-only remainder is no user message; keep the prompt whole instead.

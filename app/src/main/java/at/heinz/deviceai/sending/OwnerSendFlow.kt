@@ -78,7 +78,10 @@ internal class OwnerSendFlow(
     private val device: OwnerSendDevice,
     private val grants: OwnerSendGrants,
     private val step: (key: String, label: String, state: StepState) -> Unit = { _, _, _ -> },
-    private val cancelled: () -> Boolean = { false }
+    private val cancelled: () -> Boolean = { false },
+    /** The sequence this message belongs to, when it is a step of one: asked right before the one press. */
+    private val guard: OwnerSendGuard? = null,
+    private val progress: (OwnerSendProgress) -> Unit = {}
 ) {
     private val used = AtomicBoolean(false)
 
@@ -104,6 +107,7 @@ internal class OwnerSendFlow(
             return unsent((ready as SendVerification.Mismatch).reason)
         }
         step(STEP_VERIFY, "Entwurf geprüft", StepState.DONE)
+        progress(OwnerSendProgress.DraftVerified)
         if (!plan.send) return SendOutcome(plan, SendOutcome.State.DRAFT_READY)
         fun notSent(problem: SendProblem): SendOutcome {
             step(STEP_PRESS, "Nicht gesendet", StepState.BLOCKED)
@@ -114,13 +118,20 @@ internal class OwnerSendFlow(
         val again = verify(plan, device.screen(plan.channel))
         if (again !is SendVerification.Verified || again.send != ready.send)
             return notSent((again as? SendVerification.Mismatch)?.reason ?: SendProblem.SEND_AMBIGUOUS)
-        if (!grants.reserveSend(plan.channel))
+        // A step of a sequence writes its intent down BEFORE the press: the journal refuses a second press for the
+        // same step, recipient and text – also after the app was killed between the press and the report.
+        if (guard != null && !guard.reserve(plan)) return notSent(SendProblem.JOURNAL_REFUSED)
+        if (!grants.reserveSend(plan.channel)) {
+            guard?.pressed(plan, false)
             return notSent(if (grants.enabled(plan.channel)) SendProblem.DAILY_CAP else SendProblem.GRANT_REVOKED)
+        }
         step(STEP_PRESS, "Senden", StepState.ACTIVE)
         // The click itself is bound to one more reading: same draft, same control, in the tree that is clicked.
+        // Should the press throw, whether the click happened is unknown: the reservation stays, nobody presses again.
         val pressed = device.press(plan.channel, again.send) { shown ->
             verify(plan, shown).let { it is SendVerification.Verified && it.send == again.send }
         }
+        guard?.pressed(plan, pressed)
         if (!pressed) return notSent(SendProblem.CLICK_REFUSED)
         val effect = awaitEffect(plan)
         if (effect == null) {
@@ -191,6 +202,28 @@ internal class OwnerSendFlow(
         const val STEP_VERIFY = "send-verify"
         const val STEP_PRESS = "send-press"
     }
+}
+
+/**
+ * What a sequence of orders needs from the one press of a send step (see OwnerMissionJournal). All calls come from
+ * the send job's thread.
+ */
+internal interface OwnerSendGuard {
+    /**
+     * Called once, after the draft was verified twice and right before the send control is pressed. true = the intent
+     * is written down durably and the press may happen. false = this very message was already reserved or sent for this
+     * step, or the intent could not be written: nothing is pressed.
+     */
+    fun reserve(plan: SendPlan): Boolean
+    /** The press returned: [clicked] false = the control was not clicked, so nothing went out and the intent is released. */
+    fun pressed(plan: SendPlan, clicked: Boolean)
+}
+
+/** Real steps of a running send order for the stage: names of contacts and channels only – never a text or a number. */
+internal sealed interface OwnerSendProgress {
+    data class RecipientResolved(val name: String) : OwnerSendProgress
+    data class ChannelChosen(val channel: String) : OwnerSendProgress
+    data object DraftVerified : OwnerSendProgress
 }
 
 /** The report, worded like a colleague. States exactly what was confirmed and never more. */

@@ -379,11 +379,13 @@ class ContinuumDocumentSceneUiTest {
             AgentActivity::class.java.getDeclaredMethod("sendCurrentInput", Boolean::class.javaPrimitiveType)
                 .apply { isAccessible = true }.invoke(activity, false)
             advance(760L); measure(root); draw(root)
-            val answer = chatTexts(activity).lastOrNull { it.startsWith("Heute:") }
+            // Since 19.11.2026 (owner wish „Gesetz Nummer eins – Persönlichkeit“) the chat answer is one natural sentence
+            // from the shared-work record, which mirrors this journal episode; the record's details – request, source,
+            // state, open step and the origin note – stay on the VERLAUF surface checked below.
+            val answer = chatTexts(activity).lastOrNull { it.contains("Projektübersicht.pdf") && it.contains("nicht geklappt") }
             assertNotNull("answered from the record: ${chatTexts(activity)}", answer)
-            assertTrue(answer!!, answer.contains("„$request“ – Quelle: Projektübersicht.pdf, 3 Seiten – " +
-                "Stand: Entwurf nicht erstellt – kein lokales Modell geladen – offen: lokales Modell laden, dann den Entwurf erstellen"))
-            assertTrue(answer, answer.endsWith("(Aus dem Arbeitsverlauf dieses Geräts – Erinnerung, kein Modelllernen.)"))
+            assertTrue(answer!!, answer.endsWith("hat es mit der Zusammenfassung von „Projektübersicht.pdf“ nicht geklappt."))
+            assertTrue("no second, list-shaped answer: ${chatTexts(activity)}", chatTexts(activity).none { it.startsWith("Heute:") })
             val window = descendants(root).single { it.tag == "jarvis-work-window" && it.isShown }
             val texts = descendants(window).filterIsInstance<TextView>().map { it.text.toString() }
             assertTrue("the VERLAUF surface: $texts", texts.contains("VERLAUF"))

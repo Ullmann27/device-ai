@@ -83,7 +83,9 @@ class ClaudeAbilityCatalogueTest {
         assertEquals(catalogue, ClaudeAbilityCatalogue.text())
         assertEquals(ClaudeAbilityCatalogue.text(ClaudeToolCatalog.definitions()), catalogue)
         assertFalse(Regex("\\d{1,2}\\.\\d{1,2}\\.20\\d{2}|\\d{1,2}:\\d{2}").containsMatchIn(catalogue))
-        assertTrue(catalogue.length.toString(), catalogue.length in 1_500..6_000)
+        // Bound against runaway growth, raised from 6 000 with the storage and mail lanes (19.11.2026): the text is a
+        // cached, byte-stable prefix, so its size costs once per cache write, not per turn.
+        assertTrue(catalogue.length.toString(), catalogue.length in 1_500..7_500)
         // One constant line names the running model – per selected model, not per turn.
         assertEquals("AKTUELLES GEHIRN (nur für die direkte Frage danach): Continuum antwortet gerade über die Cloud mit dem " +
             "Modell Claude Opus 5.5 von Anthropic (claude-opus-5-5). Das Modell auf dem Gerät ist an dieser Antwort nicht beteiligt.",
@@ -150,17 +152,44 @@ class ClaudeAbilityCatalogueTest {
                 "newest_file" -> OwnerMissionPlanner.recognise(sentence, name) is OwnerMissionStep.FindFile
                 "mission" -> (OwnerMissionPlanner.plan(sentence, name)?.steps?.size ?: 0) >= 2
                 "send" -> OwnerSendIntentParser.parse(sentence, name) != null
-                "computer" -> OwnerComputerIntentParser.parse(sentence) != OwnerComputerIntentParser.Result.NotComputerCommand
+                // The lane must really carry the sentence out – „is a computer command“ was also true for its refusals.
+                "computer" -> OwnerComputerIntentParser.parse(sentence) is OwnerComputerIntentParser.Result.Ready
+                "calendar" -> at.heinz.deviceai.briefing.ContinuumBriefingCommands.parse(sentence, name) is
+                    at.heinz.deviceai.briefing.ContinuumBriefingCommand.Agenda
                 "research" -> OwnerResearchCommand.parse(sentence, name) != null
                 "system" -> SystemIntelligenceCommands.isDiagnosisRequest(sentence)
                 "storage" -> at.heinz.deviceai.deepclean.DeepCleanCommands.parse(sentence, name) != null
                 "open_saved" -> openSavedIsTaken(sentence)
+                // Gmail lane: a follow-up form ("Was steht da wegen Fristen?") is taken with a mail open in the chat.
+                "mail_connect", "mail_read", "mail_summary", "mail_draft", "mail_send" ->
+                    at.heinz.deviceai.gmail.OwnerMailCommands.route(sentence, name, at.heinz.deviceai.gmail.MailContext(list = true, mail = true)) != null
                 else -> error("no check for ${ability.key}")
             }
             assertTrue("${ability.key}: „$sentence“ is not taken by its lane", taken)
         }
         assertEquals(setOf("pdf_search", "pdf_open", "page_summary", "news", "export", "open_saved", "mail", "send", "mission",
-            "newest_file", "computer", "research", "system", "storage"), OwnerLaneCatalogue.abilities.map { it.key }.toSet())
+            "newest_file", "computer", "calendar", "research", "system", "storage", "mail_connect", "mail_read", "mail_summary",
+            "mail_draft", "mail_send"), OwnerLaneCatalogue.abilities.map { it.key }.toSet())
+    }
+
+    /**
+     * Review finding B5 (19.11.2026): the catalogue named „Öffne Chrome und suche <Begriff>“ although Chrome is one of
+     * the apps the computer flow only opens – the old check passed because a refusal also „is a computer command“.
+     */
+    @Test fun theComputerFlowIsAdvertisedOnlyWithWhatItReallyDoes() {
+        val computer = OwnerLaneCatalogue.abilities.single { it.key == "computer" }
+        assertFalse(computer.say.any { it.contains("Chrome und suche") })
+        assertTrue(OwnerComputerIntentParser.parse("Öffne Chrome und suche Wetter Wien") is OwnerComputerIntentParser.Result.Unsupported)
+        for (pattern in computer.say) {
+            val parsed = OwnerComputerIntentParser.parse(filled(pattern)) as OwnerComputerIntentParser.Result.Ready
+            // What is searched is exactly the owner's term.
+            if (pattern.contains("<Begriff>")) assertEquals(pattern, "Wetter Wien", parsed.intent.query)
+        }
+        assertTrue(computer.gate.contains("werden nur geöffnet"))
+        // The calendar's sentences are the owner's own questions, answered on the device.
+        val calendar = OwnerLaneCatalogue.abilities.single { it.key == "calendar" }
+        assertFalse(calendar.mapped)
+        assertTrue(calendar.gate.contains("an kein Modell"))
     }
 
     private fun openSavedIsTaken(sentence: String): Boolean {
@@ -175,7 +204,8 @@ class ClaudeAbilityCatalogueTest {
         val prompt = OwnerMissionModelPlan.orderPrompt("Kannst du mir bitte mal das Argon-Dokument aufmachen")
         // The send lane, the live computer and the web research are never a mapped order: only the owner's own
         // wording starts them.
-        for (key in listOf("send", "computer", "research", "system", "storage")) assertFalse(key, OwnerLaneCatalogue.abilities.single { it.key == key }.mapped)
+        for (key in listOf("send", "computer", "calendar", "research", "system", "storage", "mail_connect", "mail_read",
+                "mail_summary", "mail_draft", "mail_send")) assertFalse(key, OwnerLaneCatalogue.abilities.single { it.key == key }.mapped)
         assertFalse(prompt.contains("WhatsApp") || prompt.contains("Schreib "))
         for (form in listOf("Such das PDF <Name>", "Öffne das PDF <Name>", "Fass Seite <Zahl> zusammen und speichere es als <Word oder PDF>",
             "Fass mir die Nachrichten von heute zusammen", "Speichere das als <PDF oder Word-Datei>", "Schick das per Mail an <Adresse oder Name>",

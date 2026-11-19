@@ -85,7 +85,7 @@
   })();
   const routes = new Set(['home','chat','chats','new-chat','files','research',
     'agents','memory','device','settings','settings-voice','settings-model',
-    'settings-internet','settings-appearance','voice-input','voice-input-long-press','stop']);
+    'settings-internet','settings-appearance','voice-input','voice-input-long-press','stop','storage-clean']);
   const actions = Object.freeze({home:'home',settings:'settings',agents:'agents',
     'settings-voice':'settings-voice','settings-model':'settings-model',
     'settings-internet':'settings-internet','settings-appearance':'settings-appearance',
@@ -359,7 +359,7 @@
   }
   /** The measured speech level also drives the orb's corona and the room haze; null removes it. */
   function speechLight(level) {
-    for(const layer of [$('.native-orb-light'),$('.native-room-light')]) {
+    for(const layer of [$('.native-orb-light'),$('.native-room-light'),$('.native-bust-back')]) {
       if(!layer)continue;
       if(level===null)layer.style.removeProperty('--native-speech');
       else layer.style.setProperty('--native-speech',String(Math.round(level*100)/100));
@@ -676,7 +676,51 @@
       const frame=document.createElement('div');frame.className='native-window-frame';
       frame.setAttribute('aria-hidden','true');shell.appendChild(frame);
     }
+    mountBust();
   }
+  // ───────── Code73 · the bust in the room ─────────
+  // The original avatar draws its model with an orthographic camera of fixed height (BUST.halfHeight around
+  // BUST.centerY) that widens when its frame is narrower than the camera (see avatar3d.js, Qd: "contain"); the
+  // verified PNG it falls back to is that same picture. So every height of the model has one place in the frame,
+  // and the dissolve is laid where the model really ends (its flat lower plane at y = 0), not at a guessed line.
+  const BUST = Object.freeze({centerY:.215, halfHeight:.225, aspect:.6/.45, neck:.15, chest:.1, cut:0, shoulder:.258,
+    head:.345, headHalf:.085});
+  /** Two still light layers around the original avatar: behind it (platform, halo) and in front (threads, motes). */
+  function mountBust() {
+    const zone=$('.avatar-zone'), crop=zone?.querySelector('.avatar-crop');
+    if(!crop || zone.querySelector(':scope>.native-bust'))return;
+    const layer=(name,parts)=>{
+      const node=document.createElement('div');node.className='native-bust '+name;node.setAttribute('aria-hidden','true');
+      for(const part of parts) {const item=document.createElement('i');item.className=part;node.appendChild(item);}
+      return node;
+    };
+    crop.before(layer('native-bust-back',['native-bust-halo','native-bust-halo native-bust-inner','native-bust-ring',
+      'native-bust-ring native-bust-inner']));
+    crop.after(layer('native-bust-front',['native-bust-lines','native-bust-motes','native-bust-ring',
+      'native-bust-ring native-bust-inner']));
+    placeBust();
+  }
+  /** Measures where neck, chest, shoulders and the model's lower plane stand in the avatar's frame. */
+  function placeBust() {
+    const zone=$('.avatar-zone'), crop=zone?.querySelector('.avatar-crop');
+    if(!crop)return;
+    const width=crop.clientWidth, height=crop.clientHeight;
+    if(!(width>0 && height>0))return;
+    const aspect=width/height, half=BUST.halfHeight*Math.max(1,BUST.aspect/aspect);
+    const y=value=>((BUST.centerY+half-value)/(2*half)*100).toFixed(2)+'%';
+    const x=value=>(value/(2*half*aspect)*100).toFixed(2)+'%';
+    const values={'--bust-neck':y(BUST.neck),'--bust-chest':y(BUST.chest),'--bust-cut':y(BUST.cut),
+      '--bust-shoulder':x(BUST.shoulder),'--bust-head':y(BUST.head),'--bust-headw':x(BUST.headHalf)};
+    for(const [name,value] of Object.entries(values))
+      if(zone.style.getPropertyValue(name)!==value)zone.style.setProperty(name,value);
+    // The light layers cover exactly the avatar's frame inside its zone.
+    for(const layer of zone.querySelectorAll(':scope>.native-bust')) {
+      const box={left:crop.offsetLeft+'px',top:crop.offsetTop+'px',width:width+'px',height:height+'px',right:'auto',bottom:'auto'};
+      for(const [name,value] of Object.entries(box))if(layer.style[name]!==value)layer.style[name]=value;
+    }
+  }
+  window.addEventListener('resize',()=>placeBust());
+  window.addEventListener('continuum:avatarchange',()=>placeBust());
   function renderFiles() {
     const workspace=$('#workspace');
     if(!workspace)return;
@@ -1521,6 +1565,7 @@
     if(items.length && workTurn)workSources=true;
     if(items.length)arrivedSources=data.sourceSetId;
     feedRevision++;renderFeed();advanceWork();
+    if(snapshot && sceneChoice(snapshot)?.kind==='web')renderScene(snapshot);
     if(items.length) {
       const workspace=$('#workspace');
       const card=workspace?.classList.contains('native-work-active')?
@@ -1759,7 +1804,7 @@
     };
     leavers.set(node,done);
     const leaving=motionTier()?(node.getAnimations?.() ?? [])
-      .filter(item=>typeof item.animationName==='string' && item.animationName.startsWith('native-tac-out')):[];
+      .filter(item=>typeof item.animationName==='string' && /^native-(tac|scene)-out/.test(item.animationName)):[];
     if(leaving.length)Promise.allSettled(leaving.map(item=>item.finished)).then(done);
     else done();
   }
@@ -1768,7 +1813,8 @@
     for(const done of [...leavers.values()])done();
     for(const flight of [...gliding])flight.cancel();
     document.querySelectorAll('[data-native-enter]').forEach(node=>{delete node.dataset.nativeEnter;});
-    document.querySelectorAll('.native-tac[data-changed],.native-tac [data-changed]').forEach(node=>node.removeAttribute('data-changed'));
+    document.querySelectorAll('.native-tac[data-changed],.native-tac [data-changed],.native-scene [data-changed]')
+      .forEach(node=>node.removeAttribute('data-changed'));
     document.querySelectorAll('.workspace-shell>.native-window-ghost').forEach(node=>node.remove());
     if(armingMode==='run')settleArming();
   }
@@ -2158,6 +2204,459 @@
     return kind==='live'?$('#native-computer-panel'):kind==='result'?$('#native-document-panel'):
       kind==='files'?$('#native-files-panel'):kind==='work'?$('#native-live-panel'):null;
   }
+
+  // ───────── Code73 · work scenes ─────────
+  // One holographic work window directly below the avatar, for exactly one real lane at a time. Android's
+  // VisualWorkstationDirector names it (`scene`: {kind, since}); without that key (an older Android) a storage run
+  // or a mail record that is present is shown. Each kind is only a configuration of the same renderer: a header with
+  // the lane and its real phase, an instrument (the measured storage, the mail search), cards that arrive with the
+  // lane's real list, a progress bar of real completed steps, figures, a notice, a result line and at most one
+  // action. Everything that reads like data is snapshot data, set as text; a missing field leaves its element out.
+  // Motion: the marks of the tactical section (enter/leave, one pass, only where motionTier() allows it). The window
+  // arises from the platform's light when the lane starts, cards fly in when Android lists them, the bar travels
+  // from the old to the new real value; the avatar looks at the window when it opens and faces the owner when the
+  // lane ends or asks. Nothing runs on a clock of its own.
+  const sceneKinds = Object.freeze({deepclean:'SPEICHER & BEREINIGUNG',mail:'E-MAIL',send:'SENDEN',web:'RECHERCHE'});
+  // Kinds the director may name for the existing work windows: they own the stage, no scene is drawn for them.
+  const stageWindows = new Set(['computer','files']);
+  const cleanPhases = Object.freeze({SCAN:['SCANNT','active'],CLASSIFY:['ORDNET EIN','active'],CLEAN:['BEREINIGT','active'],
+    CHOICE:['WARTET AUF DICH','waiting'],DONE:['ABGESCHLOSSEN','done'],STOPPED:['GESTOPPT','stopped'],FAILED:['FEHLGESCHLAGEN','failed']});
+  const cleanModes = Object.freeze({ANALYSE:'Analyse',DEEP_ANALYSE:'Tiefenanalyse',SAFE_CLEAN:'Sichere Bereinigung',
+    DEEP_CLEAN:'Tiefenbereinigung',OPTIMISE:'Optimierung',TARGETED:'Gezielte Auswahl',REPORT:'Bericht',RESTORE:'Wiederherstellen'});
+  const cleanLevels = Object.freeze([['GREEN','SICHER ENTFERNBAR','green'],['YELLOW','ZUR AUSWAHL','yellow'],
+    ['RED','GESCHÜTZT','red'],['EXCLUDED','AUSGENOMMEN','slate']]);
+  const mailPhases = Object.freeze({CONNECT:['VERBINDET','active'],SEARCH:['SUCHT','active'],READ:['LIEST','active'],
+    SUMMARIZE:['FASST ZUSAMMEN','active'],DRAFT:['ENTWURF · NICHT GESENDET','waiting'],SEND:['SENDET','active'],
+    DONE:['ERLEDIGT','done'],FAILED:['FEHLGESCHLAGEN','failed']});
+  const sendPhases = Object.freeze({RUNNING:['BEREITET VOR','active'],WAITING:['WARTET AUF DICH','waiting'],
+    SENT:['GESENDET · BESTÄTIGT','done'],DRAFT:['ENTWURF · NICHT GESENDET','done'],HANDED_OVER:['AN MAIL-APP ÜBERGEBEN','done'],
+    FAILED:['NICHT GESENDET','failed'],STOPPED:['GESTOPPT','stopped']});
+  const MAX_SCENE_CARDS = 8;
+  let currentScene = null, sceneDismissed = null, sceneGlanced = '';
+  const count = value => Number.isSafeInteger(value) && value>=0?value:null;
+  /** Bytes as Android's own storage screens say them: decimal units, German comma. */
+  function bytesText(value) {
+    if(!Number.isSafeInteger(value) || value<0)return '';
+    const units=[[1e12,'TB'],[1e9,'GB'],[1e6,'MB'],[1e3,'kB']];
+    for(const [size,unit] of units)if(value>=size) {
+      const amount=value/size;
+      return (amount>=100?String(Math.round(amount)):amount.toFixed(1).replace('.',','))+' '+unit;
+    }
+    return value+(value===1?' Byte':' Bytes');
+  }
+  const filesText = value => value===1?'1 Datei':value.toLocaleString('de-DE')+' Dateien';
+  function volumeOf(value) {
+    const free=count(value?.freeBytes), total=count(value?.totalBytes);
+    return free!==null && total!==null && total>0 && free<=total?{free,total}:null;
+  }
+  /** `deepClean` (schema continuum.deepclean.v1): phase, progress and measured figures; never a file name. */
+  function deepCleanOf(value) {
+    if(!value || typeof value!=='object' || value.schema!=='continuum.deepclean.v1' || !own(cleanPhases,value.phase))return null;
+    const pair=item=>({count:count(item?.count) ?? 0,bytes:count(item?.bytes) ?? 0});
+    const categories=[];
+    for(const item of Array.isArray(value.categories)?value.categories.slice(0,24):[]) {
+      if(!item || typeof item.key!=='string' || !/^[A-Z0-9_]{1,40}$/.test(item.key) ||
+        categories.some(row=>row.key===item.key))continue;
+      const label=plain(item.label,60), bytes=count(item.bytes), files=count(item.count);
+      if(label && bytes!==null && files!==null)categories.push({key:item.key,label,files,bytes});
+    }
+    const levels={};
+    for(const [key] of cleanLevels)levels[key]=pair(value.levels?.[key]);
+    return {phase:value.phase,mode:own(cleanModes,value.mode)?value.mode:null,
+      done:count(value.progress?.done) ?? 0,total:count(value.progress?.total) ?? 0,categories,levels,
+      before:volumeOf(value.before),after:volumeOf(value.after),
+      removed:{files:count(value.removed?.files) ?? 0,bytes:count(value.removed?.bytes) ?? 0},
+      choice:pair(value.choice),shared:['GRANTED','MISSING','UNSUPPORTED'].includes(value.sharedAccess)?value.sharedAccess:null};
+  }
+  /**
+   * `mailWork` (version 1, gmail/MailWorkBoard): phase, the search, counts, up to six cards (sender, subject, date)
+   * and the result line. It never holds an address, a body or an attachment. Unknown fields are ignored; a missing
+   * one leaves its element out.
+   */
+  function mailWorkOf(value) {
+    if(!value || typeof value!=='object' || !own(mailPhases,value.phase))return null;
+    const cards=[];
+    for(const item of Array.isArray(value.cards)?value.cards.slice(0,6):[]) {
+      const sender=plain(item?.sender,80), subject=plain(item?.subject,120);
+      if(!sender && !subject)continue;
+      const state=typeof item.state==='string'?item.state.toUpperCase():'';
+      cards.push({index:Number.isSafeInteger(item.index) && item.index>0?item.index:cards.length+1,sender,subject,
+        date:mailDate(item.dateMillis),state:['UNREAD','READ','SELECTED'].includes(state)?state:'READ'});
+    }
+    const progress=value.progress && count(value.progress.total)!==null && count(value.progress.done)!==null &&
+      value.progress.done<=value.progress.total?{done:value.progress.done,total:value.progress.total}:null;
+    return {phase:value.phase,query:plain(value.query,120),found:count(value.found),read:count(value.read),
+      cards,progress,result:plain(value.result,200)};
+  }
+  const weekdays=Object.freeze(['So.','Mo.','Di.','Mi.','Do.','Fr.','Sa.']);
+  /** A mail's date as the owner reads it: today its time („14:05“), otherwise „Di., 17.11.“. */
+  function mailDate(millis) {
+    if(!Number.isSafeInteger(millis) || millis<=0)return '';
+    const date=new Date(millis), now=new Date(), two=value=>String(value).padStart(2,'0');
+    if(date.getFullYear()===now.getFullYear() && date.getMonth()===now.getMonth() && date.getDate()===now.getDate())
+      return two(date.getHours())+':'+two(date.getMinutes());
+    return weekdays[date.getDay()]+', '+two(date.getDate())+'.'+two(date.getMonth()+1)+'.';
+  }
+  /** `sendWork` (Android's record of the send lane's order): phase, channel and recipient as the lane named them. */
+  function sendWorkOf(value) {
+    if(!value || typeof value!=='object' || !own(sendPhases,value.phase))return null;
+    return {phase:value.phase,channel:plain(value.channel,24),to:plain(value.to,60),detail:plain(value.detail,160)};
+  }
+  /** Which scene the snapshot asks for: the director's choice, or what an older Android sends without one. */
+  function sceneChoice(state) {
+    if(own(state,'scene')) {
+      const scene=state.scene;
+      if(!scene || typeof scene!=='object' || typeof scene.kind!=='string')return null;
+      if(!own(sceneKinds,scene.kind) && !stageWindows.has(scene.kind))return null;
+      return {kind:scene.kind,since:Number.isSafeInteger(scene.since)?scene.since:0};
+    }
+    if(state.deepClean)return {kind:'deepclean',since:0};
+    if(state.mailWork)return {kind:'mail',since:0};
+    return null;
+  }
+  /** The steps of the running order Android reported, as the cards of a lane that has no list of its own. */
+  function orderCards() {
+    return (currentOrders?.items ?? []).slice(0,MAX_SCENE_CARDS).map(item=>({key:'o'+item.key,title:item.label,
+      meta:orderStates[item.state],tone:item.state==='DONE'?'green':item.state==='WAITING'?'yellow':
+        item.state==='FAILED' || item.state==='BLOCKED'?'red':'cyan'}));
+  }
+  function deepCleanScene(clean) {
+    const [phaseText,tone]=cleanPhases[clean.phase];
+    const scene={kind:'deepclean',title:sceneKinds.deepclean,sub:clean.mode?cleanModes[clean.mode]:'',phase:clean.phase,
+      phaseText,tone,cards:[],levels:[],progress:null,figures:[],notice:'',result:'',action:null,storage:null,live:tone==='active'};
+    // 2 · the device storage as Android measured it before the run (and after it, once measured).
+    const volume=clean.after ?? clean.before;
+    if(volume)scene.storage={total:volume.total,free:volume.free,before:clean.before,after:clean.after};
+    // 3 · 4 · the analysed categories, each with its measured size, scaled against the largest one.
+    const largest=Math.max(1,...clean.categories.map(item=>item.bytes));
+    scene.cards=clean.categories.slice(0,MAX_SCENE_CARDS).map(item=>({key:'c'+item.key,title:item.label,
+      meta:filesText(item.files),value:bytesText(item.bytes),fill:item.bytes/largest,tone:'cyan'}));
+    if(clean.categories.length>MAX_SCENE_CARDS)
+      scene.more=(clean.categories.length-MAX_SCENE_CARDS)+' weitere Kategorien';
+    // 5 · the safety levels; GREEN is what may be removed without asking, highlighted while it is cleaned.
+    scene.levels=cleanLevels.filter(([key])=>clean.levels[key].count>0)
+      .map(([key,label,shade])=>({key,label,shade,text:filesText(clean.levels[key].count)+' · '+bytesText(clean.levels[key].bytes),
+        active:key==='GREEN' && clean.phase==='CLEAN'}));
+    // 6 · 8 · real completed steps: files seen while scanning, GREEN files removed while cleaning.
+    if(clean.phase==='SCAN')scene.progress={done:clean.done,total:0,label:filesText(clean.done)+' geprüft'};
+    else if(clean.phase==='CLEAN' && clean.total>0)
+      scene.progress={done:Math.min(clean.done,clean.total),total:clean.total,
+        label:Math.min(clean.done,clean.total).toLocaleString('de-DE')+' von '+filesText(clean.total)+' entfernt'};
+    // 7 · what the owner has to decide.
+    if(clean.phase==='CHOICE' && clean.choice.count>0) {
+      scene.notice=filesText(clean.choice.count)+' ('+bytesText(clean.choice.bytes)+') warten auf deine Auswahl. '+
+        'Nichts davon wird ohne dich entfernt.';
+      scene.action={label:'Auswahl öffnen',route:'storage-clean'};
+    }
+    // 9 · 10 · measured before/after and what was really removed – each labelled as what it is.
+    if(clean.before && clean.after) {
+      scene.figures.push(['FREI VORHER',bytesText(clean.before.free),'gemessen'],
+        ['FREI NACHHER',bytesText(clean.after.free),'gemessen']);
+      const change=clean.after.free-clean.before.free;
+      scene.figures.push(['ÄNDERUNG',(change>=0?'+ ':'− ')+bytesText(Math.abs(change)),'freier Speicher, gemessen']);
+    } else if(clean.before)scene.figures.push(['FREI VORHER',bytesText(clean.before.free),'gemessen']);
+    if(clean.removed.files>0 || ['DONE','STOPPED'].includes(clean.phase))
+      scene.figures.push(['ENTFERNT',filesText(clean.removed.files)+' · '+bytesText(clean.removed.bytes),'Summe der Dateigrößen']);
+    if(clean.shared==='MISSING')
+      scene.notice=(scene.notice?scene.notice+' ':'')+'Gemeinsamer Speicher nicht freigegeben – geprüft wurden nur Continuums eigene Dateien.';
+    if(clean.phase==='DONE')scene.result=clean.removed.files>0?'Bereinigung abgeschlossen.':
+      clean.mode && !['SAFE_CLEAN','DEEP_CLEAN','TARGETED'].includes(clean.mode)?'Analyse abgeschlossen – nichts wurde gelöscht.':
+        'Abgeschlossen – nichts wurde gelöscht.';
+    else if(clean.phase==='STOPPED')scene.result='Gestoppt. Was bis dahin entfernt wurde, steht oben.';
+    else if(clean.phase==='FAILED')scene.result='Fehlgeschlagen. Es wird nichts weiter entfernt.';
+    if(clean.phase!=='CHOICE' && ['DONE','STOPPED','FAILED'].includes(clean.phase) && clean.choice.count>0)
+      scene.action={label:'Speicher & Bereinigung öffnen',route:'storage-clean'};
+    return scene;
+  }
+  function mailScene(mail) {
+    const [phaseText,tone]=mailPhases[mail.phase];
+    const scene={kind:'mail',title:sceneKinds.mail,sub:'',phase:mail.phase,phaseText,tone,levels:[],figures:[],
+      notice:'',result:'',action:null,storage:null,query:mail.query,live:tone==='active',
+      cards:mail.cards.map(card=>({key:'m'+card.index+'\u0000'+card.sender+'\u0000'+card.subject,title:card.subject || card.sender,
+        meta:card.subject?card.sender:'',value:card.date,tone:card.state==='UNREAD'?'cyan':card.state==='SELECTED'?'violet':'slate',
+        mark:String(card.index).padStart(2,'0')+(card.state==='UNREAD'?' · UNGELESEN':card.state==='SELECTED'?' · AUSGEWÄHLT':'')}))};
+    if(mail.found!==null)scene.figures.push(['GEFUNDEN',String(mail.found),'']);
+    if(mail.read!==null)scene.figures.push(['GELESEN',String(mail.read),'']);
+    if(mail.progress)scene.progress={...mail.progress,label:mail.progress.done+' von '+mail.progress.total};
+    if(mail.result)scene.result=mail.result;
+    else if(mail.phase==='SUMMARIZE')scene.notice='Die Zusammenfassung entsteht aus den gelesenen Nachrichten.';
+    if(mail.phase==='DRAFT')scene.notice='Der Entwurf ist nicht gesendet. Gesendet wird nur nach deinem Ja.';
+    return scene;
+  }
+  function sendScene(send) {
+    const [phaseText,tone]=sendPhases[send.phase];
+    const scene={kind:'send',title:sceneKinds.send,sub:send.channel,phase:send.phase,phaseText,tone,levels:[],figures:[],
+      notice:'',result:send.detail,action:null,storage:null,live:tone==='active',cards:orderCards()};
+    if(send.to)scene.figures.push(['AN',send.to,send.channel]);
+    if(send.phase==='WAITING')scene.notice='Gesendet wird erst nach deiner Bestätigung.';
+    return scene;
+  }
+  function webScene() {
+    const activity=currentActivity?.kind==='RESEARCH'?currentActivity:null;
+    const newest=[...sourceSets.values()].at(-1);
+    if(!activity && !newest)return null;
+    const steps=activity?.steps ?? [];
+    const active=activity?.active===true;
+    return {kind:'web',title:sceneKinds.web,sub:activity?.title ?? '',phase:active?'ACTIVE':'DONE',
+      phaseText:active?'RECHERCHIERT':'QUELLEN GELIEFERT',tone:active?'active':'done',levels:[],figures:[],notice:'',result:'',
+      action:null,storage:null,live:active,
+      cards:(newest?.items ?? []).slice(0,MAX_SCENE_CARDS).map(item=>{
+        let host='';try {host=new URL(item.url).hostname;}catch {}
+        return {key:'s'+item.id,title:plain(item.title,90) || host,meta:host,tone:'cyan'};
+      }),
+      progress:steps.length?{done:steps.filter(step=>step.state==='DONE').length,total:steps.length,
+        label:steps.filter(step=>step.state==='DONE').length+' von '+steps.length+' Schritten'}:null};
+  }
+  function sceneModel(choice,state) {
+    if(!choice || stageWindows.has(choice.kind))return null;
+    if(choice.kind==='deepclean') {const clean=deepCleanOf(state.deepClean);return clean && deepCleanScene(clean);}
+    if(choice.kind==='mail') {const mail=mailWorkOf(state.mailWork);return mail && mailScene(mail);}
+    if(choice.kind==='send') {const send=sendWorkOf(state.sendWork);return send && sendScene(send);}
+    return webScene();
+  }
+  // F · readouts in the window's foot: only readings the snapshot carries, each absent without its reading.
+  function systemBars(state) {
+    const bars=[];
+    if(validPercent(state.cpu)!==null)bars.push(['cpu','APP-CPU',state.cpu,state.cpu+' %']);
+    if(validPercent(state.ram)!==null)bars.push(['ram','GERÄTE-RAM',state.ram,state.ram+' %']);
+    const clean=deepCleanOf(state.deepClean), volume=clean?.after ?? clean?.before;
+    if(volume)bars.push(['storage','SPEICHER BELEGT',Math.round((volume.total-volume.free)/volume.total*100),
+      bytesText(volume.total-volume.free)+' von '+bytesText(volume.total)]);
+    if(currentTactical?.battery!=null)bars.push(['battery','AKKU',currentTactical.battery,
+      currentTactical.battery+' %'+(currentTactical.charging===true?' · LÄDT':'')]);
+    return bars;
+  }
+  // The brain's four steps, lit by what Android reported: an order taken (understand), the model at work (think),
+  // an input or a tool step under way (act), a check of an effect (verify). Nothing is lit by time.
+  function brainSteps(state) {
+    const kind=currentActivity?.active?currentActivity.kind:null, stage=currentWork?.stage;
+    const thinking=computesLocally(state) || state.presence==='THINKING' || kind==='THINK' || kind==='RESEARCH' || kind==='LEARN';
+    const acting=['EXECUTE','TOOL','WORKER','DEVELOP','DOCUMENT','CALCULATION'].includes(kind) ||
+      stage==='DISPATCHED' || stage==='FOCUS' || currentScene?.live===true;
+    const verifying=kind==='VERIFY' || stage==='OBSERVED' || stage==='VERIFIED';
+    const finished=currentOrders?.outcome==='COMPLETED' || stage==='COMPLETED';
+    return [['understand','VERSTEHEN',!!currentOrders || !!currentActivity || !!currentWork?.taskId],
+      ['think','DENKEN',thinking],['act','HANDELN',acting],['verify','PRÜFEN',verifying || finished]];
+  }
+  function sceneHost() {
+    let scene=$('#native-scene');
+    if(!scene) {
+      const core=$('.presence-orbit .presence-system>.presence-core');
+      if(!core)return null;
+      scene=document.createElement('section');scene.id='native-scene';scene.className='native-scene';
+      const glow=part('div','native-scene-glow');glow.setAttribute('aria-hidden','true');
+      const head=part('header','native-scene-head');
+      const phase=part('span','native-scene-phase');phase.setAttribute('role','status');
+      const close=part('button','native-scene-close','×');close.type='button';close.dataset.nativeScene='close';
+      close.setAttribute('aria-label','Arbeitsszene schließen');
+      head.append(part('span','native-scene-kind'),part('span','native-scene-sub'),phase,close);
+      const storage=part('div','native-scene-storage');
+      storage.append(part('span','native-scene-storage-label'),part('span','native-scene-gauge'),part('span','native-scene-storage-note'));
+      storage.querySelector('.native-scene-gauge').append(part('i','native-scene-used'),part('i','native-scene-before'));
+      const query=part('div','native-scene-query');
+      const levels=part('ul','native-scene-levels');levels.setAttribute('aria-label','Sicherheitsstufen');
+      const cards=part('ol','native-scene-cards');
+      const more=part('div','native-scene-more');
+      const progress=part('div','native-scene-progress');
+      progress.append(part('span','native-scene-progress-label'),part('span','native-scene-bar'));
+      progress.querySelector('.native-scene-bar').appendChild(part('i','native-scene-fill'));
+      const figures=part('dl','native-scene-figures');
+      const notice=part('div','native-scene-notice');
+      const result=part('div','native-scene-result');result.setAttribute('role','status');
+      const actions=part('div','native-scene-actions');
+      const foot=part('div','native-scene-foot');
+      foot.append(part('ul','native-scene-system'),part('ol','native-scene-brain'));
+      foot.querySelector('.native-scene-system').setAttribute('aria-label','Systemstatus');
+      foot.querySelector('.native-scene-brain').setAttribute('aria-label','KI-Gehirn');
+      // Most urgent first: what is happening, what the owner must decide, what was measured; then the lists.
+      scene.append(glow,head,query,progress,notice,actions,storage,figures,result,levels,cards,more,foot);
+      // Directly below the avatar, in the presence block's own grid: on a phone between the avatar and the tiles.
+      core.after(scene);
+      enter(scene);
+    }
+    return scene;
+  }
+  /** Sets a bar's real fraction; where motion may run, it travels there from where it visibly was. */
+  function setBar(node,fraction) {
+    const value=Math.max(0,Math.min(1,fraction)), text='scaleX('+value.toFixed(4)+')';
+    if(node.style.transform===text)return;
+    const from=node.style.transform;
+    node.style.transform=text;
+    if(from && motionTier() && typeof node.animate==='function') {
+      const glide=node.animate([{transform:from},{transform:text}],{duration:motionTier()==='full'?420:240,easing:'cubic-bezier(.16,.84,.24,1)'});
+      gliding.add(glide);const landed=()=>gliding.delete(glide);glide.finished.then(landed,landed);
+    }
+  }
+  function renderScene(state) {
+    const choice=sceneChoice(state);
+    const model=choice && sceneDismissed!==choice.kind+'|'+choice.since?sceneModel(choice,state):null;
+    const before=currentScene;
+    currentScene=model;
+    let scene=$('#native-scene');
+    if(!model) {
+      // The tiles take their row back when the window has left.
+      const gone=()=>{if(!currentScene && 'nativeScene' in document.body.dataset)delete document.body.dataset.nativeScene;};
+      if(scene && scene.dataset.nativeLeaving!=='true')leave(scene,node=>{node.remove();gone();});
+      else if(!scene)gone();
+      if(choice===null)sceneDismissed=null;
+      return;
+    }
+    if(scene?.dataset.nativeLeaving==='true') {leavers.delete(scene);scene.remove();scene=null;}
+    const fresh=!scene || scene.dataset.kind!==model.kind;
+    if(scene && fresh) {scene.remove();scene=null;}
+    scene=sceneHost();
+    if(!scene)return;
+    if(document.body.dataset.nativeScene!==model.kind)document.body.dataset.nativeScene=model.kind;
+    scene.dataset.kind=model.kind;scene.dataset.tone=model.tone;
+    scene.setAttribute('aria-label','Arbeitsszene: '+model.title);
+    setText(scene.querySelector('.native-scene-kind'),model.title);
+    setText(scene.querySelector('.native-scene-sub'),model.sub);
+    const phase=scene.querySelector('.native-scene-phase');
+    if(scene.dataset.phase!==model.phase) {
+      if(scene.dataset.phase && motionTier())phase.dataset.changed='true';
+      scene.dataset.phase=model.phase;
+    }
+    setText(phase,model.phaseText);
+    // The measured storage: used part of the volume; after a clean the earlier used part stays visible behind it.
+    const storage=scene.querySelector('.native-scene-storage');
+    storage.hidden=!model.storage;
+    if(model.storage) {
+      const {total,free,before:earlier,after}=model.storage;
+      setText(storage.querySelector('.native-scene-storage-label'),'GERÄTESPEICHER · '+bytesText(total));
+      setText(storage.querySelector('.native-scene-storage-note'),bytesText(total-free)+' belegt · '+bytesText(free)+' frei'+
+        (after?' (nachher, gemessen)':' (gemessen)'));
+      setBar(storage.querySelector('.native-scene-used'),(total-free)/total);
+      const previous=storage.querySelector('.native-scene-before');
+      previous.hidden=!(earlier && after);
+      if(earlier && after)setBar(previous,(earlier.total-earlier.free)/earlier.total);
+      if(!storage.dataset.measured) {storage.dataset.measured='true';enter(storage);}
+    }
+    const query=scene.querySelector('.native-scene-query');
+    query.hidden=!model.query;
+    if(model.query) {
+      const text='Suche: „'+model.query+'“';
+      if(query.textContent!==text && query.textContent && motionTier())query.dataset.changed='true';
+      setText(query,text);
+    }
+    scene.dataset.searching=String(model.kind==='mail' && model.phase==='SEARCH');
+    // Safety levels as chips; GREEN lights while it is being cleaned.
+    const levels=scene.querySelector('.native-scene-levels'), levelKey=JSON.stringify(model.levels);
+    if(feedVersions.get(levels)!==levelKey) {
+      const shown=new Map([...levels.children].map(node=>[node.dataset.level,node]));
+      levels.replaceChildren(...model.levels.map((level,index)=>{
+        let chip=shown.get(level.key);
+        if(!chip) {chip=part('li','native-scene-level');chip.dataset.level=level.key;
+          chip.append(part('span','native-scene-level-name'),part('span','native-scene-level-value'));
+          if(feedVersions.has(levels))enter(chip,index);}
+        else if(chip.querySelector('.native-scene-level-value').textContent!==level.text && motionTier())chip.dataset.changed='true';
+        chip.dataset.shade=level.shade;chip.dataset.active=String(level.active);
+        setText(chip.querySelector('.native-scene-level-name'),level.label);
+        setText(chip.querySelector('.native-scene-level-value'),level.text);
+        return chip;
+      }));
+      levels.hidden=!model.levels.length;feedVersions.set(levels,levelKey);
+    }
+    // Cards: one per item of the lane's real list, keyed; a new one flies in, a gone one leaves.
+    const cards=scene.querySelector('.native-scene-cards');
+    const shown=new Map([...cards.children].filter(node=>node.dataset.nativeLeaving!=='true').map(node=>[node.dataset.key,node]));
+    let arrived=0, newest=null;
+    const order=[];
+    for(const item of model.cards) {
+      let card=shown.get(item.key);
+      if(card)shown.delete(item.key);
+      else {
+        card=part('li','native-scene-card');card.dataset.key=item.key;
+        card.append(part('span','native-scene-card-mark'),part('strong','native-scene-card-title'),part('span','native-scene-card-meta'),
+          part('span','native-scene-card-value'),part('span','native-scene-card-fill'));
+        card.querySelector('.native-scene-card-fill').appendChild(part('i'));
+        cards.appendChild(card);
+        enter(card,++arrived);
+        newest=card;
+      }
+      card.dataset.tone=item.tone;
+      setText(card.querySelector('.native-scene-card-mark'),item.mark ?? '');
+      setText(card.querySelector('.native-scene-card-title'),item.title);
+      setText(card.querySelector('.native-scene-card-meta'),item.meta ?? '');
+      setText(card.querySelector('.native-scene-card-value'),item.value ?? '');
+      const fill=card.querySelector('.native-scene-card-fill');
+      fill.hidden=typeof item.fill!=='number';
+      if(typeof item.fill==='number')setBar(fill.firstElementChild,item.fill);
+      order.push(card);
+    }
+    for(const card of shown.values())leave(card,node=>node.remove());
+    // Android's order of the list (by size for the storage categories) is the order on screen.
+    order.forEach((card,index)=>{if(cards.children[index]!==card)cards.insertBefore(card,cards.children[index] ?? null);});
+    cards.hidden=!model.cards.length;
+    setText(scene.querySelector('.native-scene-more'),model.more ?? '');
+    scene.querySelector('.native-scene-more').hidden=!model.more;
+    const progress=scene.querySelector('.native-scene-progress');
+    progress.hidden=!model.progress;
+    if(model.progress) {
+      setText(progress.querySelector('.native-scene-progress-label'),model.progress.label);
+      const bar=progress.querySelector('.native-scene-bar');
+      // Scanning has no total: a counter, no bar.
+      bar.hidden=!(model.progress.total>0);
+      if(model.progress.total>0)setBar(bar.firstElementChild,model.progress.done/model.progress.total);
+    }
+    const figures=scene.querySelector('.native-scene-figures'), figureKey=JSON.stringify(model.figures);
+    if(feedVersions.get(figures)!==figureKey) {
+      figures.replaceChildren(...model.figures.map(([label,value,note])=>{
+        const row=part('div','native-scene-figure');
+        row.append(part('dt','native-scene-figure-label',label),part('dd','native-scene-figure-value',value));
+        if(note)row.appendChild(part('dd','native-scene-figure-note',note));
+        if(feedVersions.has(figures) && !JSON.parse(feedVersions.get(figures)).some(entry=>entry[0]===label))enter(row);
+        return row;
+      }));
+      figures.hidden=!model.figures.length;feedVersions.set(figures,figureKey);
+    }
+    setText(scene.querySelector('.native-scene-notice'),model.notice);
+    scene.querySelector('.native-scene-notice').hidden=!model.notice;
+    const result=scene.querySelector('.native-scene-result');
+    if(result.textContent!==model.result && model.result && motionTier())result.dataset.nativeEnter='a';
+    setText(result,model.result);result.hidden=!model.result;
+    const actions=scene.querySelector('.native-scene-actions'), actionKey=JSON.stringify(model.action);
+    if(feedVersions.get(actions)!==actionKey) {
+      actions.replaceChildren(...(model.action?[(()=>{
+        const button=part('button','native-scene-action',model.action.label);button.type='button';
+        button.dataset.nativeScene='route';button.dataset.route=model.action.route;return button;})()]:[]));
+      actions.hidden=!model.action;feedVersions.set(actions,actionKey);
+    }
+    // F · the foot: system readouts and the brain's steps.
+    const system=scene.querySelector('.native-scene-system'), bars=systemBars(state), barKey=JSON.stringify(bars);
+    if(feedVersions.get(system)!==barKey) {
+      const earlier=new Map([...system.children].map(node=>[node.dataset.bar,node]));
+      system.replaceChildren(...bars.map(([key,label,percent,text])=>{
+        let row=earlier.get(key);
+        if(!row) {row=part('li','native-scene-sysbar');row.dataset.bar=key;
+          row.append(part('span','native-scene-sysbar-name',label),part('span','native-scene-sysbar-track'),part('span','native-scene-sysbar-value'));
+          row.querySelector('.native-scene-sysbar-track').appendChild(part('i'));}
+        setText(row.querySelector('.native-scene-sysbar-value'),text);
+        setBar(row.querySelector('.native-scene-sysbar-track>i'),percent/100);
+        return row;
+      }));
+      system.hidden=!bars.length;feedVersions.set(system,barKey);
+    }
+    const brain=scene.querySelector('.native-scene-brain'), steps=brainSteps(state);
+    if(brain.children.length!==steps.length)brain.replaceChildren(...steps.map(([key,label])=>{
+      const step=part('li','native-scene-brain-step',label);step.dataset.step=key;return step;}));
+    steps.forEach(([key,,lit],index)=>{
+      const step=brain.children[index];
+      if(step.dataset.lit!==String(lit)) {
+        if(step.dataset.lit===undefined || !lit || !motionTier())step.removeAttribute('data-changed');
+        else step.dataset.changed='true';
+        step.dataset.lit=String(lit);
+      }
+    });
+    // Attention: the window when it opens and when the lane lists something new; the owner when it is over or
+    // when the lane waits for an answer.
+    const gazeKey=model.kind+'|'+model.phase;
+    if(fresh || !before)lookAt(scene);
+    else if(newest)glance(scene);
+    if(gazeKey!==sceneGlanced) {
+      if(sceneGlanced && (model.tone==='done' || model.tone==='waiting' || model.tone==='failed' || model.tone==='stopped'))faceOwner();
+      sceneGlanced=gazeKey;
+    }
+  }
   // A mark is for one pass: when its animation has ended (or was cut off) it is removed, so that a later change
   // of tier cannot start it again.
   for(const type of ['animationend','animationcancel'])document.addEventListener(type,event=>{
@@ -2165,7 +2664,8 @@
     if(!node?.dataset || event.pseudoElement)return;
     if(name.startsWith('native-tac-in') && node.dataset.nativeEnter)delete node.dataset.nativeEnter;
     // The pass of a changed state runs on the word inside the element that carries the mark.
-    if(name.startsWith('native-tac-mark'))node.closest('[data-changed]')?.removeAttribute('data-changed');
+    if(name.startsWith('native-tac-mark') || name.startsWith('native-scene-mark'))node.closest('[data-changed]')?.removeAttribute('data-changed');
+    if(name.startsWith('native-scene-in') && node.dataset.nativeEnter)delete node.dataset.nativeEnter;
   },true);
   // Any input of the owner ends the start-up sequence; its own buttons do what they say.
   for(const type of ['pointerdown','keydown'])document.addEventListener(type,event=>{
@@ -2209,7 +2709,7 @@
       replyLine=null;arrivedLine=null;arrivedSources=null;draftGlanced=false;lastConsent=false;stepStatesShown.clear();
       workToken++;workTurn=false;workReplied=false;workAwaitingReply=false;workSources=false;
       workSurface=null;workReturned=true;setWorkPhase('idle');
-      clearTactical();
+      clearTactical();sceneDismissed=null;sceneGlanced='';
       if(!initial) {
         dirtyDraft=false;
         const field=$('#command-input');if(field) {field.value='';fitComposer();}
@@ -2255,6 +2755,7 @@
     renderChats();renderMeters();renderFeed();renderDocument();nativeLabels();renderAppearance(state.appearance);
     renderPresence(state);renderEnergy(state);advanceWork(freshFiles);
     renderTactical(state);
+    renderScene(state);
     if(landed) {
       // Shown where it happened for a short while; the list below the monitor keeps it.
       marker={sequence:landed.sequence};
@@ -2423,6 +2924,17 @@
   document.addEventListener('click',e=>{
     if(e.target.closest('#listen-button') && suppressMicClick) {
       suppressMicClick=false;e.preventDefault();e.stopImmediatePropagation();return;
+    }
+    const sceneControl=e.target.closest('[data-native-scene]');
+    if(sceneControl) {
+      e.preventDefault();e.stopImmediatePropagation();
+      if(sceneControl.dataset.nativeScene==='close') {
+        // Closed by the owner: this scene stays away until Android names another one.
+        const choice=snapshot && sceneChoice(snapshot);
+        if(choice) {sceneDismissed=choice.kind+'|'+choice.since;renderScene(snapshot);faceOwner();}
+      } else if(sceneControl.dataset.nativeScene==='route' && sceneControl.dataset.route==='storage-clean')
+        send('route','storage-clean');
+      return;
     }
     const tac=e.target.closest('[data-native-tac]');
     if(tac) {

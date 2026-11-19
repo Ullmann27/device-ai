@@ -64,9 +64,9 @@ class OwnerContrastRoutingTest {
     @Test fun courtesyWordsAreNotASecondStep() {
         assertEquals(ComputerApp.WHATSAPP, opened("Öffne WhatsApp bitte"))
         assertEquals(ComputerApp.CHROME, opened("Öffne mal Chrome"))
-        // A real second step is still refused.
-        assertTrue(computer("Öffne WhatsApp und dann lösche alle Chats")
-            is OwnerComputerIntentParser.Result.Unsupported)
+        // A real second step never becomes part of the opening. Since 19.11.2026 it is a further order that is handed
+        // on to the planner (NotComputerCommand) instead of a refusal that ends the turn.
+        assertEquals(OwnerComputerIntentParser.Result.NotComputerCommand, computer("Öffne WhatsApp und dann lösche alle Chats"))
     }
 
     @Test fun genericAppLookupKeepsTheWantedAppAndDropsTheExcludedOne() {

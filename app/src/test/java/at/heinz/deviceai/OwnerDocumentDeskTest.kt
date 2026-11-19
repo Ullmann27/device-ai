@@ -721,6 +721,106 @@ class OwnerDocumentDeskTest {
         assertFalse(desk.jobRunning)
     }
 
+    // ── A page summary that is shown and not saved – a step of a sequence (19.11.2026) ──────────────────────
+
+    @Test fun insideASequenceAPageIsReadSummarisedAndShownAndNothingIsSaved() {
+        val (host, desk) = opened { sequence = true }
+        assertTrue(desk.handle("analysiere Seite zwei und fasse sie zusammen"))
+        // The model saw exactly that page – the same task as for the order with a save.
+        val prompt = host.prompts.single()
+        assertTrue(prompt.contains("Seite 2 des Dokuments „Argon4“") && prompt.contains(ARGON[1]))
+        assertFalse(prompt.contains(ARGON[0]) || prompt.contains(ARGON[2]))
+        assertEquals("Seite 2 von „Argon4.pdf“ – Zusammenfassung:\n\n$SUMMARY_2\n\nGespeichert habe ich nichts.", host.lines("SAY:").last())
+        // Read and summarised – and no step builds, saves or checks a file.
+        assertEquals(listOf("desk-page:Seite 2 lesen:ACTIVE:TOOL", "desk-page:Seite 2 gelesen · ${ARGON[1].length} Zeichen:DONE",
+            "desk-summary:Zusammenfassen:ACTIVE:THINK", "desk-summary:Zusammenfassen · ${SUMMARY_2.length} Zeichen:ACTIVE",
+            "desk-summary:Zusammengefasst · ${SUMMARY_2.length} Zeichen:DONE"), host.steps.dropWhile { !it.startsWith("desk-page") })
+        assertTrue(host.downloads.isEmpty() && host.adopted.isEmpty())
+        assertEquals("DOKUMENTE · Seite 2 zusammengefasst · im Gespräch gezeigt · nichts gespeichert", host.lines("ACTIVITY:").last())
+        // The typed result: this page, really read, with the same deliverable a saved summary carries.
+        val result = host.presented.single()
+        assertEquals(OwnerDeliverable.Kind.PAGE_SUMMARY, result.kind)
+        assertEquals("Zusammenfassung Argon4 Seite 2", result.title)
+        assertEquals("Quelle: „Argon4.pdf“, Seite 2 von 4 · zusammengefasst vom Sprachmodell auf dem Gerät am 18.11.2026 · vor der " +
+            "Verwendung prüfen.", result.note)
+        assertEquals(OwnerLaneOutcome.Done(OwnerLaneResult.PageSummarised(result, "Argon4.pdf", 2, ARGON[1].length, ARGON[1].length)),
+            host.outcomes.last())
+        // The other forms of the same order.
+        for ((order, page) in listOf("Fass Seite 3 zusammen" to 3, "erkläre mir Seite 3" to 3, "Analysiere die dritte Seite" to 3,
+            "fasse bitte Seite drei kurz zusammen" to 3, "Fasst Seite 3 zusammen" to 3)) {
+            assertTrue(order, desk.handle(order))
+            assertEquals(order, page, (host.outcomes.last() as OwnerLaneOutcome.Done).result.let { (it as OwnerLaneResult.PageSummarised).page })
+        }
+        assertTrue(host.downloads.isEmpty())
+    }
+
+    @Test fun outsideASequenceTheSameWordsAreNotTheDesksOrder() {
+        val (host, desk) = opened()
+        val before = host.log.size
+        for (order in listOf("Fass Seite 2 zusammen", "analysiere Seite zwei und fasse sie zusammen", "erkläre mir Seite 3")) {
+            host.foreignTurn()
+            assertFalse(order, desk.handle(order))
+        }
+        assertEquals(before, host.log.size)
+        assertTrue(host.prompts.isEmpty() && host.presented.isEmpty())
+        // Inside a sequence everything that is more than this order still is not it.
+        host.sequence = true
+        for (order in listOf("Fass Seite 2 nicht zusammen", "Fass die Seiten 2 bis 4 zusammen", "Fass Seite 2 in einem Wort zusammen",
+            "Was steht auf Seite 2?", "Schau auf Seite 2", "Fass Seite 2 zusammen und lösche die Datei", "Fass es zusammen")) {
+            host.foreignTurn()
+            assertFalse(order, desk.handle(order))
+        }
+        // With a save order it is the page order it always was.
+        assertTrue(desk.handle("Fass Seite 2 zusammen und speichere es als Word"))
+        assertEquals(listOf(wordName), host.downloads.keys.toList())
+    }
+
+    @Test fun aSummaryThatCannotBeMadeSaysWhyAndIsNeverReportedAsDone() {
+        val (host, desk) = opened { sequence = true }
+        assertTrue(desk.handle("Fass Seite 4 zusammen"))
+        assertEquals("Seite 4 von „Argon4.pdf“ hat keinen auslesbaren Text – zum Beispiel ein Scan. Ich habe nichts zusammengefasst.",
+            host.lines("SAY:").last())
+        assertTrue(host.outcomes.last() is OwnerLaneOutcome.Failed)
+        assertTrue(desk.handle("Fass Seite 9 zusammen"))
+        assertEquals("„Argon4.pdf“ hat nur 4 Seiten – eine Seite 9 gibt es nicht. Ich habe nichts zusammengefasst.", host.lines("REPLY:").last())
+        assertTrue(host.prompts.isEmpty() && host.presented.isEmpty())
+        // No model, a model that does not finish, a model that fails.
+        val (unloaded, unloadedDesk) = opened { sequence = true; modelLoaded = false }
+        assertTrue(unloadedDesk.handle("Fass Seite 2 zusammen"))
+        assertEquals("Seite 2 von „Argon4.pdf“ habe ich gelesen (${ARGON[1].length} Zeichen). Für die Zusammenfassung brauche ich aber das " +
+            "Sprachmodell, und im Moment ist keines geladen. Ich habe nichts zusammengefasst.", unloaded.lines("SAY:").last())
+        val (cut, cutDesk) = opened { sequence = true }
+        cut.model = { OwnerWorkGeneration(SUMMARY_2.take(50), null, false) }
+        assertTrue(cutDesk.handle("Fass Seite 2 zusammen"))
+        assertEquals("Das Sprachmodell hat für Seite 2 keine brauchbare Zusammenfassung geliefert. Ich habe nichts zusammengefasst.",
+            cut.lines("SAY:").last())
+        for (h in listOf(unloaded, cut)) {
+            assertTrue(h.presented.isEmpty() && h.downloads.isEmpty())
+            assertTrue(h.outcomes.last() is OwnerLaneOutcome.Failed)
+        }
+        // No PDF open at all.
+        val (none, noneDesk) = desk { sequence = true }
+        assertTrue(noneDesk.handle("Fass Seite 2 zusammen"))
+        assertEquals("Im Moment ist kein PDF geöffnet. Ich habe nichts zusammengefasst.", none.lines("REPLY:").single())
+        // The owner's stop while the model writes: nothing is shown.
+        val (stopped, stoppedDesk) = opened { sequence = true }
+        stopped.duringGeneration = { assertTrue(stoppedDesk.stop("Stopp")) }
+        assertTrue(stoppedDesk.handle("Fass Seite 2 zusammen"))
+        assertEquals("Gestoppt. Seite 2 wurde nicht fertig zusammengefasst; gespeichert habe ich nichts.", stopped.lines("SAY:").last())
+        assertEquals(OwnerLaneOutcome.Stopped, stopped.outcomes.last())
+        assertTrue(stopped.presented.isEmpty())
+    }
+
+    @Test fun theOfferToKeepTheSummaryIsMadeOnlyWhenTheHostReallyKeepsItAndTheCloudIsNamed() {
+        val (kept, keptDesk) = opened { sequence = true; presentTaken = true }
+        assertTrue(keptDesk.handle("Fass Seite 2 zusammen"))
+        assertTrue(kept.lines("SAY:").last().endsWith("Gespeichert habe ich nichts. Wenn du sie behalten willst, sag zum Beispiel „Speichere das als Word“."))
+        val (viaCloud, cloudDesk) = opened { sequence = true; cloud = true }
+        assertTrue(cloudDesk.handle("Fass Seite 2 zusammen"))
+        assertTrue(viaCloud.lines("SAY:").last().endsWith("Gespeichert habe ich nichts. Zusammengefasst habe ich das über die Cloud, nicht mit dem Modell auf dem Gerät."))
+        assertTrue(viaCloud.presented.single().note.orEmpty().contains("zusammengefasst vom Cloud-Gehirn"))
+    }
+
     // ── What stays with the other lanes ─────────────────────────────────────────────────────────────────────
 
     @Test fun requestsWithoutANameAndOtherOrdersAreNotTaken() {

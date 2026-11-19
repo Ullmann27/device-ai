@@ -212,6 +212,7 @@ internal class ContinuumBriefingDirector(
         if (local.hour < settings.offerFromHour) return null
         val day = local.toLocalDate()
         if (settings.lastOfferDay == day || settings.lastBriefingDay == day) return null
+        if (!host.allowDailyOffer()) return null
         return OFFER_TEXT
     }
 
@@ -258,6 +259,7 @@ internal class ContinuumBriefingDirector(
             ContinuumBriefingCommand.SystemCheck -> systemCheck(request)
             is ContinuumBriefingCommand.Briefing -> startBriefing(request, command.withNews)
             is ContinuumBriefingCommand.Appointments -> appointments(request, command.day)
+            is ContinuumBriefingCommand.Agenda -> agenda(request, command.span, command.ask)
             is ContinuumBriefingCommand.Weather -> weather(request, command.day, command.place)
             is ContinuumBriefingCommand.SetPlace -> setPlace(request, command.place)
             is ContinuumBriefingCommand.Call -> call(request, command.target)
@@ -279,6 +281,13 @@ internal class ContinuumBriefingDirector(
         pendingWeather = null
         ContinuumBriefingBoard.publishOffers(emptyList())
     }
+
+    /**
+     * true while a question or an offer of this lane waits for the owner's very next turn („Welche Anna meinst du?“,
+     * „Für welchen Ort?“, the offers after a report). That turn is shown to this lane first ([handle]); when it is no
+     * answer, it keeps its ordinary route.
+     */
+    val awaitingAnswer: Boolean get() = questionOpen()
 
     /** true while one of this lane's questions still waits for the owner's answer. */
     private fun questionOpen(): Boolean =
@@ -303,12 +312,14 @@ internal class ContinuumBriefingDirector(
         pendingDaily?.takeIf { it.open }?.let {
             if (ContinuumNextSteps.isYes(request, name)) {
                 clearPending()
+                host.offerAnswered(daily = true, accepted = true)
                 host.acceptOwnerTurn(request)
                 startBriefing(request, withNews = false)
                 return true
             }
             if (ContinuumNextSteps.isNo(request, name)) {
                 clearPending()
+                host.offerAnswered(daily = true, accepted = false)
                 host.acceptOwnerTurn(request)
                 host.answer(request, "In Ordnung. Sag einfach „Gib mir mein Briefing“, wenn du es doch möchtest.")
                 return true
@@ -320,6 +331,7 @@ internal class ContinuumBriefingDirector(
                 is ContinuumNextSteps.Choice.Pick -> {
                     val offer = pending.offers[choice.index]
                     clearPending()
+                    host.offerAnswered(daily = false, accepted = true)
                     // The chosen order takes the owner's turn: it is shown and handled as if he had said it.
                     host.clearInput()
                     host.activity("NÄCHSTER SCHRITT · vom Besitzer gewählt · „${offer.order}“")
@@ -334,6 +346,7 @@ internal class ContinuumBriefingDirector(
                 }
                 ContinuumNextSteps.Choice.Decline -> {
                     clearPending()
+                    host.offerAnswered(daily = false, accepted = false)
                     host.acceptOwnerTurn(request)
                     host.answer(request, "In Ordnung.")
                     return true
@@ -378,8 +391,8 @@ internal class ContinuumBriefingDirector(
         val report = systemReport()
         val checks = ContinuumSystemCheck.snapshot()
         val storage = checks.firstOrNull { it.key == ContinuumSystemCheck.STORAGE }?.state
-        val offers = if (storage == ContinuumSystemCheck.State.WARN || storage == ContinuumSystemCheck.State.FAIL)
-            listOf(diagnosisOffer()) else emptyList()
+        val offers = host.allowOffers(if (storage == ContinuumSystemCheck.State.WARN || storage == ContinuumSystemCheck.State.FAIL)
+            listOf(diagnosisOffer()) else emptyList())
         val spoken = listOfNotNull(report, ContinuumNextSteps.question(offers)).joinToString(" ")
         host.activity("SYSTEMCHECK · " + checks.size + " Prüfungen · " + ContinuumSystemCheck.problems(checks).size +
             " auffällig · nur gelesen, kein Modell- oder Netzaufruf")
@@ -393,7 +406,7 @@ internal class ContinuumBriefingDirector(
         val quiet = !host.idle() || host.speaking() || questionOpen()
         val warning = watch.observe(facts, host.ownerName(), now().toEpochMilli(), quiet,
             loadReduced = host.loadReducedByHeat(facts), webJobRunning = host.webJobRunning()) ?: return
-        val offers = if (warning.offer == ContinuumBriefingBoard.OfferKind.DIAGNOSIS) listOf(diagnosisOffer()) else emptyList()
+        val offers = host.allowOffers(if (warning.offer == ContinuumBriefingBoard.OfferKind.DIAGNOSIS) listOf(diagnosisOffer()) else emptyList())
         ContinuumBriefingText.systemCard(ContinuumSystemCheck.run(facts))?.let(ContinuumBriefingBoard::put)
         host.activity("HINWEIS · " + warning.condition.name + " · aus dem Gerätezustand, einmal je Anlass")
         host.answer(null, listOfNotNull(warning.text, ContinuumNextSteps.question(offers)).joinToString(" "))
@@ -429,6 +442,66 @@ internal class ContinuumBriefingDirector(
                 ContinuumCalendarRead.NotGranted -> ContinuumBriefingText.CALENDAR_DENIED
                 is ContinuumCalendarRead.Failed -> ContinuumBriefingText.CALENDAR_FAILED
             })
+            // Typed, so a sequence of orders knows whether the calendar was really read.
+            host.outcome(when (read) {
+                is ContinuumCalendarRead.Events -> at.heinz.deviceai.OwnerLaneOutcome.Done(OwnerLaneResult.Agenda(label.lowercase(java.util.Locale.GERMAN),
+                    read.events.size, 0, 0))
+                ContinuumCalendarRead.NotGranted -> at.heinz.deviceai.OwnerLaneOutcome.NeedsOwner(at.heinz.deviceai.OwnerLaneOutcome.Need.GRANT,
+                    ContinuumBriefingText.CALENDAR_DENIED)
+                is ContinuumCalendarRead.Failed -> at.heinz.deviceai.OwnerLaneOutcome.Failed(ContinuumBriefingText.CALENDAR_FAILED)
+            })
+        }
+    }
+
+    /**
+     * The calendar over [span]: the list, the check for what stands out, or the free time (owner sentence 19.11.2026:
+     * „Schau, welche Termine ich diese Woche habe, und sag mir, ob ich etwas vergessen könnte“). One read through the
+     * same READ_CALENDAR path as the briefing; the answer is built here from the entries and the fixed rules of
+     * [AgendaCheck] – no model sees a calendar entry and nothing goes to the network.
+     */
+    private fun agenda(request: String, span: AgendaSpan, ask: AgendaAsk) {
+        val today = today()
+        val dates = ContinuumAgenda.dates(span, today)
+        val label = span.label.replaceFirstChar { it.titlecase(java.util.Locale.GERMAN) }
+        readCalendar(request, mayAsk = true, ContinuumAgenda.window(dates, zone())) { read ->
+            host.activity("KALENDER · nur gelesen · " + when (read) {
+                is ContinuumCalendarRead.Events -> "${read.events.size} Einträge im Zeitraum · ${span.label} · geprüft nach festen Regeln, ohne Modell"
+                ContinuumCalendarRead.NotGranted -> "Zugriff nicht erlaubt"
+                is ContinuumCalendarRead.Failed -> "nicht lesbar"
+            })
+            when (read) {
+                ContinuumCalendarRead.NotGranted -> {
+                    ContinuumBriefingBoard.put(ContinuumBriefingText.calendarCard(read, null, "Termine " + span.label))
+                    host.answer(request, ContinuumBriefingText.CALENDAR_DENIED)
+                    host.outcome(at.heinz.deviceai.OwnerLaneOutcome.NeedsOwner(at.heinz.deviceai.OwnerLaneOutcome.Need.GRANT,
+                        ContinuumBriefingText.CALENDAR_DENIED))
+                }
+                is ContinuumCalendarRead.Failed -> {
+                    ContinuumBriefingBoard.put(ContinuumBriefingText.calendarCard(read, null, "Termine " + span.label))
+                    host.answer(request, ContinuumBriefingText.CALENDAR_FAILED)
+                    host.outcome(at.heinz.deviceai.OwnerLaneOutcome.Failed(ContinuumBriefingText.CALENDAR_FAILED))
+                }
+                is ContinuumCalendarRead.Events -> {
+                    val days = ContinuumAgenda.days(read.events, dates, zone(), now())
+                    val report = AgendaCheck.check(days, now().atZone(zone()).toLocalDateTime())
+                    val listed = if (days.size == 1) ContinuumAgenda.spoken(days.single(), label, detailed = true)
+                        else ContinuumAgenda.spokenWeek(days, label, today)
+                    val spoken = when (ask) {
+                        AgendaAsk.LIST -> listed
+                        AgendaAsk.CHECK -> listed + " " + AgendaCheck.spoken(report, span.label, today)
+                        AgendaAsk.FREE -> AgendaCheck.spokenFree(report, span.label, today)
+                    }
+                    val cardLines = if (ask == AgendaAsk.CHECK) AgendaCheck.lines(report) else
+                        ContinuumAgenda.weekLines(days, ContinuumBriefingBoard.MAX_LINES).ifEmpty { listOf("nichts im Kalender") }
+                    val attention = report.findings.any { it.kind == AgendaCheck.Kind.OVERLAP || it.kind == AgendaCheck.Kind.TIGHT_CHANGE }
+                    ContinuumBriefingBoard.put(ContinuumBriefingBoard.Card("calendar", ContinuumBriefingBoard.Kind.CALENDAR,
+                        (if (ask == AgendaAsk.CHECK) "Terminprüfung " else "Termine ") + span.label, cardLines,
+                        if (attention) ContinuumBriefingBoard.State.ATTENTION else ContinuumBriefingBoard.State.INFO))
+                    host.answer(request, spoken)
+                    host.outcome(at.heinz.deviceai.OwnerLaneOutcome.Done(OwnerLaneResult.Agenda(span.label, report.events + report.allDay,
+                        report.findings.size, report.free.size)))
+                }
+            }
         }
     }
 
@@ -544,13 +617,14 @@ internal class ContinuumBriefingDirector(
             ContinuumSystemCheck.run(host.systemFacts()), newsFollows)
         val cards = ContinuumBriefingText.cards(parts)
         ContinuumBriefingBoard.publish(cards)
-        val offers = if (newsFollows) emptyList() else nextSteps(parts)
+        val offers = if (newsFollows) emptyList() else host.allowOffers(nextSteps(parts))
         val spoken = listOfNotNull(ContinuumBriefingText.spoken(parts) +
             (if (wantsNews && !newsFollows) " Nachrichten gibt es keine: Der Internetzugang ist ausgeschaltet." else ""),
             ContinuumNextSteps.question(offers)).joinToString(" ")
         host.activity("BRIEFING · Kalender, Wetter und Offenes · nur Gelesenes · " + cards.size + " Karten")
         host.answer(request, spoken, spoken + "\n\n" + ContinuumBriefingBoard.chat(cards))
         offer(offers)
+        host.briefingGiven()
         if (newsFollows) {
             val session = host.sessionId
             val turn = host.ownerTurn

@@ -36,14 +36,14 @@ internal object OwnerExportCommand {
         (pdfWords + wordWords).joinToString("|") + ")(?= |$)")
     /** Words that point at the result itself. */
     private val pointing = setOf("das", "die", "sie", "es", "dies", "diese", "dieses", "daraus", "davon", "damit",
-        "alles", "zusammenfassung", "überblick", "ueberblick", "übersicht", "text", "antwort", "ergebnis", "bericht",
+        "alles", "zusammenfassung", "überblick", "ueberblick", "übersicht", "text", "antwort", "ergebnis", "ergebnisse", "bericht",
         "kurzfassung", "inhalt", "nachrichten", "schlagzeilen", "briefing", "nachrichtenüberblick", "news")
     private val folderWords = setOf("download-ordner", "downloadordner", "downloads", "download", "downloads-ordner",
         "ordner")
     private val newsWords = setOf("nachrichten", "schlagzeilen", "briefing", "nachrichtenüberblick", "news")
     private val references = setOf("das", "die", "sie", "es", "dies", "diese", "dieses", "den", "dem", "der", "daraus",
         "davon", "damit", "alles", "zusammenfassung", "überblick", "ueberblick", "übersicht", "text", "antwort",
-        "ergebnis", "bericht", "kurzfassung", "inhalt", "datei", "dokument", "ganze", "gesamte") + newsWords
+        "ergebnis", "ergebnisse", "bericht", "kurzfassung", "inhalt", "datei", "dokument", "ganze", "gesamte") + newsWords
     private val fillers = setOf("ja", "dann", "bitte", "mir", "mal", "noch", "auch", "gleich", "jetzt", "und", "ok",
         "okay", "gut", "super", "danke", "kannst", "könntest", "koenntest", "würdest", "du", "ich", "möchte", "will",
         "hätte", "gern", "gerne", "ab", "als", "in", "im", "ins", "meinen", "meinem", "meine", "mein", "den", "dem",

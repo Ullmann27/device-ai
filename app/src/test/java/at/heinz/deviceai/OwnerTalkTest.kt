@@ -406,7 +406,8 @@ class OwnerTalkTest {
         chat.talk.onLeave()
         chat.to("2026-11-19T10:02:00")
         chat.talk.onReturn()
-        assertEquals("Hallo Heinz, wie geht's dir? Du hast dich ja zwei Stunden nicht gerührt. Soll ich dir den Tag kurz zusammenfassen?",
+        // One question per greeting: with a clause that asks something, the opening does not also ask „wie geht's dir?“.
+        assertEquals("Hallo Heinz. Du hast dich ja zwei Stunden nicht gerührt. Soll ich dir den Tag kurz zusammenfassen?",
             chat.greetings.single())
         // It takes the place of the greeting's own closing question: never two questions in a row.
         chat.to("2026-11-19T12:10:00")

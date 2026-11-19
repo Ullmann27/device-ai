@@ -53,7 +53,9 @@ class OwnerTalkRegressionTest {
             "order_mapping" -> expect.getString("order") to
                 when (val checked = OwnerMissionModelPlan.check(input, case.optString("model"), name, allowSingle = true)) {
                     is OwnerMissionModelPlan.Result.Accepted ->
-                        (if (OwnerMissionModelPlan.runsWithoutQuestion(checked.plan)) "RUN:" else "ASK:") + checked.plan.codes.joinToString(" → ")
+                        (if (OwnerMissionModelPlan.runsWithoutQuestion(checked.plan, name)) "RUN:" else "ASK:") + checked.plan.codes.joinToString(" → ")
+                    // The plan leaves an order of the sentence open: nothing runs, the rest is only offered.
+                    is OwnerMissionModelPlan.Result.Uncovered -> "PARTIAL:" + checked.rest.joinToString(" → ") { it.code }
                     is OwnerMissionModelPlan.Result.Rejected -> "REJECTED"
                 }
             "greeting_switch" -> expect.getString("greeting_switch") to

@@ -62,6 +62,22 @@ internal class ContinuumBriefingHarness(
     var speakingNow = false
     private val queue = ArrayDeque<() -> Unit>()
 
+    /** The owner's initiative policy as the Activity wires it to this lane; null = the lane alone decides (the host default). */
+    var initiative: at.heinz.deviceai.cognitive.OwnerInitiative? = null
+    var briefingsGiven = 0
+    override fun allowDailyOffer(): Boolean = initiative?.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.BRIEFING) ?: true
+    override fun allowOffers(offers: List<ContinuumBriefingBoard.Offer>): List<ContinuumBriefingBoard.Offer> {
+        val policy = initiative ?: return offers
+        if (offers.isEmpty() || !policy.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS)) return emptyList()
+        policy.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS)
+        return offers
+    }
+    override fun offerAnswered(daily: Boolean, accepted: Boolean) {
+        val kind = if (daily) at.heinz.deviceai.cognitive.OwnerSuggestionKind.BRIEFING else at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS
+        initiative?.let { if (accepted) it.accepted(kind) else it.declined(kind) }
+    }
+    override fun briefingGiven() { briefingsGiven++ }
+
     override fun acceptOwnerTurn(request: String) { ownerTurn++; chat += "> $request" }
     override fun clearInput() { inputCleared++ }
     override fun answer(request: String?, spoken: String, shown: String) {
@@ -185,6 +201,10 @@ internal class ContinuumBriefingHarness(
     }
     override fun store(): ContinuumBriefingStore = keyValue
     val settings = ContinuumBriefingSettings(keyValue)
+
+    /** How the lane said its orders ended (typed), in order. */
+    val outcomes = mutableListOf<at.heinz.deviceai.OwnerLaneOutcome>()
+    override fun outcome(outcome: at.heinz.deviceai.OwnerLaneOutcome) { outcomes += outcome }
 
     /** One owner turn through the lane; the answer is the last chat line when the lane took it. */
     fun say(text: String): Boolean = director.handle(text).also { drain() }

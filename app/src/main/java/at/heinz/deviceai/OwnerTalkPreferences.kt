@@ -50,7 +50,48 @@ internal class OwnerTalkPreferences(context: Context) : OwnerTalkStore {
         get() = preferences.getInt("greeting_count", 0)
         set(value) { preferences.edit().putInt("greeting_count", value).apply() }
 
+    override var lastTurnMillis: Long
+        get() = preferences.getLong("last_turn", 0L)
+        set(value) { preferences.edit().putLong("last_turn", value).apply() }
+
+    override var previousTalkMillis: Long
+        get() = preferences.getLong("previous_talk", 0L)
+        set(value) { preferences.edit().putLong("previous_talk", value).apply() }
+
+    override var greetingShapes: String
+        get() = preferences.getString("greeting_shapes", null).orEmpty()
+        set(value) { preferences.edit().putString("greeting_shapes", value.take(80)).apply() }
+
     companion object {
         const val FILE = "continuum-owner-talk"
     }
+}
+
+/**
+ * The shared-work record and the initiative policy's memory in the app's private preferences (application context
+ * only). Both are bounded texts; nothing here is synced, exported or sent.
+ */
+internal class OwnerSharedWorkPreferences(context: Context) : at.heinz.deviceai.cognitive.OwnerSharedWorkStore {
+    private val preferences = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
+    override fun load(): String? = preferences.getString("entries", null)
+    override fun save(text: String?) {
+        preferences.edit().apply { if (text == null) remove("entries") else putString("entries", text) }.apply()
+    }
+
+    companion object {
+        const val FILE = "continuum-owner-shared-work"
+    }
+}
+
+internal class OwnerInitiativePreferences(context: Context) : at.heinz.deviceai.cognitive.OwnerInitiativeStore {
+    private val preferences = context.applicationContext.getSharedPreferences(OwnerTalkPreferences.FILE, Context.MODE_PRIVATE)
+
+    override var level: at.heinz.deviceai.cognitive.OwnerInitiativeLevel
+        get() = at.heinz.deviceai.cognitive.OwnerInitiativeLevel.parse(preferences.getString("initiative_level", null))
+            ?: at.heinz.deviceai.cognitive.OwnerInitiativeLevel.DEFAULT
+        set(value) { preferences.edit().putString("initiative_level", value.name).apply() }
+
+    override var memory: String?
+        get() = preferences.getString("initiative_memory", null)
+        set(value) { preferences.edit().apply { if (value == null) remove("initiative_memory") else putString("initiative_memory", value) }.apply() }
 }

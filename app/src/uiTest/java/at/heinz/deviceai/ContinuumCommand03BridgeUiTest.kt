@@ -249,9 +249,11 @@ class ContinuumCommand03BridgeUiTest {
         val picker = ShadowAlertDialog.getLatestAlertDialog()
         assertFalse(dialog.isShowing)
         assertEquals("Continuum · Stimme", shadowOf(picker).title.toString())
-        // Maya, Android offline voice, and the Code63 entry for conversation, drive mode and announcements.
-        assertEquals(3, picker.listView.adapter.count)
+        // Maya, Android offline voice, the Code63 entry for conversation, drive mode and announcements, and (voice
+        // profiles 20261119) the voice-profile entry appended last so the earlier indices stay unchanged.
+        assertEquals(4, picker.listView.adapter.count)
         assertEquals("Gespräch, Fahrmodus und Ansagen", picker.listView.adapter.getItem(2).toString())
+        assertTrue(picker.listView.adapter.getItem(3).toString().startsWith("Stimmprofil und Sprechweise · "))
         assertFalse(a.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).getBoolean("voice_enabled", true))
         picker.dismiss()
     }

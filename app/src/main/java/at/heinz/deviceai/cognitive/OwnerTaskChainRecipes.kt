@@ -74,8 +74,30 @@ object OwnerTaskChainRecipes {
             .replace(Regex("(?iu)^(?:bitte\\s+|kannst\\s+du\\s+(?:mir\\s+)?(?:bitte\\s+)?)"), "").trim()
         if (text.isEmpty() || ':' in text || quote.containsMatchIn(text) || negation.containsMatchIn(text)) return null
         if (OwnerDeviceRequestSafety.inspect(text).roleManipulation) return null
-        return latestApk(text) ?: newestFile(text) ?: fileSearch(text) ?: appVersion(text) ?: storageAnalysis(text)
-            ?: screenshot(text) ?: appRestart(text) ?: deviceCheck(text)
+        val plan = latestApk(text) ?: newestFile(text) ?: fileSearch(text) ?: appVersion(text) ?: storageAnalysis(text)
+            ?: screenshot(text) ?: appRestart(text) ?: deviceCheck(text) ?: return null
+        // A recipe that only looks at how a sentence begins must not swallow a further order behind it („Such das
+        // neueste PDF in Downloads und schick es Anna“): it declines, so the sentence is read as the sequence it is and
+        // no order is dropped without a word. A tail the recipe answers itself stays its own.
+        return if (dropsFurtherOrder(text, plan.recipe.orEmpty())) null else plan
+    }
+
+    /** Recipes whose pattern is open at the end; the others match the whole sentence and cannot leave a tail unread. */
+    private val openEnded = setOf(NEWEST_FILE, LATEST_APK, DEVICE_CHECK)
+    private val tellOrShow = setOf(OwnerVerbLexicon.Family.TELL, OwnerVerbLexicon.Family.SHOW)
+
+    private fun dropsFurtherOrder(text: String, recipe: String): Boolean {
+        if (recipe !in openEnded) return false
+        val at = OwnerVerbLexicon.furtherOrderAt(text) ?: return false
+        val tail = text.substring(at)
+        // „… und sag mir, wie groß sie ist“, „… und zeig mir die Infos“: telling or showing what was found IS the
+        // recipe's answer. „… und installiere sie“ is answered by the APK recipe itself (it never installs and says so);
+        // „… und prüf den Akku“ is what the device check reports.
+        val next = OwnerVerbLexicon.leading(tail.trimStart(' ', ',', ';', '.', '!', '?').replace(Regex("(?iu)^und\\s+"), ""))?.family
+        if (next in tellOrShow) return false
+        if (recipe == LATEST_APK && installWish.containsMatchIn(tail)) return false
+        if (recipe == DEVICE_CHECK && probes.keys.any { it.containsMatchIn(tail) }) return false
+        return true
     }
 
     private fun literal(vararg pairs: Pair<String, Any>): Map<String, ChainArgument> =

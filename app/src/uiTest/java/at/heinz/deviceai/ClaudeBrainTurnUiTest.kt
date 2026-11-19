@@ -325,8 +325,14 @@ class ClaudeBrainTurnUiTest {
             assertEquals(6, first.length())
             assertTrue(first.getJSONObject(5).getString("text").startsWith("CLOUD-WERKZEUGE"))
             val tone = first.getJSONObject(4).getString("text")
-            assertEquals(at.heinz.deviceai.cognitive.OwnerToneStyle.claudeBlock(
-                at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL, null), tone)
+            val style = at.heinz.deviceai.cognitive.OwnerToneStyle.claudeBlock(
+                at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL, null)!!
+            assertTrue(tone, tone.startsWith(style))
+            // Since 19.11.2026 the same block goes on with the true facts of the conversation and its rules
+            // (OwnerConversationFacts): no invented memories, no claimed feelings, at most one question.
+            val rules = tone.removePrefix(style)
+            assertTrue(rules, rules.contains("Keine erfundenen Erinnerungen") && rules.contains("Behaupte keine eigenen Gefühle") &&
+                rules.contains("Höchstens eine Frage pro Antwort"))
             assertFalse("his name stays on the device without his switch", first.toString().contains("Heinz"))
             // Byte-stable from turn to turn, and the on-device line is not sent a second time in the user message.
             assertEquals(first.toString(), second.toString())

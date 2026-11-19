@@ -18,6 +18,7 @@ import at.heinz.deviceai.cognitive.OwnerLibraryMatcher
 import at.heinz.deviceai.cognitive.OwnerPageJobCommand
 import at.heinz.deviceai.cognitive.OwnerPageReference
 import at.heinz.deviceai.cognitive.OwnerPageSummary
+import at.heinz.deviceai.cognitive.OwnerPageSummaryCommand
 import at.heinz.deviceai.localmodel.LocalModelThermalGuard
 import java.time.Instant
 import java.time.ZoneId
@@ -119,8 +120,27 @@ internal interface OwnerDocumentDeskHost {
     fun exportAgain(request: String, format: OwnerExportCommand.Format): Boolean = false
     /** How an order of this lane ended (see [OwnerLaneOutcome]); nobody has to listen. */
     fun outcome(outcome: OwnerLaneOutcome) {}
-    /** false while a sequence of orders goes on right after a save: „Soll ich sie öffnen?“ is then not asked in between. */
+    /**
+     * true = „Soll ich sie öffnen?“ may be asked after a save right now (false while a sequence of orders goes on, or
+     * when the owner wants no offers). A question only: it is asked more than once for one save, so the answer must not
+     * count or change anything. What was really asked is reported once with [openOffered].
+     */
     fun offerToOpen(): Boolean = true
+    /** „Soll ich sie öffnen?“ was said just now. */
+    fun openOffered() {}
+    /**
+     * true while a sequence of owner orders hands its steps to the lanes. Only then „Fass Seite 2 zusammen“ – without
+     * a save order – is the desk's own order; said alone it keeps its answer through the reference registry. Its own
+     * question: [offerToOpen] can be false for other reasons (the owner's initiative level), and the desk asks this
+     * on every turn it sees.
+     */
+    fun inSequence(): Boolean = false
+    /**
+     * A result of this lane that is shown in the chat and NOT saved (the summary of one page): the host hands it to the
+     * work tools, so „speichere das als Word“ and „schick das per Mail an …“ mean exactly this text. true = it now is
+     * what the chat is about; the default keeps nothing, and the desk then does not promise that it can be saved.
+     */
+    fun present(result: OwnerDeliverable): Boolean = false
 }
 
 /**
@@ -167,6 +187,12 @@ internal class OwnerDocumentDesk(
 
     /** true while a search, an opening or a page job of this desk runs. */
     val jobRunning: Boolean get() = running != null
+
+    /**
+     * true while a question of this desk („Welche Datei meinst du?“, „Als was soll ich speichern?“) waits for the
+     * owner's very next turn. That turn is shown to the desk first; when it is no answer, it keeps its ordinary route.
+     */
+    val awaitingAnswer: Boolean get() = question?.let { it.session == host.sessionId && it.turn == host.ownerTurn } == true
 
     private fun mark() { subjectThrough = host.ownerTurn }
     private fun failed(reason: String) = host.outcome(OwnerLaneOutcome.Failed(reason))
@@ -268,6 +294,11 @@ internal class OwnerDocumentDesk(
         val name = host.assistantName
         if (answer(request, name)) return true
         OwnerPageJobCommand.parse(request, name)?.let { pageOrder(request, it); return true }
+        // A step of a sequence („…, analysiere Seite zwei und fasse sie zusammen“): summarised and shown, never saved.
+        if (host.inSequence()) (OwnerPageSummaryCommand.parse(request, name) as? OwnerPageSummaryCommand.Result.Order)?.let {
+            summaryOrder(request, it.page)
+            return true
+        }
         OwnerLibraryCommand.parseOpen(request, name)?.let { order ->
             host.acceptOwnerTurn(request)
             question = null
@@ -697,6 +728,142 @@ internal class OwnerDocumentDesk(
         }
     }
 
+    // ── „…, analysiere Seite zwei und fasse sie zusammen“ – a step of a sequence, nothing is saved ─────────────
+
+    private sealed interface PageRead {
+        class Summarised(val summary: OwnerPageSummary.Summary) : PageRead
+        class Not(val why: PageOutcome) : PageRead
+    }
+
+    /**
+     * The page is read, summarised and shown in the chat as a result of its own – and no file is written, because
+     * none was ordered. Done only when the page's text was really read and the summary was accepted, exactly as the
+     * page order with a save does it.
+     */
+    private fun summaryOrder(request: String, wanted: Int) {
+        host.acceptOwnerTurn(request)
+        question = null
+        val nothing = "Ich habe nichts zusammengefasst."
+        val document = host.openDocument()
+        if (document == null) {
+            host.reply(request, "Im Moment ist kein PDF geöffnet. $nothing")
+            failed("Im Moment ist kein PDF geöffnet; ich habe nichts zusammengefasst.")
+            return
+        }
+        val page = if (wanted == OwnerPageReference.LAST) document.pageCount else wanted
+        if (page < 1 || (document.pageCount > 0 && page > document.pageCount)) {
+            val said = "„${document.name}“ hat nur " + (if (document.pageCount == 1) "1 Seite" else "${document.pageCount} Seiten") +
+                " – eine Seite $page gibt es nicht. $nothing"
+            host.reply(request, said)
+            failed(said)
+            return
+        }
+        host.activity("DOKUMENTE · Seite $page von „${document.name}“ · Zusammenfassung im Gespräch · es wird nichts gespeichert")
+        launch(request, Running(host.sessionId, null, document.name, document.uri),
+            "Gestoppt. Seite $page wurde nicht fertig zusammengefasst; gespeichert habe ich nichts.",
+            { job -> summarise(job, document, page) }) { read, _ -> publishSummary(document, page, read) }
+    }
+
+    private fun publishSummary(document: OwnerDeskDocument, page: Int, read: PageRead) {
+        val nothing = "Ich habe nichts zusammengefasst."
+        when (read) {
+            is PageRead.Not -> {
+                val said = when (val why = read.why) {
+                    PageOutcome.NoText -> "Seite $page von „${document.name}“ hat keinen auslesbaren Text – zum Beispiel ein Scan. $nothing"
+                    PageOutcome.NeedsAndroid15 -> "Den Text einer PDF-Seite kann ich erst ab Android 15 auslesen. $nothing"
+                    is PageOutcome.Missing -> "„${document.name}“ hat nur " + (if (why.pageCount == 1) "1 Seite" else "${why.pageCount} Seiten") +
+                        " – eine Seite $page gibt es nicht. $nothing"
+                    is PageOutcome.ReadFailed -> "Seite $page von „${document.name}“ ließ sich nicht lesen: ${why.reason}. $nothing"
+                    is PageOutcome.NoModel -> "Seite $page von „${document.name}“ habe ich gelesen (${OwnerPageSummary.count(why.chars)} " +
+                        "Zeichen). Für die Zusammenfassung brauche ich aber das Sprachmodell, und im Moment ist keines geladen. $nothing"
+                    is PageOutcome.ModelFailed -> if (LocalModelThermalGuard.isThermal(why.problem)) LocalModelThermalGuard.ownerMessage(why.problem) +
+                        " $nothing" else "Das Sprachmodell hat für Seite $page keine brauchbare Zusammenfassung geliefert" +
+                        (why.problem?.let { " (${NewsBriefing.clean(it, 120)})" } ?: "") + ". $nothing"
+                    else -> "Seite $page ließ sich nicht zusammenfassen. $nothing"
+                }
+                host.say(said)
+                failed(said)
+            }
+            is PageRead.Summarised -> {
+                val summary = read.summary
+                val time = now()
+                val result = OwnerPageSummary.deliverable(document.name, page, document.pageCount, summary, time.atZone(zone()).toLocalDate(),
+                    time.toEpochMilli())
+                val kept = host.present(result)
+                host.activity("DOKUMENTE · Seite $page zusammengefasst · im Gespräch gezeigt · nichts gespeichert")
+                val basis = if (summary.complete) "" else "\n\nHinweis: Die Seite ist länger, als das Modell auf einmal lesen kann. " +
+                    "Grundlage sind die ersten ${OwnerPageSummary.count(summary.coveredChars)} von " +
+                    "${OwnerPageSummary.count(summary.totalChars)} Zeichen der Seite."
+                val author = if (summary.cloud) " Zusammengefasst habe ich das über die Cloud, nicht mit dem Modell auf dem Gerät." else ""
+                // The offer is made only when the result really is what a save order would take.
+                val offer = if (kept) " Wenn du sie behalten willst, sag zum Beispiel „Speichere das als Word“." else ""
+                host.say("Seite $page von „${document.name}“ – Zusammenfassung:\n\n${summary.text}$basis\n\nGespeichert habe ich nichts.$author$offer")
+                host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.PageSummarised(result, document.name, page, summary.coveredChars,
+                    summary.totalChars)))
+            }
+        }
+    }
+
+    /** Reads [page] and has the model summarise it; why not, when that is not possible. Nothing is written. */
+    private fun summarise(job: OwnerDeskJob, document: OwnerDeskDocument, page: Int): PageRead {
+        fun stopped(key: String, label: String): Nothing {
+            job.step(key, label, StepState.FAILED)
+            throw CancellationException(label)
+        }
+        fun not(why: PageOutcome): PageRead = PageRead.Not(why)
+        job.step(STEP_PAGE, "Seite $page lesen", StepState.ACTIVE, CockpitAction.TOOL)
+        val text = when (val read = try { job.readPage(document, page) } catch (error: Exception) {
+            if (error is CancellationException) stopped(STEP_PAGE, "Lesen gestoppt")
+            OwnerDeskPage.Failed(NewsBriefing.clean(error.message ?: error.javaClass.simpleName, 140))
+        }) {
+            is OwnerDeskPage.Text -> read.text.trim()
+            OwnerDeskPage.NoText -> { job.step(STEP_PAGE, "Seite $page hat keinen Text", StepState.FAILED); return not(PageOutcome.NoText) }
+            OwnerDeskPage.NeedsAndroid15 -> {
+                job.step(STEP_PAGE, "Textauszug braucht Android 15", StepState.BLOCKED)
+                return not(PageOutcome.NeedsAndroid15)
+            }
+            is OwnerDeskPage.Missing -> {
+                job.step(STEP_PAGE, "Seite $page gibt es nicht", StepState.FAILED)
+                return not(PageOutcome.Missing(read.pageCount))
+            }
+            is OwnerDeskPage.Failed -> {
+                job.step(STEP_PAGE, "Seite $page nicht lesbar", StepState.FAILED)
+                return not(PageOutcome.ReadFailed(read.reason))
+            }
+        }
+        if (text.isEmpty()) { job.step(STEP_PAGE, "Seite $page hat keinen Text", StepState.FAILED); return not(PageOutcome.NoText) }
+        job.step(STEP_PAGE, "Seite $page gelesen · ${OwnerPageSummary.count(text.length)} Zeichen", StepState.DONE)
+        if (job.cancelled()) stopped(STEP_SUMMARY, "Zusammenfassen gestoppt")
+        if (!host.modelReady()) {
+            job.step(STEP_SUMMARY, "Kein Sprachmodell geladen", StepState.BLOCKED)
+            return not(PageOutcome.NoModel(text.length))
+        }
+        val prompt = OwnerPageSummary.prompt(document.name, page, text, host.promptBudgetBytes()) ?: run {
+            job.step(STEP_SUMMARY, "Zusammenfassen nicht möglich", StepState.FAILED)
+            return not(PageOutcome.ModelFailed("der Seitentext passt nicht in die Aufgabe für das Modell"))
+        }
+        job.step(STEP_SUMMARY, "Zusammenfassen", StepState.ACTIVE, CockpitAction.THINK)
+        // While the model computes the phone is warm enough: the step shows the growing text in a few coarse steps.
+        var written = 0
+        val generated = try {
+            job.generate(prompt.text) { chars ->
+                if (written == 0 || chars - written >= PROGRESS_CHARS) {
+                    written = chars
+                    job.step(STEP_SUMMARY, "Zusammenfassen · ${OwnerPageSummary.count(chars)} Zeichen", StepState.ACTIVE)
+                }
+            }
+        } catch (error: CancellationException) { stopped(STEP_SUMMARY, "Zusammenfassen gestoppt") }
+        if (job.cancelled()) stopped(STEP_SUMMARY, "Zusammenfassen gestoppt")
+        val paragraphs = if (generated.failure != null || !generated.complete) null else OwnerPageSummary.accept(generated.text)
+        if (paragraphs == null || prompt.coveredChars <= 0) {
+            job.step(STEP_SUMMARY, "Zusammenfassen fehlgeschlagen", StepState.FAILED)
+            return not(PageOutcome.ModelFailed(generated.failure))
+        }
+        return PageRead.Summarised(OwnerPageSummary.Summary(paragraphs, prompt.coveredChars, prompt.totalChars, host.cloudBrain()).also {
+            job.step(STEP_SUMMARY, "Zusammengefasst · ${OwnerPageSummary.count(it.text.length)} Zeichen", StepState.DONE)
+        })
+    }
+
     private fun pageWork(job: OwnerDeskJob, document: OwnerDeskDocument, order: PageOrder, format: OwnerExportCommand.Format,
                          reuse: OwnerPageSummary.Summary?): PageOutcome {
         val page = order.page
@@ -704,58 +871,10 @@ internal class OwnerDocumentDesk(
             job.step(key, label, StepState.FAILED)
             throw CancellationException(label)
         }
-        val summary = reuse ?: run {
-            job.step(STEP_PAGE, "Seite $page lesen", StepState.ACTIVE, CockpitAction.TOOL)
-            val text = when (val read = try { job.readPage(document, page) } catch (error: Exception) {
-                if (error is CancellationException) stopped(STEP_PAGE, "Lesen gestoppt")
-                OwnerDeskPage.Failed(NewsBriefing.clean(error.message ?: error.javaClass.simpleName, 140))
-            }) {
-                is OwnerDeskPage.Text -> read.text.trim()
-                OwnerDeskPage.NoText -> { job.step(STEP_PAGE, "Seite $page hat keinen Text", StepState.FAILED); return PageOutcome.NoText }
-                OwnerDeskPage.NeedsAndroid15 -> {
-                    job.step(STEP_PAGE, "Textauszug braucht Android 15", StepState.BLOCKED)
-                    return PageOutcome.NeedsAndroid15
-                }
-                is OwnerDeskPage.Missing -> {
-                    job.step(STEP_PAGE, "Seite $page gibt es nicht", StepState.FAILED)
-                    return PageOutcome.Missing(read.pageCount)
-                }
-                is OwnerDeskPage.Failed -> {
-                    job.step(STEP_PAGE, "Seite $page nicht lesbar", StepState.FAILED)
-                    return PageOutcome.ReadFailed(read.reason)
-                }
-            }
-            if (text.isEmpty()) { job.step(STEP_PAGE, "Seite $page hat keinen Text", StepState.FAILED); return PageOutcome.NoText }
-            job.step(STEP_PAGE, "Seite $page gelesen · ${OwnerPageSummary.count(text.length)} Zeichen", StepState.DONE)
-            if (job.cancelled()) stopped(STEP_SUMMARY, "Zusammenfassen gestoppt")
-            if (!host.modelReady()) {
-                job.step(STEP_SUMMARY, "Kein Sprachmodell geladen", StepState.BLOCKED)
-                return PageOutcome.NoModel(text.length)
-            }
-            val prompt = OwnerPageSummary.prompt(document.name, page, text, host.promptBudgetBytes()) ?: run {
-                job.step(STEP_SUMMARY, "Zusammenfassen nicht möglich", StepState.FAILED)
-                return PageOutcome.ModelFailed("der Seitentext passt nicht in die Aufgabe für das Modell")
-            }
-            job.step(STEP_SUMMARY, "Zusammenfassen", StepState.ACTIVE, CockpitAction.THINK)
-            // While the model computes the phone is warm enough: the step shows the growing text in a few coarse steps.
-            var written = 0
-            val generated = try {
-                job.generate(prompt.text) { chars ->
-                    if (written == 0 || chars - written >= PROGRESS_CHARS) {
-                        written = chars
-                        job.step(STEP_SUMMARY, "Zusammenfassen · ${OwnerPageSummary.count(chars)} Zeichen", StepState.ACTIVE)
-                    }
-                }
-            } catch (error: CancellationException) { stopped(STEP_SUMMARY, "Zusammenfassen gestoppt") }
-            if (job.cancelled()) stopped(STEP_SUMMARY, "Zusammenfassen gestoppt")
-            val paragraphs = if (generated.failure != null || !generated.complete) null else OwnerPageSummary.accept(generated.text)
-            if (paragraphs == null) {
-                job.step(STEP_SUMMARY, "Zusammenfassen fehlgeschlagen", StepState.FAILED)
-                return PageOutcome.ModelFailed(generated.failure)
-            }
-            OwnerPageSummary.Summary(paragraphs, prompt.coveredChars, prompt.totalChars, host.cloudBrain()).also {
-                job.step(STEP_SUMMARY, "Zusammengefasst · ${OwnerPageSummary.count(it.text.length)} Zeichen", StepState.DONE)
-            }
+        // Reading and summarising are the same work as for a summary that is only shown ([summarise]).
+        val summary = reuse ?: when (val read = summarise(job, document, page)) {
+            is PageRead.Summarised -> read.summary
+            is PageRead.Not -> return read.why
         }
         val time = now()
         val date = time.atZone(zone()).toLocalDate()
@@ -875,6 +994,7 @@ internal class OwnerDocumentDesk(
                 else "Seite $page von „${document.name}“" + (replaces?.takeIf { it.order.page != page }?.let { " – statt Seite ${it.order.page}" } ?: "") +
                     " – Zusammenfassung:\n\n${outcome.summary.text}$basis\n\nGespeichert als ${format.label}: $place$author" +
                     "$unchecked$previous$lateNote$offer")
+                if (offer.isNotEmpty()) host.openOffered()
                 host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FileSaved(file, outcome.result, outcome.location, outcome.verified)))
             }
         }

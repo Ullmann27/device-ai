@@ -83,10 +83,45 @@ class OwnerComputerIntentParserTest {
         assertTrue(OwnerComputerIntentParser.parse("Schreibe Anna auf WhatsApp") is OwnerComputerIntentParser.Result.Ask)
     }
 
+    /**
+     * A tail the lane cannot carry out never falls back to a plain opening. Since 19.11.2026 (review finding B5) a tail
+     * that is a FURTHER order – a connector and an imperative – is no refusal of this lane any more: the sentence is
+     * handed on (NotComputerCommand), so the planner reads both orders instead of the turn ending here.
+     */
     @Test fun unsupportedTailNeverFallsBackToOpening() {
-        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp und lösche Anna") is OwnerComputerIntentParser.Result.Unsupported)
-        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp und suche Anna und sende Hallo") is OwnerComputerIntentParser.Result.Unsupported)
+        for (request in listOf("Öffne WhatsApp und lösche Anna", "Öffne WhatsApp und suche Anna und sende Hallo")) {
+            assertSame(request, OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse(request))
+        }
         assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp nicht") is OwnerComputerIntentParser.Result.Unsupported)
+        // A tail without an order verb is still this lane's refusal.
+        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp und Facebook") is OwnerComputerIntentParser.Result.Unsupported)
+        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp mit dem Chat von Anna") is OwnerComputerIntentParser.Result.Unsupported)
+    }
+
+    /** Review finding B5: a second order is neither a dead end nor search text. */
+    @Test fun aFurtherOrderInTheSentenceHandsItOnInsteadOfEndingTheTurnOrTypingIt() {
+        for (request in listOf(
+            "Öffne bitte WhatsApp und schreib meinem Vater guten Morgen.",
+            "Suche in WhatsApp nach Anna und schreib ihr Hallo",
+            "Öffne WhatsApp und suche Anna, dann schick ihr das PDF",
+            "Suche in Gmail nach Rechnung und danach speicher sie als PDF",
+            "Öffne Excel und erstell eine Tabelle",
+            "Öffne Kamera und mach ein Foto",
+            "Öffne Chrome und suche Wetter Wien und schick es Anna",
+            "Schreib Anna und ruf dann Bernd an auf WhatsApp"
+        )) assertSame(request, OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse(request))
+        // The lane's own orders are untouched: „und“ without an imperative belongs to the search text.
+        assertEquals("Anna", ready("Öffne WhatsApp und suche Anna").query)
+        assertEquals("Anna und Bernd", ready("Suche in WhatsApp nach Anna und Bernd").query)
+        assertEquals("Rechnung und Mahnung", ready("Suche in Gmail nach Rechnung und Mahnung").query)
+        assertEquals("Angebot und Suche", ready("Suche in Gmail nach Angebot und Suche").query)
+        // Dictated text after the colon is text, whatever it says.
+        assertEquals("Hallo und öffne dann Chrome", ready("Schreib Anna auf WhatsApp: Hallo und öffne dann Chrome").draft)
+        // A negated order of this lane stays a refusal, also with a second order behind it.
+        assertTrue(OwnerComputerIntentParser.parse("Öffne WhatsApp nicht und schreib Anna") is OwnerComputerIntentParser.Result.Unsupported)
+        // No query of this lane ever carries an order.
+        for (request in listOf("Suche in WhatsApp nach Anna und Bernd", "Öffne Kontakte und such nach Bernd Beispiel"))
+            assertFalse(request, OwnerVerbLexicon.hasFurtherOrder(checkNotNull(ready(request).query)))
     }
 
     @Test fun ordinaryConversationIsNotAComputerOrder() {
@@ -108,7 +143,8 @@ class OwnerComputerIntentParserTest {
             else assertEquals(app, ready("Öffne ${app.discoveryQuery}").app)
         }
         assertEquals(ComputerGoal.OPEN_DOWNLOADS, ready("Öffne den Download-Ordner").goal)
-        assertTrue(OwnerComputerIntentParser.parse("Öffne Word und bearbeite den Vertrag") is OwnerComputerIntentParser.Result.Unsupported)
+        // „bearbeite den Vertrag“ is a further order (19.11.2026): never an editor of this lane, and no dead end.
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand, OwnerComputerIntentParser.parse("Öffne Word und bearbeite den Vertrag"))
     }
 
     @Test fun systemAndEverydayAppsUseTheExistingOwnerApprovalPath() {
@@ -153,8 +189,9 @@ class OwnerComputerIntentParserTest {
         }
         assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
             OwnerComputerIntentParser.parse("Wechsle zu irgendeiner anderen App"))
-        assertTrue(OwnerComputerIntentParser.parse("Wechsle zu Chrome und lösche Daten")
-            is OwnerComputerIntentParser.Result.Unsupported)
+        // A further order after the switch is handed on (19.11.2026); it never becomes a plan of this lane.
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+            OwnerComputerIntentParser.parse("Wechsle zu Chrome und lösche Daten"))
     }
 
     @Test fun ambiguityAndOversizedTextDoNotProduceExecutablePlans() {

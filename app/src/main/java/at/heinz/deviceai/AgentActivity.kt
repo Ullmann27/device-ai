@@ -478,6 +478,44 @@ class AgentActivity : Activity() {
         internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
         SecureTokenStore.loadElevenLabsToken(this) != null
     private fun replyVoiceReady() = voiceReady || mayaAvailable()
+    // Voice profiles (voice/): engine + voice + prosody; „weiter“ after an interruption; one plain fallback notice.
+    private val voiceProfileStore by lazy { at.heinz.deviceai.voice.VoiceProfileStore.android(this) }
+    private val resumableSpeech = at.heinz.deviceai.voice.ResumableReplySpeech(android.os.SystemClock::elapsedRealtime)
+    private val voiceFallbackNotice = at.heinz.deviceai.voice.VoiceFallbackNotice()
+    /** One-shot selection for „Mit Continuum-Satz testen“; consumed by the next reply. */
+    private var voiceTestOverride: at.heinz.deviceai.voice.VoiceProfileSelection? = null
+    /** Selection of the reply being spoken; the request factory runs on Maya's worker thread. */
+    @Volatile private var speechProfile = at.heinz.deviceai.voice.VoiceProfileSelection()
+    private fun elevenAvailable(selection: at.heinz.deviceai.voice.VoiceProfileSelection) =
+        selection.engine == at.heinz.deviceai.voice.VoiceEngine.ELEVENLABS &&
+            internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+            SecureTokenStore.loadElevenLabsToken(this) != null
+    private val voiceProfileDialogs by lazy { at.heinz.deviceai.voice.VoiceProfileDialogs(voiceProfileHost) }
+    private val voiceProfileHost = object : at.heinz.deviceai.voice.VoiceProfileDialogs.Host {
+        override val context: android.content.Context get() = this@AgentActivity
+        override fun selection() = voiceProfileStore.load()
+        override fun apply(selection: at.heinz.deviceai.voice.VoiceProfileSelection) {
+            interruptReplySpeech()
+            if (!voiceProfileStore.save(selection))
+                Toast.makeText(this@AgentActivity, "Die Stimmeinstellung konnte nicht gespeichert werden.", Toast.LENGTH_LONG).show()
+        }
+        override fun elevenLabsKey() = SecureTokenStore.loadElevenLabsToken(this@AgentActivity)
+        override fun internetAlwaysOn() = internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON
+        override fun speakTest(selection: at.heinz.deviceai.voice.VoiceProfileSelection): Boolean {
+            if (!voiceEnabled) { voiceEnabled = true; bootstrapMemory.voiceEnabled = true; voiceButton?.text = "TON AN" }
+            voiceTestOverride = selection
+            speakReply(at.heinz.deviceai.voice.VoiceProfiles.TEST_SENTENCE, allowMaya = true)
+            voiceTestOverride = null
+            return speechTurnId != null
+        }
+        override fun <T> io(work: () -> T, done: (Result<T>) -> Unit) {
+            Thread {
+                val result = runCatching(work)
+                runOnUiThread { if (!isFinishing && !isDestroyed) done(result) }
+            }.start()
+        }
+        override fun openElevenLabsKeySettings() = showMayaVoiceSettings()
+    }
 
     private var voiceButton: Button? = null
     private var cameraButton: Button? = null
@@ -919,6 +957,14 @@ class AgentActivity : Activity() {
         foregroundLearningActive = true
         restoreOwnerRoutines()
         renderRoutineMessages()
+        // A sequence of orders the journal still holds from before this app start: told and asked once, never started.
+        if (!ownerMissionResumeChecked) {
+            ownerMissionResumeChecked = true
+            mainHandler.postDelayed({
+                if (!isFinishing && !isDestroyed && !busy && selectedBot == null && !neuralCoach.isActive())
+                    runCatching { ownerMission.offerResume() }
+            }, 2_500L)
+        }
         val nativeStageVisible = nativeStagePresentationActive()
         command03MainStage?.onResume()
         scheduleCommand03HtmlState()
@@ -970,6 +1016,7 @@ class AgentActivity : Activity() {
         resumeOwnerDocumentDesk()
         codingAgents.attach()
         // The owner is back after a real pause: one personal greeting – in the foreground, once per return (OwnerTalk).
+        refreshOwnerTalkAppointment()
         mainHandler.post { if (foregroundLearningActive && !isFinishing && !isDestroyed) ownerTalk.onReturn() }
         mainHandler.post { maybeAskForConversationCamera() }
         refreshBotTeam()
@@ -2425,6 +2472,9 @@ class AgentActivity : Activity() {
 
     private var command03RuntimeSignals = at.heinz.deviceai.avatar.AvatarRuntimeSignals()
     private val command03Activity = at.heinz.deviceai.ui.Command03ActivityProjection()
+    // Code73: the send lane's order for the stage and the one decision which work scene the stage shows.
+    private val command03SendWork = at.heinz.deviceai.ui.Command03SendWork()
+    private val visualWorkstation = at.heinz.deviceai.ui.VisualWorkstationDirector()
     private val command03Files = at.heinz.deviceai.ui.Command03FilesProjection()
     private val command03ComputerWork = at.heinz.deviceai.ui.Command03ComputerWorkProjection()
     /** The stage's order rail: the open mission's steps, otherwise the running turn's steps (real events only). */
@@ -2541,6 +2591,10 @@ class AgentActivity : Activity() {
                 computerController?.awaitingConsent == true) ?: org.json.JSONObject.NULL)
             // The storage lane's phase, progress and measured figures (schema continuum.deepclean.v1, no file names).
             .put("deepClean", deepClean.stage.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
+            // What the Gmail lane really did (phase, counts, cards); schema in gmail/MailWorkBoard.kt.
+            .put("mailWork", ownerMailBoard.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
+            // The send lane's order as it reported it (accepted, waiting, how it ended); no text, no number.
+            .put("sendWork", command03SendWork.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
                 .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
             .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
@@ -2565,6 +2619,8 @@ class AgentActivity : Activity() {
         else if (::input.isInitialized) data.put("draft", org.json.JSONObject()
             .put("text", input.text.toString()).put("selectionStart", input.selectionStart.coerceAtLeast(0))
             .put("selectionEnd", input.selectionEnd.coerceAtLeast(0)))
+        // Code73: one work scene at a time, from the records above (mailWork too, once the mail lane puts it).
+        data.put("scene", visualWorkstation.decide(data, android.os.SystemClock.elapsedRealtime()) ?: org.json.JSONObject.NULL)
         stage.present(data)
         if (command03HtmlBoundView != scope) {
             command03HtmlBoundView = scope
@@ -3062,6 +3118,7 @@ class AgentActivity : Activity() {
     @Volatile private var openWork: List<String> = emptyList()
 
     private fun publishOpenWork() {
+        runCatching { ownerSharedWorkFeed.journal(workJournal.all()) }
         val open = runCatching { workJournal.openSteps(System.currentTimeMillis()) }.getOrDefault(emptyList())
         runOnUiThread {
             if (isFinishing || isDestroyed || open == openWork) return@runOnUiThread
@@ -3102,11 +3159,12 @@ class AgentActivity : Activity() {
         if (documentIoExecutor.isShutdown) read.run() else documentIoExecutor.execute(read)
     }
 
-    private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean) =
-        withWorkJournal { episodes -> presentWorkRecall(query, keepWindow, episodes) }
+    /** [answerInChat] = false: only the VERLAUF surface and the recall light – the sentence was already said (OwnerTalk). */
+    private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean, answerInChat: Boolean = true) =
+        withWorkJournal { episodes -> presentWorkRecall(query, keepWindow, episodes, answerInChat) }
 
     private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean,
-                                  episodes: List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>) {
+                                  episodes: List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>, answerInChat: Boolean = true) {
         val now = System.currentTimeMillis()
         val zone = java.util.TimeZone.getDefault()
         val answer = at.heinz.deviceai.cognitive.WorkRecall.answer(episodes, query, now, zone)
@@ -3130,7 +3188,7 @@ class AgentActivity : Activity() {
                 .apply { tag = "jarvis-recall-origin" }, matchWidth(top = 10))
             workWindowHost.show(home, body, "VERLAUF", at.heinz.deviceai.ui.JarvisActionScenes.forDocument()) {}
         } else null
-        addAssistantMessage(answer, preserveLocalContext = true, keepCockpit = window != null || !keepWindow)
+        if (answerInChat) addAssistantMessage(answer, preserveLocalContext = true, keepCockpit = window != null || !keepWindow)
     }
 
     /** The decisions shown in this conversation (session-bound): „die Entscheidung davor“ / „was davon“ refer to them. */
@@ -4728,6 +4786,7 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.LEARNING -> showLearningCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.PERSONAL -> showNexusPersonalization()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.INTERNET -> showInternetSettings()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.CONNECTIONS -> showContinuumConnections()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.RESEARCH -> showResearchModeDialog()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.CLOUD -> showCloudSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.OPENROUTER -> showOpenRouterApiKeyDialog()
@@ -6865,11 +6924,13 @@ class AgentActivity : Activity() {
             .setItems(arrayOf(
                 (if (mayaSelected()) "● " else "") + MayaSpeech.VOICE_NAME + " · ElevenLabs",
                 "Android · Offline-Stimme",
-                "Gespräch, Fahrmodus und Ansagen"
+                "Gespräch, Fahrmodus und Ansagen",
+                "Stimmprofil und Sprechweise · " + at.heinz.deviceai.voice.VoiceProfiles.describe(voiceProfileStore.load())
             )) { _, choice ->
                 when (choice) {
                     0 -> showMayaVoiceSettings()
                     2 -> showConversationSettings()
+                    3 -> voiceProfileDialogs.showMenu()
                     else -> {
                         interruptReplySpeech()
                         getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
@@ -7632,6 +7693,7 @@ class AgentActivity : Activity() {
                 if (consumeOwnerWorkInterruption()) return@setOnClickListener
                 if (interceptOwnerMission()) return@setOnClickListener
                 if (interceptOwnerDocumentDesk()) return@setOnClickListener
+                if (interceptOwnerMail()) return@setOnClickListener
                 if (consumePendingResearchChatReply()) return@setOnClickListener
                 // „Erlauben“, „Ablehnen“ and „Stopp den Coding-Agenten“ reach the cloud agent while the lane is busy.
                 if (busy && codingAgents.controls(input.text.toString()) && interceptCodingAgents()) return@setOnClickListener
@@ -7802,6 +7864,8 @@ class AgentActivity : Activity() {
                     setBusy(false)
                     val launched = flow.launchedCandidate
                     val approvedAt = computerApprovedAt
+                    val forMission = ownerMissionAppOrder == request
+                    if (forMission) ownerMissionAppOrder = null
                     if (computerIntent != null && launched != null && approvedAt != null) {
                         val pending = PendingComputerLaunch(ownerSession, generation, launched.packageName,
                             computerIntent, approvedAt, request, allowMaya, ownerRevision)
@@ -7810,6 +7874,14 @@ class AgentActivity : Activity() {
                         return
                     }
                     when {
+                        // A step of a sequence never becomes a model turn or a new question: it opened the app or it did not.
+                        forMission -> {
+                            val reply = AppActionReply(ownerSession, generation, request, step.message, null, ownerRevision)
+                            if (foregroundLearningActive) deliverAppActionReply(reply) else pendingAppActionReply = reply
+                            ownerMission.laneOutcome(OwnerMissionLane.APP, launched?.let {
+                                OwnerLaneOutcome.Done(OwnerLaneResult.AppOpened(it.label, it.packageName)) }
+                                ?: OwnerLaneOutcome.Failed(step.message))
+                        }
                         fallbackToConversation -> {
                             if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY) {
                                 runLocal(request)
@@ -7940,6 +8012,7 @@ class AgentActivity : Activity() {
         else result
         localConversationContext.recordToolResult(pending.session, pending.request, "owner_computer_workflow",
             "${accepted.status}: ${accepted.message}")
+        ownerSharedWorkFeed.computer(pending.intent.app.discoveryQuery, accepted.status, startedAt = 0L)
         addAssistantMessage(accepted.message, preserveLocalContext = true, keepCockpit = true,
             allowMaya = pending.allowMaya,
             speakNow = speakNow && pending.ownerRevision == ownerReplyRevision && continuousConversation.state !=
@@ -8075,6 +8148,50 @@ class AgentActivity : Activity() {
         addToolActivity("GERÄTESTATUS · nur öffentliche Betriebsdaten · kein Modell- oder Werkzeugaufruf")
     }
 
+    /**
+     * Whole-utterance voice controls (voice/VoiceCommands): „weiter“ resumes an interrupted spoken reply from the
+     * interrupted piece (otherwise „weiter“ keeps its existing meaning), „Wechsle die Stimme“, „Nimm wieder die
+     * bisherige Stimme“, „Sprich langsamer/schneller/ruhiger/normal“. Never while a model turn is running.
+     */
+    private fun consumeVoiceCommand(): Boolean {
+        val spoken = input.text.toString().trim()
+        if (busy || botLookupPending) return false
+        val command = at.heinz.deviceai.voice.VoiceCommands.parse(spoken,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(continuumState?.archive?.identityState?.chosenName))
+            ?: return false
+        val keep = activeWorkArea == ContinuumWorkArea.START
+        if (command == at.heinz.deviceai.voice.VoiceCommands.Command.RESUME) {
+            val rest = resumableSpeech.takeRest(sessionId) ?: return false
+            input.text.clear()
+            addUserMessage(spoken, keepCockpit = keep)
+            addToolActivity("Stimme · setzt beim unterbrochenen Satz fort")
+            // The reply is already in the chat in full; only its unspoken rest is read again.
+            speakReplyText(rest.joinToString(" "), ownerReplyAllowsMaya, shaped = true)
+            return true
+        }
+        input.text.clear()
+        addUserMessage(spoken, keepCockpit = keep)
+        val current = voiceProfileStore.load()
+        val reply = when (command) {
+            at.heinz.deviceai.voice.VoiceCommands.Command.CHOOSE_VOICE -> {
+                mainHandler.post { if (!isFinishing && !isDestroyed) voiceProfileDialogs.showMenu() }
+                "Ich öffne die Stimmauswahl. Wähle dort Stimme und Sprechweise; „Probe hören“ spielt ein Beispiel."
+            }
+            at.heinz.deviceai.voice.VoiceCommands.Command.FORMER_VOICE -> {
+                voiceProfileHost.apply(at.heinz.deviceai.voice.VoiceProfiles.former(current))
+                "Ich spreche wieder mit der bisherigen Stimme und den bisherigen Einstellungen."
+            }
+            else -> {
+                val step = at.heinz.deviceai.voice.VoiceProfiles.step(current,
+                    at.heinz.deviceai.voice.VoiceCommands.toStep(command) ?: return true)
+                if (step.changed) voiceProfileHost.apply(step.selection)
+                step.sentence
+            }
+        }
+        addAssistantMessage(reply, preserveLocalContext = true, keepCockpit = keep)
+        return true
+    }
+
     private fun consumeOwnerWorkInterruption(spoken: String = input.text.toString().trim()): Boolean {
         val addressed = OwnerAppLookupIntent.stripAddress(spoken,
             continuumState?.archive?.identityState?.chosenName)
@@ -8136,9 +8253,11 @@ class AgentActivity : Activity() {
             .strayDots(input.text.toString()).takeIf { it != input.text.toString() }
             ?.let { input.setText(it); input.setSelection(input.text.length) }
         if (pendingConversationSelection != null) return
+        if (selectedBot == null && consumeVoiceCommand()) return
         if (consumeOwnerWorkInterruption()) return
         if (interceptOwnerMission()) return
         if (interceptOwnerDocumentDesk()) return
+        if (interceptOwnerMail()) return
         if (consumeDeviceToolCommand()) return
         if (interceptIncomingMessages()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
@@ -8254,6 +8373,10 @@ class AgentActivity : Activity() {
         // Storage lane („Bereinige mein Handy“, „Schau, was unnötig Speicher verbraucht“, „Mach eine Tiefenbereinigung“).
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
             computerController?.active != true && deepClean.handle(request)) return
+        // Gmail lane: „Zeig mir neue Mails“, „Fass sie zusammen“, „Schick die Mail ab“ (with confirmation). Fail closed;
+        // „Suche in Gmail nach X“ without a connected account stays with the computer lane below (ownerMail.handles).
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && ownerMail.handles(request) && ownerMail.handle(request)) return
         if (clarifiedAppName == null && selectedBot == null && tryStartComputerRequest(request, clarifiedComputer)) return
         // Owner work tools: „Fass mir die Nachrichten von heute zusammen“, then „speichere das als PDF“ / „schick das
         // per Mail an …“. Deterministic and fail closed; before the clock, document and research lanes can guess.
@@ -9520,6 +9643,7 @@ class AgentActivity : Activity() {
         val request = input.text.toString().trim()
         if (request.isEmpty() || busy || botLookupPending || neuralCoach.isActive()) return false
         if (consumeCloudToolCommand(request)) return true
+        if (consumeInternetAccessCommand(request)) return true
         val reply = deviceTools.command(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
             continuumState?.archive?.identityState?.chosenName)) ?: return false
         input.text.clear()
@@ -11872,7 +11996,9 @@ class AgentActivity : Activity() {
         mayaSpeech?.stop()
         speechUsesMaya = false
         speechInternetRevision = -1L
-        // Any end of speech (STOP, error, new reply, pause) discards the unspoken rest of the reply.
+        // Any end of speech (STOP, error, new reply, pause) discards the unspoken rest of the reply from the queue;
+        // an interrupted rest is remembered for „weiter“ (voice/ResumableReplySpeech).
+        speechTurnId?.let { resumableSpeech.ended(it, interrupted) }
         speechTurnId?.let { speechChunks.stop(it) }
         speechTurnId = null
         speechChunkId = null
@@ -11953,20 +12079,30 @@ class AgentActivity : Activity() {
 
     private fun speakBootstrap(message: String) = speakReply(message, allowMaya = true)
 
-    private fun speakReply(message: String, allowMaya: Boolean) {
-        if (!voiceEnabled || !replyVoiceReady() || !foregroundLearningActive || voiceListening) return
-        val useMaya = allowMaya && ownerReplyAllowsMaya && mayaAvailable()
+    private fun speakReply(message: String, allowMaya: Boolean) = speakReplyText(message, allowMaya, shaped = false)
+
+    /** [shaped]: [message] already went through the speech-text shaper (resumed rest of a reply). */
+    private fun speakReplyText(message: String, allowMaya: Boolean, shaped: Boolean) {
+        val profile = voiceTestOverride ?: voiceProfileStore.load()
+        if (!voiceEnabled || !(voiceReady || elevenAvailable(profile)) || !foregroundLearningActive || voiceListening) return
+        val useMaya = allowMaya && ownerReplyAllowsMaya && elevenAvailable(profile)
         if (!useMaya && !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(
                 voiceEngine?.voice?.isNetworkConnectionRequired)) return
         voiceEngine?.stop()
         stopVoiceAnimation()
         speechUsesMaya = useMaya
+        speechProfile = profile
         speechInternetRevision = internetConsent.revision()
-        if (allowMaya && mayaSelected() && !useMaya) Toast.makeText(this,
-            "Maya nicht verfügbar: Android-Offline-Stimme wird verwendet.", Toast.LENGTH_SHORT).show()
+        if (allowMaya && profile.engine == at.heinz.deviceai.voice.VoiceEngine.ELEVENLABS && !useMaya)
+            at.heinz.deviceai.voice.VoiceFallbackNotice.cause(SecureTokenStore.loadElevenLabsToken(this) != null,
+                internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON, ownerReplyAllowsMaya)
+                ?.let { voiceFallbackNotice.unavailable(at.heinz.deviceai.voice.VoiceProfiles.voiceName(profile), it) }
+                ?.let { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
+        // Spoken form only (numbers, abbreviations, lists, links); the chat keeps the visible text.
+        val spokenText = if (shaped) message else at.heinz.deviceai.voice.SpeechTextShaper.shape(message)
         // Read substantially beyond the former 15-chunk ceiling while keeping a hard bounded queue.
         val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(
-            message, maxChunks = SPEECH_CONTENT_MAX_CHUNKS)
+            spokenText, maxChunks = SPEECH_CONTENT_MAX_CHUNKS)
         if (chunks.pieces.isEmpty()) return
         // Beyond the queue capacity the cut is announced instead of ending silently.
         val pieces = if (chunks.truncated) chunks.pieces + SPOKEN_REST_IN_CHAT else chunks.pieces
@@ -11977,12 +12113,16 @@ class AgentActivity : Activity() {
         }
         speechChunks.markLastChunkSubmitted(turn)
         speechTurnId = turn
+        resumableSpeech.begin(turn, sessionId, pieces)
         mainHandler.removeCallbacks(conversationLatencyCue)
         // Outside the hands-free conversation no spoken turn set a tone: use the neutral one.
         if (!continuousConversation.active)
             spokenReplyRegister = at.heinz.deviceai.cognitive.ConversationRegister.CASUAL
         // Slightly faster when joking, slightly slower on serious matters; one recognisable speaker throughout.
-        voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate *
+        // The profile's rate/pitch also apply when the device voice stands in for ElevenLabs.
+        val prosody = at.heinz.deviceai.voice.VoiceProfiles.prosody(profile)
+        voiceEngine?.setPitch(prosody.devicePitch)
+        voiceEngine?.setSpeechRate(prosody.deviceRate *
             at.heinz.deviceai.cognitive.HumanSpeechTiming.rateFactor(spokenReplyRegister))
         if (!speakNextChunk(turn, TextToSpeech.QUEUE_FLUSH)) stopVoiceAnimation()
     }
@@ -11996,15 +12136,20 @@ class AgentActivity : Activity() {
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
         speechChunkId = chunk.chunkId
+        at.heinz.deviceai.voice.ResumableReplySpeech.pieceIndex(turn, chunk.chunkId)
+            ?.let { resumableSpeech.pieceStarted(turn, it) }
         updateUiFeedbackPolicy() // Pending synthesis already owns the voice channel.
         voiceSignal.activate(id)
         voiceAvatarText = chunk.approvedText
         if (speechUsesMaya) {
             val key = SecureTokenStore.loadElevenLabsToken(this) ?: return false
             val revision = speechInternetRevision
-            val engine = mayaSpeech ?: MayaSpeech(::ElevenLabsPcmRequest, { MayaPcmPlayer(this) },
+            // The request reads the selection of the reply being spoken (voice id, model, voice_settings).
+            val engine = mayaSpeech ?: MayaSpeech({ ElevenLabsPcmRequest.forSpec(
+                at.heinz.deviceai.voice.VoiceProfiles.elevenLabs(speechProfile)) }, { MayaPcmPlayer(this) },
                 { action -> mainHandler.post { action() } }, object : MayaSpeech.Listener {
                     override fun started(id: String, pcm: ByteArray) {
+                        voiceFallbackNotice.onElevenLabsSpoke()
                         voiceProgressListener?.onBeginSynthesis(id, MayaSpeech.SAMPLE_RATE,
                             android.media.AudioFormat.ENCODING_PCM_16BIT, 1)
                         var offset = 0
@@ -12042,12 +12187,12 @@ class AgentActivity : Activity() {
                 localVoiceState(), voiceEngine?.voice?.isNetworkConnectionRequired) &&
             voiceEngine?.speak(voiceAvatarText, TextToSpeech.QUEUE_FLUSH, null, id) == TextToSpeech.SUCCESS) {
             speechUsesMaya = false
-            Toast.makeText(this, "Maya konnte nicht sprechen. Die Android-Offline-Stimme spricht weiter.",
-                Toast.LENGTH_LONG).show()
+            // Said once; later failures of the same kind continue silently with the local voice.
+            voiceFallbackNotice.continuedLocally(at.heinz.deviceai.voice.VoiceProfiles.voiceName(speechProfile))
+                ?.let { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
             return
         }
-        Toast.makeText(this,
-            "Maya konnte nicht sprechen. Die Antwort bleibt im Chat. Prüfe Schlüssel, Credits und Internet.",
+        Toast.makeText(this, voiceFallbackNotice.silent(at.heinz.deviceai.voice.VoiceProfiles.voiceName(speechProfile)),
             Toast.LENGTH_LONG).show()
         voiceProgressListener?.onError(id, TextToSpeech.ERROR_NETWORK)
     }
@@ -12058,13 +12203,17 @@ class AgentActivity : Activity() {
         val chunk = speechChunkId ?: return false
         if (speechChunks.onChunkFinished(turn, chunk) !=
             at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue.Completion.MORE_CHUNKS) return false
+        at.heinz.deviceai.voice.ResumableReplySpeech.pieceIndex(turn, chunk)?.let { resumableSpeech.pieceFinished(turn, it) }
         // End the finished piece in the avatar now; a STOP before the next onStart then leaves no stale utterance.
         val finishedId = voiceUtteranceId
         finishedId?.let { avatarDirector.speechEnded(it, interrupted = false) }
         // People pause between sentences, and never by the same length twice. The next piece follows after a
-        // pause from the measured medium band.
-        val pause = at.heinz.deviceai.cognitive.HumanSpeechTiming.pauseBetweenMs(
-            voiceAvatarText, "next", spokenReplyRegister, ++spokenPieceCounter)
+        // pause from the measured medium band, scaled by the profile (Souverän pauses a little longer).
+        val pause = (at.heinz.deviceai.cognitive.HumanSpeechTiming.pauseBetweenMs(
+            voiceAvatarText, "next", spokenReplyRegister, ++spokenPieceCounter) *
+            at.heinz.deviceai.voice.VoiceProfiles.prosody(speechProfile).pausePercent / 100L)
+            .coerceIn(at.heinz.deviceai.cognitive.HumanSpeechTiming.MIN_PAUSE_MS,
+                at.heinz.deviceai.cognitive.HumanSpeechTiming.MAX_PAUSE_MS)
         // During the pause no utterance is current: a late or repeated engine callback for the finished piece
         // must neither end the reply nor reopen the microphone. The hands-free session stays bound to the
         // reply through a placeholder id until the next piece takes over.
@@ -12622,6 +12771,10 @@ class AgentActivity : Activity() {
         val cancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
         activeResearchCancellation = cancellation
         setBusy(true)
+        val researchStartedAt = System.currentTimeMillis()
+        // The run has really started and says nothing by itself until its result: one short line (personal tone only).
+        if (mentorArea == null && ownerTalk.tone == at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL)
+            addAssistantMessage(ownerTalk.acknowledge(), preserveLocalContext = true, keepCockpit = false)
         val budget = ResearchBudgetPolicy.forMode(mode)
         activityText.text = "RESEARCH · PLANNING · ${mode.name}"
         addToolActivity("WEB-RESEARCH · ${mode.name} · read-only")
@@ -12739,13 +12892,23 @@ class AgentActivity : Activity() {
                     addToolActivity("RESEARCH · abgebrochen oder Freigabe widerrufen · Ergebnis verworfen")
                     setBusy(false)
                     refreshLocalModelUi()
+                    settleOwnerMissionResearch(OwnerLaneOutcome.Stopped)
                     return@runOnUiThread
                 }
+                var missionOutcome: OwnerLaneOutcome = OwnerLaneOutcome.Stopped
                 result.onSuccess { dossier ->
                     if(!session.isAuthorized()) {
                         addToolActivity("WEB · Freigabe widerrufen, Ergebnis verworfen")
                         return@onSuccess
                     }
+                    // For a sequence of orders: done only with at least one source that was really read.
+                    val read = dossier.sources.filter { it.duplicateOf == null }
+                    missionOutcome = at.heinz.deviceai.cognitive.OwnerDeliverable.ofResearch(session.call.question,
+                        dossier.synthesis?.text.orEmpty(), read.take(16).map { source ->
+                            at.heinz.deviceai.cognitive.NewsSourceRef(source.domain, source.title ?: source.domain, source.canonicalUrl) },
+                        java.time.LocalDate.now(), System.currentTimeMillis())
+                        ?.let { OwnerLaneOutcome.Done(OwnerLaneResult.Researched(it, session.call.question, read.size)) }
+                        ?: OwnerLaneOutcome.Failed("Die Recherche hat keine Quelle gelesen, aus der sich etwas zusammenfassen ließ.")
                     val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
                         .joinToString("\n") { at.heinz.deviceai.cognitive.ResearchDialogueHandoff.citationLine(it) }
                     val body = buildString {
@@ -12773,6 +12936,9 @@ class AgentActivity : Activity() {
                     generalDiscovery.lastIssue?.let { addToolActivity("WEB · "+it) }
                     addAssistantMessage(body.take(8_000), preserveLocalContext = true, keepCockpit = false,
                         kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.LANE_DELIVERABLE)
+                    // The result is held as what a later „Speichere das als PDF“ means, before any notice follows it.
+                    ownerWorkTools.holdSubject()
+                    val reportable = dossier.sources.isNotEmpty() && ownerWorkTools.heldIsSubject
                     // B1: the research result becomes follow-up context for the local model (same brain,
                     // same session) – typed as external, unverified data, never an owner fact.
                     at.heinz.deviceai.cognitive.ResearchDialogueHandoff
@@ -12789,11 +12955,22 @@ class AgentActivity : Activity() {
                             "Prüfe sie über INTERNET · LERNSTOFF PRÜFEN. Noch keine automatische Wissensübernahme.")
                     }
                     addToolActivity("RESEARCH · ${dossier.phase.name} · ${dossier.sources.size} Quellen")
+                    if (mentorArea == null) {
+                        val distinct = dossier.sources.count { it.duplicateOf == null }
+                        ownerSharedWorkFeed.research(session.call.question, distinct, researchStartedAt)
+                        mainHandler.post {
+                            // The report offer is made only when „das“ of the export order would be this result.
+                            if (!isFinishing && !isDestroyed && sessionId == researchSessionId)
+                                ownerTalk.afterResult(if (reportable) OwnerResultHint.Research(distinct) else OwnerResultHint.Other)
+                        }
+                    }
                 }.onFailure { error ->
                     addAssistantMessage(ContinuumUiCopy.researchFailure(error.message))
                     addToolActivity("RESEARCH · PARTIAL")
+                    missionOutcome = OwnerLaneOutcome.Failed(ContinuumUiCopy.researchFailure(error.message))
                 }
                 setBusy(false)
+                settleOwnerMissionResearch(missionOutcome)
                 refreshLocalModelUi()
             }
         }
@@ -12820,7 +12997,11 @@ class AgentActivity : Activity() {
             ownerMission.laneOutcome(OwnerMissionLane.WORK, outcome)
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.WORK.name, outcome)
         }
-        override fun offerToOpen(): Boolean = !ownerMission.active
+        // Asked more than once per save and, through the desk, on every turn: the question only reads. The offer is
+        // counted where it is really said.
+        override fun offerToOpen(): Boolean = !ownerMission.active &&
+            ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
+        override fun openOffered() = ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
 
         override fun reply(request: String, text: String, kind: at.heinz.deviceai.cognitive.NonModelReplyKind) =
             addNonModelReply(request, text, kind)
@@ -12977,7 +13158,8 @@ class AgentActivity : Activity() {
         override fun composeMail(address: String?, subject: String, body: String, attachment: OwnerSavedFile?): String? =
             documents.composeMail(address, subject, body, attachment)
 
-        override fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean = ownerSend.mail(order)
+        override fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean =
+            ownerSend.mail(order, ownerMission.sendGuard())
     }
 
     // ── Owner document desk („Öffne das PDF Argon4“, „Fass Seite 2 zusammen und speichere es als Word“) ─────────
@@ -13036,12 +13218,19 @@ class AgentActivity : Activity() {
         override val ownerTurn: Long get() = work.ownerTurn
         override val assistantName: String? get() = work.assistantName
         override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.DESK, request)
+        override fun present(result: at.heinz.deviceai.cognitive.OwnerDeliverable): Boolean {
+            ownerWorkTools.adoptDeliverable(result)
+            return true
+        }
         override fun outcome(outcome: OwnerLaneOutcome) {
             continuumBriefing.laneOutcome(outcome)
             ownerMission.laneOutcome(OwnerMissionLane.DESK, outcome)
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.DESK.name, outcome)
         }
-        override fun offerToOpen(): Boolean = !ownerMission.active
+        override fun offerToOpen(): Boolean = work.offerToOpen()
+        override fun openOffered() = work.openOffered()
+        // Whether a sequence hands over its steps is not a question of the owner's initiative level.
+        override fun inSequence(): Boolean = ownerMission.active
 
         override fun reply(request: String, text: String) {
             val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(localConversationContext, sessionId,
@@ -13220,12 +13409,15 @@ class AgentActivity : Activity() {
     internal val ownerSendGrants by lazy {
         at.heinz.deviceai.sending.OwnerSendGrants(at.heinz.deviceai.sending.OwnerSendPreferences(this)) { java.time.LocalDate.now() }
     }
+    private val OWNER_MAIL_LANE = "MAIL"
     /** Open questions of the owner lanes, served before the whole-sentence lanes (see [OwnerOpenQuestions]). */
     private val ownerOpenQuestions by lazy {
         OwnerOpenQuestions(session = { sessionId }, turn = { ownerReplyRevision })
             .lane(OwnerMissionLane.SEND.name, awaiting = { ownerSend.awaitingAnswer }) { ownerSend.handle(it) }
-            .lane(OwnerMissionLane.DESK.name) { ownerDocumentDesk.handle(it) }
+            .lane(OwnerMissionLane.DESK.name, awaiting = { ownerDocumentDesk.awaitingAnswer }) { ownerDocumentDesk.handle(it) }
             .lane(OwnerMissionLane.WORK.name, awaiting = { ownerWorkTools.awaitingAnswer }) { ownerWorkTools.handle(it) }
+            .lane(OWNER_MAIL_LANE) { ownerMail.handle(it) }
+            .lane(OwnerMissionLane.BRIEFING.name, awaiting = { continuumBriefing.awaitingAnswer }) { continuumBriefing.handle(it) }
     }
     internal val ownerRelations by lazy {
         at.heinz.deviceai.sending.OwnerRelations(at.heinz.deviceai.sending.OwnerRelationPreferences(this))
@@ -13250,13 +13442,19 @@ class AgentActivity : Activity() {
         override val sessionId: String get() = work.sessionId
         override val ownerTurn: Long get() = work.ownerTurn
         override val assistantName: String? get() = work.assistantName
-        override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.SEND, request)
+        override fun acceptOwnerTurn(request: String) {
+            command03SendWork.started(sessionId, android.os.SystemClock.elapsedRealtime())
+            acceptOwnerLaneTurn(OwnerMissionLane.SEND, request)
+        }
         override fun outcome(outcome: OwnerLaneOutcome) {
+            command03SendWork.settled(sessionId, outcome, android.os.SystemClock.elapsedRealtime())
             continuumBriefing.laneOutcome(outcome)
             ownerMission.laneOutcome(OwnerMissionLane.SEND, outcome)
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.SEND.name, outcome)
             incomingSendOutcome(outcome)
         }
+        override fun progress(event: at.heinz.deviceai.sending.OwnerSendProgress) =
+            command03SendWork.progress(sessionId, event, android.os.SystemClock.elapsedRealtime())
 
         override fun reply(request: String, text: String) {
             // Only the owner's own sentence and a fixed label enter the model context: no contact data, no screen text.
@@ -13320,7 +13518,8 @@ class AgentActivity : Activity() {
         at.heinz.deviceai.codingagents.CodingAgentScreen(this, cockpitTriggers,
             say = { addAssistantMessage(it.take(8_000), preserveLocalContext = true, keepCockpit = activeWorkArea == ContinuumWorkArea.START) },
             log = ::addToolActivity, idle = { !busy && !botLookupPending }, ownerTurn = ::showOwnerLaneTurn,
-            assistantName = { continuumState?.archive?.identityState?.chosenName })
+            assistantName = { continuumState?.archive?.identityState?.chosenName },
+            runStartedHook = ownerSharedWorkFeed::codingAgentStarted, runEndedHook = ownerSharedWorkFeed::codingAgentEnded)
     }
 
     /** An order for the cloud coding agents, the answer to their one confirmation, an approval or their stop. */
@@ -13480,7 +13679,29 @@ class AgentActivity : Activity() {
     // ── Owner conversation manner (tone, name, greeting) – logic in OwnerTalk.kt and cognitive/OwnerConversationTone.kt,
     // cognitive/OwnerGreeting.kt. Thin adapter only: fixed replies of the app, no model turn, no tool, no plan.
     private val ownerTalkStore by lazy { OwnerTalkPreferences(this) }
-    internal val ownerTalk by lazy { OwnerTalk(OwnerTalkAdapter(), ownerTalkStore) }
+    /** The shared-work record („Wo waren wir?“) and the one policy for unsolicited offers – logic in cognitive/. */
+    internal val ownerSharedWork by lazy { at.heinz.deviceai.cognitive.OwnerSharedWorkRecord(OwnerSharedWorkPreferences(this)) }
+    internal val ownerInitiative by lazy { at.heinz.deviceai.cognitive.OwnerInitiative(OwnerInitiativePreferences(this)) }
+    private val ownerSharedWorkFeed by lazy { OwnerSharedWorkFeed(ownerSharedWork) }
+    internal val ownerTalk by lazy { OwnerTalk(OwnerTalkAdapter(), ownerTalkStore, ownerSharedWork, ownerInitiative) }
+    /** Today's next appointment as the calendar held it at the last read (off the UI thread); null = none or not readable. */
+    @Volatile private var ownerTalkAppointment: Triple<at.heinz.deviceai.briefing.ContinuumCalendarEvent, Long, Long>? = null
+
+    /** Reads today's calendar off the UI thread when the owner allowed it; the greeting only uses a fresh read. */
+    private fun refreshOwnerTalkAppointment() {
+        val source = continuumCalendarOverride ?: at.heinz.deviceai.briefing.AndroidContinuumCalendar(this)
+        if (ownerInitiative.level != at.heinz.deviceai.cognitive.OwnerInitiativeLevel.ACTIVE || documentIoExecutor.isShutdown) return
+        documentIoExecutor.execute {
+            ownerTalkAppointment = runCatching {
+                if (!source.granted()) return@runCatching null
+                val now = System.currentTimeMillis()
+                val read = source.read(now, now + OwnerContextSuggestions.APPOINTMENT_WINDOW_MILLIS)
+                (read as? at.heinz.deviceai.briefing.ContinuumCalendarRead.Events)?.events
+                    ?.filter { !it.allDay && it.startMillis > now }?.minByOrNull { it.startMillis }
+                    ?.let { Triple(it, it.startMillis, now) }
+            }.getOrNull()
+        }
+    }
 
     private inner class OwnerTalkAdapter : OwnerTalkHost {
         override val sessionId: String get() = this@AgentActivity.sessionId
@@ -13500,6 +13721,48 @@ class AgentActivity : Activity() {
             centerDialog?.isShowing != true && readinessDialog?.isShowing != true && !isFinishing && !isDestroyed
         override fun confirmedFacts(): List<String> = if (::bootstrapMemory.isInitialized) bootstrapMemory.facts() else emptyList()
         override fun cloudBrain(): Boolean = claudeBrain?.claudeSelected == true
+        override fun later(action: () -> Unit) { mainHandler.post { if (!isFinishing && !isDestroyed) action() } }
+        override fun continuationOpen(): Boolean = ownerMission.active || pausedTaskChain != null
+        /**
+         * After every journal write that is still queued on the serial document lane (a STOP of a moment ago), and
+         * with the journal mirrored once more – never file I/O on the UI thread, never a blocking wait for it.
+         */
+        override fun whenWorkSettled(action: () -> Unit) {
+            val session = sessionId
+            val settle = Runnable {
+                runCatching { ownerSharedWorkFeed.journal(workJournal.all()) }
+                runOnUiThread { if (!isFinishing && !isDestroyed && sessionId == session) action() }
+            }
+            if (documentIoExecutor.isShutdown) settle.run() else documentIoExecutor.execute(settle)
+        }
+        /**
+         * „Wo waren wir?“ in the cockpit: the sentence is said without leaving START, and – when work of the cockpit's
+         * journal is among what was named – the existing VERLAUF surface shows its source, state and open step.
+         */
+        override fun recallReply(request: String, text: String, period: at.heinz.deviceai.cognitive.OwnerSharedWorkCommand.Period,
+                                 entries: List<at.heinz.deviceai.cognitive.SharedWorkEntry>) {
+            val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(localConversationContext, sessionId, request,
+                at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+            addAssistantMessage(text, preserveLocalContext = keep, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            if (entries.none { it.provenance == OwnerSharedWorkFeed.JOURNAL }) return
+            val journalPeriod = when (period) {
+                at.heinz.deviceai.cognitive.OwnerSharedWorkCommand.Period.TODAY -> at.heinz.deviceai.cognitive.WorkRecall.Period.TODAY
+                at.heinz.deviceai.cognitive.OwnerSharedWorkCommand.Period.YESTERDAY -> at.heinz.deviceai.cognitive.WorkRecall.Period.YESTERDAY
+                else -> at.heinz.deviceai.cognitive.WorkRecall.Period.RECENT
+            }
+            presentWorkRecall(at.heinz.deviceai.cognitive.WorkRecall.Query(journalPeriod, openOnly = false), keepWindow = true, answerInChat = false)
+        }
+        /** The order goes through the owner input path; a held result goes to the work tools, which know what „das“ means. */
+        override fun submit(order: String, onHeldResult: Boolean) {
+            if (!::input.isInitialized || isFinishing || isDestroyed || busy) return
+            if (onHeldResult && ownerWorkTools.handleOnHeld(order)) return
+            input.setText(order)
+            sendCurrentInput()
+        }
+        override fun openMessages(): OwnerOpenMessageCount? = runCatching {
+            at.heinz.deviceai.notifications.IncomingMessages.inbox.open().filter { !it.hidden && it.sender.isNotBlank() }
+                .let { open -> OwnerOpenMessageCount(open.size, (open.maxOfOrNull { it.firstAtMs } ?: 0L).toString()) }
+        }.getOrNull()
     }
 
     /**
@@ -13523,6 +13786,11 @@ class AgentActivity : Activity() {
                 .map { at.heinz.deviceai.briefing.ContinuumOpenMessage(it.sender, it.appLabel, "Was ist noch offen?") }
         }
         ownerTalk.greetingExtra = { briefingOffer() }
+        ownerTalk.contextSuggestions = listOf(at.heinz.deviceai.cognitive.OwnerSuggestionProvider { now ->
+            ownerTalkAppointment?.let { (event, start, readAt) ->
+                OwnerContextSuggestions.appointment(event.title, start, now, java.time.ZoneId.systemDefault(), readAt)
+            }
+        })
     }
 
     private fun wireOwnerTalkToCloudBrain() {
@@ -13530,14 +13798,21 @@ class AgentActivity : Activity() {
         val brain = claudeBrain ?: return
         val store = OwnerTalkPreferences(applicationContext)
         val memory = BootstrapMemoryStore(applicationContext)
-        brain.ownerStyle = { OwnerTalk.cloudBlock(store, { memory.facts() }) { store.nameToCloud || brain.settings.shareLocalMemory } }
+        // Application context only: the record, the level and the names consent are read from their stores.
+        val initiative = OwnerInitiativePreferences(applicationContext)
+        val names = at.heinz.deviceai.devicetools.StoredDeviceToolSettings(applicationContext)
+        val workStore = OwnerSharedWorkPreferences(applicationContext)
+        val conversation = OwnerConversationFacts(
+            entries = { at.heinz.deviceai.cognitive.OwnerSharedWorkRecord(workStore).entries() },
+            level = { initiative.level }, titlesAllowed = { names.cloudNames })
+        brain.ownerStyle = { OwnerTalk.cloudBlock(store, { memory.facts() }, conversation) { store.nameToCloud || brain.settings.shareLocalMemory } }
         // The cloud's own web search stays inside the app's internet consent (localmodel/ClaudeServerTools.kt).
         brain.webTurn.internetMode = { internetConsent.mode }
     }
 
     private fun showOwnerTalkSettings() {
         centerDialog?.dismiss()
-        val dialog = at.heinz.deviceai.ui.OwnerTalkSettingsDialog.show(this, ownerTalkStore, ownerTalk)
+        val dialog = at.heinz.deviceai.ui.OwnerTalkSettingsDialog.show(this, ownerTalkStore, ownerTalk, ownerInitiative)
         centerDialog = dialog
         dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
     }
@@ -13545,7 +13820,23 @@ class AgentActivity : Activity() {
     // ── Owner missions („Auftragsfolge“) – logic in OwnerMission.kt and cognitive/OwnerMissionPlan*.kt ──────────
     // Thin adapter only: a mission hands every step to the owner entry of its lane above and listens to the lanes'
     // typed outcomes; it has no way of its own to read, write, open or send anything.
-    internal val ownerMission by lazy { OwnerMissionDirector(OwnerMissionAdapter()) }
+    internal val ownerMission by lazy {
+        OwnerMissionDirector(OwnerMissionAdapter(), OwnerMissionJournal(FileOwnerMissionJournalStore(java.io.File(filesDir, "owner-mission")))).also {
+            // The shared-work record listens where every lane's typed outcome passes, and to the mission's own end.
+            it.onLaneOutcome = ownerSharedWorkFeed::lane
+            it.onSettled = ownerSharedWorkFeed::mission
+        }
+    }
+    /** The order of a sequence whose app opening / research run is under way: its end is reported to the sequence. */
+    private var ownerMissionAppOrder: String? = null
+    private var ownerMissionResearchTopic: String? = null
+    private var ownerMissionResumeChecked = false
+
+    private fun settleOwnerMissionResearch(outcome: OwnerLaneOutcome) {
+        if (ownerMissionResearchTopic == null) return
+        ownerMissionResearchTopic = null
+        ownerMission.laneOutcome(OwnerMissionLane.RESEARCH, outcome)
+    }
 
     /** Stop, „weiter“, „abbrechen“ and a correction for a running or waiting mission, before any lane sees the turn. */
     private fun interceptOwnerMission(spoken: String = input.text.toString().trim()): Boolean =
@@ -13610,8 +13901,12 @@ class AgentActivity : Activity() {
         override fun noBriefingYet(): Boolean =
             ownerWorkTools.deliverable?.kind != at.heinz.deviceai.cognitive.OwnerDeliverable.Kind.NEWS_BRIEFING
         override fun continueOn(result: at.heinz.deviceai.cognitive.OwnerDeliverable): Boolean = ownerWorkTools.continueOn(result)
+        // The offer at the end of a sequence passes the same initiative rule as the one after a single save.
         override fun offerOpening(result: at.heinz.deviceai.cognitive.OwnerDeliverable, file: OwnerSavedFile): Boolean =
-            ownerWorkTools.offerOpening(result, file)
+            ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE) &&
+                ownerWorkTools.offerOpening(result, file).also {
+                    if (it) ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
+                }
 
         override fun chain(order: String, plan: at.heinz.deviceai.cognitive.ChainPlan): Boolean {
             if (!startOwnerTaskChain(order, plan)) ownerMission.laneOutcome(OwnerMissionLane.CHAIN,
@@ -13644,6 +13939,64 @@ class AgentActivity : Activity() {
 
         override fun holdSubject() = ownerWorkTools.holdSubject()
         override fun workOnHeld(order: String): Boolean = ownerWorkTools.handleOnHeld(order)
+
+        // Steps of the second phase: each is the owner entry of its lane, with that lane's own gates.
+        override fun missionSend(order: String, channelGiven: Boolean, recipientOverride: String?,
+                                 guard: at.heinz.deviceai.sending.OwnerSendGuard): Boolean =
+            ownerSend.missionSend(order, channelGiven, recipientOverride, guard)
+        override fun adoptResult(result: at.heinz.deviceai.cognitive.OwnerDeliverable) = ownerWorkTools.adoptDeliverable(result)
+        override fun openSaved(order: String, file: OwnerSavedFile): Boolean = ownerWorkTools.openSaved(order, file)
+        override fun mailReadable(): Boolean = ownerMailConnection.connected &&
+            ownerMailConnection.grant.granted(at.heinz.deviceai.gmail.GmailCapability.READ)
+        override fun mailSearch(order: String, query: at.heinz.deviceai.gmail.MailQuery,
+                                done: (at.heinz.deviceai.gmail.MailLaneOutcome) -> Unit) = ownerMail.search(order, query, done)
+        override fun mailRead(order: String, ref: at.heinz.deviceai.gmail.MailRef,
+                              done: (at.heinz.deviceai.gmail.MailLaneOutcome) -> Unit) = ownerMail.read(order, ref, false, done)
+        override fun mailSummarize(order: String, refs: List<at.heinz.deviceai.gmail.MailRef>,
+                                   done: (at.heinz.deviceai.gmail.MailLaneOutcome) -> Unit) = ownerMail.summarize(order, refs, done)
+        override fun relationName(word: String): String? =
+            at.heinz.deviceai.sending.OwnerRelation.parse(word)?.let { ownerRelations.get(it)?.displayName }
+        override fun briefing(order: String): Boolean = continuumBriefing.handle(order)
+
+        override fun openApp(order: String, appName: String): Boolean {
+            if (busy) return false
+            ownerMissionAppOrder = order
+            runExplicitAppLookup(order, OwnerAppLookupIntent.Intake.Lookup(appName, opening = true))
+            // The lookup asked which app is meant instead of starting: no app was opened.
+            if (!appLookupActive && ownerMissionAppOrder == order) {
+                ownerMissionAppOrder = null
+                ownerMission.laneOutcome(OwnerMissionLane.APP, OwnerLaneOutcome.Failed("$appName wurde nicht geöffnet."))
+            }
+            return true
+        }
+
+        /** The same path as „Recherchiere …“ said alone: OFF sends nothing, ASK shows the one-time dialog. */
+        override fun research(order: String, topic: String): Boolean {
+            restoreInternetMode()
+            if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
+                addToolActivity("WEB · AUS · keine Anfrage gesendet")
+                val offline = at.heinz.deviceai.cognitive.OwnerResearchCommand.offlineReply()
+                addNonModelReply(order, offline, at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+                ownerMission.laneOutcome(OwnerMissionLane.RESEARCH, OwnerLaneOutcome.Failed(offline))
+                return true
+            }
+            val researchSession = sessionId
+            confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(topic), researchMode, requireIdle = true) { session ->
+                if (session != null && !busy && sessionId == researchSession && foregroundLearningActive && !isFinishing && !isDestroyed) {
+                    ownerMissionResearchTopic = topic
+                    runResearch(session)
+                    // The run refused to start (lane occupied, grant gone): nothing was read.
+                    if (activeWebResearchSession !== session) settleOwnerMissionResearch(
+                        OwnerLaneOutcome.Failed("Die Recherche konnte nicht starten; es wurde nichts abgerufen."))
+                } else {
+                    session?.cancel()
+                    if (!isFinishing && !isDestroyed) addToolActivity("WEB · nicht freigegeben oder Sitzung gewechselt · keine Anfrage gesendet")
+                    ownerMission.laneOutcome(OwnerMissionLane.RESEARCH,
+                        OwnerLaneOutcome.Failed("Der Internetzugriff wurde für die Recherche nicht freigegeben; es wurde nichts abgerufen."))
+                }
+            }
+            return true
+        }
 
         /** One bounded, tool-free generation, as for a chain plan; the text is data for the plan check. */
         override fun proposePlan(request: String, prompt: String, done: (String?) -> Unit) {
@@ -13730,8 +14083,12 @@ class AgentActivity : Activity() {
         override val ownerTurn: Long get() = work.ownerTurn
         override val assistantName: String? get() = work.assistantName
         override fun ownerName(): String? = continuumOwnerName()
-        override fun acceptOwnerTurn(request: String) = showOwnerLaneTurn(request)
+        override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.BRIEFING, request)
         override fun clearInput() { input.text.clear() }
+        override fun outcome(outcome: OwnerLaneOutcome) {
+            ownerMission.laneOutcome(OwnerMissionLane.BRIEFING, outcome)
+            ownerOpenQuestions.noteOutcome(OwnerMissionLane.BRIEFING.name, outcome)
+        }
 
         override fun answer(request: String?, spoken: String, shown: String) {
             // Only the owner's own sentence and a fixed label enter the model context: no calendar entry, contact or
@@ -13923,6 +14280,17 @@ class AgentActivity : Activity() {
 
         override fun openWork(): List<String> = openWork
         override fun openMessages(): at.heinz.deviceai.briefing.ContinuumOpenMessages = continuumOpenMessages
+
+        // This lane's own offers pass the owner's one initiative policy (level, a recent no, the caps).
+        override fun allowDailyOffer(): Boolean = ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.BRIEFING)
+        override fun allowOffers(offers: List<at.heinz.deviceai.briefing.ContinuumBriefingBoard.Offer>) =
+            if (offers.isEmpty() || !ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS)) emptyList()
+            else offers.also { ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS) }
+        override fun offerAnswered(daily: Boolean, accepted: Boolean) {
+            val kind = if (daily) at.heinz.deviceai.cognitive.OwnerSuggestionKind.BRIEFING else at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS
+            if (accepted) ownerInitiative.accepted(kind) else ownerInitiative.declined(kind)
+        }
+        override fun briefingGiven() = ownerSharedWorkFeed.briefing()
         override fun contactsReadable(): Boolean = send.contactsReadable()
         override fun requestContacts(explanation: String, done: (Boolean) -> Unit) = send.requestContacts(explanation, done)
         override fun contacts(): at.heinz.deviceai.sending.OwnerSendContactSource = send.contacts()
@@ -13942,6 +14310,181 @@ class AgentActivity : Activity() {
             tone = { ownerTalk.tone == at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL })
     }
     internal val deepClean: at.heinz.deviceai.deepclean.DeepCleanDirector get() = deepCleanWiring.first
+    // ── Gmail lane and „Verbindungen“ (gmail/*, connections/*) ─────────────────────────────────────────────────
+    // Thin adapter only: recognition, wording, the API, the error mapping and the stage record live in the packages
+    // at.heinz.deviceai.gmail and at.heinz.deviceai.connections. Mail content is answered privately: shown and
+    // spoken, but not written to the chat transcript and not put into the model's conversation context.
+
+    /** Host tests replace Google's authorization and the network; null = the real phone. */
+    internal var ownerMailAuthorizerOverride: at.heinz.deviceai.gmail.GmailAuthorizer? = null
+    internal var ownerMailTransportOverride: at.heinz.deviceai.gmail.GmailHttpTransport? = null
+    private val ownerMailStore by lazy { at.heinz.deviceai.gmail.AndroidConnectionStore(this, at.heinz.deviceai.gmail.GmailConnection.PREFERENCES) }
+    private val ownerMailConnection by lazy { at.heinz.deviceai.gmail.GmailConnection(ownerMailStore) }
+    private val ownerConnectionUsage by lazy {
+        at.heinz.deviceai.connections.ContinuumConnectionUsage(at.heinz.deviceai.gmail.AndroidConnectionStore(this, "continuum-connections"))
+    }
+    internal val ownerMailBoard = at.heinz.deviceai.gmail.MailWorkBoard()
+    private val ownerMailAuthorizer by lazy { at.heinz.deviceai.gmail.AndroidGmailAuthorizer(this) { ownerMailConnection.account } }
+    private val ownerMailConsent by lazy { at.heinz.deviceai.gmail.AndroidGmailConsent(this, ownerMailAuthorizer) }
+    internal val ownerMail by lazy { at.heinz.deviceai.gmail.OwnerMailDirector(OwnerMailAdapter()) }
+
+    /** The stop word while a Gmail job runs. */
+    private fun interceptOwnerMail(spoken: String = input.text.toString().trim()): Boolean {
+        if (spoken.isEmpty() || selectedBot != null || !ownerMail.intercept(spoken)) return false
+        input.text.clear()
+        addUserMessage(spoken, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        return true
+    }
+
+    private fun showContinuumConnections() {
+        centerDialog?.dismiss()
+        val work = OwnerWorkToolsAdapter()
+        val send = OwnerSendAdapter()
+        val briefing = ContinuumBriefingAdapter()
+        val checks = object : at.heinz.deviceai.connections.ContinuumConnectionChecks {
+            override fun gmail() = ownerMailConnection.view()
+            override fun calendarGranted(): Boolean? = runCatching { briefing.calendar().granted() }.getOrNull()
+            override fun contactsGranted(): Boolean? = runCatching { send.contactsReadable() }.getOrNull()
+            override fun filesAccess(): Boolean? = when (runCatching { (ownerDeskFilesOverride ?: ownerDeskPhoneFiles).access() }.getOrNull()) {
+                OwnerLibraryAccess.GRANTED -> true
+                OwnerLibraryAccess.MISSING -> false
+                else -> null
+            }
+            override fun whatsappInstalled(): Boolean? = runCatching { send.device().installed(at.heinz.deviceai.sending.SendChannel.WHATSAPP) }.getOrNull()
+            override fun whatsappSelfSend(): Boolean? = runCatching { ownerSendGrants.enabled(at.heinz.deviceai.sending.SendChannel.WHATSAPP) }.getOrNull()
+            override fun accessibilityOn(): Boolean? = runCatching { send.device().accessibilityOn() }.getOrNull()
+            override fun internetMode(): at.heinz.deviceai.cognitive.InternetAccessMode? = runCatching { work.internetMode() }.getOrNull()
+            override fun incomingAnnouncements(): Boolean? =
+                runCatching { at.heinz.deviceai.notifications.IncomingMessagePreferences.load(this@AgentActivity).enabled }.getOrNull()
+            override fun canAskPermission(permission: String): Boolean =
+                checkSelfPermission(permission) == android.content.pm.PackageManager.PERMISSION_GRANTED ||
+                    !getSharedPreferences("continuum-connections", MODE_PRIVATE).getBoolean("asked_$permission", false) ||
+                    shouldShowRequestPermissionRationale(permission)
+        }
+        val actions = object : at.heinz.deviceai.connections.ContinuumConnectionsActions {
+            override fun rows() = at.heinz.deviceai.connections.ContinuumConnectionRegistry.rows(checks, ownerConnectionUsage)
+            override fun gmail() = ownerMailConnection
+            override fun idle(): Boolean = !busy && !ownerMission.active
+            override fun connectGmail(capability: at.heinz.deviceai.gmail.GmailCapability, done: (String) -> Unit) =
+                ownerMail.connectFromSettings(capability, done)
+            override fun disconnectGmail(done: (String) -> Unit) = ownerMail.disconnectFromSettings(done)
+            override fun perform(kind: at.heinz.deviceai.connections.ContinuumConnectionKind,
+                                 action: at.heinz.deviceai.connections.ContinuumConnectionAction) {
+                fun open(intent: Intent) { runCatching { startActivity(intent) }.onFailure {
+                    Toast.makeText(this@AgentActivity, "Diese Android-Seite ließ sich nicht öffnen.", Toast.LENGTH_LONG).show() } }
+                fun asked(permission: String) = getSharedPreferences("continuum-connections", MODE_PRIVATE).edit()
+                    .putBoolean("asked_$permission", true).apply()
+                when (action) {
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_GMAIL -> Unit
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.REQUEST_PERMISSION -> when (kind) {
+                        at.heinz.deviceai.connections.ContinuumConnectionKind.CALENDAR -> {
+                            asked(android.Manifest.permission.READ_CALENDAR)
+                            briefing.requestCalendar(at.heinz.deviceai.briefing.ContinuumBriefingDirector.CALENDAR_EXPLANATION) { showContinuumConnections() }
+                        }
+                        at.heinz.deviceai.connections.ContinuumConnectionKind.CONTACTS -> {
+                            asked(android.Manifest.permission.READ_CONTACTS)
+                            send.requestContacts(at.heinz.deviceai.gmail.OwnerMailDirector.CONTACTS_EXPLANATION) { showContinuumConnections() }
+                        }
+                        else -> Unit
+                    }
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_APP_SETTINGS ->
+                        open(Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.parse("package:$packageName")))
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_FILES_ACCESS ->
+                        (ownerDeskFilesOverride ?: ownerDeskPhoneFiles).accessSettings().firstOrNull()?.let(::open)
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_ACCESSIBILITY ->
+                        open(Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_SELF_SEND -> showOwnerSendSettings()
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_INTERNET -> showInternetSettings()
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_INCOMING -> showIncomingMessageSettings()
+                }
+            }
+        }
+        val dialog = at.heinz.deviceai.connections.ContinuumConnectionsDialog.show(this, actions)
+        centerDialog = dialog
+        dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
+    }
+
+    private inner class OwnerMailAdapter : at.heinz.deviceai.gmail.OwnerMailHost {
+        private val work = OwnerWorkToolsAdapter()
+        private val send = OwnerSendAdapter()
+        override val sessionId: String get() = work.sessionId
+        override val ownerTurn: Long get() = work.ownerTurn
+        override val assistantName: String? get() = work.assistantName
+        override fun acceptOwnerTurn(request: String) = showOwnerLaneTurn(request)
+
+        override fun answer(request: String?, spoken: String, shown: String, private: Boolean) {
+            // Only the owner's own sentence and a fixed label enter the model context – never mail data.
+            if (request != null) localConversationContext.recordNonModel(sessionId, request,
+                "(Gmail-Auftrag deterministisch bearbeitet; Mailinhalte, Absender und Betreffe nicht im Verlauf)")
+            addAssistantMessage(shown.take(8_000), preserveLocalContext = true, keepCockpit = activeWorkArea == ContinuumWorkArea.START,
+                speakNow = false, persist = !private)
+            speakReply(at.heinz.deviceai.cognitive.ChatReplyFormatter.plain(spoken.take(4_000)), ownerReplyAllowsMaya)
+        }
+
+        override fun activity(line: String) = addToolActivity(line)
+        override fun internetMode(): at.heinz.deviceai.cognitive.InternetAccessMode = work.internetMode()
+        override fun cloudBrain(): Boolean = work.cloudBrain()
+        // With the cloud brain selected the device model is not loaded (SelectableModelRuntime refuses loads).
+        override fun onDeviceModelReady(): Boolean = !work.cloudBrain() && work.modelReady()
+        override fun promptBudgetBytes(): Int = runCatching { work.promptBudgetBytes() }.getOrDefault(6_000)
+        override fun connection() = ownerMailConnection
+        override fun usage() = ownerConnectionUsage
+        override fun board() = ownerMailBoard
+        override fun transport(): at.heinz.deviceai.gmail.GmailHttpTransport = ownerMailTransportOverride ?: at.heinz.deviceai.gmail.AndroidGmailTransport()
+        override fun authorizer(): at.heinz.deviceai.gmail.GmailAuthorizer = ownerMailAuthorizerOverride ?: ownerMailAuthorizer
+
+        override fun authorize(capabilities: Set<at.heinz.deviceai.gmail.GmailCapability>,
+                               done: (at.heinz.deviceai.gmail.GmailAuthResult) -> Unit) {
+            ownerMailAuthorizerOverride?.let { fake ->
+                done(fake.silent(capabilities).let { if (it is at.heinz.deviceai.gmail.GmailAuthResult.NeedsConsent)
+                    at.heinz.deviceai.gmail.GmailAuthResult.Failed(at.heinz.deviceai.gmail.GmailFailureKind.CANCELLED) else it })
+                return
+            }
+            ownerMailConsent.begin(capabilities) { result -> mainHandler.post { if (!isFinishing && !isDestroyed) done(result) } }
+        }
+
+        override fun revoke(account: String?, grant: at.heinz.deviceai.gmail.GmailGrant,
+                            done: (at.heinz.deviceai.gmail.GmailFailureKind?) -> Unit) {
+            if (ownerMailAuthorizerOverride != null) { done(null); return }
+            ownerMailAuthorizer.revoke(account, grant) { problem -> mainHandler.post { done(problem) } }
+        }
+
+        override fun <T> runJob(request: String, label: String, work: (at.heinz.deviceai.gmail.OwnerMailJob) -> T, done: (Result<T>) -> Unit) {
+            this.work.runFileJob(request, { job ->
+                work(object : at.heinz.deviceai.gmail.OwnerMailJob {
+                    override fun step(key: String, label: String, state: at.heinz.deviceai.cockpit.StepState) = job.step(key, label, state)
+                    override fun cancelled(): Boolean = isFinishing || isDestroyed
+                    override fun generate(prompt: String, cloud: Boolean): OwnerWorkGeneration {
+                        // The brain the lane decided on must be the one that answers: never quietly the other one.
+                        if (cloud != (claudeBrain?.claudeSelected == true))
+                            return OwnerWorkGeneration("", "Das gewählte Gehirn hat sich geändert", false)
+                        if (cloud) at.heinz.deviceai.localmodel.ClaudeTurnGate.refusal(claudeBrain, request, false)
+                            ?.let { return OwnerWorkGeneration("", it, false) }
+                        val generation = generateLocal(promptCharacters = prompt.length, hardDeadlineMillis = 150_000,
+                            maxOutputBytes = 6_000) { callback -> localRuntime.streamTextOnly(prompt, callback) }
+                        return OwnerWorkGeneration(generation.response, generation.failure,
+                            generation.completion == LocalGenerationCompletion.COMPLETE)
+                    }
+                })
+            }) { result -> done(result) }
+        }
+
+        override fun contactsReadable(): Boolean = send.contactsReadable()
+        override fun requestContacts(explanation: String, done: (Boolean) -> Unit) = send.requestContacts(explanation, done)
+        override fun contacts(): at.heinz.deviceai.sending.OwnerSendContactSource = send.contacts()
+        override fun nowMillis(): Long = System.currentTimeMillis()
+        override fun zone(): java.time.ZoneId = java.time.ZoneId.systemDefault()
+        override fun deliverable(title: String, text: String, cloud: Boolean) = summarised(title, text, 1, cloud, true)
+        override fun summarised(title: String, text: String, mails: Int, cloud: Boolean, complete: Boolean) {
+            at.heinz.deviceai.cognitive.OwnerDeliverable.ofMailSummary(title, text, mails, cloud, complete, java.time.LocalDate.now(),
+                System.currentTimeMillis())?.let(ownerWorkTools::adoptDeliverable)
+        }
+        override fun outcome(outcome: OwnerLaneOutcome) {
+            // A question of the mail lane (send confirmation, missing right, which mail) gets the next owner turn first.
+            ownerOpenQuestions.noteOutcome(OWNER_MAIL_LANE, outcome)
+            continuumBriefing.laneOutcome(outcome)
+        }
+    }
 
     private fun runCloud(message: String?, outputs: List<ToolOutput>) = runCloud(message, outputs, command03ViewOwner())
 
@@ -17295,6 +17838,48 @@ class AgentActivity : Activity() {
         return true
     }
 
+    /** The offer „Soll ich ihn auf ‚Immer an' stellen?“ waits for exactly the owner's next turn in this chat. */
+    private var internetAccessOffer: Pair<String, Long>? = null
+
+    /**
+     * The owner talks about Continuum's own internet access (cognitive/OwnerInternetAccess): the answer names the real
+     * setting; widening it is offered and done only after his „Ja“, narrowing it is done at once. No model turn.
+     */
+    private fun consumeInternetAccessCommand(request: String): Boolean {
+        fun state() = at.heinz.deviceai.cognitive.OwnerInternetAccess.State(internetConsent.mode,
+            claudeBrain?.claudeSelected == true, claudeBrain?.cloudWebReady == true)
+        fun say(text: String, line: String) {
+            input.text.clear()
+            addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            addNonModelReply(request, text, at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+            addToolActivity(line)
+        }
+        val offered = internetAccessOffer
+        internetAccessOffer = null
+        if (offered != null && offered.first == sessionId && android.os.SystemClock.elapsedRealtime() - offered.second in 0..120_000L) {
+            when (at.heinz.deviceai.cognitive.OwnerInternetAccess.answer(request)) {
+                true -> {
+                    setInternetMode(at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+                    say(at.heinz.deviceai.cognitive.OwnerInternetAccess.allowed(state()),
+                        "INTERNETZUGANG · auf „Immer an“ gestellt · nach deinem Ja · kein Modellaufruf")
+                    return true
+                }
+                false -> {
+                    say(at.heinz.deviceai.cognitive.OwnerInternetAccess.KEPT, "INTERNETZUGANG · unverändert · kein Modellaufruf")
+                    return true
+                }
+                null -> Unit
+            }
+        }
+        val ask = at.heinz.deviceai.cognitive.OwnerInternetAccess.parse(request) ?: return false
+        val reply = at.heinz.deviceai.cognitive.OwnerInternetAccess.reply(ask, state())
+        reply.set?.let(::setInternetMode)
+        say(reply.text, "INTERNETZUGANG · " + (if (reply.set != null) "eingeschränkt auf deinen Befehl" else "Stand genannt") +
+            " · kein Modellaufruf")
+        if (reply.offer) internetAccessOffer = sessionId to android.os.SystemClock.elapsedRealtime()
+        return true
+    }
+
     /** Activity-log wording: an answer from the cloud brain is never called local. */
     private fun brainLabel(local: String, cloud: String): String =
         if (claudeBrain?.claudeSelected == true) cloud else local
@@ -18140,10 +18725,14 @@ class AgentActivity : Activity() {
      */
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,
                                     allowMaya: Boolean = ownerReplyAllowsMaya, speakNow: Boolean = true,
-                                    kind: at.heinz.deviceai.cognitive.OwnerChatLine.Kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.SYSTEM) {
+                                    kind: at.heinz.deviceai.cognitive.OwnerChatLine.Kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.SYSTEM,
+                                    persist: Boolean = true) {
         // „Ich habe „Thermux“ als Termux verstanden.“ – stated once, in front of the answer to the repaired turn.
         @Suppress("NAME_SHADOWING") val value = ownerUnderstanding.withNotice(sessionId, value)
         if (value.trimEnd().endsWith("?")) { incomingQuestionTurn = ownerReplyRevision; incomingQuestionAt = android.os.SystemClock.elapsedRealtime() }
+        ownerTalk.noteAppLine(value)
+        if (kind == at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER && selectedBot == null)
+            ownerSharedWorkFeed.conversation(sessionId)
         // First sign of life after a pause that was already an order: one short greeting clause in front of the answer,
         // as a line of its own (it is not part of the answer) – never before a question or a failure (OwnerTalk).
         val returnClause = ownerTalk.returnClause(sessionId, value)
@@ -18165,7 +18754,7 @@ class AgentActivity : Activity() {
             (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         }
         returnClause?.let { addBubble(it, user = false) }
-        addHomeGreeting(value, allowMaya = allowMaya, speakNow = speakNow, spokenLead = returnClause, kind = kind)
+        addHomeGreeting(value, persist = persist, allowMaya = allowMaya, speakNow = speakNow, spokenLead = returnClause, kind = kind)
     }
 
     /** Startup/session greetings remain available in chat without taking space
@@ -19158,6 +19747,7 @@ class AgentActivity : Activity() {
 
     @Deprecated("Deprecated in Android SDK, kept for broad device compatibility")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (ownerMailConsent.onActivityResult(requestCode, resultCode, data)) return
         if (at.heinz.deviceai.cognitive.ComputerCaptureConsent.ownsRequestCode(requestCode)) {
             computerController?.projectionResult(requestCode, resultCode, data)
             return

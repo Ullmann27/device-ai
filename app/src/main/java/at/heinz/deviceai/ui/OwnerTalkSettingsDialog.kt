@@ -6,11 +6,14 @@ import android.widget.EditText
 import at.heinz.deviceai.OwnerTalk
 import at.heinz.deviceai.OwnerTalkStore
 import at.heinz.deviceai.cognitive.OwnerConversationTone
+import at.heinz.deviceai.cognitive.OwnerInitiative
+import at.heinz.deviceai.cognitive.OwnerInitiativeLevel
 
 /**
  * „Gesprächston“ in the settings hub: Persönlich · Sachlich, the greeting when the owner gets in touch, how he is
- * addressed and whether his name may be handed to the cloud brain. Every change is the owner's own tap here (or his
- * spoken sentence, see [OwnerTalk.handle]); the texts say exactly what each switch does.
+ * addressed, whether his name may be handed to the cloud brain, how much the app may suggest by itself, and what it
+ * has noted about the shared work. Every change is the owner's own tap here (or his spoken sentence, see
+ * [OwnerTalk.handle]); the texts say exactly what each switch does.
  */
 internal object OwnerTalkSettingsDialog {
     const val TAG_TONE = "owner-talk-tone:"
@@ -18,6 +21,9 @@ internal object OwnerTalkSettingsDialog {
     const val TAG_NAME = "owner-talk-name"
     const val TAG_NAME_CLOUD = "owner-talk-name-cloud"
     const val TAG_STATE = "owner-talk-state"
+    const val TAG_LEVEL = "owner-talk-level:"
+    const val TAG_WORK = "owner-talk-work"
+    const val TAG_WORK_FORGET = "owner-talk-work-forget"
 
     const val INTRO = "Persönlich: locker, per Du, wie unter alten Freunden – ehrlich bleibt es trotzdem, und Freigaben und " +
         "Fehler bleiben eindeutig. Sachlich: die nüchterne Art wie bisher, ohne Begrüßung. Die Einstellung gilt für das " +
@@ -25,6 +31,9 @@ internal object OwnerTalkSettingsDialog {
     const val NAME_CLOUD_QUESTION = "Dein Name steht dann in den Arbeitsanweisungen, die bei jeder Anfrage an das Cloud-Gehirn " +
         "(Anthropic) gesendet werden, damit es dich damit anspricht. Ohne diese Freigabe bleibt dein Name auf dem Gerät; " +
         "die Begrüßung der App nennt ihn trotzdem. Du kannst die Freigabe hier jederzeit zurücknehmen."
+    const val WORK_FORGET_QUESTION = "Gelöscht wird nur, was ich mir über unsere gemeinsame Arbeit notiert habe – Art, " +
+        "Name, Stand und Zeit. Deine Dateien, Gespräche und der Arbeitsverlauf bleiben, wie sie sind. Danach kann ich " +
+        "auf „Wo waren wir?“ nichts Früheres mehr nennen."
 
     fun toneLine(store: OwnerTalkStore): String = "Gesprächston: " + store.tone.label
     fun greetingLine(store: OwnerTalkStore): String = "Begrüßung, wenn du dich nach einer Pause meldest: " +
@@ -36,7 +45,20 @@ internal object OwnerTalkSettingsDialog {
     fun nameCloudLine(store: OwnerTalkStore): String = "Name an das Cloud-Gehirn: " +
         if (store.nameToCloud) "FREIGEGEBEN" else "nicht freigegeben – der Name bleibt auf dem Gerät"
 
-    fun show(activity: Activity, store: OwnerTalkStore, talk: OwnerTalk): AlertDialog {
+    /** What the level means, in the same words wherever it is shown. */
+    fun levelLine(level: OwnerInitiativeLevel): String = "Gesprächsinitiative: " + level.label + " – " + when (level) {
+        OwnerInitiativeLevel.RESERVED -> "keine Angebote und keine Vorschläge von mir aus."
+        OwnerInitiativeLevel.NORMAL -> "höchstens ein Angebot bei der Begrüßung und ein Vorschlag nach einem fertigen Ergebnis."
+        OwnerInitiativeLevel.ACTIVE -> "zusätzlich Hinweise aus dem Zusammenhang, etwa ein Termin, der bald ansteht. Ich frage immer erst."
+    }
+
+    fun workLine(count: Int): String = "Gemeinsame Arbeit: " + when (count) {
+        0 -> "nichts festgehalten."
+        1 -> "1 Eintrag mit Zeit und Herkunft – nur auf diesem Gerät."
+        else -> "$count Einträge mit Zeit und Herkunft – nur auf diesem Gerät."
+    }
+
+    fun show(activity: Activity, store: OwnerTalkStore, talk: OwnerTalk, initiative: OwnerInitiative = talk.initiative): AlertDialog {
         val cockpit = ContinuumBentoCockpit
         val box = cockpit.panel(activity, "CONTINUUM · GESPRÄCH", "Gesprächston", INTRO)
         box.tag = "continuum-owner-talk"
@@ -57,6 +79,19 @@ internal object OwnerTalkSettingsDialog {
                 store.returnGreeting = !store.returnGreeting
                 render()
             }.apply { tag = TAG_GREETING })
+            rows.addView(cockpit.section(activity, levelLine(initiative.level)))
+            OwnerInitiativeLevel.entries.forEach { level ->
+                rows.addView(cockpit.action(activity, (if (initiative.level == level) "✓ " else "") + level.label.uppercase(),
+                    primary = initiative.level == level) { initiative.setLevel(level); render() }.apply { tag = TAG_LEVEL + level.name })
+            }
+            val noted = runCatching { talk.work.entries().size }.getOrDefault(0)
+            rows.addView(cockpit.section(activity, workLine(noted)).apply { tag = TAG_WORK })
+            if (noted > 0) rows.addView(cockpit.action(activity, "GEMEINSAME ARBEIT VERGESSEN", critical = true) {
+                AlertDialog.Builder(activity).setTitle("Vergessen, woran wir gearbeitet haben?")
+                    .setMessage(WORK_FORGET_QUESTION)
+                    .setNegativeButton("Abbrechen", null)
+                    .setPositiveButton("Ja, vergessen") { _, _ -> talk.forgetWork(); render() }.show()
+            }.apply { tag = TAG_WORK_FORGET })
             rows.addView(cockpit.section(activity, "Anrede: " + (talk.name() ?: "ohne Namen") + " · " + talk.nameSource()))
             rows.addView(cockpit.action(activity, "NAMEN EINTRAGEN ODER ÄNDERN") {
                 val field = EditText(activity).apply {

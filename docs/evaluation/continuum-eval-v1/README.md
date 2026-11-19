@@ -11,25 +11,30 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-voice.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Sprachrunde: Gesprächsregister, Satzende-Erkennung, Fahrmodus-Befehle, Benachrichtigungs-Ansagen (Codes, Links, Freigabestufen) |
 | `regression-references.jsonl` | 32 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Code64 Bezugsverwaltung: Dokumente einer Sitzung (Reihenfolge, Name, „das andere“), Seiten- und Absatzfokus, Vergleiche mit zwei Operanden, Rückfrage bei Mehrdeutigkeit, fehlende Seiten/Absätze; Dokumente aus `regression-references.documents.json` (synthetisch) |
 | `regression-news.jsonl` | 64 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Arbeitswerkzeuge (18.11.2026): Nachrichtenauftrag ja/nein (Abgrenzung zu Mitteilungen, Messenger, Benachrichtigungs-Ansage), Themen, Antworten auf die Rückfrage, Feed-Lesen (RSS 2.0, RDF, Atom), Tagesauswahl und Zusammenführen derselben Meldung; Folgeaufträge auf das Ergebnis: Speichern als PDF/Word, Dateinamen (Datum, sichere Zeichen, nie überschreiben), E-Mail-Übergabe (Adresse/Name aus dem Satz); Feeds aus `regression-news.feeds.json` (synthetisch) |
-| `regression-understanding.jsonl` | 74 | **Host, automatisch** (`OwnerUnderstandingRegressionTest`) | Verstehen trotz Fehlhörung: falsch erkannte App-/Produkt-/Modellnamen in Aufträgen, österreichische Formulierungen, Beinahe-Paare mit Rückfrage, gültige Wörter und diktierter Text, die unverändert bleiben müssen; App-Bestand in `regression-understanding.apps.json` |
+| `regression-understanding.jsonl` | 77 | **Host, automatisch** (`OwnerUnderstandingRegressionTest`) | Verstehen trotz Fehlhörung: falsch erkannte App-/Produkt-/Modellnamen in Aufträgen, österreichische Formulierungen, Beinahe-Paare mit Rückfrage, gültige Wörter und diktierter Text, die unverändert bleiben müssen; App-Bestand in `regression-understanding.apps.json`; seit 19.11.2026 drei Fälle `several_orders`: Fehlhörung im ersten von zwei Aufträgen – der Name wird repariert, der Satz ist danach kein Auftrag der Computer-Lenkung |
 | `regression-chains.jsonl` | 47 | **Host, automatisch** (`OwnerTaskChainRegressionTest`) | Aufgabenketten über den echten Orchestrator, ToolGate und Guard mit nachgestelltem Geräte-Backend: Reihenfolge, Argumentübergabe, Erfolgsprüfung stoppt die Kette, Freigabe-Pause und „weiter“, Auswahl, STOP, abgelehnte Modellpläne |
 | `regression-send.jsonl` | 62 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Selbst senden (18.11.2026): WhatsApp-Auftrag ja/nein (Abgrenzung zu Vorlesen, Fragen, Nachrichtenüberblick, App öffnen), Wortlaut (diktiert, indirekte Rede, Dialekt, Wunsch nach eigenem Text), Empfängerauflösung im Adressbuch (eindeutig, mehrdeutig, unbekannt, ohne Ländervorwahl), ganze Besitzerzüge durch Lenkung und Sendeablauf auf einem nachgebauten Gerät: Dauerfreigabe je Kanal, Regel a (nur Diktiertes/Bestätigtes), Regel b (Rückfrage statt Raten), Bildschirmprüfung, Tagesgrenze, Bildschirmtext als Daten, Gmail mit/ohne gespeicherte Datei, Beziehungen statt Namen („meinem Vater“: nie über Namensbestandteile, gemerkt erst nach Ja, erster Versand bestätigt), kein Empfängerwort im Text, Bestätigung nach „nicht gefunden“ (19.11.2026); Adressbuch aus `regression-send.contacts.json` (frei erfunden). WhatsApp/Gmail selbst sind **nicht** Teil dieses Laufs (Gerät: NOT_RUN) |
 | `regression-library.jsonl` | 160 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage (18.11.2026), **Entwicklungssatz**: „Öffne das PDF Argon4“ ja/nein (ohne Namen → Android-Auswahl, Verneinung, Zitat, Web-Formulierung, Zweitauftrag), Name wie gesagt, Spracherkennungs-Varianten (Zahlwort, klein, „öffnet“, „als Wort“, „Fasst/Fast“), Namensvergleich und Rang (genau · Anfang · enthält · Beinahe-Treffer), Antworten auf die Rückfrage, Seitenauftrag mit Speichern, Korrekturen (Seite · Format · andere Datei · Nummer · Name), Stopp, Abgrenzung zu den anderen Lenkungen |
 | `regression-library-check.jsonl` | 74 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (`b058417cd`), wird nicht zum Abstimmen benutzt |
-| `regression-missions.jsonl` | 58 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen (18.11.2026), **Entwicklungssatz**: ein Satz mit mehreren Aufträgen für die Besitzer-Lenkungen → geordneter Plan (Lenkung und Argumente je Schritt) oder `NONE`. Besitzerabläufe (PDF öffnen → Seite zusammenfassen → Word → Mail; Nachrichten → PDF → Mail; neuestes PDF suchen → öffnen), Verbinder (Komma, „und“, „und dann“, „danach“, „anschließend“, „dann“, „zuerst“), Bezüge („es“, „sie“, „die Datei“), unabhängige Aufträge hintereinander; dagegen Einzelaufträge, Fragen, Zitate, Verneinungen, Bedingungen, „und“ in Dateinamen und Nachrichtentexten, Bezüge ohne Erzeuger, fremde Teilaufträge, zu viele Schritte |
-| `regression-missions-check.jsonl` | 49 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Auftragsfolgen vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
+| `regression-missions.jsonl` | 98 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen (18.11.2026), **Entwicklungssatz**: ein Satz mit mehreren Aufträgen für die Besitzer-Lenkungen → geordneter Plan (Lenkung und Argumente je Schritt) oder `NONE`. Besitzerabläufe (PDF öffnen → Seite zusammenfassen → Word → Mail; Nachrichten → PDF → Mail; neuestes PDF suchen → öffnen), Verbinder (Komma, „und“, „und dann“, „danach“, „anschließend“, „dann“, „zuerst“), Bezüge („es“, „sie“, „die Datei“), unabhängige Aufträge hintereinander; dagegen Einzelaufträge, Fragen, Zitate, Verneinungen, Bedingungen, „und“ in Dateinamen und Nachrichtentexten, Bezüge ohne Erzeuger, fremde Teilaufträge, zu viele Schritte. Stand der Datei 84 Fälle: 64 bis zum 19.11.2026 (darunter die Speicher-Folgen) und 20 für die Mehrschritt-Arbeit vom 19.11.2026 – Seite zusammenfassen ohne Speichern (`PAGESUM`) und der Läufer `mission_reading` für die ehrliche Teilantwort (Zielsatz des Besitzers und die Sätze 1–5 der Architekturkritik); dazu 14 Fälle (MIS-085…098) für die zweite Phase vom 19.11.2026: Sende-, App-, Mail-, Kalender- und Recherche-Schritte (`SEND`, `APP`, `MAILFIND`, `MAILREAD`, `MAILSUM`, `CAL`, `RESEARCH`) |
+| `regression-missions-check.jsonl` | 89 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Auftragsfolgen vor der Umsetzung“), wird nicht zum Abstimmen benutzt; dazu 22 Fälle vom 19.11.2026 (`PAGESUM`, `mission_reading`), ebenfalls vor ihrer Umsetzung eingecheckt (`84f0df82b`), und 18 Fälle (MISC-072…089) für die zweite Phase, vor deren Umsetzung eingecheckt (`c64e0d5b1`) |
 | `regression-coding-agents.jsonl` | 56 | **Host, automatisch** (`CodingAgentOrderRegressionTest`) | Coding-Agenten (19.11.2026), **Entwicklungssatz**: welche Sätze ein Auftrag für die Cloud-Coding-Agenten sind, für welches Repository der Freigabeliste und welcher Art (Coding-Auftrag / Sicherheitsprüfung) – Auftragsformen des Besitzers („Coding-Agent: …“, „Lass den Agenten in <Repo> …“, „Der Coding-Agent soll …“, „Gib dem Coding-Agenten den Auftrag …“), Repository-Auflösung (genannt, als Link, Besitzer/Name, keines genannt bei einem oder mehreren freigegebenen, fremdes Konto, nicht freigegeben), Bereich öffnen, Stopp, Status; dagegen Fragen, Aussagen, Zitate, Verneinungen, Bedingungen, eingebettete Aufträge, bloßes „Agent“ ohne Repository (lokales Team) |
 | `regression-coding-agents-check.jsonl` | 51 | **Host, automatisch** (`CodingAgentOrderRegressionTest`) | Coding-Agenten, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor dem Parser eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Coding-Agenten-Aufträge vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `regression-devicetools.jsonl` | 125 | **Host, automatisch** (`DeviceToolRegressionTest`) | Gerätewerkzeuge (19.11.2026), **Entwicklungssatz**: Gerätesuche über Apps, Dateien und Ordner (Rang genau · Anfang · enthält, Zahlwörter, Umlaute, Typwörter, Ordnernamen, Beinahe-Treffer), Schaltbefehle für die Cloud-Freigaben (Namen · Inhalte) und „Dokumente ohne Rückfrage“, Entscheidung vor dem Start eines Werkzeugs (im Prozess · Shizuku-Brücke · abgelehnt mit Grund: Brücke läuft nicht, Dateizugriff fehlt, Cloud-Freigabe fehlt, nur Systemzentrum, Anzeigen nicht verlangt, Dokumentgrenze), Vorab-Freigabe eines Dokuments, Modellpläne mit den neuen Werkzeugen (gültig/abgelehnt), Kettenläufe über den echten Orchestrator und das ToolGate mit nachgestelltem Backend in den echten Ausgabeformaten, Dokument-Auszeichnung (Überschrift · Liste · Absatz), Seitenbereiche; Geräte-Bestand in `regression-devicetools.fixture.json` (frei erfunden) |
 | `regression-devicetools-check.jsonl` | 94 | **Host, automatisch** (`DeviceToolRegressionTest`) | Gerätewerkzeuge, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Fällen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): Prüfsätze für die Gerätewerkzeuge vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `regression-incoming.jsonl` | 130 | **Host, automatisch** (`IncomingMessageRegressionTest`) | Eingehende Nachrichten melden (19.11.2026), **Entwicklungssatz**: Absender, Betreff, Text und App einer frei erfundenen Nachricht → melden · nicht melden · unklar, jeweils mit Grund. Gerichte und Behörden (Bezirksgericht, Landesgericht, Staatsanwaltschaft, Finanzamt/FinanzOnline, Magistrat, BH, ÖGK, PVA, AMS, Gemeinde, Polizei, gv.at; auch deutsche), Institute (Bank, Versicherung, Schule, Ordination/Klinik, Kanzlei/Notar, Steuerberatung, Hausverwaltung, Inkasso), amtliche Sachen im Betreff (Bescheid, Ladung, Mahnung, Zahlungserinnerung, Kündigung, RSa/RSb, Aktenzeichen, Frist), Werbung (Rabatt, Gutschein, Newsletter, Sale, „jetzt sichern“, Marketing-Adressen, Institute mit Werbung, „Gerichte der Woche“), Sammelmeldungen sozialer Netzwerke, Personen (Kontakt, Personenname mit und ohne Titel), Messenger (Kontakt, unbekannte Nummer, Geschäftskonto, Gruppe aus/an), Besitzerlisten „immer melden“/„nie melden“, unklare Fälle (Paket, Rechnung, Sicherheitswarnung) |
 | `regression-incoming-check.jsonl` | 78 | **Host, automatisch** (`IncomingMessageRegressionTest`) | Eingehende Nachrichten melden, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Absendern und Betreffen; vor dem Klassifikator geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für eingehende Nachrichten vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
-| `regression-briefing.jsonl` | 94 | **Host, automatisch** (`ContinuumBriefingRegressionTest`) | Systemstart-Bericht und Tagesbriefing (19.11.2026), **Entwicklungssatz**: welcher Satz ist ein Auftrag für Systemcheck, Briefing (mit/ohne Nachrichtenteil), Termine heute/morgen, Wetter (gespeicherter oder genannter Ort), Ortseinstellung, Anruf über die Wähltastatur, das tägliche Briefing-Angebot und den Nachrichtenteil – und welcher Satz behält seine heutige Lenkung (`NONE`: Dokument- und Filmfragen, Nachrichtenaufträge, Geräteuhr, Gruß, Fähigkeitenliste, Systemdiagnose, Sendeaufträge, Dokumentenablage, Routinen, Arbeitsjournal, Verneinung, Zitat, wiedergegebene Rede, Kalender schreiben); dazu die Antwort auf die Folgeangebote („Entscheide du die Aktion“) |
-| `regression-briefing-check.jsonl` | 86 | **Host, automatisch** (`ContinuumBriefingRegressionTest`) | Systemstart-Bericht und Tagesbriefing, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): Sätze für Briefing und Systemstart vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
+| `regression-briefing.jsonl` | 115 | **Host, automatisch** (`ContinuumBriefingRegressionTest`) | Systemstart-Bericht und Tagesbriefing (19.11.2026), **Entwicklungssatz**: welcher Satz ist ein Auftrag für Systemcheck, Briefing (mit/ohne Nachrichtenteil), Termine heute/morgen, Wetter (gespeicherter oder genannter Ort), Ortseinstellung, Anruf über die Wähltastatur, das tägliche Briefing-Angebot und den Nachrichtenteil – und welcher Satz behält seine heutige Lenkung (`NONE`: Dokument- und Filmfragen, Nachrichtenaufträge, Geräteuhr, Gruß, Fähigkeitenliste, Systemdiagnose, Sendeaufträge, Dokumentenablage, Routinen, Arbeitsjournal, Verneinung, Zitat, wiedergegebene Rede, Kalender schreiben); dazu die Antwort auf die Folgeangebote („Entscheide du die Aktion“); dazu 21 Fälle vom 19.11.2026: Termine der Woche (`APPOINTMENTS:<THIS_WEEK|NEXT_WEEK>`), Terminprüfung (`AGENDA_CHECK`), freie Zeit (`FREE_TIME`) |
+| `regression-briefing-check.jsonl` | 115 | **Host, automatisch** (`ContinuumBriefingRegressionTest`) | Systemstart-Bericht und Tagesbriefing, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): Sätze für Briefing und Systemstart vor der Umsetzung“), wird nicht zum Abstimmen benutzt; dazu 29 Fälle vom 19.11.2026 zur Kalenderwoche, ebenfalls vor ihrer Umsetzung eingecheckt (`84f0df82b`) |
+| `regression-computer.jsonl` | 26 | **Host, automatisch** (`OwnerComputerRegressionTest`) | Computer-Lenkung bei mehreren Aufträgen in einem Satz (19.11.2026), **Entwicklungssatz**: ein weiterer Auftrag hinter der App, im Suchtext oder im Empfänger – Verbinder oder Komma + Imperativ – gibt den Satz weiter (`NONE`) statt ihn abzulehnen oder in die Suche zu tippen; die eigenen Aufträge der Lenkung (Öffnen, Suchen, „und“ ohne Imperativ, diktierter Text, Verneinung, Apps nur zum Öffnen) bleiben |
+| `regression-computer-check.jsonl` | 16 | **Host, automatisch** (`OwnerComputerRegressionTest`) | Computer-Lenkung, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (`84f0df82b`), wird nicht zum Abstimmen benutzt |
 | `regression-talk.jsonl` | 194 | **Host, automatisch** (`OwnerTalkRegressionTest`) | Gesprächssatz (19.11.2026), **Entwicklungssatz**: Gesprächston-Befehl („Sprich persönlich mit mir“ / „Sprich wieder sachlich“), „Nenn mich …“ und Widerruf, reiner Gruß ja/nein, Schalter der Begrüßung, Pause aus zwei Zeitstempeln (Stufen und Rundung), Reparatur verirrter Tastaturpunkte, „Erstelle eine PDF“ ohne Zeigewort, Satz als Auftragsfolge, was das Cloud-Gehirn auf einen Auftrag abbilden darf (und was verworfen wird), direkte Frage nach dem laufenden Modell, Suche der Ablage in der Wunschform, zerlegter Name als ähnlicher Treffer. Enthält die zwei Besitzer-Feldfälle vom Fold7 (`category: field`) |
 | `regression-talk-check.jsonl` | 114 | **Host, automatisch** (`OwnerTalkRegressionTest`) | Gesprächssatz, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; wird nicht zum Abstimmen benutzt |
+| `dialogue-benchmark.jsonl` | 262 | **Host, automatisch** (`DialogueBenchmarkTest`) | Human Dialogue Benchmark, Experiment E3 (19.11.2026, „Gesetz Nummer eins – Persönlichkeit“): ganze Gesprächslagen statt einzelner Sätze – Begrüßung nach Lage, Rückkehr mit offener Arbeit, „Wo waren wir?“, Smalltalk ohne behauptete Gefühle, Korrekturen und Unterbrechungen, Umgangssprache, Initiative je Stufe, Nichts-Erfinden, Wiederholungen über Folgen. Jede Zeile läuft gegen den echten `OwnerTalk` mit gestellter Uhr und gestellten Speichern. 184 Entwicklungsfälle (`"set": "dev"`) und 78 **zurückgehaltene** (`"set": "heldout"`, vor der Umsetzung geschrieben und eingecheckt, Commit `a3dd77f2a`; gemessen, nicht nachgezogen). Schema und Ergebnis: `docs/research/DIALOG-BENCHMARK-20261119.md` |
 | `regression-deepclean.jsonl` | 152 | **Host, automatisch** (`DeepCleanRegressionTest`) | Speicher & Bereinigung (19.11.2026), **Entwicklungssatz**: welcher Satz welcher Auftrag mit welchen Rechten ist – nur prüfen (`ANALYSE`), sicher bereinigen (`SAFE_CLEAN`, nur GRÜN), Tiefenanalyse/-bereinigung (`DEEP_ANALYSE`/`DEEP_CLEAN`, GELB nur zur Auswahl), Optimierung (`OPTIMISE`, nie löschen), gezieltes Löschen (`TARGETED:<Gruppe>` / `TARGETED:NAME:<Datei>`), Bericht, Wiederherstellen, Bildschirm; Einschränkungen und Verneinungen (`NO_DELETE`, `KEEP:<Gruppen>`, `UNSURE`), Rückfragen (`CLARIFY`, `DECLINE`); dagegen fremde Sätze (`NONE`: Mail, Kalender, Bildschirm, Systemdiagnose, eigener Cache der Systemzentrale, Zitate, Anleitungsfragen) und die Antworten auf die nummerierte Auswahl (`deepclean_reply`) |
 | `regression-deepclean-check.jsonl` | 75 | **Host, automatisch** (`DeepCleanRegressionTest`) | Speicher & Bereinigung, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; zusammen mit dem Entwicklungssatz geschrieben und nach dem ersten Lauf **nicht** zum Abstimmen benutzt – Fehltreffer werden als `KNOWN_CHECK_MISSES` festgehalten |
+| `regression-mail.jsonl` | 161 | **Host, automatisch** (`OwnerMailRegressionTest`) | Gmail-Lenkung (19.11.2026), **Entwicklungssatz**: Satz + offener Mailkontext (`context`: NONE · LIST · MAIL · DRAFT · CONFIRM) → Route der Lenkung (`CONNECT`, `NEW`, `SEARCH_FROM:…`, `READ:n`, `PICK:n`, `SUMMARIZE`, `DEADLINES`, `DRAFT:<an>|<Text>`, `REPLY:…`, `SEND`, `CONFIRM:YES/NO`, `STOP` …) oder `NONE`; Fälle mit `keeps` prüfen zusätzlich, dass die genannte Lenkung (SEND, SHARE, DESK, EXPORT, BRIEFING, NEWS) den Satz wirklich nimmt – „Schick das per Mail an Anna“ bleibt die bestehende Weitergabe |
+| `regression-mail-check.jsonl` | 80 | **Host, automatisch** (`OwnerMailRegressionTest`) | Gmail-Lenkung, **zurückgehaltener Prüfsatz**: vor dem Parser eingecheckt (Commit „test(eval): Mail-Sätze und zurückgehaltener Prüfsatz vor der Umsetzung“), wird nicht zum Abstimmen benutzt; Fehltreffer sind im Test festgehalten |
 | `model-dev.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | Entwicklungs-/Abstimmungssatz für Prompt-, Kontext- und ggf. Adapteranpassung |
 | `model-holdout.jsonl` | 34 | **Gerät, lokales Modell** – NOT_RUN | fester Abschlusstest; darf nie für Training, Prompt-Abstimmung oder Fehlersuche verwendet werden |
 | `model-holdout.sha256` | – | Host | Prüfsumme des Holdouts; eine Änderung lässt den Test fehlschlagen |
@@ -80,6 +85,15 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   `FIND:<Name>` (nur suchen) · `PAGE:<n|LAST>:<DOCX|PDF|ASK>` (Seite zusammenfassen und speichern) · `NEWS` · `EXPORT:<PDF|DOCX>` ·
   `MAIL:<Adresse oder Empfänger wie gesagt>` · `FILE:<NEWEST|SEARCH>` (Rezept der Aufgabenketten) · `OPEN_FOUND` (die gefundene
   Datei öffnen) · `OPEN_SAVED` (die gerade gespeicherte Datei öffnen)
+  · `PAGESUM:<n|LAST>` (Seite lesen und zusammenfassen, Ergebnis nur im Gespräch – es wird keine Datei geschrieben) ·
+  `STORAGE:<Modus>`. `mission_reading` (19.11.2026) liest den Satz Teilsatz für Teilsatz und erwartet `reading`: `PLAN` ·
+  `PARTIAL` (mehrere Aufträge, nicht alle sind schon möglich: ehrliche Teilantwort, nichts läuft von selbst) · `NONE`
+  (keine Auftragsfolge: der Satz behält seine heutige Lenkung); optional `clauses` – ein Code je Auftrag in Reihenfolge:
+  der Schrittcode, wenn eine Lenkung ihn heute als Schritt ausführt (`OPEN_IT` = „öffne es“ vor der Bindung), sonst
+  `LATER:<SEND|APP|CALL|APPOINTMENTS|WEATHER|BRIEFING|STORAGE|RESEARCH|SUMMARY>` (eine Lenkung nimmt den Auftrag allein,
+  als Schritt einer Folge kommt er erst später), `NOTYET:MAIL` (Mails lesen kann die App noch nicht) oder `UNKNOWN`
+  (Auftragsverb, aber keine Lenkung kennt den Auftrag) – und `rest`: die Schritte, die statt des Ganzen angeboten werden
+  (`[]` = nichts: was auf einem nicht ausführbaren Auftrag aufbaut, wird nicht angeboten)
 - `regression-coding-agents.jsonl` / `regression-coding-agents-check.jsonl`: `coding_order` erwartet `order` – `NONE` (der
   Satz behält seine heutige Lenkung) · `PANEL` · `STOP` · `STATUS` · oder `<CODE|SECURITY>:<Ziel>` mit Ziel `<Besitzer/Name>`
   (genannt und freigegeben) · `ONLY:<Besitzer/Name>` (keines genannt, genau eines freigegeben) · `ASK` (Rückfrage) ·
@@ -101,6 +115,13 @@ Regression (`regression.jsonl`), ein JSON-Objekt je Zeile:
   `RECALL`) – der Test prüft sie am echten Parser dieser Lenkung. `briefing_choice` (`offers` = die angebotenen
   nächsten Schritte in Reihenfolge: `APPOINTMENTS` · `MESSAGE` · `WORK` · `NEWS` · `DIAGNOSIS` · `WEATHER`) erwartet
   `choice` (`PICK:<n>` · `ASK` = Ja bei mehreren Angeboten · `DECLINE` · `NONE` = keine Antwort auf das Angebot)
+  Seit 19.11.2026 zusätzlich: `APPOINTMENTS:<THIS_WEEK|NEXT_WEEK>` (diese Woche = heute bis Sonntag, nächste Woche =
+  Montag bis Sonntag) · `AGENDA_CHECK:<TODAY|TOMORROW|THIS_WEEK|NEXT_WEEK>` („habe ich etwas vergessen?“ – beantwortet nur
+  aus festen Regeln über die echten Einträge) · `FREE_TIME:<TODAY|TOMORROW|THIS_WEEK|NEXT_WEEK>` (freie Blöcke ab zwei
+  Stunden zwischen 8 und 20 Uhr)
+- `regression-computer.jsonl` / `regression-computer-check.jsonl`: `computer_order` erwartet `computer`
+  (`READY:<APP>:<ZIEL>` · `ASK` · `UNSUPPORTED` · `NONE` = kein Auftrag dieser Lenkung, der Satz wird weitergereicht) und
+  optional `query` (was in die Suche der App getippt würde)
 
 Modellfälle (`model-*.jsonl`):
 
@@ -275,6 +296,89 @@ Wetter?“ (`REG-LONG-001`) und „Ruf Anna an“ (`VOI-END-007`) – dort theme
 ohne eigene Lenkung; ihre eigenen Tests sind unverändert grün. Jede weitere Äußerung, die wandert, lässt den Test
 fehlschlagen. Was auf dem Gerät passiert – Spracherkennung, Kalender-Anbieter, Wähltastatur, Open-Meteo, Sprachausgabe –
 ist NOT_RUN.
+
+Für die Mehrschritt-Arbeit vom 19.11.2026 (Architekturkritik `docs/research/ARCHITEKTURKRITIK-MEHRSCHRITT-20261119.md`,
+Befunde B1, B5, B7 und die Sätze 4 und 5) gilt, in der Reihenfolge, in der es entstand:
+
+1. **Zuerst die zurückgehaltenen Fälle**, vor jeder Zeile Code, eingecheckt als `84f0df82b`: 22 in
+   `regression-missions-check.jsonl` (MISC-050…071), 29 in `regression-briefing-check.jsonl` (BRC-087…115), 16 in der neuen
+   `regression-computer-check.jsonl` (COMC-001…016). Die Codes (`PAGESUM`, `mission_reading`, `AGENDA_CHECK`, `FREE_TIME`,
+   `computer_order`) wurden dafür vorab festgelegt.
+2. **Dann der Code**, und mit ihm die Entwicklungsfälle (MIS-065…084, BRF-095…115, COM-001…026, UND-075…077). Die
+   Entwicklungsfälle wurden in Kenntnis des Codes geschrieben und an ihm ausgerichtet; kein Satz steht in beiden Sätzen
+   (die Tests prüfen das).
+
+Gemessen am Host, die neuen zurückgehaltenen Fälle beim ersten Lauf, in dem ihr Läufer existierte:
+
+| Satz | neue Prüffälle, erster Lauf | Endstand der Datei |
+|---|---|---|
+| `regression-missions-check.jsonl` | 21 / 22 | 70 / 71 (der eine ist MISC-038, siehe unten) |
+| `regression-briefing-check.jsonl` | 29 / 29 | 115 / 115 |
+| `regression-computer-check.jsonl` | 16 / 16 | 16 / 16 |
+
+Der eine Fehlschlag (MISC-065 „Ruf Anna an und öffne danach das PDF Argon4“): „danach“ direkt hinter dem Verb trennte den
+Teilsatz, das PDF wurde nicht als Auftrag erkannt und deshalb nicht angeboten. Behoben am Code mit einer allgemeinen Regel
+(ein Reihenfolgewort direkt hinter dem Verb sagt wann, nicht was); der Fall selbst blieb unverändert. Das ist eine
+Korrektur **wegen** eines zurückgehaltenen Falls und hier als solche ausgewiesen – der Prüfsatz ist für diese eine Regel
+kein unabhängiger Beleg mehr.
+
+Ein alter zurückgehaltener Fall hält seitdem **absichtlich** nicht mehr und bleibt unverändert in der Datei: MISC-038 „Öffne
+das PDF Argon4 und fass Seite 2 zusammen“ war als `NONE` festgelegt („Zusammenfassen ohne Speichern bleibt die Antwort im
+Gespräch“). Der Besitzersatz vom 19.11.2026 („Such die PDF-Datei Argon4, öffne sie, analysiere Seite zwei und fasse sie
+zusammen“) verlangt genau diese Folge; in der Kurzform kann derselbe Auftrag nichts anderes bedeuten. Der Satz ist jetzt
+`OPEN:Argon4 → PAGESUM:2` – weiterhin eine Antwort im Gespräch, weiterhin ohne Datei. `OwnerMissionRegressionTest` führt ihn
+namentlich (`SUPERSEDED`) und hält den neuen Plan fest. MISC-037 („… und schick es per Mail an …“) blieb bis zur zweiten
+Phase `NONE`: eine nur gezeigte Zusammenfassung war noch keine Quelle für einen späteren Schritt (siehe unten).
+
+### Zweite Phase der Auftragsfolgen (19.11.2026): Sende-, App-, Mail-, Kalender- und Recherche-Schritte
+
+Reihenfolge, in der es entstand:
+
+1. **Zuerst die zurückgehaltenen Fälle**, vor jeder Zeile Code, eingecheckt als `c64e0d5b1`: 18 in
+   `regression-missions-check.jsonl` (MISC-072…089). Die Codes (`SEND:WHATSAPP:<Empfänger>`, `APP:<App>`, `MAILFIND:<Suche>`,
+   `MAILREAD`, `MAILSUM`, `CAL:<Briefing-Code>`, `RESEARCH:<Thema>`) wurden dafür vorab festgelegt.
+2. **Dann der Code**, und mit ihm die Entwicklungsfälle MIS-085…098. Sie wurden in Kenntnis des Codes geschrieben und an ihm
+   ausgerichtet.
+
+Gemessen am Host beim ersten Lauf, in dem der Code übersetzte: **17 / 18** der neuen zurückgehaltenen Fälle. Der eine
+Fehlschlag war MISC-081 („Schreib Anna auf WhatsApp, dass ich nicht komme, und öffne das PDF Argon4“): Die Prüfung „ein
+Satz der Computer-Lenkung bleibt ihr Auftrag“ sah das „nicht“ im Nachrichtentext und verwarf den Plan. Behoben am Code mit
+einer allgemeinen Regel (ein Satz, der mit einer Nachricht beginnt, gehört nie der Computer-Lenkung – die Sende-Lenkung
+steht in der App davor); der Fall blieb unverändert. Das ist eine Korrektur **wegen** eines zurückgehaltenen Falls: Für
+diese eine Regel ist der Prüfsatz kein unabhängiger Beleg mehr. Endstand der Datei: 89 Fälle, davon halten 81 wie
+geschrieben; 8 sind abgelöst (unten), dazu 7 Zeilen des Entwicklungssatzes.
+
+Ältere Zeilen, die seitdem **absichtlich** nicht mehr halten und unverändert in den Dateien stehen. Sie legten fest, dass
+ein Auftrag „noch nicht“ geht, der seit der zweiten Phase ein Schritt ist. `OwnerMissionRegressionTest` führt jede
+namentlich und hält fest, was ihr Satz jetzt ist (`SUPERSEDED`, `SUPERSEDED_READINGS`):
+
+| Zeile | war | ist | Grund |
+|---|---|---|---|
+| MIS-037 | `NONE` | `OPEN:Argon4 → SEND:WHATSAPP:Anna` | Nachricht auf WhatsApp ist ein Schritt |
+| MIS-071 (Zielsatz) | `PARTIAL`, nichts angeboten | `PLAN` Mails → Zusammenfassung → PDF → WhatsApp | Mail- und Sendeschritt |
+| MIS-072 | `PARTIAL` (`LATER:APP`, `LATER:SEND`) | `PLAN` ein Sendeschritt | „Öffne WhatsApp und schreib …“ |
+| MIS-073 | `PARTIAL`, nichts angeboten | `PLAN` Mail suchen → Zusammenfassung → PDF → öffnen | Mailschritte |
+| MIS-076, MIS-078, MIS-079 | `PARTIAL`, Rest ohne Nachricht | `PLAN` mit Sendeschritt | Sendeschritt |
+| MISC-037 | `NONE` | `PAGESUM:2 → MAIL:anna@example.org` | gezeigte Seitenzusammenfassung ist ein typisiertes Ergebnis |
+| MISC-059, MISC-063, MISC-064 | `PARTIAL` (`NOTYET:MAIL`) | `PLAN` mit Mailschritten | Mailschritte |
+| MISC-060 | `PARTIAL`, nichts angeboten | `PARTIAL`, angeboten wird „Facebook öffnen“ | App öffnen ist ein Schritt; Schreiben ohne Kanal nicht |
+| MISC-061, MISC-062 | `PARTIAL`, Rest ohne Nachricht | `PLAN` mit Sendeschritt | Sendeschritt |
+
+Ob Gmail verbunden ist, entscheidet nicht der Planer: Ohne Verbindung antwortet die Auftragsfolge mit der Teilantwort, die
+die fehlende Verbindung nennt und den unabhängigen Rest anbietet (`OwnerMissionPhase2FlowTest`). Zwei Äußerungen der
+Computer-Sätze sind jetzt eine Auftragsfolge aus einem Sendeschritt (COM-001, COMC-005: „Öffne WhatsApp und schreib …“);
+`OwnerMissionRegressionTest` und `OwnerComputerRegressionTest` führen sie namentlich.
+
+Nicht am Host geprüft und NOT_RUN: WhatsApp, Gmail, Kalender, App-Start und Recherche auf dem Gerät, ein echter Neustart
+der App, eine echte Antwort eines Cloud-Modells im JSON-Planformat.
+
+Zusätzlich geprüft: Die ehrliche Teilantwort (`PARTIAL`) träfe von allen Äußerungen der übrigen Sätze genau 16, die im Test
+einzeln stehen (`KNOWN_PARTIAL_UTTERANCES`) – jeweils ein Satz mit mehreren Aufträgen, von denen die App bisher keinen oder
+stillschweigend nur einen Teil ausführte. Jede weitere lässt den Test fehlschlagen. Kein Satz, der seine Lenkung behalten
+muss, wird zu einem Plan oder zu einer Teilantwort. Die Terminprüfung selbst (Überschneidung, enger Ortswechsel, ohne
+Ort/Dauer, früh/spät, gleich, leere Tage, freie Blöcke) ist in `AgendaCheckTest` mit festen Kalendern belegt, nicht in
+diesen Sätzen. Einordnung wie überall hier: dieselbe Hand hat Prüffälle und Erkennung geschrieben. Was auf dem Gerät
+passiert – Spracherkennung, Kalender-Anbieter, PDF-Textauszug, Modell – ist NOT_RUN.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 

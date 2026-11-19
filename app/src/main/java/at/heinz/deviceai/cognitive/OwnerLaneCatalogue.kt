@@ -41,13 +41,22 @@ internal object OwnerLaneCatalogue {
                 "der Entwurf in WhatsApp bereit; nur der eigene Wortlaut des Besitzers",
             mapped = false),
         Ability("mission", "Mehrere dieser Aufträge in einem Satz nacheinander ausführen",
-            listOf("Öffne das PDF <Name>, fass Seite 2 zusammen, speichere es als Word und schick es per Mail an <Adresse>"),
-            "jeder Schritt mit den Freigaben seines eigenen Ablaufs"),
+            listOf("Öffne das PDF <Name>, fass Seite 2 zusammen, speichere es als Word und schick es per Mail an <Adresse>",
+                "Öffne das PDF <Name> und fass Seite <Zahl> zusammen"),
+            "jeder Schritt mit den Freigaben seines eigenen Ablaufs; ohne Speicherauftrag wird nichts gespeichert; was noch " +
+                "kein Schritt sein kann (senden, andere App, Mails lesen), sagt die App und bietet den Rest an"),
         Ability("newest_file", "Die neueste Datei eines Ordners suchen",
             listOf("Such das neueste PDF in Downloads"), "nur lesend", needsBridge = true),
-        Ability("computer", "Eine andere App im Live-Bild bedienen",
-            listOf("Öffne Chrome und suche <Begriff>", "Suche in Gmail nach <Begriff>"),
-            "Bildschirmbeobachtung und Bestätigungen des Besitzers; nur die fest angebundenen Apps", mapped = false),
+        // Review finding B5 (19.11.2026): the list used to name „Öffne Chrome und suche <Begriff>“ although Chrome is one
+        // of the apps this flow only opens. Every sentence here is one the flow really carries out (the test asks it).
+        Ability("computer", "Eine andere App im Live-Bild öffnen und in manchen davon suchen",
+            listOf("Öffne Chrome", "Öffne WhatsApp und suche <Begriff>", "Suche in Gmail nach <Begriff>"),
+            "Bildschirmbeobachtung und Bestätigungen des Besitzers; nur die fest angebundenen Apps; Chrome, Einstellungen, " +
+                "Kamera, Galerie, Kalender, TikTok und SMS werden nur geöffnet", mapped = false),
+        Ability("calendar", "Termine dieser oder der nächsten Woche nennen, freie Zeiten zeigen und nach festen Regeln prüfen, " +
+            "was auffällt",
+            listOf("Welche Termine habe ich diese Woche?", "Habe ich diese Woche etwas vergessen?"),
+            "nur lesend; die Termine bleiben auf dem Gerät und gehen an kein Modell", mapped = false),
         Ability("research", "Im Web recherchieren und Quellen nennen",
             listOf("Recherchiere <Thema>"), "Internetfreigabe des Besitzers", mapped = false),
         Ability("system", "Das Handy im Systemzentrum analysieren (Speicher, Wärme, Akku, eigene Diagnoseablage)",
@@ -58,7 +67,19 @@ internal object OwnerLaneCatalogue {
                 "Wie viel Platz habe ich wieder?"),
             "automatisch nur Continuums eigene, eindeutig entbehrliche Zwischendateien; alles andere nur nach Auswahl des " +
                 "Besitzers und über Androids eigenen Papierkorb-Dialog; persönliche Dateien, Modelle und Gedächtnis nie",
-            mapped = false))
+            mapped = false),
+        // Gmail lane (19.11.2026): the owner's own Google account through Google's consent; mail text is third-party data.
+        Ability("mail_connect", "Das Gmail-Konto des Besitzers verbinden, den Verbindungsstatus nennen oder trennen",
+            listOf("Verbinde Gmail", "Trenne Gmail"), "Googles eigene Freigabeseite; nur in der original signierten App", mapped = false),
+        Ability("mail_read", "Neue oder gesuchte Mails im verbundenen Gmail zeigen und vorlesen",
+            listOf("Zeig mir neue Mails", "Suche Mails von <Name>", "Lies die Mail vor"), "Leserecht bei Google; nur lesend", mapped = false),
+        Ability("mail_summary", "Mails zusammenfassen, die wichtigsten nach festen Punkten nennen und Fristen wörtlich zitieren",
+            listOf("Fass meine wichtigsten Mails zusammen", "Was steht da wegen Fristen?"),
+            "Mailtext geht nur mit der eigenen Freigabe des Besitzers an die Cloud, sonst Modell auf dem Gerät", mapped = false),
+        Ability("mail_draft", "Einen Mail-Entwurf in Gmail anlegen oder auf die gezeigte Mail antworten",
+            listOf("Schreib einen Entwurf an <Name>: <Text>"), "Entwurfsrecht bei Google; gesendet wird nichts", mapped = false),
+        Ability("mail_send", "Den Entwurf über Gmail senden",
+            listOf("Schick die Mail ab"), "eigenes Senderecht bei Google und Bestätigung von Empfänger, Betreff und Text", mapped = false))
 
     /** One line per ability for a prompt: what it is, how the owner says it, what guards it. */
     fun lines(): List<String> = abilities.map { ability ->

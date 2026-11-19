@@ -27,7 +27,10 @@ class CodingAgentScreen(
     private val idle: () -> Boolean,
     private val ownerTurn: (String) -> Unit,
     private val assistantName: () -> String?,
-    private val controllerOf: () -> CodingAgentController = { AndroidCodingAgents.controller(activity) }
+    private val controllerOf: () -> CodingAgentController = { AndroidCodingAgents.controller(activity) },
+    /** A run started and ended, as the controller reports it – for a listener that keeps a record. Nobody has to listen. */
+    private val runStartedHook: (runId: String, title: String) -> Unit = { _, _ -> },
+    private val runEndedHook: (runId: String, delivered: Boolean) -> Unit = { _, _ -> }
 ) : CodingAgentHost {
     private val main = Handler(Looper.getMainLooper())
     private val ui by lazy { ContinuumBotDialogStyle(activity) }
@@ -76,9 +79,15 @@ class CodingAgentScreen(
     }
 
     override fun activity(line: String) = log(line)
-    override fun runStarted(runId: String, title: String) = triggers.commandAcknowledged(timeline(runId), title)
+    override fun runStarted(runId: String, title: String) {
+        runCatching { runStartedHook(runId, title) }
+        triggers.commandAcknowledged(timeline(runId), title)
+    }
     override fun step(runId: String, key: String, label: String, state: StepState) = triggers.workStep(timeline(runId), key, label, state)
-    override fun runEnded(runId: String, delivered: Boolean, verified: Boolean) = triggers.turnEnded(timeline(runId), delivered, verified)
+    override fun runEnded(runId: String, delivered: Boolean, verified: Boolean) {
+        runCatching { runEndedHook(runId, delivered) }
+        triggers.turnEnded(timeline(runId), delivered, verified)
+    }
     override fun idle(): Boolean = idle.invoke()
 
     /** A run moved on: only the status and the run list are redrawn, so nothing the owner is typing is lost. */
