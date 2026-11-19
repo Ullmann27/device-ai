@@ -764,10 +764,12 @@ class ContinuumCommand03BridgeUiTest {
         } finally { release.countDown() }
         AgentActivity.chatTranscriptIo.submit {}.get(8, TimeUnit.SECONDS)
         repeat(3) { advance() }
-        @Suppress("UNCHECKED_CAST")
-        val botRows = field(a, "command03VisibleMessages") as ArrayDeque<Pair<Boolean, String>>
+        // A visible line is a typed record (user, text, kind) since „das“ may only mean a result; the text is read as before.
+        val botRows = field(a, "command03VisibleMessages") as ArrayDeque<*>
         assertTrue(botRows.isNotEmpty())
-        assertTrue(botRows.first().second.startsWith("Atlas ·"))
+        val firstRow = botRows.first()!!
+        val firstText = firstRow.javaClass.getDeclaredField("text").apply { isAccessible = true }.get(firstRow) as String
+        assertTrue(firstText.startsWith("Atlas ·"))
         call(a, "returnToJarvis")
         assertNotEquals(old.viewId, binding(a).viewId)
         assertEquals(old.sessionId, binding(a).sessionId)
