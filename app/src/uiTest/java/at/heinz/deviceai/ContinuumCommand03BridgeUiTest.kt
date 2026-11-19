@@ -1166,13 +1166,24 @@ class ContinuumCommand03BridgeUiTest {
         assertEquals("UNCONFIRMED", paused.getJSONArray("actions").getJSONObject(0).getString("state"))
     }
 
-    @Test fun thePageSnapshotCarriesTheOrderRailTheStatusStripAndEmptyStartUpListsUntilRealOnesExist() = withActivity { _, a ->
+    @Test fun thePageSnapshotCarriesTheOrderRailTheStatusStripAndTheRealStartUpCheck() = withActivity { _, a ->
         ready(a)
         call(a, "syncCommand03HtmlState")
         val idle = packet(a, "receive")
         assertTrue("No step was reported, so there is no order", idle.isNull("orders"))
-        assertEquals("No provider handed checks over", "[]", idle.getJSONArray("systemCheck").toString())
-        assertEquals("No provider handed cards over", "[]", idle.getJSONArray("briefingCards").toString())
+        // The first snapshot of a ready page carries the briefing lane's real system check of this moment – the
+        // stage's start-up sequence shows measured states, never a made-up "all systems ready".
+        val measured = at.heinz.deviceai.briefing.ContinuumSystemCheck.snapshot()
+        assertTrue("The start-up check ran on real device facts", measured.isNotEmpty())
+        val shown = idle.getJSONArray("systemCheck")
+        assertEquals(minOf(measured.size, at.heinz.deviceai.ui.Command03StageBoard.MAX_CHECKS), shown.length())
+        for (index in 0 until shown.length()) {
+            assertEquals(measured[index].key, shown.getJSONObject(index).getString("key"))
+            assertEquals(measured[index].state.name, shown.getJSONObject(index).getString("state"))
+        }
+        val cards = idle.getJSONArray("briefingCards")
+        assertEquals("Only what the lane published is a card", at.heinz.deviceai.briefing.ContinuumBriefingBoard.cards().size
+            .coerceAtMost(at.heinz.deviceai.ui.Command03StageBoard.MAX_CARDS), cards.length())
         val strip = idle.getJSONObject("tactical")
         assertTrue(strip.getString("brain") in setOf("LOCAL", "CLAUDE"))
         assertTrue(strip.isNull("internet") || strip.getString("internet") in setOf("OFF", "ASK", "ALWAYS_ON"))
@@ -1206,5 +1217,12 @@ class ContinuumCommand03BridgeUiTest {
         assertEquals("WARN", filled.getJSONArray("systemCheck").getJSONObject(0).getString("state"))
         assertEquals("weather", filled.getJSONArray("briefingCards").getJSONObject(0).getString("kind"))
         assertEquals("info", filled.getJSONArray("briefingCards").getJSONObject(0).getString("state"))
+        // A new publication of the briefing lane replaces what the stage shows: the board follows the lane.
+        a.systemStartReport()
+        call(a, "syncCommand03HtmlState")
+        val again = packet(a, "receive").getJSONArray("systemCheck")
+        assertEquals(at.heinz.deviceai.briefing.ContinuumSystemCheck.snapshot().first().key, again.getJSONObject(0).getString("key"))
+        assertEquals("The fixture row made way for the measured checks", minOf(at.heinz.deviceai.briefing.ContinuumSystemCheck
+            .snapshot().size, at.heinz.deviceai.ui.Command03StageBoard.MAX_CHECKS), again.length())
     }
 }

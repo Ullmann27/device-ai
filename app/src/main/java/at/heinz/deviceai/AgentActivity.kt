@@ -2429,6 +2429,35 @@ class AgentActivity : Activity() {
     private val command03Orders = at.heinz.deviceai.ui.Command03OrdersProjection { sessionId }
     /** Start-up checks and info cards of the stage: empty until their providers hand real items over. */
     private val command03Board = at.heinz.deviceai.ui.Command03StageBoard()
+    /** The briefing board's revision this activity last showed; only what is published during its life is taken over. */
+    private var command03BoardRevision = at.heinz.deviceai.briefing.ContinuumBriefingBoard.revision()
+    private var command03BoardPrimed = false
+
+    /**
+     * Hands the stage what the briefing lane really measured: the system check of this moment and the info cards.
+     * The first time the real stage page is up, one system check runs (device facts only – no model, no network,
+     * nothing spoken) so the start-up sequence shows the true state. After that the board follows every publication
+     * of the briefing lane (system check, briefing, watcher).
+     */
+    private fun feedCommand03Board() {
+        if (!command03BoardPrimed && command03MainStage?.mediaReady == true) {
+            command03BoardPrimed = true
+            runCatching { continuumBriefing.systemReport() }
+        }
+        val revision = at.heinz.deviceai.briefing.ContinuumBriefingBoard.revision()
+        if (revision == command03BoardRevision) return
+        command03BoardRevision = revision
+        command03Board.setSystemCheck(at.heinz.deviceai.briefing.ContinuumSystemCheck.snapshot().map { check ->
+            at.heinz.deviceai.ui.Command03StageBoard.Check(check.key, check.label,
+                at.heinz.deviceai.ui.Command03StageBoard.CheckState.valueOf(check.state.name), check.detail)
+        })
+        command03Board.setBriefingCards(at.heinz.deviceai.briefing.ContinuumBriefingBoard.cards().mapNotNull { card ->
+            val kind = at.heinz.deviceai.ui.Command03StageBoard.CardKind.values().firstOrNull { it.wire == card.kind.code }
+                ?: return@mapNotNull null
+            at.heinz.deviceai.ui.Command03StageBoard.Card(card.id, kind, card.title, card.lines,
+                card.state == at.heinz.deviceai.briefing.ContinuumBriefingBoard.State.ATTENTION)
+        })
+    }
 
     /** PowerManager's thermal status (0..6), or null where the platform reports none. Never a temperature. */
     private fun currentThermalStatusOrNull(): Int? {
@@ -2467,6 +2496,7 @@ class AgentActivity : Activity() {
         if (!foregroundLearningActive || isFinishing || isDestroyed) return
         val scope = command03Binding() ?: return
         val system = capabilityDashboard?.system
+        feedCommand03Board()
         val workRows = org.json.JSONArray()
         homeView?.state?.computer?.let { computer ->
             (computer.planningRows() + computer.resultRows()).take(20).forEach { row ->
