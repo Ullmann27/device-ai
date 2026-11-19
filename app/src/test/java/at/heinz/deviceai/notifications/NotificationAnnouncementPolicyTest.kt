@@ -109,6 +109,27 @@ class NotificationAnnouncementPolicyTest {
         assertFalse(appOnly.displayDetail.contains("Anna"))
     }
 
+    @Test fun askKeepsSenderAndContentOutOfTheAnnouncementUntilTheOwnerAsks() {
+        val gmail = "com.google.android.gm"
+        val settings = settings(whatsApp to AnnouncementMode.ASK, gmail to AnnouncementMode.ASK)
+        val policy = NotificationAnnouncementPolicy()
+        val message = policy.decide(notification(), settings, state()) as Announce
+        assertEquals("WhatsApp: neue Nachricht. Darf ich sie vorlesen? Sag „Lies vor“.", message.spokenText)
+        assertFalse(message.displayDetail.contains("Anna"))
+        assertEquals("WhatsApp: Nachricht von Anna: Bin gleich da.", message.readOffer?.spokenText)
+        val mail = notification(key = "mail", packageName = gmail, label = "Gmail", category = "email")
+        val email = policy.decide(mail, settings, state()) as Announce
+        assertTrue(email.spokenText.startsWith("Gmail: neue E-Mail."))
+        assertFalse(email.spokenText.contains("Bin gleich da"))
+        assertEquals(gmail, email.readOffer?.packageName)
+        val code = policy.decide(mail.copy(key = "code", text = "Dein Sicherheitscode ist 123456"), settings, state()) as Announce
+        assertNull(code.readOffer)
+        assertFalse(code.spokenText.contains("123456"))
+        assertTrue(ReadOffer.accepts("Ja, lies die Nachricht bitte vor"))
+        assertFalse(ReadOffer.accepts("Ja"))
+        assertFalse(ReadOffer.accepts("Lies vor und beantworte sie"))
+    }
+
     @Test fun otherAppsAreReportedAndAmountsOnlyInFullMode() {
         val credit = bankNotification("Geldeingang", "Du hast € 1.250,00 erhalten")
         assertEquals(

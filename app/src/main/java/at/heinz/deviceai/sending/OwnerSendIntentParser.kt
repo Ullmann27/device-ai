@@ -76,6 +76,13 @@ internal object OwnerSendIntentParser {
     private val several = Regex("(?iu)(?:,|(?<![\\p{L}\\p{N}_])(?:und|sowie|oder|plus)(?![\\p{L}\\p{N}_]))")
     private val group = Regex("(?iu)(?:gruppe|broadcast|verteiler|(?<![\\p{L}\\p{N}_])(?:alle|allen|jeden|jedem)(?![\\p{L}\\p{N}_]))")
     private val article = Regex("(?iu)^(?:an\\s+)?(?:(?:den|dem|der|die|da|dem)\\s+)?")
+    private val familyRecipient = Regex("(?iu)^\\s*((?:mein(?:en|em|e|er)?|unser(?:en|em|e|er)?|dem|der|den|die|da)\\s+" +
+        "(?:papa|vater|mama|mutter|oma|opa|tante|onkel|bruder|schwester))(?=\\s|[:,]|$)")
+    private val additionalRecipient = Regex("(?iu)^\\s*(?:und|sowie|oder|plus)\\b")
+    private val channelAnswer = Regex("(?iu)^(?:ja[, ]+)?(?:(?:auf|in|per|über|ueber)\\s+)?whats\\s?app[.!]?$")
+    private val recipientAnswerLead = Regex("(?iu)^(?:ich\\s+habe\\s+dir\\s+(?:.{1,60}\\s+)?gesagt[, ]+)?" +
+        "(?:der\\s+(?:kontakt\\s*)?name\\s+(?:heißt|heisst|ist)|(?:der\\s+)?kontakt\\s+(?:heißt|heisst|ist)|" +
+        "ich\\s+(?:meine|meinte)|gemeint\\s+(?:ist|war))\\s*:?\\s+")
     private val headNoise = Regex("(?iu)^(?:(?:nur\\s+)?(?:als\\s+|einen\\s+|an\\s+)?entwurf\\s+(?:für|fuer|an)\\s+|" +
         "(?:eine?|a|ane)\\s+(?:kurze\\s+)?(?:nachricht|message)\\s+)")
     private val nameLike = Regex("^[\\p{L}][\\p{L}\\p{N}.'’ -]{0,59}$")
@@ -139,8 +146,22 @@ internal object OwnerSendIntentParser {
             message = tail
         } else {
             val toWhom = Regex("(?iu)^\\s*(?:an|für|fuer)\\s+(?!\\s)").find(tail)
-            if (toWhom == null) message = tail // no recipient named: asked for
-            else {
+            if (toWhom == null) {
+                val family = splitFamily(tail)
+                if (family == null) message = tail
+                else {
+                    val remainder = family.second.trimStart()
+                    if (startsWithNegation(remainder)) return Result.Refused(REFUSED_NEGATED)
+                    if (hasAdditionalRecipient(remainder)) return Result.Refused(REFUSED_SEVERAL)
+                    if (remainder.isEmpty() || remainder.startsWith(':') || remainder.startsWith(',')) {
+                        recipient = cleanRecipient(family.first)
+                        message = remainder
+                    } else {
+                        unsplit = tail.trim()
+                        message = ""
+                    }
+                }
+            } else {
                 val named = tail.substring(toWhom.range.last + 1)
                 val cut = Regex("(?iu)[:,\\n]|\\s+dass\\s+|\\s+daß\\s+").find(named)
                 if (cut != null) {
@@ -189,11 +210,19 @@ internal object OwnerSendIntentParser {
         if (text.firstOrNull()?.isLowerCase() == true) text.substring(0, 1).uppercase(Locale.GERMAN) + text.substring(1) else text
 
     /** A recipient phrase the owner gave as an answer („Anna Beispiel“, „der Thomas“); null when it is no name. */
-    fun recipientAnswer(raw: String): String? = raw.trim().trimEnd('.', '!').takeIf { it.split(Regex("\\s+")).size <= 4 }
-        ?.let(::cleanRecipient)
+    fun recipientAnswer(raw: String): String? {
+        val name = raw.trim().trimEnd('.', '!').replace(recipientAnswerLead, "")
+        return if (addressesContinuum(name) || isYes(name) || isChannelAnswer(name)) null else cleanRecipient(name)
+    }
 
     fun isCancel(raw: String): Boolean = cancel.matches(raw.trim())
     fun isYes(raw: String): Boolean = yes.matches(raw.trim())
+    fun isChannelAnswer(raw: String): Boolean = channelAnswer.matches(raw.trim())
+    fun hasAdditionalRecipient(raw: String): Boolean = additionalRecipient.containsMatchIn(raw)
+    fun startsWithNegation(raw: String): Boolean = negation.find(raw.trimStart())?.range?.first == 0
+    fun splitFamily(raw: String): Pair<String, String>? = familyRecipient.find(raw)?.let {
+        it.groupValues[1] to raw.substring(it.range.last + 1)
+    }
     /** A follow-up that reads like a question or order to Continuum itself is never taken silently as message text. */
     fun addressesContinuum(raw: String): Boolean = raw.trim().let {
         it.endsWith("?") || forContinuum.containsMatchIn(it) || infinitiveOrder.containsMatchIn(it)

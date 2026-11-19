@@ -213,6 +213,17 @@ class OwnerComputerIntentParserTest {
         }
     }
 
+    @Test fun theNewAppRoutesUseTheExistingScopedComputerPlans() {
+        assertEquals(ComputerApp.TIKTOK, ready("Öffne Tik Tok").app)
+        assertEquals(ComputerApp.SMS, ready("Öffne SMS-App").app)
+        assertEquals(ComputerGoal.SEARCH, ready("Suche in Gmail nach Beispiel").goal)
+        assertEquals(ComputerApp.CONTACTS, ready("Suche in Kontakte nach Beispiel").app)
+        assertSame(OwnerComputerIntentParser.Result.NotComputerCommand,
+            OwnerComputerIntentParser.parse("Schick das per Gmail an anna@example.org"))
+        assertTrue(OwnerComputerIntentParser.parse("Sende eine Nachricht an Anna per SMS: Hallo")
+            is OwnerComputerIntentParser.Result.Unsupported)
+    }
+
     @Test fun draftBodyNegationDoesNotCancelTheOwnerCommand() {
         val intent = ready("Schreibe Anna auf WhatsApp: Die Kamera funktioniert nicht.")
         assertEquals(ComputerGoal.DRAFT_MESSAGE, intent.goal)

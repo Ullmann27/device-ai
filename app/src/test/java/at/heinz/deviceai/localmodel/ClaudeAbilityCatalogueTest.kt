@@ -107,6 +107,28 @@ class ClaudeAbilityCatalogueTest {
         assertTrue(OwnerLaneCatalogue.lines().single { it.contains("Such das neueste PDF") }.contains("braucht die Shizuku-Verbindung"))
     }
 
+    /**
+     * One source for what the app can do. Code71 appended a second, English ability text to the stable instruction
+     * block; what it named beyond this catalogue (a WhatsApp draft without the standing grant, the scoped Android
+     * apps) is in the catalogue, and the frame carries no further ability text of its own.
+     */
+    @Test fun theCatalogueIsTheOnlyAbilityTextOfTheFrame() {
+        val send = OwnerLaneCatalogue.lines().single { it.contains("Schreib <Name> auf WhatsApp") }
+        assertTrue(send, send.contains("mit der Dauerfreigabe des Besitzers für den Kanal wird nach der Prüfung am Bildschirm gesendet"))
+        assertTrue(send, send.contains("ohne sie steht nur der Entwurf in WhatsApp bereit"))
+        assertTrue(catalogue.contains("„Suche in Gmail nach <Begriff>“"))
+        for (head in listOf(ClaudePromptFrame.HEAD_TEXT_ONLY, ClaudePromptFrame.HEAD_TOOLS)) {
+            val stable = head + ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS
+            // Without the owner frame nothing about abilities is added; with it, exactly the catalogue.
+            assertEquals(listOf(ClaudePromptFrame.RUNTIME_PREFACE, stable),
+                ClaudePromptFrame.frame(stable + "Was kannst du?", isolatedWorker = false).systemBlocks)
+            val framed = ClaudePromptFrame.frame(stable + "Was kannst du?", isolatedWorker = false) { listOf(catalogue) }
+            assertEquals(listOf(ClaudePromptFrame.RUNTIME_PREFACE, stable, catalogue), framed.systemBlocks)
+            assertEquals(1, framed.systemBlocks.count { it.contains("Feste Abläufe der App") })
+            assertTrue(framed.systemBlocks.none { it.contains("app actions") || it.contains("direct chat command") })
+        }
+    }
+
     // ── every sentence the catalogue names is one the app takes ───────────────────────────────────────────
 
     private fun filled(sentence: String): String = sentence.replace("<Name>", "Argon4").replace("<Zahl>", "2")

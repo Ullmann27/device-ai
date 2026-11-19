@@ -12,6 +12,8 @@ enum class AnnouncementMode {
     SENDER,
     /** App, title/sender and the bounded text. */
     FULL,
+    /** Mentions the app, then waits for the owner to ask to hear the contents. */
+    ASK,
 }
 
 data class AppRule(val mode: AnnouncementMode)
@@ -117,12 +119,26 @@ sealed class AnnouncementDecision {
         val spokenText: String,
         val displayTitle: String,
         val displayDetail: String,
+        val readOffer: ReadOffer? = null,
     ) : AnnouncementDecision()
 
     data class Suppress(val reason: SuppressReason) : AnnouncementDecision()
 
     /** The assistant speaks or the owner is talking: queue [notification] and decide again later. */
     data class Defer(val notification: IncomingNotification) : AnnouncementDecision()
+}
+
+/** Sanitised, transient readout. Never part of the conversation history. */
+class ReadOffer(val key: String, val packageName: String, val spokenText: String) {
+    override fun toString(): String = "ReadOffer(package=$packageName, content=redacted)"
+
+    companion object {
+        const val MAX_AGE_MS = 120_000L
+        private val accept = Regex("(?iu)^(?:ja[, ]+)?(?:bitte\\s+)?(?:lies|lese)\\s+" +
+            "(?:(?:mir\\s+)?(?:sie|es|die\\s+nachricht|die\\s+e-mail)\\s+)?(?:bitte\\s+)?vor[.!]?$")
+
+        fun accepts(request: String): Boolean = accept.matches(request.trim())
+    }
 }
 
 enum class SuppressReason {
@@ -341,12 +357,13 @@ class NotificationAnnouncementPolicy {
         var text = ""
         if (!securityCode && mode != AnnouncementMode.APP_ONLY) {
             val withoutLinks = UntrustedNotificationText.replaceLinks(rawTitle)
-            val allowed = if (mode == AnnouncementMode.FULL) withoutLinks else UntrustedNotificationText.hideAmounts(withoutLinks)
+            val allowed = if (mode == AnnouncementMode.FULL || mode == AnnouncementMode.ASK) withoutLinks
+                else UntrustedNotificationText.hideAmounts(withoutLinks)
             title = UntrustedNotificationText.bound(allowed, UntrustedNotificationText.MAX_TITLE)
                 .trimEnd(' ', ':', ',', ';', '.')
             // A title that only repeats the app name carries no sender.
             if (title.equals(label, ignoreCase = true)) title = ""
-            if (mode == AnnouncementMode.FULL) {
+            if (mode == AnnouncementMode.FULL || mode == AnnouncementMode.ASK) {
                 text = UntrustedNotificationText.bound(
                     UntrustedNotificationText.replaceLinks(rawText),
                     UntrustedNotificationText.MAX_TEXT,
@@ -361,7 +378,7 @@ class NotificationAnnouncementPolicy {
 
     private fun coalesce(candidates: List<Candidate>): List<Group> {
         val foldable = candidates
-            .filter { !it.securityCode && it.kind != Kind.OTHER && it.mode != AnnouncementMode.FULL }
+            .filter { !it.securityCode && it.kind != Kind.OTHER && it.mode != AnnouncementMode.FULL && it.mode != AnnouncementMode.ASK }
             .groupBy { it.notification.packageName }
             .filterValues { it.size > 1 }
         val groups = ArrayList<Group>()
@@ -379,6 +396,13 @@ class NotificationAnnouncementPolicy {
 
     private fun single(c: Candidate): AnnouncementDecision.Announce {
         if (c.securityCode) return announce(c.label, SECURITY_CODE_SENTENCE, reported = false)
+        val readout = content(c)
+        if (c.mode != AnnouncementMode.ASK || (c.title.isEmpty() && c.text.isEmpty())) return readout
+        return announce(c.label, "neue ${c.kind.singular}. Darf ich sie vorlesen? Sag „Lies vor“.", reported = false)
+            .copy(readOffer = ReadOffer(c.notification.key, c.notification.packageName, readout.spokenText))
+    }
+
+    private fun content(c: Candidate): AnnouncementDecision.Announce {
         val noun = c.kind.singular
         if (c.title.isEmpty() && c.text.isEmpty()) return announce(c.label, "neue $noun.", reported = false)
         if (c.kind == Kind.OTHER) {

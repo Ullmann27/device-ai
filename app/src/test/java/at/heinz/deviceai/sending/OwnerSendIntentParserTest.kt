@@ -55,6 +55,19 @@ class OwnerSendIntentParserTest {
         }
     }
 
+    @Test fun aSpokenFamilyRecipientAfterWhatsAppIsNotTreatedAsTheMessage() {
+        val request = order("schreib bitte in WhatsApp meinen Papa guten Morgen")
+        assertEquals("meinen Papa guten Morgen", request.unsplit)
+        assertNull(request.text)
+        assertEquals("Papa", OwnerSendIntentParser.recipientAnswer(
+            "ich habe dir zum dreimal gesagt der Name heißt Papa"))
+        assertNull(OwnerSendIntentParser.recipientAnswer("WhatsApp"))
+        assertEquals(OwnerSendIntentParser.REFUSED_SEVERAL,
+            refused("Schreib in WhatsApp meinem Papa und Mama guten Morgen"))
+        assertEquals(OwnerSendIntentParser.REFUSED_NEGATED,
+            refused("Schreib in WhatsApp meinem Papa nicht guten Morgen"))
+    }
+
     @Test fun austrianColloquialFormsAreUnderstoodAndStayVerbatim() {
         order("schreib da Anna auf WhatsApp, i kumm a bissl später").let {
             assertEquals("Anna", it.recipient); assertEquals("I kumm a bissl später", it.text)

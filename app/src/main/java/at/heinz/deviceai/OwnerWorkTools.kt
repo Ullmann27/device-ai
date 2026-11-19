@@ -223,11 +223,17 @@ internal class OwnerWorkTools(
     fun handleOnHeld(request: String): Boolean =
         handle(request, held?.takeIf { it.session == host.sessionId }?.turn ?: host.ownerTurn)
 
+    /** The turn being handled only asked what should go into a file: it makes no result the subject again. */
+    private var onlyAsked = false
+    /** The wording of that question when it was asked last. */
+    private var askedForContent: String? = null
+
     private fun handle(request: String, said: Long): Boolean {
         val subject = deliverable != null && subjectThrough == said
+        onlyAsked = false
         val handled = route(request, subject, said)
         // A work-tool turn keeps its result the subject of the conversation; a turn of any other lane ends that.
-        if (handled && deliverable != null) subjectThrough = host.ownerTurn
+        if (handled && deliverable != null && !onlyAsked) subjectThrough = host.ownerTurn
         return handled
     }
 
@@ -393,6 +399,10 @@ internal class OwnerWorkTools(
     /**
      * What „das“ means: the result we are talking about; the news when the owner names them; otherwise the last
      * assistant answer of the chat. Null when there is nothing worth keeping.
+     *
+     * [unpointed] („Erstelle eine PDF“, no word that points at a result) needs something current: the result we are
+     * talking about, the summary draft that is the chat's newest work, or the last answer. A result the chat has
+     * moved on from is not silently taken for it – null then, and [export] asks what should go into the file.
      */
     private fun subjectOf(aboutNews: Boolean, subject: Boolean, unpointed: Boolean = false, said: Long = host.ownerTurn): OwnerDeliverable? {
         val current = deliverable
@@ -400,7 +410,8 @@ internal class OwnerWorkTools(
         val time = now()
         // An order that is carried out later means the answer that was the last one when the owner gave it.
         val kept = held?.takeIf { it.session == host.sessionId && it.turn == said && said != host.ownerTurn }
-        val reply = if (kept != null) kept.reply else host.lastAssistantReply()
+        // This lane's own „was soll in der Datei stehen?“ is a question, never the answer worth keeping.
+        val reply = (if (kept != null) kept.reply else host.lastAssistantReply())?.takeUnless { it.trim() == askedForContent }
         // The summary draft of the open PDF: on the very next turn, while it is the last answer of the chat, or –
         // for „Erstelle eine PDF“ without a pointing word – while it is the chat's newest piece of work.
         draft?.takeIf { it.session == host.sessionId && time.toEpochMilli() - it.atMillis in 0..FOLLOW_UP_MILLIS }?.let { last ->
@@ -409,7 +420,8 @@ internal class OwnerWorkTools(
             if (meant) OwnerDeliverable.ofDocumentDraft(last.name, last.text, last.complete, last.cloud,
                 time.atZone(zone()).toLocalDate(), time.toEpochMilli())?.let { return it }
         }
-        return reply?.let { OwnerDeliverable.ofReply(it, time.atZone(zone()).toLocalDate(), time.toEpochMilli()) } ?: current
+        return reply?.let { OwnerDeliverable.ofReply(it, time.atZone(zone()).toLocalDate(), time.toEpochMilli()) }
+            ?: current.takeUnless { unpointed }
     }
 
     private class Exported(val file: OwnerSavedFile, val pages: Int?)
@@ -422,7 +434,12 @@ internal class OwnerWorkTools(
             val ask = "Gern – was soll in der ${command.format.label} stehen? Sag zum Beispiel „Fass mir die Nachrichten von " +
                 "heute zusammen“ oder lass mich ein PDF zusammenfassen; das Ergebnis speichere ich dir dann als ${command.format.label}."
             host.reply(request, ask)
-            host.outcome(OwnerLaneOutcome.Failed("Es gibt in diesem Gespräch noch nichts, das in die Datei könnte."))
+            onlyAsked = true
+            askedForContent = ask
+            // Typed as not done, not as an open question: this lane keeps no question open, so a sequence ends here
+            // instead of waiting for an answer no lane would take.
+            host.outcome(OwnerLaneOutcome.Failed(if (deliverable == null) "Es gibt in diesem Gespräch noch nichts, das in die Datei könnte."
+                else "Es ist offen, was in die Datei soll: Das Gespräch ist inzwischen bei etwas anderem."))
             return
         }
         if (target == null) {
