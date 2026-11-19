@@ -107,6 +107,16 @@ internal interface OwnerMissionHost {
 }
 
 /**
+ * How a mission stands when it pauses or ends – typed, for whoever keeps the record of the shared work. [step]: the
+ * 1-based step it stands at. [resumable]: giving the owner's sentence [request] to the mission layer again would
+ * repeat nothing that left the device, changed his storage or was already saved.
+ */
+internal data class OwnerMissionSettled(val id: String, val request: String, val steps: Int, val step: Int, val how: How,
+                                        val resumable: Boolean, val startedAt: Long) {
+    enum class How { PAUSED, COMPLETED, FAILED, STOPPED }
+}
+
+/**
  * The mission layer („Auftragsfolge“, owner goal 18.11.2026): a goal that needs several of the existing abilities in
  * sequence is carried out as one mission – plan, act step by step, verify, report.
  *
@@ -165,6 +175,23 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
     }
 
     private var mission: Mission? = null
+
+    /**
+     * Every typed outcome a lane reports passes here first – the one place all owner lanes report to. [partOfMission]:
+     * it settles the step this mission runs or waits on. Nobody has to listen.
+     */
+    var onLaneOutcome: (lane: OwnerMissionLane, outcome: OwnerLaneOutcome, partOfMission: Boolean) -> Unit = { _, _, _ -> }
+
+    /** A mission paused or ended. Nobody has to listen. */
+    var onSettled: (OwnerMissionSettled) -> Unit = {}
+
+    private fun settled(m: Mission, how: OwnerMissionSettled.How) {
+        // Taking the sentence up again must repeat nothing outward (mail), nothing that deletes (storage) and no save.
+        val repeatable = m.slots.none { it.step is OwnerMissionStep.Mail || it.step is OwnerMissionStep.Storage } &&
+            m.slots.none { it.state == State.DONE && (it.step is OwnerMissionStep.PageSave || it.step is OwnerMissionStep.Export) }
+        runCatching { onSettled(OwnerMissionSettled(m.turnId, m.request, m.slots.size, m.current + 1, how,
+            repeatable && how != OwnerMissionSettled.How.COMPLETED, m.startedAt)) }
+    }
 
     /** true while the director hands a step to its lane: the lane's order is then not a new owner turn. */
     var dispatching = false
@@ -317,14 +344,11 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
 
     /** How an order ended in [lane]. Ignored unless it is the outcome of the step this mission runs or waits on. */
     fun laneOutcome(lane: OwnerMissionLane, outcome: OwnerLaneOutcome) {
+        val own = accepts(lane, outcome)
+        runCatching { onLaneOutcome(lane, outcome, own) }
+        if (!own) return
         val m = open() ?: return
-        if (m.phase != Phase.RUNNING && m.phase != Phase.WAITING) return
         val slot = m.slots[m.current]
-        if (slot.state != State.RUNNING && slot.state != State.WAITING) return
-        if (lane !in lanes(slot.step)) return
-        if (outcome is OwnerLaneOutcome.Done && !fits(slot.step, outcome.result)) return
-        // After a new order of the owner only the result this step was to produce still counts for it.
-        if (m.foreign && outcome !is OwnerLaneOutcome.Done) return
         m.foreign = false
         m.outcomes++
         m.noticed = false
@@ -346,10 +370,27 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 else host.later { redo(m, queued) }
             }
             outcome is OwnerLaneOutcome.Done -> { m.phase = Phase.RUNNING; host.later { advance(m) } }
-            outcome is OwnerLaneOutcome.NeedsOwner -> { m.phase = Phase.WAITING; m.pausedAt = host.nowMillis() }
+            outcome is OwnerLaneOutcome.NeedsOwner -> {
+                m.phase = Phase.WAITING
+                m.pausedAt = host.nowMillis()
+                settled(m, OwnerMissionSettled.How.PAUSED)
+            }
             outcome is OwnerLaneOutcome.Failed -> end(m, End.FAILED)
             else -> end(m, End.STOPPED)
         }
+    }
+
+    /** true = [outcome] of [lane] is the outcome of the step this mission runs or waits on. */
+    private fun accepts(lane: OwnerMissionLane, outcome: OwnerLaneOutcome): Boolean {
+        val m = open() ?: return false
+        if (m.phase != Phase.RUNNING && m.phase != Phase.WAITING) return false
+        val slot = m.slots[m.current]
+        if (slot.state != State.RUNNING && slot.state != State.WAITING) return false
+        if (lane !in lanes(slot.step)) return false
+        if (outcome is OwnerLaneOutcome.Done && !fits(slot.step, outcome.result)) return false
+        // After a new order of the owner only the result this step was to produce still counts for it.
+        if (m.foreign && outcome !is OwnerLaneOutcome.Done) return false
+        return true
     }
 
     /** A task chain run ended. Counts only for the chain this mission started as its current step. */
@@ -597,6 +638,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
     private fun hold(m: Mission, why: String) {
         m.phase = Phase.HELD
         m.pausedAt = host.nowMillis()
+        settled(m, OwnerMissionSettled.How.PAUSED)
         host.say("$why Die Auftragsfolge wartet bei Schritt ${m.current + 1} von ${m.slots.size} (${label(m.slots[m.current].step)}). " +
             "Sag „weiter“, wenn ich dort weitermachen soll.")
     }
@@ -653,6 +695,11 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         m.pausedAt = host.nowMillis()
         // Only a completed mission stays open for a correction by the very next turn.
         if (how != End.COMPLETED && mission === m) mission = null
+        settled(m, when (how) {
+            End.COMPLETED -> OwnerMissionSettled.How.COMPLETED
+            End.FAILED -> OwnerMissionSettled.How.FAILED
+            End.STOPPED, End.TIME -> OwnerMissionSettled.How.STOPPED
+        })
         host.activity("AUFTRAGSFOLGE · " + when (how) {
             End.COMPLETED -> "alle Schritte erledigt"
             End.FAILED -> "bei Schritt ${m.current + 1} beendet · nichts Weiteres ausgeführt"
