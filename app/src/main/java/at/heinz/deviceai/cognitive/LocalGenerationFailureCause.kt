@@ -12,7 +12,7 @@ enum class LocalGenerationFailureCause(val ownerMessage: String) {
     CONTEXT_UNVERIFIED("Der Modellkontext konnte nicht zuverlässig übernommen werden."),
     RUNTIME_FAILED("Die lokale Modelllaufzeit meldete einen Fehler. Die genaue Ursache ist ohne Geräteprotokoll nicht bestätigt."),
     /** The optional cloud brain (Claude) stopped delivering; never worded as a local runtime fault. */
-    CLOUD_INTERRUPTED("Die Verbindung zu Claude (Cloud) ist abgebrochen; die Antwort ist unvollständig."),
+    CLOUD_INTERRUPTED("Die Verbindung zur Cloud ist abgebrochen; die Antwort ist unvollständig."),
     UNKNOWN("Die lokale Generierung wurde nicht vollständig abgeschlossen. Die genaue Ursache ist nicht bestätigt.");
 
     companion object {

@@ -78,7 +78,7 @@ internal object OwnerPageSummary {
      */
     fun deliverable(documentName: String, page: Int, pageCount: Int, summary: Summary, date: LocalDate,
                     createdAtMillis: Long): OwnerDeliverable {
-        val author = if (summary.cloud) "von Claude (Cloud)" else "vom Sprachmodell auf dem Gerät"
+        val author = if (summary.cloud) "vom Cloud-Gehirn" else "vom Sprachmodell auf dem Gerät"
         val basis = if (summary.complete) "" else " Grundlage sind die ersten ${count(summary.coveredChars)} von " +
             "${count(summary.totalChars)} Zeichen der Seite; der Rest ist nicht enthalten."
         val pages = if (pageCount > 0) " von $pageCount" else ""

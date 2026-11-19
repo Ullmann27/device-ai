@@ -101,6 +101,51 @@ sealed interface ChainExtract {
         }
     }
 
+    /**
+     * Like [OneLine], but only lines that are a path (`/sdcard/…`) count: the in-process file search ends an empty or
+     * cut-short result with a sentence („Keine Datei gefunden …“, „Hinweis: …“) that must never be handed on as a path.
+     */
+    data class PathLines(val key: String) : ChainExtract {
+        override fun extract(output: String, value: (String, String) -> String?): Result {
+            val lines = output.lineSequence().map { it.trim() }.filter { it.startsWith("/") }.distinct().take(MAX_OPTIONS + 1).toList()
+            return when {
+                lines.isEmpty() -> Result.Missing("kein Treffer")
+                lines.size == 1 -> Result.Values(mapOf(key to lines.single()))
+                else -> Result.Choice(key, lines.take(MAX_OPTIONS).map { it to it })
+            }
+        }
+    }
+
+    /**
+     * What a device search found (`1. [DATEI] /sdcard/… · PDF · …`, `2. [APP] Name · paket`). Files come first: one
+     * file hands over `path` and `name`, several need the owner's choice. Without a file hit the same holds for apps
+     * (`package`, `label`); a folder hit hands over `path`. Near misses („Ähnlich heißen“) are never handed over.
+     */
+    data object DeviceSearchTarget : ChainExtract {
+        private val file = Regex("^\\d+\\. \\[DATEI] (/.+?) · [^·]* · [^·]* · geändert [^·]*$")
+        private val app = Regex("^\\d+\\. \\[APP] (.+) · ([A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+)$")
+        private val folder = Regex("^\\d+\\. \\[ORDNER] (/.+)$")
+
+        override fun extract(output: String, value: (String, String) -> String?): Result {
+            if (output.lineSequence().firstOrNull()?.contains("Ähnlich heißen") == true)
+                return Result.Missing("kein Name passt genau; es gibt nur ähnliche")
+            val lines = output.lineSequence().map { it.trim() }.toList()
+            val files = lines.mapNotNull { file.matchEntire(it)?.groupValues?.get(1) }.distinct()
+            if (files.size == 1) return Result.Values(mapOf("path" to files[0], "name" to OwnerChainValues.part(files[0], ChainArgument.Part.LEAF)))
+            if (files.size > 1) return Result.Choice("path", files.take(MAX_OPTIONS).map { it to it })
+            val apps = lines.mapNotNull { line -> app.matchEntire(line)?.let { it.groupValues[1] to it.groupValues[2] } }
+                .filter { ToolRegistry.isExplicitAppTarget(it.second) }.distinctBy { it.second }
+            if (apps.size == 1) return Result.Values(mapOf("package" to apps[0].second, "label" to apps[0].first))
+            if (apps.size > 1) return Result.Choice("package", apps.take(MAX_OPTIONS).map { "${it.first} (${it.second})" to it.second })
+            val folders = lines.mapNotNull { folder.matchEntire(it)?.groupValues?.get(1) }.distinct()
+            return when {
+                folders.size == 1 -> Result.Values(mapOf("path" to folders[0]))
+                folders.size > 1 -> Result.Choice("path", folders.take(MAX_OPTIONS).map { it to it })
+                else -> Result.Missing("kein Treffer")
+            }
+        }
+    }
+
     /** The first capture group of [pattern] („Gespeichert: (.+)“). */
     data class Pattern(val key: String, val pattern: Regex, val missing: String) : ChainExtract {
         override fun extract(output: String, value: (String, String) -> String?): Result =
@@ -226,11 +271,11 @@ object OwnerChainStepCatalog {
 
     @Synchronized fun contract(tool: String): Contract? = contracts[tool]
 
-    /** Tools DeviceToolExecutor answers from Android itself; every other chain tool needs the Shizuku bridge. */
-    private val nativeTools = setOf("get_device_info", "list_installed_apps", "get_app_info", "find_app",
-        "get_storage_info", "get_network_summary", "get_battery_info")
-
-    fun needsDeviceBridge(tool: String): Boolean = tool !in nativeTools
+    /**
+     * True only for the tools Android gives an app no API for (stop/restart another app, screenshots, …). Everything
+     * else is answered in-process; a missing grant or consent is the ToolGate precheck's to say, step by step.
+     */
+    fun needsDeviceBridge(tool: String): Boolean = at.heinz.deviceai.devicetools.DeviceToolPolicy.needsBridge(tool)
     @Synchronized fun all(): List<Contract> = contracts.values.toList()
 
     init {
@@ -243,7 +288,7 @@ object OwnerChainStepCatalog {
         add("get_device_info", "Geräteinformationen lesen", ChainSuccess.Contains("Modell:"), listOf(
             ChainExtract.Field("model", "Modell"), ChainExtract.Field("android", "Android")), "model", "android")
         add("list_files", "Ordner lesen", ChainSuccess.NonEmpty, listOf(ChainExtract.Lines("listing", 12)), "listing")
-        add("find_files", "Dateien suchen", ChainSuccess.NonEmpty, listOf(ChainExtract.OneLine("path")), "path")
+        add("find_files", "Dateien suchen", ChainSuccess.NonEmpty, listOf(ChainExtract.PathLines("path")), "path")
         add("find_latest_apk", "Neueste APK suchen", ChainSuccess.Contains(".apk"), listOf(ChainExtract.FirstLine("path")), "path")
         add("get_large_files", "Große Dateien suchen", ChainSuccess.NonEmpty, listOf(ChainExtract.Lines("largest", 5)), "largest")
         add("find_app", "App suchen", ChainSuccess.Contains("CONTINUUM_APP_DISCOVERY_V1"), listOf(ChainExtract.AppPackage), "package", "label")
@@ -254,6 +299,22 @@ object OwnerChainStepCatalog {
             ChainExtract.Pattern("path", Regex("Gespeichert:\\s*(\\S.*)"), "der Speicherort wurde nicht gemeldet")), "path")
         add("restart_app", "App neu starten", ChainSuccess.Contains("Neu gestartet:"), emptyList())
         add("stop_app", "App stoppen", ChainSuccess.Contains("Gestoppt:"), emptyList())
+        // In-process device tools (19.11.2026): search → read, search → open, create → open. Their observations are
+        // written by at.heinz.deviceai.devicetools; a refusal or „nicht gefunden“ never carries the success marker.
+        add("search_device", "Gerät durchsuchen", ChainSuccess.Contains("Treffer:"), listOf(ChainExtract.DeviceSearchTarget),
+            "path", "name", "package", "label")
+        add("read_file", "Datei lesen", ChainSuccess.Contains("\nInhalt ("), listOf(
+            ChainExtract.Field("path", "Datei"),
+            ChainExtract.Pattern("text", Regex("(?s)\\nInhalt \\([^\\n]*\\):\\n(.+)$"), "die Datei enthält keinen lesbaren Text")), "path", "text")
+        add("create_document", "Dokument erstellen", ChainSuccess.Contains("Gespeichert:"), listOf(
+            ChainExtract.Pattern("path", Regex("Gespeichert:\\s*(\\S[^\\n]*)"), "der Speicherort wurde nicht gemeldet"),
+            ChainExtract.Field("name", "Name")), "path", "name")
+        add("open_file", "Datei anzeigen", ChainSuccess.Contains("Geöffnet:"), emptyList())
+        add("list_recent_files", "Neueste Dateien suchen", ChainSuccess.Contains("Zuletzt geänderte Dateien"), listOf(
+            ChainExtract.Pattern("path", Regex("(?m)^1\\. (/.+?) · [^·\\n]* · geändert [^·\\n]*$"), "keine Datei gefunden")), "path")
+        add("search_file_text", "In Dateien suchen", ChainSuccess.Contains("Fundstelle(n)"), listOf(
+            ChainExtract.Pattern("path", Regex("(?m)^1\\. (/.+?) · Zeile \\d+: "), "keine Fundstelle")), "path")
+        add("get_folder_overview", "Ordnerübersicht lesen", ChainSuccess.Contains("Ordnerübersicht"), listOf(ChainExtract.Lines("overview", 12)), "overview")
     }
 }
 

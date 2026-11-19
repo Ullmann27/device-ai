@@ -7,6 +7,7 @@ import at.heinz.deviceai.cognitive.ApprovedWebToolGate
 import at.heinz.deviceai.cognitive.InternetAccessMode
 import at.heinz.deviceai.cognitive.InternetConsentPolicy
 import at.heinz.deviceai.cognitive.NewsFeed
+import at.heinz.deviceai.cognitive.OwnerChatLine
 import at.heinz.deviceai.cognitive.NewsFeedCatalog
 import at.heinz.deviceai.cognitive.NewsFeedResult
 import at.heinz.deviceai.cognitive.NewsSourceRef
@@ -137,11 +138,30 @@ internal class OwnerWorkToolsHarness(
     /** false = an Android version without MediaStore downloads: saved in the app folder, no shareable URI. */
     var mediaStore = true
     /** An answer of another lane (the model) that the work tools did not produce. */
-    fun foreignTurn(question: String, answer: String) { ownerTurn++; log += "USER:$question"; log += "SAY:$answer" }
+    fun foreignTurn(question: String, answer: String) {
+        ownerTurn++; log += "USER:$question"; modelLines += log.size; log += "SAY:$answer"
+    }
 
-    override fun lastAssistantReply(): String? = spokenInOrder().lastOrNull()
-    private fun spokenInOrder(): List<String> = log.filter { it.startsWith("SAY:") || it.startsWith("REPLY:") }
-        .map { it.substringAfter(':') }
+    /** Positions in [log] of answers the model gave; every other spoken line is the app's own. */
+    private val modelLines = mutableSetOf<Int>()
+
+    /** Like the Activity: a model answer, a lane's report (SAY), a fixed sentence of the app (REPLY), foreign content (FOREIGN). */
+    override fun lastAssistantLine(): OwnerChatLine? = log.withIndex().lastOrNull { (_, line) ->
+        line.startsWith("SAY:") || line.startsWith("REPLY:") || line.startsWith("FOREIGN:")
+    }?.let { (index, line) ->
+        OwnerChatLine(line.substringAfter(':'), when {
+            index in modelLines -> OwnerChatLine.Kind.MODEL_ANSWER
+            line.startsWith("FOREIGN:") -> OwnerChatLine.Kind.FOREIGN
+            line.startsWith("REPLY:") -> OwnerChatLine.Kind.SYSTEM
+            else -> OwnerChatLine.Kind.LANE_REPORT
+        })
+    }
+
+    /** A notification or message the app read out to the owner (not his and not the model's words). */
+    fun readOut(text: String) { log += "FOREIGN:$text" }
+
+    /** A fixed sentence of another lane of the app (a refusal, a question) to an owner turn. */
+    fun systemTurn(question: String, answer: String) { ownerTurn++; log += "USER:$question"; log += "REPLY:$answer" }
 
     override fun <T> runFileJob(request: String, work: (OwnerWorkFileJob) -> T, done: (Result<T>) -> Unit) {
         val job = object : OwnerWorkFileJob {

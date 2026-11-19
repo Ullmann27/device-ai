@@ -80,17 +80,85 @@ class OwnerWorkToolsExportFlowTest {
         assertTrue(host.opened.isEmpty())
     }
 
+    /**
+     * „Erstelle eine PDF und zeig sie mir“ is a sequence of two orders of this lane – save, then open the saved
+     * file – run by the mission director ([OwnerMissionHarness] wires it as the Activity does). The work tools
+     * themselves take each order alone and never the whole sentence.
+     */
     @Test fun explicitDisplayOpensTheResultOnceAndMissingContentAsks() {
+        val typed = "Erstelle.bitte eine pdf und zeig sie mir.dann"
+        val said = at.heinz.deviceai.cognitive.OwnerInputRepair.strayDots(typed)
+        val (alone, aloneTools) = briefed()
+        assertFalse("the whole sentence is not one order of the work tools", aloneTools.handle(said))
+        assertTrue(alone.downloads.isEmpty() && alone.opened.isEmpty())
+
+        val chat = OwnerMissionHarness()
+        chat.toolsHost.model = { OwnerWorkGeneration(briefing, null, true) }
+        assertEquals("TOOLS", chat.owner("Fass mir die Nachrichten von heute zusammen"))
+        assertEquals("MISSION", chat.owner(said))
+        assertEquals(listOf(pdfName), chat.downloads())
+        assertEquals(pdfName, chat.toolsHost.opened.single().displayName)
+        assertTrue(chat.lastSaid, chat.lastSaid.startsWith("Fertig"))
+        assertTrue(chat.said.none { it.contains("Soll ich sie öffnen?") })
+
+        // Nothing in the chat that could go into the file: the first step asks, and the opening never starts.
+        val empty = OwnerMissionHarness()
+        assertEquals("MISSION", empty.owner("Erstelle bitte eine PDF und zeig sie mir dann"))
+        assertTrue(empty.downloads().isEmpty())
+        assertTrue(empty.toolsHost.opened.isEmpty())
+        assertTrue(empty.said.last { it.startsWith("TOOLS:") }.contains("was soll in der PDF stehen?"))
+
+        // Another lane answered since the briefing: the bare order does not silently mean the old result – it asks.
+        val other = OwnerMissionHarness()
+        other.toolsHost.model = { OwnerWorkGeneration(briefing, null, true) }
+        assertEquals("TOOLS", other.owner("Fass mir die Nachrichten von heute zusammen"))
+        other.toolsHost.foreignTurn("Wie spät ist es?", "Es ist 9 Uhr.")
+        assertEquals("MISSION", other.owner("Erstelle bitte eine PDF und zeig sie mir dann"))
+        assertTrue(other.downloads().isEmpty())
+        assertTrue(other.toolsHost.opened.isEmpty())
+        assertTrue(other.said.last { it.startsWith("TOOLS:") }.contains("was soll in der PDF stehen?"))
+    }
+
+    /**
+     * „Erstelle eine PDF“ points at nothing, so it needs something current. A result the chat has moved on from is
+     * asked about instead of being saved silently; the summary draft that is the chat's newest work is never asked
+     * about (field finding 19.11.2026).
+     */
+    @Test fun theBareOrderNeedsSomethingCurrentAndNeverIgnoresTheSummaryDraft() {
         val (host, tools) = briefed()
-        assertTrue(tools.handle("Erstelle.bitte eine pdf und zeig sie mir.dann"))
-        assertEquals(pdfName, host.opened.single().displayName)
-        assertTrue(host.lines("SAY:").last().contains("zum Anzeigen geöffnet"))
-        val (other, otherTools) = briefed()
-        other.foreignTurn("Wie spät ist es?", "Es ist 9 Uhr.")
-        assertTrue(otherTools.handle("Erstelle bitte eine PDF und zeig sie mir dann"))
-        assertTrue(other.downloads.isEmpty())
-        assertTrue(other.opened.isEmpty())
-        assertTrue(other.lines("REPLY:").last().contains("Was soll darin stehen?"))
+        host.foreignTurn("Wie spät ist es?", "Es ist 9 Uhr.")
+        assertTrue(tools.handle("Erstelle bitte eine PDF"))
+        assertTrue(host.downloads.isEmpty())
+        assertTrue(host.lines("REPLY:").last().startsWith("Gern – was soll in der PDF stehen?"))
+        // The question makes the old result no subject again: said once more, the order asks once more.
+        assertTrue(tools.handle("Erstelle bitte eine PDF"))
+        assertTrue(host.downloads.isEmpty())
+        // Named, the briefing is still there.
+        assertTrue(tools.handle("Speichere die Nachrichten als PDF"))
+        assertEquals(listOf(pdfName), host.downloads.keys.toList())
+
+        // Right after the briefing it is what the chat is about.
+        val (direct, directTools) = briefed()
+        assertTrue(directTools.handle("Erstelle bitte eine PDF"))
+        assertEquals(listOf(pdfName), direct.downloads.keys.toList())
+
+        // A longer answer of the chat is something current as well.
+        val (answered, answeredTools) = briefed()
+        answered.foreignTurn("Erklär mir die Photosynthese", "Die Photosynthese wandelt Lichtenergie in chemische Energie um. " +
+            "Pflanzen bilden dabei aus Wasser und Kohlendioxid Zucker und geben Sauerstoff ab.")
+        assertTrue(answeredTools.handle("Erstelle bitte eine PDF"))
+        assertEquals(listOf("Continuum Notiz 18.11.2026.pdf"), answered.downloads.keys.toList())
+
+        // The summary draft of a PDF is saved, whatever was said after it – the app does not ask.
+        val summary = "Kernaussagen: Argon ist ein Edelgas, das in den vier Versuchsreihen unter Druck gemessen wurde.\n\n" +
+            "Offene Punkte: Die vierte Messreihe ist unvollständig und sollte wiederholt werden."
+        val (drafted, draftTools) = briefed()
+        drafted.foreignTurn("Fass das Dokument zusammen", summary)
+        draftTools.noteDocumentDraft("Argon4 Experimente.pdf", summary, complete = true, cloud = false)
+        drafted.foreignTurn("Wie spät ist es?", "Es ist 9 Uhr.")
+        assertTrue(draftTools.handle("Erstelle bitte eine PDF"))
+        assertEquals(listOf("Zusammenfassung Argon4 Experimente 18.11.2026.pdf"), drafted.downloads.keys.toList())
+        assertTrue(drafted.spoken.none { it.contains("was soll in der PDF stehen?") })
     }
 
     @Test fun openingIsOfferedOnlyWhenPossibleAndDoneOnYes() {

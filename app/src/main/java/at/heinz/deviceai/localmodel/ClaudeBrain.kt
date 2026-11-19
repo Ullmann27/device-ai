@@ -83,11 +83,64 @@ class ClaudeBrain internal constructor(
     /** Set by [LocalModelHost]: stops a running generation of whichever runtime loses the selection. */
     @Volatile internal var onBrainChanged: (BrainKind) -> Unit = {}
 
-    val runtime = ClaudeModelRuntime(settings = { current }, apiKey = ::loadedKey, ledger = ledger, endpoint = endpoint)
+    /**
+     * How the owner wants to be talked to, as one constant block for the system frame (null = none). Set once by
+     * the app from the same style source the on-device prompt uses, so the brain does not change the manner. The
+     * provider must not hold an Activity: this object lives as long as the process.
+     */
+    @Volatile var ownerStyle: () -> String? = { null }
+
+    /**
+     * The constant blocks of the owner's chat turn, most stable first: what the app can do, which model answers
+     * (for the direct question only), how to talk. None of them changes between two turns.
+     */
+    val runtime = ClaudeModelRuntime(settings = { current }, apiKey = ::loadedKey, ledger = ledger, endpoint = endpoint,
+        ownerFrame = { listOf(ClaudeAbilityCatalogue.text(), ClaudeAbilityCatalogue.runningOn(current.model),
+            runCatching { ownerStyle() }.getOrNull()) },
+        // Last, and written from the plan the request really declares: web search and code execution over the cloud.
+        cloudToolsFrame = ClaudeAbilityCatalogue::cloudTools,
+        serverTools = { ClaudeServerToolPolicy.decide(current, draftTurn, webTurn::grant) },
+        onServerToolOutcome = { outcome -> synchronized(outcomeLock) { turnOutcome = turnOutcome + outcome } })
+
+    /**
+     * The web side of the running owner turn: the app's internet mode and a one-turn approval. The cloud's web
+     * search is only ever declared within what this allows ([ClaudeServerToolPolicy]).
+     */
+    val webTurn = ClaudeWebTurn()
+
+    private val outcomeLock = Any()
+    private var turnOutcome = ClaudeServerToolOutcome()
+
+    @Volatile private var draftTurn = false
+
+    /**
+     * A model turn for the owner's sentence [request] starts. Nothing of an earlier turn carries over.
+     * [documentDraft]: its answer becomes the text of a document, so it gets no server tool.
+     */
+    fun beginOwnerTurn(request: String, documentDraft: Boolean = false) {
+        webTurn.begin(request)
+        draftTurn = documentDraft
+        synchronized(outcomeLock) { turnOutcome = ClaudeServerToolOutcome() }
+    }
+
+    /** What the server tools did in the turn that just ended (sources, counts), or null. Handed out once. */
+    fun takeServerToolOutcome(): ClaudeServerToolOutcome? = synchronized(outcomeLock) {
+        turnOutcome.takeUnless { it.none }.also { turnOutcome = ClaudeServerToolOutcome() }
+    }
+
+    /** The cloud's own web search would be used for a web request right now, if the internet consent allows it. */
+    val cloudWebReady: Boolean get() = current.claudeSelected && current.consentGiven && current.cloudWebSearch && hasKey()
+
+    /** Both switches need the stored consent to be turned on; turning off always works. */
+    fun setCloudWebSearch(on: Boolean): Boolean =
+        (!on || current.consentGiven) && store(current.copy(cloudWebSearch = on))
+
+    fun setCloudCodeExecution(on: Boolean): Boolean =
+        (!on || current.consentGiven) && store(current.copy(cloudCodeExecution = on))
 
     val settings: ClaudeBrainSettings get() = current
 
-    /** True while Claude is the selected brain: the permanent "CLAUDE · CLOUD" marker follows this. */
+    /** True while Claude is the selected brain: the permanent "CONTINUUM · CLOUD" marker follows this. */
     val claudeSelected: Boolean get() = current.claudeSelected
 
     /** May DEVICE_LOCAL_ONLY memory be part of a prompt? Always true for the local brain. */
@@ -115,7 +168,7 @@ class ClaudeBrain internal constructor(
     fun revokeConsent(): Boolean {
         val wasClaude = current.claudeSelected
         val stored = store(current.copy(consentGiven = false, consentAtMillis = 0L, shareLocalMemory = false,
-            brain = BrainKind.LOCAL))
+            brain = BrainKind.LOCAL, cloudWebSearch = false, cloudCodeExecution = false))
         if (stored && wasClaude) onBrainChanged(BrainKind.LOCAL)
         return stored
     }
@@ -153,8 +206,8 @@ class ClaudeBrain internal constructor(
         return keyStore.clear()
     }
 
-    /** "CLAUDE · CLOUD" or "LOKAL": the marker text every status surface shows. */
-    fun marker(): String = if (current.claudeSelected) MARKER_CLAUDE else MARKER_LOCAL
+    /** "CONTINUUM · CLOUD" or "LOKAL": the marker text every status surface shows. */
+    fun marker(): String = if (current.claudeSelected) MARKER_CLOUD else MARKER_LOCAL
 
     fun describeUsage(): String = ledger.describe(current.monthlyLimitCents)
 
@@ -177,7 +230,12 @@ class ClaudeBrain internal constructor(
     override fun toString(): String = "ClaudeBrain(brain=${current.brain}, model=${current.model.id}, key=redacted)"
 
     companion object {
-        const val MARKER_CLAUDE = "CLAUDE · CLOUD"
+        /**
+         * The permanent marker while the cloud brain answers (owner order 19.11.2026: „… möchte ich nicht stehen
+         * haben Claude, sondern Continuum im Chat“). Who is talking is always Continuum; „· CLOUD“ is the owner's
+         * privacy signal that answers leave the device, and must never be dropped from it.
+         */
+        const val MARKER_CLOUD = "CONTINUUM · CLOUD"
         const val MARKER_LOCAL = "LOKAL"
     }
 }

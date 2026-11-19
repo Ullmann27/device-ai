@@ -1,6 +1,9 @@
 package at.heinz.deviceai
 
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
+import at.heinz.deviceai.cockpit.MissionOrder
+import at.heinz.deviceai.cockpit.MissionOrderState
+import at.heinz.deviceai.cockpit.MissionOrdersEvent
 import at.heinz.deviceai.cockpit.ProcessStep
 import at.heinz.deviceai.cockpit.StepState
 import at.heinz.deviceai.cognitive.ChainArgument
@@ -19,7 +22,7 @@ import at.heinz.deviceai.cognitive.OwnerTaskChainContinuation
 import java.util.Locale
 
 /** The owner lanes a mission step can run through. */
-internal enum class OwnerMissionLane { DESK, WORK, SEND, CHAIN }
+internal enum class OwnerMissionLane { DESK, WORK, SEND, CHAIN, DEEPCLEAN }
 
 /**
  * The small surface a mission needs from the Activity: the chat, the single work lane, and one entry per owner lane.
@@ -68,6 +71,8 @@ internal interface OwnerMissionHost {
     fun continueOn(result: OwnerDeliverable): Boolean
     /** See [OwnerWorkTools.offerOpening]. */
     fun offerOpening(result: OwnerDeliverable, file: OwnerSavedFile): Boolean = false
+    /** The storage lane's owner entry; true = it took [order]. */
+    fun deepClean(order: String): Boolean = false
     /** Starts a recognised task chain; true = it runs and [OwnerMissionDirector.chainSettled] follows. */
     fun chain(order: String, plan: ChainPlan): Boolean
     /** The owner's stop for the job that runs right now. */
@@ -79,6 +84,23 @@ internal interface OwnerMissionHost {
     fun proposePlan(request: String, prompt: String, done: (String?) -> Unit) = done(null)
     /** The request takes its ordinary turn after a model plan was not accepted. */
     fun answerWithoutPlan(request: String) {}
+    /**
+     * true while the owner's cloud brain proposes the plans: then one sentence may also be mapped to a single lane
+     * order ([OwnerMissionDirector.proposeOrderFromModel]). The on-device model keeps plans of at least two steps only.
+     */
+    fun modelOrders(): Boolean = false
+    /**
+     * false = [request] must not be handed to the plan model at all (the owner ruled the cloud out in this sentence,
+     * see ClaudeTurnGate). It then takes its ordinary turn, which refuses it with the proper wording.
+     */
+    fun mayPlan(request: String): Boolean = true
+    /** See [OwnerWorkTools.holdSubject]: called right before the owner's sentence is shown. */
+    fun holdSubject() {}
+    /**
+     * [work] for an order on what the chat was about when the owner gave his sentence (the plan, a question or his
+     * „Ja“ were shown in between). See [OwnerWorkTools.handleOnHeld].
+     */
+    fun workOnHeld(order: String): Boolean = work(order)
 }
 
 /**
@@ -167,6 +189,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
     fun handle(request: String): Boolean {
         val plan = OwnerMissionPlanner.plan(request, host.assistantName, host.noBriefingYet()) ?: return false
         val replaced = open() != null
+        host.holdSubject()
         host.acceptOwnerTurn(request)
         start(plan.request, plan, if (replaced) "Die frühere Auftragsfolge beende ich damit. " else "")
         return true
@@ -192,6 +215,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 mission = null
                 if (OwnerDeskReply.isYes(request, name)) {
                     host.acceptOwnerTurn(request)
+                    // One confirmed order goes to its lane as if the owner had said it; the lane answers itself.
+                    if (m.slots.size == 1) { handOver(m.slots.single().step, request); return true }
                     // The plan was just said; it is not said again.
                     start(request, OwnerMissionPlan(m.request, m.slots.map { it.step }), "In Ordnung, ich fange an.", announce = false)
                     return true
@@ -350,18 +375,43 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
      * device goal. Its text is data – every line must be a lane order with nothing the owner did not say – and the
      * plan is only spoken. Nothing runs before the owner's yes. true = the turn is handled here.
      */
-    fun proposeFromModel(request: String): Boolean {
+    fun proposeFromModel(request: String): Boolean = propose(request, single = false)
+
+    /**
+     * Cloud brain only (owner goal 19.11.2026: the cloud brain must be able to operate every ability): a free sentence
+     * that is about a thing of the lanes but that no lane parser took – „Kannst du mir bitte mal das Argon-Dokument
+     * aufmachen“ – is mapped by the model to ONE lane order, or to none. The same validation as for a plan applies:
+     * the order must be one a lane parser takes, and may name nothing the owner did not say. A reading order or one
+     * that writes the owner's own file is then handed to its lane at once; anything that leaves the device is asked
+     * first, and the lane's own approvals stay in force either way. Call it where the turn would otherwise become a
+     * free model turn, so no fixed route of the app is passed over. false = not taken; nothing happened.
+     */
+    fun proposeOrderFromModel(request: String): Boolean = host.modelOrders() && propose(request, single = true)
+
+    private fun propose(request: String, single: Boolean): Boolean {
         val name = host.assistantName
-        if (open() != null || !host.modelPlans() || !OwnerMissionModelPlan.wants(request, name)) return false
+        if (open() != null || !host.modelPlans()) return false
+        val wanted = if (single) OwnerMissionModelPlan.wantsOrder(request, name) else OwnerMissionModelPlan.wants(request, name)
+        if (!wanted || !host.mayPlan(request)) return false
+        host.holdSubject()
         host.acceptOwnerTurn(request)
-        host.activity("AUFTRAGSFOLGE · das Modell schlägt Schritte vor · nichts läuft ohne deine Bestätigung")
+        host.activity(if (single) "AUFTRAG · das Modell ordnet deinen Satz einem festen Ablauf zu · geprüft wird, dass nichts dazukommt"
+            else "AUFTRAGSFOLGE · das Modell schlägt Schritte vor · nichts läuft ohne deine Bestätigung")
         val session = host.sessionId
-        host.proposePlan(request, OwnerMissionModelPlan.prompt(request)) { text ->
+        host.proposePlan(request, if (single) OwnerMissionModelPlan.orderPrompt(request) else OwnerMissionModelPlan.prompt(request)) { text ->
             if (host.sessionId != session) return@proposePlan
-            when (val checked = OwnerMissionModelPlan.check(request, text, name)) {
+            when (val checked = OwnerMissionModelPlan.check(request, text, name, allowSingle = single)) {
                 is OwnerMissionModelPlan.Result.Accepted -> {
-                    mission = Mission(session, request, checked.plan.steps, host.nowMillis()).also { it.phase = Phase.PROPOSED }
-                    host.reply(request, checked.plan.announcement("Ich würde das in", " machen") + " Soll ich das so machen?")
+                    val steps = checked.plan.steps
+                    if (OwnerMissionModelPlan.runsWithoutQuestion(checked.plan)) {
+                        // Reading or the owner's own file: his order, run by its lane with the lane's own gates.
+                        host.activity("AUFTRAG · zugeordnet: „${steps.single().order.take(120)}“ · nichts hinzugefügt")
+                        handOver(steps.single(), request)
+                    } else {
+                        mission = Mission(session, request, steps, host.nowMillis()).also { it.phase = Phase.PROPOSED }
+                        host.reply(request, if (steps.size == 1) "Ich verstehe das so: ${label(steps.single())}. Soll ich das so machen?"
+                            else checked.plan.announcement("Ich würde das in", " machen") + " Soll ich das so machen?")
+                    }
                 }
                 is OwnerMissionModelPlan.Result.Rejected -> {
                     host.activity("AUFTRAGSFOLGE · Modellplan verworfen · " + checked.reason.take(120))
@@ -370,6 +420,29 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             }
         }
         return true
+    }
+
+    /**
+     * One validated order goes to its lane through the lane's owner entry, exactly as a mission hands over a step:
+     * the lane's parser, gates, grants, questions and wording apply, and the lane itself answers. The owner's
+     * sentence is already shown, so the order is not shown as a second owner turn.
+     */
+    private fun handOver(step: OwnerMissionStep, request: String) {
+        host.later {
+            if (!host.idle()) { host.reply(request, "Gerade läuft noch etwas anderes. Sag es bitte gleich noch einmal."); return@later }
+            dispatching = true
+            val taken = try {
+                when (step) {
+                    is OwnerMissionStep.OpenPdf, is OwnerMissionStep.PageSave -> host.desk(step.order)
+                    is OwnerMissionStep.News -> host.work(step.order)
+                    is OwnerMissionStep.Export, is OwnerMissionStep.Mail -> host.workOnHeld(step.order)
+                    is OwnerMissionStep.FindFile -> host.chain(step.order, step.plan)
+                    is OwnerMissionStep.Storage -> host.deepClean(step.order)
+                    else -> false
+                }
+            } finally { dispatching = false }
+            if (!taken) host.reply(request, "Diesen Auftrag hat der zuständige Ablauf nicht angenommen; es wurde nichts ausgeführt.")
+        }
     }
 
     // ── Running the plan ────────────────────────────────────────────────────────────────────────────────────
@@ -444,10 +517,15 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                     if (slot.state == State.RUNNING && m.outcomes == seen && host.idle()) kept(m, index)
                     true
                 } else host.desk(step.order)
-                is OwnerMissionStep.News, is OwnerMissionStep.Export, is OwnerMissionStep.Mail -> host.work(step.order)
+                is OwnerMissionStep.News -> host.work(step.order)
+                // A step on what the chat was about before this mission („Erstelle eine PDF und zeig sie mir“): the
+                // plan that was just announced is not that result.
+                is OwnerMissionStep.Export, is OwnerMissionStep.Mail ->
+                    if (step.source == null) host.workOnHeld(step.order) else host.work(step.order)
                 is OwnerMissionStep.OpenSaved -> host.work(OPEN_SAVED_ORDER)
                 is OwnerMissionStep.FindFile -> host.chain(step.order, step.plan)
                 is OwnerMissionStep.OpenFound -> { host.deskOpenFound(step.order, checkNotNull(found).name, found.folderHint); true }
+                is OwnerMissionStep.Storage -> host.deepClean(step.order)
                 else -> false
             }
         } finally { dispatching = false }
@@ -700,6 +778,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerMissionStep.OpenPdf, is OwnerMissionStep.PageSave, is OwnerMissionStep.OpenFound -> setOf(OwnerMissionLane.DESK)
         is OwnerMissionStep.Mail -> setOf(OwnerMissionLane.WORK, OwnerMissionLane.SEND)
         is OwnerMissionStep.FindFile -> setOf(OwnerMissionLane.CHAIN)
+        is OwnerMissionStep.Storage -> setOf(OwnerMissionLane.DEEPCLEAN)
         else -> setOf(OwnerMissionLane.WORK)
     }
 
@@ -714,6 +793,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerMissionStep.FindFile -> result is OwnerLaneResult.FileFound
         is OwnerMissionStep.OpenFound -> result is OwnerLaneResult.DocumentOpened
         is OwnerMissionStep.OpenSaved -> result is OwnerLaneResult.FileOpened
+        is OwnerMissionStep.Storage -> result is OwnerLaneResult.Storage && result.mode == step.mode
         else -> false
     }
 
@@ -738,6 +818,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerLaneResult.FileSaved -> "„${result.file.displayName}“ gespeichert (" + (result.location ?: result.file.folder) + ")" +
             if (result.verified == false) " – zurücklesen konnte ich die Datei nicht" else ""
         is OwnerLaneResult.FileOpened -> "„${result.file.displayName}“ geöffnet"
+        is OwnerLaneResult.Storage -> storageSentence(result)
         is OwnerLaneResult.Delivered -> {
             val attached = result.attachment?.let { if (it.displayName in named) ", diese Datei hängt an" else ", Anhang „${it.displayName}“" }
                 ?: ", ohne Anhang"
@@ -746,6 +827,20 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 OwnerLaneResult.Delivered.State.DRAFT -> "Entwurf an ${result.to} in ${result.channel} vorbereitet$attached – gesendet habe ich nichts"
                 OwnerLaneResult.Delivered.State.HANDED_OVER -> "E-Mail an ${result.to} im Mailprogramm vorbereitet$attached – gesendet habe ich nichts"
             }
+        }
+    }
+
+    /** The storage lane's measured figures in a few words – nothing it did not measure. */
+    private fun storageSentence(result: OwnerLaneResult.Storage): String {
+        val bytes = at.heinz.deviceai.deepclean.DeepCleanText::bytes
+        val free = result.freeAfter ?: result.freeBefore
+        return when (result.mode) {
+            "SAFE_CLEAN" -> (if (result.removedFiles == 0) "nichts Entbehrliches gefunden, nichts gelöscht" else
+                "${at.heinz.deviceai.deepclean.DeepCleanText.files(result.removedFiles)} entfernt (${bytes(result.removedBytes)} Dateigröße)") +
+                (if (result.freeBefore != null && result.freeAfter != null) ", Android misst ${bytes(result.freeBefore)} → ${bytes(result.freeAfter)} frei" else "")
+            "REPORT" -> "Platz gemeldet" + (free?.let { ": ${bytes(it)} frei" } ?: "")
+            "OPTIMISE" -> "Last geprüft, nichts gelöscht"
+            else -> "Speicher geprüft, nichts gelöscht" + (free?.let { " (${bytes(it)} frei)" } ?: "")
         }
     }
 
@@ -809,6 +904,20 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             })
         }
         if (steps.isNotEmpty()) host.stage(CockpitAnimationEvent.ProcessTimeline(m.turnId, host.nowMillis(), steps))
+        // The same overview with the exact outcome of every started step, for the order rail of the stage.
+        if (steps.isNotEmpty()) host.stage(MissionOrdersEvent(m.turnId, host.nowMillis(), m.slots.size,
+            m.slots.withIndex().mapNotNull { (index, slot) ->
+                val state = when (slot.state) {
+                    State.PENDING -> null
+                    State.RUNNING -> MissionOrderState.RUNNING
+                    State.WAITING -> MissionOrderState.WAITING
+                    State.DONE -> MissionOrderState.DONE
+                    State.FAILED -> MissionOrderState.FAILED
+                    State.STOPPED -> MissionOrderState.STOPPED
+                    State.SKIPPED -> MissionOrderState.SKIPPED
+                }
+                state?.let { MissionOrder(index, label(slot.step), it) }
+            }))
     }
 
     internal companion object {

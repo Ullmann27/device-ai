@@ -58,6 +58,12 @@ internal object OwnerComputerIntentParser {
         .sortedByDescending { it.first.length }
     private val OPEN_ONLY_APPS = setOf(ComputerApp.CHROME, ComputerApp.SETTINGS,
         ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR, ComputerApp.TIKTOK, ComputerApp.SMS)
+    /**
+     * Targets of this lane for work inside the app only (a search). Their plain „Öffne …“ stays with the app lane,
+     * which starts the installed app directly – the route the understanding set pins for „Öffne Gmail“ and for the
+     * names speech recognition breaks („Dschimeil“, „G Mail“; UND-006, UND-018).
+     */
+    private val NO_PLAIN_OPEN = setOf(ComputerApp.GMAIL)
     private val otherAction = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:und|dann|danach)\\s+(?:sende?|schicke?|lösche?|loesche?|poste?|teile?|kaufe?|rufe?|öffne?|oeffne?|starte?|suche?)(?![\\p{L}\\p{N}_])")
     /** The optional suffix is presentation only, never a second device action. */
     private val downloadsOpen = Regex(
@@ -116,7 +122,8 @@ internal object OwnerComputerIntentParser {
             }
             val found = appPrefix(rest) ?: return Result.NotComputerCommand
             val suffix = rest.substring(found.first.length).trim()
-            if (suffix.isEmpty()) return Result.Ready(OwnerComputerIntent(found.second, ComputerGoal.OPEN))
+            if (suffix.isEmpty()) return if (found.second in NO_PLAIN_OPEN) Result.NotComputerCommand
+                else Result.Ready(OwnerComputerIntent(found.second, ComputerGoal.OPEN))
             if (found.second == ComputerApp.FILES && suffix.matches(Regex("(?iu)und\\s+(?:öffne\\s+)?(?:den\\s+)?downloads?(?:[- ]ordner)?"))) {
                 return Result.Ready(OwnerComputerIntent(found.second, ComputerGoal.OPEN_DOWNLOADS))
             }
@@ -131,7 +138,8 @@ internal object OwnerComputerIntentParser {
             return search(found.second, query)
         }
         apps.firstOrNull { lower == "${it.first} öffnen" || lower == "${it.first} oeffnen" }?.let {
-            return Result.Ready(OwnerComputerIntent(it.second, ComputerGoal.OPEN))
+            return if (it.second in NO_PLAIN_OPEN) Result.NotComputerCommand
+                else Result.Ready(OwnerComputerIntent(it.second, ComputerGoal.OPEN))
         }
         return Result.NotComputerCommand
     }

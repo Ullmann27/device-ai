@@ -20,12 +20,13 @@ internal object OwnerSendSettingsDialog {
     const val TAG_TOGGLE = "owner-send-toggle:"
     const val TAG_STATE = "owner-send-state"
     const val TAG_DIAGNOSIS = "owner-send-diagnosis"
+    const val TAG_RELATION = "owner-send-relation:"
 
     fun statusLine(grants: OwnerSendGrants, channel: SendChannel): String = channel.settingLabel + ": " +
         (grants.grantedOn(channel)?.let { "EIN (seit $it)" } ?: "AUS – nur Entwürfe")
 
     fun show(activity: Activity, grants: OwnerSendGrants, accessibilityOn: () -> Boolean, contactsReadable: () -> Boolean,
-             startDiagnosis: () -> Unit, lastDiagnosis: () -> String?): AlertDialog {
+             startDiagnosis: () -> Unit, lastDiagnosis: () -> String?, relations: OwnerRelations? = null): AlertDialog {
         val cockpit = ContinuumBentoCockpit
         val box = cockpit.panel(activity, "CONTINUUM · SELBST SENDEN", "Selbst senden",
             "Standardmäßig aus: Ohne Freigabe bereitet Continuum nur Entwürfe vor und du sendest selbst. " +
@@ -64,6 +65,13 @@ internal object OwnerSendSettingsDialog {
                 dialog.dismiss()
                 startDiagnosis()
             }.apply { tag = TAG_DIAGNOSIS })
+            // Relations the owner confirmed („Thomas Muster ist dein Vater“); each one can be forgotten here.
+            relations?.all()?.forEach { entry ->
+                rows.addView(cockpit.action(activity, "VERGESSEN · ${entry.displayName} ist ${entry.relation.yours}") {
+                    relations.forget(entry.relation)
+                    render()
+                }.apply { tag = TAG_RELATION + entry.relation.name })
+            }
             lastDiagnosis()?.let { report ->
                 rows.addView(cockpit.action(activity, "LETZTE SENDE-DIAGNOSE ANZEIGEN") { showDiagnosis(activity, report) })
             }

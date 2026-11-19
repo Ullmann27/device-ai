@@ -190,8 +190,9 @@ class OwnerSendDirectorTest {
     @Test fun unknownRecipientsGroupsSeveralRecipientsAndPronounsNeverSend() {
         val (host, lane) = newLane(SendChannel.WHATSAPP)
         lane.handle("Schreib meinem Chef auf WhatsApp, ich komme später")
-        assertEquals("Ich habe keinen Kontakt „meinem Chef“ gefunden. Nenn mir den Namen so, wie er in deinen Kontakten steht. " +
-            "Es wurde nichts vorbereitet und nichts gesendet.", host.lastReply)
+        // Changed 19.11.2026 (relations): „meinem Chef“ is a relation – asked for, never matched against contact names.
+        assertEquals("Ich habe keinen Kontakt „meinem Chef“ gefunden. Wer ist dein Chef in den Kontakten? Nenn mir den Namen, " +
+            "wie er dort steht. Es wurde nichts vorbereitet und nichts gesendet.", host.lastReply)
         lane.handle("Schreib in die Familiengruppe auf WhatsApp, ich komme später")
         assertEquals(OwnerSendIntentParser.REFUSED_GROUP, host.lastReply)
         lane.handle("Schreib Thomas und Mama auf WhatsApp, ich komme später")
@@ -225,6 +226,14 @@ class OwnerSendDirectorTest {
         assertTrue(lane.awaitingAnswer)
         assertTrue(host.device.pressed.isEmpty())
         assertTrue(lane.handle("ich habe dir zum dreimal gesagt der Name heißt Thomas Muster"))
+        // Changed 19.11.2026 (relations): the named contact is offered to be remembered as the father, and – learnt
+        // just now – recipient and text are shown once before anything is sent, also with the standing grant.
+        assertEquals("Soll ich mir merken, dass Thomas Muster dein Vater ist?", host.lastReply)
+        assertTrue(host.device.opened.isEmpty())
+        assertTrue(lane.handle("ja"))
+        assertEquals("Ich würde Thomas Muster auf WhatsApp schreiben:\n\n„Guten Morgen“\n\nSoll ich das so senden?", host.lastReply)
+        assertTrue(host.device.opened.isEmpty() && host.device.pressed.isEmpty())
+        assertTrue(lane.handle("ja"))
         assertEquals(SendPlan.WhatsApp("Thomas Muster", "430005550103", "Guten Morgen", send = true), host.device.opened.single())
         assertEquals(1, host.device.pressed.size)
         assertFalse(lane.handle("WhatsApp"))

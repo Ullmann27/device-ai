@@ -45,8 +45,49 @@ data class IncomingNotification(
     val isGroupSummary: Boolean,
     val postedAtMs: Long,
     val isOwnPackage: Boolean,
+    /** What the incoming-message intake needs beyond title and text; null for sources that do not read it. */
+    val details: NotificationDetails? = null,
 ) {
     override fun toString(): String = "IncomingNotification(package=$packageName, content=redacted)"
+}
+
+/** Where a posted notification was seen. Both sources feed the one [ContinuumNotificationBus]. */
+enum class NotificationSource {
+    /** [ContinuumNotificationListener]; only in a build with the notification-access option. */
+    LISTENER,
+    /** Notification events of the accessibility service the owner enabled (the normal build). */
+    ACCESSIBILITY,
+}
+
+/** One entry of a messaging-style notification. [sender] is empty for the device owner's own message. */
+data class NotificationMessage(val sender: String, val text: String, val timeMs: Long) {
+    override fun toString(): String = "NotificationMessage(content=redacted)"
+}
+
+/**
+ * Structured extras of a notification, bounded by the reader. UNTRUSTED third-party data like title and text;
+ * `toString()` is redacted.
+ */
+data class NotificationDetails(
+    val source: NotificationSource,
+    /** The notification's own timestamp (`Notification.when`); 0 when the app set none. */
+    val whenMs: Long = 0L,
+    val conversationTitle: String = "",
+    val isGroupConversation: Boolean = false,
+    /** Messaging-style history, oldest first; empty for other styles. */
+    val messages: List<NotificationMessage> = emptyList(),
+    /** The name the app uses for the device owner in [messages]. */
+    val selfName: String = "",
+    val subText: String = "",
+    val bigText: String = "",
+    val channelId: String = "",
+    val shortcutId: String = "",
+    /** true = posted without sound or vibration; null = this source cannot tell. */
+    val silent: Boolean? = null,
+    /** Android handed out no content (locked device, private notification). */
+    val contentHidden: Boolean = false,
+) {
+    override fun toString(): String = "NotificationDetails(source=$source, content=redacted)"
 }
 
 /**

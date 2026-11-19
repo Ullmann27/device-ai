@@ -50,11 +50,13 @@ class ClaudeBrainTurnUiTest {
         override val loadedModel = ImportedLocalModel("local-fixture", "v1", "a".repeat(64), 1,
             LocalModelCapabilities(true, false, false, false, true, 32_768, null, setOf(LocalModelBackend.CPU)))
         var calls = 0
+        val prompts = mutableListOf<String>()
         override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) =
             error("Unexpected model load")
         override fun unload(callback: (Result<Unit>) -> Unit) = error("Unexpected model unload")
         override fun stream(prompt: String, callback: LocalInferenceCallback) {
             calls++
+            prompts += prompt
             callback.onEvent(LocalInferenceEvent.TextDelta(reply))
             callback.onEvent(LocalInferenceEvent.Completed(LocalInferenceMetrics(0, 0, 0, null, null, null, 1)))
         }
@@ -149,10 +151,24 @@ class ClaudeBrainTurnUiTest {
             assertEquals("claude-opus-5-5", body.getString("model"))
             val user = body.getJSONArray("messages").getJSONObject(0).getString("content")
             assertTrue(user.contains(task))
-            // The activity's fixed instruction block went to `system`, byte for byte.
+            // The activity's fixed instruction block went to `system`, byte for byte. Since 19.11.2026 two more
+            // constant blocks follow it: what the app can do, and which model runs (for the direct question only).
+            // A fifth constant block says what web search and code execution over the cloud may do in this turn –
+            // here: nothing, both owner switches are off, and no server tool is declared.
             val system = body.getJSONArray("system")
-            assertEquals(2, system.length())
+            assertEquals(5, system.length())
+            assertEquals(at.heinz.deviceai.localmodel.ClaudeAbilityCatalogue.cloudTools(
+                at.heinz.deviceai.localmodel.ClaudeServerToolPolicy.Decision.NONE), system.getJSONObject(4).getString("text"))
+            val declared = body.getJSONArray("tools")
+            assertTrue((0 until declared.length()).none { declared.getJSONObject(it).has("type") &&
+                declared.getJSONObject(it).getString("type") != "custom" })
             assertTrue(system.getJSONObject(1).getString("text").endsWith(ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS))
+            assertEquals(at.heinz.deviceai.localmodel.ClaudeAbilityCatalogue.text(), system.getJSONObject(2).getString("text"))
+            assertEquals(at.heinz.deviceai.localmodel.ClaudeAbilityCatalogue.runningOn(at.heinz.deviceai.localmodel.ClaudeModel.OPUS_5_5),
+                system.getJSONObject(3).getString("text"))
+            // With the cloud brain an explanation keeps the registered tools (the model decides, never forced).
+            assertTrue(body.has("tools"))
+            assertEquals("auto", body.getJSONObject("tool_choice").getString("type"))
             assertFalse(user.contains(ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS))
             // Nothing on screen or in the log shows the key.
             assertTrue((chat(a) + (get(a, "activityText") as TextView).text.toString()).none { it.contains("sk-ant") })
@@ -238,6 +254,9 @@ class ClaudeBrainTurnUiTest {
             Reply.Stream(listOf(messageStart()) + text(0, closing) + stop("end_turn")))
         val local = LocalFixture("LOKALE ANTWORT")
         withTurns(claudeBrain(), local) { a ->
+            // „App stoppen“ needs the device bridge; since the tool precheck (19.11.2026) a bridge-only tool without it
+            // is refused before the approval. Here the bridge is up, and a declined call must never be dispatched.
+            set(a, "executor", DeviceToolExecutor(a, { true }, { _, _ -> error("a declined call must not be dispatched") }, null))
             val order = "Stoppe die App com.example.app."
             call(a, "runLocal", order, order, null, CognitiveTurnTrace(get(a, "sessionId") as String), null, null)
             // The proposal waits at the app's own confirmation dialog; nothing runs and nothing more is sent.
@@ -268,6 +287,73 @@ class ClaudeBrainTurnUiTest {
             // The app's own outcome line: the tool was declined, and no success is claimed.
             assertTrue(chat(a).toString(), chat(a).any { it.contains("stop_app meldet REJECTED") })
             assertTrue(chat(a).none { it.contains("SUCCEEDED") })
+        }
+    }
+
+    // ---- owner order 19.11.2026: Continuum in the conversation, the cloud still visible ------------------------
+
+    @Test fun aCloudTurnShowsContinuumAndTheCloudButNeverTheProviderOrAModelId() {
+        endpoint.enqueue(Reply.Stream(listOf(messageStart()) + text(0, answer) + stop("end_turn")))
+        withTurns(claudeBrain(), LocalFixture("LOKALE ANTWORT")) { a ->
+            ask(a, task)
+            val visible = chat(a) + (get(a, "activityText") as TextView).text.toString()
+            assertTrue(visible.toString(), visible.any { it.contains(answer) })
+            assertTrue(visible.toString(), visible.none { it.contains("Claude") || it.contains("CLAUDE") || it.contains("claude-") })
+            // The privacy signal stays: every status wording of a cloud turn takes the cloud variant.
+            assertEquals("Continuum plant in der Cloud …", call(a, "brainLabel", "Lokales Modell plant …", "Continuum plant in der Cloud …"))
+            assertEquals("Cloud", call(a, "brainLabel", "Lokal", "Cloud"))
+        }
+    }
+
+    // ---- owner wish 19.11.2026: one tone for both brains ------------------------------------------------------
+
+    private fun talkPreferences(a: AgentActivity) = a.applicationContext.getSharedPreferences("continuum-owner-talk", 0)
+
+    @Test fun thePersonalToneReachesTheCloudBrainAsAConstantBlockAndTheNameOnlyWithTheOwnersSwitch() {
+        repeat(6) { endpoint.enqueue(Reply.Stream(listOf(messageStart()) + text(0, answer) + stop("end_turn"))) }
+        val brain = claudeBrain()
+        withTurns(brain, LocalFixture("LOKALE ANTWORT")) { a ->
+            talkPreferences(a).edit().clear().putString("name", "Heinz").putString("name_statement", "Nenn mich Heinz")
+                .putLong("name_at", 1L).commit()
+            call(a, "wireOwnerTalkToCloudBrain")
+            ask(a, task)
+            ask(a, "Erkläre kurz, was ein Mock ist.")
+            val before = endpoint.requests.size
+            val first = endpoint.requests.first().body.getJSONArray("system")
+            val second = endpoint.requests.last().body.getJSONArray("system")
+            // The tone block keeps its place; the block about the cloud's web search and code execution follows it.
+            assertEquals(6, first.length())
+            assertTrue(first.getJSONObject(5).getString("text").startsWith("CLOUD-WERKZEUGE"))
+            val tone = first.getJSONObject(4).getString("text")
+            assertEquals(at.heinz.deviceai.cognitive.OwnerToneStyle.claudeBlock(
+                at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL, null), tone)
+            assertFalse("his name stays on the device without his switch", first.toString().contains("Heinz"))
+            // Byte-stable from turn to turn, and the on-device line is not sent a second time in the user message.
+            assertEquals(first.toString(), second.toString())
+            assertFalse(endpoint.requests.any { it.body.getJSONArray("messages").toString().contains("PERSÖNLICHER TON") })
+            talkPreferences(a).edit().putBoolean("name_to_cloud", true).commit()
+            ask(a, "Erkläre kurz, was ein Stub ist.")
+            assertTrue(endpoint.requests.size > before)
+            assertTrue(endpoint.requests.last().body.getJSONArray("system").getJSONObject(4).getString("text").contains("„Heinz“"))
+            // „Sachlich“: no tone block at all.
+            talkPreferences(a).edit().putString("tone", "FACTUAL").commit()
+            assertNull(brain.ownerStyle())
+        }
+    }
+
+    @Test fun theOnDeviceModelGetsTheSameToneAsOneShortLineAndNoneInSachlich() {
+        val local = LocalFixture("Lokal: Ein Test prüft, ob ein Ergebnis einer Erwartung entspricht.")
+        withTurns(testBrain(), local) { a ->
+            talkPreferences(a).edit().clear().putString("name", "Heinz").putString("name_statement", "Nenn mich Heinz")
+                .putLong("name_at", 1L).commit()
+            ask(a, "Was hältst du von Tests?")
+            val personal = local.prompts.last()
+            assertTrue(personal, personal.contains("PERSÖNLICHER TON – nur die Art zu reden: Sprich mit Heinz wie ein alter Freund"))
+            assertEquals(1, Regex("PERSÖNLICHER TON").findAll(personal).count())
+            talkPreferences(a).edit().putString("tone", "FACTUAL").commit()
+            ask(a, "Was hältst du von Mocks?")
+            assertFalse(local.prompts.last().contains("PERSÖNLICHER TON"))
+            assertTrue(endpoint.requests.isEmpty())
         }
     }
 

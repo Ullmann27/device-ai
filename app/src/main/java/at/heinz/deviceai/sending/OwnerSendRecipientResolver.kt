@@ -21,8 +21,11 @@ internal interface OwnerSendContactSource {
  * Pure Kotlin; the address book comes in as plain rows.
  */
 internal object OwnerSendRecipientResolver {
-    /** [value]: WhatsApp digits without „+“ or the e-mail address. [label] tells same-named candidates apart. */
-    data class Candidate(val displayName: String, val value: String, val label: String)
+    /**
+     * [value]: WhatsApp digits without „+“ or the e-mail address. [label] tells same-named candidates apart.
+     * [contactId]: the address-book entry, so a confirmed relation can point at it; null for a typed address.
+     */
+    data class Candidate(val displayName: String, val value: String, val label: String, val contactId: Long? = null)
 
     sealed interface Resolution {
         data class Resolved(val candidate: Candidate) : Resolution
@@ -46,14 +49,31 @@ internal object OwnerSendRecipientResolver {
     private fun matches(query: List<String>, displayName: String): Boolean =
         query.isNotEmpty() && tokens(displayName).let { name -> query.all { it in name } }
 
+    /**
+     * The rows [phrase] may mean. A relation („meinem Vater“, „die Mama“) is never matched word by word – a contact
+     * „Vater Lukas (Kita)“ is not the owner's father. Only a contact whose whole name is one of the relation's words
+     * („Papa“) is the owner's own name for it; a stored relation is resolved by the caller through its contact id.
+     */
+    private fun <T> named(phrase: String, rows: List<T>, name: (T) -> String): List<T> {
+        OwnerRelation.parse(phrase)?.let { relation -> return rows.filter { OwnerRelation.namesExactly(relation, name(it)) } }
+        val query = asked(phrase)
+        return rows.filter { matches(query, name(it)) }
+    }
+
     /** WhatsApp digits of an E.164 number, or null when it is not a full international number. */
     fun waDigits(e164: String?): String? = e164?.trim()?.removePrefix("+")?.filter { it.isDigit() }
         ?.takeIf { e164.trim().startsWith("+") && digitsOnly.matches(it) }
 
     fun whatsapp(phrase: String, rows: List<OwnerContactPhone>): Resolution {
-        val query = asked(phrase)
-        if (query.isEmpty()) return Resolution.NotFound(phrase.trim())
-        val matched = rows.filter { matches(query, it.displayName) }
+        if (asked(phrase).isEmpty()) return Resolution.NotFound(phrase.trim())
+        return whatsappOf(phrase, named(phrase, rows) { it.displayName })
+    }
+
+    /** The one contact a confirmed relation points at; NotFound when it is no longer in the address book. */
+    fun whatsappContact(phrase: String, contactId: Long, rows: List<OwnerContactPhone>): Resolution =
+        whatsappOf(phrase, rows.filter { it.contactId == contactId })
+
+    private fun whatsappOf(phrase: String, matched: List<OwnerContactPhone>): Resolution {
         if (matched.isEmpty()) return Resolution.NotFound(phrase.trim())
         // Per contact: its mobile numbers, or – only when none is marked mobile – its other numbers.
         val perContact = matched.groupBy { it.contactId }.values.map { numbers ->
@@ -74,16 +94,45 @@ internal object OwnerSendRecipientResolver {
         }
     }
 
+    /**
+     * „Ruf Anna an“ (briefing lane): the number the dialer is opened with – exactly one number of exactly one
+     * contact, or a question. Same name matching and same preference for mobile numbers as [whatsapp]; unlike there,
+     * a number stored without country code is usable, because the phone dials it as stored. [Candidate.value] is the
+     * number to dial.
+     */
+    fun dial(phrase: String, rows: List<OwnerContactPhone>): Resolution {
+        if (asked(phrase).isEmpty()) return Resolution.NotFound(phrase.trim())
+        val matched = named(phrase, rows) { it.displayName }
+        if (matched.isEmpty()) return Resolution.NotFound(phrase.trim())
+        val perContact = matched.groupBy { it.contactId }.values.map { numbers -> numbers.filter { it.mobile }.ifEmpty { numbers } }
+        val pairs = perContact.flatten().mapNotNull { row ->
+            val number = (row.e164?.trim()?.takeIf { it.startsWith("+") } ?: row.raw.trim()).filter { it.isDigit() || it == '+' }
+            if (number.count(Char::isDigit) < 3) null else row to number
+        }.distinctBy { tokens(it.first.displayName) to it.second.filter(Char::isDigit) }
+        return when (pairs.size) {
+            0 -> Resolution.Unusable("Bei ${matched.first().displayName} ist keine wählbare Nummer gespeichert. Angerufen habe ich niemanden.")
+            1 -> Resolution.Resolved(candidates(pairs).single())
+            else -> Resolution.Ambiguous(phrase.trim(), candidates(pairs), pairs.size)
+        }
+    }
+
     fun mail(phrase: String, rows: List<OwnerContactMail>): Resolution {
-        val query = asked(phrase)
-        if (query.isEmpty()) return Resolution.NotFound(phrase.trim())
-        val matched = rows.filter { matches(query, it.displayName) && mailAddress.matches(it.address.trim()) }
+        if (asked(phrase).isEmpty()) return Resolution.NotFound(phrase.trim())
+        return mailOf(phrase, named(phrase, rows) { it.displayName })
+    }
+
+    /** The one contact a confirmed relation points at, by its e-mail addresses. */
+    fun mailContact(phrase: String, contactId: Long, rows: List<OwnerContactMail>): Resolution =
+        mailOf(phrase, rows.filter { it.contactId == contactId })
+
+    private fun mailOf(phrase: String, rows: List<OwnerContactMail>): Resolution {
+        val matched = rows.filter { mailAddress.matches(it.address.trim()) }
             .distinctBy { tokens(it.displayName) to it.address.trim().lowercase(Locale.ROOT) }
         return when (matched.size) {
             0 -> Resolution.NotFound(phrase.trim())
-            1 -> matched.single().let { Resolution.Resolved(Candidate(it.displayName, it.address.trim(), it.displayName)) }
+            1 -> matched.single().let { Resolution.Resolved(Candidate(it.displayName, it.address.trim(), it.displayName, it.contactId)) }
             else -> Resolution.Ambiguous(phrase.trim(), matched.take(MAX_LISTED).map {
-                Candidate(it.displayName, it.address.trim(), "${it.displayName} (${it.address.trim()})")
+                Candidate(it.displayName, it.address.trim(), "${it.displayName} (${it.address.trim()})", it.contactId)
             }, matched.size)
         }
     }
@@ -93,7 +142,7 @@ internal object OwnerSendRecipientResolver {
         return pairs.take(MAX_LISTED).map { (row, digits) ->
             val label = if ((sameName[tokens(row.displayName)]?.size ?: 0) > 1 && digits.length >= 2)
                 "${row.displayName} (Nummer endet auf ${digits.takeLast(2)})" else row.displayName
-            Candidate(row.displayName, digits, label)
+            Candidate(row.displayName, digits, label, row.contactId)
         }
     }
 
@@ -107,7 +156,10 @@ internal object OwnerSendRecipientResolver {
             val boundary = words[count - 1].range.last + 1
             val prefix = unsplit.substring(0, boundary).trim()
             val query = asked(prefix)
-            if (query.isNotEmpty() && names.any { matches(query, it) })
+            val relation = OwnerRelation.parse(prefix)
+            val hit = if (relation != null) names.any { OwnerRelation.namesExactly(relation, it) }
+                else query.isNotEmpty() && names.any { matches(query, it) }
+            if (hit)
                 return prefix to unsplit.substring(boundary).trimStart()
         }
         return null

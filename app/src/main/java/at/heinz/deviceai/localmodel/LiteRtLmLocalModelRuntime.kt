@@ -277,7 +277,7 @@ class LiteRtLmLocalModelRuntime(
             val prefixConversation = newEngine.createConversation(
                 ConversationConfig(
                     systemInstruction = Contents.of(systemPrompt),
-                    tools = ToolRegistry.all().map(::registeredToolProvider),
+                    tools = ToolRegistry.onDeviceModel().map(::registeredToolProvider),
                     automaticToolCalling = false,
                     prefillPrefaceOnInit = true,
                     maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
@@ -290,7 +290,7 @@ class LiteRtLmLocalModelRuntime(
             createdConversation = null
             val newConversation = newEngine.createConversation(ConversationConfig(
                 systemInstruction = Contents.of(systemPrompt),
-                tools = ToolRegistry.all().map(::registeredToolProvider),
+                tools = ToolRegistry.onDeviceModel().map(::registeredToolProvider),
                 automaticToolCalling = false,
                 maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
             ))
@@ -508,7 +508,7 @@ class LiteRtLmLocalModelRuntime(
                             LocalInferenceStage.CONVERSATION_CREATE_EXIT) {
                             checkNotNull(engine).createConversation(ConversationConfig(
                                 systemInstruction = Contents.of(systemPrompt),
-                                tools = ToolRegistry.all().map(::registeredToolProvider),
+                                tools = ToolRegistry.onDeviceModel().map(::registeredToolProvider),
                                 automaticToolCalling = false,
                                 maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
                             ))
@@ -891,31 +891,7 @@ class LiteRtLmLocalModelRuntime(
 
     private fun registeredToolProvider(spec: ToolSpec) = tool(
         object : OpenApiTool {
-            override fun getToolDescriptionJsonString(): String {
-                val properties = JSONObject()
-                (spec.required + spec.optional).sorted().forEach { argument ->
-                    val type = when {
-                        argument in setOf("lines", "limit", "seconds") -> "integer"
-                        argument == "userOnly" -> "boolean"
-                        argument == "roots" -> "array"
-                        else -> "string"
-                    }
-                    val field = JSONObject().put("type", type)
-                    if (type == "array") field.put("items", JSONObject().put("type", "string"))
-                    properties.put(argument, field)
-                }
-                val parameters = JSONObject()
-                    .put("type", "object")
-                    .put("properties", properties)
-                if (spec.required.isNotEmpty()) {
-                    parameters.put("required", JSONArray(spec.required.sorted()))
-                }
-                return JSONObject()
-                    .put("name", spec.name)
-                    .put("description", "${spec.description} Risk: ${spec.risk.name}.")
-                    .put("parameters", parameters)
-                    .toString()
-            }
+            override fun getToolDescriptionJsonString(): String = LiteRtToolDeclaration.json(spec)
 
             override fun execute(paramsJsonString: String): String =
                 """{"error":"Tool execution must be submitted to Device AI's explicit ToolGate."}"""
@@ -926,5 +902,42 @@ class LiteRtLmLocalModelRuntime(
         const val MAX_PROMPT_CHARACTERS = 16_000
         const val MAX_RESPONSE_CHARACTERS = LocalModelGenerationPolicy.MAX_RESPONSE_CHARACTERS
         const val MAX_TOOL_RESPONSES = 4
+    }
+}
+
+/**
+ * The declaration of one registered tool as the on-device runtime receives it. Kept apart from the runtime so that its
+ * argument types and its size – every declared tool takes room in the model's 4 096-token window – are checked on the
+ * host. Only the tools of [ToolRegistry.onDeviceModel] are declared there.
+ */
+internal object LiteRtToolDeclaration {
+    /** The same mapping ClaudeToolCatalog.jsonType uses; [at.heinz.deviceai.ToolProposal] accepts exactly these. */
+    fun jsonType(argument: String): String = when {
+        argument in setOf("lines", "limit", "seconds") -> "integer"
+        argument == "offset" -> "integer"
+        argument == "userOnly" -> "boolean"
+        argument == "roots" -> "array"
+        else -> "string"
+    }
+
+    fun json(spec: ToolSpec): String {
+        val properties = JSONObject()
+        (spec.required + spec.optional).sorted().forEach { argument ->
+            val type = jsonType(argument)
+            val field = JSONObject().put("type", type)
+            if (type == "array") field.put("items", JSONObject().put("type", "string"))
+            properties.put(argument, field)
+        }
+        val parameters = JSONObject()
+            .put("type", "object")
+            .put("properties", properties)
+        if (spec.required.isNotEmpty()) {
+            parameters.put("required", JSONArray(spec.required.sorted()))
+        }
+        return JSONObject()
+            .put("name", spec.name)
+            .put("description", "${spec.description} Risk: ${spec.risk.name}.")
+            .put("parameters", parameters)
+            .toString()
     }
 }

@@ -86,6 +86,7 @@ internal object OwnerLibraryMatcher {
         if (wantedKey.isEmpty()) return emptyList()
         val real = ArrayList<Hit>()
         val near = ArrayList<Pair<Hit, Int>>()
+        val loose = ArrayList<Pair<Hit, Int>>()
         for (file in files) {
             val have = tokens(file.name)
             val haveKey = have.joinToString("")
@@ -98,11 +99,26 @@ internal object OwnerLibraryMatcher {
             }
             if (tier != null) real += Hit(file, tier)
             else nearDistance(wantedKey, haveKey)?.let { near += Hit(file, Tier.NEAR) to it }
+                ?: sharedWords(wanted, have, wantedKey.length)?.let { loose += Hit(file, Tier.NEAR) to it }
         }
         val order = compareBy<Hit>({ it.tier.ordinal }, { -it.file.modifiedMillis }, { it.file.name.lowercase(Locale.GERMAN) },
             { it.file.path })
         if (real.isNotEmpty()) return real.sortedWith(order)
-        return near.sortedWith(compareBy<Pair<Hit, Int>> { it.second }.thenBy(order) { it.first }).map { it.first }
+        if (near.isNotEmpty()) return near.sortedWith(compareBy<Pair<Hit, Int>> { it.second }.thenBy(order) { it.first }).map { it.first }
+        return loose.sortedWith(compareBy<Pair<Hit, Int>> { -it.second }.thenBy(order) { it.first }).map { it.first }
+    }
+
+    /**
+     * A looser near miss for a name that speech recognition broke apart (field finding 19.11.2026: „a und 4
+     * Experimente“ for „Argon4 Experimente“): the file shares at least two whole words with what was said, one of them
+     * a real word of five letters or more, and these words are most of what was said. The weight is the number of
+     * shared characters. Like every near miss it is never a hit – it is only offered as a question.
+     */
+    private fun sharedWords(wanted: List<String>, have: List<String>, wantedLength: Int): Int? {
+        val shared = wanted.toSet().filter { it in have }
+        if (shared.size < 2 || shared.none { it.length >= 5 && it.all(Char::isLetter) }) return null
+        val weight = shared.sumOf { it.length }
+        return weight.takeIf { it * 5 >= wantedLength * 3 }
     }
 
     /**

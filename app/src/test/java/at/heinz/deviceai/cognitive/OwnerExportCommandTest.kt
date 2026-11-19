@@ -74,15 +74,28 @@ class OwnerExportCommandTest {
         assertEquals("NONE", EvalProbe.computer("Speichere das als PDF"))
     }
 
+    /**
+     * „… und zeig sie mir“ is the next order of a sequence, not a flag of the save: the export lane takes the save
+     * (with or without a pointing word), the mission planner adds the opening of the saved file as its own step.
+     * The keyboard dots of the field sentence are repaired at the intake ([OwnerInputRepair]), before any parser.
+     */
     @Test fun creationAndDisplayUseOnePdfOrder() {
-        val unspecified = requireNotNull(parse("Erstelle.bitte eine pdf und zeig sie mir.dann"))
-        assertEquals(Format.PDF, unspecified.format)
-        assertTrue(unspecified.openAfterSaving)
-        assertTrue(unspecified.needsCurrentDeliverable)
-        val specified = requireNotNull(parse("Speichere die Zusammenfassung als PDF und zeig sie mir"))
-        assertTrue(specified.openAfterSaving)
-        assertFalse(specified.needsCurrentDeliverable)
+        val said = OwnerInputRepair.strayDots("Erstelle.bitte eine pdf und zeig sie mir.dann")
+        assertEquals("Erstelle bitte eine pdf und zeig sie mir dann", said)
+        assertNull(parse(said))
+        assertNull(OwnerExportCommand.parseMake(said))
+        val unspecified = requireNotNull(OwnerMissionPlanner.plan(said)).steps
+        assertEquals(listOf("EXPORT:PDF", "OPEN_SAVED"), unspecified.map { it.code })
+        assertEquals(0, unspecified[1].source)
+        val made = requireNotNull(OwnerExportCommand.parseMake(unspecified[0].order))
+        assertEquals(Format.PDF, made.format)
+        assertTrue(made.unpointed)
+        val specified = requireNotNull(OwnerMissionPlanner.plan("Speichere die Zusammenfassung als PDF und zeig sie mir")).steps
+        assertEquals(listOf("EXPORT:PDF", "OPEN_SAVED"), specified.map { it.code })
+        assertFalse(requireNotNull(parse(specified[0].order)).unpointed)
         assertNull(parse("Erstelle keine PDF und zeig sie mir"))
+        assertNull(OwnerExportCommand.parseMake("Erstelle keine PDF und zeig sie mir"))
+        assertNull(OwnerMissionPlanner.plan("Erstelle keine PDF und zeig sie mir"))
     }
 
     @Test fun fileNamesAreDatedSafeAndNeverOverwrite() {

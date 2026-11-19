@@ -14,6 +14,7 @@ import at.heinz.deviceai.cognitive.NewsSourceRef
 import at.heinz.deviceai.cognitive.NewsStory
 import at.heinz.deviceai.cognitive.NonModelReplyKind
 import at.heinz.deviceai.cognitive.OwnerAppLookupIntent
+import at.heinz.deviceai.cognitive.OwnerChatLine
 import at.heinz.deviceai.cognitive.OwnerDeliverable
 import at.heinz.deviceai.cognitive.OwnerDocumentDocx
 import at.heinz.deviceai.cognitive.OwnerDocumentLayout
@@ -80,8 +81,8 @@ internal interface OwnerWorkToolsHost {
     fun rememberResearch(digest: ResearchDialogueHandoff.Digest)
 
     // ── Export and hand-over of the result ──────────────────────────────────────────────────────────────────
-    /** The last assistant answer shown in this chat as plain text, or null. */
-    fun lastAssistantReply(): String?
+    /** The last assistant line shown in this chat, with where it came from, or null. */
+    fun lastAssistantLine(): OwnerChatLine?
     /** Runs [work] off the UI thread as the single busy job; [done] on the UI thread. */
     fun <T> runFileJob(request: String, work: (OwnerWorkFileJob) -> T, done: (Result<T>) -> Unit)
     /** The blocks as an A4 PDF: bytes and page count. Called inside a file job. */
@@ -133,6 +134,29 @@ internal class OwnerWorkTools(
     private var subjectThrough = -1L
     private var saved: Saved? = null
     private var openOffer: OpenOffer? = null
+    private class Draft(val session: String, val turn: Long, val name: String, val text: String, val complete: Boolean,
+                        val cloud: Boolean?, val atMillis: Long)
+    private var draft: Draft? = null
+
+    /**
+     * The summary draft of the PDF [documentName] was just shown in this chat (field finding 19.11.2026: „Erstelle
+     * bitte eine pdf“ right after it found nothing to save). Session-only; it is what an order to save means while
+     * it is the newest result of the chat. [cloud]: which brain wrote it – null when that is not known (a draft from
+     * the work journal shown again); the saved file then names no author.
+     */
+    fun noteDocumentDraft(documentName: String, text: String, complete: Boolean, cloud: Boolean? = null) {
+        if (text.isBlank()) return
+        draft = Draft(host.sessionId, host.ownerTurn, documentName, text.trim(), complete, cloud, now().toEpochMilli())
+    }
+
+    /** The owner edited the shown draft: the edited text is what gets saved. */
+    fun reviseDocumentDraft(text: String) {
+        val last = draft?.takeIf { it.session == host.sessionId } ?: return
+        if (text.isNotBlank()) draft = Draft(last.session, last.turn, last.name, text.trim(), last.complete, last.cloud, last.atMillis)
+    }
+
+    /** true while „Soll ich sie öffnen?“ of this lane waits for the owner's very next turn. */
+    val awaitingAnswer: Boolean get() = openOffer?.let { it.session == host.sessionId && it.turn == host.ownerTurn } == true
 
     /** The last deliverable of the current chat, if any. */
     val deliverable: OwnerDeliverable? get() = lastDeliverable?.takeIf { it.first == host.sessionId }?.second
@@ -187,21 +211,44 @@ internal class OwnerWorkTools(
      * true = [request] was an order for a work tool and is completely handled (a reply was or will be given).
      * Call on the UI thread while no other job runs. false = not a work-tool order; nothing happened.
      */
-    fun handle(request: String): Boolean {
-        val subject = deliverable != null && subjectThrough == host.ownerTurn
-        val handled = route(request, subject)
+    fun handle(request: String): Boolean = handle(request, host.ownerTurn)
+
+    private class Held(val session: String, val turn: Long, val reply: OwnerChatLine?)
+    private var held: Held? = null
+
+    /**
+     * The owner's sentence that is about to be shown will be carried out later – after a plan was announced, a
+     * question was asked or his „Ja“ was shown. What the chat is about right now is kept for [handleOnHeld], so
+     * „das“ still means what it meant when he said it and not a line the app showed in between.
+     */
+    fun holdSubject() { held = Held(host.sessionId, host.ownerTurn, host.lastAssistantLine()) }
+
+    /** [handle] for an order of the sentence [holdSubject] was called for; without one it is [handle]. */
+    fun handleOnHeld(request: String): Boolean =
+        handle(request, held?.takeIf { it.session == host.sessionId }?.turn ?: host.ownerTurn)
+
+    /** The turn being handled only asked what should go into a file: it makes no result the subject again. */
+    private var onlyAsked = false
+    /** The wording of that question when it was asked last. */
+    private var askedForContent: String? = null
+
+    private fun handle(request: String, said: Long): Boolean {
+        val subject = deliverable != null && subjectThrough == said
+        onlyAsked = false
+        val handled = route(request, subject, said)
         // A work-tool turn keeps its result the subject of the conversation; a turn of any other lane ends that.
-        if (handled && deliverable != null) subjectThrough = host.ownerTurn
+        if (handled && deliverable != null && !onlyAsked) subjectThrough = host.ownerTurn
         return handled
     }
 
-    private fun route(request: String, subject: Boolean): Boolean {
+    private fun route(request: String, subject: Boolean, said: Long = host.ownerTurn): Boolean {
         val name = host.assistantName
         OwnerNewsCommand.parse(request, name)?.let { startBriefing(request, it); return true }
-        OwnerExportCommand.parse(request, name)?.let { export(request, it, subject); return true }
+        (OwnerExportCommand.parse(request, name) ?: OwnerExportCommand.parseMake(request, name))
+            ?.let { export(request, it, subject, said); return true }
         OwnerShareCommand.parse(request, name)?.let { share ->
             // „Schick das an Anna“ without „Mail“ is only a mail order while the result is what we talk about.
-            if (share.mailNamed || subject) { mail(request, share, subject); return true }
+            if (share.mailNamed || subject) { mail(request, share, subject, said); return true }
         }
         if (answerOpenOffer(request)) return true
         return handleFollowUp(request, name)
@@ -356,28 +403,50 @@ internal class OwnerWorkTools(
     /**
      * What „das“ means: the result we are talking about; the news when the owner names them; otherwise the last
      * assistant answer of the chat. Null when there is nothing worth keeping.
+     *
+     * [unpointed] („Erstelle eine PDF“, no word that points at a result) needs something current: the result we are
+     * talking about, the summary draft that is the chat's newest work, or the last answer. A result the chat has
+     * moved on from is not silently taken for it – null then, and [export] asks what should go into the file.
      */
-    private fun subjectOf(aboutNews: Boolean, subject: Boolean): OwnerDeliverable? {
+    private fun subjectOf(aboutNews: Boolean, subject: Boolean, unpointed: Boolean = false, said: Long = host.ownerTurn): OwnerDeliverable? {
         val current = deliverable
         if (current != null && (subject || aboutNews)) return current
         val time = now()
-        return host.lastAssistantReply()
-            ?.let { OwnerDeliverable.ofReply(it, time.atZone(zone()).toLocalDate(), time.toEpochMilli()) } ?: current
+        // An order that is carried out later means the answer that was the last one when the owner gave it.
+        val kept = held?.takeIf { it.session == host.sessionId && it.turn == said && said != host.ownerTurn }
+        // This lane's own „was soll in der Datei stehen?“ is a question, never the answer worth keeping.
+        val reply = (if (kept != null) kept.reply else host.lastAssistantLine())?.takeUnless { it.text.trim() == askedForContent }
+        // The summary draft of the open PDF: on the very next turn, while it is the last answer of the chat, or –
+        // for „Erstelle eine PDF“ without a pointing word – while it is the chat's newest piece of work.
+        draft?.takeIf { it.session == host.sessionId && time.toEpochMilli() - it.atMillis in 0..FOLLOW_UP_MILLIS }?.let { last ->
+            val newest = current == null || current.createdAtMillis <= last.atMillis
+            val meant = last.turn == said || reply?.text?.trim() == last.text || (unpointed && newest)
+            if (meant) OwnerDeliverable.ofDocumentDraft(last.name, last.text, last.complete, last.cloud,
+                time.atZone(zone()).toLocalDate(), time.toEpochMilli())?.let { return it }
+        }
+        return reply?.let { OwnerDeliverable.ofReply(it, time.atZone(zone()).toLocalDate(), time.toEpochMilli()) }
+            ?: current.takeUnless { unpointed }
     }
 
     private class Exported(val file: OwnerSavedFile, val pages: Int?)
 
-    private fun export(request: String, command: OwnerExportCommand.Request, subject: Boolean) {
-        val target = if (command.needsCurrentDeliverable) deliverable?.takeIf { subject }
-            else subjectOf(command.aboutNews, subject)
+    private fun export(request: String, command: OwnerExportCommand.Request, subject: Boolean, said: Long = host.ownerTurn) {
+        val target = subjectOf(command.aboutNews, subject, command.unpointed, said)
         host.acceptOwnerTurn(request)
+        if (target == null && command.unpointed) {
+            // Not „kann ich nicht“: the app can make the file, it only needs to know of what.
+            val ask = "Gern – was soll in der ${command.format.label} stehen? Sag zum Beispiel „Fass mir die Nachrichten von " +
+                "heute zusammen“ oder lass mich ein PDF zusammenfassen; das Ergebnis speichere ich dir dann als ${command.format.label}."
+            host.reply(request, ask)
+            onlyAsked = true
+            askedForContent = ask
+            // Typed as not done, not as an open question: this lane keeps no question open, so a sequence ends here
+            // instead of waiting for an answer no lane would take.
+            host.outcome(OwnerLaneOutcome.Failed(if (deliverable == null) "Es gibt in diesem Gespräch noch nichts, das in die Datei könnte."
+                else "Es ist offen, was in die Datei soll: Das Gespräch ist inzwischen bei etwas anderem."))
+            return
+        }
         if (target == null) {
-            if (command.needsCurrentDeliverable) {
-                val question = "Ich kann die PDF speichern und direkt öffnen. Was soll darin stehen?"
-                host.reply(request, question)
-                host.outcome(OwnerLaneOutcome.NeedsOwner(OwnerLaneOutcome.Need.DETAIL, question))
-                return
-            }
             host.reply(request, "In diesem Gespräch gibt es noch nichts, das ich speichern könnte. Sag zum Beispiel " +
                 "„Fass mir die Nachrichten von heute zusammen“ – danach speichere ich sie dir als PDF oder Word-Datei.")
             host.outcome(OwnerLaneOutcome.Failed("In diesem Gespräch gibt es noch nichts, das ich speichern könnte."))
@@ -413,15 +482,10 @@ internal class OwnerWorkTools(
             result.onSuccess { exported ->
                 val file = exported.file
                 saved = Saved(host.sessionId, target, file)
-                val openable = !command.openAfterSaving && file.uri != null && host.offerToOpen()
+                val openable = file.uri != null && host.offerToOpen()
                 openOffer = if (openable) OpenOffer(host.sessionId, host.ownerTurn, file) else null
+                host.say(savedMessage(target, command, exported, openable))
                 host.activity("EXPORT · gespeichert · ${file.displayName}")
-                val opening = if (!command.openAfterSaving) "" else {
-                    val problem = runCatching { host.openFile(file) }.getOrElse { "Der Dokumentbetrachter ist nicht verfügbar." }
-                    if (problem == null) " Ich habe die Datei zum Anzeigen geöffnet."
-                    else " Die Datei konnte nicht geöffnet werden. $problem"
-                }
-                host.say(savedMessage(target, command, exported, openable) + opening)
                 host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FileSaved(file, target, null, null)))
             }.onFailure { error ->
                 val failed = "Das Speichern hat nicht geklappt: " + NewsBriefing.clean(error.message ?: error.javaClass.simpleName, 160) +
@@ -439,6 +503,7 @@ internal class OwnerWorkTools(
             OwnerDeliverable.Kind.NEWS_BRIEFING -> ""
             OwnerDeliverable.Kind.ASSISTANT_REPLY -> " Darin steht meine letzte Antwort aus diesem Gespräch."
             OwnerDeliverable.Kind.PAGE_SUMMARY -> " Darin steht die Seitenzusammenfassung aus diesem Gespräch."
+            OwnerDeliverable.Kind.DOCUMENT_DRAFT -> " Darin steht der Entwurf der Zusammenfassung aus diesem Gespräch; das PDF steht als Quelle dabei."
         }
         val shape = listOfNotNull(
             exported.pages?.let { if (it == 1) "1 Seite" else "$it Seiten" } ?: command.format.label,
@@ -477,8 +542,8 @@ internal class OwnerWorkTools(
 
     // ── „Schick das per Mail an …“ (hand-over only) ─────────────────────────────────────────────────────────
 
-    private fun mail(request: String, command: OwnerShareCommand.Request, subject: Boolean) {
-        val target = subjectOf(aboutNews = false, subject = subject)
+    private fun mail(request: String, command: OwnerShareCommand.Request, subject: Boolean, said: Long = host.ownerTurn) {
+        val target = subjectOf(aboutNews = false, subject = subject, said = said)
         host.acceptOwnerTurn(request)
         if (target == null) {
             host.reply(request, "In diesem Gespräch gibt es noch nichts, das ich verschicken könnte. Es wurde nichts vorbereitet.")

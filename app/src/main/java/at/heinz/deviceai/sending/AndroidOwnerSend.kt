@@ -29,6 +29,15 @@ internal class OwnerSendPreferences(context: Context) : OwnerSendKeyValue {
     }
 }
 
+/** The owner's confirmed relations in their own app-private preferences. Written synchronously. */
+internal class OwnerRelationPreferences(context: Context) : OwnerSendKeyValue {
+    private val preferences = context.applicationContext.getSharedPreferences(OwnerRelations.PREFERENCES, Context.MODE_PRIVATE)
+    override fun get(key: String): String? = preferences.getString(key, null)
+    override fun put(key: String, value: String?) {
+        preferences.edit().apply { if (value == null) remove(key) else putString(key, value) }.commit()
+    }
+}
+
 /** The device address book, read for an owner send order only (READ_CONTACTS). Nothing is cached or stored. */
 internal class AndroidOwnerSendContacts(private val context: Context) : OwnerSendContactSource {
     private fun country(): String {

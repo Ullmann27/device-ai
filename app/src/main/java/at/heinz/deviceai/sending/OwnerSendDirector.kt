@@ -34,6 +34,8 @@ internal interface OwnerSendHost {
     fun contacts(): OwnerSendContactSource
     fun device(): OwnerSendDevice
     fun grants(): OwnerSendGrants
+    /** The owner's confirmed relations („mein Vater“ = one contact). */
+    fun relations(): OwnerRelations
     fun modelReady(): Boolean
     /** [work] off the UI thread while the app is busy, [done] back on it. */
     fun <T> runJob(request: String, work: (OwnerSendJob) -> T, done: (Result<T>) -> Unit)
@@ -59,24 +61,42 @@ internal interface OwnerSendHost {
  * one [OwnerSendFlow] per order presses at most once; [OwnerSendGrants.reserveSend] holds the daily limit.
  */
 internal class OwnerSendDirector(private val host: OwnerSendHost) {
+    /**
+     * [confirm]: the owner sees recipient and text once and says yes before anything is sent, also with the standing
+     * grant – the recipient came from a free answer after „not found“, from a relation that was just learnt or has
+     * never been used to send, or the text was not separated from where a recipient could stand.
+     * [learn]: the owner is naming the contact for this relation; after the resolution he is asked whether to remember it.
+     * [via]: the confirmed relation this recipient was resolved through.
+     */
     private sealed interface Work {
         val request: String
+        val confirm: Boolean
+        val learn: OwnerRelation?
+        val via: OwnerRelation?
         data class Chat(override val request: String, val order: OwnerSendOrder, val recipient: Candidate?,
-                        val text: String?, val origin: TextOrigin) : Work
+                        val text: String?, val origin: TextOrigin, override val confirm: Boolean = false,
+                        override val learn: OwnerRelation? = null, override val via: OwnerRelation? = null) : Work
         data class Mail(override val request: String, val handover: OwnerMailHandover, val recipient: Candidate?,
-                        val origin: TextOrigin) : Work
+                        val origin: TextOrigin, override val confirm: Boolean = false,
+                        override val learn: OwnerRelation? = null, override val via: OwnerRelation? = null) : Work
     }
 
     private sealed interface Pending {
-        data class Recipient(val work: Work.Chat) : Pending
-        data class Pick(val candidates: List<Candidate>, val work: Work) : Pending
-        data class Wording(val work: Work.Chat) : Pending
-        data class Confirm(val work: Work) : Pending
+        val work: Work
+        data class Recipient(override val work: Work.Chat) : Pending
+        data class Pick(val candidates: List<Candidate>, override val work: Work) : Pending
+        data class Wording(override val work: Work.Chat) : Pending
+        data class Confirm(override val work: Work) : Pending
+        /** „Wer ist dein Vater in den Kontakten?“ */
+        data class Relation(override val work: Work, val relation: OwnerRelation) : Pending
+        /** „Soll ich mir merken, dass Thomas Muster dein Vater ist?“ [work] already holds the resolved recipient. */
+        data class Remember(override val work: Work, val relation: OwnerRelation, val candidate: Candidate) : Pending
     }
 
     private class Open(val session: String, val turn: Long, val at: Long, val pending: Pending, val question: String)
     /** [sent]: what the send flow really did, when it ran. */
-    private class Next(val text: String, val pending: Pending? = null, val activity: String? = null, val sent: SendOutcome? = null)
+    private class Next(val text: String, val pending: Pending? = null, val activity: String? = null, val sent: SendOutcome? = null,
+                       val via: OwnerRelation? = null)
 
     private var open: Open? = null
 
@@ -94,6 +114,12 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         val parsed = OwnerSendIntentParser.parse(request, host.assistantName)
         if (waiting != null && answer(request, waiting, parsed != null)) return true
         if (DIAGNOSIS.matches(request.trim())) { diagnose(request); return true }
+        OwnerRelation.forgetCommand(request)?.let { relation ->
+            host.acceptOwnerTurn(request)
+            host.reply(request, if (host.relations().forget(relation)) "In Ordnung, ich habe vergessen, wer ${relation.yours} ist. " +
+                "Beim nächsten Mal frage ich wieder nach." else "Ich hatte mir nicht gemerkt, wer ${relation.yours} ist.")
+            return true
+        }
         return when (parsed) {
             null -> false
             is OwnerSendIntentParser.Result.Refused -> {
@@ -121,7 +147,34 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         return true
     }
 
+    /**
+     * The answer the owner dictated and confirmed in the incoming-message conversation; [request] is his yes to the
+     * repeated wording. Same lane and same rules as an order he spoke himself: [recipient] (the sender's name as the
+     * notification showed it – data, never a command) is only ever matched against the contacts, so it resolves to
+     * one address-book entry or to this lane's question; the standing grant decides between sending and a draft, the
+     * screen is checked and the daily limit holds. false = not taken and nothing prepared (unusable text or name,
+     * or Gmail without its grant – a mail is never handed to another app as a half-filled draft from here).
+     */
+    fun reply(request: String, channel: SendChannel, recipient: String, subject: String, text: String): Boolean {
+        val words = OwnerSendIntentParser.dictated(text) ?: return false
+        val name = recipient.replace(Regex("[^\\p{L}\\p{N}.'’ -]+"), " ").replace(Regex(" {2,}"), " ").trim()
+        if (name.isEmpty() || name.length > 80 || name.none { it.isLetter() }) return false
+        if (channel == SendChannel.GMAIL && (!host.grants().enabled(channel) || !host.device().installed(channel))) return false
+        open = null
+        host.acceptOwnerTurn(request)
+        start(when (channel) {
+            SendChannel.WHATSAPP -> Work.Chat(request, OwnerSendOrder(name, words, TextOrigin.OWNER_CONFIRMED, original = request),
+                null, words, TextOrigin.OWNER_CONFIRMED)
+            SendChannel.GMAIL -> Work.Mail(request, OwnerMailHandover(request, null, name, subject.take(200), words, null),
+                null, TextOrigin.OWNER_CONFIRMED)
+        })
+        return true
+    }
+
     private fun answer(request: String, waiting: Open, newOrder: Boolean): Boolean {
+        val asked = waiting.pending
+        // „nein“ to „Soll ich mir das merken?“ only means: do not remember it.
+        if (asked is Pending.Remember) return remember(request, asked)
         if (OwnerSendIntentParser.isCancel(request)) {
             host.acceptOwnerTurn(request)
             host.reply(request, "In Ordnung. Es wurde nichts gesendet.")
@@ -136,12 +189,31 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             ask(request, waiting.question, pending)
             return true
         }
+        // „Nicht Papa, Mama“: the owner names another recipient for the same message.
+        if (pending !is Pending.Wording) OwnerSendIntentParser.correctedRecipient(request)?.let { name ->
+            host.acceptOwnerTurn(request)
+            start(retarget(pending.work, name))
+            return true
+        }
         when (pending) {
             is Pending.Recipient -> {
                 val name = OwnerSendIntentParser.recipientAnswer(request) ?: return false
                 host.acceptOwnerTurn(request)
                 start(pending.work.copy(order = pending.work.order.copy(recipient = name, unsplit = null)))
             }
+            is Pending.Relation -> {
+                val name = OwnerSendIntentParser.recipientAnswer(request) ?: return false
+                host.acceptOwnerTurn(request)
+                // The owner's answer names a person; a relation named again is resolved as such, not learnt twice.
+                val learn = pending.relation.takeIf { OwnerRelation.parse(name) == null }
+                start(when (val work = pending.work) {
+                    is Work.Chat -> work.copy(order = work.order.copy(recipient = name, unsplit = null), recipient = null,
+                        learn = learn, via = null, confirm = true)
+                    is Work.Mail -> work.copy(handover = work.handover.copy(recipientName = name, address = null), recipient = null,
+                        learn = learn, via = null, confirm = true)
+                })
+            }
+            is Pending.Remember -> return remember(request, pending)
             is Pending.Pick -> {
                 val chosen = OwnerSendRecipientResolver.pick(request, pending.candidates)
                     ?: OwnerSendIntentParser.recipientAnswer(request)?.let {
@@ -168,12 +240,57 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
                 if (!OwnerSendIntentParser.isYes(request)) return false
                 host.acceptOwnerTurn(request)
                 start(when (val work = pending.work) {
-                    is Work.Chat -> work.copy(origin = TextOrigin.OWNER_CONFIRMED)
-                    is Work.Mail -> work.copy(origin = TextOrigin.OWNER_CONFIRMED)
+                    is Work.Chat -> work.copy(origin = TextOrigin.OWNER_CONFIRMED, confirm = false)
+                    is Work.Mail -> work.copy(origin = TextOrigin.OWNER_CONFIRMED, confirm = false)
                 })
             }
         }
         return true
+    }
+
+    /** The answer to „Soll ich mir merken, dass … ist?“: only a clear yes stores the relation. Either way nothing is sent yet. */
+    private fun remember(request: String, pending: Pending.Remember): Boolean {
+        val relation = pending.relation
+        val candidate = pending.candidate
+        val work = pending.work
+        when {
+            OwnerSendIntentParser.isYes(request) -> {
+                host.acceptOwnerTurn(request)
+                val id = candidate.contactId
+                if (id == null) {
+                    host.reply(request, "Diesen Empfänger kann ich mir nicht als ${relation.yours} merken, weil er nicht in deinen Kontakten steht.")
+                    start(work)
+                } else {
+                    host.relations().remember(relation, id, candidate.displayName)
+                    host.activity("BEZIEHUNG · ${relation.yours} gemerkt · vom Besitzer bestätigt")
+                    host.reply(request, "Gut, ich merke mir: ${candidate.displayName} ist ${relation.yours}. Mit „Vergiss, wer " +
+                        "${relation.mine} ist“ lösche ich das wieder.")
+                    start(when (work) {
+                        is Work.Chat -> work.copy(via = relation)
+                        is Work.Mail -> work.copy(via = relation)
+                    })
+                }
+            }
+            REMEMBER_NO.matches(request.trim()) -> {
+                host.acceptOwnerTurn(request)
+                host.reply(request, "In Ordnung, das merke ich mir nicht.")
+                start(work)
+            }
+            OwnerSendIntentParser.isCancel(request) -> {
+                host.acceptOwnerTurn(request)
+                host.reply(request, "In Ordnung. Es wurde nichts gesendet.")
+                host.outcome(OwnerLaneOutcome.Stopped)
+            }
+            else -> return false
+        }
+        return true
+    }
+
+    /** The same message to the recipient the owner named instead; nothing learnt or resolved before carries over. */
+    private fun retarget(work: Work, name: String): Work = when (work) {
+        is Work.Chat -> work.copy(order = work.order.copy(recipient = name, unsplit = null), recipient = null, learn = null, via = null)
+        is Work.Mail -> work.copy(handover = work.handover.copy(recipientName = name, address = null), recipient = null,
+            learn = null, via = null)
     }
 
     private fun start(work: Work) {
@@ -185,8 +302,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             return
         }
         if (work is Work.Chat && work.recipient == null && work.order.recipient == null && work.order.unsplit == null) {
-            ask(request, "An wen soll die WhatsApp gehen? Nenn mir den Namen, wie er in deinen Kontakten steht.",
-                Pending.Recipient(work))
+            ask(request, ASK_RECIPIENT, Pending.Recipient(work))
             return
         }
         val needsContacts = when (work) {
@@ -210,6 +326,8 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         host.runJob(request, { job -> when (work) { is Work.Chat -> chat(work, job); is Work.Mail -> mail(work, job) } }) { result ->
             result.fold({ next ->
                 next.activity?.let(host::activity)
+                // The first confirmed send through a newly learnt relation: from now on it counts like a name.
+                if (next.sent?.state == SendOutcome.State.SENT) next.via?.let { host.relations().markSent(it) }
                 if (next.pending != null) ask(request, next.text, next.pending) else {
                     host.reply(request, next.text)
                     host.outcome(settled(next))
@@ -229,7 +347,8 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         host.outcome(OwnerLaneOutcome.NeedsOwner(when (pending) {
             is Pending.Pick -> OwnerLaneOutcome.Need.CHOICE
             is Pending.Confirm -> OwnerLaneOutcome.Need.CONFIRMATION
-            is Pending.Recipient, is Pending.Wording -> OwnerLaneOutcome.Need.DETAIL
+            is Pending.Recipient, is Pending.Wording, is Pending.Relation -> OwnerLaneOutcome.Need.DETAIL
+            is Pending.Remember -> OwnerLaneOutcome.Need.CONFIRMATION
         }, question))
     }
 
@@ -253,15 +372,27 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         var text = work.text
         var origin = work.origin
         var brief = work.order.modelBrief
+        var confirm = work.confirm
+        var via = work.via
         if (recipient == null) {
             job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt suchen", StepState.ACTIVE)
             val rows = host.contacts().phones()
             var phrase = work.order.recipient
             if (phrase == null) {
                 val unsplit = checkNotNull(work.order.unsplit)
-                val parts = OwnerSendRecipientResolver.split(unsplit, rows.map { it.displayName }.distinct())
+                // A relation in front („meinem Chef, ich komme später“) is never split by name tokens of contacts.
+                val parts = OwnerRelation.split(unsplit)?.let { it.second to it.third }
+                    ?: OwnerSendRecipientResolver.split(unsplit, rows.map { it.displayName }.distinct())
                     ?: OwnerSendIntentParser.splitFamily(unsplit)
-                    ?: return notFound(job, unsplit.substringBefore(' '))
+                if (parts == null) {
+                    if (!work.order.looseText) return notFound(job, unsplit.substringBefore(' '))
+                    // Nobody is named in front: the whole tail is the text. Who gets it is asked, and recipient and
+                    // wording are shown once before anything is sent – recipient words never slip into the message.
+                    val content = OwnerSendIntentParser.body(unsplit) ?: return Next(OwnerSendIntentParser.REFUSED_TEXT)
+                    job.step(OwnerSendFlow.STEP_CONTACT, "Rückfrage: an wen", StepState.WAITING)
+                    return Next(ASK_RECIPIENT, Pending.Recipient(work.copy(order = work.order.copy(unsplit = null, looseText = false,
+                        modelBrief = content.modelBrief), text = content.text, origin = content.origin, confirm = true)))
+                }
                 if (OwnerSendIntentParser.startsWithNegation(parts.second)) return Next(OwnerSendIntentParser.REFUSED_NEGATED)
                 if (OwnerSendIntentParser.hasAdditionalRecipient(parts.second)) {
                     return Next(OwnerSendIntentParser.REFUSED_SEVERAL)
@@ -271,13 +402,21 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             }
             val settled = work.copy(order = work.order.copy(recipient = phrase, unsplit = null, modelBrief = brief),
                 text = text, origin = origin)
-            when (val found = OwnerSendRecipientResolver.whatsapp(phrase, rows)) {
-                is Resolution.Resolved -> recipient = found.candidate
+            val relation = OwnerRelation.parse(phrase).takeIf { work.learn == null }
+            val stored = relation?.let { host.relations().get(it) }
+            val found = if (stored != null) OwnerSendRecipientResolver.whatsappContact(phrase, stored.contactId, rows)
+                else OwnerSendRecipientResolver.whatsapp(phrase, rows)
+            when (found) {
+                is Resolution.Resolved -> {
+                    recipient = found.candidate
+                    if (stored != null) { via = relation; if (!stored.firstSendDone) confirm = true }
+                }
                 is Resolution.Ambiguous -> {
                     job.step(OwnerSendFlow.STEP_CONTACT, "Rückfrage: welcher Kontakt", StepState.WAITING)
                     return Next(which(found), Pending.Pick(found.candidates, settled))
                 }
-                is Resolution.NotFound -> return notFound(job, found.asked, settled)
+                is Resolution.NotFound -> return if (relation != null) relationQuestion(job, found.asked, relation, stored, settled, mail = false)
+                    else notFound(job, found.asked, settled)
                 is Resolution.Unusable -> {
                     job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt ohne nutzbare Nummer", StepState.BLOCKED)
                     return Next(found.reason)
@@ -288,7 +427,8 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         if (recipient.value.isEmpty()) return Next("Die Nummer von ${recipient.displayName} ist ohne Ländervorwahl gespeichert. " +
             "Trag sie bitte mit +43 … im Kontakt ein. Es wurde nichts gesendet.")
         val resolved = work.copy(recipient = recipient, text = text, origin = origin,
-            order = work.order.copy(modelBrief = brief))
+            order = work.order.copy(modelBrief = brief), confirm = confirm, via = via)
+        work.learn?.let { learn -> rememberQuestion(job, learn, recipient, resolved.copy(learn = null))?.let { return it } }
         val wantSend = host.grants().enabled(SendChannel.WHATSAPP) && !work.order.draftOnly
         if (text == null) {
             val wording = Pending.Wording(resolved.copy(order = resolved.order.copy(modelBrief = null)))
@@ -307,13 +447,15 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             job.step(STEP_COMPOSE, "Text formuliert", StepState.DONE)
             text = written; origin = TextOrigin.DERIVED
         }
-        // Fixed rule (a): text that is not the owner's own wording is shown once and waits for a clear yes.
-        if (wantSend && !origin.ownerWords) return Next(
+        // Fixed rule (a): text that is not the owner's own wording is shown once and waits for a clear yes. The same
+        // single question when the recipient or the separation of the text is not yet confirmed (see [Work.confirm]).
+        if (wantSend && (!origin.ownerWords || confirm)) return Next(
             "Ich würde ${recipient.label} auf WhatsApp schreiben:\n\n„$text“\n\nSoll ich das so senden?",
-            Pending.Confirm(resolved.copy(text = text, origin = TextOrigin.DERIVED)))
+            Pending.Confirm(resolved.copy(text = text, origin = if (origin.ownerWords) origin else TextOrigin.DERIVED, confirm = true)))
         val plan = SendPlan.WhatsApp(recipient.displayName, recipient.value, text, wantSend)
         val outcome = OwnerSendFlow(host.device(), host.grants(), job::step).run(plan)
-        return Next(OwnerSendReport.text(outcome, draftWanted = work.order.draftOnly), activity = activityLine(outcome), sent = outcome)
+        return Next(OwnerSendReport.text(outcome, draftWanted = work.order.draftOnly), activity = activityLine(outcome), sent = outcome,
+            via = via)
     }
 
     // ── Gmail ───────────────────────────────────────────────────────────────────────────────────────────────
@@ -321,15 +463,27 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
     private fun mail(work: Work.Mail, job: OwnerSendJob): Next {
         val order = work.handover
         var recipient = work.recipient ?: order.address?.let { Candidate(it, it, it) }
+        var confirm = work.confirm
+        var via = work.via
         if (recipient == null) {
             job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt suchen", StepState.ACTIVE)
-            when (val found = OwnerSendRecipientResolver.mail(order.recipientName.orEmpty(), host.contacts().mails())) {
-                is Resolution.Resolved -> recipient = found.candidate
+            val phrase = order.recipientName.orEmpty()
+            val relation = OwnerRelation.parse(phrase).takeIf { work.learn == null }
+            val stored = relation?.let { host.relations().get(it) }
+            val rows = host.contacts().mails()
+            val found = if (stored != null) OwnerSendRecipientResolver.mailContact(phrase, stored.contactId, rows)
+                else OwnerSendRecipientResolver.mail(phrase, rows)
+            when (found) {
+                is Resolution.Resolved -> {
+                    recipient = found.candidate
+                    if (stored != null) { via = relation; if (!stored.firstSendDone) confirm = true }
+                }
                 is Resolution.Ambiguous -> {
                     job.step(OwnerSendFlow.STEP_CONTACT, "Rückfrage: welcher Kontakt", StepState.WAITING)
                     return Next(which(found), Pending.Pick(found.candidates, work))
                 }
                 is Resolution.NotFound -> {
+                    if (relation != null) return relationQuestion(job, found.asked, relation, stored, work, mail = true)
                     job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt nicht gefunden", StepState.BLOCKED)
                     return Next("Ich habe keinen Kontakt „${found.asked}“ mit E-Mail-Adresse gefunden. Nenn mir die Adresse " +
                         "oder den Namen, wie er in deinen Kontakten steht. Es wurde nichts vorbereitet und nichts gesendet.")
@@ -344,21 +498,50 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         val subject = if (file != null) file.displayName.substringBeforeLast('.').ifBlank { file.displayName } else order.subject.take(200)
         val body = if (file != null) "" else order.body.take(MAX_MAIL_BODY)
         val origin = if (file != null) TextOrigin.DICTATED else work.origin
+        val settled = work.copy(recipient = recipient, confirm = confirm, via = via)
+        work.learn?.let { learn -> rememberQuestion(job, learn, recipient, settled.copy(learn = null))?.let { return it } }
+        if (origin.ownerWords && confirm) return Next(
+            "Ich würde an ${recipient.label} über Gmail senden: Betreff „$subject“" +
+                (if (file != null) ", Anhang „${file.displayName}“" else "") + ". Soll ich das so senden?",
+            Pending.Confirm(settled))
         if (!origin.ownerWords) return Next(
             "Ich würde an ${recipient.label} diese E-Mail über Gmail senden:\n\nBetreff: $subject\n\n" +
                 body.trim().let { if (it.length > 600) it.take(600) + " … (insgesamt ${it.length} Zeichen)" else it } +
                 "\n\nDen Text habe nicht du diktiert, deshalb frage ich einmal: Soll ich das so senden? " +
                 "(Als gespeicherte Datei – „speichere das als PDF“ – geht es künftig ohne Rückfrage als Anhang hinaus.)",
-            Pending.Confirm(work.copy(recipient = recipient, origin = TextOrigin.DERIVED)))
+            Pending.Confirm(settled.copy(origin = TextOrigin.DERIVED, confirm = true)))
         val plan = SendPlan.Mail(recipient.value, recipient.displayName.takeIf { it != recipient.value }, subject, body, file, send = true)
         val outcome = OwnerSendFlow(host.device(), host.grants(), job::step).run(plan)
-        return Next(OwnerSendReport.text(outcome), activity = activityLine(outcome), sent = outcome)
+        return Next(OwnerSendReport.text(outcome), activity = activityLine(outcome), sent = outcome, via = via)
     }
 
+    /**
+     * The name was not found. The owner may answer with the name as it stands in his contacts; because that answer is
+     * only a few free words, the resolved contact and the text are shown once before anything is sent.
+     */
     private fun notFound(job: OwnerSendJob, asked: String, work: Work.Chat? = null): Next {
         job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt nicht gefunden", StepState.BLOCKED)
         return Next("Ich habe keinen Kontakt „$asked“ gefunden. Nenn mir den Namen so, wie er in deinen Kontakten steht. " +
-            "Es wurde nichts vorbereitet und nichts gesendet.", work?.let { Pending.Recipient(it) })
+            "Es wurde nichts vorbereitet und nichts gesendet.", work?.let { Pending.Recipient(it.copy(confirm = true)) })
+    }
+
+    /** „Wer ist dein Vater in den Kontakten?“ – a relation is never guessed from contact names. */
+    private fun relationQuestion(job: OwnerSendJob, asked: String, relation: OwnerRelation, stored: OwnerRelationEntry?,
+                                 work: Work, mail: Boolean): Next {
+        job.step(OwnerSendFlow.STEP_CONTACT, "Rückfrage: wer ist ${relation.yours}", StepState.WAITING)
+        val lead = if (stored != null) "„${stored.displayName}“, den ich mir als ${relation.yours} gemerkt habe, finde ich " +
+            (if (mail) "mit E-Mail-Adresse " else "") + "nicht mehr in deinen Kontakten."
+            else "Ich habe keinen Kontakt „$asked“" + (if (mail) " mit E-Mail-Adresse" else "") + " gefunden."
+        return Next("$lead ${relation.whoIs} in den Kontakten? Nenn mir den Namen, wie er dort steht. " +
+            "Es wurde nichts vorbereitet und nichts gesendet.", Pending.Relation(work, relation))
+    }
+
+    /** After the owner named the contact for a relation: „Soll ich mir merken, dass … ist?“ Null when it cannot be stored. */
+    private fun rememberQuestion(job: OwnerSendJob, relation: OwnerRelation, candidate: Candidate, work: Work): Next? {
+        if (candidate.contactId == null) return null
+        job.step(OwnerSendFlow.STEP_CONTACT, "Rückfrage: merken", StepState.WAITING)
+        return Next("Soll ich mir merken, dass ${candidate.displayName} ${relation.yours} ist?",
+            Pending.Remember(work, relation, candidate))
     }
 
     private fun which(found: Resolution.Ambiguous): String {
@@ -419,6 +602,8 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
 
     companion object {
         const val PENDING_MILLIS = 2 * 60_000L
+        const val ASK_RECIPIENT = "An wen soll die WhatsApp gehen? Nenn mir den Namen, wie er in deinen Kontakten steht."
+        private val REMEMBER_NO = Regex("(?iu)^(?:nein|nö|nee|ne|nein danke|lieber nicht|nicht merken|merk dir das nicht|brauchst du nicht)[.!]?$")
         const val MAX_MAIL_BODY = 8_000
         const val DIAGNOSIS_WAIT_MILLIS = 30_000L
         const val DIAGNOSIS_SETTLE_MILLIS = 4_000L

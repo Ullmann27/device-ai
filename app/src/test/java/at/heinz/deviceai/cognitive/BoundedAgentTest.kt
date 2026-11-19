@@ -63,10 +63,11 @@ class BoundedAgentTest {
             approvalProvider = AgentToolApprovalProvider { _, _ -> AgentToolApproval(approve) }
         )
         val search = agent("find_files", { error("bridge not connected") }).run("ich suche eine PDF die heißt Argon4 Experimente")
+        // Since the file tools read the storage in-process (19.11.2026) the hint no longer names the Shizuku bridge:
+        // a missing bridge or grant is refused before the start (devicetools/DeviceToolGateTest).
         assertEquals("„Dateien suchen“ hat kein Ergebnis geliefert. Das Werkzeug liest nur – es wurde nichts verändert, und es " +
-            "ist nichts gesperrt. Die Dateiwerkzeuge laufen über die Shizuku-Verbindung; läuft Shizuku nicht (nach einem " +
-            "Neustart des Geräts muss es neu gestartet werden), bekomme ich keine Antwort. Ein PDF finde ich auch ohne " +
-            "Shizuku: Sag „Such das PDF“ und den Namen. Du kannst es noch einmal versuchen.", search.response)
+            "ist nichts gesperrt. Dateien lese ich direkt auf dem Gerät, ohne Shizuku; bei sehr vielen Dateien kann das zu " +
+            "lange dauern. Nenne dann einen Ordner oder einen genaueren Namen. Du kannst es noch einmal versuchen.", search.response)
         assertTrue(!search.response.contains("UNKNOWN") && !search.response.contains("Besitzerprüfung"))
         // The same question again is a new call and gets the same plain answer – nothing stayed blocked.
         val again = agent("find_files", { error("bridge not connected") }).run("nein geht schon du kannst suchen")

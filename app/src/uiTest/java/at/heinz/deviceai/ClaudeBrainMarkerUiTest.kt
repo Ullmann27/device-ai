@@ -118,13 +118,14 @@ class ClaudeBrainMarkerUiTest {
         })
         val badge = field(a, "localBadge") as TextView
         call(a, "refreshLocalModelUi")
-        assertFalse(badge.text.contains("CLAUDE"))
+        assertFalse(badge.text.contains("CLOUD"))
         assertEquals("internet research is OFF in this fixture", true, localOnly(a))
 
         assertTrue(brain.selectBrain(BrainKind.CLAUDE))
         call(a, "onClaudeBrainChanged", BrainKind::class.java to BrainKind.LOCAL)
-        assertEquals("● CLAUDE · CLOUD", badge.text.toString())
-        assertTrue(badge.contentDescription.toString().contains("Claude in der Cloud"))
+        assertEquals("● CONTINUUM · CLOUD", badge.text.toString())
+        assertTrue(badge.contentDescription.toString().contains("Continuum antwortet über die Cloud"))
+        assertFalse(badge.contentDescription.toString().contains("laude"))
         assertEquals("not local-only while the cloud brain answers", false, localOnly(a))
         val runtime = field(a, "localRuntime") as LocalModelRuntime
         assertEquals(LocalModelState.READY, runtime.state)
@@ -134,8 +135,8 @@ class ClaudeBrainMarkerUiTest {
         advance()
         val centre = ShadowAlertDialog.getLatestAlertDialog()
         val shown = texts(centre.window!!.decorView)
-        assertTrue(shown.toString(), shown.any { it == "GEHIRN WÄHLEN · CLAUDE · CLOUD" })
-        assertTrue(shown.any { it.startsWith("Aktives Gehirn: CLAUDE · CLOUD · claude-opus-5-5") &&
+        assertTrue(shown.toString(), shown.any { it == "GEHIRN WÄHLEN · CONTINUUM · CLOUD" })
+        assertTrue(shown.any { it.startsWith("Aktives Gehirn: CONTINUUM · CLOUD · claude-opus-5-5") &&
             it.contains("Das lokale Sprachmodell wird nicht verwendet") })
         assertTrue("the key itself is never displayed", shown.none { it.contains("sk-ant") })
         centre.dismiss()
@@ -150,7 +151,7 @@ class ClaudeBrainMarkerUiTest {
 
         assertTrue(brain.selectBrain(BrainKind.LOCAL))
         call(a, "onClaudeBrainChanged", BrainKind::class.java to BrainKind.CLAUDE)
-        assertFalse(badge.text.contains("CLAUDE"))
+        assertFalse(badge.text.contains("CLOUD"))
         assertEquals("Lokaler Startkern: Status und Sprachmodell erklären", badge.contentDescription.toString())
         assertEquals(true, localOnly(a))
         assertEquals(LocalModelState.EMPTY, runtime.state)
@@ -162,8 +163,8 @@ class ClaudeBrainMarkerUiTest {
             at.heinz.deviceai.diagnostics.ContinuumDiagnostics(java.io.File(dir, "diagnostics.tsv"), "host-qa"))
         fun live(model: String?, mode: String?) = ContinuumDashboardCollector.Live(model, model != null, false, "OFF",
             false, false, false, false, false, false, false, false, false, emptyList(), mode)
-        assertEquals("CLAUDE · CLOUD", collector.collect(live("claude-opus-5-5 cloud", "CLAUDE · CLOUD")).model.mode)
-        assertEquals("claude-opus-5-5 cloud", collector.collect(live("claude-opus-5-5 cloud", "CLAUDE · CLOUD")).model.name)
+        assertEquals("CONTINUUM · CLOUD", collector.collect(live("claude-opus-5-5 cloud", "CONTINUUM · CLOUD")).model.mode)
+        assertEquals("claude-opus-5-5 cloud", collector.collect(live("claude-opus-5-5 cloud", "CONTINUUM · CLOUD")).model.name)
         assertEquals("Lokales Sprachmodell", collector.collect(live("gemma-4-e4b 1", null)).model.mode)
         assertEquals("Startkern ohne Sprachmodell", collector.collect(live(null, null)).model.mode)
     }

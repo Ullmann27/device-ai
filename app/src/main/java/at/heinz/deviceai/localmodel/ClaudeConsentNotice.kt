@@ -32,7 +32,7 @@ object ClaudeConsentNotice {
         "Anthropic verarbeitet die Daten nach den Bedingungen deines API-Kontos; für Claude Fable 5.2 verlangt " +
         "Anthropic eine Datenaufbewahrung von 30 Tagen. Lehnt Claude eine Anfrage ab, kann Anthropic sie auf " +
         "seinen Servern mit einem anderen Claude-Modell beantworten.\n\n" +
-        "Solange Claude aktiv ist, zeigt die App „CLAUDE · CLOUD“ an. Du kannst die Zustimmung jederzeit " +
+        "Solange Claude aktiv ist, zeigt die App „" + ClaudeBrain.MARKER_CLOUD + "“ an. Du kannst die Zustimmung jederzeit " +
         "widerrufen und auf „Lokal“ zurückschalten; die App wechselt nie von selbst."
 
     const val SHARE_MEMORY_LABEL =

@@ -21,21 +21,22 @@ data class ToolProposal(val toolName: String, val arguments: Map<String, Any?>) 
         }
         if (arguments.size > 16 || arguments.any { (key, value) ->
                 !key.matches(Regex("[A-Za-z][A-Za-z0-9_]{0,63}")) ||
-                    !isStructuredValue(value) || !validArgumentType(toolName, key, value)
+                    !isStructuredValue(value, ToolRegistry.maxTextLength(key)) || !validArgumentType(toolName, key, value)
             }) return "Tool arguments must match a bounded registered-tool schema."
         return ToolRegistry.validate(ToolCallRequest("proposal", toolName, arguments))
     }
 
-    private fun isStructuredValue(value: Any?): Boolean = when (value) {
+    /** [maxText]: 4 096 characters for every argument except the registry's long-text ones (a document's content). */
+    private fun isStructuredValue(value: Any?, maxText: Int = 4_096): Boolean = when (value) {
         null, is Boolean -> true
         is Number -> value.toDouble().isFinite() && value.toDouble() % 1.0 == 0.0
-        is String -> value.length <= 4_096
+        is String -> value.length <= maxText
         is List<*> -> value.size <= 100 && value.all { it is String && isStructuredValue(it) }
         else -> false
     }
 
     private fun validArgumentType(name: String, key: String, value: Any?): Boolean = when (key) {
-        "lines", "limit", "seconds" -> value is Number || value is String && value.toIntOrNull() != null
+        "lines", "limit", "seconds", "offset" -> value is Number || value is String && value.toIntOrNull() != null
         "userOnly" -> value is Boolean || value is String &&
             (value.equals("true", true) || value.equals("false", true))
         "roots" -> (name == "find_files" || name == "get_large_files") &&
@@ -93,7 +94,30 @@ data class ToolExecutionRecord(
 data class ToolExecutionResult(val output: String?, val record: ToolExecutionRecord,
                                val replayed: Boolean = false,
                                /** Journal unreadable before this call dispatched: nothing ran here, prior state unknown. */
-                               val journalUnavailableBeforeDispatch: Boolean = false)
+                               val journalUnavailableBeforeDispatch: Boolean = false,
+                               /**
+                                * Set when a [ToolPrecheck] refused the call: nothing was dispatched, no approval was
+                                * used, and [output] is the refusal's plain message for the owner and the brain.
+                                */
+                               val refusal: ToolRefusal? = null)
+
+/**
+ * Why a registered, valid call is not started at all (a bridge-only tool without the bridge, a missing Android grant,
+ * a missing owner consent). Decided before the owner is asked and before any backend work, so it is never an unknown
+ * outcome. [code] is stable for tests and journals; [message] is what the owner reads.
+ */
+data class ToolRefusal(val code: String, val message: String) {
+    init { require(code.matches(Regex("[A-Z][A-Z0-9_]{2,63}")) && message.isNotBlank() && message.length <= 1_500) }
+}
+
+/** Asked by the [ToolGate] before approval and dispatch; must be cheap, free of side effects and must not block. */
+fun interface ToolPrecheck {
+    fun refusal(request: ToolCallRequest): ToolRefusal?
+
+    companion object {
+        val NONE = ToolPrecheck { null }
+    }
+}
 
 /** A trusted backend can narrow an outcome to failure, never assert success. */
 class ToolBackendFailure(val status: ToolExecutionStatus, message: String) : RuntimeException(message) {
@@ -121,7 +145,8 @@ class ToolGate(
     private val runner: ToolRunner,
     private val clock: () -> Long = System::nanoTime,
     private val receiptStore: ToolExecutionReceiptStore? = null,
-    private val receiptClock: () -> Long = System::currentTimeMillis
+    private val receiptClock: () -> Long = System::currentTimeMillis,
+    private val precheck: ToolPrecheck = ToolPrecheck.NONE
 ) {
     private val calls = AtomicInteger()
     private val cancelled = AtomicBoolean()
@@ -136,6 +161,18 @@ class ToolGate(
             pendingStarts.forEach { it.revokeIfPending() }
         }
         activeFutures.forEach { it.cancel(true) }
+    }
+
+    /**
+     * The reason this valid call would not be started, or null. Callers ask before they request the owner's approval
+     * (nobody is asked to approve what cannot run); [execute] asks again and never dispatches a refused call. A
+     * precheck that breaks refuses: an unknown precondition never becomes a dispatch.
+     */
+    fun refusalBeforeDispatch(request: ToolCallRequest): ToolRefusal? = try {
+        precheck.refusal(request)
+    } catch (_: Exception) {
+        ToolRefusal("PRECHECK_FAILED", "Die Voraussetzungen für „${ToolRegistry.label(request.name)}“ ließen sich nicht " +
+            "prüfen. Es wurde nichts ausgeführt.")
     }
 
     fun recordProposal(invocation: ToolInvocation): ToolExecutionReceipt? {
@@ -251,6 +288,11 @@ class ToolGate(
                     "Receipt conflict: concurrent dispatch outcome UNKNOWN; operator review required.",uncertain=true)
             }
             return result(status, reason)
+        }
+        // Before approval, budget and dispatch: a call whose precondition is missing ends here with a plain reason.
+        refusalBeforeDispatch(request)?.let { refusal ->
+            val rejected = rejectWithReceipt(ToolExecutionStatus.REJECTED, "Refused before dispatch: ${refusal.code}.")
+            return if (rejected.record.outcomeUncertain) rejected else rejected.copy(output = refusal.message, refusal = refusal)
         }
         when (spec!!.risk) {
             Risk.READ_ONLY -> if (!policy.readOnlyEnabled) {

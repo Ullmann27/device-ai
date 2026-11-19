@@ -31,9 +31,11 @@ class OwnerSendBoundaryTest {
         assertEquals(listOf("AgentActivity.kt"), using(Regex("(?<!class )OwnerSendDirector\\(")))
         assertEquals(listOf("AgentActivity.kt"), using(Regex("ownerSend\\.(?:handle|mail)\\(")))
         val activity = source("AgentActivity.kt")
-        // The owner-turn intake, the settings button for the diagnosis, and the work tools' mail order.
-        assertEquals(2, Regex("ownerSend\\.handle\\(").findAll(activity).count())
+        // The owner-turn intake, the same owner turn as the answer to this lane's open question (changed 19.11.2026:
+        // open questions are served before the whole-sentence lanes), the settings button for the diagnosis.
+        assertEquals(3, Regex("ownerSend\\.handle\\(").findAll(activity).count())
         assertTrue(activity.contains("ownerSend.handle(request)) return"))
+        assertTrue(activity.contains("awaiting = { ownerSend.awaitingAnswer }) { ownerSend.handle(it) }"))
         assertTrue(activity.contains("ownerSend.handle(\"Sende-Diagnose\")"))
         assertEquals(1, Regex("ownerSend\\.mail\\(").findAll(activity).count())
         // The only caller of the mail hand-over is the work tools' own mail order.

@@ -25,6 +25,11 @@
          Asked once at runtime with a plain explanation; read on the device only. No SMS permission and no
          notification listener are declared (see NormalInstallManifestTest). -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Daily briefing („Was steht heute an?“, „Welche Termine habe ich heute?“): today's and tomorrow morning's
+         appointments are read from the device calendar. Asked at runtime with a plain explanation the first time
+         the owner asks for appointments; read on the device only and never transmitted. WRITE_CALENDAR is not
+         declared – the app cannot change the calendar (see NormalInstallManifestTest). -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
     <!-- Document desk („Öffne das PDF Argon4“): finding a PDF by its name in the owner's shared storage, offline and
          inside the app. Nothing is read until the owner switches on „Zugriff auf alle Dateien“ for this app in
          Android's own settings; he can switch it off there at any time. The desk only lists names and opens the
@@ -142,6 +147,11 @@
             android:exported="false" />
         <receiver
             android:name=".ContinuumOwnerUpdateReceiver"
+            android:exported="false" />
+
+        <!-- „Später“ on Continuum's own card for an incoming message. Not exported; it starts nothing. -->
+        <receiver
+            android:name=".notifications.IncomingMessageActionReceiver"
             android:exported="false" />
 
         <activity

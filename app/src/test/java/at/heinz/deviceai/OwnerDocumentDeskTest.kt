@@ -547,8 +547,8 @@ class OwnerDocumentDeskTest {
     @Test fun theCloudBrainIsNeverCalledTheModelOnTheDevice() {
         val (host, desk) = opened { cloud = true }
         assertTrue(desk.handle("Fass Seite 2 zusammen und speichere es als Word"))
-        assertTrue(host.lines("SAY:").last().contains("Zusammengefasst hat Claude (Cloud), nicht das Modell auf dem Gerät."))
-        assertTrue(wordText(host.downloads.values.single()).contains("zusammengefasst von Claude (Cloud) am 18.11.2026"))
+        assertTrue(host.lines("SAY:").last().contains("Zusammengefasst habe ich das über die Cloud, nicht mit dem Modell auf dem Gerät."))
+        assertTrue(wordText(host.downloads.values.single()).contains("zusammengefasst vom Cloud-Gehirn am 18.11.2026"))
     }
 
     // ── Corrections change the next action ──────────────────────────────────────────────────────────────────

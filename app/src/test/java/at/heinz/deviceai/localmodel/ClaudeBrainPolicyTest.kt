@@ -94,10 +94,10 @@ class ClaudeBrainPolicyTest {
         for (head in listOf(ClaudePromptFrame.HEAD_TEXT_ONLY, ClaudePromptFrame.HEAD_TOOLS)) {
             val stable = head + ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS
             val frame = ClaudePromptFrame.frame(stable + rest, isolatedWorker = false)
-            assertEquals(listOf(ClaudePromptFrame.RUNTIME_PREFACE, stable + ClaudePromptFrame.OWNER_APP_ACTIONS), frame.systemBlocks)
+            assertEquals(listOf(ClaudePromptFrame.RUNTIME_PREFACE, stable), frame.systemBlocks)
             assertEquals(rest, frame.user)
             // Nothing is lost or reordered.
-            assertEquals(stable + rest, frame.systemBlocks[1].removeSuffix(ClaudePromptFrame.OWNER_APP_ACTIONS) + frame.user)
+            assertEquals(stable + rest, frame.systemBlocks[1] + frame.user)
         }
         // A bot turn inserts its profile after the head line: not split.
         val bot = ClaudePromptFrame.HEAD_TOOLS + "Dieser ausdrücklich erteilte Auftrag gehört zum ausgewählten Fachbot. " +
@@ -259,7 +259,7 @@ class ClaudeBrainPolicyTest {
         assertEquals(listOf(true, true, false, true), ClaudeModel.entries.map { it.serverSideFallback })
         assertTrue(ClaudeConsentNotice.TEXT.contains("api.anthropic.com"))
         for (stated in listOf("deine Nachricht", "Gesprächsverlauf", "Gedächtnis", "Dokumenten", "Werkzeugen", "Guthaben",
-            "Bildschirminhalte anderer Apps", "widerrufen", "CLAUDE · CLOUD", "wechselt nie von selbst"))
+            "Bildschirminhalte anderer Apps", "widerrufen", "CONTINUUM · CLOUD", "wechselt nie von selbst"))
             assertTrue(stated, ClaudeConsentNotice.TEXT.contains(stated))
     }
 
@@ -430,8 +430,9 @@ class ClaudeBrainPolicyTest {
         assertEquals(1_700_000_000_000L, brain.settings.consentAtMillis)
         assertTrue(brain.selectBrain(BrainKind.CLAUDE))
         assertTrue(brain.claudeSelected)
-        assertEquals(ClaudeBrain.MARKER_CLAUDE, brain.marker())
-        assertEquals("CLAUDE · CLOUD", brain.marker())
+        assertEquals(ClaudeBrain.MARKER_CLOUD, brain.marker())
+        // Owner order 19.11.2026: the speaker is Continuum on both brains; „· CLOUD“ stays as the privacy signal.
+        assertEquals("CONTINUUM · CLOUD", brain.marker())
         assertFalse("device-local memory stays local without the separate opt-in", brain.mayUseLocalOnlyMemory)
         assertTrue(brain.setShareLocalMemory(true))
         assertTrue(brain.mayUseLocalOnlyMemory)

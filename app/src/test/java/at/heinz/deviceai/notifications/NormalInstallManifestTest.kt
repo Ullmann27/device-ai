@@ -48,7 +48,36 @@ class NormalInstallManifestTest {
             "android.permission.REQUEST_INSTALL_PACKAGES", "android.permission.READ_CONTACTS",
             // Added deliberately for the document desk (18.11.2026), see the test below.
             "android.permission.MANAGE_EXTERNAL_STORAGE",
+            // Added deliberately for the daily briefing (19.11.2026), see readCalendarIsTheOnlyPermissionAddedForTheBriefing.
+            "android.permission.READ_CALENDAR",
             "com.termux.permission.RUN_COMMAND"))
+    }
+
+    /**
+     * Daily briefing („Was steht heute an?“, „Welche Termine habe ich heute?“, owner goal 19.11.2026): today's and
+     * tomorrow morning's appointments come from the device calendar. READ_CALENDAR is the one permission added for
+     * the briefing lane: a runtime permission Android asks the owner for, after a plain explanation, the first time
+     * he asks for appointments. It is not in Play Protect's blocking rule (SMS, notification listener). The app can
+     * only read: no calendar write, no call, no location and no SMS permission comes with it – „Ruf Anna an“ opens
+     * the dialer (ACTION_DIAL) and the weather uses a place the owner names. Whether Play Protect accepts a normally
+     * installed build with this declaration is NOT verified by this test – only the device can show that.
+     */
+    @Test fun readCalendarIsTheOnlyPermissionAddedForTheBriefing() {
+        val manifest = source("src/main/AndroidManifest.xml").replace(Regex("<!--[\\s\\S]*?-->"), "")
+        val declared = Regex("<uses-permission\\s+android:name=\"([^\"]+)\"").findAll(manifest).map { it.groupValues[1] }.toList()
+        assertTrue(declared.count { it == "android.permission.READ_CALENDAR" } == 1)
+        listOf("WRITE_CALENDAR", "CALL_PHONE", "READ_CALL_LOG", "READ_PHONE_STATE", "ACCESS_FINE_LOCATION",
+            "ACCESS_COARSE_LOCATION", "ACCESS_BACKGROUND_LOCATION", "SEND_SMS", "READ_SMS", "RECEIVE_SMS",
+            "SCHEDULE_EXACT_ALARM", "USE_EXACT_ALARM", "SYSTEM_ALERT_WINDOW").forEach {
+            assertFalse(it, declared.contains("android.permission.$it"))
+        }
+        // The calendar boundary only queries; the dialer is opened, a call is never placed.
+        val boundary = source("src/main/java/at/heinz/deviceai/briefing/AndroidContinuumBriefing.kt")
+        assertTrue(boundary.contains("CalendarContract.Instances.CONTENT_URI"))
+        assertTrue(boundary.contains("Intent(Intent.ACTION_DIAL"))
+        listOf("ACTION_CALL", ".insert(", ".update(", ".delete(", "CalendarContract.Events.CONTENT_URI", "WRITE_CALENDAR").forEach {
+            assertFalse(it, boundary.contains(it))
+        }
     }
 
     /**

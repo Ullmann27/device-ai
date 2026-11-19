@@ -35,13 +35,14 @@ object ContinuumWorkAreaNavigationSpec {
     val toolEntries = listOf(
         CategoryEntry("Mein KI-Team", "agents"), CategoryEntry("Aufgaben", "tasks"),
         CategoryEntry("Recherche", "research"), CategoryEntry("Web", "web"),
-        CategoryEntry("Gerätesteuerung", "device"))
+        CategoryEntry("Gerätesteuerung", "device"), CategoryEntry("Speicher & Bereinigung", "storage-clean"))
     val moreEntries = listOf(
         CategoryEntry("Gespeicherte Gespräche", "chats"), CategoryEntry("Neuer Chat", "new-chat"),
         CategoryEntry("Datei öffnen", "files"), CategoryEntry("Startseite", "home"),
         CategoryEntry("Denken und Planen", "logic"), CategoryEntry("Mein KI-Team", "agents"),
         CategoryEntry("Aufgaben", "tasks"), CategoryEntry("Lernen", "learning"), CategoryEntry("Web und Quellen", "web"),
-        CategoryEntry("Systemstatus", "system"), CategoryEntry("Diagnose", "notifications"),
+        CategoryEntry("Systemstatus", "system"), CategoryEntry("Speicher & Bereinigung", "storage-clean"),
+        CategoryEntry("Diagnose", "notifications"),
         CategoryEntry("Einstellungen", "settings"), CategoryEntry("Datenschutz & Freigaben", "privacy"),
         CategoryEntry("Kamera und Wahrnehmung", "camera-settings"),
         CategoryEntry("Modellverwaltung", "model-management"),

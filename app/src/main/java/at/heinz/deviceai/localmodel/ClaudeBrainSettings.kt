@@ -53,13 +53,21 @@ data class ClaudeBrainSettings(
      */
     val shareLocalMemory: Boolean = false,
     /** Local monthly estimate limit in whole US cents; requests are blocked once it is reached. */
-    val monthlyLimitCents: Int = DEFAULT_MONTHLY_LIMIT_CENTS
+    val monthlyLimitCents: Int = DEFAULT_MONTHLY_LIMIT_CENTS,
+    /**
+     * Two separate owner switches, both off by default (owner order 19.11.2026: „Ja bau das ein“): Anthropic's own
+     * web search and page fetch, and its code-execution sandbox. They cost extra API credit and only ever take effect
+     * while the cloud brain is selected and the consent is stored ([ClaudeServerToolPolicy]).
+     */
+    val cloudWebSearch: Boolean = false,
+    val cloudCodeExecution: Boolean = false
 ) {
     init {
         require(monthlyLimitCents in MIN_MONTHLY_LIMIT_CENTS..MAX_MONTHLY_LIMIT_CENTS)
         // The cloud brain and the memory opt-in cannot even be represented without the stored consent.
         require(brain == BrainKind.LOCAL || consentGiven) { "Claude needs the owner's stored consent." }
         require(!shareLocalMemory || consentGiven) { "Sharing local memory needs the owner's stored consent." }
+        require(!(cloudWebSearch || cloudCodeExecution) || consentGiven) { "Cloud tools need the owner's stored consent." }
     }
 
     /** The cloud brain is the selected runtime. It may still be unusable (no key, no credit, offline). */
@@ -104,7 +112,9 @@ class PreferencesClaudeSettingsStore(context: Context) : ClaudeSettingsStore {
             consentAtMillis = preferences.getLong(KEY_CONSENT_AT, 0L),
             shareLocalMemory = consent && preferences.getBoolean(KEY_SHARE_MEMORY, false),
             monthlyLimitCents = preferences.getInt(KEY_LIMIT, ClaudeBrainSettings.DEFAULT_MONTHLY_LIMIT_CENTS)
-                .coerceIn(ClaudeBrainSettings.MIN_MONTHLY_LIMIT_CENTS, ClaudeBrainSettings.MAX_MONTHLY_LIMIT_CENTS)
+                .coerceIn(ClaudeBrainSettings.MIN_MONTHLY_LIMIT_CENTS, ClaudeBrainSettings.MAX_MONTHLY_LIMIT_CENTS),
+            cloudWebSearch = consent && preferences.getBoolean(KEY_CLOUD_WEB, false),
+            cloudCodeExecution = consent && preferences.getBoolean(KEY_CLOUD_CODE, false)
         )
     }.getOrDefault(ClaudeBrainSettings())
 
@@ -116,6 +126,8 @@ class PreferencesClaudeSettingsStore(context: Context) : ClaudeSettingsStore {
         .putLong(KEY_CONSENT_AT, settings.consentAtMillis)
         .putBoolean(KEY_SHARE_MEMORY, settings.shareLocalMemory)
         .putInt(KEY_LIMIT, settings.monthlyLimitCents)
+        .putBoolean(KEY_CLOUD_WEB, settings.cloudWebSearch)
+        .putBoolean(KEY_CLOUD_CODE, settings.cloudCodeExecution)
         .commit()
 
     private companion object {
@@ -127,5 +139,7 @@ class PreferencesClaudeSettingsStore(context: Context) : ClaudeSettingsStore {
         const val KEY_CONSENT_AT = "consent_at"
         const val KEY_SHARE_MEMORY = "share_local_memory"
         const val KEY_LIMIT = "monthly_limit_cents"
+        const val KEY_CLOUD_WEB = "cloud_web_search"
+        const val KEY_CLOUD_CODE = "cloud_code_execution"
     }
 }

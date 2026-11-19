@@ -764,10 +764,12 @@ class ContinuumCommand03BridgeUiTest {
         } finally { release.countDown() }
         AgentActivity.chatTranscriptIo.submit {}.get(8, TimeUnit.SECONDS)
         repeat(3) { advance() }
-        @Suppress("UNCHECKED_CAST")
-        val botRows = field(a, "command03VisibleMessages") as ArrayDeque<Pair<Boolean, String>>
+        // A visible line is a typed record (user, text, kind) since „das“ may only mean a result; the text is read as before.
+        val botRows = field(a, "command03VisibleMessages") as ArrayDeque<*>
         assertTrue(botRows.isNotEmpty())
-        assertTrue(botRows.first().second.startsWith("Atlas ·"))
+        val firstRow = botRows.first()!!
+        val firstText = firstRow.javaClass.getDeclaredField("text").apply { isAccessible = true }.get(firstRow) as String
+        assertTrue(firstText.startsWith("Atlas ·"))
         call(a, "returnToJarvis")
         assertNotEquals(old.viewId, binding(a).viewId)
         assertEquals(old.sessionId, binding(a).sessionId)
@@ -1164,5 +1166,65 @@ class ContinuumCommand03BridgeUiTest {
         val paused = packet(a, "receive").getJSONObject("computerWork")
         assertEquals("PAUSED", paused.getString("stage"))
         assertEquals("UNCONFIRMED", paused.getJSONArray("actions").getJSONObject(0).getString("state"))
+    }
+
+    @Test fun thePageSnapshotCarriesTheOrderRailTheStatusStripAndTheRealStartUpCheck() = withActivity { _, a ->
+        ready(a)
+        call(a, "syncCommand03HtmlState")
+        val idle = packet(a, "receive")
+        assertTrue("No step was reported, so there is no order", idle.isNull("orders"))
+        // The first snapshot of a ready page carries the briefing lane's real system check of this moment – the
+        // stage's start-up sequence shows measured states, never a made-up "all systems ready".
+        val measured = at.heinz.deviceai.briefing.ContinuumSystemCheck.snapshot()
+        assertTrue("The start-up check ran on real device facts", measured.isNotEmpty())
+        val shown = idle.getJSONArray("systemCheck")
+        assertEquals(minOf(measured.size, at.heinz.deviceai.ui.Command03StageBoard.MAX_CHECKS), shown.length())
+        for (index in 0 until shown.length()) {
+            assertEquals(measured[index].key, shown.getJSONObject(index).getString("key"))
+            assertEquals(measured[index].state.name, shown.getJSONObject(index).getString("state"))
+        }
+        val cards = idle.getJSONArray("briefingCards")
+        assertEquals("Only what the lane published is a card", at.heinz.deviceai.briefing.ContinuumBriefingBoard.cards().size
+            .coerceAtMost(at.heinz.deviceai.ui.Command03StageBoard.MAX_CARDS), cards.length())
+        val strip = idle.getJSONObject("tactical")
+        assertTrue(strip.getString("brain") in setOf("LOCAL", "CLAUDE"))
+        assertTrue(strip.isNull("internet") || strip.getString("internet") in setOf("OFF", "ASK", "ALWAYS_ON"))
+        for (key in listOf("thermal", "battery", "charging")) assertTrue("$key is a reading or null, never absent", strip.has(key))
+        // A real turn on the activity's cockpit bus: its command and one running step.
+        val bus = field(a, "cockpitBus") as at.heinz.deviceai.cockpit.CockpitAnimationBus
+        bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.CommandFlyIn("rail-fixture", 1L, "Wie wird das Wetter morgen?"))
+        bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.ProcessTimeline("rail-fixture", 2L, listOf(
+            at.heinz.deviceai.cockpit.ProcessStep("ack", "Auftrag angenommen", at.heinz.deviceai.cockpit.StepState.DONE),
+            at.heinz.deviceai.cockpit.ProcessStep("web", "Websuche", at.heinz.deviceai.cockpit.StepState.ACTIVE))))
+        shadowOf(Looper.getMainLooper()).idle()
+        call(a, "syncCommand03HtmlState")
+        val orders = packet(a, "receive").getJSONObject("orders")
+        assertEquals("TURN", orders.getString("source"))
+        assertEquals("Wie wird das Wetter morgen?", orders.getString("title"))
+        assertTrue(orders.getBoolean("active"))
+        assertTrue(orders.isNull("outcome"))
+        assertEquals(1, orders.getJSONArray("items").length())
+        val step = orders.getJSONArray("items").getJSONObject(0)
+        assertEquals("Websuche", step.getString("label"))
+        assertEquals("ACTIVE", step.getString("state"))
+        assertFalse("A turn id never leaves the app", orders.toString().contains("rail-fixture"))
+        // Checks and cards a provider hands over reach the same snapshot.
+        val board = field(a, "command03Board") as at.heinz.deviceai.ui.Command03StageBoard
+        assertTrue(board.setSystemCheck(listOf(at.heinz.deviceai.ui.Command03StageBoard.Check("voice", "Stimme",
+            at.heinz.deviceai.ui.Command03StageBoard.CheckState.WARN, "Sprachausgabe aus"))))
+        assertTrue(board.setBriefingCards(listOf(at.heinz.deviceai.ui.Command03StageBoard.Card("weather",
+            at.heinz.deviceai.ui.Command03StageBoard.CardKind.WEATHER, "Wetter", listOf("Linz · 4 °C")))))
+        call(a, "syncCommand03HtmlState")
+        val filled = packet(a, "receive")
+        assertEquals("WARN", filled.getJSONArray("systemCheck").getJSONObject(0).getString("state"))
+        assertEquals("weather", filled.getJSONArray("briefingCards").getJSONObject(0).getString("kind"))
+        assertEquals("info", filled.getJSONArray("briefingCards").getJSONObject(0).getString("state"))
+        // A new publication of the briefing lane replaces what the stage shows: the board follows the lane.
+        a.systemStartReport()
+        call(a, "syncCommand03HtmlState")
+        val again = packet(a, "receive").getJSONArray("systemCheck")
+        assertEquals(at.heinz.deviceai.briefing.ContinuumSystemCheck.snapshot().first().key, again.getJSONObject(0).getString("key"))
+        assertEquals("The fixture row made way for the measured checks", minOf(at.heinz.deviceai.briefing.ContinuumSystemCheck
+            .snapshot().size, at.heinz.deviceai.ui.Command03StageBoard.MAX_CHECKS), again.length())
     }
 }

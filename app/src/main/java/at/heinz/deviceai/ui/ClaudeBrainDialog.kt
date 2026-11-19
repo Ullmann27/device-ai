@@ -23,19 +23,20 @@ import at.heinz.deviceai.localmodel.ClaudeEffort
 import at.heinz.deviceai.localmodel.ClaudeModel
 import at.heinz.deviceai.localmodel.ClaudeModelRuntime
 import at.heinz.deviceai.localmodel.ClaudePricing
+import at.heinz.deviceai.localmodel.ClaudeServerToolTexts
 
 /** Texts of the brain settings; pure, so they are checked without a device. */
 object ClaudeBrainPresentation {
     const val LOCAL_LABEL = "Lokal (Gemma, auf dem Gerät)"
     const val CLAUDE_LABEL = "Claude (Cloud, eigener API-Schlüssel)"
     /** Status badge while Claude is the brain; the local badge keeps its existing texts. */
-    const val BADGE = "● " + ClaudeBrain.MARKER_CLAUDE
+    const val BADGE = "● " + ClaudeBrain.MARKER_CLOUD
     /** "Modus" in the dashboards. */
-    const val DASHBOARD_MODE = ClaudeBrain.MARKER_CLAUDE
+    const val DASHBOARD_MODE = ClaudeBrain.MARKER_CLOUD
 
     fun status(settings: ClaudeBrainSettings, keyPresent: Boolean): String = buildString {
         append("Aktives Gehirn: ")
-        append(if (settings.claudeSelected) "${ClaudeBrain.MARKER_CLAUDE} · ${settings.model.id}"
+        append(if (settings.claudeSelected) "${ClaudeBrain.MARKER_CLOUD} · ${settings.model.id}"
             else "${ClaudeBrain.MARKER_LOCAL} · das Modell auf dem Gerät antwortet, nichts geht an Claude")
         append("\nAPI-Schlüssel: ").append(ClaudeApiKey.status(keyPresent))
         append("\nZustimmung zur Datenübertragung: ").append(if (settings.consentGiven) "erteilt" else "nicht erteilt")
@@ -79,6 +80,8 @@ object ClaudeBrainDialog {
         fun brainChanged(previous: BrainKind)
         /** One line for the activity log; never a secret. */
         fun log(line: String)
+        /** The owner's internet mode, for the status of the cloud web search; null when unknown. */
+        fun internetMode(): at.heinz.deviceai.cognitive.InternetAccessMode? = null
     }
 
     fun show(activity: Activity, brain: ClaudeBrain, host: Host): AlertDialog {
@@ -90,6 +93,7 @@ object ClaudeBrainDialog {
         lateinit var dialog: AlertDialog
         val status = note(activity, "claude-brain-status")
         val usage = note(activity, "claude-brain-usage")
+        val cloudTools = note(activity, "claude-cloud-tools-status")
         val message = note(activity, "claude-brain-message").apply { visibility = View.GONE }
         val buttons = mutableMapOf<String, TextView>()
 
@@ -118,6 +122,34 @@ object ClaudeBrainDialog {
             }
             mark("claude-share-memory", "Gerätelokale Erinnerungen mitsenden: " +
                 (if (settings.shareLocalMemory) "EIN" else "AUS"), settings.shareLocalMemory)
+            mark("claude-cloud-web", ClaudeServerToolTexts.switchLabel(ClaudeServerToolTexts.WEB_LABEL,
+                settings.cloudWebSearch), settings.cloudWebSearch)
+            mark("claude-cloud-code", ClaudeServerToolTexts.switchLabel(ClaudeServerToolTexts.CODE_LABEL,
+                settings.cloudCodeExecution), settings.cloudCodeExecution)
+            cloudTools.text = ClaudeServerToolTexts.status(settings, host.internetMode(), brain.hasKey()) + "\n\n" +
+                brain.ledger.describeServerTools()
+        }
+
+        /**
+         * One of the two cloud-tool switches. Off is immediate; on shows first what leaves the device and that it
+         * costs extra API credit, and switches only when the owner confirms.
+         */
+        fun toggleCloudTool(label: String, explanation: String, on: Boolean, set: (Boolean) -> Boolean) {
+            fun done(now: Boolean) {
+                host.log("GEHIRN · $label: " + if (now) "EIN" else "AUS")
+                render()
+            }
+            if (on) {
+                if (set(false)) done(false)
+                return
+            }
+            if (!brain.settings.consentGiven) return say("Das geht erst nach der Zustimmung zur Datenübertragung.")
+            AlertDialog.Builder(activity).setTitle("$label einschalten?")
+                .setMessage(explanation)
+                .setNegativeButton("AUS LASSEN", null)
+                .setPositiveButton("EINSCHALTEN") { _, _ ->
+                    if (set(true)) done(true) else say("Die Einstellung konnte nicht gespeichert werden.")
+                }.show()
         }
 
         fun changed(previous: BrainKind, line: String) {
@@ -143,8 +175,8 @@ object ClaudeBrainDialog {
             }
             val activate = {
                 if (brain.selectBrain(BrainKind.CLAUDE)) {
-                    say("Claude ist jetzt das Gehirn. Die Statuszeile zeigt „${ClaudeBrain.MARKER_CLAUDE}“.")
-                    changed(previous, "GEHIRN · " + ClaudeBrain.MARKER_CLAUDE + " · " + brain.settings.model.id)
+                    say("Claude ist jetzt das Gehirn. Die Statuszeile zeigt „${ClaudeBrain.MARKER_CLOUD}“.")
+                    changed(previous, "GEHIRN · " + ClaudeBrain.MARKER_CLOUD + " · " + brain.settings.model.id)
                 } else say("Claude konnte nicht aktiviert werden; „Lokal“ bleibt aktiv.")
             }
             if (brain.settings.consentGiven) activate()
@@ -230,6 +262,18 @@ object ClaudeBrainDialog {
                     render()
                 }
             }), 2)
+
+        box.addView(cockpit.section(activity, "CLOUD-WERKZEUGE · KOSTEN EXTRA"), wide(activity, 10))
+        cockpit.grid(activity, box, listOf(
+            button(activity, buttons, "claude-cloud-web") {
+                toggleCloudTool(ClaudeServerToolTexts.WEB_LABEL, ClaudeServerToolTexts.WEB_EXPLANATION,
+                    brain.settings.cloudWebSearch, brain::setCloudWebSearch)
+            },
+            button(activity, buttons, "claude-cloud-code") {
+                toggleCloudTool(ClaudeServerToolTexts.CODE_LABEL, ClaudeServerToolTexts.CODE_EXPLANATION,
+                    brain.settings.cloudCodeExecution, brain::setCloudCodeExecution)
+            }), 2)
+        box.addView(cloudTools, wide(activity, 6))
 
         box.addView(cockpit.section(activity, "KOSTEN · SCHÄTZUNG DIESER APP"), wide(activity, 10))
         box.addView(usage, wide(activity, 6))

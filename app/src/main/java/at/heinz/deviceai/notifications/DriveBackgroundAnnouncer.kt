@@ -5,9 +5,6 @@ import android.media.AudioAttributes
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.speech.tts.TextToSpeech
-import at.heinz.deviceai.cognitive.JarvisVoiceProfile
-import java.util.Locale
 
 /**
  * Speaks allowed notifications while the drive mode is on and Continuum's own screen is NOT in front
@@ -17,18 +14,14 @@ import java.util.Locale
  * It lives in the notification listener service, which Android keeps bound after the owner's one-time
  * access grant. It only speaks: no microphone, no dialogue, no action. The decision what may be said is
  * the same [NotificationAnnouncementPolicy] the foreground path uses, so codes, links and unselected apps
- * are handled identically. Only an offline German voice is used; if the device has none, nothing is said.
- *
- * Not verified on a device: audio focus and routing from a bound background service (speaker, Bluetooth,
- * car) depend on the Android version and vendor.
+ * are handled identically. It speaks through [BackgroundGermanVoice] (offline German voice only; not verified
+ * on a device).
  */
 internal class DriveBackgroundAnnouncer(context: Context) : ContinuumNotificationBus.Subscriber {
     private val appContext: Context = context.applicationContext ?: context
     private val handler = Handler(Looper.getMainLooper())
     private val policy = NotificationAnnouncementPolicy()
-    private var speech: TextToSpeech? = null
-    private var ready = false
-    private var utterance = 0L
+    private val voice = BackgroundGermanVoice(appContext, AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE, "continuum-drive-")
 
     fun start() = ContinuumNotificationBus.subscribe(this)
 
@@ -52,7 +45,10 @@ internal class DriveBackgroundAnnouncer(context: Context) : ContinuumNotificatio
             if (!driveModeActive(appContext)) release()
             return
         }
+        // „Eingehende Nachrichten melden“ speaks its own short sentence for this app: one voice, not two.
+        if (IncomingMessages.speaksInBackground(appContext, notification.packageName)) return
         val settings = NotificationAnnouncementSettings.load(appContext)
+        // „Vor dem Vorlesen fragen“ needs the chat in front for the owner's answer; here only the app is named.
         val backgroundSettings = if (settings.apps[notification.packageName]?.mode == AnnouncementMode.ASK) {
             settings.copy(apps = settings.apps + (notification.packageName to AppRule(AnnouncementMode.APP_ONLY)))
         } else settings
@@ -61,42 +57,11 @@ internal class DriveBackgroundAnnouncer(context: Context) : ContinuumNotificatio
                 // The engine queues; the policy's own rate limit bounds how much can pile up.
                 assistantSpeaking = false, listening = false, nowMs = SystemClock.elapsedRealtime()))
         val text = (decision as? AnnouncementDecision.Announce)?.spokenText ?: return
-        val engine = speech
-        if (engine != null && ready) { speak(engine, text); return }
-        if (engine == null) speech = TextToSpeech(appContext) { status ->
-            handler.post {
-                val created = speech
-                if (status != TextToSpeech.SUCCESS || created == null || !configure(created)) { release(); return@post }
-                ready = true
-                speak(created, text)
-            }
-        }
+        // German, offline only: private notification content never leaves the device for synthesis.
+        voice.say(text)
     }
 
-    /** German, offline only: private notification content never leaves the device for synthesis. */
-    private fun configure(engine: TextToSpeech): Boolean {
-        val voice = runCatching {
-            engine.voices?.filter { it.locale?.language == Locale.GERMAN.language && !it.isNetworkConnectionRequired }
-                ?.minByOrNull { if (it.locale?.country == "DE") 0 else 1 }
-        }.getOrNull() ?: return false
-        if (engine.setVoice(voice) != TextToSpeech.SUCCESS) return false
-        engine.setSpeechRate(JarvisVoiceProfile.speechRate)
-        engine.setPitch(JarvisVoiceProfile.pitch)
-        engine.setAudioAttributes(AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build())
-        return true
-    }
-
-    private fun speak(engine: TextToSpeech, text: String) {
-        engine.speak(text, TextToSpeech.QUEUE_ADD, null, "continuum-drive-" + ++utterance)
-    }
-
-    private fun release() {
-        runCatching { speech?.stop(); speech?.shutdown() }
-        speech = null
-        ready = false
-    }
+    private fun release() = voice.release()
 
     companion object {
         private const val VOICE_PREFERENCES = "continuum-voice"

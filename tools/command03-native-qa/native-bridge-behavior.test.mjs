@@ -2647,7 +2647,10 @@ test('heat contract of the window styles: no backdrop-filter, no filter, motion 
     'The binding creates no canvas and sets no blur');
   const start = css.indexOf('Code70 · cinematic windows');
   assert.ok(start > 0, 'The section exists');
-  const section = css.slice(start).replace(/\/\*[\s\S]*?\*\//g, '');
+  // The section ends where the next one (Code71, with its own contract below) begins.
+  const end = css.indexOf('/* ───────── Code71', start);
+  assert.ok(end > start, 'The window section is followed by the tactical section');
+  const section = css.slice(start, end).replace(/\/\*[\s\S]*?\*\//g, '');
   assert.doesNotMatch(section, /(^|[;{\s])filter\s*:/, 'No filter in the window section');
   assert.doesNotMatch(section, /transition\s*:(?!\s*none)/, 'The window section adds no transition');
   // Keyframes: transform and opacity only.
@@ -2678,4 +2681,560 @@ test('heat contract of the window styles: no backdrop-filter, no filter, motion 
   }
   assert.ok(moving >= 5, 'The rules were found');
   assert.equal(rules.filter(([, body]) => /infinite/.test(body)).length, 1, 'Exactly one loop exists in the section');
+});
+
+// ───────── Code71 · tactical command centre ─────────
+const tactical71 = (extra = {}) => ({brain: 'CLAUDE', internet: 'ALWAYS_ON', thermal: 0, battery: 84, charging: false, ...extra});
+const checks71 = states => [['brain', 'Gehirn', 'Claude ausgewählt'], ['voice', 'Stimme', 'Sprachausgabe nicht bereit'],
+  ['internet', 'Internet', 'Nur auf Nachfrage'], ['screen', 'Bildschirmfreigabe', '']]
+  .map(([key, label, detail], index) => ({key, label, state: states[index], detail}));
+const mission71 = (revision, items, extra = {}) => ({revision, source: 'MISSION', key: 'm3', title: '', total: 3, active: true,
+  outcome: null, items: items.map(([number, label, state]) => ({key: 'm' + (number - 1), number, label, state})), ...extra});
+const cards71 = [
+  {id: 'cal', kind: 'calendar', title: 'Heute', lines: ['09:00 Zahnarzt', '14:30 Werkstatt'], state: 'info'},
+  {id: 'weather', kind: 'weather', title: 'Linz', lines: ['4 °C, bewölkt'], state: 'info'}];
+const strip71 = f => Object.fromEntries([...f.document.querySelectorAll('#native-tac-strip .native-tac-cell')]
+  .map(cell => [cell.dataset.cell, cell.querySelector('.native-tac-value').textContent]));
+const rail71 = f => {
+  const rail = f.document.querySelector('#native-order-rail');
+  if (!rail) return null;
+  const text = selector => rail.querySelector(selector).textContent;
+  return {call: text('.native-order-call'), title: text('.native-order-title'), count: text('.native-order-count'),
+    stamp: text('.native-order-stamp'), state: rail.dataset.orderState,
+    cards: [...rail.querySelectorAll('.native-order-card')].map(card => [card.querySelector('.native-order-no').textContent,
+      card.querySelector('.native-order-label').textContent, card.querySelector('.native-order-state').textContent, card.dataset.state]),
+    chips: [...rail.querySelectorAll('.native-order-chip')].map(chip => chip.querySelector('.native-order-no').textContent + ' ' +
+      chip.querySelector('.native-order-label').textContent)};
+};
+const press71 = f => f.document.body.dispatchEvent(new f.window.Event('pointerdown', {bubbles: true}));
+
+test('the status strip shows one cell per reading Android sent and nothing without them', async () => {
+  const f = await fixture();
+  try {
+    f.state();
+    assert.equal(f.document.querySelector('#native-tac-strip'), null, 'An Android without the strip record gets no strip');
+    assert.equal(f.document.querySelector('#native-order-rail,#native-arming,#native-briefing'), null);
+    f.state({tactical: tactical71()});
+    const strip = f.document.querySelector('#native-tac-strip');
+    assert.equal(strip.closest('#native-tac-hud').parentElement, f.document.querySelector('.center-stage'));
+    assert.equal(f.document.querySelector('.center-stage').firstElementChild.id, 'native-tac-hud', 'The strip is its own region above the stage');
+    assert.deepEqual(strip71(f), {brain: 'CLAUDE', internet: 'EIN', thermal: 'NORMAL', effects: 'VOLL', battery: '84 %', orders: 'KEINE'});
+    assert.deepEqual([...strip.querySelectorAll('.native-tac-key')].map(node => node.textContent),
+      ['HIRN', 'NETZ', 'WÄRME', 'EFFEKTE', 'AKKU', 'AUFTRÄGE']);
+    // A reading the platform did not report is no cell: never a default figure.
+    f.state({tactical: {brain: 'LOCAL', internet: null, thermal: null, battery: null, charging: null}});
+    assert.deepEqual(strip71(f), {brain: 'LOKAL', effects: 'VOLL', orders: 'KEINE'});
+    f.state({tactical: tactical71({internet: 'ASK', thermal: 3, battery: 9, charging: true}), quality: 'BALANCED'});
+    assert.deepEqual(strip71(f), {brain: 'CLAUDE', internet: 'NACHFRAGE', thermal: 'HOCH', effects: 'AUSGEWOGEN', battery: '9 % · LÄDT', orders: 'KEINE'});
+    assert.equal(strip.querySelector('[data-cell="thermal"]').dataset.tone, 'warn');
+    f.state({tactical: tactical71({internet: 'OFF', thermal: 6}), quality: 'REDUCED'});
+    assert.deepEqual([strip71(f).internet, strip71(f).thermal, strip71(f).effects], ['AUS', 'ABSCHALTUNG', 'REDUZIERT']);
+    // The effect cell names what the stage really does: it rests while the on-device model computes.
+    f.state({tactical: tactical71({brain: 'LOCAL'}), busy: true, presence: 'THINKING'});
+    assert.equal(strip71(f).effects, 'RUHE');
+    f.state({tactical: tactical71(), busy: true, presence: 'THINKING', cloudBrain: true});
+    assert.equal(strip71(f).effects, 'VOLL');
+    // Values outside Android's contract are not shown; a record without the brain is no record.
+    f.state({tactical: tactical71({internet: 'MAYBE', thermal: 9, battery: 140, charging: 'yes'})});
+    assert.deepEqual(strip71(f), {brain: 'CLAUDE', effects: 'VOLL', orders: 'KEINE'});
+    for (const broken of [null, 'CLAUDE', {}, {brain: 'GPT'}, []]) {
+      f.state({tactical: broken});
+      assert.equal(f.document.querySelector('#native-tac-strip'), null, JSON.stringify(broken));
+    }
+    // The unchanged readings keep their nodes.
+    f.state({tactical: tactical71()});
+    const cell = f.document.querySelector('#native-tac-strip [data-cell="battery"]');
+    f.state({tactical: tactical71()});
+    assert.equal(f.document.querySelector('#native-tac-strip [data-cell="battery"]'), cell);
+  } finally {f.dom.window.close();}
+});
+
+test('the order rail shows a mission step by step: cards for open steps, a stack for finished ones, a stamped outcome', async () => {
+  const f = await fixture();
+  try {
+    const $ = selector => f.document.querySelector(selector);
+    f.state({tactical: tactical71()});
+    assert.equal(rail71(f), null, 'No order without a real step');
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true, orders: mission71(1, [[1, 'Wetter für morgen abrufen', 'ACTIVE']])});
+    const rail = $('#native-order-rail');
+    assert.equal(rail.parentElement, $('.center-stage'));
+    assert.equal(rail.previousElementSibling.id, 'native-tac-hud');
+    assert.equal(rail.nextElementSibling, $('.center-stage>.presence'), 'The rail is a region of its own between strip and stage');
+    assert.deepEqual(rail71(f), {call: 'MISSION M-03', title: 'Auftragsfolge', count: '0/3 ERLEDIGT', stamp: 'LÄUFT', state: 'active',
+      cards: [['01', 'Wetter für morgen abrufen', 'LÄUFT', 'active']], chips: []});
+    assert.equal(rail.querySelector('.native-order-banner').textContent, 'PLAN STEHT · 3 SCHRITTE');
+    assert.equal(strip71(f).orders, '1 AKTIV');
+    const first = rail.querySelector('.native-order-card');
+    // The same revision again (a periodic snapshot) keeps every node.
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true, orders: mission71(1, [[1, 'Etwas ganz anderes', 'FAILED']])});
+    assert.equal(rail.querySelector('.native-order-card'), first);
+    assert.equal(rail71(f).cards[0][1], 'Wetter für morgen abrufen', 'An unchanged revision keeps what is shown');
+    // Step 1 is done and docks into the stack; step 2 is dispatched.
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true,
+      orders: mission71(2, [[1, 'Wetter für morgen abrufen', 'DONE'], [2, 'Termin mit der Werkstatt prüfen', 'ACTIVE']])});
+    assert.equal($('#native-order-rail'), rail, 'The same order keeps its rail');
+    assert.deepEqual(rail71(f), {call: 'MISSION M-03', title: 'Auftragsfolge', count: '1/3 ERLEDIGT', stamp: 'LÄUFT', state: 'active',
+      cards: [['02', 'Termin mit der Werkstatt prüfen', 'LÄUFT', 'active']], chips: ['01 Wetter für morgen abrufen']});
+    assert.equal(first.isConnected, false, 'Without an animation engine the finished card is gone at once');
+    // The step waits for the owner: named on the card and on the rail, and it is a real warning.
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true, presence: 'WAITING_FOR_APPROVAL',
+      orders: mission71(3, [[1, 'Wetter für morgen abrufen', 'DONE'], [2, 'Termin mit der Werkstatt prüfen', 'WAITING']])});
+    assert.deepEqual([rail71(f).stamp, rail71(f).state, rail71(f).cards[0][2], rail71(f).cards[0][3]],
+      ['WARTET AUF DICH', 'waiting', 'WARTET AUF DICH', 'waiting']);
+    assert.equal(f.document.body.dataset.nativeAttention, 'warn');
+    assert.equal(strip71(f).orders, '1 · WARTET');
+    assert.equal($('.native-stop-button').hidden, false, 'Stop stays while the question is open');
+    // It failed and the mission ended: stamped as failed, the failed step stays readable.
+    f.state({tactical: tactical71(), orders: mission71(4, [[1, 'Wetter für morgen abrufen', 'DONE'],
+      [2, 'Termin mit der Werkstatt prüfen', 'FAILED']], {active: false, outcome: 'FAILED'})});
+    assert.deepEqual([rail71(f).stamp, rail71(f).state, rail71(f).cards[0][2]], ['FEHLGESCHLAGEN', 'failed', 'FEHLGESCHLAGEN']);
+    assert.equal(f.document.body.dataset.nativeAttention, 'fail');
+    assert.equal(strip71(f).orders, 'KEINE', 'An ended order is not an open one');
+    // The owner's correction reopens it and all three steps are done.
+    f.state({tactical: tactical71(), orders: mission71(5, [[1, 'Wetter für morgen abrufen', 'DONE'],
+      [2, 'Termin mit der Werkstatt prüfen', 'DONE'], [3, 'Nachricht an Anna entwerfen', 'DONE']], {active: false, outcome: 'COMPLETED'})});
+    assert.deepEqual([rail71(f).stamp, rail71(f).state, rail71(f).count, rail71(f).cards.length, rail71(f).chips.length],
+      ['ERLEDIGT', 'completed', '3/3 ERLEDIGT', 0, 3]);
+    assert.equal(rail.querySelector('.native-order-list').hidden, true);
+    assert.equal('nativeAttention' in f.document.body.dataset, false);
+    // The head folds the finished steps out to their labels and back.
+    const head = rail.querySelector('.native-order-head'), sent = f.navigations.length;
+    assert.equal(head.getAttribute('aria-expanded'), 'false');
+    f.click(head);
+    assert.deepEqual([rail.dataset.expanded, head.getAttribute('aria-expanded')], ['true', 'true']);
+    f.click(head);
+    assert.deepEqual([rail.dataset.expanded, head.getAttribute('aria-expanded')], ['false', 'false']);
+    assert.deepEqual(f.navigations.filter(url => url.pathname === '/command' || url.pathname === '/route'), [], 'Folding sends nothing to Android');
+    assert.equal(sent, f.navigations.length, 'Folding sends nothing to Android at all');
+    // Stopped, skipped, blocked and unverified steps are named as they are.
+    f.state({tactical: tactical71(), orders: mission71(6, [[1, 'A', 'STOPPED'], [2, 'B', 'SKIPPED'], [3, 'C', 'BLOCKED']],
+      {active: false, outcome: 'STOPPED'})});
+    assert.deepEqual([rail71(f).stamp, ...rail71(f).cards.map(card => card[2])], ['GESTOPPT', 'GESTOPPT', 'ÜBERSPRUNGEN', 'BLOCKIERT']);
+    // Android withdraws the record: the rail leaves.
+    f.state({tactical: tactical71(), orders: null});
+    assert.equal(rail71(f), null);
+  } finally {f.dom.window.close();}
+});
+
+test('the rail of a running turn carries the owner\'s command; another order replaces it and another chat has none', async () => {
+  const f = await fixture();
+  try {
+    const turn = (revision, key, title, items, extra = {}) => ({revision, source: 'TURN', key, title, total: items.length, active: true,
+      outcome: null, items: items.map(([number, label, state]) => ({key: 't' + label, number, label, state})), ...extra});
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true,
+      orders: turn(1, 't7', 'Wie wird das Wetter morgen in Linz?', [[1, 'Websuche', 'ACTIVE']])});
+    const rail = f.document.querySelector('#native-order-rail');
+    assert.deepEqual(rail71(f), {call: 'AUFTRAG A-07', title: '„Wie wird das Wetter morgen in Linz?“', count: '0/1 ERLEDIGT',
+      stamp: 'LÄUFT', state: 'active', cards: [['01', 'Websuche', 'LÄUFT', 'active']], chips: []});
+    assert.equal(rail.querySelector('.native-order-banner').textContent, 'AUFTRAG ANGENOMMEN');
+    assert.equal(f.gazes.at(-1).target, rail, 'A new order draws one glance to the rail');
+    // The steps are done but the turn has not ended yet: no outcome is claimed.
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true,
+      orders: turn(2, 't7', 'Wie wird das Wetter morgen in Linz?', [[1, 'Websuche', 'DONE']], {active: false})});
+    assert.deepEqual([rail71(f).stamp, rail71(f).state], ['SCHRITTE GEMELDET', 'idle']);
+    f.state({tactical: tactical71(), orders: turn(3, 't7', 'Wie wird das Wetter morgen in Linz?', [[1, 'Websuche', 'DONE']],
+      {active: false, outcome: 'ENDED'})});
+    assert.deepEqual([rail71(f).stamp, rail71(f).state], ['BEENDET', 'ended']);
+    // The next order has its own rail.
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true, orders: turn(4, 't8', 'Öffne die Kamera', [[1, 'App suchen', 'ACTIVE']])});
+    assert.notEqual(f.document.querySelector('#native-order-rail'), rail);
+    assert.equal(rail.isConnected, false);
+    assert.equal(rail71(f).call, 'AUFTRAG A-08');
+    assert.equal(f.document.querySelectorAll('#native-order-rail').length, 1);
+    // Text is bounded plain text; more than eight items, a duplicate key and an unknown state never appear.
+    const many = Array.from({length: 12}, (_, index) => [index + 1, 'Schritt ' + (index + 1), 'ACTIVE']);
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true, orders: {...turn(5, 't8', 'x'.repeat(300) + '<b>', many),
+      items: [...turn(5, 't8', '', many).items.slice(0, 3), {key: 'tSchritt 1', number: 1, label: 'Doppelt', state: 'ACTIVE'},
+        {key: 'u', number: 2, label: 'Unbekannt', state: 'EXPLODED'}, {key: 'w', number: 0, label: 'Null', state: 'ACTIVE'},
+        {key: 'z', number: 4, label: '   ', state: 'ACTIVE'}, {key: 'v', number: 3, label: 'a\u0007<i>b</i>', state: 'WAITING'},
+        ...turn(5, 't8', '', many).items.slice(3)]}});
+    const shown = rail71(f);
+    assert.equal(shown.cards.length, 4, 'Eight entries are read; the valid ones of them are shown');
+    assert.deepEqual(shown.cards.at(-1), ['03', 'a<i>b</i>', 'WARTET AUF DICH', 'waiting']);
+    assert.equal(f.document.querySelector('#native-order-rail i'), null, 'Labels are text, never markup');
+    assert.equal(shown.title.length, 82, 'The title is bounded to 80 characters inside its quotation marks');
+    // Malformed records render nothing at all.
+    for (const broken of ['x', {}, {...turn(6, 't9', '', [])}.items, {...turn(6, 't9', '', []), source: 'BOT'},
+      {...turn(6, 't9', '', []), key: 'x9'}, {...turn(6, 't9', '', []), revision: -1}, {...turn(6, 't9', '', []), items: 'none'}]) {
+      f.state({tactical: tactical71(), orders: broken});
+      assert.equal(rail71(f), null, JSON.stringify(broken));
+    }
+    // Another chat: its snapshot carries no order of this one.
+    f.state({tactical: tactical71(), busy: true, cloudBrain: true, orders: turn(7, 't9', 'Noch ein Auftrag', [[1, 'Websuche', 'ACTIVE']])});
+    assert.equal(rail71(f).call, 'AUFTRAG A-09');
+    f.state({sessionId: anotherSession, tactical: tactical71()});
+    assert.equal(rail71(f), null);
+    assert.ok(f.document.querySelector('#native-tac-strip'), 'The strip belongs to the device and stays');
+  } finally {f.dom.window.close();}
+});
+
+test('the start-up check ticks in once when the stage appears and says "alles bereit" only when every check is ready', async () => {
+  const f = await fixture();
+  try {
+    const $ = selector => f.document.querySelector(selector);
+    const rows = () => [...f.document.querySelectorAll('#native-arming .native-arming-row')].map(row =>
+      [row.querySelector('.native-check-label').textContent, row.querySelector('.native-check-state').textContent,
+        row.querySelector('.native-check-detail').textContent, row.dataset.state]);
+    f.state({tactical: tactical71(), systemCheck: checks71(['OK', 'OK', 'OK', 'OK'])});
+    const panel = $('#native-arming');
+    assert.equal(panel.parentElement.id, 'native-tac-hud');
+    assert.deepEqual([panel.dataset.mode, panel.dataset.verdict, f.document.body.dataset.nativeArming], ['run', 'ready', 'run']);
+    assert.equal($('.native-arming-call').textContent, 'SYSTEMSTART · PRÜFUNG');
+    assert.equal($('.native-arming-count').textContent, '4/4 BEREIT');
+    assert.equal($('.native-arming-verdict').textContent, 'ALLE SYSTEME BEREIT');
+    assert.deepEqual(rows(), [['Gehirn', 'BEREIT', 'Claude ausgewählt', 'ok'], ['Stimme', 'BEREIT', 'Sprachausgabe nicht bereit', 'ok'],
+      ['Internet', 'BEREIT', 'Nur auf Nachfrage', 'ok'], ['Bildschirmfreigabe', 'BEREIT', '', 'ok']]);
+    assert.deepEqual([...panel.querySelectorAll('.native-arming-row')].map(row => [row.dataset.nativeEnter, row.style.getPropertyValue('--tac-i')]),
+      [['a', '0'], ['a', '1'], ['a', '2'], ['a', '3']], 'Each check has its place in the sequence');
+    assert.equal(f.gazes.at(-1).target, panel, 'The avatar looks at the checks once');
+    assert.deepEqual([strip71(f).systems, $('[data-cell="systems"]').getAttribute('aria-expanded'), $('[data-cell="systems"]').dataset.tone],
+      ['4/4', 'true', 'ok']);
+    // The composer stays usable; the first input of the owner ends the sequence, and with every check ready the list closes.
+    assert.equal($('#command-input').disabled, false);
+    press71(f);
+    assert.equal($('#native-arming'), null);
+    assert.equal('nativeArming' in f.document.body.dataset, false);
+    assert.equal($('[data-cell="systems"]').getAttribute('aria-expanded'), 'false');
+    assert.deepEqual(f.gazes.at(-1).detail, {x: 0, y: 0, durationMs: 2200}, 'Afterwards she faces the owner');
+    // The strip cell opens the list again, as a plain list, and closes it.
+    f.click($('[data-cell="systems"]'));
+    assert.deepEqual([$('#native-arming').dataset.mode, rows().length, $('.native-arming-call').textContent,
+      $('[data-cell="systems"]').getAttribute('aria-expanded')], ['list', 4, 'SYSTEMCHECK', 'true']);
+    assert.equal($('#native-arming [data-native-enter]'), null, 'No second sequence');
+    assert.equal('nativeArming' in f.document.body.dataset, false);
+    f.click($('.native-arming-close'));
+    assert.equal($('#native-arming'), null);
+    // A check that fails later is a real warning in the strip; the list does not open by itself.
+    f.state({tactical: tactical71(), systemCheck: checks71(['OK', 'FAIL', 'OK', 'OK'])});
+    assert.equal($('#native-arming'), null);
+    assert.deepEqual([strip71(f).systems, $('[data-cell="systems"]').dataset.tone, f.document.body.dataset.nativeAttention], ['3/4', 'fail', 'fail']);
+    // The provider withdraws its checks: no cell, no list.
+    f.state({tactical: tactical71(), systemCheck: []});
+    assert.equal('systems' in strip71(f), false);
+  } finally {f.dom.window.close();}
+});
+
+test('with a check that is not ready the start-up check names the problems plainly and keeps them listed', async () => {
+  const f = await fixture();
+  try {
+    const $ = selector => f.document.querySelector(selector);
+    const labels = () => [...f.document.querySelectorAll('#native-arming .native-check-label')].map(node => node.textContent);
+    f.state({tactical: tactical71(), systemCheck: checks71(['OK', 'FAIL', 'WARN', 'OFF'])});
+    assert.deepEqual([$('#native-arming').dataset.mode, $('#native-arming').dataset.verdict], ['run', 'problems']);
+    assert.equal($('.native-arming-count').textContent, '1/4 BEREIT');
+    assert.equal($('.native-arming-verdict').textContent, 'NICHT ALLES BEREIT · Fehler: Stimme · Warnung: Internet · Aus: Bildschirmfreigabe');
+    assert.deepEqual([...f.document.querySelectorAll('#native-arming .native-arming-row')].map(row =>
+      [row.dataset.state, row.querySelector('.native-check-detail').textContent]),
+      [['ok', 'Claude ausgewählt'], ['fail', 'Sprachausgabe nicht bereit'], ['warn', 'Nur auf Nachfrage'], ['off', '']],
+      'What each check says stands in its row');
+    assert.doesNotMatch($('#native-arming').textContent, /ALLE SYSTEME BEREIT/);
+    assert.deepEqual(labels(), ['Gehirn', 'Stimme', 'Internet', 'Bildschirmfreigabe']);
+    assert.equal(f.document.body.dataset.nativeAttention, 'fail');
+    // A key press ends the sequence too. What is not ready stays listed until the owner closes it.
+    f.document.body.dispatchEvent(new f.window.Event('keydown', {bubbles: true}));
+    assert.deepEqual([$('#native-arming').dataset.mode, labels()], ['problems', ['Stimme', 'Internet', 'Bildschirmfreigabe']]);
+    assert.match($('.native-arming-verdict').textContent, /^NICHT ALLES BEREIT/);
+    assert.equal('nativeArming' in f.document.body.dataset, false);
+    press71(f);
+    assert.equal($('#native-arming').dataset.mode, 'problems', 'Further input does not hide the problems');
+    // The check was repaired while it is listed: the list follows.
+    f.state({tactical: tactical71(), systemCheck: checks71(['OK', 'OK', 'WARN', 'OFF'])});
+    assert.deepEqual(labels(), ['Internet', 'Bildschirmfreigabe']);
+    assert.equal(f.document.body.dataset.nativeAttention, 'warn');
+    f.click($('.native-arming-close'));
+    assert.equal($('#native-arming'), null);
+    // "Off" alone is not a warning, and still not "alles bereit".
+    f.state({tactical: tactical71(), systemCheck: checks71(['OK', 'OK', 'OK', 'OFF'])});
+    assert.equal('nativeAttention' in f.document.body.dataset, false);
+    f.click($('[data-cell="systems"]'));
+    assert.equal($('.native-arming-verdict').textContent, 'NICHT ALLES BEREIT · Aus: Bildschirmfreigabe');
+    assert.equal(strip71(f).systems, '3/4');
+  } finally {f.dom.window.close();}
+});
+
+test('no start-up sequence without checks, after the owner acted or into a running turn; malformed checks never appear', async () => {
+  for (const [name, before, values] of [
+    ['absent', () => {}, {}], ['empty', () => {}, {systemCheck: []}], ['not a list', () => {}, {systemCheck: {key: 'a'}}],
+    ['running turn', () => {}, {systemCheck: checks71(['OK', 'OK', 'OK', 'OK']), busy: true, cloudBrain: true}],
+    ['owner acted', f => {f.state({tactical: tactical71()});press71(f);}, {systemCheck: checks71(['OK', 'OK', 'OK', 'OK'])}]]) {
+    const f = await fixture();
+    try {
+      before(f);
+      f.state({tactical: tactical71(), ...values});
+      assert.equal(f.document.querySelector('#native-arming'), null, name);
+      assert.equal('nativeArming' in f.document.body.dataset, false, name);
+      assert.equal('systems' in strip71(f), Array.isArray(values.systemCheck) && values.systemCheck.length > 0, name);
+    } finally {f.dom.window.close();}
+  }
+  const f = await fixture();
+  try {
+    f.state({tactical: tactical71(), systemCheck: [
+      {key: 'a', label: 'L'.repeat(200), state: 'OK', detail: 'D'.repeat(500)}, {key: 'a', label: 'Doppelt', state: 'FAIL', detail: ''},
+      {key: 'b', label: '<img src=x>', state: 'WARN', detail: 'a\u0007b'}, {key: 'c', label: 'Unbekannt', state: 'MAYBE', detail: ''},
+      {key: 'mit leer', label: 'Schlüssel', state: 'OK', detail: ''}, {key: 'd', label: '  ', state: 'OK', detail: ''}, null, 'x',
+      ...Array.from({length: 20}, (_, index) => ({key: 'k' + index, label: 'Prüfung ' + index, state: 'OK'}))]});
+    const rows = [...f.document.querySelectorAll('#native-arming .native-arming-row')];
+    assert.equal(rows.length, 6, 'Twelve entries are read; the valid ones of them are shown');
+    assert.equal(rows[0].querySelector('.native-check-label').textContent.length, 40);
+    assert.equal(rows[0].querySelector('.native-check-detail').textContent.length, 120);
+    assert.deepEqual([rows[1].querySelector('.native-check-label').textContent, rows[1].querySelector('.native-check-detail').textContent],
+      ['<img src=x>', 'ab']);
+    assert.equal(f.document.querySelector('#native-arming img'), null);
+    assert.equal(rows[2].querySelector('.native-check-detail').textContent, '', 'A check without a detail has none');
+  } finally {f.dom.window.close();}
+});
+
+test('info cards fly in per item of briefingCards, leave when gone from it and stay across a chat change', async () => {
+  const f = await fixture();
+  try {
+    const $ = selector => f.document.querySelector(selector);
+    const shown = () => [...f.document.querySelectorAll('#native-briefing .native-brief-card')].map(card =>
+      [card.dataset.card, card.querySelector('.native-brief-kind').textContent, card.querySelector('.native-brief-title').textContent,
+        [...card.querySelectorAll('.native-brief-line')].map(line => line.textContent), card.dataset.state]);
+    f.state({tactical: tactical71(), briefingCards: []});
+    assert.equal($('#native-briefing'), null);
+    f.state({tactical: tactical71(), briefingCards: cards71});
+    const deck = $('#native-briefing');
+    assert.equal(deck.parentElement, $('.center-stage'));
+    assert.equal(deck.previousElementSibling.id, 'native-tac-hud');
+    assert.deepEqual(shown(), [['cal', 'TERMINE', 'Heute', ['09:00 Zahnarzt', '14:30 Werkstatt'], 'info'],
+      ['weather', 'WETTER', 'Linz', ['4 °C, bewölkt'], 'info']]);
+    assert.deepEqual([...deck.children].map(card => [card.dataset.nativeEnter, card.style.getPropertyValue('--tac-i')]),
+      [['a', ''], ['a', '1']], 'Cards that arrive together fly in one after the other');
+    assert.equal(f.gazes.at(-1).target, deck);
+    assert.equal('nativeAttention' in f.document.body.dataset, false);
+    const calendar = deck.firstElementChild;
+    // A third card arrives and needs attention; the two that are there keep their nodes.
+    f.state({tactical: tactical71(), briefingCards: [...cards71,
+      {id: 'msg', kind: 'messages', title: '2 neue Nachrichten', lines: ['Anna: Bist du da?'], state: 'attention'}]});
+    assert.equal(deck.firstElementChild, calendar);
+    assert.deepEqual(shown()[2], ['msg', 'NACHRICHTEN · ACHTUNG', '2 neue Nachrichten', ['Anna: Bist du da?'], 'attention']);
+    assert.equal(f.document.body.dataset.nativeAttention, 'warn');
+    // With an order running the rail stands between strip and cards.
+    f.state({tactical: tactical71(), briefingCards: cards71, busy: true, cloudBrain: true, orders: mission71(1, [[1, 'A', 'ACTIVE']])});
+    assert.deepEqual([...$('.center-stage').children].slice(0, 4).map(node => node.id || node.className.split(' ')[0]),
+      ['native-tac-hud', 'native-order-rail', 'native-briefing', 'presence']);
+    assert.deepEqual(shown().map(card => card[0]), ['cal', 'weather'], 'The card that is gone from the list left');
+    // A card changes its text in place; another chat keeps the cards (they belong to the device).
+    f.state({tactical: tactical71(), briefingCards: [{...cards71[0], lines: ['Keine Termine mehr']}, cards71[1]]});
+    assert.deepEqual([deck.firstElementChild, shown()[0][3]], [calendar, ['Keine Termine mehr']]);
+    f.state({sessionId: anotherSession, tactical: tactical71(), briefingCards: [{...cards71[0], lines: ['Keine Termine mehr']}, cards71[1]]});
+    assert.equal($('#native-briefing .native-brief-card'), calendar);
+    // Bounded: six cards, four lines, plain text; unknown kinds and states never appear.
+    f.state({tactical: tactical71(), briefingCards: [
+      {id: 'a', kind: 'news', title: 'T'.repeat(200), lines: ['1', '2', '3', '4', '5', '', 7, '<b>x</b>' + 'y'.repeat(200)], state: 'info'},
+      {id: 'a', kind: 'news', title: 'Doppelt', lines: [], state: 'info'}, {id: 'b', kind: 'horoscope', title: 'Nein', lines: [], state: 'info'},
+      {id: 'c', kind: 'tasks', title: 'Nein', lines: [], state: 'urgent'}, {id: 'd d', kind: 'tasks', title: 'Nein', lines: [], state: 'info'},
+      {id: 'f', kind: 'system', title: 'Speicher', lines: 'frei', state: 'info'}, {id: 'e', kind: 'system', title: ' ', lines: [], state: 'info'},
+      ...Array.from({length: 9}, (_, index) => ({id: 'n' + index, kind: 'tasks', title: 'Aufgabe ' + index, lines: [], state: 'info'}))]});
+    assert.deepEqual(shown().map(card => card[0]), ['a', 'f'], 'Of the first six entries the valid ones are shown');
+    assert.deepEqual([shown()[0][2].length, shown()[0][3]], [60, ['1', '2', '3', '4']]);
+    assert.equal(deck.querySelector('.native-brief-card[data-card="f"] .native-brief-lines').hidden, true);
+    assert.equal($('#native-briefing b'), null);
+    f.state({tactical: tactical71(), briefingCards: []});
+    assert.equal($('#native-briefing'), null, 'The last card left: the region is gone');
+  } finally {f.dom.window.close();}
+});
+
+test('attention is raised by real warnings only: checks, attention cards, Android\'s thermal status, an open question, a failure', async () => {
+  const f = await fixture();
+  try {
+    const attention = values => {f.state({tactical: tactical71(), ...values});return f.document.body.dataset.nativeAttention ?? null;};
+    assert.equal(attention({}), null);
+    assert.equal(attention({busy: true, cloudBrain: true, presence: 'THINKING', orders: mission71(1, [[1, 'A', 'ACTIVE']])}), null,
+      'Running work is no warning');
+    assert.equal(attention({tactical: tactical71({thermal: 1})}), null);
+    assert.equal(attention({tactical: tactical71({thermal: 2})}), 'warn');
+    assert.equal(attention({tactical: tactical71({thermal: 3})}), 'warn');
+    assert.equal(attention({tactical: tactical71({thermal: 4})}), 'fail');
+    assert.equal(attention({tactical: tactical71({battery: 5})}), null, 'A low battery colours its own cell only');
+    assert.equal(f.document.querySelector('[data-cell="battery"]').dataset.tone, 'warn');
+    assert.equal(attention({presence: 'WAITING_FOR_APPROVAL', busy: true}), 'warn');
+    assert.equal(attention({presence: 'BLOCKED', busy: true}), 'fail');
+    assert.equal(attention({computerWork: {consentPending: true}}), 'warn');
+    assert.equal(attention({briefingCards: [{...cards71[0], state: 'attention'}]}), 'warn');
+    assert.equal(attention({briefingCards: cards71}), null);
+    assert.equal(attention({systemCheck: checks71(['OK', 'WARN', 'OK', 'OK'])}), 'warn');
+    assert.equal(attention({systemCheck: checks71(['OK', 'WARN', 'FAIL', 'OK'])}), 'fail');
+    assert.equal(attention({systemCheck: checks71(['OK', 'OFF', 'OK', 'OK'])}), null);
+    // Without the strip record nothing of this exists and nothing is claimed.
+    f.state({tactical: null, systemCheck: [], briefingCards: []});
+    assert.equal('nativeAttention' in f.document.body.dataset, false);
+  } finally {f.dom.window.close();}
+});
+
+test('marks for motion are set only where motion may run: never while the device computes, in the reduced tier or against a preference', async () => {
+  const marks = f => [...f.document.querySelectorAll('.center-stage>.native-tac [data-native-enter],.center-stage>[data-native-enter]')]
+    .map(node => node.className.split(' ').at(-1));
+  const everything = {tactical: tactical71(), briefingCards: cards71, orders: mission71(1, [[1, 'A', 'DONE'], [2, 'B', 'ACTIVE']])};
+  for (const [name, prepare, values, moves] of [
+    ['full', () => {}, {busy: true, cloudBrain: true, presence: 'THINKING'}, true],
+    ['balanced', () => {}, {busy: true, cloudBrain: true, presence: 'THINKING', quality: 'BALANCED'}, true],
+    ['local computing', () => {}, {busy: true, presence: 'THINKING'}, false],
+    ['a local turn under another presence', () => {}, {busy: true, presence: 'SPEAKING', speaking: true}, false],
+    ['reduced tier', () => {}, {busy: true, cloudBrain: true, presence: 'THINKING', quality: 'REDUCED'}, false],
+    ['light motion off', () => {}, {busy: true, cloudBrain: true, presence: 'THINKING', appearance: {neon: 70, lightMotion: false}}, false],
+    ['prefers-reduced-motion', f => {f.window.matchMedia = () => ({matches: true, addEventListener() {}, removeEventListener() {}});},
+      {busy: true, cloudBrain: true, presence: 'THINKING'}, false]]) {
+    const f = await fixture();
+    try {
+      prepare(f);
+      f.state(values);
+      const pending = f.pendingWork().length;
+      f.state({...everything, ...values});
+      // The line that names the moment of an order passes in the full tier only.
+      assert.deepEqual(marks(f), moves ? ['native-tac-strip', 'native-order-rail', 'native-order-card', 'native-order-banner',
+        'native-brief-card', 'native-brief-card'].filter(mark => name === 'full' || mark !== 'native-order-banner') : [], name);
+      // The content is complete either way: the final state never needs the animation.
+      assert.deepEqual([rail71(f).cards.length, rail71(f).chips.length, f.document.querySelectorAll('.native-brief-card').length,
+        Object.keys(strip71(f)).length], [1, 1, 2, 6], name);
+      // A step that finishes and a card that leaves: gone at once in this engine, with or without marks.
+      f.state({...everything, ...values, briefingCards: [cards71[1]], orders: mission71(2, [[1, 'A', 'DONE'], [2, 'B', 'DONE'], [3, 'C', 'ACTIVE']])});
+      assert.deepEqual([rail71(f).cards.map(card => card[1]), rail71(f).chips.length, f.document.querySelectorAll('.native-brief-card').length],
+        [['C'], 2, 1], name);
+      assert.equal(f.document.querySelectorAll('[data-native-leaving]').length, 0, name);
+      const changed = f.document.querySelectorAll('#native-tac-strip [data-changed],#native-order-rail [data-changed]').length;
+      assert.equal(changed > 0, false, name + ': nothing changed its state here');
+      // A state Android changes is marked for one pass – only where motion may run.
+      f.state({...everything, ...values, briefingCards: [cards71[1]],
+        orders: mission71(3, [[1, 'A', 'DONE'], [2, 'B', 'DONE'], [3, 'C', 'WAITING']])});
+      assert.equal(f.document.querySelector('.native-order-card[data-state="waiting"]').dataset.changed, moves ? 'true' : undefined, name);
+      assert.equal(f.document.querySelector('.native-order-stamp').dataset.changed, moves ? 'true' : undefined, name);
+      assert.equal(f.pendingWork().length, pending, name + ': the regions asked the clock for nothing');
+    } finally {f.dom.window.close();}
+  }
+});
+
+test('work windows hand over: the arriving window is marked once, the leaving plate is gone, and nothing is marked while the device computes', async () => {
+  const f = await fixture();
+  try {
+    const $ = selector => f.document.querySelector(selector);
+    const files = revision => ({revision, kind: 'SEARCH', label: 'Argon4', total: 1, more: false, names: ['Argon4.pdf']});
+    const entering = () => [...f.document.querySelectorAll('#workspace>[data-native-enter]')].map(node => node.id);
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING'});
+    await f.flush();
+    assert.equal(f.document.body.dataset.nativeWindow, 'work');
+    assert.deepEqual(entering(), ['native-live-panel'], 'The work window arrives');
+    const first = $('#native-live-panel').dataset.nativeEnter;
+    // Files open: one window out, one in – decided once, from where the snapshot ends.
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', files: files(1)});
+    await f.flush();
+    assert.equal(f.document.body.dataset.nativeWindow, 'files');
+    assert.deepEqual(entering(), ['native-files-panel']);
+    assert.equal($('.native-window-ghost'), null, 'Without an animation engine the leaving plate is removed at once');
+    // The owner closes the list: the work window returns, and its entrance starts again under its other name.
+    f.click($('#close-button'));
+    await f.flush();
+    assert.deepEqual(entering(), ['native-live-panel']);
+    assert.notEqual($('#native-live-panel').dataset.nativeEnter, undefined);
+    assert.ok(['a', 'b'].includes($('#native-live-panel').dataset.nativeEnter) && ['a', 'b'].includes(first));
+    // The same window again is no hand-over.
+    const mark = $('#native-live-panel').dataset.nativeEnter;
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', files: files(1)});
+    await f.flush();
+    assert.deepEqual([entering(), $('#native-live-panel').dataset.nativeEnter], [['native-live-panel'], mark]);
+    // While the device computes a window changes without any mark and without a plate.
+    f.state({busy: true, presence: 'THINKING', files: files(2)});
+    await f.flush();
+    assert.equal(f.document.body.dataset.nativeWindow, 'files');
+    assert.deepEqual(entering(), []);
+    assert.equal($('.native-window-ghost'), null);
+    assert.equal($('.native-files-list li').dataset.nativeEnter, undefined, 'No row flies in while the device computes');
+  } finally {f.dom.window.close();}
+});
+
+test('installed-app hits are shown as the labels Android matched: a window of names, nothing started', async () => {
+  const f = await fixture();
+  try {
+    const $ = selector => f.document.querySelector(selector);
+    const apps = {revision: 4, kind: 'APPS', label: 'Kamera', total: 5, more: false, names: ['Kamera', 'Booking.com', 'Open Camera']};
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', files: apps});
+    const panel = $('#native-files-panel');
+    assert.equal(panel.dataset.kind, 'apps');
+    assert.equal(panel.getAttribute('aria-label'), 'App-Fenster mit der Antwort der Android-App-Suche');
+    assert.equal($('.native-files-kicker').textContent, 'APP-SUCHE · ANDROID-WERKZEUG');
+    assert.equal($('.native-files-title').textContent, '„Kamera“');
+    assert.equal($('.native-files-count').textContent, '5 Apps gefunden · 3 angezeigt');
+    assert.equal($('.native-files-note').textContent, 'Nur App-Namen aus der Antwort des Android-Werkzeugs. Keine App wurde gestartet.');
+    assert.deepEqual([...panel.querySelectorAll('.native-file-name')].map(node => node.textContent), ['Kamera', 'Booking.com', 'Open Camera']);
+    assert.equal(panel.querySelector('.native-file-kind'), null, 'An app label has no file type');
+    assert.deepEqual([...panel.querySelectorAll('.native-files-list li')].map(item => item.style.getPropertyValue('--tac-i')), ['1', '2', '3'],
+      'The hits fly in one after the other');
+    assert.equal($('#workspace-meta').textContent, 'APPS');
+    assert.equal($('#workspace-footnote').textContent, 'App-Namen aus dem Android-Werkzeug');
+    assert.deepEqual(f.navigations.filter(url => url.pathname === '/route'), [], 'Showing hits starts nothing');
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', files: {...apps, revision: 5, label: '', total: 0, names: []}});
+    assert.deepEqual([$('.native-files-title').textContent, $('.native-files-count').textContent], ['App-Suche', 'Keine App gefunden']);
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', files: {...apps, revision: 6, total: 1, names: ['Kamera']}});
+    assert.equal($('.native-files-count').textContent, '1 App gefunden');
+    // The file kinds read as before.
+    f.state({busy: true, cloudBrain: true, presence: 'THINKING', files: {revision: 7, kind: 'SEARCH', label: 'Argon4', total: 1, more: false,
+      names: ['Argon4.pdf']}});
+    assert.equal(panel.getAttribute('aria-label'), 'Dateifenster mit der Antwort des Android-Dateiwerkzeugs');
+    assert.equal($('.native-files-note').textContent, 'Nur Dateinamen aus der Antwort des Android-Werkzeugs. Kein Inhalt wurde geöffnet.');
+    assert.equal(panel.querySelector('.native-file-kind').textContent, 'PDF');
+  } finally {f.dom.window.close();}
+});
+
+test('heat contract of the tactical section: no blur, no filter, no transition; motion in the full and balanced tiers only; two loops in full', () => {
+  const css = readFileSync(resolve(assetRoot, 'native-layer.css'), 'utf8');
+  const start = css.indexOf('Code71 · tactical command centre');
+  assert.ok(start > css.indexOf('Code70 · cinematic windows'), 'The section exists, after the window section');
+  const section = css.slice(start).replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[^{]*?\*\//, '');
+  assert.doesNotMatch(section, /backdrop-filter/);
+  assert.doesNotMatch(section, /(^|[;{\s])filter\s*:/, 'No filter in the tactical section');
+  assert.doesNotMatch(section, /transition\s*:(?!\s*none)/, 'The tactical section adds no transition');
+  assert.doesNotMatch(section, /will-change/);
+  // The strip's sweep travels beyond the strip: the strip clips it without becoming a box that can be scrolled.
+  assert.match(section, /\.native-tac-strip \{[^}]*overflow:clip;/);
+  // Keyframes: transform and opacity only, and all of them carry the section's name.
+  const frames = [...section.matchAll(/@keyframes\s+([\w-]+)\s*\{((?:[^{}]*\{[^{}]*\})*)\s*\}/g)];
+  assert.ok(frames.length >= 18, 'The keyframes were found: ' + frames.length);
+  for (const [, name, body] of frames) {
+    assert.match(name, /^native-tac-(in|out|mark|loop|arming)-/, name);
+    const properties = [...body.matchAll(/([\w-]+)\s*:/g)].map(match => match[1]);
+    assert.ok(properties.length > 0 && properties.every(property => property === 'transform' || property === 'opacity'),
+      name + ' animates ' + properties.join(', '));
+  }
+  // Every rule that starts an animation is limited to the full or balanced tier by each of its selectors.
+  const rules = [...section.replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*\s*\}/g, '').replace(/@media[^{]*\{/g, '')
+    .matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(match => [match[1].trim(), match[2]]);
+  let moving = 0;
+  const loops = [];
+  for (const [selectors, body] of rules) {
+    const animation = /animation\s*:\s*([^;]+)/.exec(body)?.[1];
+    assert.doesNotMatch(body, /animation-(name|iteration-count|duration)\s*:/, 'Animations are declared in one place: ' + selectors);
+    if (!animation || /^none\b/.test(animation.trim())) continue;
+    moving++;
+    const name = /native-tac-[\w-]+/.exec(animation)?.[0];
+    assert.ok(frames.some(match => match[1] === name), 'A keyframe of this section: ' + animation);
+    for (const selector of selectors.split(',')) {
+      assert.match(selector, /\[data-native-effects="(full|balanced)"\]/, 'Unconditional animation: ' + selector.trim());
+      assert.doesNotMatch(selector, /\[data-native-effects="(rest|light)"\]/);
+      if (/infinite/.test(animation)) assert.match(selector, /\[data-native-effects="full"\]/, 'A loop runs in the full tier only: ' + selector.trim());
+    }
+    if (/infinite/.test(animation)) loops.push(name);
+    else assert.match(animation, /\s[1-3](\s|$)/, 'Finite: ' + animation);
+    // A mark's pass belongs to its mark: an entrance to data-native-enter, a departure to data-native-leaving.
+    if (name.startsWith('native-tac-in-') && !/wing/.test(name)) assert.match(selectors, /\[data-native-enter/, selectors);
+    if (name === 'native-tac-arming-pass') assert.match(selectors, /\[data-mode="run"\]\[data-pass="true"\]/, selectors);
+    if (name.startsWith('native-tac-out-')) assert.match(selectors, /\[data-native-leaving="true"\]/, selectors);
+    if (name.startsWith('native-tac-mark-')) assert.match(selectors, /\[data-changed="true"\]/, selectors);
+  }
+  assert.ok(moving >= 30, 'The rules were found: ' + moving);
+  assert.deepEqual(loops.sort(), ['native-tac-loop-lamp', 'native-tac-loop-sweep'], 'Exactly two loops exist in the section');
+  // Existing surfaces get tactical marks only outside the resting stage.
+  for (const [selectors] of rules) for (const selector of selectors.split(',')) {
+    if (/\.native-(tac|order|arming|check|brief|window-ghost)/.test(selector) || /\[data-kind="apps"\]/.test(selector) ||
+      /^\s*body\[data-design="command03"\]\s*$/.test(selector)) continue;
+    if (/#native-computer-panel/.test(selector) && !/op-mode-label/.test(selector)) continue;   // layout of the unfolded monitor
+    assert.match(selector, /\[data-native-effects(="(full|balanced)")?\]|\[data-native-light-motion="off"\]|\.native-files-list li|#workspace>\[data-native-enter\]|\.presence-wing/,
+      'An existing surface is styled while the device computes: ' + selector.trim());
+    if (/\[data-native-effects\]/.test(selector)) assert.match(selector, /:not\(\[data-native-effects="rest"\]\)/, selector.trim());
+  }
+  // The binding starts none of it by itself: marks are set through the tier check only.
+  const bridge = readFileSync(resolve(assetRoot, 'native-bridge.js'), 'utf8');
+  const tacticalCode = bridge.slice(bridge.indexOf('Code71 · tactical command centre ─'));
+  assert.doesNotMatch(tacticalCode.slice(0, tacticalCode.indexOf('const workspace=$(')), /setInterval|setTimeout|requestAnimationFrame/,
+    'The tactical code has no clock of its own');
 });

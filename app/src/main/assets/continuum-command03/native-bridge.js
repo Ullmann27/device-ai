@@ -164,7 +164,7 @@
   const energies = Object.freeze({IDLE:'idle',LISTENING:'to-avatar',THINKING:'to-orb',RESEARCHING:'to-orb',
     LEARNING:'to-orb',WAITING_FOR_APPROVAL:'hold',SPEAKING:'speech',BLOCKED:'hold'});
   const sceneEnergies = Object.freeze({idle:'idle',listening:'to-avatar',working:'to-orb',speaking:'speech'});
-  const fileKinds = Object.freeze({SEARCH:'DATEISUCHE',FOLDER:'ORDNER'});
+  const fileKinds = Object.freeze({SEARCH:'DATEISUCHE',FOLDER:'ORDNER',APPS:'APP-SUCHE'});
   const MAX_FILES = 12, MAX_FILE_NAME = 96;
   // One real turn on the stage: activation → opening → projected → settling → idle.
   let workPhase = 'idle', workTurn = false, workReplied = false, workAwaitingReply = false;
@@ -187,6 +187,23 @@
   let marker = null, markerTimer = 0, computerRecord = null, lastGlanceAt = -Infinity;
   let replyLine = null, arrivedLine = null, arrivedSources = null, draftGlanced = false, lastConsent = false;
   const stepStatesShown = new Map();
+  // Code71 · tactical command centre: words for what Android reports, and what is shown of it right now.
+  const orderStates = Object.freeze({ACTIVE:'LÄUFT',WAITING:'WARTET AUF DICH',DONE:'ERLEDIGT',FAILED:'FEHLGESCHLAGEN',
+    STOPPED:'GESTOPPT',SKIPPED:'ÜBERSPRUNGEN',BLOCKED:'BLOCKIERT',UNVERIFIED:'UNGEPRÜFT'});
+  const orderOutcomes = Object.freeze({COMPLETED:'ERLEDIGT',FAILED:'FEHLGESCHLAGEN',STOPPED:'GESTOPPT',ENDED:'BEENDET'});
+  const internetModes = Object.freeze({OFF:'AUS',ASK:'NACHFRAGE',ALWAYS_ON:'EIN'});
+  // PowerManager's thermal status 0..6 by name; never a temperature.
+  const thermalNames = Object.freeze(['NORMAL','LEICHT','ERHÖHT','HOCH','KRITISCH','NOTFALL','ABSCHALTUNG']);
+  const effectNames = Object.freeze({full:'VOLL',balanced:'AUSGEWOGEN',light:'REDUZIERT',rest:'RUHE'});
+  const checkStates = Object.freeze({OK:'BEREIT',WARN:'WARNUNG',FAIL:'FEHLER',OFF:'AUS'});
+  const cardKinds = Object.freeze({calendar:'TERMINE',weather:'WETTER',messages:'NACHRICHTEN',tasks:'AUFGABEN',
+    news:'NEUIGKEITEN',system:'SYSTEM'});
+  const windowNames = Object.freeze({live:'LIVE-MONITOR',result:'ERGEBNIS',files:'DATEIEN',work:'ARBEITSFENSTER'});
+  const MAX_ORDERS = 8, OPEN_ORDERS = 3, MAX_CHECKS = 12, MAX_CARDS = 6, MAX_STAGGER = 7;
+  let currentTactical = null, currentOrders = null, currentChecks = [], currentCards = [];
+  let armed = false, armingMode = null, armingToken = 0, ownerActed = false, lastTier;
+  let shownWindow = null, shownName = '', windowQueued = false, windowSerial = 0;
+  const flights = new WeakMap(), gliding = new Set(), leavers = new Map();
   function presenceOf(state) {return own(presences,state?.presence)?presences[state.presence]:null;}
   function sceneOf(state) {
     return presenceOf(state)?.scene ?? (state?.speaking===true?'speaking':state?.listening===true?'listening':
@@ -429,6 +446,22 @@
     else if(workAwaitingReply)settleWork();
     faceOwner();
   }
+  /**
+   * The gate for every added effect, set before anything of a snapshot is rendered, so that a mark for motion is
+   * decided by the state it belongs to (see motionTier) and never by the one before it.
+   */
+  function renderMotionGate(state) {
+    const moved=motionTier();
+    const quality=own(qualities,state.quality)?state.quality:null;
+    const effects=computesLocally(state) || (state.busy===true && state.cloudBrain!==true)?'rest':
+      quality===null?'full':effectTiers[quality];
+    if(document.body.dataset.nativeEffects!==effects)document.body.dataset.nativeEffects=effects;
+    const motion=state.appearance?.lightMotion===false?'off':'on';
+    if(document.body.dataset.nativeLightMotion!==motion)document.body.dataset.nativeLightMotion=motion;
+    // Motion ends here (the device starts to compute, the tier drops, the owner switched it off): what was still
+    // arriving or leaving is settled now, so that no mark is left to start a pass when motion returns.
+    if(moved && !motionTier())settleMarks();
+  }
   function renderPresence(state) {
     const key=own(presences,state.presence)?state.presence:null;
     const name=key?key.toLowerCase().replace(/_/g,'-'):null;
@@ -449,8 +482,7 @@
     // The added window effects are opt-in per tier and absent while the device computes (see native-layer.css).
     // They rest more readily than the Code68 stage does: also while a local turn is still running under another
     // presence – its answer being spoken, a question to the owner – because the model may still be computing.
-    const effects=local || (state.busy===true && state.cloudBrain!==true)?'rest':quality===null?'full':effectTiers[quality];
-    if(document.body.dataset.nativeEffects!==effects)document.body.dataset.nativeEffects=effects;
+    renderMotionGate(state);
     // Without a tier the original preview setting ("hoch") stays in force; local computing always gets "low".
     const sceneQuality=local?'low':quality===null?null:qualities[quality];
     if(sceneQuality!==lastQuality) {
@@ -656,7 +688,6 @@
     if(!panel) {
       panel=document.createElement('section');panel.id='native-files-panel';
       panel.className='projected-computer native-files-panel';
-      panel.setAttribute('aria-label','Dateifenster mit der Antwort des Android-Dateiwerkzeugs');
       const head=document.createElement('div');head.className='native-files-heading';
       const kicker=document.createElement('small');kicker.className='native-files-kicker';
       const title=document.createElement('h2');title.className='native-files-title';
@@ -664,27 +695,36 @@
       head.append(kicker,title,count);
       const list=document.createElement('ol');list.className='native-files-list';
       const note=document.createElement('p');note.className='native-files-note';
-      note.textContent='Nur Dateinamen aus der Antwort des Android-Werkzeugs. Kein Inhalt wurde geöffnet.';
       panel.append(head,list,note);workspace.appendChild(panel);
     }
     if(feedVersions.get(panel)!==files.revision) {
+      // The same window shows the hits of the installed-app search: the labels Android matched, nothing started.
+      const apps=files.kind==='APPS';
       panel.dataset.kind=files.kind.toLowerCase();
+      panel.setAttribute('aria-label',apps?'App-Fenster mit der Antwort der Android-App-Suche':
+        'Dateifenster mit der Antwort des Android-Dateiwerkzeugs');
+      panel.querySelector('.native-files-note').textContent=apps?
+        'Nur App-Namen aus der Antwort des Android-Werkzeugs. Keine App wurde gestartet.':
+        'Nur Dateinamen aus der Antwort des Android-Werkzeugs. Kein Inhalt wurde geöffnet.';
       panel.querySelector('.native-files-kicker').textContent=fileKinds[files.kind]+' · ANDROID-WERKZEUG';
       panel.querySelector('.native-files-title').textContent=files.label?
-        (files.kind==='SEARCH'?'„'+files.label+'“':files.label):(files.kind==='SEARCH'?'Dateisuche':'Ordner');
-      const unit=files.kind==='SEARCH'?(files.total===1?'Datei gefunden':'Dateien gefunden'):
+        (files.kind==='FOLDER'?files.label:'„'+files.label+'“'):(apps?'App-Suche':files.kind==='SEARCH'?'Dateisuche':'Ordner');
+      const unit=apps?(files.total===1?'App gefunden':'Apps gefunden'):
+        files.kind==='SEARCH'?(files.total===1?'Datei gefunden':'Dateien gefunden'):
         (files.total===1?'Eintrag im Ordner':'Einträge im Ordner');
       panel.querySelector('.native-files-count').textContent=
-        (files.total===0?(files.kind==='SEARCH'?'Keine Datei gefunden':'Keine Einträge im Ordner'):
+        (files.total===0?(apps?'Keine App gefunden':files.kind==='SEARCH'?'Keine Datei gefunden':'Keine Einträge im Ordner'):
           (files.more?'Mindestens ':'')+files.total+' '+unit)+
         (files.total>files.names.length && files.names.length?' · '+files.names.length+' angezeigt':'')+
         (files.more?' · Suchgrenze erreicht':'');
-      panel.querySelector('.native-files-list').replaceChildren(...files.names.map(name=>{
+      panel.querySelector('.native-files-list').replaceChildren(...files.names.map((name,index)=>{
         const item=document.createElement('li');
         const glyph=document.createElement('span');glyph.className='native-file-glyph';glyph.setAttribute('aria-hidden','true');
         const label=document.createElement('span');label.className='native-file-name';label.textContent=name;
         item.append(glyph,label);
-        const dot=name.lastIndexOf('.'), kind=dot>0?name.slice(dot+1):'';
+        // Each hit of a new answer flies in, one after the other.
+        enter(item,index+1);
+        const dot=name.lastIndexOf('.'), kind=!apps && dot>0?name.slice(dot+1):'';
         if(/^[A-Za-z0-9]{1,5}$/.test(kind)) {
           const chip=document.createElement('span');chip.className='native-file-kind';chip.textContent=kind.toUpperCase();
           item.appendChild(chip);
@@ -1602,6 +1642,8 @@
       $('#workspace')?.classList.contains('native-work-active')?'work':null;
     if(shown===null)delete document.body.dataset.nativeWindow;
     else if(document.body.dataset.nativeWindow!==shown)document.body.dataset.nativeWindow=shown;
+    // One render can pass through several windows; the hand-over is decided from where it ends (see handover).
+    if(shown!==shownWindow && !windowQueued) {windowQueued=true;Promise.resolve().then(handover);}
   }
   function nativeLabels() {
     if(!snapshot)return;
@@ -1614,12 +1656,12 @@
     const set=(selector,text)=>{const node=$(selector);if(node && node.textContent!==text)node.textContent=text;};
     labelWithIcons($('.preview-badge'),'ANDROID · LOKAL');set('.sidebar-note small','Gespeicherte Gespräche auf deinem Gerät.');
     set('.project-button small','Deine Gespräche');set('.input-hint','LOKAL');
-    set('#workspace-meta',computerOpen()?'COMPUTER':currentDocument?'PDF':filesOpen()?'DATEIEN':
+    set('#workspace-meta',computerOpen()?'COMPUTER':currentDocument?'PDF':filesOpen()?(currentFiles.kind==='APPS'?'APPS':'DATEIEN'):
       snapshot.busy?'AUFTRAG AKTIV':'LOKAL');
     renderWindowKind();
     set('#workspace-footnote',computerOpen()?(currentComputer.reason||'Gerätebild · Android'):
       currentDocument?'PDF · '+currentDocument.name:
-      filesOpen()?'Dateinamen aus dem Android-Werkzeug':
+      filesOpen()?(currentFiles.kind==='APPS'?'App-Namen aus dem Android-Werkzeug':'Dateinamen aus dem Android-Werkzeug'):
       lines.length?'Dein Gespräch und deine Arbeitsschritte':'Bereit für deinen Auftrag');
     const recipient=snapshot.viewKind==='BOT'?String(snapshot.viewLabel||'Helfer').slice(0,96):null;
     $('#command-input')?.setAttribute('aria-label',recipient?'Nachricht an '+recipient:'Dein Auftrag');
@@ -1633,6 +1675,503 @@
     mic?.setAttribute('aria-pressed',voiceMode?.active===true?'true':'false');
     $('.send-button')?.setAttribute('aria-label','Auftrag senden');
   }
+  // ───────── Code71 · tactical command centre ─────────
+  // Status strip, order rail, start-up check and info cards above the stage. Every element stands for a fact of
+  // the snapshot (`tactical`, `orders`, `systemCheck`, `briefingCards`, tier and presence) and is absent without
+  // it; no figure, target or alarm is made up. Motion is CSS: this code sets one mark per real event (an entrance,
+  // a changed state, a departure) and only where motion may run – the "full" and "balanced" effect tiers, the
+  // owner's light motion on, no system preference against it. While the device computes nothing here moves.
+  /** Plain bounded text of a snapshot string; anything else is the empty string. */
+  function plain(value,max) {
+    return typeof value==='string'?bounded(value.replace(/[\u0000-\u001f\u007f-\u009f]/g,'').trim(),max):'';
+  }
+  /** Android's optional order record: the open mission's steps or the running turn's steps. Malformed = none. */
+  function ordersOf(value) {
+    if(!value || typeof value!=='object' || !Number.isSafeInteger(value.revision) || value.revision<0 ||
+      (value.source!=='MISSION' && value.source!=='TURN') || typeof value.key!=='string' ||
+      !/^[mt][0-9]{1,12}$/.test(value.key) || typeof value.active!=='boolean' || !Number.isSafeInteger(value.total) ||
+      value.total<0 || value.total>999 || !Array.isArray(value.items))return null;
+    const items=[];
+    for(const item of value.items.slice(0,MAX_ORDERS)) {
+      if(!item || typeof item.key!=='string' || !item.key || item.key.length>120 || !Number.isSafeInteger(item.number) ||
+        item.number<1 || item.number>999 || !own(orderStates,item.state) || items.some(row=>row.key===item.key))continue;
+      const label=plain(item.label,80);
+      if(label)items.push({key:item.key,number:item.number,label,state:item.state});
+    }
+    return {revision:value.revision,source:value.source,key:value.key,title:plain(value.title,80),
+      total:Math.max(value.total,items.length),active:value.active,
+      outcome:own(orderOutcomes,value.outcome)?value.outcome:null,items};
+  }
+  /** Android's readouts for the status strip. A reading the platform did not report stays null: no figure. */
+  function tacticalOf(value) {
+    if(!value || typeof value!=='object' || (value.brain!=='CLAUDE' && value.brain!=='LOCAL'))return null;
+    return {brain:value.brain,internet:own(internetModes,value.internet)?value.internet:null,
+      thermal:Number.isInteger(value.thermal) && value.thermal>=0 && value.thermal<=6?value.thermal:null,
+      battery:Number.isInteger(value.battery) && value.battery>=0 && value.battery<=100?value.battery:null,
+      charging:typeof value.charging==='boolean'?value.charging:null};
+  }
+  /** `systemCheck`: [{key,label,state:"OK"|"WARN"|"FAIL"|"OFF",detail}]. Unknown states are dropped, not guessed. */
+  function checksOf(value) {
+    const checks=[];
+    for(const item of Array.isArray(value)?value.slice(0,MAX_CHECKS):[]) {
+      if(!item || typeof item.key!=='string' || !/^[A-Za-z0-9._:-]{1,64}$/.test(item.key) ||
+        !own(checkStates,item.state) || checks.some(row=>row.key===item.key))continue;
+      const label=plain(item.label,40);
+      if(label)checks.push({key:item.key,label,state:item.state,detail:plain(item.detail,120)});
+    }
+    return checks;
+  }
+  /** `briefingCards`: [{id,kind,title,lines:[≤4],state:"info"|"attention"}]. */
+  function cardsOf(value) {
+    const cards=[];
+    for(const item of Array.isArray(value)?value.slice(0,MAX_CARDS):[]) {
+      if(!item || typeof item.id!=='string' || !/^[A-Za-z0-9._:-]{1,64}$/.test(item.id) || !own(cardKinds,item.kind) ||
+        (item.state!=='info' && item.state!=='attention') || cards.some(row=>row.id===item.id))continue;
+      const title=plain(item.title,60);
+      if(title)cards.push({id:item.id,kind:item.kind,title,state:item.state,
+        lines:(Array.isArray(item.lines)?item.lines:[]).map(line=>plain(line,90)).filter(Boolean).slice(0,4)});
+    }
+    return cards;
+  }
+  /** The tier in which added motion may run right now, or null. */
+  function motionTier() {
+    const effects=document.body.dataset.nativeEffects;
+    return (effects==='full' || effects==='balanced') && document.body.dataset.nativeLightMotion!=='off' &&
+      !reducedMotion()?effects:null;
+  }
+  /** Marks a new element for its one entrance; `order` staggers elements that arrive together. */
+  function enter(node,order=0) {
+    if(!motionTier())return;
+    node.dataset.nativeEnter='a';
+    if(order>0)node.style.setProperty('--tac-i',String(Math.min(order,MAX_STAGGER)));
+  }
+  /**
+   * Ends something that is shown. Where motion may run the element gets its leaving mark and is finished when the
+   * animations of that mark have ended; where none started (resting stage, reduced motion, no animation engine)
+   * it is finished at once. The final state never depends on an animation having run.
+   */
+  function leave(node,finish) {
+    if(!node || node.dataset.nativeLeaving==='true')return;
+    node.dataset.nativeLeaving='true';delete node.dataset.nativeEnter;
+    const done=()=>{
+      if(leavers.get(node)!==done)return;
+      leavers.delete(node);finish(node);
+    };
+    leavers.set(node,done);
+    const leaving=motionTier()?(node.getAnimations?.() ?? [])
+      .filter(item=>typeof item.animationName==='string' && item.animationName.startsWith('native-tac-out')):[];
+    if(leaving.length)Promise.allSettled(leaving.map(item=>item.finished)).then(done);
+    else done();
+  }
+  /** Settles everything that is arriving, changing or leaving at once: the state without animation. */
+  function settleMarks() {
+    for(const done of [...leavers.values()])done();
+    for(const flight of [...gliding])flight.cancel();
+    document.querySelectorAll('[data-native-enter]').forEach(node=>{delete node.dataset.nativeEnter;});
+    document.querySelectorAll('.native-tac[data-changed],.native-tac [data-changed]').forEach(node=>node.removeAttribute('data-changed'));
+    document.querySelectorAll('.workspace-shell>.native-window-ghost').forEach(node=>node.remove());
+    if(armingMode==='run')settleArming();
+  }
+  /**
+   * Applies a change of the regions above the stage. What that change pushes down or pulls up glides to its new
+   * place (FLIP): two measurements per real event, then transform only – no layout per frame. A newer change
+   * starts from where the element visibly is.
+   */
+  function reflow(change) {
+    const tier=motionTier(), stage=$('.center-stage');
+    const movers=tier && stage && typeof stage.animate==='function'?
+      [...stage.children].filter(node=>!node.classList.contains('native-tac')):[];
+    const before=movers.map(node=>node.getBoundingClientRect().top);
+    for(const node of movers) {flights.get(node)?.cancel();flights.delete(node);}
+    change();
+    movers.forEach((node,index)=>{
+      // A change nested in this one has measured for itself; this one replaces its flight.
+      flights.get(node)?.cancel();flights.delete(node);
+      const delta=before[index]-node.getBoundingClientRect().top;
+      if(Math.abs(delta)<2 || Math.abs(delta)>720)return;
+      const flight=node.animate([{transform:'translateY('+delta+'px)'},{transform:'translateY(0)'}],
+        {duration:tier==='full'?360:200,easing:'cubic-bezier(.16,.84,.24,1)',composite:'add'});
+      flights.set(node,flight);gliding.add(flight);
+      const landed=()=>gliding.delete(flight);
+      flight.finished.then(landed,landed);
+    });
+  }
+  function tacHud() {
+    let hud=$('#native-tac-hud');
+    const stage=$('.center-stage');
+    if(!hud && stage) {
+      hud=document.createElement('div');hud.id='native-tac-hud';hud.className='native-tac native-tac-hud';
+      stage.prepend(hud);
+    }
+    return hud;
+  }
+  const setText=(node,text)=>{if(node && node.textContent!==text)node.textContent=text;};
+  const part=(tag,name,text)=>{const node=document.createElement(tag);node.className=name;if(text!==undefined)node.textContent=text;return node;};
+  /** What the strip, the rail and the cards have to warn about right now: 'fail', 'warn' or nothing. */
+  function attentionOf(state) {
+    const presence=own(presences,state.presence)?state.presence:null, items=currentOrders?.items ?? [];
+    if(currentChecks.some(check=>check.state==='FAIL') || (currentTactical?.thermal ?? 0)>=4 || presence==='BLOCKED' ||
+      currentOrders?.outcome==='FAILED' || (currentOrders?.active && items.some(item=>item.state==='FAILED')))return 'fail';
+    if(currentChecks.some(check=>check.state==='WARN') || currentCards.some(card=>card.state==='attention') ||
+      (currentTactical?.thermal ?? 0)>=2 || presence==='WAITING_FOR_APPROVAL' || currentWork?.consentPending===true ||
+      (currentOrders?.active && items.some(item=>item.state==='WAITING')))return 'warn';
+    return null;
+  }
+  /** The status strip: one cell per reading Android really sent. */
+  function renderStrip(state) {
+    const hud=tacHud();
+    let strip=$('#native-tac-strip');
+    if(!currentTactical || !hud) {strip?.remove();return;}
+    const effects=document.body.dataset.nativeEffects, tier=own(qualities,state.quality)?state.quality:null;
+    const open=currentOrders?.active?currentOrders.items.filter(item=>item.state==='ACTIVE' || item.state==='WAITING'):[];
+    const waiting=open.some(item=>item.state==='WAITING');
+    const ready=currentChecks.filter(check=>check.state==='OK').length;
+    const cells=[['brain','HIRN',currentTactical.brain==='CLAUDE'?'CLAUDE':'LOKAL',currentTactical.brain==='CLAUDE'?'cloud':'local'],
+      currentTactical.internet?['internet','NETZ',internetModes[currentTactical.internet],
+        currentTactical.internet==='OFF'?'off':'normal']:null,
+      currentTactical.thermal!==null?['thermal','WÄRME',thermalNames[currentTactical.thermal],
+        currentTactical.thermal>=4?'fail':currentTactical.thermal>=2?'warn':'normal']:null,
+      // The strength of the stage's own effects, as it is applied right now (see renderPresence).
+      own(effectNames,effects)?['effects','EFFEKTE',effectNames[effects],effects==='rest' || tier==='REDUCED'?'off':'normal']:null,
+      currentTactical.battery!==null?['battery','AKKU',currentTactical.battery+' %'+(currentTactical.charging===true?' · LÄDT':''),
+        currentTactical.battery<=15 && currentTactical.charging!==true?'warn':'normal']:null,
+      currentChecks.length?['systems','SYSTEME',ready+'/'+currentChecks.length,
+        currentChecks.some(check=>check.state==='FAIL')?'fail':currentChecks.some(check=>check.state==='WARN')?'warn':
+        ready===currentChecks.length?'ok':'off',armingMode!==null]:null,
+      ['orders','AUFTRÄGE',open.length?open.length+(waiting?' · WARTET':' AKTIV'):'KEINE',waiting?'warn':open.length?'active':'off']]
+      .filter(Boolean);
+    if(!strip) {
+      strip=document.createElement('section');strip.id='native-tac-strip';strip.className='native-tac-strip';
+      strip.setAttribute('aria-label','Lage: Gehirn, Netz, Wärme, Akku und Aufträge');
+      hud.prepend(strip);enter(strip);
+    }
+    const signature=JSON.stringify(cells);
+    if(feedVersions.get(strip)===signature)return;
+    const earlier=new Map([...strip.children].map(node=>[node.dataset.cell,node]));
+    strip.replaceChildren(...cells.map(([key,label,value,tone,listed])=>{
+      // The check cell opens the list of checks; every other cell is a readout.
+      let cell=earlier.get(key);
+      if(!cell) {
+        cell=document.createElement(key==='systems'?'button':'div');cell.className='native-tac-cell';cell.dataset.cell=key;
+        if(key==='systems') {cell.type='button';cell.dataset.nativeTac='systems';}
+        cell.append(part('span','native-tac-key',label),part('span','native-tac-value'));
+      }
+      const shown=cell.querySelector('.native-tac-value');
+      // A reading that moved (not its first appearance) is marked for one pass.
+      if(feedVersions.has(strip) && earlier.has(key) && shown.textContent!==value && motionTier())cell.dataset.changed='true';
+      setText(shown,value);
+      if(cell.dataset.tone!==tone)cell.dataset.tone=tone;
+      if(key==='systems') {
+        cell.setAttribute('aria-expanded',String(listed));
+        cell.setAttribute('aria-label','Systemcheck: '+value+' bereit. Liste '+(listed?'schließen':'öffnen'));
+      }
+      return cell;
+    }));
+    feedVersions.set(strip,signature);
+  }
+  /** The order rail: the steps Android really reported, as cards; finished steps dock into a compact stack. */
+  function renderOrders() {
+    const hud=tacHud(), orders=currentOrders;
+    let rail=$('#native-order-rail');
+    if(!orders || !hud) {
+      if(rail)leave(rail,node=>reflow(()=>node.remove()));
+      return;
+    }
+    if(rail && (rail.dataset.orderKey!==orders.key || rail.dataset.nativeLeaving==='true')) {
+      // A newer order wins: the rail that is shown (or still leaving) and the cards leaving in it are gone at once.
+      for(const node of [rail,...rail.querySelectorAll('[data-native-leaving]')])leavers.delete(node);
+      rail.remove();rail=null;
+    }
+    if(rail && feedVersions.get(rail)===orders.revision)return;
+    reflow(()=>{
+      const fresh=!rail;
+      if(fresh) {
+        rail=document.createElement('section');rail.id='native-order-rail';rail.className='native-tac native-order-rail';
+        rail.dataset.orderKey=orders.key;rail.setAttribute('aria-label','Arbeitsaufträge');
+        const head=document.createElement('button');head.type='button';head.className='native-order-head';
+        head.dataset.nativeTac='orders';
+        const stamp=part('span','native-order-stamp');stamp.setAttribute('role','status');
+        head.append(part('span','native-order-call'),part('span','native-order-title'),part('span','native-order-count'),stamp);
+        const list=part('ol','native-order-list');list.setAttribute('aria-label','Laufende Schritte');
+        const done=part('ol','native-order-done');done.setAttribute('aria-label','Erledigte Schritte');
+        const banner=part('span','native-order-banner');banner.setAttribute('aria-hidden','true');
+        rail.append(head,list,done,banner);
+        // Its own region of the stage column, directly below the strip: it stays in view while the page scrolls.
+        hud.after(rail);
+        enter(rail);
+        // The line of the moment passes in the full tier only.
+        if(motionTier()==='full')enter(banner);
+      }
+      const number=String(Number(orders.key.slice(1))).padStart(2,'0');
+      const docked=orders.items.filter(item=>item.state==='DONE'), live=orders.items.filter(item=>item.state!=='DONE');
+      const waiting=orders.active && orders.items.some(item=>item.state==='WAITING');
+      const stampText=orders.outcome?orderOutcomes[orders.outcome]:waiting?orderStates.WAITING:
+        orders.active?orderStates.ACTIVE:'SCHRITTE GEMELDET';
+      const stampState=orders.outcome?orders.outcome.toLowerCase():waiting?'waiting':orders.active?'active':'idle';
+      rail.dataset.source=orders.source.toLowerCase();
+      if(rail.dataset.orderState!==stampState)rail.dataset.orderState=stampState;
+      setText(rail.querySelector('.native-order-call'),(orders.source==='MISSION'?'MISSION M-':'AUFTRAG A-')+number);
+      setText(rail.querySelector('.native-order-title'),orders.title?'„'+orders.title+'“':
+        orders.source==='MISSION'?'Auftragsfolge':'Laufender Auftrag');
+      // Folded, the rail shows its three newest open steps; the count says when there are more.
+      setText(rail.querySelector('.native-order-count'),docked.length+'/'+orders.total+' ERLEDIGT'+
+        (live.length>OPEN_ORDERS?' · '+live.length+' OFFEN':''));
+      const stamp=rail.querySelector('.native-order-stamp');
+      if(stamp.textContent!==stampText) {
+        // The outcome is stamped once when Android reports it.
+        if(!fresh && motionTier())stamp.dataset.changed='true';
+        stamp.textContent=stampText;
+      }
+      // The moment the order or the plan arrives: named once, in a line that is visible only while it passes.
+      if(fresh)rail.querySelector('.native-order-banner').textContent=orders.source==='MISSION'?
+        'PLAN STEHT · '+orders.total+(orders.total===1?' SCHRITT':' SCHRITTE'):'AUFTRAG ANGENOMMEN';
+      const expanded=rail.dataset.expanded==='true';
+      const head=rail.querySelector('.native-order-head');
+      head.setAttribute('aria-expanded',String(expanded));
+      head.setAttribute('aria-label',rail.querySelector('.native-order-call').textContent+': '+stampText+
+        '. Alle Schritte '+(expanded?'einklappen':'ausklappen'));
+      const list=rail.querySelector('.native-order-list'), stack=rail.querySelector('.native-order-done');
+      const shown=new Map([...list.children].filter(node=>node.dataset.nativeLeaving!=='true').map(node=>[node.dataset.key,node]));
+      let arrived=0;
+      for(const item of live) {
+        let card=shown.get(item.key);
+        if(card)shown.delete(item.key);
+        else {
+          card=part('li','native-order-card');card.dataset.key=item.key;
+          card.append(part('span','native-order-no'),part('span','native-order-label'),part('span','native-order-state'));
+          list.appendChild(card);enter(card,fresh?arrived:0);arrived++;
+        }
+        const state=item.state.toLowerCase();
+        if(card.dataset.state!==state) {
+          if(card.dataset.state && motionTier())card.dataset.changed='true';
+          card.dataset.state=state;
+        }
+        setText(card.querySelector('.native-order-no'),String(item.number).padStart(2,'0'));
+        setText(card.querySelector('.native-order-label'),item.label);
+        setText(card.querySelector('.native-order-state'),orderStates[item.state]);
+      }
+      // A card that is no longer open: its step is done (it is stamped and docks) or Android no longer lists it.
+      for(const [key,card] of shown) {
+        if(docked.some(item=>item.key===key)) {
+          card.dataset.state='done';setText(card.querySelector('.native-order-state'),orderStates.DONE);
+        }
+        // When it has left, a list without cards takes no room.
+        leave(card,node=>reflow(()=>{node.remove();list.hidden=!list.children.length;}));
+      }
+      const chips=new Map([...stack.children].map(node=>[node.dataset.key,node]));
+      for(const item of docked) {
+        let chip=chips.get(item.key);
+        if(chip)chips.delete(item.key);
+        else {
+          chip=part('li','native-order-chip');chip.dataset.key=item.key;chip.dataset.state='done';
+          chip.append(part('span','native-order-no'),part('span','native-order-label'));
+          stack.appendChild(chip);
+          // It appears as its card leaves; a step that was already done when the rail was built just stands there.
+          if(shown.has(item.key))enter(chip);
+        }
+        setText(chip.querySelector('.native-order-no'),String(item.number).padStart(2,'0'));
+        setText(chip.querySelector('.native-order-label'),item.label);
+      }
+      for(const chip of chips.values())chip.remove();
+      stack.hidden=!docked.length;list.hidden=!list.children.length;
+      feedVersions.set(rail,orders.revision);
+    });
+  }
+  function checkVerdict() {
+    const not=state=>currentChecks.filter(check=>check.state===state);
+    if(currentChecks.every(check=>check.state==='OK'))return ['ready','ALLE SYSTEME BEREIT'];
+    // Which checks are not ready, by name; what each one says stands in its row.
+    return ['problems','NICHT ALLES BEREIT · '+[['FAIL','Fehler'],['WARN','Warnung'],['OFF','Aus']]
+      .filter(([state])=>not(state).length).map(([state,word])=>word+': '+not(state).map(check=>check.label).join(', ')).join(' · ')];
+  }
+  /**
+   * The start-up check. `armingMode` is 'run' (the stage just appeared: every check ticks in), 'problems' (only what
+   * is not ready stays listed), 'list' (the owner opened the list) or null (closed; the strip keeps the count).
+   */
+  function renderArming() {
+    const hud=tacHud();
+    let panel=$('#native-arming');
+    if(!currentChecks.length || !armingMode || !hud) {
+      if(panel)leave(panel,node=>reflow(()=>node.remove()));
+      if('nativeArming' in document.body.dataset)delete document.body.dataset.nativeArming;
+      return;
+    }
+    if(panel?.dataset.nativeLeaving==='true') {leavers.delete(panel);panel.remove();panel=null;}
+    const [verdict,sentence]=checkVerdict();
+    const rows=armingMode==='problems'?currentChecks.filter(check=>check.state!=='OK'):currentChecks;
+    const signature=JSON.stringify([armingMode,rows,sentence]);
+    if(panel && feedVersions.get(panel)===signature)return;
+    reflow(()=>{
+      const fresh=!panel;
+      if(fresh) {
+        panel=document.createElement('section');panel.id='native-arming';panel.className='native-arming';
+        panel.setAttribute('aria-label','Systemcheck');
+        const head=part('div','native-arming-head');
+        const count=part('span','native-arming-count');count.setAttribute('role','status');
+        const close=part('button','native-arming-close','SCHLIESSEN');close.type='button';close.dataset.nativeTac='arming-close';
+        close.setAttribute('aria-label','Systemcheck schließen');
+        head.append(part('span','native-arming-call'),count,close);
+        const list=part('ol','native-arming-list');
+        const sentenceNode=part('p','native-arming-verdict');sentenceNode.setAttribute('role','status');
+        panel.append(head,list,sentenceNode);
+        hud.appendChild(panel);
+      }
+      panel.dataset.mode=armingMode;panel.dataset.verdict=verdict;
+      panel.style.setProperty('--tac-n',String(rows.length));
+      setText(panel.querySelector('.native-arming-call'),armingMode==='run'?'SYSTEMSTART · PRÜFUNG':'SYSTEMCHECK');
+      setText(panel.querySelector('.native-arming-count'),
+        currentChecks.filter(check=>check.state==='OK').length+'/'+currentChecks.length+' BEREIT');
+      const running=armingMode==='run' && fresh && !!motionTier();
+      panel.querySelector('.native-arming-list').replaceChildren(...rows.map((check,index)=>{
+        const row=part('li','native-arming-row');row.dataset.state=check.state.toLowerCase();
+        const lamp=part('span','native-check-lamp');lamp.setAttribute('aria-hidden','true');
+        row.append(lamp,part('span','native-check-label',check.label),part('span','native-check-detail',check.detail),
+          part('span','native-check-state',checkStates[check.state]));
+        if(running) {row.dataset.nativeEnter='a';row.style.setProperty('--tac-i',String(index));}
+        return row;
+      }));
+      setText(panel.querySelector('.native-arming-verdict'),sentence);
+      if(running) {
+        // `pass` lasts as long as the sequence (its line along the lower edge); the entrance marks are shorter.
+        panel.dataset.nativeEnter='a';panel.dataset.pass='true';
+        if(motionTier()==='full')panel.querySelector('.native-arming-verdict').dataset.nativeEnter='a';
+      } else delete panel.dataset.pass;
+      feedVersions.set(panel,signature);
+    });
+    if(armingMode==='run')document.body.dataset.nativeArming='run';
+    else if('nativeArming' in document.body.dataset)delete document.body.dataset.nativeArming;
+    if(armingMode!=='run' || panel.dataset.pass!=='true' || feedVersions.get(panel)!==signature)return;
+    // The sequence is over when the panel's own pass has ended: then only what is not ready stays.
+    const token=++armingToken;
+    const pass=(panel.getAnimations?.({subtree:true}) ?? []).filter(item=>item.animationName==='native-tac-arming-pass');
+    if(pass.length)Promise.allSettled(pass.map(item=>item.finished)).then(()=>{if(token===armingToken)settleArming();});
+  }
+  /** Ends the start-up sequence: by its own end or by any input of the owner. */
+  function settleArming() {
+    if(armingMode!=='run')return;
+    armingToken++;
+    armingMode=currentChecks.some(check=>check.state!=='OK')?'problems':null;
+    document.querySelectorAll('#native-tac-hud [data-native-enter]').forEach(node=>{delete node.dataset.nativeEnter;});
+    renderArming();
+    if(snapshot)renderStrip(snapshot);
+    faceOwner();
+  }
+  /** Info cards: one per item of `briefingCards`; a card that is gone from the list leaves. */
+  function renderBriefing() {
+    const stage=$('.center-stage'), hud=tacHud();
+    let deck=$('#native-briefing');
+    if(!hud || !stage)return;
+    if(!currentCards.length) {
+      if(deck)leave(deck,node=>reflow(()=>node.remove()));
+      return;
+    }
+    if(deck?.dataset.nativeLeaving==='true') {leavers.delete(deck);deck.remove();deck=null;}
+    const signature=JSON.stringify(currentCards);
+    if(deck && feedVersions.get(deck)===signature)return;
+    reflow(()=>{
+      if(!deck) {
+        deck=document.createElement('section');deck.id='native-briefing';deck.className='native-tac native-briefing';
+        deck.setAttribute('aria-label','Lagekarten');
+        ($('#native-order-rail') ?? hud).after(deck);
+      }
+      const shown=new Map([...deck.children].filter(node=>node.dataset.nativeLeaving!=='true').map(node=>[node.dataset.card,node]));
+      let arrived=0;
+      for(const card of currentCards) {
+        let node=shown.get(card.id);
+        if(node)shown.delete(card.id);
+        else {
+          node=part('article','native-brief-card');node.dataset.card=card.id;
+          node.append(part('small','native-brief-kind'),part('strong','native-brief-title'),part('ul','native-brief-lines'));
+          deck.appendChild(node);enter(node,arrived++);
+        }
+        node.dataset.kind=card.kind;
+        if(node.dataset.state!==card.state) {
+          if(node.dataset.state && card.state==='attention' && motionTier())node.dataset.changed='true';
+          node.dataset.state=card.state;
+        }
+        setText(node.querySelector('.native-brief-kind'),cardKinds[card.kind]+(card.state==='attention'?' · ACHTUNG':''));
+        setText(node.querySelector('.native-brief-title'),card.title);
+        const lines=node.querySelector('.native-brief-lines'), key=JSON.stringify(card.lines);
+        if(feedVersions.get(lines)!==key) {
+          lines.replaceChildren(...card.lines.map(line=>part('li','native-brief-line',line)));
+          lines.hidden=!card.lines.length;feedVersions.set(lines,key);
+        }
+      }
+      for(const node of shown.values())leave(node,gone=>reflow(()=>gone.remove()));
+      feedVersions.set(deck,signature);
+    });
+  }
+  /** Everything of this section, from one snapshot. */
+  function renderTactical(state) {
+    const before={orders:currentOrders,cards:currentCards,checks:currentChecks};
+    currentTactical=tacticalOf(state.tactical);
+    const orders=ordersOf(state.orders);
+    // An unchanged revision keeps what is shown; null withdraws the rail.
+    if(!orders || orders.key!==currentOrders?.key || orders.revision!==currentOrders.revision)currentOrders=orders;
+    currentChecks=checksOf(state.systemCheck);currentCards=cardsOf(state.briefingCards);
+    // The stage appears with real checks: they tick in once. Checks that arrive later only fill the strip.
+    if(currentChecks.length && !armed) {armed=true;armingMode=!ownerActed && state.busy!==true?'run':null;}
+    if(!currentChecks.length)armingMode=null;
+    const attention=attentionOf(state);
+    if(attention===null) {if('nativeAttention' in document.body.dataset)delete document.body.dataset.nativeAttention;}
+    else if(document.body.dataset.nativeAttention!==attention)document.body.dataset.nativeAttention=attention;
+    renderArming();renderStrip(state);renderOrders();renderBriefing();
+    // Android changed the thermal tier: the strip's effect cell is marked for one pass.
+    const tier=own(qualities,state.quality)?state.quality:null;
+    if(lastTier!==undefined && tier!==lastTier && motionTier())$('#native-tac-strip [data-cell="effects"]')?.setAttribute('data-changed','true');
+    lastTier=tier;
+    // New work, a new card or the start-up list: one glance to where it is shown.
+    if(armingMode==='run' && before.checks.length===0)lookAt($('#native-arming'));
+    else if(currentOrders && (currentOrders.key!==before.orders?.key ||
+      currentOrders.items.length>(before.orders?.items.length ?? 0)))glance($('#native-order-rail'));
+    else if(currentCards.some(card=>!before.cards.some(row=>row.id===card.id)))glance($('#native-briefing'));
+  }
+  /** Another chat: its orders are not this chat's. Checks and info cards belong to the device and stay. */
+  function clearTactical() {
+    const rail=$('#native-order-rail');
+    if(rail) {for(const node of [rail,...rail.querySelectorAll('[data-native-leaving]')])leavers.delete(node);rail.remove();}
+    currentOrders=null;
+    if(armingMode==='run')settleArming();
+  }
+  /** Window choreography: the hand-over between two work windows, decided once per task from the final state. */
+  function handover() {
+    windowQueued=false;
+    const to=document.body.dataset.nativeWindow ?? null, from=shownWindow, name=shownName;
+    if(to===from)return;
+    shownWindow=to;shownName=to==='files' && currentFiles?.kind==='APPS'?'APPS':to?windowNames[to]:'';
+    const shell=$('.workspace-shell');
+    // A newer hand-over wins: what was still leaving or arriving is settled.
+    shell?.querySelectorAll(':scope>.native-window-ghost').forEach(node=>{leavers.delete(node);node.remove();});
+    for(const kind of Object.keys(windowNames)) {const panel=windowPanel(kind);if(panel)delete panel.dataset.nativeEnter;}
+    if(!motionTier() || !shell)return;
+    if(from) {
+      // The window that leaves: its plate with its name slides out while the next one comes in.
+      const ghost=part('div','native-window-ghost');ghost.setAttribute('aria-hidden','true');ghost.dataset.window=from;
+      ghost.appendChild(part('span','native-window-ghost-name',name));
+      shell.appendChild(ghost);leave(ghost,node=>node.remove());
+    }
+    // The same entrance under two names: a window that returns at once starts its entrance again.
+    const panel=windowPanel(to);
+    if(panel)panel.dataset.nativeEnter=++windowSerial%2?'a':'b';
+  }
+  function windowPanel(kind) {
+    return kind==='live'?$('#native-computer-panel'):kind==='result'?$('#native-document-panel'):
+      kind==='files'?$('#native-files-panel'):kind==='work'?$('#native-live-panel'):null;
+  }
+  // A mark is for one pass: when its animation has ended (or was cut off) it is removed, so that a later change
+  // of tier cannot start it again.
+  for(const type of ['animationend','animationcancel'])document.addEventListener(type,event=>{
+    const node=event.target, name=event.animationName ?? '';
+    if(!node?.dataset || event.pseudoElement)return;
+    if(name.startsWith('native-tac-in') && node.dataset.nativeEnter)delete node.dataset.nativeEnter;
+    // The pass of a changed state runs on the word inside the element that carries the mark.
+    if(name.startsWith('native-tac-mark'))node.closest('[data-changed]')?.removeAttribute('data-changed');
+  },true);
+  // Any input of the owner ends the start-up sequence; its own buttons do what they say.
+  for(const type of ['pointerdown','keydown'])document.addEventListener(type,event=>{
+    ownerActed=true;
+    if(armingMode==='run' && !event.target?.closest?.('[data-native-tac]'))settleArming();
+  },true);
   const workspace=$('#workspace');
   if(workspace)new MutationObserver(()=>{
     if(snapshot && (lines.length || snapshot.busy || snapshot.workRows?.length) && !workspace.querySelector('#native-live-panel'))renderFeed();
@@ -1670,6 +2209,7 @@
       replyLine=null;arrivedLine=null;arrivedSources=null;draftGlanced=false;lastConsent=false;stepStatesShown.clear();
       workToken++;workTurn=false;workReplied=false;workAwaitingReply=false;workSources=false;
       workSurface=null;workReturned=true;setWorkPhase('idle');
+      clearTactical();
       if(!initial) {
         dirtyDraft=false;
         const field=$('#command-input');if(field) {field.value='';fitComposer();}
@@ -1677,6 +2217,7 @@
       closePanels();
     }
     page=state.pageId;view=state.viewId;viewRevision=state.viewRevision;session=state.sessionId;snapshot=state;
+    renderMotionGate(state);
     const activity=activityOf(state.activity);
     // An unchanged revision keeps what is already shown, whatever else it carries.
     if(!activity || activity.revision!==currentActivity?.revision)currentActivity=activity;
@@ -1713,6 +2254,7 @@
     else renderFiles();
     renderChats();renderMeters();renderFeed();renderDocument();nativeLabels();renderAppearance(state.appearance);
     renderPresence(state);renderEnergy(state);advanceWork(freshFiles);
+    renderTactical(state);
     if(landed) {
       // Shown where it happened for a short while; the list below the monitor keeps it.
       marker={sequence:landed.sequence};
@@ -1881,6 +2423,20 @@
   document.addEventListener('click',e=>{
     if(e.target.closest('#listen-button') && suppressMicClick) {
       suppressMicClick=false;e.preventDefault();e.stopImmediatePropagation();return;
+    }
+    const tac=e.target.closest('[data-native-tac]');
+    if(tac) {
+      e.preventDefault();e.stopImmediatePropagation();
+      if(tac.dataset.nativeTac==='orders') {
+        // Folds every step out to its full label and back.
+        const rail=tac.closest('#native-order-rail');
+        reflow(()=>{rail.dataset.expanded=String(rail.dataset.expanded!=='true');});
+        tac.setAttribute('aria-expanded',rail.dataset.expanded);
+      } else if(snapshot && currentChecks.length) {
+        if(armingMode==='run')settleArming();
+        else {armingMode=tac.dataset.nativeTac==='systems' && !armingMode?'list':null;renderArming();renderStrip(snapshot);}
+      }
+      return;
     }
     const source=e.target.closest('[data-native-source]');
     if(source) {

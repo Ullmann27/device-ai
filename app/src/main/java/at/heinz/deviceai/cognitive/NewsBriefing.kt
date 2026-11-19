@@ -28,8 +28,8 @@ internal object NewsBriefing {
     enum class Brain(val subject: String, val summaryOf: String, val notReady: String, val logLabel: String) {
         LOCAL("Das lokale Modell", "Zusammenfassung des lokalen Modells", "Das lokale Modell ist gerade nicht geladen.",
             "lokale Zusammenfassung"),
-        CLOUD("Claude (Cloud)", "Zusammenfassung von Claude (Cloud)", "Claude (Cloud) ist gerade nicht bereit.",
-            "Zusammenfassung von Claude (Cloud)")
+        CLOUD("Das Cloud-Gehirn", "Zusammenfassung des Cloud-Gehirns", "Das Cloud-Gehirn ist gerade nicht bereit.",
+            "Zusammenfassung des Cloud-Gehirns")
     }
 
     data class Prompt(val text: String, val stories: List<NewsStory>)

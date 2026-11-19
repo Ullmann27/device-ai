@@ -12,9 +12,15 @@ import android.graphics.Rect
 import at.heinz.deviceai.cognitive.*
 
 class ContinuumScreenObservationService:AccessibilityService(){
-    override fun onServiceConnected(){super.onServiceConnected();ScreenObservationBus.connect(this)}
+    override fun onServiceConnected(){super.onServiceConnected();ScreenObservationBus.connect(this)
+        at.heinz.deviceai.notifications.AccessibilityNotificationSource.connected(this)}
     override fun onAccessibilityEvent(event:AccessibilityEvent?){
         if(event==null)return
+        if(event.eventType==AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED){
+            // Only delivered while the owner switched „Eingehende Nachrichten melden“ on; never a window observation.
+            at.heinz.deviceai.notifications.AccessibilityNotificationSource.onEvent(this,event)
+            return
+        }
         if(event.eventType==AccessibilityEvent.TYPE_VIEW_SCROLLED){
             ScreenObservationBus.scrolled(this,event)
             return
@@ -35,7 +41,8 @@ class ContinuumScreenObservationService:AccessibilityService(){
         }
     }
     override fun onInterrupt(){ScreenObservationBus.interrupt(this);AndroidLiveComputer.observationRevoked(this)}
-    override fun onDestroy(){ScreenObservationBus.disconnect(this);AndroidLiveComputer.observationRevoked(this);super.onDestroy()}
+    override fun onDestroy(){ScreenObservationBus.disconnect(this);AndroidLiveComputer.observationRevoked(this)
+        at.heinz.deviceai.notifications.AccessibilityNotificationSource.disconnected(this);super.onDestroy()}
     internal fun readScreen(expectedPackage:String,checkActive:()->Unit,bindWindow:(Int)->Unit):ScreenTextSnapshot{
         checkActive()
         val root=rootInActiveWindow?:error("NO_ACTIVE_WINDOW")
