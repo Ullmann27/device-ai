@@ -87,7 +87,7 @@ internal object OwnerReturn {
  */
 internal object OwnerGreeting {
     private const val HELLO = "(?:hallo|hallöchen|hallihallo|hi|hey|servus|moin|mahlzeit|grüß dich|grüss dich|" +
-        "grüß gott|grüss gott|guten morgen|guten tag|guten abend)"
+        "grüß gott|grüss gott|guten morgen|guten tag|guten abend|na|nabend|tach|griaß di|grias di)"
     private const val BACK = "(?:(?:ich )?bin (?:wieder |jetzt )*(?:da|zurück|hier)|da bin ich(?: wieder)?|ich bin wieder zurück)"
     private val greeting = Regex("^(?:$HELLO(?: $HELLO)?(?: $BACK)?|$BACK)$")
 
@@ -110,40 +110,67 @@ internal object OwnerGreeting {
     /**
      * One greeting. [opening]: the greeting itself with everything that is a fact (name, pause). [closing]: its own
      * short question at the end – replaced when another module supplies a clause of its own. [index]: the wording used.
+     * [shape]: the structure of the sentence, so the same structure is not used three times in a row.
      */
-    data class Said(val opening: String, val closing: String, val index: Int) {
+    data class Said(val opening: String, val closing: String, val index: Int, val shape: String = "") {
         val text: String get() = listOf(opening, closing).filter { it.isNotEmpty() }.joinToString(" ")
     }
+
+    /** One wording of a pool. [plain]: the opening without a question of its own, for a greeting that carries an offer. */
+    private class Wording(val opening: String, val closing: String, val shape: String, val plain: String = opening)
 
     /**
      * The personal greeting when the owner gets in touch. [name]: as he gave it, or null. [absence]: how long he was
      * away, or null when nothing is known. [variation]: any counter; [previous]: the index used last time (-1 = none).
+     *
+     * [lastTalk]: when the last conversation was, as [OwnerSpokenTime.at] says it from the stored timestamp of his last
+     * turn („gestern Abend“) – null when there is none; only then a sentence about it can appear. [shapes]: the
+     * structures of the greetings said before, newest last. [withOffer]: another clause with a question follows, so
+     * the opening asks none of its own.
      */
-    fun reply(name: String?, hour: Int, absence: OwnerAbsence?, variation: Int, previous: Int = -1): Said {
+    fun reply(name: String?, hour: Int, absence: OwnerAbsence?, variation: Int, previous: Int = -1, lastTalk: String? = null,
+              shapes: List<String> = emptyList(), withOffer: Boolean = false): Said {
         val day = timeOfDay(hour)
         val away = absence?.let(OwnerReturn::spoken)
         // „Hallo Heinz“ / „Hallo“ – the same sentences with and without the name.
         val to = name?.let { " $it" }.orEmpty()
         val called = name?.let { ", $it" }.orEmpty()
-        val pool: List<Pair<String, String>> = when {
+        // The last conversation is named only across a night or more, and only when its timestamp is known.
+        val talked = lastTalk?.takeIf { absence == OwnerAbsence.SinceYesterday || absence is OwnerAbsence.Days }
+            ?.let { "Wir haben $it zuletzt gesprochen." }
+        val pool: List<Wording> = when {
             away != null -> listOf(
-                "Hallo$to, wie geht's dir? Du hast dich ja $away nicht gerührt." to "",
-                "Na$to, da bist du ja wieder. ${cap(away)} habe ich nichts von dir gehört." to "Was liegt an?",
-                "$day$called! ${cap(away)} war Funkstille." to "Alles gut bei dir?")
+                Wording("Hallo$to, wie geht's dir? Du hast dich ja $away nicht gerührt.", "", "ASK_AWAY",
+                    plain = "Hallo$to. Du hast dich ja $away nicht gerührt."),
+                Wording("Na$to, da bist du ja wieder. ${cap(away)} habe ich nichts von dir gehört.", "Was liegt an?", "NA_AWAY"),
+                Wording("$day$called! ${cap(away)} war Funkstille.", "Alles gut bei dir?", "DAY_AWAY"),
+                Wording("$day$called. Schön, dass du wieder da bist. " + (talked ?: "${cap(away)} war es still hier."),
+                    "Wie geht's dir heute?", "DAY_BACK"),
+                Wording("Hallo$to! Schön, dich wiederzusehen. " + (talked ?: "${cap(away)} habe ich nichts von dir gehört."),
+                    "Was haben wir heute vor?", "HELLO_BACK"),
+                Wording("Na$called – $away nichts von dir gehört.", "Was haben wir heute vor?", "NA_SHORT"))
             absence == OwnerAbsence.Brief -> listOf(
-                "Da bist du ja wieder$called." to "Was gibt's?",
-                "Na$to, wieder da?" to "Dann los.",
-                "Hallo$to, schön, dass du wieder da bist." to "Was liegt an?")
+                Wording("Da bist du ja wieder$called.", "Was gibt's?", "BACK"),
+                Wording("Na$to, wieder da?", "Dann los.", "NA_BACK", plain = "Na$to, wieder da."),
+                Wording("Hallo$to, schön, dass du wieder da bist.", "Was liegt an?", "HELLO_BACK"),
+                Wording("$day$called. Weiter geht's.", "Womit machen wir weiter?", "DAY_GO"),
+                Wording("Wieder da$called – gut.", "Was brauchst du?", "BACK_SHORT"))
             else -> listOf(
-                "Hallo$to! Schön, dass du da bist." to "Was liegt an?",
-                "Na$to, da bist du ja." to "Was gibt's?",
-                "$day$called!" to "Womit fangen wir an?",
-                "Grüß dich$called!" to "Schieß los.",
-                (if (name != null) "Ah, $name!" else "Ah, da bist du!") to "Was hast du auf dem Herzen?")
+                Wording("Hallo$to! Schön, dass du da bist.", "Was liegt an?", "HELLO"),
+                Wording("Na$to, da bist du ja.", "Was gibt's?", "NA"),
+                Wording("$day$called!", "Womit fangen wir an?", "DAY"),
+                Wording("Grüß dich$called!", "Schieß los.", "GRUESS"),
+                Wording(if (name != null) "Ah, $name!" else "Ah, da bist du!", "Was hast du auf dem Herzen?", "AH"),
+                Wording("Na$called?", "Was haben wir heute vor?", "NA_SHORT"),
+                Wording("$day$called. Ich bin bereit.", "Was steht an?", "DAY_READY"))
         }
         var pick = ((variation % pool.size) + pool.size) % pool.size
-        if (pool.size > 1 && pick == previous) pick = (pick + 1) % pool.size
-        return Said(pool[pick].first, pool[pick].second, pick)
+        // Never the same wording twice in a row, and never the same structure three times in a row.
+        val twice = shapes.takeLast(2).takeIf { it.size == 2 && it[0] == it[1] }?.first()
+        var tries = 0
+        while (pool.size > 1 && tries < pool.size && (pick == previous || pool[pick].shape == twice)) { pick = (pick + 1) % pool.size; tries++ }
+        val said = pool[pick]
+        return Said(if (withOffer) said.plain else said.opening, said.closing, pick, said.shape)
     }
 
     /**

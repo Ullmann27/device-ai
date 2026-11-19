@@ -106,7 +106,8 @@ class OwnerGreetingTest {
             previous = said.index
             seen += said.text
         }
-        assertEquals(3, seen.toSet().size)
+        // The pool for a pause has grown from three to six wordings (owner wish 19.11.2026: never the same greeting twice).
+        assertEquals(6, seen.toSet().size)
         // The same counter and the same previous wording always give the same sentence: nothing is random.
         assertEquals(OwnerGreeting.reply("Heinz", 14, OwnerAbsence.Hours(120), 5, 1).text,
             OwnerGreeting.reply("Heinz", 14, OwnerAbsence.Hours(120), 5, 1).text)
