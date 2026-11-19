@@ -171,6 +171,8 @@ class AgentActivity : Activity() {
         private const val CONVERSATION_RETRY_DELAY_MS = 300L
         private const val CONVERSATION_IDLE_CHECK_MS = 900L
         private const val NOTIFICATION_RETRY_MS = 3_000L
+        /** An assistant message that ended with a question is not followed by an incoming-message offer this long. */
+        private const val INCOMING_QUESTION_GUARD_MS = 120_000L
         private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241
         private const val READINESS_CAMERA_PERMISSION_REQUEST = 2242
         private const val READINESS_MIC_PERMISSION_REQUEST = 2243
@@ -898,6 +900,7 @@ class AgentActivity : Activity() {
         super.onResume()
         at.heinz.deviceai.notifications.ContinuumNotificationBus.subscribe(notificationSubscriber)
         at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.foregroundPresenterActive = true
+        resumeIncomingMessages()
         // Drive mode belongs to this app session: a flag left over from an ended process is cleared.
         if (!driveMode.active && at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.driveModeActive(this))
             at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.markDriveMode(this, false)
@@ -967,6 +970,7 @@ class AgentActivity : Activity() {
     override fun onPause() {
         at.heinz.deviceai.notifications.ContinuumNotificationBus.unsubscribe(notificationSubscriber)
         at.heinz.deviceai.notifications.DriveBackgroundAnnouncer.foregroundPresenterActive = false
+        pauseIncomingMessages()
         command03MainStage?.cancelComposerFocus()
         // A visible split-screen task retains its already approved feed while the owner taps the target app.
         // Speech still ends below; only that existing visible computer session keeps the WebView drawing.
@@ -4664,6 +4668,7 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SYSTEM -> showSystemCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.AUTONOMY -> showAutonomyControl()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SELF_SEND -> showOwnerSendSettings()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.INCOMING_MESSAGES -> showIncomingMessageSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SHIZUKU -> showShizukuConnectionDialog()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.DIAGNOSTICS -> showDiagnosticsCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.UPDATES ->
@@ -8048,6 +8053,7 @@ class AgentActivity : Activity() {
         if (interceptOwnerMission()) return
         if (interceptOwnerDocumentDesk()) return
         if (consumeDeviceToolCommand()) return
+        if (interceptIncomingMessages()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
             setOf("stopp", "stop", "computer stoppen", "live-bild stoppen")) {
             val stopRequest = input.text.toString().trim()
@@ -13110,7 +13116,10 @@ class AgentActivity : Activity() {
         override val ownerTurn: Long get() = work.ownerTurn
         override val assistantName: String? get() = work.assistantName
         override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.SEND, request)
-        override fun outcome(outcome: OwnerLaneOutcome) = ownerMission.laneOutcome(OwnerMissionLane.SEND, outcome)
+        override fun outcome(outcome: OwnerLaneOutcome) {
+            ownerMission.laneOutcome(OwnerMissionLane.SEND, outcome)
+            incomingSendOutcome(outcome)
+        }
 
         override fun reply(request: String, text: String) {
             // Only the owner's own sentence and a fixed label enter the model context: no contact data, no screen text.
@@ -13180,6 +13189,134 @@ class AgentActivity : Activity() {
     private fun interceptCodingAgents(spoken: String = input.text.toString().trim()): Boolean =
         spoken.isNotEmpty() && selectedBot == null && !botLookupPending && !neuralCoach.isActive() &&
             codingAgents.take(spoken)
+    // ── Incoming messages („Eingehende Nachrichten melden“) – logic in notifications/IncomingMessage*.kt ────────
+    // Thin adapter only. Notification content is shown for this session and spoken with the offline voice; it is
+    // never stored in the transcript, never put into the model context and never handed to a network voice.
+
+    /** The owner's name and tone for „Hey …, darf ich dich kurz stören?“; wired to the app's real source. */
+    internal var incomingOwnerProfile: at.heinz.deviceai.notifications.IncomingOwnerProfile =
+        at.heinz.deviceai.notifications.IncomingOwnerProfile.DEFAULT
+        set(value) { field = value; at.heinz.deviceai.notifications.IncomingMessages.profile = value }
+    internal val incomingMessages by lazy {
+        at.heinz.deviceai.notifications.IncomingMessages.start(this)
+        at.heinz.deviceai.notifications.IncomingMessageDialogue(IncomingMessageAdapter(),
+            at.heinz.deviceai.notifications.IncomingMessages.inbox)
+    }
+    private var incomingRecognizerPause = false
+    /** Owner turn and time of the last assistant message that asked something: its answer is not interrupted. */
+    private var incomingQuestionTurn = -1L
+    private var incomingQuestionAt = 0L
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        openIncomingMessage(intent)
+    }
+
+    /** „Vorlesen“ on Continuum's own card: the wish is taken once; the reading starts at the next quiet moment. */
+    private fun openIncomingMessage(intent: Intent?) {
+        val id = intent?.getLongExtra(at.heinz.deviceai.notifications.IncomingMessages.EXTRA_ITEM, -1L) ?: return
+        if (id < 0) return
+        val read = intent.getBooleanExtra(at.heinz.deviceai.notifications.IncomingMessages.EXTRA_READ, false)
+        intent.removeExtra(at.heinz.deviceai.notifications.IncomingMessages.EXTRA_ITEM)
+        if (read) incomingMessages.action(id, read = true)
+    }
+
+    private fun resumeIncomingMessages() {
+        at.heinz.deviceai.notifications.IncomingMessages.profile = incomingOwnerProfile
+        at.heinz.deviceai.notifications.IncomingMessages.foreground = incomingMessages
+        openIncomingMessage(intent)
+        incomingMessages.attach()
+    }
+
+    private fun pauseIncomingMessages() {
+        incomingMessages.detach()
+        if (at.heinz.deviceai.notifications.IncomingMessages.foreground === incomingMessages)
+            at.heinz.deviceai.notifications.IncomingMessages.foreground = null
+    }
+
+    /** „ja“ / „später“ / the dictated answer to this lane's question, and its own sentences („Was ist noch offen?“). */
+    private fun interceptIncomingMessages(spoken: String = input.text.toString().trim()): Boolean =
+        spoken.isNotEmpty() && selectedBot == null && !botLookupPending && !neuralCoach.isActive() &&
+            // An approval or a send-lane question that opened meanwhile gets the owner's answer first.
+            pendingResearchChatApproval == null && !avatarAwaitingApproval && !ownerSend.awaitingAnswer &&
+            incomingMessages.handle(spoken)
+
+    /** The quiet moment between two recogniser rounds or after a reply; true = a question is being spoken now. */
+    private fun offerIncomingMessage(recognizerRoundEnded: Boolean): Boolean {
+        if (isFinishing || isDestroyed || !foregroundLearningActive) return false
+        incomingRecognizerPause = recognizerRoundEnded
+        val offered = try { incomingMessages.poll() } finally { incomingRecognizerPause = false }
+        return offered && announcementUtteranceId != null
+    }
+
+    private fun incomingSendOutcome(outcome: OwnerLaneOutcome) = incomingMessages.replySettled(
+        sent = ((outcome as? OwnerLaneOutcome.Done)?.result as? OwnerLaneResult.Delivered)?.state == OwnerLaneResult.Delivered.State.SENT,
+        waitsForOwner = outcome is OwnerLaneOutcome.NeedsOwner)
+
+    private fun showIncomingMessageSettings() {
+        at.heinz.deviceai.notifications.IncomingMessageSettingsDialog.show(this,
+            accessibilityOn = { (ownerSendDeviceOverride ?: ownerSendPhone).accessibilityOn() })
+    }
+
+    private inner class IncomingMessageAdapter : at.heinz.deviceai.notifications.IncomingMessageHost {
+        override val ownerTurn: Long get() = ownerReplyRevision
+        override val assistantName: String? get() = at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
+            continuumState?.archive?.identityState?.chosenName)
+        override val profile: at.heinz.deviceai.notifications.IncomingOwnerProfile get() = incomingOwnerProfile
+        override fun nowMillis(): Long = android.os.SystemClock.elapsedRealtime()
+        override fun minuteOfDay(): Int = at.heinz.deviceai.notifications.IncomingMessages.minuteOfDay()
+        override fun settings() = at.heinz.deviceai.notifications.IncomingMessagePreferences.load(this@AgentActivity)
+
+        override fun updateSettings(change: (at.heinz.deviceai.notifications.IncomingMessageSettings) ->
+            at.heinz.deviceai.notifications.IncomingMessageSettings) {
+            at.heinz.deviceai.notifications.IncomingMessagePreferences.update(this@AgentActivity, change)
+            at.heinz.deviceai.notifications.IncomingMessages.settingsChanged(this@AgentActivity)
+        }
+
+        /** No job, no approval, no question of another lane, no mission step, nothing typed, nobody speaking. */
+        override fun quiet(): Boolean = foregroundLearningActive && !isFinishing && !isDestroyed && !busy &&
+            !botLookupPending && !avatarAwaitingApproval && pendingResearchChatApproval == null &&
+            pendingConversationSelection == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && !ownerSend.awaitingAnswer && !ownerMission.active &&
+            centerDialog?.isShowing != true && readinessDialog?.isShowing != true && input.text.isNullOrBlank() &&
+            !voiceSpeaking && voiceUtteranceId == null &&
+            !(incomingQuestionTurn == ownerReplyRevision && nowMillis() - incomingQuestionAt < INCOMING_QUESTION_GUARD_MS)
+
+        override fun announce(title: String, detail: String, spoken: String): Boolean {
+            if (isFinishing || isDestroyed || !foregroundLearningActive) return false
+            // The existing announcement path: stage card, offline voice only, never over the owner's speech.
+            if (!presentNotificationAnnouncement(at.heinz.deviceai.notifications.AnnouncementDecision.Announce(
+                    spoken, title, detail), incomingRecognizerPause)) return false
+            addBubble(spoken, user = false, persist = false)
+            return true
+        }
+
+        override fun acceptOwnerTurn(request: String) = showOwnerLaneTurn(request)
+
+        override fun reply(text: String) {
+            recordCockpitDialog(false, text)
+            addHomeGreeting(text.take(8_000), persist = false, allowMaya = false)
+        }
+
+        override fun activity(line: String) = addToolActivity(line)
+        override fun stage(event: at.heinz.deviceai.cockpit.CockpitAnimationEvent) = cockpitBus.emit(event)
+        override fun later(delayMs: Long, action: () -> Unit) {
+            mainHandler.postDelayed({ if (!isFinishing && !isDestroyed) action() }, delayMs)
+        }
+
+        override fun sendReply(request: String, channel: at.heinz.deviceai.notifications.IncomingReplyChannel,
+                               recipient: String, subject: String, text: String): Boolean = ownerSend.reply(request,
+            if (channel == at.heinz.deviceai.notifications.IncomingReplyChannel.GMAIL) at.heinz.deviceai.sending.SendChannel.GMAIL
+            else at.heinz.deviceai.sending.SendChannel.WHATSAPP, recipient, subject, text)
+
+        /** A tap answer is offered whenever the answer cannot simply be spoken (no hands-free conversation). */
+        override fun card(item: at.heinz.deviceai.notifications.IncomingItem) {
+            if (!continuousConversation.active) at.heinz.deviceai.notifications.IncomingMessages.card(item)
+        }
+
+        override fun clearCard(item: at.heinz.deviceai.notifications.IncomingItem) =
+            at.heinz.deviceai.notifications.IncomingMessages.clearCard(item)
+    }
 
     // ── Owner missions („Auftragsfolge“) – logic in OwnerMission.kt and cognitive/OwnerMissionPlan*.kt ──────────
     // Thin adapter only: a mission hands every step to the owner entry of its lane above and listens to the lanes'
@@ -17435,6 +17572,7 @@ class AgentActivity : Activity() {
                                     allowMaya: Boolean = ownerReplyAllowsMaya, speakNow: Boolean = true) {
         // „Ich habe „Thermux“ als Termux verstanden.“ – stated once, in front of the answer to the repaired turn.
         @Suppress("NAME_SHADOWING") val value = ownerUnderstanding.withNotice(sessionId, value)
+        if (value.trimEnd().endsWith("?")) { incomingQuestionTurn = ownerReplyRevision; incomingQuestionAt = android.os.SystemClock.elapsedRealtime() }
         recordCockpitDialog(false, value)
         // Rendering a normal assistant reply never owns session invalidation. Callers pass false only
         // after a semantic policy decided that older dialogue is stale (for example a confirmed memory change).
@@ -18118,6 +18256,8 @@ class AgentActivity : Activity() {
 
     private fun onIncomingNotification(notification: at.heinz.deviceai.notifications.IncomingNotification) {
         if (isFinishing || isDestroyed || !foregroundLearningActive) return
+        // An app of „Eingehende Nachrichten melden“ is asked about in a conversation, not announced twice.
+        if (at.heinz.deviceai.notifications.IncomingMessages.inbox.claims(notification.packageName)) return
         val settings = at.heinz.deviceai.notifications.NotificationAnnouncementSettings.load(this)
         val state = announcementState(
             speaking = voiceSpeaking || voiceUtteranceId != null || busy, listening = voiceListening)
@@ -18165,6 +18305,7 @@ class AgentActivity : Activity() {
 
     /** Speaks what waited while the owner or the assistant was talking. True when an announcement started. */
     private fun speakQueuedNotifications(recognizerRoundEnded: Boolean = false): Boolean {
+        if (offerIncomingMessage(recognizerRoundEnded)) return true
         if (isFinishing || isDestroyed || !foregroundLearningActive || notificationQueue.size == 0) return false
         // A model turn in progress keeps the channel: its reply comes first.
         if ((voiceListening && !recognizerRoundEnded) || voiceSpeaking || voiceUtteranceId != null || busy) return false
