@@ -14,6 +14,7 @@ import at.heinz.deviceai.cognitive.NewsSourceRef
 import at.heinz.deviceai.cognitive.NewsStory
 import at.heinz.deviceai.cognitive.NonModelReplyKind
 import at.heinz.deviceai.cognitive.OwnerAppLookupIntent
+import at.heinz.deviceai.cognitive.OwnerChatLine
 import at.heinz.deviceai.cognitive.OwnerDeliverable
 import at.heinz.deviceai.cognitive.OwnerDocumentDocx
 import at.heinz.deviceai.cognitive.OwnerDocumentLayout
@@ -80,8 +81,8 @@ internal interface OwnerWorkToolsHost {
     fun rememberResearch(digest: ResearchDialogueHandoff.Digest)
 
     // ── Export and hand-over of the result ──────────────────────────────────────────────────────────────────
-    /** The last assistant answer shown in this chat as plain text, or null. */
-    fun lastAssistantReply(): String?
+    /** The last assistant line shown in this chat, with where it came from, or null. */
+    fun lastAssistantLine(): OwnerChatLine?
     /** Runs [work] off the UI thread as the single busy job; [done] on the UI thread. */
     fun <T> runFileJob(request: String, work: (OwnerWorkFileJob) -> T, done: (Result<T>) -> Unit)
     /** The blocks as an A4 PDF: bytes and page count. Called inside a file job. */
@@ -209,7 +210,7 @@ internal class OwnerWorkTools(
      */
     fun handle(request: String): Boolean = handle(request, host.ownerTurn)
 
-    private class Held(val session: String, val turn: Long, val reply: String?)
+    private class Held(val session: String, val turn: Long, val reply: OwnerChatLine?)
     private var held: Held? = null
 
     /**
@@ -217,7 +218,7 @@ internal class OwnerWorkTools(
      * question was asked or his „Ja“ was shown. What the chat is about right now is kept for [handleOnHeld], so
      * „das“ still means what it meant when he said it and not a line the app showed in between.
      */
-    fun holdSubject() { held = Held(host.sessionId, host.ownerTurn, host.lastAssistantReply()) }
+    fun holdSubject() { held = Held(host.sessionId, host.ownerTurn, host.lastAssistantLine()) }
 
     /** [handle] for an order of the sentence [holdSubject] was called for; without one it is [handle]. */
     fun handleOnHeld(request: String): Boolean =
@@ -411,12 +412,12 @@ internal class OwnerWorkTools(
         // An order that is carried out later means the answer that was the last one when the owner gave it.
         val kept = held?.takeIf { it.session == host.sessionId && it.turn == said && said != host.ownerTurn }
         // This lane's own „was soll in der Datei stehen?“ is a question, never the answer worth keeping.
-        val reply = (if (kept != null) kept.reply else host.lastAssistantReply())?.takeUnless { it.trim() == askedForContent }
+        val reply = (if (kept != null) kept.reply else host.lastAssistantLine())?.takeUnless { it.text.trim() == askedForContent }
         // The summary draft of the open PDF: on the very next turn, while it is the last answer of the chat, or –
         // for „Erstelle eine PDF“ without a pointing word – while it is the chat's newest piece of work.
         draft?.takeIf { it.session == host.sessionId && time.toEpochMilli() - it.atMillis in 0..FOLLOW_UP_MILLIS }?.let { last ->
             val newest = current == null || current.createdAtMillis <= last.atMillis
-            val meant = last.turn == said || reply?.trim() == last.text || (unpointed && newest)
+            val meant = last.turn == said || reply?.text?.trim() == last.text || (unpointed && newest)
             if (meant) OwnerDeliverable.ofDocumentDraft(last.name, last.text, last.complete, last.cloud,
                 time.atZone(zone()).toLocalDate(), time.toEpochMilli())?.let { return it }
         }

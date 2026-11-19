@@ -29,6 +29,8 @@ object ClaudeBrainFailure {
     const val LOCAL_ONLY_SCREEN_DATA = "CLAUDE_LOCAL_ONLY_SCREEN_DATA"
     const val LOCAL_ONLY_OWNER_VETO = "CLAUDE_LOCAL_ONLY_OWNER_VETO"
     const val LOCAL_ONLY_MEMORY = "CLAUDE_LOCAL_ONLY_MEMORY"
+    /** The turn contains a notification or message of someone else that the app read out on the device. */
+    const val LOCAL_ONLY_MESSAGE_CONTENT = "CLAUDE_LOCAL_ONLY_MESSAGE_CONTENT"
     /** Features that are labelled as local measurements of the on-device model. */
     const val LOCAL_ONLY_FEATURE = "CLAUDE_LOCAL_ONLY_FEATURE"
     /**
@@ -83,6 +85,8 @@ object ClaudeBrainFailure {
             "Bitte stelle den Auftrag noch einmal.",
         LOCAL_ONLY_SCREEN_DATA to "Bildschirminhalte anderer Apps sind in dieser App als „nur auf dem Gerät“ " +
             "markiert. Ich sende sie nicht in die Cloud; diese Anfrage wurde nicht gesendet.",
+        LOCAL_ONLY_MESSAGE_CONTENT to "Inhalte von Benachrichtigungen und Nachrichten anderer bleiben auf dem Gerät. In dieser " +
+            "Anfrage stand so ein Inhalt, deshalb habe ich sie nicht in die Cloud gesendet.",
         LOCAL_ONLY_OWNER_VETO to "Du hast für diese Nachricht Internet oder Cloud ausgeschlossen. Mein Gehirn läuft " +
             "gerade in der Cloud, deshalb habe ich die Nachricht nicht gesendet.",
         LOCAL_ONLY_MEMORY to "Für diese Frage bräuchte mein Cloud-Gehirn eine bestätigte Erinnerung, die als „nur auf dem " +
@@ -104,7 +108,7 @@ object ClaudeBrainFailure {
      */
     private val OFFER_SWITCH_BACK = setOf(NO_CONSENT, NO_API_KEY, INVALID_API_KEY, PERMISSION_DENIED, NO_CREDIT,
         RATE_LIMITED, OVERLOADED, OFFLINE, TIMEOUT, MODEL_UNAVAILABLE, DATA_RETENTION_REQUIRED, SPEND_LIMIT_REACHED,
-        LOCAL_ONLY_SCREEN_DATA, LOCAL_ONLY_OWNER_VETO, LOCAL_ONLY_MEMORY, LOCAL_ONLY_FEATURE)
+        LOCAL_ONLY_SCREEN_DATA, LOCAL_ONLY_MESSAGE_CONTENT, LOCAL_ONLY_OWNER_VETO, LOCAL_ONLY_MEMORY, LOCAL_ONLY_FEATURE)
 
     /** A cut connection leaves real answer text behind; after every other failure streamed text is no answer. */
     private val KEEPS_PARTIAL_OUTPUT = setOf(STREAM_INTERRUPTED, TIMEOUT, OVERLOADED)

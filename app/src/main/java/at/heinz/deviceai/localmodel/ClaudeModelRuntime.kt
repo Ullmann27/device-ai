@@ -200,6 +200,8 @@ class ClaudeModelRuntime internal constructor(
         val run = begin(Kind.TOOLS, callback, payload?.length ?: 0)
         if (payload == null) return finish(run, LocalInferenceEvent.Failed("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))
         ClaudeLocalOnlyGuard.toolResponseRefusal(responses)?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
+        if (responses.any { DeviceLocalOnlyText.carriedIn(it.response) })
+            return finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.LOCAL_ONLY_MESSAGE_CONTENT))
         val previous = synchronized(lock) { toolConversation }
         if (previous == null || previous.pendingToolUses.isEmpty() ||
             previous.rounds >= ClaudeGenerationPolicy.MAX_TOOL_ROUNDS)
@@ -275,6 +277,7 @@ class ClaudeModelRuntime internal constructor(
         // A new full prompt always starts a new tool conversation, like the on-device runtime.
         if (kind == Kind.TOOLS) synchronized(lock) { toolConversation = null }
         ClaudeLocalOnlyGuard.promptRefusal(prompt)?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
+        if (DeviceLocalOnlyText.carriedIn(prompt)) return finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.LOCAL_ONLY_MESSAGE_CONTENT))
         val current = settings()
         preflight(current.model)?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
         // Server tools belong to the owner's own chat turn only – the one prompt shape that also carries the

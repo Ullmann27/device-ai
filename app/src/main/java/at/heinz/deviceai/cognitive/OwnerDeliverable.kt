@@ -69,11 +69,38 @@ internal data class OwnerDeliverable(
         }
 
         /** Any other assistant answer of the chat as a deliverable; null when there is nothing worth keeping. */
-        fun ofReply(text: String, date: LocalDate, createdAtMillis: Long): OwnerDeliverable? {
+        /**
+         * The last line of the chat as the result „das“ means – only a model answer or a lane's text result. A lane's
+         * report, a question or refusal of the app, a mission report and foreign content (a read-out notification,
+         * mail text) are never the subject of „Speichere das als PDF“ or of a mail attachment.
+         */
+        fun ofReply(line: OwnerChatLine, date: LocalDate, createdAtMillis: Long): OwnerDeliverable? {
+            if (!line.kind.worthKeeping) return null
+            val text = line.text
             val paragraphs = text.split(Regex("\\n\\s*\\n")).map { it.trim() }.filter { it.isNotEmpty() }
             if (paragraphs.sumOf { it.length } < 40) return null
             return OwnerDeliverable(Kind.ASSISTANT_REPLY, "Continuum Notiz", date, paragraphs,
                 note = "Antwort aus dem Gespräch mit Continuum", createdAtMillis = createdAtMillis)
         }
+    }
+}
+
+/**
+ * One assistant line of the chat with where it came from. Only a model answer or a lane's text result can become a
+ * result by its text; every other line – and every line not typed at all – is only conversation.
+ */
+internal data class OwnerChatLine(val text: String, val kind: Kind) {
+    /** [worthKeeping]: the line itself is a result the owner may save or send by pointing at it („das“). */
+    enum class Kind(val worthKeeping: Boolean) {
+        /** The answer the model (on the device or the cloud brain) gave to the owner's turn. */
+        MODEL_ANSWER(true),
+        /** A result a lane produced as text: a research dossier, an answer from the open document. */
+        LANE_DELIVERABLE(true),
+        /** A report of an owner lane („Erledigt. … liegt jetzt …“, a mission report). */
+        LANE_REPORT(false),
+        /** A fixed sentence of the app: a question, a refusal, a status. */
+        SYSTEM(false),
+        /** Content of others the app shows or reads out: a notification, a message, a mail. */
+        FOREIGN(false)
     }
 }

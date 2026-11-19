@@ -186,10 +186,23 @@ class OwnerWorkToolsDeviceUiTest {
      * with the Word format here; the same adapter, job lane, MediaStore code and wording serve the PDF order.
      * What the PDF order does when Android cannot produce the PDF is asserted first: the real reason, no file.
      */
+    private val ANSWER = "Die Photosynthese wandelt Lichtenergie in chemische Energie um. Pflanzen bilden dabei aus " +
+        "Wasser und Kohlendioxid Zucker und geben Sauerstoff ab."
+
     @Test fun theLastAnswerIsSavedInDownloadsOpenedAndHandedToTheMailApp() = withActivity("OFF") { activity ->
         val app = shadowOf(RuntimeEnvironment.getApplication())
-        // A result in the chat: the honest offline reply of the news order (long enough to be worth keeping).
+        // Changed 19.11.2026 (review B2): the honest offline reply of the news order is a fixed sentence of the app,
+        // never the result „das“ means – nothing is saved.
         say(activity, "Fass mir die Nachrichten von heute zusammen")
+        say(activity, "Speichere das als PDF")
+        assertTrue(chat(activity).last().startsWith("In diesem Gespräch gibt es noch nichts, das ich speichern könnte."))
+        assertTrue(DownloadsProvider.rows.isEmpty())
+        // A result in the chat: a model answer, shown through the Activity's own path for it (no model runs here).
+        AgentActivity::class.java.getDeclaredMethod("addAssistantMessage", String::class.java, Boolean::class.javaPrimitiveType,
+            Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType,
+            at.heinz.deviceai.cognitive.OwnerChatLine.Kind::class.java).apply { isAccessible = true }
+            .invoke(activity, ANSWER, true, false, false, false, at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER)
+        idle()
         say(activity, "Speichere das als PDF")
         assertTrue(chat(activity).toString(), chat(activity).any {
             it.startsWith("Das Speichern hat nicht geklappt:") && it.endsWith("Es wurde keine Datei angelegt.") })
@@ -207,7 +220,7 @@ class OwnerWorkToolsDeviceUiTest {
             generateSequence { zip.nextEntry }.first { it.name == "word/document.xml" }
             String(zip.readBytes(), Charsets.UTF_8)
         }
-        assertTrue(document.contains("Internetzugang ist AUS") && document.contains("Continuum Notiz"))
+        assertTrue(document.contains("Photosynthese wandelt Lichtenergie") && document.contains("Continuum Notiz"))
         val saved = chat(activity).last { it.startsWith("Erledigt.") }
         assertEquals("Erledigt. „$name“ liegt jetzt in deinem Download-Ordner (Word-Datei). Darin steht meine letzte Antwort " +
             "aus diesem Gespräch. Soll ich sie öffnen?", saved)
@@ -230,7 +243,7 @@ class OwnerWorkToolsDeviceUiTest {
         assertEquals("mailto:", mail.selector!!.dataString)
         assertEquals(listOf("anna.muster@example.org"), mail.getStringArrayExtra(Intent.EXTRA_EMAIL)!!.toList())
         assertEquals("Continuum Notiz $today", mail.getStringExtra(Intent.EXTRA_SUBJECT))
-        assertTrue(mail.getStringExtra(Intent.EXTRA_TEXT)!!.contains("Internetzugang ist AUS"))
+        assertTrue(mail.getStringExtra(Intent.EXTRA_TEXT)!!.contains("Photosynthese wandelt Lichtenergie"))
         assertEquals(ContentUris.withAppendedId(MediaStore.Downloads.EXTERNAL_CONTENT_URI, 2L),
             mail.getParcelableExtra<Uri>(Intent.EXTRA_STREAM))
         assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", mail.type)

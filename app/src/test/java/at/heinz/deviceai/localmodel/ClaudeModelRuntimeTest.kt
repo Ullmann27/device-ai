@@ -545,6 +545,31 @@ class ClaudeModelRuntimeTest {
         assertTrue(endpoint.requests.isEmpty())
     }
 
+    /**
+     * The consent text promises that notification and message content is not sent to the cloud brain. Whatever path
+     * a prompt took, a text the app read out on the device is refused here before any network use; an ordinary
+     * prompt still goes out (review 19.11.2026, point 7).
+     */
+    @Test fun readOutNotificationTextNeverLeavesTheDeviceButOrdinaryTurnsDo() {
+        val notification = "Anna Beispiel schreibt: Der Schlüssel liegt unter der Matte beim Nachbarn."
+        DeviceLocalOnlyText.clear()
+        try {
+            DeviceLocalOnlyText.remember(notification)
+            DeviceLocalOnlyText.remember("Neue Nachricht") // too short to be kept: a common phrase never blocks
+            val runtime = runtime()
+            val quoted = ownerPrompt + "Verlauf:\nContinuum: " + notification.replace(" ", "  ") + "\nAktueller Auftrag:\nWas meint sie?\n"
+            assertEquals(ClaudeBrainFailure.LOCAL_ONLY_MESSAGE_CONTENT, failure(run { runtime.stream(quoted, it) }))
+            assertEquals(ClaudeBrainFailure.LOCAL_ONLY_MESSAGE_CONTENT, failure(run {
+                runtime.respondToTools(listOf(LocalToolResponse("read_file", "{\"text\":\"$notification\"}")), it)
+            }))
+            assertTrue(endpoint.requests.isEmpty())
+            assertTrue(ClaudeBrainFailure.ownerMessage(ClaudeBrainFailure.LOCAL_ONLY_MESSAGE_CONTENT).contains("Benachrichtigungen"))
+            endpoint.enqueue(Reply.Stream(listOf(messageStart()) + text(0, "Ein Test prüft etwas.") + stop("end_turn")))
+            assertEquals("Ein Test prüft etwas.", texts(run { runtime.stream(ownerPrompt + "Neue Nachricht\n", it) }))
+            assertEquals(1, endpoint.requests.size)
+        } finally { DeviceLocalOnlyText.clear() }
+    }
+
     // ---- usage ------------------------------------------------------------------------------------------------
 
     @Test fun usageOfEveryAnswerIsCountedPerModelWithCacheTokens() {

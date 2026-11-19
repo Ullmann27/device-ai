@@ -2329,7 +2329,9 @@ class AgentActivity : Activity() {
     private var command03HtmlBoundView: Command03Binding? = null
     private var command03TransitionCause: org.json.JSONObject? = null
     private val command03DraftLedger = Command03DraftLedger()
-    private val command03VisibleMessages = ArrayDeque<Pair<Boolean, String>>()
+    /** One visible chat line; [kind] says where an assistant line came from („das“ may only mean a result). */
+    private data class Command03Line(val user: Boolean, val text: String, val kind: at.heinz.deviceai.cognitive.OwnerChatLine.Kind)
+    private val command03VisibleMessages = ArrayDeque<Command03Line>()
     private data class Command03SourceSet(val view: Command03View, val id: String,
         val items: List<Pair<String, AgentCitation>>)
     private val command03Sources = ArrayDeque<Command03SourceSet>()
@@ -2567,7 +2569,7 @@ class AgentActivity : Activity() {
         if (command03HtmlBoundView != scope) {
             command03HtmlBoundView = scope
             val entries = org.json.JSONArray()
-            command03VisibleMessages.forEach { (user, text) ->
+            command03VisibleMessages.forEach { (user, text, _) ->
                 entries.put(org.json.JSONObject().put("user", user).put("text", text))
             }
             stage.presentTranscript(scope, entries)
@@ -7966,7 +7968,8 @@ class AgentActivity : Activity() {
         addUserMessage(request, keepCockpit = stay)
         val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(localConversationContext, sessionId,
             request, at.heinz.deviceai.cognitive.NonModelReplyKind.DOCUMENT_STATE)
-        addAssistantMessage(answer, preserveLocalContext = keep, keepCockpit = stay)
+        addAssistantMessage(answer, preserveLocalContext = keep, keepCockpit = stay,
+            kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.LANE_DELIVERABLE)
         addToolActivity("DOKUMENT · aus der gelesenen PDF beantwortet · kein Modell-, Web- oder Dateiauswahl-Aufruf")
     }
 
@@ -12764,7 +12767,8 @@ class AgentActivity : Activity() {
                     }
                     discovery.lastIssue?.let { addToolActivity("RIS · "+it) }
                     generalDiscovery.lastIssue?.let { addToolActivity("WEB · "+it) }
-                    addAssistantMessage(body.take(8_000))
+                    addAssistantMessage(body.take(8_000), preserveLocalContext = true, keepCockpit = false,
+                        kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.LANE_DELIVERABLE)
                     // B1: the research result becomes follow-up context for the local model (same brain,
                     // same session) – typed as external, unverified data, never an owner fact.
                     at.heinz.deviceai.cognitive.ResearchDialogueHandoff
@@ -12920,7 +12924,8 @@ class AgentActivity : Activity() {
 
         private val documents by lazy { OwnerDocumentStore(this@AgentActivity) }
 
-        override fun lastAssistantReply(): String? = command03VisibleMessages.lastOrNull { !it.first }?.second
+        override fun lastAssistantLine(): at.heinz.deviceai.cognitive.OwnerChatLine? = command03VisibleMessages
+            .lastOrNull { !it.user }?.let { at.heinz.deviceai.cognitive.OwnerChatLine(it.text, it.kind) }
 
         /** Short local file work on the busy lane with a real step timeline; no model, no network. */
         override fun <T> runFileJob(request: String, work: (OwnerWorkFileJob) -> T, done: (Result<T>) -> Unit) {
@@ -13424,7 +13429,8 @@ class AgentActivity : Activity() {
             // The existing announcement path: stage card, offline voice only, never over the owner's speech.
             if (!presentNotificationAnnouncement(at.heinz.deviceai.notifications.AnnouncementDecision.Announce(
                     spoken, title, detail), incomingRecognizerPause)) return false
-            addBubble(spoken, user = false, persist = false)
+            addBubble(spoken, user = false, persist = false, kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.FOREIGN)
+            at.heinz.deviceai.localmodel.DeviceLocalOnlyText.remember(spoken)
             return true
         }
 
@@ -13432,7 +13438,9 @@ class AgentActivity : Activity() {
 
         override fun reply(text: String) {
             recordCockpitDialog(false, text)
-            addHomeGreeting(text.take(8_000), persist = false, allowMaya = false)
+            // What this conversation says reads out or repeats messages of others: foreign content, device-local only.
+            addHomeGreeting(text.take(8_000), persist = false, allowMaya = false, kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.FOREIGN)
+            at.heinz.deviceai.localmodel.DeviceLocalOnlyText.remember(text)
         }
 
         override fun activity(line: String) = addToolActivity(line)
@@ -15505,7 +15513,8 @@ class AgentActivity : Activity() {
                     // While the continuation runs nothing is shown or spoken: the joined answer follows as one message.
                     if (resumeContinuation == null) addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession,
                         keepCockpit = draftWindow != null, allowMaya = draftAllowsMaya,
-                        speakNow = draftWindow == null)
+                        speakNow = draftWindow == null, kind = if (successful && !ephemeralScreenRun.get())
+                            at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER else at.heinz.deviceai.cognitive.OwnerChatLine.Kind.SYSTEM)
                     presentCloudToolOutcome(successful)
                     if (draftWindow != null && draftTurn != null) {
                         val scope = if (draftTurn.prompt.complete) "Dein Entwurf steht bereit."
@@ -18111,8 +18120,13 @@ class AgentActivity : Activity() {
         addAssistantMessage(value, preserveLocalContext, keepCockpit = false)
 
     /** [keepCockpit]: the result is already shown in an open cockpit work window – record it without leaving START. */
+    /**
+     * [kind]: where the line came from. Default SYSTEM – only the places that show a model answer or a lane's text
+     * result say so, so a new caller can never make its sentence the „das“ of „Speichere das als PDF“ by accident.
+     */
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,
-                                    allowMaya: Boolean = ownerReplyAllowsMaya, speakNow: Boolean = true) {
+                                    allowMaya: Boolean = ownerReplyAllowsMaya, speakNow: Boolean = true,
+                                    kind: at.heinz.deviceai.cognitive.OwnerChatLine.Kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.SYSTEM) {
         // „Ich habe „Thermux“ als Termux verstanden.“ – stated once, in front of the answer to the repaired turn.
         @Suppress("NAME_SHADOWING") val value = ownerUnderstanding.withNotice(sessionId, value)
         if (value.trimEnd().endsWith("?")) { incomingQuestionTurn = ownerReplyRevision; incomingQuestionAt = android.os.SystemClock.elapsedRealtime() }
@@ -18137,16 +18151,17 @@ class AgentActivity : Activity() {
             (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         }
         returnClause?.let { addBubble(it, user = false) }
-        addHomeGreeting(value, allowMaya = allowMaya, speakNow = speakNow, spokenLead = returnClause)
+        addHomeGreeting(value, allowMaya = allowMaya, speakNow = speakNow, spokenLead = returnClause, kind = kind)
     }
 
     /** Startup/session greetings remain available in chat without taking space
      * from the home dashboard. Every actual action result opens the conversation. */
     private fun addHomeGreeting(value: String, persist: Boolean = true, allowMaya: Boolean = ownerReplyAllowsMaya,
-                                speakNow: Boolean = true, spokenLead: String? = null) {
+                                speakNow: Boolean = true, spokenLead: String? = null,
+                                kind: at.heinz.deviceai.cognitive.OwnerChatLine.Kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.SYSTEM) {
         // Code55: the bubble is plain text – no raw Markdown markers on screen or in speech.
         val shown = at.heinz.deviceai.cognitive.ChatReplyFormatter.plain(value)
-        addBubble(shown, user = false, persist = persist)
+        addBubble(shown, user = false, persist = persist, kind = kind)
         if (speakNow) speakReply(if (spokenLead == null) shown else "$spokenLead $shown", allowMaya)
     }
 
@@ -18208,7 +18223,8 @@ class AgentActivity : Activity() {
         return snapshot.entries.size
     }
 
-    private fun addBubble(value: String, user: Boolean, persist: Boolean = true) {
+    private fun addBubble(value: String, user: Boolean, persist: Boolean = true,
+                          kind: at.heinz.deviceai.cognitive.OwnerChatLine.Kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.SYSTEM) {
         command03ViewOwner()
         command03HtmlMessageRevision++
         // Central chat only; bot dialogues have their own ChiefBotProfileStore history.
@@ -18260,7 +18276,7 @@ class AgentActivity : Activity() {
             matchWidth(top = 8)
         )
         syncCommand03HtmlState()
-        command03VisibleMessages.addLast(user to Command03BridgeContract.messageText(value))
+        command03VisibleMessages.addLast(Command03Line(user, Command03BridgeContract.messageText(value), kind))
         while (command03VisibleMessages.size > 60) command03VisibleMessages.removeFirst()
         command03Binding()?.let { scope -> command03MainStage?.presentMessage(scope, user, value) }
         heatMeasurement.onBubble(user, value.length)
@@ -18367,7 +18383,8 @@ class AgentActivity : Activity() {
         val resumable = localConversationContext.hasContinuation(held.sessionId)
         addAssistantMessage(at.heinz.deviceai.cognitive.LocalPartialAnswerPresentation.present(
             held.answer, held.blocker, continuationAvailable = resumable),
-            preserveLocalContext = true, keepCockpit = false, speakNow = false)
+            preserveLocalContext = true, keepCockpit = false, speakNow = false,
+            kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER)
         if (resumable) lastLocalReply = LocalReplySnapshot(held.sessionId, held.lastRequest,
             held.lastSegment.take(2_000), textOnly = true)
         addToolActivity("Automatische Fortsetzung beendet · ${held.segments} von " +
@@ -18828,6 +18845,7 @@ class AgentActivity : Activity() {
         announcement: at.heinz.deviceai.notifications.AnnouncementDecision.Announce,
         recognizerRoundEnded: Boolean = false): Boolean {
         if ((voiceListening && !recognizerRoundEnded) || voiceSpeaking || voiceUtteranceId != null) return false
+        at.heinz.deviceai.localmodel.DeviceLocalOnlyText.remember(announcement.spokenText)
         announcement.readOffer?.let {
             pendingNotificationRead = PendingNotificationRead(sessionId, ownerReplyRevision,
                 android.os.SystemClock.elapsedRealtime(), it)
