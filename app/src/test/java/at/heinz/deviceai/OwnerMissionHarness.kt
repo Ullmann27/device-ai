@@ -84,8 +84,8 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
         override fun say(text: String) { deskHost.say(text); said += "DESK:$text" }
         override fun outcome(outcome: OwnerLaneOutcome) = mission.laneOutcome(OwnerMissionLane.DESK, outcome)
         override fun offerToOpen(): Boolean = !mission.active
-        // The Activity's adapter implements the interface itself, so its default reads its own offerToOpen().
-        override fun inSequence(): Boolean = !offerToOpen()
+        // As the Activity's adapter answers it: from the mission itself, not from the offer rule.
+        override fun inSequence(): Boolean = mission.active
         override fun present(result: OwnerDeliverable): Boolean {
             presented += result
             if (!presentWired) return false

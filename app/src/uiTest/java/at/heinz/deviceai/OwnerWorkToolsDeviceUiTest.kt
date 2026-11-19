@@ -207,7 +207,13 @@ class OwnerWorkToolsDeviceUiTest {
         assertTrue(chat(activity).toString(), chat(activity).any {
             it.startsWith("Das Speichern hat nicht geklappt:") && it.endsWith("Es wurde keine Datei angelegt.") })
         assertTrue(DownloadsProvider.rows.isEmpty())
+        // Three turns that saved nothing: no offer was made, so none counts against the owner's initiative cap. (Until
+        // 19.11.2026 the desk's look at every turn was counted as an offer, and the real one below was then withheld.)
+        fun offersCounted() = RuntimeEnvironment.getApplication().getSharedPreferences("continuum-owner-talk", Context.MODE_PRIVATE)
+            .getString("initiative_memory", null)?.let { org.json.JSONObject(it).optJSONArray("offers")?.length() } ?: 0
+        assertEquals(0, offersCounted())
         say(activity, "Speichere die Antwort als Word-Datei")
+        assertEquals("One offer was said, one is counted", 1, offersCounted())
         val name = "Continuum Notiz $today.docx"
         val row = DownloadsProvider.rows.values.single()
         assertEquals(name, row[MediaStore.MediaColumns.DISPLAY_NAME])
@@ -228,6 +234,7 @@ class OwnerWorkToolsDeviceUiTest {
         say(activity, "Speichere das nochmal als Word-Datei")
         assertEquals(listOf(name, "Continuum Notiz $today (2).docx"),
             DownloadsProvider.rows.values.map { it[MediaStore.MediaColumns.DISPLAY_NAME] })
+        assertEquals(2, offersCounted())
         // „Ja“ opens the file that was just saved in the owner's viewer, with a read grant.
         app.clearNextStartedActivities()
         say(activity, "Ja")

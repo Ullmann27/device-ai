@@ -120,14 +120,21 @@ internal interface OwnerDocumentDeskHost {
     fun exportAgain(request: String, format: OwnerExportCommand.Format): Boolean = false
     /** How an order of this lane ended (see [OwnerLaneOutcome]); nobody has to listen. */
     fun outcome(outcome: OwnerLaneOutcome) {}
-    /** false while a sequence of orders goes on right after a save: „Soll ich sie öffnen?“ is then not asked in between. */
+    /**
+     * true = „Soll ich sie öffnen?“ may be asked after a save right now (false while a sequence of orders goes on, or
+     * when the owner wants no offers). A question only: it is asked more than once for one save, so the answer must not
+     * count or change anything. What was really asked is reported once with [openOffered].
+     */
     fun offerToOpen(): Boolean = true
+    /** „Soll ich sie öffnen?“ was said just now. */
+    fun openOffered() {}
     /**
      * true while a sequence of owner orders hands its steps to the lanes. Only then „Fass Seite 2 zusammen“ – without
-     * a save order – is the desk's own order; said alone it keeps its answer through the reference registry. The
-     * default reads it from [offerToOpen], which every host of a sequence already answers.
+     * a save order – is the desk's own order; said alone it keeps its answer through the reference registry. Its own
+     * question: [offerToOpen] can be false for other reasons (the owner's initiative level), and the desk asks this
+     * on every turn it sees.
      */
-    fun inSequence(): Boolean = !offerToOpen()
+    fun inSequence(): Boolean = false
     /**
      * A result of this lane that is shown in the chat and NOT saved (the summary of one page): the host hands it to the
      * work tools, so „speichere das als Word“ and „schick das per Mail an …“ mean exactly this text. true = it now is
@@ -981,6 +988,7 @@ internal class OwnerDocumentDesk(
                 else "Seite $page von „${document.name}“" + (replaces?.takeIf { it.order.page != page }?.let { " – statt Seite ${it.order.page}" } ?: "") +
                     " – Zusammenfassung:\n\n${outcome.summary.text}$basis\n\nGespeichert als ${format.label}: $place$author" +
                     "$unchecked$previous$lateNote$offer")
+                if (offer.isNotEmpty()) host.openOffered()
                 host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FileSaved(file, outcome.result, outcome.location, outcome.verified)))
             }
         }

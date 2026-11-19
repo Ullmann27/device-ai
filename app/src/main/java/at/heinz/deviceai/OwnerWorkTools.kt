@@ -102,8 +102,14 @@ internal interface OwnerWorkToolsHost {
     fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean = false
     /** How an order of this lane ended (see [OwnerLaneOutcome]); nobody has to listen. */
     fun outcome(outcome: OwnerLaneOutcome) {}
-    /** false while a sequence of orders goes on right after a save: „Soll ich sie öffnen?“ is then not asked in between. */
+    /**
+     * true = „Soll ich sie öffnen?“ may be asked after a save right now (false while a sequence of orders goes on, or
+     * when the owner wants no offers). A question only: the lanes ask it more than once for one save, so the answer must
+     * not count or change anything. What was really asked is reported once with [openOffered].
+     */
     fun offerToOpen(): Boolean = true
+    /** „Soll ich sie öffnen?“ was said just now. */
+    fun openOffered() {}
 }
 
 /** What the Activity lends a running file job. */
@@ -493,6 +499,7 @@ internal class OwnerWorkTools(
                 val openable = file.uri != null && host.offerToOpen()
                 openOffer = if (openable) OpenOffer(host.sessionId, host.ownerTurn, file) else null
                 host.say(savedMessage(target, command, exported, openable))
+                if (openable) host.openOffered()
                 host.activity("EXPORT · gespeichert · ${file.displayName}")
                 host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FileSaved(file, target, null, null)))
             }.onFailure { error ->

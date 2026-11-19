@@ -12967,10 +12967,11 @@ class AgentActivity : Activity() {
             ownerMission.laneOutcome(OwnerMissionLane.WORK, outcome)
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.WORK.name, outcome)
         }
+        // Asked more than once per save and, through the desk, on every turn: the question only reads. The offer is
+        // counted where it is really said.
         override fun offerToOpen(): Boolean = !ownerMission.active &&
-            ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE).also {
-                if (it) ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
-            }
+            ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
+        override fun openOffered() = ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
 
         override fun reply(request: String, text: String, kind: at.heinz.deviceai.cognitive.NonModelReplyKind) =
             addNonModelReply(request, text, kind)
@@ -13191,10 +13192,10 @@ class AgentActivity : Activity() {
             ownerMission.laneOutcome(OwnerMissionLane.DESK, outcome)
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.DESK.name, outcome)
         }
-        override fun offerToOpen(): Boolean = !ownerMission.active &&
-            ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE).also {
-                if (it) ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
-            }
+        override fun offerToOpen(): Boolean = work.offerToOpen()
+        override fun openOffered() = work.openOffered()
+        // Whether a sequence hands over its steps is not a question of the owner's initiative level.
+        override fun inSequence(): Boolean = ownerMission.active
 
         override fun reply(request: String, text: String) {
             val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(localConversationContext, sessionId,
@@ -13852,8 +13853,12 @@ class AgentActivity : Activity() {
         override fun noBriefingYet(): Boolean =
             ownerWorkTools.deliverable?.kind != at.heinz.deviceai.cognitive.OwnerDeliverable.Kind.NEWS_BRIEFING
         override fun continueOn(result: at.heinz.deviceai.cognitive.OwnerDeliverable): Boolean = ownerWorkTools.continueOn(result)
+        // The offer at the end of a sequence passes the same initiative rule as the one after a single save.
         override fun offerOpening(result: at.heinz.deviceai.cognitive.OwnerDeliverable, file: OwnerSavedFile): Boolean =
-            ownerWorkTools.offerOpening(result, file)
+            ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE) &&
+                ownerWorkTools.offerOpening(result, file).also {
+                    if (it) ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
+                }
 
         override fun chain(order: String, plan: at.heinz.deviceai.cognitive.ChainPlan): Boolean {
             if (!startOwnerTaskChain(order, plan)) ownerMission.laneOutcome(OwnerMissionLane.CHAIN,
