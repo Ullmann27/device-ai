@@ -13229,12 +13229,14 @@ class AgentActivity : Activity() {
     internal val ownerSendGrants by lazy {
         at.heinz.deviceai.sending.OwnerSendGrants(at.heinz.deviceai.sending.OwnerSendPreferences(this)) { java.time.LocalDate.now() }
     }
+    private val OWNER_MAIL_LANE = "MAIL"
     /** Open questions of the owner lanes, served before the whole-sentence lanes (see [OwnerOpenQuestions]). */
     private val ownerOpenQuestions by lazy {
         OwnerOpenQuestions(session = { sessionId }, turn = { ownerReplyRevision })
             .lane(OwnerMissionLane.SEND.name, awaiting = { ownerSend.awaitingAnswer }) { ownerSend.handle(it) }
             .lane(OwnerMissionLane.DESK.name) { ownerDocumentDesk.handle(it) }
             .lane(OwnerMissionLane.WORK.name, awaiting = { ownerWorkTools.awaitingAnswer }) { ownerWorkTools.handle(it) }
+            .lane(OWNER_MAIL_LANE) { ownerMail.handle(it) }
     }
     internal val ownerRelations by lazy {
         at.heinz.deviceai.sending.OwnerRelations(at.heinz.deviceai.sending.OwnerRelationPreferences(this))
@@ -14117,7 +14119,11 @@ class AgentActivity : Activity() {
         override fun zone(): java.time.ZoneId = java.time.ZoneId.systemDefault()
         override fun deliverable(title: String, text: String, cloud: Boolean) =
             ownerWorkTools.noteDocumentDraft(title, text, complete = true, cloud = cloud)
-        override fun outcome(outcome: OwnerLaneOutcome) = continuumBriefing.laneOutcome(outcome)
+        override fun outcome(outcome: OwnerLaneOutcome) {
+            // A question of the mail lane (send confirmation, missing right, which mail) gets the next owner turn first.
+            ownerOpenQuestions.noteOutcome(OWNER_MAIL_LANE, outcome)
+            continuumBriefing.laneOutcome(outcome)
+        }
     }
 
     private fun runCloud(message: String?, outputs: List<ToolOutput>) = runCloud(message, outputs, command03ViewOwner())
