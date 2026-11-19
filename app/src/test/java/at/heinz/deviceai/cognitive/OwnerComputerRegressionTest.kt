@@ -64,20 +64,34 @@ class OwnerComputerRegressionTest {
             KNOWN_CHECK_MISSES, misses.keys.toSet())
     }
 
-    /** A sentence handed on is then read clause by clause: its orders are found, none is lost and none runs by itself. */
+    /**
+     * A sentence handed on is then read clause by clause: its orders are found, none is lost and none runs by itself.
+     * Since the second phase of the sequences (19.11.2026) „Öffne WhatsApp und schreib …“ is a complete sequence of
+     * ONE send step ([NOW_A_SEQUENCE]): both orders are in it, and the send lane carries it out with its own gates.
+     */
     @Test fun aSentenceHandedOnIsReadAsSeveralOrders() {
         var checked = 0
+        val sequences = sortedSetOf<String>()
         listOf("regression-computer.jsonl", "regression-computer-check.jsonl").forEach { name ->
             cases(name).filter { it.getString("category") == "further_order" && it.getString("id") !in KNOWN_CHECK_MISSES }.forEach { case ->
                 val input = case.getString("input")
                 val reading = checkNotNull(OwnerMissionPlanner.read(input, "Jarvis")) { input }
                 checked++
+                val plan = reading.plan
+                if (plan != null) {
+                    sequences += case.getString("id")
+                    assertTrue("${case.getString("id")}: „$input“ → ${plan.codes}", plan.codes.all { it.startsWith("SEND:WHATSAPP:") })
+                    return@forEach
+                }
                 assertTrue("${case.getString("id")}: „$input“ has ${reading.orders.size} orders ${reading.codes}", reading.orders.size >= 2)
-                assertEquals("${case.getString("id")}: „$input“ is no complete plan", null, reading.plan)
             }
         }
         assertTrue("too few: $checked", checked >= 12)
+        assertEquals(NOW_A_SEQUENCE, sequences)
     }
+
+    /** „Öffne WhatsApp und schreib <jemandem> <Text>“: opened and written by the send lane as one step. */
+    private val NOW_A_SEQUENCE: Set<String> = sortedSetOf("COM-001", "COMC-005")
 
     @Test fun theDevelopmentAndTheCheckSetShareNoSentence() {
         fun inputs(name: String) = cases(name).map { it.getString("input").trim().lowercase() }

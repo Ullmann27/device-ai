@@ -7,12 +7,13 @@ import java.util.Locale
  * owner's language, as one whole sentence.
  */
 internal enum class OwnerClauseAbility(val cannot: String) {
-    /** No lane reads, searches or forwards mails at all. */
-    MAIL("Deine E-Mails kann ich noch nicht lesen."),
-    /** The send lane takes the order alone; inside a sequence it comes with the next phase. */
-    SEND("Eine Nachricht kann ich in so einer Auftragsfolge noch nicht mitschicken."),
-    /** The computer lane and the app lane: opening another app, searching in it. */
-    APP("Eine andere App öffnen oder darin suchen kann ich in so einer Auftragsfolge noch nicht."),
+    /** Searching, reading and summarising mails are steps; answering, deleting, drafting and forwarding are not. */
+    MAIL("Diesen Mail-Auftrag kann ich in einer Auftragsfolge noch nicht ausführen – Mails suchen, lesen und zusammenfassen geht."),
+    /** A message is a step when it names WhatsApp and exactly one recipient; anything else stays the send lane's own order. */
+    SEND("Diese Nachricht kann ich in einer Auftragsfolge noch nicht mitschicken: Dafür brauche ich „auf WhatsApp“ und " +
+        "genau einen Empfänger; eine neue E-Mail schreibe ich nur als einzelnen Auftrag."),
+    /** Opening an app is a step; working inside another app (a search there) is the computer lane's own order. */
+    APP("In einer anderen App suchen oder etwas bedienen kann ich in so einer Auftragsfolge noch nicht – öffnen geht."),
     CALL("Einen Anruf kann ich in so einer Auftragsfolge noch nicht vorbereiten."),
     APPOINTMENTS("Deine Termine kann ich in so einer Auftragsfolge noch nicht nachsehen."),
     WEATHER("Das Wetter kann ich in so einer Auftragsfolge noch nicht abrufen."),
@@ -167,11 +168,30 @@ internal object OwnerMissionPartial {
             val sentence = when (val reading = clause.reading) {
                 is OwnerClauseReading.Later -> reading.ability.cannot
                 is OwnerClauseReading.NotYet -> reading.ability.cannot
+                // An order the app knows, but that a proposed plan left out: said as what it is.
+                is OwnerClauseReading.Step -> "Den Auftrag „${quoted(clause.text)}“ deckt der vorgeschlagene Plan nicht ab."
                 else -> "Für „${quoted(clause.text)}“ habe ich in einer Auftragsfolge noch keinen festen Ablauf."
             }
             if (said.add(sentence)) append(' ').append(sentence)
         }
         flush()
+        when (rest.size) {
+            0 -> append(' ').append(NOTHING_DONE)
+            1 -> append(" Soll ich den Rest machen: ").append(capital(rest.single().label)).append('?')
+            else -> append(" Soll ich den Rest so machen: ").append(rest.mapIndexed { index, step ->
+                "${index + 1}. ${capital(step.label)}" + if (index == rest.lastIndex) "?" else "."
+            }.joinToString(" "))
+        }
+    }
+
+    /**
+     * The same answer when the sentence is a complete plan but Gmail is not connected: the mail steps cannot run,
+     * [hanging] builds on them, [rest] does not and is offered.
+     */
+    fun withoutMail(hanging: List<String>, rest: List<OwnerMissionStep>): String = buildString {
+        append("Verstanden – ganz kann ich das noch nicht erledigen. Gmail ist noch nicht verbunden, deshalb kann ich deine Mails ")
+        append("nicht lesen. Sag „Verbinde Gmail“, dann geht auch das.")
+        if (hanging.isNotEmpty()) append(" Was darauf aufbaut, lasse ich deshalb auch: ").append(list(hanging.distinct())).append('.')
         when (rest.size) {
             0 -> append(' ').append(NOTHING_DONE)
             1 -> append(" Soll ich den Rest machen: ").append(capital(rest.single().label)).append('?')

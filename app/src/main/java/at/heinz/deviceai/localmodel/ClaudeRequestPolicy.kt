@@ -295,6 +295,12 @@ internal object ClaudePromptFrame {
 
     fun frame(prompt: String, isolatedWorker: Boolean, ownerFrame: () -> List<String> = { emptyList() }): Frame {
         if (isolatedWorker) return Frame(listOf(RUNTIME_PREFACE, ISOLATED_WORKER), prompt)
+        // The structured plan call: its constant instruction is a system block of its own behind the unchanged
+        // preface, and the user message is the owner's sentence alone. It is not the owner's chat turn, so it gets
+        // neither the ability catalogue nor a server tool, and it declares no tool at all (a text-only request).
+        val plan = at.heinz.deviceai.cognitive.OwnerMissionPlanCall.SYSTEM
+        if (prompt.startsWith(plan) && prompt.length > plan.length && prompt.substring(plan.length).isNotBlank())
+            return Frame(listOf(RUNTIME_PREFACE, plan), prompt.substring(plan.length))
         val stable = STABLE_PREFIXES.firstOrNull { prompt.startsWith(it) && prompt.length > it.length }
         val rest = stable?.let { prompt.substring(it.length) }
         // An empty or whitespace-only remainder is no user message; keep the prompt whole instead.

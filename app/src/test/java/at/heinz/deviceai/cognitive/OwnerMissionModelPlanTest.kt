@@ -60,7 +60,9 @@ class OwnerMissionModelPlanTest {
         assertEquals("der Modellplan hat 7 Zeilen", rejected((1..7).joinToString("\n") { "$it. Speichere das als PDF" }))
         assertEquals("Zeile 1 hält das Listenformat nicht ein", rejected("Gern, hier ist der Plan:\n1. Öffne das PDF Argon4\n2. Speichere das als PDF"))
         assertEquals("Zeile 2 ist kein Auftrag, den eine Lenkung kennt", rejected("1. Öffne das PDF Argon4\n2. Lösche das PDF Argon4"))
-        assertEquals("Zeile 2 ist kein Auftrag, den eine Lenkung kennt", rejected("1. Öffne das PDF Argon4\n2. Schreib Anna auf WhatsApp, dass es da ist"))
+        // A message is a step since the second phase – but never one a model adds or words: it must be the owner's own clause.
+        assertEquals("Schritt 2 nennt einen Nachrichtentext oder Empfänger, das du nicht gesagt hast",
+            rejected("1. Öffne das PDF Argon4\n2. Schreib Anna auf WhatsApp, dass es da ist"))
         assertEquals("Zeile 2 ist kein klarer Auftrag", rejected("1. Öffne das PDF Argon4\n2. Fass Seite 2 zusammen und speichere es nicht als Word"))
         assertEquals("die Schritte passen nicht aufeinander", rejected("1. Öffne das PDF Argon4\n2. Speichere das als PDF"))
     }
@@ -94,12 +96,13 @@ class OwnerMissionModelPlanTest {
     /** Review sentence 1: „1. Speichere das als PDF“ passed the check and ran at once on the last chat answer. */
     @Test fun aPlanForOneOfFourOrdersIsNeverAcceptedAndOffersNothingThatBuildsOnTheRest() {
         val checked = checkNotNull(uncovered(goalSentence, "1. Speichere das als PDF"))
-        assertEquals(listOf("NOTYET:MAIL", "LATER:SUMMARY", "EXPORT:PDF", "LATER:SEND"), checked.open.map { it.reading.code })
-        // The PDF would be made of mails nobody read: it is not offered, and nothing runs.
+        assertEquals(listOf("MAILFIND:INBOX", "SUM_IT", "EXPORT:PDF", "SEND:WHATSAPP:meinem Vater"), checked.open.map { it.reading.code })
+        // The PDF would be made of mails the plan never reads: it is not offered, and nothing runs.
         assertTrue(checked.rest.isEmpty())
         assertTrue(checked.open.single { it.reading.code == "EXPORT:PDF" }.dependsOnOpen)
         val said = OwnerMissionPartial.text(checked.open, checked.rest)
-        assertTrue(said, said.startsWith("Verstanden – ganz kann ich das noch nicht erledigen. Deine E-Mails kann ich noch nicht lesen."))
+        assertTrue(said, said.startsWith("Verstanden – ganz kann ich das noch nicht erledigen. Den Auftrag „Schau bitte meine E-Mails durch“ " +
+            "deckt der vorgeschlagene Plan nicht ab."))
         assertTrue(said, said.endsWith("Ich habe nichts davon ausgeführt."))
         assertFalse(said, said.contains("Erledigt"))
         // Not as a plan of several lines either: a mail to his father is not what he said.
@@ -110,10 +113,11 @@ class OwnerMissionModelPlanTest {
     /** Review sentence 3: „Speichere das als PDF / Öffne es“ was announced and saved the last chat answer after „Ja“. */
     @Test fun aPlanThatSkipsTheSearchAndTheSummaryIsNeverAccepted() {
         val checked = checkNotNull(uncovered(lawyer, "1. Speichere das als PDF\n2. Öffne es", single = false))
-        assertEquals(listOf("NOTYET:MAIL", "LATER:SUMMARY", "EXPORT:PDF", "OPEN_IT"), checked.open.map { it.reading.code })
+        assertEquals(listOf("MAILFIND:LATEST:Anwalt", "SUM_IT", "EXPORT:PDF", "OPEN_IT"), checked.open.map { it.reading.code })
         assertTrue(checked.rest.isEmpty())
-        assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Deine E-Mails kann ich noch nicht lesen. Was darauf aufbaut, " +
-            "lasse ich deshalb auch: zusammenfassen, als PDF speichern und öffnen. Ich habe nichts davon ausgeführt.",
+        assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Den Auftrag „Suche die letzte Mail von meinem Anwalt“ deckt " +
+            "der vorgeschlagene Plan nicht ab. Den Auftrag „fasse sie zusammen“ deckt der vorgeschlagene Plan nicht ab. Was darauf " +
+            "aufbaut, lasse ich deshalb auch: als PDF speichern und öffnen. Ich habe nichts davon ausgeführt.",
             OwnerMissionPartial.text(checked.open, checked.rest))
     }
 
