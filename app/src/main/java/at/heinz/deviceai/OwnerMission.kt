@@ -19,7 +19,7 @@ import at.heinz.deviceai.cognitive.OwnerTaskChainContinuation
 import java.util.Locale
 
 /** The owner lanes a mission step can run through. */
-internal enum class OwnerMissionLane { DESK, WORK, SEND, CHAIN }
+internal enum class OwnerMissionLane { DESK, WORK, SEND, CHAIN, DEEPCLEAN }
 
 /**
  * The small surface a mission needs from the Activity: the chat, the single work lane, and one entry per owner lane.
@@ -68,6 +68,8 @@ internal interface OwnerMissionHost {
     fun continueOn(result: OwnerDeliverable): Boolean
     /** See [OwnerWorkTools.offerOpening]. */
     fun offerOpening(result: OwnerDeliverable, file: OwnerSavedFile): Boolean = false
+    /** The storage lane's owner entry; true = it took [order]. */
+    fun deepClean(order: String): Boolean = false
     /** Starts a recognised task chain; true = it runs and [OwnerMissionDirector.chainSettled] follows. */
     fun chain(order: String, plan: ChainPlan): Boolean
     /** The owner's stop for the job that runs right now. */
@@ -432,6 +434,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                     is OwnerMissionStep.News -> host.work(step.order)
                     is OwnerMissionStep.Export, is OwnerMissionStep.Mail -> host.workOnHeld(step.order)
                     is OwnerMissionStep.FindFile -> host.chain(step.order, step.plan)
+                    is OwnerMissionStep.Storage -> host.deepClean(step.order)
                     else -> false
                 }
             } finally { dispatching = false }
@@ -519,6 +522,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 is OwnerMissionStep.OpenSaved -> host.work(OPEN_SAVED_ORDER)
                 is OwnerMissionStep.FindFile -> host.chain(step.order, step.plan)
                 is OwnerMissionStep.OpenFound -> { host.deskOpenFound(step.order, checkNotNull(found).name, found.folderHint); true }
+                is OwnerMissionStep.Storage -> host.deepClean(step.order)
                 else -> false
             }
         } finally { dispatching = false }
@@ -771,6 +775,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerMissionStep.OpenPdf, is OwnerMissionStep.PageSave, is OwnerMissionStep.OpenFound -> setOf(OwnerMissionLane.DESK)
         is OwnerMissionStep.Mail -> setOf(OwnerMissionLane.WORK, OwnerMissionLane.SEND)
         is OwnerMissionStep.FindFile -> setOf(OwnerMissionLane.CHAIN)
+        is OwnerMissionStep.Storage -> setOf(OwnerMissionLane.DEEPCLEAN)
         else -> setOf(OwnerMissionLane.WORK)
     }
 
@@ -785,6 +790,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerMissionStep.FindFile -> result is OwnerLaneResult.FileFound
         is OwnerMissionStep.OpenFound -> result is OwnerLaneResult.DocumentOpened
         is OwnerMissionStep.OpenSaved -> result is OwnerLaneResult.FileOpened
+        is OwnerMissionStep.Storage -> result is OwnerLaneResult.Storage && result.mode == step.mode
         else -> false
     }
 
@@ -809,6 +815,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerLaneResult.FileSaved -> "„${result.file.displayName}“ gespeichert (" + (result.location ?: result.file.folder) + ")" +
             if (result.verified == false) " – zurücklesen konnte ich die Datei nicht" else ""
         is OwnerLaneResult.FileOpened -> "„${result.file.displayName}“ geöffnet"
+        is OwnerLaneResult.Storage -> storageSentence(result)
         is OwnerLaneResult.Delivered -> {
             val attached = result.attachment?.let { if (it.displayName in named) ", diese Datei hängt an" else ", Anhang „${it.displayName}“" }
                 ?: ", ohne Anhang"
@@ -817,6 +824,20 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 OwnerLaneResult.Delivered.State.DRAFT -> "Entwurf an ${result.to} in ${result.channel} vorbereitet$attached – gesendet habe ich nichts"
                 OwnerLaneResult.Delivered.State.HANDED_OVER -> "E-Mail an ${result.to} im Mailprogramm vorbereitet$attached – gesendet habe ich nichts"
             }
+        }
+    }
+
+    /** The storage lane's measured figures in a few words – nothing it did not measure. */
+    private fun storageSentence(result: OwnerLaneResult.Storage): String {
+        val bytes = at.heinz.deviceai.deepclean.DeepCleanText::bytes
+        val free = result.freeAfter ?: result.freeBefore
+        return when (result.mode) {
+            "SAFE_CLEAN" -> (if (result.removedFiles == 0) "nichts Entbehrliches gefunden, nichts gelöscht" else
+                "${at.heinz.deviceai.deepclean.DeepCleanText.files(result.removedFiles)} entfernt (${bytes(result.removedBytes)} Dateigröße)") +
+                (if (result.freeBefore != null && result.freeAfter != null) ", Android misst ${bytes(result.freeBefore)} → ${bytes(result.freeAfter)} frei" else "")
+            "REPORT" -> "Platz gemeldet" + (free?.let { ": ${bytes(it)} frei" } ?: "")
+            "OPTIMISE" -> "Last geprüft, nichts gelöscht"
+            else -> "Speicher geprüft, nichts gelöscht" + (free?.let { " (${bytes(it)} frei)" } ?: "")
         }
     }
 

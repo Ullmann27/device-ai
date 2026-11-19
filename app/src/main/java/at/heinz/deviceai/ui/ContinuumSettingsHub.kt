@@ -31,6 +31,7 @@ object ContinuumSettingsHub {
         SELF_SEND("Gerät & Kontrolle", "Selbst senden", "WhatsApp und Gmail: Freigabe, Widerruf, Sende-Diagnose"),
         INCOMING_MESSAGES("Gerät & Kontrolle", "Eingehende Nachrichten melden",
             "WhatsApp und Gmail: bei neuer Nachricht fragen, vorlesen, antworten – ohne Werbung"),
+        STORAGE("Gerät & Kontrolle", "Speicher & Bereinigung", "Speicher prüfen, sicher bereinigen, Auswahl, Protokoll, Wiederherstellen"),
         SHIZUKU("Gerät & Kontrolle", "Shizuku-Verbindung", "Vorhandenen Gerätezugriff verbinden"),
         DIAGNOSTICS("Gerät & Kontrolle", "Diagnose & Protokolle", "Status und Fehlerberichte ansehen"),
         UPDATES("Gerät & Kontrolle", "App-Updates", "Verfügbare Continuum-Versionen prüfen"),

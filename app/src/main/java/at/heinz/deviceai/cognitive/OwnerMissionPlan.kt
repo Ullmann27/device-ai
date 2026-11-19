@@ -70,6 +70,21 @@ internal sealed interface OwnerMissionStep {
         override val label get() = "die gespeicherte Datei öffnen"
         override val code get() = "OPEN_SAVED"
     }
+
+    /**
+     * „Prüf meinen Speicher“, „bereinige die sicheren temporären Dateien“, „sag mir, wie viel Platz ich wieder habe“ –
+     * the storage lane. [mode] is the lane's own mode name; only modes that need no selection are steps of a plan.
+     */
+    data class Storage(override val order: String, val mode: String, override val source: Int? = null) : OwnerMissionStep {
+        override val label get() = when (mode) {
+            "SAFE_CLEAN" -> "die eindeutig entbehrlichen Dateien entfernen"
+            "REPORT" -> "sagen, wie viel Platz wieder frei ist"
+            "OPTIMISE" -> "die Last von Continuum prüfen"
+            "DEEP_ANALYSE" -> "den Speicher gründlich prüfen"
+            else -> "den Speicher prüfen"
+        }
+        override val code get() = "STORAGE:$mode"
+    }
 }
 
 /** The owner's sentence as an ordered plan. [request]: the whole sentence as he said it. */
@@ -109,7 +124,7 @@ internal object OwnerMissionPlanner {
     private val quote = Regex("[\"„“”«»]")
     private val blocked = Regex("(?iu)$S(?:nicht|nichts|nie|niemals|ohne|weder|kein\\p{L}*|oder|falls|wenn|sobald|bevor|nachdem)$E")
     /** No lane order without one of these: an ordinary question with commas never reaches the parsers. */
-    private val laneWord = Regex("(?iu)(?:pdf|nachricht|schlagzeil|news|meldung|weltgeschehen|speicher|sichere|export|mail|datei|word|docx)")
+    private val laneWord = Regex("(?iu)(?:pdf|nachricht|schlagzeil|news|meldung|weltgeschehen|speicher|sichere|export|mail|datei|word|docx|platz)")
     private val openIt = Regex("(?iu)^(?:öffne|öffnen|zeig|zeige)\\s+(?:mir\\s+)?(?:es|sie|ihn|das|die|diese|dieses|" +
         "(?:die|diese)\\s+(?:gefundene\\s+|gespeicherte\\s+|neue\\s+)?(?:datei|pdf|pdf-datei)|" +
         "(?:das|dieses)\\s+(?:gefundene\\s+|gespeicherte\\s+|neue\\s+)?(?:pdf|dokument|ergebnis))" +
@@ -214,6 +229,7 @@ internal object OwnerMissionPlanner {
         OwnerTaskChainRecipes.recognise(order, assistantName)?.let { plan ->
             return if (plan.recipe in findRecipes) OwnerMissionStep.FindFile(order, plan) else null
         }
+        storage(order, assistantName)?.let { return it }
         return if (openIt.matches(order)) OpenIt(order) else null
     }
 
@@ -275,6 +291,15 @@ internal object OwnerMissionPlanner {
             }
         }
         return steps
+    }
+
+    /** Storage orders that run without a selection; a restriction or an unsure clause keeps the sentence out of a plan. */
+    private val storageModes = setOf("ANALYSE", "DEEP_ANALYSE", "SAFE_CLEAN", "REPORT", "OPTIMISE")
+
+    private fun storage(order: String, assistantName: String?): OwnerMissionStep.Storage? {
+        val command = at.heinz.deviceai.deepclean.DeepCleanCommands.parse(order, assistantName) ?: return null
+        if (command.mode.name !in storageModes || command.keep.isNotEmpty() || command.noDelete || command.unsure) return null
+        return OwnerMissionStep.Storage(order, command.mode.name)
     }
 
     /** Only mails and openings so far, all on the chat's existing result: the next one may refer to it as well. */

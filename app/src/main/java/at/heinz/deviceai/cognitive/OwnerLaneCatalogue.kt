@@ -51,7 +51,14 @@ internal object OwnerLaneCatalogue {
         Ability("research", "Im Web recherchieren und Quellen nennen",
             listOf("Recherchiere <Thema>"), "Internetfreigabe des Besitzers", mapped = false),
         Ability("system", "Das Handy im Systemzentrum analysieren (Speicher, Wärme, Akku, eigene Diagnoseablage)",
-            listOf("Analysiere mein Handy"), "nur lesend; Bereinigen nur mit eigener Bestätigung des Besitzers", mapped = false))
+            listOf("Analysiere mein Handy"), "nur lesend; Bereinigen nur mit eigener Bestätigung des Besitzers", mapped = false),
+        Ability("storage", "Den Speicher prüfen, sicher bereinigen, gründlich nach großen Dateien und Duplikaten durchsuchen und " +
+            "sagen, wie viel Platz wirklich frei wurde",
+            listOf("Schau, was unnötig Speicher verbraucht", "Bereinige mein Handy", "Mach eine Tiefenbereinigung",
+                "Wie viel Platz habe ich wieder?"),
+            "automatisch nur Continuums eigene, eindeutig entbehrliche Zwischendateien; alles andere nur nach Auswahl des " +
+                "Besitzers und über Androids eigenen Papierkorb-Dialog; persönliche Dateien, Modelle und Gedächtnis nie",
+            mapped = false))
 
     /** One line per ability for a prompt: what it is, how the owner says it, what guards it. */
     fun lines(): List<String> = abilities.map { ability ->

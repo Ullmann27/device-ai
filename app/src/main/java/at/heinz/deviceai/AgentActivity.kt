@@ -2495,6 +2495,8 @@ class AgentActivity : Activity() {
             // What the approved computer task really did (tap target, text, scroll, confirmed or not) for the monitor.
             .put("computerWork", command03ComputerWork.snapshot(scope.sessionId, homeView?.state?.computer,
                 computerController?.awaitingConsent == true) ?: org.json.JSONObject.NULL)
+            // The storage lane's phase, progress and measured figures (schema continuum.deepclean.v1, no file names).
+            .put("deepClean", deepClean.stage.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
                 .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
             .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
@@ -3947,6 +3949,7 @@ class AgentActivity : Activity() {
             "mobile-builder" -> openMobileBuilder()
             "brain" -> showBrainScene()
             "stop" -> cancelLocalRequest()
+            "storage-clean" -> deepCleanWiring.second.openPanel()
             else -> menuNavigator.navigate(target)
         }
     }
@@ -4689,6 +4692,7 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SELF_SEND -> showOwnerSendSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.INCOMING_MESSAGES -> showIncomingMessageSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.SHIZUKU -> showShizukuConnectionDialog()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.STORAGE -> deepCleanWiring.second.openPanel()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.DIAGNOSTICS -> showDiagnosticsCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.UPDATES ->
                     startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
@@ -8079,6 +8083,8 @@ class AgentActivity : Activity() {
     private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
         // „Continuum Wärmemessung“ and, while it runs, „Stopp“; a no-op for every other text.
         if (heatMeasurement.consumeInput(input.text.toString())) return
+        // Storage lane: „Stopp“ while its scan or clean-up runs ends it before the next file.
+        if (selectedBot == null && deepClean.intercept(input.text.toString())) return
         // Field finding 19.11.2026: keyboard dots where spaces belong („Erstelle.bitte eine pdf und zeig sie mir.dann“) are
         // repaired once, before any route reads the turn; file names, addresses, numbers and abbreviations stay.
         if (selectedBot == null && !neuralCoach.isActive()) at.heinz.deviceai.cognitive.OwnerInputRepair
@@ -8196,6 +8202,9 @@ class AgentActivity : Activity() {
         // Deterministic, whole-utterance, fail closed; an order of the news lane stays a news order.
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
             computerController?.active != true && continuumBriefing.handle(request)) return
+        // Storage lane („Bereinige mein Handy“, „Schau, was unnötig Speicher verbraucht“, „Mach eine Tiefenbereinigung“).
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && deepClean.handle(request)) return
         if (clarifiedAppName == null && selectedBot == null && tryStartComputerRequest(request, clarifiedComputer)) return
         // Owner work tools: „Fass mir die Nachrichten von heute zusammen“, then „speichere das als PDF“ / „schick das
         // per Mail an …“. Deterministic and fail closed; before the clock, document and research lanes can guess.
@@ -13521,6 +13530,7 @@ class AgentActivity : Activity() {
         override fun deskCorrect(request: String): Boolean = ownerDocumentDesk.correct(request)
         override fun openDocumentName(): String? = localConversationContext.document(sessionId)?.name
         override fun work(order: String): Boolean = ownerWorkTools.handle(order)
+        override fun deepClean(order: String): Boolean = this@AgentActivity.deepClean.handle(order)
         override fun noBriefingYet(): Boolean =
             ownerWorkTools.deliverable?.kind != at.heinz.deviceai.cognitive.OwnerDeliverable.Kind.NEWS_BRIEFING
         override fun continueOn(result: at.heinz.deviceai.cognitive.OwnerDeliverable): Boolean = ownerWorkTools.continueOn(result)
@@ -13846,6 +13856,16 @@ class AgentActivity : Activity() {
         }
         override fun store(): at.heinz.deviceai.briefing.ContinuumBriefingStore = continuumBriefingStore
     }
+
+    // ── Storage lane („Speicher & Bereinigung“) – everything lives in at.heinz.deviceai.deepclean ──────────────
+    // Thin wiring only: the lane borrows the briefing adapter's chat, owner-turn and busy-lane paths.
+    private val deepCleanWiring by lazy {
+        at.heinz.deviceai.deepclean.AndroidDeepCleanHost.create(this, ContinuumBriefingAdapter(),
+            stage = { mainHandler.post { scheduleCommand03HtmlState() } },
+            unloadModel = { if (::localRuntime.isInitialized && localRuntime.loadedModel != null) { unloadModel(); null } else "Es ist kein lokales Modell geladen." },
+            tone = { ownerTalk.tone == at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL })
+    }
+    internal val deepClean: at.heinz.deviceai.deepclean.DeepCleanDirector get() = deepCleanWiring.first
 
     private fun runCloud(message: String?, outputs: List<ToolOutput>) = runCloud(message, outputs, command03ViewOwner())
 
@@ -16243,6 +16263,7 @@ class AgentActivity : Activity() {
     private fun cancelLocalRequest() {
         // The owner's STOP also ends a mission: its remaining steps are not started.
         ownerMission.stopRequested()
+        deepClean.stop()
         cancelPendingConversationSelection()
         cancelLocalRequest(preserveContinuousMode = false, announceDraftStop = true)
     }
@@ -19014,6 +19035,7 @@ class AgentActivity : Activity() {
             return
         }
         super.onActivityResult(requestCode, resultCode, data)
+        if (deepCleanWiring.second.activityResult(requestCode, resultCode)) return
         when (requestCode) {
             SYSTEM_FILES_REQUEST -> {
                 val expectedSession = systemPickerSession
