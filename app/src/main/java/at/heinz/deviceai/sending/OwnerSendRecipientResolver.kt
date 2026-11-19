@@ -74,6 +74,29 @@ internal object OwnerSendRecipientResolver {
         }
     }
 
+    /**
+     * „Ruf Anna an“ (briefing lane): the number the dialer is opened with – exactly one number of exactly one
+     * contact, or a question. Same name matching and same preference for mobile numbers as [whatsapp]; unlike there,
+     * a number stored without country code is usable, because the phone dials it as stored. [Candidate.value] is the
+     * number to dial.
+     */
+    fun dial(phrase: String, rows: List<OwnerContactPhone>): Resolution {
+        val query = asked(phrase)
+        if (query.isEmpty()) return Resolution.NotFound(phrase.trim())
+        val matched = rows.filter { matches(query, it.displayName) }
+        if (matched.isEmpty()) return Resolution.NotFound(phrase.trim())
+        val perContact = matched.groupBy { it.contactId }.values.map { numbers -> numbers.filter { it.mobile }.ifEmpty { numbers } }
+        val pairs = perContact.flatten().mapNotNull { row ->
+            val number = (row.e164?.trim()?.takeIf { it.startsWith("+") } ?: row.raw.trim()).filter { it.isDigit() || it == '+' }
+            if (number.count(Char::isDigit) < 3) null else row to number
+        }.distinctBy { tokens(it.first.displayName) to it.second.filter(Char::isDigit) }
+        return when (pairs.size) {
+            0 -> Resolution.Unusable("Bei ${matched.first().displayName} ist keine wählbare Nummer gespeichert. Angerufen habe ich niemanden.")
+            1 -> Resolution.Resolved(candidates(pairs).single())
+            else -> Resolution.Ambiguous(phrase.trim(), candidates(pairs), pairs.size)
+        }
+    }
+
     fun mail(phrase: String, rows: List<OwnerContactMail>): Resolution {
         val query = asked(phrase)
         if (query.isEmpty()) return Resolution.NotFound(phrase.trim())
