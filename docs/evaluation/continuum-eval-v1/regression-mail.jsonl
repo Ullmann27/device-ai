@@ -1,0 +1,161 @@
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-001", "input": "Verbinde Gmail", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-002", "input": "Gmail verbinden", "note": "Infinitiv", "runner": "mail_route"}
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-003", "input": "Verbinde mein Gmail-Konto", "note": "mit Konto", "runner": "mail_route"}
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-004", "input": "Bitte verbinde mein Gmail", "note": "höflich", "runner": "mail_route"}
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-005", "input": "Jarvis, verbinde Gmail", "note": "mit Anrede", "runner": "mail_route"}
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-006", "input": "Verbinde mein Google-Konto für Gmail", "note": "Google-Konto", "runner": "mail_route"}
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-007", "input": "Verbinde Gmail erneut", "note": "erneut", "runner": "mail_route"}
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-008", "input": "Gmail neu verbinden", "note": "neu verbinden", "runner": "mail_route"}
+{"category": "connect", "context": "NONE", "expect": {"route": "CONNECT"}, "id": "MAIL-009", "input": "Kannst du mein Gmail verbinden?", "note": "Bitte als Frage", "runner": "mail_route"}
+{"category": "disconnect", "context": "NONE", "expect": {"route": "DISCONNECT"}, "id": "MAIL-010", "input": "Trenne Gmail", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "disconnect", "context": "NONE", "expect": {"route": "DISCONNECT"}, "id": "MAIL-011", "input": "Gmail trennen", "note": "Infinitiv", "runner": "mail_route"}
+{"category": "disconnect", "context": "NONE", "expect": {"route": "DISCONNECT"}, "id": "MAIL-012", "input": "Trenne die Gmail-Verbindung", "note": "Verbindung", "runner": "mail_route"}
+{"category": "disconnect", "context": "NONE", "expect": {"route": "DISCONNECT"}, "id": "MAIL-013", "input": "Gmail-Verbindung trennen", "note": "Infinitiv", "runner": "mail_route"}
+{"category": "disconnect", "context": "NONE", "expect": {"route": "DISCONNECT"}, "id": "MAIL-014", "input": "Trenn bitte mein Gmail-Konto", "note": "Kurzform", "runner": "mail_route"}
+{"category": "disconnect", "context": "NONE", "expect": {"route": "DISCONNECT"}, "id": "MAIL-015", "input": "Gmail abmelden", "note": "abmelden", "runner": "mail_route"}
+{"category": "status", "context": "NONE", "expect": {"route": "STATUS"}, "id": "MAIL-016", "input": "Ist Gmail verbunden?", "note": "Frage", "runner": "mail_route"}
+{"category": "status", "context": "NONE", "expect": {"route": "STATUS"}, "id": "MAIL-017", "input": "Gmail-Status", "note": "Stichwort", "runner": "mail_route"}
+{"category": "status", "context": "NONE", "expect": {"route": "STATUS"}, "id": "MAIL-018", "input": "Mit welchem Konto ist Gmail verbunden?", "note": "Konto", "runner": "mail_route"}
+{"category": "status", "context": "NONE", "expect": {"route": "STATUS"}, "id": "MAIL-019", "input": "Zeig mir die Gmail-Verbindung", "note": "zeigen", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-020", "input": "Zeig mir neue Mails", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-021", "input": "Was ist neu in meinem Postfach", "note": "Besitzerwort ohne Fragezeichen", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-022", "input": "Was ist neu in meinem Postfach?", "note": "Frage", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-023", "input": "Habe ich neue Mails?", "note": "Frage", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-024", "input": "Hab ich neue E-Mails?", "note": "umgangssprachlich", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-025", "input": "Gibt es neue Mails?", "note": "Frage", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-026", "input": "Neue Mails", "note": "Stichwort", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-027", "input": "Zeig mir meine ungelesenen Mails", "note": "ungelesen", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-028", "input": "Zeig meine neuen E-Mails", "note": "E-Mails", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-029", "input": "Was gibt's Neues in Gmail?", "note": "Gmail genannt", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-030", "input": "Sind neue Mails da?", "note": "Frage", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-031", "input": "Jarvis, zeig mir neue Mails", "note": "Anrede", "runner": "mail_route"}
+{"category": "new", "context": "NONE", "expect": {"route": "NEW"}, "id": "MAIL-032", "input": "Lies mir meine neuen Mails vor", "note": "vorlesen der Liste", "runner": "mail_route"}
+{"category": "important", "context": "NONE", "expect": {"route": "IMPORTANT"}, "id": "MAIL-033", "input": "Was sind meine wichtigsten Mails?", "note": "Frage", "runner": "mail_route"}
+{"category": "important", "context": "NONE", "expect": {"route": "IMPORTANT"}, "id": "MAIL-034", "input": "Zeig mir die wichtigen Mails", "note": "zeigen", "runner": "mail_route"}
+{"category": "important", "context": "NONE", "expect": {"route": "IMPORTANT"}, "id": "MAIL-035", "input": "Welche Mails sind wichtig?", "note": "Frage", "runner": "mail_route"}
+{"category": "important", "context": "NONE", "expect": {"route": "SUMMARIZE:IMPORTANT"}, "id": "MAIL-036", "input": "Fass meine wichtigsten Mails zusammen", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "important", "context": "NONE", "expect": {"route": "SUMMARIZE:NEW"}, "id": "MAIL-037", "input": "Fass meine neuen Mails zusammen", "note": "neu", "runner": "mail_route"}
+{"category": "important", "context": "NONE", "expect": {"route": "SUMMARIZE:NEW"}, "id": "MAIL-038", "input": "Fass mein Postfach zusammen", "note": "Postfach", "runner": "mail_route"}
+{"category": "important", "context": "NONE", "expect": {"route": "IMPORTANT_WHY"}, "id": "MAIL-039", "input": "Wie bestimmst du, welche Mails wichtig sind?", "note": "Kriterien ohne Liste", "runner": "mail_route"}
+{"category": "important", "context": "LIST", "expect": {"route": "IMPORTANT_WHY"}, "id": "MAIL-040", "input": "Warum sind die wichtig?", "note": "nach der Liste", "runner": "mail_route"}
+{"category": "important", "context": "LIST", "expect": {"route": "IMPORTANT_WHY"}, "id": "MAIL-041", "input": "Nach welchen Kriterien?", "note": "nach der Liste", "runner": "mail_route"}
+{"category": "important", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-042", "input": "Warum sind die wichtig?", "note": "ohne Liste kein Mailbezug", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_FROM:Anna"}, "id": "MAIL-043", "input": "Suche Mails von Anna", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_FROM:Anna Beispiel"}, "id": "MAIL-044", "input": "Such Mails von Anna Beispiel", "note": "Vor- und Nachname", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_FROM:anna@example.org"}, "id": "MAIL-045", "input": "Suche E-Mails von anna@example.org", "note": "Adresse", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_FROM:Hausverwaltung"}, "id": "MAIL-046", "input": "Finde Mails von der Hausverwaltung", "note": "Artikel", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_FROM:Peter"}, "id": "MAIL-047", "input": "Zeig mir Mails von Peter", "note": "zeigen", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_FROM:Maria"}, "id": "MAIL-048", "input": "Suche alle Mails von Maria", "note": "alle", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_ABOUT:Rechnung"}, "id": "MAIL-049", "input": "Such in Gmail nach Rechnung", "note": "in Gmail nach", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_ABOUT:Rechnung"}, "id": "MAIL-050", "input": "Suche Mails zu Rechnung", "note": "zu Stichwort", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_ABOUT:Wärmepumpe"}, "id": "MAIL-051", "input": "Suche Mails zum Thema Wärmepumpe", "note": "zum Thema", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_ABOUT:Steuererklärung"}, "id": "MAIL-052", "input": "Suche Mails über die Steuererklärung", "note": "über", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_ABOUT:Vertrag"}, "id": "MAIL-053", "input": "Finde E-Mails mit dem Stichwort Vertrag", "note": "Stichwort", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_ABOUT:Flugticket"}, "id": "MAIL-054", "input": "Suche in meinen Mails nach Flugticket", "note": "in meinen Mails nach", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_DAY:YESTERDAY"}, "id": "MAIL-055", "input": "Suche Mails von gestern", "note": "Tag statt Absender", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_DAY:TODAY"}, "id": "MAIL-056", "input": "Zeig mir die Mails von heute", "note": "heute", "runner": "mail_route"}
+{"category": "search", "context": "NONE", "expect": {"route": "SEARCH_FROM:Anna|ABOUT:Rechnung"}, "id": "MAIL-057", "input": "Suche Mails von Anna zu Rechnung", "note": "Absender und Stichwort", "runner": "mail_route"}
+{"category": "latest", "context": "NONE", "expect": {"route": "LATEST_FROM:Anna"}, "id": "MAIL-058", "input": "Suche die letzte Mail von Anna", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "latest", "context": "NONE", "expect": {"route": "LATEST_FROM:Peter"}, "id": "MAIL-059", "input": "Zeig mir die letzte Mail von Peter", "note": "zeigen", "runner": "mail_route"}
+{"category": "latest", "context": "NONE", "expect": {"route": "LATEST_FROM:Maria"}, "id": "MAIL-060", "input": "Was war die letzte Mail von Maria?", "note": "Frage", "runner": "mail_route"}
+{"category": "latest", "context": "NONE", "expect": {"route": "READ_LATEST_FROM:Anna"}, "id": "MAIL-061", "input": "Lies mir die letzte Mail von Anna vor", "note": "gleich vorlesen", "runner": "mail_route"}
+{"category": "latest", "context": "NONE", "expect": {"route": "LATEST_FROM:Bank"}, "id": "MAIL-062", "input": "Zeig mir die neueste Mail von der Bank", "note": "neueste", "runner": "mail_route"}
+{"category": "read", "context": "MAIL", "expect": {"route": "READ"}, "id": "MAIL-063", "input": "Lies die Mail vor", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "read", "context": "LIST", "expect": {"route": "READ"}, "id": "MAIL-064", "input": "Lies die Mail vor", "note": "aus der Liste: eine oder Rückfrage", "runner": "mail_route"}
+{"category": "read", "context": "NONE", "expect": {"route": "READ"}, "id": "MAIL-065", "input": "Lies die Mail vor", "note": "ohne Kontext: Rückfrage der Lenkung", "runner": "mail_route"}
+{"category": "read", "context": "MAIL", "expect": {"route": "READ_THREAD"}, "id": "MAIL-066", "input": "Lies den Verlauf vor", "note": "Verlauf", "runner": "mail_route"}
+{"category": "read", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-067", "input": "Lies den Verlauf vor", "note": "ohne Mailkontext kein Mailbezug", "runner": "mail_route"}
+{"category": "read", "context": "MAIL", "expect": {"route": "READ"}, "id": "MAIL-068", "input": "Lies sie vor", "note": "Pronomen", "runner": "mail_route"}
+{"category": "read", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-069", "input": "Lies sie vor", "note": "Pronomen ohne Bezug", "runner": "mail_route"}
+{"category": "read", "context": "LIST", "expect": {"route": "READ:2"}, "id": "MAIL-070", "input": "Lies die zweite Mail vor", "note": "Nummer", "runner": "mail_route"}
+{"category": "read", "context": "LIST", "expect": {"route": "READ:1"}, "id": "MAIL-071", "input": "Öffne die erste Mail", "note": "öffnen", "runner": "mail_route"}
+{"category": "read", "context": "MAIL", "expect": {"route": "READ"}, "id": "MAIL-072", "input": "Lies mir die Mail vor", "note": "mir", "runner": "mail_route"}
+{"category": "read", "context": "MAIL", "expect": {"route": "READ_THREAD"}, "id": "MAIL-073", "input": "Lies den ganzen Verlauf vor", "note": "ganzer Verlauf", "runner": "mail_route"}
+{"category": "read", "context": "MAIL", "expect": {"route": "READ"}, "id": "MAIL-074", "input": "Was steht in der Mail?", "note": "Frage nach Inhalt", "runner": "mail_route"}
+{"category": "pick", "context": "LIST", "expect": {"route": "PICK:2"}, "id": "MAIL-075", "input": "die zweite", "note": "Ordinalzahl", "runner": "mail_route"}
+{"category": "pick", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-076", "input": "die zweite", "note": "ohne Liste", "runner": "mail_route"}
+{"category": "pick", "context": "LIST", "expect": {"route": "PICK:1"}, "id": "MAIL-077", "input": "Die erste", "note": "groß", "runner": "mail_route"}
+{"category": "pick", "context": "LIST", "expect": {"route": "PICK:3"}, "id": "MAIL-078", "input": "Nummer drei", "note": "Nummer", "runner": "mail_route"}
+{"category": "pick", "context": "LIST", "expect": {"route": "PICK_DAY:YESTERDAY"}, "id": "MAIL-079", "input": "die von gestern", "note": "Tag", "runner": "mail_route"}
+{"category": "pick", "context": "LIST", "expect": {"route": "PICK_FROM:Anna"}, "id": "MAIL-080", "input": "die von Anna", "note": "Absender", "runner": "mail_route"}
+{"category": "pick", "context": "LIST", "expect": {"route": "PICK:LAST"}, "id": "MAIL-081", "input": "die letzte", "note": "letzte", "runner": "mail_route"}
+{"category": "pick", "context": "LIST", "expect": {"route": "PICK:4"}, "id": "MAIL-082", "input": "die vierte bitte", "note": "bitte", "runner": "mail_route"}
+{"category": "summarize", "context": "MAIL", "expect": {"route": "SUMMARIZE"}, "id": "MAIL-083", "input": "Fass sie zusammen", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "summarize", "context": "LIST", "expect": {"route": "SUMMARIZE"}, "id": "MAIL-084", "input": "Fass sie zusammen", "note": "Liste", "runner": "mail_route"}
+{"category": "summarize", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-085", "input": "Fass sie zusammen", "note": "ohne Bezug gehört sie nicht hierher", "runner": "mail_route"}
+{"category": "summarize", "context": "MAIL", "expect": {"route": "SUMMARIZE"}, "id": "MAIL-086", "input": "Fass die Mail zusammen", "note": "Mail", "runner": "mail_route"}
+{"category": "summarize", "context": "NONE", "expect": {"route": "SUMMARIZE"}, "id": "MAIL-087", "input": "Fass die Mail zusammen", "note": "Mail genannt: Rückfrage der Lenkung", "runner": "mail_route"}
+{"category": "summarize", "context": "MAIL", "expect": {"route": "SUMMARIZE_THREAD"}, "id": "MAIL-088", "input": "Fass den Verlauf zusammen", "note": "Verlauf", "runner": "mail_route"}
+{"category": "summarize", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-089", "input": "Fass den Verlauf zusammen", "note": "Verlauf ohne Mailbezug", "runner": "mail_route"}
+{"category": "summarize", "context": "MAIL", "expect": {"route": "SUMMARIZE"}, "id": "MAIL-090", "input": "Mach mir eine Zusammenfassung davon", "note": "davon", "runner": "mail_route"}
+{"category": "summarize", "context": "LIST", "expect": {"route": "SUMMARIZE:2"}, "id": "MAIL-091", "input": "Fass die zweite Mail zusammen", "note": "Nummer", "runner": "mail_route"}
+{"category": "deadlines", "context": "MAIL", "expect": {"route": "DEADLINES"}, "id": "MAIL-092", "input": "Was steht da wegen Fristen?", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "deadlines", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-093", "input": "Was steht da wegen Fristen?", "note": "ohne Mailbezug", "runner": "mail_route"}
+{"category": "deadlines", "context": "MAIL", "expect": {"route": "DEADLINES"}, "id": "MAIL-094", "input": "Was steht da wegen Terminen?", "note": "Termine", "runner": "mail_route"}
+{"category": "deadlines", "context": "MAIL", "expect": {"route": "DEADLINES"}, "id": "MAIL-095", "input": "Gibt es darin eine Frist?", "note": "darin", "runner": "mail_route"}
+{"category": "deadlines", "context": "NONE", "expect": {"route": "DEADLINES"}, "id": "MAIL-096", "input": "Steht in der Mail eine Frist?", "note": "Mail genannt", "runner": "mail_route"}
+{"category": "deadlines", "context": "NONE", "expect": {"route": "DEADLINES:INBOX"}, "id": "MAIL-097", "input": "Welche Fristen stehen in meinen Mails?", "note": "über das Postfach", "runner": "mail_route"}
+{"category": "draft", "context": "NONE", "expect": {"route": "DRAFT:Anna|Ich komme am Montag."}, "id": "MAIL-098", "input": "Schreib einen Entwurf an Anna: Ich komme am Montag.", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "draft", "context": "NONE", "expect": {"route": "DRAFT:anna@example.org|Danke für die Unterlagen"}, "id": "MAIL-099", "input": "Schreib einen Mail-Entwurf an anna@example.org: Danke für die Unterlagen", "note": "Adresse", "runner": "mail_route"}
+{"category": "draft", "context": "NONE", "expect": {"route": "DRAFT:Peter|Treffen wir uns um 10?"}, "id": "MAIL-100", "input": "Erstelle einen Entwurf an Peter: Treffen wir uns um 10?", "note": "erstelle", "runner": "mail_route"}
+{"category": "draft", "context": "NONE", "expect": {"route": "DRAFT:Maria|Bitte ruf mich zurück."}, "id": "MAIL-101", "input": "Schreib eine Mail an Maria: Bitte ruf mich zurück.", "note": "Mail heißt Entwurf", "runner": "mail_route"}
+{"category": "draft", "context": "NONE", "expect": {"route": "DRAFT:Anna|Ich bin morgen nicht da."}, "id": "MAIL-102", "input": "Schreib Anna eine Mail: Ich bin morgen nicht da.", "note": "Dativ", "runner": "mail_route"}
+{"category": "draft", "context": "NONE", "expect": {"route": "DRAFT:anna@example.org|Ich komme später"}, "id": "MAIL-103", "input": "Entwirf eine Mail an anna@example.org, dass ich später komme", "note": "indirekte Rede", "runner": "mail_route"}
+{"category": "draft", "context": "NONE", "expect": {"route": "DRAFT:Anna|?"}, "id": "MAIL-104", "input": "Schreib einen Entwurf an Anna", "note": "ohne Text: Rückfrage", "runner": "mail_route"}
+{"category": "reply", "context": "MAIL", "expect": {"route": "REPLY:Ich habe am Freitag Zeit"}, "id": "MAIL-105", "input": "Antworte ihm, dass ich am Freitag Zeit habe", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "reply", "context": "MAIL", "expect": {"route": "REPLY:Danke, passt."}, "id": "MAIL-106", "input": "Antworte ihr: Danke, passt.", "note": "Doppelpunkt", "runner": "mail_route"}
+{"category": "reply", "context": "MAIL", "expect": {"route": "REPLY:Ich melde mich morgen."}, "id": "MAIL-107", "input": "Antworte darauf: Ich melde mich morgen.", "note": "darauf", "runner": "mail_route"}
+{"category": "reply", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-108", "input": "Antworte ihm, dass ich am Freitag Zeit habe", "note": "ohne Mail kein Empfänger", "runner": "mail_route"}
+{"category": "reply", "context": "MAIL", "expect": {"route": "REPLY:?"}, "id": "MAIL-109", "input": "Antworte ihm", "note": "ohne Text", "runner": "mail_route"}
+{"category": "send", "context": "DRAFT", "expect": {"route": "SEND"}, "id": "MAIL-110", "input": "Schick die Mail ab", "note": "Besitzerwort", "runner": "mail_route"}
+{"category": "send", "context": "NONE", "expect": {"route": "SEND"}, "id": "MAIL-111", "input": "Schick die Mail ab", "note": "ohne Entwurf: ehrliche Antwort der Lenkung", "runner": "mail_route"}
+{"category": "send", "context": "DRAFT", "expect": {"route": "SEND"}, "id": "MAIL-112", "input": "Sende den Entwurf", "note": "Entwurf", "runner": "mail_route"}
+{"category": "send", "context": "DRAFT", "expect": {"route": "SEND"}, "id": "MAIL-113", "input": "Schick den Entwurf ab", "note": "ab", "runner": "mail_route"}
+{"category": "send", "context": "DRAFT", "expect": {"route": "SEND"}, "id": "MAIL-114", "input": "Sende die Mail jetzt", "note": "jetzt", "runner": "mail_route"}
+{"category": "confirm", "context": "CONFIRM", "expect": {"route": "CONFIRM:YES"}, "id": "MAIL-115", "input": "Ja, abschicken", "note": "Bestätigung", "runner": "mail_route"}
+{"category": "confirm", "context": "CONFIRM", "expect": {"route": "CONFIRM:YES"}, "id": "MAIL-116", "input": "Ja", "note": "Ja", "runner": "mail_route"}
+{"category": "confirm", "context": "CONFIRM", "expect": {"route": "CONFIRM:YES"}, "id": "MAIL-117", "input": "Senden", "note": "Senden", "runner": "mail_route"}
+{"category": "confirm", "context": "CONFIRM", "expect": {"route": "CONFIRM:NO"}, "id": "MAIL-118", "input": "Nein", "note": "Nein", "runner": "mail_route"}
+{"category": "confirm", "context": "CONFIRM", "expect": {"route": "CONFIRM:NO"}, "id": "MAIL-119", "input": "Nein, doch nicht", "note": "doch nicht", "runner": "mail_route"}
+{"category": "confirm", "context": "CONFIRM", "expect": {"route": "NONE"}, "id": "MAIL-120", "input": "Wie spät ist es?", "note": "andere Frage ist kein Ja", "runner": "mail_route"}
+{"category": "stop", "context": "LIST", "expect": {"route": "STOP"}, "id": "MAIL-121", "input": "Stopp", "note": "Stoppwort", "runner": "mail_route"}
+{"category": "stop", "context": "DRAFT", "expect": {"route": "STOP"}, "id": "MAIL-122", "input": "Abbrechen", "note": "abbrechen", "runner": "mail_route"}
+{"category": "stop", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-123", "input": "Stopp", "note": "ohne Mailarbeit", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-124", "input": "Schreib Anna auf WhatsApp, ich komme später", "keeps": "SEND", "note": "WhatsApp-Lenkung", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-125", "input": "Schick Peter eine WhatsApp: bin gleich da", "keeps": "SEND", "note": "WhatsApp-Lenkung", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-126", "input": "Antworte Anna auf WhatsApp, dass ich später komme", "note": "WhatsApp genannt", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-127", "input": "Schick das per Mail an Anna", "keeps": "SHARE", "note": "bestehende Weitergabe", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-128", "input": "Schick die Zusammenfassung per Mail an anna@example.org", "keeps": "SHARE", "note": "bestehende Weitergabe", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-129", "input": "Schick das per E-Mail an Peter", "keeps": "SHARE", "note": "bestehende Weitergabe", "runner": "mail_route"}
+{"category": "negative", "context": "MAIL", "expect": {"route": "NONE"}, "id": "MAIL-130", "input": "Schick das per Mail an Anna", "keeps": "SHARE", "note": "auch mit offener Mail bleibt es die Weitergabe", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-131", "input": "Öffne das PDF Argon4", "keeps": "DESK", "note": "Dokumentenablage", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-132", "input": "Speichere das als PDF", "keeps": "EXPORT", "note": "Export", "runner": "mail_route"}
+{"category": "negative", "context": "MAIL", "expect": {"route": "NONE"}, "id": "MAIL-133", "input": "Speichere das als PDF", "keeps": "EXPORT", "note": "Export auch nach einer Mail", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-134", "input": "Erstelle eine PDF davon", "keeps": "EXPORT", "note": "Export", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-135", "input": "Welche Termine habe ich heute?", "keeps": "BRIEFING", "note": "Kalender", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-136", "input": "Was steht heute an?", "keeps": "BRIEFING", "note": "Briefing", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-137", "input": "Ruf Anna an", "keeps": "BRIEFING", "note": "Anruf", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-138", "input": "Fass mir die Nachrichten von heute zusammen", "keeps": "NEWS", "note": "Nachrichten", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-139", "input": "Lies die Nachricht von Anna vor", "note": "Mitteilung, keine Mail", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-140", "input": "Was hat Anna auf WhatsApp geschrieben?", "note": "WhatsApp-Frage", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-141", "input": "Was ist eine Mail?", "note": "Begriffsfrage", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-142", "input": "Wie schreibe ich eine gute E-Mail?", "note": "Ratgeberfrage", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-143", "input": "Ich habe heute keine Mails bekommen", "note": "Aussage", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-144", "input": "Hat Anna mir geschrieben?", "note": "Kanal offen", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-145", "input": "Öffne Gmail", "note": "App öffnen", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-146", "input": "Öffne die Gmail-App", "note": "App öffnen", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-147", "input": "Lösche alle Mails", "note": "nicht gebaut", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-148", "input": "Schreib keine Mail an Anna", "note": "Verneinung", "runner": "mail_route"}
+{"category": "negative", "context": "DRAFT", "expect": {"route": "NONE"}, "id": "MAIL-149", "input": "Schick die Mail nicht ab", "note": "Verneinung", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-150", "input": "Er sagte: Verbinde Gmail", "note": "wiedergegebene Rede", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-151", "input": "„Zeig mir neue Mails“ ist ein guter Befehl", "note": "Zitat", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-152", "input": "Recherchiere E-Mail-Verschlüsselung", "note": "Webrecherche", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-153", "input": "Trenne die WLAN-Verbindung", "note": "anderes Gerät", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-154", "input": "Verbinde Bluetooth", "note": "anderes Gerät", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-155", "input": "Zeig mir neue Fotos", "note": "keine Mail", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-156", "input": "Suche Dateien von gestern", "note": "Dateien", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-157", "input": "Schreib einen Entwurf für eine Rede", "note": "kein Mailempfänger", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-158", "input": "Antworte mir bitte kurz", "note": "an Continuum", "runner": "mail_route"}
+{"category": "negative", "context": "MAIL", "expect": {"route": "NONE"}, "id": "MAIL-159", "input": "Antworte auf Englisch", "note": "Sprachwunsch an Continuum", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-160", "input": "Fass Seite 2 zusammen", "note": "Dokument", "runner": "mail_route"}
+{"category": "negative", "context": "NONE", "expect": {"route": "NONE"}, "id": "MAIL-161", "input": "Wenn Anna mailt, sag mir Bescheid", "note": "Bedingung", "runner": "mail_route"}
