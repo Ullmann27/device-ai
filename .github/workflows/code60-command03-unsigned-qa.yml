@@ -194,7 +194,7 @@ jobs:
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process \
             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
-            -PcontinuumStandaloneVersionCode=72 \
+            -PcontinuumStandaloneVersionCode=73 \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             :app:testDebugUnitTest
@@ -208,7 +208,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Code72-full-android-junit
+          name: Code73-full-android-junit
           path: |
             app/build/test-results/testDebugUnitTest/
             full-android-receipt.json
@@ -218,8 +218,8 @@ jobs:
   unsigned-arm64:
     if: github.repository == 'Ullmann27/device-ai' && contains(fromJSON('["refs/heads/fix/command03-native-controls-20261116","refs/heads/feat/continuum-cinema63-20261117","refs/heads/ccr-7597adbd-8ko252"]'), github.ref)
     env:
-      APK_CODE: ${{ github.ref == 'refs/heads/ccr-7597adbd-8ko252' && '72' || github.ref == 'refs/heads/feat/continuum-cinema63-20261117' && '63' || '60' }}
-      APK_VERSION: ${{ github.ref == 'refs/heads/ccr-7597adbd-8ko252' && '0.3.71' || github.ref == 'refs/heads/feat/continuum-cinema63-20261117' && '0.3.62' || '0.3.59' }}
+      APK_CODE: ${{ github.ref == 'refs/heads/ccr-7597adbd-8ko252' && '73' || github.ref == 'refs/heads/feat/continuum-cinema63-20261117' && '63' || '60' }}
+      APK_VERSION: ${{ github.ref == 'refs/heads/ccr-7597adbd-8ko252' && '0.3.72' || github.ref == 'refs/heads/feat/continuum-cinema63-20261117' && '0.3.62' || '0.3.59' }}
     runs-on: ubuntu-latest
     timeout-minutes: 65
     steps:
