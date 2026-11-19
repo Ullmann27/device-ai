@@ -47,6 +47,24 @@ class IncomingMessageDialogueTest {
         assertTrue("the log names the app, never sender or text", rig.host.activity.none { "Anna" in it || "fünf" in it })
     }
 
+    /** For a host on which another source asks a read question as well: the answer belongs to the question asked last. */
+    @Test fun theHostCanSeeWhenTheQuestionThatStillCountsWasAsked() {
+        val rig = IncomingRig()
+        assertNull(rig.dialogue.questionAt)
+        val before = rig.time.now
+        rig.anna()
+        val asked = requireNotNull(rig.dialogue.questionAt)
+        assertTrue(asked in before..rig.time.now)
+        // Another owner turn that this lane did not take ends the question for the host at once.
+        rig.host.turn++
+        assertNull(rig.dialogue.questionAt)
+
+        val silent = IncomingRig()
+        silent.anna()
+        silent.time.advance(IncomingMessageDialogue.OFFER_WINDOW_MS + 1_000L)
+        assertNull(silent.dialogue.questionAt)
+    }
+
     @Test fun noLaterAndSilenceNeverSendAnythingAndLaterKeepsItInTheOpenList() {
         val no = IncomingRig()
         no.anna()

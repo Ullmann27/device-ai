@@ -390,6 +390,12 @@ internal class IncomingMessageDialogue(
 
     /** true while a question of this lane waits for the owner's next turn. */
     val awaitingAnswer: Boolean get() = asked != null
+    /**
+     * When the question that still counts for the owner's next turn was asked ([IncomingMessageHost.nowMillis]); null
+     * when none does. For a host on which another source asks a question of its own (the notification listener's
+     * „Darf ich sie vorlesen?“): the owner's „Lies vor“ belongs to the question that was asked last.
+     */
+    val questionAt: Long? get() = asked?.takeIf { host.ownerTurn == it.turn && host.nowMillis() - it.at <= window(it.kind) }?.at
     val doNotDisturb: Boolean get() = host.nowMillis() < inbox.doNotDisturbUntil
 
     /** The Activity is in front: messages that became ready meanwhile are offered as „Während du weg warst …“. */
