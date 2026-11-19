@@ -74,6 +74,17 @@ class OwnerExportCommandTest {
         assertEquals("NONE", EvalProbe.computer("Speichere das als PDF"))
     }
 
+    @Test fun creationAndDisplayUseOnePdfOrder() {
+        val unspecified = requireNotNull(parse("Erstelle.bitte eine pdf und zeig sie mir.dann"))
+        assertEquals(Format.PDF, unspecified.format)
+        assertTrue(unspecified.openAfterSaving)
+        assertTrue(unspecified.needsCurrentDeliverable)
+        val specified = requireNotNull(parse("Speichere die Zusammenfassung als PDF und zeig sie mir"))
+        assertTrue(specified.openAfterSaving)
+        assertFalse(specified.needsCurrentDeliverable)
+        assertNull(parse("Erstelle keine PDF und zeig sie mir"))
+    }
+
     @Test fun fileNamesAreDatedSafeAndNeverOverwrite() {
         val none: (String) -> Boolean = { false }
         assertEquals("Nachrichten von heute 18.11.2026.pdf",

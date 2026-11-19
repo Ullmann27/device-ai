@@ -368,9 +368,16 @@ internal class OwnerWorkTools(
     private class Exported(val file: OwnerSavedFile, val pages: Int?)
 
     private fun export(request: String, command: OwnerExportCommand.Request, subject: Boolean) {
-        val target = subjectOf(command.aboutNews, subject)
+        val target = if (command.needsCurrentDeliverable) deliverable?.takeIf { subject }
+            else subjectOf(command.aboutNews, subject)
         host.acceptOwnerTurn(request)
         if (target == null) {
+            if (command.needsCurrentDeliverable) {
+                val question = "Ich kann die PDF speichern und direkt öffnen. Was soll darin stehen?"
+                host.reply(request, question)
+                host.outcome(OwnerLaneOutcome.NeedsOwner(OwnerLaneOutcome.Need.DETAIL, question))
+                return
+            }
             host.reply(request, "In diesem Gespräch gibt es noch nichts, das ich speichern könnte. Sag zum Beispiel " +
                 "„Fass mir die Nachrichten von heute zusammen“ – danach speichere ich sie dir als PDF oder Word-Datei.")
             host.outcome(OwnerLaneOutcome.Failed("In diesem Gespräch gibt es noch nichts, das ich speichern könnte."))
@@ -406,10 +413,15 @@ internal class OwnerWorkTools(
             result.onSuccess { exported ->
                 val file = exported.file
                 saved = Saved(host.sessionId, target, file)
-                val openable = file.uri != null && host.offerToOpen()
+                val openable = !command.openAfterSaving && file.uri != null && host.offerToOpen()
                 openOffer = if (openable) OpenOffer(host.sessionId, host.ownerTurn, file) else null
-                host.say(savedMessage(target, command, exported, openable))
                 host.activity("EXPORT · gespeichert · ${file.displayName}")
+                val opening = if (!command.openAfterSaving) "" else {
+                    val problem = runCatching { host.openFile(file) }.getOrElse { "Der Dokumentbetrachter ist nicht verfügbar." }
+                    if (problem == null) " Ich habe die Datei zum Anzeigen geöffnet."
+                    else " Die Datei konnte nicht geöffnet werden. $problem"
+                }
+                host.say(savedMessage(target, command, exported, openable) + opening)
                 host.outcome(OwnerLaneOutcome.Done(OwnerLaneResult.FileSaved(file, target, null, null)))
             }.onFailure { error ->
                 val failed = "Das Speichern hat nicht geklappt: " + NewsBriefing.clean(error.message ?: error.javaClass.simpleName, 160) +

@@ -5,6 +5,10 @@ import java.util.Locale
 internal enum class ComputerApp(val discoveryQuery: String, val aliases: List<String>) {
     WHATSAPP("WhatsApp", listOf("whatsapp", "whats app")),
     FACEBOOK("Facebook", listOf("facebook")),
+    GMAIL("Gmail", listOf("gmail", "g mail")),
+    TIKTOK("TikTok", listOf("tiktok", "tik tok")),
+    SMS("Nachrichten", listOf("sms-app", "sms", "nachrichten")),
+    CONTACTS("Kontakte", listOf("kontakte-app", "kontakte")),
     FILES("Eigene Dateien", listOf("samsung eigene dateien", "eigene dateien", "meine dateien", "dateien")),
     WORD("Word", listOf("microsoft word", "word")),
     EXCEL("Excel", listOf("microsoft excel", "excel")),
@@ -53,7 +57,7 @@ internal object OwnerComputerIntentParser {
     private val apps = ComputerApp.entries.flatMap { app -> app.aliases.map { it to app } }
         .sortedByDescending { it.first.length }
     private val OPEN_ONLY_APPS = setOf(ComputerApp.CHROME, ComputerApp.SETTINGS,
-        ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR)
+        ComputerApp.CAMERA, ComputerApp.GALLERY, ComputerApp.CALENDAR, ComputerApp.TIKTOK, ComputerApp.SMS)
     private val otherAction = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:und|dann|danach)\\s+(?:sende?|schicke?|lösche?|loesche?|poste?|teile?|kaufe?|rufe?|öffne?|oeffne?|starte?|suche?)(?![\\p{L}\\p{N}_])")
     /** The optional suffix is presentation only, never a second device action. */
     private val downloadsOpen = Regex(
@@ -166,6 +170,7 @@ internal object OwnerComputerIntentParser {
         if (distinct.size > 1) return Result.Ask("In welcher App soll ich den Entwurf vorbereiten?")
         val app = distinct.singleOrNull() ?: contextApp
             ?: return Result.Ask("In welcher App soll ich den Entwurf vorbereiten?")
+        if (app == ComputerApp.GMAIL && OwnerShareCommand.parse(text)?.mailNamed == true) return null
         if (app != ComputerApp.WHATSAPP) return Result.Unsupported("Nachrichtenentwürfe sind für diese App noch nicht sicher angebunden.")
         var remaining = command
         appMatches.map { it.first }.sortedByDescending { it.length }.forEach { alias ->

@@ -43,6 +43,43 @@ class BoundedAgentTest {
         )
     }
 
+    /** Field finding Fold7, 19.11.2026: a failed file search answered „Werkzeugausgang UNKNOWN … blockiert“. */
+    @Test
+    fun aReadOnlyToolThatFailsAfterItsStartIsReportedPlainlyAndBlocksNothing() {
+        fun agent(tool: String, run: () -> String, approve: Boolean = false) = BoundedAgentOrchestrator(
+            model = AgentModel { _, _, _, observations ->
+                if (observations.isEmpty()) AgentModelOutput("test-model", "",
+                    ToolProposal(tool, when (tool) {
+                        "find_files" -> mapOf("query" to "Argon4")
+                        "restart_app" -> mapOf("packageOrName" to "com.example.app")
+                        else -> emptyMap()
+                    }))
+                else AgentModelOutput("test-model", "weiter")
+            },
+            memories = { emptyList() },
+            toolGate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { run() }),
+            evaluator = AgentEvaluator { _, _ -> Evaluation(true, 1.0) },
+            experienceStore = InMemoryExperienceStore(),
+            approvalProvider = AgentToolApprovalProvider { _, _ -> AgentToolApproval(approve) }
+        )
+        val search = agent("find_files", { error("bridge not connected") }).run("ich suche eine PDF die heißt Argon4 Experimente")
+        assertEquals("„Dateien suchen“ hat kein Ergebnis geliefert. Das Werkzeug liest nur – es wurde nichts verändert, und es " +
+            "ist nichts gesperrt. Die Dateiwerkzeuge laufen über die Shizuku-Verbindung; läuft Shizuku nicht (nach einem " +
+            "Neustart des Geräts muss es neu gestartet werden), bekomme ich keine Antwort. Ein PDF finde ich auch ohne " +
+            "Shizuku: Sag „Such das PDF“ und den Namen. Du kannst es noch einmal versuchen.", search.response)
+        assertTrue(!search.response.contains("UNKNOWN") && !search.response.contains("Besitzerprüfung"))
+        // The same question again is a new call and gets the same plain answer – nothing stayed blocked.
+        val again = agent("find_files", { error("bridge not connected") }).run("nein geht schon du kannst suchen")
+        assertEquals(search.response, again.response)
+        // A read-only tool without the bridge hint.
+        val info = agent("get_device_info", { error("boom") }).run("Gerät?")
+        assertEquals("„" + at.heinz.deviceai.ToolRegistry.label("get_device_info") + "“ hat kein Ergebnis geliefert. Das Werkzeug liest " +
+            "nur – es wurde nichts verändert, und es ist nichts gesperrt. Du kannst es noch einmal versuchen.", info.response)
+        // A CHANGING tool with an unknown end keeps the owner review: its effect may persist.
+        val changing = agent("restart_app", { error("boom") }, approve = true).run("Starte die App neu")
+        assertTrue(changing.response, changing.response.startsWith("Werkzeugausgang UNKNOWN"))
+    }
+
     @Test
     fun toolPathUsesGateAndNeverExecutesRawShellProposal() {
         var runs = 0

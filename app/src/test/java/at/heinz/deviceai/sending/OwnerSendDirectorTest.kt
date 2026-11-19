@@ -215,6 +215,30 @@ class OwnerSendDirectorTest {
         assertTrue(none.device.opened.isEmpty())
     }
 
+    @Test fun familyContactAndSpokenCorrectionKeepTheDictatedGreeting() {
+        val (host, lane) = newLane(SendChannel.WHATSAPP)
+        val order = "schreib bitte in WhatsApp meinen Papa guten Morgen"
+        assertTrue(lane.handle(order))
+        assertTrue(lane.awaitingAnswer)
+        assertTrue(host.device.pressed.isEmpty())
+        assertTrue(lane.handle("Whatsapp"))
+        assertTrue(lane.awaitingAnswer)
+        assertTrue(host.device.pressed.isEmpty())
+        assertTrue(lane.handle("ich habe dir zum dreimal gesagt der Name heißt Thomas Muster"))
+        assertEquals(SendPlan.WhatsApp("Thomas Muster", "430005550103", "Guten Morgen", send = true), host.device.opened.single())
+        assertEquals(1, host.device.pressed.size)
+        assertFalse(lane.handle("WhatsApp"))
+        assertFalse(lane.handle("mach es jetzt"))
+        assertEquals(1, host.device.pressed.size)
+        assertTrue(host.prompts.isEmpty())
+
+        val (direct, directLane) = newLane(SendChannel.WHATSAPP)
+        direct.contacts.phoneRows = listOf(phone(5, "Papa", "+43 000 555 0105"))
+        assertTrue(directLane.handle(order))
+        assertEquals(SendPlan.WhatsApp("Papa", "430005550105", "Guten Morgen", send = true), direct.device.opened.single())
+        assertEquals(1, direct.device.pressed.size)
+    }
+
     @Test fun contactsAreReadOnlyAfterTheOwnerAllowedItOnce() {
         val (host, lane) = newLane(SendChannel.WHATSAPP)
         host.contactsGranted = false

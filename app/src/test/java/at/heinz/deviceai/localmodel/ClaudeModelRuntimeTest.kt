@@ -120,7 +120,7 @@ class ClaudeModelRuntimeTest {
         assertEquals(2, system.length())
         assertEquals(ClaudePromptFrame.RUNTIME_PREFACE, system.getJSONObject(0).getString("text"))
         assertFalse(system.getJSONObject(0).has("cache_control"))
-        assertEquals(ClaudePromptFrame.HEAD_TEXT_ONLY + ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS,
+        assertEquals(ClaudePromptFrame.HEAD_TEXT_ONLY + ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS + ClaudePromptFrame.OWNER_APP_ACTIONS,
             system.getJSONObject(1).getString("text"))
         assertEquals("ephemeral", system.getJSONObject(1).getJSONObject("cache_control").getString("type"))
         val messages = body.getJSONArray("messages")

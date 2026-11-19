@@ -80,6 +80,19 @@ class OwnerWorkToolsExportFlowTest {
         assertTrue(host.opened.isEmpty())
     }
 
+    @Test fun explicitDisplayOpensTheResultOnceAndMissingContentAsks() {
+        val (host, tools) = briefed()
+        assertTrue(tools.handle("Erstelle.bitte eine pdf und zeig sie mir.dann"))
+        assertEquals(pdfName, host.opened.single().displayName)
+        assertTrue(host.lines("SAY:").last().contains("zum Anzeigen geöffnet"))
+        val (other, otherTools) = briefed()
+        other.foreignTurn("Wie spät ist es?", "Es ist 9 Uhr.")
+        assertTrue(otherTools.handle("Erstelle bitte eine PDF und zeig sie mir dann"))
+        assertTrue(other.downloads.isEmpty())
+        assertTrue(other.opened.isEmpty())
+        assertTrue(other.lines("REPLY:").last().contains("Was soll darin stehen?"))
+    }
+
     @Test fun openingIsOfferedOnlyWhenPossibleAndDoneOnYes() {
         val (host, tools) = briefed()
         assertTrue(tools.handle("Speichere das als PDF"))

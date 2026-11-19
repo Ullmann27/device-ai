@@ -52,7 +52,11 @@ internal class DriveBackgroundAnnouncer(context: Context) : ContinuumNotificatio
             if (!driveModeActive(appContext)) release()
             return
         }
-        val decision = policy.decide(notification, NotificationAnnouncementSettings.load(appContext),
+        val settings = NotificationAnnouncementSettings.load(appContext)
+        val backgroundSettings = if (settings.apps[notification.packageName]?.mode == AnnouncementMode.ASK) {
+            settings.copy(apps = settings.apps + (notification.packageName to AppRule(AnnouncementMode.APP_ONLY)))
+        } else settings
+        val decision = policy.decide(notification, backgroundSettings,
             AnnouncementState(conversationActive = false, driveModeActive = true,
                 // The engine queues; the policy's own rate limit bounds how much can pile up.
                 assistantSpeaking = false, listening = false, nowMs = SystemClock.elapsedRealtime()))

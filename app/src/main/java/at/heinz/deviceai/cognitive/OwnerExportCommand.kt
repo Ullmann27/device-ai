@@ -22,7 +22,10 @@ internal object OwnerExportCommand {
      * [name]: the file name the owner said, in his spelling, or null. [viaWord]: he asked to write it „in Word“ and
      * keep it as PDF. [aboutNews]: he named the news explicitly, not just „das“.
      */
-    data class Request(val format: Format, val name: String?, val viaWord: Boolean, val aboutNews: Boolean, val original: String)
+    data class Request(
+        val format: Format, val name: String?, val viaWord: Boolean, val aboutNews: Boolean, val original: String,
+        val openAfterSaving: Boolean = false, val needsCurrentDeliverable: Boolean = false
+    )
 
     private val saveVerbs = setOf("speicher", "speichere", "speichern", "speicherst", "abspeichern", "sichere", "sichern",
         "exportiere", "exportier", "exportieren", "ablegen", "leg", "lege", "abzuspeichern")
@@ -64,10 +67,20 @@ internal object OwnerExportCommand {
             "download(?:s|-?ordner)?(?:\\s+ab)?|im\\s+download(?:s|-?ordner)?|als\\s+(?:eine?\\s+)?$formatHead))+[.!?]*$")
     /** A slash in a wished file name is made harmless by [fileName]; links and addresses are never export orders. */
     private val linkOrPath = Regex("(?i)(https?://|www\\.|@)")
+    private val showAfter = Regex("(?iu)[,;. ]+und[ ,.;]+(?:(?:dann|danach)[ ,.;]+)?(?:zeig(?:e)?|öffne|oeffne)[ ,.;]+" +
+        "(?:mir[ ,.;]+)?(?:sie|es|die[ ,.;]+datei|das[ ,.;]+dokument)(?:[ ,.;]+(?:mir|dann|danach|bitte))*$")
+    private val barePdf = Regex("(?iu)^(?:bitte )?(?:erstell(?:e)?|erzeug(?:e)?|mach(?:e)?) " +
+        "(?:(?:mir|bitte|jetzt) )*(?:ein|eine) (?:pdf|pdf-datei|pdf-dokument)$")
 
     fun parse(utterance: String, assistantName: String? = null): Request? {
         if (utterance.length !in 8..300 || utterance.any { it.isISOControl() }) return null
-        val text = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trimEnd('.', '!', '?', ' ')
+        val addressed = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trimEnd('.', '!', '?', ' ')
+        val show = showAfter.find(addressed)
+        val text = if (show == null) addressed else addressed.substring(0, show.range.first).trimEnd('.', ',', ';', ' ')
+        if (show != null && barePdf.matches(text.replace(Regex("[.\\s]+"), " "))) {
+            return Request(Format.PDF, null, viaWord = false, aboutNews = false, original = utterance.trim(),
+                openAfterSaving = true, needsCurrentDeliverable = true)
+        }
         if (linkOrPath.containsMatchIn(text)) return null
         // Split off the file name first: it is free text and not part of the order's vocabulary.
         var order = text
@@ -103,7 +116,7 @@ internal object OwnerExportCommand {
         }
         val format = if (pdf || !word) Format.PDF else Format.DOCX
         return Request(format, name?.take(120), viaWord = pdf && word, aboutNews = words.any { it in newsWords } ||
-            name?.contains("nachrichten", ignoreCase = true) == true, original = utterance.trim())
+            name?.contains("nachrichten", ignoreCase = true) == true, original = utterance.trim(), openAfterSaving = show != null)
     }
 
     private fun isPlace(candidate: String): Boolean =

@@ -94,10 +94,10 @@ class ClaudeBrainPolicyTest {
         for (head in listOf(ClaudePromptFrame.HEAD_TEXT_ONLY, ClaudePromptFrame.HEAD_TOOLS)) {
             val stable = head + ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS
             val frame = ClaudePromptFrame.frame(stable + rest, isolatedWorker = false)
-            assertEquals(listOf(ClaudePromptFrame.RUNTIME_PREFACE, stable), frame.systemBlocks)
+            assertEquals(listOf(ClaudePromptFrame.RUNTIME_PREFACE, stable + ClaudePromptFrame.OWNER_APP_ACTIONS), frame.systemBlocks)
             assertEquals(rest, frame.user)
             // Nothing is lost or reordered.
-            assertEquals(stable + rest, frame.systemBlocks[1] + frame.user)
+            assertEquals(stable + rest, frame.systemBlocks[1].removeSuffix(ClaudePromptFrame.OWNER_APP_ACTIONS) + frame.user)
         }
         // A bot turn inserts its profile after the head line: not split.
         val bot = ClaudePromptFrame.HEAD_TOOLS + "Dieser ausdrücklich erteilte Auftrag gehört zum ausgewählten Fachbot. " +

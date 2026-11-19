@@ -140,6 +140,12 @@ internal object ClaudePromptFrame {
         "Erkläre bei Warum-Fragen tatsächliche Ursachen; falls unbekannt, Unsicherheit nennen.\n"
 
     private val STABLE_PREFIXES = listOf(HEAD_TEXT_ONLY + OWNER_TURN_INSTRUCTIONS, HEAD_TOOLS + OWNER_TURN_INSTRUCTIONS)
+    const val OWNER_APP_ACTIONS =
+        "Continuum's Android chat also handles direct owner commands before inference. For example, it can prepare " +
+        "or send a WhatsApp message through the Android app, depending on the owner's permissions, and export a " +
+        "chat result as PDF or Word. These are app actions, not model-callable tools. For capability questions, " +
+        "describe these app actions and the required owner input. If an action request reached you without a " +
+        "verified result, give the direct chat command with any missing details and do not claim it ran."
 
     fun frame(prompt: String, isolatedWorker: Boolean): Frame {
         if (isolatedWorker) return Frame(listOf(RUNTIME_PREFACE, ISOLATED_WORKER), prompt)
@@ -147,7 +153,7 @@ internal object ClaudePromptFrame {
         val rest = stable?.let { prompt.substring(it.length) }
         // An empty or whitespace-only remainder is no user message; keep the prompt whole instead.
         return if (stable == null || rest.isNullOrBlank()) Frame(listOf(RUNTIME_PREFACE), prompt)
-        else Frame(listOf(RUNTIME_PREFACE, stable), rest)
+        else Frame(listOf(RUNTIME_PREFACE, stable + OWNER_APP_ACTIONS), rest)
     }
 }
 
