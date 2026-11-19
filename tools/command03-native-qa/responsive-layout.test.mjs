@@ -5,6 +5,7 @@ import {execFileSync} from 'node:child_process';
 import {readFile, mkdir, writeFile} from 'node:fs/promises';
 import {resolve, extname, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {tacticalStage} from './tactical-stage.checks.mjs';
 
 const require = createRequire(import.meta.url);
 const {chromium} = require(process.env.COMMAND03_PLAYWRIGHT_MODULE || 'playwright');
@@ -350,6 +351,71 @@ try {
     }
     scrollTo(0,0);return blocked;
   });
+  // ───────── Code71: the ordered expansion of the layout ─────────
+  // The owner ordered the layout to be expanded (19.11.2026): a status strip, an order rail and info cards stand
+  // above the stage as regions of their own. This is the one deliberate change to the Code64 arrangement and it is
+  // checked as exactly that. With the regions present every Code64 box keeps its x, its width and its height; the
+  // boxes above the stage column keep their place; everything from the stage down – the composer too where it is
+  // part of the flow – moves down by exactly the height the regions take. Nothing else moves, nothing is resized,
+  // and the comparison without the regions (above) stays as strict as it was.
+  const expansion71={tactical:{brain:'CLAUDE',internet:'ALWAYS_ON',thermal:0,battery:84,charging:false},
+    orders:{revision:1,source:'MISSION',key:'m3',title:'',total:3,active:true,outcome:null,items:[
+      {key:'m0',number:1,label:'Wetter für morgen abrufen',state:'DONE'},
+      {key:'m1',number:2,label:'Termin mit der Werkstatt prüfen',state:'ACTIVE'}]},
+    briefingCards:[{id:'cal',kind:'calendar',title:'Heute',lines:['09:00 Zahnarzt','14:30 Werkstatt'],state:'info'},
+      {id:'weather',kind:'weather',title:'Linz',lines:['4 °C, bewölkt','Regen ab 15 Uhr'],state:'info'}]};
+  const aboveStage71=new Set(['.masthead','.plugin-toolbar','#main-nav','.native-settings-shortcuts']);
+  report.code71={expansion:{}};
+  async function expanded71(room,original,width,height,name,values) {
+    const item={label:`code71-boxes-${name}-${width}x${height}`,failures:[]};
+    await room.evaluate(packet=>{scrollTo(0,0);window.ContinuumNative.receive(packet);},{...state,...values,...expansion71});
+    // The regions arrive with their motion where the tier allows it; the boxes are read when everything has landed.
+    await room.evaluate(async()=>{
+      for(let round=0;round<8;round++) {
+        const finite=document.getAnimations().filter(animation=>animation.constructor.name!=='CSSTransition' &&
+          animation.playState!=='finished' && animation.effect?.getComputedTiming().iterations!==Infinity);
+        if(!finite.length)break;
+        for(const animation of finite) {try {animation.finish();}catch {}}
+        await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));
+      }
+      window.dispatchEvent(new Event('resize'));
+      await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));
+    });
+    const current=await measure(room);
+    const regions=await room.evaluate(()=>{
+      const box=selector=>{const node=document.querySelector(selector);if(!node)return null;
+        const r=node.getBoundingClientRect();return [r.x+scrollX,r.y+scrollY,r.width,r.height];};
+      return {strip:box('#native-tac-strip'),rail:box('#native-order-rail'),cards:box('#native-briefing'),hud:box('#native-tac-hud'),
+        stage:box('.center-stage>.presence'),composerFixed:getComputedStyle(document.querySelector('#command-form')).position==='fixed'};});
+    for(const key of ['strip','rail','cards'])if(!regions[key] || regions[key][3]<=0)item.failures.push(key+': region missing');
+    if(item.failures.length)return item;
+    // The height the regions take: from where the stage stood to where it stands now.
+    const taken=regions.stage[1]-regions.hud[1];
+    const shift=current.boxes['.presence-topline'][1]-original.boxes['.presence-topline'][1];
+    if(Math.abs(shift-taken)>1)item.failures.push('the stage moved by '+shift.toFixed(1)+' px, the regions take '+taken.toFixed(1)+' px');
+    const moved=[], kept=[];
+    for(const selector of boxSelectors) {
+      const a=original.boxes[selector], b=current.boxes[selector];
+      if(!a || !b) {if(a!==b)item.failures.push(selector+': exists only in one version');continue;}
+      const stays=aboveStage71.has(selector) || (selector==='#command-form' && regions.composerFixed);
+      (stays?kept:moved).push(selector);
+      const expected=[a[0],a[1]+(stays?0:shift),a[2],a[3]];
+      if(expected.some((value,index)=>Math.abs(value-b[index])>1))
+        item.failures.push(selector+': expected '+JSON.stringify(expected.map(Math.round))+', is '+JSON.stringify(b.map(Math.round)));
+    }
+    if(Math.abs(original.height+shift-current.height)>1)
+      item.failures.push('page height '+original.height+' + '+Math.round(shift)+' ≠ '+current.height);
+    if(current.scroll>current.viewport+1)item.failures.push('root horizontal overflow');
+    for(const selector of textSelectors)
+      if(JSON.stringify(original.texts[selector])!==JSON.stringify(current.texts[selector]))
+        item.failures.push(selector+': text colour or size changed');
+    item.failures.push(...await blockedControls(room));
+    report.code71.expansion[item.label]={movedDownBy:Math.round(shift),strip:Math.round(regions.strip[3]),rail:Math.round(regions.rail[3]),
+      cards:Math.round(regions.cards[3]),moved,kept};
+    await room.evaluate(()=>scrollTo(0,0));
+    await room.screenshot({path:resolve(output,`code71-expanded-${name}-${width}x${height}.png`)});
+    return item;
+  }
   const baselineReady=baselineFiles!==null;
   if(!baselineReady && process.env.COMMAND03_REQUIRE_BASELINE==='1')
     assert.fail('Baseline '+baselineRef+' is not readable from git: '+baselineError);
@@ -363,9 +429,11 @@ try {
       for(const selector of ['.avatar-zone','.orb-zone','.native-activity','.native-evidence','#command-form'])
         if(!current.boxes[selector] || current.boxes[selector][2]<=0 || current.boxes[selector][3]<=0)
           item.failures.push(selector+': missing box');
+      let baselineBoxes=null;
       if(baselineReady) {
         const before=await openRoom('base',width,height,values);
         const original=await measure(before);
+        baselineBoxes=original;
         for(const selector of boxSelectors) {
           const a=original.boxes[selector], b=current.boxes[selector];
           if(!a || !b) {if(a!==b)item.failures.push(selector+': exists only in one version');continue;}
@@ -397,8 +465,10 @@ try {
       await now.evaluate(()=>document.querySelector('.presence').scrollIntoView({block:'start'}));
       await now.waitForTimeout(350);
       await now.screenshot({path:resolve(output,`code64-room-${name}-${width}x${height}.png`)});
-      await now.context().close();
       report.checks.push(item);
+      // Code71: the same page with the ordered regions, against the same Code64 boxes.
+      if(baselineBoxes)report.checks.push(await expanded71(now,baselineBoxes,width,height,name,values));
+      await now.context().close();
     }
   }
   // Light, tiers and the work sequence in a real browser engine, on the unfolded display.
@@ -793,9 +863,15 @@ try {
       return {dx:cx-(a.x+x*a.width),dy:cy-(a.y+y*a.height),topmost:document.elementFromPoint(cx,cy)===image,
         ring:getComputedStyle(dot,'::after').animationName,state:dot.dataset.state,pointer:getComputedStyle(dot).pointerEvents};
     },[x,y]);
+    // Code71: a window now arrives with its entrance (it slides in from the side). What is measured below is the
+    // window once it has landed; the entrance itself is checked in tactical-stage.checks.mjs.
+    const landed70=room=>room.waitForFunction(()=>!document.getAnimations().some(animation=>
+      animation.animationName?.startsWith('native-tac-') && animation.playState==='running' &&
+      animation.effect?.getComputedTiming().iterations!==Infinity),null,{timeout:20000});
     for(const name of Object.keys(states70)) {
       const room=await openRoom('after',devices70[0][1],devices70[0][2],{presence:'IDLE'});
       await states70[name](room);
+      await landed70(room);
       for(const [device,width,height] of devices70) {
         // Rotation, folding and the keyboard change the size of the page that is already showing this state.
         await room.setViewportSize({width,height});
@@ -880,6 +956,15 @@ try {
           moving?'animated':style.opacity,style.animationName,style.transitionProperty];};
       return {endless:[...new Set(running.filter(endless).map(label))].sort(),
         addedRunning:[...new Set(running.filter(animation=>added.includes(animation.animationName)).map(label))].sort(),
+        // Code71: no pass, loop or glide of the tactical regions, and no mark that could start one later.
+        tactical:[...new Set(document.getAnimations().filter(animation=>animation.animationName?
+          animation.animationName.startsWith('native-tac-'):animation.constructor.name==='Animation' && animation.effect?.composite==='add')
+          .map(label))].sort(),
+        marks:[...document.querySelectorAll('[data-native-enter],[data-native-leaving],.native-tac [data-changed],.native-window-ghost')]
+          .map(node=>node.className.split(' ').at(-1)).sort(),
+        regions:['#native-tac-strip','#native-order-rail','#native-briefing'].map(selector=>{
+          const node=document.querySelector(selector);return node?[selector,node.getBoundingClientRect().height>0,
+            [...node.querySelectorAll('.native-tac-cell,.native-order-card,.native-order-chip,.native-brief-card')].length]:[selector,false,0];}),
         canvases:document.querySelectorAll('canvas').length,
         blurred:[...document.querySelectorAll('body,body *')].filter(node=>{
           const style=getComputedStyle(node);
@@ -891,16 +976,25 @@ try {
           '#command-form','.native-orb-light','.native-room-light','.native-holo-field','.core-status','.avatar-crop',
           '.orb-zone','.presence-system'].map(selector=>[selector,paint(selector)]))};
     },added);
+    // Code71: the status strip, the order rail with an open and a finished step, and two info cards stand above the
+    // stage in every resting comparison below. They are part of what must not move while the device computes.
+    const rest71=(revision,states,cards)=>({tactical:{brain:'LOCAL',internet:'ASK',thermal:1,battery:84,charging:false},
+      systemCheck:[{key:'brain',label:'Gehirn',state:'OK',detail:'Lokales Modell'},{key:'voice',label:'Stimme',state:'WARN',detail:'Aus'}],
+      orders:{revision,source:'TURN',key:'t7',title:'Und vom Bund?',total:states.length,active:true,outcome:null,
+        items:states.map((state,index)=>({key:'t'+index,number:index+1,label:['Gedächtnis durchsuchen','Websuche','Antwort schreiben'][index],state}))},
+      briefingCards:cards.map(id=>({id,kind:id==='msg'?'messages':'calendar',title:id==='msg'?'Neue Nachricht':'Heute',
+        lines:['14:30 Werkstatt'],state:id==='msg'?'attention':'info'}))});
     // The same packets for both versions; the Code69 page ignores what it does not know.
     const restStage=async(version,width,height,quality,monitor)=>{
       const room=await openRoom(version,width,height,{presence:'IDLE',quality});
-      await put(room,{busy:true,presence:'RESEARCHING',cloudBrain:true,quality,activity:steps70});
+      await put(room,{busy:true,presence:'RESEARCHING',cloudBrain:true,quality,activity:steps70,...rest71(1,['ACTIVE'],['cal'])});
       await say(room,true,'Welche Förderung gibt es für Wärmepumpen in Oberösterreich?');
       await room.evaluate(packet=>window.ContinuumNative.sources(packet),sources70);
       await say(room,false,'Es gibt eine Landesförderung.');
       await say(room,true,'Und vom Bund?');
       const computing={...local,quality,activity:{...steps70,revision:33,kind:'THINK',title:'Denkt nach',
-        steps:steps70.steps.map((step,index)=>index===2?{...step,state:'DONE'}:index===3?{...step,state:'ACTIVE'}:step)}};
+        steps:steps70.steps.map((step,index)=>index===2?{...step,state:'DONE'}:index===3?{...step,state:'ACTIVE'}:step)},
+        ...rest71(2,['DONE','ACTIVE'],['cal','plan'])};
       await put(room,computing);
       if(monitor) {
         await put(room,{...computing,computerWork:{...work70,actions:[work70.actions[0]]}});
@@ -927,18 +1021,29 @@ try {
           if(current.addedRunning.length)item.failures.push('window animations run while the device computes: '+current.addedRunning.join());
           if(current.blurred)item.failures.push(current.blurred+' elements blur their background');
           if(current.veil!=='none')item.failures.push('the depth layer is painted while the device computes');
+          // Code71: the regions are there (strip, a card and a docked step in the rail, two info cards) and stand still.
+          if(JSON.stringify(current.regions)!==JSON.stringify([['#native-tac-strip',true,7],['#native-order-rail',true,2],['#native-briefing',true,2]]))
+            item.failures.push('tactical regions '+JSON.stringify(current.regions));
+          if(current.tactical.length)item.failures.push('tactical regions move while the device computes: '+current.tactical.join());
+          if(current.marks.length)item.failures.push('marks for motion are set while the device computes: '+current.marks.join());
           // Reduced has no looping light at all; the list is that of Code69 for the tier.
           const expected=quality==='REDUCED'?literal.filter(name=>!name.startsWith('native-corona')):literal;
           if(JSON.stringify(current.endless)!==JSON.stringify(expected))
             item.failures.push('looping animations '+JSON.stringify(current.endless)+' instead of '+JSON.stringify(expected));
           // One event of each kind while computing: a step moves, a draft grows, an input lands. Nothing starts.
+          // Code71, in the same snapshot: a step docks, the next one waits for the owner, a card leaves, one arrives.
           await put(now,{...local,quality,activity:{...steps70,revision:34,kind:'THINK',title:'Denkt nach',
             steps:steps70.steps.map(step=>({...step,state:'DONE'}))},
-            ...(monitor?{computerWork:{...work70,actions:[work70.actions[0],{...tap,sequence:9}]}}:{})});
+            ...(monitor?{computerWork:{...work70,actions:[work70.actions[0],{...tap,sequence:9}]}}:{}),
+            ...rest71(3,['DONE','DONE','WAITING'],['plan','msg'])});
           if(!monitor)await now.evaluate(packet=>window.ContinuumNative.draft(packet),{...scope,text:'Der Bund fördert den Tausch mit einem Zuschuss'});
           const after=await motion(now);
           if(after.addedRunning.length)item.failures.push('an event started '+after.addedRunning.join()+' while the device computes');
           if(JSON.stringify(after.endless)!==JSON.stringify(current.endless))item.failures.push('an event changed the looping animations');
+          if(after.tactical.length || after.marks.length)
+            item.failures.push('an event moved the tactical regions while the device computes: '+after.tactical.concat(after.marks).join());
+          if(JSON.stringify(after.regions)!==JSON.stringify([['#native-tac-strip',true,7],['#native-order-rail',true,3],['#native-briefing',true,2]]))
+            item.failures.push('tactical regions after the events '+JSON.stringify(after.regions));
           if(monitor) {
             const at=await markerAt(now,tap.x,tap.y);
             if(at.missing)item.failures.push('the input is not marked while the device computes');
@@ -1140,6 +1245,18 @@ try {
     report.code65={frameRates:item.rates};
     await governed.close();
     report.checks.push(item);
+  }
+  // ───────── Code71: the regions themselves (tactical-stage.checks.mjs) ─────────
+  // Geometry and reachability at every size, motion per tier, the final state without motion, interruption, the
+  // start-up sequence. Run here, after the pages above are closed, so that it shares this run's browser and verdict.
+  {
+    // Pages that are still open keep drawing their scene in the background; none of them is needed any more.
+    for(const leftover of browser.contexts())await leftover.close();
+    const tactical71=await tacticalStage({browser,url,state,scope,output,errors});
+    report.checks.push(...tactical71.items);
+    report.code71.motion=tactical71.summary.motion;
+    report.code71.result={expansion:baselineReady?'PASS':'NOT_RUN',regions:'PASS',motion:'PASS',tiers:'PASS',startUp:'PASS',
+      restingStage:restFiles?'PASS':'PASS (literal list; Code69 comparison NOT_RUN)'};
   }
   report.code64.result={arrangement:baselineReady?'PASS':'NOT_RUN',orbAnimated:baselineReady?'PASS':'NOT_RUN',
     presenceLight:'PASS',tiers:'PASS',workSequence:'PASS',filesWindow:'PASS',largeFont:'PASS'};
