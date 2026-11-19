@@ -1,0 +1,16 @@
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-001", "input": "Suche in Facebook nach Elena Müller und schick ihr eine Nachricht", "note": "zweiter Auftrag in der Suchanfrage", "runner": "computer_order"}
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-002", "input": "Öffne Gmail und suche nach Rechnung, dann leite sie weiter", "note": "Komma + dann + Imperativ", "runner": "computer_order"}
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-003", "input": "Such in WhatsApp nach Papa, danach ruf ihn an", "note": "danach + Imperativ", "runner": "computer_order"}
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-004", "input": "Öffne Excel und erstell eine Tabelle", "note": "Zusatzauftrag statt Sackgasse", "runner": "computer_order"}
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-005", "input": "Öffne WhatsApp, schreib Anna Hallo", "note": "Komma + Imperativ", "runner": "computer_order"}
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-006", "input": "Öffne Word und speicher das Dokument", "note": "speichern", "runner": "computer_order"}
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-007", "input": "Öffne Kamera und mach ein Foto", "note": "mach", "runner": "computer_order"}
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-008", "input": "Suche in Facebook nach Anna und dann zeig mir ihr Profil", "note": "und dann + Imperativ", "runner": "computer_order"}
+{"category": "further_order", "expect": {"computer": "NONE"}, "id": "COMC-009", "input": "Wechsle zu WhatsApp und antworte Anna", "note": "antworte", "runner": "computer_order"}
+{"category": "own_order", "expect": {"computer": "READY:CONTACTS:SEARCH", "query": "Bernd Beispiel"}, "id": "COMC-010", "input": "Öffne Kontakte und such nach Bernd Beispiel", "note": "eigene Suchform der Lenkung bleibt", "runner": "computer_order"}
+{"category": "own_order", "expect": {"computer": "READY:WHATSAPP:SEARCH", "query": "Anna und Bernd"}, "id": "COMC-011", "input": "Suche in WhatsApp nach Anna und Bernd", "note": "„und“ ohne Imperativ gehört zur Suche", "runner": "computer_order"}
+{"category": "own_order", "expect": {"computer": "READY:GMAIL:SEARCH", "query": "Rechnung und Mahnung"}, "id": "COMC-012", "input": "Suche in Gmail nach Rechnung und Mahnung", "note": "zwei Suchwörter", "runner": "computer_order"}
+{"category": "own_order", "expect": {"computer": "UNSUPPORTED"}, "id": "COMC-013", "input": "Öffne Chrome und such nach Wetter Wien", "note": "Chrome ist nur zum Öffnen freigegeben – ehrliche Absage der Lenkung", "runner": "computer_order"}
+{"category": "own_order", "expect": {"computer": "READY:WHATSAPP:OPEN"}, "id": "COMC-014", "input": "Öffne WhatsApp bitte", "note": "reines Öffnen", "runner": "computer_order"}
+{"category": "own_order", "expect": {"computer": "UNSUPPORTED"}, "id": "COMC-015", "input": "Öffne WhatsApp und Facebook", "note": "zwei Apps, kein weiterer Auftrag", "runner": "computer_order"}
+{"category": "negation", "expect": {"computer": "UNSUPPORTED"}, "id": "COMC-016", "input": "Öffne WhatsApp nicht und schreib Anna", "note": "verneinter App-Auftrag bleibt eine Absage", "runner": "computer_order"}

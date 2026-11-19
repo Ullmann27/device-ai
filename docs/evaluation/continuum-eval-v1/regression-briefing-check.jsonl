@@ -84,3 +84,32 @@
 {"category": "next_step", "expect": {"choice": "ASK"}, "id": "BRC-084", "input": "ja", "note": "mehrere Angebote", "offers": ["APPOINTMENTS", "MESSAGE"], "runner": "briefing_choice"}
 {"category": "next_step", "expect": {"choice": "PICK:3"}, "id": "BRC-085", "input": "die offene Arbeit", "note": "Stichwort", "offers": ["APPOINTMENTS", "MESSAGE", "WORK"], "runner": "briefing_choice"}
 {"category": "next_step", "expect": {"choice": "PICK:2"}, "id": "BRC-086", "input": "zweite", "note": "nur die Ordnungszahl", "offers": ["APPOINTMENTS", "MESSAGE", "WORK"], "runner": "briefing_choice"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRC-087", "input": "Was habe ich diese Woche für Termine?", "note": "Woche = heute bis Sonntag", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:NEXT_WEEK"}, "id": "BRC-088", "input": "Welche Termine stehen nächste Woche an?", "note": "Montag bis Sonntag", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRC-089", "input": "Zeig mir meine Termine für diese Woche", "note": "Auftragsform", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:NEXT_WEEK"}, "id": "BRC-090", "input": "Was steht nächste Woche an?", "note": "ohne das Wort Termine", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRC-091", "input": "Wie sieht meine Woche aus?", "note": "meine Woche", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRC-092", "input": "Habe ich diese Woche etwas vergessen?", "note": "Prüfung nur aus Regeln und echten Terminen", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:NEXT_WEEK"}, "id": "BRC-093", "input": "Hab ich nächste Woche was übersehen?", "note": "umgangssprachlich", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:NEXT_WEEK"}, "id": "BRC-094", "input": "Schau meine Termine für nächste Woche durch und sag mir, ob ich etwas vergessen habe", "note": "zwei Teilsätze, ein Auftrag dieser Lenkung", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRC-095", "input": "Prüf meinen Kalender für diese Woche", "note": "prüfen", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRC-096", "input": "Gibt es diese Woche Terminüberschneidungen?", "note": "Überschneidungen", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:TODAY"}, "id": "BRC-097", "input": "Habe ich bei meinen Terminen heute etwas vergessen?", "note": "ein Tag nur mit dem Wort Termine", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:THIS_WEEK"}, "id": "BRC-098", "input": "Wann habe ich diese Woche Zeit?", "note": "freie Blöcke", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:NEXT_WEEK"}, "id": "BRC-099", "input": "Wo ist nächste Woche noch etwas frei?", "note": "frei", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:TOMORROW"}, "id": "BRC-100", "input": "Habe ich morgen noch Zeit?", "note": "ein Tag", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:TODAY"}, "id": "BRC-101", "input": "Wann bin ich heute frei?", "note": "heute", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-102", "input": "Trag für diese Woche einen Termin beim Zahnarzt ein", "note": "Kalender schreiben", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-103", "input": "Diese Woche war anstrengend", "note": "Aussage", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-104", "input": "Was haben wir diese Woche entschieden?", "note": "Arbeitsjournal", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-105", "input": "Erinnere mich nächste Woche an den Zahnarzt", "note": "Erinnerung", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-106", "input": "Wie wird das Wetter diese Woche?", "note": "Wetter gibt es nur für heute und morgen", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-107", "input": "Wo habe ich meine Schlüssel vergessen?", "note": "kein Kalenderbezug", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-108", "input": "Hat Anna diese Woche Zeit?", "note": "fremder Kalender", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-109", "input": "Welche Termine hat Anna diese Woche?", "note": "fremder Kalender", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-110", "input": "Lösch alle Termine dieser Woche", "note": "Kalender ändern", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-111", "input": "Schau, welche Termine ich diese Woche habe, und verschieb den Zahnarzt", "note": "zweiter Auftrag ändert den Kalender", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-112", "input": "Sag Anna, dass ich diese Woche keine Zeit habe", "note": "Nachrichtentext", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-113", "input": "Welche Nachrichten gab es diese Woche?", "note": "Nachrichten, nicht Termine", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-114", "input": "Ich habe diese Woche viele Termine", "note": "Aussage", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRC-115", "input": "Habe ich heute etwas vergessen?", "note": "ohne Termin- oder Kalenderwort bleibt ein einzelner Tag offen", "runner": "briefing_route"}
