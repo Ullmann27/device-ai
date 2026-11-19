@@ -45,7 +45,15 @@ internal data class OwnerComputerIntent(
     }
 }
 
-/** Parsing grants no device permission. */
+/**
+ * Parsing grants no device permission.
+ *
+ * One order per sentence (review finding B5, 19.11.2026): when the words after the app, a search text or a recipient
+ * carry a FURTHER order – a connector or a comma followed by an imperative of [OwnerVerbLexicon], „Öffne WhatsApp und
+ * schreib meinem Vater guten Morgen“, „Suche in WhatsApp nach Anna und schreib ihr Hallo“ – the sentence is not this
+ * lane's single order. It answers [Result.NotComputerCommand], so the mission planner can read the sentence clause by
+ * clause, instead of ending the turn with a refusal or typing the second order into the search field.
+ */
 internal object OwnerComputerIntentParser {
     sealed interface Result {
         data class Ready(val intent: OwnerComputerIntent) : Result
@@ -64,7 +72,6 @@ internal object OwnerComputerIntentParser {
      * names speech recognition breaks („Dschimeil“, „G Mail“; UND-006, UND-018).
      */
     private val NO_PLAIN_OPEN = setOf(ComputerApp.GMAIL)
-    private val otherAction = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:und|dann|danach)\\s+(?:sende?|schicke?|lösche?|loesche?|poste?|teile?|kaufe?|rufe?|öffne?|oeffne?|starte?|suche?)(?![\\p{L}\\p{N}_])")
     /** The optional suffix is presentation only, never a second device action. */
     private val downloadsOpen = Regex(
         "(?iu)^(?:(?:den|meinen)\\s+)?downloads?(?:[- ]?ordner)?" +
@@ -102,16 +109,21 @@ internal object OwnerComputerIntentParser {
         if (negation.containsMatchIn(command)) {
             val affirmative = negation.replace(command, " ").replace(Regex("\\s+"), " ").trim()
             val candidate = if (':' in text) affirmative + ":" + text.substringAfter(':') else affirmative
-            return if (parseCommand(candidate, contextApp) == Result.NotComputerCommand) Result.NotComputerCommand
+            // A negated order of this lane stays a refusal, whatever follows it in the sentence.
+            return if (parseCommand(candidate, contextApp, alone = true) == Result.NotComputerCommand) Result.NotComputerCommand
                 else Result.Unsupported("Der verneinte App-Auftrag wird nicht ausgeführt.")
         }
         return parseCommand(text, contextApp)
     }
 
-    private fun parseCommand(normalized: String, contextApp: ComputerApp?): Result {
+    /**
+     * [alone]: the sentence is judged as this lane's order only – a further order in it is then a reason to refuse
+     * instead of handing the sentence on.
+     */
+    private fun parseCommand(normalized: String, contextApp: ComputerApp?, alone: Boolean = false): Result {
         var text = normalized
         val lower = text.lowercase(Locale.ROOT)
-        parseMessage(text, contextApp)?.let { return it }
+        parseMessage(text, contextApp, alone)?.let { return it }
         text = text.trimEnd('.', '?', '!').trim()
         Regex("(?iu)^(?:öffne|oeffne|starte|open|wechsle\\s+zu|wechsel\\s+zu)\\s+(.+)$").matchEntire(text)?.let { match ->
             // Courtesy words carry no second step: „Öffne WhatsApp bitte“ is a plain open.
@@ -128,14 +140,18 @@ internal object OwnerComputerIntentParser {
                 return Result.Ready(OwnerComputerIntent(found.second, ComputerGoal.OPEN_DOWNLOADS))
             }
             val search = searchLabel.matchEntire(suffix)
-                ?: return Result.Unsupported("Der zusätzliche App-Schritt wird noch nicht sicher verstanden.")
-            return search(found.second, search.groupValues[1])
+            if (search == null) {
+                // „… und schreib meinem Vater guten Morgen“: a second order, not a step of this one.
+                if (!alone && OwnerVerbLexicon.hasFurtherOrder(" $suffix")) return Result.NotComputerCommand
+                return Result.Unsupported("Der zusätzliche App-Schritt wird noch nicht sicher verstanden.")
+            }
+            return search(found.second, search.groupValues[1], alone)
         }
         Regex("(?iu)^(?:suche|such)\\s+(?:in|auf)\\s+(.+)$").matchEntire(text)?.let { match ->
             val found = appPrefix(match.groupValues[1]) ?: return Result.NotComputerCommand
             val query = match.groupValues[1].substring(found.first.length).trim()
                 .replace(Regex("(?iu)^nach(?:\\s+|$)"), "")
-            return search(found.second, query)
+            return search(found.second, query, alone)
         }
         apps.firstOrNull { lower == "${it.first} öffnen" || lower == "${it.first} oeffnen" }?.let {
             return if (it.second in NO_PLAIN_OPEN) Result.NotComputerCommand
@@ -144,12 +160,15 @@ internal object OwnerComputerIntentParser {
         return Result.NotComputerCommand
     }
 
-    private fun search(app: ComputerApp, raw: String): Result {
+    private fun search(app: ComputerApp, raw: String, alone: Boolean): Result {
+        val query = raw.trim().trim('"', '„', '“').trim()
+        // „… nach Anna und schreib ihr Hallo“: the second order is never typed into the search.
+        val further = OwnerVerbLexicon.hasFurtherOrder(query)
+        if (further && !alone) return Result.NotComputerCommand
         if (app in OPEN_ONLY_APPS)
             return Result.Unsupported("In ${app.discoveryQuery} ist nur das bestätigte Öffnen mit Livebild freigegeben.")
-        val query = raw.trim().trim('"', '„', '“').trim()
         if (query.isBlank()) return Result.Ask("Wonach soll ich in ${app.discoveryQuery} suchen?", app)
-        if (query.length > 200 || otherAction.containsMatchIn(query)) {
+        if (query.length > 200 || further) {
             return Result.Unsupported("Bitte nenne einen eindeutigen Suchauftrag ohne weitere Aktion.")
         }
         return Result.Ready(OwnerComputerIntent(app, ComputerGoal.SEARCH, query))
@@ -159,7 +178,7 @@ internal object OwnerComputerIntentParser {
         text.equals(alias, true) || (text.startsWith(alias, true) && text.getOrNull(alias.length)?.isWhitespace() == true)
     }
 
-    private fun parseMessage(text: String, contextApp: ComputerApp?): Result? {
+    private fun parseMessage(text: String, contextApp: ComputerApp?, alone: Boolean): Result? {
         if (!Regex("(?iu)^(?:bereite|verfasse|schreibe|schreib|sende|schicke)(?![\\p{L}\\p{N}_])").containsMatchIn(text)) return null
         val colon = text.indexOf(':')
         val command = if (colon < 0) text else text.substring(0, colon)
@@ -189,7 +208,9 @@ internal object OwnerComputerIntentParser {
             .replace(Regex("(?iu)^an(?:\\s+|$)"), "")
             .replace(Regex("(?iu)(?:^|\\s+)vor$"), "").trim()
         if (remaining.isBlank()) return Result.Ask("An wen soll ich den Entwurf vorbereiten?")
-        if (remaining.length > 120 || otherAction.containsMatchIn(remaining)) return Result.Unsupported("Der Empfänger ist nicht eindeutig beschrieben.")
+        val further = OwnerVerbLexicon.hasFurtherOrder(remaining)
+        if (further && !alone) return Result.NotComputerCommand
+        if (remaining.length > 120 || further) return Result.Unsupported("Der Empfänger ist nicht eindeutig beschrieben.")
         if (draft.isNullOrBlank()) return Result.Ask("Welchen Text soll ich als Entwurf eintragen?")
         if (draft.length > 500 || draft.any { it.isISOControl() }) return Result.Unsupported("Der Text überschreitet die sichere Eingabegrenze von 500 Zeichen.")
         val send = Regex("(?iu)^(?:sende|schicke)(?![\\p{L}\\p{N}_])").containsMatchIn(text)
