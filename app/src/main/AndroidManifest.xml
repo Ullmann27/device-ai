@@ -144,6 +144,11 @@
             android:name=".ContinuumOwnerUpdateReceiver"
             android:exported="false" />
 
+        <!-- „Später“ on Continuum's own card for an incoming message. Not exported; it starts nothing. -->
+        <receiver
+            android:name=".notifications.IncomingMessageActionReceiver"
+            android:exported="false" />
+
         <activity
             android:name=".AgentActivity"
             android:exported="true"

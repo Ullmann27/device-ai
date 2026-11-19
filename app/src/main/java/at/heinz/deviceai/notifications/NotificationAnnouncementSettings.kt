@@ -88,7 +88,8 @@ object NotificationAnnouncementSettings {
 
     const val UNSUPPORTED_NOTICE = "Ansagen von Benachrichtigungen sind in dieser Installation nicht enthalten. " +
         "Android (Google Play Protect) blockiert sonst die normale Installation der App. " +
-        "Alles andere im Gespräch und im Fahrmodus funktioniert unverändert."
+        "Alles andere im Gespräch und im Fahrmodus funktioniert unverändert. Neue Nachrichten aus WhatsApp und Gmail " +
+        "meldet Continuum ohne diesen Dienst über „Eingehende Nachrichten melden“ (Einstellungen)."
 
     /** True when the owner granted notification access to this app's listener in Android settings. */
     fun isAccessGranted(context: Context): Boolean {

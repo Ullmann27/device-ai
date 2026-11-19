@@ -9,8 +9,9 @@ import android.service.notification.StatusBarNotification
  * Receives posted notifications after the owner granted notification access in Android settings.
  *
  * The service decides nothing and speaks nothing. It maps a notification of an app the owner
- * enabled to an [IncomingNotification] and hands it to [ContinuumNotificationBus]. For everything
- * else (announcements off, app without a rule, own package) the extras are not even read.
+ * enabled (for the plain announcements or for „Eingehende Nachrichten melden“) to an [IncomingNotification]
+ * and hands it to [ContinuumNotificationBus]. For everything else (both off, app without a rule, own
+ * package) the extras are not even read.
  * Content is never logged and never written to disk.
  */
 class ContinuumNotificationListener : NotificationListenerService() {
@@ -24,6 +25,7 @@ class ContinuumNotificationListener : NotificationListenerService() {
 
     override fun onListenerConnected() {
         ContinuumNotificationBus.listenerConnected = true
+        IncomingMessages.start(this)
         if (driveAnnouncer == null) driveAnnouncer = DriveBackgroundAnnouncer(this).also { it.start() }
     }
 
@@ -57,11 +59,14 @@ class ContinuumNotificationListener : NotificationListenerService() {
 
     private fun map(sbn: StatusBarNotification): IncomingNotification? {
         val settings = NotificationAnnouncementSettings.load(this)
-        if (!settings.enabled) return null
+        val incoming = IncomingMessagePreferences.load(this)
         val sourcePackage = sbn.packageName ?: return null
         if (sourcePackage == packageName) return null
-        val mode = settings.apps[sourcePackage]?.mode ?: AnnouncementMode.OFF
-        if (mode == AnnouncementMode.OFF) return null
+        // Mapped for an app of the plain announcements or of „Eingehende Nachrichten melden“; each side then applies
+        // its own settings. For every other app the extras are not even read.
+        val announced = settings.enabled && (settings.apps[sourcePackage]?.mode ?: AnnouncementMode.OFF) != AnnouncementMode.OFF
+        val reported = incoming.enabled && sourcePackage in incoming.apps
+        if (!announced && !reported) return null
 
         val notification = sbn.notification ?: return null
         val extras = notification.extras
@@ -81,7 +86,17 @@ class ContinuumNotificationListener : NotificationListenerService() {
             isGroupSummary = flags and Notification.FLAG_GROUP_SUMMARY != 0,
             postedAtMs = sbn.postTime,
             isOwnPackage = false,
+            details = if (reported) NotificationDetailsReader.details(notification, NotificationSource.LISTENER, silent(sbn)) else null,
         )
+    }
+
+    /** true = Android ranks it below the default importance (no sound): a muted chat or a silent channel. */
+    private fun silent(sbn: StatusBarNotification): Boolean? = try {
+        val ranking = NotificationListenerService.Ranking()
+        if (currentRanking?.getRanking(sbn.key, ranking) == true) ranking.importance < android.app.NotificationManager.IMPORTANCE_DEFAULT
+        else null
+    } catch (_: RuntimeException) {
+        null
     }
 
     /** Keeps no more than the policy will ever inspect, so large payloads are not held in memory. */
