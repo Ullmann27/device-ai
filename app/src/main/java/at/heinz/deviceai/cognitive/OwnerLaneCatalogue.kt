@@ -41,13 +41,22 @@ internal object OwnerLaneCatalogue {
                 "der Entwurf in WhatsApp bereit; nur der eigene Wortlaut des Besitzers",
             mapped = false),
         Ability("mission", "Mehrere dieser Aufträge in einem Satz nacheinander ausführen",
-            listOf("Öffne das PDF <Name>, fass Seite 2 zusammen, speichere es als Word und schick es per Mail an <Adresse>"),
-            "jeder Schritt mit den Freigaben seines eigenen Ablaufs"),
+            listOf("Öffne das PDF <Name>, fass Seite 2 zusammen, speichere es als Word und schick es per Mail an <Adresse>",
+                "Öffne das PDF <Name> und fass Seite <Zahl> zusammen"),
+            "jeder Schritt mit den Freigaben seines eigenen Ablaufs; ohne Speicherauftrag wird nichts gespeichert; was noch " +
+                "kein Schritt sein kann (senden, andere App, Mails lesen), sagt die App und bietet den Rest an"),
         Ability("newest_file", "Die neueste Datei eines Ordners suchen",
             listOf("Such das neueste PDF in Downloads"), "nur lesend", needsBridge = true),
-        Ability("computer", "Eine andere App im Live-Bild bedienen",
-            listOf("Öffne Chrome und suche <Begriff>", "Suche in Gmail nach <Begriff>"),
-            "Bildschirmbeobachtung und Bestätigungen des Besitzers; nur die fest angebundenen Apps", mapped = false),
+        // Review finding B5 (19.11.2026): the list used to name „Öffne Chrome und suche <Begriff>“ although Chrome is one
+        // of the apps this flow only opens. Every sentence here is one the flow really carries out (the test asks it).
+        Ability("computer", "Eine andere App im Live-Bild öffnen und in manchen davon suchen",
+            listOf("Öffne Chrome", "Öffne WhatsApp und suche <Begriff>", "Suche in Gmail nach <Begriff>"),
+            "Bildschirmbeobachtung und Bestätigungen des Besitzers; nur die fest angebundenen Apps; Chrome, Einstellungen, " +
+                "Kamera, Galerie, Kalender, TikTok und SMS werden nur geöffnet", mapped = false),
+        Ability("calendar", "Termine dieser oder der nächsten Woche nennen, freie Zeiten zeigen und nach festen Regeln prüfen, " +
+            "was auffällt",
+            listOf("Welche Termine habe ich diese Woche?", "Habe ich diese Woche etwas vergessen?"),
+            "nur lesend; die Termine bleiben auf dem Gerät und gehen an kein Modell", mapped = false),
         Ability("research", "Im Web recherchieren und Quellen nennen",
             listOf("Recherchiere <Thema>"), "Internetfreigabe des Besitzers", mapped = false),
         Ability("system", "Das Handy im Systemzentrum analysieren (Speicher, Wärme, Akku, eigene Diagnoseablage)",
