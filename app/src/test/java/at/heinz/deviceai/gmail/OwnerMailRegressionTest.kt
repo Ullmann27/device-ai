@@ -71,12 +71,17 @@ class OwnerMailRegressionTest {
             KNOWN_CHECK_MISSES, misses.keys)
     }
 
+    private val SHARED_WITH_THE_COMPUTER_LANE = setOf("regression-computer-check.jsonl:COMC-012", "regression-computer.jsonl:COM-020")
+
     /** Sentences of the other sets do not become mail orders (no open mail context, as in every other lane's chat). */
     @Test fun noUtteranceOfTheOtherSetsBecomesAMailOrder() {
         val moved = mutableListOf<String>()
         var checked = 0
         fun check(source: String, utterance: String) {
             checked++
+            // „Suche in Gmail nach …“ is shared on purpose: with a connected account the API lane answers it, without one
+            // it stays with the computer lane (OwnerMailDirector.handles). The computer sets pin that second half.
+            if (source in SHARED_WITH_THE_COMPUTER_LANE) return
             OwnerMailCommands.standalone(utterance, "Jarvis")?.let { moved += "$source „$utterance“ → ${it.code}" }
         }
         root.listFiles { file -> file.name.endsWith(".jsonl") && !file.name.startsWith("regression-mail") }!!.sortedBy { it.name }.forEach { file ->
