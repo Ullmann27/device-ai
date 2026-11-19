@@ -22,6 +22,7 @@ object ContinuumSettingsHub {
         MEMORY("KI & Gedächtnis", "Gedächtnis & Fakten", "Erinnerungen ansehen, berichtigen und löschen"),
         LEARNING("KI & Gedächtnis", "Lernen & Training", "Lernzentrum und vorhandene Trainingsoptionen"),
         PERSONAL("KI & Gedächtnis", "Personalisierung", "Persönliche Fakten und Lernzugänge"),
+        CONNECTIONS("Internet & Verbindungen", "Verbindungen", "Google Gmail, Kalender, Kontakte, Dateien, WhatsApp, Internet, Benachrichtigungen"),
         INTERNET("Internet & Verbindungen", "Internetfreigabe", "Offline, nachfragen oder freigegeben"),
         RESEARCH("Internet & Verbindungen", "Recherche & Datenschutz", "Recherchemodus und bestehende Freigaben"),
         CLOUD("Internet & Verbindungen", "Cloud-Backend", "Server und Verbindungsoptionen"),

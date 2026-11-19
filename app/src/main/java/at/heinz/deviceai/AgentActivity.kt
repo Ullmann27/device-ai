@@ -2541,6 +2541,8 @@ class AgentActivity : Activity() {
                 computerController?.awaitingConsent == true) ?: org.json.JSONObject.NULL)
             // The storage lane's phase, progress and measured figures (schema continuum.deepclean.v1, no file names).
             .put("deepClean", deepClean.stage.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
+            // What the Gmail lane really did (phase, counts, cards); schema in gmail/MailWorkBoard.kt.
+            .put("mailWork", ownerMailBoard.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
                 .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
             .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
@@ -4728,6 +4730,7 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.LEARNING -> showLearningCenter()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.PERSONAL -> showNexusPersonalization()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.INTERNET -> showInternetSettings()
+                at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.CONNECTIONS -> showContinuumConnections()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.RESEARCH -> showResearchModeDialog()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.CLOUD -> showCloudSettings()
                 at.heinz.deviceai.ui.ContinuumSettingsHub.Entry.OPENROUTER -> showOpenRouterApiKeyDialog()
@@ -7632,6 +7635,7 @@ class AgentActivity : Activity() {
                 if (consumeOwnerWorkInterruption()) return@setOnClickListener
                 if (interceptOwnerMission()) return@setOnClickListener
                 if (interceptOwnerDocumentDesk()) return@setOnClickListener
+                if (interceptOwnerMail()) return@setOnClickListener
                 if (consumePendingResearchChatReply()) return@setOnClickListener
                 // „Erlauben“, „Ablehnen“ and „Stopp den Coding-Agenten“ reach the cloud agent while the lane is busy.
                 if (busy && codingAgents.controls(input.text.toString()) && interceptCodingAgents()) return@setOnClickListener
@@ -8139,6 +8143,7 @@ class AgentActivity : Activity() {
         if (consumeOwnerWorkInterruption()) return
         if (interceptOwnerMission()) return
         if (interceptOwnerDocumentDesk()) return
+        if (interceptOwnerMail()) return
         if (consumeDeviceToolCommand()) return
         if (interceptIncomingMessages()) return
         if (computerController?.active == true && input.text.toString().trim().lowercase() in
@@ -8254,6 +8259,10 @@ class AgentActivity : Activity() {
         // Storage lane („Bereinige mein Handy“, „Schau, was unnötig Speicher verbraucht“, „Mach eine Tiefenbereinigung“).
         if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
             computerController?.active != true && deepClean.handle(request)) return
+        // Gmail lane: „Zeig mir neue Mails“, „Fass sie zusammen“, „Schick die Mail ab“ (with confirmation). Fail closed;
+        // „Suche in Gmail nach X“ without a connected account stays with the computer lane below (ownerMail.handles).
+        if (clarifiedAppName == null && clarifiedComputer == null && selectedBot == null && !neuralCoach.isActive() &&
+            computerController?.active != true && ownerMail.handles(request) && ownerMail.handle(request)) return
         if (clarifiedAppName == null && selectedBot == null && tryStartComputerRequest(request, clarifiedComputer)) return
         // Owner work tools: „Fass mir die Nachrichten von heute zusammen“, then „speichere das als PDF“ / „schick das
         // per Mail an …“. Deterministic and fail closed; before the clock, document and research lanes can guess.
@@ -13942,6 +13951,174 @@ class AgentActivity : Activity() {
             tone = { ownerTalk.tone == at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL })
     }
     internal val deepClean: at.heinz.deviceai.deepclean.DeepCleanDirector get() = deepCleanWiring.first
+    // ── Gmail lane and „Verbindungen“ (gmail/*, connections/*) ─────────────────────────────────────────────────
+    // Thin adapter only: recognition, wording, the API, the error mapping and the stage record live in the packages
+    // at.heinz.deviceai.gmail and at.heinz.deviceai.connections. Mail content is answered privately: shown and
+    // spoken, but not written to the chat transcript and not put into the model's conversation context.
+
+    /** Host tests replace Google's authorization and the network; null = the real phone. */
+    internal var ownerMailAuthorizerOverride: at.heinz.deviceai.gmail.GmailAuthorizer? = null
+    internal var ownerMailTransportOverride: at.heinz.deviceai.gmail.GmailHttpTransport? = null
+    private val ownerMailStore by lazy { at.heinz.deviceai.gmail.AndroidConnectionStore(this, at.heinz.deviceai.gmail.GmailConnection.PREFERENCES) }
+    private val ownerMailConnection by lazy { at.heinz.deviceai.gmail.GmailConnection(ownerMailStore) }
+    private val ownerConnectionUsage by lazy {
+        at.heinz.deviceai.connections.ContinuumConnectionUsage(at.heinz.deviceai.gmail.AndroidConnectionStore(this, "continuum-connections"))
+    }
+    internal val ownerMailBoard = at.heinz.deviceai.gmail.MailWorkBoard()
+    private val ownerMailAuthorizer by lazy { at.heinz.deviceai.gmail.AndroidGmailAuthorizer(this) { ownerMailConnection.account } }
+    private val ownerMailConsent by lazy { at.heinz.deviceai.gmail.AndroidGmailConsent(this, ownerMailAuthorizer) }
+    internal val ownerMail by lazy { at.heinz.deviceai.gmail.OwnerMailDirector(OwnerMailAdapter()) }
+
+    /** The stop word while a Gmail job runs. */
+    private fun interceptOwnerMail(spoken: String = input.text.toString().trim()): Boolean {
+        if (spoken.isEmpty() || selectedBot != null || !ownerMail.intercept(spoken)) return false
+        input.text.clear()
+        addUserMessage(spoken, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        return true
+    }
+
+    private fun showContinuumConnections() {
+        centerDialog?.dismiss()
+        val work = OwnerWorkToolsAdapter()
+        val send = OwnerSendAdapter()
+        val briefing = ContinuumBriefingAdapter()
+        val checks = object : at.heinz.deviceai.connections.ContinuumConnectionChecks {
+            override fun gmail() = ownerMailConnection.view()
+            override fun calendarGranted(): Boolean? = runCatching { briefing.calendar().granted() }.getOrNull()
+            override fun contactsGranted(): Boolean? = runCatching { send.contactsReadable() }.getOrNull()
+            override fun filesAccess(): Boolean? = when (runCatching { (ownerDeskFilesOverride ?: ownerDeskPhoneFiles).access() }.getOrNull()) {
+                OwnerLibraryAccess.GRANTED -> true
+                OwnerLibraryAccess.MISSING -> false
+                else -> null
+            }
+            override fun whatsappInstalled(): Boolean? = runCatching { send.device().installed(at.heinz.deviceai.sending.SendChannel.WHATSAPP) }.getOrNull()
+            override fun whatsappSelfSend(): Boolean? = runCatching { ownerSendGrants.enabled(at.heinz.deviceai.sending.SendChannel.WHATSAPP) }.getOrNull()
+            override fun accessibilityOn(): Boolean? = runCatching { send.device().accessibilityOn() }.getOrNull()
+            override fun internetMode(): at.heinz.deviceai.cognitive.InternetAccessMode? = runCatching { work.internetMode() }.getOrNull()
+            override fun incomingAnnouncements(): Boolean? =
+                runCatching { at.heinz.deviceai.notifications.IncomingMessagePreferences.load(this@AgentActivity).enabled }.getOrNull()
+            override fun canAskPermission(permission: String): Boolean =
+                checkSelfPermission(permission) == android.content.pm.PackageManager.PERMISSION_GRANTED ||
+                    !getSharedPreferences("continuum-connections", MODE_PRIVATE).getBoolean("asked_$permission", false) ||
+                    shouldShowRequestPermissionRationale(permission)
+        }
+        val actions = object : at.heinz.deviceai.connections.ContinuumConnectionsActions {
+            override fun rows() = at.heinz.deviceai.connections.ContinuumConnectionRegistry.rows(checks, ownerConnectionUsage)
+            override fun gmail() = ownerMailConnection
+            override fun idle(): Boolean = !busy && !ownerMission.active
+            override fun connectGmail(capability: at.heinz.deviceai.gmail.GmailCapability, done: (String) -> Unit) =
+                ownerMail.connectFromSettings(capability, done)
+            override fun disconnectGmail(done: (String) -> Unit) = ownerMail.disconnectFromSettings(done)
+            override fun perform(kind: at.heinz.deviceai.connections.ContinuumConnectionKind,
+                                 action: at.heinz.deviceai.connections.ContinuumConnectionAction) {
+                fun open(intent: Intent) { runCatching { startActivity(intent) }.onFailure {
+                    Toast.makeText(this@AgentActivity, "Diese Android-Seite ließ sich nicht öffnen.", Toast.LENGTH_LONG).show() } }
+                fun asked(permission: String) = getSharedPreferences("continuum-connections", MODE_PRIVATE).edit()
+                    .putBoolean("asked_$permission", true).apply()
+                when (action) {
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_GMAIL -> Unit
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.REQUEST_PERMISSION -> when (kind) {
+                        at.heinz.deviceai.connections.ContinuumConnectionKind.CALENDAR -> {
+                            asked(android.Manifest.permission.READ_CALENDAR)
+                            briefing.requestCalendar(at.heinz.deviceai.briefing.ContinuumBriefingDirector.CALENDAR_EXPLANATION) { showContinuumConnections() }
+                        }
+                        at.heinz.deviceai.connections.ContinuumConnectionKind.CONTACTS -> {
+                            asked(android.Manifest.permission.READ_CONTACTS)
+                            send.requestContacts(at.heinz.deviceai.gmail.OwnerMailDirector.CONTACTS_EXPLANATION) { showContinuumConnections() }
+                        }
+                        else -> Unit
+                    }
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_APP_SETTINGS ->
+                        open(Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.parse("package:$packageName")))
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_FILES_ACCESS ->
+                        (ownerDeskFilesOverride ?: ownerDeskPhoneFiles).accessSettings().firstOrNull()?.let(::open)
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_ACCESSIBILITY ->
+                        open(Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_SELF_SEND -> showOwnerSendSettings()
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_INTERNET -> showInternetSettings()
+                    at.heinz.deviceai.connections.ContinuumConnectionAction.OPEN_INCOMING -> showIncomingMessageSettings()
+                }
+            }
+        }
+        val dialog = at.heinz.deviceai.connections.ContinuumConnectionsDialog.show(this, actions)
+        centerDialog = dialog
+        dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
+    }
+
+    private inner class OwnerMailAdapter : at.heinz.deviceai.gmail.OwnerMailHost {
+        private val work = OwnerWorkToolsAdapter()
+        private val send = OwnerSendAdapter()
+        override val sessionId: String get() = work.sessionId
+        override val ownerTurn: Long get() = work.ownerTurn
+        override val assistantName: String? get() = work.assistantName
+        override fun acceptOwnerTurn(request: String) = showOwnerLaneTurn(request)
+
+        override fun answer(request: String?, spoken: String, shown: String, private: Boolean) {
+            // Only the owner's own sentence and a fixed label enter the model context – never mail data.
+            if (request != null) localConversationContext.recordNonModel(sessionId, request,
+                "(Gmail-Auftrag deterministisch bearbeitet; Mailinhalte, Absender und Betreffe nicht im Verlauf)")
+            addAssistantMessage(shown.take(8_000), preserveLocalContext = true, keepCockpit = activeWorkArea == ContinuumWorkArea.START,
+                speakNow = false, persist = !private)
+            speakReply(at.heinz.deviceai.cognitive.ChatReplyFormatter.plain(spoken.take(4_000)), ownerReplyAllowsMaya)
+        }
+
+        override fun activity(line: String) = addToolActivity(line)
+        override fun internetMode(): at.heinz.deviceai.cognitive.InternetAccessMode = work.internetMode()
+        override fun cloudBrain(): Boolean = work.cloudBrain()
+        // With the cloud brain selected the device model is not loaded (SelectableModelRuntime refuses loads).
+        override fun onDeviceModelReady(): Boolean = !work.cloudBrain() && work.modelReady()
+        override fun promptBudgetBytes(): Int = runCatching { work.promptBudgetBytes() }.getOrDefault(6_000)
+        override fun connection() = ownerMailConnection
+        override fun usage() = ownerConnectionUsage
+        override fun board() = ownerMailBoard
+        override fun transport(): at.heinz.deviceai.gmail.GmailHttpTransport = ownerMailTransportOverride ?: at.heinz.deviceai.gmail.AndroidGmailTransport()
+        override fun authorizer(): at.heinz.deviceai.gmail.GmailAuthorizer = ownerMailAuthorizerOverride ?: ownerMailAuthorizer
+
+        override fun authorize(capabilities: Set<at.heinz.deviceai.gmail.GmailCapability>,
+                               done: (at.heinz.deviceai.gmail.GmailAuthResult) -> Unit) {
+            ownerMailAuthorizerOverride?.let { fake ->
+                done(fake.silent(capabilities).let { if (it is at.heinz.deviceai.gmail.GmailAuthResult.NeedsConsent)
+                    at.heinz.deviceai.gmail.GmailAuthResult.Failed(at.heinz.deviceai.gmail.GmailFailureKind.CANCELLED) else it })
+                return
+            }
+            ownerMailConsent.begin(capabilities) { result -> mainHandler.post { if (!isFinishing && !isDestroyed) done(result) } }
+        }
+
+        override fun revoke(account: String?, grant: at.heinz.deviceai.gmail.GmailGrant,
+                            done: (at.heinz.deviceai.gmail.GmailFailureKind?) -> Unit) {
+            if (ownerMailAuthorizerOverride != null) { done(null); return }
+            ownerMailAuthorizer.revoke(account, grant) { problem -> mainHandler.post { done(problem) } }
+        }
+
+        override fun <T> runJob(request: String, label: String, work: (at.heinz.deviceai.gmail.OwnerMailJob) -> T, done: (Result<T>) -> Unit) {
+            this.work.runFileJob(request, { job ->
+                work(object : at.heinz.deviceai.gmail.OwnerMailJob {
+                    override fun step(key: String, label: String, state: at.heinz.deviceai.cockpit.StepState) = job.step(key, label, state)
+                    override fun cancelled(): Boolean = isFinishing || isDestroyed
+                    override fun generate(prompt: String, cloud: Boolean): OwnerWorkGeneration {
+                        // The brain the lane decided on must be the one that answers: never quietly the other one.
+                        if (cloud != (claudeBrain?.claudeSelected == true))
+                            return OwnerWorkGeneration("", "Das gewählte Gehirn hat sich geändert", false)
+                        if (cloud) at.heinz.deviceai.localmodel.ClaudeTurnGate.refusal(claudeBrain, request, false)
+                            ?.let { return OwnerWorkGeneration("", it, false) }
+                        val generation = generateLocal(promptCharacters = prompt.length, hardDeadlineMillis = 150_000,
+                            maxOutputBytes = 6_000) { callback -> localRuntime.streamTextOnly(prompt, callback) }
+                        return OwnerWorkGeneration(generation.response, generation.failure,
+                            generation.completion == LocalGenerationCompletion.COMPLETE)
+                    }
+                })
+            }) { result -> done(result) }
+        }
+
+        override fun contactsReadable(): Boolean = send.contactsReadable()
+        override fun requestContacts(explanation: String, done: (Boolean) -> Unit) = send.requestContacts(explanation, done)
+        override fun contacts(): at.heinz.deviceai.sending.OwnerSendContactSource = send.contacts()
+        override fun nowMillis(): Long = System.currentTimeMillis()
+        override fun zone(): java.time.ZoneId = java.time.ZoneId.systemDefault()
+        override fun deliverable(title: String, text: String, cloud: Boolean) =
+            ownerWorkTools.noteDocumentDraft(title, text, complete = true, cloud = cloud)
+        override fun outcome(outcome: OwnerLaneOutcome) = continuumBriefing.laneOutcome(outcome)
+    }
 
     private fun runCloud(message: String?, outputs: List<ToolOutput>) = runCloud(message, outputs, command03ViewOwner())
 
@@ -18140,7 +18317,8 @@ class AgentActivity : Activity() {
      */
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean, keepCockpit: Boolean,
                                     allowMaya: Boolean = ownerReplyAllowsMaya, speakNow: Boolean = true,
-                                    kind: at.heinz.deviceai.cognitive.OwnerChatLine.Kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.SYSTEM) {
+                                    kind: at.heinz.deviceai.cognitive.OwnerChatLine.Kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.SYSTEM,
+                                    persist: Boolean = true) {
         // „Ich habe „Thermux“ als Termux verstanden.“ – stated once, in front of the answer to the repaired turn.
         @Suppress("NAME_SHADOWING") val value = ownerUnderstanding.withNotice(sessionId, value)
         if (value.trimEnd().endsWith("?")) { incomingQuestionTurn = ownerReplyRevision; incomingQuestionAt = android.os.SystemClock.elapsedRealtime() }
@@ -18165,7 +18343,7 @@ class AgentActivity : Activity() {
             (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         }
         returnClause?.let { addBubble(it, user = false) }
-        addHomeGreeting(value, allowMaya = allowMaya, speakNow = speakNow, spokenLead = returnClause, kind = kind)
+        addHomeGreeting(value, persist = persist, allowMaya = allowMaya, speakNow = speakNow, spokenLead = returnClause, kind = kind)
     }
 
     /** Startup/session greetings remain available in chat without taking space
@@ -19158,6 +19336,7 @@ class AgentActivity : Activity() {
 
     @Deprecated("Deprecated in Android SDK, kept for broad device compatibility")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (ownerMailConsent.onActivityResult(requestCode, resultCode, data)) return
         if (at.heinz.deviceai.cognitive.ComputerCaptureConsent.ownsRequestCode(requestCode)) {
             computerController?.projectionResult(requestCode, resultCode, data)
             return
