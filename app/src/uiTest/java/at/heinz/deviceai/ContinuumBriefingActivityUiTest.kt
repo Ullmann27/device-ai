@@ -91,6 +91,8 @@ class ContinuumBriefingActivityUiTest {
         try {
             controller.setup().visible().windowFocusChanged(true)
             idle()
+            // In the app the name is what the owner told it („Nenn mich …“); these tests give the lane a fixed one.
+            controller.get().continuumOwnerName = { ContinuumBriefingDirector.DEFAULT_OWNER_NAME }
             check(controller.get())
         } finally {
             ShadowAlertDialog.getLatestAlertDialog()?.dismiss()

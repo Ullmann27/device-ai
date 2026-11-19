@@ -211,6 +211,9 @@ class ContinuumBriefingRegressionTest {
          */
         val KNOWN_MOVED_UTTERANCES: Set<String> = setOf("regression-library-check.jsonl:LIBC-041",
             "regression-references.jsonl:REF-010", "regression-references.jsonl:REF-023",
+            // Two weather questions of the tone set (added by the tone package in parallel): there they only pin that a
+            // sentence with a greeting in front is no greeting order; the weather itself is this lane's.
+            "regression-talk-check.jsonl:TLKC-GRU-009", "regression-talk-check.jsonl:TLKC-WNT-003",
             "regression-voice.jsonl:VOI-END-007", "regression.jsonl:REG-LONG-001")
     }
 }

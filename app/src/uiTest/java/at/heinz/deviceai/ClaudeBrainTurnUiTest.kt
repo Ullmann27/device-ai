@@ -247,6 +247,9 @@ class ClaudeBrainTurnUiTest {
             Reply.Stream(listOf(messageStart()) + text(0, closing) + stop("end_turn")))
         val local = LocalFixture("LOKALE ANTWORT")
         withTurns(claudeBrain(), local) { a ->
+            // „App stoppen“ needs the device bridge; since the tool precheck (19.11.2026) a bridge-only tool without it
+            // is refused before the approval. Here the bridge is up, and a declined call must never be dispatched.
+            set(a, "executor", DeviceToolExecutor(a, { true }, { _, _ -> error("a declined call must not be dispatched") }, null))
             val order = "Stoppe die App com.example.app."
             call(a, "runLocal", order, order, null, CognitiveTurnTrace(get(a, "sessionId") as String), null, null)
             // The proposal waits at the app's own confirmation dialog; nothing runs and nothing more is sent.

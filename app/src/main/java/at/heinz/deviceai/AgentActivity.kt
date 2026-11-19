@@ -13394,7 +13394,26 @@ class AgentActivity : Activity() {
      * context only; the owner's name goes into its instructions only under his own switch for that (or his existing
      * opt-in for memory that is marked „nur auf dem Gerät“).
      */
+    /**
+     * One owner name and one tone for every package that speaks to him: the incoming-message question and the
+     * briefing take both from [ownerTalk] (his own „Nenn mich …“ or a confirmed fact – never a built-in name), the
+     * briefing lists the open incoming messages, and the daily briefing offer is the one extra clause of the greeting.
+     */
+    private fun wireOwnerTalkToLanes() {
+        incomingOwnerProfile = object : at.heinz.deviceai.notifications.IncomingOwnerProfile {
+            override val ownerName: String? get() = ownerTalk.name()
+            override val personalTone: Boolean get() = ownerTalk.tone == at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL
+        }
+        continuumOwnerName = { ownerTalk.name() }
+        continuumOpenMessages = at.heinz.deviceai.briefing.ContinuumOpenMessages {
+            at.heinz.deviceai.notifications.IncomingMessages.inbox.open().filter { !it.hidden && it.sender.isNotBlank() }
+                .map { at.heinz.deviceai.briefing.ContinuumOpenMessage(it.sender, it.appLabel, "Was ist noch offen?") }
+        }
+        ownerTalk.greetingExtra = { briefingOffer() }
+    }
+
     private fun wireOwnerTalkToCloudBrain() {
+        wireOwnerTalkToLanes()
         val brain = claudeBrain ?: return
         val store = OwnerTalkPreferences(applicationContext)
         val memory = BootstrapMemoryStore(applicationContext)
@@ -13549,7 +13568,7 @@ class AgentActivity : Activity() {
     internal var continuumOpenMessages: at.heinz.deviceai.briefing.ContinuumOpenMessages =
         at.heinz.deviceai.briefing.ContinuumOpenMessages.NONE
     /** How the owner is addressed in reports and warnings; null = without a name. */
-    internal var continuumOwnerName: () -> String? = { at.heinz.deviceai.briefing.ContinuumBriefingDirector.DEFAULT_OWNER_NAME }
+    internal var continuumOwnerName: () -> String? = { null }
     private val continuumDevice by lazy { at.heinz.deviceai.briefing.AndroidContinuumDevice(this) }
     private val continuumBriefingStore by lazy { at.heinz.deviceai.briefing.ContinuumBriefingPreferences(this) }
     private var pendingContinuumCalendar: ((Boolean) -> Unit)? = null

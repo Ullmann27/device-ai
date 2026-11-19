@@ -43,6 +43,9 @@ class OwnerTalkGreetingUiTest {
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
         app.getSharedPreferences("continuum-command03", Context.MODE_PRIVATE).edit().putBoolean("original_html_main", false).commit()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
+        // The greeting's one extra clause is the daily briefing offer of the briefing package; these tests look at the
+        // greeting itself, so that offer is switched off (the chain is tested in ContinuumBriefingActivityUiTest).
+        app.getSharedPreferences("continuum-briefing", Context.MODE_PRIVATE).edit().putString("offer", "off").commit()
         app.getSharedPreferences("continuum-internet", Context.MODE_PRIVATE).edit().putString("mode", "OFF").commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
             .putBoolean("introduced", true).putBoolean("camera-question-shown-v1", true).commit()
