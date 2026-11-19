@@ -133,6 +133,11 @@ internal interface OwnerMailHost {
     fun zone(): ZoneId
     /** The summary is this chat's newest result: „mach daraus ein PDF“ refers to it next. */
     fun deliverable(title: String, text: String, cloud: Boolean) {}
+    /**
+     * The same with what the saved document states about itself: how many mails it rests on and whether long mails
+     * were cut. A host that keeps the summary as a document of its own overrides this one.
+     */
+    fun summarised(title: String, text: String, mails: Int, cloud: Boolean, complete: Boolean) = deliverable(title, text, cloud)
     /** Typed end of a step for listeners that only know [OwnerLaneOutcome] (drafts and sends map to Delivered). */
     fun outcome(outcome: OwnerLaneOutcome) {}
     fun mailOutcome(outcome: MailLaneOutcome) {}
@@ -882,7 +887,7 @@ internal class OwnerMailDirector(private val host: OwnerMailHost) : OwnerMailLan
                 val author = if (cloud) "über das Cloud-Gehirn (mit deiner Freigabe für Mailinhalte)" else "mit dem Modell auf dem Gerät"
                 val basis = if (complete) "" else " Grundlage ist ein Auszug; lange Mails sind gekürzt."
                 val title = if (messages.size == 1) "Zusammenfassung Mail ${messages.single().ref.from.take(40)}" else "Zusammenfassung ${messages.size} Mails"
-                host.deliverable(title, text, cloud)
+                host.summarised(title, text, messages.size, cloud, complete)
                 board.finish(s.id, true, "Zusammenfassung von ${messages.size} Mails")
                 host.activity("GMAIL · zusammengefasst · ${messages.size} Mails · " + if (cloud) "Cloud" else "Gerät")
                 val shown = (note?.let { "$it\n\n" } ?: "") + text + "\n\nZusammengefasst $author aus ${messages.size} " +

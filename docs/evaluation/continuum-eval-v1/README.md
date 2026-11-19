@@ -16,8 +16,8 @@ privaten Nutzerdaten enthalten und es dürfen ohne ausdrückliche Zustimmung kei
 | `regression-send.jsonl` | 62 | **Host, automatisch** (`ContinuumEvalDatasetTest`) | Selbst senden (18.11.2026): WhatsApp-Auftrag ja/nein (Abgrenzung zu Vorlesen, Fragen, Nachrichtenüberblick, App öffnen), Wortlaut (diktiert, indirekte Rede, Dialekt, Wunsch nach eigenem Text), Empfängerauflösung im Adressbuch (eindeutig, mehrdeutig, unbekannt, ohne Ländervorwahl), ganze Besitzerzüge durch Lenkung und Sendeablauf auf einem nachgebauten Gerät: Dauerfreigabe je Kanal, Regel a (nur Diktiertes/Bestätigtes), Regel b (Rückfrage statt Raten), Bildschirmprüfung, Tagesgrenze, Bildschirmtext als Daten, Gmail mit/ohne gespeicherte Datei, Beziehungen statt Namen („meinem Vater“: nie über Namensbestandteile, gemerkt erst nach Ja, erster Versand bestätigt), kein Empfängerwort im Text, Bestätigung nach „nicht gefunden“ (19.11.2026); Adressbuch aus `regression-send.contacts.json` (frei erfunden). WhatsApp/Gmail selbst sind **nicht** Teil dieses Laufs (Gerät: NOT_RUN) |
 | `regression-library.jsonl` | 160 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage (18.11.2026), **Entwicklungssatz**: „Öffne das PDF Argon4“ ja/nein (ohne Namen → Android-Auswahl, Verneinung, Zitat, Web-Formulierung, Zweitauftrag), Name wie gesagt, Spracherkennungs-Varianten (Zahlwort, klein, „öffnet“, „als Wort“, „Fasst/Fast“), Namensvergleich und Rang (genau · Anfang · enthält · Beinahe-Treffer), Antworten auf die Rückfrage, Seitenauftrag mit Speichern, Korrekturen (Seite · Format · andere Datei · Nummer · Name), Stopp, Abgrenzung zu den anderen Lenkungen |
 | `regression-library-check.jsonl` | 74 | **Host, automatisch** (`OwnerLibraryRegressionTest`) | Dokumentenablage, **zurückgehaltener Prüfsatz**: dieselben Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (`b058417cd`), wird nicht zum Abstimmen benutzt |
-| `regression-missions.jsonl` | 84 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen (18.11.2026), **Entwicklungssatz**: ein Satz mit mehreren Aufträgen für die Besitzer-Lenkungen → geordneter Plan (Lenkung und Argumente je Schritt) oder `NONE`. Besitzerabläufe (PDF öffnen → Seite zusammenfassen → Word → Mail; Nachrichten → PDF → Mail; neuestes PDF suchen → öffnen), Verbinder (Komma, „und“, „und dann“, „danach“, „anschließend“, „dann“, „zuerst“), Bezüge („es“, „sie“, „die Datei“), unabhängige Aufträge hintereinander; dagegen Einzelaufträge, Fragen, Zitate, Verneinungen, Bedingungen, „und“ in Dateinamen und Nachrichtentexten, Bezüge ohne Erzeuger, fremde Teilaufträge, zu viele Schritte. Stand der Datei 84 Fälle: 64 bis zum 19.11.2026 (darunter die Speicher-Folgen) und 20 für die Mehrschritt-Arbeit vom 19.11.2026 – Seite zusammenfassen ohne Speichern (`PAGESUM`) und der Läufer `mission_reading` für die ehrliche Teilantwort (Zielsatz des Besitzers und die Sätze 1–5 der Architekturkritik) |
-| `regression-missions-check.jsonl` | 71 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Auftragsfolgen vor der Umsetzung“), wird nicht zum Abstimmen benutzt; dazu 22 Fälle vom 19.11.2026 (`PAGESUM`, `mission_reading`), ebenfalls vor ihrer Umsetzung eingecheckt (`84f0df82b`) |
+| `regression-missions.jsonl` | 98 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen (18.11.2026), **Entwicklungssatz**: ein Satz mit mehreren Aufträgen für die Besitzer-Lenkungen → geordneter Plan (Lenkung und Argumente je Schritt) oder `NONE`. Besitzerabläufe (PDF öffnen → Seite zusammenfassen → Word → Mail; Nachrichten → PDF → Mail; neuestes PDF suchen → öffnen), Verbinder (Komma, „und“, „und dann“, „danach“, „anschließend“, „dann“, „zuerst“), Bezüge („es“, „sie“, „die Datei“), unabhängige Aufträge hintereinander; dagegen Einzelaufträge, Fragen, Zitate, Verneinungen, Bedingungen, „und“ in Dateinamen und Nachrichtentexten, Bezüge ohne Erzeuger, fremde Teilaufträge, zu viele Schritte. Stand der Datei 84 Fälle: 64 bis zum 19.11.2026 (darunter die Speicher-Folgen) und 20 für die Mehrschritt-Arbeit vom 19.11.2026 – Seite zusammenfassen ohne Speichern (`PAGESUM`) und der Läufer `mission_reading` für die ehrliche Teilantwort (Zielsatz des Besitzers und die Sätze 1–5 der Architekturkritik); dazu 14 Fälle (MIS-085…098) für die zweite Phase vom 19.11.2026: Sende-, App-, Mail-, Kalender- und Recherche-Schritte (`SEND`, `APP`, `MAILFIND`, `MAILREAD`, `MAILSUM`, `CAL`, `RESEARCH`) |
+| `regression-missions-check.jsonl` | 89 | **Host, automatisch** (`OwnerMissionRegressionTest`) | Auftragsfolgen, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor der Umsetzung geschrieben und eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Auftragsfolgen vor der Umsetzung“), wird nicht zum Abstimmen benutzt; dazu 22 Fälle vom 19.11.2026 (`PAGESUM`, `mission_reading`), ebenfalls vor ihrer Umsetzung eingecheckt (`84f0df82b`), und 18 Fälle (MISC-072…089) für die zweite Phase, vor deren Umsetzung eingecheckt (`c64e0d5b1`) |
 | `regression-coding-agents.jsonl` | 56 | **Host, automatisch** (`CodingAgentOrderRegressionTest`) | Coding-Agenten (19.11.2026), **Entwicklungssatz**: welche Sätze ein Auftrag für die Cloud-Coding-Agenten sind, für welches Repository der Freigabeliste und welcher Art (Coding-Auftrag / Sicherheitsprüfung) – Auftragsformen des Besitzers („Coding-Agent: …“, „Lass den Agenten in <Repo> …“, „Der Coding-Agent soll …“, „Gib dem Coding-Agenten den Auftrag …“), Repository-Auflösung (genannt, als Link, Besitzer/Name, keines genannt bei einem oder mehreren freigegebenen, fremdes Konto, nicht freigegeben), Bereich öffnen, Stopp, Status; dagegen Fragen, Aussagen, Zitate, Verneinungen, Bedingungen, eingebettete Aufträge, bloßes „Agent“ ohne Repository (lokales Team) |
 | `regression-coding-agents-check.jsonl` | 51 | **Host, automatisch** (`CodingAgentOrderRegressionTest`) | Coding-Agenten, **zurückgehaltener Prüfsatz**: derselbe Läufer mit anderen Sätzen; vor dem Parser eingecheckt (Commit „test(eval): zurückgehaltener Prüfsatz für Coding-Agenten-Aufträge vor der Umsetzung“), wird nicht zum Abstimmen benutzt |
 | `regression-devicetools.jsonl` | 125 | **Host, automatisch** (`DeviceToolRegressionTest`) | Gerätewerkzeuge (19.11.2026), **Entwicklungssatz**: Gerätesuche über Apps, Dateien und Ordner (Rang genau · Anfang · enthält, Zahlwörter, Umlaute, Typwörter, Ordnernamen, Beinahe-Treffer), Schaltbefehle für die Cloud-Freigaben (Namen · Inhalte) und „Dokumente ohne Rückfrage“, Entscheidung vor dem Start eines Werkzeugs (im Prozess · Shizuku-Brücke · abgelehnt mit Grund: Brücke läuft nicht, Dateizugriff fehlt, Cloud-Freigabe fehlt, nur Systemzentrum, Anzeigen nicht verlangt, Dokumentgrenze), Vorab-Freigabe eines Dokuments, Modellpläne mit den neuen Werkzeugen (gültig/abgelehnt), Kettenläufe über den echten Orchestrator und das ToolGate mit nachgestelltem Backend in den echten Ausgabeformaten, Dokument-Auszeichnung (Überschrift · Liste · Absatz), Seitenbereiche; Geräte-Bestand in `regression-devicetools.fixture.json` (frei erfunden) |
@@ -327,8 +327,50 @@ das PDF Argon4 und fass Seite 2 zusammen“ war als `NONE` festgelegt („Zusamm
 Gespräch“). Der Besitzersatz vom 19.11.2026 („Such die PDF-Datei Argon4, öffne sie, analysiere Seite zwei und fasse sie
 zusammen“) verlangt genau diese Folge; in der Kurzform kann derselbe Auftrag nichts anderes bedeuten. Der Satz ist jetzt
 `OPEN:Argon4 → PAGESUM:2` – weiterhin eine Antwort im Gespräch, weiterhin ohne Datei. `OwnerMissionRegressionTest` führt ihn
-namentlich (`SUPERSEDED`) und hält den neuen Plan fest. MISC-037 („… und schick es per Mail an …“) bleibt `NONE`: eine nur
-gezeigte Zusammenfassung ist noch keine Quelle für einen späteren Schritt.
+namentlich (`SUPERSEDED`) und hält den neuen Plan fest. MISC-037 („… und schick es per Mail an …“) blieb bis zur zweiten
+Phase `NONE`: eine nur gezeigte Zusammenfassung war noch keine Quelle für einen späteren Schritt (siehe unten).
+
+### Zweite Phase der Auftragsfolgen (19.11.2026): Sende-, App-, Mail-, Kalender- und Recherche-Schritte
+
+Reihenfolge, in der es entstand:
+
+1. **Zuerst die zurückgehaltenen Fälle**, vor jeder Zeile Code, eingecheckt als `c64e0d5b1`: 18 in
+   `regression-missions-check.jsonl` (MISC-072…089). Die Codes (`SEND:WHATSAPP:<Empfänger>`, `APP:<App>`, `MAILFIND:<Suche>`,
+   `MAILREAD`, `MAILSUM`, `CAL:<Briefing-Code>`, `RESEARCH:<Thema>`) wurden dafür vorab festgelegt.
+2. **Dann der Code**, und mit ihm die Entwicklungsfälle MIS-085…098. Sie wurden in Kenntnis des Codes geschrieben und an ihm
+   ausgerichtet.
+
+Gemessen am Host beim ersten Lauf, in dem der Code übersetzte: **17 / 18** der neuen zurückgehaltenen Fälle. Der eine
+Fehlschlag war MISC-081 („Schreib Anna auf WhatsApp, dass ich nicht komme, und öffne das PDF Argon4“): Die Prüfung „ein
+Satz der Computer-Lenkung bleibt ihr Auftrag“ sah das „nicht“ im Nachrichtentext und verwarf den Plan. Behoben am Code mit
+einer allgemeinen Regel (ein Satz, der mit einer Nachricht beginnt, gehört nie der Computer-Lenkung – die Sende-Lenkung
+steht in der App davor); der Fall blieb unverändert. Das ist eine Korrektur **wegen** eines zurückgehaltenen Falls: Für
+diese eine Regel ist der Prüfsatz kein unabhängiger Beleg mehr. Endstand der Datei: 89 Fälle, davon halten 81 wie
+geschrieben; 8 sind abgelöst (unten), dazu 7 Zeilen des Entwicklungssatzes.
+
+Ältere Zeilen, die seitdem **absichtlich** nicht mehr halten und unverändert in den Dateien stehen. Sie legten fest, dass
+ein Auftrag „noch nicht“ geht, der seit der zweiten Phase ein Schritt ist. `OwnerMissionRegressionTest` führt jede
+namentlich und hält fest, was ihr Satz jetzt ist (`SUPERSEDED`, `SUPERSEDED_READINGS`):
+
+| Zeile | war | ist | Grund |
+|---|---|---|---|
+| MIS-037 | `NONE` | `OPEN:Argon4 → SEND:WHATSAPP:Anna` | Nachricht auf WhatsApp ist ein Schritt |
+| MIS-071 (Zielsatz) | `PARTIAL`, nichts angeboten | `PLAN` Mails → Zusammenfassung → PDF → WhatsApp | Mail- und Sendeschritt |
+| MIS-072 | `PARTIAL` (`LATER:APP`, `LATER:SEND`) | `PLAN` ein Sendeschritt | „Öffne WhatsApp und schreib …“ |
+| MIS-073 | `PARTIAL`, nichts angeboten | `PLAN` Mail suchen → Zusammenfassung → PDF → öffnen | Mailschritte |
+| MIS-076, MIS-078, MIS-079 | `PARTIAL`, Rest ohne Nachricht | `PLAN` mit Sendeschritt | Sendeschritt |
+| MISC-037 | `NONE` | `PAGESUM:2 → MAIL:anna@example.org` | gezeigte Seitenzusammenfassung ist ein typisiertes Ergebnis |
+| MISC-059, MISC-063, MISC-064 | `PARTIAL` (`NOTYET:MAIL`) | `PLAN` mit Mailschritten | Mailschritte |
+| MISC-060 | `PARTIAL`, nichts angeboten | `PARTIAL`, angeboten wird „Facebook öffnen“ | App öffnen ist ein Schritt; Schreiben ohne Kanal nicht |
+| MISC-061, MISC-062 | `PARTIAL`, Rest ohne Nachricht | `PLAN` mit Sendeschritt | Sendeschritt |
+
+Ob Gmail verbunden ist, entscheidet nicht der Planer: Ohne Verbindung antwortet die Auftragsfolge mit der Teilantwort, die
+die fehlende Verbindung nennt und den unabhängigen Rest anbietet (`OwnerMissionPhase2FlowTest`). Zwei Äußerungen der
+Computer-Sätze sind jetzt eine Auftragsfolge aus einem Sendeschritt (COM-001, COMC-005: „Öffne WhatsApp und schreib …“);
+`OwnerMissionRegressionTest` und `OwnerComputerRegressionTest` führen sie namentlich.
+
+Nicht am Host geprüft und NOT_RUN: WhatsApp, Gmail, Kalender, App-Start und Recherche auf dem Gerät, ein echter Neustart
+der App, eine echte Antwort eines Cloud-Modells im JSON-Planformat.
 
 Zusätzlich geprüft: Die ehrliche Teilantwort (`PARTIAL`) träfe von allen Äußerungen der übrigen Sätze genau 16, die im Test
 einzeln stehen (`KNOWN_PARTIAL_UTTERANCES`) – jeweils ein Satz mit mehreren Aufträgen, von denen die App bisher keinen oder

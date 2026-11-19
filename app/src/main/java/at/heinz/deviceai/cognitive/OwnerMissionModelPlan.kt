@@ -129,7 +129,7 @@ internal object OwnerMissionModelPlan {
      * says (review finding B1: one accepted line used to run at once and the rest of the sentence was dropped).
      */
     fun runsWithoutQuestion(plan: OwnerMissionPlan, assistantName: String? = null): Boolean =
-        plan.steps.size == 1 && plan.steps.single() !is OwnerMissionStep.Mail &&
+        plan.steps.size == 1 && plan.steps.single() !is OwnerMissionStep.Mail && plan.steps.single() !is OwnerMissionStep.SendChat &&
             (OwnerMissionPlanner.read(plan.request, assistantName)?.orders?.size ?: 2) <= 1
 
     /** The bounded instruction for a text runtime; the listed forms are the only ones a line may have. */
@@ -160,12 +160,24 @@ internal object OwnerMissionModelPlan {
         if (noPlan.containsMatchIn(body)) return Result.Rejected("das Modell sieht keinen Plan")
         val lines = body.lines().map { it.trim() }.filter { it.isNotEmpty() }
         if (lines.size !in least..OwnerMissionPlanner.MAX_STEPS) return Result.Rejected("der Modellplan hat ${lines.size} Zeilen")
-        val parts = lines.mapIndexed { index, raw ->
-            val order = line.matchEntire(raw)?.groupValues?.get(1)?.trim()
-                ?: return Result.Rejected("Zeile ${index + 1} hält das Listenformat nicht ein")
-            if (':' in order || quote.containsMatchIn(order) || blocked.containsMatchIn(order))
+        val orders = lines.mapIndexed { index, raw ->
+            line.matchEntire(raw)?.groupValues?.get(1)?.trim() ?: return Result.Rejected("Zeile ${index + 1} hält das Listenformat nicht ein")
+        }
+        return checkOrders(request, orders, assistantName, least)
+    }
+
+    /**
+     * The same check for a plan that is already a list of orders (the lines of a text plan, or the steps of a typed
+     * JSON plan worded as lane orders by [OwnerMissionPlanCall]). [verbatim]: positions whose order is a clause of the
+     * owner's own sentence, word for word – its free text is his and is not inspected as a command.
+     */
+    fun checkOrders(request: String, orders: List<String>, assistantName: String? = null, least: Int = 2,
+                    verbatim: Set<Int> = emptySet(), claims: Map<Int, String> = emptyMap()): Result {
+        if (orders.size !in least..OwnerMissionPlanner.MAX_STEPS) return Result.Rejected("der Modellplan hat ${orders.size} Schritte")
+        val parts = orders.mapIndexed { index, order ->
+            if (index !in verbatim && (':' in order || quote.containsMatchIn(order) || blocked.containsMatchIn(order)))
                 return Result.Rejected("Zeile ${index + 1} ist kein klarer Auftrag")
-            OwnerMissionPlanner.recognise(order, assistantName)
+            OwnerMissionPlanner.recogniseInSequence(order, assistantName)
                 ?: return Result.Rejected("Zeile ${index + 1} ist kein Auftrag, den eine Lenkung kennt")
         }
         val steps = OwnerMissionPlanner.assemble(parts)?.takeIf { it.size in least..OwnerMissionPlanner.MAX_STEPS }
@@ -180,7 +192,9 @@ internal object OwnerMissionModelPlan {
         steps.forEachIndexed { index, step ->
             notOrdered(request, reading, step, steps.getOrNull(index + 1))?.let { return Result.Rejected("Schritt ${index + 1} $it, was du nicht bestellt hast") }
         }
-        val (open, rest) = coverage(reading, steps) ?: return Result.Accepted(OwnerMissionPlan(request.trim(), steps))
+        // What a typed plan says a step covers counts only while every order became exactly one step.
+        val claimed = claims.takeIf { steps.size == orders.size }.orEmpty()
+        val (open, rest) = coverage(reading, steps, claimed) ?: return Result.Accepted(OwnerMissionPlan(request.trim(), steps))
         return Result.Uncovered(open, rest)
     }
 
@@ -227,9 +241,22 @@ internal object OwnerMissionModelPlan {
             // Checking or cleaning the storage is never the model's idea: the owner's own clause must be that order.
             is OwnerMissionStep.Storage -> if (reading.clauses.any { (it.step as? OwnerMissionStep.Storage)?.mode == step.mode }) null
                 else "räumt den Speicher auf oder prüft ihn"
+            // A message, another app, the calendar and a web research are never the model's idea either: the owner's
+            // own clause must be exactly that order – same recipient, same app, same stretch, same topic.
+            is OwnerMissionStep.SendChat -> if (ownClause(reading, step)) null else "schickt eine Nachricht"
+            is OwnerMissionStep.OpenApp -> if (ownClause(reading, step)) null else "öffnet eine App"
+            is OwnerMissionStep.Calendar -> if (ownClause(reading, step)) null else "liest den Kalender"
+            is OwnerMissionStep.Research -> if (ownClause(reading, step)) null else "recherchiert im Internet"
+            is OwnerMissionStep.MailSearch, is OwnerMissionStep.MailRead, is OwnerMissionStep.MailSummary ->
+                if (mailNoun.containsMatchIn(request)) null else "liest deine E-Mails"
             else -> null
         }
     }
+
+    private val mailNoun = Regex("(?iu)$S(?:e-?mails?|mails?|posteingang|postfach|inbox)$E")
+
+    private fun ownClause(reading: OwnerSentenceReading, step: OwnerMissionStep): Boolean =
+        reading.clauses.any { clause -> clause.step?.let { it::class == step::class && it.code == step.code } == true }
 
     // ── No dropped order (B1) ───────────────────────────────────────────────────────────────────────────────
 
@@ -238,19 +265,26 @@ internal object OwnerMissionModelPlan {
         // A clause one of the other lanes takes, or that no lane can do yet, is never „covered“ by a different step.
         when (val reading = clause.reading) {
             is OwnerClauseReading.Step -> return reading.step::class == step::class ||
-                (reading.step.code == "OPEN_IT" && (step is OwnerMissionStep.OpenFound || step is OwnerMissionStep.OpenSaved || step is OwnerMissionStep.OpenPdf))
+                (reading.step.code == "OPEN_IT" && (step is OwnerMissionStep.OpenFound || step is OwnerMissionStep.OpenSaved ||
+                    step is OwnerMissionStep.OpenPdf || step is OwnerMissionStep.MailRead)) ||
+                (reading.step.code == "SUM_IT" && step is OwnerMissionStep.MailSummary) ||
+                (reading.step.code == "READ_IT" && step is OwnerMissionStep.MailRead) ||
+                // „Fass meine neuen Mails zusammen“ may be planned as a search and its summary.
+                (reading.step is OwnerMissionStep.MailSummary && step is OwnerMissionStep.MailSearch)
             is OwnerClauseReading.Later, is OwnerClauseReading.NotYet -> return false
             else -> Unit
         }
         return when (clause.verb?.family) {
             OwnerVerbLexicon.Family.OPEN, OwnerVerbLexicon.Family.SHOW -> step is OwnerMissionStep.OpenPdf || step is OwnerMissionStep.OpenFound ||
                 step is OwnerMissionStep.OpenSaved || (step is OwnerMissionStep.News && newsNoun.containsMatchIn(clause.text))
-            OwnerVerbLexicon.Family.SEARCH -> step is OwnerMissionStep.OpenPdf || step is OwnerMissionStep.FindFile
+            OwnerVerbLexicon.Family.SEARCH -> step is OwnerMissionStep.OpenPdf || step is OwnerMissionStep.FindFile ||
+                (step is OwnerMissionStep.MailSearch && mailNoun.containsMatchIn(clause.text))
             OwnerVerbLexicon.Family.READ, OwnerVerbLexicon.Family.LOOK, OwnerVerbLexicon.Family.TELL -> step is OwnerMissionStep.OpenPdf ||
                 step is OwnerMissionStep.PageSummary || (step is OwnerMissionStep.News && newsNoun.containsMatchIn(clause.text)) ||
-                step is OwnerMissionStep.Storage
+                step is OwnerMissionStep.Storage ||
+                ((step is OwnerMissionStep.MailSearch || step is OwnerMissionStep.MailRead) && mailNoun.containsMatchIn(clause.text))
             OwnerVerbLexicon.Family.SUMMARISE -> step is OwnerMissionStep.PageSave || step is OwnerMissionStep.PageSummary ||
-                step is OwnerMissionStep.News || step is OwnerMissionStep.Export
+                step is OwnerMissionStep.News || step is OwnerMissionStep.Export || step is OwnerMissionStep.MailSummary
             OwnerVerbLexicon.Family.SAVE, OwnerVerbLexicon.Family.CREATE, OwnerVerbLexicon.Family.MAKE ->
                 step is OwnerMissionStep.PageSave || step is OwnerMissionStep.Export
             OwnerVerbLexicon.Family.SEND, OwnerVerbLexicon.Family.WRITE -> step is OwnerMissionStep.Mail && mailWord.containsMatchIn(clause.text)
@@ -265,7 +299,13 @@ internal object OwnerMissionModelPlan {
      * orders that will not be carried out – the uncovered ones, and those whose step comes after the first gap and may
      * build on it – and what may be offered instead: the steps in front of that gap, which stand on their own.
      */
-    private fun coverage(reading: OwnerSentenceReading, steps: List<OwnerMissionStep>): Pair<List<OwnerClause>, List<OwnerMissionStep>>? {
+    private fun coverage(reading: OwnerSentenceReading, steps: List<OwnerMissionStep>,
+                         claims: Map<Int, String> = emptyMap()): Pair<List<OwnerClause>, List<OwnerMissionStep>>? {
+        // A typed plan names the part of the sentence a step carries out. For an order no lane knew by its words that
+        // claim is what covers it – the checks that nothing is added and nothing invented have already passed. An order
+        // another lane takes, or one the app cannot do, is never covered this way.
+        fun claimed(step: Int, clause: OwnerClause): Boolean = clause.reading is OwnerClauseReading.Unknown &&
+            claims[step]?.let { literal(it, clause.text) || literal(clause.text, it) } == true
         val orders = reading.orders
         val stepOf = HashMap<Int, Int>()
         var used = 0
@@ -276,7 +316,7 @@ internal object OwnerMissionModelPlan {
                 stepOf[position] = used - 1
                 return@forEachIndexed
             }
-            val at = (used until steps.size).firstOrNull { covers(steps[it], clause) }
+            val at = (used until steps.size).firstOrNull { covers(steps[it], clause) || claimed(it, clause) }
             if (at == null) { if (gapAt == null) gapAt = used } else { stepOf[position] = at; used = at + 1 }
         }
         val keep = gapAt ?: return null
@@ -340,6 +380,25 @@ internal object OwnerMissionModelPlan {
                 .replace(Regex("(?iu)$S(?:das|die|den|der|dem|in|im|aus|nach|mir|bitte|datei|dateien|neueste[nrs]?|ordner)$E"), " ")) -> "einen Namen oder Ordner"
             else -> null
         }
+        is OwnerMissionStep.MailSearch -> when {
+            step.from != null && !said(request, step.from) -> "den Absender „${step.from}“"
+            step.about != null && !said(request, step.about) -> "das Stichwort „${step.about}“"
+            step.newest && !newest.containsMatchIn(request) -> "eine Suche nach der letzten Mail"
+            else -> null
+        }
+        is OwnerMissionStep.MailRead -> step.own?.let { invented(request, it) }
+        is OwnerMissionStep.MailSummary -> step.own?.let { invented(request, it) }
+        is OwnerMissionStep.Research -> if (said(request, step.topic)) null else "das Thema „${step.topic}“"
+        // The message is the owner's own clause, word for word – a model never writes or changes what is sent.
+        is OwnerMissionStep.SendChat -> if (literal(request, step.order)) null else "einen Nachrichtentext oder Empfänger"
+        is OwnerMissionStep.Calendar -> if (literal(request, step.order)) null else "einen Zeitraum"
+        is OwnerMissionStep.OpenApp -> if (said(request, step.appName) || literal(request, step.order.substringAfter(' '))) null
+            else "die App „${step.appName}“"
         else -> null
     }
+
+    private fun squeezed(text: String): String = text.lowercase(Locale.GERMAN).replace(Regex("\\s+"), " ").trim()
+
+    /** true = [part] stands in [request] exactly as it is (apart from letter case and runs of blanks). */
+    internal fun literal(request: String, part: String): Boolean = part.isNotBlank() && squeezed(request).contains(squeezed(part))
 }

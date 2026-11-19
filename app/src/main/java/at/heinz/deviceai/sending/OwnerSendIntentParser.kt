@@ -115,7 +115,12 @@ internal object OwnerSendIntentParser {
     private val infinitiveOrder = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:vorlesen|öffnen|oeffnen|starten|anzeigen|zeigen|suchen|" +
         "abspielen|stoppen|beenden|speichern|löschen|loeschen|zusammenfassen)[.!]?$")
 
-    fun parse(utterance: String, assistantName: String? = null): Result? {
+    /**
+     * [channelGiven]: the order stands behind „Öffne WhatsApp und …“ in the owner's own sentence, so the channel is
+     * said although this clause does not repeat it („schreib meinem Vater guten Morgen“). Only the mission planner
+     * passes true, and only for exactly that sentence shape; everything else of the order is read as always.
+     */
+    fun parse(utterance: String, assistantName: String? = null, channelGiven: Boolean = false): Result? {
         if (utterance.length !in 6..2_400 || utterance.any { it.isISOControl() && it != '\n' }) return null
         val addressed = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName)
         var text = polite.replace(addressed, "")
@@ -127,11 +132,14 @@ internal object OwnerSendIntentParser {
         val verbWord = command.groupValues[1].lowercase(Locale.GERMAN)
         val rest = text.substring(command.range.last + 1)
         // „WhatsApp“ must belong to the order, not to the dictated text behind a colon or comma.
-        val found = alias.find(rest) ?: return null
         val firstSeparator = rest.indexOfFirst { it == ':' || it == ',' || it == '\n' }
-        if (firstSeparator in 0 until found.range.first) return null
-        var head = rest.substring(0, found.range.first).trim()
-        var tail = rest.substring(found.range.last + 1)
+        val named = alias.find(rest)
+        if (named != null && firstSeparator in 0 until named.range.first && !channelGiven) return null
+        // With the channel given by the clause in front, a „WhatsApp“ behind a separator is part of the dictated text.
+        val found = named?.takeUnless { firstSeparator in 0 until it.range.first }
+        if (found == null && !channelGiven) return null
+        var head = if (found == null) "" else rest.substring(0, found.range.first).trim()
+        var tail = if (found == null) " $rest" else rest.substring(found.range.last + 1)
         var draftOnly = verbWord in draftVerbs
         if (Regex("(?iu)(?<![\\p{L}\\p{N}_])entwurf(?![\\p{L}\\p{N}_])").containsMatchIn(head)) draftOnly = true
         head = headNoise.replace(head, "").trim()

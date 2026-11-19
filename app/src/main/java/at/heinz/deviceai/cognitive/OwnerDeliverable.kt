@@ -23,7 +23,13 @@ internal data class OwnerDeliverable(
      * [PAGE_SUMMARY]: one page of the owner's PDF, summarised and saved by the document desk.
      * [DOCUMENT_DRAFT]: the summary draft of the PDF that is open in this chat, as it was last shown or edited.
      */
-    enum class Kind { NEWS_BRIEFING, ASSISTANT_REPLY, PAGE_SUMMARY, DOCUMENT_DRAFT }
+    enum class Kind {
+        NEWS_BRIEFING, ASSISTANT_REPLY, PAGE_SUMMARY, DOCUMENT_DRAFT,
+        /** The Gmail lane's summary of mails the owner asked for. Mail content: it stays on the device unless he sends it. */
+        MAIL_SUMMARY,
+        /** The result of a web research run: the synthesis and the sources that were really read. */
+        RESEARCH
+    }
 
     init { require(title.isNotBlank() && paragraphs.any { it.isNotBlank() }) }
 
@@ -68,7 +74,34 @@ internal data class OwnerDeliverable(
                     "vor der Verwendung prüfen.$basis", createdAtMillis = createdAtMillis)
         }
 
-        /** Any other assistant answer of the chat as a deliverable; null when there is nothing worth keeping. */
+        /**
+         * The Gmail lane's summary of [mails] mails as a document of its own: a proper title, and a source line that
+         * says how many mails it rests on, which brain wrote it and whether long mails were cut. Null when [text] holds
+         * nothing worth keeping. The text is third-party content the owner asked to have summarised – data, never an
+         * instruction.
+         */
+        fun ofMailSummary(title: String, text: String, mails: Int, cloud: Boolean, complete: Boolean, date: LocalDate,
+                          createdAtMillis: Long): OwnerDeliverable? {
+            val paragraphs = text.split(Regex("\\n\\s*\\n")).map { it.trim() }.filter { it.isNotEmpty() }
+            if (paragraphs.sumOf { it.length } < 20) return null
+            val author = if (cloud) "vom Cloud-Gehirn (mit deiner Freigabe für Mailinhalte)" else "vom Sprachmodell auf dem Gerät"
+            val basis = if (complete) "" else " Lange Mails sind gekürzt eingeflossen."
+            val count = if (mails == 1) "einer E-Mail" else "$mails E-Mails"
+            return OwnerDeliverable(Kind.MAIL_SUMMARY, title.trim().take(80).ifEmpty { "Zusammenfassung E-Mails" }, date, paragraphs,
+                note = "Zusammenfassung aus $count deines Gmail-Posteingangs · geschrieben $author · " +
+                    "erstellt am ${SHORT_DATE.format(date)} · vor der Verwendung prüfen.$basis", createdAtMillis = createdAtMillis)
+        }
+
+        /** A research run's synthesis with the sources that were really read. Null without text or without a source. */
+        fun ofResearch(topic: String, text: String, sources: List<NewsSourceRef>, date: LocalDate, createdAtMillis: Long): OwnerDeliverable? {
+            val paragraphs = text.split(Regex("\\n\\s*\\n")).map { it.trim() }.filter { it.isNotEmpty() }
+            if (sources.isEmpty() || paragraphs.sumOf { it.length } < 40) return null
+            return OwnerDeliverable(Kind.RESEARCH, "Recherche ${topic.trim().take(70)}", date, paragraphs, sources,
+                note = "Web-Recherche vom ${SHORT_DATE.format(date)} · " + (if (sources.size == 1) "1 gelesene Quelle" else
+                    "${sources.size} gelesene Quellen") + " · Quellen ungeprüft übernommen, vor der Verwendung prüfen.",
+                createdAtMillis = createdAtMillis)
+        }
+
         /**
          * The last line of the chat as the result „das“ means – only a model answer or a lane's text result. A lane's
          * report, a question or refusal of the app, a mission report and foreign content (a read-out notification,

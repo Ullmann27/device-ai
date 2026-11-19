@@ -58,6 +58,8 @@ class OwnerMissionRegressionTest {
         val misses = LinkedHashMap<String, String>()
         all.forEach { case ->
             assertTrue(case.getString("id"), case.getString("runner") in setOf("mission_plan", "mission_reading"))
+            // A superseded row is not a miss: it is held to what its sentence does now by its own test.
+            if (case.getString("id") in SUPERSEDED || case.getString("id") in SUPERSEDED_READINGS) return@forEach
             val got = got(case)
             if (got != expected(case)) misses[case.getString("id")] = "got $got, expected ${expected(case)} · „${case.getString("input")}“"
         }
@@ -81,7 +83,26 @@ class OwnerMissionRegressionTest {
         assertTrue("check set unexpectedly small: $total", total >= 45)
         val misses = misses("regression-missions-check.jsonl")
         assertEquals("held-out misses changed:\n" + misses.entries.joinToString("\n") { "${it.key}: ${it.value}" },
-            KNOWN_CHECK_MISSES + SUPERSEDED.keys, misses.keys.toSet())
+            KNOWN_CHECK_MISSES, misses.keys.toSet())
+    }
+
+    /**
+     * The same for a row that pinned „not yet“ for an ability that is a step since the second phase (19.11.2026):
+     * the row is unchanged and no longer holds; its sentence is held to exactly the reading listed here.
+     */
+    @Test fun aSupersededReadingIsNamedWithWhatItsSentenceIsNow() {
+        val all = (cases("regression-missions.jsonl") + cases("regression-missions-check.jsonl")).associateBy { it.getString("id") }
+        SUPERSEDED_READINGS.forEach { (id, now) ->
+            val case = checkNotNull(all[id]) { id }
+            assertEquals(id, "mission_reading", case.getString("runner"))
+            assertTrue("$id is pinned as something else", expected(case) != now)
+            assertEquals(id, now, got(case))
+        }
+        // Every superseded row pinned an ability that was no step then: reading or sending mails, a message, an app.
+        SUPERSEDED_READINGS.keys.forEach { id ->
+            val clauses = list(checkNotNull(all[id]).getJSONObject("expect"), "clauses").orEmpty()
+            assertTrue(id, clauses.any { it in setOf("NOTYET:MAIL", "LATER:SEND", "LATER:APP") })
+        }
     }
 
     /**
@@ -155,7 +176,11 @@ class OwnerMissionRegressionTest {
         }
         others { id, utterance -> check(id, utterance) }
         assertTrue("too few utterances checked: $checked", checked >= 500)
-        assertTrue("${moved.size} existing utterances would become a mission:\n" + moved.joinToString("\n"), moved.isEmpty())
+        // Since the second phase: „Öffne WhatsApp und schreib …“ of the computer sets is one send step ([NOW_A_SEQUENCE]).
+        val now = moved.filter { line -> NOW_A_SEQUENCE.any { line.startsWith("$it ") } }
+        assertEquals(NOW_A_SEQUENCE.size, now.size)
+        val other = moved - now.toSet()
+        assertTrue("${other.size} existing utterances would become a mission:\n" + other.joinToString("\n"), other.isEmpty())
     }
 
     /**
@@ -225,7 +250,35 @@ class OwnerMissionRegressionTest {
          * but it is now carried out as a sequence (open, then summarise page 2), because the same order with „such“
          * and „öffne sie“ in front is the owner's sentence and cannot mean something else in its short form.
          */
-        val SUPERSEDED: Map<String, String> = mapOf("MISC-038" to "OPEN:Argon4 → PAGESUM:2")
+        val SUPERSEDED: Map<String, String> = mapOf("MISC-038" to "OPEN:Argon4 → PAGESUM:2",
+            // Second phase (19.11.2026). MISC-037: a page summary that is shown and not saved is a typed result now, so
+            // „… und schick es per Mail an …“ has what it sends. MIS-037: a message on WhatsApp is a step.
+            "MISC-037" to "PAGESUM:2 → MAIL:anna@example.org",
+            "MIS-037" to "OPEN:Argon4 → SEND:WHATSAPP:Anna")
+
+        /**
+         * `mission_reading` rows of 19.11.2026 that pinned the honest partial answer for an ability that was no step
+         * then. With the second phase – a message on WhatsApp (`SEND`), opening an app (`APP`), searching, reading and
+         * summarising mails through the Gmail lane (`MAILFIND`, `MAILREAD`, `MAILSUM`) – their sentences are complete
+         * sequences, or offer more. The rows are unchanged. Whether Gmail is connected is not the planner's business:
+         * without a connection the director answers with the partial answer that names it (OwnerMissionPhase2FlowTest).
+         */
+        val SUPERSEDED_READINGS: Map<String, String> = mapOf(
+            "MIS-071" to "PLAN [MAILFIND:INBOX · SUM_IT · EXPORT:PDF · SEND:WHATSAPP:meinem Vater] rest []",
+            "MIS-072" to "PLAN [SEND:WHATSAPP:meinem Vater] rest []",
+            "MIS-073" to "PLAN [MAILFIND:LATEST:Anwalt · SUM_IT · EXPORT:PDF · OPEN_IT] rest []",
+            "MIS-076" to "PLAN [NEWS · EXPORT:PDF · SEND:WHATSAPP:Anna] rest []",
+            "MIS-078" to "PLAN [EXPORT:PDF · SEND:WHATSAPP:meinem Chef] rest []",
+            "MIS-079" to "PLAN [OPEN:Argon4 · SEND:WHATSAPP:Anna] rest []",
+            "MISC-059" to "PLAN [MAILFIND:NEW · SUM_IT · EXPORT:PDF] rest []",
+            "MISC-060" to "PARTIAL [APP:FACEBOOK · LATER:SEND] rest [APP:FACEBOOK]",
+            "MISC-061" to "PLAN [NEWS · SEND:WHATSAPP:Anna] rest []",
+            "MISC-062" to "PLAN [OPEN:Argon4 · PAGE:2:DOCX · SEND:WHATSAPP:Anna] rest []",
+            "MISC-063" to "PLAN [STORAGE:ANALYSE · MAILFIND:INBOX] rest []",
+            "MISC-064" to "PLAN [MAILFIND:INBOX · MAILFIND:FROM:Bank · OPEN:Kontoauszug] rest []")
+
+        /** `file:id` of utterances of the other sets that are a sequence now: one send step for „Öffne WhatsApp und schreib …“. */
+        val NOW_A_SEQUENCE: Set<String> = sortedSetOf("regression-computer-check.jsonl:COMC-005", "regression-computer.jsonl:COM-001")
 
         /**
          * `file:id` of utterances of the other sets the honest partial answer would be given for. Each is a sentence

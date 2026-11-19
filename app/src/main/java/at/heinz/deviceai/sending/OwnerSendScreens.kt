@@ -67,7 +67,9 @@ internal enum class SendProblem(val text: String) {
     ACCESSIBILITY_OFF("die Continuum-Bedienungshilfe in den Android-Einstellungen ausgeschaltet ist"),
     GRANT_REVOKED("die Freigabe zum selbstständigen Senden inzwischen ausgeschaltet wurde"),
     DAILY_CAP("die feste Tagesgrenze von ${OwnerSendGrants.DAILY_CAP} selbst gesendeten Nachrichten erreicht ist"),
-    STOPPED("der Auftrag gestoppt wurde")
+    STOPPED("der Auftrag gestoppt wurde"),
+    /** A step of a sequence: the journal already holds a send for it, or the intent could not be written down. */
+    JOURNAL_REFUSED("das Senden für diese Auftragsfolge schon vermerkt ist oder sich nicht sicher vermerken ließ – ohne diesen Vermerk drücke ich nicht")
 }
 
 internal enum class SendEffect { CONFIRMED, PENDING, STILL_DRAFT, UNCLEAR, ERROR }
