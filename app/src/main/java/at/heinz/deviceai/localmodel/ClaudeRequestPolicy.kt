@@ -198,7 +198,9 @@ internal object ClaudeAbilityCatalogue {
             "dort entsteht, kann die App noch nicht aufs Gerät holen: Lege kein Ergebnis als Datei ab, sondern nenne " +
             "es im Text, und sag ehrlich, dass das Abholen von Dateien noch fehlt, wenn er eine Datei wollte (für PDF " +
             "und Word gibt es den festen Ablauf der App). Gib das Ergebnis in eigenen Worten wieder, nicht die rohe " +
-            "Ausgabe; den Hinweis „berechnet in der Cloud“ ergänzt die App. Schlägt eine Ausführung fehl, sag das klar."
+            "Ausgabe; den Hinweis „berechnet in der Cloud“ ergänzt die App. Schlägt eine Ausführung fehl, sag das klar. " +
+            "Wo der Auftrag weiter unten „keine Werkzeuge“ sagt, sind die Gerätewerkzeuge der App gemeint; " +
+            "code_execution steht dir in dieser Anfrage trotzdem offen."
             else if (decision.codeSwitch && decision.documentDraft) "In dieser Anfrage nicht freigeschaltet: Für " +
                 "einen Dokumententwurf wird kein Code ausgeführt. Behaupte keine nachgerechneten Ergebnisse."
             else "Über die Cloud ausgeschaltet. Du kannst in dieser Anfrage keinen Code ausführen; behaupte keine " +

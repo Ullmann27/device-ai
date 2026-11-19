@@ -372,12 +372,7 @@ class ClaudeModelRuntime internal constructor(
             val attempt = Attempt()
             val terminal = outcome(run, current, attempt, allowFallbackDowngrade = true)
             run.stream = null
-            // A response that started but never reported its final usage is still billed for what it produced.
-            val seen = attempt.promptUsage
-            if (!attempt.settled && seen != null) ledger.record(current.model.id, current.model.id,
-                seen.copy(outputTokens = (run.responseCharacters.get() + 1L) / 2), estimated = true)
-            // Server-tool calls that were seen in a cut-off response are counted (and the searches priced) as well.
-            if (!attempt.settled) ledger.recordServerTools(attempt.seenServerTools)
+            settleCutOff(run, current, attempt)
             val paused = attempt.paused
             if (terminal != null || paused == null) { terminal?.let { finish(run, it) }; return }
             // stop_reason pause_turn: the API ended a long turn early. The same turn is sent again with what the
@@ -512,8 +507,24 @@ class ClaudeModelRuntime internal constructor(
             codeExecutions = if (code) 1 else 0)
         if (code && conversation.outcome.codeSteps + attempt.seenServerTools.codeExecutions > ClaudeServerToolPolicy.CODE_MAX_STEPS) {
             runCatching { run.stream?.close() }
+            // Booked before the owner sees the end of the turn.
+            settleCutOff(run, conversation, attempt)
             finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.CLOUD_CODE_LIMIT))
         }
+    }
+
+    /**
+     * A response that started but never reported its final usage is still billed for what it produced: its tokens
+     * are estimated, and the server-tool calls that were seen in it are counted (and the searches priced) as well.
+     */
+    private fun settleCutOff(run: Run, conversation: Conversation, attempt: Attempt) {
+        if (attempt.settled) return
+        attempt.promptUsage?.let { seen ->
+            ledger.record(conversation.model.id, conversation.model.id,
+                seen.copy(outputTokens = (run.responseCharacters.get() + 1L) / 2), estimated = true)
+        }
+        ledger.recordServerTools(attempt.seenServerTools)
+        attempt.settled = true
     }
 
     /** Forwards streamed text; ends the run when the response reaches the app's character limit. */

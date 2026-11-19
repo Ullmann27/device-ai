@@ -375,9 +375,12 @@ class ClaudeCloudToolsUiTest {
                 "Cloud-Code-Ausführung an" to "Code-Ausführung in der Cloud (Berechnungen, Datenanalyse, Dateien erzeugen) ist jetzt EIN.",
                 "Cloud-Werkzeuge zeigen" to "Websuche und Seitenabruf über die Cloud: EIN",
                 "Cloud-Websuche aus" to "Websuche und Seitenabruf über die Cloud ist jetzt AUS.")) {
-                assertEquals(sentence, true, call(a, "consumeCloudToolCommand", sentence))
+                // Through the composer, so every router that reads a sentence before this command has had its turn.
+                (get(a, "input") as EditText).setText(sentence)
+                call(a, "sendCurrentInput", false)
                 idle()
-                assertTrue(chat(a).toString(), chat(a).any { it.contains(expected) })
+                assertTrue(sentence + " → " + chat(a), chat(a).any { it.contains(expected) })
+                assertEquals("", (get(a, "input") as EditText).text.toString())
             }
             assertFalse(brain.settings.cloudWebSearch)
             assertTrue(brain.settings.cloudCodeExecution)
