@@ -10,13 +10,16 @@ import at.heinz.deviceai.cognitive.ChainArgument
 import at.heinz.deviceai.cognitive.ChainPlan
 import at.heinz.deviceai.cognitive.NewsBriefing
 import at.heinz.deviceai.cognitive.OwnerDeliverable
+import at.heinz.deviceai.cognitive.OwnerClause
 import at.heinz.deviceai.cognitive.OwnerDeskReply
 import at.heinz.deviceai.cognitive.OwnerLibraryMatcher
 import at.heinz.deviceai.cognitive.OwnerMissionCorrection
 import at.heinz.deviceai.cognitive.OwnerMissionModelPlan
+import at.heinz.deviceai.cognitive.OwnerMissionPartial
 import at.heinz.deviceai.cognitive.OwnerMissionPlan
 import at.heinz.deviceai.cognitive.OwnerMissionPlanner
 import at.heinz.deviceai.cognitive.OwnerMissionStep
+import at.heinz.deviceai.cognitive.OwnerSentenceReading
 import at.heinz.deviceai.cognitive.OwnerTaskChain
 import at.heinz.deviceai.cognitive.OwnerTaskChainContinuation
 import java.util.Locale
@@ -215,8 +218,12 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 mission = null
                 if (OwnerDeskReply.isYes(request, name)) {
                     host.acceptOwnerTurn(request)
-                    // One confirmed order goes to its lane as if the owner had said it; the lane answers itself.
-                    if (m.slots.size == 1) { handOver(m.slots.single().step, request); return true }
+                    // One confirmed order goes to its lane as if the owner had said it; the lane answers itself. A page
+                    // summary without a save is the desk's order only inside a sequence: it runs as a sequence of one.
+                    if (m.slots.size == 1 && m.slots.single().step !is OwnerMissionStep.PageSummary) {
+                        handOver(m.slots.single().step, request)
+                        return true
+                    }
                     // The plan was just said; it is not said again.
                     start(request, OwnerMissionPlan(m.request, m.slots.map { it.step }), "In Ordnung, ich fange an.", announce = false)
                     return true
@@ -390,7 +397,18 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
 
     private fun propose(request: String, single: Boolean): Boolean {
         val name = host.assistantName
-        if (open() != null || !host.modelPlans()) return false
+        if (open() != null) return false
+        // Several orders in one sentence, and not all of them can run (review finding B1, 19.11.2026): said plainly,
+        // from the sentence itself and without a model – what cannot be done yet, and the offer for the rest.
+        val reading = OwnerMissionPlanner.read(request, name, host.noBriefingYet())
+        if (reading?.kind == OwnerSentenceReading.Kind.PARTIAL) {
+            host.holdSubject()
+            host.acceptOwnerTurn(request)
+            host.activity("AUFTRAGSFOLGE · " + reading.orders.size + " Aufträge erkannt · nicht alle sind schon möglich · nichts läuft ohne deine Bestätigung")
+            offerRest(request, reading.open, reading.rest)
+            return true
+        }
+        if (!host.modelPlans()) return false
         val wanted = if (single) OwnerMissionModelPlan.wantsOrder(request, name) else OwnerMissionModelPlan.wants(request, name)
         if (!wanted || !host.mayPlan(request)) return false
         host.holdSubject()
@@ -403,7 +421,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             when (val checked = OwnerMissionModelPlan.check(request, text, name, allowSingle = single)) {
                 is OwnerMissionModelPlan.Result.Accepted -> {
                     val steps = checked.plan.steps
-                    if (OwnerMissionModelPlan.runsWithoutQuestion(checked.plan)) {
+                    if (OwnerMissionModelPlan.runsWithoutQuestion(checked.plan, name)) {
                         // Reading or the owner's own file: his order, run by its lane with the lane's own gates.
                         host.activity("AUFTRAG · zugeordnet: „${steps.single().order.take(120)}“ · nichts hinzugefügt")
                         handOver(steps.single(), request)
@@ -413,6 +431,11 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                             else checked.plan.announcement("Ich würde das in", " machen") + " Soll ich das so machen?")
                     }
                 }
+                // The plan is valid but leaves an order of the sentence open: nothing of it runs by itself.
+                is OwnerMissionModelPlan.Result.Uncovered -> {
+                    host.activity("AUFTRAGSFOLGE · der Modellplan deckt nicht jeden Auftrag deines Satzes · nichts läuft ohne deine Bestätigung")
+                    offerRest(request, checked.open, checked.rest)
+                }
                 is OwnerMissionModelPlan.Result.Rejected -> {
                     host.activity("AUFTRAGSFOLGE · Modellplan verworfen · " + checked.reason.take(120))
                     host.answerWithoutPlan(request)
@@ -420,6 +443,16 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             }
         }
         return true
+    }
+
+    /**
+     * The honest partial answer: [open] cannot run, [rest] can. The rest is only offered – it waits for the owner's
+     * yes like every proposed plan, and with nothing left to offer the reply says that nothing was carried out.
+     */
+    private fun offerRest(request: String, open: List<OwnerClause>, rest: List<OwnerMissionStep>) {
+        mission = if (rest.isEmpty()) null else
+            Mission(host.sessionId, request, rest, host.nowMillis()).also { it.phase = Phase.PROPOSED }
+        host.reply(request, OwnerMissionPartial.text(open, rest))
     }
 
     /**
@@ -488,7 +521,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 val subject = deliverable(source)
                 if (subject == null || !host.continueOn(subject)) return gone("Das Ergebnis")
             }
-            is OwnerMissionStep.PageSave -> if (step.source != null) {
+            is OwnerMissionStep.PageSave, is OwnerMissionStep.PageSummary -> if (step.source != null) {
                 val opened = source as? OwnerLaneResult.DocumentOpened
                 if (opened == null || host.openDocumentName() != opened.name) return gone("Das PDF")
             }
@@ -517,6 +550,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                     if (slot.state == State.RUNNING && m.outcomes == seen && host.idle()) kept(m, index)
                     true
                 } else host.desk(step.order)
+                // Summarised and shown, never saved: the desk takes this order only from a sequence.
+                is OwnerMissionStep.PageSummary -> host.desk(step.order)
                 is OwnerMissionStep.News -> host.work(step.order)
                 // A step on what the chat was about before this mission („Erstelle eine PDF und zeig sie mir“): the
                 // plan that was just announced is not that result.
@@ -627,6 +662,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         // A mission that ends with a save offers once what the lane offers after a save of its own.
         val saved = (m.slots.last().result as? OwnerLaneResult.FileSaved)?.takeIf { how == End.COMPLETED && m.slots.last().state == State.DONE }
         val offer = if (saved != null && host.offerOpening(saved.of, saved.file)) " Soll ich die Datei öffnen?" else ""
+        // One order that ran as a sequence of one: its lane has already said how it ended.
+        if (m.slots.size == 1 && how == End.COMPLETED && m.slots.single().state == State.DONE) return
         host.say(report(m, how) + offer)
     }
 
@@ -634,7 +671,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
 
     /** The step [change] concerns, or -1 when this mission has none. */
     private fun target(m: Mission, change: OwnerMissionCorrection.Change): Int = when (change) {
-        is OwnerMissionCorrection.Change.Page -> m.slots.indexOfLast { it.step is OwnerMissionStep.PageSave }
+        is OwnerMissionCorrection.Change.Page -> m.slots.indexOfLast { it.step is OwnerMissionStep.PageSave || it.step is OwnerMissionStep.PageSummary }
         is OwnerMissionCorrection.Change.Format -> {
             // The save that last ran or runs; before any save has started, the first one of the plan.
             val saves = m.slots.indices.filter { m.slots[it].step.let { s -> s is OwnerMissionStep.PageSave || s is OwnerMissionStep.Export } }
@@ -650,7 +687,11 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         val slot = m.slots[index]
         val old = slot.step
         val wanted: OwnerMissionStep = when (change) {
-            is OwnerMissionCorrection.Change.Page -> (old as OwnerMissionStep.PageSave).copy(page = change.page)
+            is OwnerMissionCorrection.Change.Page -> when (old) {
+                is OwnerMissionStep.PageSave -> old.copy(page = change.page)
+                is OwnerMissionStep.PageSummary -> old.copy(page = change.page)
+                else -> return false
+            }
             is OwnerMissionCorrection.Change.Format -> when (old) {
                 is OwnerMissionStep.PageSave -> old.copy(format = change.format)
                 is OwnerMissionStep.Export -> old.copy(format = change.format)
@@ -766,6 +807,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             "${new.pageName} statt " + if (old.page == at.heinz.deviceai.cognitive.OwnerPageReference.LAST) "der letzten Seite" else old.pageName
         old is OwnerMissionStep.PageSave && new is OwnerMissionStep.PageSave ->
             "als ${new.format?.label} statt " + (old.format?.let { "als ${it.label}" } ?: "ohne Format")
+        old is OwnerMissionStep.PageSummary && new is OwnerMissionStep.PageSummary -> "${new.pageName} statt " +
+            if (old.page == at.heinz.deviceai.cognitive.OwnerPageReference.LAST) "der letzten Seite" else old.pageName
         old is OwnerMissionStep.Export && new is OwnerMissionStep.Export -> "als ${new.format.label} statt als ${old.format.label}"
         old is OwnerMissionStep.Mail && new is OwnerMissionStep.Mail -> "an ${new.to} statt an ${old.to}"
         old is OwnerMissionStep.OpenPdf && new is OwnerMissionStep.OpenPdf -> "das PDF „${new.query}“ statt „${old.query}“"
@@ -775,7 +818,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
     // ── What the typed results say ──────────────────────────────────────────────────────────────────────────
 
     private fun lanes(step: OwnerMissionStep): Set<OwnerMissionLane> = when (step) {
-        is OwnerMissionStep.OpenPdf, is OwnerMissionStep.PageSave, is OwnerMissionStep.OpenFound -> setOf(OwnerMissionLane.DESK)
+        is OwnerMissionStep.OpenPdf, is OwnerMissionStep.PageSave, is OwnerMissionStep.PageSummary, is OwnerMissionStep.OpenFound ->
+            setOf(OwnerMissionLane.DESK)
         is OwnerMissionStep.Mail -> setOf(OwnerMissionLane.WORK, OwnerMissionLane.SEND)
         is OwnerMissionStep.FindFile -> setOf(OwnerMissionLane.CHAIN)
         is OwnerMissionStep.Storage -> setOf(OwnerMissionLane.DEEPCLEAN)
@@ -787,6 +831,9 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerMissionStep.OpenPdf -> if (!step.open) result is OwnerLaneResult.FilesFound else
             result is OwnerLaneResult.DocumentOpened && (result.query == null || result.query.equals(step.query, ignoreCase = true))
         is OwnerMissionStep.PageSave -> result is OwnerLaneResult.FileSaved && result.of.kind == OwnerDeliverable.Kind.PAGE_SUMMARY
+        // Verified = the page's text was really read and the summary accepted (the desk reports nothing else as done).
+        is OwnerMissionStep.PageSummary -> result is OwnerLaneResult.PageSummarised && result.coveredChars > 0 &&
+            (step.page == at.heinz.deviceai.cognitive.OwnerPageReference.LAST || result.page == step.page)
         is OwnerMissionStep.News -> result is OwnerLaneResult.Briefing
         is OwnerMissionStep.Export -> result is OwnerLaneResult.FileSaved && result.file.mime == step.format.mime
         is OwnerMissionStep.Mail -> result is OwnerLaneResult.Delivered
@@ -818,6 +865,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerLaneResult.FileSaved -> "„${result.file.displayName}“ gespeichert (" + (result.location ?: result.file.folder) + ")" +
             if (result.verified == false) " – zurücklesen konnte ich die Datei nicht" else ""
         is OwnerLaneResult.FileOpened -> "„${result.file.displayName}“ geöffnet"
+        is OwnerLaneResult.PageSummarised -> "Seite ${result.page} von „${result.document}“ zusammengefasst und hier gezeigt – " +
+            "gespeichert habe ich nichts"
         is OwnerLaneResult.Agenda -> "Kalender für ${result.span} gelesen (" + (if (result.events == 1) "1 Eintrag" else
             "${result.events} Einträge") + ")"
         is OwnerLaneResult.Storage -> storageSentence(result)

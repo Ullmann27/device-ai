@@ -51,6 +51,13 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
     var modelPlan: (String) -> String? = { null }
     val planPrompts = mutableListOf<String>()
     val ordinaryTurns = mutableListOf<String>()
+    /** Results the desk showed without saving them (the summary of one page). */
+    val presented = mutableListOf<OwnerDeliverable>()
+    /**
+     * false = as the Activity is today: the desk's hook for a shown, unsaved result is not connected to the work
+     * tools. true = connected the way the hook is meant to be (see [DeskHost.present]).
+     */
+    var presentWired = false
     private val queue = ArrayDeque<() -> Unit>()
 
     private inner class WorkHost : OwnerWorkToolsHost by toolsHost {
@@ -77,6 +84,17 @@ internal class OwnerMissionHarness(mode: InternetAccessMode = InternetAccessMode
         override fun say(text: String) { deskHost.say(text); said += "DESK:$text" }
         override fun outcome(outcome: OwnerLaneOutcome) = mission.laneOutcome(OwnerMissionLane.DESK, outcome)
         override fun offerToOpen(): Boolean = !mission.active
+        // The Activity's adapter implements the interface itself, so its default reads its own offerToOpen().
+        override fun inSequence(): Boolean = !offerToOpen()
+        override fun present(result: OwnerDeliverable): Boolean {
+            presented += result
+            if (!presentWired) return false
+            // What the Activity's adapter has to do (one line, not wired there yet): hand the shown summary to the work
+            // tools. Here through the entry they already have for a summary that was shown and not saved.
+            tools.noteDocumentDraft(result.title.removePrefix("Zusammenfassung ").trim(), result.paragraphs.joinToString("\n\n"),
+                complete = result.note?.contains("Grundlage sind") != true, cloud = result.note?.contains("Cloud-Gehirn") == true)
+            return true
+        }
         override fun adopt(result: OwnerDeliverable, file: OwnerSavedFile) { deskHost.adopt(result, file); tools.adopt(result, file, offerToOpen = offerToOpen()) }
         override fun exportAgain(request: String, format: OwnerExportCommand.Format): Boolean = tools.exportAgain(request, format)
     }

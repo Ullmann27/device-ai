@@ -38,6 +38,14 @@ internal sealed interface OwnerLaneResult {
     data class FileSaved(val file: OwnerSavedFile, val of: OwnerDeliverable, val location: String?, val verified: Boolean?) : OwnerLaneResult
 
     /**
+     * One page of the open PDF was really read ([coveredChars] > 0 of [totalChars] characters went into the summary)
+     * and the accepted summary was shown in the chat. Nothing was saved; [of] is the result a later „speichere das als
+     * Word“ means.
+     */
+    data class PageSummarised(val of: OwnerDeliverable, val document: String, val page: Int, val coveredChars: Int,
+                              val totalChars: Int) : OwnerLaneResult
+
+    /**
      * The calendar was read – never written – for [span] (the briefing lane's own words: „diese Woche“). [events]:
      * entries still ahead, [findings]: what the fixed rules of the agenda check noticed, [freeBlocks]: free stretches
      * of at least two hours. Counted from the entries themselves; no model saw them and nothing left the device.

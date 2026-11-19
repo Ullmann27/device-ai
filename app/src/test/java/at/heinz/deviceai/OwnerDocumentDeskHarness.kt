@@ -187,6 +187,17 @@ internal class OwnerDocumentDeskHarness(
     override fun readBack(file: OwnerSavedFile): ByteArray? = if (readBackWorks) downloads[file.displayName] else null
     override fun location(file: OwnerSavedFile): String? = if (file.uri != null) "Interner Speicher › Download" else null
     override fun adopt(result: OwnerDeliverable, file: OwnerSavedFile) { adopted += result to file; onAdopt?.invoke(result, file) }
+
+    /** true = a sequence of owner orders hands its steps to the desk right now. */
+    var sequence = false
+    override fun inSequence(): Boolean = sequence
+    /** Results the desk showed without saving them; [presentTaken]: the host made them what the chat is about. */
+    val presented = mutableListOf<OwnerDeliverable>()
+    var presentTaken = false
+    override fun present(result: OwnerDeliverable): Boolean { presented += result; return presentTaken }
+    /** How the desk said its orders ended (typed), in order. */
+    val outcomes = mutableListOf<OwnerLaneOutcome>()
+    override fun outcome(outcome: OwnerLaneOutcome) { outcomes += outcome }
     override fun exportAgain(request: String, format: OwnerExportCommand.Format): Boolean =
         exportAgainTakes?.invoke(request, format) ?: false
 

@@ -268,6 +268,52 @@ internal object OwnerPageJobCommand {
 }
 
 /**
+ * „Fass Seite 2 zusammen“, „analysiere Seite zwei und fasse sie zusammen“, „erkläre mir die dritte Seite“ – the summary
+ * of ONE page of the PDF that is open in this chat, shown in the chat and NOT saved (owner sentence 19.11.2026: „Such
+ * die PDF-Datei Argon4, öffne sie, analysiere Seite zwei und fasse sie zusammen“ must not leave a file nobody ordered).
+ *
+ * It is a step of a sequence only: said alone, „Fass Seite 2 zusammen“ keeps its answer through the reference
+ * registry (LIB-160). Fail closed like [OwnerPageJobCommand]: exactly one page, a verb that asks for a summary, and
+ * every other word from a small closed vocabulary – a negation, a save order, „in einem Wort“ or anything else
+ * foreign is not this order.
+ */
+internal object OwnerPageSummaryCommand {
+    sealed interface Result {
+        /** [page]: 1-based, or [OwnerPageReference.LAST]. */
+        data class Order(val page: Int, val original: String) : Result
+        /** Several pages at once: not this order. */
+        data object SeveralPages : Result
+    }
+
+    private val asks = Regex("(?iu)(?<![\\p{L}\\p{N}_])(?:fass|fasse|fasst|zusammenfass\\p{L}*|zusammenzufassen|zusammenfassung|" +
+        "kurzfassung|analysier\\p{L}*|erklär\\p{L}*|erklaer\\p{L}*|erläuter\\p{L}*|erlaeuter\\p{L}*|beschreib\\p{L}*)(?![\\p{L}\\p{N}_])")
+    private val verbs = setOf("fass", "fasse", "fasst", "zusammen", "zusammenfassen", "zusammenfassung", "kurzfassung",
+        "analysier", "analysiere", "analysieren", "analysierst", "erklär", "erkläre", "erklären", "erklärst", "erklaer",
+        "erklaere", "erläuter", "erläutere", "erläutern", "erlaeutere", "beschreib", "beschreibe", "beschreiben")
+    private val fillers = setOf("bitte", "mir", "uns", "mal", "kurz", "knapp", "noch", "dann", "danach", "anschließend",
+        "anschliessend", "auch", "und", "sie", "es", "das", "die", "den", "ihn", "inhalt", "text", "davon", "eine", "einen",
+        "gib", "mach", "mache", "für", "mich", "einmal", "gleich", "jetzt", "du", "kannst", "könntest", "würdest", "von",
+        "dort", "daraus", "ganz", "ganze", "komplett")
+
+    fun parse(utterance: String, assistantName: String? = null): Result? {
+        if (utterance.length !in 12..200 || utterance.any { it.isISOControl() }) return null
+        val said = OwnerAppLookupIntent.stripAddress(utterance.trim(), assistantName).trimEnd('.', '!', '?', ' ')
+        val text = OwnerPageJobCommand.heard(said)
+        if (!asks.containsMatchIn(text)) return null
+        val several = OwnerPageReference.several.containsMatchIn(text)
+        val pages = OwnerPageReference.one.findAll(text).toList()
+        if (pages.isEmpty() && !several) return null
+        val words = text.replace(OwnerPageReference.several, " ").replace(OwnerPageReference.withContext, " ")
+            .lowercase(Locale.GERMAN).replace(Regex("[^\\p{L}\\p{N}-]+"), " ").split(' ').map { it.trim('-') }.filter { it.isNotEmpty() }
+        if (words.isEmpty() || words.size > 16 || words.any { it !in verbs && it !in fillers }) return null
+        if (words.none { it in verbs && it != "zusammen" }) return null
+        if (several || pages.size != 1) return Result.SeveralPages
+        val page = OwnerPageReference.page(pages.single()) ?: return null
+        return Result.Order(page, utterance.trim())
+    }
+}
+
+/**
  * The owner corrects the document desk's last order: „Ich meinte Seite 3“, „Nein, Seite 3“, „Nicht Seite 2, sondern
  * Seite 3“, „Ich meinte als PDF“, „Ich meinte die andere Datei“, „Nein, die zweite“, „Nein, Argon4 Datenblatt“.
  * Recognition only – whether there is anything to correct, and what the corrected order is, decides the desk. A

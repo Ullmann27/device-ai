@@ -218,6 +218,9 @@ class ContinuumBriefingRegressionTest {
             // The Gmail sets (19.11.2026) list this lane's own orders as negatives (`keeps: BRIEFING`): there they pin that the
             // mail lane does not take them, and OwnerMailRegressionTest asserts that this lane does.
             "regression-mail-check.jsonl:MAILC-072", "regression-mail.jsonl:MAIL-135", "regression-mail.jsonl:MAIL-136",
-            "regression-mail.jsonl:MAIL-137")
+            "regression-mail.jsonl:MAIL-137",
+            // 19.11.2026: the owner's week sentence stands in the mission set as well – there it pins that the planner
+            // leaves it to this lane (`NONE`); the order itself is this lane's (BRF-095).
+            "regression-missions.jsonl:MIS-074")
     }
 }
