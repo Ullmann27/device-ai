@@ -225,6 +225,29 @@ kennen, endet als „unklar“ und wird in der Voreinstellung kurz gemeldet, nic
 von WhatsApp oder Gmail auf dem Fold7 wirklich enthält (Absendername statt Adresse, Betreff, Gruppen-Kennzeichen) und ob
 das Signal ohne Benachrichtigungsdienst überhaupt mit Inhalt ankommt, ist NOT_RUN
 (`docs/handover/NACHRICHTENEINGANG-GERAETECHECKLISTE-20261119.md`).
+Für `regression-briefing.jsonl` und `regression-briefing-check.jsonl` (Systemstart-Bericht und Tagesbriefing,
+19.11.2026) gibt es keinen Vorher-Wert: eine Lenkung für Systemcheck, Briefing, Termine, Wetter und Anrufe gab es
+nicht (die Sätze gingen an das Modell, das weder Kalender noch Wetter noch Gerätezustand kennt). Beide Sätze wurden vor
+der Umsetzung geschrieben und eingecheckt; kein Fall steht in beiden (der Test prüft das). Gemessen am Host:
+
+| Lauf | Entwicklungssatz | Prüfsatz |
+|---|---|---|
+| erster Lauf nach der Umsetzung, vor jeder Anpassung | 94 / 94 | 86 / 86 |
+
+Es gab keinen Fehlschlag, also auch keine Anpassung wegen eines Falls und keine Änderung an einem der Sätze. Danach kamen
+nur Schutzwörter hinzu, die kein Fall verlangt hatte (eine Zeitspanne ist kein Ort: „in zwei Wochen“; Notruf-Wörter beim
+Anruf); beide Sätze stehen danach unverändert bei 94 / 94 und 86 / 86. Einordnung, ehrlich: Beide
+Sätze hat dieselbe Hand geschrieben wie die Erkennung, mit den geplanten Auftragsformen vor Augen – das Ergebnis
+belegt, dass nicht auf den Prüfsatz abgestimmt wurde, nicht, dass fremde Formulierungen des Besitzers getroffen
+werden. Zusätzlich geprüft (`ContinuumBriefingRegressionTest`): kein Satz, der seine Lenkung behalten muss, wird
+angenommen; wo ein Fall die Lenkung nennt, die den Satz heute hält (`keeps`), nimmt der echte Parser dieser Lenkung ihn
+an; kein Auftrag dieser Lenkung gehört einer Lenkung, die in der Activity vor ihr gefragt wird (Auftragsfolge, Ablage,
+Senden, Nachrichten, Routinen). Fünf Äußerungen der anderen Sätze nimmt die neue Lenkung bewusst an und sie sind im
+Test namentlich festgehalten: „Wie wird das Wetter morgen?“ (`LIBC-041`, `REF-010`, `REF-023`), „Wie ist das
+Wetter?“ (`REG-LONG-001`) und „Ruf Anna an“ (`VOI-END-007`) – dort themenfremde Füllsätze bzw. ein Satzende-Beispiel
+ohne eigene Lenkung; ihre eigenen Tests sind unverändert grün. Jede weitere Äußerung, die wandert, lässt den Test
+fehlschlagen. Was auf dem Gerät passiert – Spracherkennung, Kalender-Anbieter, Wähltastatur, Open-Meteo, Sprachausgabe –
+ist NOT_RUN.
 
 ## Kennzahlen für die Gerätemessung (alle NOT_RUN)
 
