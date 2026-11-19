@@ -282,6 +282,13 @@ internal class ContinuumBriefingDirector(
         ContinuumBriefingBoard.publishOffers(emptyList())
     }
 
+    /**
+     * true while a question or an offer of this lane waits for the owner's very next turn („Welche Anna meinst du?“,
+     * „Für welchen Ort?“, the offers after a report). That turn is shown to this lane first ([handle]); when it is no
+     * answer, it keeps its ordinary route.
+     */
+    val awaitingAnswer: Boolean get() = questionOpen()
+
     /** true while one of this lane's questions still waits for the owner's answer. */
     private fun questionOpen(): Boolean =
         listOf(pendingOffers, pendingDaily, pendingCall, pendingWeather).any { it?.open == true }
@@ -434,6 +441,14 @@ internal class ContinuumBriefingDirector(
                 is ContinuumCalendarRead.Events -> ContinuumAgenda.spoken(view!!, label, detailed = true)
                 ContinuumCalendarRead.NotGranted -> ContinuumBriefingText.CALENDAR_DENIED
                 is ContinuumCalendarRead.Failed -> ContinuumBriefingText.CALENDAR_FAILED
+            })
+            // Typed, so a sequence of orders knows whether the calendar was really read.
+            host.outcome(when (read) {
+                is ContinuumCalendarRead.Events -> at.heinz.deviceai.OwnerLaneOutcome.Done(OwnerLaneResult.Agenda(label.lowercase(java.util.Locale.GERMAN),
+                    read.events.size, 0, 0))
+                ContinuumCalendarRead.NotGranted -> at.heinz.deviceai.OwnerLaneOutcome.NeedsOwner(at.heinz.deviceai.OwnerLaneOutcome.Need.GRANT,
+                    ContinuumBriefingText.CALENDAR_DENIED)
+                is ContinuumCalendarRead.Failed -> at.heinz.deviceai.OwnerLaneOutcome.Failed(ContinuumBriefingText.CALENDAR_FAILED)
             })
         }
     }

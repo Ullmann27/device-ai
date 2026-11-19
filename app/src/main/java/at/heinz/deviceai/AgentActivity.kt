@@ -957,6 +957,14 @@ class AgentActivity : Activity() {
         foregroundLearningActive = true
         restoreOwnerRoutines()
         renderRoutineMessages()
+        // A sequence of orders the journal still holds from before this app start: told and asked once, never started.
+        if (!ownerMissionResumeChecked) {
+            ownerMissionResumeChecked = true
+            mainHandler.postDelayed({
+                if (!isFinishing && !isDestroyed && !busy && selectedBot == null && !neuralCoach.isActive())
+                    runCatching { ownerMission.offerResume() }
+            }, 2_500L)
+        }
         val nativeStageVisible = nativeStagePresentationActive()
         command03MainStage?.onResume()
         scheduleCommand03HtmlState()
@@ -7856,6 +7864,8 @@ class AgentActivity : Activity() {
                     setBusy(false)
                     val launched = flow.launchedCandidate
                     val approvedAt = computerApprovedAt
+                    val forMission = ownerMissionAppOrder == request
+                    if (forMission) ownerMissionAppOrder = null
                     if (computerIntent != null && launched != null && approvedAt != null) {
                         val pending = PendingComputerLaunch(ownerSession, generation, launched.packageName,
                             computerIntent, approvedAt, request, allowMaya, ownerRevision)
@@ -7864,6 +7874,14 @@ class AgentActivity : Activity() {
                         return
                     }
                     when {
+                        // A step of a sequence never becomes a model turn or a new question: it opened the app or it did not.
+                        forMission -> {
+                            val reply = AppActionReply(ownerSession, generation, request, step.message, null, ownerRevision)
+                            if (foregroundLearningActive) deliverAppActionReply(reply) else pendingAppActionReply = reply
+                            ownerMission.laneOutcome(OwnerMissionLane.APP, launched?.let {
+                                OwnerLaneOutcome.Done(OwnerLaneResult.AppOpened(it.label, it.packageName)) }
+                                ?: OwnerLaneOutcome.Failed(step.message))
+                        }
                         fallbackToConversation -> {
                             if (::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY) {
                                 runLocal(request)
@@ -12874,13 +12892,23 @@ class AgentActivity : Activity() {
                     addToolActivity("RESEARCH · abgebrochen oder Freigabe widerrufen · Ergebnis verworfen")
                     setBusy(false)
                     refreshLocalModelUi()
+                    settleOwnerMissionResearch(OwnerLaneOutcome.Stopped)
                     return@runOnUiThread
                 }
+                var missionOutcome: OwnerLaneOutcome = OwnerLaneOutcome.Stopped
                 result.onSuccess { dossier ->
                     if(!session.isAuthorized()) {
                         addToolActivity("WEB · Freigabe widerrufen, Ergebnis verworfen")
                         return@onSuccess
                     }
+                    // For a sequence of orders: done only with at least one source that was really read.
+                    val read = dossier.sources.filter { it.duplicateOf == null }
+                    missionOutcome = at.heinz.deviceai.cognitive.OwnerDeliverable.ofResearch(session.call.question,
+                        dossier.synthesis?.text.orEmpty(), read.take(16).map { source ->
+                            at.heinz.deviceai.cognitive.NewsSourceRef(source.domain, source.title ?: source.domain, source.canonicalUrl) },
+                        java.time.LocalDate.now(), System.currentTimeMillis())
+                        ?.let { OwnerLaneOutcome.Done(OwnerLaneResult.Researched(it, session.call.question, read.size)) }
+                        ?: OwnerLaneOutcome.Failed("Die Recherche hat keine Quelle gelesen, aus der sich etwas zusammenfassen ließ.")
                     val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
                         .joinToString("\n") { at.heinz.deviceai.cognitive.ResearchDialogueHandoff.citationLine(it) }
                     val body = buildString {
@@ -12939,8 +12967,10 @@ class AgentActivity : Activity() {
                 }.onFailure { error ->
                     addAssistantMessage(ContinuumUiCopy.researchFailure(error.message))
                     addToolActivity("RESEARCH · PARTIAL")
+                    missionOutcome = OwnerLaneOutcome.Failed(ContinuumUiCopy.researchFailure(error.message))
                 }
                 setBusy(false)
+                settleOwnerMissionResearch(missionOutcome)
                 refreshLocalModelUi()
             }
         }
@@ -13127,7 +13157,8 @@ class AgentActivity : Activity() {
         override fun composeMail(address: String?, subject: String, body: String, attachment: OwnerSavedFile?): String? =
             documents.composeMail(address, subject, body, attachment)
 
-        override fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean = ownerSend.mail(order)
+        override fun sendMailYourself(order: at.heinz.deviceai.sending.OwnerMailHandover): Boolean =
+            ownerSend.mail(order, ownerMission.sendGuard())
     }
 
     // ── Owner document desk („Öffne das PDF Argon4“, „Fass Seite 2 zusammen und speichere es als Word“) ─────────
@@ -13186,6 +13217,10 @@ class AgentActivity : Activity() {
         override val ownerTurn: Long get() = work.ownerTurn
         override val assistantName: String? get() = work.assistantName
         override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.DESK, request)
+        override fun present(result: at.heinz.deviceai.cognitive.OwnerDeliverable): Boolean {
+            ownerWorkTools.adoptDeliverable(result)
+            return true
+        }
         override fun outcome(outcome: OwnerLaneOutcome) {
             continuumBriefing.laneOutcome(outcome)
             ownerMission.laneOutcome(OwnerMissionLane.DESK, outcome)
@@ -13378,9 +13413,10 @@ class AgentActivity : Activity() {
     private val ownerOpenQuestions by lazy {
         OwnerOpenQuestions(session = { sessionId }, turn = { ownerReplyRevision })
             .lane(OwnerMissionLane.SEND.name, awaiting = { ownerSend.awaitingAnswer }) { ownerSend.handle(it) }
-            .lane(OwnerMissionLane.DESK.name) { ownerDocumentDesk.handle(it) }
+            .lane(OwnerMissionLane.DESK.name, awaiting = { ownerDocumentDesk.awaitingAnswer }) { ownerDocumentDesk.handle(it) }
             .lane(OwnerMissionLane.WORK.name, awaiting = { ownerWorkTools.awaitingAnswer }) { ownerWorkTools.handle(it) }
             .lane(OWNER_MAIL_LANE) { ownerMail.handle(it) }
+            .lane(OwnerMissionLane.BRIEFING.name, awaiting = { continuumBriefing.awaitingAnswer }) { continuumBriefing.handle(it) }
     }
     internal val ownerRelations by lazy {
         at.heinz.deviceai.sending.OwnerRelations(at.heinz.deviceai.sending.OwnerRelationPreferences(this))
@@ -13416,6 +13452,8 @@ class AgentActivity : Activity() {
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.SEND.name, outcome)
             incomingSendOutcome(outcome)
         }
+        override fun progress(event: at.heinz.deviceai.sending.OwnerSendProgress) =
+            command03SendWork.progress(sessionId, event, android.os.SystemClock.elapsedRealtime())
 
         override fun reply(request: String, text: String) {
             // Only the owner's own sentence and a fixed label enter the model context: no contact data, no screen text.
@@ -13782,11 +13820,21 @@ class AgentActivity : Activity() {
     // Thin adapter only: a mission hands every step to the owner entry of its lane above and listens to the lanes'
     // typed outcomes; it has no way of its own to read, write, open or send anything.
     internal val ownerMission by lazy {
-        OwnerMissionDirector(OwnerMissionAdapter()).also {
+        OwnerMissionDirector(OwnerMissionAdapter(), OwnerMissionJournal(FileOwnerMissionJournalStore(java.io.File(filesDir, "owner-mission")))).also {
             // The shared-work record listens where every lane's typed outcome passes, and to the mission's own end.
             it.onLaneOutcome = ownerSharedWorkFeed::lane
             it.onSettled = ownerSharedWorkFeed::mission
         }
+    }
+    /** The order of a sequence whose app opening / research run is under way: its end is reported to the sequence. */
+    private var ownerMissionAppOrder: String? = null
+    private var ownerMissionResearchTopic: String? = null
+    private var ownerMissionResumeChecked = false
+
+    private fun settleOwnerMissionResearch(outcome: OwnerLaneOutcome) {
+        if (ownerMissionResearchTopic == null) return
+        ownerMissionResearchTopic = null
+        ownerMission.laneOutcome(OwnerMissionLane.RESEARCH, outcome)
     }
 
     /** Stop, „weiter“, „abbrechen“ and a correction for a running or waiting mission, before any lane sees the turn. */
@@ -13887,6 +13935,64 @@ class AgentActivity : Activity() {
         override fun holdSubject() = ownerWorkTools.holdSubject()
         override fun workOnHeld(order: String): Boolean = ownerWorkTools.handleOnHeld(order)
 
+        // Steps of the second phase: each is the owner entry of its lane, with that lane's own gates.
+        override fun missionSend(order: String, channelGiven: Boolean, recipientOverride: String?,
+                                 guard: at.heinz.deviceai.sending.OwnerSendGuard): Boolean =
+            ownerSend.missionSend(order, channelGiven, recipientOverride, guard)
+        override fun adoptResult(result: at.heinz.deviceai.cognitive.OwnerDeliverable) = ownerWorkTools.adoptDeliverable(result)
+        override fun openSaved(order: String, file: OwnerSavedFile): Boolean = ownerWorkTools.openSaved(order, file)
+        override fun mailReadable(): Boolean = ownerMailConnection.connected &&
+            ownerMailConnection.grant.granted(at.heinz.deviceai.gmail.GmailCapability.READ)
+        override fun mailSearch(order: String, query: at.heinz.deviceai.gmail.MailQuery,
+                                done: (at.heinz.deviceai.gmail.MailLaneOutcome) -> Unit) = ownerMail.search(order, query, done)
+        override fun mailRead(order: String, ref: at.heinz.deviceai.gmail.MailRef,
+                              done: (at.heinz.deviceai.gmail.MailLaneOutcome) -> Unit) = ownerMail.read(order, ref, false, done)
+        override fun mailSummarize(order: String, refs: List<at.heinz.deviceai.gmail.MailRef>,
+                                   done: (at.heinz.deviceai.gmail.MailLaneOutcome) -> Unit) = ownerMail.summarize(order, refs, done)
+        override fun relationName(word: String): String? =
+            at.heinz.deviceai.sending.OwnerRelation.parse(word)?.let { ownerRelations.get(it)?.displayName }
+        override fun briefing(order: String): Boolean = continuumBriefing.handle(order)
+
+        override fun openApp(order: String, appName: String): Boolean {
+            if (busy) return false
+            ownerMissionAppOrder = order
+            runExplicitAppLookup(order, OwnerAppLookupIntent.Intake.Lookup(appName, opening = true))
+            // The lookup asked which app is meant instead of starting: no app was opened.
+            if (!appLookupActive && ownerMissionAppOrder == order) {
+                ownerMissionAppOrder = null
+                ownerMission.laneOutcome(OwnerMissionLane.APP, OwnerLaneOutcome.Failed("$appName wurde nicht geöffnet."))
+            }
+            return true
+        }
+
+        /** The same path as „Recherchiere …“ said alone: OFF sends nothing, ASK shows the one-time dialog. */
+        override fun research(order: String, topic: String): Boolean {
+            restoreInternetMode()
+            if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
+                addToolActivity("WEB · AUS · keine Anfrage gesendet")
+                val offline = at.heinz.deviceai.cognitive.OwnerResearchCommand.offlineReply()
+                addNonModelReply(order, offline, at.heinz.deviceai.cognitive.NonModelReplyKind.READ_ONLY_TOOL)
+                ownerMission.laneOutcome(OwnerMissionLane.RESEARCH, OwnerLaneOutcome.Failed(offline))
+                return true
+            }
+            val researchSession = sessionId
+            confirmWebRequest(at.heinz.deviceai.cognitive.WebToolRequest.Search(topic), researchMode, requireIdle = true) { session ->
+                if (session != null && !busy && sessionId == researchSession && foregroundLearningActive && !isFinishing && !isDestroyed) {
+                    ownerMissionResearchTopic = topic
+                    runResearch(session)
+                    // The run refused to start (lane occupied, grant gone): nothing was read.
+                    if (activeWebResearchSession !== session) settleOwnerMissionResearch(
+                        OwnerLaneOutcome.Failed("Die Recherche konnte nicht starten; es wurde nichts abgerufen."))
+                } else {
+                    session?.cancel()
+                    if (!isFinishing && !isDestroyed) addToolActivity("WEB · nicht freigegeben oder Sitzung gewechselt · keine Anfrage gesendet")
+                    ownerMission.laneOutcome(OwnerMissionLane.RESEARCH,
+                        OwnerLaneOutcome.Failed("Der Internetzugriff wurde für die Recherche nicht freigegeben; es wurde nichts abgerufen."))
+                }
+            }
+            return true
+        }
+
         /** One bounded, tool-free generation, as for a chain plan; the text is data for the plan check. */
         override fun proposePlan(request: String, prompt: String, done: (String?) -> Unit) {
             if (busy || localAgentExecutor.isShutdown || isFinishing || isDestroyed) { done(null); return }
@@ -13972,8 +14078,12 @@ class AgentActivity : Activity() {
         override val ownerTurn: Long get() = work.ownerTurn
         override val assistantName: String? get() = work.assistantName
         override fun ownerName(): String? = continuumOwnerName()
-        override fun acceptOwnerTurn(request: String) = showOwnerLaneTurn(request)
+        override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.BRIEFING, request)
         override fun clearInput() { input.text.clear() }
+        override fun outcome(outcome: OwnerLaneOutcome) {
+            ownerMission.laneOutcome(OwnerMissionLane.BRIEFING, outcome)
+            ownerOpenQuestions.noteOutcome(OwnerMissionLane.BRIEFING.name, outcome)
+        }
 
         override fun answer(request: String?, spoken: String, shown: String) {
             // Only the owner's own sentence and a fixed label enter the model context: no calendar entry, contact or
@@ -14359,8 +14469,11 @@ class AgentActivity : Activity() {
         override fun contacts(): at.heinz.deviceai.sending.OwnerSendContactSource = send.contacts()
         override fun nowMillis(): Long = System.currentTimeMillis()
         override fun zone(): java.time.ZoneId = java.time.ZoneId.systemDefault()
-        override fun deliverable(title: String, text: String, cloud: Boolean) =
-            ownerWorkTools.noteDocumentDraft(title, text, complete = true, cloud = cloud)
+        override fun deliverable(title: String, text: String, cloud: Boolean) = summarised(title, text, 1, cloud, true)
+        override fun summarised(title: String, text: String, mails: Int, cloud: Boolean, complete: Boolean) {
+            at.heinz.deviceai.cognitive.OwnerDeliverable.ofMailSummary(title, text, mails, cloud, complete, java.time.LocalDate.now(),
+                System.currentTimeMillis())?.let(ownerWorkTools::adoptDeliverable)
+        }
         override fun outcome(outcome: OwnerLaneOutcome) {
             // A question of the mail lane (send confirmation, missing right, which mail) gets the next owner turn first.
             ownerOpenQuestions.noteOutcome(OWNER_MAIL_LANE, outcome)

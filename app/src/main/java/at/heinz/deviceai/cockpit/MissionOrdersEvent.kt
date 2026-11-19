@@ -28,4 +28,5 @@ class MissionOrdersEvent(
 /** One step of a mission: its position in the plan (0-based), its plain label and how it stands. */
 data class MissionOrder(val index: Int, val label: String, val state: MissionOrderState)
 
-enum class MissionOrderState { RUNNING, WAITING, DONE, FAILED, STOPPED, SKIPPED }
+/** [UNVERIFIED]: the step acted (a send was pressed) but its effect could not be confirmed – never shown as done. */
+enum class MissionOrderState { RUNNING, WAITING, DONE, FAILED, STOPPED, SKIPPED, UNVERIFIED }

@@ -181,6 +181,12 @@ internal class OwnerDocumentDesk(
     /** true while a search, an opening or a page job of this desk runs. */
     val jobRunning: Boolean get() = running != null
 
+    /**
+     * true while a question of this desk („Welche Datei meinst du?“, „Als was soll ich speichern?“) waits for the
+     * owner's very next turn. That turn is shown to the desk first; when it is no answer, it keeps its ordinary route.
+     */
+    val awaitingAnswer: Boolean get() = question?.let { it.session == host.sessionId && it.turn == host.ownerTurn } == true
+
     private fun mark() { subjectThrough = host.ownerTurn }
     private fun failed(reason: String) = host.outcome(OwnerLaneOutcome.Failed(reason))
     private fun needs(need: OwnerLaneOutcome.Need, question: String) = host.outcome(OwnerLaneOutcome.NeedsOwner(need, question))

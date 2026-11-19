@@ -17,6 +17,15 @@ import at.heinz.deviceai.cognitive.OwnerMissionCorrection
 import at.heinz.deviceai.cognitive.OwnerMissionModelPlan
 import at.heinz.deviceai.cognitive.OwnerMissionPartial
 import at.heinz.deviceai.cognitive.OwnerMissionPlan
+import at.heinz.deviceai.cognitive.OwnerMissionPlanCall
+import at.heinz.deviceai.cognitive.OwnerStepSlot
+import at.heinz.deviceai.gmail.MailDay
+import at.heinz.deviceai.gmail.MailLaneOutcome
+import at.heinz.deviceai.gmail.MailLaneResult
+import at.heinz.deviceai.gmail.MailQuery
+import at.heinz.deviceai.gmail.MailRef
+import at.heinz.deviceai.sending.OwnerSendGuard
+import at.heinz.deviceai.sending.SendPlan
 import at.heinz.deviceai.cognitive.OwnerMissionPlanner
 import at.heinz.deviceai.cognitive.OwnerMissionStep
 import at.heinz.deviceai.cognitive.OwnerSentenceReading
@@ -25,7 +34,7 @@ import at.heinz.deviceai.cognitive.OwnerTaskChainContinuation
 import java.util.Locale
 
 /** The owner lanes a mission step can run through. */
-internal enum class OwnerMissionLane { DESK, WORK, SEND, CHAIN, DEEPCLEAN }
+internal enum class OwnerMissionLane { DESK, WORK, SEND, CHAIN, DEEPCLEAN, MAIL, BRIEFING, APP, RESEARCH }
 
 /**
  * The small surface a mission needs from the Activity: the chat, the single work lane, and one entry per owner lane.
@@ -104,6 +113,43 @@ internal interface OwnerMissionHost {
      * „Ja“ were shown in between). See [OwnerWorkTools.handleOnHeld].
      */
     fun workOnHeld(order: String): Boolean = work(order)
+
+    // ── Send, app, mail, calendar and research steps (19.11.2026) ───────────────────────────────────────────
+
+    /** Wall clock, for the journal and for „die Auftragsfolge von 14:02“. */
+    fun wallMillis(): Long = System.currentTimeMillis()
+    /** A wall-clock time as the owner reads it. */
+    fun clockLabel(wallMillis: Long): String = java.time.Instant.ofEpochMilli(wallMillis).atZone(java.time.ZoneId.systemDefault())
+        .let { String.format(Locale.GERMAN, "%02d:%02d", it.hour, it.minute) }
+    fun today(): java.time.LocalDate = java.time.LocalDate.now()
+    /**
+     * The send lane's own entry for a message that is a step of a sequence (see OwnerSendDirector.missionSend): the
+     * lane's parser, recipient resolution, confirmations, grant, screen verification and daily limit apply as for an
+     * order said alone. [guard] is asked right before the one press. true = the lane took [order].
+     */
+    fun missionSend(order: String, channelGiven: Boolean, recipientOverride: String?, guard: OwnerSendGuard): Boolean = false
+    /** A typed result of a step is from now on what „das“ means in this chat (see [OwnerWorkTools.adoptDeliverable]). */
+    fun adoptResult(result: OwnerDeliverable) {}
+    /** See [OwnerWorkTools.openSaved]: opens exactly the file an earlier step saved. */
+    fun openSaved(order: String, file: OwnerSavedFile): Boolean = work(order)
+    /** true = a Gmail account is connected and the owner granted reading. Only then a mail step is started at all. */
+    fun mailReadable(): Boolean = false
+    /** The Gmail lane's search, read and summary (OwnerMailLane); each ends in exactly one typed outcome through [done]. */
+    fun mailSearch(order: String, query: MailQuery, done: (MailLaneOutcome) -> Unit) = done(MailLaneOutcome.Failed(MAIL_NOT_CONNECTED))
+    fun mailRead(order: String, ref: MailRef, done: (MailLaneOutcome) -> Unit) = done(MailLaneOutcome.Failed(MAIL_NOT_CONNECTED))
+    fun mailSummarize(order: String, refs: List<MailRef>, done: (MailLaneOutcome) -> Unit) = done(MailLaneOutcome.Failed(MAIL_NOT_CONNECTED))
+    /** The contact name the owner confirmed for a relation word („Anwalt“), or null: the word is searched as said. */
+    fun relationName(word: String): String? = null
+    /** The briefing lane's owner entry (calendar); true = it took [order] and reports through [OwnerMissionDirector.laneOutcome]. */
+    fun briefing(order: String): Boolean = false
+    /** The app lane opens [appName]; true = started, the outcome follows as [OwnerLaneResult.AppOpened] or a failure. */
+    fun openApp(order: String, appName: String): Boolean = false
+    /** The existing web research for [topic] with the owner's internet consent; the outcome follows as [OwnerLaneResult.Researched]. */
+    fun research(order: String, topic: String): Boolean = false
+
+    companion object {
+        const val MAIL_NOT_CONNECTED = "Gmail ist nicht verbunden; es wurde keine Mail gelesen."
+    }
 }
 
 /**
@@ -138,12 +184,23 @@ internal data class OwnerMissionSettled(val id: String, val request: String, val
  * Bounded: at most [OwnerMissionPlanner.MAX_STEPS] steps, [MAX_RUNS] lane orders including repeated ones, a time
  * limit, and never a second attempt of a failed step without the owner. Free of Android.
  */
-internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
-    private enum class State { PENDING, RUNNING, WAITING, DONE, FAILED, STOPPED, SKIPPED }
-    private enum class Phase { PROPOSED, RUNNING, WAITING, HELD, ASKING, ENDED }
-    private enum class End { COMPLETED, FAILED, STOPPED, TIME }
+internal class OwnerMissionDirector(private val host: OwnerMissionHost,
+                                    private val journal: OwnerMissionJournal = OwnerMissionJournal()) {
+    /** [UNVERIFIED]: a send was pressed (or reserved) and never confirmed – not done, and never pressed again by itself. */
+    private enum class State { PENDING, RUNNING, WAITING, DONE, FAILED, STOPPED, SKIPPED, UNVERIFIED }
+    /** [RESUMING]: a sequence from the journal was offered after an app start and waits for the owner's word. */
+    private enum class Phase { PROPOSED, RUNNING, WAITING, HELD, ASKING, ENDED, RESUMING }
+    private enum class End { COMPLETED, FAILED, STOPPED, TIME, UNCONFIRMED }
 
-    private class Slot(var step: OwnerMissionStep) {
+    private class Slot(step: OwnerMissionStep) {
+        /** true = the step's arguments changed since the journal last saw them (a correction). */
+        var changed = false
+        var step: OwnerMissionStep = step
+            set(value) { field = value; changed = true }
+        /** The owner corrected this very step after it had been sent: the repeat is asked with its own wording. */
+        var confirmOwn = false
+        /** Known from the journal after a restart: what the report says instead of a result that is not in memory. */
+        var note: String? = null
         var state = State.PENDING
         var result: OwnerLaneResult? = null
         var problem: String? = null
@@ -157,9 +214,11 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
 
     private class Queued(val target: Int, val step: OwnerMissionStep, val request: String, val deskOwn: Boolean)
 
-    private class Mission(val session: String, val request: String, steps: List<OwnerMissionStep>, val startedAt: Long) {
+    private class Mission(val session: String, val request: String, steps: List<OwnerMissionStep>, var startedAt: Long,
+                          val turnId: String = "mission-" + java.util.UUID.randomUUID()) {
         val slots = steps.map(::Slot)
-        val turnId = "mission-" + java.util.UUID.randomUUID()
+        /** Wall-clock start, for the journal. */
+        var wallStartedAt = 0L
         var phase = Phase.RUNNING
         var current = 0
         var pausedAt = startedAt
@@ -200,7 +259,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
     /** true while a mission runs or waits in this chat. */
     val active: Boolean get() = open() != null
 
-    private fun open(): Mission? = current()?.takeIf { it.phase != Phase.ENDED && it.phase != Phase.PROPOSED }
+    private fun open(): Mission? = current()?.takeIf { it.phase != Phase.ENDED && it.phase != Phase.PROPOSED && it.phase != Phase.RESUMING }
 
     /** The mission of this chat while it is still within its bounds. */
     private fun current(): Mission? {
@@ -221,8 +280,51 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         val replaced = open() != null
         host.holdSubject()
         host.acceptOwnerTurn(request)
+        // A step that needs the Gmail connection is not started without it: said plainly, with the rest offered.
+        if (plan.steps.any(::mailStep) && !host.mailReadable()) {
+            host.activity("AUFTRAGSFOLGE · Gmail ist nicht verbunden · die Mail-Schritte entfallen · nichts läuft ohne deine Bestätigung")
+            offerWithoutMail(request, plan)
+            return true
+        }
         start(plan.request, plan, if (replaced) "Die frühere Auftragsfolge beende ich damit. " else "")
         return true
+    }
+
+    private fun mailStep(step: OwnerMissionStep): Boolean =
+        step is OwnerMissionStep.MailSearch || step is OwnerMissionStep.MailRead || step is OwnerMissionStep.MailSummary
+
+    /**
+     * The honest partial answer when Gmail is not connected: the mail steps and what builds on their result are named
+     * and left out; what does not depend on them is offered and runs only after the owner's yes.
+     */
+    private fun offerWithoutMail(request: String, plan: OwnerMissionPlan) {
+        val steps = plan.steps
+        val out = sortedSetOf<Int>()
+        steps.forEachIndexed { index, step -> if (mailStep(step) || step.source?.let { it in out } == true) out += index }
+        val kept = steps.indices.filter { it !in out }
+        // The steps that stay keep pointing at each other: their sources are renumbered.
+        val rest = kept.map { index -> withSource(steps[index], steps[index].source?.let(kept::indexOf)) }
+        val hanging = out.filter { !mailStep(steps[it]) }.map { steps[it].label }
+        mission = if (rest.isEmpty()) null else Mission(host.sessionId, request, rest, host.nowMillis()).also { it.phase = Phase.PROPOSED }
+        host.reply(request, OwnerMissionPartial.withoutMail(hanging, rest))
+    }
+
+    private fun withSource(step: OwnerMissionStep, source: Int?): OwnerMissionStep = when (step) {
+        is OwnerMissionStep.OpenPdf -> step.copy(source = source)
+        is OwnerMissionStep.PageSave -> step.copy(source = source)
+        is OwnerMissionStep.PageSummary -> step.copy(source = source)
+        is OwnerMissionStep.News -> step.copy(source = source)
+        is OwnerMissionStep.Export -> step.copy(source = source)
+        is OwnerMissionStep.Mail -> step.copy(source = source)
+        is OwnerMissionStep.FindFile -> step.copy(source = source)
+        is OwnerMissionStep.OpenFound -> step.copy(source = source)
+        is OwnerMissionStep.OpenSaved -> step.copy(source = source)
+        is OwnerMissionStep.Storage -> step.copy(source = source)
+        is OwnerMissionStep.SendChat -> step.copy(source = source)
+        is OwnerMissionStep.OpenApp -> step.copy(source = source)
+        is OwnerMissionStep.Calendar -> step.copy(source = source)
+        is OwnerMissionStep.Research -> step.copy(source = source)
+        else -> step
     }
 
     /**
@@ -247,7 +349,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                     host.acceptOwnerTurn(request)
                     // One confirmed order goes to its lane as if the owner had said it; the lane answers itself. A page
                     // summary without a save is the desk's order only inside a sequence: it runs as a sequence of one.
-                    if (m.slots.size == 1 && m.slots.single().step !is OwnerMissionStep.PageSummary) {
+                    if (m.slots.size == 1 && handsOver(m.slots.single().step)) {
                         handOver(m.slots.single().step, request)
                         return true
                     }
@@ -262,6 +364,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 }
                 return false
             }
+            Phase.RESUMING -> return answerResume(m, request)
             Phase.RUNNING, Phase.WAITING, Phase.HELD, Phase.ASKING -> Unit
         }
         if (OwnerDeskReply.isStop(request, name)) return stop(m, request)
@@ -272,6 +375,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             if (OwnerDeskReply.isYes(request, name)) {
                 host.acceptOwnerTurn(request)
                 slot.confirmFirst = false
+                slot.confirmOwn = false
                 m.phase = Phase.RUNNING
                 host.later { advance(m) }
                 return true
@@ -279,6 +383,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             if (OwnerDeskReply.isNo(request, name)) {
                 host.acceptOwnerTurn(request)
                 slot.confirmFirst = false
+                slot.confirmOwn = false
                 slot.state = State.SKIPPED
                 m.phase = Phase.RUNNING
                 host.later { advance(m) }
@@ -352,15 +457,29 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         m.foreign = false
         m.outcomes++
         m.noticed = false
+        // A send step whose intent is in the journal and that did not end as a confirmed send: whether the message
+        // went out is not known. It is neither done nor simply failed, and it is never pressed again by itself.
+        val unknown = outcome !is OwnerLaneOutcome.Done && outcome !is OwnerLaneOutcome.NeedsOwner &&
+            journal.state(m.turnId, m.current) == OwnerMissionJournal.State.INTENT_RESERVED
         when (outcome) {
-            is OwnerLaneOutcome.Done -> { slot.state = State.DONE; slot.result = outcome.result; slot.problem = null }
+            is OwnerLaneOutcome.Done -> {
+                slot.state = State.DONE; slot.result = outcome.result; slot.problem = null; slot.note = null
+                // A text result of this step is what a later „das“ of the sequence means – as the object it is.
+                when (val result = outcome.result) {
+                    is OwnerLaneResult.MailSummarised -> host.adoptResult(result.of)
+                    is OwnerLaneResult.Researched -> host.adoptResult(result.of)
+                    is OwnerLaneResult.PageSummarised -> host.adoptResult(result.of)
+                    else -> Unit
+                }
+            }
             is OwnerLaneOutcome.NeedsOwner -> { slot.state = State.WAITING; slot.problem = outcome.question }
-            is OwnerLaneOutcome.Failed -> { slot.state = State.FAILED; slot.problem = outcome.reason }
-            OwnerLaneOutcome.Stopped -> slot.state = State.STOPPED
+            is OwnerLaneOutcome.Failed -> { slot.state = if (unknown) State.UNVERIFIED else State.FAILED; slot.problem = outcome.reason }
+            OwnerLaneOutcome.Stopped -> slot.state = if (unknown) State.UNVERIFIED else State.STOPPED
         }
         stage(m)
         val queued = m.queued
         when {
+            unknown -> end(m, End.UNCONFIRMED)
             m.stopping -> end(m, End.STOPPED)
             // The step that was running when the owner corrected the plan has settled: now the correction – unless
             // a step the correction does not concern has just failed.
@@ -443,10 +562,38 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         // from the sentence itself and without a model – what cannot be done yet, and the offer for the rest.
         val reading = OwnerMissionPlanner.read(request, name, host.noBriefingYet())
         if (reading?.kind == OwnerSentenceReading.Kind.PARTIAL) {
+            // Orders the app's own reading left open only because no lane knew their words: the cloud brain the owner
+            // selected may map them – ONE text request that carries his sentence and nothing else. Orders the app
+            // cannot carry out at all are said plainly, without a request.
+            val ask = host.modelPlans() && host.modelOrders() && OwnerMissionPlanCall.wants(reading) && host.mayPlan(request)
             host.holdSubject()
             host.acceptOwnerTurn(request)
-            host.activity("AUFTRAGSFOLGE · " + reading.orders.size + " Aufträge erkannt · nicht alle sind schon möglich · nichts läuft ohne deine Bestätigung")
-            offerRest(request, reading.open, reading.rest)
+            if (!ask) {
+                host.activity("AUFTRAGSFOLGE · " + reading.orders.size + " Aufträge erkannt · nicht alle sind schon möglich · nichts läuft ohne deine Bestätigung")
+                offerRest(request, reading.open, reading.rest)
+                return true
+            }
+            host.activity("AUFTRAGSFOLGE · " + reading.orders.size + " Aufträge erkannt · das Cloud-Gehirn ordnet die offenen zu · " +
+                "gesendet wird nur dein Satz · jeder Schritt wird geprüft")
+            val session = host.sessionId
+            host.proposePlan(request, OwnerMissionPlanCall.prompt(request)) { text ->
+                if (host.sessionId != session) return@proposePlan
+                when (val checked = OwnerMissionPlanCall.check(request, text, name)) {
+                    is OwnerMissionModelPlan.Result.Accepted -> {
+                        mission = Mission(session, request, checked.plan.steps, host.nowMillis()).also { it.phase = Phase.PROPOSED }
+                        host.reply(request, checked.plan.announcement("Ich würde das in", " machen") + " Soll ich das so machen?")
+                    }
+                    is OwnerMissionModelPlan.Result.Uncovered -> {
+                        host.activity("AUFTRAGSFOLGE · der Modellplan deckt nicht jeden Auftrag deines Satzes · nichts läuft ohne deine Bestätigung")
+                        offerRest(request, checked.open, checked.rest)
+                    }
+                    // No valid plan: the app's own reading stands – what cannot be done, and the offer for the rest.
+                    is OwnerMissionModelPlan.Result.Rejected -> {
+                        host.activity("AUFTRAGSFOLGE · Modellplan verworfen · " + checked.reason.take(120))
+                        offerRest(request, reading.open, reading.rest)
+                    }
+                }
+            }
             return true
         }
         if (!host.modelPlans()) return false
@@ -457,9 +604,19 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         host.activity(if (single) "AUFTRAG · das Modell ordnet deinen Satz einem festen Ablauf zu · geprüft wird, dass nichts dazukommt"
             else "AUFTRAGSFOLGE · das Modell schlägt Schritte vor · nichts läuft ohne deine Bestätigung")
         val session = host.sessionId
-        host.proposePlan(request, if (single) OwnerMissionModelPlan.orderPrompt(request) else OwnerMissionModelPlan.prompt(request)) { text ->
+        // A sequence for the cloud brain is asked as a typed JSON plan; one order, and every plan of the model on the
+        // device, keeps the numbered-line format (see OwnerMissionPlanCall for why). Both pass the same checks.
+        val typed = !single && host.modelOrders()
+        val prompt = when {
+            single -> OwnerMissionModelPlan.orderPrompt(request)
+            typed -> OwnerMissionPlanCall.prompt(request)
+            else -> OwnerMissionModelPlan.prompt(request)
+        }
+        host.proposePlan(request, prompt) { text ->
             if (host.sessionId != session) return@proposePlan
-            when (val checked = OwnerMissionModelPlan.check(request, text, name, allowSingle = single)) {
+            val result = if (typed) OwnerMissionPlanCall.check(request, text, name)
+                else OwnerMissionModelPlan.check(request, text, name, allowSingle = single)
+            when (val checked = result) {
                 is OwnerMissionModelPlan.Result.Accepted -> {
                     val steps = checked.plan.steps
                     if (OwnerMissionModelPlan.runsWithoutQuestion(checked.plan, name)) {
@@ -501,6 +658,14 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
      * the lane's parser, gates, grants, questions and wording apply, and the lane itself answers. The owner's
      * sentence is already shown, so the order is not shown as a second owner turn.
      */
+    /**
+     * true = one confirmed order of this kind is handed to its lane as if the owner had said it. A message, another
+     * app, mails, the calendar and a research run as a sequence of one instead: with the journal and its typed result.
+     */
+    private fun handsOver(step: OwnerMissionStep): Boolean = step is OwnerMissionStep.OpenPdf || step is OwnerMissionStep.PageSave ||
+        step is OwnerMissionStep.News || step is OwnerMissionStep.Export || step is OwnerMissionStep.Mail ||
+        step is OwnerMissionStep.FindFile || step is OwnerMissionStep.Storage
+
     private fun handOver(step: OwnerMissionStep, request: String) {
         host.later {
             if (!host.idle()) { host.reply(request, "Gerade läuft noch etwas anderes. Sag es bitte gleich noch einmal."); return@later }
@@ -524,8 +689,18 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
     private fun start(request: String, plan: OwnerMissionPlan, lead: String, announce: Boolean = true) {
         val m = Mission(host.sessionId, plan.request, plan.steps, host.nowMillis())
         mission = m
-        host.reply(request, if (announce) lead + plan.announcement() else lead)
-        host.activity("AUFTRAGSFOLGE · ${m.slots.size} Schritte nacheinander · jeder läuft durch seine eigene Lenkung")
+        m.wallStartedAt = host.wallMillis()
+        // Written down before the first step: what was ordered, and for every step that it has not acted yet.
+        if (!journal.begin(m.turnId, plan.request, m.wallStartedAt, plan.steps))
+            host.activity("AUFTRAGSFOLGE · das Journal ist nicht schreibbar · ein Sendeschritt wird deshalb nicht gedrückt")
+        // Two orders that became one step („Öffne WhatsApp und schreib …“): no list to read out, the work starts.
+        host.reply(request, when {
+            !announce -> lead
+            m.slots.size == 1 -> lead + "Verstanden. Ich kümmere mich darum."
+            else -> lead + plan.announcement()
+        })
+        host.activity("AUFTRAGSFOLGE · ${m.slots.size} " + (if (m.slots.size == 1) "Schritt" else "Schritte nacheinander") +
+            " · jeder läuft durch seine eigene Lenkung")
         if (announce) host.afterAnnouncement { advance(m) } else host.later { advance(m) }
     }
 
@@ -533,8 +708,9 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
     private fun advance(m: Mission) {
         if (mission !== m || m.phase != Phase.RUNNING || m.slots.any { it.state == State.RUNNING }) return
         if (m.session != host.sessionId) { mission = null; return }
+        sync(m)
         val next = m.slots.indexOfFirst { it.state == State.PENDING }
-        if (next < 0) { end(m, End.COMPLETED); return }
+        if (next < 0) { end(m, if (m.slots.any { it.state == State.UNVERIFIED }) End.UNCONFIRMED else End.COMPLETED); return }
         m.current = next
         val slot = m.slots[next]
         if (host.nowMillis() - m.startedAt > MAX_TOTAL_MILLIS || m.runs >= MAX_RUNS) { end(m, End.TIME); return }
@@ -542,7 +718,10 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             m.phase = Phase.ASKING
             m.pausedAt = host.nowMillis()
             val before = slot.earlier.lastOrNull()?.let { sentence(it) } ?: label(slot.step)
-            host.say("Schritt ${next + 1} war schon erledigt: $before. Soll ich ihn mit dem neuen Ergebnis noch einmal ausführen?")
+            // The owner corrected a step that had already gone out: it cannot be taken back, so the repeat is his decision.
+            host.say(if (slot.confirmOwn) "Schritt ${next + 1} war schon erledigt: $before. Das lässt sich nicht zurücknehmen. " +
+                "Soll ich ihn mit deiner Änderung noch einmal ausführen (${label(slot.step)})?"
+                else "Schritt ${next + 1} war schon erledigt: $before. Soll ich ihn mit dem neuen Ergebnis noch einmal ausführen?")
             return
         }
         if (!host.idle()) { hold(m, "Gerade läuft noch etwas anderes."); return }
@@ -557,25 +736,56 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         fun gone(what: String) = failBefore(m, slot, "$what aus Schritt ${(step.source ?: 0) + 1} ist nicht mehr das, worum es " +
             "in diesem Gespräch geht. Ich mache damit nicht weiter, statt etwas Falsches zu nehmen.")
         var found: OwnerLaneResult.FileFound? = null
-        when (step) {
-            is OwnerMissionStep.Export, is OwnerMissionStep.Mail, is OwnerMissionStep.OpenSaved -> if (step.source != null) {
+        var file: OwnerSavedFile? = null
+        var mails: List<MailRef> = emptyList()
+        // The step gets the result OBJECT of the step it depends on, by its kind – never „the last answer of the chat“.
+        when (step.needs) {
+            OwnerStepSlot.DELIVERABLE -> {
                 val subject = deliverable(source)
                 if (subject == null || !host.continueOn(subject)) return gone("Das Ergebnis")
             }
-            is OwnerMissionStep.PageSave, is OwnerMissionStep.PageSummary -> if (step.source != null) {
+            OwnerStepSlot.SAVED_FILE -> {
+                file = when (source) {
+                    // Saved in this run: its content must still be what the chat is about.
+                    is OwnerLaneResult.FileSaved -> source.file.takeIf { host.continueOn(source.of) }
+                    // Known from the journal after a restart: the file itself.
+                    is OwnerLaneResult.FileKept -> source.file
+                    else -> null
+                } ?: return gone("Das Ergebnis")
+            }
+            OwnerStepSlot.OPEN_DOCUMENT -> {
                 val opened = source as? OwnerLaneResult.DocumentOpened
                 if (opened == null || host.openDocumentName() != opened.name) return gone("Das PDF")
             }
-            is OwnerMissionStep.OpenFound -> {
+            OwnerStepSlot.FOUND_FILE -> {
                 found = source as? OwnerLaneResult.FileFound ?: return gone("Die Datei")
                 if (!found.name.endsWith(".pdf", ignoreCase = true)) return failBefore(m, slot, "„${found.name}“ ist kein PDF. " +
                     "Für diesen Dateityp gibt es noch kein freigegebenes Werkzeug zum Öffnen.")
+            }
+            OwnerStepSlot.MAILS -> {
+                mails = when (source) {
+                    is OwnerLaneResult.MailsFound -> source.ids.map { MailRef(it.first, it.second, "", "", 0L) }
+                    is OwnerLaneResult.MailRead -> listOf(MailRef(source.id.first, source.id.second, "", "", 0L))
+                    else -> emptyList()
+                }
+                if (mails.isEmpty()) return gone("Die Mail")
+            }
+            null -> Unit
+        }
+        if (mailStep(step) && !host.mailReadable()) return failBefore(m, slot, "Gmail ist nicht mehr verbunden; es wurde keine Mail gelesen.")
+        // A send step whose message may already be out is never handed over again (see OwnerMissionJournal).
+        if (step is OwnerMissionStep.SendChat || step is OwnerMissionStep.Mail) when (journal.state(m.turnId, index)) {
+            OwnerMissionJournal.State.INTENT_RESERVED, OwnerMissionJournal.State.UNCONFIRMED -> {
+                slot.state = State.UNVERIFIED
+                stage(m)
+                return end(m, End.UNCONFIRMED)
             }
             else -> Unit
         }
         slot.state = State.RUNNING
         slot.problem = null
         m.phase = Phase.RUNNING
+        m.current = index
         m.runs++
         stage(m)
         host.activity("AUFTRAGSFOLGE · Schritt ${index + 1} von ${m.slots.size} · ${label(step)}")
@@ -598,15 +808,276 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 // plan that was just announced is not that result.
                 is OwnerMissionStep.Export, is OwnerMissionStep.Mail ->
                     if (step.source == null) host.workOnHeld(step.order) else host.work(step.order)
-                is OwnerMissionStep.OpenSaved -> host.work(OPEN_SAVED_ORDER)
+                is OwnerMissionStep.OpenSaved -> host.openSaved(OPEN_SAVED_ORDER, checkNotNull(file))
                 is OwnerMissionStep.FindFile -> host.chain(step.order, step.plan)
                 is OwnerMissionStep.OpenFound -> { host.deskOpenFound(step.order, checkNotNull(found).name, found.folderHint); true }
                 is OwnerMissionStep.Storage -> host.deepClean(step.order)
+                // The send lane's own entry: its parser, its questions, its grant, its screen check, one press.
+                is OwnerMissionStep.SendChat -> host.missionSend(step.order, step.channelFromOpening,
+                    step.recipient.takeIf { step.corrected }, guard(m, index))
+                is OwnerMissionStep.OpenApp -> host.openApp(step.order, step.appName)
+                is OwnerMissionStep.Calendar -> host.briefing(step.order)
+                is OwnerMissionStep.Research -> host.research(step.order, step.topic)
+                is OwnerMissionStep.MailSearch -> { mailSearch(m, index, step) { hits -> mailSettled(m, index, hits) }; true }
+                is OwnerMissionStep.MailRead -> {
+                    val own = step.own
+                    if (own == null) mailRead(m, index, step.order, mails) else mailSearch(m, index, own) { hits ->
+                        val listed = refs(hits)
+                        if (listed == null) mailSettled(m, index, hits) else mailRead(m, index, step.order, listed)
+                    }
+                    true
+                }
+                is OwnerMissionStep.MailSummary -> {
+                    val own = step.own
+                    if (own == null) host.mailSummarize(step.order, mails) { mailSettled(m, index, it) }
+                    else mailSearch(m, index, own) { hits ->
+                        val listed = refs(hits)
+                        if (listed == null) mailSettled(m, index, hits)
+                        else host.mailSummarize(step.order, listed) { summary -> mailSettled(m, index, summary) }
+                    }
+                    true
+                }
                 else -> false
             }
         } finally { dispatching = false }
         if (!taken && slot.state == State.RUNNING) failBefore(m, slot, "Diesen Teilauftrag hat die zuständige Lenkung nicht angenommen; " +
             "es wurde dafür nichts ausgeführt.")
+    }
+
+    // ── Mail steps: the Gmail lane's typed outcomes ─────────────────────────────────────────────────────────
+
+    private fun mailSearch(m: Mission, index: Int, step: OwnerMissionStep.MailSearch, done: (MailLaneOutcome) -> Unit) {
+        // „von meinem Anwalt“: the name the owner confirmed for that relation; without one the word as he said it.
+        val from = step.from?.let { host.relationName(it) ?: it }
+        val query = MailQuery(from = from, about = step.about, day = step.day?.let { name -> MailDay.entries.firstOrNull { it.name == name } },
+            unreadOnly = step.unreadOnly, max = if (step.newest) 1 else MAIL_LIST, label = when {
+                step.newest && step.from != null -> "letzte Mail von ${step.fromSaid ?: step.from}"
+                step.from == null && step.about == null && step.day == null && !step.unreadOnly -> "die neuesten Mails im Posteingang"
+                step.unreadOnly && step.from == null && step.about == null -> "neue Mails"
+                else -> null
+            })
+        host.mailSearch(step.order, query) { outcome -> if (mission === m && m.current == index) done(outcome) }
+    }
+
+    /** The mails a search found, when it found any. */
+    private fun refs(outcome: MailLaneOutcome): List<MailRef>? =
+        ((outcome as? MailLaneOutcome.Done)?.result as? MailLaneResult.Found)?.refs?.takeIf { it.isNotEmpty() }
+
+    private fun mailRead(m: Mission, index: Int, order: String, mails: List<MailRef>) {
+        // „Lies sie vor“ means one mail. Which of several is the owner's choice, not a guess.
+        if (mails.size != 1) return mailSettled(m, index, MailLaneOutcome.Failed("Die Suche hat ${mails.size} Mails gefunden. " +
+            "Sag mir, welche ich vorlesen soll – zum Beispiel „Lies die erste vor“. Vorgelesen habe ich keine."))
+        host.mailRead(order, mails.single()) { mailSettled(m, index, it) }
+    }
+
+    /**
+     * How a mail step ended, as the typed result of this sequence. The mail lane has already shown what it found,
+     * read or wrote – in its own private replies. Here only references and counts are kept; a mail's text is data of
+     * the lane and is never read for an order.
+     */
+    private fun mailSettled(m: Mission, index: Int, outcome: MailLaneOutcome) {
+        if (mission !== m || m.current != index) return
+        laneOutcome(OwnerMissionLane.MAIL, when (outcome) {
+            is MailLaneOutcome.Done -> when (val result = outcome.result) {
+                is MailLaneResult.Found -> if (result.refs.isEmpty()) OwnerLaneOutcome.Failed("Dazu habe ich in deinem Posteingang keine Mail gefunden.")
+                    else OwnerLaneOutcome.Done(OwnerLaneResult.MailsFound(result.query, result.refs.map { it.id to it.threadId }))
+                is MailLaneResult.Read -> OwnerLaneOutcome.Done(OwnerLaneResult.MailRead(result.text.ref.id to result.text.ref.threadId, result.text.body.length))
+                is MailLaneResult.Summary -> {
+                    val title = if (result.refs.size == 1) "Zusammenfassung E-Mail" else "Zusammenfassung ${result.refs.size} E-Mails"
+                    OwnerDeliverable.ofMailSummary(title, result.text, result.refs.size, result.cloud, result.complete, host.today(), host.wallMillis())
+                        ?.let { OwnerLaneOutcome.Done(OwnerLaneResult.MailSummarised(it, result.refs.size, result.cloud, result.complete)) }
+                        ?: OwnerLaneOutcome.Failed("Die Zusammenfassung der Mails ist leer geblieben.")
+                }
+                else -> OwnerLaneOutcome.Failed("Die Mail-Lenkung hat etwas anderes geliefert als bestellt; ich mache damit nicht weiter.")
+            }
+            is MailLaneOutcome.NeedsOwner -> OwnerLaneOutcome.NeedsOwner(outcome.need, outcome.question)
+            is MailLaneOutcome.Failed -> OwnerLaneOutcome.Failed(outcome.reason)
+            MailLaneOutcome.Stopped -> OwnerLaneOutcome.Stopped
+        })
+    }
+
+    // ── Send steps: the journal around the one press ────────────────────────────────────────────────────────
+
+    /** Asked by the send flow right before it presses: the intent is written down first, or nothing is pressed. */
+    private fun guard(m: Mission, index: Int): OwnerSendGuard = object : OwnerSendGuard {
+        override fun reserve(plan: SendPlan): Boolean = journal.reserve(m.turnId, index, plan.channel.name, when (plan) {
+            is SendPlan.WhatsApp -> plan.waDigits
+            is SendPlan.Mail -> plan.address
+        }, when (plan) {
+            is SendPlan.WhatsApp -> plan.text
+            is SendPlan.Mail -> plan.subject + "\n" + plan.body
+        }, (plan as? SendPlan.Mail)?.attachment?.displayName, host.wallMillis())
+
+        override fun pressed(plan: SendPlan, clicked: Boolean) = journal.pressed(m.turnId, index, clicked, host.wallMillis())
+    }
+
+    /**
+     * For the host that routes „schick das per Mail an …“ of the work tools to the send lane: the guard of the mail
+     * step this sequence is handing over right now, else null (an order the owner gave himself has no sequence).
+     */
+    fun sendGuard(): OwnerSendGuard? {
+        if (!dispatching) return null
+        val m = open() ?: return null
+        return if (m.slots[m.current].step is OwnerMissionStep.Mail) guard(m, m.current) else null
+    }
+
+    // ── After an app start: a sequence the journal still holds ──────────────────────────────────────────────
+
+    /**
+     * Call once when the chat is ready after the app was started. When the journal holds a sequence that never
+     * ended, the owner is told where it stands and asked – one sentence. Nothing starts by itself: reading, searching,
+     * summarising, opening and saving may be done again after his „weiter“; a send step whose intent was written down
+     * and never confirmed is NOT pressed again – the app says that it does not know whether the message went out and
+     * sends again only on his explicit „ja, nochmal“. true = the offer was made.
+     */
+    fun offerResume(): Boolean {
+        if (mission != null) return false
+        val record = journal.open() ?: return false
+        val now = host.wallMillis()
+        if (now - record.startedAt !in 0..RESUME_MILLIS) { journal.end(record.id, "EXPIRED", now); return false }
+        val steps = record.steps.map { OwnerMissionStepCodec.decode(it.args, host.assistantName) }
+        if (steps.any { it == null }) { journal.end(record.id, "UNREADABLE", now); return false }
+        val m = Mission(host.sessionId, record.request, steps.filterNotNull(), host.nowMillis(), record.id)
+        m.wallStartedAt = record.startedAt
+        record.steps.forEachIndexed { index, kept ->
+            val slot = m.slots[index]
+            when (kept.state) {
+                OwnerMissionJournal.State.DONE, OwnerMissionJournal.State.SENT, OwnerMissionJournal.State.PREPARED -> {
+                    slot.state = State.DONE
+                    slot.result = OwnerMissionStepCodec.restore(kept.result)
+                    slot.note = label(slot.step) + when (kept.state) {
+                        OwnerMissionJournal.State.SENT -> " – schon vor dem Neustart gesendet, nicht wiederholt"
+                        OwnerMissionJournal.State.PREPARED -> " – schon vor dem Neustart vorbereitet, nichts gesendet"
+                        else -> " – schon vor dem Neustart erledigt"
+                    }
+                }
+                OwnerMissionJournal.State.INTENT_RESERVED, OwnerMissionJournal.State.UNCONFIRMED -> slot.state = State.UNVERIFIED
+                OwnerMissionJournal.State.SKIPPED -> slot.state = State.SKIPPED
+                else -> slot.state = State.PENDING
+            }
+        }
+        val at = m.slots.indexOfFirst { it.state == State.PENDING || it.state == State.UNVERIFIED }
+        if (at < 0) { journal.end(record.id, "COMPLETED", now); return false }
+        // A step that is still to do may need the result of a step that was done: a text result is not in the
+        // journal, so its step is done again. Only steps that send nothing are ever done again this way.
+        val again = sortedSetOf<Int>()
+        var grew = true
+        while (grew) {
+            grew = false
+            m.slots.forEachIndexed { index, slot ->
+                if (slot.state != State.PENDING && index !in again) return@forEachIndexed
+                val source = slot.step.source ?: return@forEachIndexed
+                val before = m.slots[source]
+                if (source !in again && before.state == State.DONE && !provides(before.result, slot.step.needs) && replaySafe(before.step)) {
+                    again += source
+                    grew = true
+                }
+            }
+        }
+        again.forEach { m.slots[it].state = State.PENDING; m.slots[it].result = null; m.slots[it].note = null }
+        m.current = at
+        m.phase = Phase.RESUMING
+        m.pausedAt = host.nowMillis()
+        mission = m
+        val total = m.slots.size
+        val head = "Die Auftragsfolge von ${host.clockLabel(record.startedAt)} steht bei Schritt ${at + 1} von $total."
+        val unknown = m.slots[at].takeIf { it.state == State.UNVERIFIED }
+        host.activity("AUFTRAGSFOLGE · aus dem Journal · Schritt ${at + 1} von $total offen · nichts startet von selbst")
+        host.say(if (unknown != null) {
+            val where = if (unknown.step is OwnerMissionStep.Mail) "Gmail" else "WhatsApp"
+            "$head Das ist: ${label(unknown.step)}. Ich weiß nicht, ob diese Nachricht rausging: Die App wurde beendet, bevor ich das " +
+                "Senden bestätigen konnte. Bitte sieh in $where nach. Ich drücke nicht noch einmal – nur wenn du „ja, nochmal“ " +
+                "sagst, sende ich sie erneut. Mit „weiter“ lasse ich diesen Schritt aus" +
+                (if (m.slots.any { it.state == State.PENDING }) " und mache den Rest" else "") + ", mit „abbrechen“ beende ich die Auftragsfolge."
+        } else head + " Weiter?" + when {
+            again.isEmpty() -> ""
+            else -> " Dafür mache ich " + (if (again.size == 1) "Schritt ${again.first() + 1}" else
+                "die Schritte " + again.joinToString(", ") { (it + 1).toString() }) + " noch einmal – dabei geht nichts nach außen" +
+                (if (again.any { m.slots[it].step.let { s -> s is OwnerMissionStep.Export || s is OwnerMissionStep.PageSave } })
+                    "; die Datei von vorhin bleibt liegen, es kommt eine zweite dazu." else ".")
+        })
+        return true
+    }
+
+    /** true = [result] is in memory and is what a step that [needs] it can work on. */
+    private fun provides(result: OwnerLaneResult?, needs: OwnerStepSlot?): Boolean = when (needs) {
+        null -> true
+        OwnerStepSlot.DELIVERABLE -> deliverable(result) != null
+        OwnerStepSlot.SAVED_FILE -> result is OwnerLaneResult.FileSaved || result is OwnerLaneResult.FileKept
+        OwnerStepSlot.FOUND_FILE -> result is OwnerLaneResult.FileFound
+        OwnerStepSlot.OPEN_DOCUMENT -> result is OwnerLaneResult.DocumentOpened && host.openDocumentName() == result.name
+        OwnerStepSlot.MAILS -> result is OwnerLaneResult.MailsFound || result is OwnerLaneResult.MailRead
+    }
+
+    /** Steps that may be done again after a restart: they read, search, summarise, open or write the owner's own file. */
+    private fun replaySafe(step: OwnerMissionStep): Boolean = step !is OwnerMissionStep.SendChat && step !is OwnerMissionStep.Mail &&
+        (step !is OwnerMissionStep.Storage || step.mode != "SAFE_CLEAN")
+
+    private val retry = Regex("(?iu)^(?:ja[, ]+)?(?:bitte\\s+)?(?:(?:sende?|schicke?|drücke?)\\s+)?(?:(?:sie|es|die\\s+nachricht)\\s+)?" +
+        "(?:nochmal|noch\\s+einmal|noch\\s+mal|erneut)(?:\\s+(?:senden|schicken|drücken|abschicken))?(?:\\s+bitte)?[.!]?$")
+
+    /** The owner's word on the resume offer. Anything that is no answer lets the offer go; the journal keeps it. */
+    private fun answerResume(m: Mission, request: String): Boolean {
+        val name = host.assistantName
+        val text = request.trim()
+        val unknown = m.slots.indexOfFirst { it.state == State.UNVERIFIED }
+        fun go(lead: String) {
+            m.phase = Phase.RUNNING
+            m.startedAt = host.nowMillis()
+            journal.reopen(m.turnId)
+            host.reply(request, lead)
+            host.later { advance(m) }
+        }
+        when {
+            unknown >= 0 && retry.matches(text) -> {
+                host.acceptOwnerTurn(request)
+                if (!journal.allowRetry(m.turnId, unknown, host.wallMillis())) {
+                    host.reply(request, "Ich kann das im Journal nicht vermerken und sende deshalb nicht. Bitte schick die Nachricht selbst.")
+                    return true
+                }
+                m.slots[unknown].state = State.PENDING
+                go("In Ordnung, auf dein Wort sende ich sie noch einmal – mit allen Prüfungen wie beim ersten Mal.")
+            }
+            OwnerDeskReply.isYes(request, name) ||
+                OwnerTaskChainContinuation.parse(request, waitsForChoice = false, assistantName = name) is OwnerTaskChainContinuation.Command.Continue -> {
+                host.acceptOwnerTurn(request)
+                val next = m.slots.indexOfFirst { it.state == State.PENDING }
+                go(when {
+                    next < 0 -> "In Ordnung, ich sende nicht noch einmal."
+                    unknown >= 0 -> "In Ordnung, die Nachricht sende ich nicht noch einmal. Ich mache bei Schritt ${next + 1} von ${m.slots.size} weiter: ${label(m.slots[next].step)}."
+                    else -> "Ich mache bei Schritt ${next + 1} von ${m.slots.size} weiter: ${label(m.slots[next].step)}."
+                })
+            }
+            OwnerDeskReply.isNo(request, name) || OwnerDeskReply.isStop(request, name) ||
+                OwnerTaskChainContinuation.parse(request, waitsForChoice = false, assistantName = name) == OwnerTaskChainContinuation.Command.Drop -> {
+                host.acceptOwnerTurn(request)
+                journal.end(m.turnId, "DROPPED", host.wallMillis())
+                mission = null
+                host.reply(request, "In Ordnung, die Auftragsfolge ist beendet. Von den offenen Schritten habe ich nichts ausgeführt.")
+            }
+            else -> { mission = null; return false }
+        }
+        return true
+    }
+
+    /** What the journal knows about this sequence right now, written through. A reservation is never overwritten. */
+    private fun sync(m: Mission) {
+        if (m.phase == Phase.PROPOSED || m.phase == Phase.RESUMING) return
+        if (m.phase != Phase.ENDED) journal.reopen(m.turnId)
+        val at = host.wallMillis()
+        m.slots.forEachIndexed { index, slot ->
+            journal.step(m.turnId, index, when (slot.state) {
+                State.PENDING -> OwnerMissionJournal.State.PENDING
+                State.RUNNING -> OwnerMissionJournal.State.RUNNING
+                State.WAITING -> OwnerMissionJournal.State.WAITING
+                State.DONE -> OwnerMissionJournal.State.DONE
+                State.FAILED -> OwnerMissionJournal.State.FAILED
+                State.STOPPED -> OwnerMissionJournal.State.STOPPED
+                State.SKIPPED -> OwnerMissionJournal.State.SKIPPED
+                State.UNVERIFIED -> OwnerMissionJournal.State.UNCONFIRMED
+            }, slot.result, at, slot.step.takeIf { slot.changed })
+            slot.changed = false
+        }
     }
 
     /**
@@ -624,7 +1095,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         if (m.slots[index].state != State.DONE) return failBefore(m, m.slots[index], "Der Schritt wurde nicht noch einmal ausgeführt.")
         stage(m)
         if (m.slots.any { it.state == State.PENDING }) host.later { advance(m) }
-        else { m.phase = Phase.ENDED; m.pausedAt = host.nowMillis() }
+        else { m.phase = Phase.ENDED; m.pausedAt = host.nowMillis(); journal.end(m.turnId, End.COMPLETED.name, host.wallMillis()) }
     }
 
     /** A step that could not even be handed to its lane. */
@@ -693,6 +1164,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         host.stage(CockpitAnimationEvent.TurnEnded(m.turnId, host.nowMillis(), how == End.COMPLETED))
         m.phase = Phase.ENDED
         m.pausedAt = host.nowMillis()
+        journal.end(m.turnId, how.name, host.wallMillis())
         // Only a completed mission stays open for a correction by the very next turn.
         if (how != End.COMPLETED && mission === m) mission = null
         settled(m, when (how) {
@@ -705,12 +1177,15 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             End.FAILED -> "bei Schritt ${m.current + 1} beendet · nichts Weiteres ausgeführt"
             End.STOPPED -> "gestoppt bei Schritt ${m.current + 1}"
             End.TIME -> "Grenze erreicht bei Schritt ${m.current + 1}"
+            End.UNCONFIRMED -> "ein Senden ist unbestätigt · nicht wiederholt"
         })
         // A mission that ends with a save offers once what the lane offers after a save of its own.
         val saved = (m.slots.last().result as? OwnerLaneResult.FileSaved)?.takeIf { how == End.COMPLETED && m.slots.last().state == State.DONE }
         val offer = if (saved != null && host.offerOpening(saved.of, saved.file)) " Soll ich die Datei öffnen?" else ""
         // One order that ran as a sequence of one: its lane has already said how it ended.
         if (m.slots.size == 1 && how == End.COMPLETED && m.slots.single().state == State.DONE) return
+        // One message that did not go out as a sequence of one: the send lane has said exactly why, and what it did not do.
+        if (m.slots.size == 1 && m.slots.single().step is OwnerMissionStep.SendChat && how != End.TIME) return
         host.say(report(m, how) + offer)
     }
 
@@ -724,7 +1199,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             val saves = m.slots.indices.filter { m.slots[it].step.let { s -> s is OwnerMissionStep.PageSave || s is OwnerMissionStep.Export } }
             saves.lastOrNull { m.slots[it].state != State.PENDING } ?: saves.firstOrNull() ?: -1
         }
-        is OwnerMissionCorrection.Change.Recipient -> m.slots.indexOfLast { it.step is OwnerMissionStep.Mail }
+        is OwnerMissionCorrection.Change.Recipient -> m.slots.indexOfLast { it.step is OwnerMissionStep.Mail || it.step is OwnerMissionStep.SendChat }
         is OwnerMissionCorrection.Change.File -> m.slots.indexOfFirst { it.step is OwnerMissionStep.OpenPdf }
     }
 
@@ -744,7 +1219,12 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 is OwnerMissionStep.Export -> old.copy(format = change.format)
                 else -> return false
             }
-            is OwnerMissionCorrection.Change.Recipient -> (old as OwnerMissionStep.Mail).copy(address = change.address, recipientName = change.name)
+            is OwnerMissionCorrection.Change.Recipient -> when (old) {
+                is OwnerMissionStep.Mail -> old.copy(address = change.address, recipientName = change.name)
+                // A message goes to a contact or a confirmed relation; the send lane resolves the new name as always.
+                is OwnerMissionStep.SendChat -> old.copy(recipient = change.name ?: return false, corrected = true)
+                else -> return false
+            }
             is OwnerMissionCorrection.Change.File -> (old as OwnerMissionStep.OpenPdf).copy(query = change.query, open = true, folderHint = null)
         }
         val number = index + 1
@@ -801,7 +1281,9 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                 host.acceptOwnerTurn(request)
                 m.queued = Queued(index, step, request, deskOwn && slot.state == State.DONE)
                 val running = m.slots[busy].step
-                val wait = running is OwnerMissionStep.Mail || running is OwnerMissionStep.Export || running is OwnerMissionStep.OpenSaved
+                // A send that runs is never cut off: once the control is pressed the message is out.
+                val wait = running is OwnerMissionStep.Mail || running is OwnerMissionStep.Export || running is OwnerMissionStep.OpenSaved ||
+                    running is OwnerMissionStep.SendChat
                 host.reply(request, "Verstanden – $what. " + (if (busy == index) "Schritt $number läuft gerade" else
                     "Gerade läuft Schritt ${busy + 1}") + (if (wait) "; sobald er fertig ist, mache ich " else "; ich breche ihn ab und mache ") +
                     (if (busy == index) "ihn" else "Schritt $number") + " mit der Änderung neu.")
@@ -832,8 +1314,11 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         again.forEach { index ->
             val slot = m.slots[index]
             slot.result?.let { slot.earlier += it }
-            // A mail that already went out is not repeated on its own; the corrected step itself is the owner's order.
-            slot.confirmFirst = index != queued.target && slot.state == State.DONE && slot.step is OwnerMissionStep.Mail
+            // A mail that already went out is not repeated on its own. A step that was really SENT cannot be taken back:
+            // also when it is the corrected step itself, the owner is asked before it goes out a second time.
+            val sent = (slot.result as? OwnerLaneResult.Delivered)?.state == OwnerLaneResult.Delivered.State.SENT
+            slot.confirmOwn = index == queued.target && slot.state == State.DONE && sent
+            slot.confirmFirst = slot.state == State.DONE && ((index != queued.target && slot.step is OwnerMissionStep.Mail) || slot.confirmOwn)
             slot.state = State.PENDING
             slot.result = null
             slot.problem = null
@@ -858,6 +1343,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             if (old.page == at.heinz.deviceai.cognitive.OwnerPageReference.LAST) "der letzten Seite" else old.pageName
         old is OwnerMissionStep.Export && new is OwnerMissionStep.Export -> "als ${new.format.label} statt als ${old.format.label}"
         old is OwnerMissionStep.Mail && new is OwnerMissionStep.Mail -> "an ${new.to} statt an ${old.to}"
+        old is OwnerMissionStep.SendChat && new is OwnerMissionStep.SendChat -> "an ${new.recipient} statt an ${old.recipient ?: "den zuerst genannten Empfänger"}"
         old is OwnerMissionStep.OpenPdf && new is OwnerMissionStep.OpenPdf -> "das PDF „${new.query}“ statt „${old.query}“"
         else -> label(new)
     }
@@ -870,6 +1356,11 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerMissionStep.Mail -> setOf(OwnerMissionLane.WORK, OwnerMissionLane.SEND)
         is OwnerMissionStep.FindFile -> setOf(OwnerMissionLane.CHAIN)
         is OwnerMissionStep.Storage -> setOf(OwnerMissionLane.DEEPCLEAN)
+        is OwnerMissionStep.SendChat -> setOf(OwnerMissionLane.SEND)
+        is OwnerMissionStep.OpenApp -> setOf(OwnerMissionLane.APP)
+        is OwnerMissionStep.Calendar -> setOf(OwnerMissionLane.BRIEFING)
+        is OwnerMissionStep.Research -> setOf(OwnerMissionLane.RESEARCH)
+        is OwnerMissionStep.MailSearch, is OwnerMissionStep.MailRead, is OwnerMissionStep.MailSummary -> setOf(OwnerMissionLane.MAIL)
         else -> setOf(OwnerMissionLane.WORK)
     }
 
@@ -888,12 +1379,26 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerMissionStep.OpenFound -> result is OwnerLaneResult.DocumentOpened
         is OwnerMissionStep.OpenSaved -> result is OwnerLaneResult.FileOpened
         is OwnerMissionStep.Storage -> result is OwnerLaneResult.Storage && result.mode == step.mode
+        // Sent, or a verified draft: the lane reports nothing else as done. The report says which of the two it was.
+        is OwnerMissionStep.SendChat -> result is OwnerLaneResult.Delivered
+        // Verified = the app lane itself saw the launched app.
+        is OwnerMissionStep.OpenApp -> result is OwnerLaneResult.AppOpened
+        is OwnerMissionStep.Calendar -> result is OwnerLaneResult.Agenda
+        // Verified = at least one source was really read.
+        is OwnerMissionStep.Research -> result is OwnerLaneResult.Researched && result.sources > 0
+        // Verified = Gmail answered with message ids.
+        is OwnerMissionStep.MailSearch -> result is OwnerLaneResult.MailsFound && result.ids.isNotEmpty()
+        is OwnerMissionStep.MailRead -> result is OwnerLaneResult.MailRead
+        is OwnerMissionStep.MailSummary -> result is OwnerLaneResult.MailSummarised && result.mails > 0
         else -> false
     }
 
     private fun deliverable(result: OwnerLaneResult?): OwnerDeliverable? = when (result) {
         is OwnerLaneResult.Briefing -> result.deliverable
         is OwnerLaneResult.FileSaved -> result.of
+        is OwnerLaneResult.PageSummarised -> result.of
+        is OwnerLaneResult.MailSummarised -> result.of
+        is OwnerLaneResult.Researched -> result.of
         else -> null
     }
 
@@ -917,7 +1422,19 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerLaneResult.Agenda -> "Kalender für ${result.span} gelesen (" + (if (result.events == 1) "1 Eintrag" else
             "${result.events} Einträge") + ")"
         is OwnerLaneResult.Storage -> storageSentence(result)
-        is OwnerLaneResult.Delivered -> {
+        is OwnerLaneResult.AppOpened -> "${result.appName} geöffnet"
+        // Counts only: who wrote and what a mail says stays in the mail lane's own replies.
+        is OwnerLaneResult.MailsFound -> if (result.ids.size == 1) "1 Mail gefunden" else "${result.ids.size} Mails gefunden"
+        is OwnerLaneResult.MailRead -> "die Mail gelesen und hier gezeigt"
+        is OwnerLaneResult.MailSummarised -> (if (result.mails == 1) "1 Mail" else "${result.mails} Mails") + " zusammengefasst und hier gezeigt (" +
+            (if (result.cloud) "über das Cloud-Gehirn, mit deiner Freigabe für Mailinhalte" else "mit dem Modell auf dem Gerät") + ")"
+        is OwnerLaneResult.Researched -> "Recherche zu „${result.topic}“ abgeschlossen (" + (if (result.sources == 1) "1 gelesene Quelle" else
+            "${result.sources} gelesene Quellen") + ")"
+        is OwnerLaneResult.FileKept -> "„${result.file.displayName}“ gespeichert (vor dem Neustart)"
+        is OwnerLaneResult.Delivered -> if (result.channel == at.heinz.deviceai.sending.SendChannel.WHATSAPP.label) when (result.state) {
+            OwnerLaneResult.Delivered.State.SENT -> "Nachricht an ${result.to} über WhatsApp gesendet"
+            else -> "Entwurf an ${result.to} in WhatsApp vorbereitet – gesendet habe ich nichts"
+        } else {
             val attached = result.attachment?.let { if (it.displayName in named) ", diese Datei hängt an" else ", Anhang „${it.displayName}“" }
                 ?: ", ohne Anhang"
             when (result.state) {
@@ -948,10 +1465,13 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             .joinToString(" ") { (index, slot) -> "${index + 1}. ${text(slot).trimEnd('.', ' ')}." }
         val named = HashSet<String>()
         val done = numbered(setOf(State.DONE)) { slot ->
+            slot.note?.let { return@numbered it }
             val result = slot.result ?: return@numbered label(slot.step)
             sentence(result, named).also { if (result is OwnerLaneResult.FileSaved) named += result.file.displayName }
         }
         val failed = numbered(setOf(State.FAILED)) { slot -> label(slot.step) + " – " + reason(slot.problem) }
+        val unverified = numbered(setOf(State.UNVERIFIED)) { slot -> label(slot.step) + " – ob die Nachricht rausging, weiß ich nicht; " +
+            "ich habe nicht noch einmal gedrückt. Bitte sieh selbst nach" }
         val stopped = numbered(setOf(State.STOPPED)) { slot -> label(slot.step) }
         val skipped = numbered(setOf(State.SKIPPED)) { slot -> label(slot.step) }
         val open = numbered(setOf(State.PENDING)) { slot -> label(slot.step) }
@@ -965,6 +1485,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             End.FAILED -> "Die Auftragsfolge endet bei Schritt ${m.current + 1} von $total."
             End.STOPPED -> "Die Auftragsfolge ist gestoppt."
             End.TIME -> "Die Auftragsfolge endet hier: Ihre Grenze für Zeit und Wiederholungen ist erreicht."
+            End.UNCONFIRMED -> "Die Auftragsfolge endet mit einem offenen Punkt."
         }
         val before = m.slots.flatMap { it.earlier }.distinct().filter { earlier -> m.slots.none { it.result == earlier } }
         return buildString {
@@ -972,6 +1493,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
             if (done.isNotEmpty()) append(if (how == End.COMPLETED) " " else " Erledigt: ").append(done)
             else if (how != End.COMPLETED) append(" Erledigt war noch nichts.")
             if (failed.isNotEmpty()) append(" Nicht geklappt: ").append(failed)
+            if (unverified.isNotEmpty()) append(" Unklar: ").append(unverified)
             if (stopped.isNotEmpty()) append(" Abgebrochen: ").append(stopped)
             if (skipped.isNotEmpty()) append(" Nicht wiederholt: ").append(skipped)
             if (open.isNotEmpty()) append(" Nicht begonnen: ").append(open)
@@ -992,12 +1514,14 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
 
     /** The mission's steps as far as they were really handed over; a step that has not started is not shown. */
     private fun stage(m: Mission) {
+        sync(m)
         val steps = m.slots.withIndex().filter { it.value.state != State.PENDING }.map { (index, slot) ->
             ProcessStep("mission:$index", "${index + 1}/${m.slots.size} ${label(slot.step)}".take(80), when (slot.state) {
                 State.RUNNING -> StepState.ACTIVE
                 State.WAITING -> StepState.WAITING
                 State.DONE -> StepState.DONE
                 State.FAILED -> StepState.FAILED
+                State.UNVERIFIED -> StepState.UNVERIFIED
                 else -> StepState.BLOCKED
             })
         }
@@ -1013,6 +1537,7 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
                     State.FAILED -> MissionOrderState.FAILED
                     State.STOPPED -> MissionOrderState.STOPPED
                     State.SKIPPED -> MissionOrderState.SKIPPED
+                    State.UNVERIFIED -> MissionOrderState.UNVERIFIED
                 }
                 state?.let { MissionOrder(index, label(slot.step), it) }
             }))
@@ -1027,6 +1552,10 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         const val MAX_RUNS = 2 * OwnerMissionPlanner.MAX_STEPS
         private const val MAX_REASON = 220
         private const val STOP_CHECK_MILLIS = 4_000L
+        /** How long after its start a sequence from the journal is still offered. */
+        const val RESUME_MILLIS = 24 * 60 * 60_000L
+        /** Mails a search of a sequence lists; the summary takes as many as the mail lane summarises at once. */
+        const val MAIL_LIST = 5
         const val OPEN_SAVED_ORDER = "Öffne die gespeicherte Datei"
     }
 }

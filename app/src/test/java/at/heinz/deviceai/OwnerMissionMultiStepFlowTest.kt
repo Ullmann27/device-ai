@@ -21,6 +21,11 @@ import java.util.zip.ZipInputStream
  * do yet – and that nothing is reported as done that was not done, nothing is dropped without a word and nothing is
  * added that he did not order.
  *
+ * Since the second phase (19.11.2026) a message on WhatsApp, opening an app and the Gmail lane are steps. The tests
+ * here keep what they were written for – the honest partial answer, the offer that runs only after a yes, no dead end,
+ * no PDF of the wrong text – on this chat without a Gmail connection and without contacts, and with an order that
+ * still is no step (a call). The complete runs are in OwnerMissionPhase2FlowTest.
+ *
  * Device behaviour – storage, PDF reader, model, WhatsApp, the calendar – is NOT_RUN here.
  */
 class OwnerMissionMultiStepFlowTest {
@@ -69,7 +74,8 @@ class OwnerMissionMultiStepFlowTest {
         // Page two was really read: exactly its text went into the one model task.
         val prompt = h.deskHost.prompts.single()
         assertTrue(prompt, prompt.contains("Seite zwei erklärt den Abruf") && !prompt.contains("Seite eins beschreibt"))
-        assertEquals("DESK:Seite 2 von „Argon4.pdf“ – Zusammenfassung:\n\n$SUMMARY_2\n\nGespeichert habe ich nichts.", h.said[2])
+        assertEquals("DESK:Seite 2 von „Argon4.pdf“ – Zusammenfassung:\n\n$SUMMARY_2\n\nGespeichert habe ich nichts. " +
+            "Wenn du sie behalten willst, sag zum Beispiel „Speichere das als Word“.", h.said[2])
         assertEquals("Fertig – beide Schritte sind erledigt. 1. „Argon4.pdf“ geöffnet (Ordner Download). 2. Seite 2 von „Argon4.pdf“ " +
             "zusammengefasst und hier gezeigt – gespeichert habe ich nichts.", h.lastSaid)
         // No file nobody ordered, no question for a format, no mail.
@@ -137,15 +143,15 @@ class OwnerMissionMultiStepFlowTest {
     }
 
     /**
-     * „Speichere das als Word“ afterwards: the desk hands the shown summary on through its host. In the Activity that
-     * hook is not connected to the work tools yet (the adapter is the other developer's file) – so the desk does not
-     * promise it. Connected, the save takes exactly the summary and nothing else of the chat.
+     * „Speichere das als Word“ afterwards: the desk hands the shown summary on through its host, and the Activity's
+     * adapter gives it to the work tools as the chat's result (connected since 19.11.2026). A host that does not keep
+     * it gets no promise from the desk. Connected, the save takes exactly the summary and nothing else of the chat.
      */
     @Test fun theShownSummaryIsWhatALaterSaveMeansOnceTheHostHandsItToTheWorkTools() {
-        val today = argon()
-        today.owner(five)
-        assertFalse(today.said[2], today.said[2].contains("Speichere das als Word"))
-        val wired = argon().apply { presentWired = true }
+        val unwired = argon().apply { presentWired = false }
+        unwired.owner(five)
+        assertFalse(unwired.said[2], unwired.said[2].contains("Speichere das als Word"))
+        val wired = argon()
         wired.owner(five)
         assertTrue(wired.said[2], wired.said[2].endsWith("Gespeichert habe ich nichts. Wenn du sie behalten willst, sag zum Beispiel „Speichere das als Word“."))
         assertTrue(wired.downloads().isEmpty())
@@ -158,34 +164,37 @@ class OwnerMissionMultiStepFlowTest {
         assertFalse(text.contains("beide Schritte sind erledigt"))
     }
 
-    // ── The goal sentence and the sentences 2 and 3: honest, and nothing runs ───────────────────────────────
+    // ── The goal sentence and the sentences 2 and 3 on a chat without Gmail and without contacts ────────────
 
-    @Test fun theGoalSentenceIsAnsweredHonestlyAndNothingOfItRuns() {
+    @Test fun theGoalSentenceWithoutGmailIsAnsweredHonestlyAndNothingRunsBeforeAYes() {
         // Also with the cloud brain and model plans on: the answer comes from the sentence itself.
         for (cloud in listOf(false, true)) {
             val h = argon().apply { modelPlansOn = cloud; cloudBrain = cloud; modelPlan = { "1. Speichere das als PDF" } }
             // The chat holds an earlier answer – the one a „PDF daraus“ used to be made of.
             h.toolsHost.foreignTurn("Erklär mir Argon", "Argon ist ein Edelgas mit der Ordnungszahl 18 und kommt in der Luft vor.")
             assertEquals("MISSION", h.owner(goal))
-            assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Deine E-Mails kann ich noch nicht lesen. Was darauf aufbaut, " +
-                "lasse ich deshalb auch: zusammenfassen und als PDF speichern. Eine Nachricht kann ich in so einer Auftragsfolge noch " +
-                "nicht mitschicken. Ich habe nichts davon ausgeführt.", h.lastSaid)
+            assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Gmail ist noch nicht verbunden, deshalb kann ich deine " +
+                "Mails nicht lesen. Sag „Verbinde Gmail“, dann geht auch das. Was darauf aufbaut, lasse ich deshalb auch: als PDF speichern. " +
+                "Soll ich den Rest machen: Meinem Vater auf WhatsApp schreiben?", h.lastSaid)
             assertNothingRan(h)
             assertFalse(h.lastSaid.contains("einzeln", ignoreCase = true))
-            // Nothing was offered, so a „Ja“ starts nothing.
-            assertEquals("OTHER", h.owner("Ja"))
-            assertTrue(h.downloads().isEmpty() && h.sendHost.device.pressed.isEmpty())
+            // The offer is only an offer: with a no nothing happens – and no PDF of the earlier answer was made.
+            assertEquals("MISSION", h.owner("Nein"))
+            assertEquals("In Ordnung, ich mache nichts davon.", h.lastSaid)
+            assertTrue(h.downloads().isEmpty() && h.sendHost.device.opened.isEmpty() && h.sendHost.device.pressed.isEmpty())
         }
     }
 
-    @Test fun openWhatsAppAndWriteIsNoDeadEndAndNothingIsOpenedOrSent() {
+    @Test fun openWhatsAppAndWriteIsNoDeadEndAndNothingIsSentToAGuessedContact() {
         val h = argon()
         assertEquals("MISSION", h.owner(two))
-        assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Eine andere App öffnen oder darin suchen kann ich in so einer " +
-            "Auftragsfolge noch nicht. Eine Nachricht kann ich in so einer Auftragsfolge noch nicht mitschicken. Ich habe nichts davon " +
-            "ausgeführt.", h.lastSaid)
-        assertNothingRan(h)
-        assertTrue(h.sendHost.replies.isEmpty())
+        // It is the send lane's order now: nobody is called „Vater“ here, so the lane asks – it guesses nobody.
+        assertEquals("Verstanden. Ich kümmere mich darum.", h.missionSaid.single())
+        assertEquals("Ich habe keinen Kontakt „meinem Vater“ gefunden. Wer ist dein Vater in den Kontakten? Nenn mir den Namen, wie er " +
+            "dort steht. Es wurde nichts vorbereitet und nichts gesendet.", h.lastSaid)
+        assertTrue(h.sendHost.device.opened.isEmpty() && h.sendHost.device.pressed.isEmpty())
+        assertTrue(h.said.none { it.contains("App-Schritt wird noch nicht sicher verstanden") || it.contains("Erledigt") || it.contains("Fertig") })
+        assertTrue(h.appsOpened.isEmpty() && h.planPrompts.isEmpty())
     }
 
     @Test fun theLawyersMailMakesNoPdfOfTheLastChatAnswer() {
@@ -193,8 +202,9 @@ class OwnerMissionMultiStepFlowTest {
             val h = argon().apply { modelPlansOn = cloud; cloudBrain = cloud; modelPlan = { "1. Speichere das als PDF\n2. Öffne es" } }
             h.toolsHost.foreignTurn("Erklär mir Argon", "Argon ist ein Edelgas mit der Ordnungszahl 18 und kommt in der Luft vor.")
             assertEquals("MISSION", h.owner(three))
-            assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Deine E-Mails kann ich noch nicht lesen. Was darauf aufbaut, " +
-                "lasse ich deshalb auch: zusammenfassen, als PDF speichern und öffnen. Ich habe nichts davon ausgeführt.", h.lastSaid)
+            assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Gmail ist noch nicht verbunden, deshalb kann ich deine " +
+                "Mails nicht lesen. Sag „Verbinde Gmail“, dann geht auch das. Was darauf aufbaut, lasse ich deshalb auch: als PDF speichern " +
+                "und die gespeicherte Datei öffnen. Ich habe nichts davon ausgeführt.", h.lastSaid)
             assertNothingRan(h)
             assertTrue(h.toolsHost.opened.isEmpty())
         }
@@ -202,29 +212,31 @@ class OwnerMissionMultiStepFlowTest {
 
     // ── The rest is offered and runs only after the owner's yes ─────────────────────────────────────────────
 
-    private val newsAndMessage = "Fass mir die Nachrichten von heute zusammen, speichere sie als PDF und schreib Anna auf WhatsApp, dass sie fertig sind"
+    /** A call is an order of the briefing lane and still no step of a sequence. */
+    private val newsAndCall = "Fass mir die Nachrichten von heute zusammen, speichere sie als PDF und ruf Anna an"
+    private val noCall = "Einen Anruf kann ich in so einer Auftragsfolge noch nicht vorbereiten."
 
     @Test fun theRestIsOfferedAndRunsOnlyAfterAYes() {
         val h = argon()
-        assertEquals("MISSION", h.owner(newsAndMessage))
-        assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Eine Nachricht kann ich in so einer Auftragsfolge noch nicht " +
-            "mitschicken. Soll ich den Rest so machen: 1. Die Nachrichten von heute zusammenfassen. 2. Als PDF speichern?", h.lastSaid)
+        assertEquals("MISSION", h.owner(newsAndCall))
+        assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. $noCall Soll ich den Rest so machen: " +
+            "1. Die Nachrichten von heute zusammenfassen. 2. Als PDF speichern?", h.lastSaid)
         assertNothingRan(h)
         assertEquals("MISSION", h.owner("Ja"))
         assertEquals(listOf(NEWS_PDF), h.downloads())
         assertTrue(h.lastSaid, h.lastSaid.startsWith("Fertig – beide Schritte sind erledigt. 1. Nachrichten zusammengefasst ("))
-        // The message was not sent with it, and the report does not claim it.
-        assertTrue(h.sendHost.device.opened.isEmpty() && h.sendHost.device.pressed.isEmpty())
-        assertFalse(h.lastSaid.contains("WhatsApp") || h.lastSaid.contains("Anna"))
+        // Nobody was called with it, and the report does not claim it.
+        assertTrue(h.briefingHost.dialed.isEmpty() && h.sendHost.device.opened.isEmpty())
+        assertFalse(h.lastSaid.contains("Anruf") || h.lastSaid.contains("Anna"))
     }
 
     @Test fun aNoOrAnotherTurnDropsTheOffer() {
         val h = argon()
-        h.owner(newsAndMessage)
+        h.owner(newsAndCall)
         assertEquals("MISSION", h.owner("Nein"))
         assertEquals("In Ordnung, ich mache nichts davon.", h.lastSaid)
         assertEquals("OTHER", h.owner("Ja"))
-        h.owner(newsAndMessage)
+        h.owner(newsAndCall)
         assertEquals("OTHER", h.owner("Wie spät ist es?"))
         assertEquals("OTHER", h.owner("Ja"))
         assertTrue(h.downloads().isEmpty() && h.toolsHost.consents.isEmpty())
@@ -233,9 +245,9 @@ class OwnerMissionMultiStepFlowTest {
     @Test fun oneOfferedOrderRunsThroughItsOwnLane() {
         // The news alone: handed to the work tools as if the owner had said it.
         val news = argon()
-        assertEquals("MISSION", news.owner("Fass mir die Nachrichten von heute zusammen und schreib Anna auf WhatsApp, dass ich nicht komme"))
-        assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. Eine Nachricht kann ich in so einer Auftragsfolge noch nicht " +
-            "mitschicken. Soll ich den Rest machen: Die Nachrichten von heute zusammenfassen?", news.lastSaid)
+        assertEquals("MISSION", news.owner("Fass mir die Nachrichten von heute zusammen und ruf Anna an"))
+        assertEquals("Verstanden – ganz kann ich das noch nicht erledigen. $noCall Soll ich den Rest machen: " +
+            "Die Nachrichten von heute zusammenfassen?", news.lastSaid)
         assertNothingRan(news)
         assertEquals("MISSION", news.owner("Ja"))
         assertEquals(1, news.toolsHost.consents.size)
@@ -244,11 +256,12 @@ class OwnerMissionMultiStepFlowTest {
         // A page summary alone is the desk's order only inside a sequence: it runs as a sequence of one and is said once.
         val page = argon()
         assertEquals("DESK", page.owner("Öffne das PDF Argon4"))
-        assertEquals("MISSION", page.owner("Fass Seite 2 zusammen und schreib Anna auf WhatsApp, dass ich fertig bin"))
+        assertEquals("MISSION", page.owner("Fass Seite 2 zusammen und ruf Anna an"))
         assertTrue(page.lastSaid, page.lastSaid.endsWith("Soll ich den Rest machen: Seite 2 zusammenfassen?"))
         assertTrue(page.deskHost.prompts.isEmpty())
         assertEquals("MISSION", page.owner("Ja"))
-        assertEquals("Seite 2 von „Argon4.pdf“ – Zusammenfassung:\n\n$SUMMARY_2\n\nGespeichert habe ich nichts.", page.lastSaid)
+        assertEquals("Seite 2 von „Argon4.pdf“ – Zusammenfassung:\n\n$SUMMARY_2\n\nGespeichert habe ich nichts. " +
+            "Wenn du sie behalten willst, sag zum Beispiel „Speichere das als Word“.", page.lastSaid)
         assertEquals(1, page.said.count { it.contains("Zusammenfassung:") })
         assertTrue(page.downloads().isEmpty() && page.sendHost.device.pressed.isEmpty())
     }
