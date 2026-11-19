@@ -93,17 +93,17 @@ class OwnerWorkToolsNewsFlowTest {
         val tools = tools(host)
         assertTrue(tools.handle(order))
         assertTrue(host.lines("SAY:").single().startsWith(briefing))
-        assertEquals("Zusammenfassung von Claude (Cloud) aus den unten genannten Meldungen", tools.deliverable!!.note)
-        assertTrue(host.lines("ACTIVITY:").last().endsWith("8 Quellen · Zusammenfassung von Claude (Cloud)"))
+        assertEquals("Zusammenfassung des Cloud-Gehirns aus den unten genannten Meldungen", tools.deliverable!!.note)
+        assertTrue(host.lines("ACTIVITY:").last().endsWith("8 Quellen · Zusammenfassung des Cloud-Gehirns"))
         val notReady = OwnerWorkToolsHarness(modelLoaded = false).apply { cloud = true }
         assertTrue(tools(notReady).handle(order))
-        assertTrue(notReady.lines("SAY:").single().startsWith("Claude (Cloud) ist gerade nicht bereit. Du bekommst deshalb"))
+        assertTrue(notReady.lines("SAY:").single().startsWith("Das Cloud-Gehirn ist gerade nicht bereit. Du bekommst deshalb"))
         val failed = OwnerWorkToolsHarness(model = { OwnerWorkGeneration("", "CLAUDE_NETWORK", false) }).apply { cloud = true }
         assertTrue(tools(failed).handle(order))
-        assertTrue(failed.lines("SAY:").single().startsWith("Claude (Cloud) hat gerade keine Zusammenfassung geliefert."))
+        assertTrue(failed.lines("SAY:").single().startsWith("Das Cloud-Gehirn hat gerade keine Zusammenfassung geliefert."))
         val meta = answering("Um Nachrichten zusammenfassen zu können, müsstest du eine Funktion entwickeln.").apply { cloud = true }
         assertTrue(tools(meta).handle(order))
-        assertTrue(meta.lines("SAY:").single().startsWith("Die Zusammenfassung von Claude (Cloud) habe ich verworfen"))
+        assertTrue(meta.lines("SAY:").single().startsWith("Die Zusammenfassung des Cloud-Gehirns habe ich verworfen"))
         (listOf(host, notReady, failed, meta)).forEach { harness ->
             assertFalse(harness.log.toString(), harness.log.any { it.contains("lokale", ignoreCase = true) })
         }

@@ -867,7 +867,7 @@ internal class OwnerDocumentDesk(
                 val basis = if (outcome.summary.complete) "" else "\n\nHinweis: Die Seite ist länger, als das Modell auf einmal lesen " +
                     "kann. Grundlage sind die ersten ${OwnerPageSummary.count(outcome.summary.coveredChars)} von " +
                     "${OwnerPageSummary.count(outcome.summary.totalChars)} Zeichen der Seite."
-                val author = if (outcome.summary.cloud) " Zusammengefasst hat Claude (Cloud), nicht das Modell auf dem Gerät." else ""
+                val author = if (outcome.summary.cloud) " Zusammengefasst habe ich das über die Cloud, nicht mit dem Modell auf dem Gerät." else ""
                 val lateNote = if (late) " Diese Datei war schon gespeichert, bevor der Abbruch ankam." else ""
                 val offer = if (openable && !late && host.offerToOpen()) " Soll ich sie öffnen?" else ""
                 host.say(if (sameSummary) "Erledigt – dieselbe Zusammenfassung von Seite $page jetzt als ${format.label}: $place" +

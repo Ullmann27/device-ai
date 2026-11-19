@@ -29,13 +29,13 @@ object ClaudeBrainPresentation {
     const val LOCAL_LABEL = "Lokal (Gemma, auf dem Gerät)"
     const val CLAUDE_LABEL = "Claude (Cloud, eigener API-Schlüssel)"
     /** Status badge while Claude is the brain; the local badge keeps its existing texts. */
-    const val BADGE = "● " + ClaudeBrain.MARKER_CLAUDE
+    const val BADGE = "● " + ClaudeBrain.MARKER_CLOUD
     /** "Modus" in the dashboards. */
-    const val DASHBOARD_MODE = ClaudeBrain.MARKER_CLAUDE
+    const val DASHBOARD_MODE = ClaudeBrain.MARKER_CLOUD
 
     fun status(settings: ClaudeBrainSettings, keyPresent: Boolean): String = buildString {
         append("Aktives Gehirn: ")
-        append(if (settings.claudeSelected) "${ClaudeBrain.MARKER_CLAUDE} · ${settings.model.id}"
+        append(if (settings.claudeSelected) "${ClaudeBrain.MARKER_CLOUD} · ${settings.model.id}"
             else "${ClaudeBrain.MARKER_LOCAL} · das Modell auf dem Gerät antwortet, nichts geht an Claude")
         append("\nAPI-Schlüssel: ").append(ClaudeApiKey.status(keyPresent))
         append("\nZustimmung zur Datenübertragung: ").append(if (settings.consentGiven) "erteilt" else "nicht erteilt")
@@ -143,8 +143,8 @@ object ClaudeBrainDialog {
             }
             val activate = {
                 if (brain.selectBrain(BrainKind.CLAUDE)) {
-                    say("Claude ist jetzt das Gehirn. Die Statuszeile zeigt „${ClaudeBrain.MARKER_CLAUDE}“.")
-                    changed(previous, "GEHIRN · " + ClaudeBrain.MARKER_CLAUDE + " · " + brain.settings.model.id)
+                    say("Claude ist jetzt das Gehirn. Die Statuszeile zeigt „${ClaudeBrain.MARKER_CLOUD}“.")
+                    changed(previous, "GEHIRN · " + ClaudeBrain.MARKER_CLOUD + " · " + brain.settings.model.id)
                 } else say("Claude konnte nicht aktiviert werden; „Lokal“ bleibt aktiv.")
             }
             if (brain.settings.consentGiven) activate()

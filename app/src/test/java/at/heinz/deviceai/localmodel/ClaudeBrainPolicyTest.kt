@@ -259,7 +259,7 @@ class ClaudeBrainPolicyTest {
         assertEquals(listOf(true, true, false, true), ClaudeModel.entries.map { it.serverSideFallback })
         assertTrue(ClaudeConsentNotice.TEXT.contains("api.anthropic.com"))
         for (stated in listOf("deine Nachricht", "Gesprächsverlauf", "Gedächtnis", "Dokumenten", "Werkzeugen", "Guthaben",
-            "Bildschirminhalte anderer Apps", "widerrufen", "CLAUDE · CLOUD", "wechselt nie von selbst"))
+            "Bildschirminhalte anderer Apps", "widerrufen", "CONTINUUM · CLOUD", "wechselt nie von selbst"))
             assertTrue(stated, ClaudeConsentNotice.TEXT.contains(stated))
     }
 
@@ -430,8 +430,9 @@ class ClaudeBrainPolicyTest {
         assertEquals(1_700_000_000_000L, brain.settings.consentAtMillis)
         assertTrue(brain.selectBrain(BrainKind.CLAUDE))
         assertTrue(brain.claudeSelected)
-        assertEquals(ClaudeBrain.MARKER_CLAUDE, brain.marker())
-        assertEquals("CLAUDE · CLOUD", brain.marker())
+        assertEquals(ClaudeBrain.MARKER_CLOUD, brain.marker())
+        // Owner order 19.11.2026: the speaker is Continuum on both brains; „· CLOUD“ stays as the privacy signal.
+        assertEquals("CONTINUUM · CLOUD", brain.marker())
         assertFalse("device-local memory stays local without the separate opt-in", brain.mayUseLocalOnlyMemory)
         assertTrue(brain.setShareLocalMemory(true))
         assertTrue(brain.mayUseLocalOnlyMemory)

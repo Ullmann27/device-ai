@@ -49,7 +49,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
         val autoStudyEnabled: Boolean,
         val curiosityPending: Boolean,
         val responseTimesMs: List<Long>,
-        /** Set while the owner's optional cloud brain answers (e.g. "CLAUDE · CLOUD"); null = on-device. */
+        /** Set while the owner's optional cloud brain answers (e.g. "CONTINUUM · CLOUD"); null = on-device. */
         val brainMode: String? = null
     )
 

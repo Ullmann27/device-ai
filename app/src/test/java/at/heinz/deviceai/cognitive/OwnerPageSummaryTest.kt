@@ -86,7 +86,7 @@ class OwnerPageSummaryTest {
     @Test fun aCutPageAndTheCloudBrainAreNamedInTheSourceLine() {
         val cut = OwnerPageSummary.deliverable("Bericht.PDF", 7, 0, OwnerPageSummary.Summary(listOf("Ein Absatz."), 4_000, 12_345, cloud = true), date, 1L)
         assertEquals("Zusammenfassung Bericht Seite 7", cut.title)
-        assertEquals("Quelle: „Bericht.PDF“, Seite 7 · zusammengefasst von Claude (Cloud) am 18.11.2026 · vor der Verwendung prüfen. " +
+        assertEquals("Quelle: „Bericht.PDF“, Seite 7 · zusammengefasst vom Cloud-Gehirn am 18.11.2026 · vor der Verwendung prüfen. " +
             "Grundlage sind die ersten 4.000 von 12.345 Zeichen der Seite; der Rest ist nicht enthalten.", cut.note)
         assertEquals("Dokument", OwnerPageSummary.baseName(" .pdf "))
         assertEquals("1.840", OwnerPageSummary.count(1_840))

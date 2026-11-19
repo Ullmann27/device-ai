@@ -44,19 +44,20 @@ object ClaudeBrainFailure {
             "Bitte prüfe den Schlüssel in der Anthropic-Konsole und trage ihn unter „Modelle → Gehirn“ neu ein.",
         PERMISSION_DENIED to "Der API-Schlüssel darf dieses Modell oder diese Anfrage nicht verwenden. " +
             "Bitte prüfe die Berechtigungen des Schlüssels in der Anthropic-Konsole oder wähle ein anderes Claude-Modell.",
-        NO_CREDIT to "Das API-Guthaben deines Anthropic-Kontos ist aufgebraucht. Claude antwortet erst wieder, " +
-            "wenn du in der Anthropic-Konsole Guthaben aufgeladen hast.",
+        NO_CREDIT to "Das API-Guthaben deines Anthropic-Kontos ist aufgebraucht. Über die Cloud kann ich erst wieder " +
+            "antworten, wenn du in der Anthropic-Konsole Guthaben aufgeladen hast.",
         RATE_LIMITED to "Anthropic nimmt gerade keine weitere Anfrage an: Das Anfragelimit oder die monatliche " +
             "Ausgabengrenze deines API-Kontos ist erreicht. Bitte warte einen Moment und frag mich dann noch einmal.",
-        OVERLOADED to "Die Claude-Server sind gerade überlastet oder gestört. Deine Nachricht wurde nicht beantwortet. " +
+        OVERLOADED to "Die Server meines Cloud-Gehirns (Anthropic) sind gerade überlastet oder gestört. Deine " +
+            "Nachricht wurde nicht beantwortet. " +
             "Bitte versuche es in ein paar Minuten noch einmal.",
-        OFFLINE to "Ich erreiche Claude nicht: Das Gerät hat keine Internetverbindung oder die Verbindung zu " +
+        OFFLINE to "Ich erreiche mein Cloud-Gehirn nicht: Das Gerät hat keine Internetverbindung oder die Verbindung zu " +
             "Anthropic kam nicht zustande.",
-        TIMEOUT to "Claude hat nicht rechtzeitig geantwortet (Zeitüberschreitung). Die Antwort ist unvollständig " +
+        TIMEOUT to "Mein Cloud-Gehirn hat nicht rechtzeitig geantwortet (Zeitüberschreitung). Die Antwort ist unvollständig " +
             "oder fehlt. Bitte frag mich noch einmal.",
-        STREAM_INTERRUPTED to "Die Verbindung zu Claude ist mitten in der Antwort abgebrochen. Was bis dahin ankam, " +
+        STREAM_INTERRUPTED to "Die Verbindung zu meinem Cloud-Gehirn ist mitten in der Antwort abgebrochen. Was bis dahin ankam, " +
             "ist unvollständig; ich habe nichts ergänzt.",
-        REFUSAL to "Claude hat diese Anfrage abgelehnt (Sicherheitsprüfung von Anthropic). Es gibt dazu keine " +
+        REFUSAL to "Mein Cloud-Gehirn hat diese Anfrage abgelehnt (Sicherheitsprüfung von Anthropic). Es gibt dazu keine " +
             "Antwort. Formuliere die Frage anders oder stelle sie dem lokalen Modell.",
         MODEL_UNAVAILABLE to "Das gewählte Claude-Modell ist für deinen API-Schlüssel nicht verfügbar. " +
             "Wähle unter „Modelle → Gehirn“ ein anderes Claude-Modell.",
@@ -67,17 +68,17 @@ object ClaudeBrainFailure {
             "nicht deiner Frage. Es wurde nichts beantwortet.",
         CONTEXT_TOO_LONG to "Die Anfrage war für das gewählte Claude-Modell zu lang. Ich habe nichts abgeschnitten " +
             "und nichts gesendet, was unvollständig wäre. Bitte beginne ein neues Gespräch oder kürze den Auftrag.",
-        UNEXPECTED_RESPONSE to "Claude hat die Antwort in einer Form beendet, die diese App nicht verarbeitet. " +
+        UNEXPECTED_RESPONSE to "Mein Cloud-Gehirn hat die Antwort in einer Form beendet, die diese App nicht verarbeitet. " +
             "Ich übernehme davon nichts als Ergebnis.",
         SPEND_LIMIT_REACHED to "Dein selbst gesetztes Monatslimit für Claude ist nach der Schätzung dieser App " +
             "erreicht. Ich sende keine weitere Anfrage. Du kannst das Limit unter „Modelle → Gehirn“ ändern.",
-        NO_TOOL_CONVERSATION to "Die Werkzeugrückmeldung gehört zu keinem laufenden Claude-Gespräch mehr. " +
+        NO_TOOL_CONVERSATION to "Die Werkzeugrückmeldung gehört zu keinem laufenden Cloud-Gespräch mehr. " +
             "Bitte stelle den Auftrag noch einmal.",
         LOCAL_ONLY_SCREEN_DATA to "Bildschirminhalte anderer Apps sind in dieser App als „nur auf dem Gerät“ " +
-            "markiert. Ich sende sie nicht an Claude; diese Anfrage wurde nicht gesendet.",
-        LOCAL_ONLY_OWNER_VETO to "Du hast für diese Nachricht Internet oder Cloud ausgeschlossen. Claude läuft in " +
-            "der Cloud, deshalb habe ich die Nachricht nicht gesendet.",
-        LOCAL_ONLY_MEMORY to "Für diese Frage bräuchte Claude eine bestätigte Erinnerung, die als „nur auf dem " +
+            "markiert. Ich sende sie nicht in die Cloud; diese Anfrage wurde nicht gesendet.",
+        LOCAL_ONLY_OWNER_VETO to "Du hast für diese Nachricht Internet oder Cloud ausgeschlossen. Mein Gehirn läuft " +
+            "gerade in der Cloud, deshalb habe ich die Nachricht nicht gesendet.",
+        LOCAL_ONLY_MEMORY to "Für diese Frage bräuchte mein Cloud-Gehirn eine bestätigte Erinnerung, die als „nur auf dem " +
             "Gerät“ markiert ist. Ich habe sie nicht gesendet. Du kannst das Mitsenden solcher Erinnerungen unter " +
             "„Modelle → Gehirn“ ausdrücklich erlauben.",
         LOCAL_ONLY_FEATURE to "Diese Funktion misst das lokale Modell auf dem Gerät. Solange Claude als Gehirn " +
@@ -106,10 +107,14 @@ object ClaudeBrainFailure {
     fun offersSwitchBack(problem: String?): Boolean = problem in OFFER_SWITCH_BACK
 
     fun ownerMessage(problem: String?): String {
-        val message = MESSAGES[problem] ?: return "Claude konnte nicht antworten." + SWITCH_BACK
+        val message = MESSAGES[problem] ?: return "Ich konnte über die Cloud nicht antworten." + SWITCH_BACK
         return if (offersSwitchBack(problem)) message + SWITCH_BACK else message
     }
 
-    /** Short line for the activity log; contains the code only. */
-    fun logLine(problem: String?): String = "CLAUDE · " + (problem?.takeIf(::isClaude) ?: "unbekannter Fehler")
+    /**
+     * Short line for the activity log – a status surface next to the conversation, so it names the cloud, not the
+     * provider: the code only, without its internal `CLAUDE_` prefix.
+     */
+    fun logLine(problem: String?): String =
+        "CLOUD · " + (problem?.takeIf(::isClaude)?.removePrefix("CLAUDE_") ?: "unbekannter Fehler")
 }

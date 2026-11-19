@@ -100,7 +100,7 @@ class ClaudeBrain internal constructor(
 
     val settings: ClaudeBrainSettings get() = current
 
-    /** True while Claude is the selected brain: the permanent "CLAUDE · CLOUD" marker follows this. */
+    /** True while Claude is the selected brain: the permanent "CONTINUUM · CLOUD" marker follows this. */
     val claudeSelected: Boolean get() = current.claudeSelected
 
     /** May DEVICE_LOCAL_ONLY memory be part of a prompt? Always true for the local brain. */
@@ -166,8 +166,8 @@ class ClaudeBrain internal constructor(
         return keyStore.clear()
     }
 
-    /** "CLAUDE · CLOUD" or "LOKAL": the marker text every status surface shows. */
-    fun marker(): String = if (current.claudeSelected) MARKER_CLAUDE else MARKER_LOCAL
+    /** "CONTINUUM · CLOUD" or "LOKAL": the marker text every status surface shows. */
+    fun marker(): String = if (current.claudeSelected) MARKER_CLOUD else MARKER_LOCAL
 
     fun describeUsage(): String = ledger.describe(current.monthlyLimitCents)
 
@@ -190,7 +190,12 @@ class ClaudeBrain internal constructor(
     override fun toString(): String = "ClaudeBrain(brain=${current.brain}, model=${current.model.id}, key=redacted)"
 
     companion object {
-        const val MARKER_CLAUDE = "CLAUDE · CLOUD"
+        /**
+         * The permanent marker while the cloud brain answers (owner order 19.11.2026: „… möchte ich nicht stehen
+         * haben Claude, sondern Continuum im Chat“). Who is talking is always Continuum; „· CLOUD“ is the owner's
+         * privacy signal that answers leave the device, and must never be dropped from it.
+         */
+        const val MARKER_CLOUD = "CONTINUUM · CLOUD"
         const val MARKER_LOCAL = "LOKAL"
     }
 }

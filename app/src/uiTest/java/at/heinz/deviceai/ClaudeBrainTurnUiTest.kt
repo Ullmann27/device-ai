@@ -280,6 +280,21 @@ class ClaudeBrainTurnUiTest {
         }
     }
 
+    // ---- owner order 19.11.2026: Continuum in the conversation, the cloud still visible ------------------------
+
+    @Test fun aCloudTurnShowsContinuumAndTheCloudButNeverTheProviderOrAModelId() {
+        endpoint.enqueue(Reply.Stream(listOf(messageStart()) + text(0, answer) + stop("end_turn")))
+        withTurns(claudeBrain(), LocalFixture("LOKALE ANTWORT")) { a ->
+            ask(a, task)
+            val visible = chat(a) + (get(a, "activityText") as TextView).text.toString()
+            assertTrue(visible.toString(), visible.any { it.contains(answer) })
+            assertTrue(visible.toString(), visible.none { it.contains("Claude") || it.contains("CLAUDE") || it.contains("claude-") })
+            // The privacy signal stays: every status wording of a cloud turn takes the cloud variant.
+            assertEquals("Continuum plant in der Cloud …", call(a, "brainLabel", "Lokales Modell plant …", "Continuum plant in der Cloud …"))
+            assertEquals("Cloud", call(a, "brainLabel", "Lokal", "Cloud"))
+        }
+    }
+
     // ---- owner wish 19.11.2026: one tone for both brains ------------------------------------------------------
 
     private fun talkPreferences(a: AgentActivity) = a.applicationContext.getSharedPreferences("continuum-owner-talk", 0)
