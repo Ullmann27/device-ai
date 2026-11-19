@@ -8712,9 +8712,9 @@ class AgentActivity : Activity() {
             val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
             input.text.clear()
             addUserMessage(request)
-            confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true) { session ->
+            confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true, explanation = cloudWebNote()) { session ->
                 if (session != null && !busy) {
-                    runResearch(session)
+                    runApprovedWeb(request, session)
                 } else session?.cancel()
             }
             return
@@ -8736,9 +8736,9 @@ class AgentActivity : Activity() {
                 val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(topic)
                 input.text.clear()
                 addUserMessage(request)
-                confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true) { session ->
+                confirmWebRequest(call, ResearchMode.STANDARD, requireIdle = true, explanation = cloudWebNote()) { session ->
                     if (busy) { session?.cancel(); return@confirmWebRequest }
-                    if (session != null) runResearch(session)
+                    if (session != null) runApprovedWeb(request, session)
                     else {
                         addToolActivity("WEB · nicht freigegeben · lokale Antwort ohne aktuelle Quellen")
                         runContinuumDialogue(request)
@@ -8761,12 +8761,16 @@ class AgentActivity : Activity() {
         // and an armed research button both go through the same owner dialog.
         val webRequest=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
         if(webRequest!=null) {
+            // The armed research button keeps the app's own research run; a web request in a sentence may go to
+            // the cloud's web search when the owner switched that on.
+            val armed = researchArmed
             researchArmed=false
             input.text.clear()
             addUserMessage(request)
-            confirmWebRequest(webRequest,researchMode, requireIdle = true) { session ->
+            confirmWebRequest(webRequest,researchMode, requireIdle = true,
+                explanation = if (armed) null else cloudWebNote()) { session ->
                 if(session!=null && !busy) {
-                    runResearch(session)
+                    if (armed) runResearch(session) else runApprovedWeb(request, session)
                 } else session?.cancel()
             }
             return
@@ -9466,6 +9470,7 @@ class AgentActivity : Activity() {
     private fun consumeDeviceToolCommand(): Boolean {
         val request = input.text.toString().trim()
         if (request.isEmpty() || busy || botLookupPending || neuralCoach.isActive()) return false
+        if (consumeCloudToolCommand(request)) return true
         val reply = deviceTools.command(request, at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(
             continuumState?.archive?.identityState?.chosenName)) ?: return false
         input.text.clear()
@@ -13457,6 +13462,8 @@ class AgentActivity : Activity() {
         val store = OwnerTalkPreferences(applicationContext)
         val memory = BootstrapMemoryStore(applicationContext)
         brain.ownerStyle = { OwnerTalk.cloudBlock(store, { memory.facts() }) { store.nameToCloud || brain.settings.shareLocalMemory } }
+        // The cloud's own web search stays inside the app's internet consent (localmodel/ClaudeServerTools.kt).
+        brain.webTurn.internetMode = { internetConsent.mode }
     }
 
     private fun showOwnerTalkSettings() {
@@ -14680,6 +14687,8 @@ class AgentActivity : Activity() {
             botTask?.let { finishBotTask(it, "Auftrag zu groß · nicht gestartet") }
             return
         }
+        // Cloud web search: a one-turn approval counts for exactly this sentence; nothing of an earlier turn carries over.
+        claudeBrain?.beginOwnerTurn(text, documentDraft = documentDraftTurn?.prompt?.request == text)
         // Claude brain: a turn that must stay on the device is refused here, before anything is built or sent.
         at.heinz.deviceai.localmodel.ClaudeTurnGate.refusal(claudeBrain, text, groundedRecall != null)?.let { problem ->
             refuseClaudeTurn(problem, turnTrace, botTask, allowMaya)
@@ -15450,6 +15459,7 @@ class AgentActivity : Activity() {
                     if (resumeContinuation == null) addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession,
                         keepCockpit = draftWindow != null, allowMaya = draftAllowsMaya,
                         speakNow = draftWindow == null)
+                    presentCloudToolOutcome(successful)
                     if (draftWindow != null && draftTurn != null) {
                         val scope = if (draftTurn.prompt.complete) "Dein Entwurf steht bereit."
                             else "Dein Entwurf aus dem begrenzten Textauszug steht bereit."
@@ -17161,6 +17171,7 @@ class AgentActivity : Activity() {
         at.heinz.deviceai.ui.ClaudeBrainDialog.show(this, brain, object : at.heinz.deviceai.ui.ClaudeBrainDialog.Host {
             override fun busy() = busy
             override fun log(line: String) = addToolActivity(line)
+            override fun internetMode() = internetConsent.mode
             override fun brainChanged(previous: at.heinz.deviceai.localmodel.BrainKind) = onClaudeBrainChanged(previous)
         })
     }
@@ -17174,6 +17185,44 @@ class AgentActivity : Activity() {
             restoreOriginalGemmaOnOpen()
         refreshLocalModelUi()
         pushCockpitState()
+    }
+
+    /**
+     * Owner switch „Websuche und Seitenabruf über die Cloud“ (localmodel/ClaudeServerTools.kt). A web request the
+     * owner approved through the app's own consent path is answered by the cloud brain's search in the turn that
+     * follows; without the switch (or the cloud brain) the app's own research run stays as it was.
+     */
+    private fun runApprovedWeb(request: String, session: at.heinz.deviceai.cognitive.ApprovedWebResearchSession) {
+        val brain = claudeBrain?.takeIf { it.cloudWebReady } ?: return runResearch(session)
+        brain.webTurn.approve(request) { session.isAuthorized() }
+        addToolActivity("WEB · Suche über die Cloud freigegeben · nur für diesen Auftrag")
+        runContinuumDialogue(request)
+    }
+
+    /** First sentences of the one-time web consent dialog when the cloud would do the searching; else null. */
+    private fun cloudWebNote(): String? = claudeBrain?.takeIf { it.cloudWebReady }
+        ?.let { at.heinz.deviceai.localmodel.ClaudeServerToolTexts.CONSENT_DIALOG_NOTE }
+
+    /** After a cloud answer: the pages its web search cited or fetched, through the app's own sources card. */
+    private fun presentCloudToolOutcome(answered: Boolean) {
+        val outcome = claudeBrain?.takeServerToolOutcome() ?: return
+        if (answered && outcome.sources.isNotEmpty())
+            addCitations(outcome.sources.map { AgentCitation(title = it.title, url = it.url) })
+    }
+
+    /**
+     * „Cloud-Websuche an/aus“, „Cloud-Code-Ausführung an/aus“, „Cloud-Werkzeuge zeigen“: exact command shapes only
+     * (localmodel/ClaudeServerTools.kt). No model turn, nothing is sent.
+     */
+    private fun consumeCloudToolCommand(request: String): Boolean {
+        val reply = at.heinz.deviceai.localmodel.ClaudeServerToolCommand.reply(claudeBrain, request,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(continuumState?.archive?.identityState?.chosenName),
+            internetConsent.mode) ?: return false
+        input.text.clear()
+        addUserMessage(request, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+        addNonModelReply(request, reply, at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+        addToolActivity("CLOUD-WERKZEUGE · Schalter-Befehl ausgeführt · kein Modellaufruf")
+        return true
     }
 
     /** Activity-log wording: an answer from the cloud brain is never called local. */
