@@ -48,6 +48,12 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.LEGACY)
 @LooperMode(LooperMode.Mode.PAUSED)
 class AvatarSpeechReattachmentUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private data class SpeechFixture(
         val activity: AgentActivity,
         val home: ContinuumHomeView,
@@ -215,7 +221,7 @@ class AvatarSpeechReattachmentUiTest {
         set(f.activity, "conversationActive", true)
         invoke(f.activity, "refreshConversationLayout")
         measure(f.activity.window.decorView)
-        assertSame(field(f.activity, "chatColumn"), f.live.parent)
+        assertSame("Mounted conversation keeps the one live surface", f.home, f.live.parent)
         assertSame(f.live, field(f.activity, "hologramView"))
         assertTrue(f.live.isShown)
         assertEquals(1, descendants(f.activity.window.decorView).count { it is ContinuumHologramView })

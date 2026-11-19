@@ -1,0 +1,21 @@
+Captured command output from this session, before the owner stop.
+Command: OPENBLAS_NUM_THREADS=1 python -m unittest discover -s experimental/brain -p test_cdxa1_pointer.py -v
+Implementation file: experimental/brain/cdxa1_pointer.py (the committed closure source is byte-identical to the tested file).
+This is unit/numerical verification only. No candidate training or corpus generation evaluation ran.
+
+test_neural_pointer_implementation_exists (test_cdxa1_pointer.AvailabilityTest.test_neural_pointer_implementation_exists) ... ok
+test_actual_gradient_step_reduces_the_same_loss (test_cdxa1_pointer.NeuralPointerTest.test_actual_gradient_step_reduces_the_same_loss) ... ok
+test_derivatives_include_pointer_unknown_and_eos_without_mutation (test_cdxa1_pointer.NeuralPointerTest.test_derivatives_include_pointer_unknown_and_eos_without_mutation) ... ok
+test_limits_reject_without_truncating (test_cdxa1_pointer.NeuralPointerTest.test_limits_reject_without_truncating) ... ok
+test_no_forced_copy_transition_or_hardcoded_eos (test_cdxa1_pointer.NeuralPointerTest.test_no_forced_copy_transition_or_hardcoded_eos) ... ok
+test_serialization_rejects_nonfinite_or_mismatched_shapes (test_cdxa1_pointer.NeuralPointerTest.test_serialization_rejects_nonfinite_or_mismatched_shapes) ... ok
+test_tokenization_preserves_unicode_source_and_offsets (test_cdxa1_pointer.NeuralPointerTest.test_tokenization_preserves_unicode_source_and_offsets) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.051s
+
+OK
+
+Earlier RED before implementation: 1 failure /6 skipped, expected assertion
+"CDXA1 neural pointer implementation is missing". No independent evaluation
+case was used for unit checks; all are tiny authored numerics/format examples.

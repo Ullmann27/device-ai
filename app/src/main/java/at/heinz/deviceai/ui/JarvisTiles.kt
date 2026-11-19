@@ -201,13 +201,16 @@ object JarvisTiles {
         NavItem("tasks", "Aufgaben", Icon.CHECK_CIRCLE), NavItem("web", "Internet", Icon.GLOBE),
         NavItem("learning", "Lernen", Icon.BOOK), NavItem("device", "Gerätesteuerung", Icon.CPU),
         NavItem("system", "Systemstatus", Icon.PULSE))
-    /**
-     * Holographic tool dock that replaces the retired left rail.
-     * Same destinations and order as [railNav] so every previous rail target stays reachable.
-     * Labels stay the real German owner terms; reference mock-up names such as "Dateien" or "PDF"
-     * are not shown because those routes do not exist.
-     */
-    val bottomNav = CockpitGlassButtons.buttons.map { NavItem(it.target, it.label, it.icon) }
+    /** Kommando 03: seven native destinations. The historical slot name also serves the upper tool strip. */
+    val bottomNav = listOf(
+        NavItem("chat", "Gespräch", Icon.CHAT),
+        NavItem("files", "Dateien", Icon.DOCUMENT),
+        NavItem("research", "Recherche", Icon.SEARCH),
+        NavItem("agents", "Agenten", Icon.USERS),
+        NavItem("memory", "Gedächtnis", Icon.DATABASE),
+        NavItem("device", "Computer", Icon.CPU),
+        NavItem("settings", "Einstellungen", Icon.GEAR)
+    )
 
     /** Shared by drawing, hit testing and the native, independently scrollable rail controls. */
     fun railItemBoxes(b: Box, count: Int = railNav.size, fontScale: Float = 1f): List<Box> {
@@ -299,16 +302,17 @@ object JarvisTiles {
         else (JarvisShellLayout.TOOL_DOCK_HEIGHT_DP + (rows - 1) * DOCK_EXTRA_ROW_DP) * font
     }
 
-    /** Equal-width cells matching [ContinuumHomeView] hit targets and [JarvisShellContent.hitTarget]. */
+    /** Equal-width cells per row; a partial final row uses the full dock width for drawing and native hits. */
     fun bottomNavItemBoxes(b: Box, items: List<NavItem> = bottomNav): List<Box> {
         if (items.isEmpty() || b.width <= 0f) return emptyList()
         val columns = bottomNavColumns(b.width, items.size)
         val rows = (items.size + columns - 1) / columns
-        val cellW = b.width / columns
         val cellH = b.height / rows
         return items.indices.map { i ->
             val col = i % columns
             val row = i / columns
+            val rowItems = minOf(columns, items.size - row * columns)
+            val cellW = b.width / rowItems
             Box(b.left + col * cellW, b.top + row * cellH,
                 b.left + (col + 1) * cellW, b.top + (row + 1) * cellH)
         }
@@ -341,10 +345,6 @@ object JarvisTiles {
             p.scale(cinema.scale, cinema.scale, tile.centerX, tile.centerY)
             if (cinema.tiltY != 0f) p.rotate(cinema.tiltY, tile.centerX, tile.centerY)
             val active = i == selected || i == pressed
-            val model = JarvisTile(it.target, it.label, it.icon,
-                controlState = if (i == pressed) JarvisControlState.PRESSED
-                    else if (i == selected) JarvisControlState.SELECTED
-                    else JarvisControlState.NORMAL)
             if (cinema.glassAlpha < 0.02f && cinema.rimAlpha > 0.02f) {
                 p.strokeRoundRect(tile.left, tile.top, tile.right, tile.bottom, 10f, 1.4f,
                     Fill.Solid(Colors.cyan), cinema.rimAlpha)
@@ -352,16 +352,13 @@ object JarvisTiles {
                 return@forEachIndexed
             }
             if (cinema.glassAlpha < 1f) p.saveAlpha(cinema.glassAlpha)
-            val spec = CockpitGlassButtons.spec(it.target)
-            if (spec != null) {
-                CockpitGlassButtons.draw(p, tile, spec, active, i == pressed,
-                    fontScale = fontScale, pressX = pressX, pressY = pressY,
-                    timeMs = if (animatorScale > 0f && cinemaBudget?.animate != false) timeMs else 0L)
-            } else {
-                drawSurface(p, tile, model, active, timeMs, luxuryDepth = true,
-                    pressX = pressX, pressY = pressY)
-                draw(p, tile, model)
-            }
+            // The current navigation supplies the owner-visible label. Retain the existing glass renderer.
+            val spec = CockpitGlassButtons.spec(it.target)?.copy(label = it.label, icon = it.icon)
+                ?: CockpitGlassButtons.Spec(it.target, it.label, it.icon,
+                    if (it.target == "agents") Colors.violet else Colors.cyan, "Licht")
+            CockpitGlassButtons.draw(p, tile, spec, active, i == pressed,
+                fontScale = fontScale, pressX = pressX, pressY = pressY,
+                timeMs = if (animatorScale > 0f && cinemaBudget?.animate != false) timeMs else 0L)
             if (cinema.glassAlpha < 1f) p.restore()
             p.restore()
         }

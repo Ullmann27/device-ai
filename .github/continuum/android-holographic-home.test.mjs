@@ -49,7 +49,7 @@ test('reference start screen reaches all seven real Android feature paths',()=>{
  const nav=section('private fun navigateWorkArea(','private fun refreshConversationLayout()');
  assert.match(pane,/val liveHologram = \(hologramView \?: ContinuumHologramView\(this\)\)\.also/);
  assert.match(pane,/hologramView = it/);
- assert.match(pane,/avatarDirector\.attach\(it\)/);
+ assert.match(pane,/avatarDirector\.attach\(command03AvatarSink\(it\)\)/);
  assert.match(pane,/ContinuumHomeView\(this, liveHologram\)/);
  assert.match(pane,/openHomeSlot\(slot, x, y\)/);
  for(const call of ['focusChatComposer()','showResearchModeDialog()','showLearningCenter()','showModelCenter()',

@@ -1,0 +1,125 @@
+{
+  "created_at_utc": "2026-11-16T05:26:57.273548+00:00",
+  "status": "PASS_LOCAL_SELECTED_TESTS_AND_UNSIGNED_APK",
+  "tested_source_commit": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "tested_source_tree": "092827dcd6ea9cdf92129e80d55c868577075c2c",
+  "tested_app_tree": "2ca2e8189ca574f2637424cc3c2db59e8ea34d91",
+  "tested_main_tree": "8ead90327b0a99898ac75632b8f83621d4f77d0a",
+  "source_frozen_and_clean_during_runs": true,
+  "selected_tests": {
+    "live-media-ui-07": {
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "live-media-unit-02": {
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "live-media-classic-ui-02": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "web_tests": {
+    "tests": 28,
+    "pass": 28,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "total_tests": 153,
+  "total_failures": 0,
+  "total_errors": 0,
+  "total_skipped": 0,
+  "fresh_junit_files": 18,
+  "runs": [
+    {
+      "label": "live-media-compile-06",
+      "mode": "compile",
+      "status": "PASS_LOCAL",
+      "elapsed_seconds": 32.025,
+      "receipt": "receipts/live-media-compile-06.json",
+      "receipt_sha256": "75a8f91f25337ee4cf18902c51011d3972c29239bee2fdb456f0675fea9f5ded"
+    },
+    {
+      "label": "live-media-ui-compile-04",
+      "mode": "ui-compile",
+      "status": "PASS_LOCAL_TEST_COMPILATION_ONLY",
+      "elapsed_seconds": 17.456,
+      "receipt": "receipts/live-media-ui-compile-04.json",
+      "receipt_sha256": "d5d9e6ffba88a4858c7654329883c3ba0d321ac8b25f5794d9cbfb5b11d18949"
+    },
+    {
+      "label": "live-media-ui-07",
+      "mode": "ui-tests",
+      "status": "PASS_LOCAL",
+      "elapsed_seconds": 19.274,
+      "receipt": "receipts/live-media-ui-07.json",
+      "receipt_sha256": "31d19102c8c5c06163c191cb44fcfb2129eb50106ed1326c2b6379d5f075157a"
+    },
+    {
+      "label": "live-media-unit-02",
+      "mode": "unit-tests",
+      "status": "PASS_LOCAL",
+      "elapsed_seconds": 17.216,
+      "receipt": "receipts/live-media-unit-02.json",
+      "receipt_sha256": "eb4e387072fd7da750919c96663ce636d110a3ab820319fc94c5b857a81c5375"
+    },
+    {
+      "label": "live-media-classic-compile-02",
+      "mode": "ui-compile",
+      "status": "PASS_LOCAL_TEST_COMPILATION_ONLY",
+      "elapsed_seconds": 18.471,
+      "receipt": "receipts/live-media-classic-compile-02.json",
+      "receipt_sha256": "08897a2f443bcec9d4fb421d5ff0386f6827f1df554913e6cdad2f006747233a"
+    },
+    {
+      "label": "live-media-classic-ui-02",
+      "mode": "ui-tests",
+      "status": "PASS_LOCAL",
+      "elapsed_seconds": 38.68,
+      "receipt": "receipts/live-media-classic-ui-02.json",
+      "receipt_sha256": "c56044e73aa275fda6f1cf31a4b171b7d5612b26fc8a6ed63c08e43942fd596a"
+    },
+    {
+      "label": "live-media-unsigned-02",
+      "mode": "unsigned",
+      "status": "PASS_LOCAL",
+      "elapsed_seconds": 12.704,
+      "receipt": "receipts/live-media-unsigned-02.json",
+      "receipt_sha256": "8694e76d17a7b0a4f5e1520402cc4318f6eb00ee8fa4ef96674e49f52434cd1f"
+    }
+  ],
+  "original_assets": {
+    "count": 35,
+    "bytes": 15864219,
+    "result": "BYTE_IDENTICAL"
+  },
+  "packaged_command03_assets": {
+    "count": 38,
+    "result": "BYTE_IDENTICAL_TO_SOURCE"
+  },
+  "apk": {
+    "apk_file": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/artifacts/live-media-unsigned-02/release/app-release-unsigned.apk",
+    "bytes": 111421502,
+    "sha256": "00def8e94f0f2d26257d25eeb5176f4e7d007bf33013c48a92ee6f8874d57e4c",
+    "signing_status": "UNSIGNED_NOT_INSTALLABLE",
+    "status": "PASS_INDEPENDENT_LOCAL_ARTIFACT_REVIEW"
+  },
+  "compiler_scope": "NORMAL_INCREMENTAL_GRADLE_AT_ORIGINAL_PATH_AFTER_VERIFIED_COHERENT_BASELINE_RECOVERY",
+  "physical_device": "NOT_RUN",
+  "actual_webview_gpu_pixels": "NOT_RUN",
+  "physical_audio_lipsync": "NOT_RUN",
+  "complete_release_qa": "NOT_RUN",
+  "owner_signing": "NOT_RUN",
+  "installation": "NOT_RUN",
+  "ci_dispatch": "NOT_RUN",
+  "scope_note": "153 targeted host/DOM cases; not the complete repository suite or device acceptance."
+}

@@ -13,7 +13,9 @@ data class CockpitStageFrame(
     val monitorBottom: Float,
     val yawDegrees: Float = -3f,
     val pitchDegrees: Float = 0f,
-    val depthOffset: Float = 0f
+    val depthOffset: Float = 0f,
+    /** A clipped conversation presence keeps the rest camera while its original scene stays mounted. */
+    val cameraFlightEnabled: Boolean = true
 ) {
     val monitorWidth get() = monitorRight - monitorLeft
     val monitorHeight get() = monitorBottom - monitorTop

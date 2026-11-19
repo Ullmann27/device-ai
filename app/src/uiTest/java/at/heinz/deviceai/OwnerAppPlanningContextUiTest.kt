@@ -45,6 +45,12 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class OwnerAppPlanningContextUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     @org.robolectric.annotation.Implements(android.media.projection.MediaProjectionManager::class)
     class ProjectionConsentShadow {
         @org.robolectric.annotation.Implementation(minSdk = 34)

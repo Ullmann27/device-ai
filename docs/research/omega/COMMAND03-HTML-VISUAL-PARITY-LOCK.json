@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "source_repository": "Ullmann27/device-ai",
+  "source_commit": "0876aa0accdf8154e06e53da42aa5c9492892066",
+  "source_pr": 850,
+  "android_branch": "integrate/continuum-command03-android-20261115",
+  "html_root": "app/src/main/assets/continuum-command03",
+  "mode": "HTML_ASSETS_EXACT_MAIN_STAGE_WIP_NOT_DEVICE_VERIFIED",
+  "files": {
+    "app.js": {
+      "git_blob_sha": "07a29fb45783cf942e05be174f4690c03eb23a60",
+      "bytes": 41955
+    },
+    "ausprobieren.html": {
+      "git_blob_sha": "6a991e768ab5c8f5e700a25273dfe0f36ede391e",
+      "bytes": 3135
+    },
+    "avatar3d.js": {
+      "git_blob_sha": "81f141986377ec34623ee3681f2d6f870a5ce6f9",
+      "bytes": 634422
+    },
+    "command-layout.css": {
+      "git_blob_sha": "9c6879b34900de3f9d984e9999ab63924982f8f8",
+      "bytes": 10866
+    },
+    "index.html": {
+      "git_blob_sha": "6b8e45abfea26bf354f6261d04f6b19bad0edc1b",
+      "bytes": 11777
+    },
+    "operations.css": {
+      "git_blob_sha": "ac5ce6b6af2f02e714f96461ed769c37ab1650ad",
+      "bytes": 14784
+    },
+    "operations.js": {
+      "git_blob_sha": "311172fd21b2ad075efd016f135fbaa1a29fdfc4",
+      "bytes": 24554
+    },
+    "orb-original.js": {
+      "git_blob_sha": "f5e91fa3576857bfb570d67541bdfb08dd6bbf99",
+      "bytes": 31032
+    },
+    "presence-instruments.css": {
+      "git_blob_sha": "260c5f161faa26887d6ff5efabe07661510d598f",
+      "bytes": 15246
+    },
+    "presence-instruments.js": {
+      "git_blob_sha": "e7249333a689b73cf07fe4d01940d8253c049d06",
+      "bytes": 12196
+    },
+    "presence-layout.css": {
+      "git_blob_sha": "6b9cd331b0a2fa3b8d9551749ba0d70b516f4359",
+      "bytes": 7439
+    },
+    "projekt.html": {
+      "git_blob_sha": "44cd73a03b0dc622c7766a9080633429b5d5e894",
+      "bytes": 9039
+    },
+    "scene.js": {
+      "git_blob_sha": "34e5cf6abbec0f85de0f7f055109c0a55d1aa354",
+      "bytes": 43393
+    },
+    "style.css": {
+      "git_blob_sha": "33016cbf7262fde0166d624a601046a0b340102e",
+      "bytes": 66811
+    },
+    "telemetry.css": {
+      "git_blob_sha": "15c51ffcac33edbd7d9aa691d04a47a5fe06dafb",
+      "bytes": 4893
+    },
+    "telemetry.js": {
+      "git_blob_sha": "289abdd9756e5fd1afeab3e07d2348b78724f22c",
+      "bytes": 16738
+    },
+    "workspace-motion.css": {
+      "git_blob_sha": "5f014993d0c5f3c8374055802d32e9901d4b66cc",
+      "bytes": 4937
+    },
+    "workspace-motion.js": {
+      "git_blob_sha": "90aa85980ee1b756f2aa95a872a268180605bb9a",
+      "bytes": 18355
+    },
+    "assets/LICENSE.ASSETS.md": {
+      "git_blob_sha": "f3ede1fc3318f8d794e2cb51924186c62f02f71a",
+      "bytes": 6962
+    },
+    "assets/continuum-avatar-NOTICE.json": {
+      "git_blob_sha": "91f05ac554172da5b5c79a9e6b845731d27fb801",
+      "bytes": 4254
+    },
+    "assets/continuum-avatar-original.png": {
+      "git_blob_sha": "0092bec2c0a2756e0fcfee4bd89fc2547628baf8",
+      "bytes": 1283790
+    },
+    "assets/continuum-avatar.glb": {
+      "git_blob_sha": "3498c003a8bf186a8abb47048e2d36be4810b88c",
+      "bytes": 12038416
+    },
+    "assets/continuum-orb-original.png": {
+      "git_blob_sha": "ecd22736f4d661d0723ba95bd3d806b7f302416c",
+      "bytes": 955980
+    },
+    "assets/fonts/manrope-0.ttf": {
+      "git_blob_sha": "584563d34e601f89f5c4220938cecd50b8fdf469",
+      "bytes": 96200
+    },
+    "assets/fonts/manrope-1.ttf": {
+      "git_blob_sha": "d1aee0111f10fa492fac493b97ded574cbbf65d8",
+      "bytes": 96300
+    },
+    "assets/fonts/manrope-2.ttf": {
+      "git_blob_sha": "b15dd73546fa47f92dbf67419c84efc01061df52",
+      "bytes": 96348
+    },
+    "assets/fonts/manrope-3.ttf": {
+      "git_blob_sha": "0dab9c06521d1c3e5721af0fb9e94108ff5fb660",
+      "bytes": 96188
+    },
+    "assets/fonts/space-grotesk-4.ttf": {
+      "git_blob_sha": "576f9b559440869fc6ac0dbb5c0d0457753f2950",
+      "bytes": 69360
+    },
+    "assets/fonts/space-grotesk-5.ttf": {
+      "git_blob_sha": "6141a5846ffe9e18414b74c838a50509cb4019f2",
+      "bytes": 69416
+    },
+    "assets/fonts/space-grotesk-6.ttf": {
+      "git_blob_sha": "f4f80025b75c29d644acc3a7e06cce169ccb9ac4",
+      "bytes": 69308
+    },
+    "assets/licenses/Manrope_NOTICE.txt": {
+      "git_blob_sha": "f7d83e64c031db9e7e459524a69fc3dc070b89df",
+      "bytes": 120
+    },
+    "assets/licenses/Manrope_OFL.txt": {
+      "git_blob_sha": "e271172a9ed0cddc895aabb6509f1c7d880b492d",
+      "bytes": 4387
+    },
+    "assets/licenses/Space_Grotesk_NOTICE.txt": {
+      "git_blob_sha": "fa5beb633f6986932efba2e5de83577bb790404b",
+      "bytes": 135
+    },
+    "assets/licenses/Space_Grotesk_OFL.txt": {
+      "git_blob_sha": "f831dbc69f05a4d5abbb54c530f0123bc0ff2d8b",
+      "bytes": 4402
+    },
+    "assets/licenses/Three_MIT.txt": {
+      "git_blob_sha": "8ada2a5f982916b0ba4b7a0aa7de347587e745d7",
+      "bytes": 1081
+    }
+  },
+  "android_activity_main_surface": "ContinuumCommand03OriginalStage in AgentActivity.buildUi (opt-out preference)",
+  "owner_signing": "BLOCKED_PENDING_NATIVE_FUNCTIONAL_AND_VISUAL_QA"
+}

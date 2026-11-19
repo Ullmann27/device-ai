@@ -88,7 +88,11 @@ test('personalisation is a real choice and cannot silently train models or insta
 
 test('start screen and chat never overlap after leaving or returning from chat', () => {
   const refresh=section('private fun refreshConversationLayout()', 'private fun showHomeDashboard()');
-  assert.match(refresh, /dashboardSection\?\.visibility = if \(chat\) View\.GONE else View\.VISIBLE/);
+  assert.match(refresh, /val mountedPresence = chat && homeView\?\.jarvisShellStage == true/);
+  assert.match(refresh, /dashboardSection\?\.visibility = if \(!chat \|\| mountedPresence\) View\.VISIBLE else View\.GONE/);
+  assert.match(refresh, /updateConversationPresenceViewport\(mountedPresence\)/);
+  assert.match(refresh, /home\.setConversationPresence\(height\)/);
+  assert.match(refresh, /scroll\.presenceLocked = present/);
   assert.match(refresh, /chatColumn\?\.visibility = if \(chat\) View\.VISIBLE else View\.GONE/);
   assert.doesNotMatch(activity, /nexusExpertPanel|nexusExpertExpanded/);
 });

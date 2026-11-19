@@ -52,7 +52,10 @@ test('all navigation taps route to existing trusted screens', () => {
   assert.match(navigation, /ContinuumWorkArea\.LERNEN -> showDashboardCategory\("KI-System", ContinuumWorkAreaNavigationSpec\.systemEntries\)/);
   assert.match(navigation, /ContinuumWorkArea\.ENTWICKELN -> showDashboardCategory\("Werkzeuge", ContinuumWorkAreaNavigationSpec\.toolEntries\)/);
   assert.match(navigation, /ContinuumWorkArea\.MEHR -> showMoreWorkAreas\(\)/);
-  assert.match(member('private fun showMoreWorkAreas()'), /showDashboardCategory\("Mehr", ContinuumWorkAreaNavigationSpec\.moreEntries\)/);
+  const more = member('private fun showMoreWorkAreas()');
+  assert.match(more, /val titles = listOf\("KOMMANDO 03 · ORIGINALDESIGN ALS STARTSEITE"\) \+ entries\.map/);
+  assert.match(more, /if \(selection == 0\) switchCommand03MainDesign\(true\)/);
+  assert.match(more, /navigateDashboardTarget\(entries\[selection - 1\]\.target\)/);
   const category = member('private fun showDashboardCategory(');
   assert.match(category, /setItems\(entries\.map \{ it\.title \}\.toTypedArray\(\)\)/);
   assert.match(category, /navigateDashboardTarget\(entries\[index\]\.target\)/);
@@ -86,10 +89,10 @@ test('Fold rail offers every current destination without a second bottom bar', (
   assert.deepEqual([...current.matchAll(/NavItem\("([^"]+)"/g)].map(m => m[1]),
     ['home', 'chat', 'memory', 'logic', 'research', 'agents', 'tasks', 'web', 'learning', 'device', 'system']);
   assert.match(menu, /val railEntries: List<Entry> = JarvisTiles\.railNav\.map/);
-  assert.match(rail, /val entries = at\.heinz\.deviceai\.ui\.JarvisMenu\.railEntries/);
-  assert.match(rail, /for \(entry in entries\)/);
-  assert.match(rail, /contentDescription = entry\.label/);
-  assert.match(rail, /setOnClickListener \{ menuNavigator\.navigate\(entry\.target\) \}/);
+  assert.match(rail, /ContinuumConversationRailView\(this,/);
+  assert.match(rail, /onNew = ::newCentralConversation, onSelect = ::selectStoredConversation/);
+  assert.match(rail, /contentDescription = "Gespeicherte Gespräche und Projekte"/);
+  assert.match(rail, /onNavigate = ::navigateDashboardTarget/);
   const ui = member('private fun buildUi(): View');
   assert.match(ui, /val rail = buildRail\(\)\.also/);
   assert.match(ui, /wideContent\.addView\(rail, LinearLayout\.LayoutParams/);
@@ -114,10 +117,10 @@ test('existing chat, learning monitoring and owner permission boundaries remain'
 
 test('Fold rail and start screen reach all actions at short heights', () => {
   const rail = member('private fun buildRail(): View');
-  assert.match(rail, /JarvisMenuRail\.rows\(\(b - t\) \/ density, entries\.size\)/);
-  assert.match(rail, /JarvisMenuRail\.minHeightDp\(entries\.size\)/);
-  assert.match(rail, /return ScrollView\(this\)/);
-  assert.match(member('private fun buildConversationPane(wide: Boolean): View'), /val dashboardScroll = ScrollView\(this\)/);
+  assert.match(rail, /addView\(list, android\.widget\.FrameLayout\.LayoutParams/);
+  assert.match(rail, /isFillViewport = true/);
+  assert.match(rail, /return ScrollView\(this\)\.apply/);
+  assert.match(member('private fun buildConversationPane(wide: Boolean): View'), /val dashboardScroll = ConversationDashboardScroll\(this\)/);
 });
 
 test('start screen adapts to large fonts, rotated compact screens and the unfolded Fold', () => {

@@ -132,7 +132,7 @@ test('Fold chat remains a real native action and both content and rail stay scro
  assert.match(activityMember('private fun openHomeSlot('),/Slot\.LABEL_THINKING -> navigateWorkArea\(ContinuumWorkArea\.CHAT\)/);
  assert.match(activityMember('private fun navigateWorkArea('),/ContinuumWorkArea\.CHAT -> focusChatComposer\(\)/);
  const pane=activityMember('private fun buildConversationPane(wide: Boolean): View');
- assert.match(pane,/val dashboardScroll = ScrollView\(this\)/);
+ assert.match(pane,/val dashboardScroll = ConversationDashboardScroll\(this\)/);
  assert.match(pane,/isVerticalScrollBarEnabled = true/);
  assert.match(pane,/contentDescription = "Continuum-Cockpit, vertikal scrollbar:/);
  assert.match(view,/private val shellRailScroll = android\.widget\.ScrollView\(context\)/);
@@ -147,9 +147,9 @@ test('phone and Fold share the original live surface and preserve its lifecycle 
  const pane=activityMember('private fun buildConversationPane(wide: Boolean): View');
  assert.match(pane,/val liveHologram = \(hologramView \?: ContinuumHologramView\(this\)\)\.also/);
  assert.match(pane,/\(it\.parent as\? android\.view\.ViewGroup\)\?\.removeView\(it\)/);
- assert.match(pane,/avatarDirector\.attach\(it\)/);
- assert.match(pane,/it\.setForegroundActive\(foregroundLearningActive \|\| computerFeedbackActive\(\)\)/);
- assert.match(pane,/home\.setForegroundActive\(foregroundLearningActive \|\| computerFeedbackActive\(\)\)/);
+ assert.match(pane,/avatarDirector\.attach\(command03AvatarSink\(it\)\)/);
+ assert.match(pane,/it\.setForegroundActive\(nativeStagePresentationActive\(\)\)/);
+ assert.match(pane,/home\.setForegroundActive\(nativeStagePresentationActive\(\)\)/);
  assert.match(activityMember('private fun computerFeedbackActive(): Boolean'),/computerViewVisible && isInMultiWindowMode &&\s*computerController\?\.active == true && computerController\?\.awaitingConsent != true/);
  assert.doesNotMatch(pane,/it\.setForegroundActive\(true\)|home\.setForegroundActive\(true\)/);
  assert.match(pane,/ContinuumHomeView\(this, liveHologram\)/);

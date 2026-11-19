@@ -1,0 +1,13 @@
+{
+  "source_commit": "7e783f3ee8bc3e75f800b8249f5cef283187752d",
+  "checked_at_utc": "2026-11-16T06:08:10.414285+00:00",
+  "tests": 28,
+  "failures": 0,
+  "skipped": 0,
+  "native_packet_required": true,
+  "native_packet_sha256": "59ecce13aa404c12c51a0327b88d411b227aa819bf98d85121894d5d3f9e4711",
+  "native_packet_origin": "navigation-green-ui-01 / actual ContinuumCommand03MediaStageUiTest serialization of synthetic 2x2 JPEG",
+  "tap_sha256": "45bcda5881256ba76ff58d2b1fb8662668038d845ef92d1eca98ff13ec9136a2",
+  "original_source_lock": "COMMAND03_ORIGINAL_SOURCE_LOCK_PASS assets=35 bytes=15864219 scope=ORIGINAL_ARTWORK_AND_MAIN_STAGE_SOURCE_CONTRACT_ONLY (NOT compiled/visual/device/release acceptance)",
+  "scope": "DOM_BEHAVIOR_AND_ACTUAL_NATIVE_PACKET_INTEROP; NOT_ANDROID_DEVICE_OR_GPU_RENDERING"
+}

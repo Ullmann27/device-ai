@@ -35,9 +35,10 @@ test('builder stays in the existing agent UI and opens only an allowlisted Andro
   const nav = read(src + 'ContinuumWorkAreaNavigationSpec.kt');
   assert.match(nav, /CategoryEntry\("Handy-Builder · Termux", "mobile-builder"\)/);
   const more = agent.slice(agent.indexOf('private fun showMoreWorkAreas()'), agent.indexOf('private fun showBrainScene()'));
-  assert.match(more, /showDashboardCategory\("Mehr", ContinuumWorkAreaNavigationSpec\.moreEntries\)/);
-  assert.match(more, /setItems\(entries\.map \{ it\.title \}\.toTypedArray\(\)\)/);
-  assert.match(more, /navigateDashboardTarget\(entries\[index\]\.target\)/);
+  assert.match(more, /val entries = ContinuumWorkAreaNavigationSpec\.moreEntries/);
+  assert.match(more, /val titles = listOf\("KOMMANDO 03 · ORIGINALDESIGN ALS STARTSEITE"\) \+ entries\.map/);
+  assert.match(more, /setItems\(titles\.toTypedArray\(\)\)/);
+  assert.match(more, /navigateDashboardTarget\(entries\[selection - 1\]\.target\)/);
   assert.match(more, /"mobile-builder" -> openMobileBuilder\(\)/);
   assert.match(agent, /ContinuumMobileBuilderRoute\.destination\(BuildConfig\.APPLICATION_ID\)/);
   assert.match(agent, /Intent\(\)\.setClassName\(destination\.packageName, destination\.className\)/);

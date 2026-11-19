@@ -18,6 +18,7 @@ CASES = (
     "mediumNearSquare", "expandedCanonical", "expandedTablet",
     "compactFont150", "compactFont200", "mediumFont150", "mediumFont200",
     "expandedFont150", "expandedFont200", "referenceRasterActivityCanvas",
+    "commandPhone392", "commandFold904", "commandComputer904",
 )
 
 

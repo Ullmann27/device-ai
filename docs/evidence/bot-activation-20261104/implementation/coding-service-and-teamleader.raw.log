@@ -1,0 +1,39 @@
+✔ private durable config keeps service, project, model and profile identities separate (13.11621ms)
+✔ read-only status leaves unstarted state byte-identical and cannot create canonical keys (5.393891ms)
+✔ public permissions, symlinks, hardlinks and oversized private files fail closed (1.057138ms)
+✔ runtime configuration rejects unknown cloud controls and nonreviewed model hashes (0.791209ms)
+✔ bounded inbox rejects duplicate identities, unknown delivery states and excess records (4.881832ms)
+✔ profile bridge code change invalidates its pinned artifact (6.032465ms)
+✔ source/profile overlap and artificial unbounded queue limits are rejected (6.574084ms)
+✔ inherited cloud flags and Node injection never reach the worker environment (3.950333ms)
+✔ process identity binds boot and kernel start ticks, never a PID alone (1.024038ms)
+✔ three local cycles pace on a fixed one-hour schedule and persist honest heartbeat (2.121026ms)
+✔ failures stay failed, sleep with increasing backoff and eventually recover (0.466311ms)
+✔ signal stopping terminates without another cycle or artificial success (0.268213ms)
+✔ invalid intervals, cycle limits and CLI mode combinations are rejected (0.643326ms)
+✔ unverified repair and interruption increment failure counters, not successes (0.334352ms)
+✔ unknown or unfinished worker result must fail closed (0.377376ms)
+✔ signal while waiting persists terminal STOPPED heartbeat (0.339089ms)
+✔ one-shot CLI exits nonzero for failed, unverified or unknown outcomes (0.255844ms)
+✔ failure backoff never retries before a user configured interval (0.272619ms)
+✔ a failing baseline without a code diagnostic remains a failed worker cycle (0.327612ms)
+✔ scheduler wait failure persists terminal ERROR rather than false WAITING (0.594033ms)
+✔ saved status validates legitimate heartbeats and rejects spoofed or corrupt states (0.513842ms)
+✔ durable restart retains total cycle budget and pending backoff (71.087266ms)
+✔ durable cancellation during work records interruption and a stopped session (32.341719ms)
+✔ pre-aborted durable run writes STOPPED without executing work (18.045252ms)
+✔ durable state fails closed on corruption, changed budgets and changed source (55.011456ms)
+✔ durable scheduling requires a finite budget and state outside source (18.512304ms)
+✔ durable integrity validation rejects plausible counter edits (55.563035ms)
+✔ source drift while waiting terminates the saved cadence before another cycle (47.209282ms)
+✔ source drift during a cycle cannot retain its reported verification success (48.797247ms)
+✔ durable loop rejects a competing scheduler before its work executes (53.478668ms)
+✔ SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay (122.318215ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 713.042207

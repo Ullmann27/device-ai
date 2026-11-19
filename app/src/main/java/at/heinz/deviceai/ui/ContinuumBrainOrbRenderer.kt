@@ -19,6 +19,8 @@ class ContinuumBrainOrbRenderer {
                        val processing: Boolean = false, val particles: Int = 70, val orbitSegments: Int = 96)
 
     var label1 = "Continuum"
+    /** > 0: try the Blender orb ([ContinuumBlenderAssets]) at this density first; 0 = vector orb only. */
+    var rasterDensity = 0f
     var label2 = "Gehirn"
 
     /** Kugelmitte ([cx],[cy]) und Radius [r] in px; Sockel und Lichtbalken liegen unter der Kugel bis cy + 1.30 r. */
@@ -30,6 +32,7 @@ class ContinuumBrainOrbRenderer {
         val stable = if (pulse == s.pulse && recall == s.recall && phase == s.phase) s
             else s.copy(pulse = pulse, recall = recall, phase = phase)
         val C = JarvisDesign.Colors
+        if (rasterDensity > 0f && drawRasterOrb(p, cx, cy, r, stable)) return
         drawPedestal(p, cx, cy + r * 1.0f, r)
         drawLightCone(p, cx, cy, r)
         drawOrbits(p, cx, cy, r, stable, back = true)
@@ -98,6 +101,35 @@ class ContinuumBrainOrbRenderer {
         drawDust(p, cx, cy, r, s.particles)
         drawOrbits(p, cx, cy, r, stable, back = false)
         drawLabel(p, cx, cy, r)
+    }
+
+    /**
+     * Blender orb as the static body; real signals stay live on top: rotating front orbit planes,
+     * MemoryStored pulse and RecallHits glow, hypothesis marker, dust and the label. False = nothing drawn.
+     */
+    private fun drawRasterOrb(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals): Boolean {
+        val C = JarvisDesign.Colors
+        // The rendered rings behind the glass are baked into the image; nothing is drawn before the raster, so a
+        // failed raster leaves the canvas untouched for the full vector orb.
+        if (!ContinuumBlenderAssets.drawOrb(p, cx, cy, r, rasterDensity)) return false
+        val glow = .22f * s.pulse + .18f * s.recall + if (s.processing) .10f else 0f
+        if (glow > 0f) {
+            p.setAdditive(true)
+            p.fillCircle(cx, cy - r * .10f, r * .80f, Fill.Radial(cx, cy - r * .10f, r * .80f,
+                intArrayOf(Argb.withAlpha(C.glowCore, glow), Argb.withAlpha(C.cyan, glow * .5f), 0),
+                floatArrayOf(0f, .5f, 1f)))
+            p.setAdditive(false)
+        }
+        if (s.hypothesis) {
+            p.setAdditive(true)
+            for (i in 0 until 12) p.strokeArc(cx - r * .90f, cy - r * .90f, cx + r * .90f, cy + r * .90f,
+                i * 30f, 16f, r * .014f, Fill.Solid(C.violetRim), .65f)
+            p.setAdditive(false)
+        }
+        drawDust(p, cx, cy, r, s.particles)
+        drawOrbits(p, cx, cy, r, s, back = false)
+        drawLabel(p, cx, cy, r)
+        return true
     }
 
     /** Three independent 3D ring planes, projected with depth. Hidden segments are painted before the globe. */

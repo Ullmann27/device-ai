@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: a projected real PDF remains visible through periodic state and transcript updates
+ok 1 - a projected real PDF remains visible through periodic state and transcript updates
+  ---
+  duration_ms: 248.270292
+  type: 'test'
+  ...
+# Subtest: native file and source controls never start the original demonstration
+ok 2 - native file and source controls never start the original demonstration
+  ---
+  duration_ms: 167.868823
+  type: 'test'
+  ...
+# Subtest: real telemetry stops the hidden simulation and keeps unknown readings unknown
+ok 3 - real telemetry stops the hidden simulation and keeps unknown readings unknown
+  ---
+  duration_ms: 126.508053
+  type: 'test'
+  ...
+# Subtest: a command draft survives native rejection and clears only after its matching acceptance
+ok 4 - a command draft survives native rejection and clears only after its matching acceptance
+  ---
+  duration_ms: 121.59548
+  type: 'test'
+  ...
+# Subtest: a late acceptance does not delete a new draft or a different conversation
+ok 5 - a late acceptance does not delete a new draft or a different conversation
+  ---
+  duration_ms: 122.925323
+  type: 'test'
+  ...
+# Subtest: long real commands and input selections use the native session and UTF-8 budget
+ok 6 - long real commands and input selections use the native session and UTF-8 budget
+  ---
+  duration_ms: 78.293248
+  type: 'test'
+  ...
+# Subtest: actual busy, listening and speaking transitions drive the original scene without demo timers
+ok 7 - actual busy, listening and speaking transitions drive the original scene without demo timers
+  ---
+  duration_ms: 146.439131
+  type: 'test'
+  ...
+# Subtest: telemetry history advances only for new actual measurements and preserves unavailable gaps
+ok 8 - telemetry history advances only for new actual measurements and preserves unavailable gaps
+  ---
+  duration_ms: 173.097827
+  type: 'test'
+  ...
+# Subtest: empty native history and native-ready captions replace demo content while retaining button icons
+ok 9 - empty native history and native-ready captions replace demo content while retaining button icons
+  ---
+  duration_ms: 53.729745
+  type: 'test'
+  ...
+# Subtest: late message and document callbacks cannot cross conversation boundaries
+ok 10 - late message and document callbacks cannot cross conversation boundaries
+  ---
+  duration_ms: 65.245676
+  type: 'test'
+  ...
+# Subtest: chunked transcripts preserve long model responses and user scroll nodes on status refresh
+ok 11 - chunked transcripts preserve long model responses and user scroll nodes on status refresh
+  ---
+  duration_ms: 63.78936
+  type: 'test'
+  ...
+# Subtest: native restore does not overwrite a local draft and oversize commands keep their synchronized draft
+ok 12 - native restore does not overwrite a local draft and oversize commands keep their synchronized draft
+  ---
+  duration_ms: 76.628216
+  type: 'test'
+  ...
+# Subtest: selecting a stored conversation closes the existing mobile drawer without replacing its controls
+ok 13 - selecting a stored conversation closes the existing mobile drawer without replacing its controls
+  ---
+  duration_ms: 58.171977
+  type: 'test'
+  ...
+# Subtest: the original composer slot supports exact multiline paste, submit and native restore
+ok 14 - the original composer slot supports exact multiline paste, submit and native restore
+  ---
+  duration_ms: 84.368609
+  type: 'test'
+  ...
+# Subtest: typing before Android is ready is synchronized as soon as the first native session arrives
+ok 15 - typing before Android is ready is synchronized as soon as the first native session arrives
+  ---
+  duration_ms: 104.643835
+  type: 'test'
+  ...
+# Subtest: native draft revisions cannot restore consumed text or reset a newer local selection
+ok 16 - native draft revisions cannot restore consumed text or reset a newer local selection
+  ---
+  duration_ms: 167.217876
+  type: 'test'
+  ...
+# Subtest: computer frames use the original window and acknowledge only decoded visible frames after its one flight
+ok 17 - computer frames use the original window and acknowledge only decoded visible frames after its one flight
+  ---
+  duration_ms: 89.849906
+  type: 'test'
+  ...
+# Subtest: late decode and frame replay cannot reopen a stopped or rebound computer source
+ok 18 - late decode and frame replay cannot reopen a stopped or rebound computer source
+  ---
+  duration_ms: 70.469843
+  type: 'test'
+  ...
+# Subtest: a computer image expires without new frames and unavailable status removes pixels immediately
+ok 19 - a computer image expires without new frames and unavailable status removes pixels immediately
+  ---
+  duration_ms: 66.636859
+  type: 'test'
+  ...
+# Subtest: PDF and chat remain intact while a covered computer invalidates its previous render receipt
+ok 20 - PDF and chat remain intact while a covered computer invalidates its previous render receipt
+  ---
+  duration_ms: 91.399988
+  type: 'test'
+  ...
+# Subtest: invalid computer payloads and callbacks from an old conversation never become visible frames
+ok 21 - invalid computer payloads and callbacks from an old conversation never become visible frames
+  ---
+  duration_ms: 77.939927
+  type: 'test'
+  ...
+# Subtest: occlusion, page hiding and failed decoding never produce a computer render acknowledgement
+ok 22 - occlusion, page hiding and failed decoding never produce a computer render acknowledgement
+  ---
+  duration_ms: 94.045595
+  type: 'test'
+  ...
+# Subtest: native speech frames reach the original viseme API with their actual source and expire to silence
+ok 23 - native speech frames reach the original viseme API with their actual source and expire to silence
+  ---
+  duration_ms: 45.878169
+  type: 'test'
+  ...
+# Subtest: speech rejects invalid morphs, late utterances, stopped generations and different sessions
+ok 24 - speech rejects invalid morphs, late utterances, stopped generations and different sessions
+  ---
+  duration_ms: 66.051511
+  type: 'test'
+  ...
+# Subtest: the byte-locked bundled avatar accepts the native visemes through its public fallback-mode API
+ok 25 - the byte-locked bundled avatar accepts the native visemes through its public fallback-mode API
+  ---
+  duration_ms: 66.966536
+  type: 'test'
+  ...
+# Subtest: covering a decoded image with a newer pending frame withdraws both exact receipts
+ok 26 - covering a decoded image with a newer pending frame withdraws both exact receipts
+  ---
+  duration_ms: 84.250762
+  type: 'test'
+  ...
+# Subtest: an expired pose cannot transfer its generation to another utterance or return after page hiding
+ok 27 - an expired pose cannot transfer its generation to another utterance or return after page hiding
+  ---
+  duration_ms: 56.953948
+  type: 'test'
+  ...
+# Subtest: the actual Kotlin Stage computer JSON reaches the original window and its exact render acknowledgement
+ok 28 - the actual Kotlin Stage computer JSON reaches the original window and its exact render acknowledgement
+  ---
+  duration_ms: 52.520134
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3168.475197

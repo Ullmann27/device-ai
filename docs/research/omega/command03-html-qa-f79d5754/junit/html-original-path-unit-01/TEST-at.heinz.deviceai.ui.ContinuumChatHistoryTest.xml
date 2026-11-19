@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumChatHistoryTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-15T20:30:22" hostname="731a0110a54f" time="0.106">
+  <properties/>
+  <testcase name="firstOwnerMessageReplacesGreetingButLaterMessagesDoNotRenameIt" classname="at.heinz.deviceai.ui.ContinuumChatHistoryTest" time="0.023"/>
+  <testcase name="initialIndexOpensOnlyTheHundredMostRecentlyModifiedTranscripts" classname="at.heinz.deviceai.ui.ContinuumChatHistoryTest" time="0.024"/>
+  <testcase name="appendUpdatesOnlyItsCachedConversationUntilAnExplicitRefresh" classname="at.heinz.deviceai.ui.ContinuumChatHistoryTest" time="0.001"/>
+  <testcase name="indexContainsOnlyStoredMessagesInActualRecencyOrder" classname="at.heinz.deviceai.ui.ContinuumChatHistoryTest" time="0.003"/>
+  <testcase name="titleSurvivesTheRestoreWindowAndAHistoryRestart" classname="at.heinz.deviceai.ui.ContinuumChatHistoryTest" time="0.018"/>
+  <testcase name="navigationDoesNotPersistAResetOrLeakTheOtherChatsContext" classname="at.heinz.deviceai.ui.ContinuumChatHistoryTest" time="0.029"/>
+  <testcase name="missingEmptyAndTraversalSelectionsLeaveTheExistingConversationIntact" classname="at.heinz.deviceai.ui.ContinuumChatHistoryTest" time="0.006"/>
+  <testcase name="readRestoresExactlyOneConversationWithoutChangingSelectionOrAppending" classname="at.heinz.deviceai.ui.ContinuumChatHistoryTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

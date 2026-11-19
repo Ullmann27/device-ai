@@ -22,6 +22,8 @@ object JarvisCockpitGridContent {
     private val clockFormat = SimpleDateFormat("HH:mm", Locale.GERMANY)
     private val dateFormat = SimpleDateFormat("EEE, d. MMM", Locale.GERMANY)
     const val MODE_LABEL = "JARVIS"
+    /** Long to short: the status line below already says "Kamera aus/aktiv". */
+    val CAMERA_TITLES = listOf("Kamerawahrnehmung", "Wahrnehmung", "Kamera")
     const val COMPANION = "Dein KI-Begleiter auf dem Gerät"
     const val COMPANION_SHORT = "Dein KI-Begleiter"
 
@@ -37,7 +39,20 @@ object JarvisCockpitGridContent {
         "device" to listOf("Android und Apps", "nach Freigabe", "steuern"),
         "system" to listOf("Zustand, Leistung", "und Modellstatus", "überwachen"))
 
-    data class Module(val label: String, val icon: Icon, val value: String, val ok: Boolean)
+    data class Module(val label: String, val icon: Icon, val value: String, val ok: Boolean,
+                      val shortLabel: String = label)
+
+    /** First label variant that fits [room] after a bounded shrink; the last one is ellipsized if needed. */
+    fun firstFitting(p: ContinuumPainter, variants: List<String>, style: TextStyle, room: Float,
+                     minScale: Float = .80f): Pair<String, TextStyle> {
+        for (v in variants) {
+            val st = JarvisShellRenderer.shrinkToFit(p, v, style, room, minScale)
+            if (p.measureText(v, st) <= room) return v to st
+        }
+        val last = variants.last()
+        val st = JarvisShellRenderer.shrinkToFit(p, last, style, room, minScale)
+        return fit(p, last, st, room) to st
+    }
 
     /** A loaded language model is not evidence that a separate reasoning service is initialized. */
     fun modules(s: ContinuumDashboardState): List<Module> = listOf(
@@ -49,7 +64,8 @@ object JarvisCockpitGridContent {
             Module("Assistenten", Icon.USERS, running?.let { "$it aktiv" } ?: NONE, running != null && running > 0)
         },
         Module("Lernen", Icon.BOOK, if (s.learning.live) "aktiv" else "ruhend", s.learning.live),
-        Module("Lokales Modell", Icon.CPU, if (s.model.online) "online" else s.model.stateLabel, s.model.online))
+        Module("Lokales Modell", Icon.CPU, if (s.model.online) "online" else s.model.stateLabel, s.model.online,
+            shortLabel = "Modell"))
 
     fun statusSegments(s: ContinuumDashboardState): List<Pair<String, Boolean>> =
         JarvisCockpitPanels.statusSegments(s).map { it.text to it.ok }
@@ -245,8 +261,8 @@ object JarvisCockpitGridContent {
     private fun cameraStatus(p: ContinuumPainter, b: Box, s: ContinuumDashboardState) {
         val x = b.left + 22f; val cy = b.centerY
         cameraGlyph(p, x, cy, 19f, Colors.cyanSoft)
-        p.drawText(fit(p, "Kamerawahrnehmung", Type.heading, b.width - 58f), b.left + 43f,
-            cy - 2f, Type.heading, Fill.Solid(Colors.text))
+        val (cameraTitle, cameraStyle) = firstFitting(p, CAMERA_TITLES, Type.heading, b.width - 58f)
+        p.drawText(cameraTitle, b.left + 43f, cy - 2f, cameraStyle, Fill.Solid(Colors.text))
         val status = when { s.presentation.tracking -> "Gesicht erkannt"; s.presentation.cameraSessionActive -> "Kamera aktiv"; else -> "Kamera aus" }
         p.fillCircle(b.left + 47f, cy + 10f, 3f, Fill.Solid(if (s.presentation.cameraSessionActive) Colors.ok else Colors.textMuted))
         p.drawText(fit(p, status, Type.caption, b.width - 62f), b.left + 55f,
@@ -263,8 +279,8 @@ object JarvisCockpitGridContent {
             ContinuumIcons.draw(p, m.icon, b.left + 17f, cy, iconSize, Fill.Solid(Colors.cyanSoft))
             val valueWidth = minOf(p.measureText(m.value, style), b.width * .32f)
             val valueStart = b.right - 10f - valueWidth
-            p.drawText(fit(p, m.label, style, valueStart - b.left - 47f), b.left + 34f, cy + cap / 2f,
-                style, Fill.Solid(Colors.text))
+            val (label, labelStyle) = firstFitting(p, listOf(m.label, m.shortLabel), style, valueStart - b.left - 47f)
+            p.drawText(label, b.left + 34f, cy + cap / 2f, labelStyle, Fill.Solid(Colors.text))
             p.fillCircle(valueStart - 7f, cy, 2.5f, Fill.Solid(if (m.ok) Colors.ok else Colors.textMuted))
             p.drawText(fit(p, m.value, style, valueWidth), b.right - 9f, cy + cap / 2f, style,
                 Fill.Solid(if (m.ok) Colors.okSoft else Colors.textSecondary), TextAlign.RIGHT)
@@ -313,8 +329,13 @@ object JarvisCockpitGridContent {
         val room = b.right - x - 18f
         ContinuumIcons.draw(p, Icon.PULSE, b.left + 23f, b.top + 16f, 20f, Fill.Solid(Colors.cyan))
         val live = Type.caption.copy(size = 10f)
-        p.drawText(fit(p, "JARVIS", title, room * .7f), x, b.top + 8f + p.capHeight(title), title, Fill.Solid(Colors.cyan))
-        p.drawText("Status", b.right - 14f, b.top + 8f + p.capHeight(live), live,
+        // Design-Lead 17.11.: in a phone column "JARVIS" was cut to "JAR…" by the "Status" caption.
+        // Narrow boxes keep the full name (shrink first) and rely on the status dot alone.
+        val narrowDialog = p.measureText("JARVIS", title) > room * .7f
+        val nameRoom = if (narrowDialog) room else room * .7f
+        val nameStyle = JarvisShellRenderer.shrinkToFit(p, "JARVIS", title, nameRoom, minScale = .72f)
+        p.drawText(fit(p, "JARVIS", nameStyle, nameRoom), x, b.top + 8f + p.capHeight(title), nameStyle, Fill.Solid(Colors.cyan))
+        if (!narrowDialog) p.drawText("Status", b.right - 14f, b.top + 8f + p.capHeight(live), live,
             Fill.Solid(if (s.presentation.live || s.model.online) Colors.ok else Colors.textMuted), TextAlign.RIGHT)
         val waveTop = b.top + 8f + p.capHeight(title) + 6f
         val waveBottom = minOf(b.bottom - p.capHeight(detail) - 10f, waveTop + 18f)

@@ -4,8 +4,7 @@ on:
   push:
     branches: ["copilot/pr-12-working-first-vertical-slice"]
     paths: [".github/workflows/continuum-zero-cost.yml"]
-  schedule:
-    - cron: "37 */4 * * *"
+  # schedule bewusst entfernt (Integration 2026-11-17): ein Merge nach main darf keine neue Automatik aktivieren.
   issue_comment:
     types: [created]
   workflow_dispatch:

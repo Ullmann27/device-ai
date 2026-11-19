@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCompactComposerUiTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-16T05:17:17" hostname="731a0110a54f" time="3.163">
+  <properties/>
+  <testcase name="shortLandscapeKeepsEditorAndSendFullyVisible" classname="at.heinz.deviceai.ContinuumCompactComposerUiTest" time="2.568"/>
+  <testcase name="narrowLargeTextKeepsEditingAndOriginalSend" classname="at.heinz.deviceai.ContinuumCompactComposerUiTest" time="0.185"/>
+  <testcase name="heightChangesKeepDraftSelectionAndOriginalControls" classname="at.heinz.deviceai.ContinuumCompactComposerUiTest" time="0.142"/>
+  <testcase name="overflowPreservesActionsLongPressesAndDisabledState" classname="at.heinz.deviceai.ContinuumCompactComposerUiTest" time="0.267"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

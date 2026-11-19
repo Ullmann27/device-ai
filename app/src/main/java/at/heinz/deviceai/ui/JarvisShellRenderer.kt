@@ -301,7 +301,8 @@ object JarvisShellRenderer {
                 if (cinema.contentAlpha < 1f) p.saveAlpha(cinema.contentAlpha)
                 when {
                     slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
-                    slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
+                    slot == Slot.NAV_RAIL -> if (!shell.workstation)
+                        JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
                     slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box,
                         selected = JarvisTiles.bottomNav.indexOfFirst { it.target == selectedDockTarget },
                         timeMs = if (animatorScale > 0f) materialTimeMs else 0L,
@@ -336,7 +337,8 @@ object JarvisShellRenderer {
     /** Portable ref5 background: near-black navy, faint lower-edge haze and deterministic dust. */
     fun background(p: ContinuumPainter, w: Float, h: Float) {
         p.fillRect(0f, 0f, w, h, Fill.Linear(0f, 0f, 0f, h, intArrayOf(Colors.background, Colors.backgroundBottom)))
-        JarvisVisualDepth.paintSpace(p, w, h)
+        // Blender spaceship interior (ContinuumBlenderAssets); vector space stays the fallback.
+        if (!ContinuumBlenderAssets.drawBackground(p, w, h)) JarvisVisualDepth.paintSpace(p, w, h)
         val step = 96f
         p.setAdditive(true)
         var x = 0f; while (x <= w) { p.drawLine(x, 0f, x, h, .7f, Fill.Solid(Colors.cyan), .014f); x += step }

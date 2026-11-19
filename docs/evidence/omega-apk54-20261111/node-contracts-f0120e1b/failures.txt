@@ -1,0 +1,26 @@
+not ok 373 - genuine RED→GREEN chain is VERIFIED from re-executed tests and bound to the receipt bytes
+not ok 374 - forged receipts are rejected against the real repository
+not ok 376 - patch mode (CCC1 repair): base fails, base+patch passes, tampered patch is rejected
+not ok 378 - executor coverage rejects missing in commit and patch modes
+not ok 379 - executor coverage rejects renamed in commit and patch modes
+not ok 380 - executor coverage rejects skipped in commit and patch modes
+not ok 381 - executor coverage rejects todo in commit and patch modes
+not ok 382 - executor coverage rejects suite in commit and patch modes
+not ok 383 - executor coverage rejects duplicate in commit and patch modes
+not ok 384 - executor coverage rejects reordered in commit and patch modes
+not ok 385 - executor coverage rejects skipType in commit and patch modes
+not ok 386 - executor coverage accepts retain
+not ok 387 - executor coverage accepts extension
+not ok 388 - executor coverage rejects interrupted execution and then verifies a fresh retry
+not ok 391 - Delta follow-up preserves omitted optional legacy metadata and unique aliases
+not ok 651 - strict observation failure exposes the canonical negative Echo report without learning
+not ok 652 - resuming a negative task reuses its report without inference, execution or journal changes
+not ok 653 - a reporter removed during a failed attempt cannot receive a canonical report
+not ok 654 - strict replay of an older completed repair cannot publish success without a current model observation
+not ok 655 - a competing writer cannot turn a strict observation failure into an older success report
+not ok 656 - service attempt persists the canonical negative report for owner lookup while rejecting
+not ok 657 - provider-shaped and JSON-copied errors cannot acquire canonical failure evidence
+not ok 658 - failure evidence persistence cannot replace the model error or overwrite a prior record
+not ok 659 - owner lookup offers only the checked negative report for an unknown delivery
+not ok 1184 - MΩ PR400 self-closing suite does not capture following actual Node cases
+not ok 1185 - MΩ PR400 actual Node identities survive a symlinked TMPDIR

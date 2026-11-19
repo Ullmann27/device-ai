@@ -32,12 +32,12 @@ class JarvisShellContentTest {
         assertEquals(na, tiles.first { it.target == "memory" }.displayText)
         val live = ContinuumDashboardState(system = ContinuumDashboardState.SystemStatus(batteryPercent = 64))
         assertEquals("Akku 64 %", JarvisShellContent.tileValue("device", live, 0L))
-        for (item in JarvisTiles.railNav + JarvisTiles.bottomNav) assertTrue(item.target in JarvisShellContent.routes)
+        for (item in JarvisTiles.railNav + JarvisTiles.bottomNav) assertTrue(JarvisShellContent.hasNativeRoute(item.target))
     }
 
     @Test fun hitTestRoutesAllFeatureCardsWithoutAFixedRailAcrossWindowSizes() {
         val tiles = JarvisTiles.reference
-        for (width in listOf(412f, 692f, 884f, 1280f)) {
+        for (width in listOf(392f, 412f, 692f, 884f, 1280f)) {
             val shell = JarvisShellLayout.create(width, 760f)
             assertEquals(null, shell[JarvisShellLayout.Slot.NAV_RAIL])
             if (shell.hasFeatureTiles) {
@@ -48,10 +48,17 @@ class JarvisShellContentTest {
                 }
             } else {
                 val dock = requireNotNull(shell[JarvisShellLayout.Slot.BOTTOM_NAV])
+                val cells = JarvisTiles.bottomNavItemBoxes(dock)
                 assertEquals(JarvisTiles.bottomNav.map { it.target },
-                    JarvisTiles.bottomNavItemBoxes(dock).map { box ->
+                    cells.map { box ->
                         JarvisShellContent.hitTarget(shell, tiles, box.centerX, box.centerY)
                     })
+                cells.groupBy { it.top }.values.forEach { row ->
+                    assertEquals("Every row starts at the dock edge", dock.left, row.first().left, .001f)
+                    assertEquals("Partial rows use the otherwise empty space", dock.right, row.last().right, .001f)
+                    row.zipWithNext().forEach { (left, right) -> assertEquals(left.right, right.left, .001f) }
+                    assertTrue("Every target keeps its full touch size", row.all { it.width >= 48f && it.height >= 48f })
+                }
             }
             assertEquals(null, JarvisShellContent.hitTarget(shell, tiles, 0f, 100f))
         }

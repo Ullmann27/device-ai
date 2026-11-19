@@ -33,6 +33,12 @@ import java.time.Duration
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class AvatarEntranceUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private fun configure() {
         ShadowChoreographer.setPaused(true)
         ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
@@ -193,8 +199,14 @@ class AvatarEntranceUiTest {
             home.setForegroundActive(true); live.setForegroundActive(true)
             measure(activity.window.decorView); live.dispatchWindowFocusChanged(true)
             frame(live).recycle()
+            // What the cue needs, recorded before it is sent. This precondition failed once on CI (19.11.2026, full
+            // suite) and in no local run since; should it fail again, the message names the missing part.
+            val before = "docked=${home.avatarRenderer != null} owns=${home.ownsAvatarSlot} active=${home.isPresentationActive()} " +
+                "shown=${live.isShown} focus=${live.hasWindowFocus()} size=${home.width}x${home.height}"
             boot(home)
-            assertTrue("The actual Activity receives the boot cue", live.entranceScale() < .2f)
+            assertTrue("The actual Activity receives the boot cue: scale=${live.entranceScale()} before[$before] " +
+                "after[docked=${home.avatarRenderer != null} active=${home.isPresentationActive()}] ${live.motionDiagnostics()}",
+                live.entranceScale() < .2f)
             AgentActivity::class.java.getDeclaredMethod("cancelLocalRequest")
                 .apply { isAccessible = true }.invoke(activity)
             assertEquals("STOP resets before its queued callbacks", 1f, live.entranceScale(), 0f)

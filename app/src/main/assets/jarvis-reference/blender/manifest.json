@@ -1,0 +1,150 @@
+{
+  "generator": "tools/blender/continuum_scenes.py + tools/blender/export_assets.py",
+  "blender": "4.2.3 LTS",
+  "cycles_samples": 128,
+  "reference_images_used": false,
+  "contains_runtime_status": false,
+  "note": "All meshes, lights and materials are procedural in the script; no owner reference image is embedded.",
+  "assets": [
+    {
+      "asset": "jarvis-reference/blender/orb-1024.webp",
+      "kind": "orb",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "bytes": 227754,
+      "sha256": "8d3d4b3a5ecaa67abcd382348a8db528b0e05714a400088771afbb63b5d01e36",
+      "metrics": {
+        "centerX": 0.5,
+        "centerY": 0.457,
+        "radius": 0.2415
+      }
+    },
+    {
+      "asset": "jarvis-reference/blender/orb-512.webp",
+      "kind": "orb",
+      "dimensions": [
+        512,
+        512
+      ],
+      "bytes": 89088,
+      "sha256": "7f8b944c2ce511d4432542a15177e92863ee4d1fe21612303ba9da5742003ef3",
+      "metrics": {
+        "centerX": 0.5,
+        "centerY": 0.457,
+        "radius": 0.2415
+      }
+    },
+    {
+      "asset": "jarvis-reference/blender/bg-wide-1600x1200.webp",
+      "kind": "background",
+      "dimensions": [
+        1600,
+        1200
+      ],
+      "bytes": 37492,
+      "sha256": "bee1ae7c668df9a2148b5a0787d39ac90218e7057fedd96a7b295cf190491279"
+    },
+    {
+      "asset": "jarvis-reference/blender/bg-tall-900x1800.webp",
+      "kind": "background",
+      "dimensions": [
+        900,
+        1800
+      ],
+      "bytes": 33986,
+      "sha256": "28f7b47aab8be515b222fec127f23f45df7445f41e1a8c70c7b894bd18b0ceb1"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-agents.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 3282,
+      "sha256": "af9439c998d9f7faefb0d923f39d098ee3209ffe1c458132c03412645fc8cedb"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-chat.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 3406,
+      "sha256": "e9a7af4b06b41896bcb56ab577198db3040a69b14ebac11b26ea809bdce9a4cb"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-device.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 2056,
+      "sha256": "4338c84c0423a6f0479a42d5eee3b3aa72ed3b6445855600598f488f23da985b"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-files.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 2966,
+      "sha256": "069a011fb4eb9bd226156fc3ad6eaf9e1891da13a07eabb60409505a12de00ee"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-home.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 2700,
+      "sha256": "dc2be774d26fc13b96ca713dc53cc72600df7f0d499d36bdd4ca1f3ccef4fd6a"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-memory.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 3338,
+      "sha256": "843c28bf94d9493441b4fd5d3dcce28a406581f0b0e23e4615fcbb7656e2a6bd"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-research.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 3698,
+      "sha256": "6a8f113e35f53ee053dac73cce0a828ef795aa7d8c4a51949ced47f79ebff7bf"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-settings.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 3558,
+      "sha256": "19f36720bc7d72622dfb9962bb9c482fe8dc19d28f0fcf266c3c2e0d2400dfe9"
+    },
+    {
+      "asset": "jarvis-reference/blender/tile-web.webp",
+      "kind": "tile",
+      "dimensions": [
+        320,
+        240
+      ],
+      "bytes": 4096,
+      "sha256": "6fc98e37c2c1685e211b775714a16f9bd0ca7312429ecb1668225c6f89ace9d0"
+    }
+  ]
+}

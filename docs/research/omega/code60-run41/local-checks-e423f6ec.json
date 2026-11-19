@@ -1,0 +1,45 @@
+{
+  "source_sha": "e423f6ec3f972e743996b410735bb9b4f61d33fa",
+  "scope": "LOCAL_PARTIAL_ONLY",
+  "android_source_contracts": {
+    "tests": 66,
+    "passed": 66,
+    "failed": 0,
+    "skipped": 0,
+    "node": "24.22.1",
+    "command": "node --test --test-concurrency=1 .github/continuum/android-always-on-wiring.test.mjs .github/continuum/android-integration-wiring.test.mjs .github/continuum/autonomous-topic-frontier.test.mjs .github/continuum/coding-agent-speech-wiring.test.mjs .github/continuum/gemma-reopen-lifecycle.test.mjs .github/continuum/groq-mentor-ui-wiring.test.mjs .github/continuum/model-import-identity.test.mjs .github/continuum/nexus-beginner-ui.test.mjs .github/continuum/research-job-permission.test.mjs"
+  },
+  "android_compilation": [
+    {
+      "label": "run41-fixtures-compile-01",
+      "mode": "ui-compile",
+      "status": "FAILED_OR_SOURCE_CHANGED",
+      "elapsed_seconds": 4.635,
+      "gradle_exit": -9,
+      "source_unchanged": true,
+      "verification_scope": "FOCUSED_HOST_TEST_COMPILATION_ONLY"
+    },
+    {
+      "label": "run41-fixtures-compile-02",
+      "mode": "ui-compile",
+      "status": "FAILED_OR_SOURCE_CHANGED",
+      "elapsed_seconds": 119.662,
+      "gradle_exit": 1,
+      "source_unchanged": true,
+      "verification_scope": "FOCUSED_HOST_TEST_COMPILATION_ONLY"
+    },
+    {
+      "label": "run41-fixtures-compile-03",
+      "mode": "ui-compile",
+      "status": "FAILED_OR_SOURCE_CHANGED",
+      "elapsed_seconds": 59.816,
+      "gradle_exit": 1,
+      "source_unchanged": true,
+      "verification_scope": "FOCUSED_HOST_TEST_COMPILATION_ONLY"
+    }
+  ],
+  "release_qa": "NOT_PASSED",
+  "native_emulator_retest": "NOT_RUN",
+  "signing": "NOT_RUN",
+  "android_compilation_note": "No completed Android compilation or test execution. Processes terminated or Gradle daemon disappeared; exact cause unproven. A separate info-level diagnostic also failed. No assertion was removed to turn these runs green."
+}

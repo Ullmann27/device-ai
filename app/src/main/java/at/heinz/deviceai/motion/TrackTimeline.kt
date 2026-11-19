@@ -80,4 +80,22 @@ object MotionTimelines {
     /** Widgets (Bildbeschrieb 6): 50 → 100 % on the widget spring (~0,5 s, slight overshoot), staggered left to right. */
     fun widgets(keys: List<String>, startMs: Long = 0L): TrackTimeline =
         staggered(keys, MotionPresets.widgetSpring.settleMs, MotionPresets.widgetSpring.asEasing(), Staggers.linear(), startMs)
+
+    /**
+     * Muster B for the boxes around the head (ref5): every box 0,6 s cubic ease-out (map to scale
+     * [MotionPresets.FLY_IN_FROM_SCALE] 0,8 → 1, alpha 0 → 1), the box nearest the head first, each further
+     * distance rank 80 ms later, equally far boxes together ([Staggers.spatialCenterFirst]).
+     * out[i] of [TrackTimeline.evaluate] belongs to boxes[i] (input order).
+     *
+     * Centres are normalised 0..1 from the real view bounds (cx = centreX / width, cy = centreY / height); keys are
+     * the area names of `JarvisCockpitGrid.Area` (#481, e.g. "USER_CARD", "DIALOG", "ORB", "MODULES", "TILES",
+     * "ROW_AGENTS"). Kern wires this into `CockpitAnimationPresenter.flyInCards()`.
+     */
+    fun cockpitBoxes(boxes: List<MotionBox>, headX: Float = .5f, headY: Float = .5f, startMs: Long = 0L): TrackTimeline {
+        val ranks = Staggers.spatialRanks(boxes, headX, headY)
+        return TrackTimeline(boxes.mapIndexed { i, b ->
+            MotionTrack(b.key, startMs + ranks[i] * MotionPresets.STAGGER_MS, MotionPresets.FLY_IN_MS, MotionPresets.flyInEasing)
+        })
+    }
 }
+

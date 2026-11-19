@@ -43,6 +43,12 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class JarvisDeterministicCaptureUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private fun field(activity: AgentActivity, name: String): Any? = AgentActivity::class.java
         .getDeclaredField(name).apply { isAccessible = true }.get(activity)
 
@@ -56,7 +62,8 @@ class JarvisDeterministicCaptureUiTest {
 
     private fun capture(label: String, width: Int, height: Int, fontScale: Float = 1f,
                         captureScrollDetails: Boolean = false, captureLiveTab: Boolean = false,
-                        captureNavigationCycle: Boolean = false) {
+                        captureNavigationCycle: Boolean = false, requireFixedComposer: Boolean = false,
+                        captureComputer: Boolean = false) {
         val app = RuntimeEnvironment.getApplication()
         val resolver = app.contentResolver
         val previousScale = durationScale()
@@ -113,6 +120,22 @@ class JarvisDeterministicCaptureUiTest {
             assertEquals(0f, home.rotationY, 0f)
 
             val viewport = field(activity, "dashboardSection") as ScrollView
+            val composerInput = field(activity, "input") as View
+            fun inScrollContainer(view: View) = generateSequence(view.parent as? View) { it.parent as? View }
+                .any { it is ScrollView }
+            fun rootBounds(view: View): Rect {
+                val origin = IntArray(2).also(root::getLocationOnScreen)
+                val position = IntArray(2).also(view::getLocationOnScreen)
+                return Rect(position[0] - origin[0], position[1] - origin[1],
+                    position[0] - origin[0] + view.width, position[1] - origin[1] + view.height)
+            }
+            if (requireFixedComposer) {
+                val visible = Rect()
+                assertTrue("The actual Android input is visible without scrolling Home", composerInput.getGlobalVisibleRect(visible))
+                assertFalse("The one composer is outside the Home/chat scroll containers", inScrollContainer(composerInput))
+                assertEquals("The complete input is available", composerInput.height, visible.height())
+                assertTrue("Input remains inside the real viewport", rootBounds(composerInput).bottom <= height)
+            }
             val density = home.resources.displayMetrics.density
             val shell = requireNotNull(home.jarvisShell.currentShell())
             val status = requireNotNull(shell[JarvisShellLayout.Slot.STATUS])
@@ -143,6 +166,7 @@ class JarvisDeterministicCaptureUiTest {
                         image.outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
                         fun bounds(view: View) = JSONObject().put("left", view.left).put("top", view.top)
                             .put("right", view.right).put("bottom", view.bottom)
+                        val inputBounds = rootBounds(composerInput)
                         val metadata = JSONObject()
                             .put("schema_version", 1)
                             .put("fidelity", "android_activity_host_native_canvas_api28_explicit_2d_head")
@@ -161,6 +185,10 @@ class JarvisDeterministicCaptureUiTest {
                             .put("data_policy", "isolated empty test storage; real application startup; no invented status data")
                             .put("bounds_coordinate_space", "each View relative to its real parent; no synthetic composition")
                             .put("home_bounds", bounds(home)).put("avatar_bounds", bounds(avatar))
+                            .put("composer_visible", composerInput.isShown)
+                            .put("composer_in_scroll_container", inScrollContainer(composerInput))
+                            .put("composer_bounds_in_root", JSONObject().put("left", inputBounds.left)
+                                .put("top", inputBounds.top).put("right", inputBounds.right).put("bottom", inputBounds.bottom))
                             .put("shell_bounds", bounds(home.jarvisShell))
                             .put("scroll_viewport_bounds", bounds(viewport))
                             .put("scroll_x_px", viewport.scrollX).put("scroll_y_px", viewport.scrollY)
@@ -177,7 +205,17 @@ class JarvisDeterministicCaptureUiTest {
                     bitmap.recycle()
                 }
             }
-            render(label, "home")
+            if (captureComputer) {
+                JarvisHomeTestRoutes.touch(root, JarvisHomeTestRoutes.destination(root, "device"))
+                measure()
+                measure()
+                val workWindow = requireNotNull(root.findViewWithTag<View>("jarvis-work-window"))
+                assertTrue("The real Computer entry opens its native work window", workWindow.isShown)
+                assertTrue("Computer content intersects the viewport", workWindow.getGlobalVisibleRect(Rect()))
+                render(label, "android_computer")
+            } else {
+                render(label, "home")
+            }
             if (captureNavigationCycle) {
                 val bar = field(activity, "bottomWorkAreaBar") as View
                 val pane = (bar.parent as android.view.ViewGroup).getChildAt(0)
@@ -246,6 +284,15 @@ class JarvisDeterministicCaptureUiTest {
     fun compact390() = capture("activity-compact-390x844", 390, 844)
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
     fun compact412() = capture("activity-compact-412x915", 412, 915)
+    @Test @Config(qualifiers = "w392dp-h852dp-mdpi")
+    fun commandPhone392() = capture("activity-command-phone-392x852", 392, 852,
+        requireFixedComposer = true)
+    @Test @Config(qualifiers = "w904dp-h768dp-land-mdpi")
+    fun commandFold904() = capture("activity-command-fold-904x768", 904, 768,
+        requireFixedComposer = true)
+    @Test @Config(qualifiers = "w904dp-h768dp-land-mdpi")
+    fun commandComputer904() = capture("activity-command-computer-904x768", 904, 768,
+        requireFixedComposer = true, captureComputer = true)
     @Test @Config(qualifiers = "w780dp-h360dp-land-mdpi")
     fun mediumShortLandscape() = capture("activity-medium-780x360", 780, 360)
     @Test @Config(qualifiers = "w700dp-h720dp-mdpi")

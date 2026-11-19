@@ -50,4 +50,38 @@ object Staggers {
         }
         return r
     }
+
+    /** Default distance tolerance (normalised 0..1 units) under which two boxes count as equally far. */
+    const val SPATIAL_TOLERANCE = .01f
+
+    /**
+     * Spatial "Mitte zuerst": rank of each box by euclidean distance of its centre to the head centre
+     * ([headX], [headY]), nearest = 0. Distances within [tolerance] of the first box of a group share a rank
+     * (symmetric boxes start together). Ranks are dense (0, 1, 2, …), deterministic, input order is kept.
+     */
+    fun spatialRanks(boxes: List<MotionBox>, headX: Float = .5f, headY: Float = .5f, tolerance: Float = SPATIAL_TOLERANCE): IntArray {
+        require(tolerance >= 0f && tolerance.isFinite())
+        boxes.forEach { require(it.cx.isFinite() && it.cy.isFinite()) { "Box ${it.key}: finite centre required" } }
+        val d = FloatArray(boxes.size) { val dx = boxes[it].cx - headX; val dy = boxes[it].cy - headY; kotlin.math.sqrt(dx * dx + dy * dy) }
+        val order = boxes.indices.sortedWith(compareBy<Int> { d[it] }.thenBy { it })
+        val ranks = IntArray(boxes.size)
+        var rank = -1; var anchor = Float.NEGATIVE_INFINITY
+        for (i in order) {
+            if (rank < 0 || d[i] - anchor > tolerance) { rank++; anchor = d[i] }
+            ranks[i] = rank
+        }
+        return ranks
+    }
+
+    /** [Stagger] over [boxes] (index = position in [boxes]): delay = spatial rank · [stepSec]. */
+    fun spatialCenterFirst(boxes: List<MotionBox>, headX: Float = .5f, headY: Float = .5f,
+                           stepSec: Float = MotionPresets.STAGGER_SEC, tolerance: Float = SPATIAL_TOLERANCE): Stagger {
+        require(stepSec >= 0f && stepSec.isFinite())
+        val ranks = spatialRanks(boxes, headX, headY, tolerance)
+        return Stagger { index, _ -> if (index in ranks.indices) ranks[index] * stepSec else 0f }
+    }
 }
+
+/** A cockpit box for spatial staggering: [key] and its centre normalised 0..1 (from the real view bounds). */
+data class MotionBox(val key: String, val cx: Float, val cy: Float)
+

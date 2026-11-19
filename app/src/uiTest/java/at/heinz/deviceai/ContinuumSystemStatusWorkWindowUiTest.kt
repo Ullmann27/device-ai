@@ -45,6 +45,12 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumSystemStatusWorkWindowUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private var framePump: CockpitHostFramePump? = null
     @Before fun pauseVsync() {
         ShadowChoreographer.setPaused(true)
@@ -104,6 +110,20 @@ class ContinuumSystemStatusWorkWindowUiTest {
             assertTrue(root.dispatchTouchEvent(down))
             assertTrue(root.dispatchTouchEvent(up))
         } finally { down.recycle(); up.recycle() }
+        return bounds
+    }
+
+    /** The More menu the last [tapHomeTarget] had to open; destinations listed there are two native actions away. */
+    private var moreMenuOfLastNavigation: android.app.AlertDialog? = null
+
+    private fun tapHomeTarget(root: View, target: String): Rect {
+        moreMenuOfLastNavigation = null
+        if (target !in JarvisHomeTestRoutes.moreTargets) {
+            return tap(root, JarvisHomeTestRoutes.destination(root, target))
+        }
+        val more = descendants(root).single { it.tag == "jarvis-header:more" && it.isShown }
+        val bounds = JarvisHomeTestRoutes.visibleBounds(more)
+        moreMenuOfLastNavigation = JarvisHomeTestRoutes.navigate(root, target)
         return bounds
     }
 
@@ -337,21 +357,47 @@ class ContinuumSystemStatusWorkWindowUiTest {
             avatar.setAnimationsEnabled(true); avatar.setForegroundActive(true); home.setForegroundActive(true)
             measure(root); advance(320L); measure(root); draw(root)
             val headBounds = Rect(field(avatar, "cockpitHeadBounds") as Rect)
-            val beforeDialog = ShadowAlertDialog.getLatestAlertDialog()
+            // Web and learning are listed in the More menu, so that menu is the navigation's own dialog.
+            // The centre itself must add none: the latest dialog stays the one known before it opened.
+            var knownDialog = ShadowAlertDialog.getLatestAlertDialog()
+            // „Gerät“ is the Android-Computer centre; Systemstatus is the More entry „system“.
             val expected = mapOf("memory" to "Gedächtniszentrum", "web" to "Web und Quellen",
-                "learning" to "Lernzentrum", "device" to "Systemstatus")
+                "learning" to "Lernzentrum", "device" to "Android-Computer", "system" to "Systemstatus")
+            fun faceRelativeTo(work: View): android.graphics.RectF {
+                val faceBounds = checkNotNull(home.jarvisShell.currentShell()?.protectedFaceBounds)
+                val density = home.resources.displayMetrics.density
+                val shellPosition = IntArray(2).also(home.jarvisShell::getLocationOnScreen)
+                val workPosition = IntArray(2).also(work::getLocationOnScreen)
+                return android.graphics.RectF(faceBounds.left * density, faceBounds.top * density,
+                    faceBounds.right * density, faceBounds.bottom * density).apply {
+                    offset((shellPosition[0] - workPosition[0]).toFloat(),
+                        (shellPosition[1] - workPosition[1]).toFloat())
+                }
+            }
             for ((target, title) in expected) {
-                val control = JarvisHomeTestRoutes.destination(root, target)
-                val controlBox = tap(root, control)
+                val controlBox = tapHomeTarget(root, target)
+                assertEquals("$target is reached through More exactly when it is listed there",
+                    target in JarvisHomeTestRoutes.moreTargets, moreMenuOfLastNavigation != null)
+                moreMenuOfLastNavigation?.let { knownDialog = it }
                 advance(640L); measure(root); draw(root)
                 val work = shown(root, "jarvis-work-window")
                 val labels = descendants(work).filterIsInstance<TextView>().map { it.text.toString() }
                 assertTrue("$target opens $title: $labels", labels.any { it.equals(title, true) })
-                assertSame("$title creates no AlertDialog", beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
+                assertSame("$title creates no AlertDialog", knownDialog, ShadowAlertDialog.getLatestAlertDialog())
+                assertFalse("No dialog stays in front of $title", knownDialog?.isShowing == true)
                 val origin = field(work, "origin") as android.graphics.RectF
                 val workPosition = IntArray(2).also(work::getLocationOnScreen)
-                assertEquals("$title emerges from the touched card", controlBox.exactCenterX() - workPosition[0], origin.centerX(), 1.5f)
-                assertEquals(controlBox.exactCenterY() - workPosition[1], origin.centerY(), 1.5f)
+                if (moreMenuOfLastNavigation == null) {
+                    assertEquals("$title emerges from the touched card", controlBox.exactCenterX() - workPosition[0], origin.centerX(), 1.5f)
+                    assertEquals(controlBox.exactCenterY() - workPosition[1], origin.centerY(), 1.5f)
+                } else {
+                    // The touched More row is gone with its menu and the deck has no card for this centre:
+                    // the window starts from the seed beside the face, never from inside it.
+                    val face = faceRelativeTo(work)
+                    assertTrue("protected face is measured", face.width() > 0f && face.height() > 0f)
+                    assertTrue("$title starts from a real seed", origin.width() > 0f && origin.height() > 0f)
+                    assertFalse("$title starts beside the face, not on it", android.graphics.RectF.intersects(face, origin))
+                }
                 assertTrue("the avatar glances at the window", windowIntent() != null)
                 assertEquals("head stays in place", headBounds, field(avatar, "cockpitHeadBounds"))
                 tap(root, shown(work, "jarvis-work-window:close"))
@@ -376,7 +422,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             }
             assertTrue("protected face is measured", face.width() > 0f && face.height() > 0f)
             assertFalse("seed stays outside the actual face", android.graphics.RectF.intersects(face, origin))
-            assertSame(beforeDialog, ShadowAlertDialog.getLatestAlertDialog())
+            assertSame(knownDialog, ShadowAlertDialog.getLatestAlertDialog())
         } finally {
             framePump?.close()
             framePump = null
@@ -522,7 +568,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
             assertTrue(descendants(root).none { it.tag == "jarvis-work-window" && it.isShown })
             assertEquals("the deck returns after the window folded back", before, deck())
             assertEquals("TalkBack offers them again", a11yBefore, a11yChildren())
-            tap(root, JarvisHomeTestRoutes.destination(root, "web"))
+            tapHomeTarget(root, "web")
             advance(640L); measure(root); draw(root)
             val reopened = descendants(shown(root, "jarvis-work-window")).filterIsInstance<TextView>().map { it.text.toString() }
             assertTrue("navigation remains clickable after restoring the deck: $reopened", reopened.any { it.equals("Web und Quellen", true) })
@@ -721,7 +767,7 @@ class ContinuumSystemStatusWorkWindowUiTest {
                 assertEquals("TalkBack offers the whole deck after $qualifiers", shownDeck, a11y())
             }
             assertEquals("unfolded again: the complete inner deck", inner, deck())
-            tap(root, JarvisHomeTestRoutes.destination(root, "web"))
+            tapHomeTarget(root, "web")
             advance(640L); measure(root, width, height); draw(root)
             val reopened = descendants(shown(root, "jarvis-work-window")).filterIsInstance<TextView>().map { it.text.toString() }
             assertTrue("navigation opens its centre after the round trip: $reopened", reopened.any { it.equals("Web und Quellen", true) })

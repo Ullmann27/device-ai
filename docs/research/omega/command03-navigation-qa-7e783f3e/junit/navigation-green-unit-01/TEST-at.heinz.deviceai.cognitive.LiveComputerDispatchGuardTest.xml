@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-16T06:05:24" hostname="731a0110a54f" time="0.01">
+  <properties/>
+  <testcase name="eachDispatchRechecksAgeInsteadOfTrustingFirstObservation" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.007"/>
+  <testcase name="noSourceAndWaitingNeverPermitNativeInput" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.0"/>
+  <testcase name="captureAndImportWithoutRenderCannotAuthorizeInput" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.001"/>
+  <testcase name="stoppedCaptureAndRevokedCaptureRejectFormerlyFreshFrame" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.0"/>
+  <testcase name="anotherFreshTaskCannotBorrowSameCaptureId" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.0"/>
+  <testcase name="coveredOrPausedSourceRejectsInputImmediately" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.0"/>
+  <testcase name="anotherFreshCaptureCannotAuthorizeOldSession" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.001"/>
+  <testcase name="freshSubmittedFrameAllowsInputWithoutConsumingIt" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.001"/>
+  <testcase name="lostSurfaceImmediatelyRevokesDispatch" classname="at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

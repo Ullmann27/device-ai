@@ -1,0 +1,23 @@
+{
+  "baseline_source": "d3cec2c04b094040473e3ad0889aa3513b6a0da1",
+  "scope": "ACTUAL_WIP_DOM_RED_BEFORE_ADAPTER_FIX",
+  "tests": 34,
+  "pass": 27,
+  "fail": 7,
+  "skipped": 0,
+  "command": "COMMAND03_DOM_MODULE=/workspace/scratch/8f95e7fd540d/web-test-deps/node_modules/jsdom/lib/api.js node --test tools/command03-native-qa/native-bridge-behavior.test.mjs",
+  "files": {
+    "native-bridge.before.js": {
+      "bytes": 44454,
+      "sha256": "a4e575b8e188ac80f3876b309f3372fb7032d93dd168571cc66d7f1af5039f8f"
+    },
+    "native-bridge-behavior.red.test.mjs": {
+      "bytes": 48845,
+      "sha256": "e23a638cffd5f2df6ea221f28ff76a05659aa8aabbbd96ff5db2164a37c379b9"
+    },
+    "dom-red.txt": {
+      "bytes": 9261,
+      "sha256": "1a2e61f9ff40830e0fc57b04579e60382f8c5bc62f8b178cc3a91e8393ad50e9"
+    }
+  }
+}

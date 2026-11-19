@@ -10,6 +10,7 @@ import at.heinz.deviceai.ui.ContinuumHomeView
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -47,6 +48,9 @@ class ContinuumAdaptiveAvatarNavigationUiTest {
         RuntimeEnvironment.setFontScale(font)
         try {
             val activity = Robolectric.buildActivity(AgentActivity::class.java).get()
+            // This fixture exercises the classic native surface.
+            activity.getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+                .putBoolean("original_html_main", false).commit()
             set(activity, "bootstrapMemory", BootstrapMemoryStore(activity))
             set(activity, "foregroundLearningActive", true)
             set(activity, "renderedWindowWidthDp", width.toFloat())
@@ -77,8 +81,10 @@ class ContinuumAdaptiveAvatarNavigationUiTest {
                     set(activity, "conversationActive", true)
                     refresh.invoke(activity)
                     measure(pane, width, height)
-                    assertSame(chat, head.parent)
-                    assertEquals(ContinuumHologramRenderer.Geometry.PHONE, renderer.geometry)
+                    assertSame("The workstation keeps the original surface mounted during chat", home, head.parent)
+                    assertTrue(home.isConversationPresence)
+                    assertTrue(head.isShown)
+                    assertEquals(expectedHomeGeometry, renderer.geometry)
 
                     set(activity, "conversationActive", false)
                     refresh.invoke(activity)

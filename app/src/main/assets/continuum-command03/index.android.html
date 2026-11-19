@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#030912">
+  <title>Device AI Continuum · Kommando 03</title>
+  <meta name="description" content="Interaktive Continuum-Gestaltung mit dem vorhandenen Originalkopf, der Originalkugel, räumlichen Arbeitsflächen und verknüpften Diagrammen.">
+  <link rel="stylesheet" href="native-layer.css">
+  <link rel="stylesheet" href="style.css?v=command03.1">
+  <link rel="stylesheet" href="presence-layout.css?v=command03.1">
+  <link rel="stylesheet" href="presence-instruments.css?v=command03.1">
+  <link rel="stylesheet" href="telemetry.css?v=command03.1">
+  <link rel="stylesheet" href="command-layout.css?v=command03.1">
+  <link rel="stylesheet" href="operations.css?v=command03.1">
+  <link rel="stylesheet" href="workspace-motion.css?v=command03.1">
+</head>
+<body data-state="idle" data-section="conversation" data-design="command03">
+  <canvas id="scene-canvas" aria-hidden="true"></canvas>
+  <div class="room-architecture" aria-hidden="true"><i></i><i></i><i></i><i></i><div class="floor-grid"></div></div>
+  <div class="app-shell">
+    <header class="masthead">
+      <button class="brand" data-action="home" aria-label="Zur lebendigen Bereitschaft"><span><b>DEVICE AI</b><strong>CONTINUUM</strong></span></button>
+      <span class="edition">DEINE INTELLIGENZ. DEINE KONTROLLE.</span>
+      <div class="header-tools"><a class="format-preview-link" href="https://device-ai-continuum-heinz.electemu.chatgpt.site/ausprobieren.html" target="_blank" rel="noopener">Ansichten</a><a class="project-download-link" href="https://device-ai-continuum-heinz.electemu.chatgpt.site/projekt.html" target="_blank" rel="noopener">Projektdateien ↗</a><span class="preview-badge"><i></i>Designvorschau</span><button class="icon-button" data-action="settings" title="Darstellung einstellen" aria-label="Einstellungen"><svg><use href="#i-settings"/></svg></button></div>
+    </header>
+
+    <div class="plugin-toolbar"><span class="toolbar-label">WERKZEUGE</span><nav class="floating-dock" aria-label="Plugins und Werkzeuge" id="main-nav"></nav></div>
+    <div class="mobile-side-controls"><button class="secondary-button" data-action="toggle-chats" aria-expanded="false"><svg><use href="#i-chat"/></svg>Chats & Projekte</button><button class="secondary-button" data-action="toggle-instruments" aria-expanded="false"><svg><use href="#i-agents"/></svg>Diagramme <span class="instrument-count">3</span></button></div>
+    <div class="cockpit-grid">
+      <aside class="chat-sidebar" aria-label="Chats und Projekte"><div class="sidebar-heading"><span>DEIN KONTEXT</span><button class="icon-button drawer-close" data-action="close-panels" aria-label="Chats schließen"><svg><use href="#i-close"/></svg></button></div><button class="new-chat-button" data-action="new-chat"><span>＋</span> Neuer Chat</button><div class="sidebar-section-title">PROJEKTE</div><button class="project-button" data-chat="start"><span class="project-glyph">C</span><span>Continuum<small>Gestaltung & Präsenz</small></span></button><div class="sidebar-section-title">UNTERHALTUNGEN <span>LOKAL</span></div><div id="chat-list"></div><div class="sidebar-note"><span class="status-dot"></span><span>Dein Raum bleibt erhalten.<small>Beispielchats und lokaler Verlauf dieser Vorschau.</small></span></div></aside>
+    <main class="center-stage">
+      <section class="presence presence-orbit" aria-label="Zentrale Continuum-Präsenz mit seitlichen Hologrammen">
+        <div class="presence-topline"><span class="eyebrow" id="state-eyebrow">DEIN RAUM. DEINE INTELLIGENZ.</span><span class="presence-edition">KOMMANDO / 03</span></div>
+        <div class="presence-system">
+          <div class="presence-wing presence-wing-left"><aside class="presence-instrument presence-instrument-left" data-presence-left aria-label="Holografischer Phasenverlauf"></aside><aside data-telemetry-left aria-label="Prozessor und Bildablauf"></aside></div>
+          <div class="presence-core">
+            <div class="orb-zone" data-orb-anchor data-orb-motion="fixed" aria-label="Ruhende Original-Continuum-Kugel hinter der Assistentin"></div>
+            <div class="avatar-zone"><div class="avatar-aura" aria-hidden="true"></div><div class="avatar-crop" role="img" aria-label="Original-Continuum-Avatar in der Mitte vor der Kugel"></div><div class="avatar-caption"><span class="status-dot"></span><span>CONTINUUM <small>PRÄSENZ</small></span></div></div>
+            <div class="core-status"><span class="status-dot" aria-hidden="true"></span><span id="orb-status">BEREIT</span></div>
+            <nav class="avatar-linkbar" aria-label="Schnellzugriff bei der Assistentin"><button class="icon-button" data-action="quick-files" title="Dateien öffnen" aria-label="Dateien öffnen"><svg><use href="#i-file"/></svg></button><button class="icon-button" data-action="research-demo" title="Recherche im projizierten Computer" aria-label="Recherche im projizierten Computer"><svg><use href="#i-search"/></svg></button><button class="icon-button" data-action="quick-memory" title="Gedächtnis öffnen" aria-label="Gedächtnis öffnen"><svg><use href="#i-memory"/></svg></button></nav>
+          </div>
+          <div class="presence-wing presence-wing-right"><aside class="presence-instrument presence-instrument-right" data-presence-right aria-label="Holografisches Quellennetz"></aside><aside data-telemetry-right aria-label="Arbeitsspeicher und Verlauf"></aside></div>
+        </div>
+        <div class="presence-copy"><div><h1 id="presence-title">Eine Welt,<br>die mit dir denkt.</h1><p id="presence-description">Gedanken werden Zusammenhänge.<br>Aufträge werden sichtbar.</p></div><div class="presence-mission-actions"><button class="primary-button" id="hero-action" data-action="research-demo"><svg><use href="#i-computer"/></svg> Recherche erleben <span>↗</span></button><button class="secondary-button" data-action="open-demo">Argon4 öffnen</button></div></div>
+        <div class="scene-identity"><span class="tiny-signal"></span><span id="scene-caption">Lebendige Bereitschaft</span><span class="scene-number" id="scene-number">01 / 07</span></div>
+      </section>
+
+      <section class="workspace-shell" data-work-anchor aria-label="Arbeitsraum">
+        <div class="workspace-backplate" aria-hidden="true"><span class="backplate-circuit"></span><span class="backplate-spine"></span></div>
+        <div class="workspace-sidewall" aria-hidden="true"><span></span></div>
+        <div class="workspace-lower-edge" aria-hidden="true"></div>
+        <div class="workspace-topline"><div><span class="workspace-led"></span><span id="workspace-label">DEIN ARBEITSRAUM</span></div><div class="workspace-tools"><span class="demo-label" id="workspace-meta">INTERAKTIVE SZENE</span><button class="icon-button small" id="expand-button" data-action="expand" title="Arbeitsfläche vergrößern" aria-label="Arbeitsfläche vergrößern"><svg><use href="#i-expand"/></svg></button><button class="icon-button small" id="close-button" data-action="close" title="Arbeitsfläche schließen" aria-label="Arbeitsfläche schließen"><svg><use href="#i-close"/></svg></button></div></div>
+        <div id="workspace" class="workspace-body"></div>
+        <div class="workspace-bottomline"><span id="workspace-footnote">Gestaltungsvorschau · keine Verbindung zu Android oder einem KI-Modell</span><span class="live-line" aria-hidden="true"><i></i></span></div>
+      </section>
+
+      <div class="timeline-strip" aria-label="Sieben Schlüsselmomente"><span class="timeline-label">SZENE</span><div id="scene-controls"></div><button class="icon-button small" id="sequence-button" data-action="sequence" title="Gesamte Sequenz abspielen" aria-label="Gesamte Sequenz abspielen"><svg><use href="#i-play"/></svg></button></div>
+
+      <form id="command-form" class="command-bar"><button type="button" class="mic-button" id="listen-button" data-action="listen" aria-label="Zuhörszene zeigen"><svg><use href="#i-mic"/></svg></button><div class="command-field"><label for="command-input">WAS MÖCHTEST DU SICHTBAR MACHEN?</label><input id="command-input" autocomplete="off" placeholder="Zum Beispiel: Öffne die PDF Argon4 …" aria-label="Auftrag für die Vorschau"></div><span class="input-hint">VORSCHAU</span><button class="send-button" type="submit" aria-label="Auftrag in der Vorschau ausführen"><svg><use href="#i-arrow"/></svg></button></form>
+    </main>
+      <aside class="instrument-sidebar" aria-label="Diagramme und Quellen"><div class="sidebar-heading"><span>INSTRUMENTE</span><button class="icon-button drawer-close" data-action="close-panels" aria-label="Diagramme schließen"><svg><use href="#i-close"/></svg></button></div><div class="instrument-rail-label"><span class="status-dot"></span> MIT DEINER ARBEIT VERBUNDEN</div><div id="instrument-content"></div></aside>
+    </div>
+    <button class="drawer-backdrop" data-action="close-panels" aria-label="Seitenbereich schließen"></button>
+    <footer class="app-footer"><span>ORIGINALAVATAR · PROJIZIERTER ARBEITSRAUM · KONTINUIERLICHE BEWEGUNG</span><span>CONTINUUM / KOMMANDO 03</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <svg class="svg-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-8l-5 3v-3H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M7 9h10M7 13h7"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 2h8l5 5v15H6Z M14 2v6h5M9 12h7M9 16h7"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M7 10h7M10.5 6.5v7"/></symbol>
+    <symbol id="i-agents" viewBox="0 0 24 24"><path d="m12 4-8 5v8l8 4 8-4V9ZM4 9l8 5 8-5M12 14v7M12 4v6"/><circle cx="12" cy="4" r="2"/><circle cx="4" cy="9" r="2"/><circle cx="20" cy="9" r="2"/></symbol>
+    <symbol id="i-memory" viewBox="0 0 24 24"><path d="M12 4c-4-5-9 0-7 4-5 2-3 8 1 8-1 5 5 6 6 2 2 4 7 3 6-2 5 0 6-6 2-8 1-5-5-8-8-4ZM12 4v14M7 8l5 3 5-3M7 15l5-4 5 4"/></symbol>
+    <symbol id="i-computer" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 22h8M12 17v5m-6-13 3 3-3 3M12 12h5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="m9 3 1-2h4l1 2 3 2 2-.2 2 3-1 2v4l1 2-2 3-2-.2-3 2-1 2h-4l-1-2-3-2-2 .2-2-3 1-2v-4l-1-2 2-3 2 .2Z" transform="translate(1 1) scale(.91)"/><circle cx="12" cy="12" r="3.5"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11v2a7 7 0 0 0 14 0v-2M12 20v3M8 23h8"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-7-7 7 7-7 7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 3H3v6M15 3h6v6M3 15v6h6M21 15v6h-6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="m9 14 6-6M8 8 5 11a4 4 0 0 0 6 6l3-3M10 8l3-3a4 4 0 0 1 6 6l-3 3"/></symbol>
+  </defs></svg>
+  <script src="native-bridge.js"></script>
+  <script src="scene.js?v=command03.1"></script>
+  <script src="orb-original.js?v=command03.1"></script>
+  <script src="avatar3d.js?v=command03.1"></script>
+  <script src="workspace-motion.js?v=command03.1"></script>
+  <script src="app.js?v=command03.1"></script>
+  <script src="presence-instruments.js?v=command03.1"></script>
+  <script src="telemetry.js?v=command03.1"></script>
+  <script src="operations.js?v=command03.1"></script>
+</body>
+</html>

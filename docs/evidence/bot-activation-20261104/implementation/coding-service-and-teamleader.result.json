@@ -1,0 +1,18 @@
+{
+  "command": [
+    "node",
+    "--test",
+    ".github/continuum/coding-service.test.mjs",
+    ".github/continuum/local-teamleader-loop.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/8f5df1fd155a/continuum-bot-activation",
+  "sourceCommit": "000d413bd5745694d5ff6a8e9e6046af5b591db3",
+  "node": "v24.22.1",
+  "startedAt": "2026-11-04T18:44:00.700419+00:00",
+  "finishedAt": "2026-11-04T18:44:01.579663+00:00",
+  "exitCode": 0,
+  "gitStatusBefore": "",
+  "gitStatusAfter": "",
+  "rawLog": "/workspace/scratch/8f5df1fd155a/probe-evidence/implementation/coding-service-and-teamleader.raw.log",
+  "rawLogSha256": "d53efa02f36b0f41e7f4d5063a98028a990c583f9b6804fbb497c02bb9dc07c3"
+}

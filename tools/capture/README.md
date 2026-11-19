@@ -27,8 +27,8 @@ python3 tools/capture/capture_jarvis.py \
   --case expandedCanonical
 ```
 
-`--matrix` runs the seven viewport cases and six font variants below, plus the
-1536×1024dp technical raster probe. Tracked source must be committed, and the
+`--matrix` runs the viewport cases, font variants, Command03 cases and
+1536×1024dp technical raster probe below. Tracked source must be committed, and the
 output directory must be empty. Every PNG has a matching JSON containing its
 actual hash, source commit, density, logical viewport, font scale and renderer
 limitations. `capture-run.json` records the source tree, exit status and frames.
@@ -49,6 +49,15 @@ otherwise reuse its result. It does not force recompilation of unchanged sources
 | `mediumFont150`, `mediumFont200` | 832×748 | 1.5, 2.0 | Large medium text |
 | `expandedFont150`, `expandedFont200` | 960×640 | 1.5, 2.0 | Large expanded text |
 | `referenceRasterActivityCanvas` | 1536×1024 | 1.0 | Technical raster probe; different logical width |
+| `commandPhone392` | 392×852 | 1.0 | Command03 Home and the actual fixed Android composer |
+| `commandFold904` | 904×768 | 1.0 | Command03 expanded Home and the actual fixed Android composer |
+| `commandComputer904` | 904×768 | 1.0 | Actual Computer dock action and its native work window |
+
+The Command03 cases use the same Activity and native-Canvas renderer as the
+existing fixture. They require the real composer to be visible outside the
+Home/chat scroll containers and record its root-relative bounds. The Computer
+case dispatches the real dock touch, requires a visible native work window and
+does not start an external app, request screen control or fabricate device data.
 
 The configuration is mdpi, so pixels equal dp. The canonical 960×640dp frame can
 be compared to the supplied 1536×1024 reference only by an explicitly recorded

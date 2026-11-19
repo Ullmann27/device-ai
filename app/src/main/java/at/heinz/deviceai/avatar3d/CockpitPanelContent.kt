@@ -19,7 +19,8 @@ internal class CockpitPanelContent private constructor(
     data class Key(
         val taskId: String, val sessionId: Long,
         val planning: List<Row>, val results: List<Row>,
-        val density: Float, val fontScale: Float
+        val density: Float, val fontScale: Float,
+        val system: ContinuumDashboardState.SystemStatus = ContinuumDashboardState.SystemStatus()
     )
 
     companion object {
@@ -31,10 +32,17 @@ internal class CockpitPanelContent private constructor(
             val agents = state.cockpit.workers?.takeIf { it.any { worker -> worker.running } }
                 ?.let { JarvisCockpitPanels.agentRows(state).take(2) }.orEmpty()
             val key = Key(computer.taskId, computer.sessionId,
-                (computer.planningRows() + agents).toList(), computer.resultRows().toList(), density, font)
+                (computer.planningRows() + agents).toList(), computer.resultRows().toList(), density, font,
+                state.system.copy(activity = state.system.activity.takeLast(24).toList()))
             return CockpitPanelContent(key, computer.snapshot.observationRevision, { painter, box, result ->
-                JarvisCockpitPanels.drawComputerRows(painter, box, if (result) "Ergebnis" else "Auftrag",
+                val telemetry = at.heinz.deviceai.ui.CommandWorkstationInstruments.telemetryBox(box, key.fontScale)
+                val content = at.heinz.deviceai.ui.CommandWorkstationInstruments.contentBox(box, key.fontScale)
+                JarvisCockpitPanels.drawComputerRows(painter, content, if (result) "Ergebnis" else "Auftrag",
                     Icon.DOCUMENT, if (result) key.results else key.planning, true)
+                if (telemetry != null) {
+                    if (result) at.heinz.deviceai.ui.CommandWorkstationInstruments.drawMemory(painter, telemetry, key.system)
+                    else at.heinz.deviceai.ui.CommandWorkstationInstruments.drawCpu(painter, telemetry, key.system)
+                }
             }, requestFrame)
         }
     }

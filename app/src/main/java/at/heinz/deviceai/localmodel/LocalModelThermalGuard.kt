@@ -63,6 +63,10 @@ object LocalModelThermalGuard {
         override fun streamTextOnly(prompt: String, callback: LocalInferenceCallback) =
             guarded(callback) { delegate.streamTextOnly(prompt, it) }
 
+        // The experimental kept-dialogue entry is a generation like the others: same thermal gate, same ownership.
+        override fun streamDialogue(request: LocalDialogueRequest, callback: LocalInferenceCallback) =
+            guarded(callback) { delegate.streamDialogue(request, it) }
+
         override fun streamThinking(prompt: String, callback: LocalInferenceCallback) =
             guarded(callback) { delegate.streamThinking(prompt, it) }
 

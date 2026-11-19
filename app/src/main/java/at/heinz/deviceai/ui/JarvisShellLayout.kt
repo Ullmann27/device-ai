@@ -82,6 +82,8 @@ object JarvisShellLayout {
 
         /** Shared drawing and touch bounds. */
         fun dialogControlBoxes(): List<Box> {
+            // The workstation uses AgentActivity's single pinned native composer.
+            if (workstation && boxes[Slot.INPUT] == null) return emptyList()
             boxes[Slot.INPUT]?.let { input ->
                 val y = input.centerY - 24f
                 return listOf(input.left + 4f, input.right - 52f)
@@ -107,8 +109,9 @@ object JarvisShellLayout {
             val b = (if (workstation) null else grid?.areas?.get(Area.ICONS)) ?: boxes[Slot.TOP_BAR]?.let {
                 Box(maxOf(it.left, it.right - if (workstation) 144f else 96f), it.top, it.right, it.bottom)
             } ?: return emptyMap()
-            val targets = if ((grid != null || workstation) && b.width >= 144f) listOf("notifications", "settings", "more")
-                else listOf("notifications", "settings")
+            val primary = if (workstation) "chats" else "notifications"
+            val targets = if ((grid != null || workstation) && b.width >= 144f) listOf(primary, "settings", "more")
+                else listOf(primary, "settings")
             val size = minOf(48f, b.width / targets.size)
             val top = (b.centerY - size / 2f).coerceAtLeast(0f)
             return targets.mapIndexed { index, target ->

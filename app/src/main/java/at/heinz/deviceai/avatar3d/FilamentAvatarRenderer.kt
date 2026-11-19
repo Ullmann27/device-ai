@@ -335,7 +335,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         val cameraAngle = Math.toRadians(focus.azimuthDegrees)
         val worldFrame = cockpitFrame
         if (cockpitStage != null && worldFrame != null) {
-            updateWorld(worldFrame, fitted, orbPhase, motion)
+            updateWorld(worldFrame, fitted, motion)
         } else {
             camera!!.lookAt(focus.centerX + kotlin.math.sin(cameraAngle) * distance, centerY - dy,
                 focus.centerZ + kotlin.math.cos(cameraAngle) * distance,
@@ -444,7 +444,8 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
 
     internal fun cockpitWorkEvent(event: CockpitWorkEvent) {
         when (event.stage) {
-            CockpitWorkEvent.Stage.ACCEPTED -> if (cockpitStage != null) cameraFlight.start(System.nanoTime())
+            CockpitWorkEvent.Stage.ACCEPTED -> if (cockpitStage != null)
+                cameraFlight.start(System.nanoTime(), cockpitFrame?.cameraFlightEnabled != false)
             CockpitWorkEvent.Stage.STOPPED, CockpitWorkEvent.Stage.ERROR -> cameraFlight.cancel()
             else -> Unit
         }
@@ -459,11 +460,11 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         appliedOpacity = alpha
     }
 
-    private fun updateWorld(frame: CockpitStageFrame, fitted: AvatarFraming.Window, orbPhase: Float, motion: Boolean) {
+    private fun updateWorld(frame: CockpitStageFrame, fitted: AvatarFraming.Window, motion: Boolean) {
         val unit = frame.worldScale
         val d = (frame.distance * unit).toDouble()
         val near = frame.near
-        val flight = if (motion) cameraFlight.progress(System.nanoTime()) else { cameraFlight.cancel(); null }
+        val flight = cameraFlight.progress(System.nanoTime(), motion && frame.cameraFlightEnabled)
         val pose = flight?.let {
             val monitor = frame.monitorTransform()
             CockpitCameraFlight.pose(it, monitor[12].toDouble(), monitor[13].toDouble(),
@@ -483,7 +484,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         engine!!.transformManager.setTransform(avatarRoot, transformed)
         applyAvatarOpacity(at.heinz.deviceai.ui.CinematicWorkstationLayout.AVATAR_OPACITY)
         // Presentation yaw belongs only to the monitor, never to the validated stage/native overlay frame.
-        cockpitStage?.update(frame, cockpitOrb, orbPhase, motion,
+        // The approved central composition keeps the original orb at its authored rest pose.
+        // Avatar pose, camera flight, monitor motion and room lighting retain their own clocks.
+        cockpitStage?.update(frame, cockpitOrb, .4f, motion,
             monitorTurnDegrees = (pose?.monitorYawDegrees ?: 0.0).toFloat())
         // SDR pixels stay below threshold.
     }

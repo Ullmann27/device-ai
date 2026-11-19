@@ -1,0 +1,55 @@
+{
+  "status": "WIP_PORTED_NATIVE_QA_BLOCKED_SHARED_RESOURCE_PRESSURE",
+  "product_source": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "app_tree": "fca7fd5e1f5f87c784f43340e19451aadcf11a1c",
+  "main_tree": "5f215bf5a60f3f570b7329c424e89d4a080e372f",
+  "parents": [
+    "05c7f432957cdfdf02c73ad9be5c63a7a6e9ffdb",
+    "3d5efd9ec4b1a8a5c9c12bb39835be8aef9a9b64"
+  ],
+  "feature_pr": 854,
+  "canonical_pr": 851,
+  "canonical_history_preserved_through": "3d5efd9ec4b1a8a5c9c12bb39835be8aef9a9b64",
+  "controls_fast_forward_to_canonical": "NOT_DONE_PENDING_NATIVE_ACCEPTANCE",
+  "current_source_contracts": {
+    "python_pass": 44,
+    "node_pass": 40,
+    "failed": 0,
+    "skipped": 0,
+    "yaml_files": 3,
+    "embedded_bash_blocks": 32
+  },
+  "web_development": {
+    "passed": 44,
+    "same_web_inputs": true,
+    "final_45_case_interop": "NOT_RUN"
+  },
+  "earlier_native_source": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+  "earlier_native_tests": {
+    "tests": 34,
+    "passed": 29,
+    "failures": 5,
+    "errors": 0,
+    "skipped": 0
+  },
+  "corrected_native_cases_confirmed": "NOT_RUN",
+  "current_native_groups": {
+    "html_ui": 37,
+    "unit": 77,
+    "classic_ui": 32,
+    "document_ui": 6,
+    "total": 152,
+    "status": "NOT_RUN_AFTER_MAIN_DAEMON_LOSS"
+  },
+  "new_unsigned_apk": "NOT_BUILT",
+  "original_assets": {
+    "count": 35,
+    "bytes": 15864219,
+    "status": "BYTE_IDENTICAL"
+  },
+  "physical_device": "NOT_RUN",
+  "ci_dispatch": "NOT_RUN",
+  "original_signing": "NOT_RUN",
+  "publication": "NOT_RUN",
+  "main_merge": "NOT_RUN"
+}

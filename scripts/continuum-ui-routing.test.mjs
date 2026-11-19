@@ -96,10 +96,10 @@ test("Fold rail has actual click targets for every visible category", () => {
   const end = activity.indexOf("private fun cockpitActionFor(", start);
   assert.ok(start >= 0 && end > start);
   const rail = activity.slice(start, end);
-  has(rail, /val entries = at\.heinz\.deviceai\.ui\.JarvisMenu\.railEntries/);
-  has(rail, /for \(entry in entries\)/);
-  has(rail, /contentDescription = entry\.label/);
-  has(rail, /setOnClickListener \{ menuNavigator\.navigate\(entry\.target\) \}/,
+  has(rail, /ContinuumConversationRailView\(this,/);
+  has(rail, /onNew = ::newCentralConversation, onSelect = ::selectStoredConversation/);
+  has(rail, /contentDescription = "Gespeicherte Gespräche und Projekte"/);
+  has(rail, /onNavigate = ::navigateDashboardTarget/,
     "Native rail targets cannot dispatch");
 });
 

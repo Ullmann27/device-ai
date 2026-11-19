@@ -41,6 +41,12 @@ import java.util.concurrent.TimeUnit
 @GraphicsMode(GraphicsMode.Mode.LEGACY)
 @LooperMode(LooperMode.Mode.PAUSED)
 class JarvisLiveAvatarWiringUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private fun field(target: Any, name: String): Any? = target.javaClass.getDeclaredField(name)
         .apply { isAccessible = true }.get(target)
 
@@ -197,8 +203,8 @@ class JarvisLiveAvatarWiringUiTest {
     fun shortMediumWindowOwnsOneSidebarAndNoPhoneBottomNavigation() = withShell(780, 360) { activity, home, _ ->
         assertEquals(780, home.width)
         assertEquals(360f, home.jarvisShell.viewportHeightDp, .01f)
-        assertEquals("The reference home has no duplicated fixed sidebar", 0, visibleRails(activity, home).size)
-        assertFalse((field(home, "shellRailScroll") as View).isShown)
+        assertEquals("The workstation has one rail, not duplicates", 1, visibleRails(activity, home).size)
+        assertTrue((field(home, "shellRailScroll") as View).isShown)
         assertFalse("Phone navigation must not consume medium-window height",
             (field(activity, "bottomWorkAreaBar") as? View)?.isShown == true)
     }
@@ -214,9 +220,9 @@ class JarvisLiveAvatarWiringUiTest {
 
         val resized = field(activity, "homeView") as ContinuumHomeView
         assertEquals(606, resized.width)
-        assertEquals("Crossing 600 dp must reflow without reinstating the removed home sidebar",
-            0, visibleRails(activity, resized).size)
-        assertFalse((field(resized, "shellRailScroll") as View).isShown)
+        assertEquals("The wider workstation restores exactly one rail",
+            1, visibleRails(activity, resized).size)
+        assertTrue((field(resized, "shellRailScroll") as View).isShown)
         assertFalse((field(activity, "bottomWorkAreaBar") as? View)?.isShown == true)
         assertSame("Reflow retains the real surface", live, field(activity, "hologramView"))
         assertSame(director, field(activity, "avatarDirector"))

@@ -1,0 +1,828 @@
+{
+  "source_sha": "3d5efd9ec4b1a8a5c9c12bb39835be8aef9a9b64",
+  "run_id": 43864138460,
+  "status": "FAILED",
+  "junit_tests": 5914,
+  "junit_failures": 134,
+  "junit_skips": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox"
+    }
+  ],
+  "artifact_zip_sha256": {
+    "android": "941fe59115ec348b823c5cf82bde6f3a1a2b01301d352f16c0e144717c051488",
+    "native": "1dfb5dd00d7f711052cbb24f8f680b1c7672775b9f7fa4486e55fa4d03ea6bc7",
+    "node": "0da0018e849e071c786ee061fa8ac83541254689f0df9003c0b8704ceaf9eaae"
+  },
+  "failures": [
+    {
+      "class": "at.heinz.deviceai.ui.AvatarEntranceUiTest",
+      "name": "actualActivityStartupDeliversEntranceAfterFirstLayout",
+      "message": "java.lang.AssertionError: The real first boot reaches the head: Avatar: Activity nicht im Vordergrund.",
+      "location": "at at.heinz.deviceai.ui.AvatarEntranceUiTest.actualActivityStartupDeliversEntranceAfterFirstLayout(AvatarEntranceUiTest.kt:223)"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.AvatarEntranceUiTest",
+      "name": "actualOwnerStopImmediatelyCancelsTheEntranceAndItsDelayedCue",
+      "message": "java.lang.AssertionError: The actual Activity receives the boot cue",
+      "location": "at at.heinz.deviceai.ui.AvatarEntranceUiTest.actualOwnerStopImmediatelyCancelsTheEntranceAndItsDelayedCue(AvatarEntranceUiTest.kt:197)"
+    },
+    {
+      "class": "at.heinz.deviceai.avatar3d.CockpitMonitorPresentationTest",
+      "name": "rendererKeepsTheFrameAndStageTurnsOnlyMonitorGeometry",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.avatar3d.CockpitMonitorPresentationTest.rendererKeepsTheFrameAndStageTurnsOnlyMonitorGeometry(CockpitMonitorPresentationTest.kt:92)"
+    },
+    {
+      "class": "at.heinz.deviceai.SystemIntelligenceUiTest",
+      "name": "shortSpokenDiagnosisUsesRealWorkSceneWithoutModelInference",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.SystemIntelligenceUiTest",
+      "name": "manualThermalSeriesRequiresOwnerStartAndStopsOnPauseOrCancel",
+      "message": "java.lang.AssertionError: Existing diagnosis action: JETZT ANALYSIEREN",
+      "location": "at at.heinz.deviceai.SystemIntelligenceUiTest.render$click(SystemIntelligenceUiTest.kt:153)"
+    },
+    {
+      "class": "at.heinz.deviceai.SystemIntelligenceUiTest",
+      "name": "existingCinemaPresentsMeasuredAndUnknownStates",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.SystemIntelligenceUiTest.render(SystemIntelligenceUiTest.kt:284)"
+    },
+    {
+      "class": "at.heinz.deviceai.SystemIntelligenceUiTest",
+      "name": "compactCinemaPresentsMeasuredAndUnknownStates",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.SystemIntelligenceUiTest.render(SystemIntelligenceUiTest.kt:284)"
+    },
+    {
+      "class": "at.heinz.deviceai.SystemIntelligenceUiTest",
+      "name": "ownerTargetSentenceDiagnosesAndPreviewsWithoutCleanup",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest",
+      "name": "offlineFieldSequenceIsAnsweredFromTheReadPdfAndNeverReplaysTheOldAnswer",
+      "message": "java.lang.AssertionError: the cockpit stays the stage expected:<START> but was:<CHAT>",
+      "location": "at at.heinz.deviceai.OwnerPdfDialogueFollowUpUiTest.offlineFieldSequenceIsAnsweredFromTheReadPdfAndNeverReplaysTheOldAnswer$lambda$0(OwnerPdfDialogueFollowUpUiTest.kt:291)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+      "name": "ordinaryRelatedTaskReachesModelWithBoundedCurrentState",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+      "name": "actualNewSessionClearsThePreviousOwnerObjectState",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+      "name": "fiveStepCorrectionUsesActualOfflineEntryAndOwnerPerspective",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerObjectStateConversationUiTest",
+      "name": "historicalChangeRequestsReachModelWithRetainedHistory",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "appTopicQuestionsReachConversationWithoutComputerWork",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "planningClarificationKeepsTheCompleteOriginalOnce",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "unavailableModelKeepsTheCompletePlanOnce",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "completedPlanningTurnIsRecordedOnceThroughActivityAndTranscript",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "missingLoadedIdentityKeepsTheCompletePlanOnce",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "unmatchedVerbFinalReturnsToConversationWithoutArmingNameReply",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "roleHeadersCannotReachReadyInferenceOrTheCorrectionShortcut",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "planningPromptContainsCurrentRequestOnceAndOnlyEarlierTurnsAsHistory",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "plainAppClarificationKeepsTheOriginalOnce",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "pluralStatementsReachConversationWithoutAppLookup",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "computerResultReachesFollowUpPromptAsObservedOutput",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppPlanningContextUiTest",
+      "name": "explicitNegatedAppCommandNeverReachesInferenceOrLookup",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.OwnerAppActionWorkSceneUiTest",
+      "name": "chatInputOpensRealWorkWindowHoldsGazeAndStopsProgressAtResult",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.LocalReasoningWorkSceneUiTest",
+      "name": "ownerLocalTurnGetsRealWindowAndOnlyItsTurnCanCloseIt",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.LocalReasoningWorkSceneUiTest.ownerLocalTurnGetsRealWindowAndOnlyItsTurnCanCloseIt(LocalReasoningWorkSceneUiTest.kt:232)"
+    },
+    {
+      "class": "at.heinz.deviceai.LocalReasoningWorkSceneUiTest",
+      "name": "simpleTurnWaitsOneSecondAndToolPromotionCancelsAStaleOpen",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.LocalReasoningWorkSceneUiTest.simpleTurnWaitsOneSecondAndToolPromotionCancelsAStaleOpen(LocalReasoningWorkSceneUiTest.kt:127)"
+    },
+    {
+      "class": "at.heinz.deviceai.LocalReasoningWorkSceneUiTest",
+      "name": "visibleReasoningWindowMorphsIntoToolWithoutPhysicalReopen",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.LocalReasoningWorkSceneUiTest.visibleReasoningWindowMorphsIntoToolWithoutPhysicalReopen(LocalReasoningWorkSceneUiTest.kt:292)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "tablet",
+      "message": "java.lang.IllegalArgumentException: shell drawn",
+      "location": "at at.heinz.deviceai.JarvisShellStageUiTest.run(JarvisShellStageUiTest.kt:84)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "phone",
+      "message": "java.lang.IllegalArgumentException: shell drawn",
+      "location": "at at.heinz.deviceai.JarvisShellStageUiTest.run(JarvisShellStageUiTest.kt:84)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "foldOpen",
+      "message": "java.lang.IllegalArgumentException: shell drawn",
+      "location": "at at.heinz.deviceai.JarvisShellStageUiTest.run(JarvisShellStageUiTest.kt:84)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisWorkWindowHostViewportUiTest",
+      "name": "partiallyVisibleDockStartsFromItsVisiblePartAndLaterScrollClosesTheWindow",
+      "message": "java.lang.AssertionError: expected:<60.0> but was:<132.0>",
+      "location": "at at.heinz.deviceai.JarvisWorkWindowHostViewportUiTest.partiallyVisibleDockStartsFromItsVisiblePartAndLaterScrollClosesTheWindow(JarvisWorkWindowHostViewportUiTest.kt:174)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisWorkWindowHostViewportUiTest",
+      "name": "scrolledDockOpensInsideTheClippedViewportWithoutResettingItsOrigin",
+      "message": "java.lang.AssertionError: Scroll retains a usable work area",
+      "location": "at at.heinz.deviceai.JarvisWorkWindowHostViewportUiTest.scrolledDockOpensInsideTheClippedViewportWithoutResettingItsOrigin(JarvisWorkWindowHostViewportUiTest.kt:159)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisLiveTabsUiTest",
+      "name": "foldHandlesOpenAndCloseWithoutReplacingFeatureCards",
+      "message": "java.lang.AssertionError: expected null, but was:<Box(left=16.0, top=8.0, right=176.0, bottom=1252.36)>",
+      "location": "at at.heinz.deviceai.JarvisLiveTabsUiTest.assertHandles(JarvisLiveTabsUiTest.kt:197)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "name": "shellUsesTheOneSurfaceReceivingActivitySignals",
+      "message": "java.lang.AssertionError: The signal-bearing surface must actually be visible",
+      "location": "at at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.shellUsesTheOneSurfaceReceivingActivitySignals$lambda$0(JarvisLiveAvatarWiringUiTest.kt:103)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "name": "semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn",
+      "message": "java.lang.AssertionError: logic must use the cockpit window expected same:<null> was not:<android.app.AlertDialog@523ebc06>",
+      "location": "at at.heinz.deviceai.JarvisLiveAvatarWiringUiTest.semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn$lambda$0(JarvisLiveAvatarWiringUiTest.kt:270)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "commandFold904",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "commandPhone392",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "referenceTallAspect",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "expandedCanonical",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "compact390",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "compact412",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "commandComputer904",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:device",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "expandedTablet",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "ownerFoldAspect",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "mediumNearSquare",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "mediumMultiwindow",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "compactDockOwnsNavigation",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "mediumFont150",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "mediumFont200",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "referenceRasterActivityCanvas",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "mediumShortLandscape",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "expandedFont150",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "expandedFont200",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "compactFont150",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisDeterministicCaptureUiTest",
+      "name": "compactFont200",
+      "message": "java.lang.AssertionError: Native Canvas capture must contain rendered content",
+      "location": "at at.heinz.deviceai.JarvisDeterministicCaptureUiTest.capture$render(JarvisDeterministicCaptureUiTest.kt:154)"
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisAvatarSlotUiTest",
+      "name": "registeredRendererIsDockedFedAndDetached",
+      "message": "java.lang.AssertionError: [attach, attach]",
+      "location": "at at.heinz.deviceai.JarvisAvatarSlotUiTest.registeredRendererIsDockedFedAndDetached(JarvisShellStageUiTest.kt:177)"
+    },
+    {
+      "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+      "name": "theEntireActualControlRectangleStaysOutsideTheCompositor",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.FullStageMemoryReviewUiTest.withActivity(FullStageMemoryReviewUiTest.kt:110)"
+    },
+    {
+      "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+      "name": "actualWindowCloseAndSystemTapRemainUsableAboveTheScene",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.FullStageMemoryReviewUiTest.withActivity(FullStageMemoryReviewUiTest.kt:110)"
+    },
+    {
+      "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+      "name": "falseSignalsAndAnEventFloodCannotInventOrExtendTheEpisode",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.FullStageMemoryReviewUiTest.withActivity(FullStageMemoryReviewUiTest.kt:110)"
+    },
+    {
+      "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+      "name": "actualActivityNoticeApiStaysVisibleAndDismissibleDuringMemoryFlight",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.FullStageMemoryReviewUiTest.withActivity(FullStageMemoryReviewUiTest.kt:110)"
+    },
+    {
+      "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+      "name": "realStopRejectsQueuedMemoryAndChatReparentingCannotReplay",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.FullStageMemoryReviewUiTest.withActivity(FullStageMemoryReviewUiTest.kt:110)"
+    },
+    {
+      "class": "at.heinz.deviceai.FullStageMemoryReviewUiTest",
+      "name": "actualActivityMemoryBusEnlargesAndReturnsTheOriginalOrb",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.FullStageMemoryReviewUiTest.withActivity(FullStageMemoryReviewUiTest.kt:110)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumWorkWindowScrollUiTest",
+      "name": "innerStatusScrollKeepsTheWorkAreaAndBackgroundStill",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumWorkWindowScrollUiTest.touch(ContinuumWorkWindowScrollUiTest.kt:82)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumWorkWindowScrollUiTest",
+      "name": "backgroundScrollClosesTheRealWorkAreaAndGlance",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumWorkWindowScrollUiTest.touch(ContinuumWorkWindowScrollUiTest.kt:82)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "name": "fold7CoverAndPhone",
+      "message": "java.lang.AssertionError: fold7-cover-phone-412x915-1-start must not be blank",
+      "location": "at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.capture(ContinuumVisualEvidenceUiTest.kt:82)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "name": "fold7InnerLargerFont",
+      "message": "java.lang.AssertionError: fold7-inner-884x760-font130-1-start must not be blank",
+      "location": "at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.capture(ContinuumVisualEvidenceUiTest.kt:82)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "name": "fold7InnerMotionClip",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.touch(ContinuumVisualEvidenceUiTest.kt:110)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "name": "referenceTablet",
+      "message": "java.lang.AssertionError: reference-1536x1024-1-start must not be blank",
+      "location": "at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.capture(ContinuumVisualEvidenceUiTest.kt:82)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumVisualEvidenceUiTest",
+      "name": "fold7Inner",
+      "message": "java.lang.AssertionError: fold7-inner-884x760-1-start must not be blank",
+      "location": "at at.heinz.deviceai.ContinuumVisualEvidenceUiTest.capture(ContinuumVisualEvidenceUiTest.kt:82)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "name": "authorizedRealRunnerEntryAndExitReachTheVisibleSurface",
+      "message": "java.lang.AssertionError: Caller fixture must be shown",
+      "location": "at at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest.withFixture(ContinuumTaskEffectsCallerUiTest.kt:128)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "systemNavigationOpensInsideCockpitWithRealStatusAndSameAvatar",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.tap(ContinuumSystemStatusWorkWindowUiTest.kt:104)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "toolRunUnfoldsBesideTheFaceShowsRealStateAndReturnsTheGaze",
+      "message": "java.lang.AssertionError: One visible jarvis-work-window belongs to the Activity expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.shown(ContinuumSystemStatusWorkWindowUiTest.kt:88)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "workWindowMovesTheOriginalHeadProjectionAndReturns",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.tap(ContinuumSystemStatusWorkWindowUiTest.kt:104)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "cameraReturnsAfterStopAndDoesNotReplayAfterLifecycleBoundaries",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.tap(ContinuumSystemStatusWorkWindowUiTest.kt:104)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "appToolShowsTheRealInstalledAppIdentityAndNeverAnInventedOne",
+      "message": "java.lang.AssertionError: The deck contains every current destination expected:<7> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.appToolShowsTheRealInstalledAppIdentityAndNeverAnInventedOne(ContinuumSystemStatusWorkWindowUiTest.kt:576)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "rotatingOrFoldingWithAnOpenWindowAlwaysGivesTheDeckBack",
+      "message": "java.lang.AssertionError: The inner deck has every current destination expected:<7> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.rotatingOrFoldingWithAnOpenWindowAlwaysGivesTheDeckBack(ContinuumSystemStatusWorkWindowUiTest.kt:698)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "speakingInsideAnOpenWindowKeepsTheCameraAndStopReturnsItAfterSpeechEnds",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.tap(ContinuumSystemStatusWorkWindowUiTest.kt:104)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "openWindowClearsTheDeckAndItReturnsAfterClosing",
+      "message": "java.lang.AssertionError: The current composition occupies the deck expected:<7> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.openWindowClearsTheDeckAndItReturnsAfterClosing(ContinuumSystemStatusWorkWindowUiTest.kt:463)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "everyCentreNavigationUnfoldsTheSameWorkWindowAndTheAvatarLooksAtIt",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.tap(ContinuumSystemStatusWorkWindowUiTest.kt:104)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest",
+      "name": "largeFontDeckClearsOnlyForAnAcceptedWindowAndAlwaysReturns",
+      "message": "java.lang.AssertionError: All cards and diagnostics remain at 200 percent expected:<7> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumSystemStatusWorkWindowUiTest.largeFontDeckClearsOnlyForAnAcceptedWindowAndAlwaysReturns(ContinuumSystemStatusWorkWindowUiTest.kt:639)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldLandscapeHasRealDestinationsAndReadableLargeType",
+      "message": "java.lang.AssertionError: Exactly one current native control for jarvis-dialog:voice-input expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.tagged(ContinuumReferenceCockpitUiTest.kt:269)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldPortraitCompactChooserRestoresExact2dGeometry",
+      "message": "java.lang.AssertionError: Exactly one current native control for jarvis-dialog:voice-input expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.tagged(ContinuumReferenceCockpitUiTest.kt:269)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldLandscapeCompactChooserRestoresExact2dGeometry",
+      "message": "java.lang.AssertionError: Exactly one current native control for jarvis-dialog:voice-input expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.tagged(ContinuumReferenceCockpitUiTest.kt:269)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "narrowPhoneHasRealDestinationsAndReadableLargeType",
+      "message": "java.lang.AssertionError: Exactly one current native control for jarvis-dialog:voice-input expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.tagged(ContinuumReferenceCockpitUiTest.kt:269)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "presentationControlsReuseTheLiveAvatarAndPersistCompactChoice",
+      "message": "java.lang.AssertionError: Exactly one current native control for jarvis-input:conversation expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.tagged(ContinuumReferenceCockpitUiTest.kt:269)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "wideLargeTypeSystemTabReachesAppearanceWithoutChangingPresentation",
+      "message": "java.lang.AssertionError: Exactly one current native control for jarvis-header:mode expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.tagged(ContinuumReferenceCockpitUiTest.kt:269)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "phoneHasRealDestinationsAndReadableLargeType",
+      "message": "java.lang.AssertionError: Exactly one current native control for jarvis-dialog:voice-input expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.tagged(ContinuumReferenceCockpitUiTest.kt:269)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldPortraitHasRealDestinationsAndReadableLargeType",
+      "message": "java.lang.AssertionError: Exactly one current native control for jarvis-dialog:voice-input expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.tagged(ContinuumReferenceCockpitUiTest.kt:269)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "shortenedWideWindowKeepsEveryCardScrollableAndConversationRailClickable",
+      "message": "java.lang.AssertionError: The hero uses the complete Home width expected null, but was:<Box(left=16.0, top=8.0, right=196.0, bottom=1193.928)>",
+      "location": "at at.heinz.deviceai.ContinuumReferenceCockpitUiTest.assertHomeHasNoFixedRail(ContinuumReferenceCockpitUiTest.kt:327)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "restoredChatOpensPdfBeforeTheCockpitsFirstLayout",
+      "message": "java.lang.AssertionError: The restored CHAT has never laid out its cockpit expected:<0> but was:<724>",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.restoredChatOpensPdfBeforeTheCockpitsFirstLayout$lambda$0(ContinuumDocumentSceneUiTest.kt:218)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "documentBlueprintPipelineEventsFollowRealIntakeAndDraft",
+      "message": "java.lang.AssertionError: expected:<[open]> but was:<[]>",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.documentBlueprintPipelineEventsFollowRealIntakeAndDraft$lambda$0(ContinuumDocumentSceneUiTest.kt:484)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "stopBeforeFirstCockpitLayoutDiscardsThePendingDocument",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.stopBeforeFirstCockpitLayoutDiscardsThePendingDocument$lambda$0(ContinuumDocumentSceneUiTest.kt:253)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "aCorrectionEndsTheWrongDraftAndShowsTheMeantOne",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.aCorrectionEndsTheWrongDraftAndShowsTheMeantOne$lambda$0(ContinuumDocumentSceneUiTest.kt:1037)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork",
+      "message": "java.lang.AssertionError: A typed PDF task must open its animated work window",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.typedPdfRequestReturnsFromChatIntoAnimatedDocumentWork$lambda$0(ContinuumDocumentSceneUiTest.kt:203)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "rememberingAndCorrectingAreVisibleAndAFailedDraftNeverReadsAsRunning",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.rememberingAndCorrectingAreVisibleAndAFailedDraftNeverReadsAsRunning$lambda$0(ContinuumDocumentSceneUiTest.kt:1104)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "theDocumentArrivesAsItsOwnPageOnTheTrailAndJarvisLooksAtIt",
+      "message": "java.lang.AssertionError: The original deck is shown",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.theDocumentArrivesAsItsOwnPageOnTheTrailAndJarvisLooksAtIt$lambda$0(ContinuumDocumentSceneUiTest.kt:150)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "documentWorkWaitsForFreshShellGeometry",
+      "message": "java.lang.AssertionError: A pending layout must not discard the document scene",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.documentWorkWaitsForFreshShellGeometry$lambda$0(ContinuumDocumentSceneUiTest.kt:240)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "aDraftRequestWithoutALoadedModelSaysSoAndStartsNoModelTurn",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.aDraftRequestWithoutALoadedModelSaysSoAndStartsNoModelTurn$lambda$0(ContinuumDocumentSceneUiTest.kt:979)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "theDraftIsItsOwnSurfaceIsEditedAndSavedThroughAndroid",
+      "message": "java.lang.AssertionError: the draft opens as a cockpit surface",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.theDraftIsItsOwnSurfaceIsEditedAndSavedThroughAndroid$lambda$0(ContinuumDocumentSceneUiTest.kt:290)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "theWorkRecordSurvivesARestartAndAnswersWhereWeWere",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.theWorkRecordSurvivesARestartAndAnswersWhereWeWere$lambda$1(ContinuumDocumentSceneUiTest.kt:1009)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentSceneUiTest",
+      "name": "withoutTextTheSceneSaysWhyAndShowsNoInventedExcerpt",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.ContinuumDocumentSceneUiTest.withoutTextTheSceneSaysWhyAndShowsNoInventedExcerpt$lambda$0(ContinuumDocumentSceneUiTest.kt:819)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "stopBeforeResultArrivalSuppressesItsPersonalOffer",
+      "message": "java.lang.AssertionError: timed out waiting for: the result starts arriving",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.until(ContinuumDocumentFlowUiTest.kt:166)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "personalOfferWaitsForResultArrivalAndSpeaksOnce",
+      "message": "java.lang.AssertionError: timed out waiting for: the result starts arriving",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.until(ContinuumDocumentFlowUiTest.kt:166)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "aReplyQueuedBeforeStopIsDiscardedAfterIt",
+      "message": "java.lang.AssertionError: expected:<START> but was:<CHAT>",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.aReplyQueuedBeforeStopIsDiscardedAfterIt$lambda$0(ContinuumDocumentFlowUiTest.kt:557)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "withoutAWindowTheStatusCardsLeaveTheAvatarFreeAndStayInTheProcessPanel",
+      "message": "java.lang.AssertionError: the turn's steps exist (they are docked, not lost)",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.assertAvatarFree(ContinuumDocumentFlowUiTest.kt:231)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "backgroundingDuringResultArrivalSuppressesItsPersonalOffer",
+      "message": "java.lang.AssertionError: timed out waiting for: the result starts arriving",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.until(ContinuumDocumentFlowUiTest.kt:166)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "jarvisReadsTheDocumentWhileTheModelWorksAndThenShowsTheDraft",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.status(ContinuumDocumentFlowUiTest.kt:1055)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "aFailedModelRunReadsAsFailedNeverAsRunning",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.status(ContinuumDocumentFlowUiTest.kt:1055)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "aLateAnswerAfterStopChangesNothingAndALaterFailureKeepsItsCause",
+      "message": "java.lang.AssertionError: expected:<START> but was:<CHAT>",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.aLateAnswerAfterStopChangesNothingAndALaterFailureKeepsItsCause$lambda$0(ContinuumDocumentFlowUiTest.kt:519)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDocumentFlowUiTest",
+      "name": "stopDuringTheDraftEndsReadingWindowAndRunAsAborted",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumDocumentFlowUiTest.stopDuringTheDraftEndsReadingWindowAndRunAsAborted$lambda$0(ContinuumDocumentFlowUiTest.kt:466)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDashboardVisibilityUiTest",
+      "name": "returningToCockpitRefreshesImmediatelyAndCoalesces",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.returningToCockpitRefreshesImmediatelyAndCoalesces$lambda$0(ContinuumDashboardVisibilityUiTest.kt:97)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDashboardVisibilityUiTest",
+      "name": "visibleSystemDialogStillRefreshesFromChat",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.visibleSystemDialogStillRefreshesFromChat$lambda$0(ContinuumDashboardVisibilityUiTest.kt:108)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumDashboardVisibilityUiTest",
+      "name": "hiddenCockpitDoesNotQueueTelemetryReads",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.ContinuumDashboardVisibilityUiTest.hiddenCockpitDoesNotQueueTelemetryReads$lambda$0(ContinuumDashboardVisibilityUiTest.kt:87)"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest",
+      "name": "composerTouchDuringHandsFreeKeepsTheNextSpokenTurnOnStart",
+      "message": "java.lang.AssertionError: expected:<8> but was:<0>",
+      "location": "at at.heinz.deviceai.ContinuumCockpitHandsFreeUiTest.composerTouchDuringHandsFreeKeepsTheNextSpokenTurnOnStart$lambda$0(ContinuumCockpitHandsFreeUiTest.kt:253)"
+    },
+    {
+      "class": "at.heinz.deviceai.CinemaStopReturnUiTest",
+      "name": "stopCancelsImmediatelyButReturnsVisibleWindow",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.CinemaStopReturnUiTest.stopCancelsImmediatelyButReturnsVisibleWindow(CinemaStopReturnUiTest.kt:164)"
+    },
+    {
+      "class": "at.heinz.deviceai.CinemaNativeSequenceUiTest",
+      "name": "innerSequence",
+      "message": "java.lang.AssertionError: One active work window expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.CinemaNativeSequenceUiTest.sequence(CinemaNativeSequenceUiTest.kt:136)"
+    },
+    {
+      "class": "at.heinz.deviceai.CinemaNativeSequenceUiTest",
+      "name": "coverSequence",
+      "message": "java.lang.AssertionError: One active work window expected:<1> but was:<0>",
+      "location": "at at.heinz.deviceai.CinemaNativeSequenceUiTest.sequence(CinemaNativeSequenceUiTest.kt:136)"
+    },
+    {
+      "class": "at.heinz.deviceai.CinemaFlightDeckLabelsUiTest",
+      "name": "exp06SwitchesTheReadingThreadLiveThroughTheHostAndDefaultsOn",
+      "message": "java.lang.IllegalArgumentException: Required value was null.",
+      "location": "at at.heinz.deviceai.CinemaFlightDeckLabelsUiTest.exp06SwitchesTheReadingThreadLiveThroughTheHostAndDefaultsOn$lambda$0(CinemaFlightDeckLabelsUiTest.kt:194)"
+    },
+    {
+      "class": "at.heinz.deviceai.CinemaFlightDeckLabelsUiTest",
+      "name": "flightContactNeverLightsTheKpiTilesWhileTheWindowFlies",
+      "message": "java.lang.IllegalArgumentException: Required value was null.",
+      "location": "at at.heinz.deviceai.CinemaFlightDeckLabelsUiTest.flightContactNeverLightsTheKpiTilesWhileTheWindowFlies$lambda$0(CinemaFlightDeckLabelsUiTest.kt:152)"
+    },
+    {
+      "class": "at.heinz.deviceai.CinemaFlightDeckLabelsUiTest",
+      "name": "exp06StoredOffByTheOwnerStaysOffAfterRestart",
+      "message": "java.lang.IllegalArgumentException: Required value was null.",
+      "location": "at at.heinz.deviceai.CinemaFlightDeckLabelsUiTest.exp06StoredOffByTheOwnerStaysOffAfterRestart$lambda$1(CinemaFlightDeckLabelsUiTest.kt:225)"
+    },
+    {
+      "class": "at.heinz.deviceai.CinemaButtonMaterialUiTest",
+      "name": "innerDockPress",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.CinemaButtonMaterialUiTest.sequence(CinemaButtonMaterialUiTest.kt:190)"
+    },
+    {
+      "class": "at.heinz.deviceai.CinemaButtonMaterialUiTest",
+      "name": "coverDockPress",
+      "message": "java.util.NoSuchElementException: Collection contains no element matching the predicate.",
+      "location": "at at.heinz.deviceai.CinemaButtonMaterialUiTest.sequence(CinemaButtonMaterialUiTest.kt:190)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "name": "measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:130)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "name": "installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:130)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "name": "previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:130)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "name": "appLookupCancellationStopsSpeechBeforeReturning",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:130)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "name": "chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:130)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "name": "aTtsEngineWithoutPcmRetainsWordRangeMotion",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:130)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "name": "lookupCancellationClosesWorkWindowAndLateStatusCannotReopenIt",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:130)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarSpeechReattachmentUiTest",
+      "name": "installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarSpeechReattachmentUiTest.withSpeechShell(AvatarSpeechReattachmentUiTest.kt:108)"
+    },
+    {
+      "class": "at.heinz.deviceai.AvatarSpeechReattachmentUiTest",
+      "name": "chatReparentRestoresOnlyLiveCuesAndPauseRejectsLateCallbacks",
+      "message": "java.lang.AssertionError",
+      "location": "at at.heinz.deviceai.AvatarSpeechReattachmentUiTest.withSpeechShell(AvatarSpeechReattachmentUiTest.kt:108)"
+    },
+    {
+      "class": "at.heinz.deviceai.AgentActivityReopenLifecycleUiTest",
+      "name": "reopenedAppKeepsTheToolboxStateBeyondTheFourTurnModelWindow",
+      "message": "java.lang.AssertionError: The root receives jarvis-bottom:chat",
+      "location": "at at.heinz.deviceai.JarvisHomeTestRoutes.touch(JarvisHomeTestRoutes.kt:186)"
+    }
+  ]
+}

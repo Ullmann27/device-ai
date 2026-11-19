@@ -97,6 +97,30 @@ class CockpitCameraFlightTest {
         assertNull(clock.progress(5_001))
     }
 
+    @Test fun enteringConversationPresenceCancelsFlightAndReturningDoesNotResumeIt() {
+        val workstation = CockpitStageFrame(704f, 620f, 164f, 370f, 540f, 600f)
+        val presence = workstation.copy(cameraFlightEnabled = false)
+        assertTrue(workstation.valid() && presence.valid())
+        assertTrue("Ordinary workstation retains the existing camera flight", workstation.cameraFlightEnabled)
+        val clock = CockpitCameraFlight.Clock()
+        val started = 1_000L
+        val quarter = started + CockpitCameraFlight.DURATION_NANOS / 4
+        clock.start(started, workstation.cameraFlightEnabled)
+        assertEquals(.25, clock.progress(quarter, workstation.cameraFlightEnabled)!!, 1e-9)
+
+        // These are the same start/progress calls used by the native renderer with the active frame.
+        assertNull("Entering the clipped strip returns the camera to rest", clock.progress(quarter + 1, presence.cameraFlightEnabled))
+        assertFalse(clock.active)
+        clock.start(quarter + 2, presence.cameraFlightEnabled)
+        assertNull("A new accepted task cannot move the clipped camera", clock.progress(quarter + 3, presence.cameraFlightEnabled))
+        assertFalse(clock.active)
+
+        assertNull("Returning to the full scene does not replay a hidden flight", clock.progress(quarter + 4, workstation.cameraFlightEnabled))
+        clock.start(quarter + 5, workstation.cameraFlightEnabled)
+        assertEquals("A later new task can fly normally", 0.0,
+            clock.progress(quarter + 5, workstation.cameraFlightEnabled)!!, 0.0)
+    }
+
     @Test fun quaternionSlerpStaysUnitAndHitsBothKeys() {
         val a = CockpitCameraFlight.startOrientation
         val b = CockpitCameraFlight.Quat.IDENTITY

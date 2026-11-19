@@ -1,0 +1,221 @@
+{
+  "mode": "ui-compile",
+  "label": "live-media-classic-compile-02",
+  "checkout": "/workspace/scratch/5d87eafb90be/device-ai-android",
+  "build_output": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+  "command": [
+    "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    "--console=plain",
+    "--project-cache-dir",
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build/project-cache",
+    "-Dorg.gradle.jvmargs=-Xmx768m -XX:MaxMetaspaceSize=256m -XX:ReservedCodeCacheSize=128m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -XX:+ExitOnOutOfMemoryError -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts",
+    "-Dcontinuum.native.buildRoot=/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerArm64=true",
+    "-PcontinuumStandaloneVersionCode=60",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-I",
+    "/workspace/scratch/5d87eafb90be/device-ai-android/tools/command03-native-qa/build-location.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    "-I",
+    "/workspace/scratch/8f95e7fd540d/native-live-qa-output/original-test-memory.init.gradle",
+    "-Dcontinuum.native.testSources=/workspace/scratch/8f95e7fd540d/native-live-qa-output/runs/live-media-classic-compile-02-test-sources.json",
+    "-Dcontinuum.native.compiledTestSources=/workspace/scratch/8f95e7fd540d/native-live-qa-output/runs/live-media-classic-compile-02-compiled-test-sources.json",
+    "-I",
+    "/workspace/scratch/5d87eafb90be/device-ai-android/tools/command03-native-qa/focused-test-sources.init.gradle",
+    ":app:compileDebugUnitTestKotlin"
+  ],
+  "source": {
+    "commit": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "tree": "092827dcd6ea9cdf92129e80d55c868577075c2c",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "offline": true,
+  "dependency_resolution": "CACHE_ONLY",
+  "original_signing_used": false,
+  "device_tests": "NOT_RUN",
+  "cached_model_pins_verified": {
+    "status": "VERIFIED",
+    "models": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ]
+  },
+  "toolchain": {
+    "repo": "/workspace/scratch/5d87eafb90be/device-ai-android",
+    "output_dir": "/workspace/scratch/8f95e7fd540d/native-live-qa-output",
+    "build_dir": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+    "java_home": "/workspace/scratch/5d87eafb90be/native-toolchain/jdk17",
+    "android_sdk": "/workspace/scratch/5d87eafb90be/native-toolchain/android-sdk",
+    "android_user_home": "/workspace/scratch/5d87eafb90be/native-toolchain/android-user",
+    "gradle_home": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-8.11.1",
+    "gradle_user_home": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache",
+    "build_tools_version": "35.0.0",
+    "config_path": "/workspace/scratch/5d87eafb90be/native-qa-config.json"
+  },
+  "java_memory_limits_mib": {
+    "heap": 768,
+    "metaspace": 256
+  },
+  "resource_sample_seconds": 2,
+  "workspace_safety_buffer_bytes": 134217728,
+  "selected_tests": [
+    "at.heinz.deviceai.ContinuumCommandNavigationUiTest",
+    "at.heinz.deviceai.ContinuumReferenceCockpitUiTest.composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+    "at.heinz.deviceai.ContinuumVisibleAvatarUiTest.repeatedKeyboardChangesResizeWithoutDuplicatingAvatar",
+    "at.heinz.deviceai.ui.JarvisRailLabelReadabilityUiTest",
+    "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest",
+    "at.heinz.deviceai.ContinuumCompactComposerUiTest",
+    "at.heinz.deviceai.JarvisReferenceHitTargetsUiTest"
+  ],
+  "focused_test_sources": {
+    "scope": "FOCUSED_HOST_TESTS_ONLY",
+    "source_commit": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "files": [
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt",
+        "bytes": 1285,
+        "sha256": "8fd846639c0ed9b207f9e5f6599ee448c9e58fadb2eb7f818d4362d83c8acf18",
+        "role": "existing_helper",
+        "filters": []
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAdaptiveAvatarNavigationUiTest.kt",
+        "bytes": 6664,
+        "sha256": "1bd42747a4dbbe5955735117a84ca26799397d6bd2597620ed91cc709c8afec1",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest"
+        ]
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommandNavigationUiTest.kt",
+        "bytes": 19585,
+        "sha256": "51b194620437d75f5d4d61167fcdc252a3804b7cc9143518084eaafd0de7c31a",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumCommandNavigationUiTest"
+        ]
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCompactComposerUiTest.kt",
+        "bytes": 7505,
+        "sha256": "eb90a58171e4951883422c34b536c768b017c4ecd8f641a7548ab2b320bd226c",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumCompactComposerUiTest"
+        ]
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+        "bytes": 71511,
+        "sha256": "6841db3f26442f16dcd578a4c0b2cc7e3d3a64d43668fd58861043b74b0bbfb4",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumReferenceCockpitUiTest.composerDraftSurvivesActualWindowReflowAndActivityRecreation"
+        ]
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumVisibleAvatarUiTest.kt",
+        "bytes": 3568,
+        "sha256": "6b45df216d58956dfd83760b82ce91a9ae9a42f700b460459305907561a4669e",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumVisibleAvatarUiTest.repeatedKeyboardChangesResizeWithoutDuplicatingAvatar"
+        ]
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt",
+        "bytes": 10175,
+        "sha256": "eca720ab0147ccef13bffce20cb331b6251702e0ed971c8e69ee68b542335397",
+        "role": "existing_helper",
+        "filters": []
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisReferenceHitTargetsUiTest.kt",
+        "bytes": 26858,
+        "sha256": "4fec041199d4de4975f047d1486fa912afffc3a6f6a1accbb4adfc04a450fa1e",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.JarvisReferenceHitTargetsUiTest"
+        ]
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisRailLabelReadabilityUiTest.kt",
+        "bytes": 7513,
+        "sha256": "1395c4a7c884b3703d09edae1b7a7cb123e9df5a93a43b78ee7d8bf5751fb2b1",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ui.JarvisRailLabelReadabilityUiTest"
+        ]
+      }
+    ]
+  },
+  "verification_scope": "FOCUSED_HOST_TEST_COMPILATION_ONLY",
+  "memory_harness_sha256": "9541dfeedd3520e03317d8ef37461062a00432d4d1e7d9c064eebde1795d90c5",
+  "free_bytes": {
+    "build_volume": 488407040,
+    "workspace": 488407040
+  },
+  "test_execution": "NOT_RUN_COMPILE_ONLY",
+  "elapsed_seconds": 18.471,
+  "gradle_exit": 0,
+  "interrupted": false,
+  "source_after": {
+    "commit": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "tree": "092827dcd6ea9cdf92129e80d55c868577075c2c",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "source_unchanged": true,
+  "log": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/runs/live-media-classic-compile-02.log",
+  "free_bytes_after": {
+    "build_volume": 487886848,
+    "workspace": 487886848
+  },
+  "resource_monitor": {
+    "path": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/runs/live-media-classic-compile-02-resources.jsonl",
+    "interval_seconds": 2,
+    "sampled_java_peak_rss_kib": 990500,
+    "lowest_sampled_mem_available_kib": 2051184,
+    "scope": "visible process namespace; sampling alone does not establish a kill cause"
+  },
+  "gradle_daemon_disappeared": false,
+  "kotlin_compiler_errors": [],
+  "compiled_test_source_receipt": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/runs/live-media-classic-compile-02-compiled-test-sources.json",
+  "focused_source_hashes_unchanged": true,
+  "cached_model_pins_after": {
+    "status": "VERIFIED",
+    "models": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ]
+  },
+  "status": "PASS_LOCAL_TEST_COMPILATION_ONLY"
+}

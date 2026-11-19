@@ -1,4 +1,4 @@
-name: "Continuum Code51/55/59 — Originalsignierung und GitHub-Release"
+name: "Continuum Code51/55/59/60 — Originalsignierung und GitHub-Release"
 
 # Existing registered path; manual owner sign-and-publish approval remains mandatory.
 # Nur manueller Start. Die Kanalwahl ersetzt NICHT die ausdrückliche SHA-Freigabe des Besitzers:
@@ -14,7 +14,7 @@ on:
         required: true
         type: string
       qa_run_id:
-        description: "Exakter grüner Voll-QA-Lauf für Code51, Code55 oder Code59"
+        description: "Exakter grüner Voll-QA-Lauf für Code51, Code55, Code59 oder das manuelle Code60-Profil"
         required: true
         type: string
       apk_run_id:
@@ -22,7 +22,7 @@ on:
         required: false
         type: string
       context_run_id:
-        description: "Code59: grüner Kontext-QA-Lauf desselben SHA; sonst leer lassen"
+        description: "Code59/60: grüner Kontext-QA-Lauf desselben SHA; sonst leer lassen"
         required: false
         type: string
       owner_approved_sha:
@@ -39,7 +39,7 @@ concurrency:
 
 jobs:
   preflight:
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112' || github.ref == 'refs/heads/fix/code59-context-complete-20261114')
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112' || github.ref == 'refs/heads/fix/code59-context-complete-20261114' || github.ref == 'refs/heads/integrate/continuum-command03-android-20261115')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -80,7 +80,7 @@ jobs:
 
   release-original-signed:
     needs: preflight
-    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112' || github.ref == 'refs/heads/fix/code59-context-complete-20261114')
+    if: github.repository == 'Ullmann27/device-ai' && (github.ref == 'refs/heads/copilot/code51-master-integrator-20261108' || github.ref == 'refs/heads/integrate/code55-apk-fable-20261112' || github.ref == 'refs/heads/fix/code59-context-complete-20261114' || github.ref == 'refs/heads/integrate/continuum-command03-android-20261115')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     environment: continuum-original-signing

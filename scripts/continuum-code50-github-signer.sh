@@ -36,6 +36,13 @@ elif [[ "${GITHUB_REF:-}" == refs/heads/fix/code59-context-complete-20261114 ]];
   name_version="0.3.58"
   artifact="Code59-UNSIGNED-NOT-INSTALLABLE"
   unsigned_name="Continuum-Code59-UNSIGNED-NOT-INSTALLABLE.apk"
+elif [[ "${GITHUB_REF:-}" == refs/heads/integrate/continuum-command03-android-20261115 ]]; then
+  branch="integrate/continuum-command03-android-20261115"
+  qa_workflow_path=".github/workflows/continuum-code57-voice-full-qa.yml"
+  code="60"
+  name_version="0.3.59"
+  artifact="Code60-UNSIGNED-NOT-INSTALLABLE"
+  unsigned_name="Continuum-Code60-UNSIGNED-NOT-INSTALLABLE.apk"
 fi
 apk_run="${APK_RUN_ID:-}"
 context_run="${CONTEXT_RUN_ID:-}"
@@ -55,7 +62,7 @@ if [[ "$code" == 55 ]]; then
 else
   [[ -z "$apk_run" ]] || fail UNEXPECTED_APK_RUN
 fi
-if [[ "$code" == 59 ]]; then
+if [[ "$code" == 59 || "$code" == 60 ]]; then
   [[ "$context_run" =~ ^[0-9]{6,20}$ && "$context_run" != "$qa_run" ]] || fail CONTEXT_RUN_FORMAT
 else
   [[ -z "$context_run" ]] || fail UNEXPECTED_CONTEXT_RUN
@@ -361,6 +368,40 @@ verify_code59_evidence() {
   echo CHECKPOINT=CODE59_SOURCE_BOUND_COMPLETE_PROOFS_VERIFIED
 }
 
+verify_code60_evidence() {
+  for cmd in git node python3; do command -v "$cmd" >/dev/null || fail TOOL_MISSING; done
+  [[ -n "${ANDROID_HOME:-}" ]] || fail ANDROID_HOME_MISSING
+  tools="$ANDROID_HOME/build-tools/35.0.0"
+  test -x "$tools/apksigner" && test -x "$tools/aapt2" && test -x "$tools/zipalign" || fail ANDROID_SIGN_TOOLS_MISSING
+  [[ "$(git rev-parse HEAD)" == "$source_sha" ]] || fail CHECKOUT_SHA_MISMATCH
+  [[ -z "$(git status --porcelain --untracked-files=normal)" ]] || fail CHECKOUT_NOT_CLEAN
+  source_tree="$(git rev-parse 'HEAD^{tree}')"
+  [[ "$source_tree" =~ ^[0-9a-f]{40}$ ]] || fail CHECKOUT_TREE_INVALID
+  verify_code55_run "$qa_run" "$qa_workflow_path" '["workflow_dispatch"]' \
+    '["unsigned-arm64","renderer-preflight","full-android","node-backend","native-runtime"]' full
+  verify_code55_run "$context_run" ".github/workflows/code58-fold7-combined-context-qa.yml" '["workflow_dispatch"]' \
+    '["android-context-regression"]' context
+  download_code55_proof "$qa_run" "Code60-Node-backend-QA" node full
+  download_code55_proof "$qa_run" "Code60-Android-full-QA" host full
+  download_code55_proof "$qa_run" "Code60-Renderer-regressions" renderer full
+  download_code55_proof "$qa_run" "Code60-native-runtime-QA" native full
+  download_code55_proof "$qa_run" "$artifact" unsigned full
+  download_code55_proof "$context_run" "fold7-long-context-junit" context context
+  python3 -B tools/code55-apk/code59_signing_evidence.py "$tmp" "$source_sha" "$source_tree" "$tools" 60 ||
+    fail CODE60_RECEIPT_OR_APK_INVALID
+  node tools/code55-apk/code59-node-proof.mjs "$tmp/node" "$source_sha" "$branch" || fail CODE60_NODE_PROOF_INVALID
+  IFS= read -r unsigned < "$tmp/code60-unsigned-path.txt"
+  for prefix in full context; do
+    local run_id="$qa_run"
+    [[ "$prefix" == full ]] || run_id="$context_run"
+    gh api "repos/$repo/actions/runs/$run_id" > "$tmp/$prefix-run-after.json" || fail QA_RUN_UNREADABLE
+    jq -e -s '.[0].id==.[1].id and .[0].head_sha==.[1].head_sha and .[0].run_attempt==.[1].run_attempt
+      and .[1].status=="completed" and .[1].conclusion=="success"' \
+      "$tmp/$prefix-run.json" "$tmp/$prefix-run-after.json" >/dev/null || fail QA_ATTEMPT_CHANGED
+  done
+  echo CHECKPOINT=CODE60_SOURCE_BOUND_COMPLETE_PROOFS_VERIFIED
+}
+
 
 # 1. Environment-Schutz: ohne Pflicht-Reviewer (Besitzer) und enge Branch-Regel wird NICHT signiert.
 env_json="$(gh api "repos/$repo/environments/$environment_name")" || fail ENVIRONMENT_UNREADABLE
@@ -378,6 +419,9 @@ if [[ "$code" == 55 ]]; then
   lifecycle="PASS_REQUIRED_IN_FULL_ANDROID"
 elif [[ "$code" == 59 ]]; then
   verify_code59_evidence
+  lifecycle="PASS_REQUIRED_IN_FULL_ANDROID"
+elif [[ "$code" == 60 ]]; then
+  verify_code60_evidence
   lifecycle="PASS_REQUIRED_IN_FULL_ANDROID"
 else
 run="$(gh api "repos/$repo/actions/runs/$qa_run")" || fail QA_RUN_UNREADABLE
@@ -410,6 +454,13 @@ else
     baseline_code=51
     baseline_version=0.3.50
     [[ "$latest_tag" == "$baseline_tag" ]] || fail CODE51_BASELINE_CHANGED
+  elif [[ "$code" == 60 ]]; then
+    baseline_tag="continuum-local-code59-79c16e57aeb7e0cf4a851e921d7441f7f6384fdf"
+    baseline_digest="7fa6387e68fc4be9ee46079aac1b95feb67ab2656fec3c359128c58e6a82210e"
+    baseline_size=104438996
+    baseline_code=59
+    baseline_version=0.3.58
+    [[ "$latest_tag" == "$baseline_tag" ]] || fail CODE59_BASELINE_CHANGED
   else
     baseline_tag="continuum-local-code55-889e06d47fffd2230fa5b062dd1f31b65992e728"
     baseline_digest="2ba5cbf91f151833e204d54a6ac6435d9cf4081051de1cb25d5fd89a203a07b9"
@@ -430,6 +481,8 @@ else
   grep -Fq "package: name='$pkg' versionCode='$baseline_code' versionName='$baseline_version'" <<< "$baseline_badging" || fail BASELINE_PACKAGE_MISMATCH
   if [[ "$code" == 55 ]]; then
     echo CHECKPOINT=PINNED_CODE51_BASELINE_VERIFIED
+  elif [[ "$code" == 60 ]]; then
+    echo CHECKPOINT=PINNED_CODE59_BASELINE_VERIFIED
   else
     echo CHECKPOINT=PINNED_CODE55_BASELINE_VERIFIED
   fi
@@ -481,7 +534,7 @@ test "$fp" = "$fingerprint" || fail ORIGINAL_CERTIFICATE_MISMATCH
 echo CHECKPOINT=ORIGINAL_P12_CERTIFICATE_VERIFIED
 
 # 6. Ausrichten, signieren, unabhängig prüfen.
-if [[ "$code" == 55 || "$code" == 59 ]]; then
+if [[ "$code" == 55 || "$code" == 59 ]] || [[ "$code" == 60 ]]; then
   "$tools/zipalign" -P 16 -f 4 "$unsigned" "$tmp/aligned.apk" >/dev/null || fail APK_ZIPALIGN_FAILED
 else
   "$tools/zipalign" -p -f 4 "$unsigned" "$tmp/aligned.apk" >/dev/null || fail APK_ZIPALIGN_FAILED
@@ -491,7 +544,7 @@ if ! "$tools/apksigner" sign --ks "$tmp/original.p12" --ks-type PKCS12 --ks-key-
 fi
 unset SIGN_PASS
 rm -f "$tmp/original.p12"
-if [[ "$code" == 55 || "$code" == 59 ]]; then
+if [[ "$code" == 55 || "$code" == 59 ]] || [[ "$code" == 60 ]]; then
   "$tools/zipalign" -c -P 16 -v 4 "$tmp/signed.apk" >/dev/null || fail SIGNED_16K_ALIGNMENT_FAILED
 fi
 verified="$("$tools/apksigner" verify --verbose --print-certs "$tmp/signed.apk")" || fail SIGNED_APK_VERIFY_FAILED
@@ -517,6 +570,13 @@ elif [[ "$code" == 59 ]]; then
     "$tmp/code59-junit.json" >> "$tmp/BUILD-INFO.txt"
   jq -r '"context_tests_executed=\(.context.executed)\nrenderer_tests_executed=\(.renderer.executed)\nroutine_periodic_trigger=\(.native.routines.periodic_due_trigger)\nroutine_periodic_wait_ms=\(.native.routines.periodic_real_wait_ms)"' \
     "$tmp/code59-evidence.json" >> "$tmp/BUILD-INFO.txt"
+elif [[ "$code" == 60 ]]; then
+  printf 'context_run_id=%s\nsource_tree=%s\nunsigned_apk_sha256=%s\nnative_pdf=PASS\nnative_filament=PASS_EMULATOR\nnative_hologram=SURFACE_FRAMES_VERIFIED\nnative_app=PASS_EMULATOR\nnative_routines=PASS_EMULATOR\n' \
+    "$context_run" "$source_tree" "$(jq -r .sha256 "$tmp/code60-apk-proof.json")" >> "$tmp/BUILD-INFO.txt"
+  jq -r '"tests_total=\(.tests)\ntests_failed=\(.failures)\ntests_errors=\(.errors)\ntests_skipped=\(.skipped)\ntests_executed=\(.executed)"' \
+    "$tmp/code60-junit.json" >> "$tmp/BUILD-INFO.txt"
+  jq -r '"context_tests_executed=\(.context.executed)\nrenderer_tests_executed=\(.renderer.executed)\nroutine_periodic_trigger=\(.native.routines.periodic_due_trigger)\nroutine_periodic_wait_ms=\(.native.routines.periodic_real_wait_ms)"' \
+    "$tmp/code60-evidence.json" >> "$tmp/BUILD-INFO.txt"
 fi
 echo CHECKPOINT=SIGNED_APK_CERTIFICATE_PACKAGE_AND_HASH_VERIFIED
 

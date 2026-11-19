@@ -1,0 +1,183 @@
+{
+  "mode": "ui-tests",
+  "label": "navigation-red-ui-02",
+  "checkout": "/tmp/continuum-command03-navigation-2f1f2f3ed7e2",
+  "build_output": "/tmp/continuum-command03-navigation-build-2f1f2f3ed7e2",
+  "command": [
+    "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    "--console=plain",
+    "--project-cache-dir",
+    "/tmp/continuum-command03-navigation-build-2f1f2f3ed7e2/project-cache",
+    "-Dorg.gradle.jvmargs=-Xmx1024m -XX:MaxMetaspaceSize=384m -XX:ReservedCodeCacheSize=128m -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -XX:+ExitOnOutOfMemoryError -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts",
+    "-Dcontinuum.native.buildRoot=/tmp/continuum-command03-navigation-build-2f1f2f3ed7e2",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumOwnerArm64=true",
+    "-PcontinuumStandaloneVersionCode=60",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-I",
+    "/tmp/continuum-command03-navigation-2f1f2f3ed7e2/tools/command03-native-qa/build-location.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    "-I",
+    "/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/original-test-memory.init.gradle",
+    "-Dcontinuum.native.testSelection=/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/runs/navigation-red-ui-02-tests.json",
+    "-I",
+    "/tmp/continuum-command03-navigation-2f1f2f3ed7e2/tools/command03-native-qa/test-selection.init.gradle",
+    "-Dcontinuum.native.testSources=/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/runs/navigation-red-ui-02-test-sources.json",
+    "-Dcontinuum.native.compiledTestSources=/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/runs/navigation-red-ui-02-compiled-test-sources.json",
+    "-I",
+    "/tmp/continuum-command03-navigation-2f1f2f3ed7e2/tools/command03-native-qa/focused-test-sources.init.gradle",
+    ":app:testDebugUnitTest"
+  ],
+  "source": {
+    "commit": "3cf133527a86bb1c227a3d732888574e4f0d0996",
+    "tree": "114f7a9fdc477bcf48a9495b3c499a40e4a46667",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "offline": true,
+  "dependency_resolution": "CACHE_ONLY",
+  "original_signing_used": false,
+  "device_tests": "NOT_RUN",
+  "cached_model_pins_verified": {
+    "status": "VERIFIED",
+    "models": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ]
+  },
+  "toolchain": {
+    "repo": "/tmp/continuum-command03-navigation-2f1f2f3ed7e2",
+    "output_dir": "/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2",
+    "build_dir": "/tmp/continuum-command03-navigation-build-2f1f2f3ed7e2",
+    "java_home": "/workspace/scratch/5d87eafb90be/native-toolchain/jdk17",
+    "android_sdk": "/workspace/scratch/5d87eafb90be/native-toolchain/android-sdk",
+    "android_user_home": "/workspace/scratch/5d87eafb90be/native-toolchain/android-user",
+    "gradle_home": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-8.11.1",
+    "gradle_user_home": "/workspace/scratch/5d87eafb90be/native-toolchain/gradle-cache",
+    "build_tools_version": "35.0.0",
+    "config_path": "/workspace/scratch/5d87eafb90be/native-qa-config.json"
+  },
+  "java_memory_limits_mib": {
+    "heap": 1024,
+    "metaspace": 384
+  },
+  "resource_sample_seconds": 2,
+  "workspace_safety_buffer_bytes": 134217728,
+  "selected_tests": [
+    "at.heinz.deviceai.ContinuumCommand03BridgeUiTest"
+  ],
+  "focused_test_sources": {
+    "scope": "FOCUSED_HOST_TESTS_ONLY",
+    "source_commit": "3cf133527a86bb1c227a3d732888574e4f0d0996",
+    "files": [
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt",
+        "bytes": 1285,
+        "sha256": "8fd846639c0ed9b207f9e5f6599ee448c9e58fadb2eb7f818d4362d83c8acf18",
+        "role": "existing_helper",
+        "filters": []
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/Command03HostWebView.kt",
+        "bytes": 1323,
+        "sha256": "3bb9631914c768d8d642c541d18aabed484a48b5716c3ed37278e108d3dae682",
+        "role": "existing_helper",
+        "filters": []
+      },
+      {
+        "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03BridgeUiTest.kt",
+        "bytes": 36243,
+        "sha256": "c322cbcd1bdbf7c3176e9627a95a0c38151ae0390647efa6b7f77f1b0de90ae8",
+        "role": "selected_test",
+        "filters": [
+          "at.heinz.deviceai.ContinuumCommand03BridgeUiTest"
+        ]
+      }
+    ]
+  },
+  "verification_scope": "FOCUSED_HOST_TESTS_ONLY",
+  "memory_harness_sha256": "9541dfeedd3520e03317d8ef37461062a00432d4d1e7d9c064eebde1795d90c5",
+  "free_bytes": {
+    "build_volume": 4567015424,
+    "workspace": 4567015424
+  },
+  "elapsed_seconds": 23.184,
+  "gradle_exit": 1,
+  "interrupted": false,
+  "source_after": {
+    "commit": "3cf133527a86bb1c227a3d732888574e4f0d0996",
+    "tree": "114f7a9fdc477bcf48a9495b3c499a40e4a46667",
+    "clean": true,
+    "status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_metadata": []
+  },
+  "source_unchanged": true,
+  "log": "/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/runs/navigation-red-ui-02.log",
+  "free_bytes_after": {
+    "build_volume": 4566892544,
+    "workspace": 4566892544
+  },
+  "resource_monitor": {
+    "path": "/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/runs/navigation-red-ui-02-resources.jsonl",
+    "interval_seconds": 2,
+    "sampled_java_peak_rss_kib": 1516888,
+    "lowest_sampled_mem_available_kib": 4178344,
+    "scope": "visible process namespace; sampling alone does not establish a kill cause"
+  },
+  "gradle_daemon_disappeared": false,
+  "kotlin_compiler_errors": [],
+  "junit": {
+    "fresh_files": 1,
+    "older_files_ignored": 0,
+    "tests": 17,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "classes": [
+      "at.heinz.deviceai.ContinuumCommand03BridgeUiTest"
+    ],
+    "failure_details": [
+      {
+        "test": "at.heinz.deviceai.ContinuumCommand03BridgeUiTest.computerNavigationKeepsTheActiveSessionInTheOriginalHtmlStage",
+        "kind": "failure",
+        "message": "java.lang.AssertionError: Opening Computer must preserve the active session",
+        "detail": "java.lang.AssertionError: Opening Computer must preserve the active session\n\tat org.junit.Assert.fail(Assert.java:89)\n\tat org.junit.Assert.assertTrue(Assert.java:42)\n\tat at.heinz.deviceai.ContinuumCommand03BridgeUiTest.computerNavigationKeepsTheActiveSessionInTheOriginalHtmlStage$lambda$0(ContinuumCommand03BridgeUiTest.kt:223)\n\tat at.heinz.deviceai.ContinuumCommand03BridgeUiTest.withActivity(ContinuumCommand03BridgeUiTest.kt:184)\n\tat at.heinz.deviceai.ContinuumCommand03BridgeUiTest.computerNavigationKeepsTheActiveSessionInTheOriginalHtmlStage(ContinuumCommand03BridgeUiTest.kt:217)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n\tSuppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.\n"
+      }
+    ],
+    "selected_filters_without_fresh_result": []
+  },
+  "compiled_test_source_receipt": "/tmp/continuum-command03-navigation-qa-2f1f2f3ed7e2/runs/navigation-red-ui-02-compiled-test-sources.json",
+  "focused_source_hashes_unchanged": true,
+  "cached_model_pins_after": {
+    "status": "VERIFIED",
+    "models": [
+      {
+        "id": "yunet",
+        "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+        "bytes": 232589
+      },
+      {
+        "id": "sface",
+        "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+        "bytes": 38696353
+      }
+    ]
+  },
+  "status": "FAILED_OR_SOURCE_CHANGED"
+}

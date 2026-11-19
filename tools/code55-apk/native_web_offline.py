@@ -25,7 +25,7 @@ SUFFIX = ('\n\nDirekte genehmigte HTTPS-Quelle.'
           '\n\nHinweis: Deterministische Rechercheausgabe (NO_USABLE_EVIDENCE); keine bestätigte Gemma-Antwort.')
 QUICK_BUDGET = [2, 1, 3, 64000, 128000, 32, 1, 5000, 15000, 0, 0, 2]
 MAX_CENTER_SCROLLS = 6
-MAX_CAPTURES = 18 + 2 * MAX_CENTER_SCROLLS
+MAX_CAPTURES = 20 + 2 * MAX_CENTER_SCROLLS
 
 
 def java_length(value):
@@ -261,7 +261,8 @@ def verify(directory, report, source_sha, source_tree):
             assert center_settings(center_scroll(nodes, size), nodes, size), 'Web settings action missing'
     assert all(step['suffix'] in ('initial', 'final') for step in scrolls)
     expected_actions = [
-        ('web-open-center-initial', 'Internet', 'web-home-initial'),
+        ('web-open-more-initial', 'Mehr', 'web-home-initial'),
+        ('web-open-center-initial', 'Web und Quellen', 'web-more-initial'),
         ('web-open-settings-initial', 'INTERNETFREIGABE', settings['initial']),
         ('web-select-off-initial', OFF, 'web-settings-initial'),
         ('web-open', 'Recherche nur nach Freigabe', 'web-chat-before'),
@@ -270,10 +271,11 @@ def verify(directory, report, source_sha, source_tree):
         ('web-search', 'JETZT SUCHEN', 'web-topic-input'),
         ('web-allow-once', 'Einmal erlauben', 'web-approval'),
         ('web-home-final', 'Zur Startseite mit allen KI-Bereichen', 'web-result'),
-        ('web-open-center-final', 'Internet', 'web-home-final'),
+        ('web-open-more-final', 'Mehr', 'web-home-final'),
+        ('web-open-center-final', 'Web und Quellen', 'web-more-final'),
         ('web-open-settings-final', 'INTERNETFREIGABE', settings['final']),
         ('web-select-off-final', OFF, 'web-settings-final'),
-        ('web-return-chat', 'Konversation öffnen', 'web-off-final')]
+        ('web-return-chat', 'Gespräch', 'web-off-final')]
     actions = observation['actions']
     assert [(a['name'], a['control'].casefold(), a['snapshot']) for a in actions] == [(n, v.casefold(), s) for n, v, s in expected_actions]
     for action in actions:
@@ -407,7 +409,9 @@ class Probe:
             self.save()
 
     def settings_off(self, suffix):
-        self.press('web-open-center-' + suffix, 'Internet')
+        self.press('web-open-more-' + suffix, 'Mehr')
+        self.take('web-more-' + suffix, await_text='Web und Quellen')
+        self.press('web-open-center-' + suffix, 'Web und Quellen')
         self.take('web-center-' + suffix, await_text='Web und Quellen')
         self.seek_settings(suffix)
         self.press('web-open-settings-' + suffix, 'INTERNETFREIGABE')
@@ -466,7 +470,7 @@ class Probe:
         self.press('web-home-final', 'Zur Startseite mit allen KI-Bereichen')
         self.take('web-home-final')
         self.settings_off('final')
-        self.press('web-return-chat', 'Konversation öffnen')
+        self.press('web-return-chat', 'Gespräch')
         self.take('web-chat-restored')
         self.api['report']['offline_web'] = verify(self.api['out'], self.api['report'], self.api['source'],
                                                    self.api['report']['source_tree'])

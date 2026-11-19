@@ -1,0 +1,16 @@
+2c2
+< """Verify the unsigned APK53 candidate without modifying it."""
+---
+> """Verify the unsigned APK54 candidate (derived from the hash-checked APK53 validator 2a0aeaef; only version constants changed) without modifying it."""
+76c76
+<             "Expected exact clean APK53 source")
+---
+>             "Expected exact clean APK54 source")
+86c86
+<     require(rows == [(EXPECTED_PACKAGE, "53", "0.3.52")], "APK package/version mismatch")
+---
+>     require(rows == [(EXPECTED_PACKAGE, "54", "0.3.53")], "APK package/version mismatch")
+93c93
+<     return {"package": rows[0][0], "versionCode": 53, "versionName": "0.3.52",
+---
+>     return {"package": rows[0][0], "versionCode": 54, "versionName": "0.3.53",

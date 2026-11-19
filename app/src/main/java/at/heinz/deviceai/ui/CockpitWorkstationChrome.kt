@@ -62,20 +62,32 @@ object CockpitWorkstationChrome {
 
     fun header(p: ContinuumPainter, b: Box, actions: Map<String, Box>,
                notifications: Int, fontScale: Float) {
-        JarvisReferenceHud.surface(p, b, 12f, Colors.cyan, Colors.violetRim)
-        val mark = minOf(32f * fontScale, b.height - 16f)
-        JarvisReferenceHud.brandMark(p, b.left + 12f, b.centerY - mark * .5f, mark)
-        val x = b.left + mark + 22f
+        JarvisReferenceHud.surface(p, b, 5f, Colors.cyan, Colors.cyanDeep)
+        val x = b.left + 14f
         val end = actions.values.minOfOrNull { it.left } ?: (b.right - 12f)
-        val base = TextStyle(FontFamily.DISPLAY, 600, 23f * fontScale, 1.3f)
-        val style = JarvisShellRenderer.shrinkToFit(p, "CONTINUUM", base,
+        // JarvisTextScalePainter already applies the user's accessibility text scale.
+        val base = TextStyle(FontFamily.DISPLAY, 500, 22f, 1.1f)
+        val style = JarvisShellRenderer.shrinkToFit(p, "DEVICE AI", base,
             (end - x - 8f).coerceAtLeast(1f), minScale = .55f)
-        if (end - x >= 85f) p.drawText("CONTINUUM", x, b.centerY + p.capHeight(style) * .5f,
-            style, Fill.Solid(Colors.text))
+        val caption = TextStyle(FontFamily.DISPLAY, 400, 10f, 1.8f)
+        val line = JarvisShellRenderer.shrinkToFit(p, "CONTINUUM", caption,
+            (end - x - 8f).coerceAtLeast(1f), minScale = .7f)
+        val titleCap = p.capHeight(style)
+        val captionCap = p.capHeight(line)
+        val top = b.centerY - (titleCap + captionCap + 5f) * .5f
+        if (end - x >= 64f) {
+            p.drawText("DEVICE AI", x, top + titleCap, style, Fill.Solid(Colors.text))
+            p.drawText("CONTINUUM", x, top + titleCap + 5f + captionCap,
+                line, Fill.Solid(Colors.textSecondary))
+        }
         actions.forEach { (target, box) ->
             val r = minOf(18f, box.width * .39f)
-            p.strokeCircle(box.centerX, box.centerY, r, .8f, Fill.Solid(Colors.rim))
+            p.fillRoundRect(box.centerX - r, box.centerY - r,
+                box.centerX + r, box.centerY + r, 5f, Fill.Solid(Colors.navSurface))
+            p.strokeRoundRect(box.centerX - r, box.centerY - r,
+                box.centerX + r, box.centerY + r, 5f, .8f, Fill.Solid(Colors.rim))
             ContinuumIcons.draw(p, when (target) {
+                "chats" -> Icon.CHAT
                 "notifications" -> Icon.BELL
                 "settings" -> Icon.GEAR
                 else -> Icon.DOTS_HORIZONTAL
@@ -90,23 +102,27 @@ object CockpitWorkstationChrome {
         p.fillRoundRect(b.left + 2f, b.top + 2f, b.right - 2f, b.bottom - 2f, 5f, panelFill)
         p.strokeRoundRect(b.left + 2f, b.top + 2f, b.right - 2f, b.bottom - 2f, 5f,
             .65f, Fill.Solid(Colors.rim), .75f)
+        p.strokeRoundRect(b.left + 4f, b.top + 4f, b.right - 4f, b.bottom - 4f, 3f,
+            .45f, Fill.Solid(Colors.textSecondary), .18f)
+        p.drawLine(b.left + 9f, b.top + 2f, b.left + minOf(37f, b.width * .25f),
+            b.top + 2f, 1.2f, Fill.Solid(Colors.cyanSoft), .65f)
+        p.drawLine(b.right - 2f, b.bottom - 25f, b.right - 2f,
+            b.bottom - 9f, 1.2f, Fill.Solid(Colors.violetSoft), .6f)
     }
 
     fun badgeSurface(p: ContinuumPainter, b: Box) {
-        p.fillRoundRect(b.left, b.top, b.right, b.bottom, 10f, panelFill, .94f)
+        p.fillRoundRect(b.left, b.top, b.right, b.bottom, 5f, panelFill, .94f)
         val edge = Fill.Linear(b.left, b.top, b.right, b.bottom,
             intArrayOf(Colors.cyan, Colors.cyanDeep, Colors.violetRim))
-        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, 10f, 1.1f, edge, .78f)
+        p.strokeRoundRect(b.left, b.top, b.right, b.bottom, 5f, 1.1f, edge, .78f)
         p.strokeRoundRect(b.left + 2f, b.top + 2f, b.right - 2f, b.bottom - 2f,
-            8f, .6f, Fill.Solid(Colors.text), .12f)
+            3f, .6f, Fill.Solid(Colors.text), .12f)
     }
 
     fun companionBadge(p: ContinuumPainter, b: Box, status: String, active: Boolean) {
         val stacked = b.width < 260f
-        val mark = minOf(29f, b.height - 16f)
-        val top = if (stacked) b.top + 9f else b.centerY - mark * .5f
-        JarvisReferenceHud.brandMark(p, b.left + 10f, top, mark)
-        val textX = b.left + mark + 18f
+        val top = if (stacked) b.top + 9f else b.centerY - 14f
+        val textX = b.left + 12f
         val style = JarvisDesign.Type.body.copy(size = 13f)
         val cap = p.capHeight(style)
         p.drawText(JarvisShellRenderer.fit(p, "Device AI", style, b.right - textX - 8f),
@@ -118,7 +134,7 @@ object CockpitWorkstationChrome {
         val y = if (stacked) b.bottom - 9f else b.centerY + p.capHeight(caption) * .5f
         p.fillCircle(statusX - 9f, y - p.capHeight(caption) * .5f, 2.8f,
             Fill.Solid(if (active) Colors.ok else Colors.textMuted))
-        p.drawText(JarvisShellRenderer.fit(p, "JARVIS · $status", caption, b.right - statusX - 8f),
+        p.drawText(JarvisShellRenderer.fit(p, status, caption, b.right - statusX - 8f),
             statusX, y, caption, Fill.Solid(Colors.textSecondary))
     }
 

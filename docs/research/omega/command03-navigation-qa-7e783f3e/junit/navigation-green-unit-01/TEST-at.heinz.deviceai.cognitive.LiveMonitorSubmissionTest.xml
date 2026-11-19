@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-16T06:05:24" hostname="731a0110a54f" time="0.002">
+  <properties/>
+  <testcase name="newCaptureCannotRenewOldRenderedImageAge" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.001"/>
+  <testcase name="importAloneDoesNotMeanRenderSubmission" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="withdrawingReplacedImageDoesNotSubmitOrInvalidateItsPendingSuccessor" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="clockRegressionCannotAuthorizeSubmission" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="withdrawingOldUnsubmittedOrForeignFrameKeepsTheCurrentRenderedReceipt" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="geometryAndWindowChangesRequireMatchingRenderedImage" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="differentTrackerCannotBorrowSubmissionToken" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="surfaceInvalidationRejectsDelayedSubmissionToken" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="advancingProducerDoesNotStarveFreshRenderedSequence" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.001"/>
+  <testcase name="submittedSnapshotUsesRenderedSequenceAndActualAge" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="sourceRebindRejectsOldTokenEvenWithIdenticalBinding" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="resumedCaptureRequiresNewImportAndSubmission" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="globalInvalidationRejectsDisplayedAndPendingTokensDespiteLateWithdrawals" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <testcase name="pauseBetweenSnapshotAndImportCannotReviveOldPixels" classname="at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

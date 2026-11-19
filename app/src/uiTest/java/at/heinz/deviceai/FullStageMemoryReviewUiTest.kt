@@ -38,6 +38,12 @@ import java.time.Duration
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class FullStageMemoryReviewUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private data class Fixture(val activity: AgentActivity, val root: View, val home: ContinuumHomeView,
                                val live: ContinuumHologramView, val bus: CockpitAnimationBus) {
         val sequence get() = (home.avatarRenderer as JarvisHoloAvatar).sequence!!
@@ -215,7 +221,7 @@ class FullStageMemoryReviewUiTest {
         val oldSequence = f.sequence
         call(f.activity, "focusChatComposer")
         assertFalse("Moving the live head to CHAT cancels the scene", f.live.memoryScene.isActive)
-        assertFalse(f.live.parent === f.home)
+        assertSame("CHAT keeps the shared head mounted in its own stage", f.home, f.live.parent)
         oldSequence.render(document())
         shadowOf(Looper.getMainLooper()).idle()
         call(f.activity, "showHomeDashboard")
@@ -273,12 +279,19 @@ class FullStageMemoryReviewUiTest {
         advance(80L)
         assertTrue("The real entrance is still moving", card.translationX > 0f)
         assertTrue("The real entrance is fading in", card.alpha > 0f && card.alpha < 1f)
+        val visible = Rect()
+        var presented = card.getGlobalVisibleRect(visible)
+        repeat(32) {
+            if (!presented) {
+                advance(16L)
+                presented = card.getGlobalVisibleRect(visible)
+            }
+        }
+        assertTrue("The animated notice must enter the visible viewport", presented)
         val animated = frame(f.root)
         card.visibility = View.INVISIBLE
         val withoutCard = frame(f.root)
         card.visibility = View.VISIBLE
-        val visible = Rect()
-        assertTrue(card.getGlobalVisibleRect(visible))
         val rootPosition = IntArray(2).also(f.root::getLocationOnScreen)
         visible.offset(-rootPosition[0], -rootPosition[1])
         assertTrue(visible.intersect(0, 0, animated.width, animated.height))

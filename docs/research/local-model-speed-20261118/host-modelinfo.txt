@@ -1,0 +1,48 @@
+DOWNLOAD litert-community/gemma-4-E2B-it-litert-lm/gemma-4-E2B-it.litertlm -> 200 2588147712
+SHA256 181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c gemma-4-E2B-it.litertlm
+FILE gemma-4-E2B-it.litertlm bytes=2588147712
+  modelType=LLM
+  inputModalities=SupportedModalities(text=true, vision=true, audio=true, video=false)
+  maxContextTokens=32003 dynamicContext=true
+  minRuntimeVersion=null
+  supportedBackends(TEXT)=[CPU, GPU] npuBrand=UNKNOWN soc=null
+  supportedBackends(VISION)=[CPU] npuBrand=UNKNOWN soc=null
+  supportedBackends(AUDIO)=[CPU] npuBrand=UNKNOWN soc=null
+  supportedBackends(VIDEO)=[] npuBrand=UNKNOWN soc=null
+  supportsFunctionCalling=false
+  supportsThinking=false
+  hasSpeculativeDecodingSupport=true
+  defaultSamplerParams=SamplerParameters(type=0, temperature=0.0, topK=0, topP=0.0)
+DELETED gemma-4-E2B-it.litertlm
+DOWNLOAD litert-community/gemma-4-E4B-it-litert-lm/gemma-4-E4B-it.litertlm -> 200 3659530240
+SHA256 0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0 gemma-4-E4B-it.litertlm
+FILE gemma-4-E4B-it.litertlm bytes=3659530240
+  modelType=LLM
+  inputModalities=SupportedModalities(text=true, vision=true, audio=true, video=false)
+  maxContextTokens=0 dynamicContext=false
+  minRuntimeVersion=null
+  supportedBackends(TEXT)=[CPU, GPU] npuBrand=UNKNOWN soc=null
+  supportedBackends(VISION)=[CPU] npuBrand=UNKNOWN soc=null
+  supportedBackends(AUDIO)=[CPU] npuBrand=UNKNOWN soc=null
+  supportedBackends(VIDEO)=[] npuBrand=UNKNOWN soc=null
+  supportsFunctionCalling=false
+  supportsThinking=false
+  hasSpeculativeDecodingSupport=true
+  defaultSamplerParams=SamplerParameters(type=0, temperature=0.0, topK=0, topP=0.0)
+DELETED gemma-4-E4B-it.litertlm
+DOWNLOAD litert-community/Qwen3-0.6B/Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm -> 200 343490560
+SHA256 bf1aba9ce8d963124407353c6aa4cbf72eba78db21ae133de983eac672ce83e0 Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm
+FILE Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm bytes=343490560
+  modelType=LLM
+  inputModalities=SupportedModalities(text=true, vision=false, audio=false, video=false)
+  maxContextTokens=4096 dynamicContext=false
+  minRuntimeVersion=null
+  supportedBackends(TEXT)=[CPU, GPU] npuBrand=UNKNOWN soc=null
+  supportedBackends(VISION)=[] npuBrand=UNKNOWN soc=null
+  supportedBackends(AUDIO)=[] npuBrand=UNKNOWN soc=null
+  supportedBackends(VIDEO)=[] npuBrand=UNKNOWN soc=null
+  supportsFunctionCalling=false
+  supportsThinking=false
+  hasSpeculativeDecodingSupport=false
+  defaultSamplerParams=SamplerParameters(type=2, temperature=0.6, topK=20, topP=0.95)
+DELETED Qwen3-0.6B_dynamic_wi4b32_afp32.litertlm

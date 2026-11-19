@@ -1,0 +1,100 @@
+{
+  "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "tests": 32,
+  "status": "PASS_LOCAL",
+  "physical_test_sources_identical_to_previous_failing_run": true,
+  "source_files": {
+    "app/src/uiTest/java/at/heinz/deviceai/CockpitHostFramePump.kt": "8fd846639c0ed9b207f9e5f6599ee448c9e58fadb2eb7f818d4362d83c8acf18",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumAdaptiveAvatarNavigationUiTest.kt": "1bd42747a4dbbe5955735117a84ca26799397d6bd2597620ed91cc709c8afec1",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumCommandNavigationUiTest.kt": "51b194620437d75f5d4d61167fcdc252a3804b7cc9143518084eaafd0de7c31a",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumCompactComposerUiTest.kt": "eb90a58171e4951883422c34b536c768b017c4ecd8f641a7548ab2b320bd226c",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt": "6841db3f26442f16dcd578a4c0b2cc7e3d3a64d43668fd58861043b74b0bbfb4",
+    "app/src/uiTest/java/at/heinz/deviceai/ContinuumVisibleAvatarUiTest.kt": "6b45df216d58956dfd83760b82ce91a9ae9a42f700b460459305907561a4669e",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisHomeTestRoutes.kt": "eca720ab0147ccef13bffce20cb331b6251702e0ed971c8e69ee68b542335397",
+    "app/src/uiTest/java/at/heinz/deviceai/JarvisReferenceHitTargetsUiTest.kt": "4fec041199d4de4975f047d1486fa912afffc3a6f6a1accbb4adfc04a450fa1e",
+    "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisRailLabelReadabilityUiTest.kt": "1395c4a7c884b3703d09edae1b7a7cb123e9df5a93a43b78ee7d8bf5751fb2b1"
+  },
+  "worker_starts": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "worker_finishes": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "worker_events": [
+    [
+      "started",
+      "1"
+    ],
+    [
+      "finished",
+      "1"
+    ],
+    [
+      "started",
+      "2"
+    ],
+    [
+      "finished",
+      "2"
+    ],
+    [
+      "started",
+      "3"
+    ],
+    [
+      "finished",
+      "3"
+    ],
+    [
+      "started",
+      "4"
+    ],
+    [
+      "finished",
+      "4"
+    ],
+    [
+      "started",
+      "5"
+    ],
+    [
+      "finished",
+      "5"
+    ],
+    [
+      "started",
+      "6"
+    ],
+    [
+      "finished",
+      "6"
+    ],
+    [
+      "started",
+      "7"
+    ],
+    [
+      "finished",
+      "7"
+    ]
+  ],
+  "each_worker_heap_mib": 1024,
+  "test_worker_policy": {
+    "fork_every": 1,
+    "max_parallel_forks": 1,
+    "memory_limits": "UNCHANGED_ORIGINAL_UI_HARNESS"
+  },
+  "memory_harness_sha256": "9541dfeedd3520e03317d8ef37461062a00432d4d1e7d9c064eebde1795d90c5"
+}

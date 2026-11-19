@@ -60,7 +60,7 @@ class JarvisWorkWindowHostViewportUiTest {
             isFillViewport = true
             isSmoothScrollingEnabled = false
             clipToPadding = true
-            setPadding(8, 12, 8, 16)
+            setPadding(8, 12, 8, 160)
             addView(home, ViewGroup.LayoutParams(-1, -2))
         }
         val clipped = FrameLayout(activity).apply {
@@ -156,7 +156,19 @@ class JarvisWorkWindowHostViewportUiTest {
             sameBounds(origin, requireNotNull(f.launch))
             val destination = requireNotNull(window.shownBounds())
             assertTrue("Window stays within ancestor clipping", f.viewport.contains(destination))
-            assertTrue("Scroll retains a usable work area", destination.height() >= f.viewport.height() * .75f)
+            // The dialogue card is protected content. With the dock above the scene it lies inside this
+            // viewport, so the window takes the free band next to it instead of covering it; "usable" is
+            // measured against that band (the whole viewport whenever the card is scrolled out of it).
+            val dialogue = f.bounds(requireNotNull(f.home.findViewWithTag<View>("jarvis-dialog:conversation")))
+            assertFalse("The protected dialogue card stays uncovered: $destination / $dialogue",
+                RectF.intersects(destination, dialogue))
+            val freeBand = if (!RectF.intersects(dialogue, f.viewport)) f.viewport.height()
+                else maxOf(dialogue.top - f.viewport.top, f.viewport.bottom - dialogue.bottom)
+            assertTrue("Scroll retains a usable work area: ${destination.height()} / $freeBand",
+                destination.height() >= freeBand * .75f)
+            val density = f.home.resources.displayMetrics.density
+            assertTrue("The window keeps the cockpit's minimum work size: $destination",
+                destination.width() >= 200f * density && destination.height() >= 160f * density)
             assertEquals("Native dock stays available", View.VISIBLE, f.card().visibility)
             f.host.close(immediate = true)
             assertEquals(initial, f.scroll.scrollY)
@@ -168,7 +180,9 @@ class JarvisWorkWindowHostViewportUiTest {
 
     @Test fun partiallyVisibleDockStartsFromItsVisiblePartAndLaterScrollClosesTheWindow() {
         Fixture().use { f ->
-            f.scroll.scrollTo(0, (f.card().top - f.viewport.height() + 60f).toInt())
+            val currentCard = f.bounds(f.card())
+            f.scroll.scrollTo(0, f.scroll.scrollY +
+                (currentCard.bottom - f.viewport.top - 60f).toInt())
             val initial = f.scroll.scrollY
             val origin = f.tapCard()
             assertEquals(60f, origin.height(), .01f)

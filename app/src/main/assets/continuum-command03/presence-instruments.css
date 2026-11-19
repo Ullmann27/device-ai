@@ -1,0 +1,133 @@
+/* Self-contained holographic instruments. Parent layout belongs to presence-layout.css. */
+.presence-instrument{min-width:0;position:relative;isolation:isolate;--pi-cyan:#96e4e8;--pi-muted:#7093ac;--pi-violet:#aca6df}
+.presence-instrument .pi-shell{box-sizing:border-box;position:relative;display:flex;flex-direction:column;gap:7px;min-width:0;height:315px;max-height:315px;min-height:282px;padding:13px 11px 12px;border:1px solid #64889c67;border-radius:12px;background:linear-gradient(128deg,#1a334a70,#081727e6 44%,#0b1527ef);box-shadow:inset 0 1px 0 #d2f4ff38,inset 0 0 0 3px #93cbe009,0 11px 27px #0007;backdrop-filter:blur(15px);font-family:Manrope,Arial,sans-serif;overflow:visible}
+.presence-instrument .pi-rear-skin{position:absolute;inset:4px -4px -5px 4px;z-index:-1;border:1px solid #7a9aac49;border-radius:12px;background:linear-gradient(115deg,#1634489e,#060e1ccc 55%,#30374a75);box-shadow:1px 2px 0 #030914,2px 4px 7px #0005;pointer-events:none}
+.presence-instrument .pi-rear-skin:after{content:"";position:absolute;top:15%;right:1px;bottom:18%;width:1px;background:linear-gradient(transparent,#83d4e466,transparent)}
+.presence-instrument .pi-front-skin{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;overflow:hidden;border-top:1px solid #bfdce24f;border-left:1px solid #65d7df21}
+.presence-instrument .pi-front-skin:before{content:"";position:absolute;width:33%;height:160%;top:-30%;left:-45%;background:linear-gradient(90deg,transparent,#afdef10c 54%,transparent);transform:skewX(-19deg);animation:pi-glass-pass 21.7s linear infinite}
+.presence-instrument .pi-front-skin:after{content:"";position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,#a2edf2a8,transparent);box-shadow:0 0 7px #88d1f24d}
+.presence-instrument .pi-context-shell{background:linear-gradient(131deg,#2c335267,#0c1728e8 43%,#0b1829eb);border-color:#7883ac5e}
+.presence-instrument .pi-context-shell .pi-front-skin:before{animation-duration:29.3s;animation-delay:-11.4s}
+.presence-instrument .pi-context-shell .pi-front-skin:after{background:linear-gradient(90deg,transparent,#b5b6e8a8,transparent)}
+.presence-instrument .pi-heading{display:flex;align-items:center;gap:6px;min-height:21px;flex-shrink:0;position:relative;z-index:1}
+.presence-instrument .pi-heading h3{font-family:'Space Grotesk',Manrope,sans-serif;font-size:15px;line-height:1.2;font-weight:500;letter-spacing:-.25px;margin:0;color:#cae5ee;white-space:nowrap}
+.presence-instrument .pi-instrument-icon{display:flex;align-items:center;justify-content:center;width:17px;height:20px;flex-shrink:0;color:#87d2de}
+.presence-instrument .pi-instrument-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.presence-instrument .pi-icon-violet{color:#b0acd9}
+.presence-instrument .pi-title-unit{margin-left:auto;font-family:'Space Grotesk',Manrope,sans-serif;font-size:12px;color:#5f8ba3;line-height:1}
+.presence-instrument .pi-time-reading{display:flex;justify-content:space-between;align-items:center;gap:7px;min-height:43px;flex-shrink:0;margin-top:1px}
+.presence-instrument .pi-time-reading>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.presence-instrument .pi-data-label{font-size:12px;line-height:1.3;color:#6e92a9;white-space:nowrap}
+.presence-instrument .pi-current-name{font-size:13px;line-height:1.3;color:#bbdce8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.presence-instrument .pi-end-value{font-family:'Space Grotesk',Manrope,sans-serif;font-size:31px;line-height:1;letter-spacing:-1.1px;font-weight:400;font-variant-numeric:tabular-nums;color:#d1f1ef;display:flex;align-items:baseline;gap:3px;white-space:nowrap;flex-shrink:0}
+.presence-instrument .pi-end-value small{font-family:Manrope,sans-serif;font-size:12px;font-weight:400;letter-spacing:0;color:#7499a8}
+.presence-instrument .pi-time-viewport{min-height:65px;flex:1;position:relative;margin:2px 0 0;overflow:hidden;border-top:1px solid #46677b27;border-bottom:1px solid #46677b27;background:linear-gradient(180deg,#05142021,#14304729 70%,#11223820)}
+.presence-instrument .pi-time-chart{position:absolute;inset:0;display:block;width:100%;height:100%;min-height:0;stroke-linecap:round;overflow:visible;fill:none;pointer-events:none}
+.presence-instrument .pi-grid-line{stroke:#496a7e32;stroke-width:.6;stroke-dasharray:1.2 4}
+.presence-instrument .pi-track{stroke:#4a7f9629;stroke-width:.6}
+.presence-instrument .pi-bar-depth{fill:#010a158f;stroke:#27485d71;stroke-width:.6}
+.presence-instrument .pi-bar{fill:url(#pi-time-bar);stroke:#7bbdd15f;stroke-width:.65;opacity:.7;transition:opacity .18s,fill .18s}
+.presence-instrument .pi-bar-highlight{stroke:#abd3df66;stroke-width:.6;opacity:.55}
+.presence-instrument .pi-time-row[data-selected=true] .pi-bar{fill:url(#pi-time-selected);stroke:#c5eee8bc;opacity:1;filter:drop-shadow(0 0 2px #78e0e745)}
+.presence-instrument .pi-time-row[data-selected=true] .pi-bar-highlight{stroke:#e9fff5;opacity:.85}
+.presence-instrument .pi-time-impulse{stroke:#ddfff3;stroke-width:.9;stroke-dasharray:5 230;stroke-dashoffset:240;opacity:0;animation:pi-time-transfer 5.3s linear infinite}
+.presence-instrument .pi-time-row[data-selected=true] .pi-time-impulse{opacity:.68}
+.presence-instrument .pi-selection-line{stroke:#b6f2e24f;stroke-width:.6;stroke-dasharray:2 3}
+.presence-instrument .pi-axis-labels{display:flex;justify-content:space-between;gap:8px;color:#61849b;font-size:12px;line-height:1.2;font-variant-numeric:tabular-nums;flex-shrink:0;margin-top:-3px}
+.presence-instrument .pi-phase-controls{display:grid;grid-template-columns:repeat(3,minmax(44px,1fr));gap:5px;margin-top:2px;flex-shrink:0}
+.presence-instrument .pi-phase-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:44px;min-height:44px;border:1px solid #4f798d47;border-radius:6px;background:linear-gradient(145deg,#142d415d,#0b1b2a80);box-shadow:inset 0 1px 0 #b6dce30b;color:#6d96ac;cursor:pointer;padding:4px 2px;font-family:Manrope,sans-serif;transition:border-color .18s,background .18s;touch-action:manipulation}
+.presence-instrument .pi-phase-number{font-size:12px;line-height:1.05;color:#597e96}
+.presence-instrument .pi-phase-end{font-family:'Space Grotesk',Manrope,sans-serif;font-size:14px;line-height:1.05;font-weight:500;font-variant-numeric:tabular-nums;color:#9abfce;white-space:nowrap}
+.presence-instrument .pi-phase-end small{font-family:Manrope,sans-serif;font-size:12px;font-weight:400;color:#648fa3}
+.presence-instrument .pi-phase-button:hover{border-color:#8bd1df99;background:#1a3d5299}
+.presence-instrument .pi-phase-button.is-selected{background:linear-gradient(145deg,#2c5a6d75,#163b518f);border-color:#8bded299;box-shadow:inset 0 1px 0 #c4f9ee39,0 0 11px #84dcdf0b}
+.presence-instrument .pi-phase-button.is-selected .pi-phase-number{color:#a4d4d7}
+.presence-instrument .pi-phase-button.is-selected .pi-phase-end{color:#e0f9ef}
+.presence-instrument .pi-phase-button.is-selected small{color:#94c8c8}
+.presence-instrument .pi-document-label{display:flex;align-items:center;justify-content:space-between;gap:5px;flex-shrink:0;min-height:20px}
+.presence-instrument .pi-document-label>span{font-family:'Space Grotesk',Manrope,sans-serif;font-size:15px;color:#adbedb;letter-spacing:-.3px}
+.presence-instrument .pi-document-label small{font-size:12px;color:#637d9b;line-height:1.3}
+.presence-instrument .pi-context-viewport{position:relative;flex:1;min-height:95px;border-top:1px solid #7d84a71e;border-bottom:1px solid #6c84a41e;background:radial-gradient(ellipse at 50% 35%,#36507115,transparent 75%)}
+.presence-instrument .pi-source-chart{position:absolute;inset:0;display:block;width:100%;height:100%;min-height:0;fill:none;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.presence-instrument .pi-network-depth{stroke:#55719421;stroke-width:.65}
+.presence-instrument .pi-contains{stroke:#7691b35a;stroke-width:1.1}
+.presence-instrument .pi-source-impulse{stroke:#c8d5ed;stroke-width:1;stroke-dasharray:6 125;animation:pi-source-transfer 6.7s linear infinite;opacity:0}
+.presence-instrument .pi-node-shadow{fill:#02091399;stroke:#3b526c4d;stroke-width:.6}
+.presence-instrument .pi-source-node{fill:#152b43;stroke:#7185af;stroke-width:1}
+.presence-instrument .pi-source-corona{fill:none;stroke:#909bc32b;stroke-width:.6}
+.presence-instrument .pi-node-number{fill:#93aaca;stroke:none;font-family:'Space Grotesk',Manrope,sans-serif;font-size:15px;font-weight:400}
+.presence-instrument .pi-proves{stroke:#7bcdd3;stroke-width:1.2;opacity:0}
+.presence-instrument .pi-source-branch[data-selected=true] .pi-contains{stroke:url(#pi-source-edge);stroke-width:1.4}
+.presence-instrument .pi-source-branch[data-selected=true] .pi-source-impulse{opacity:.7}
+.presence-instrument .pi-source-branch[data-selected=true] .pi-source-node{fill:#244158;stroke:#acc9dd;filter:drop-shadow(0 0 3px #9aabc241)}
+.presence-instrument .pi-source-branch[data-selected=true] .pi-source-corona{stroke:#a7d4df66;animation:pi-node-presence 8.9s ease-in-out infinite}
+.presence-instrument .pi-source-branch[data-selected=true] .pi-node-number{fill:#d4e8ed}
+.presence-instrument .pi-source-branch[data-selected=true] .pi-proves{opacity:.7;stroke-dasharray:3 3}
+.presence-instrument .pi-document-shadow{fill:#030b1777;stroke:#34475a;stroke-width:.65}
+.presence-instrument .pi-document-node{fill:#25334f;stroke:#a6abc580;stroke-width:1}
+.presence-instrument .pi-document-icon{stroke:#c2c5db;stroke-width:1.1}
+.presence-instrument .pi-target-node{fill:#1d394c;stroke:#78b9c5;stroke-width:1}
+.presence-instrument .pi-target-glint{stroke:#c2e8e8;stroke-width:.7}
+.presence-instrument .pi-source-controls{display:grid;grid-template-columns:repeat(3,minmax(44px,1fr));gap:5px;flex-shrink:0;margin-top:1px}
+.presence-instrument .pi-source-button{min-width:44px;min-height:44px;border:1px solid #7481a948;border-radius:6px;background:linear-gradient(145deg,#25304a52,#0e1a2b80);color:#8b9dbd;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;padding:5px 2px;font-family:Manrope,sans-serif;cursor:pointer;touch-action:manipulation;transition:background .18s,border-color .18s}
+.presence-instrument .pi-source-button>span{font-family:'Space Grotesk',Manrope,sans-serif;font-size:15px;line-height:1.1;font-variant-numeric:tabular-nums}
+.presence-instrument .pi-source-button small{font-size:12px;line-height:1.1;color:#697d9d}
+.presence-instrument .pi-source-button:hover{background:#2c365a6b;border-color:#aaaed298}
+.presence-instrument .pi-source-button.is-selected{background:linear-gradient(145deg,#3c426a6e,#1933458f);border-color:#a5b0d594;box-shadow:inset 0 1px 0 #d1d6f02b}
+.presence-instrument .pi-source-button.is-selected>span{color:#dee5f5}
+.presence-instrument .pi-source-button.is-selected small{color:#a2b0cd}
+.presence-instrument .pi-relationship-label{display:flex;align-items:flex-start;gap:6px;flex-shrink:0;min-height:34px;margin-top:1px;font-size:12px;line-height:1.35;padding:2px 0}
+.presence-instrument .pi-relation-word{color:#5e8298;font-size:12px;line-height:1.45;flex-shrink:0}
+.presence-instrument .pi-relationship-label strong{font-size:13px;line-height:1.35;font-weight:500;color:#b1c9da}
+.presence-instrument .pi-phase-button:focus-visible,.presence-instrument .pi-source-button:focus-visible{outline:2px solid #c7eff0;outline-offset:2px}
+@keyframes pi-glass-pass{0%{left:-45%;opacity:0}9%{opacity:.7}86%{opacity:.7}100%{left:130%;opacity:0}}
+@keyframes pi-time-transfer{0%{stroke-dashoffset:240}100%{stroke-dashoffset:-235}}
+@keyframes pi-source-transfer{0%{stroke-dashoffset:135}100%{stroke-dashoffset:-131}}
+@keyframes pi-node-presence{0%,100%{opacity:.4}43%{opacity:.9}76%{opacity:.65}}
+
+/* On the narrow stage the presence remains above two short readable instruments. */
+@container presence-orbit (max-width:649px){
+  .presence-instrument .pi-shell{height:220px;min-height:220px;max-height:220px;padding:10px 9px 9px;gap:5px;border-radius:10px}
+  .presence-instrument .pi-rear-skin{inset:3px -3px -4px 3px;border-radius:10px}
+  .presence-instrument .pi-heading{min-height:18px;gap:5px}
+  .presence-instrument .pi-heading h3{font-size:14px}
+  .presence-instrument .pi-heading .pi-instrument-icon{display:none}
+  .presence-instrument .pi-time-reading{min-height:31px;margin:0;gap:5px}
+  .presence-instrument .pi-time-reading>div{gap:2px}
+  .presence-instrument .pi-end-value{font-size:24px;letter-spacing:-.7px;gap:2px}
+  .presence-instrument .pi-data-label{font-size:12px}
+  .presence-instrument .pi-current-name{font-size:12px}
+  .presence-instrument .pi-time-viewport{min-height:36px;margin:0}
+  .presence-instrument .pi-axis-labels{display:none}
+  .presence-instrument .pi-phase-controls{gap:4px;margin:0}
+  .presence-instrument .pi-phase-button{min-height:44px;gap:2px;padding:4px 1px}
+  .presence-instrument .pi-phase-end{font-size:13px}
+  .presence-instrument .pi-phase-end small{font-size:12px}
+  .presence-instrument .pi-document-label{min-height:17px}
+  .presence-instrument .pi-document-label>span{font-size:14px}
+  .presence-instrument .pi-document-label small{font-size:12px}
+  .presence-instrument .pi-context-viewport{min-height:62px}
+  .presence-instrument .pi-source-controls{gap:4px;margin:0}
+  .presence-instrument .pi-source-button{min-height:44px;padding:3px 1px;gap:2px}
+  .presence-instrument .pi-relationship-label{min-height:30px;margin:0;padding:0;gap:5px;line-height:1.25}
+  .presence-instrument .pi-relationship-label strong{font-size:12px;line-height:1.25}
+  .presence-instrument .pi-relation-word{font-size:12px;line-height:1.25}
+}
+/* At a 320px phone the two panels remain independent, without shrinking taps. */
+@container presence-orbit (max-width:359px){
+  .presence-instrument .pi-shell{height:280px;min-height:280px;max-height:280px;padding:10px 8px 9px}
+  .presence-instrument .pi-heading .pi-title-unit{display:none}
+  .presence-instrument .pi-time-reading{flex-direction:column;align-items:flex-start;gap:3px;min-height:58px}
+  .presence-instrument .pi-current-name{max-width:100%;font-size:12px}
+  .presence-instrument .pi-time-reading>div{max-width:100%}
+  .presence-instrument .pi-time-viewport{min-height:20px}
+  .presence-instrument .pi-phase-controls{grid-template-columns:repeat(2,minmax(44px,1fr))}
+  .presence-instrument .pi-phase-button{height:44px}
+  .presence-instrument .pi-document-label{flex-direction:column;align-items:flex-start;gap:1px;min-height:34px}
+  .presence-instrument .pi-context-viewport{min-height:46px}
+  .presence-instrument .pi-source-controls{grid-template-columns:repeat(2,minmax(44px,1fr))}
+  .presence-instrument .pi-source-button:last-child:nth-child(odd){grid-column:1 / -1;flex-direction:row;gap:6px}
+  .presence-instrument .pi-relationship-label{flex-direction:column;gap:1px;min-height:31px}
+  .presence-instrument .pi-relationship-label strong{overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){.presence-instrument .pi-front-skin:before{animation-duration:43s}.presence-instrument .pi-time-impulse{animation-duration:11s}.presence-instrument .pi-source-impulse{animation-duration:13s}.presence-instrument .pi-source-corona{animation-duration:16s}}

@@ -1,0 +1,105 @@
+{
+  "status": "NOT_READY_AFTER_THREE_MINUTES",
+  "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "condition": "Two samples30s apart: MemAvailable>=3GiB, unchanged global oom_kill, build>=450MiB, output>=134MiB, no visible Gradle workers. No gate or parameter changes.",
+  "samples": [
+    {
+      "time_utc": "2026-11-16T06:58:11Z",
+      "elapsed_seconds": 0.0,
+      "memory_kib": {
+        "MemAvailable": 2153148,
+        "SwapFree": 0,
+        "Shmem": 6286796
+      },
+      "oom_kill": 61,
+      "build_free_bytes": 717279232,
+      "output_free_bytes": 717279232,
+      "visible_gradle_pids": [],
+      "single_sample_ready": false
+    },
+    {
+      "time_utc": "2026-11-16T06:58:41Z",
+      "elapsed_seconds": 30.002,
+      "memory_kib": {
+        "MemAvailable": 2127108,
+        "SwapFree": 0,
+        "Shmem": 6285160
+      },
+      "oom_kill": 61,
+      "build_free_bytes": 717262848,
+      "output_free_bytes": 717262848,
+      "visible_gradle_pids": [],
+      "single_sample_ready": false
+    },
+    {
+      "time_utc": "2026-11-16T06:59:11Z",
+      "elapsed_seconds": 60.004,
+      "memory_kib": {
+        "MemAvailable": 2042284,
+        "SwapFree": 0,
+        "Shmem": 6313044
+      },
+      "oom_kill": 61,
+      "build_free_bytes": 717262848,
+      "output_free_bytes": 717262848,
+      "visible_gradle_pids": [],
+      "single_sample_ready": false
+    },
+    {
+      "time_utc": "2026-11-16T06:59:41Z",
+      "elapsed_seconds": 90.007,
+      "memory_kib": {
+        "MemAvailable": 2024628,
+        "SwapFree": 0,
+        "Shmem": 6315096
+      },
+      "oom_kill": 61,
+      "build_free_bytes": 506601472,
+      "output_free_bytes": 506601472,
+      "visible_gradle_pids": [],
+      "single_sample_ready": false
+    },
+    {
+      "time_utc": "2026-11-16T07:00:11Z",
+      "elapsed_seconds": 120.008,
+      "memory_kib": {
+        "MemAvailable": 1522340,
+        "SwapFree": 0,
+        "Shmem": 6500392
+      },
+      "oom_kill": 63,
+      "build_free_bytes": 506605568,
+      "output_free_bytes": 506605568,
+      "visible_gradle_pids": [],
+      "single_sample_ready": false
+    },
+    {
+      "time_utc": "2026-11-16T07:00:41Z",
+      "elapsed_seconds": 150.013,
+      "memory_kib": {
+        "MemAvailable": 1579824,
+        "SwapFree": 0,
+        "Shmem": 6370784
+      },
+      "oom_kill": 63,
+      "build_free_bytes": 506605568,
+      "output_free_bytes": 506605568,
+      "visible_gradle_pids": [],
+      "single_sample_ready": false
+    },
+    {
+      "time_utc": "2026-11-16T07:01:11Z",
+      "elapsed_seconds": 180.034,
+      "memory_kib": {
+        "MemAvailable": 2193960,
+        "SwapFree": 0,
+        "Shmem": 6487632
+      },
+      "oom_kill": 64,
+      "build_free_bytes": 506605568,
+      "output_free_bytes": 506605568,
+      "visible_gradle_pids": [],
+      "single_sample_ready": false
+    }
+  ]
+}

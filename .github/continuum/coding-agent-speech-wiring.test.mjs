@@ -18,7 +18,12 @@ test('coding agent has one integrated entry from Android home, no second app',()
   // The existing home slot and More category reach development through the same trusted navigator.
   assert.match(activity,/Slot\.LABEL_DEVELOPING -> showDevelopmentCenter\(\)/);
   assert.match(activity,/ContinuumWorkArea\.MEHR -> showMoreWorkAreas\(\)/);
-  assert.match(activity,/showDashboardCategory\("Mehr", ContinuumWorkAreaNavigationSpec\.moreEntries\)/);
+  const more = activity.slice(activity.indexOf('private fun showMoreWorkAreas()'),
+    activity.indexOf('private fun showDashboardCategory('));
+  assert.match(more,/val entries = ContinuumWorkAreaNavigationSpec\.moreEntries/);
+  assert.match(more,/val titles = listOf\("KOMMANDO 03 · ORIGINALDESIGN ALS STARTSEITE"\) \+ entries\.map \{ it\.title \}/);
+  assert.match(more,/if \(selection == 0\) switchCommand03MainDesign\(true\)/);
+  assert.match(more,/else navigateDashboardTarget\(entries\[selection - 1\]\.target\)/);
   assert.match(navigation,/CategoryEntry\("Entwicklerwerkzeuge", "development"\)/);
   assert.match(activity,/navigateDashboardTarget\(entries\[index\]\.target\)/);
   assert.match(activity,/else -> menuNavigator\.navigate\(target\)/);

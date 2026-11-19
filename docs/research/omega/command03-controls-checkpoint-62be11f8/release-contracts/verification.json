@@ -1,0 +1,86 @@
+{
+  "status": "PASS_LOCAL_RELEASE_CONTRACT_TESTS_AND_SYNTAX",
+  "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "source_tree": "4b67a51e26dbccf4d6b5fbb3f3b05e9ad48c8b85",
+  "source_unchanged": true,
+  "source_clean_before_and_after": true,
+  "finished_at_utc": "2026-11-16T06:53:49.931265+00:00",
+  "python_tests": 44,
+  "node_tests": 40,
+  "failures": 0,
+  "skipped": 0,
+  "workflow_yaml_count": 3,
+  "embedded_bash_count": 32,
+  "executions": [
+    {
+      "name": "python",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/code55-apk",
+        "-p",
+        "test_code59_signing*.py",
+        "-v"
+      ],
+      "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+      "started_at_utc": "2026-11-16T06:51:28.329117+00:00",
+      "finished_at_utc": "2026-11-16T06:51:41.969541+00:00",
+      "elapsed_seconds": 13.640439608003362,
+      "exit_code": 0,
+      "log": "python.txt"
+    },
+    {
+      "name": "node",
+      "argv": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        ".github/continuum/code50-github-release-contract.test.mjs",
+        ".github/continuum/code50-github-signer-preflight.test.mjs",
+        ".github/continuum/code59-signing-node-proof.test.mjs",
+        ".github/continuum/code60-release-contract.test.mjs"
+      ],
+      "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+      "started_at_utc": "2026-11-16T06:51:28.328926+00:00",
+      "finished_at_utc": "2026-11-16T06:52:13.073787+00:00",
+      "elapsed_seconds": 44.7448738499952,
+      "exit_code": 0,
+      "log": "node.tap"
+    }
+  ],
+  "input_sha256": {
+    "docs/release/CODE60-COMMAND03-RELEASE.md": "14577e5ba0051decad29d70b543c0621bb8758dc40292ffa9b5f3ab8a60797fb",
+    "scripts/continuum-code50-github-signer.sh": "68332d7d79abf5085bfbeec8e47213952994a6ae179821ad8e8282520c1453a7",
+    ".github/workflows/continuum-code57-voice-full-qa.yml": "ed5233bbd689932838788baf64aafaa4059bc212d5cd826c31e3165ce1384695",
+    ".github/workflows/code58-fold7-combined-context-qa.yml": "a573b52fce6361be46708bfd63dc7beb871fd636328209fc76a698a2b7225a7d",
+    ".github/workflows/continuum-code50-sign-release.yml": "4aed85728d27bab77c66cae10627061364437715d0ad8f07448cccbf7a049acc",
+    ".github/continuum/code50-github-release-contract.test.mjs": "bd414d5988e15af87c8bf47ba32d8dd48971350c75b2b16ec039df6de34df170",
+    ".github/continuum/code50-github-signer-preflight.test.mjs": "6efe54017923f290145aa8b5937573afeab91b3fc1750bf90795ca9a5ddb78f0",
+    ".github/continuum/code59-signing-node-proof.test.mjs": "11e8ffe4d09d996585d679bd16724f91e0f40080055dbaaed8564af954d3fc93",
+    ".github/continuum/code60-release-contract.test.mjs": "27c072fafcfef75f6168fc641b8c3b3f7af51c462c40a46aaf218eaec9d27672",
+    "tools/code55-apk/code59-node-proof.mjs": "a242f2d03e8f801a034d619c571b1c10c6c860d3fb0b9d6e85069d854c8e8104",
+    "tools/code55-apk/test_code59_signing_code60.py": "00426467366f77abc63e30b9e26c473931dd9214ae6185186be8922cd7779c37",
+    "tools/code55-apk/test_code59_signing_evidence.py": "6a0b30fae49ec0f5b8f8ac91abf126508a62a325efefe3402a4809c93652a4ec",
+    "tools/code55-apk/test_code59_signing_preflight.py": "61616656e077fab452b6b07bad376e20930e935a257aa46f3cd82943745ed491"
+  },
+  "evidence_sha256": {
+    "node-syntax.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signer-syntax.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node.tap": "8840155b63a001b4cfe9671fc4d77f1052ccf97d28f3966fff27b7330b1b6afa",
+    "visual-source.txt": "1bb22a39f40fca6c2e144826763d8e54cd3d43ce1020209096dc31a3852cb04e",
+    "python.txt": "9a612af2f754d1584dafd75f91926c6fc28a6edeba2d9579fc59809a12838d0f",
+    "node-execution.json": "bb146217f948d882b0f4a765184a6ca2683dd0bbdef5ec35d0d3af1812abf4e5",
+    "bridge-syntax.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "before.json": "d83d696766f2d5e82f18634280bf5a525a1387a5bccc7dd2325607d4b4f4aed3",
+    "syntax-verification.json": "88026587b9957db1e516db315b867ba702f8afeb04c2a070c0a8fcea4c9b8686",
+    "python-execution.json": "ac81ef732bd0f8195528f1db7ef1b41f724cbc4814a489ea8d9265fcd2e17a13"
+  },
+  "limitations": [
+    "Local synthetic contract checks only.",
+    "No workflow dispatch, release signing, installation or publication."
+  ]
+}

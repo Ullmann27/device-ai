@@ -1,0 +1,11 @@
+{
+  "source_commit": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "test": "actualSerializedComputerPayloadUsesTheStrictBrowserWireTypes",
+  "test_status": "PASS",
+  "source_junit_xml": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/evidence/live-media-ui-07/junit/TEST-at.heinz.deviceai.ContinuumCommand03MediaStageUiTest.xml",
+  "source_junit_xml_sha256": "2db89128b18ed86234b97a4873e1afa3444906a701b53fa43d04ae492cf2c23f",
+  "wire": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/evidence/live-media-ui-07/native-computer-wire.json",
+  "wire_sha256": "86aca35b3e7955ed9b8adb5f1b6fe7c656b06a5258b3c5854236d68fdda36f60",
+  "wire_bytes": 1427,
+  "scope": "Actual Stage serialization in a host test using a synthetic2x2 JPEG; not a physical device capture/GPU claim"
+}

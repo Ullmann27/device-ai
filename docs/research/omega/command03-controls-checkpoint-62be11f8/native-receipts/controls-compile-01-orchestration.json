@@ -1,0 +1,249 @@
+{
+  "started_epoch": 1794810823.5065885,
+  "authorized_sha": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+  "restore_sha": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+  "restore_branch": "integrate/continuum-command03-android-20261115",
+  "mode": "compile",
+  "label": "controls-compile-01",
+  "orchestration_sha256": "d5c0da14db05908869a02890335ba77b6b6ebefe99ded38bbf566b65577d9e8e",
+  "java_memory_limits_mib": {
+    "heap": 768,
+    "metaspace": 256
+  },
+  "baseline_source": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+  "tested_baseline_source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "historical_ram_state": "RESET_MISSING_RECORDED_NOT_RECONSTRUCTED",
+  "previous_validation": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/validation-summary-b56a614b.json",
+  "previous_validation_sha256": "c3547d1b1c5d62e52aaeb603f32b3de0e27c0c5ea4026145a2d30dba7d613cfb",
+  "baseline_apk": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/artifacts/live-media-unsigned-02/release/app-release-unsigned.apk",
+  "baseline_apk_sha256": "00def8e94f0f2d26257d25eeb5176f4e7d007bf33013c48a92ee6f8874d57e4c",
+  "baseline_apk_bytes": 111421502,
+  "source_path": "/workspace/scratch/5d87eafb90be/device-ai-android",
+  "build_path": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+  "output_path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output",
+  "baseline_app_tree": "2ca2e8189ca574f2637424cc3c2db59e8ea34d91",
+  "tested_baseline_app_tree": "2ca2e8189ca574f2637424cc3c2db59e8ea34d91",
+  "locks": [
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/native-source.lock",
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/native-build.lock"
+  ],
+  "original_before": {
+    "head": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "branch_ref": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "status": "",
+    "head_name": "integrate/continuum-command03-android-20261115"
+  },
+  "historical_reset_before": {
+    "/workspace/scratch/8f95e7fd540d/native-qa-output/original-build-backup-533eb104": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/original-build-backup-533eb104",
+      "target_exists": false
+    },
+    "/workspace/scratch/8f95e7fd540d/native-qa-output/artifacts/html-original-path-unsigned-01": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/html-original-path-unsigned-01",
+      "target_exists": false
+    },
+    "/workspace/scratch/8f95e7fd540d/deliverables": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/deliverables",
+      "target_exists": false
+    },
+    "/workspace/scratch/5d87eafb90be/native-deliverables/Continuum-Code60-Pruefdatei-unsigniert.apk": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/dev/shm/continuum-live-preserved-8f95e7fd540d/historical-native-deliverables/Continuum-Code60-Pruefdatei-unsigniert.apk",
+      "target_exists": false
+    },
+    "/workspace/scratch/5d87eafb90be/native-deliverables/Continuum-Code60-Technisches-Pruefpaket.zip": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/dev/shm/continuum-live-preserved-8f95e7fd540d/historical-native-deliverables/Continuum-Code60-Technisches-Pruefpaket.zip",
+      "target_exists": false
+    },
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build/app-build/outputs/apk/release/app-release-unsigned.apk": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/original-build-backup-533eb104/app-build/outputs/apk/release/app-release-unsigned.apk",
+      "target_exists": false
+    }
+  },
+  "historical_release_before": {
+    "app-release-unsigned.apk": {
+      "kind": "symlink",
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/original-build-backup-533eb104/app-build/outputs/apk/release/app-release-unsigned.apk",
+      "target_exists": false
+    },
+    "output-metadata.json": {
+      "kind": "file",
+      "bytes": 431,
+      "sha256": "4d434139962b06bb33340969e18c0a45f37ae6b14fc9b0c3b3bf9b609b0c48e3",
+      "mode": 33188,
+      "mtime_ns": 1794758172286149913
+    }
+  },
+  "free_bytes_before": 572985344,
+  "workspace_free_bytes_before": 572985344,
+  "candidate_tree": "62eccf11011f44cd613e0223f712fa0373be1f88",
+  "prior_verified_source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "source_diff_from_previous_validation": "M\tapp/src/main/assets/continuum-command03/native-bridge.js\nM\tapp/src/main/assets/continuum-command03/native-layer.css\nM\tapp/src/main/java/at/heinz/deviceai/AgentActivity.kt\nM\tapp/src/main/java/at/heinz/deviceai/ui/Command03BridgeContract.kt\nM\tapp/src/main/java/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.kt\nA\tapp/src/test/java/at/heinz/deviceai/ui/Command03DraftLedgerTest.kt\nM\tapp/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03BridgeUiTest.kt\nM\tapp/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03MediaStageUiTest.kt\nM\tapp/src/uiTest/java/at/heinz/deviceai/ContinuumCommand03StageUiTest.kt\nM\tapp/src/uiTest/java/at/heinz/deviceai/ContinuumDocumentSceneUiTest.kt",
+  "build_dependency_diff": "",
+  "existing_main_classes_before": {
+    "debug/at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "488e9a27a5b67378c18761199f1f0b9b5bafc5b586a24afafa68c222f1f41695",
+      "mtime": 1794810304.457005
+    },
+    "debug/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "c8ddac223193c7b46ba8b72867350b07c5429f2dcf087683703d3d83bdaa9897",
+      "mtime": 1794810304.4710224
+    },
+    "debug/at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "c6d1e83bf88ab1e411268eb3d80cea5aa24f824f76d83e433b6bf9d8620f05cf",
+      "mtime": 1794810304.470232
+    },
+    "release/at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "593ffc19542f7538f9d7a4d1e4533830e530794487782b62f316193cf98bbe6b",
+      "mtime": 1794806546.734361
+    },
+    "release/at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "e8acc693a9b2a2a71034f247ba67ad26089e06a9ac0d81a0e9b96d1680424295",
+      "mtime": 1794806546.7513127
+    },
+    "release/at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "f13c0628446dd28f156278e393cd8259f5da286126b6f7a78209e8dc56509368",
+      "mtime": 1794806546.7497907
+    }
+  },
+  "candidate_before": {
+    "head": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+    "branch_ref": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "status": "",
+    "head_name": "HEAD"
+  },
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "tools/command03-native-qa/run.py",
+    "--config",
+    "/workspace/scratch/5d87eafb90be/native-qa-config.json",
+    "--repo",
+    "/workspace/scratch/5d87eafb90be/device-ai-android",
+    "--output-dir",
+    "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output",
+    "--build-dir",
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+    "--mode",
+    "compile",
+    "--version-code",
+    "60",
+    "--label",
+    "controls-compile-01",
+    "--expected-sha",
+    "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+    "--heap-mib",
+    "768",
+    "--metaspace-mib",
+    "256",
+    "--resource-sample-seconds",
+    "2"
+  ],
+  "harness_exit": 0,
+  "candidate_after": {
+    "head": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+    "branch_ref": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "status": "",
+    "head_name": "HEAD"
+  },
+  "raw_receipt_sha256": "bb68937c61a2221f3c17527b88ef1d15a748c4fa6984fc99ed8b27501868ceac",
+  "raw_status": "PASS_LOCAL",
+  "raw_apk": null,
+  "main_classes": {
+    "at/heinz/deviceai/AgentActivity.class": {
+      "exists": true,
+      "sha256": "4c326049a02cf265721fab985e2acb0af233bbc06dc2ee61b2535b62faf16ece",
+      "mtime": 1794810858.6696098
+    },
+    "at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class": {
+      "exists": true,
+      "sha256": "127e6298e248b02a2d33bad69a42a352281081fd98ecfe1cba6392ca21e60f0e",
+      "mtime": 1794810858.6778758
+    },
+    "at/heinz/deviceai/ui/Command03BridgeContract.class": {
+      "exists": true,
+      "sha256": "c6d1e83bf88ab1e411268eb3d80cea5aa24f824f76d83e433b6bf9d8620f05cf",
+      "mtime": 1794810304.470232
+    }
+  },
+  "source_restore_status": "RESTORED_WITHOUT_FORCE_OR_RESET",
+  "original_after": {
+    "head": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "branch_ref": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "status": "",
+    "head_name": "integrate/continuum-command03-android-20261115"
+  },
+  "historical_release_after": {
+    "app-release-unsigned.apk": {
+      "kind": "symlink",
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/original-build-backup-533eb104/app-build/outputs/apk/release/app-release-unsigned.apk",
+      "target_exists": false
+    },
+    "output-metadata.json": {
+      "kind": "file",
+      "bytes": 431,
+      "sha256": "4d434139962b06bb33340969e18c0a45f37ae6b14fc9b0c3b3bf9b609b0c48e3",
+      "mode": 33188,
+      "mtime_ns": 1794758172286149913
+    }
+  },
+  "historical_reset_after": {
+    "/workspace/scratch/8f95e7fd540d/native-qa-output/original-build-backup-533eb104": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/original-build-backup-533eb104",
+      "target_exists": false
+    },
+    "/workspace/scratch/8f95e7fd540d/native-qa-output/artifacts/html-original-path-unsigned-01": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/html-original-path-unsigned-01",
+      "target_exists": false
+    },
+    "/workspace/scratch/8f95e7fd540d/deliverables": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/deliverables",
+      "target_exists": false
+    },
+    "/workspace/scratch/5d87eafb90be/native-deliverables/Continuum-Code60-Pruefdatei-unsigniert.apk": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/dev/shm/continuum-live-preserved-8f95e7fd540d/historical-native-deliverables/Continuum-Code60-Pruefdatei-unsigniert.apk",
+      "target_exists": false
+    },
+    "/workspace/scratch/5d87eafb90be/native-deliverables/Continuum-Code60-Technisches-Pruefpaket.zip": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/dev/shm/continuum-live-preserved-8f95e7fd540d/historical-native-deliverables/Continuum-Code60-Technisches-Pruefpaket.zip",
+      "target_exists": false
+    },
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build/app-build/outputs/apk/release/app-release-unsigned.apk": {
+      "status": "RESET_MISSING",
+      "symlink": true,
+      "target": "/tmp/continuum-live-preserved-8f95e7fd540d/original-build-backup-533eb104/app-build/outputs/apk/release/app-release-unsigned.apk",
+      "target_exists": false
+    }
+  },
+  "historical_reset_unchanged": true,
+  "baseline_apk_unchanged": true,
+  "historical_release_unchanged": true,
+  "finished_epoch": 1794810860.0090363,
+  "wrapper_exit": 0
+}

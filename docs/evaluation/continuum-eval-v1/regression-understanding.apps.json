@@ -1,0 +1,274 @@
+{
+ "fold7": [
+  {
+   "label": "WhatsApp",
+   "package": "com.whatsapp"
+  },
+  {
+   "label": "Chrome",
+   "package": "com.android.chrome"
+  },
+  {
+   "label": "Gmail",
+   "package": "com.google.android.gm"
+  },
+  {
+   "label": "YouTube",
+   "package": "com.google.android.youtube"
+  },
+  {
+   "label": "Termux",
+   "package": "com.termux"
+  },
+  {
+   "label": "Shizuku",
+   "package": "moe.shizuku.privileged.api"
+  },
+  {
+   "label": "Kalender",
+   "package": "com.samsung.android.calendar"
+  },
+  {
+   "label": "Kamera",
+   "package": "com.sec.android.app.camera"
+  },
+  {
+   "label": "Galerie",
+   "package": "com.sec.android.gallery3d"
+  },
+  {
+   "label": "Einstellungen",
+   "package": "com.android.settings"
+  },
+  {
+   "label": "Eigene Dateien",
+   "package": "com.sec.android.app.myfiles"
+  },
+  {
+   "label": "Telegram",
+   "package": "org.telegram.messenger"
+  },
+  {
+   "label": "Signal",
+   "package": "org.thoughtcrime.securesms"
+  },
+  {
+   "label": "Spotify",
+   "package": "com.spotify.music"
+  },
+  {
+   "label": "Wetter",
+   "package": "com.sec.android.daemonapp"
+  },
+  {
+   "label": "Uhr",
+   "package": "com.sec.android.app.clockpackage"
+  },
+  {
+   "label": "Rechner",
+   "package": "com.sec.android.app.popupcalculator"
+  },
+  {
+   "label": "Nachrichten",
+   "package": "com.samsung.android.messaging"
+  },
+  {
+   "label": "Kontakte",
+   "package": "com.samsung.android.app.contacts"
+  },
+  {
+   "label": "Telefon",
+   "package": "com.samsung.android.dialer"
+  },
+  {
+   "label": "Play Store",
+   "package": "com.android.vending"
+  },
+  {
+   "label": "Maps",
+   "package": "com.google.android.apps.maps"
+  },
+  {
+   "label": "Firefox",
+   "package": "org.mozilla.firefox"
+  },
+  {
+   "label": "Word",
+   "package": "com.microsoft.office.word"
+  },
+  {
+   "label": "Excel",
+   "package": "com.microsoft.office.excel"
+  },
+  {
+   "label": "Outlook",
+   "package": "com.microsoft.office.outlook"
+  },
+  {
+   "label": "Komoot",
+   "package": "de.komoot.android"
+  },
+  {
+   "label": "Samsung Notes",
+   "package": "com.samsung.android.app.notes"
+  },
+  {
+   "label": "Nextcloud",
+   "package": "com.nextcloud.client"
+  }
+ ],
+ "twins": [
+  {
+   "label": "WhatsApp",
+   "package": "com.whatsapp"
+  },
+  {
+   "label": "Chrome",
+   "package": "com.android.chrome"
+  },
+  {
+   "label": "Gmail",
+   "package": "com.google.android.gm"
+  },
+  {
+   "label": "YouTube",
+   "package": "com.google.android.youtube"
+  },
+  {
+   "label": "Termux",
+   "package": "com.termux"
+  },
+  {
+   "label": "Shizuku",
+   "package": "moe.shizuku.privileged.api"
+  },
+  {
+   "label": "Kalender",
+   "package": "com.samsung.android.calendar"
+  },
+  {
+   "label": "Kamera",
+   "package": "com.sec.android.app.camera"
+  },
+  {
+   "label": "Galerie",
+   "package": "com.sec.android.gallery3d"
+  },
+  {
+   "label": "Einstellungen",
+   "package": "com.android.settings"
+  },
+  {
+   "label": "Eigene Dateien",
+   "package": "com.sec.android.app.myfiles"
+  },
+  {
+   "label": "Telegram",
+   "package": "org.telegram.messenger"
+  },
+  {
+   "label": "Signal",
+   "package": "org.thoughtcrime.securesms"
+  },
+  {
+   "label": "Spotify",
+   "package": "com.spotify.music"
+  },
+  {
+   "label": "Wetter",
+   "package": "com.sec.android.daemonapp"
+  },
+  {
+   "label": "Uhr",
+   "package": "com.sec.android.app.clockpackage"
+  },
+  {
+   "label": "Rechner",
+   "package": "com.sec.android.app.popupcalculator"
+  },
+  {
+   "label": "Nachrichten",
+   "package": "com.samsung.android.messaging"
+  },
+  {
+   "label": "Kontakte",
+   "package": "com.samsung.android.app.contacts"
+  },
+  {
+   "label": "Telefon",
+   "package": "com.samsung.android.dialer"
+  },
+  {
+   "label": "Play Store",
+   "package": "com.android.vending"
+  },
+  {
+   "label": "Maps",
+   "package": "com.google.android.apps.maps"
+  },
+  {
+   "label": "Firefox",
+   "package": "org.mozilla.firefox"
+  },
+  {
+   "label": "Word",
+   "package": "com.microsoft.office.word"
+  },
+  {
+   "label": "Excel",
+   "package": "com.microsoft.office.excel"
+  },
+  {
+   "label": "Outlook",
+   "package": "com.microsoft.office.outlook"
+  },
+  {
+   "label": "Komoot",
+   "package": "de.komoot.android"
+  },
+  {
+   "label": "Samsung Notes",
+   "package": "com.samsung.android.app.notes"
+  },
+  {
+   "label": "Nextcloud",
+   "package": "com.nextcloud.client"
+  },
+  {
+   "label": "Calendar",
+   "package": "com.google.android.calendar"
+  },
+  {
+   "label": "Camera",
+   "package": "net.sourceforge.opencamera"
+  },
+  {
+   "label": "Lumo",
+   "package": "example.lumo"
+  },
+  {
+   "label": "Luma",
+   "package": "example.luma"
+  },
+  {
+   "label": "Nuki",
+   "package": "example.nuki"
+  },
+  {
+   "label": "Niki",
+   "package": "example.niki"
+  },
+  {
+   "label": "Mira",
+   "package": "example.mira"
+  },
+  {
+   "label": "Mora",
+   "package": "example.mora"
+  },
+  {
+   "label": "Sigma",
+   "package": "example.sigma"
+  }
+ ]
+}

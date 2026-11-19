@@ -129,6 +129,7 @@ object CockpitGlassButtons {
         }
         if (sink == 0f) p.fillRoundRect(l + 1f, t + 4f, r + 1f, bt + 5f, radius, shadowFill, .62f * alpha)
         p.fillRoundRect(l, t, r, bt, radius, m.body, alpha)
+        if (!disabled) ContinuumBlenderAssets.drawTile(p, spec.target, l, t, r, bt, radius, ContinuumBlenderAssets.TILE_ALPHA * alpha)
         // Glossy upper half and bevel: light enters from the top edge, the bottom edge turns away.
         p.fillRoundRect(l + 1.2f, t + 1.2f, r - 1.2f, t + sunk.height * .5f, (radius - 1f).coerceAtLeast(1f), m.gloss, alpha)
         p.drawLine(l + radius * .8f, t + 1.1f, r - radius * .8f, t + 1.1f, 1f, whiteFill, (if (active) .62f else .42f) * alpha)

@@ -1,0 +1,226 @@
+{
+  "status": "BLOCKED_SHARED_RESOURCE_PRESSURE",
+  "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "source_tree": "4b67a51e26dbccf4d6b5fbb3f3b05e9ad48c8b85",
+  "app_tree": "fca7fd5e1f5f87c784f43340e19451aadcf11a1c",
+  "main_tree": "5f215bf5a60f3f570b7329c424e89d4a080e372f",
+  "parents": [
+    "05c7f432957cdfdf02c73ad9be5c63a7a6e9ffdb",
+    "3d5efd9ec4b1a8a5c9c12bb39835be8aef9a9b64"
+  ],
+  "finished_at_utc": "2026-11-16T07:03:53Z",
+  "observation": {
+    "start": "2026-11-16T06:58:11Z",
+    "end": "2026-11-16T07:01:11Z",
+    "seconds": 180.034,
+    "samples": 7,
+    "minimum_mem_available_kib": 1522340,
+    "maximum_mem_available_kib": 2193960,
+    "oom_kill_start": 61,
+    "oom_kill_end": 64,
+    "ready_sample_count": 0,
+    "own_visible_workers_during_observation": 0
+  },
+  "cause_limits": "The daemon disappeared without Kotlin compiler diagnostics. Shared global OOM pressure continued after our JVM ended; no PID-attributed kill cause established. cgroup counters are unavailable and dmesg access is denied.",
+  "native_final_source_results": {
+    "normal_main_compile": {
+      "state": "FAILED_DAEMON_LOST",
+      "label": "controls-compile-03",
+      "elapsed_seconds": 36.927,
+      "source_unchanged": true,
+      "kotlin_compiler_errors": []
+    },
+    "html_ui_compilation": {
+      "state": "NOT_RUN_ON_FINAL_SOURCE"
+    },
+    "html_ui": {
+      "state": "NOT_RUN_ON_FINAL_SOURCE",
+      "declared_cases": 37
+    },
+    "unit": {
+      "state": "NOT_RUN_ON_FINAL_SOURCE",
+      "declared_cases": 77
+    },
+    "classic_ui": {
+      "state": "NOT_RUN_ON_FINAL_SOURCE",
+      "declared_cases": 32
+    },
+    "document_ui": {
+      "state": "NOT_RUN_ON_FINAL_SOURCE",
+      "declared_cases": 6
+    },
+    "fresh_native_browser_interop": {
+      "state": "NOT_RUN_NO_GREEN_FINAL_NATIVE_WIRE"
+    },
+    "unsigned_apk": {
+      "state": "NOT_RUN",
+      "required_free_bytes": 734003200
+    }
+  },
+  "history": [
+    {
+      "label": "controls-diagnostic-compile-01",
+      "source_commit": "5e7b9eddb5252d570e7a99eaaa845afb53e38485",
+      "status": "PASS_LOCAL",
+      "elapsed_seconds": 34.275,
+      "gradle_exit": 0,
+      "source_unchanged": true,
+      "daemon_disappeared": false,
+      "raw_receipt": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-diagnostic-compile-01.json",
+      "raw_receipt_sha256": "11720e49f2a68e8d2016e26aabf4da06c5e0ab1f3367a54d7f7bd1a70e941ada"
+    },
+    {
+      "label": "controls-compile-01",
+      "source_commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+      "status": "PASS_LOCAL",
+      "elapsed_seconds": 35.424,
+      "gradle_exit": 0,
+      "source_unchanged": true,
+      "daemon_disappeared": false,
+      "raw_receipt": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-compile-01.json",
+      "raw_receipt_sha256": "bb68937c61a2221f3c17527b88ef1d15a748c4fa6984fc99ed8b27501868ceac"
+    },
+    {
+      "label": "controls-html-ui-compile-01",
+      "source_commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+      "status": "PASS_LOCAL_TEST_COMPILATION_ONLY",
+      "elapsed_seconds": 19.031,
+      "gradle_exit": 0,
+      "source_unchanged": true,
+      "daemon_disappeared": false,
+      "raw_receipt": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-html-ui-compile-01.json",
+      "raw_receipt_sha256": "fc638fe7bcdbf282bfc475b8707ca83bde7e950f16e645c52b9a9bad8a5a6211"
+    },
+    {
+      "label": "controls-html-ui-01",
+      "source_commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+      "status": "FAILED_OR_SOURCE_CHANGED",
+      "elapsed_seconds": 25.88,
+      "gradle_exit": 1,
+      "source_unchanged": true,
+      "daemon_disappeared": false,
+      "raw_receipt": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-html-ui-01.json",
+      "raw_receipt_sha256": "ae7440fccb3c9139488d15c0f9fd81ba33e5048d6112c7576e9012ff1559c49d",
+      "junit": {
+        "fresh_files": 3,
+        "tests": 34,
+        "failures": 5,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "label": "controls-compile-03",
+      "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+      "status": "FAILED_OR_SOURCE_CHANGED",
+      "elapsed_seconds": 36.927,
+      "gradle_exit": 1,
+      "source_unchanged": true,
+      "daemon_disappeared": true,
+      "raw_receipt": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/runs/controls-compile-03.json",
+      "raw_receipt_sha256": "c19beadc0ccfeca7f9aa63802a39eec225980213f0d5c98235957c345c600b62"
+    },
+    {
+      "label": "controls-compile-02",
+      "source_commit": "05c7f432957cdfdf02c73ad9be5c63a7a6e9ffdb",
+      "status": "NOT_RUN_PREFLIGHT_ASSERTION_BEFORE_SOURCE_SWITCH_OR_JVM",
+      "receipt": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/controls-compile-02-preflight-rejection.json",
+      "limitation": "The failed invocation did not retain its local numeric free-space values. Later same-volume readbacks exceeded compile thresholds; exact transient cause remains unestablished."
+    }
+  ],
+  "no_further_retries": true,
+  "no_original_signing_or_ci_or_installation": true,
+  "active_own_workers": [],
+  "both_original_locks_acquired_nonblocking": true,
+  "original_checkout": {
+    "head": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "branch": "integrate/continuum-command03-android-20261115",
+    "status": ""
+  },
+  "prior_b56_apk": {
+    "status": "UNCHANGED_PRIOR_SOURCE_ONLY_NOT_NEW_APK",
+    "path": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/artifacts/live-media-unsigned-02/release/app-release-unsigned.apk",
+    "sha256": "00def8e94f0f2d26257d25eeb5176f4e7d007bf33013c48a92ee6f8874d57e4c",
+    "bytes": 111421502
+  },
+  "reset_missing_links": {
+    "/workspace/scratch/8f95e7fd540d/native-qa-output/original-build-backup-533eb104": {
+      "exists": false,
+      "is_symlink": true,
+      "link_target": "/tmp/continuum-live-preserved-8f95e7fd540d/original-build-backup-533eb104"
+    },
+    "/workspace/scratch/8f95e7fd540d/native-qa-output/artifacts/html-original-path-unsigned-01": {
+      "exists": false,
+      "is_symlink": true,
+      "link_target": "/tmp/continuum-live-preserved-8f95e7fd540d/html-original-path-unsigned-01"
+    },
+    "/workspace/scratch/8f95e7fd540d/deliverables": {
+      "exists": false,
+      "is_symlink": true,
+      "link_target": "/tmp/continuum-live-preserved-8f95e7fd540d/deliverables"
+    },
+    "/workspace/scratch/5d87eafb90be/native-deliverables/Continuum-Code60-Pruefdatei-unsigniert.apk": {
+      "exists": false,
+      "is_symlink": true,
+      "link_target": "/dev/shm/continuum-live-preserved-8f95e7fd540d/historical-native-deliverables/Continuum-Code60-Pruefdatei-unsigniert.apk"
+    },
+    "/workspace/scratch/5d87eafb90be/native-deliverables/Continuum-Code60-Technisches-Pruefpaket.zip": {
+      "exists": false,
+      "is_symlink": true,
+      "link_target": "/dev/shm/continuum-live-preserved-8f95e7fd540d/historical-native-deliverables/Continuum-Code60-Technisches-Pruefpaket.zip"
+    },
+    "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build/app-build/outputs/apk/release/app-release-unsigned.apk": {
+      "exists": false,
+      "is_symlink": true,
+      "link_target": "/tmp/continuum-live-preserved-8f95e7fd540d/original-build-backup-533eb104/app-build/outputs/apk/release/app-release-unsigned.apk"
+    }
+  },
+  "both_locks_released": true,
+  "final_resources": {
+    "free_bytes": {
+      "/workspace": 623755264,
+      "/tmp": 1951674368,
+      "/dev/shm": 1864732672
+    },
+    "memory_kib": {
+      "MemAvailable": 2191544,
+      "SwapFree": 0,
+      "Shmem": 6487604
+    },
+    "oom_kill": 64
+  },
+  "last_window_capacity_gap": {
+    "memory_to_3_gib_observation_target_kib": 951768,
+    "unsigned_workspace_bytes": 227397632
+  },
+  "supporting_evidence": [
+    {
+      "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/controls-62be-resource-window-01.json",
+      "sha256": "6c6c7461eeb8889899d7469a2e44b326525bd91b4565fe5aff6245de9024e72c"
+    },
+    {
+      "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/evidence/controls-compile-03/daemon-loss-diagnosis.json",
+      "sha256": "3e8c100872dcf5510f1df9fe9bc9b2153626560660936ea1e7a8c94fa70153b1"
+    },
+    {
+      "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/controls-freeze-62be11f8-preflight.json",
+      "sha256": "7e6c1f0365b98bb5c6e2922d72a1b3b4f9005d7d74579eb2a3df316d7761edb6"
+    },
+    {
+      "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/test-selection-frozen-62be11f8.json",
+      "sha256": "41b4b274b11ff85bc2b3cbc1abaf53e35cb32239fbe7b69d072a190798663afc"
+    },
+    {
+      "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/capacity-relocation.json",
+      "sha256": "df8160364f662a697386acd9d54fb99359cf2f12c1277a0861dcd84156d9fb5b"
+    },
+    {
+      "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/remaining-derived-relocation.json",
+      "sha256": "b4a391ad655e327c80d5f9a5261d1f5eaaec2821033c8db6e9406608e2c4ae0a"
+    }
+  ],
+  "final_snapshot_shortfall": {
+    "memory_to_3_gib_observation_target_kib": 954184,
+    "unsigned_workspace_bytes": 110247936
+  }
+}

@@ -2,20 +2,23 @@ package at.heinz.deviceai.ui
 
 /**
  * Bundled open-licence fonts (licence texts next to the files in assets/fonts):
- * Exo 2 (SIL OFL 1.1) for display / titles, matching the technical HUD of the owner
- * reference plates, and Roboto (Apache 2.0) for body text and figures.
+ * Space Grotesk for display / titles and Manrope for text and figures, matching
+ * the approved Kommando 03 design. Both families use SIL OFL 1.1.
  * Device and JVM preview load the same files, so typography is identical in both.
  */
 object ContinuumFonts {
-    private val display = sortedMapOf(300 to "fonts/Exo2-Light.ttf", 400 to "fonts/Exo2-Regular.ttf",
-        500 to "fonts/Exo2-Medium.ttf", 600 to "fonts/Exo2-SemiBold.ttf")
-    private val text = sortedMapOf(300 to "fonts/Roboto-Light.ttf", 400 to "fonts/Roboto-Regular.ttf",
-        500 to "fonts/Roboto-Medium.ttf", 700 to "fonts/Roboto-Bold.ttf")
+    private val display = sortedMapOf(400 to "fonts/SpaceGrotesk-Regular.ttf",
+        500 to "fonts/SpaceGrotesk-Medium.ttf", 700 to "fonts/SpaceGrotesk-Bold.ttf")
+    private val text = sortedMapOf(400 to "fonts/Manrope-Regular.ttf",
+        500 to "fonts/Manrope-Medium.ttf", 600 to "fonts/Manrope-SemiBold.ttf",
+        700 to "fonts/Manrope-Bold.ttf")
 
     /** Asset path of the closest bundled weight. */
     fun assetPath(family: FontFamily, weight: Int): String {
         val table = if (family == FontFamily.DISPLAY) display else text
-        return table.entries.minBy { kotlin.math.abs(it.key - weight) }.value
+        return table.entries.minWith(compareBy<Map.Entry<Int, String>> {
+            kotlin.math.abs(it.key - weight)
+        }.thenByDescending { it.key }).value
     }
 
     val allAssets: List<String> get() = (display.values + text.values).toList()

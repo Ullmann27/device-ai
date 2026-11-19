@@ -1,0 +1,70 @@
+{
+  "source": "b56a614b290977684b50910fac3cc8d14e4294c0",
+  "release_compilation_run": "live-media-unsigned-01",
+  "release_compilation_completed": true,
+  "first_run_overall_status": "FAILED_AT_COMPRESS_RELEASE_ASSETS_NOT_COMPILATION",
+  "final_packaging_run": "live-media-unsigned-02",
+  "final_run_status": "PASS_LOCAL",
+  "second_run_reuses_same_source_fresh_release_classes": true,
+  "actual_asset_compression_and_packaging_executed": true,
+  "classes": [
+    {
+      "class": "at/heinz/deviceai/AgentActivity.class",
+      "sha256": "593ffc19542f7538f9d7a4d1e4533830e530794487782b62f316193cf98bbe6b",
+      "baseline533_sha256": "fe63f4c6ae9f01f8aabee7ea69d2c201080f533208ccca22dae5edf0a1c83e6e",
+      "mtime": 1794806546.734361,
+      "freshly_compiled_in_unsigned01": true
+    },
+    {
+      "class": "at/heinz/deviceai/cognitive/LiveMonitorSubmission.class",
+      "sha256": "e7f204deaae3348608f2bb4f828b70c8e5958e0bba394b04938f075ced22f504",
+      "baseline533_sha256": "ad8d5830cbdad4b6503c153e436289d19d3fd1d11bb5a4cde34f68203fcf10b4",
+      "mtime": 1794806546.749106,
+      "freshly_compiled_in_unsigned01": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/Command03BridgeContract.class",
+      "sha256": "f13c0628446dd28f156278e393cd8259f5da286126b6f7a78209e8dc56509368",
+      "baseline533_sha256": null,
+      "mtime": 1794806546.7497907,
+      "freshly_compiled_in_unsigned01": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/Command03ComputerProjection.class",
+      "sha256": "aa6e68a87fce066919b5c08249cc0aff27a4de33a0b6946e334090597b0a4824",
+      "baseline533_sha256": null,
+      "mtime": 1794806546.7506223,
+      "freshly_compiled_in_unsigned01": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/Command03FrameEncoder.class",
+      "sha256": "a107e6dfb27214c2a8e6df0a173d261a0246c9db17330f400142ee87c60cfeeb",
+      "baseline533_sha256": null,
+      "mtime": 1794806546.7508428,
+      "freshly_compiled_in_unsigned01": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/Command03SpeechProjection.class",
+      "sha256": "d5b34eaefdce7eece7e39ef7cd835d8a005938dd13071ab0b3fe3957c07081d0",
+      "baseline533_sha256": null,
+      "mtime": 1794806546.751108,
+      "freshly_compiled_in_unsigned01": true
+    },
+    {
+      "class": "at/heinz/deviceai/ui/ContinuumCommand03OriginalStage.class",
+      "sha256": "e8acc693a9b2a2a71034f247ba67ad26089e06a9ac0d81a0e9b96d1680424295",
+      "baseline533_sha256": null,
+      "mtime": 1794806546.7513127,
+      "freshly_compiled_in_unsigned01": true
+    }
+  ],
+  "archived_apk": {
+    "path": "/workspace/scratch/8f95e7fd540d/native-live-qa-output/artifacts/live-media-unsigned-02/release/app-release-unsigned.apk",
+    "bytes": 111421502,
+    "sha256": "00def8e94f0f2d26257d25eeb5176f4e7d007bf33013c48a92ee6f8874d57e4c",
+    "build_time_path": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build/app-build/outputs/apk/release/app-release-unsigned.apk",
+    "source_commit": "b56a614b290977684b50910fac3cc8d14e4294c0",
+    "source_tree": "092827dcd6ea9cdf92129e80d55c868577075c2c"
+  },
+  "raw_receipt_mapping_verified": true
+}

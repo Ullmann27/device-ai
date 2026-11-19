@@ -1,0 +1,167 @@
+✔ a projected real PDF remains visible through periodic state and transcript updates (275.077191ms)
+✔ native file and source controls never start the original demonstration (138.231712ms)
+✔ real telemetry stops the hidden simulation and keeps unknown readings unknown (108.569323ms)
+✔ a command draft survives native rejection and clears only after its matching acceptance (90.101885ms)
+✔ a late acceptance does not delete a new draft or a different conversation (78.766207ms)
+✔ long real commands and input selections use the native session and UTF-8 budget (80.231978ms)
+✔ actual busy, listening and speaking transitions drive the original scene without demo timers (145.63456ms)
+✔ telemetry history advances only for new actual measurements and preserves unavailable gaps (208.596408ms)
+✔ empty native history and native-ready captions replace demo content while retaining button icons (41.998763ms)
+✔ late message and document callbacks cannot cross conversation boundaries (50.572858ms)
+✔ chunked transcripts preserve long model responses and user scroll nodes on status refresh (74.284453ms)
+✔ native restore does not overwrite a local draft and oversize commands keep their synchronized draft (70.404512ms)
+✔ selecting a stored conversation closes the existing mobile drawer without replacing its controls (44.465004ms)
+✔ the original composer slot supports exact multiline paste, submit and native restore (64.499401ms)
+✔ typing before Android is ready is synchronized as soon as the first native session arrives (56.414797ms)
+✔ native draft revisions cannot restore consumed text or reset a newer local selection (106.637942ms)
+✔ computer frames use the original window and acknowledge only decoded visible frames after its one flight (80.244346ms)
+✔ late decode and frame replay cannot reopen a stopped or rebound computer source (67.536032ms)
+✔ a computer image expires without new frames and unavailable status removes pixels immediately (65.767353ms)
+✔ PDF and chat remain intact while a covered computer invalidates its previous render receipt (85.532748ms)
+✔ invalid computer payloads and callbacks from an old conversation never become visible frames (78.990415ms)
+✔ occlusion, page hiding and failed decoding never produce a computer render acknowledgement (90.7872ms)
+✔ native speech frames reach the original viseme API with their actual source and expire to silence (64.64679ms)
+✔ speech rejects invalid morphs, late utterances, stopped generations and different sessions (57.180748ms)
+✔ the byte-locked bundled avatar accepts the native visemes through its public fallback-mode API (70.873266ms)
+✔ covering a decoded image with a newer pending frame withdraws both exact receipts (96.924558ms)
+✔ an expired pose cannot transfer its generation to another utterance or return after page hiding (41.537996ms)
+✖ native control acknowledgements admit real dictation and consumption without replacing newer local edits (54.580815ms)
+✖ native control selection acknowledgements preserve a newer caret and never echo a restored draft (51.897836ms)
+✖ native control view instances replace bot histories and reject old snapshots messages and command acknowledgements (82.57215ms)
+✖ native control focus reaches the visible composer only for the current explicitly selected view (42.556856ms)
+✖ native control microphone long press uses the existing native action once and cancellation suppresses it (43.786591ms)
+✖ native control source cards use native identifiers and cannot survive a view switch (38.483608ms)
+✖ native control PDF draft action identifies only the currently displayed document and honours native availability (46.326151ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 27
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3200.046157
+
+✖ failing tests:
+
+test at tools/command03-native-qa/native-bridge-behavior.test.mjs:645:1
+✖ native control acknowledgements admit real dictation and consumption without replacing newer local edits (54.580815ms)
+  AssertionError [ERR_ASSERTION]: A confirmed native dictation is a real newer edit
+  + actual - expected
+  
+  + 'Mein Entwurf'
+  - 'Mein Entwurf mit Diktat'
+                 ^
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8f95e7fd540d/device-ai/tools/command03-native-qa/native-bridge-behavior.test.mjs:652:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'Mein Entwurf',
+    expected: 'Mein Entwurf mit Diktat',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/command03-native-qa/native-bridge-behavior.test.mjs:669:1
+✖ native control selection acknowledgements preserve a newer caret and never echo a restored draft (51.897836ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  null !== '1'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8f95e7fd540d/device-ai/tools/command03-native-qa/native-bridge-behavior.test.mjs:676:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: '1',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/command03-native-qa/native-bridge-behavior.test.mjs:689:1
+✖ native control view instances replace bot histories and reject old snapshots messages and command acknowledgements (82.57215ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'Veralteter Snapshot'
+  - 'Bot-Entwurf'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8f95e7fd540d/device-ai/tools/command03-native-qa/native-bridge-behavior.test.mjs:704:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Veralteter Snapshot',
+    expected: 'Bot-Entwurf',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/command03-native-qa/native-bridge-behavior.test.mjs:715:1
+✖ native control focus reaches the visible composer only for the current explicitly selected view (42.556856ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  
+  + HTMLBodyElement {
+  +   Symbol(SameObject caches): [Object: null prototype] {
+  +     dataset: DOMStringMap {}
+  +   }
+  + }
+  - HTMLTextAreaElement {}
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8f95e7fd540d/device-ai/tools/command03-native-qa/native-bridge-behavior.test.mjs:722:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: {},
+    expected: {},
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/command03-native-qa/native-bridge-behavior.test.mjs:731:1
+✖ native control microphone long press uses the existing native action once and cancellation suppresses it (43.786591ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'voice-input'
+  - 'voice-input-long-press'
+                ^
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8f95e7fd540d/device-ai/tools/command03-native-qa/native-bridge-behavior.test.mjs:743:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'voice-input',
+    expected: 'voice-input-long-press',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/command03-native-qa/native-bridge-behavior.test.mjs:753:1
+✖ native control source cards use native identifiers and cannot survive a view switch (38.483608ms)
+  TypeError [Error]: f.window.ContinuumNative.sources is not a function
+      at TestContext.<anonymous> (file:///workspace/scratch/8f95e7fd540d/device-ai/tools/command03-native-qa/native-bridge-behavior.test.mjs:758:30)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tools/command03-native-qa/native-bridge-behavior.test.mjs:775:1
+✖ native control PDF draft action identifies only the currently displayed document and honours native availability (46.326151ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(draft)
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8f95e7fd540d/device-ai/tools/command03-native-qa/native-bridge-behavior.test.mjs:782:78)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

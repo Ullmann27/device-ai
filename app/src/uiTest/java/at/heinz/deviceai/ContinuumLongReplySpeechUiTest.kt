@@ -69,6 +69,9 @@ class ContinuumLongReplySpeechUiTest {
             assertTrue("speech requires the foreground activity", field(a, "foregroundLearningActive") as Boolean)
             AgentActivity::class.java.getDeclaredMethod("installVoiceProgressListener").apply { isAccessible = true }.invoke(a)
             val listener = requireNotNull(shadowOf(tts).utteranceProgressListener)
+            // These tests play the engine themselves. Since Code63 a pause passes between pieces, so the test
+            // clock advances; the shadow engine's own automatic callbacks would then mix into the scripted ones.
+            tts.setOnUtteranceProgressListener(null)
             body(a, tts, listener)
         } finally {
             runCatching { controller.close() }
@@ -81,6 +84,10 @@ class ContinuumLongReplySpeechUiTest {
 
     private fun spoken(tts: TextToSpeech) = (shadowOf(tts) as ShadowTextToSpeech).spokenTextList
 
+    /** Code63: the next piece follows after a human-length pause, not in the same instant. */
+    private fun passPauseBetweenPieces() = shadowOf(Looper.getMainLooper()).idleFor(
+        at.heinz.deviceai.cognitive.HumanSpeechTiming.MAX_PAUSE_MS + 50, TimeUnit.MILLISECONDS)
+
     @Test fun longReplyIsReadCompletelyInOrderAcrossPieces() = withSpeakingActivity { a, tts, listener ->
         assertTrue("fixture must exceed the former 480-character limit", longReply.length > 2_000)
         call(a, "speakBootstrap", longReply)
@@ -92,6 +99,7 @@ class ContinuumLongReplySpeechUiTest {
             listener.onStart(id)
             assertEquals("the avatar speaks this piece", true, field(a, "voiceSpeaking"))
             listener.onDone(id)
+            passPauseBetweenPieces()
             assertTrue(++guard < 40)
         }
         val pieces = spoken(tts)
@@ -130,6 +138,7 @@ class ContinuumLongReplySpeechUiTest {
             while (true) {
                 val id = field(a, "voiceUtteranceId") as String? ?: break
                 listener.onStart(id); listener.onDone(id)
+                passPauseBetweenPieces()
             }
             assertEquals("reply ${turn + 1} ends with a closed mouth", false, field(a, "voiceSpeaking"))
         }
@@ -146,6 +155,12 @@ class ContinuumLongReplySpeechUiTest {
         val first = field(a, "voiceUtteranceId") as String
         listener.onStart(first)
         listener.onDone(first)
+        assertNull("no utterance is current during the pause", field(a, "voiceUtteranceId"))
+        assertEquals("the reply is still being spoken", true, field(a, "voiceSpeaking"))
+        // A repeated engine callback for the finished piece must not end the reply.
+        listener.onDone(first)
+        assertEquals(true, field(a, "voiceSpeaking"))
+        passPauseBetweenPieces()
         val second = field(a, "voiceUtteranceId") as String
         assertTrue(second != first)
         listener.onStop(second, true) // STOP before the engine started the second piece
@@ -160,8 +175,45 @@ class ContinuumLongReplySpeechUiTest {
         while (true) {
             val id = field(a, "voiceUtteranceId") as String? ?: break
             listener.onStart(id); listener.onDone(id)
+            passPauseBetweenPieces()
         }
         assertEquals("31 answer pieces plus one truncation notice", 32, spoken(tts).size)
         assertEquals("Der Rest der Antwort steht im Chat.", spoken(tts).last())
+    }
+
+    @Test fun stopDuringThePauseBetweenPiecesNeverStartsTheNextPiece() = withSpeakingActivity { a, tts, listener ->
+        call(a, "speakBootstrap", longReply)
+        val first = field(a, "voiceUtteranceId") as String
+        listener.onStart(first)
+        listener.onDone(first)
+        assertEquals(1, spoken(tts).size)
+        call(a, "interruptReplySpeech") // owner stop inside the pause
+        passPauseBetweenPieces()
+        assertEquals("no further piece after the stop", 1, spoken(tts).size)
+        assertNull(field(a, "voiceUtteranceId"))
+        assertNull(field(a, "speechTurnId"))
+        assertEquals(false, field(a, "voiceSpeaking"))
+    }
+
+    @Test fun thePauseBetweenPiecesIsNeverTheSameTwiceInARow() = withSpeakingActivity { a, tts, listener ->
+        call(a, "speakBootstrap", longReply)
+        val waits = ArrayList<Long>()
+        repeat(3) {
+            val id = field(a, "voiceUtteranceId") as String
+            listener.onStart(id); listener.onDone(id)
+            assertNull(field(a, "voiceUtteranceId"))
+            val before = spoken(tts).size
+            var waited = 0L
+            while (spoken(tts).size == before && waited <= at.heinz.deviceai.cognitive.HumanSpeechTiming.MAX_PAUSE_MS) {
+                shadowOf(Looper.getMainLooper()).idleFor(10, TimeUnit.MILLISECONDS)
+                waited += 10
+            }
+            waits += waited
+        }
+        assertTrue("pauses stay in the measured medium band: $waits", waits.all {
+            it >= at.heinz.deviceai.cognitive.HumanSpeechTiming.MIN_PAUSE_MS - 10 &&
+                it <= at.heinz.deviceai.cognitive.HumanSpeechTiming.MAX_PAUSE_MS + 10
+        })
+        assertTrue("consecutive pauses differ: $waits", waits[0] != waits[1] && waits[1] != waits[2])
     }
 }

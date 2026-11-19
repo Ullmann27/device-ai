@@ -1,0 +1,252 @@
+{
+  "source_commit": "7e783f3ee8bc3e75f800b8249f5cef283187752d",
+  "junit": {
+    "tests": 128,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "dom": {
+    "tests": 28,
+    "failures": 0,
+    "skipped": 0
+  },
+  "files": {
+    "apk/independent-apk-review-7e783f3e-aapt.txt": {
+      "bytes": 1916,
+      "sha256": "cb2eb9e87a48c847d4b634299c23af76e425abe0dbf81052d7cd26e809c90b64"
+    },
+    "apk/independent-apk-review-7e783f3e-apksigner.txt": {
+      "bytes": 52,
+      "sha256": "1413af210d1627fde4f14e31934eb5d9d031684e4f7a5c3371a74b3bdeb8764c"
+    },
+    "apk/independent-apk-review-7e783f3e-zipalign.txt": {
+      "bytes": 9265,
+      "sha256": "64a17794627cfdcc8fbfafd53655555282e4e47c23c930a3d726e79a554088cf"
+    },
+    "apk/independent-apk-review-7e783f3e.json": {
+      "bytes": 10618,
+      "sha256": "86e3762a15c3b6a2635a6d287b0919d2389b77d57fbae3d947faf50dc785f7d6"
+    },
+    "apk/independent_apk_review.py": {
+      "bytes": 6766,
+      "sha256": "351b4313fa258c706ca058fdc594cd639ec11d2d9be00519f72787892b755704"
+    },
+    "junit/navigation-green-classic-ui-01/TEST-at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest.xml": {
+      "bytes": 1071,
+      "sha256": "c14aafea68ea8f1dff38f2605c8a14696fea37dba087650d43635347c02eda19"
+    },
+    "junit/navigation-green-classic-ui-01/TEST-at.heinz.deviceai.ContinuumCommandNavigationUiTest.xml": {
+      "bytes": 2096,
+      "sha256": "9a62bdbc72b63334c5d3dc90737fa189951e1ea3d915c63444473343aa4244cf"
+    },
+    "junit/navigation-green-classic-ui-01/TEST-at.heinz.deviceai.ContinuumCompactComposerUiTest.xml": {
+      "bytes": 901,
+      "sha256": "10cb9500028f8fb12093bda9569d1ce840378c4ec1a05c6d69814692de9c5f15"
+    },
+    "junit/navigation-green-classic-ui-01/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml": {
+      "bytes": 543,
+      "sha256": "93c34527209106e0397166118f245bb5d6594d68b5b172074f3f63c427d0dd05"
+    },
+    "junit/navigation-green-classic-ui-01/TEST-at.heinz.deviceai.ContinuumVisibleAvatarUiTest.xml": {
+      "bytes": 476,
+      "sha256": "c64ebe17b6680e16985fcb1df0e1f3a581b11c31c8c0560d9dfad1043be5e0c0"
+    },
+    "junit/navigation-green-classic-ui-01/TEST-at.heinz.deviceai.JarvisReferenceHitTargetsUiTest.xml": {
+      "bytes": 1556,
+      "sha256": "666c4f14e30b2ed5353b2629ca78ce2225cf7bf6fbff4bb5569eba8a609ab467"
+    },
+    "junit/navigation-green-classic-ui-01/TEST-at.heinz.deviceai.ui.JarvisRailLabelReadabilityUiTest.xml": {
+      "bytes": 656,
+      "sha256": "50718a6c0c01898ea9db99e8655485e45ee3769552b7849bd73a724c95a80c1b"
+    },
+    "junit/navigation-green-ui-01/TEST-at.heinz.deviceai.ContinuumCommand03BridgeUiTest.xml": {
+      "bytes": 3069,
+      "sha256": "48bed5c6273b83280d10cfe05d3ce6ac0986de8169bb1c8dd38f90e66ebbd502"
+    },
+    "junit/navigation-green-ui-01/TEST-at.heinz.deviceai.ContinuumCommand03MediaStageUiTest.xml": {
+      "bytes": 2412,
+      "sha256": "f9865486020917a46460c568682ef52d29e5ea8f543a291c66198e30ddf8c406"
+    },
+    "junit/navigation-green-ui-01/TEST-at.heinz.deviceai.ContinuumCommand03StageUiTest.xml": {
+      "bytes": 977,
+      "sha256": "c491275b461a5c63e50c9b1164b3b511a34d7d53735ff21938fc04823d715dca"
+    },
+    "junit/navigation-green-unit-01/TEST-at.heinz.deviceai.avatar.AvatarSpeechAdmissionTest.xml": {
+      "bytes": 1102,
+      "sha256": "b51ea7728bfefa124613049574d7b1827c89e96a6a177c84b62500a4b7a62de1"
+    },
+    "junit/navigation-green-unit-01/TEST-at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest.xml": {
+      "bytes": 1903,
+      "sha256": "0ba96e92d7ebd662ecb8297e56a497bf6adef92e402687f5ff4a1986a1d0cbc8"
+    },
+    "junit/navigation-green-unit-01/TEST-at.heinz.deviceai.cognitive.LiveComputerDispatchGuardTest.xml": {
+      "bytes": 1688,
+      "sha256": "bad72af87e9613b80d435a3d922ee3abcc331adc780f010152c95e173831ca59"
+    },
+    "junit/navigation-green-unit-01/TEST-at.heinz.deviceai.cognitive.LiveComputerFramesTest.xml": {
+      "bytes": 2173,
+      "sha256": "9f95cc2fc6d3f35dbed145e8d245cfff7a642c015aa6ffff1951baacfb7be946"
+    },
+    "junit/navigation-green-unit-01/TEST-at.heinz.deviceai.cognitive.LiveMonitorSubmissionTest.xml": {
+      "bytes": 2442,
+      "sha256": "21ff120d2c652fcec0f43f9b7c184c042e2f95f56e973085f62f51261c89f7f3"
+    },
+    "junit/navigation-green-unit-01/TEST-at.heinz.deviceai.ui.Command03BridgeContractTest.xml": {
+      "bytes": 1215,
+      "sha256": "5a3ee888f73c127ebed8f0bda33cee32c98faa7062c2b4b3e1d29c80c3c7f686"
+    },
+    "junit/navigation-green-unit-01/TEST-at.heinz.deviceai.ui.Command03ComputerProjectionTest.xml": {
+      "bytes": 1776,
+      "sha256": "1eedd35118457879075b949eb56b3002ee863b5b26c84c1cbe3fe502a0a85736"
+    },
+    "junit/navigation-green-unit-01/TEST-at.heinz.deviceai.ui.Command03SpeechProjectionTest.xml": {
+      "bytes": 1107,
+      "sha256": "fca2675211af976c91d5787a6d844c945759fd82cf4efc7aae0c25e6172f7cc3"
+    },
+    "logs/navigation-green-classic-ui-01.log": {
+      "bytes": 3154,
+      "sha256": "bcbd703fe94b716e863cb8bcac5feddac7d03c20a5aabd4e187ee999956c00f3"
+    },
+    "logs/navigation-green-ui-01.log": {
+      "bytes": 7286,
+      "sha256": "373c2e84f173412873c20dd25434c9affccf7f75e5e4fe8d49c50a3c685271aa"
+    },
+    "logs/navigation-green-unit-01.log": {
+      "bytes": 2440,
+      "sha256": "4a0d7ffff224d209d0a728486c6c233926149fd41c33ce3433b1d23a05abc305"
+    },
+    "logs/navigation-red-ui-01.log": {
+      "bytes": 3379,
+      "sha256": "8d33d2dcb5a339be61063e332b2b69da1c5d591ee2d65d91b1cdd8bc258b8b29"
+    },
+    "logs/navigation-red-ui-02.log": {
+      "bytes": 3325,
+      "sha256": "591b2088c5a5acca952c46360f4c0e17103e8573c54d3f830f6a1c28babc136e"
+    },
+    "logs/navigation-unsigned-01.log": {
+      "bytes": 27153,
+      "sha256": "58710dcdc7a5aa1b506c336771421b06a32ac37e2d28b375dead1309ba993555"
+    },
+    "receipts/navigation-green-classic-ui-01-compiled-test-sources.json": {
+      "bytes": 3659,
+      "sha256": "b15bb3cb95c7c5de4eb4943a6b91fa8a70dc8e13181bb3b3fdc2011ece7b54bd"
+    },
+    "receipts/navigation-green-classic-ui-01-resources.jsonl": {
+      "bytes": 10915,
+      "sha256": "bf402b7278886f569f96d5356ecadb62dbbc0b84e8c034528c62b9a7960bef1d"
+    },
+    "receipts/navigation-green-classic-ui-01-test-sources.json": {
+      "bytes": 3040,
+      "sha256": "aa2621d4724518e1640c48967bda6ee3090c4b6122f37f6593416b890812a160"
+    },
+    "receipts/navigation-green-classic-ui-01-tests.json": {
+      "bytes": 512,
+      "sha256": "49c97cf21c22cb70bdc1615911294370b501900ae421453406d273e80aa2ce50"
+    },
+    "receipts/navigation-green-classic-ui-01.json": {
+      "bytes": 10223,
+      "sha256": "eab6f37726ff8cdb1d771954e5e5d77fb488569bc73dd9ac9d9ffda7d8b3c8ac"
+    },
+    "receipts/navigation-green-ui-01-compiled-test-sources.json": {
+      "bytes": 2012,
+      "sha256": "eeacffb667f66989ad808ff86ecb81c97a38e6903bf9a200b8df73d7bdb838df"
+    },
+    "receipts/navigation-green-ui-01-resources.jsonl": {
+      "bytes": 9732,
+      "sha256": "3b41d613103645b5fa76da8fa219ee66a6baee96596691162127d6310f1f96b2"
+    },
+    "receipts/navigation-green-ui-01-test-sources.json": {
+      "bytes": 1601,
+      "sha256": "8f5e0db69effefec2ee21d1aa03700c8aa525360902b687c51697c7c7834d5e5"
+    },
+    "receipts/navigation-green-ui-01-tests.json": {
+      "bytes": 168,
+      "sha256": "5389ee7b17f17f494b2f02f0fbf3a8577290a93ef06f0e31336e18e4849dd377"
+    },
+    "receipts/navigation-green-ui-01.json": {
+      "bytes": 8059,
+      "sha256": "13fe6025073a34a69233dfbbec6ebf580376af1e13a4c8e5d3c7b9b2a0822dd9"
+    },
+    "receipts/navigation-green-unit-01-compiled-test-sources.json": {
+      "bytes": 3303,
+      "sha256": "49adc3155185ce2d539a14f4f13d332f9dba5a7e7db9c71c3c80fac52537022f"
+    },
+    "receipts/navigation-green-unit-01-resources.jsonl": {
+      "bytes": 3133,
+      "sha256": "92b68ff890fd1b2ba4d4a014e4601fff1077019a79965e68478dce2341f05012"
+    },
+    "receipts/navigation-green-unit-01-test-sources.json": {
+      "bytes": 2768,
+      "sha256": "2f757c2c00db98870c8d42f043392acbb428efed717295c40a4479280876f3c5"
+    },
+    "receipts/navigation-green-unit-01-tests.json": {
+      "bytes": 470,
+      "sha256": "8a1781ad9dfcc2e1b23cc30836bdc5f35990dc125996cb83da5ff641d166f8a3"
+    },
+    "receipts/navigation-green-unit-01.json": {
+      "bytes": 9552,
+      "sha256": "eec6e04f1dc6939a1935e3c93fe5fb27a033801184cec20a109a4ccdf8d77e85"
+    },
+    "receipts/navigation-red-ui-01-resources.jsonl": {
+      "bytes": 4804,
+      "sha256": "53d0b5e34ef59b7a76dffaa463f041a1aa89115ed6901a8ab2679f700c4a967b"
+    },
+    "receipts/navigation-red-ui-01-test-sources.json": {
+      "bytes": 946,
+      "sha256": "c320d699bf0515cd672c17fc33ce3eb9160ff609abf9d8569ef4543ba330e42d"
+    },
+    "receipts/navigation-red-ui-01-tests.json": {
+      "bytes": 57,
+      "sha256": "b81fa84ae8d70a8be2faed424a41f2c690622bfb1891891db12de097ad6fa7db"
+    },
+    "receipts/navigation-red-ui-01.json": {
+      "bytes": 12092,
+      "sha256": "37c4d50afaef6e048cdd85d832769821aac582dfb02b0fd2e10244807e657949"
+    },
+    "receipts/navigation-red-ui-02-compiled-test-sources.json": {
+      "bytes": 1253,
+      "sha256": "170c9fcb19750c1641399211824c36201f9ab85b632daf1982e4f0e984281f7a"
+    },
+    "receipts/navigation-red-ui-02-resources.jsonl": {
+      "bytes": 4806,
+      "sha256": "b333105359e3fc59b36cb4b7be2bd1b7dffee816328dad3deebbe19aa2d31a16"
+    },
+    "receipts/navigation-red-ui-02-test-sources.json": {
+      "bytes": 946,
+      "sha256": "bdd2ae88ed97071f909bd4aeba00ae0442246bac97c345bf95e59ecacbb30f42"
+    },
+    "receipts/navigation-red-ui-02-tests.json": {
+      "bytes": 57,
+      "sha256": "b81fa84ae8d70a8be2faed424a41f2c690622bfb1891891db12de097ad6fa7db"
+    },
+    "receipts/navigation-red-ui-02.json": {
+      "bytes": 9588,
+      "sha256": "2610c0e16e510a361bd5550b87ff9075b2bfbc0512fb57366a37fb7aa754578d"
+    },
+    "receipts/navigation-unsigned-01-resources.jsonl": {
+      "bytes": 27364,
+      "sha256": "162fc88758c1a4b844f7905087895c745dfd7e87095188d0192c4381998ddf4f"
+    },
+    "receipts/navigation-unsigned-01.json": {
+      "bytes": 5168,
+      "sha256": "8f361db451f8d201fed05a99652eeeacf0aab2f650b5a718d39295076685a783"
+    },
+    "web/native-computer-wire.json": {
+      "bytes": 1438,
+      "sha256": "59ecce13aa404c12c51a0327b88d411b227aa819bf98d85121894d5d3f9e4711"
+    },
+    "web/navigation-dom.tap": {
+      "bytes": 7100,
+      "sha256": "45bcda5881256ba76ff58d2b1fb8662668038d845ef92d1eca98ff13ec9136a2"
+    },
+    "web/original-source-lock.txt": {
+      "bytes": 168,
+      "sha256": "1bb22a39f40fca6c2e144826763d8e54cd3d43ce1020209096dc31a3852cb04e"
+    },
+    "web/web-verification.json": {
+      "bytes": 808,
+      "sha256": "928953380adf4c6ff3deabd6090a4bce3c416fab03cd9b48c3d08b0c5a0654e5"
+    }
+  }
+}

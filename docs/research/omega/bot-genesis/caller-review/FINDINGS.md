@@ -1,6 +1,8 @@
 # Independent caller review — 2026-11-03
 
-Status: **CHANGES_REQUESTED — source audit, not runtime execution**.
+Status: **ACCEPTED_SOURCE_SLICE** after Chief repair
+`d112106b5ddad13c2f67faf8912ebbc4276d63fe`; source audit, not runtime execution.
+The original change request below remains recorded for provenance.
 
 Reviewer session `synapse_lifecycle_builder` did not author these caller changes.
 Criteria froze in `c09ef5b721a3cbb66f962c232066680425ff1f88` before inspection.
@@ -16,6 +18,8 @@ The separate UI review's 29 widget/speech results are not counted here. No froze
 unknown MΩ benchmark task bodies were inspected. No production file was changed.
 
 ## CR-1 — speech recognition scope survives a private bot switch
+
+Disposition: **closed at source level** by the follow-up repair described below.
 
 Priority: P1, stale private input routing. Source-demonstrated call path; the
 callback sequence below has not been executed on Android by this reviewer.
@@ -108,3 +112,39 @@ These are source observations, not end-to-end or Fold7 acceptance.
    assumption without changing the controller contract.
 
 Release, original signing, installation, main merge and owner data are untouched.
+
+## Follow-up repair inspection
+
+Inspected `git diff 66fce742 d112106b` independently after the source finding was
+pushed in `cb7ec5618532309743ab2565fe9151684650672a` and its admission-window
+clarification in `d02a3097`. Production repair belongs to the Chief.
+
+- `selectBot` and asynchronous `routeBotInput` invalidate the existing speech
+  scope before queued I/O. `enterBotConversation`, `returnToJarvis` and selected
+  context edits invalidate it again at the actual context transition. Therefore
+  the old ASR result and microphone permission continuation no longer satisfy
+  their existing generation guards. CR-1 is closed by source inspection.
+- All profile edits now increment the pending lookup revision before the
+  selected-bot check, preventing a pending selection from publishing its pre-edit
+  snapshot after a different profile was edited.
+- Direct addressed switching loads the target bot's existing history on the
+  backlog executor and replays the same helper used by roster selection. The
+  visible-history discrepancy in limitation 1 is closed at source level.
+- Load/unload/import explicitly invalidate the private controller; unload also
+  cancels the active private turn token. This closes the missing explicit hook
+  in limitation 6, including reload of the same weight hash.
+- Starting chat dictation stops TTS but no longer calls the global
+  `cancelLocalRequest` path. An unrelated coding/tool job remains governed by its
+  explicit stop action. Developer-goal dictation is rejected while busy.
+- Roster state refresh uses existing Activity state changes and its five-second
+  dashboard callback. It introduces no per-bot timer or model call, and clears
+  retained status views when opening/closing a dialog.
+
+No additional source blocker was identified in this narrow diff. The native
+dispatch deadline, monitor-held fsync and cross-Activity execution limitations
+remain open as stated above. The separate QA session is adding real ASR shadow
+tests; their execution is not asserted or counted in this source-review result.
+
+This is **not** ANDROID_BUILD_VERIFIED, FOLD7_VERIFIED, a local-model repair
+benchmark or complete bot/tool end-to-end acceptance. Final shared-source QA is
+required after integration.

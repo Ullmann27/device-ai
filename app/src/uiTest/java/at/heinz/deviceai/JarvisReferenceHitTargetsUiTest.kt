@@ -2,6 +2,8 @@ package at.heinz.deviceai
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Rect
+import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
@@ -9,6 +11,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import android.widget.Button
+import android.widget.EditText
 import at.heinz.deviceai.avatar.JarvisHoloAvatar
 import at.heinz.deviceai.cockpit.JarvisAvatarSlot
 import at.heinz.deviceai.ui.ContinuumHomeView
@@ -25,6 +29,11 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
+import org.robolectric.shadow.api.Shadow
+import org.robolectric.shadows.ShadowDisplayManager
+import org.robolectric.shadows.ShadowToast
+import org.robolectric.shadows.ShadowViewRootImpl
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
 /** Native input, accessibility and resize contracts. No native Canvas, GPU or physical-device claim. */
@@ -81,7 +90,11 @@ class JarvisReferenceHitTargetsUiTest {
             JarvisAvatarSlot.register(JarvisHoloAvatar(live))
             home.setJarvisShellStage(true)
             home.jarvisShell.ambientMotionEnabled = false
-            home.onNavigateTarget = { calls += it }
+            home.onNavigateTarget = { target ->
+                calls += target
+                // Native-only files/settings are selected by AgentActivity's navigator, not a legacy slot.
+                if (JarvisTiles.bottomNav.any { it.target == target }) home.selectJarvisTarget(target)
+            }
             val viewport = android.widget.ScrollView(controller.get()).apply {
                 isFillViewport = true
                 isVerticalScrollBarEnabled = false
@@ -133,9 +146,8 @@ class JarvisReferenceHitTargetsUiTest {
         }
         assertEquals(JarvisHomeTestRoutes.expectedDirectTargets(home), calls)
         calls.clear()
-        val actions = linkedMapOf("dialog:voice-input" to "voice-input", "dialog:send" to "chat",
-            "header:mode" to "avatar-appearance", "header:notifications" to "notifications",
-            "header:settings" to "settings", "camera:settings" to "camera-settings")
+        val actions = linkedMapOf("header:chats" to "chats", "header:settings" to "settings",
+            "header:more" to "more")
         actions.forEach { (action, _) ->
             val button = control(home, action)
             assertTrue("$action size ${button.width} × ${button.height}", button.width >= 48 && button.height >= 48)
@@ -149,65 +161,174 @@ class JarvisReferenceHitTargetsUiTest {
         } else {
             assertEquals(actions.values.toList(), calls)
         }
+        assertTrue("Camera settings remain in the existing More navigation",
+            ContinuumWorkAreaNavigationSpec.moreEntries.any { it.target == "camera-settings" })
+        assertTrue("The real Activity composer has no duplicate Home hit targets", descendants(home).none {
+            it.tag?.toString() in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation")
+        })
         val foreground = control(home, "foreground")
         assertFalse(foreground.isClickable)
         assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_NO, foreground.importantForAccessibility)
         assertTrue("Live renderer below readable HUD", foreground.z > home.hologram.z)
-        assertTrue("Actions above HUD", control(home, "dialog:voice-input").z > foreground.z)
+        assertTrue("Actions above HUD", control(home, "header:chats").z > foreground.z)
     }
 
-    @Test fun inputActionsAndConversationRouteRealTouchesAcrossWindowReflow() = withHome { home, calls ->
-        val routes = linkedMapOf(
-            "dialog:voice-input" to "voice-input", "dialog:send" to "chat", "input:conversation" to "chat"
-        )
-        val identities = routes.keys.associateWith { control(home, it).id }
+    private fun field(a: AgentActivity, name: String): Any? = AgentActivity::class.java
+        .getDeclaredField(name).apply { isAccessible = true }.get(a)
+
+    private fun set(a: AgentActivity, name: String, value: Any?) = AgentActivity::class.java
+        .getDeclaredField(name).apply { isAccessible = true }.set(a, value)
+
+    private fun call(a: AgentActivity, name: String, vararg args: Any?): Any? =
+        AgentActivity::class.java.declaredMethods.single { it.name == name && it.parameterCount == args.size }
+            .apply { isAccessible = true }.invoke(a, *args)
+
+    /** Same real-pane host as CompactComposerUiTest; every production listener stays installed. */
+    private fun withComposer(check: (AgentActivity, Activity, View, ContinuumHomeView, EditText, Button, Button) -> Unit) {
+        val app = RuntimeEnvironment.getApplication()
+        app.getSharedPreferences("continuum-internet", Context.MODE_PRIVATE).edit().putString("mode", "OFF").commit()
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", false).putBoolean("native-head-3d", false).commit()
+        val a = Robolectric.buildActivity(AgentActivity::class.java).get()
+        set(a, "bootstrapMemory", BootstrapMemoryStore(a))
+        set(a, "voiceEnabled", false)
+        val pane = call(a, "buildConversationPane", true) as View
+        val home = field(a, "homeView") as ContinuumHomeView
+        home.hologram.setNativeHeadEnabled(false)
+        home.hologram.setAnimationsEnabled(false)
+        home.jarvisShell.ambientMotionEnabled = false
+        val host = Robolectric.buildActivity(Activity::class.java).setup().visible()
+        try {
+            host.get().setContentView(pane)
+            shadowOf(Looper.getMainLooper()).idle()
+            check(a, host.get(), pane, home, field(a, "input") as EditText,
+                field(a, "chatMicButton") as Button, field(a, "sendButton") as Button)
+        } finally {
+            (field(a, "onDeviceSpeech") as? AndroidOnDeviceSpeechInput)?.shutdown()
+            (field(a, "mainHandler") as Handler).removeCallbacksAndMessages(null)
+            home.hologram.setForegroundActive(false)
+            home.setForegroundActive(false)
+            (field(a, "cockpitSubscriptions") as List<*>).forEach { (it as AutoCloseable).close() }
+            JarvisAvatarSlot.register(null)
+            for (name in listOf("localAgentExecutor", "backlogExecutor", "learningIoExecutor", "documentIoExecutor"))
+                (field(a, name) as ExecutorService).shutdownNow()
+            host.pause().stop().destroy()
+        }
+    }
+
+    private var composerProfile = "unmeasured"
+
+    private fun measureComposer(a: AgentActivity, host: Activity, pane: View, width: Int, height: Int) {
+        composerProfile = "${width}x${height}dp font=${RuntimeEnvironment.getFontScale()} conversation=${field(a, "conversationActive")}"
+        // Resize the real host frame too: measuring only Decor leaves ViewRootImpl clipped to
+        // @Config's original 1024dp display when the unfolded portrait profile is 1050dp tall.
+        ShadowDisplayManager.changeDisplay(0, "w${width}dp-h${height}dp-mdpi")
+        host.window.setLayout(width, height)
+        val window = host.window.decorView
+        assertSame("Reflow retains the mounted pane", window, pane.rootView)
+        Shadow.extract<ShadowViewRootImpl>(window.parent).callDispatchResized()
+        shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+        set(a, "renderedWindowWidthDp", width.toFloat())
+        set(a, "renderedWindowHeightDp", height.toFloat())
+        call(a, "refreshConversationLayout")
+        repeat(2) {
+            window.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+            window.layout(0, 0, width, height)
+            shadowOf(Looper.getMainLooper()).idleFor(16, TimeUnit.MILLISECONDS)
+        }
+    }
+
+    private fun visibleControl(pane: View, target: View): Rect {
+        val outer = Rect()
+        val bounds = Rect()
+        val paneVisible = pane.getGlobalVisibleRect(outer)
+        val targetVisible = target.getGlobalVisibleRect(bounds)
+        val location = IntArray(2).also(target::getLocationOnScreen)
+        val full = Rect(location[0], location[1], location[0] + target.width, location[1] + target.height)
+        val identity = when (target) {
+            is EditText -> "editor"
+            is Button -> "button '${target.text}'"
+            else -> target.javaClass.simpleName
+        }
+        val ancestry = generateSequence(target as View?) { it.parent as? View }.joinToString(" <- ") {
+            "${it.javaClass.simpleName}[${it.left},${it.top},${it.right},${it.bottom}; scroll=${it.scrollX},${it.scrollY}]"
+        }
+        val diagnostic = "$composerProfile control=$identity description=${target.contentDescription} tag=${target.tag} " +
+            "full=$full visible=$bounds pane=$outer ancestry=$ancestry"
+        assertTrue("The real pane is visible: $diagnostic", paneVisible)
+        assertTrue("The real control is visible: $diagnostic", targetVisible)
+        assertEquals("The complete control width is reachable: $diagnostic", target.width, bounds.width())
+        assertEquals("The complete control height is reachable: $diagnostic", target.height, bounds.height())
+        assertTrue("The control is inside the real pane: $diagnostic", outer.contains(bounds))
+        val density = target.resources.displayMetrics.density
+        assertTrue("Native touch width: $diagnostic", bounds.width() / density >= 48f)
+        assertTrue("Native touch height: $diagnostic", bounds.height() / density >= 48f)
+        return bounds
+    }
+
+    private fun touchComposer(pane: View, target: View) {
+        val bounds = visibleControl(pane, target)
+        val origin = IntArray(2).also(pane::getLocationOnScreen)
+        val now = SystemClock.uptimeMillis()
+        for ((action, time) in listOf(MotionEvent.ACTION_DOWN to now, MotionEvent.ACTION_UP to now + 16L)) {
+            val event = MotionEvent.obtain(now, time, action,
+                bounds.exactCenterX() - origin[0], bounds.exactCenterY() - origin[1], 0)
+            try { assertTrue("The pane dispatches the real control touch", pane.dispatchTouchEvent(event)) }
+            finally { event.recycle() }
+        }
+        shadowOf(Looper.getMainLooper()).idleFor(50, TimeUnit.MILLISECONDS)
+    }
+
+    @Test fun inputActionsAndConversationRouteRealTouchesAcrossWindowReflow() = withComposer { a, host, pane, home, editor, mic, send ->
+        val controls = listOf(editor, mic, send)
+        val parents = controls.map { it.parent }
         val live = home.hologram
         val fontBefore = RuntimeEnvironment.getFontScale()
         try {
             for ((width, height, font) in listOf(Triple(412, 915, 1f), Triple(884, 760, 1f),
                 Triple(840, 1050, 1f), Triple(412, 915, 1.5f))) {
                 RuntimeEnvironment.setFontScale(font)
-                size(home, width, height)
-                val shell = requireNotNull(home.jarvisShell.currentShell())
-                val input = requireNotNull(shell[JarvisShellLayout.Slot.INPUT])
-                val density = home.resources.displayMetrics.density
-                val controls = routes.keys.map { control(home, it) }
-                controls.forEach { button ->
-                    assertEquals("Reflow preserves control identity", identities[button.tag.toString().removePrefix("jarvis-")], button.id)
-                    assertTrue("${button.tag} remains a readable touch target", button.width / density >= 48f && button.height / density >= 48f)
-                    assertTrue("${button.tag} stays inside the drawn input bar",
-                        button.left >= (input.left * density).toInt() && button.right <= (input.right * density).toInt() &&
-                            button.top >= (input.top * density).toInt() && button.bottom <= (input.bottom * density).toInt())
-                }
-                for (i in controls.indices) for (j in i + 1 until controls.size) {
-                    val first = controls[i]; val second = controls[j]
-                    assertFalse("Input hit targets overlap: ${first.tag}/${second.tag}",
-                        first.left < second.right && second.left < first.right &&
-                            first.top < second.bottom && second.top < first.bottom)
-                }
-                for ((key, expected) in routes) {
-                    calls.clear()
-                    tapThroughViewport(home, control(home, key))
-                    assertEquals("$width/$height font$font $key reaches only its own route", listOf(expected), calls)
-                }
-                calls.clear()
-                val badge = control(home, "dialog:conversation")
-                assertTrue("Companion badge stays usable", badge.width / density >= 48f && badge.height / density >= 48f)
-                tapThroughViewport(home, badge)
-                assertEquals("Companion badge opens the real conversation", listOf("chat"), calls)
-                calls.clear()
-                if (shell[JarvisShellLayout.Slot.CAMERA_STATUS] != null) {
-                    tapThroughViewport(home, control(home, "camera:settings"))
-                    assertEquals("Camera settings remain reachable after scrolling", listOf("camera-settings"), calls)
-                } else {
-                    tapThroughViewport(home, control(home, "header:more"))
-                    assertEquals(listOf("more"), calls)
-                    assertTrue(ContinuumWorkAreaNavigationSpec.moreEntries.any { it.target == "camera-settings" })
-                }
-                assertTrue("Old input shortcuts are absent", descendants(home).none {
-                    it.tag == "jarvis-dialog:camera-settings" || it.tag == "jarvis-dialog:avatar-appearance"
+                measureComposer(a, host, pane, width, height)
+                assertSame(editor, field(a, "input"))
+                assertSame(mic, field(a, "chatMicButton"))
+                assertSame(send, field(a, "sendButton"))
+                controls.forEachIndexed { index, control -> assertSame(parents[index], control.parent) }
+                assertEquals("One real editor", listOf(editor), descendants(pane).filterIsInstance<EditText>())
+                val bounds = controls.map { visibleControl(pane, it) }
+                for (i in bounds.indices) for (j in i + 1 until bounds.size)
+                    assertFalse("Real composer targets do not overlap", Rect.intersects(bounds[i], bounds[j]))
+                assertNull("Workstation contains no surrogate input bar",
+                    requireNotNull(home.jarvisShell.currentShell())[JarvisShellLayout.Slot.INPUT])
+                assertTrue("Home does not duplicate native composer controls", descendants(home).none {
+                    it.tag?.toString() in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation")
                 })
-                assertSame("Input navigation preserves the live avatar", live, home.hologram)
+
+                val speechBeforeEditor = field(a, "speechScopeGeneration") as Long
+                touchComposer(pane, editor)
+                assertEquals("Touching the actual editor opens the conversation", true, field(a, "conversationActive"))
+                assertTrue(editor.hasFocus())
+                assertEquals("Editor touch is not microphone capture", speechBeforeEditor, field(a, "speechScopeGeneration"))
+                measureComposer(a, host, pane, width, height)
+
+                editor.text.clear()
+                val speechBeforeSend = field(a, "speechScopeGeneration") as Long
+                ShadowToast.reset()
+                touchComposer(pane, send)
+                assertEquals("The real Send listener receives precisely this touch",
+                    "Schreib zuerst einen Auftrag.", ShadowToast.getTextOfLatestToast())
+                assertEquals("Send does not invoke microphone input", speechBeforeSend, field(a, "speechScopeGeneration"))
+                assertEquals(false, field(a, "busy"))
+
+                val speechBeforeMic = field(a, "speechScopeGeneration") as Long
+                touchComposer(pane, mic)
+                assertEquals("Only the microphone advances its actual speech scope", speechBeforeMic + 1,
+                    field(a, "speechScopeGeneration"))
+                assertEquals("SDK28 cannot pretend to start on-device audio", false, field(a, "voiceListening"))
+                assertEquals("Unavailable speech must not send a turn", false, field(a, "busy"))
+                assertEquals("", editor.text.toString())
+                assertSame("Composer actions preserve the one mounted avatar", live, home.hologram)
+                assertSame(home, live.parent)
             }
         } finally {
             RuntimeEnvironment.setFontScale(fontBefore)
@@ -266,7 +387,7 @@ class JarvisReferenceHitTargetsUiTest {
                 } else {
                     assertEquals("Packed cockpit fills the viewport without inventing scroll", h, home.measuredHeight)
                 }
-                for (target in listOf("notifications", "settings")) {
+                for (target in listOf("chats", "settings", "more")) {
                     val header = control(home, "header:$target")
                     assertTrue(header.width >= 48 && header.height >= 48)
                 }
@@ -328,14 +449,20 @@ class JarvisReferenceHitTargetsUiTest {
 
     @Test fun unavailableSpecialActionsAreDisabledInsteadOfPretendingToStartCapture() = withHome { home, calls ->
         home.onNavigateTarget = null
-        for (target in listOf("dialog:voice-input", "camera:settings", "header:mode")) {
+        assertNotNull("The wide workstation retains its real camera settings slot",
+            requireNotNull(home.jarvisShell.currentShell())[JarvisShellLayout.Slot.CAMERA_STATUS])
+        for (target in listOf("bottom:files", "header:chats", "header:settings", "header:more", "camera:settings")) {
             val button = control(home, target)
             assertFalse(button.isEnabled)
             assertTrue(button.contentDescription.toString().contains("nicht verfügbar"))
             tapThroughViewport(home, button)
             assertTrue("A disabled action cannot fall through to conversation", calls.isEmpty())
         }
-        val chat = JarvisHomeTestRoutes.destination(home, "chat")
+        val surrogates = descendants(home).mapNotNull { it.tag?.toString() }.filter {
+            it in setOf("jarvis-dialog:voice-input", "jarvis-dialog:send", "jarvis-input:conversation", "jarvis-header:mode")
+        }
+        assertTrue("Unavailable Home must not recreate removed input or header targets: $surrogates", surrogates.isEmpty())
+        val chat = control(home, "bottom:chat")
         assertTrue(chat.isEnabled)
         tapThroughViewport(home, chat)
         assertEquals(listOf("legacy-slot"), calls)

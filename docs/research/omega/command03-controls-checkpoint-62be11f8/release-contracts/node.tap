@@ -1,0 +1,250 @@
+TAP version 13
+# Subtest: QA runs only on scoped integrator pushes or explicit SHA-bound dispatch, never accesses signing secrets
+ok 1 - QA runs only on scoped integrator pushes or explicit SHA-bound dispatch, never accesses signing secrets
+  ---
+  duration_ms: 1.712156
+  type: 'test'
+  ...
+# Subtest: JDK21 lifecycle, full widget suite and lint are required in the Android job
+ok 2 - JDK21 lifecycle, full widget suite and lint are required in the Android job
+  ---
+  duration_ms: 0.269302
+  type: 'test'
+  ...
+# Subtest: Signier-Workflow: nur manuell, Preflight ohne Geheimnisse, Geheimnisse nur im geschützten Job
+ok 3 - Signier-Workflow: nur manuell, Preflight ohne Geheimnisse, Geheimnisse nur im geschützten Job
+  ---
+  duration_ms: 0.692553
+  type: 'test'
+  ...
+# Subtest: Signierskript: feste Identität und Fail-Closed-Gates
+ok 4 - Signierskript: feste Identität und Fail-Closed-Gates
+  ---
+  duration_ms: 0.370473
+  type: 'test'
+  ...
+# Subtest: Signierskript gibt Schlüsselmaterial nie aus und umgeht keine Gates
+ok 5 - Signierskript gibt Schlüsselmaterial nie aus und umgeht keine Gates
+  ---
+  duration_ms: 0.598533
+  type: 'test'
+  ...
+# Subtest: Code-50-Besitzerausnahme ist in AGENTS.md und CLAUDE.md eng begrenzt dokumentiert
+ok 6 - Code-50-Besitzerausnahme ist in AGENTS.md und CLAUDE.md eng begrenzt dokumentiert
+  ---
+  duration_ms: 1.061825
+  type: 'test'
+  ...
+# Subtest: Code55 uses the registered signer with explicit sign-and-publish approval and both exact-source runs
+ok 7 - Code55 uses the registered signer with explicit sign-and-publish approval and both exact-source runs
+  ---
+  duration_ms: 0.310773
+  type: 'test'
+  ...
+# Subtest: Code55 verifies artifact bytes, complete JUnit, native runtime receipts and preserved 16 KiB alignment
+ok 8 - Code55 verifies artifact bytes, complete JUnit, native runtime receipts and preserved 16 KiB alignment
+  ---
+  duration_ms: 0.327589
+  type: 'test'
+  ...
+# Subtest: Code59 requires full native and context proof before protected original signing
+ok 9 - Code59 requires full native and context proof before protected original signing
+  ---
+  duration_ms: 0.500167
+  type: 'test'
+  ...
+# Subtest: Preflight besteht nur mit allen Gates
+ok 10 - Preflight besteht nur mit allen Gates
+  ---
+  duration_ms: 195.231909
+  type: 'test'
+  ...
+# Subtest: Path-Suffix @ref des QA-Laufs wird akzeptiert, fremder Workflow nicht
+ok 11 - Path-Suffix @ref des QA-Laufs wird akzeptiert, fremder Workflow nicht
+  ---
+  duration_ms: 244.098086
+  type: 'test'
+  ...
+# Subtest: Environment ohne Pflicht-Reviewer oder mit falscher Branch-Regel bricht VOR Geheimnissen ab
+ok 12 - Environment ohne Pflicht-Reviewer oder mit falscher Branch-Regel bricht VOR Geheimnissen ab
+  ---
+  duration_ms: 208.060387
+  type: 'test'
+  ...
+# Subtest: QA-Lauf muss exakt, manuell, abgeschlossen und grün sein
+ok 13 - QA-Lauf muss exakt, manuell, abgeschlossen und grün sein
+  ---
+  duration_ms: 630.430121
+  type: 'test'
+  ...
+# Subtest: Unreadable or different upgrade baseline cannot silently permit publication
+ok 14 - Unreadable or different upgrade baseline cannot silently permit publication
+  ---
+  duration_ms: 509.96177
+  type: 'test'
+  ...
+# Subtest: Freigabe-SHA, Commit-Bindung, Branch, Event und Release-Zustand sind erzwungen
+ok 15 - Freigabe-SHA, Commit-Bindung, Branch, Event und Release-Zustand sind erzwungen
+  ---
+  duration_ms: 337.165008
+  type: 'test'
+  ...
+# Subtest: Sign-Modus ohne Android-Werkzeuge und ohne Schlüssel bricht ab, ohne etwas zu veröffentlichen
+ok 16 - Sign-Modus ohne Android-Werkzeuge und ohne Schlüssel bricht ab, ohne etwas zu veröffentlichen
+  ---
+  duration_ms: 175.16606
+  type: 'test'
+  ...
+# Subtest: Code55 preflight recomputes complete proofs; sign still stops before absent keys
+ok 17 - Code55 preflight recomputes complete proofs; sign still stops before absent keys
+  ---
+  duration_ms: 2993.586043
+  type: 'test'
+  ...
+# Subtest: Code55 rejects mismatched run identity, workflow, branch, approval and unfinished results
+ok 18 - Code55 rejects mismatched run identity, workflow, branch, approval and unfinished results
+  ---
+  duration_ms: 5994.018142
+  type: 'test'
+  ...
+# Subtest: Code55 requires every full and APK job exactly once and successful
+ok 19 - Code55 requires every full and APK job exactly once and successful
+  ---
+  duration_ms: 2234.904162
+  type: 'test'
+  ...
+# Subtest: Code55 rejects expired, renamed, stale, duplicated and mixed-run artifacts
+ok 20 - Code55 rejects expired, renamed, stale, duplicated and mixed-run artifacts
+  ---
+  duration_ms: 2464.685293
+  type: 'test'
+  ...
+# Subtest: Code55 verifies downloaded archive hash, size, traversal and duplicate paths
+ok 21 - Code55 verifies downloaded archive hash, size, traversal and duplicate paths
+  ---
+  duration_ms: 1857.331288
+  type: 'test'
+  ...
+# Subtest: Code55 rejects malformed JSON, duplicate fields and mismatched source receipts
+ok 22 - Code55 rejects malformed JSON, duplicate fields and mismatched source receipts
+  ---
+  duration_ms: 3739.28608
+  type: 'test'
+  ...
+# Subtest: Code55 requires actual unsigned hash and the preserved 16 KiB audit
+ok 23 - Code55 requires actual unsigned hash and the preserved 16 KiB audit
+  ---
+  duration_ms: 4048.024932
+  type: 'test'
+  ...
+# Subtest: Code55 recomputes complete JUnit and refuses hidden failures, unknown skips or sparse coverage
+ok 24 - Code55 recomputes complete JUnit and refuses hidden failures, unknown skips or sparse coverage
+  ---
+  duration_ms: 4553.886324
+  type: 'test'
+  ...
+# Subtest: Code55 requires both successful native completions and their exact source
+ok 25 - Code55 requires both successful native completions and their exact source
+  ---
+  duration_ms: 6341.83471
+  type: 'test'
+  ...
+# Subtest: Code55 independently reassesses Node XML and rejects tampered or failed reports
+ok 26 - Code55 independently reassesses Node XML and rejects tampered or failed reports
+  ---
+  duration_ms: 3176.517571
+  type: 'test'
+  ...
+# Subtest: Code55 refuses a rerun racing artifact validation or an unverified upgrade baseline
+ok 27 - Code55 refuses a rerun racing artifact validation or an unverified upgrade baseline
+  ---
+  duration_ms: 4849.457709
+  type: 'test'
+  ...
+# Subtest: actual Node report keeps unrelated device gates unclaimed
+ok 28 - actual Node report keeps unrelated device gates unclaimed
+  ---
+  duration_ms: 1.130348
+  type: 'test'
+  ...
+# Subtest: missing executed profile cannot become a passing proof
+ok 29 - missing executed profile cannot become a passing proof
+  ---
+  duration_ms: 0.338575
+  type: 'test'
+  ...
+# Subtest: duplicate profile cannot replace a required scope declaration
+ok 30 - duplicate profile cannot replace a required scope declaration
+  ---
+  duration_ms: 0.140549
+  type: 'test'
+  ...
+# Subtest: invented device success cannot be attributed to Node
+ok 31 - invented device success cannot be attributed to Node
+  ---
+  duration_ms: 0.230845
+  type: 'test'
+  ...
+# Subtest: unknown or failed scope is not silently omitted
+ok 32 - unknown or failed scope is not silently omitted
+  ---
+  duration_ms: 0.189844
+  type: 'test'
+  ...
+# Subtest: extra failed check remains a rejection
+ok 33 - extra failed check remains a rejection
+  ---
+  duration_ms: 0.078036
+  type: 'test'
+  ...
+# Subtest: only the two exact release branches select fixed Node evidence profiles
+ok 34 - only the two exact release branches select fixed Node evidence profiles
+  ---
+  duration_ms: 0.898962
+  type: 'test'
+  ...
+# Subtest: existing push lists remain exact and contain no Code60 trigger
+ok 35 - existing push lists remain exact and contain no Code60 trigger
+  ---
+  duration_ms: 0.268801
+  type: 'test'
+  ...
+# Subtest: Code60 retains all five full jobs and gates every checkout by manual event, exact ref and expected SHA
+ok 36 - Code60 retains all five full jobs and gates every checkout by manual event, exact ref and expected SHA
+  ---
+  duration_ms: 1.590074
+  type: 'test'
+  ...
+# Subtest: Code60 does not substitute targeted local tests for complete QA or weaken original gates
+ok 37 - Code60 does not substitute targeted local tests for complete QA or weaken original gates
+  ---
+  duration_ms: 0.240258
+  type: 'test'
+  ...
+# Subtest: exact owner approval and protected required reviewer remain mandatory before key use
+ok 38 - exact owner approval and protected required reviewer remain mandatory before key use
+  ---
+  duration_ms: 0.273879
+  type: 'test'
+  ...
+# Subtest: Code60 upgrade baseline pins the published original Code59 bytes and identity
+ok 39 - Code60 upgrade baseline pins the published original Code59 bytes and identity
+  ---
+  duration_ms: 0.182052
+  type: 'test'
+  ...
+# Subtest: Node evidence still rejects fabricated physical-device success and missing checks
+ok 40 - Node evidence still rejects fabricated physical-device success and missing checks
+  ---
+  duration_ms: 0.532345
+  type: 'test'
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 40
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 44675.654102

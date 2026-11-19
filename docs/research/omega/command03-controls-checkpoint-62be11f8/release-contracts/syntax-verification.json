@@ -1,0 +1,352 @@
+{
+  "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "verified_at_utc": "2026-11-16T06:51:59.470415+00:00",
+  "commands": [
+    {
+      "name": "signer-syntax",
+      "argv": [
+        "bash",
+        "-n",
+        "scripts/continuum-code50-github-signer.sh"
+      ],
+      "exit_code": 0,
+      "log": "signer-syntax.txt"
+    },
+    {
+      "name": "node-syntax",
+      "argv": [
+        "node",
+        "--check",
+        "tools/code55-apk/code59-node-proof.mjs"
+      ],
+      "exit_code": 0,
+      "log": "node-syntax.txt"
+    },
+    {
+      "name": "visual-source",
+      "argv": [
+        "node",
+        "tools/command03-native-qa/check-visual-source.mjs"
+      ],
+      "exit_code": 0,
+      "log": "visual-source.txt"
+    },
+    {
+      "name": "bridge-syntax",
+      "argv": [
+        "node",
+        "--check",
+        "app/src/main/assets/continuum-command03/native-bridge.js"
+      ],
+      "exit_code": 0,
+      "log": "bridge-syntax.txt"
+    }
+  ],
+  "workflows": [
+    {
+      "path": ".github/workflows/continuum-code57-voice-full-qa.yml",
+      "run_steps": [
+        {
+          "job": "unsigned-arm64",
+          "step": 1,
+          "name": "Exact source and original package",
+          "shell": "bash",
+          "sha256": "7e653b896a26081842ae9e950d370993ce43d132ee5e3284c9469eb063751f2a",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "unsigned-arm64",
+          "step": 4,
+          "name": "Install official Android SDK",
+          "shell": "bash",
+          "sha256": "01af1e1b8b868cd8fefadd11d2e74c26f64f45754a596c71285e28c058727fc7",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "unsigned-arm64",
+          "step": 5,
+          "name": "Assemble fixed release profile from verified source without signing credentials",
+          "shell": "bash",
+          "sha256": "65f6f9b0f571021f0cdc7b39d6431538ac5b5bab0456112507b8ba57f937ddbc",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "unsigned-arm64",
+          "step": 6,
+          "name": "Check exact version, ARM64, alignment, signing status and SHA-256",
+          "shell": "bash",
+          "sha256": "bfc8219f5808def318d2e47556730dd53e1988e3e002ffe0eb8e6acfe0976a54",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "renderer-preflight",
+          "step": 1,
+          "name": "Source identity",
+          "shell": "bash",
+          "sha256": "d95fc5bbbacfab37e9bd6863ce57ee03958d175262220d195b7000f97e4c3d29",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "renderer-preflight",
+          "step": 4,
+          "name": "Android SDK",
+          "shell": "bash",
+          "sha256": "01af1e1b8b868cd8fefadd11d2e74c26f64f45754a596c71285e28c058727fc7",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "renderer-preflight",
+          "step": 5,
+          "name": "Actual Android compilation, renderer and date regressions",
+          "shell": "bash",
+          "sha256": "93c0dcf99795c6b4578eed7b62ad8d7e55b450b291b78562718182766be3b6f0",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "full-android",
+          "step": 1,
+          "name": "Source identity",
+          "shell": "bash",
+          "sha256": "d95fc5bbbacfab37e9bd6863ce57ee03958d175262220d195b7000f97e4c3d29",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "full-android",
+          "step": 5,
+          "name": "Android SDK",
+          "shell": "bash",
+          "sha256": "01af1e1b8b868cd8fefadd11d2e74c26f64f45754a596c71285e28c058727fc7",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "full-android",
+          "step": 6,
+          "name": "Full unfiltered Android and UI regression suite (motion exercised without PNG export)",
+          "shell": "bash",
+          "sha256": "9f316c8c2faba4b1ca4f9556ca2eac8a8e421e573e7a628ab59341429050d42f",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "full-android",
+          "step": 7,
+          "name": "Diagnose actual snapshot and launch regressions",
+          "shell": "bash",
+          "sha256": "9944b0b3fb1aa121cdd7bcfa4babb7f3b89e2dae84af174971c09dc02d24effd",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "full-android",
+          "step": 8,
+          "name": "Require exact declared skip policy",
+          "shell": "bash",
+          "sha256": "5a14eb0a7b078529bfd683dea19fde52b2e3ce823fb97a7ee9d654ee18a063da",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "full-android",
+          "step": 9,
+          "name": "Require Code59 regression coverage",
+          "shell": "bash",
+          "sha256": "5d476d2942f199ae8925f69f1002f877bbf61f7633af20be372399dffb3beb40",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "full-android",
+          "step": 10,
+          "name": "Require Code60 navigation, context isolation and mounted presence regressions",
+          "shell": "bash",
+          "sha256": "4f7ee864a3b5ceccfbeabe6a429d7422faf50eb733477b459b392f6b0c2966d5",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "full-android",
+          "step": 11,
+          "name": "Full Android lint",
+          "shell": "bash",
+          "sha256": "0af974e8fbd6aebcaa7e32b0d138665216ed35bef0a5bef729fc3c06566878b5",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "node-backend",
+          "step": 1,
+          "name": "Verify source identity",
+          "shell": "bash",
+          "sha256": "d95fc5bbbacfab37e9bd6863ce57ee03958d175262220d195b7000f97e4c3d29",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "node-backend",
+          "step": 3,
+          "name": "Full Node QA and critical contracts",
+          "shell": "bash",
+          "sha256": "44565dbc9f06c7992c9845d1a97a3c2b74cc455837d6ab0794ebcfa07cf0fa04",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "node-backend",
+          "step": 4,
+          "name": "Backend checks",
+          "shell": "bash",
+          "sha256": "e7ea7f964a6ab4ea910efe39a24ff9ba551bb4e7a8b40aea0175174fed87e84d",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "native-runtime",
+          "step": 1,
+          "name": "Freeze native probe source",
+          "shell": "bash",
+          "sha256": "d95fc5bbbacfab37e9bd6863ce57ee03958d175262220d195b7000f97e4c3d29",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "native-runtime",
+          "step": 5,
+          "name": "Install emulator debugger and local display",
+          "shell": "bash",
+          "sha256": "e981540f8c314251716358a9c852b219d2d69250e6d625399acd9167278ff2fe",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "native-runtime",
+          "step": 6,
+          "name": "Install official native Android runtime",
+          "shell": "bash",
+          "sha256": "677dac17dc06823381e67bec7edcebba387cb2c3398e275b01e77eb3a0f4ea08",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "native-runtime",
+          "step": 7,
+          "name": "Verify surface evidence validator",
+          "shell": "bash",
+          "sha256": "dbbd2392f94d6d31cc1862fed222c22be531b2e93e5ddb6d29df46caee163880",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "native-runtime",
+          "step": 8,
+          "name": "Build disposable native test APKs",
+          "shell": "bash",
+          "sha256": "95d0369bc795979752532d5973234c24324830412d1fac2580c189694796b072",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "native-runtime",
+          "step": 9,
+          "name": "Verify native PDF, Filament and real app lifecycle",
+          "shell": "bash",
+          "sha256": "d998c26fe24aedf472e7fe85a66932a799d2da193f766c81df6e2ddd2bb35614",
+          "exit_code": 0,
+          "diagnostic": ""
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/code58-fold7-combined-context-qa.yml",
+      "run_steps": [
+        {
+          "job": "android-context-regression",
+          "step": 1,
+          "name": "Exact SHA and clean worktree",
+          "shell": "bash",
+          "sha256": "98358a7bcc3b7e02e5f710a44086515cf7cdae64c25213cdee188e9064ca1ce4",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "android-context-regression",
+          "step": 4,
+          "name": "Install Android SDK",
+          "shell": "bash",
+          "sha256": "baa16c796649f242fcfd645889d2d0f96a704edb9d9069f13c47fc0a5e6dab5b",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "android-context-regression",
+          "step": 5,
+          "name": "Run actual source-bound model and dialogue regression tests",
+          "shell": "bash",
+          "sha256": "200a3094ec73614b7f548070ab5275bbc161ff1694b70847eb90b705799bea3a",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "android-context-regression",
+          "step": 6,
+          "name": "Require repaired owner paths",
+          "shell": "bash",
+          "sha256": "d31762ea222011e34873dd3648b4252a8617e12b1e5ea095a493a0ec509b1a4c",
+          "exit_code": 0,
+          "diagnostic": ""
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/continuum-code50-sign-release.yml",
+      "run_steps": [
+        {
+          "job": "preflight",
+          "step": 3,
+          "name": "Prepare public verification tools",
+          "shell": "bash",
+          "sha256": "cfa051279808d12606a5afece1dae7ac8ad9b8772056d447c776fc0b6809f0c0",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "preflight",
+          "step": 4,
+          "name": "Preflight without secrets",
+          "shell": "bash",
+          "sha256": "074c3add10a58afa0f4701733b0270d914b6f81846abc7e779cd53f101133f80",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "release-original-signed",
+          "step": 3,
+          "name": "Prepare official Android 35 signing tools",
+          "shell": "bash",
+          "sha256": "cfa051279808d12606a5afece1dae7ac8ad9b8772056d447c776fc0b6809f0c0",
+          "exit_code": 0,
+          "diagnostic": ""
+        },
+        {
+          "job": "release-original-signed",
+          "step": 4,
+          "name": "Verify exact-source QA, sign with original key and publish verified release",
+          "shell": "bash",
+          "sha256": "c05130d49ddd1052447432d08430e3a43b493795162c8a83631d96c1de815003",
+          "exit_code": 0,
+          "diagnostic": ""
+        }
+      ]
+    }
+  ],
+  "workflow_yaml_count": 3,
+  "embedded_bash_count": 32
+}

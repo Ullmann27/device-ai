@@ -1,0 +1,1945 @@
+/* Additional Android state styles; original web design CSS stays byte-identical. */
+body[data-design="command03"] .native-history-glyph {
+ color:#60d2ef;font-size:16px;padding:0 8px 0 2px;
+}
+body[data-design="command03"] #workspace.native-work-active:not(.native-document-active):not(.native-computer-active)>:not(#native-live-panel) {display:none!important;}
+body[data-design="command03"] .native-live-panel {width:100%;min-height:230px;display:flex;flex-direction:column;}
+body[data-design="command03"] .native-transcript {
+ min-height:145px;max-height:360px;overflow:auto;padding:12px 3px;
+ display:flex;flex-direction:column;gap:8px;
+}
+body[data-design="command03"] .native-chat-line {
+ padding:12px 15px;border-radius:9px;border:1px solid rgba(101,210,249,.22);
+ background:linear-gradient(115deg,rgba(3,22,39,.76),rgba(28,22,51,.55));
+}
+body[data-design="command03"] .native-chat-line.native-owner {margin-left:13%;border-color:rgba(126,145,234,.4);}
+body[data-design="command03"] .native-chat-line small {
+ display:block;color:#78dff0;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.14em;
+}
+body[data-design="command03"] .native-chat-line p {
+ font:400 13px/1.55 Manrope,system-ui,sans-serif;white-space:pre-wrap;
+ overflow-wrap:anywhere;margin:5px 0 0;
+}
+body[data-design="command03"] .native-source-card {
+ display:flex;flex-direction:column;gap:7px;margin-top:10px;min-width:0;
+ padding-top:8px;border-top:1px solid rgba(101,210,249,.22);
+}
+body[data-design="command03"] .native-source-card>small {
+ color:#78dff0;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.14em;
+}
+body[data-design="command03"] .native-source-link {
+ display:flex;flex-direction:column;gap:4px;min-height:44px;width:100%;
+ padding:9px 10px;text-align:left;white-space:normal;overflow-wrap:anywhere;
+ border:1px solid rgba(101,210,249,.22);border-radius:5px;background:rgba(3,14,27,.67);
+ color:#e2f5f8;font:400 12px/1.5 Manrope,system-ui,sans-serif;
+}
+body[data-design="command03"] .native-source-link span {color:#8db8c9;font-size:11px;}
+body[data-design="command03"] .native-lane-state {
+ padding:10px;color:#a6d1dc;border-top:1px solid rgba(101,210,249,.2);
+ font:600 11px Manrope,system-ui,sans-serif;letter-spacing:.03em;
+}
+body[data-design="command03"] .native-meter {
+ display:flex;flex-direction:column;gap:7px;padding:12px 14px;width:100%;
+ background:linear-gradient(145deg,rgba(4,20,34,.91),rgba(20,20,43,.86));
+ border:1px solid rgba(88,184,222,.32);border-radius:8px;
+}
+body[data-design="command03"] .native-meter small {
+ color:#a7cbd7;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.11em;
+}
+body[data-design="command03"] .native-meter strong {
+ color:#e5fcff;font:500 26px 'Space Grotesk',system-ui,sans-serif;
+}
+body[data-design="command03"] .native-meter-track {
+ height:6px;background:rgba(73,103,132,.25);overflow:hidden;border-radius:3px;
+}
+body[data-design="command03"] .native-meter-track span {
+ display:block;height:100%;background:linear-gradient(90deg,#275d80,#6deaff);
+ transition:width .25s ease;
+}
+body[data-design="command03"] [data-telemetry-left]>:not(.native-meter):not(.native-telemetry-panel),
+body[data-design="command03"] [data-telemetry-right]>:not(.native-meter):not(.native-telemetry-panel) {display:none!important;}
+body[data-design="command03"] .native-telemetry-panel .ct-mode-toggle,
+body[data-design="command03"] #sequence-button,
+body[data-design="command03"] .format-preview-link,
+body[data-design="command03"] .project-download-link {display:none!important;}
+body[data-design="command03"] [data-scene][aria-disabled="true"] {cursor:default;}
+/* Same original command slot and type scale, with lossless multiline editing. */
+body[data-design="command03"] .center-stage .command-field textarea {
+ border:0;color:#e2f4ff;background:none;outline:none;padding:0;margin:0;
+ font:400 16px/29px Manrope,sans-serif;width:100%;min-width:0;
+ height:29px;min-height:29px;max-height:116px;display:block;resize:none;
+ overflow-y:auto;box-sizing:border-box;
+}
+body[data-design="command03"] .command-field textarea::placeholder {color:#809eb3;}
+body[data-design="command03"] .command-field textarea:focus-visible {
+ outline:2px solid #b6edf6;outline-offset:4px;
+}
+@media(max-width:760px) {
+ body[data-design="command03"] .center-stage .command-field textarea {
+  height:28px;min-height:28px;line-height:28px;max-height:112px;
+ }
+}
+
+/* The actual owner-selected PDF uses the same projected room and stays read-only. */
+body[data-design="command03"] #workspace.native-document-active:not(.native-computer-active)>:not(#native-document-panel) {display:none!important;}
+body[data-design="command03"] #workspace.native-document-active #native-document-panel {
+ display:flex;flex-direction:column;gap:12px;min-height:260px;width:100%;
+}
+body[data-design="command03"] .native-document-heading {
+ display:flex;flex-direction:column;gap:4px;padding:10px 2px;
+ border-bottom:1px solid rgba(110,226,248,.25);
+}
+body[data-design="command03"] .native-document-heading small {
+ color:#67d4e8;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.13em;
+}
+body[data-design="command03"] .native-document-title {
+ color:#e7f9ff;font:600 clamp(17px,2.1vw,25px) 'Space Grotesk',system-ui,sans-serif;
+ margin:0;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-document-facts {
+ display:grid;grid-template-columns:minmax(150px,40%) minmax(0,1fr);align-items:start;
+ gap:18px;min-height:180px;
+}
+body[data-design="command03"] .native-document-image {
+ display:block;width:100%;height:auto;max-height:470px;object-fit:contain;
+ border:1px solid rgba(95,224,249,.35);box-shadow:0 10px 35px rgba(0,5,14,.45);
+ background:#fff;border-radius:4px;
+}
+body[data-design="command03"] .native-document-image[hidden] {display:none!important;}
+body[data-design="command03"] .native-document-text {
+ display:flex;flex-direction:column;gap:8px;min-width:0;
+}
+body[data-design="command03"] .native-document-text small {
+ color:#8db8c9;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.07em;
+}
+body[data-design="command03"] .native-document-text p {
+ color:#bedce7;font:400 12px/1.5 Manrope,system-ui,sans-serif;margin:0;
+}
+body[data-design="command03"] .native-document-draft-status {
+ color:#bedce7;font:400 12px/1.5 Manrope,system-ui,sans-serif;margin:0;
+}
+body[data-design="command03"] .native-document-draft-status:empty {display:none;}
+body[data-design="command03"] [data-native-pdf="draft"]:disabled {opacity:.55;cursor:default;}
+body[data-design="command03"] .native-draft-recovery {
+ margin:10px 0;padding:12px;border:1px solid rgba(107,213,255,.3);border-radius:8px;
+ background:rgba(7,24,39,.8);color:#bedce7;font:400 12px/1.5 Manrope,system-ui,sans-serif;
+ scroll-margin-bottom:calc(var(--native-composer-height,160px) + 42px);
+}
+body[data-design="command03"] .native-draft-recovery p {margin:0 0 6px;}
+body[data-design="command03"] .native-draft-recovery summary {cursor:pointer;}
+body[data-design="command03"] .native-draft-recovery pre {
+ white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;font:inherit;
+}
+body[data-design="command03"] .native-draft-recovery .action-row {margin-top:8px;flex-wrap:wrap;}
+body[data-design="command03"] .native-draft-recovery button {min-height:44px;}
+@media(max-width:760px) {
+ body[data-design="command03"].native-has-draft-recovery .app-shell {
+  padding-bottom:max(122px,calc(var(--native-composer-height,160px) + 42px));
+ }
+}
+body[data-design="command03"] .native-document-excerpt {
+ white-space:pre-wrap;overflow-wrap:anywhere;max-height:370px;overflow:auto;
+ margin:0;padding:12px;border:1px solid rgba(79,170,209,.23);
+ background:rgba(3,14,27,.67);border-radius:5px;
+ color:#e2f5f8;font:400 12px/1.6 Manrope,system-ui,sans-serif;
+}
+@media(max-width:660px) {
+ body[data-design="command03"] .native-document-facts {grid-template-columns:1fr;}
+ body[data-design="command03"] .native-document-image {max-height:340px;}
+ body[data-design="command03"] .native-document-excerpt {max-height:300px;}
+}
+
+/* Real Android pixels occupy the existing projected browser; it owns the flight. */
+body[data-design="command03"] #workspace.native-computer-active>:not(#native-computer-panel) {display:none!important;}
+body[data-design="command03"] #workspace:not(.native-computer-active)>#native-computer-panel {display:none!important;}
+body[data-design="command03"] .native-computer-panel {width:100%;min-width:0;}
+body[data-design="command03"] .native-computer-panel .op-browser-chrome {padding:12px;}
+body[data-design="command03"] .native-computer-viewport {
+ display:flex;align-items:center;justify-content:center;padding:8px;min-height:180px;
+}
+body[data-design="command03"] .native-computer-viewport .op-waiting {min-height:180px;}
+body[data-design="command03"] .native-computer-viewport .op-waiting[hidden] {display:none!important;}
+body[data-design="command03"] .native-computer-image {
+ display:block;max-width:100%;width:auto;height:auto;max-height:min(55vh,470px);object-fit:contain;
+}
+
+/* Keep Android within its viewport. */
+html {overflow-x:clip;}
+body[data-design="command03"] {
+ min-width:0;width:100%;max-width:100%;overflow-x:clip;
+}
+body[data-design="command03"] .app-shell {
+ width:100%;min-width:0;
+}
+body[data-design="command03"] .presence-wing {
+ grid-template-columns:minmax(0,1fr);align-self:stretch;align-content:start;
+}
+/* Reset obsolete nested grid placement. */
+body[data-design="command03"] .presence-wing>.presence-instrument,
+body[data-design="command03"] .presence-wing>[data-telemetry-left],
+body[data-design="command03"] .presence-wing>[data-telemetry-right] {
+ grid-column:1;grid-row:auto;width:100%;min-width:0;max-width:100%;
+}
+body[data-design="command03"] .native-telemetry-panel {
+ grid-template-rows:minmax(16px,auto) 34px 44px auto;
+}
+body[data-design="command03"] .header-tools>.icon-button {
+ display:flex;flex:none;min-width:44px;min-height:44px;
+}
+body[data-design="command03"] .mobile-side-controls>.secondary-button {
+ min-width:0;white-space:normal;
+}
+@container presence-orbit (max-width:359px) {
+ body[data-design="command03"] .presence-system {grid-template-columns:minmax(0,1fr);}
+ body[data-design="command03"] .presence-wing-left {grid-column:1;grid-row:2;}
+ body[data-design="command03"] .presence-wing-right {grid-column:1;grid-row:3;}
+ body[data-design="command03"] .presence-instrument .pi-shell {
+  height:280px;min-height:280px;max-height:none;
+ }
+}
+@media(max-width:760px) {
+ body[data-design="command03"] .app-shell {
+  padding-bottom:calc(var(--native-composer-height,80px) + 46px + env(safe-area-inset-bottom,0px));
+ }
+ body[data-design="command03"] .center-stage .command-bar {
+  bottom:max(14px,env(safe-area-inset-bottom,0px));
+ }
+}
+@media(max-width:479px) {
+ body[data-design="command03"] .preview-badge {display:none;}
+}
+
+/* Cyan glass, violet projection light. */
+body[data-design="command03"].native-hologram {
+ --native-neon:.7;
+ --native-cyan:#83edff;
+ --native-violet:#be91ff;
+}
+body[data-design="command03"] .masthead {gap:10px;}
+body[data-design="command03"] .header-tools {flex:0 0 auto;min-width:0;}
+body[data-design="command03"] .header-tools>.native-settings-entry {
+ width:auto;height:44px;padding:0 10px;gap:7px;white-space:nowrap;
+ font:600 12px Manrope,system-ui,sans-serif;letter-spacing:.01em;
+ color:#defaff;border-color:rgba(111,231,255,.6);
+ background:linear-gradient(125deg,rgba(20,79,104,.65),rgba(39,30,77,.65));
+ box-shadow:inset 0 1px rgba(197,246,255,.2),0 0 18px rgba(65,211,255,.13);
+}
+body[data-design="command03"] .native-settings-entry svg {width:18px;height:18px;flex:none;}
+body[data-design="command03"] .native-settings-shortcuts {
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+ width:100%;min-width:0;margin:0 0 14px;
+}
+body[data-design="command03"] .native-setting-shortcut {
+ display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;
+ min-height:48px;padding:8px;border-radius:8px;border:1px solid rgba(119,208,247,.36);
+ color:#dff7ff;background:linear-gradient(135deg,rgba(16,54,76,.82),rgba(23,21,50,.86));
+ box-shadow:inset 0 1px rgba(210,251,255,.11),0 5px 18px rgba(0,4,18,.25);
+ font:500 12px Manrope,system-ui,sans-serif;cursor:pointer;
+ transition:transform .16s ease,border-color .16s ease;
+}
+body[data-design="command03"] .native-setting-shortcut svg {
+ width:19px;height:19px;flex:none;fill:none;stroke:var(--native-cyan);
+ stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
+}
+body[data-design="command03"] .native-setting-shortcut:last-child svg {stroke:var(--native-violet);}
+body[data-design="command03"] .native-setting-shortcut:hover {
+ border-color:#87e8ff;transform:translateY(-1px);
+}
+body[data-design="command03"] .native-setting-shortcut:active {transform:translateY(1px);}
+body[data-design="command03"] .native-setting-shortcut:focus-visible,
+body[data-design="command03"] .native-settings-entry:focus-visible {
+ outline:2px solid #ddfaff;outline-offset:3px;
+}
+body[data-design="command03"].native-hologram .floating-dock,
+body[data-design="command03"].native-hologram .command-bar {
+ border-color:rgba(105,227,255,.55);
+ background:linear-gradient(112deg,rgba(9,40,60,.95),rgba(13,19,39,.95) 58%,rgba(39,23,63,.92));
+ box-shadow:inset 0 1px 0 rgba(201,251,255,.3),0 0 24px rgba(73,201,255,calc(.17 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .floating-dock .nav-button.active {
+ color:#eaffff;border-color:#91f1ff;
+ background:linear-gradient(135deg,rgba(43,136,169,.4),rgba(46,55,114,.38));
+ box-shadow:inset 0 -2px #89edff,0 0 19px rgba(90,220,255,calc(.24 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .presence-instrument .pi-shell,
+body[data-design="command03"].native-hologram .native-telemetry-panel {
+ border-color:rgba(120,225,255,.44);
+ background:radial-gradient(ellipse at 0 0,rgba(50,129,167,.2),transparent 70%),
+  linear-gradient(135deg,rgba(9,31,48,.95),rgba(14,20,42,.92));
+ box-shadow:inset 0 1px 0 rgba(195,246,255,.25),inset 0 -1px rgba(133,107,245,.28),
+  0 8px 24px rgba(0,3,16,.4),0 0 19px rgba(61,201,255,calc(.14 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .presence-wing-right .pi-shell {
+ border-color:rgba(177,146,255,.5);
+ box-shadow:inset 0 1px rgba(219,204,255,.3),0 8px 24px rgba(0,3,16,.4),
+  0 0 22px rgba(158,98,255,calc(.2 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .workspace {
+ border-color:rgba(128,221,255,.5);
+ box-shadow:inset 0 1px rgba(202,252,255,.25),0 16px 46px rgba(0,4,19,.55),
+  0 0 26px rgba(94,126,255,calc(.16 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .avatar-linkbar .icon-button {
+ border-color:rgba(115,228,255,.5);
+ background:linear-gradient(145deg,rgba(31,87,111,.7),rgba(26,26,57,.75));
+ box-shadow:inset 0 1px rgba(190,246,255,.22),0 0 15px rgba(80,205,255,calc(.15 * var(--native-neon)));
+}
+body[data-design="command03"].native-hologram .presence-core {position:relative;min-width:0;}
+body[data-design="command03"] .native-holo-field {
+ position:absolute;inset:5% 0 8%;z-index:0;pointer-events:none;overflow:hidden;
+ border-radius:48%;opacity:var(--native-neon);
+ background:radial-gradient(ellipse at 35% 40%,rgba(36,174,255,.16),transparent 64%),
+  radial-gradient(ellipse at 75% 65%,rgba(156,76,246,.17),transparent 60%);
+}
+body[data-design="command03"] .native-holo-field::before,
+body[data-design="command03"] .native-holo-field::after {
+ content:"";position:absolute;inset:16% 8% 19%;border-radius:50%;
+ border:1px solid rgba(121,236,255,.48);
+ box-shadow:0 0 16px rgba(61,212,255,.3),inset 0 0 18px rgba(61,212,255,.16);
+ animation:native-holo-drift 12s ease-in-out infinite alternate;
+}
+body[data-design="command03"] .native-holo-field::after {
+ inset:29% 1% 15%;border-color:rgba(199,143,255,.5);
+ box-shadow:0 0 18px rgba(164,87,255,.32),inset 0 0 16px rgba(164,87,255,.14);
+ animation:native-holo-cross 17s ease-in-out infinite alternate;
+}
+@keyframes native-holo-drift {
+ from {transform:translateY(0) rotate(-18deg) scaleY(.78);opacity:.55;}
+ to {transform:translateY(-6px) rotate(-12deg) scaleY(.8);opacity:.9;}
+}
+@keyframes native-holo-cross {
+ from {transform:translateY(2px) rotate(23deg) scaleY(.48);opacity:.8;}
+ to {transform:translateY(-4px) rotate(28deg) scaleY(.5);opacity:.5;}
+}
+body[data-design="command03"][data-native-light-motion="off"] .native-holo-field::before,
+body[data-design="command03"][data-native-light-motion="off"] .native-holo-field::after,
+body[data-design="command03"].native-light-paused .native-holo-field::before,
+body[data-design="command03"].native-light-paused .native-holo-field::after {animation-play-state:paused;}
+@media(max-width:479px) {
+ body[data-design="command03"] .native-setting-shortcut {
+  flex-direction:column;gap:4px;min-height:58px;padding:7px 3px;font-size:11px;
+ }
+}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-holo-field::before,
+ body[data-design="command03"] .native-holo-field::after {animation:none;}
+ body[data-design="command03"] .native-setting-shortcut {transition:none;}
+}
+
+/* Cinema63: one existing scene. */
+body[data-design="command03"].native-hologram {
+ --cinema-key:112,231,255;--cinema-fill:164,119,255;
+ --cinema-glass:rgba(9,23,38,.92);
+ background-color:#020710;
+}
+body[data-design="command03"][data-state="listening"] {--cinema-key:103,255,214;}
+body[data-design="command03"][data-state="working"] {--cinema-key:187,157,255;}
+body[data-design="command03"][data-state="speaking"] {--cinema-key:137,235,255;--cinema-fill:232,172,101;}
+body[data-design="command03"] .room-architecture {
+ opacity:.8;pointer-events:none;
+ background:linear-gradient(90deg,#01050b99,transparent 22% 78%,#01050b99),
+  radial-gradient(ellipse at 50% 32%,rgba(42,84,139,.2),transparent 68%);
+}
+body[data-design="command03"] .room-architecture::before {
+ content:"";position:absolute;inset:11% 9% 8%;border:1px solid #729eb529;
+ clip-path:polygon(12% 0,88% 0,100% 15%,100% 85%,88% 100%,12% 100%,0 85%,0 15%);
+ background:linear-gradient(90deg,#7cc9e318,transparent 13% 87%,#a58bff12),
+  linear-gradient(0deg,#5f8cb718,transparent 22% 90%,#81d4f324);
+}
+body[data-design="command03"] .masthead {position:relative;border-bottom-color:#8ce3ff30;}
+body[data-design="command03"] .masthead::after {
+ content:"";position:absolute;bottom:-1px;left:0;width:92px;height:2px;
+ background:#a1eeff;box-shadow:0 0 15px #69dcff88;pointer-events:none;
+}
+body[data-design="command03"] .brand b {color:#e1f5ff;letter-spacing:.2em;}
+body[data-design="command03"] .brand strong {color:#9ab9d4;}
+body[data-design="command03"] .plugin-toolbar .floating-dock {
+ border-radius:12px;padding:6px;border-color:#85cae63b;
+ background:linear-gradient(170deg,#172d40ef,#06111ff5 55%,#11172bf0);
+ box-shadow:inset 0 1px #e1f6ff24,0 10px 24px #0005;
+}
+body[data-design="command03"] .nav-button {border-radius:7px;}
+body[data-design="command03"] .native-setting-shortcut {border-radius:9px;}
+body[data-design="command03"] .presence-topline {border-bottom:0;min-height:40px;}
+body[data-design="command03"] .presence-topline .eyebrow {color:#9ac7d9;letter-spacing:.16em;}
+body[data-design="command03"] .presence-edition {color:#be9fea;font-size:10px;}
+body[data-design="command03"] .presence-system {
+ padding:15px 0 8px;isolation:isolate;
+ background:radial-gradient(ellipse at 50% 45%,rgba(var(--cinema-key),.055),transparent 62%);
+}
+body[data-design="command03"] .presence-system::before {
+ content:"";position:absolute;z-index:-1;inset:0;border-radius:20px;
+ border:1px solid #a6deff18;pointer-events:none;
+ background:linear-gradient(115deg,#bbe9ff06,transparent 24% 76%,#b497ff08);
+ box-shadow:inset 0 1px #beeaff10,0 20px 70px #0004;
+}
+body[data-design="command03"] .presence-core::before {
+ inset:20px 3% 80px;border-color:rgba(var(--cinema-key),.24);
+ background:linear-gradient(rgba(var(--cinema-key),.7),rgba(var(--cinema-key),.7)) left top/32px 2px no-repeat,
+  linear-gradient(rgba(var(--cinema-fill),.5),rgba(var(--cinema-fill),.5)) right bottom/32px 2px no-repeat;
+}
+body[data-design="command03"] .native-holo-field {
+ inset:3% -3% 15%;border-radius:50%;
+ background:radial-gradient(ellipse at 50% 32%,rgba(var(--cinema-key),.18),transparent 59%),
+  radial-gradient(ellipse at 66% 70%,rgba(var(--cinema-fill),.24),transparent 65%);
+}
+body[data-design="command03"] .native-holo-field::before {border-color:rgba(var(--cinema-key),.6);}
+body[data-design="command03"] .native-projection-base {
+ position:absolute;left:4%;right:4%;bottom:74px;height:94px;pointer-events:none;z-index:1;
+ opacity:var(--native-neon);isolation:isolate;
+ background:radial-gradient(ellipse at 50% 65%,rgba(var(--cinema-key),.22),transparent 66%);
+}
+body[data-design="command03"] .native-projection-base i {
+ position:absolute;inset:20% 0 10%;border-radius:50%;border:1px solid rgba(var(--cinema-key),.52);
+ background:linear-gradient(180deg,#132b3d44,#030b16b0);
+ box-shadow:0 4px 0 #030a15,0 5px 0 #628ca244,0 11px 18px #0009,inset 0 1px #d8faff44;
+}
+body[data-design="command03"] .native-projection-base i:nth-child(2) {
+ inset:27% 8% 22%;background:transparent;border-color:rgba(var(--cinema-fill),.65);
+ box-shadow:0 0 16px rgba(var(--cinema-fill),.17),inset 0 0 12px rgba(var(--cinema-key),.12);
+}
+body[data-design="command03"] .native-projection-base i:nth-child(3) {
+ inset:34% 18% 33%;background:radial-gradient(ellipse,rgba(var(--cinema-key),.22),transparent 70%);
+ box-shadow:0 0 24px rgba(var(--cinema-key),.15);
+}
+body[data-design="command03"] .native-projection-base span {
+ position:absolute;inset:-190% 12% 40%;z-index:-1;
+ clip-path:polygon(29% 0,71% 0,100% 100%,0 100%);
+ background:linear-gradient(0deg,rgba(var(--cinema-key),.12),transparent 85%);
+}
+body[data-design="command03"] .core-status {
+ top:8px;padding:8px 15px;border-radius:20px;color:rgb(var(--cinema-key));
+ border-color:rgba(var(--cinema-key),.36);background:#04121de8;
+ box-shadow:0 0 22px rgba(var(--cinema-key),calc(.13 * var(--native-neon))),inset 0 1px #d4faff16;
+}
+body[data-design="command03"] .core-status .status-dot {background:rgb(var(--cinema-key));}
+body[data-design="command03"] .center-stage .presence-orbit .avatar-caption {
+ bottom:19px;border:1px solid #a4ddff22;border-radius:20px;padding:8px 12px;
+ background:linear-gradient(120deg,#071323ed,#152540e8);color:#e4f8ff;
+}
+body[data-design="command03"] .presence-wing {gap:16px;}
+/* Replace preview instruments with facts. */
+body[data-design="command03"].native-hologram [data-presence-left]>:not(.native-instrument),
+body[data-design="command03"].native-hologram [data-presence-right]>:not(.native-instrument),
+body[data-design="command03"].native-hologram #instrument-content>.rail-card {display:none!important;}
+body[data-design="command03"] .native-instrument,
+body[data-design="command03"] .native-telemetry-panel {
+ position:relative;min-width:0;width:100%;border:1px solid #76d9fa55;border-radius:12px;
+ background:linear-gradient(132deg,#a6e7ff10,transparent 32%),
+  linear-gradient(170deg,#142b3de8,#071222f5 53%,#10172bf5);
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,0 5px 0 #020712aa,0 6px 0 #5e87a32b,
+  0 15px 30px #0006,0 0 24px rgba(var(--cinema-key),calc(.08 * var(--native-neon)));
+}
+body[data-design="command03"] .native-instrument {min-height:260px;padding:16px;display:flex;flex-direction:column;}
+body[data-design="command03"] .native-instrument::before {
+ content:"";position:absolute;top:-1px;left:18px;right:50%;height:2px;background:rgb(var(--cinema-key));
+ box-shadow:0 0 13px rgba(var(--cinema-key),.6);pointer-events:none;opacity:var(--native-neon);
+}
+body[data-design="command03"] .native-evidence {border-color:#c3a0ff60;}
+body[data-design="command03"] .native-evidence::before {background:rgb(var(--cinema-fill));}
+body[data-design="command03"] .native-instrument h3 {
+ font:600 11px/1.5 'Space Grotesk',sans-serif;color:#baddeb;letter-spacing:.14em;margin:0;
+}
+body[data-design="command03"] .native-instrument>strong {
+ font:500 clamp(17px,2cqi,22px)/1.3 'Space Grotesk',sans-serif;color:#ecfaff;
+ overflow-wrap:anywhere;margin:4px 0 7px;
+}
+body[data-design="command03"] .native-instrument>p {
+ font:400 12px/1.65 Manrope,sans-serif;color:#a9c8d8;margin:0;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-instrument-art {height:98px;display:flex;align-items:center;justify-content:center;}
+body[data-design="command03"] .native-instrument-art svg {
+ width:100%;max-width:210px;height:90px;stroke:rgba(var(--cinema-key),.62);stroke-width:.8;
+ background:radial-gradient(ellipse at center,rgba(var(--cinema-key),.09),transparent 65%);
+}
+body[data-design="command03"] .native-evidence .native-instrument-art svg {stroke:rgba(var(--cinema-fill),.65);}
+body[data-design="command03"] .native-activity[data-mode="working"] .native-instrument-art {
+ animation:native-status-breathe 2.8s ease-in-out infinite alternate;
+}
+@keyframes native-status-breathe {from{opacity:.5;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+body[data-design="command03"] .native-instrument-links {margin-top:auto;}
+body[data-design="command03"] .native-instrument-links .native-source-link {
+ font-size:12px;margin-top:7px;max-height:88px;overflow:auto;line-height:1.5;
+}
+body[data-design="command03"] .native-telemetry-panel {padding:15px;border-radius:10px;}
+body[data-design="command03"] .center-stage .presence-copy {
+ padding:20px 4px 18px;margin-top:12px;border-bottom-color:#82bed82b;
+}
+body[data-design="command03"] .center-stage .presence-copy h1 {
+ color:#e8f8ff;text-shadow:0 0 32px rgba(var(--cinema-key),.13);
+}
+body[data-design="command03"] .workspace-shell {
+ border-radius:14px;border-color:#a2dfff70;
+ background:linear-gradient(135deg,#9fdfff0d,transparent 36%),linear-gradient(160deg,#142b3cef,#060f1df7 55%,#11182def);
+ box-shadow:inset 0 1px #d8f6ff44,0 22px 64px #0009,0 0 28px rgba(var(--cinema-key),calc(.1 * var(--native-neon)));
+}
+body[data-design="command03"] .workspace-topline {background:linear-gradient(90deg,#153b4e5e,#131b3100);border-radius:14px 14px 0 0;}
+body[data-design="command03"] .workspace-backplate {border-radius:13px;}
+body[data-design="command03"] .native-chat-line {
+ border-radius:12px;border-color:#82cde82e;background:linear-gradient(125deg,#0b2538d9,#0e1a2fe6);
+}
+body[data-design="command03"] .native-chat-line.native-owner {background:linear-gradient(125deg,#23274ae6,#1b1b38e6);border-color:#ae96f64a;}
+body[data-design="command03"] .native-chat-line p {font-size:15px;line-height:1.65;}
+body[data-design="command03"] .command-bar {border-radius:16px;box-shadow:0 12px 35px #000a,inset 0 1px #dbfaff38;}
+body[data-design="command03"] .send-button {border-radius:10px;background:linear-gradient(145deg,#75dceb,#5470ce);color:#04111f;border-color:#c7f6ff;}
+body[data-design="command03"] .mic-button {border-radius:10px;}
+body[data-design="command03"] .mic-button[aria-pressed="true"] {border-color:#91ffe0;color:#91ffe0;box-shadow:0 0 16px #54ebbd30;}
+body[data-design="command03"] .chat-sidebar {border-radius:12px;}
+body[data-design="command03"] .native-instrument-summary {color:#e5faff;line-height:1.6;}
+body[data-design="command03"].native-light-paused .native-instrument-art,
+body[data-design="command03"][data-native-light-motion="off"] .native-instrument-art {animation-play-state:paused!important;}
+body[data-design="command03"].native-light-paused *,
+body[data-design="command03"].native-light-paused *::before,
+body[data-design="command03"].native-light-paused *::after {animation-play-state:paused!important;}
+@container presence-orbit (min-width:750px) {
+ body[data-design="command03"] .presence-wing-left {padding-left:10px;}
+ body[data-design="command03"] .presence-wing-right {padding-right:10px;}
+}
+@container presence-orbit (max-width:749px) {
+ body[data-design="command03"] .presence-system {padding:12px 0 16px;}
+ body[data-design="command03"] .presence-system::before {inset:0 0 auto;height:390px;}
+ body[data-design="command03"] .native-instrument {min-height:234px;padding:14px;}
+ body[data-design="command03"] .native-projection-base {left:12%;right:12%;bottom:65px;height:74px;}
+}
+@container presence-orbit (max-width:449px) {
+ body[data-design="command03"] .presence-system::before {height:365px;}
+ body[data-design="command03"] .native-instrument {min-height:224px;padding:12px;}
+ body[data-design="command03"] .native-instrument h3 {font-size:10px;letter-spacing:.1em;}
+ body[data-design="command03"] .native-instrument-art {height:82px;}
+ body[data-design="command03"] .presence-topline {gap:8px;flex-wrap:wrap;}
+ body[data-design="command03"] .presence-edition {font-size:9px;}
+}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-instrument-art {animation:none!important;}
+}
+body[data-design="command03"] .native-stop-button {
+ flex:none;min-width:44px;width:44px;height:44px;min-height:44px;border-radius:10px;
+ border:1px solid #ffc48e;color:#ffe0c1;background:linear-gradient(145deg,#713e30,#40243a);
+ font-size:20px;box-shadow:inset 0 1px #ffe1b433;
+}
+body[data-design="command03"] .native-stop-button[hidden],
+body[data-design="command03"] .send-button[hidden] {display:none!important;}
+body[data-design="command03"] .center-stage .presence .native-instrument>p {display:block;}
+body[data-design="command03"].native-hologram .timeline-strip {display:none;}
+
+/* Android presence: a question or a blocker is calm amber, never the work pulse. */
+body[data-design="command03"][data-presence="waiting-for-approval"] {--cinema-key:255,200,128;--cinema-fill:232,172,101;}
+body[data-design="command03"][data-presence="blocked"] {--cinema-key:255,160,124;--cinema-fill:208,124,132;}
+
+/* Real activity from Android inside the existing activity card. */
+body[data-design="command03"] .native-activity-steps {
+ list-style:none;margin:10px 0 0;padding:9px 0 0;display:grid;gap:6px;min-width:0;
+ border-top:1px solid #8ccfe626;container-type:inline-size;
+}
+body[data-design="command03"] .native-activity-steps li {
+ display:grid;grid-template-columns:7px minmax(0,1fr) auto;align-items:baseline;column-gap:8px;min-width:0;
+ font:400 12px/1.45 Manrope,sans-serif;color:#a9c8d8;
+}
+body[data-design="command03"] .native-activity-steps li::before {
+ content:"";width:7px;height:7px;border-radius:50%;align-self:center;box-sizing:border-box;
+ background:#6f93a8;
+}
+body[data-design="command03"] .native-step-label {min-width:0;overflow-wrap:anywhere;hyphens:auto;}
+body[data-design="command03"] .native-step-state {
+ font:600 10px/1.45 'Space Grotesk',sans-serif;letter-spacing:.08em;text-transform:uppercase;
+ white-space:nowrap;color:#8fb3c6;
+}
+body[data-design="command03"] .native-activity-steps li[data-state="active"] {color:#ecfaff;}
+body[data-design="command03"] .native-activity-steps li[data-state="active"]::before {background:rgb(var(--cinema-key));}
+body[data-design="command03"] .native-activity-steps li[data-state="active"] .native-step-state {color:rgb(var(--cinema-key));}
+body[data-design="command03"] .native-activity-steps li[data-state="done"]::before {background:#7fe3b8;}
+body[data-design="command03"] .native-activity-steps li[data-state="done"] .native-step-state {color:#9fe8c8;}
+body[data-design="command03"] .native-activity-steps li[data-state="waiting"]::before {background:#ffc880;}
+body[data-design="command03"] .native-activity-steps li[data-state="waiting"] .native-step-state {color:#ffd49c;}
+body[data-design="command03"] .native-activity-steps li[data-state="blocked"]::before,
+body[data-design="command03"] .native-activity-steps li[data-state="failed"]::before {background:#ff9d8c;}
+body[data-design="command03"] .native-activity-steps li[data-state="blocked"] .native-step-state,
+body[data-design="command03"] .native-activity-steps li[data-state="failed"] .native-step-state {color:#ffb5a6;}
+body[data-design="command03"] .native-activity-steps li[data-state="unverified"]::before {
+ background:transparent;border:1px solid #9db9c8;
+}
+/* Narrow wing columns: the state sits under its step instead of squeezing it. */
+@container (max-width:239px) {
+ body[data-design="command03"] .native-activity-steps li {grid-template-columns:7px minmax(0,1fr);}
+ body[data-design="command03"] .native-activity-steps li::before {align-self:start;margin-top:5px;}
+ body[data-design="command03"] .native-step-state {grid-column:2;}
+}
+/* A finished turn keeps its last real result without the work pulse. */
+body[data-design="command03"] .native-activity[data-activity-active="false"] .native-instrument-art {
+ animation:none;opacity:.72;
+}
+
+/* Android thermal tier: only secondary light is eased. Content, controls, avatar and orb stay. */
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .avatar-aura,
+body[data-design="command03"][data-native-quality="reduced"] .workspace-motion-front::after {animation:none;}
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="balanced"] .native-holo-field::after,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::before,
+body[data-design="command03"][data-native-quality="reduced"] .native-holo-field::after {box-shadow:none;}
+body[data-design="command03"][data-native-quality="reduced"] .native-instrument,
+body[data-design="command03"][data-native-quality="reduced"] .native-telemetry-panel {
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,0 5px 0 #020712aa,0 6px 0 #5e87a32b;
+}
+body[data-design="command03"][data-native-quality="reduced"] .workspace-shell {
+ box-shadow:inset 0 1px #d8f6ff44,0 10px 24px #0008;
+}
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .workspace {
+ box-shadow:inset 0 1px rgba(202,252,255,.25),0 8px 20px rgba(0,4,19,.5);
+}
+body[data-design="command03"][data-native-quality="reduced"] .presence-system::before {box-shadow:inset 0 1px #beeaff10;}
+body[data-design="command03"][data-native-quality="reduced"] .center-stage .presence-copy h1 {text-shadow:none;}
+
+/* ───────── Code64 · one room. The Command03 arrangement is unchanged: the original orb stays behind
+   the original avatar and no box in this section has a size or a position of its own in the flow.
+   Everything below is light: where it comes from (the orb), how strong it is (the real presence and
+   the measured speech level) and what it falls on (floor, haze, the glass of tiles, window, composer).
+   Hierarchy: orb and face first, corona and floor second, glass edges third; text stays the brightest
+   small thing on every panel. ───────── */
+body[data-design="command03"].native-hologram {
+ /* Share of the orb's light in the room. The values follow the original orb's own energy per mode
+    (.18 ready, .42 listening, .78 thinking, .62 research, .52 learning) as .3 + energy × .7. */
+ --orb-light:.43;
+}
+body[data-design="command03"][data-energy="to-avatar"] {--orb-light:.59;}
+body[data-design="command03"][data-energy="to-orb"] {--orb-light:.85;}
+body[data-design="command03"][data-presence="researching"] {--orb-light:.73;}
+body[data-design="command03"][data-presence="learning"] {--orb-light:.66;}
+body[data-design="command03"][data-energy="speech"] {--orb-light:.4;}
+body[data-design="command03"][data-energy="hold"] {--orb-light:.36;}
+
+/* Haze, floor and horizon: the space between the centre and the panels. The layer hangs on the
+   centre block, reaches behind the tiles beside it and stays behind everything in the block. */
+body[data-design="command03"] .native-room-light {
+ --room-l:calc(var(--orb-light) + .5 * var(--native-speech,0));--floor-b:121px;--glow-w:30%;--band-w:60%;
+ position:absolute;top:0;bottom:0;left:-62%;right:-62%;z-index:-1;pointer-events:none;opacity:var(--native-neon);
+ background:
+  linear-gradient(90deg,transparent,rgba(var(--cinema-key),calc(.5 * var(--room-l))) 34%,
+   rgba(var(--cinema-key),calc(.85 * var(--room-l))) 50%,rgba(var(--cinema-key),calc(.5 * var(--room-l))) 66%,
+   transparent) 0 calc(100% - var(--floor-b))/100% 1px no-repeat,
+  radial-gradient(ellipse 58% 100% at 50% 0,rgba(var(--cinema-key),calc(.2 * var(--room-l))),transparent 72%)
+   0 calc(100% - (var(--floor-b) - 74px))/100% 74px no-repeat,
+  radial-gradient(ellipse var(--glow-w) 50% at 50% 38.8%,rgba(var(--cinema-key),calc(.2 * var(--room-l))),transparent 72%),
+  radial-gradient(ellipse var(--band-w) 24% at 50% 38.8%,rgba(var(--cinema-fill),calc(.13 * var(--room-l))),transparent 74%);
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+ mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+ transition:opacity .6s ease;
+}
+/* Floor in perspective under the figure: it runs on behind the tiles. */
+body[data-design="command03"] .native-room-light::after {
+ content:"";position:absolute;left:24%;right:24%;top:calc(100% - var(--floor-b));height:150px;
+ transform:perspective(260px) rotateX(64deg);transform-origin:50% 0;
+ background:repeating-linear-gradient(90deg,rgba(var(--cinema-key),.2) 0 1px,transparent 1px 46px),
+  repeating-linear-gradient(0deg,rgba(var(--cinema-key),.16) 0 1px,transparent 1px 22px);
+ -webkit-mask-image:radial-gradient(ellipse 50% 86% at 50% 0,#000 8%,transparent 74%);
+ mask-image:radial-gradient(ellipse 50% 86% at 50% 0,#000 8%,transparent 74%);
+ opacity:calc(.35 + .5 * var(--room-l));
+}
+
+/* The orb's corona, between the orb and the avatar in front of it. No second orb: a rim of light
+   on the original shell and two thin shells that carry the direction of the exchange. */
+body[data-design="command03"] .native-orb-light {
+ position:absolute;left:50%;top:38.8%;height:58%;aspect-ratio:1;z-index:1;pointer-events:none;
+ transform:translate(-50%,-50%);opacity:var(--native-neon);
+}
+body[data-design="command03"] .native-orb-light b {
+ position:absolute;inset:-22%;border-radius:50%;
+ background:radial-gradient(circle,transparent 61%,rgba(var(--cinema-key),.15) 70%,
+  rgba(var(--cinema-fill),.06) 82%,transparent 97%);
+ opacity:calc(.25 + .75 * var(--orb-light) + .55 * var(--native-speech,0));
+ transform:scale(calc(1 + .12 * var(--native-speech,0)));
+ transition:opacity .09s linear,transform .09s linear;
+}
+body[data-design="command03"] .native-orb-light i {
+ position:absolute;inset:0;border-radius:50%;border:1px solid rgba(var(--cinema-key),.62);
+ box-shadow:0 0 12px rgba(var(--cinema-key),.3),inset 0 0 12px rgba(var(--cinema-key),.16);
+ opacity:0;
+}
+@keyframes native-corona-breathe {from{opacity:.55}to{opacity:1}}
+@keyframes native-shell-in {from{transform:scale(1.42);opacity:0}22%{opacity:.75}to{transform:scale(.66);opacity:0}}
+@keyframes native-shell-out {from{transform:scale(.7);opacity:0}22%{opacity:.75}to{transform:scale(1.46);opacity:0}}
+/* Ready: a slow breath of the corona, nothing travels. */
+body[data-design="command03"][data-energy="idle"] .native-orb-light {
+ animation:native-corona-breathe 5.2s ease-in-out infinite alternate;
+}
+/* Listening: light closes in on the avatar. */
+body[data-design="command03"][data-energy="to-avatar"] .native-orb-light i {
+ animation:native-shell-in 2.6s cubic-bezier(.3,.1,.4,1) infinite;
+}
+/* Thinking, research, learning: light leaves for the orb's shell. */
+body[data-design="command03"][data-energy="to-orb"] .native-orb-light i {
+ animation:native-shell-out 2.2s cubic-bezier(.2,.5,.4,1) infinite;
+}
+body[data-design="command03"][data-presence="researching"] .native-orb-light i {animation-duration:1.7s;}
+body[data-design="command03"][data-presence="learning"] .native-orb-light i {animation-duration:3s;}
+body[data-design="command03"][data-energy="to-avatar"] .native-orb-light i:nth-child(2) {animation-delay:-1.3s;}
+body[data-design="command03"][data-energy="to-orb"] .native-orb-light i:nth-child(2) {animation-delay:-1.1s;}
+body[data-design="command03"][data-presence="researching"] .native-orb-light i:nth-child(2) {animation-delay:-.85s;}
+body[data-design="command03"][data-presence="learning"] .native-orb-light i:nth-child(2) {animation-delay:-1.5s;}
+/* Speaking has no clock: the corona is the measured speech level (see b above). */
+/* Waiting for approval, blocked: one still amber shell. */
+body[data-design="command03"][data-energy="hold"] .native-orb-light i:first-child {
+ opacity:.5;transform:scale(1.08);border-style:dashed;box-shadow:none;
+}
+
+/* Glass that stands in this light. Each panel is lit on the side that faces the orb and casts its
+   shadow away from it; beside the centre that is sideways, below it downward. */
+body[data-design="command03"] .presence-wing-left {--lit:to left;--rim:-1px 0;--cast:-14px;}
+body[data-design="command03"] .presence-wing-right {--lit:to right;--rim:1px 0;--cast:14px;}
+body[data-design="command03"].native-hologram .presence-wing .native-instrument,
+body[data-design="command03"].native-hologram .presence-wing .native-telemetry-panel {
+ background:linear-gradient(var(--lit),rgba(var(--cinema-key),calc(.1 * var(--orb-light))),transparent 42%),
+  linear-gradient(132deg,#a6e7ff10,transparent 32%),
+  linear-gradient(170deg,#142b3de8,#071222f5 53%,#10172bf5);
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,
+  inset var(--rim) rgba(var(--cinema-key),calc(.2 + .6 * var(--orb-light))),
+  0 5px 0 #020712aa,0 6px 0 #5e87a32b,var(--cast) 20px 34px #000a,
+  0 0 24px rgba(var(--cinema-key),calc(.08 * var(--native-neon)));
+ transition:box-shadow .6s ease;
+}
+body[data-design="command03"].native-hologram .presence-wing .native-evidence {
+ background:linear-gradient(var(--lit),rgba(var(--cinema-key),calc(.1 * var(--orb-light))),transparent 42%),
+  linear-gradient(132deg,#c7a6ff10,transparent 32%),
+  linear-gradient(170deg,#142b3de8,#071222f5 53%,#10172bf5);
+}
+/* The work window and the composer stand in front of and below the orb: lit from above. */
+body[data-design="command03"].native-hologram .workspace-shell {
+ background:radial-gradient(ellipse 60% 120px at 50% 0,rgba(var(--cinema-key),calc(.12 * var(--orb-light))),transparent 100%),
+  linear-gradient(135deg,#9fdfff0d,transparent 36%),linear-gradient(160deg,#142b3cef,#060f1df7 55%,#11182def);
+ box-shadow:inset 0 1px rgba(var(--cinema-key),calc(.25 + .5 * var(--orb-light))),inset 0 2px #d8f6ff1c,
+  0 30px 70px #000a,0 0 28px rgba(var(--cinema-key),calc(.1 * var(--native-neon)));
+ transition:box-shadow .6s ease,border-color .6s ease;
+}
+body[data-design="command03"].native-hologram .command-bar {
+ box-shadow:inset 0 1px rgba(var(--cinema-key),calc(.2 + .35 * var(--orb-light))),0 14px 38px #000b,
+  0 0 24px rgba(73,201,255,calc(.17 * var(--native-neon)));
+}
+
+/* Work sequence. Each phase is set by the bridge from a real Android event; nothing here moves. */
+@keyframes native-core-ignite {from{transform:scale(.8);opacity:.9}to{transform:scale(1.7);opacity:0}}
+body[data-design="command03"][data-work-phase="activation"] .native-orb-light::after,
+body[data-design="command03"][data-work-phase="opening"] .native-orb-light::after {
+ content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(var(--cinema-key),.85);
+ box-shadow:0 0 26px rgba(var(--cinema-key),.45);opacity:0;
+ animation:native-core-ignite 1.3s cubic-bezier(.2,.7,.2,1) 1 both;
+}
+/* Projection from the centre down to the work window while one is opening or open. */
+body[data-design="command03"].native-hologram .center-stage .presence.presence-orbit::after {
+ content:"";position:absolute;left:50%;top:52%;bottom:-12px;width:min(74%,620px);z-index:-1;
+ transform:translateX(-50%);pointer-events:none;opacity:0;transition:opacity .7s ease;
+ clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);
+ background:linear-gradient(180deg,transparent,rgba(var(--cinema-key),.16) 38%,rgba(var(--cinema-key),.07));
+}
+body[data-design="command03"].native-hologram[data-work-phase="opening"] .center-stage .presence.presence-orbit::after,
+body[data-design="command03"].native-hologram[data-work-phase="projected"] .center-stage .presence.presence-orbit::after {
+ opacity:var(--native-neon);
+}
+@keyframes native-window-arrive {
+ from{box-shadow:inset 0 2px rgba(var(--cinema-key),.95),0 -18px 46px rgba(var(--cinema-key),.34),0 30px 70px #000a}
+}
+body[data-design="command03"].native-hologram[data-work-phase="opening"] .workspace-shell {
+ animation:native-window-arrive 1.1s ease-out 1;
+}
+body[data-design="command03"].native-hologram[data-work-phase="opening"] .workspace-shell,
+body[data-design="command03"].native-hologram[data-work-phase="projected"] .workspace-shell {
+ border-color:rgba(var(--cinema-key),.8);
+}
+body[data-design="command03"][data-work-phase="projected"] .workspace-topline .workspace-led {
+ background:rgb(var(--cinema-key));box-shadow:0 0 12px rgba(var(--cinema-key),.8);
+}
+/* The stage recedes one step while content is projected: the window carries the key light. */
+body[data-design="command03"][data-work-phase="projected"] .native-holo-field::before,
+body[data-design="command03"][data-work-phase="projected"] .native-holo-field::after {border-color:rgba(var(--cinema-key),.3);}
+/* Return to the main stage: one eased swell of the corona; the bridge waits for exactly this animation. */
+@keyframes native-work-return {from{opacity:.35}to{opacity:1}}
+body[data-design="command03"][data-work-phase="settling"] .native-orb-light {
+ animation:native-work-return 1.2s cubic-bezier(.2,.7,.2,1) 1;
+}
+
+/* Holographic file window: the names Android's file tool really returned, in the existing workspace. */
+body[data-design="command03"] #workspace.native-files-active:not(.native-document-active):not(.native-computer-active)>:not(#native-files-panel) {display:none!important;}
+body[data-design="command03"] #workspace:not(.native-files-active)>#native-files-panel {display:none!important;}
+body[data-design="command03"] .native-files-panel {
+ width:100%;min-width:0;display:flex;flex-direction:column;gap:12px;
+}
+body[data-design="command03"] .native-files-heading {
+ display:flex;flex-direction:column;gap:5px;padding:8px 2px 12px;border-bottom:1px solid rgba(110,226,248,.25);
+}
+body[data-design="command03"] .native-files-kicker {
+ color:#67d4e8;font:600 10px Manrope,system-ui,sans-serif;letter-spacing:.13em;
+}
+body[data-design="command03"] .center-stage .workspace-shell .workspace-body .native-files-title {
+ color:#e7f9ff;font:600 clamp(18px,2.1vw,25px)/1.25 'Space Grotesk',system-ui,sans-serif;margin:0;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-files-count {
+ color:#bedce7;font:500 13px/1.5 Manrope,system-ui,sans-serif;margin:0;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-files-list {
+ list-style:none;margin:0;padding:0;display:grid;gap:7px;min-width:0;
+ grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));
+}
+body[data-design="command03"] .native-files-list li {
+ display:grid;grid-template-columns:18px minmax(0,1fr) auto;align-items:center;column-gap:10px;min-width:0;
+ min-height:44px;padding:8px 12px;border-radius:9px;border:1px solid transparent;
+ background:linear-gradient(125deg,#0b2538e0,#0e1a2fe8) padding-box,
+  linear-gradient(140deg,rgba(112,231,255,.55),rgba(112,231,255,.08) 34%,rgba(164,119,255,.3)) border-box;
+ color:#e2f5f8;font:500 13px/1.45 Manrope,system-ui,sans-serif;
+}
+body[data-design="command03"] .native-file-glyph {
+ width:14px;height:18px;border:1px solid #83edff;border-radius:2px;opacity:.85;
+ background:linear-gradient(#83edff,#83edff) 3px 6px/7px 1px no-repeat,linear-gradient(#83edff,#83edff) 3px 10px/7px 1px no-repeat;
+}
+body[data-design="command03"] .native-file-name {min-width:0;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-file-kind {
+ font:600 10px/1.4 'Space Grotesk',sans-serif;letter-spacing:.08em;color:#9fdcec;
+ padding:2px 6px;border:1px solid #76d9fa55;border-radius:5px;white-space:nowrap;
+}
+body[data-design="command03"] .native-files-list li[data-selected="true"] {
+ background:linear-gradient(125deg,#12405ae8,#152a4ce8) padding-box,
+  linear-gradient(140deg,#b9f6ff,rgba(112,231,255,.5)) border-box;
+ box-shadow:0 0 18px rgba(112,231,255,.22);
+}
+body[data-design="command03"] .native-files-note {
+ margin:0;color:#8db8c9;font:400 12px/1.5 Manrope,system-ui,sans-serif;
+}
+
+/* Where the tiles stand below the centre, the light reaches them from above. */
+@container presence-orbit (max-width:749px) {
+ body[data-design="command03"] .native-room-light {left:-8px;right:-8px;--floor-b:102px;--glow-w:66%;--band-w:100%;}
+ body[data-design="command03"] .native-room-light::after {left:6%;right:6%;}
+ body[data-design="command03"] .presence-wing-left,
+ body[data-design="command03"] .presence-wing-right {--lit:to bottom;--rim:0 1px;--cast:0px;}
+ body[data-design="command03"] .native-room-light::after {height:110px;}
+}
+
+/* Owner switch, hidden page, thermal tier and system preference ease every new light. */
+body[data-design="command03"][data-native-light-motion="off"] .native-orb-light,
+body[data-design="command03"][data-native-light-motion="off"] .native-orb-light * {animation-play-state:paused!important;}
+body[data-design="command03"][data-native-quality="balanced"] .native-orb-light i:nth-child(2),
+body[data-design="command03"][data-native-quality="reduced"] .native-orb-light i,
+body[data-design="command03"][data-native-quality="reduced"] .native-room-light::after {display:none;}
+body[data-design="command03"][data-native-quality="balanced"] .native-orb-light i {box-shadow:none;}
+body[data-design="command03"][data-native-quality="reduced"] .native-orb-light,
+body[data-design="command03"][data-native-quality="reduced"] .native-orb-light::after,
+body[data-design="command03"][data-native-quality="reduced"].native-hologram[data-work-phase="opening"] .workspace-shell {
+ animation:none!important;
+}
+/* Reduced: the haze keeps the presence level but no longer follows every speech frame. */
+body[data-design="command03"][data-native-quality="reduced"] .native-room-light {
+ --room-l:var(--orb-light);-webkit-mask-image:none;mask-image:none;transition:none;
+}
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .presence-wing .native-instrument,
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .presence-wing .native-telemetry-panel {
+ box-shadow:inset 0 1px #d4faff38,inset 0 -1px #7178ba38,
+  inset var(--rim) rgba(var(--cinema-key),calc(.2 + .6 * var(--orb-light))),0 5px 0 #020712aa,0 6px 0 #5e87a32b;
+ transition:none;
+}
+body[data-design="command03"][data-native-quality="reduced"].native-hologram .workspace-shell {
+ box-shadow:inset 0 1px rgba(var(--cinema-key),calc(.25 + .5 * var(--orb-light))),0 10px 24px #0008;transition:none;
+}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-orb-light,
+ body[data-design="command03"] .native-orb-light i,
+ body[data-design="command03"] .native-orb-light::after,
+ body[data-design="command03"].native-hologram[data-work-phase="opening"] .workspace-shell {animation:none!important;}
+ body[data-design="command03"] .native-orb-light b,
+ body[data-design="command03"] .native-room-light,
+ body[data-design="command03"].native-hologram .presence-wing .native-instrument,
+ body[data-design="command03"].native-hologram .presence-wing .native-telemetry-panel,
+ body[data-design="command03"].native-hologram .workspace-shell,
+ body[data-design="command03"].native-hologram .center-stage .presence.presence-orbit::after {transition:none!important;}
+ /* Without motion the direction stays readable as one still shell: inside for listening, outside for work. */
+ body[data-design="command03"][data-energy="to-avatar"] .native-orb-light i:first-child {opacity:.6;transform:scale(.82);}
+ body[data-design="command03"][data-energy="to-orb"] .native-orb-light i:first-child {opacity:.6;transform:scale(1.22);}
+}
+
+
+/* Code68 · local computing. While the on-device model works the stage leaves the processor to it: every travelling
+   or drifting effect rests and one slow pulse of the corona (opacity only, no repaint) shows the thinking. */
+body[data-design="command03"][data-native-compute="local"] .native-orb-light i,
+body[data-design="command03"][data-native-compute="local"] .native-holo-field::before,
+body[data-design="command03"][data-native-compute="local"] .native-holo-field::after,
+body[data-design="command03"][data-native-compute="local"] .avatar-aura,
+body[data-design="command03"][data-native-compute="local"] .native-room-light::after,
+body[data-design="command03"][data-native-compute="local"] .workspace-motion-front::after {animation:none;}
+body[data-design="command03"][data-native-compute="local"] .native-orb-light {
+ animation:native-corona-breathe 1.8s ease-in-out infinite alternate;
+}
+
+/* The answer while the on-device model is still writing it (native-bridge.js, draft): same row as an answer,
+   visibly provisional; no animation, so it costs nothing while the device computes. */
+body[data-design="command03"] .native-chat-line.native-draft {border-style:dashed;border-color:rgba(120,223,240,.38);}
+body[data-design="command03"] .native-chat-line.native-draft p {opacity:.86;}
+
+/* Matte housings for the existing command stations. */
+body[data-design="command03"] .workspace-topline {
+ background-color:rgba(8,17,26,.88);
+ border-bottom-color:rgba(154,188,203,.24);
+}
+body[data-design="command03"] .workspace-bottomline {
+ background-color:rgba(6,13,20,.84);
+ border-top-color:rgba(154,188,203,.18);
+}
+body[data-design="command03"] #native-computer-panel .op-browser-chrome {
+ background-color:#111d27;
+ border-color:rgba(149,182,195,.38);
+}
+body[data-design="command03"][data-native-effects="full"] .workspace-topline,
+body[data-design="command03"][data-native-effects="balanced"] .workspace-topline {
+ background-image:linear-gradient(100deg,rgba(96,169,191,.18),transparent 44%,rgba(132,154,171,.1));
+ box-shadow:inset 0 1px rgba(198,230,235,.13),inset 0 -2px rgba(0,0,0,.55);
+}
+body[data-design="command03"][data-native-effects="full"] .workspace-sidewall,
+body[data-design="command03"][data-native-effects="balanced"] .workspace-sidewall {
+ background-image:repeating-linear-gradient(0deg,rgba(9,16,22,.72) 0 3px,rgba(159,206,223,.14) 3px 4px,transparent 4px 8px);
+}
+
+/* ───────── Code70 · cinematic windows. Arrangement, sizes and flow are those of Code64/Code69: every rule below
+   is paint only (colour, border colour, shadow, gradient) or belongs to an element that exists only while a real
+   Android event is shown (a frame, a dispatched input, an ended source, a source list).
+   Heat contract, checked in tools/command03-native-qa:
+   · no backdrop-filter and no filter anywhere in this section, no new canvas;
+   · every animation here needs body[data-native-effects="full"] or ="balanced". The bridge sets "rest" while the
+     on-device model computes and "light" in Android's reduced tier, so nothing of this section moves then;
+   · every animation is finite (one pass on a real event) except the lamp of a monitor that really is LIVE, which
+     runs in "full" only; all of them use transform and opacity only;
+   · blurred shadows, wide gradients and the depth layer of this section are limited to "full"/"balanced" as well:
+     while the device computes, the panels that repaint with the growing answer get no shadow, gradient or layer
+     they did not have before – only flat colours of small labels and one-pixel corner marks. ───────── */
+
+/* Glass frame of the work window: four corner marks inside the existing shell, cyan above, violet below. */
+body[data-design="command03"] .native-window-frame {
+ --frame-a:rgba(var(--cinema-key,112,231,255),.5);--frame-b:rgba(var(--cinema-fill,164,119,255),.42);
+ position:absolute;inset:7px;z-index:2;pointer-events:none;border-radius:9px;
+ background:
+  linear-gradient(var(--frame-a),var(--frame-a)) left top/22px 1px no-repeat,
+  linear-gradient(var(--frame-a),var(--frame-a)) left top/1px 22px no-repeat,
+  linear-gradient(var(--frame-a),var(--frame-a)) right top/22px 1px no-repeat,
+  linear-gradient(var(--frame-a),var(--frame-a)) right top/1px 22px no-repeat,
+  linear-gradient(var(--frame-b),var(--frame-b)) left bottom/22px 1px no-repeat,
+  linear-gradient(var(--frame-b),var(--frame-b)) left bottom/1px 22px no-repeat,
+  linear-gradient(var(--frame-b),var(--frame-b)) right bottom/22px 1px no-repeat,
+  linear-gradient(var(--frame-b),var(--frame-b)) right bottom/1px 22px no-repeat;
+}
+/* An open window is framed more firmly; a result carries the violet light, the live window the cyan one. */
+body[data-design="command03"][data-native-window] .native-window-frame {
+ --frame-a:rgba(var(--cinema-key,112,231,255),.95);--frame-b:rgba(var(--cinema-fill,164,119,255),.85);
+}
+body[data-design="command03"][data-native-window="result"] .native-window-frame {
+ --frame-a:rgba(var(--cinema-fill,164,119,255),.95);--frame-b:rgba(var(--cinema-key,112,231,255),.8);
+}
+body[data-design="command03"][data-native-window="live"] .native-window-frame {--frame-a:rgba(131,237,255,.98);}
+/* Glass sheen and a second, inner pane edge: only where the tier leaves room for it. */
+body[data-design="command03"][data-native-effects="full"] .native-window-frame,
+body[data-design="command03"][data-native-effects="balanced"] .native-window-frame {
+ box-shadow:inset 0 0 0 1px rgba(var(--cinema-key,112,231,255),.07);
+}
+body[data-design="command03"][data-native-effects="full"] .native-window-frame::before {
+ content:"";position:absolute;inset:0;border-radius:inherit;
+ background:linear-gradient(118deg,rgba(214,247,255,.075),rgba(214,247,255,.02) 16%,transparent 30%),
+  linear-gradient(298deg,rgba(190,145,255,.05),transparent 22%);
+}
+
+/* Depth: the avatar's separation from the orb behind it. A still shade under the corona, between the two. */
+body[data-design="command03"] .native-depth-veil {display:none;}
+body[data-design="command03"][data-native-effects="full"] .native-depth-veil,
+body[data-design="command03"][data-native-effects="balanced"] .native-depth-veil {
+ display:block;position:absolute;left:50%;top:38.8%;height:58%;aspect-ratio:1;z-index:1;pointer-events:none;
+ transform:translate(-50%,-50%);
+ background:radial-gradient(ellipse 36% 30% at 50% 78%,rgba(2,7,16,.62),rgba(2,7,16,.28) 62%,transparent 100%),
+  radial-gradient(circle,transparent 52%,rgba(2,7,16,.3) 74%,transparent 96%);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-depth-veil {opacity:.6;}
+
+/* The work window's state in its own corner (see renderWorkBadge). */
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="running"] {
+ border-color:rgba(var(--cinema-key,112,231,255),.6);color:rgb(var(--cinema-key,112,231,255));
+ background:rgba(var(--cinema-key,112,231,255),.08);
+}
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="writing"] {
+ border-color:#be91ff99;color:#dcc6ff;background:#be91ff14;
+}
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="approval"] {
+ border-color:#ffc880b0;color:#ffd9a6;background:#ffc88014;
+}
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="blocked"],
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="failed"] {
+ border-color:#ff9d8cb0;color:#ffc2b6;background:#ff9d8c14;
+}
+body[data-design="command03"] #native-live-panel .op-mode-label[data-window-state="answered"] {
+ border-color:#7fe3b899;color:#b4f0d5;background:#7fe3b812;
+}
+/* This turn's result: the delivered answer while it is the last line. */
+body[data-design="command03"] .native-chat-line[data-result="true"] {
+ border-color:rgba(131,237,255,.5);
+ background:linear-gradient(#83edff,#83edff) left top/2px 100% no-repeat,linear-gradient(125deg,#0b2538d9,#0e1a2fe6);
+}
+
+/* Live window: the existing projected browser reads as a monitor – bezel, title with the real target, state. */
+body[data-design="command03"] #native-computer-panel .op-browser-frame {
+ border-radius:10px;border-color:rgba(131,237,255,.5);background:#020a14;
+ box-shadow:inset 0 0 0 3px #0a1b2a,inset 0 0 0 4px rgba(131,237,255,.14),0 6px 0 #020712cc,0 7px 0 #5e87a340;
+}
+body[data-design="command03"][data-native-effects="full"] #native-computer-panel .op-browser-frame,
+body[data-design="command03"][data-native-effects="balanced"] #native-computer-panel .op-browser-frame {
+ box-shadow:inset 0 0 0 3px #0a1b2a,inset 0 0 0 4px rgba(131,237,255,.14),0 6px 0 #020712cc,0 7px 0 #5e87a340,
+  0 18px 34px #0008,0 0 22px rgba(131,237,255,calc(.14 * var(--native-neon,.7)));
+}
+body[data-design="command03"] #native-computer-panel .op-browser-chrome {
+ gap:10px;background:linear-gradient(100deg,#17384a,#0b1c29 60%,#1a1c3c);border-bottom-color:rgba(131,237,255,.3);
+}
+/* The original hides the window title on phones; the real target is shown at every width. */
+body[data-design="command03"] #native-computer-panel .op-window-id {
+ display:block;color:#d7f4fb;font-size:11px;line-height:1.45;letter-spacing:.06em;white-space:normal;
+ overflow-wrap:anywhere;min-width:0;
+}
+body[data-design="command03"] #native-computer-panel .op-mode-label {border-color:#ffc880a8;color:#ffd9a6;background:#ffc88012;}
+body[data-design="command03"] #native-computer-panel[data-monitor-state="live"] .op-mode-label {
+ border-color:#7fe3b8b0;color:#b9f5da;background:#7fe3b814;
+}
+body[data-design="command03"] #native-computer-panel[data-monitor-state="covered"] .op-mode-label {
+ border-color:#ff9d8cb0;color:#ffc2b6;background:#ff9d8c14;
+}
+body[data-design="command03"] #native-computer-panel .op-browser-status .status-dot {background:#ffc880;}
+body[data-design="command03"] #native-computer-panel[data-monitor-state="live"] .op-browser-status .status-dot {background:#7fe3b8;}
+body[data-design="command03"] #native-computer-panel[data-monitor-state="covered"] .op-browser-status .status-dot {background:#ff9d8c;}
+@keyframes native-live-lamp {from{opacity:.45}to{opacity:1}}
+body[data-design="command03"][data-native-effects="full"] #native-computer-panel[data-monitor-state="live"] .op-browser-status .status-dot {
+ animation:native-live-lamp 1.4s ease-in-out infinite alternate;
+}
+/* The image and the inputs dispatched on it share one box, so a marker sits on the pixel Android measured. */
+body[data-design="command03"] .native-computer-screen {position:relative;display:inline-flex;max-width:100%;line-height:0;}
+body[data-design="command03"] .native-computer-screen[hidden] {display:none!important;}
+body[data-design="command03"] .native-computer-marker {
+ position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;pointer-events:none;
+ color:#ffd27a;border:2px solid currentColor;box-shadow:0 0 0 1px #000a,inset 0 0 0 1px #000a;
+ background:radial-gradient(circle,currentColor 0 3px,transparent 4px);
+}
+body[data-design="command03"] .native-computer-marker[data-kind="set_text"] {border-radius:5px;width:30px;margin-left:-15px;}
+body[data-design="command03"] .native-computer-marker[data-kind="scroll"] {border-radius:9px;width:20px;height:34px;margin:-17px 0 0 -10px;}
+body[data-design="command03"] .native-computer-marker[data-state="verified"] {color:#7fe3b8;}
+body[data-design="command03"] .native-computer-marker[data-state="unconfirmed"] {color:#ff9d8c;border-style:dashed;}
+body[data-design="command03"] .native-computer-marker::after {
+ content:"";position:absolute;inset:-2px;border-radius:inherit;border:2px solid currentColor;opacity:0;
+}
+@keyframes native-marker-ping {from{transform:scale(.6);opacity:.9}to{transform:scale(2.3);opacity:0}}
+body[data-design="command03"][data-native-effects="full"] .native-computer-marker::after,
+body[data-design="command03"][data-native-effects="balanced"] .native-computer-marker::after {
+ animation:native-marker-ping .7s ease-out 1 both;
+}
+/* What the approved task really did, as text. */
+body[data-design="command03"] .native-computer-work {display:grid;gap:7px;min-width:0;margin-top:14px;}
+body[data-design="command03"] .native-computer-work[hidden],
+body[data-design="command03"] .native-computer-work [hidden] {display:none!important;}
+body[data-design="command03"] .native-computer-stage {
+ margin:0;color:#e2f5f8;font:500 13px/1.5 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-computer-stage[data-stage="ask-owner"],
+body[data-design="command03"] .native-computer-stage[data-stage="paused"] {color:#ffd9a6;}
+body[data-design="command03"] .native-computer-stage[data-stage="error"] {color:#ffc2b6;}
+body[data-design="command03"] .native-computer-log-title {
+ color:#78dff0;font:600 10px/1.4 Manrope,system-ui,sans-serif;letter-spacing:.13em;
+}
+body[data-design="command03"] .native-computer-log {
+ list-style:none;margin:0;padding:0;display:grid;gap:6px;min-width:0;
+ grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));
+}
+body[data-design="command03"] .native-computer-log li {
+ display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 9px;min-width:0;padding:7px 11px 7px 24px;position:relative;
+ border-radius:8px;border:1px solid #76d9fa3a;background:#0b2538c7;
+ color:#e2f5f8;font:500 12px/1.45 Manrope,system-ui,sans-serif;
+}
+body[data-design="command03"] .native-computer-log li::before {
+ content:"";position:absolute;left:10px;top:13px;width:7px;height:7px;border-radius:50%;background:#ffd27a;
+}
+body[data-design="command03"] .native-computer-log li[data-state="verified"]::before {background:#7fe3b8;}
+body[data-design="command03"] .native-computer-log li[data-state="unconfirmed"]::before {background:#ff9d8c;}
+body[data-design="command03"] .native-action-kind {min-width:0;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-action-state {
+ margin-left:auto;font:600 10px/1.45 'Space Grotesk',sans-serif;letter-spacing:.07em;text-transform:uppercase;color:#ffe0a8;
+}
+body[data-design="command03"] .native-computer-log li[data-state="verified"] .native-action-state {color:#9fe8c8;}
+body[data-design="command03"] .native-computer-log li[data-state="unconfirmed"] .native-action-state {color:#ffb5a6;}
+
+/* The live window without an image: an open Android consent, or how the source ended. Never a picture. */
+body[data-design="command03"] .native-monitor-record {
+ display:grid;gap:7px;min-width:0;margin:6px 0 4px;padding:12px 14px;border-radius:12px;
+ border:1px solid #8fb3c655;background:linear-gradient(125deg,#0b2538d9,#0e1a2fe6);
+}
+body[data-design="command03"] .native-monitor-record[hidden] {display:none!important;}
+body[data-design="command03"] .native-monitor-record[data-state="consent"] {border-color:#ffc88099;}
+body[data-design="command03"] .native-record-head {
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;min-width:0;
+}
+body[data-design="command03"] .native-record-head small {
+ color:#78dff0;font:600 10px/1.4 Manrope,system-ui,sans-serif;letter-spacing:.14em;
+}
+body[data-design="command03"] .native-record-badge {
+ font:600 10px/1.4 'Space Grotesk',sans-serif;letter-spacing:.09em;padding:5px 8px;border-radius:4px;
+ border:1px solid #8fb3c680;color:#cfe3ee;background:#8fb3c614;
+}
+body[data-design="command03"] .native-monitor-record[data-state="consent"] .native-record-badge {
+ border-color:#ffc880b0;color:#ffd9a6;background:#ffc88014;
+}
+body[data-design="command03"] .native-monitor-record>strong {
+ color:#ecfaff;font:500 15px/1.35 'Space Grotesk',sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-monitor-record>p {
+ margin:0;color:#bedce7;font:400 13px/1.55 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-monitor-record .native-computer-work {margin-top:2px;}
+
+/* Sources as a wall of small screens in the work window: one per source Android delivered – its host as the
+   address line, its title, its address. No page is drawn and no excerpt is invented. */
+body[data-design="command03"] .native-source-host {
+ display:block;color:#cdb6ff;font:600 10px/1.4 'Space Grotesk',sans-serif;letter-spacing:.05em;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-source-host:empty {display:none;}
+body[data-design="command03"] #native-live-panel .native-source-card {
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,172px),1fr));gap:8px;
+}
+body[data-design="command03"] #native-live-panel .native-source-card>small {grid-column:1/-1;}
+body[data-design="command03"] #native-live-panel .native-source-link {
+ gap:0;padding:0;min-height:88px;overflow:hidden;border-radius:8px;border-color:#a58bff55;background:#04101ddb;
+}
+body[data-design="command03"] #native-live-panel .native-source-host {
+ padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ background:linear-gradient(100deg,#1d2a4b,#101a30);border-bottom:1px solid #8f7fd04d;
+}
+body[data-design="command03"] #native-live-panel .native-source-link strong {
+ display:block;padding:8px 10px 3px;font:500 12px/1.45 Manrope,system-ui,sans-serif;color:#e7f6fa;
+}
+body[data-design="command03"] #native-live-panel .native-source-link span {
+ display:block;padding:0 10px 8px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* Motion: one finite pass when Android reports the event, in "full" and "balanced" only. */
+@keyframes native-step-settle {from{transform:translateX(7px);opacity:.35}to{transform:none;opacity:1}}
+@keyframes native-row-arrive {from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-tile-arrive {from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+body[data-design="command03"][data-native-effects="full"] .native-activity-steps li[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-activity-steps li[data-changed="true"] {
+ animation:native-step-settle .42s cubic-bezier(.2,.7,.2,1) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-chat-line[data-arrival="reply"],
+body[data-design="command03"][data-native-effects="balanced"] .native-chat-line[data-arrival="reply"],
+body[data-design="command03"][data-native-effects="full"] .native-monitor-record:not([hidden]),
+body[data-design="command03"][data-native-effects="balanced"] .native-monitor-record:not([hidden]) {
+ animation:native-row-arrive .38s cubic-bezier(.2,.7,.2,1) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-source-card[data-arrival="sources"] .native-source-link {
+ animation:native-tile-arrive .36s cubic-bezier(.2,.7,.2,1) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-source-card[data-arrival="sources"] .native-source-link:nth-of-type(2) {animation-delay:.05s;}
+body[data-design="command03"][data-native-effects="full"] .native-source-card[data-arrival="sources"] .native-source-link:nth-of-type(n+3) {animation-delay:.1s;}
+/* The owner's switch and the system preference stop every one of them. */
+body[data-design="command03"][data-native-light-motion="off"] .native-activity-steps li,
+body[data-design="command03"][data-native-light-motion="off"] .native-chat-line,
+body[data-design="command03"][data-native-light-motion="off"] .native-monitor-record,
+body[data-design="command03"][data-native-light-motion="off"] .native-source-link,
+body[data-design="command03"][data-native-light-motion="off"] .native-computer-marker::after,
+body[data-design="command03"][data-native-light-motion="off"] #native-computer-panel .op-browser-status .status-dot {
+ animation:none!important;
+}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-activity-steps li,
+ body[data-design="command03"] .native-chat-line,
+ body[data-design="command03"] .native-monitor-record,
+ body[data-design="command03"] .native-source-link,
+ body[data-design="command03"] .native-computer-marker::after,
+ body[data-design="command03"] #native-computer-panel .op-browser-status .status-dot {animation:none!important;}
+}
+
+/* ───────── Code71 · tactical command centre. The owner's order of 19.11.2026: expand the layout, make it military,
+   real animation – windows and work orders slide in and out. Three regions are added to the stage column, each
+   only while Android reports what it shows: the status strip (`tactical`), the start-up check (`systemCheck`), the
+   order rail (`orders`) and the info cards (`briefingCards`). The look – chamfered plates, bracket corners, tick
+   rulers, uppercase call signs, state stripes – is a style; every word that reads like data is snapshot data.
+   Heat contract, checked in tools/command03-native-qa:
+   · no backdrop-filter, no filter, no transition and no new canvas in this section;
+   · every animation needs body[data-native-effects="full"] or ="balanced" in each of its selectors. The bridge
+     sets "rest" while the on-device model computes and "light" in Android's reduced tier: nothing here moves then,
+     and the bridge sets no entrance or departure mark either;
+   · keyframes use transform and opacity only. Every animation is one pass on a real event, except two loops in
+     "full": the lamp of an order that is really open and the sweep of the strip's ruler;
+   · while the device computes ("rest") no existing surface gets a style from this section; the new regions stand
+     still in flat colours.
+   The final state of every element is its state without animation: marks only add a way to get there. ───────── */
+body[data-design="command03"] {
+ --tac-line:rgba(112,231,255,.4);--tac-dim:#8fb9c9;--tac-ink:#e6f8fc;--tac-plate:#06131ff5;--tac-cell:#0a2030;
+ --tac-cyan:#83edff;--tac-violet:#c3a2ff;--tac-amber:#ffc880;--tac-red:#ff9d8c;--tac-green:#7fe3b8;--tac-slate:#9db4c4;
+ --tac-mech:cubic-bezier(.16,.84,.24,1);--tac-exit:cubic-bezier(.6,0,.9,.4);
+ --tac-cut:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));
+ /* The two cut corners of a plate, drawn as hairlines. */
+ --tac-edges:linear-gradient(45deg,transparent calc(50% - .7px),var(--tac-line) calc(50% - .7px) calc(50% + .7px),transparent calc(50% + .7px));
+}
+body[data-design="command03"] .native-tac-hud {display:grid;gap:7px;min-width:0;margin:0 0 9px;}
+body[data-design="command03"] .native-tac-hud:empty {display:none;}
+
+/* Status strip: one cell per reading; a ruler of ticks below it. */
+body[data-design="command03"] .native-tac-strip {
+ /* Clipped, not a scroll box: the sweep along the ruler must never make the strip scrollable (a cell that is
+    brought into view would otherwise shift the whole row). */
+ position:relative;display:flex;flex-wrap:wrap;gap:2px;min-width:0;padding:0 0 8px;overflow:hidden;overflow:clip;
+ background:
+  linear-gradient(var(--tac-line),var(--tac-line)) left bottom/100% 1px no-repeat,
+  repeating-linear-gradient(90deg,var(--tac-line) 0 1px,transparent 1px 8px) left calc(100% - 1px)/100% 4px no-repeat,
+  repeating-linear-gradient(90deg,var(--tac-line) 0 1px,transparent 1px 40px) left calc(100% - 1px)/100% 7px no-repeat;
+}
+body[data-design="command03"] .native-tac-cell {
+ --tone:var(--tac-slate);
+ /* As wide as its reading needs, then sharing the row: no reading is ever cut. */
+ flex:1 1 auto;display:grid;align-content:center;gap:1px;min-width:62px;max-width:100%;min-height:44px;margin:0;padding:5px 9px 5px 9px;
+ border:0;border-left:2px solid var(--tone);border-radius:0;background:var(--tac-cell);color:var(--tac-ink);
+ text-align:left;font:inherit;appearance:none;-webkit-appearance:none;
+}
+body[data-design="command03"] button.native-tac-cell {cursor:pointer;touch-action:manipulation;}
+body[data-design="command03"] button.native-tac-cell:focus-visible {outline:2px solid var(--tac-cyan);outline-offset:-2px;}
+body[data-design="command03"] .native-tac-key {
+ color:var(--tac-dim);font:600 10px/1.25 'Space Grotesk',system-ui,sans-serif;letter-spacing:.16em;white-space:nowrap;
+}
+body[data-design="command03"] .native-tac-value {
+ color:var(--tone);font:600 12px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.07em;white-space:nowrap;
+}
+body[data-design="command03"] .native-tac-cell[data-tone="cloud"] {--tone:var(--tac-violet);}
+body[data-design="command03"] .native-tac-cell[data-tone="local"],
+body[data-design="command03"] .native-tac-cell[data-tone="normal"],
+body[data-design="command03"] .native-tac-cell[data-tone="active"] {--tone:var(--tac-cyan);}
+body[data-design="command03"] .native-tac-cell[data-tone="ok"] {--tone:var(--tac-green);}
+body[data-design="command03"] .native-tac-cell[data-tone="warn"] {--tone:var(--tac-amber);}
+body[data-design="command03"] .native-tac-cell[data-tone="fail"] {--tone:var(--tac-red);}
+body[data-design="command03"] button.native-tac-cell[aria-expanded="true"] {background:#103349;}
+/* A real warning colours the ruler: amber for attention, red for a failure. */
+body[data-design="command03"][data-native-attention="warn"] .native-tac-strip {--tac-line:rgba(255,200,128,.62);}
+body[data-design="command03"][data-native-attention="fail"] .native-tac-strip {--tac-line:rgba(255,157,140,.7);}
+
+/* A plate: the chamfered frame shared by the rail, the start-up check and the info cards. */
+body[data-design="command03"] .native-order-rail,
+body[data-design="command03"] .native-arming,
+body[data-design="command03"] .native-brief-card {
+ --state:var(--tac-cyan);
+ position:relative;min-width:0;border:1px solid var(--tac-line);border-left:3px solid var(--state);
+ background:var(--tac-edges) right top/11px 11px no-repeat,var(--tac-edges) left bottom/11px 11px no-repeat,var(--tac-plate);
+ clip-path:var(--tac-cut);
+}
+
+/* Order rail. Its own region below the strip; it stays in view while the page scrolls to the work window. */
+body[data-design="command03"] .native-order-rail {
+ position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:grid;gap:5px;margin:0 0 10px;padding:0 9px 8px 10px;
+}
+body[data-design="command03"] .native-order-rail[data-order-state="waiting"] {--state:var(--tac-amber);--tac-line:rgba(255,200,128,.55);}
+body[data-design="command03"] .native-order-rail[data-order-state="completed"] {--state:var(--tac-green);}
+body[data-design="command03"] .native-order-rail[data-order-state="failed"] {--state:var(--tac-red);--tac-line:rgba(255,157,140,.6);}
+body[data-design="command03"] .native-order-rail[data-order-state="stopped"],
+body[data-design="command03"] .native-order-rail[data-order-state="ended"],
+body[data-design="command03"] .native-order-rail[data-order-state="idle"] {--state:var(--tac-slate);}
+body[data-design="command03"] .native-order-head {
+ display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;min-width:0;min-height:44px;width:100%;margin:0;padding:6px 0 4px;
+ border:0;border-bottom:1px solid rgba(112,231,255,.16);border-radius:0;background:none;color:var(--tac-ink);text-align:left;
+ font:inherit;appearance:none;-webkit-appearance:none;cursor:pointer;touch-action:manipulation;
+}
+body[data-design="command03"] .native-order-head:focus-visible {outline:2px solid var(--tac-cyan);outline-offset:-2px;}
+body[data-design="command03"] .native-order-call {
+ color:var(--state);font:600 11px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.2em;white-space:nowrap;
+}
+body[data-design="command03"] .native-order-title {
+ flex:1 1 150px;min-width:0;color:var(--tac-ink);font:500 13px/1.35 Manrope,system-ui,sans-serif;
+ overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-order-count {
+ color:var(--tac-dim);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;white-space:nowrap;
+}
+body[data-design="command03"] .native-order-stamp {
+ position:relative;padding:4px 8px 4px 19px;border:1px solid var(--state);color:var(--state);white-space:nowrap;
+ font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.16em;
+}
+body[data-design="command03"] .native-order-stamp::before {
+ content:"";position:absolute;left:7px;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--state);
+}
+body[data-design="command03"] .native-order-list,
+body[data-design="command03"] .native-order-done {list-style:none;margin:0;padding:0;min-width:0;}
+body[data-design="command03"] .native-order-list[hidden],
+body[data-design="command03"] .native-order-done[hidden] {display:none!important;}
+body[data-design="command03"] .native-order-list {
+ display:grid;gap:4px;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));
+}
+body[data-design="command03"] .native-order-card {
+ --state:var(--tac-cyan);
+ display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:9px;min-width:0;min-height:36px;
+ padding:5px 9px 5px 8px;border-left:3px solid var(--state);background:var(--tac-cell);
+ clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+}
+body[data-design="command03"] .native-order-no {
+ color:var(--state);font:600 13px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.06em;font-variant-numeric:tabular-nums;
+}
+body[data-design="command03"] .native-order-card .native-order-label {
+ min-width:0;color:var(--tac-ink);font:500 13px/1.35 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-order-state {
+ color:var(--state);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;text-align:right;
+}
+body[data-design="command03"] .native-order-card[data-state="waiting"] {
+ --state:var(--tac-amber);
+ /* Hazard stripes: the step waits for the owner. */
+ background:repeating-linear-gradient(-45deg,rgba(255,200,128,.5) 0 5px,transparent 5px 10px) left top/7px 100% no-repeat,#2a2416;
+ padding-left:14px;
+}
+body[data-design="command03"] .native-order-card[data-state="failed"] {--state:var(--tac-red);background:#2a1719;}
+body[data-design="command03"] .native-order-card[data-state="done"] {--state:var(--tac-green);}
+body[data-design="command03"] .native-order-card[data-state="stopped"],
+body[data-design="command03"] .native-order-card[data-state="skipped"],
+body[data-design="command03"] .native-order-card[data-state="blocked"],
+body[data-design="command03"] .native-order-card[data-state="unverified"] {--state:var(--tac-slate);}
+/* Folded (the default) the rail stays compact, because it stays in view: its three newest open steps, two lines
+   each. Unfolded by its head it shows every step in full and scrolls with the page. */
+body[data-design="command03"] .native-order-rail:not([data-expanded="true"]) .native-order-card:nth-last-child(n+4) {display:none;}
+body[data-design="command03"] .native-order-rail:not([data-expanded="true"]) .native-order-card .native-order-label {
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
+body[data-design="command03"] .native-order-rail[data-expanded="true"] {position:relative;top:auto;}
+/* The compact stack of finished steps: number and tick; unfolded by the rail's head they show their label. */
+body[data-design="command03"] .native-order-done {display:flex;flex-wrap:wrap;gap:4px;}
+body[data-design="command03"] .native-order-chip {
+ display:inline-flex;align-items:baseline;gap:6px;min-width:0;padding:3px 7px;border:1px solid rgba(127,227,184,.45);
+ background:#0b2a26;--state:var(--tac-green);
+}
+body[data-design="command03"] .native-order-chip .native-order-no {font-size:11px;}
+body[data-design="command03"] .native-order-chip .native-order-no::after {content:" ✓";}
+body[data-design="command03"] .native-order-chip .native-order-label {
+ display:none;min-width:0;color:#cdeee0;font:500 12px/1.35 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-order-rail[data-expanded="true"] .native-order-chip {flex:1 1 100%;}
+body[data-design="command03"] .native-order-rail[data-expanded="true"] .native-order-chip .native-order-label {display:block;}
+/* The line that names the moment an order or a plan arrives; it is visible only while it passes. */
+body[data-design="command03"] .native-order-banner {
+ position:absolute;left:0;right:0;top:0;height:44px;display:grid;place-items:center;pointer-events:none;opacity:0;
+ background:#06131f;color:var(--tac-cyan);font:600 12px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.3em;
+ text-align:center;
+}
+/* With the keyboard open or in a low window the rail scrolls with the page: the composer keeps its room. */
+@media(max-height:620px) {
+ body[data-design="command03"] .native-order-rail {position:relative;top:auto;}
+}
+
+/* Start-up check: every real check with its state; "alles bereit" only when every one is ready. */
+body[data-design="command03"] .native-arming {display:grid;gap:6px;padding:4px 10px 11px 11px;}
+body[data-design="command03"] .native-arming[data-verdict="problems"] {--state:var(--tac-amber);}
+body[data-design="command03"] .native-arming-head {display:flex;align-items:center;gap:10px;min-width:0;}
+body[data-design="command03"] .native-arming-call {
+ color:var(--tac-cyan);font:600 11px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.2em;
+}
+body[data-design="command03"] .native-arming-count {
+ margin-left:auto;color:var(--tac-ink);font:600 11px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;white-space:nowrap;
+}
+body[data-design="command03"] .native-arming-close {
+ min-width:44px;min-height:44px;margin:0;padding:0 10px;border:1px solid var(--tac-line);border-radius:0;background:var(--tac-cell);
+ color:var(--tac-ink);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;cursor:pointer;
+ appearance:none;-webkit-appearance:none;touch-action:manipulation;
+}
+body[data-design="command03"] .native-arming-list {
+ list-style:none;margin:0;padding:0;display:grid;gap:3px;min-width:0;
+ grid-template-columns:repeat(auto-fill,minmax(min(100%,232px),1fr));
+}
+body[data-design="command03"] .native-arming-row {
+ --state:var(--tac-green);
+ display:grid;grid-template-columns:8px minmax(0,1fr) auto;align-items:center;column-gap:9px;min-width:0;
+ padding:5px 9px 5px 8px;border-left:2px solid var(--state);background:var(--tac-cell);
+}
+body[data-design="command03"] .native-arming-row[data-state="warn"] {--state:var(--tac-amber);}
+body[data-design="command03"] .native-arming-row[data-state="fail"] {--state:var(--tac-red);}
+body[data-design="command03"] .native-arming-row[data-state="off"] {--state:var(--tac-slate);}
+body[data-design="command03"] .native-check-lamp {grid-column:1;grid-row:1;width:8px;height:8px;background:var(--state);}
+body[data-design="command03"] .native-check-label {
+ grid-column:2;grid-row:1;min-width:0;color:var(--tac-ink);font:600 12px/1.35 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-check-state {
+ grid-column:3;grid-row:1;color:var(--state);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;
+}
+body[data-design="command03"] .native-check-detail {
+ grid-column:2/-1;grid-row:2;min-width:0;color:var(--tac-dim);font:400 11px/1.4 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-check-detail:empty {display:none;}
+/* While the checks tick in, a ready one is its name and its state; what it says is in the list the strip opens. */
+body[data-design="command03"] .native-arming[data-mode="run"] .native-arming-row[data-state="ok"] .native-check-detail {display:none;}
+body[data-design="command03"] .native-arming-verdict {
+ margin:2px 0 0;color:var(--tac-green);font:600 12px/1.5 'Space Grotesk',system-ui,sans-serif;letter-spacing:.08em;
+ overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-arming[data-verdict="problems"] .native-arming-verdict {color:var(--tac-amber);}
+/* The pass of the start-up sequence along the lower edge; without the sequence it is not there. */
+body[data-design="command03"] .native-arming::after {
+ content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--tac-cyan);
+ transform:scaleX(0);transform-origin:left center;
+}
+
+/* Info cards: a row that can be swiped on a phone, a grid on the unfolded display. */
+body[data-design="command03"] .native-briefing {
+ display:grid;gap:8px;min-width:0;margin:0 0 11px;
+ grid-template-columns:repeat(auto-fit,minmax(min(100%,208px),1fr));
+}
+body[data-design="command03"] .native-brief-card {
+ --state:var(--tac-cyan);display:grid;align-content:start;gap:4px;padding:9px 12px 11px 11px;
+}
+body[data-design="command03"] .native-brief-card[data-kind="weather"],
+body[data-design="command03"] .native-brief-card[data-kind="news"] {--state:var(--tac-violet);}
+body[data-design="command03"] .native-brief-card[data-kind="tasks"],
+body[data-design="command03"] .native-brief-card[data-kind="system"] {--state:var(--tac-green);}
+body[data-design="command03"] .native-brief-card[data-state="attention"] {
+ --state:var(--tac-amber);--tac-line:rgba(255,200,128,.6);
+}
+body[data-design="command03"] .native-brief-kind {
+ color:var(--state);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.18em;
+}
+body[data-design="command03"] .native-brief-title {
+ color:var(--tac-ink);font:600 15px/1.3 'Space Grotesk',system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-brief-lines {list-style:none;margin:0;padding:0;display:grid;gap:2px;min-width:0;}
+body[data-design="command03"] .native-brief-lines[hidden] {display:none!important;}
+body[data-design="command03"] .native-brief-line {
+ color:#c4dde8;font:400 12px/1.45 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+@media(max-width:760px) {
+ body[data-design="command03"] .native-briefing {
+  display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;
+ }
+ body[data-design="command03"] .native-briefing::-webkit-scrollbar {display:none;}
+ body[data-design="command03"] .native-brief-card {flex:0 0 min(76%,250px);scroll-snap-align:start;}
+ body[data-design="command03"] .native-brief-card:only-child {flex-basis:100%;}
+}
+
+/* Installed-app hits in the file window: one tile per label Android matched. */
+body[data-design="command03"] #native-files-panel[data-kind="apps"] .native-files-list {
+ grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));
+}
+body[data-design="command03"] #native-files-panel[data-kind="apps"] .native-file-glyph {
+ width:16px;height:16px;border-radius:4px;
+ background:linear-gradient(#83edff,#83edff) center/6px 6px no-repeat;
+}
+
+/* The window that leaves: its plate with its name, shown only while it slides out. */
+body[data-design="command03"] .native-window-ghost {
+ position:absolute;left:14px;right:14px;top:70px;bottom:40px;z-index:3;display:grid;place-items:center;pointer-events:none;
+ opacity:0;border:1px solid var(--tac-line);background:#06131fd9;clip-path:var(--tac-cut);
+}
+body[data-design="command03"] .native-window-ghost-name {
+ color:var(--tac-cyan);font:600 13px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.34em;text-align:center;
+}
+
+/* Tactical marks on the existing windows: never while the device computes. */
+body[data-design="command03"][data-native-effects]:not([data-native-effects="rest"]) .native-window-frame::after {
+ content:"";position:absolute;left:34px;right:34px;top:0;height:6px;opacity:.55;
+ background:repeating-linear-gradient(90deg,var(--frame-a) 0 1px,transparent 1px 9px) left top/100% 3px no-repeat,
+  repeating-linear-gradient(90deg,var(--frame-a) 0 1px,transparent 1px 45px) left top/100% 6px no-repeat;
+}
+body[data-design="command03"][data-native-effects]:not([data-native-effects="rest"]) #native-live-panel .op-mode-label,
+body[data-design="command03"][data-native-effects]:not([data-native-effects="rest"]) #native-computer-panel .op-mode-label,
+body[data-design="command03"][data-native-effects]:not([data-native-effects="rest"]) .native-record-badge {
+ border-radius:0;padding-left:12px;padding-right:12px;clip-path:polygon(7px 0,100% 0,calc(100% - 7px) 100%,0 100%);
+}
+
+/* Unfolded display: the live monitor uses the width – the picture on the left, what was done beside it. */
+@media(min-width:761px) {
+ body[data-design="command03"] #native-computer-panel {
+  display:grid;grid-template-columns:minmax(0,1.6fr) minmax(210px,1fr);column-gap:16px;align-items:start;
+ }
+ body[data-design="command03"] #native-computer-panel>* {grid-column:1/-1;}
+ body[data-design="command03"] #native-computer-panel>.op-browser-frame {grid-column:1;}
+ body[data-design="command03"] #native-computer-panel>.native-computer-work {grid-column:2;margin-top:0;}
+ body[data-design="command03"] #native-computer-panel:has(>.native-computer-work[hidden])>.op-browser-frame {grid-column:1/-1;}
+ body[data-design="command03"] #native-computer-panel>.native-computer-work .native-computer-log {grid-template-columns:minmax(0,1fr);}
+ body[data-design="command03"] #native-computer-panel .native-computer-image {max-height:min(72vh,760px);}
+}
+
+/* Motion. One pass per mark; marks are set by the bridge on a real event and removed when their pass has ended. */
+@keyframes native-tac-in-drop {from{transform:translateY(-12px);opacity:0}70%{transform:translateY(1px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-slide {from{transform:translateX(-26px);opacity:0}70%{transform:translateX(2px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-fly {from{transform:translateX(54px);opacity:0}70%{transform:translateX(-3px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-tick {from{transform:translateX(-10px);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-tac-in-chip {from{transform:scale(.55);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-tac-in-banner {from{transform:translateX(-18px);opacity:0}16%{transform:none;opacity:1}74%{transform:none;opacity:1}to{transform:translateX(18px);opacity:0}}
+@keyframes native-tac-in-window-a {from{transform:translateX(38px);opacity:0}68%{transform:translateX(-3px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-window-b {from{transform:translateX(38px);opacity:0}68%{transform:translateX(-3px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-part {from{transform:translateY(11px);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-tac-in-wing-left {from{transform:translateX(-30px);opacity:0}72%{transform:translateX(2px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-wing-right {from{transform:translateX(30px);opacity:0}72%{transform:translateX(-2px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-out-dock {from{transform:none;opacity:1}46%{transform:none;opacity:1}to{transform:translateX(30px) scale(.96);opacity:0}}
+@keyframes native-tac-out-slide {from{transform:none;opacity:1}to{transform:translateX(-30px);opacity:0}}
+@keyframes native-tac-out-fly {from{transform:none;opacity:1}to{transform:translateX(54px);opacity:0}}
+@keyframes native-tac-out-lift {from{transform:none;opacity:1}to{transform:translateY(-10px);opacity:0}}
+@keyframes native-tac-out-window {from{transform:none;opacity:.94}to{transform:translateX(-46px);opacity:0}}
+@keyframes native-tac-mark-stamp {from{transform:scale(1.75);opacity:0}55%{transform:scale(.93);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-mark-flash {from{opacity:.2}to{opacity:1}}
+@keyframes native-tac-arming-pass {from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes native-tac-loop-lamp {from{opacity:.3}to{opacity:1}}
+@keyframes native-tac-loop-sweep {from{transform:translateX(-120px)}to{transform:translateX(100vw)}}
+
+/* Entrances. */
+body[data-design="command03"][data-native-effects="full"] .native-tac-strip[data-native-enter],
+body[data-design="command03"][data-native-effects="full"] .native-order-rail[data-native-enter],
+body[data-design="command03"][data-native-effects="full"] .native-arming[data-native-enter] {
+ animation:native-tac-in-drop .46s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-tac-strip[data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-order-rail[data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-arming[data-native-enter] {
+ animation:native-tac-in-drop .24s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-card[data-native-enter] {
+ animation:native-tac-in-slide .44s var(--tac-mech) 1 both;animation-delay:calc(.12s + var(--tac-i,0) * .07s);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-order-card[data-native-enter] {
+ animation:native-tac-in-slide .24s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-chip[data-native-enter] {
+ animation:native-tac-in-chip .3s var(--tac-mech) 1 both;animation-delay:.42s;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-order-chip[data-native-enter] {
+ animation:native-tac-in-chip .2s var(--tac-mech) 1 both;animation-delay:.2s;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-banner[data-native-enter] {
+ animation:native-tac-in-banner 1.25s var(--tac-mech) 1 both;animation-delay:.2s;
+}
+body[data-design="command03"][data-native-effects="full"] .native-brief-card[data-native-enter] {
+ animation:native-tac-in-fly .52s var(--tac-mech) 1 both;animation-delay:calc(var(--tac-i,0) * .09s);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-brief-card[data-native-enter] {
+ animation:native-tac-in-fly .26s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-files-list li[data-native-enter] {
+ animation:native-tac-in-fly .4s var(--tac-mech) 1 both;animation-delay:calc(.16s + var(--tac-i,0) * .05s);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-files-list li[data-native-enter] {
+ animation:native-tac-in-part .22s var(--tac-mech) 1 both;
+}
+/* Start-up sequence: each check ticks in, then the verdict; the pass along the edge is its length. */
+body[data-design="command03"][data-native-effects="full"] .native-arming-row[data-native-enter] {
+ animation:native-tac-in-tick .3s var(--tac-mech) 1 both;animation-delay:calc(.3s + var(--tac-i,0) * .17s);
+}
+body[data-design="command03"][data-native-effects="full"] .native-arming-verdict[data-native-enter] {
+ animation:native-tac-in-tick .34s var(--tac-mech) 1 both;animation-delay:calc(.5s + var(--tac-n,0) * .17s);
+}
+body[data-design="command03"][data-native-effects="full"] .native-arming[data-mode="run"][data-pass="true"]::after {
+ animation:native-tac-arming-pass calc(2.6s + var(--tac-n,0) * .17s) linear 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-arming-row[data-native-enter] {
+ animation:native-tac-in-tick .2s var(--tac-mech) 1 both;animation-delay:calc(.1s + var(--tac-i,0) * .06s);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-arming[data-mode="run"][data-pass="true"]::after {
+ animation:native-tac-arming-pass calc(1.8s + var(--tac-n,0) * .06s) linear 1 both;
+}
+/* With the start-up sequence the instrument tiles come in from their sides. */
+body[data-design="command03"][data-native-effects="full"][data-native-arming="run"] .presence-wing-left {
+ animation:native-tac-in-wing-left .62s var(--tac-mech) 1 both;animation-delay:.18s;
+}
+body[data-design="command03"][data-native-effects="full"][data-native-arming="run"] .presence-wing-right {
+ animation:native-tac-in-wing-right .62s var(--tac-mech) 1 both;animation-delay:.3s;
+}
+
+/* Window choreography: the arriving window slides in and its parts follow; the leaving one slides out. */
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter="a"] {
+ animation:native-tac-in-window-a .6s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter="b"] {
+ animation:native-tac-in-window-b .6s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter]>* {
+ animation:native-tac-in-part .32s var(--tac-mech) 1 both;animation-delay:.1s;
+}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter]>:nth-child(2) {animation-delay:.15s;}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter]>:nth-child(3) {animation-delay:.2s;}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter]>:nth-child(n+4) {animation-delay:.25s;}
+body[data-design="command03"][data-native-effects="balanced"] #workspace>[data-native-enter="a"] {
+ animation:native-tac-in-window-a .3s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] #workspace>[data-native-enter="b"] {
+ animation:native-tac-in-window-b .3s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-window-ghost[data-native-leaving="true"] {
+ animation:native-tac-out-window .36s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-window-ghost[data-native-leaving="true"] {
+ animation:native-tac-out-window .2s var(--tac-exit) 1 both;
+}
+
+/* Departures. */
+body[data-design="command03"][data-native-effects="full"] .native-order-card[data-native-leaving="true"] {
+ animation:native-tac-out-slide .3s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-card[data-native-leaving="true"][data-state="done"] {
+ animation:native-tac-out-dock .62s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-order-card[data-native-leaving="true"] {
+ animation:native-tac-out-slide .18s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-rail[data-native-leaving="true"] {
+ animation:native-tac-out-slide .34s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-order-rail[data-native-leaving="true"] {
+ animation:native-tac-out-slide .18s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-brief-card[data-native-leaving="true"] {
+ animation:native-tac-out-fly .34s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-brief-card[data-native-leaving="true"] {
+ animation:native-tac-out-fly .18s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-arming[data-native-leaving="true"],
+body[data-design="command03"][data-native-effects="full"] .native-briefing[data-native-leaving="true"] {
+ animation:native-tac-out-lift .3s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-arming[data-native-leaving="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-briefing[data-native-leaving="true"] {
+ animation:native-tac-out-lift .18s var(--tac-exit) 1 both;
+}
+
+/* A state that Android just changed: stamped once. */
+body[data-design="command03"][data-native-effects="full"] .native-order-stamp[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-order-stamp[data-changed="true"] {
+ animation:native-tac-mark-stamp .42s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-card[data-changed="true"] .native-order-state,
+body[data-design="command03"][data-native-effects="balanced"] .native-order-card[data-changed="true"] .native-order-state {
+ animation:native-tac-mark-stamp .42s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-tac-cell[data-changed="true"] .native-tac-value,
+body[data-design="command03"][data-native-effects="balanced"] .native-tac-cell[data-changed="true"] .native-tac-value,
+body[data-design="command03"][data-native-effects="full"] .native-brief-card[data-changed="true"] .native-brief-kind,
+body[data-design="command03"][data-native-effects="balanced"] .native-brief-card[data-changed="true"] .native-brief-kind {
+ animation:native-tac-mark-flash .22s ease-in-out 3 alternate both;
+}
+
+/* Two loops, in the full tier only: the lamp of an order that is open, and the sweep along the strip's ruler. */
+body[data-design="command03"][data-native-effects="full"] .native-order-rail[data-order-state="active"] .native-order-stamp::before,
+body[data-design="command03"][data-native-effects="full"] .native-order-rail[data-order-state="waiting"] .native-order-stamp::before {
+ animation:native-tac-loop-lamp .9s ease-in-out infinite alternate;
+}
+body[data-design="command03"] .native-tac-strip::after {
+ content:"";position:absolute;left:0;bottom:0;width:120px;height:2px;opacity:0;
+ background:linear-gradient(90deg,transparent,var(--tac-cyan),transparent);
+}
+body[data-design="command03"][data-native-effects="full"] .native-tac-strip::after {
+ opacity:.8;animation:native-tac-loop-sweep 5.2s linear infinite;
+}
+
+/* The owner's switch and the system preference stop every one of them. */
+body[data-design="command03"][data-native-light-motion="off"] .native-tac,
+body[data-design="command03"][data-native-light-motion="off"] .native-tac *,
+body[data-design="command03"][data-native-light-motion="off"] .native-tac::after,
+body[data-design="command03"][data-native-light-motion="off"] .native-tac *::before,
+body[data-design="command03"][data-native-light-motion="off"] .native-tac *::after,
+body[data-design="command03"][data-native-light-motion="off"] .native-window-ghost,
+body[data-design="command03"][data-native-light-motion="off"] .presence-wing,
+body[data-design="command03"][data-native-light-motion="off"] .native-files-list li,
+body[data-design="command03"][data-native-light-motion="off"] #workspace>[data-native-enter],
+body[data-design="command03"][data-native-light-motion="off"] #workspace>[data-native-enter]>* {animation:none!important;}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-tac,
+ body[data-design="command03"] .native-tac *,
+ body[data-design="command03"] .native-tac::after,
+ body[data-design="command03"] .native-tac *::before,
+ body[data-design="command03"] .native-tac *::after,
+ body[data-design="command03"] .native-window-ghost,
+ body[data-design="command03"] .presence-wing,
+ body[data-design="command03"] .native-files-list li,
+ body[data-design="command03"] #workspace>[data-native-enter],
+ body[data-design="command03"] #workspace>[data-native-enter]>* {animation:none!important;}
+}
+
+/* ───────── Code73 · the avatar in the room and the work scenes (owner's order of 19.11.2026).
+   1. The bust no longer ends in a cut. The original 3D model ends in a flat plane at its own y = 0; the bridge
+      measures where that plane and the neck stand in the avatar's frame (placeBust: the same orthographic framing
+      the original avatar computes) and this section fades the figure out above it along a curved contour: chest and
+      shoulders turn transparent and pass into fine light lines, motes and a ring platform where the body ends.
+      The model, its rig and its own animation (gaze, blinking, idle saccades, breathing, viseme mouth) are not
+      touched: the dissolve is a still mask on the original avatar's frame plus still light layers.
+   2. Work scenes: one holographic work window below the avatar that shows exactly one real lane at a time (the
+      snapshot's `scene`): storage clean, mail, send or web research.
+   Heat contract, checked in tools/command03-native-qa:
+   · no backdrop-filter, no filter, no transition, no will-change and no new canvas in this section;
+   · the dissolve, the platform and the light lines stand still in every tier; their brightness follows the presence
+     level and the measured speech level Android already reports (custom properties, no clock);
+   · every animation needs body[data-native-effects="full"] or ="balanced" in each of its selectors, is one pass on a
+     real event (a scene opens, a card arrives, a phase changes, a figure is measured) and animates transform and
+     opacity only. There is no loop in this section;
+   · the final state of every element is its state without animation. ───────── */
+body[data-design="command03"] {
+ --bust-neck:58%;--bust-chest:66%;--bust-cut:79%;--bust-shoulder:37%;--bust-head:38%;--bust-headw:11%;
+}
+/* The dissolve. Above the neck the figure is whole; below it an ellipse around the neck that reaches out to the
+   shoulders and ends just above the model's lower plane: its contour is a curve, never a line. */
+body[data-design="command03"].native-hologram .avatar-zone .avatar-crop {
+ -webkit-mask-image:linear-gradient(180deg,#000 0,#000 var(--bust-neck),transparent calc(var(--bust-neck) + 7%)),
+  radial-gradient(ellipse calc(var(--bust-shoulder) * .95) calc((var(--bust-cut) - var(--bust-neck)) * .97) at 50% var(--bust-neck),
+   #000 0,#000 40%,rgba(0,0,0,.84) 56%,rgba(0,0,0,.5) 72%,rgba(0,0,0,.18) 87%,transparent 100%);
+ mask-image:linear-gradient(180deg,#000 0,#000 var(--bust-neck),transparent calc(var(--bust-neck) + 7%)),
+  radial-gradient(ellipse calc(var(--bust-shoulder) * .95) calc((var(--bust-cut) - var(--bust-neck)) * .97) at 50% var(--bust-neck),
+   #000 0,#000 40%,rgba(0,0,0,.84) 56%,rgba(0,0,0,.5) 72%,rgba(0,0,0,.18) 87%,transparent 100%);
+ -webkit-mask-composite:source-over;mask-composite:add;
+ -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+}
+/* The light the body passes into: one layer behind the figure (the platform's far half and the halo around the
+   head), one in front of it (light lines, motes and the platform's near half). */
+body[data-design="command03"] .native-bust {
+ --bust-l:calc(.55 + .45 * var(--orb-light,.43));
+ position:absolute;inset:0;pointer-events:none;opacity:var(--native-neon,1);
+}
+body[data-design="command03"] .native-bust-back {z-index:0;}
+body[data-design="command03"] .native-bust-front {z-index:1;}
+body[data-design="command03"] .native-bust-front~.avatar-caption {z-index:2;}
+body[data-design="command03"] .native-bust i {position:absolute;display:block;}
+/* Platform: rings at the height where the body ends, a little wider than the shoulders. */
+body[data-design="command03"] .native-bust .native-bust-ring {
+ left:calc(50% - var(--bust-shoulder) * 1.32);width:calc(var(--bust-shoulder) * 2.64);aspect-ratio:5.2;
+ top:var(--bust-cut);transform:translateY(-50%);border-radius:50%;
+}
+body[data-design="command03"] .native-bust .native-bust-ring.native-bust-inner {
+ left:calc(50% - var(--bust-shoulder) * .98);width:calc(var(--bust-shoulder) * 1.96);
+}
+body[data-design="command03"] .native-bust-back .native-bust-ring {
+ border:1px solid rgba(var(--cinema-key),calc(.22 * var(--bust-l)));
+ background:radial-gradient(ellipse 50% 50%,rgba(var(--cinema-key),calc(.2 * var(--bust-l))),rgba(var(--cinema-fill),calc(.1 * var(--bust-l))) 58%,transparent 72%);
+ box-shadow:0 0 18px rgba(var(--cinema-key),calc(.16 * var(--bust-l)));
+}
+body[data-design="command03"] .native-bust-back .native-bust-ring.native-bust-inner {
+ border-color:rgba(var(--cinema-fill),calc(.42 * var(--bust-l)));background:none;box-shadow:none;
+}
+/* The near half of the platform crosses in front of the dissolving chest. */
+body[data-design="command03"] .native-bust-front .native-bust-ring {
+ border:1.5px solid rgba(var(--cinema-key),calc(.72 * var(--bust-l)));border-top-color:transparent;
+ box-shadow:0 7px 16px -6px rgba(var(--cinema-key),calc(.5 * var(--bust-l))),inset 0 -5px 12px -6px rgba(var(--cinema-key),calc(.45 * var(--bust-l)));
+ -webkit-mask-image:linear-gradient(180deg,transparent 46%,#000 62%);mask-image:linear-gradient(180deg,transparent 46%,#000 62%);
+}
+body[data-design="command03"] .native-bust-front .native-bust-ring.native-bust-inner {
+ border-color:transparent transparent rgba(var(--cinema-fill),calc(.7 * var(--bust-l)));box-shadow:none;
+}
+/* Light lines: chest and shoulders run out into fine threads that converge on the platform's centre, densest where
+   the body fades and gone above and below it (rays of one cone, so they never form a grid with the floor). */
+body[data-design="command03"] .native-bust .native-bust-lines {
+ left:calc(50% - var(--bust-shoulder) * 1.06);width:calc(var(--bust-shoulder) * 2.12);
+ top:var(--bust-chest);height:calc(var(--bust-cut) - var(--bust-chest) + 3%);
+ background:
+  repeating-conic-gradient(from 151deg at 50% 150%,transparent 0 1.1deg,rgba(var(--cinema-key),.62) 1.1deg 1.28deg,transparent 1.28deg 2.3deg),
+  repeating-conic-gradient(from 150deg at 50% 175%,transparent 0 1.7deg,rgba(205,180,255,.5) 1.7deg 1.84deg,transparent 1.84deg 3.1deg),
+  repeating-conic-gradient(from 152deg at 50% 128%,transparent 0 2.6deg,rgba(226,250,255,.55) 2.6deg 2.78deg,transparent 2.78deg 4.4deg);
+ background-size:100% 100%,100% 82%,100% 64%;background-position:0 0,0 100%,0 100%;background-repeat:no-repeat;
+ -webkit-mask-image:radial-gradient(ellipse 50% 78% at 50% 44%,#000 8%,rgba(0,0,0,.55) 46%,transparent 100%);
+ mask-image:radial-gradient(ellipse 50% 78% at 50% 44%,#000 8%,rgba(0,0,0,.55) 46%,transparent 100%);
+ opacity:calc(.5 * var(--bust-l));
+}
+/* Motes: the particles of the dissolve, on three grids so that no row reads as a line. */
+body[data-design="command03"] .native-bust .native-bust-motes {
+ left:calc(50% - var(--bust-shoulder) * 1.2);width:calc(var(--bust-shoulder) * 2.4);
+ top:calc(var(--bust-neck) + 3%);height:calc(var(--bust-cut) - var(--bust-neck) + 4%);
+ background:
+  radial-gradient(circle at 30% 40%,rgba(226,250,255,.95) 0 .8px,transparent 1.5px) 0 0/23px 17px,
+  radial-gradient(circle at 70% 60%,rgba(var(--cinema-key),.9) 0 .9px,transparent 1.7px) 7px 5px/31px 26px,
+  radial-gradient(circle at 50% 50%,rgba(var(--cinema-fill),.85) 0 1px,transparent 1.9px) 13px 11px/47px 37px;
+ -webkit-mask-image:radial-gradient(ellipse 50% 56% at 50% 64%,#000 18%,rgba(0,0,0,.4) 62%,transparent 100%);
+ mask-image:radial-gradient(ellipse 50% 56% at 50% 64%,#000 18%,rgba(0,0,0,.4) 62%,transparent 100%);
+ opacity:calc(.62 * var(--bust-l));
+}
+/* Halo: two thin tilted rings around the upper head, behind it, so that the head hides their middle. They take
+   the measured speech level as the orb's corona does. */
+body[data-design="command03"] .native-bust .native-bust-halo {
+ left:calc(50% - var(--bust-headw) * 1.95);width:calc(var(--bust-headw) * 3.9);aspect-ratio:3.7;top:var(--bust-head);
+ border-radius:50%;border:1px solid rgba(214,248,255,calc(.5 * var(--bust-l) + .4 * var(--native-speech,0)));
+ box-shadow:0 0 7px rgba(var(--cinema-key),calc(.5 * var(--bust-l) + .3 * var(--native-speech,0))),
+  inset 0 0 6px rgba(var(--cinema-key),calc(.3 * var(--bust-l)));
+ transform:translateY(-50%) rotate(-6deg);
+}
+body[data-design="command03"] .native-bust .native-bust-halo.native-bust-inner {
+ left:calc(50% - var(--bust-headw) * 1.6);width:calc(var(--bust-headw) * 3.2);aspect-ratio:3.3;top:calc(var(--bust-head) - 4.5%);
+ border-color:rgba(var(--cinema-fill),calc(.6 * var(--bust-l) + .4 * var(--native-speech,0)));
+ box-shadow:0 0 6px rgba(var(--cinema-fill),calc(.4 * var(--bust-l)));transform:translateY(-50%) rotate(7deg);
+}
+/* Reduced tier: threads, motes and platform stay; the halo leaves. */
+body[data-design="command03"][data-native-quality="reduced"] .native-bust-halo {display:none;}
+
+/* Work scene: a glass plate with two cut corners directly below the avatar, joined to its platform by a cone of
+   light. Its parts are rows of one grid; a part without data is hidden by the bridge, never left empty. */
+body[data-design="command03"] .native-scene {
+ --scene:var(--tac-cyan);
+ position:relative;z-index:4;display:grid;gap:10px;min-width:0;margin:6px 0 14px;padding:12px 14px 12px 15px;
+ border:1px solid rgba(131,237,255,.34);border-left:3px solid var(--scene);color:var(--tac-ink);
+ background:var(--tac-edges) right top/11px 11px no-repeat,var(--tac-edges) left bottom/11px 11px no-repeat,
+  radial-gradient(ellipse 70% 90px at 50% 0,rgba(var(--cinema-key),.13),transparent 100%),
+  linear-gradient(160deg,#10283bf2,#061220f7 58%,#120f2cf2);
+ box-shadow:inset 0 1px rgba(214,248,255,.2),0 18px 40px #0009,0 0 26px rgba(var(--cinema-key),calc(.1 * var(--native-neon,1)));
+ clip-path:var(--tac-cut);transform-origin:50% 0;
+}
+/* Its row in the presence grid: the whole width, below the avatar; the tiles move one row down while it is there. */
+body[data-design="command03"] .presence-system>.native-scene {grid-column:1/-1;grid-row:2;align-self:start;}
+@container presence-orbit (max-width:649px) {
+ body[data-design="command03"][data-native-scene] .presence-system>.presence-wing {grid-row:3;}
+}
+@container presence-orbit (max-width:359px) {
+ body[data-design="command03"][data-native-scene] .presence-system>.presence-wing-left {grid-row:3;}
+ body[data-design="command03"][data-native-scene] .presence-system>.presence-wing-right {grid-row:4;}
+}
+body[data-design="command03"] .native-scene[data-tone="waiting"] {--scene:var(--tac-amber);}
+body[data-design="command03"] .native-scene[data-tone="done"] {--scene:var(--tac-green);}
+body[data-design="command03"] .native-scene[data-tone="failed"] {--scene:var(--tac-red);}
+body[data-design="command03"] .native-scene[data-tone="stopped"] {--scene:var(--tac-slate);}
+body[data-design="command03"] .native-scene [hidden] {display:none!important;}
+/* The light it arises from: a cone from the platform above into the plate's upper edge. */
+body[data-design="command03"] .native-scene-glow {
+ position:absolute;left:18%;right:18%;top:0;height:46px;pointer-events:none;
+ background:linear-gradient(180deg,rgba(var(--cinema-key),.2),transparent);
+ clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);opacity:var(--native-neon,1);
+}
+body[data-design="command03"] .native-scene-head {display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;min-width:0;position:relative;}
+body[data-design="command03"] .native-scene-kind {
+ color:var(--tac-cyan);font:700 12px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.2em;
+}
+body[data-design="command03"] .native-scene-sub {color:var(--tac-dim);font-size:12px;min-width:0;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-phase {
+ margin-left:auto;padding:4px 8px;border:1px solid var(--scene);color:var(--scene);
+ font:600 11px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;white-space:nowrap;
+}
+body[data-design="command03"] .native-scene-close {
+ display:grid;place-items:center;width:44px;height:44px;margin:-8px -8px -8px 0;padding:0;border:0;background:none;
+ color:var(--tac-dim);font-size:22px;line-height:1;cursor:pointer;
+}
+body[data-design="command03"] .native-scene-close:focus-visible,
+body[data-design="command03"] .native-scene-action:focus-visible {outline:2px solid var(--tac-cyan);outline-offset:2px;}
+/* The device storage as Android measured it: a gauge of the used part; after a clean the earlier part behind it. */
+body[data-design="command03"] .native-scene-storage {display:grid;gap:5px;min-width:0;}
+body[data-design="command03"] .native-scene-storage-label {color:var(--tac-dim);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.16em;}
+body[data-design="command03"] .native-scene-storage-note {color:var(--tac-ink);font-size:12px;}
+body[data-design="command03"] .native-scene-gauge {
+ position:relative;display:block;height:14px;overflow:hidden;border:1px solid rgba(131,237,255,.4);
+ background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(131,237,255,.14) 9px 10px),#04101b;
+}
+body[data-design="command03"] .native-scene-gauge i,
+body[data-design="command03"] .native-scene-bar i,
+body[data-design="command03"] .native-scene-card-fill i,
+body[data-design="command03"] .native-scene-sysbar-track i {
+ position:absolute;inset:0;display:block;transform-origin:0 50%;transform:scaleX(0);
+}
+body[data-design="command03"] .native-scene-gauge .native-scene-used {
+ z-index:1;
+ background:linear-gradient(90deg,rgba(var(--cinema-fill),.85),rgba(var(--cinema-key),.9));
+}
+body[data-design="command03"] .native-scene-gauge .native-scene-before {
+ background:repeating-linear-gradient(135deg,rgba(255,200,128,.55) 0 3px,transparent 3px 6px);border-right:1px solid var(--tac-amber);
+}
+body[data-design="command03"] .native-scene-query {margin:0;color:var(--tac-ink);font-size:13px;overflow-wrap:anywhere;position:relative;}
+/* Safety levels: GREEN is the light of what may go; it lights while it is being cleaned. */
+body[data-design="command03"] .native-scene-levels {display:flex;flex-wrap:wrap;gap:5px;margin:0;padding:0;list-style:none;}
+body[data-design="command03"] .native-scene-level {
+ --shade:var(--tac-slate);display:grid;gap:1px;padding:5px 8px;border-left:2px solid var(--shade);background:var(--tac-cell);min-width:0;
+}
+body[data-design="command03"] .native-scene-level[data-shade="green"] {--shade:var(--tac-green);}
+body[data-design="command03"] .native-scene-level[data-shade="yellow"] {--shade:var(--tac-amber);}
+body[data-design="command03"] .native-scene-level[data-shade="red"] {--shade:var(--tac-red);}
+body[data-design="command03"] .native-scene-level[data-active="true"] {background:rgba(127,227,184,.16);box-shadow:inset 0 0 0 1px rgba(127,227,184,.55);}
+body[data-design="command03"] .native-scene-level-name {color:var(--shade);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;}
+body[data-design="command03"] .native-scene-level-value {color:var(--tac-ink);font-size:12px;}
+/* Cards: one per item of the lane's real list. */
+body[data-design="command03"] .native-scene-cards {
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,138px),1fr));gap:5px;margin:0;padding:0;list-style:none;min-width:0;
+}
+body[data-design="command03"] .native-scene-card {
+ --tone:var(--tac-cyan);position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;min-width:0;
+ padding:6px 8px 7px;border:1px solid rgba(131,237,255,.18);border-left:2px solid var(--tone);background:#081a29e6;
+}
+body[data-design="command03"] .native-scene-card[data-tone="violet"] {--tone:var(--tac-violet);}
+body[data-design="command03"] .native-scene-card[data-tone="green"] {--tone:var(--tac-green);}
+body[data-design="command03"] .native-scene-card[data-tone="yellow"] {--tone:var(--tac-amber);}
+body[data-design="command03"] .native-scene-card[data-tone="red"] {--tone:var(--tac-red);}
+body[data-design="command03"] .native-scene-card[data-tone="slate"] {--tone:var(--tac-slate);}
+body[data-design="command03"] .native-scene-card-mark {grid-column:1/-1;color:var(--tone);font:600 9px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;}
+body[data-design="command03"] .native-scene-card-mark:empty {display:none;}
+body[data-design="command03"] .native-scene-card-title {grid-column:1/-1;min-width:0;font-size:12.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-card-value {justify-self:end;color:var(--tone);font:600 12px/1.2 'Space Grotesk',system-ui,sans-serif;white-space:nowrap;}
+body[data-design="command03"] .native-scene-card-meta {min-width:0;color:var(--tac-dim);font-size:11px;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-card-fill {position:absolute;left:0;right:0;bottom:0;height:2px;display:block;}
+body[data-design="command03"] .native-scene-card-fill i {background:var(--tone);opacity:.75;}
+body[data-design="command03"] .native-scene-more {margin:-4px 0 0;color:var(--tac-dim);font-size:11px;}
+/* Progress of real completed steps. */
+body[data-design="command03"] .native-scene-progress {display:grid;gap:4px;}
+body[data-design="command03"] .native-scene-progress-label {font:600 12px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.06em;color:var(--scene);}
+body[data-design="command03"] .native-scene-bar {position:relative;display:block;height:5px;overflow:hidden;background:#0a2234;}
+body[data-design="command03"] .native-scene-bar i {background:linear-gradient(90deg,var(--scene),#e6fbff);}
+/* Figures side by side: before, after, change, removed – each with what it is. */
+body[data-design="command03"] .native-scene-figures {display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:6px;margin:0;}
+body[data-design="command03"] .native-scene-figure {display:grid;gap:1px;padding:6px 8px;background:var(--tac-cell);min-width:0;}
+body[data-design="command03"] .native-scene-figure dd {margin:0;}
+body[data-design="command03"] .native-scene-figure-label {color:var(--tac-dim);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;}
+body[data-design="command03"] .native-scene-figure-value {color:var(--tac-ink);font:600 15px/1.25 'Space Grotesk',system-ui,sans-serif;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-figure-note {color:var(--tac-dim);font-size:10px;}
+body[data-design="command03"] .native-scene-notice {margin:0;padding:6px 9px;border-left:2px solid var(--tac-amber);background:rgba(255,200,128,.08);font-size:12px;line-height:1.4;}
+body[data-design="command03"] .native-scene-result {margin:0;font-size:13px;line-height:1.45;overflow-wrap:anywhere;}
+body[data-design="command03"] .native-scene-actions {display:flex;flex-wrap:wrap;gap:8px;}
+body[data-design="command03"] .native-scene-action {
+ min-height:44px;padding:8px 14px;border:1px solid var(--tac-amber);border-radius:0;background:rgba(255,200,128,.1);
+ color:var(--tac-ink);font:600 13px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;touch-action:manipulation;
+}
+/* Foot: system readouts (bars of real readings) and the brain's four steps. */
+body[data-design="command03"] .native-scene-foot {
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px 14px;padding-top:9px;
+ border-top:1px solid rgba(131,237,255,.16);
+}
+body[data-design="command03"] .native-scene-system,
+body[data-design="command03"] .native-scene-brain {display:grid;gap:4px;margin:0;padding:0;list-style:none;min-width:0;}
+body[data-design="command03"] .native-scene-sysbar {display:grid;grid-template-columns:86px minmax(30px,1fr) auto;align-items:center;gap:7px;min-width:0;}
+body[data-design="command03"] .native-scene-sysbar-name {color:var(--tac-dim);font:600 9px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;}
+body[data-design="command03"] .native-scene-sysbar-track {position:relative;display:block;height:4px;overflow:hidden;background:#0a2234;}
+body[data-design="command03"] .native-scene-sysbar-track i {background:linear-gradient(90deg,rgba(var(--cinema-fill),.9),var(--tac-cyan));}
+body[data-design="command03"] .native-scene-sysbar-value {color:var(--tac-ink);font:600 11px/1.2 'Space Grotesk',system-ui,sans-serif;white-space:nowrap;}
+body[data-design="command03"] .native-scene-brain {grid-template-columns:repeat(4,minmax(0,1fr));align-content:center;}
+body[data-design="command03"] .native-scene-brain-step {
+ padding:5px 2px;border-bottom:2px solid #1d3a4c;color:#6f8b9c;text-align:center;
+ font:600 9px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.1em;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-scene-brain-step[data-lit="true"] {border-bottom-color:var(--tac-cyan);color:var(--tac-cyan);background:rgba(131,237,255,.07);}
+
+/* Motion: one pass per mark, set by the bridge on a real event, in the full and balanced tiers only. */
+@keyframes native-scene-in-rise {from{transform:translateY(-26px) scaleY(.12);opacity:0}45%{opacity:.85}to{transform:none;opacity:1}}
+@keyframes native-scene-in-card {from{transform:translateY(12px) scale(.94);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-scene-in-fade {from{opacity:0}to{opacity:1}}
+@keyframes native-scene-out-sink {from{transform:none;opacity:1}to{transform:translateY(-18px) scaleY(.2);opacity:0}}
+@keyframes native-scene-out-card {from{transform:none;opacity:1}to{transform:translateX(24px);opacity:0}}
+@keyframes native-scene-mark-stamp {from{transform:scale(1.5);opacity:0}60%{transform:scale(.95);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-scene-mark-flash {from{opacity:.25}to{opacity:1}}
+body[data-design="command03"][data-native-effects="full"] .native-scene[data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene[data-native-enter] {
+ animation:native-scene-in-rise .62s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene [data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene [data-native-enter] {
+ animation:native-scene-in-card .42s var(--tac-mech) calc(var(--tac-i,0) * 70ms + 120ms) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene .native-scene-result[data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene .native-scene-result[data-native-enter] {
+ animation:native-scene-in-fade .5s ease-out 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene[data-native-leaving="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene[data-native-leaving="true"] {
+ animation:native-scene-out-sink .36s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene-card[data-native-leaving="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-card[data-native-leaving="true"] {
+ animation:native-scene-out-card .3s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene-phase[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-phase[data-changed="true"] {
+ animation:native-scene-mark-stamp .42s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-scene-level[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-level[data-changed="true"],
+body[data-design="command03"][data-native-effects="full"] .native-scene-query[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-query[data-changed="true"],
+body[data-design="command03"][data-native-effects="full"] .native-scene-brain-step[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-scene-brain-step[data-changed="true"] {
+ animation:native-scene-mark-flash .2s ease-in-out 3 alternate both;
+}
+/* The owner's switch and the system preference stop every one of them. */
+body[data-design="command03"][data-native-light-motion="off"] .native-scene,
+body[data-design="command03"][data-native-light-motion="off"] .native-scene * {animation:none!important;}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-scene,
+ body[data-design="command03"] .native-scene * {animation:none!important;}
+}

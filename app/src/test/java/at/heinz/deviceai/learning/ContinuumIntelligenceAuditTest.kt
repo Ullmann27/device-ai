@@ -34,6 +34,44 @@ class ContinuumIntelligenceAuditTest {
         assertEquals(checkpoint, scored.checkpointSha256)
     }
 
+    @Test fun constantOneCharacterGenerationIsDiagnosedWithoutChangingScores() {
+        val responses = probes.mapIndexed { index, _ -> if (index % 2 == 0) "a" else " A " }
+        val audit = ContinuumIntelligenceAudit.score(responses, checkpoint, 2520)
+        assertEquals(0, audit.correctAnswers)
+        assertEquals(5, audit.unsupportedClaims)
+        assertEquals(0, audit.validAbstentions)
+        assertEquals(20, audit.dominantKnownResponseCount)
+        assertTrue(audit.answerCollapseDetected)
+        assertFalse(audit.targetMet)
+        assertTrue(audit.summary().contains("WARNUNG: Antwortkollaps"))
+    }
+
+    @Test fun correctGenerationMustNotBeFlaggedAsCollapse() {
+        val audit = ContinuumIntelligenceAudit.score(
+            probes.map { it.expected ?: "nicht angegeben" }, checkpoint, 2520
+        )
+        assertEquals(1, audit.dominantKnownResponseCount)
+        assertFalse(audit.answerCollapseDetected)
+        assertTrue(audit.targetMet)
+        assertFalse(audit.summary().contains("WARNUNG: Antwortkollaps"))
+    }
+
+    @Test fun repeatedCorrectAnswerInSmallSyntheticFixtureIsNotCollapse() {
+        val small = (1..5).map { i ->
+            ContinuumIntelligenceAudit.Probe("same-$i", "Beleg $i", "Frage $i", "ja")
+        }
+        val audit = ContinuumIntelligenceAudit.score(List(5) { "ja" }, checkpoint, 1, small)
+        assertEquals(5, audit.dominantKnownResponseCount)
+        assertFalse(audit.answerCollapseDetected)
+        assertEquals(5, audit.correctAnswers)
+    }
+
+    @Test fun unavailableAuditHasNoCollapseWarning() {
+        val audit = ContinuumIntelligenceAudit.unavailable("UNAVAILABLE_NO_CHECKPOINT")
+        assertEquals(0, audit.dominantKnownResponseCount)
+        assertFalse(audit.answerCollapseDetected)
+    }
+
     @Test fun unsupportedGuessesFailEvenWhenAllKnownAnswersAreCorrect() {
         val responses = probes.map { it.expected ?: "Graz" }
         val audit = ContinuumIntelligenceAudit.score(responses, checkpoint, 600)

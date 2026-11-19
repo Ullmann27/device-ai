@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-15T20:29:29" hostname="731a0110a54f" time="5.209">
+  <properties/>
+  <testcase name="hiddenNativeStageStaysPausedAcrossConversationLayoutAndResume" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="3.251"/>
+  <testcase name="busyOwnerCorrectionUsesTheExistingStopAndAcknowledgesOneClarification" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.222"/>
+  <testcase name="asynchronousBotLookupAcknowledgesConsumptionAndPreservesNewerTyping" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.359"/>
+  <testcase name="busyResearchReplyConsumesOnlyTheExistingDialogTicketWithoutExecutingIt" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.275"/>
+  <testcase name="busyChiefStatusReachesTheRealDiagnosticWithoutCancellingOrStartingModelWork" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.21"/>
+  <testcase name="staleAndSubframeDraftsCannotReplaceTheCurrentConversationDraft" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.132"/>
+  <testcase name="busyRejectionPreservesTheActualNativeDraftAndDoesNotSubmit" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.143"/>
+  <testcase name="realClockCommandConsumesTheComposerAndAcknowledgesOnlyOneSubmission" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.145"/>
+  <testcase name="actualPhoneFoldPhoneReflowKeepsTheSameReadyPageAndDraftSelection" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.308"/>
+  <testcase name="htmlDraftSurvivesTheActualSwitchBackToTheNativeComposer" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.164"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

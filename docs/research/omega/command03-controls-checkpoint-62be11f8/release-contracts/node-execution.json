@@ -1,0 +1,18 @@
+{
+  "name": "node",
+  "argv": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/code50-github-release-contract.test.mjs",
+    ".github/continuum/code50-github-signer-preflight.test.mjs",
+    ".github/continuum/code59-signing-node-proof.test.mjs",
+    ".github/continuum/code60-release-contract.test.mjs"
+  ],
+  "source_commit": "62be11f898586eb3546f79a0f2b38ee53acc4d84",
+  "started_at_utc": "2026-11-16T06:51:28.328926+00:00",
+  "finished_at_utc": "2026-11-16T06:52:13.073787+00:00",
+  "elapsed_seconds": 44.7448738499952,
+  "exit_code": 0,
+  "log": "node.tap"
+}

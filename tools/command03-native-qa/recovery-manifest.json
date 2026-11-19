@@ -1,0 +1,101 @@
+{
+  "status": "RECOVERED_HARNESS_STATICALLY_CHECKED_NOT_BUILT",
+  "checks": {
+    "scope": "HARNESS_STATIC_CHECKS_ONLY",
+    "source_commit_for_path_resolution": "83e9976be5908535554e5c06819da5cbeb81a73d",
+    "python_ast": "PASS",
+    "json_parse": "PASS",
+    "cli_help": "PASS",
+    "online_plan_only": "PASS",
+    "gradle_started": false,
+    "project_compile_or_tests_executed": false,
+    "selection_checks": {
+      "command03-unit": {
+        "filters": 11,
+        "physical_files": 14,
+        "source_paths_resolved": true
+      },
+      "command03-ui": {
+        "filters": 7,
+        "physical_files": 9,
+        "source_paths_resolved": true
+      },
+      "command03-capture": {
+        "filters": 3,
+        "physical_files": 2,
+        "source_paths_resolved": true
+      }
+    },
+    "dependency_prefetch_correction": {
+      "status": "API_PRESENT_IN_ACTUAL_GRADLE_8_11_1",
+      "method": "ArtifactView.ViewConfiguration.componentFilter(Spec<ComponentIdentifier>)",
+      "filter_type": "ModuleComponentIdentifier",
+      "scope": "Prefetch external modules only; Android project artifacts and assertions unchanged",
+      "runtime_verification": "NOT_YET_RUN_AFTER_CORRECTION"
+    },
+    "fresh_test_execution_correction": {
+      "scope": "Only explicitly selected testDebugUnitTest task; compilation remains incremental",
+      "implementation": "outputs.upToDateWhen { false }, matching existing tools/capture/force_capture.gradle",
+      "fresh_junit_gate": "Unchanged; no stale result accepted",
+      "runtime_verification": "NOT_YET_RUN_AFTER_CORRECTION"
+    }
+  },
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 28,
+      "sha256": "f6a517c53bc7094667899dedf5aa4529bd42e6c613836318cc29218bc9354cd8"
+    },
+    {
+      "path": "README.md",
+      "bytes": 7063,
+      "sha256": "fc62e32c336b3d6f86a09bc37e57b4fb6a205fb9edc93c610a3917db1060e68f"
+    },
+    {
+      "path": "build-location.init.gradle",
+      "bytes": 363,
+      "sha256": "fb8d045196afc187f362b9ab8a92a279d36a7f6939152895b4ca8194b13a62b5"
+    },
+    {
+      "path": "capture-runner.py",
+      "bytes": 2348,
+      "sha256": "8378fc5a440c86797341a294a501e260ba51f742600a507feb06d9deb2d8202a"
+    },
+    {
+      "path": "focused-test-sources.init.gradle",
+      "bytes": 2648,
+      "sha256": "9c73be88e6e8497786d734b41050a9ca2991d65d2493cd9ea2ebfcec8830e9c1"
+    },
+    {
+      "path": "historical-observations-before-reset.json",
+      "bytes": 3921,
+      "sha256": "2e8c18eef86c44cc30edf0ccce25c6bc9b4b9c0dc2b647ae92c9eca99da52ab1"
+    },
+    {
+      "path": "resolve-dependencies.init.gradle",
+      "bytes": 1821,
+      "sha256": "1b82d75d0a06f8513d01c2758bae00facd4a29d385194b3ed05ec916fdb4086a"
+    },
+    {
+      "path": "run.py",
+      "bytes": 31570,
+      "sha256": "3bd79dfcbe0e9d171bb7aceecf4eba9db431ca2ee7aa9c691c4532108bd0c0c2"
+    },
+    {
+      "path": "selections.json",
+      "bytes": 2151,
+      "sha256": "20e37a70bf10e247bc72ede3f419236259a231e87fb8a777c84c62267b010e0a"
+    },
+    {
+      "path": "test-selection.init.gradle",
+      "bytes": 1384,
+      "sha256": "18f3d5e4f243cd16618901f7a861c8d6d667a9d388c12f17e9ee6ccf178a416b"
+    },
+    {
+      "path": "toolchain.example.json",
+      "bytes": 381,
+      "sha256": "b5847ea90ff3a9116cdd09d6ef4723bca6c72d043dc16849143001b0b3af2388"
+    }
+  ],
+  "historical_evidence": "Separate OBSERVED_BEFORE_RESET file; no original local receipts survive"
+}

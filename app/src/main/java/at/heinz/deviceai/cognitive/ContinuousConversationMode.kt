@@ -28,6 +28,17 @@ class ContinuousConversationMode {
     private var silentAttempts = 0
     private var recoveryAttempts = 0
     private var foregroundSuspendedAt: Long? = null
+    private var silentSince: Long? = null
+
+    /**
+     * Owner-selected listening window in milliseconds. A speech pause is not a goodbye: while the
+     * window is open, silence only re-arms the microphone. 0 keeps the classic limit of
+     * [MAX_SILENT_RETRIES] silent attempts. The window is measured from the first silent result
+     * after the last real activity (recognized speech, finished reply, owner tap) and is bounded by
+     * [MAX_SILENCE_WINDOW_MS], so the mode still never listens without bound.
+     */
+    var silenceWindowMs: Long = 0L
+        set(value) { field = value.coerceIn(0L, MAX_SILENCE_WINDOW_MS) }
 
     /** Explicit session interrupted by Android. */
     val foregroundRecoveryPending: Boolean get() = foregroundSuspendedAt != null
@@ -48,6 +59,7 @@ class ContinuousConversationMode {
         session = sessionId
         replyUtterance = null
         silentAttempts = 0
+        silentSince = null
         recoveryAttempts = 0
         coldRecognizerRecommended = false
         foregroundSuspendedAt = null
@@ -61,6 +73,7 @@ class ContinuousConversationMode {
         session = null
         replyUtterance = null
         silentAttempts = 0
+        silentSince = null
         recoveryAttempts = 0
         coldRecognizerRecommended = false
         foregroundSuspendedAt = null
@@ -89,6 +102,7 @@ class ContinuousConversationMode {
         foregroundSuspendedAt = null
         state = State.LISTENING
         silentAttempts = 0
+        silentSince = null
         recoveryAttempts = 0
         coldRecognizerRecommended = true
         turn++
@@ -102,14 +116,15 @@ class ContinuousConversationMode {
     fun listeningTurn(sessionId: String): Long? =
         if (state == State.LISTENING && session == sessionId) turn else null
 
-    fun recognized(turnToken: Long, sessionId: String, text: String): Decision {
+    fun recognized(turnToken: Long, sessionId: String, text: String, nowMs: Long? = null): Decision {
         if (!current(turnToken, sessionId)) return Decision.IGNORE
         return when (command(text)) {
             Command.STOP -> { stop(); Decision.STOP }
             Command.PAUSE -> { pause(); Decision.PAUSE }
-            null -> if (text.isBlank()) silence() else {
+            null -> if (text.isBlank()) silence(nowMs) else {
                 state = State.THINKING
                 silentAttempts = 0
+                silentSince = null
                 recoveryAttempts = 0
                 coldRecognizerRecommended = false
                 replyUtterance = null
@@ -126,9 +141,9 @@ class ContinuousConversationMode {
      * the mode pauses so the owner decides. The mode never loops without bound.
      */
     fun listenFailed(turnToken: Long, sessionId: String, silence: Boolean, recoverable: Boolean = false,
-                     retryBudget: Int = MAX_RECOVERY_RETRIES): Decision {
+                     retryBudget: Int = MAX_RECOVERY_RETRIES, nowMs: Long? = null): Decision {
         if (!current(turnToken, sessionId)) return Decision.IGNORE
-        if (silence) return silence()
+        if (silence) return silence(nowMs)
         if (recoverable && recoveryAttempts < retryBudget.coerceIn(0, MAX_RECOVERY_RETRIES)) {
             recoveryAttempts++
             // A single-shot budget (service failure) re-arms with a fresh native recognizer at once.
@@ -140,6 +155,21 @@ class ContinuousConversationMode {
         // After exhausted recovery the owner's next tap must not reuse the stale recognizer.
         if (recoverable) coldRecognizerRecommended = true
         return Decision.PAUSE
+    }
+
+    /**
+     * The recognizer delivered an audibly unfinished fragment (see [OwnerTurnCompletion]): the owner is
+     * still talking. Listening re-arms at once; this is speech, so it neither counts as a silent round
+     * nor ends the turn. The caller bounds how often it asks ([OwnerTurnAssembler]).
+     */
+    fun ownerContinues(turnToken: Long, sessionId: String): Decision {
+        if (!current(turnToken, sessionId)) return Decision.IGNORE
+        silentAttempts = 0
+        silentSince = null
+        recoveryAttempts = 0
+        coldRecognizerRecommended = false
+        turn++
+        return Decision.RETRY_LISTEN
     }
 
     /** Delay before the automatic re-arm of [failure]; a service failure waits for the rebinding. */
@@ -163,6 +193,7 @@ class ContinuousConversationMode {
         state = State.THINKING
         replyUtterance = null
         silentAttempts = 0
+        silentSince = null
         recoveryAttempts = 0
         foregroundSuspendedAt = null
         turn++
@@ -243,6 +274,7 @@ class ContinuousConversationMode {
         }
         state = State.LISTENING
         silentAttempts = 0
+        silentSince = null
         recoveryAttempts = 0
         replyUtterance = null
         foregroundSuspendedAt = null
@@ -253,7 +285,22 @@ class ContinuousConversationMode {
     private fun current(turnToken: Long, sessionId: String) =
         state == State.LISTENING && turnToken == turn && sessionId == session
 
-    private fun silence(): Decision {
+    private fun silence(nowMs: Long? = null): Decision {
+        val window = silenceWindowMs
+        if (window > 0L && nowMs != null) {
+            val since = silentSince ?: nowMs.also { silentSince = it }
+            // A clock that ran backwards is treated as an expired window, never as an endless one.
+            if (nowMs >= since && nowMs - since < window) {
+                silentAttempts++
+                // The warm recognizer is reused; a fresh one every few silent rounds clears a stuck service.
+                coldRecognizerRecommended = silentAttempts % COLD_RECOGNIZER_EVERY_SILENT_ROUNDS == 0
+                turn++
+                return Decision.RETRY_LISTEN
+            }
+            pause()
+            coldRecognizerRecommended = true
+            return Decision.PAUSE
+        }
         if (silentAttempts < MAX_SILENT_RETRIES) {
             silentAttempts++
             coldRecognizerRecommended = silentAttempts >= 2
@@ -270,12 +317,28 @@ class ContinuousConversationMode {
         foregroundSuspendedAt = null
         replyUtterance = null
         silentAttempts = 0
+        silentSince = null
         recoveryAttempts = 0
         turn++
     }
 
     companion object {
         const val MAX_SILENT_RETRIES = 3
+        /** Selectable listening windows in seconds; 0 = classic three silent attempts. */
+        val SILENCE_WINDOW_CHOICES_S = listOf(0, 60, 120, 300, 600)
+        const val DEFAULT_SILENCE_WINDOW_S = 120
+        const val MAX_SILENCE_WINDOW_MS = 600_000L
+        private const val COLD_RECOGNIZER_EVERY_SILENT_ROUNDS = 6
+
+        /** Stored value → supported window; anything unknown falls back to the default. */
+        fun silenceWindowSeconds(stored: Int): Int =
+            if (stored in SILENCE_WINDOW_CHOICES_S) stored else DEFAULT_SILENCE_WINDOW_S
+
+        fun silenceWindowLabel(seconds: Int): String = when {
+            seconds <= 0 -> "Kurz · nach drei stillen Versuchen pausieren"
+            seconds < 120 -> "$seconds Sekunden weiter zuhören"
+            else -> "${seconds / 60} Minuten weiter zuhören"
+        }
         const val FOREGROUND_GRACE_MS = 15_000L
         /** Automatic retries after „Spracherkenner belegt“ before the owner is asked to tap. */
         const val MAX_RECOVERY_RETRIES = 3

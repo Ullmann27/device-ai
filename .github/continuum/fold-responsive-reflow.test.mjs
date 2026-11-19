@@ -46,7 +46,7 @@ test('reflow preserves the active agent, user draft, conversation views and dash
   assert.ok(code.indexOf('setContentView(buildUi())') < code.indexOf('previous.copy(computer = home.state.computer)'));
   const pane = activity.split('private fun buildConversationPane(wide: Boolean): View {')[1]?.split('\n    private fun ')[0];
   assert.ok(pane, 'rebuilt dashboard source');
-  assert.match(pane, /homeView = home\s*home\.onComputerPresentationChanged = \{ computerController\?\.refreshGaze\(\) \}\s*computerController\?\.restoreFeed\(\)/);
+  assert.match(pane, /homeView = home\s*home\.onComputerPresentationChanged = \{ computerController\?\.refreshGaze\(\) \}\s*home\.setLiveComputerFeed\(command03ComputerFeed\.takeUnless \{ usesCommand03HtmlDesign\(\) \}\)\s*computerController\?\.restoreFeed\(\)/);
   assert.doesNotMatch(code, /onDestroy\(|localRuntime\.unload|bootstrapMemory\s*=/);
   assert.match(composer, /fun safeSelection\(\): Pair<Int, Int>/);
 });

@@ -1,0 +1,58 @@
+{
+  "time_utc": "2026-11-16T06:44:54Z",
+  "paths": [
+    {
+      "path": "/workspace",
+      "realpath": "/workspace",
+      "device": 27,
+      "free": 714674176,
+      "total": 67586535424,
+      "statvfs_avail": 714674176
+    },
+    {
+      "path": "/workspace/scratch/8f95e7fd540d",
+      "realpath": "/workspace/scratch/8f95e7fd540d",
+      "device": 27,
+      "free": 714674176,
+      "total": 67586535424,
+      "statvfs_avail": 714674176
+    },
+    {
+      "path": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output",
+      "realpath": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output",
+      "device": 27,
+      "free": 714674176,
+      "total": 67586535424,
+      "statvfs_avail": 714674176
+    },
+    {
+      "path": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+      "realpath": "/workspace/scratch/5d87eafb90be/device-ai-native-qa-output/build",
+      "device": 27,
+      "free": 714674176,
+      "total": 67586535424,
+      "statvfs_avail": 714674176
+    },
+    {
+      "path": "/tmp",
+      "realpath": "/tmp",
+      "device": 39,
+      "free": 3766046720,
+      "total": 5225713664,
+      "statvfs_avail": 3766046720
+    },
+    {
+      "path": "/dev/shm",
+      "realpath": "/dev/shm",
+      "device": 38,
+      "free": 2322509824,
+      "total": 5225713664,
+      "statvfs_avail": 2322509824
+    }
+  ],
+  "original_head": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+  "original_status": "",
+  "phase": "REJECTED_BEFORE_SOURCE_SWITCH_OR_GRADLE_BY_UNCHANGED_WORKSPACE_BUFFER",
+  "attempt": "controls-compile-02",
+  "source_candidate": "05c7f432957cdfdf02c73ad9be5c63a7a6e9ffdb"
+}

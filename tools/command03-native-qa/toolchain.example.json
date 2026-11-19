@@ -1,0 +1,10 @@
+{
+  "repo": "./device-ai-android",
+  "output_dir": "./device-ai-native-qa-output",
+  "java_home": "./native-toolchain/jdk17",
+  "android_sdk": "./native-toolchain/android-sdk",
+  "android_user_home": "./native-toolchain/android-user",
+  "gradle_home": "./native-toolchain/gradle-8.11.1",
+  "gradle_user_home": "./native-toolchain/gradle-cache",
+  "build_tools_version": "35.0.0"
+}

@@ -1,0 +1,15 @@
+{
+  "source_sha": "3d5efd9ec4b1a8a5c9c12bb39835be8aef9a9b64",
+  "run_id": 43864138460,
+  "artifact_id": 14225625699,
+  "artifact_path": "app/camera-declined.png",
+  "sha256": "dfca6a5bc004dc03df6bee671d7a2af66e15a97081b5bdf72f312038cd7c1bf9",
+  "bytes": 498182,
+  "width": 540,
+  "height": 1200,
+  "package": "at.heinz.deviceai.mentorpaired",
+  "sdk": 35,
+  "abi": "x86_64",
+  "meaning": "Actual Android emulator screenshot from failed native app probe; shows original HTML. Does not establish complete UI lifecycle, avatar animation, Fold7 or release acceptance.",
+  "status": "OBSERVATION_ONLY"
+}

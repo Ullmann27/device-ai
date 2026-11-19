@@ -279,7 +279,9 @@ class HttpReadOnlyResearchProvider private constructor(
                 .replace(Regex("<[^>]+>")," ").replace(Regex("\\s+")," ").trim().take(limit)
         }
         private val SAFE_MIME_TYPES = setOf(
-            "text/html", "text/plain", "application/json", "application/xml", "text/xml", "application/rss+xml"
+            "text/html", "text/plain", "application/json", "application/xml", "text/xml", "application/rss+xml",
+            // Feed formats of the news briefing (Atom, RSS 1.0/RDF); read as bounded text like the other XML types.
+            "application/atom+xml", "application/rdf+xml"
         )
         private val REQUEST_TIMEOUTS = Executors.newSingleThreadScheduledExecutor { runnable ->
             Thread(runnable, "device-ai-research-timeout").apply { isDaemon = true }

@@ -1,0 +1,248 @@
+{
+  "schema": "continuum.intelligence.v1",
+  "split": "development",
+  "suite_id": "10301f1b7f840a82bab891b1e6249a1761cc3a7fe697630fa2fcdbd81dbc4124",
+  "privacy": "Public synthetic development data with public answer keys; never a blind holdout.",
+  "cases": [
+    {
+      "id": "G1-MEM-01A",
+      "domain": "memory",
+      "dimension": "memory",
+      "pair_id": "MEM-01",
+      "prompt": "Synthetisches Register: E1, eingetragen an Tag 1: Fuer Objekt Q gilt Wert 4 ab Tag 1. E2, eingetragen an Tag 8: Ab Tag 20 gilt fuer Q Wert 9 statt 4; davor bleibt E1 gueltig. Welcher Wert gilt an Tag 10? Antworte nur als JSON mit value (Ganzzahl) und evidence (E1 oder E2).",
+      "expected": {"value": 4, "evidence": "E1"},
+      "rationale": "Tag 10 liegt vor dem Wirksamkeitsdatum 20; Eintragungszeit 8 macht E2 nicht vorzeitig gueltig.",
+      "limit": "Zeitlogik ueber mitgelieferte Historie, kein dauerhafter Abruf."
+    },
+    {
+      "id": "G1-MEM-01B",
+      "domain": "memory",
+      "dimension": "memory",
+      "pair_id": "MEM-01",
+      "prompt": "Synthetisches Register: E1, eingetragen an Tag 1: Fuer Objekt Q gilt Wert 4 ab Tag 1. E2, eingetragen an Tag 8: Ab Tag 20 gilt fuer Q Wert 9 statt 4; davor bleibt E1 gueltig. Welcher Wert gilt an Tag 21? Antworte nur als JSON mit value (Ganzzahl) und evidence (E1 oder E2).",
+      "expected": {"value": 9, "evidence": "E2"},
+      "rationale": "Tag 21 liegt nach dem Wirksamkeitsdatum 20.",
+      "limit": "Zeitlogik ueber mitgelieferte Historie, kein dauerhafter Abruf."
+    },
+    {
+      "id": "G1-MEM-02A",
+      "domain": "memory",
+      "dimension": "memory",
+      "pair_id": "MEM-02",
+      "prompt": "Synthetische Belege zu Objekt R: E3 an Tag 1 bestaetigt Kennung A. E4 an Tag 2, gleiche Autoritaet: E3 ist widerrufen, kein Ersatz bekannt. An Tag 3 wird eine alte Kopie von E3 gelesen; die Kopie ist keine neue Bestaetigung. Welche Kennung ist jetzt belegt? JSON: value (A oder ABSTAIN), evidence (E4 bei Widerruf, sonst E3+E4).",
+      "expected": {"value": "ABSTAIN", "evidence": "E4"},
+      "rationale": "Ein alter gelesener Datensatz hebt einen expliziten Widerruf nicht auf.",
+      "limit": "Widerrufsentscheidung ohne echten Store oder Sessionwechsel."
+    },
+    {
+      "id": "G1-MEM-02B",
+      "domain": "memory",
+      "dimension": "memory",
+      "pair_id": "MEM-02",
+      "prompt": "Synthetische Belege zu Objekt R: E3 an Tag 1 bestaetigt Kennung A. E4 an Tag 2, gleiche Autoritaet: E3 bleibt gueltig, kein Widerruf. An Tag 3 wird eine alte Kopie von E3 gelesen; die Kopie ist keine neue Bestaetigung. Welche Kennung ist jetzt belegt? JSON: value (A oder ABSTAIN), evidence (E4 bei Widerruf, sonst E3+E4).",
+      "expected": {"value": "A", "evidence": "E3+E4"},
+      "rationale": "Die neue gleichrangige Aussage bestaetigt E3 statt es zu widerrufen.",
+      "limit": "Widerrufsentscheidung ohne echten Store oder Sessionwechsel."
+    },
+    {
+      "id": "G1-GEN-01A",
+      "domain": "context",
+      "dimension": "generalization",
+      "pair_id": "GEN-01",
+      "prompt": "Dialogprotokoll: Thema T1: Transportkosten fuer Paket P sind noch offen. Danach Thema T2: Urlaubsplanung im Mai. Neue Bitte: Kehren wir zu den Transportkosten von vorhin zurueck. Welches fruehere Thema ist explizit gemeint? Nur vollstaendig passende Begriffe gelten als Referenz, verwandte oder gleich beginnende Woerter reichen nicht. JSON: topic (T1, T2 oder NONE).",
+      "expected": {"topic": "T1"},
+      "rationale": "Der volle Begriff Transportkosten wurde in T1 genannt.",
+      "limit": "Quelleninformierte Praefixkontrolle, keine blinde Morphologie-Generalisation."
+    },
+    {
+      "id": "G1-GEN-01B",
+      "domain": "context",
+      "dimension": "generalization",
+      "pair_id": "GEN-01",
+      "prompt": "Dialogprotokoll: Thema T1: Transportkosten fuer Paket P sind noch offen. Danach Thema T2: Urlaubsplanung im Mai. Neue Bitte: Kehren wir zu der Transportkiste von vorhin zurueck. Welches fruehere Thema ist explizit gemeint? Nur vollstaendig passende Begriffe gelten als Referenz, verwandte oder gleich beginnende Woerter reichen nicht. JSON: topic (T1, T2 oder NONE).",
+      "expected": {"topic": "NONE"},
+      "rationale": "Transportkiste wurde nie genannt; die ersten zehn Kleinbuchstaben kollidieren mit Transportkosten.",
+      "limit": "Quelleninformierte Praefixkontrolle, kein ausgefuehrter H4-B1-Gegentest."
+    },
+    {
+      "id": "G1-GEN-02A",
+      "domain": "logic",
+      "dimension": "generalization",
+      "pair_id": "GEN-02",
+      "prompt": "Neue Mini-Sprache: dak kehrt die Zeichenreihenfolge um; vem verschiebt das erste Zeichen ans Ende. Beide wirken genau einmal auf das jeweilige Zwischenergebnis. Start ABCD. Programm: dak, dann vem. JSON: result (Zeichenkette).",
+      "expected": {"result": "CBAD"},
+      "rationale": "ABCD -> DCBA -> CBAD.",
+      "limit": "Kompositionsprobe mit expliziten Regeln, kein Nachweis allgemeiner Programmsynthese."
+    },
+    {
+      "id": "G1-GEN-02B",
+      "domain": "logic",
+      "dimension": "generalization",
+      "pair_id": "GEN-02",
+      "prompt": "Neue Mini-Sprache: dak kehrt die Zeichenreihenfolge um; vem verschiebt das erste Zeichen ans Ende. Beide wirken genau einmal auf das jeweilige Zwischenergebnis. Start ABCD. Programm: vem, dann dak. JSON: result (Zeichenkette).",
+      "expected": {"result": "ADCB"},
+      "rationale": "ABCD -> BCDA -> ADCB.",
+      "limit": "Kompositionsprobe mit expliziten Regeln, kein Nachweis allgemeiner Programmsynthese."
+    },
+    {
+      "id": "G1-CAU-01A",
+      "domain": "logic",
+      "dimension": "causal_reasoning",
+      "pair_id": "CAU-01",
+      "prompt": "Strukturelles Modell: U ist ein fairer binaerer Zufallswert; X := U; Y := U. Eine Beobachtung konditioniert nur. do(X=0) ersetzt nur die Gleichung fuer X und laesst U unveraendert verteilt. Gesucht: P(Y=1 | Beobachtung X=0). JSON: probability als Dezimalzahl.",
+      "expected": {"probability": 0.0},
+      "rationale": "Beobachtetes X=0 erzwingt U=0, daher Y=0.",
+      "limit": "Interventionslogik bei vorgegebenem korrektem Modell, keine Kausalinduktion."
+    },
+    {
+      "id": "G1-CAU-01B",
+      "domain": "logic",
+      "dimension": "causal_reasoning",
+      "pair_id": "CAU-01",
+      "prompt": "Strukturelles Modell: U ist ein fairer binaerer Zufallswert; X := U; Y := U. Eine Beobachtung konditioniert nur. do(X=0) ersetzt nur die Gleichung fuer X und laesst U unveraendert verteilt. Gesucht: P(Y=1 | do(X=0)). JSON: probability als Dezimalzahl.",
+      "expected": {"probability": 0.5},
+      "rationale": "Nach Intervention bleiben U und damit Y zu gleichen Teilen 0 und 1.",
+      "limit": "Interventionslogik bei vorgegebenem korrektem Modell, keine Kausalinduktion."
+    },
+    {
+      "id": "G1-CAU-02A",
+      "domain": "logic",
+      "dimension": "causal_reasoning",
+      "pair_id": "CAU-02",
+      "prompt": "Genau eines zweier deterministischer Modelle gilt. M1: X:=U, Y:=X. M2: X:=U, Y:=U. Rein beobachtete Daten enthalten sowohl U=0 als auch U=1 und immer X=Y. Zusaetzlicher kontrollierter Beleg: Bei U=1 und do(X=0) wurde Y=0 gemessen. Was ist bei erneuter Intervention U=1, do(X=0) fuer Y identifiziert? JSON: result (0, 1 oder ABSTAIN als Zeichenkette), identified (bool).",
+      "expected": {"result": "0", "identified": true},
+      "rationale": "Nur M1 ist mit dem kontrollierten Interventionsbeleg vereinbar.",
+      "limit": "Hypothesenauswahl zwischen zwei bekannten Modellen; Beleg ist synthetisch."
+    },
+    {
+      "id": "G1-CAU-02B",
+      "domain": "logic",
+      "dimension": "causal_reasoning",
+      "pair_id": "CAU-02",
+      "prompt": "Genau eines zweier deterministischer Modelle gilt. M1: X:=U, Y:=X. M2: X:=U, Y:=U. Rein beobachtete Daten enthalten sowohl U=0 als auch U=1 und immer X=Y. Zusaetzlicher kontrollierter Beleg: Es wurde keine Intervention gemessen. Was ist bei erneuter Intervention U=1, do(X=0) fuer Y identifiziert? JSON: result (0, 1 oder ABSTAIN als Zeichenkette), identified (bool).",
+      "expected": {"result": "ABSTAIN", "identified": false},
+      "rationale": "M1 sagt 0 und M2 sagt 1; Beobachtungsdaten unterscheiden sie nicht.",
+      "limit": "Hypothesenauswahl zwischen zwei bekannten Modellen, keine kalibrierte Modellkonfidenz."
+    },
+    {
+      "id": "G1-META-01A",
+      "domain": "truth",
+      "dimension": "metacognition",
+      "pair_id": "META-01",
+      "prompt": "Synthetischer Prueflauf J fuer exakt Revision r7. Aussage des Planers: J wird sicher bestehen. Einziger Laufbeleg: J ist gestartet; noch kein Ergebnis. PASS darf nur eine abgeschlossene Quittung mit 4/4 bestandenen Tests fuer r7 belegen. Welcher Status ist jetzt gestuetzt? JSON: status (PASS oder UNKNOWN), supported (bool; true nur fuer belegtes PASS).",
+      "expected": {"status": "UNKNOWN", "supported": false},
+      "rationale": "Planerzuversicht und Startquittung sind kein Abschlussergebnis.",
+      "limit": "Belegtreue, nicht subjektives Selbstbewusstsein oder Konfidenzkalibrierung."
+    },
+    {
+      "id": "G1-META-01B",
+      "domain": "truth",
+      "dimension": "metacognition",
+      "pair_id": "META-01",
+      "prompt": "Synthetischer Prueflauf J fuer exakt Revision r7. Aussage des Planers: J wird sicher bestehen. Einziger Laufbeleg: J ist abgeschlossen, Quittung fuer r7 mit 4/4 bestandenen Tests. PASS darf nur eine abgeschlossene Quittung mit 4/4 bestandenen Tests fuer r7 belegen. Welcher Status ist jetzt gestuetzt? JSON: status (PASS oder UNKNOWN), supported (bool; true nur fuer belegtes PASS).",
+      "expected": {"status": "PASS", "supported": true},
+      "rationale": "Die abgeschlossene revisionsgebundene Quittung erfuellt die explizite Belegregel.",
+      "limit": "Synthetischer Beleg ist keine echte Ausfuehrungsattestierung."
+    },
+    {
+      "id": "G1-META-02A",
+      "domain": "truth",
+      "dimension": "metacognition",
+      "pair_id": "META-02",
+      "prompt": "Zwei gleichrangige Belege zum selben Objekt und selben Zeitpunkt: A sagt rot; B sagt blau. Keiner hat Vorrang. Status B: weiterhin gueltig. Konflikte duerfen nicht durch Raten geloest werden. Welche Farbe ist eindeutig gestuetzt? JSON: color (rot, blau oder ABSTAIN), conflict (bool).",
+      "expected": {"color": "ABSTAIN", "conflict": true},
+      "rationale": "Zwei unvertraegliche gleichrangige gueltige Aussagen liefern keine eindeutige Farbe.",
+      "limit": "Explizite Konflikterkennung, keine Messung interner Unsicherheit."
+    },
+    {
+      "id": "G1-META-02B",
+      "domain": "truth",
+      "dimension": "metacognition",
+      "pair_id": "META-02",
+      "prompt": "Zwei gleichrangige Belege zum selben Objekt und selben Zeitpunkt: A sagt rot; B sagt blau. Keiner hat Vorrang. Status B: ausdruecklich widerrufen. Konflikte duerfen nicht durch Raten geloest werden. Welche Farbe ist eindeutig gestuetzt? JSON: color (rot, blau oder ABSTAIN), conflict (bool).",
+      "expected": {"color": "rot", "conflict": false},
+      "rationale": "Nach Widerruf von B bleibt nur A als gueltiger Beleg.",
+      "limit": "Explizite Konflikterkennung, keine Messung interner Unsicherheit."
+    },
+    {
+      "id": "G1-PLAN-01A",
+      "domain": "planning",
+      "dimension": "long_term_planning",
+      "pair_id": "PLAN-01",
+      "prompt": "Planung in einem gerichteten synthetischen Graphen. Einzige Kanten mit Kosten: S>A:2, A>B:2, B>G:2, S>C:1, C>D:1, D>E:1, E>G:4. Start S, Ziel G. Gesamtbudget 6; keine weiteren Aktionen oder Kredite. Finde den billigsten vollstaendigen Pfad innerhalb des Budgets. JSON: plan (Knoten mit > verbunden, sonst ABSTAIN), cost (Ganzzahl, bei Unmoeglichkeit -1).",
+      "expected": {"plan": "S>A>B>G", "cost": 6},
+      "rationale": "Die einzigen Zielpfade kosten 6 und 7; Budget 6 laesst nur den ersten zu.",
+      "limit": "Kurzer Planungsdiagnostikfall, keine langfristige Ausfuehrung."
+    },
+    {
+      "id": "G1-PLAN-01B",
+      "domain": "planning",
+      "dimension": "long_term_planning",
+      "pair_id": "PLAN-01",
+      "prompt": "Planung in einem gerichteten synthetischen Graphen. Einzige Kanten mit Kosten: S>A:2, A>B:2, B>G:2, S>C:1, C>D:1, D>E:1, E>G:4. Start S, Ziel G. Gesamtbudget 5; keine weiteren Aktionen oder Kredite. Finde den billigsten vollstaendigen Pfad innerhalb des Budgets. JSON: plan (Knoten mit > verbunden, sonst ABSTAIN), cost (Ganzzahl, bei Unmoeglichkeit -1).",
+      "expected": {"plan": "ABSTAIN", "cost": -1},
+      "rationale": "Beide vollstaendigen Pfade ueberschreiten Budget 5.",
+      "limit": "Kurzer Planungsdiagnostikfall, keine langfristige Ausfuehrung."
+    },
+    {
+      "id": "G1-PLAN-02A",
+      "domain": "planning",
+      "dimension": "long_term_planning",
+      "pair_id": "PLAN-02",
+      "prompt": "Nur Plansimulation, keine Aktion ausfuehren. Ein Bericht durchlaeuft collect, check, consent, package, verify, deliver in dieser Reihenfolge. Jede Stufe braucht die gueltige Quittung der vorherigen fuer dieselbe Revision. Aktuelles Ziel r2; collect/check/consent besitzen gueltige r2-Quittungen. Vor Unterbrechung wurde package quittiert fuer r1. verify/deliver wurden nicht begonnen. Was ist nach Wiederaufnahme die erste noetige Stufe und wie viele Stufen einschliesslich dieser bleiben? JSON: next (Stufenname), remaining (Ganzzahl).",
+      "expected": {"next": "package", "remaining": 3},
+      "rationale": "Die r1-Paketquittung ist fuer r2 veraltet; package, verify, deliver bleiben.",
+      "limit": "Planentscheidung aus mitgeliefertem Journal, kein realer Prozessneustart."
+    },
+    {
+      "id": "G1-PLAN-02B",
+      "domain": "planning",
+      "dimension": "long_term_planning",
+      "pair_id": "PLAN-02",
+      "prompt": "Nur Plansimulation, keine Aktion ausfuehren. Ein Bericht durchlaeuft collect, check, consent, package, verify, deliver in dieser Reihenfolge. Jede Stufe braucht die gueltige Quittung der vorherigen fuer dieselbe Revision. Aktuelles Ziel r2; collect/check/consent besitzen gueltige r2-Quittungen. Vor Unterbrechung wurde package quittiert fuer r2. verify/deliver wurden nicht begonnen. Was ist nach Wiederaufnahme die erste noetige Stufe und wie viele Stufen einschliesslich dieser bleiben? JSON: next (Stufenname), remaining (Ganzzahl).",
+      "expected": {"next": "verify", "remaining": 2},
+      "rationale": "Die gueltige r2-Paketquittung erlaubt verify als naechsten Schritt.",
+      "limit": "Planentscheidung aus mitgeliefertem Journal, kein realer Prozessneustart."
+    },
+    {
+      "id": "G1-LEARN-01A",
+      "domain": "memory",
+      "dimension": "continual_learning",
+      "pair_id": "LEARN-01",
+      "prompt": "Aufgabenlokale Regeln, keine Gewichts- oder Speicherveraenderung. Anfangs bedeutet glorp in Aufgabe A und B east. Neue autorisierte Regel: glorp bedeutet west. Geltungsbereich der neuen Regel: nur Aufgabe B. Welche Bedeutung gilt danach in A und B? JSON: task_a und task_b, jeweils east oder west.",
+      "expected": {"task_a": "east", "task_b": "west"},
+      "rationale": "Die neue lokale Regel darf den unveraenderten Anker in A nicht ueberschreiben.",
+      "limit": "In-Context-Scope-Update, kein kontinuierliches Lernen nachgewiesen."
+    },
+    {
+      "id": "G1-LEARN-01B",
+      "domain": "memory",
+      "dimension": "continual_learning",
+      "pair_id": "LEARN-01",
+      "prompt": "Aufgabenlokale Regeln, keine Gewichts- oder Speicherveraenderung. Anfangs bedeutet glorp in Aufgabe A und B east. Neue autorisierte Regel: glorp bedeutet west. Geltungsbereich der neuen Regel: alle Aufgaben. Welche Bedeutung gilt danach in A und B? JSON: task_a und task_b, jeweils east oder west.",
+      "expected": {"task_a": "west", "task_b": "west"},
+      "rationale": "Der explizit globale Geltungsbereich aktualisiert beide Aufgaben.",
+      "limit": "In-Context-Scope-Update, kein kontinuierliches Lernen nachgewiesen."
+    },
+    {
+      "id": "G1-LEARN-02A",
+      "domain": "memory",
+      "dimension": "continual_learning",
+      "pair_id": "LEARN-02",
+      "prompt": "Synthetische Regelfolge im aktuellen Kontext. Zuerst bestaetigt: lum=2, vek=5, nif=8. Dann autorisierte Korrektur: lum=7. Alle nicht genannten Regeln bleiben unveraendert. Gib die aktuellen drei Werte aus, nicht die frueheren. JSON mit Ganzzahlen lum, vek, nif.",
+      "expected": {"lum": 7, "vek": 5, "nif": 8},
+      "rationale": "Gezielte Korrektur von lum; vek und nif sind unveraenderte Anker.",
+      "limit": "Update und Interferenz im Prompt; keine Persistenz, kein Gewichtslernen."
+    },
+    {
+      "id": "G1-LEARN-02B",
+      "domain": "memory",
+      "dimension": "continual_learning",
+      "pair_id": "LEARN-02",
+      "prompt": "Synthetische Regelfolge im aktuellen Kontext. Zuerst bestaetigt: lum=2, vek=5, nif=8. Dann autorisierte Korrektur: vek=7. Alle nicht genannten Regeln bleiben unveraendert. Gib die aktuellen drei Werte aus, nicht die frueheren. JSON mit Ganzzahlen lum, vek, nif.",
+      "expected": {"lum": 2, "vek": 7, "nif": 8},
+      "rationale": "Gezielte Korrektur von vek; lum und nif sind unveraenderte Anker.",
+      "limit": "Update und Interferenz im Prompt; keine Persistenz, kein Gewichtslernen."
+    }
+  ]
+}

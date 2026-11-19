@@ -1,0 +1,115 @@
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-001", "input": "Systemcheck", "note": "Besitzerwort für den Selbsttest", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-002", "input": "Wie ist dein Status?", "note": "Besitzerfrage", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-003", "input": "Mach einen Systemcheck", "note": "Auftragsform", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-004", "input": "Statusbericht", "note": "ein Wort", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-005", "input": "Jarvis, wie ist dein Status?", "note": "mit Anrede", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-006", "input": "Läuft alles?", "note": "kurze Frage", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-007", "input": "Ist alles in Ordnung bei dir?", "note": "persönliche Form", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-008", "input": "Fahr die Systeme hoch", "note": "Wortlaut aus dem Zielbild („Ich fahre die Systeme hoch“)", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-009", "input": "Wie geht es deinen Systemen?", "note": "Frage nach den Systemen", "runner": "briefing_route"}
+{"category": "system_check", "expect": {"route": "SYSTEM_CHECK"}, "id": "BRF-010", "input": "Systemstatus", "note": "ein Wort", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-011", "input": "Was steht heute an?", "note": "Besitzerfrage", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-012", "input": "Gib mir mein Briefing", "note": "Besitzerauftrag", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-013", "input": "Guten Morgen, gib mir mein Briefing", "note": "Gruß und Briefing-Wunsch", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-014", "input": "Mein Tagesbriefing bitte", "note": "ohne Verb", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-015", "input": "Was liegt heute an?", "note": "andere Frageform", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-016", "input": "Briefing", "note": "ein Wort", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-017", "input": "Guten Morgen, was steht heute an?", "note": "Gruß und Frage", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING:NEWS"}, "id": "BRF-018", "input": "Gib mir mein Briefing mit Nachrichten", "note": "Nachrichtenteil für dieses eine Mal", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-019", "input": "Gib mir einen Überblick über meinen Tag", "note": "Tagesüberblick", "runner": "briefing_route"}
+{"category": "briefing", "expect": {"route": "BRIEFING"}, "id": "BRF-020", "input": "Wie sieht mein Tag aus?", "note": "Frage nach dem Tag", "runner": "briefing_route"}
+{"category": "appointments", "expect": {"route": "APPOINTMENTS:TODAY"}, "id": "BRF-021", "input": "Welche Termine habe ich heute?", "note": "Termine heute", "runner": "briefing_route"}
+{"category": "appointments", "expect": {"route": "APPOINTMENTS:TODAY"}, "id": "BRF-022", "input": "Habe ich heute Termine?", "note": "Ja/Nein-Frage", "runner": "briefing_route"}
+{"category": "appointments", "expect": {"route": "APPOINTMENTS:TOMORROW"}, "id": "BRF-023", "input": "Was steht morgen im Kalender?", "note": "Kalender morgen", "runner": "briefing_route"}
+{"category": "appointments", "expect": {"route": "APPOINTMENTS:TOMORROW"}, "id": "BRF-024", "input": "Welche Termine habe ich morgen?", "note": "Termine morgen", "runner": "briefing_route"}
+{"category": "appointments", "expect": {"route": "APPOINTMENTS:TODAY"}, "id": "BRF-025", "input": "Meine Termine", "note": "ohne Tag = heute", "runner": "briefing_route"}
+{"category": "appointments", "expect": {"route": "APPOINTMENTS:TODAY"}, "id": "BRF-026", "input": "Was steht im Kalender?", "note": "ohne Tag = heute", "runner": "briefing_route"}
+{"category": "appointments", "expect": {"route": "APPOINTMENTS:TODAY"}, "id": "BRF-027", "input": "Lies mir meine Termine vor", "note": "Vorlesen der Termine", "runner": "briefing_route"}
+{"category": "weather", "expect": {"route": "WEATHER:TODAY"}, "id": "BRF-028", "input": "Wie wird das Wetter heute?", "note": "Wetter am gespeicherten Ort", "runner": "briefing_route"}
+{"category": "weather", "expect": {"route": "WEATHER:TODAY"}, "id": "BRF-029", "input": "Wie ist das Wetter?", "note": "ohne Tag = heute", "runner": "briefing_route"}
+{"category": "weather", "expect": {"route": "WEATHER:TOMORROW"}, "id": "BRF-030", "input": "Wie wird das Wetter morgen?", "note": "Wetter morgen", "runner": "briefing_route"}
+{"category": "weather", "expect": {"route": "WEATHER:TODAY"}, "id": "BRF-031", "input": "Wetter", "note": "ein Wort", "runner": "briefing_route"}
+{"category": "weather", "expect": {"route": "WEATHER:TODAY@Wien"}, "id": "BRF-032", "input": "Wie wird das Wetter in Wien?", "note": "anderer Ort nur für diese Frage", "runner": "briefing_route"}
+{"category": "weather", "expect": {"route": "WEATHER:TODAY"}, "id": "BRF-033", "input": "Regnet es heute?", "note": "Regenfrage", "runner": "briefing_route"}
+{"category": "weather", "expect": {"route": "WEATHER:TODAY"}, "id": "BRF-034", "input": "Brauche ich heute einen Regenschirm?", "note": "Regenschirmfrage", "runner": "briefing_route"}
+{"category": "weather", "expect": {"route": "WEATHER:TOMORROW"}, "id": "BRF-035", "input": "Wetterbericht für morgen", "note": "ohne Verb", "runner": "briefing_route"}
+{"category": "place", "expect": {"route": "PLACE:Linz"}, "id": "BRF-036", "input": "Mein Ort ist Linz", "note": "Besitzereinstellung für das Wetter", "runner": "briefing_route"}
+{"category": "place", "expect": {"route": "PLACE:Bad Ischl"}, "id": "BRF-037", "input": "Mein Wetterort ist Bad Ischl", "note": "zwei Wörter", "runner": "briefing_route"}
+{"category": "place", "expect": {"route": "PLACE:Wien"}, "id": "BRF-038", "input": "Setze meinen Ort auf Wien", "note": "Auftragsform", "runner": "briefing_route"}
+{"category": "place", "expect": {"route": "PLACE:Sankt Pölten"}, "id": "BRF-039", "input": "Mein Ort ist Sankt Pölten.", "note": "mit Punkt und Umlaut", "runner": "briefing_route"}
+{"category": "call", "expect": {"route": "CALL:Anna"}, "id": "BRF-040", "input": "Ruf Anna an", "note": "Besitzerauftrag: Wähltastatur öffnen", "runner": "briefing_route"}
+{"category": "call", "expect": {"route": "CALL:Anna Beispiel"}, "id": "BRF-041", "input": "Rufe bitte Anna Beispiel an", "note": "voller Name, höflich", "runner": "briefing_route"}
+{"category": "call", "expect": {"route": "CALL:Thomas"}, "id": "BRF-042", "input": "Kannst du Thomas anrufen?", "note": "Frageform", "runner": "briefing_route"}
+{"category": "call", "expect": {"route": "CALL:meine Mutter"}, "id": "BRF-043", "input": "Ich möchte meine Mutter anrufen", "note": "Wunschform; „meine“ löst das Adressbuch auf", "runner": "briefing_route"}
+{"category": "call", "expect": {"route": "CALL:0664 1234567"}, "id": "BRF-044", "input": "Ruf 0664 1234567 an", "note": "Nummer statt Name", "runner": "briefing_route"}
+{"category": "call", "expect": {"route": "CALL:Anna Muster"}, "id": "BRF-045", "input": "Anna Muster anrufen", "note": "Grundform", "runner": "briefing_route"}
+{"category": "routine", "expect": {"route": "OFFER:7"}, "id": "BRF-046", "input": "Jeden Morgen um 7 das Briefing anbieten", "note": "tägliches Angebot ab einer Uhrzeit", "runner": "briefing_route"}
+{"category": "routine", "expect": {"route": "OFFER:6"}, "id": "BRF-047", "input": "Biete mir das Briefing jeden Tag ab 6 Uhr an", "note": "Auftragsform mit Uhrzeit", "runner": "briefing_route"}
+{"category": "routine", "expect": {"route": "OFFER:OFF"}, "id": "BRF-048", "input": "Biete mir kein Briefing mehr an", "note": "Angebot abschalten", "runner": "briefing_route"}
+{"category": "routine", "expect": {"route": "OFFER:ON"}, "id": "BRF-049", "input": "Biete mir das Briefing wieder an", "note": "Angebot wieder einschalten", "runner": "briefing_route"}
+{"category": "routine", "expect": {"route": "NEWS_PART:ON"}, "id": "BRF-050", "input": "Nimm die Nachrichten ins Briefing auf", "note": "Nachrichtenteil dauerhaft", "runner": "briefing_route"}
+{"category": "routine", "expect": {"route": "NEWS_PART:OFF"}, "id": "BRF-051", "input": "Lass die Nachrichten im Briefing weg", "note": "Nachrichtenteil dauerhaft aus", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-052", "input": "Was steht in der PDF?", "note": "Dokumentfrage bleibt beim Dokument", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-053", "input": "Wie wird das Wetter in dem Film dargestellt?", "note": "Frage über einen Film, kein Wetterauftrag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "NEWS", "route": "NONE"}, "id": "BRF-054", "input": "Fass mir die Nachrichten von heute zusammen", "note": "Nachrichtenauftrag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "NEWS", "route": "NONE"}, "id": "BRF-055", "input": "Schlagzeilen", "note": "Nachrichtenauftrag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "CLOCK", "route": "NONE"}, "id": "BRF-056", "input": "Wie spät ist es?", "note": "Geräteuhr", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "CLOCK", "route": "NONE"}, "id": "BRF-057", "input": "Welches Datum haben wir?", "note": "Geräteuhr", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "GREETING", "route": "NONE"}, "id": "BRF-058", "input": "Guten Morgen", "note": "ein Gruß allein ist kein Briefing-Wunsch", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "CAPABILITIES", "route": "NONE"}, "id": "BRF-059", "input": "Was kannst du?", "note": "Fähigkeitenliste", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "DIAGNOSIS", "route": "NONE"}, "id": "BRF-060", "input": "Systemdiagnose", "note": "die ausführliche Diagnose bleibt, wo sie ist", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-061", "input": "Ruf Anna nicht an", "note": "Verneinung", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "SEND", "route": "NONE"}, "id": "BRF-062", "input": "Schreib Anna auf WhatsApp, ich komme später", "note": "Sendeauftrag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-063", "input": "Wer hat angerufen?", "note": "Frage nach Anrufen, kein Anrufauftrag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "DESK", "route": "NONE"}, "id": "BRF-064", "input": "Öffne das PDF Argon4", "note": "Dokumentenablage", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-065", "input": "Mein Schlüssel ist in der Küche", "note": "Objektgedächtnis, keine Ortseinstellung", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-066", "input": "Was steht heute in der Zeitung?", "note": "Zeitung, nicht der eigene Tag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-067", "input": "Was steht im Vertrag?", "note": "Dokumentfrage", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-068", "input": "Ruf die Webseite auf", "note": "aufrufen ist nicht anrufen", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "ROUTINE", "route": "NONE"}, "id": "BRF-069", "input": "Routine einrichten", "note": "Routinen", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "NEWS", "route": "NONE"}, "id": "BRF-070", "input": "Gib mir das Nachrichtenbriefing", "note": "Nachrichtenauftrag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-071", "input": "Wie ist der Status der Bestellung?", "note": "Status von etwas anderem", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-072", "input": "Ruf Anna an und sag ihr, dass ich später komme", "note": "die App spricht nicht im Telefonat; kein halber Auftrag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "CLOCK", "route": "NONE"}, "id": "BRF-073", "input": "Welche Uhrzeit haben wir?", "note": "Geräteuhr", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "NEWS", "route": "NONE"}, "id": "BRF-074", "input": "Was gibt's Neues in der Welt?", "note": "Nachrichtenauftrag", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-075", "input": "Ich habe morgen einen Termin beim Zahnarzt", "note": "Aussage; in den Kalender wird nie geschrieben", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-076", "input": "Trag einen Termin für morgen um 9 ein", "note": "Kalender schreiben gibt es nicht", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-077", "input": "Das Wetter war gestern schön", "note": "Aussage", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-078", "input": "Er sagte, ruf Anna an", "note": "wiedergegebene Rede", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"route": "NONE"}, "id": "BRF-079", "input": "„Systemcheck“ ist ein komisches Wort", "note": "Zitat", "runner": "briefing_route"}
+{"category": "keeps_route", "expect": {"keeps": "RECALL", "route": "NONE"}, "id": "BRF-080", "input": "Was ist noch offen?", "note": "Arbeitsjournal", "runner": "briefing_route"}
+{"category": "next_step", "expect": {"choice": "PICK:1"}, "id": "BRF-081", "input": "die erste", "note": "Ordnungszahl", "offers": ["APPOINTMENTS", "MESSAGE", "WORK"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "PICK:2"}, "id": "BRF-082", "input": "das zweite", "note": "Ordnungszahl", "offers": ["APPOINTMENTS", "MESSAGE", "WORK"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "PICK:3"}, "id": "BRF-083", "input": "Nummer drei", "note": "Nummer", "offers": ["APPOINTMENTS", "MESSAGE", "WORK"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "PICK:1"}, "id": "BRF-084", "input": "den Termin", "note": "Stichwort", "offers": ["APPOINTMENTS", "MESSAGE", "WORK"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "PICK:2"}, "id": "BRF-085", "input": "die Nachricht öffnen", "note": "Stichwort mit Verb", "offers": ["APPOINTMENTS", "MESSAGE", "WORK"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "PICK:1"}, "id": "BRF-086", "input": "ja", "note": "ein Angebot: Ja genügt", "offers": ["NEWS"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "ASK"}, "id": "BRF-087", "input": "ja", "note": "mehrere Angebote: Ja allein entscheidet nichts", "offers": ["APPOINTMENTS", "NEWS"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "DECLINE"}, "id": "BRF-088", "input": "nein", "note": "Ablehnung", "offers": ["APPOINTMENTS", "NEWS"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "DECLINE"}, "id": "BRF-089", "input": "nichts davon", "note": "Ablehnung", "offers": ["APPOINTMENTS", "MESSAGE", "WORK"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "DECLINE"}, "id": "BRF-090", "input": "später", "note": "aufgeschoben ist nicht gewählt", "offers": ["WORK"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "NONE"}, "id": "BRF-091", "input": "Wie spät ist es?", "note": "eine andere Frage bleibt eine andere Frage", "offers": ["APPOINTMENTS", "NEWS"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "NONE"}, "id": "BRF-092", "input": "die vierte", "note": "gibt es nicht", "offers": ["APPOINTMENTS", "NEWS"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "PICK:2"}, "id": "BRF-093", "input": "die Nachrichten", "note": "Mehrzahl = Nachrichtenüberblick", "offers": ["APPOINTMENTS", "NEWS"], "runner": "briefing_choice"}
+{"category": "next_step", "expect": {"choice": "PICK:1"}, "id": "BRF-094", "input": "ja bitte", "note": "ein Angebot nach einer Warnung", "offers": ["DIAGNOSIS"], "runner": "briefing_choice"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRF-095", "input": "Schau, welche Termine ich diese Woche habe, und sag mir, ob ich etwas vergessen könnte.", "note": "Architekturkritik 19.11.2026, Satz 4", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRF-096", "input": "Was steht diese Woche an?", "note": "Besitzerform", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:THIS_WEEK"}, "id": "BRF-097", "input": "Wo habe ich diese Woche noch Zeit?", "note": "Besitzerform", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRF-098", "input": "Welche Termine habe ich diese Woche?", "note": "Woche = heute bis Sonntag", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:NEXT_WEEK"}, "id": "BRF-099", "input": "Welche Termine habe ich nächste Woche?", "note": "Montag bis Sonntag", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:NEXT_WEEK"}, "id": "BRF-100", "input": "Was steht kommende Woche an?", "note": "kommende = nächste", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:NEXT_WEEK"}, "id": "BRF-101", "input": "Habe ich nächste Woche etwas vergessen?", "note": "Prüfung nur aus Regeln und Terminen", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:NEXT_WEEK"}, "id": "BRF-102", "input": "Schau, welche Termine ich nächste Woche habe, und sag mir, ob ich etwas vergessen könnte", "note": "der Besitzersatz für die nächste Woche", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRF-103", "input": "Prüf meine Termine", "note": "ohne Zeitraum: diese Woche", "runner": "briefing_route"}
+{"category": "week_check", "expect": {"route": "AGENDA_CHECK:THIS_WEEK"}, "id": "BRF-104", "input": "Überschneiden sich diese Woche Termine?", "note": "Überschneidung", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:NEXT_WEEK"}, "id": "BRF-105", "input": "Wo habe ich nächste Woche noch Zeit?", "note": "freie Blöcke", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:TODAY"}, "id": "BRF-106", "input": "Wann habe ich heute noch Zeit?", "note": "ein Tag", "runner": "briefing_route"}
+{"category": "free_time", "expect": {"route": "FREE_TIME:THIS_WEEK"}, "id": "BRF-107", "input": "Zeig mir meine freien Zeiten für diese Woche", "note": "Auftragsform", "runner": "briefing_route"}
+{"category": "week", "expect": {"route": "APPOINTMENTS:THIS_WEEK"}, "id": "BRF-108", "input": "Wochenüberblick", "note": "ein Wort", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-109", "input": "Was steht diese Woche in der Zeitung?", "note": "kein Kalenderbezug", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-110", "input": "Verschieb meine Termine von dieser Woche", "note": "Kalender ändern", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-111", "input": "Wie viel Zeit habe ich diese Woche am Handy verbracht?", "note": "Bildschirmzeit, nicht Kalender", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-112", "input": "Diese Woche habe ich etwas vergessen", "note": "Aussage", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-113", "input": "Schau, welche Termine ich diese Woche habe, und schick sie Anna", "note": "zweiter Auftrag", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-114", "input": "Habe ich etwas vergessen?", "note": "ohne Zeitraum und ohne Terminwort", "runner": "briefing_route"}
+{"category": "fail_closed", "expect": {"route": "NONE"}, "id": "BRF-115", "input": "Was steht diese Woche im Fernsehen an?", "note": "nicht der Kalender", "runner": "briefing_route"}

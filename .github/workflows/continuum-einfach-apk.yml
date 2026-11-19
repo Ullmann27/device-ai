@@ -1,0 +1,156 @@
+name: "Continuum – APK einfach bauen und originalsignieren"
+on:
+  push:
+    branches: [integrate/continuum-command03-android-20261115]
+    paths:
+      - .github/workflows/continuum-einfach-apk.yml
+      - app/**
+      - scripts/**
+      - backend/**
+      - tools/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-einfache-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Code73 – APK bauen, kein manueller SHA-Eintrag
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Android SDK vorbereiten
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Die echte Continuum-APK einmal bauen
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/integrate/continuum-command03-android-20261115"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD
+          gradle --no-daemon --max-workers=1 --console=plain             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2'             -Pkotlin.compiler.execution.strategy=in-process             -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true             -PcontinuumStandaloneVersionCode=73 -PcontinuumLocalRenderUnsigned=true             :app:assembleRelease
+          test -s app/build/outputs/apk/release/app-release-unsigned.apk
+          mkdir -p output
+          cp app/build/outputs/apk/release/app-release-unsigned.apk output/Continuum-Unsigned.apk
+          printf 'source_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversionCode=73\nversionName=0.3.72\n'             "$GITHUB_SHA" > output/SOURCE.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt2" dump badging output/Continuum-Unsigned.apk > output/BADGING.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='73' versionName='0.3.72'" output/BADGING.txt
+          grep -Fxq "native-code: 'arm64-v8a'" output/BADGING.txt
+          if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify output/Continuum-Unsigned.apk >/dev/null 2>&1; then
+            echo "::error::Unexpected signing state" >&2
+            exit 1
+          fi
+      - name: Das ursprüngliche Build-Ergebnis intern übergeben
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-Einfach-Unsigned
+          path: output/
+          if-no-files-found: error
+          retention-days: 14
+
+  originalsignieren:
+    name: Code73 – mit Besitzerfreigabe originalsignieren und Download veröffentlichen
+    needs: build
+    if: github.repository == 'Ullmann27/device-ai'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    environment: continuum-original-signing
+    permissions:
+      contents: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Nur die notwendigen Android-Signaturwerkzeuge laden
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;35.0.0"
+      - uses: actions/download-artifact@v4
+        with:
+          name: Continuum-Einfach-Unsigned
+          path: unsigned
+      - name: Originalsignatur aus geschütztem Environment und APK-Identität prüfen
+        shell: bash
+        env:
+          ORIGINAL_P12: ${{ secrets.CONTINUUM_LOCAL_SIGNING_P12_BASE64 }}
+          ORIGINAL_PASSWORD: ${{ secrets.CONTINUUM_LOCAL_SIGNING_PASSWORD }}
+        run: |
+          set -Eeuo pipefail
+          set +x
+          umask 077
+          test "$GITHUB_REF" = "refs/heads/integrate/continuum-command03-android-20261115"
+          grep -Fxq "source_sha=$GITHUB_SHA" unsigned/SOURCE.txt
+          grep -Fxq "package=at.heinz.deviceai.continuumlocal" unsigned/SOURCE.txt
+          test -s unsigned/Continuum-Unsigned.apk
+          test -n "${ORIGINAL_P12:-}"
+          test -n "${ORIGINAL_PASSWORD:-}"
+          dir="$(mktemp -d)"
+          trap 'rm -rf "$dir"' EXIT
+          printf '%s' "$ORIGINAL_P12" | base64 --decode > "$dir/original.p12"
+          unset ORIGINAL_P12
+          export SIGN_PASS="$ORIGINAL_PASSWORD"
+          unset ORIGINAL_PASSWORD
+          keytool -list -v -storetype PKCS12 -alias continuum-local             -keystore "$dir/original.p12" -storepass:env SIGN_PASS > "$dir/keyinfo.txt" 2>/dev/null
+          grep -Fq "Entry type: PrivateKeyEntry" "$dir/keyinfo.txt"
+          cert="$(sed -n 's/^[[:space:]]*SHA256: //p' "$dir/keyinfo.txt" | head -n1 | tr -d ':' | tr '[:upper:]' '[:lower:]')"
+          test "$cert" = "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23"
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          "$tools/zipalign" -P 16 -f 4 unsigned/Continuum-Unsigned.apk "$dir/aligned.apk"
+          mkdir -p release
+          "$tools/apksigner" sign --ks "$dir/original.p12"             --ks-type PKCS12 --ks-key-alias continuum-local             --ks-pass env:SIGN_PASS --key-pass env:SIGN_PASS             --out release/Continuum-Code73.apk "$dir/aligned.apk"
+          unset SIGN_PASS
+          "$tools/zipalign" -c -P 16 -v 4 release/Continuum-Code73.apk > /dev/null
+          "$tools/apksigner" verify --verbose --print-certs release/Continuum-Code73.apk > "$dir/verified.txt"
+          grep -Fxq 'Signer #1 certificate SHA-256 digest: 6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23' "$dir/verified.txt"
+          grep -Fxq 'Verified using v2 scheme (APK Signature Scheme v2): true' "$dir/verified.txt"
+          "$tools/aapt2" dump badging release/Continuum-Code73.apk > release/BADGING.txt
+          grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='73' versionName='0.3.72'" release/BADGING.txt
+          grep -Fxq "native-code: 'arm64-v8a'" release/BADGING.txt
+          (cd release && sha256sum Continuum-Code73.apk > SHA256SUMS.txt)
+          printf 'repo=%s\nsource_sha=%s\npackage=%s\nversionCode=%s\noriginal_certificate_sha256=%s\nFold7=NOT_RUN\n'             "$GITHUB_REPOSITORY" "$GITHUB_SHA" "at.heinz.deviceai.continuumlocal" "73" "$cert"             > release/BUILD-INFO.txt
+      - name: Signierte Continuum-APK bereitstellen – keine zweite Pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="continuum-einfach-code73-${GITHUB_RUN_ID}"
+          gh release create "$TAG"             release/Continuum-Code73.apk release/SHA256SUMS.txt release/BUILD-INFO.txt             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA"             --title "Device AI Continuum – Code73 Android-Test-APK"             --notes "Code73 enthält alles seit Code72: Gmail-Verbindung über das Google-Konto mit getrennten Rechten (Lesen, Entwürfe, Senden) und die Seite Verbindungen; mehrere Aufträge in einem Satz als eine Auftragsfolge mit Sende-, App-, Mail-, Kalender- und Recherche-Schritten, Auftragsprotokoll gegen doppeltes Senden und Fortsetzen nach Neustart; Kalenderwoche mit Terminprüfung; Seitenzusammenfassung ohne Speichern; Gesprächspersönlichkeit mit Begrüßung nach Lage, Wo waren wir, drei Stufen der Eigeninitiative; Stimmprofile und Sprechweisen mit Hörprobe, bisherige Stimme bleibt Standard; Avatar ohne Schnittkante, Arbeitsszenen für Speicherbereinigung, Mail, Senden und Recherche; Fragen zum Internetzugang mit echtem Stand und Angebot. Die Gmail-Verbindung braucht ein eigenes Google-Cloud-Projekt des Besitzers (Anleitung in docs/handover). Host-Tests und Layoutprüfung auf GitHub grün; echte Aufrufe an Google und Fold7-Geräteprüfung offen (NOT_RUN)."             --prerelease --latest=false
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url --jq .url
+      - name: Signierte APK zusätzlich in GitHub Actions sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-Einfach-Signiert-${{ github.run_id }}
+          path: release/
+          if-no-files-found: warn
+          retention-days: 30
+

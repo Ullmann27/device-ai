@@ -89,7 +89,7 @@ class CockpitMonitorPresentationTest {
         val renderer = source("FilamentAvatarRenderer.kt")
         val stage = source("FilamentCockpitStage.kt")
         assertFalse("Never put presentation yaw into the stage frame", renderer.contains("frame.copy(yawDegrees"))
-        assertTrue(renderer.contains("cockpitStage?.update(frame, cockpitOrb, orbPhase, motion,"))
+        assertTrue(renderer.contains("cockpitStage?.update(frame, cockpitOrb, .4f, motion,"))
         assertTrue(renderer.contains("monitorTurnDegrees = (pose?.monitorYawDegrees ?: 0.0).toFloat()"))
         assertTrue(stage.contains("val monitorMatrix = frame.monitorTransform(monitorTurnDegrees)"))
         assertTrue(stage.contains("setTransform(monitorTransform, monitorMatrix)"))

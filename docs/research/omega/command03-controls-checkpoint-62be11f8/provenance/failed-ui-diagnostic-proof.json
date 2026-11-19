@@ -1,0 +1,36 @@
+{
+  "scope": "DIAGNOSTIC_WIRE_FROM_FAILED_UI_SUITE_NOT_FINAL_ACCEPTANCE",
+  "source_commit": "68a0eba67dfda45e20c6abcdf3d0bfbe80006654",
+  "run_label": "controls-html-ui-01",
+  "suite_status": "FAILED_OR_SOURCE_CHANGED",
+  "junit": {
+    "fresh_files": 3,
+    "tests": 34,
+    "failures": 5,
+    "errors": 0,
+    "skipped": 0
+  },
+  "serialization_case": {
+    "name": "actualSerializedComputerPayloadUsesTheStrictBrowserWireTypes",
+    "classname": "at.heinz.deviceai.ContinuumCommand03MediaStageUiTest",
+    "time": "0.023"
+  },
+  "serialization_case_passed": true,
+  "wire": "/workspace/scratch/8f95e7fd540d/native-continuation-qa-output/evidence/controls-html-ui-01/native-computer-wire.json",
+  "wire_sha256": "ee8c1474085f6b5995638e7e5ec18821a0c6a3cba06cd63f48f6c9ea0d771b6c",
+  "raw_receipt_sha256": "ae7440fccb3c9139488d15c0f9fd81ba33e5048d6112c7576e9012ff1559c49d",
+  "stage_xml_sha256": "bca3fc2405162d2529cb3f707ea188a7c69395b77b384d0f673475f2d1a4a0da",
+  "log_sha256": "c7db3bdf9e8535ff22c3dfbbe527cb6ec481d281aa77aeab3710da4bd41f46ee",
+  "original_source_after": {
+    "head": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "branch_ref": "e92001ad6c28cdfd75e3fc29bb6efb65e832afa0",
+    "status": "",
+    "head_name": "integrate/continuum-command03-android-20261115"
+  },
+  "historical_release_unchanged": true,
+  "historical_reset_unchanged": true,
+  "java": [],
+  "both_locks_acquired_nonblocking": true,
+  "locks_released": true,
+  "workspace_free_bytes": 532914176
+}

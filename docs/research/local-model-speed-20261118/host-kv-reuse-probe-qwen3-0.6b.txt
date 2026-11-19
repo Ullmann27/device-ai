@@ -1,0 +1,10 @@
+FLAG_OFF getBenchmarkInfo -> THROWS LiteRtLmJniException: Failed to get benchmark info: INTERNAL: Benchmark is not enabled. Please make sure the BenchmarkParams is set in the EngineSettings.
+FLAG_OFF getTokenCount -> 1833
+A_FRESH_PER_TURN turn=1 prefillTokens=1812 decodeTokens=24 prefillTokPerSec=102.8 decodeTokPerSec=8.0 ttftSec=17.75 wallMs=20628 tokenCount=1836
+A_FRESH_PER_TURN turn=2 prefillTokens=1868 decodeTokens=24 prefillTokPerSec=116.4 decodeTokPerSec=8.9 ttftSec=16.15 wallMs=18731 tokenCount=1892
+A_FRESH_PER_TURN turn=3 prefillTokens=1912 decodeTokens=24 prefillTokPerSec=123.9 decodeTokPerSec=9.1 ttftSec=15.54 wallMs=18073 tokenCount=1936
+B_REUSED_CONVERSATION turn=1 prefillTokens=1809 decodeTokens=24 prefillTokPerSec=116.8 decodeTokPerSec=9.0 ttftSec=15.59 wallMs=18144 tokenCount=1833
+B_REUSED_CONVERSATION turn=2 prefillTokens=31 decodeTokens=24 prefillTokPerSec=24.9 decodeTokPerSec=8.7 ttftSec=15.59 wallMs=4004 tokenCount=1888
+B_REUSED_CONVERSATION turn=3 prefillTokens=25 decodeTokens=23 prefillTokPerSec=23.3 decodeTokPerSec=8.8 ttftSec=15.59 wallMs=3701 tokenCount=1936
+C_PREFACE_PREFILLED create wallMs=14823 tokenCountAfterCreate=1775
+C_PREFACE_PREFILLED turn=1 prefillTokens=34 decodeTokens=24 prefillTokPerSec=32.9 decodeTokPerSec=8.7 ttftSec=14.94 wallMs=3785 tokenCount=1833

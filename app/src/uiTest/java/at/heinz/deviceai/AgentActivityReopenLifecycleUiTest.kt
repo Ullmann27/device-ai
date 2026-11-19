@@ -47,6 +47,12 @@ import java.util.concurrent.TimeUnit
 @LooperMode(LooperMode.Mode.PAUSED)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class AgentActivityReopenLifecycleUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private val statement = "Meine Werkzeugkiste ist blau, steht im Keller und enthält zwölf Schrauben."
     private val recall = "Welche Farbe hat meine Werkzeugkiste, wo steht sie und wie viele Schrauben sind darin?"
 

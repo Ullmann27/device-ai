@@ -9,10 +9,18 @@ class DeviceToolExecutor internal constructor(
     private val bridgeReady: () -> Boolean,
     private val runBridge: (String, (Result<String>) -> Unit) -> Unit,
     private val appActions: DeviceAppActionPort?,
-    private val probeBridge: (((Result<ShizukuCapabilities>) -> Unit) -> Unit)? = null
+    private val probeBridge: (((Result<ShizukuCapabilities>) -> Unit) -> Unit)? = null,
+    /**
+     * The in-process device tools (19.11.2026): file tools under Android's all-files grant, device search, reading
+     * and creating documents. A call they answer never reaches the shell bridge. Null in tests of the bridge seam.
+     */
+    internal val native: at.heinz.deviceai.devicetools.NativeDeviceTools? = null
 ) {
     constructor(context: Context, bridge: ShizukuBridge) :
-        this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context), bridge::probeCapabilities)
+        this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context), bridge::probeCapabilities,
+            at.heinz.deviceai.devicetools.NativeDeviceTools.android(context))
+    /** The bridge state this executor would dispatch with; the gate's precheck asks it before a call starts. */
+    internal fun bridgeIsReady(): Boolean = runCatching(bridgeReady).getOrDefault(false)
     internal val systemStorage by lazy { SystemStorageInspector(context) }
     @Volatile internal var lastDiagnosis: SystemDiagnosis? = null
         private set
@@ -95,6 +103,17 @@ class DeviceToolExecutor internal constructor(
         if (call.name == "open_android_settings") {
             callback(runCatching {
                 val page = requiredString(call, "page").lowercase(Locale.GERMAN)
+                // Android's own page for „Zugriff auf alle Dateien“ (the grant the in-process file tools need).
+                if (page in setOf("dateizugriff", "alle dateien", "zugriff auf alle dateien", "all files", "files access") &&
+                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                    val pages = OwnerDeviceLibrary(context).accessSettings()
+                    check(pages.any { intent -> runCatching {
+                        context.startActivity(intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)) }.isSuccess }) {
+                        "Android hat die Seite für den Dateizugriff nicht geöffnet."
+                    }
+                    return@runCatching "Android-Seite „Zugriff auf alle Dateien“ angefordert; keine Einstellung geändert. " +
+                        "Den Schalter legst du dort selbst um."
+                }
                 val action = when (page) {
                     "wifi", "wlan" -> android.provider.Settings.ACTION_WIFI_SETTINGS
                     "bluetooth" -> android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
@@ -136,7 +155,14 @@ class DeviceToolExecutor internal constructor(
             callback(runCatching { DeviceBatteryProbe.read(context) })
             return
         }
+        // In-process first: what Android lets an app do itself needs no Shizuku. The call runs on the ToolGate's
+        // worker thread; a stop interrupts it. A file tool without the all-files grant falls through to the bridge.
+        native?.takeIf { it.handles(call.name) }?.let { tools ->
+            callback(runCatching { tools.execute(call) })
+            return
+        }
         if (!bridgeReady()) {
+            // The gate's precheck (DeviceToolPolicy) refuses such a call before it is dispatched; this is the last line.
             callback(Result.failure(IllegalStateException("Shizuku ist nicht verbunden.")))
             return
         }

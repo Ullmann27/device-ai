@@ -1,9 +1,23 @@
-name: "Code59 Fold7 - Context, long answers and clarification QA"
+name: "Code59/60 Fold7 - Context, long answers and clarification QA"
 on:
   push:
     paths: [app/**, .github/continuum/**, .github/workflows/code58-fold7-combined-context-qa.yml]
     branches:
       - fix/code59-context-complete-20261114
+      - fix/code60-full-qa-html-mode-20261116
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Code60: exakter freigegebener 40-stelliger Quell-SHA; Code59 unverändert"
+        required: false
+        type: string
+
+env:
+  # Fixed branch profiles; version inputs cannot select another release.
+  RELEASE_CODE: ${{ (github.ref == 'refs/heads/integrate/continuum-command03-android-20261115' || github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116') && '60' || '59' }}
+  RELEASE_VERSION: ${{ (github.ref == 'refs/heads/integrate/continuum-command03-android-20261115' || github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116') && '0.3.59' || '0.3.58' }}
+  EXPECTED_SOURCE_SHA: ${{ inputs.expected_sha || (github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116' && github.sha) || '' }}
+
 permissions:
   contents: read
 concurrency:
@@ -11,6 +25,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   android-context-regression:
+    if: github.repository == 'Ullmann27/device-ai' && ((github.event_name == 'push' && github.ref == 'refs/heads/fix/code59-context-complete-20261114') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/integrate/continuum-command03-android-20261115') || (github.event_name == 'push' && github.ref == 'refs/heads/fix/code60-full-qa-html-mode-20261116'))
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -20,6 +35,16 @@ jobs:
       - name: Exact SHA and clean worktree
         run: |
           set -euo pipefail
+          if [[ "$RELEASE_CODE" == 60 ]]; then
+            if [[ "$GITHUB_REF" == 'refs/heads/fix/code60-full-qa-html-mode-20261116' ]]; then
+              test "$GITHUB_EVENT_NAME" = push
+            else
+              test "$GITHUB_EVENT_NAME" = workflow_dispatch
+              test "$GITHUB_REF" = 'refs/heads/integrate/continuum-command03-android-20261115'
+            fi
+            [[ "$EXPECTED_SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+            test "$EXPECTED_SOURCE_SHA" = "$GITHUB_SHA"
+          fi
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test -z "$(git status --porcelain)"
       - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
@@ -39,7 +64,7 @@ jobs:
           gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
             -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
             -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true \
-            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode=59 \
+            -PcontinuumOwnerArm64=true -PcontinuumStandaloneVersionCode="$RELEASE_CODE" \
             -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
             -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
             -I .github/continuum/code58-fold7-long-context-tests.init.gradle \

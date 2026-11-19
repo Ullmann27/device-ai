@@ -21,6 +21,21 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- Owner send orders („Schreib Anna auf WhatsApp …“): a name is resolved to exactly one address-book entry.
+         Asked once at runtime with a plain explanation; read on the device only. No SMS permission and no
+         notification listener are declared (see NormalInstallManifestTest). -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Daily briefing („Was steht heute an?“, „Welche Termine habe ich heute?“): today's and tomorrow morning's
+         appointments are read from the device calendar. Asked at runtime with a plain explanation the first time
+         the owner asks for appointments; read on the device only and never transmitted. WRITE_CALENDAR is not
+         declared – the app cannot change the calendar (see NormalInstallManifestTest). -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <!-- Document desk („Öffne das PDF Argon4“): finding a PDF by its name in the owner's shared storage, offline and
+         inside the app. Nothing is read until the owner switches on „Zugriff auf alle Dateien“ for this app in
+         Android's own settings; he can switch it off there at any time. The desk only lists names and opens the
+         chosen PDF read-only (see OwnerDeviceLibrary and NormalInstallManifestTest). -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <uses-permission android:name="com.termux.permission.RUN_COMMAND" />
 
@@ -42,6 +57,10 @@
             <intent-filter><action android:name="android.accessibilityservice.AccessibilityService" /></intent-filter>
             <meta-data android:name="android.accessibilityservice" android:resource="@xml/continuum_screen_observation" />
         </service>
+
+        <!-- The notification listener is NOT declared here. Google Play Protect stops the normal installation of an
+             APK from browser or file manager when it declares one (owner finding with Code64, 18.11.2026). It lives
+             in src/notificationAccess/AndroidManifest.xml and is merged only with -PcontinuumNotificationAccess=true. -->
 
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
@@ -130,6 +149,11 @@
             android:name=".ContinuumOwnerUpdateReceiver"
             android:exported="false" />
 
+        <!-- „Später“ on Continuum's own card for an incoming message. Not exported; it starts nothing. -->
+        <receiver
+            android:name=".notifications.IncomingMessageActionReceiver"
+            android:exported="false" />
+
         <activity
             android:name=".AgentActivity"
             android:exported="true"
@@ -140,6 +164,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Optional (required="false"): lets the experimental LiteRT-LM GPU backend open the device's OpenCL
+             driver on Android 12+. Listed in the LiteRT-LM Kotlin guide; without them the GPU start fails and
+             the model loads on the CPU. Nothing is loaded unless the owner switches the GPU on. -->
+        <uses-native-library android:name="libvndksupport.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL.so" android:required="false" />
     </application>
 
 </manifest>

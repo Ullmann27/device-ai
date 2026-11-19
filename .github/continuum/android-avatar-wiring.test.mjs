@@ -8,7 +8,7 @@ const contract=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/devicea
 
 test('avatar director is wired to hologram state, TTS start/range/end and the TTS audio envelope',()=>{
  assert.match(activity,/AvatarDirector\(\s*at\.heinz\.deviceai\.cockpit\.JarvisAvatarSlot\.fanOut/);
- assert.match(activity,/val liveHologram = \(hologramView \?: ContinuumHologramView\(this\)\)\.also \{[^}]*avatarDirector\.attach\(it\)[^}]*\}/);
+ assert.match(activity,/val liveHologram = \(hologramView \?: ContinuumHologramView\(this\)\)\.also \{[^}]*avatarDirector\.attach\(command03AvatarSink\(it\)\)[^}]*\}/);
  assert.match(activity,/ContinuumHomeView\(this, liveHologram\)/);
  assert.match(activity,/avatarDirector\.onRuntime\(/);
  assert.match(activity,/avatarDirector\.speechStarted\(utteranceId, voiceAvatarText\)/);

@@ -1,0 +1,187 @@
+name: "Code60 Command03 – complete Android and native/browser interop (unsigned only)"
+
+on:
+  push:
+    branches:
+      - fix/command03-native-controls-20261116
+    paths:
+      - .github/workflows/code60-command03-deep-qa.yml
+      - app/src/main/**
+      - app/src/uiTest/**
+      - app/src/test/**
+      - tools/command03-native-qa/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code60-command03-deep-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-android:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/fix/command03-native-controls-20261116'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Verify source, locked artwork and Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --quiet HEAD --
+          node tools/command03-native-qa/check-visual-source.mjs
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+      - name: Full unfiltered Android unit, original UI and lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=60 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            :app:testDebugUnitTest :app:lintDebug
+      - name: Require real JUnit evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B tools/code55-apk/junit-summary.py app/build/test-results/testDebugUnitTest --strict-skips
+      - name: Preserve failure inventory even when unfiltered tests fail
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p app/build/reports
+          python3 - <<'PY'
+          import collections, os, pathlib, xml.etree.ElementTree as ET
+          root=pathlib.Path('app/build/test-results/testDebugUnitTest')
+          groups=collections.Counter()
+          failures=[]
+          total=0
+          skipped=0
+          for path in sorted(root.glob('TEST-*.xml')):
+              suite=ET.parse(path).getroot()
+              for case in suite.findall('testcase'):
+                  total+=1
+                  skipped+=case.find('skipped') is not None
+                  issue=case.find('failure')
+                  if issue is None:
+                      issue=case.find('error')
+                  if issue is None:
+                      continue
+                  name=case.get('classname','').split('.')[-1]
+                  groups[name]+=1
+                  failures.append((name,case.get('name',''),issue.get('message','')))
+          lines=['source_sha=' + os.environ.get('GITHUB_SHA',''),
+              'cases=' + str(total),'failed=' + str(len(failures)),'skipped=' + str(skipped)]
+          lines.extend(str(count) + ' ' + name for name,count in groups.most_common())
+          lines.extend(name + '.' + case + ': ' + message for name,case,message in failures)
+          output=pathlib.Path('app/build/reports/code60-failure-summary.txt')
+          output.write_text('\n'.join(lines)+'\n')
+          print('\n'.join(lines[:45]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Code60-Command03-FULL-Android-JUnit-and-Lint
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/code60-failure-summary.txt
+            app/build/reports/lint-results-debug.*
+          if-no-files-found: ignore
+          retention-days: 7
+
+  native-browser-interop:
+    if: github.repository == 'Ullmann27/device-ai' && github.ref == 'refs/heads/fix/command03-native-controls-20261116'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.2'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Install Android SDK and freeze actual test selection
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+          printf '%s\n' '["at.heinz.deviceai.ContinuumCommand03MediaStageUiTest"]' > "$RUNNER_TEMP/command03-interop-selection.json"
+      - name: Execute real native Stage serializer test
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --no-build-cache --max-workers=1 --console=plain \
+            -Dorg.gradle.jvmargs='-Xmx2200m -XX:MaxMetaspaceSize=768m -XX:+UseSerialGC -XX:ActiveProcessorCount=2' \
+            -Dcontinuum.native.testSelection="$RUNNER_TEMP/command03-interop-selection.json" \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true -PcontinuumOwnerArm64=true \
+            -PcontinuumStandaloneVersionCode=60 \
+            -PcontinuumLocalStandaloneQa=true -PcontinuumUiWidgetTests=true \
+            -I docs/evidence/omega-apk54-20261111/harness/test-memory.gradle \
+            -I tools/command03-native-qa/test-selection.init.gradle \
+            :app:testDebugUnitTest
+      - name: Extract unchanged Kotlin packet from original JUnit output
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,pathlib,xml.etree.ElementTree as ET
+          p=pathlib.Path('app/build/test-results/testDebugUnitTest/TEST-at.heinz.deviceai.ContinuumCommand03MediaStageUiTest.xml')
+          suite=ET.parse(p).getroot()
+          assert int(suite.attrib['tests']) == 4
+          assert all(int(suite.attrib[k]) == 0 for k in ('failures','errors','skipped'))
+          source=suite.findtext('system-out') or ''
+          packets=[json.loads(line.split('COMMAND03_COMPUTER_WIRE:',1)[1])
+                   for line in source.splitlines() if line.startswith('COMMAND03_COMPUTER_WIRE:')]
+          assert len(packets)==1, f'Expected a fresh Kotlin packet, found {len(packets)}'
+          packet=packets[0]
+          assert packet['active'] is True and packet['frameDataUri'].startswith('data:image/jpeg;base64,')
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'command03-kotlin-packet.json'
+          out.write_text(json.dumps(packet,separators=(',',':'),ensure_ascii=False)+'\n')
+          print('FRESH_NATIVE_STAGE_PACKET_ACCEPTED source_run=' + os.environ['GITHUB_SHA'])
+          PY
+      - name: Require 46 DOM cases including actual native packet
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix "$RUNNER_TEMP/command03-dom" --ignore-scripts --no-audit --no-fund --no-save jsdom@26.1.0
+          COMMAND03_DOM_MODULE="$RUNNER_TEMP/command03-dom/node_modules/jsdom/lib/api.js" \
+          COMMAND03_REQUIRE_NATIVE_PACKET=1 \
+          COMMAND03_NATIVE_COMPUTER_PACKET="$RUNNER_TEMP/command03-kotlin-packet.json" \
+            node --test --test-reporter=tap tools/command03-native-qa/native-bridge-behavior.test.mjs \
+            | tee command03-native-interop.tap
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Code60-Command03-Kotlin-HTML-Interop-evidence
+          path: |
+            command03-native-interop.tap
+            app/build/test-results/testDebugUnitTest/
+          if-no-files-found: ignore
+          retention-days: 7

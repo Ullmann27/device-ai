@@ -43,6 +43,51 @@ class ShellExecutionTest {
         assertEquals(0, result.exitCode)
     }
 
+    // The platform encodes process arguments (locale charset on a desktop JVM, UTF-8 on
+    // Android). Forcing an ASCII-only argument charset reproduces the POSIX-locale host on
+    // every machine and proves the command still reaches the shell byte-exact.
+    @Test fun commandThePlatformCannotEncodeAsArgumentReachesTheShellUnchanged() {
+        val ascii = Charsets.US_ASCII
+        val german = BoundedShellProcess.execute(ShellExecutionRequest("printf 'Grüße vom Gerät'; exit 37", 1000), ascii)
+        assertEquals(ShellOutcome.COMPLETED, german.outcome)
+        assertEquals("Grüße vom Gerät", german.output)
+        assertEquals(37, german.exitCode)
+        // The evaluated command still sees end-of-input, exactly like the argument path.
+        assertEquals("ä-eof", BoundedShellProcess.execute(
+            ShellExecutionRequest("cat >/dev/null; printf 'ä-eof'", 1000), ascii).checkedOutput())
+        // Trailing newlines of the command text are preserved (here-document terminator).
+        assertEquals("Zeile ö\n", BoundedShellProcess.execute(
+            ShellExecutionRequest("cat <<'EOF'\nZeile ö\nEOF\n", 1000), ascii).checkedOutput())
+        // A syntax error is the shell's own failure, never a success.
+        val broken = BoundedShellProcess.execute(ShellExecutionRequest("printf 'ü'; if then", 1000), ascii)
+        assertNotEquals(0, broken.exitCode)
+        // A representable command behaves identically under the same argument charset.
+        assertEquals("plain", BoundedShellProcess.execute(ShellExecutionRequest("printf plain", 1000), ascii).checkedOutput())
+    }
+
+    @Test fun deadlineAndOutputLimitAlsoBoundTheStandardInputDelivery() {
+        val start = System.nanoTime()
+        val slow = BoundedShellProcess.execute(ShellExecutionRequest(": 'ü'; exec sleep 2", 100), Charsets.US_ASCII)
+        assertEquals(ShellOutcome.TIMED_OUT, slow.outcome)
+        assertTrue(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) < 900)
+        val flood = BoundedShellProcess.execute(
+            ShellExecutionRequest("while :; do printf 'üüüüüüüüüüüüüüüüüüüüüüüüüüüüüü'; done", 2000), Charsets.US_ASCII)
+        assertEquals(ShellOutcome.OUTPUT_LIMIT, flood.outcome)
+    }
+
+    @Test fun malformedCommandTextIsRejectedInsteadOfRunningAReplacement() {
+        val dir = java.nio.file.Files.createTempDirectory("shell-malformed-").toFile()
+        try {
+            val marker = java.io.File(dir, "executed")
+            // An unpaired surrogate has no UTF-8 form; no charset may substitute a '?' for it.
+            val request = ShellExecutionRequest("touch '${marker.absolutePath}' # \uD83D", 1000)
+            for (charset in listOf(Charsets.UTF_8, Charsets.US_ASCII)) {
+                assertEquals(ShellOutcome.FAILED, BoundedShellProcess.execute(request, charset).outcome)
+                assertFalse(marker.exists())
+            }
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun silentAndOpenPipeCommandsRespectTheWholeDeadline() {
         for (command in listOf("exec sleep 2", "sleep 1 & wait")) {
             val start = System.nanoTime()

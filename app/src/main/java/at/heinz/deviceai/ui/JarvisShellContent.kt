@@ -57,6 +57,13 @@ object JarvisShellContent {
         "system" to ContinuumHomeLayout.Slot.SYSTEM_STATUS,
     )
 
+    /** Direct AgentActivity adapters, deliberately not mapped to an unrelated legacy slot. */
+    val activityRoutes: Set<String> = setOf("files", "chats", "new-chat", "settings", "notifications", "more",
+        "model-management", "privacy", "mobile-builder", "brain", "stop", "voice-input", "camera-settings", "avatar-appearance")
+
+    fun hasNativeRoute(target: String): Boolean = target in routes || target in activityRoutes ||
+        target in JarvisMenu.extraRoutes
+
     /** Real value per tile target; never an invented number. */
     fun tileValue(target: String, s: ContinuumDashboardState, nowMillis: Long): String {
         val na = ContinuumCockpitPresentation.NOT_AVAILABLE
@@ -85,6 +92,9 @@ object JarvisShellContent {
     fun hitTarget(shell: JarvisShellLayout.Shell, tiles: List<JarvisTile>, x: Float, y: Float): String? {
         shell.tileBoxes().forEachIndexed { i, b -> if (i < tiles.size && b.contains(x, y)) return tiles[i].target }
         shell[Slot.NAV_RAIL]?.takeIf { it.contains(x, y) }?.let { b ->
+            // Workstation history consists of actual native rows owned by ContinuumConversationRailView.
+            // It must never hit-test the legacy static tool list under those rows.
+            if (shell.workstation) return null
             val i = JarvisTiles.railItemBoxes(b, fontScale = shell.profile.fontScale)
                 .indexOfFirst { it.contains(x, y) }
             return JarvisTiles.railNav.getOrNull(i)?.target

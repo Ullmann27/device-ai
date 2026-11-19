@@ -34,6 +34,12 @@ import java.util.concurrent.atomic.AtomicReference
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumTaskEffectsCallerUiTest {
+    @org.junit.Before fun selectClassicPresentation() {
+        org.robolectric.RuntimeEnvironment.getApplication()
+            .getSharedPreferences("continuum-command03", android.content.Context.MODE_PRIVATE).edit()
+            .putBoolean("original_html_main", false).commit()
+    }
+
     private var framePump: CockpitHostFramePump? = null
     @Before fun configureVirtualVsyncClock() {
         // Activity setup can start the real avatar loop before fixture code can pause it.
@@ -99,6 +105,8 @@ class ContinuumTaskEffectsCallerUiTest {
         val host = if (realUi) null else Robolectric.buildActivity(Activity::class.java).setup().visible()
         val h: ContinuumHologramView
         if (realUi) {
+            a.getSharedPreferences("continuum-command03", Context.MODE_PRIVATE).edit()
+                .putBoolean("original_html_main", false).commit()
             a.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit()
                 .putBoolean("voice_enabled", false).commit()
             a.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit()
@@ -129,10 +137,17 @@ class ContinuumTaskEffectsCallerUiTest {
         assertTrue("Caller surface must be measured", h.width > 0 && h.height > 0)
         val before = h.sampleMotion()
         h.setForegroundActive(true);advanceFrames(200)
+        val surface = if (realUi) a.window.decorView else host!!.get().window.decorView
+        val rendered = android.graphics.Bitmap.createBitmap(surface.width, surface.height,
+            android.graphics.Bitmap.Config.ARGB_8888)
+        try { surface.draw(android.graphics.Canvas(rendered)) }
+        finally { rendered.recycle() }
         val active = h.sampleMotion()
         assertTrue("Caller events require actual frame callbacks",active.callbackCount > before.callbackCount)
         assertTrue("Caller events require actual phase progress",active.phase > before.phase)
-        assertTrue("Caller events require an actual host Canvas draw",active.drawCount > before.drawCount)
+        assertTrue("Caller events require an actual host Canvas draw: ${active.reason}; " +
+            "avatar=${android.graphics.Rect(h.left, h.top, h.right, h.bottom)} in window ${surface.width}x${surface.height}",
+            active.drawCount > before.drawCount)
         assertEquals("Positive control: the actual host window must be visible",View.VISIBLE,h.windowVisibility)
         try {block(a,h)} finally {
             (get(a,"chiefStatusPool") as? at.heinz.deviceai.chief.ChiefWorkerPool)?.shutdown()
@@ -147,6 +162,9 @@ class ContinuumTaskEffectsCallerUiTest {
         call(a,"setBusy",true);advance()
         assertTrue(pulses(h).isEmpty())
     }
+    // The real Activity needs a real window of the size the fixture lays out: the next platform traversal
+    // restores the window's own size, and in the default 320x470 dp window the avatar starts below the fold.
+    @Config(qualifiers = "w884dp-h760dp-land-mdpi")
     @Test fun authorizedRealRunnerEntryAndExitReachTheVisibleSurface() = withFixture(realUi = true) {a,h ->
         val started=CountDownLatch(1);val finish=AtomicReference<((Result<String>)->Unit)?>()
         set(a,"executor",DeviceToolExecutor(a,{true},{_,cb -> finish.set(cb);started.countDown()},null))

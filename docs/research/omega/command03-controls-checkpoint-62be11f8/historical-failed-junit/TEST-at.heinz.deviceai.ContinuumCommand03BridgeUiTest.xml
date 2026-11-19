@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" tests="23" skipped="0" failures="5" errors="0" timestamp="2026-11-16T06:35:12" hostname="731a0110a54f" time="11.747">
+  <properties/>
+  <testcase name="successfulPdfCompletionRevealsChatWithoutClosingAReplacedDocumentOrRequestingFocus" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="3.284"/>
+  <testcase name="hiddenNativeStageStaysPausedAcrossConversationLayoutAndResume" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.182"/>
+  <testcase name="selectingActiveComputerKeepsItsSessionButChatStillStopsIt" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="3.256"/>
+  <testcase name="botAndCentralViewsFenceOldDraftsAndAnAlreadyQueuedCentralHistoryRead" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.153">
+    <failure message="java.lang.NoSuchFieldException: botProfiles" type="java.lang.NoSuchFieldException">java.lang.NoSuchFieldException: botProfiles
+	at java.base/java.lang.Class.getDeclaredField(Class.java:2612)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.field(ContinuumCommand03BridgeUiTest.kt:89)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.profile(ContinuumCommand03BridgeUiTest.kt:169)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.enter(ContinuumCommand03BridgeUiTest.kt:172)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.botAndCentralViewsFenceOldDraftsAndAnAlreadyQueuedCentralHistoryRead$lambda$0(ContinuumCommand03BridgeUiTest.kt:548)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.withActivity(ContinuumCommand03BridgeUiTest.kt:229)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.botAndCentralViewsFenceOldDraftsAndAnAlreadyQueuedCentralHistoryRead(ContinuumCommand03BridgeUiTest.kt:536)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="busyOwnerCorrectionUsesTheExistingStopAndAcknowledgesOneClarification" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.14"/>
+  <testcase name="asynchronousBotLookupAcknowledgesConsumptionAndPreservesNewerTyping" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.21"/>
+  <testcase name="microphoneLongPressUsesSilentDictationAndItsNativeEditCannotBeRolledBack" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.17"/>
+  <testcase name="busyResearchReplyConsumesOnlyTheExistingDialogTicketWithoutExecutingIt" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.191"/>
+  <testcase name="htmlOwnsTheOnlyFrameFeedAndTheClassicalSwitchRestoresTheNativeConsumer" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.171"/>
+  <testcase name="projectedPdfDraftUsesTheExistingNoModelAndBusyHandlersAndRejectsReplacedIds" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.132">
+    <failure message="java.lang.AssertionError" type="java.lang.AssertionError">java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.projectedPdfDraftUsesTheExistingNoModelAndBusyHandlersAndRejectsReplacedIds$lambda$0(ContinuumCommand03BridgeUiTest.kt:720)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.withActivity(ContinuumCommand03BridgeUiTest.kt:229)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.projectedPdfDraftUsesTheExistingNoModelAndBusyHandlersAndRejectsReplacedIds(ContinuumCommand03BridgeUiTest.kt:700)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="realSpeechSurvivesReparentWithANewGenerationAndPauseNeutralizesIt" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.202"/>
+  <testcase name="busyChiefStatusReachesTheRealDiagnosticWithoutCancellingOrStartingModelWork" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.169"/>
+  <testcase name="visibleSplitScreenKeepsHtmlComputerDrawingWhileFullStopEndsTheExistingSession" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.171"/>
+  <testcase name="staleAndSubframeDraftsCannotReplaceTheCurrentConversationDraft" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.11"/>
+  <testcase name="installedTtsPcmAndWordRangeReachHtmlAndStopRejectsLateCallbacks" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.097"/>
+  <testcase name="actualCloudSourcesUseOpaqueViewBoundIdsAndOnlyNativeApprovedUrlsOpen" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="1.84">
+    <failure message="java.lang.NoSuchFieldException: botProfiles" type="java.lang.NoSuchFieldException">java.lang.NoSuchFieldException: botProfiles
+	at java.base/java.lang.Class.getDeclaredField(Class.java:2612)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.field(ContinuumCommand03BridgeUiTest.kt:89)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.profile(ContinuumCommand03BridgeUiTest.kt:169)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.enter(ContinuumCommand03BridgeUiTest.kt:172)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.actualCloudSourcesUseOpaqueViewBoundIdsAndOnlyNativeApprovedUrlsOpen$lambda$0(ContinuumCommand03BridgeUiTest.kt:644)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.withActivity(ContinuumCommand03BridgeUiTest.kt:229)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.actualCloudSourcesUseOpaqueViewBoundIdsAndOnlyNativeApprovedUrlsOpen(ContinuumCommand03BridgeUiTest.kt:622)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="nativeComposerFocusTargetsTheVisiblePageAndPauseRevokesTheQueuedKeyboardRequest" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.329">
+    <failure message="java.lang.AssertionError: The visible WebView owns focus" type="java.lang.AssertionError">java.lang.AssertionError: The visible WebView owns focus
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.nativeComposerFocusTargetsTheVisiblePageAndPauseRevokesTheQueuedKeyboardRequest$lambda$0(ContinuumCommand03BridgeUiTest.kt:609)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.withActivity(ContinuumCommand03BridgeUiTest.kt:229)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.nativeComposerFocusTargetsTheVisiblePageAndPauseRevokesTheQueuedKeyboardRequest(ContinuumCommand03BridgeUiTest.kt:601)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="acceptedAddressedBotCommandCarriesOnlyItsConfirmedNewerDraftAcrossItsOwnViewChange" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.151"/>
+  <testcase name="busyRejectionPreservesTheActualNativeDraftAndDoesNotSubmit" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.17"/>
+  <testcase name="realClockCommandConsumesTheComposerAndAcknowledgesOnlyOneSubmission" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.134"/>
+  <testcase name="actualPhoneFoldPhoneReflowKeepsTheSameReadyPageAndDraftSelection" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.225"/>
+  <testcase name="delayedCloudProducerCannotRelabelItsAnswerOrContinueToolsInAnotherView" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.115">
+    <failure message="java.lang.NoSuchFieldException: botProfiles" type="java.lang.NoSuchFieldException">java.lang.NoSuchFieldException: botProfiles
+	at java.base/java.lang.Class.getDeclaredField(Class.java:2612)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.field(ContinuumCommand03BridgeUiTest.kt:89)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.profile(ContinuumCommand03BridgeUiTest.kt:169)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.enter(ContinuumCommand03BridgeUiTest.kt:172)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.delayedCloudProducerCannotRelabelItsAnswerOrContinueToolsInAnotherView$lambda$0(ContinuumCommand03BridgeUiTest.kt:657)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.withActivity(ContinuumCommand03BridgeUiTest.kt:229)
+	at at.heinz.deviceai.ContinuumCommand03BridgeUiTest.delayedCloudProducerCannotRelabelItsAnswerOrContinueToolsInAnotherView(ContinuumCommand03BridgeUiTest.kt:653)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="htmlDraftSurvivesTheActualSwitchBackToTheNativeComposer" classname="at.heinz.deviceai.ContinuumCommand03BridgeUiTest" time="0.142"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

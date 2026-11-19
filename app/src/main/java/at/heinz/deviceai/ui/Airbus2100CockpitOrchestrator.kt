@@ -109,6 +109,8 @@ class Airbus2100CockpitOrchestrator(
             // Other bus subscribers retain the event for the original memory/orb visualisation.
             is CockpitAnimationEvent.DocumentLearned -> Unit
             is CockpitAnimationEvent.RecallHits -> {
+                // MEMORY_TURN recall is unscoped: it must not replace an opened document world.
+                if (document.hasDocument) return
                 promote(Phase.TOOL_ACTIVE, scene(JarvisActionScenes.Kind.MEMORY))
                 onLiveData(HollywoodFuiLiveData.evidence(event.count, event.topScore, "Recall"))
             }
@@ -173,6 +175,21 @@ class Airbus2100CockpitOrchestrator(
 
     internal fun phaseRankForTest(): Int = synchronized(this) { phase.rank }
     internal fun activeTurnForTest(): String? = synchronized(this) { activeTurnId }
+
+    /** UI conversation selection: discard the previous chat's presentation, never a tool or memory record. */
+    @Synchronized
+    fun clearConversationPresentation() {
+        if (closed) return
+        cancelTick()
+        activeTurnId?.let { sideQuestEngine.stopMissionCountdown(it, clockNanos()) }
+        activeTurnId = null
+        phase = Phase.IDLE
+        document.reset()
+        documentTurnId = null
+        swarmWorkers.clear()
+        onLiveData(null)
+        onTelemetry(null)
+    }
 
     @Synchronized
     override fun close() {

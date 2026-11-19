@@ -1,0 +1,107 @@
+{
+  "schema": "CDX_REPAIR_EVIDENCE_MANIFEST_V1",
+  "sourceCommit": "1f18e6bc008508225216f58fbaaa7c0f5d192f40",
+  "status": "MEASURED_HOST_RESEARCH_ONLY",
+  "files": [
+    {
+      "file": "conditioner-v1/raw/stage-0.cdx.base64",
+      "bytes": 82717,
+      "sha256": "015c564f256c0b18af9af2229f4250dad9f7d738a09c645851cb5e0dedba97a5"
+    },
+    {
+      "file": "conditioner-v1/raw/stage-120000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "ac719875d5297bd32ac535fd0ad426e6e0d9715b443c431973461dd40e12beab"
+    },
+    {
+      "file": "conditioner-v1/raw/stage-30000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "c5bf713a8da4926114038e385c740232f66d4b4fc408f94f606682ed02ce5eb7"
+    },
+    {
+      "file": "conditioner-v1/raw/stage-6000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "df6ef50839efdad02003cc860f773171a495f3fc3930f451a1d49d265a163a8e"
+    },
+    {
+      "file": "conditioner-v1/report.json",
+      "bytes": 126666,
+      "sha256": "e4ef865afef399bc310c49624c497c3e0dc21ced34ef370acee14497f60a7c14"
+    },
+    {
+      "file": "conditioner-v1/train_mean_centered_x32/stage-0.cdx.base64",
+      "bytes": 82717,
+      "sha256": "015c564f256c0b18af9af2229f4250dad9f7d738a09c645851cb5e0dedba97a5"
+    },
+    {
+      "file": "conditioner-v1/train_mean_centered_x32/stage-120000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "328d6e831c6386e0bd53a65cea519f556664805c64a344b28ba127a9cc8e0139"
+    },
+    {
+      "file": "conditioner-v1/train_mean_centered_x32/stage-30000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "5c5b715370c55fed7e70c562109038960bd0dbaf52a2e30349a86ce164028c9e"
+    },
+    {
+      "file": "conditioner-v1/train_mean_centered_x32/stage-6000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "a53ca8d406bfed20e2651a128b0da792619c6b5aa57dae547705598af3e5223d"
+    },
+    {
+      "file": "conditioner-v1/unit_l2/stage-0.cdx.base64",
+      "bytes": 82717,
+      "sha256": "015c564f256c0b18af9af2229f4250dad9f7d738a09c645851cb5e0dedba97a5"
+    },
+    {
+      "file": "conditioner-v1/unit_l2/stage-120000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "3be8ceb512a4c966b92e2d8eeeefd9d0f982990aa81bbc8011c8c5fde4c29404"
+    },
+    {
+      "file": "conditioner-v1/unit_l2/stage-30000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "c017c02ce6e1dc97a1775093c208a4a1e84d8925fce4eaff0d758578d1a149ee"
+    },
+    {
+      "file": "conditioner-v1/unit_l2/stage-6000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "0f22ad0ea6f6b5a56ac2e860f176187b1da8dad7c9595f10cdc4881bae8464cd"
+    },
+    {
+      "file": "conditioner-v1-run.txt",
+      "bytes": 444,
+      "sha256": "03f3118df9ddd405173cbf3d9144fd76b37c0d8803d19776450ec354cde5522d"
+    },
+    {
+      "file": "conditioner-v1-summary.json",
+      "bytes": 9040,
+      "sha256": "c87d8524d856bb4ed2b1b2ff8a16c2c3eee3a09d6ef3e24ddf83ee0ae31e7cb3"
+    },
+    {
+      "file": "diagnosis.json",
+      "bytes": 14691,
+      "sha256": "005390fe02f3e52a4e0158aa365a9e20fd6766c2934ea3e1a3b76b81407c5825"
+    },
+    {
+      "file": "diagnosis.txt",
+      "bytes": 14691,
+      "sha256": "005390fe02f3e52a4e0158aa365a9e20fd6766c2934ea3e1a3b76b81407c5825"
+    },
+    {
+      "file": "green-centered.txt",
+      "bytes": 69,
+      "sha256": "f6b6ef929181a5819cb7a84eb5466540e41e457281ef0e818c20f19ac01b510d"
+    },
+    {
+      "file": "quality-regression.json",
+      "bytes": 1539,
+      "sha256": "525465fba962023439f83d882b096efbcd092ff49b50692834dc123d8147744f"
+    },
+    {
+      "file": "red-archived.txt",
+      "bytes": 450,
+      "sha256": "7ef80bc574d12b8fcf0b3658b1f2d2f5bc60ab335533a2fd4552d4fb6e136ac6"
+    }
+  ]
+}
