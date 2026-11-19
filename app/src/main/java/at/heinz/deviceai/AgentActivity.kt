@@ -2425,6 +2425,9 @@ class AgentActivity : Activity() {
 
     private var command03RuntimeSignals = at.heinz.deviceai.avatar.AvatarRuntimeSignals()
     private val command03Activity = at.heinz.deviceai.ui.Command03ActivityProjection()
+    // Code73: the send lane's order for the stage and the one decision which work scene the stage shows.
+    private val command03SendWork = at.heinz.deviceai.ui.Command03SendWork()
+    private val visualWorkstation = at.heinz.deviceai.ui.VisualWorkstationDirector()
     private val command03Files = at.heinz.deviceai.ui.Command03FilesProjection()
     private val command03ComputerWork = at.heinz.deviceai.ui.Command03ComputerWorkProjection()
     /** The stage's order rail: the open mission's steps, otherwise the running turn's steps (real events only). */
@@ -2543,6 +2546,8 @@ class AgentActivity : Activity() {
             .put("deepClean", deepClean.stage.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             // What the Gmail lane really did (phase, counts, cards); schema in gmail/MailWorkBoard.kt.
             .put("mailWork", ownerMailBoard.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
+            // The send lane's order as it reported it (accepted, waiting, how it ended); no text, no number.
+            .put("sendWork", command03SendWork.snapshot(scope.sessionId) ?: org.json.JSONObject.NULL)
             .put("voiceMode", org.json.JSONObject().put("active", continuousConversation.active)
                 .put("paused", continuousConversation.state == at.heinz.deviceai.cognitive.ContinuousConversationMode.State.PAUSED))
             .put("longPressTimeoutMs", android.view.ViewConfiguration.getLongPressTimeout())
@@ -2567,6 +2572,8 @@ class AgentActivity : Activity() {
         else if (::input.isInitialized) data.put("draft", org.json.JSONObject()
             .put("text", input.text.toString()).put("selectionStart", input.selectionStart.coerceAtLeast(0))
             .put("selectionEnd", input.selectionEnd.coerceAtLeast(0)))
+        // Code73: one work scene at a time, from the records above (mailWork too, once the mail lane puts it).
+        data.put("scene", visualWorkstation.decide(data, android.os.SystemClock.elapsedRealtime()) ?: org.json.JSONObject.NULL)
         stage.present(data)
         if (command03HtmlBoundView != scope) {
             command03HtmlBoundView = scope
@@ -13261,8 +13268,12 @@ class AgentActivity : Activity() {
         override val sessionId: String get() = work.sessionId
         override val ownerTurn: Long get() = work.ownerTurn
         override val assistantName: String? get() = work.assistantName
-        override fun acceptOwnerTurn(request: String) = acceptOwnerLaneTurn(OwnerMissionLane.SEND, request)
+        override fun acceptOwnerTurn(request: String) {
+            command03SendWork.started(sessionId, android.os.SystemClock.elapsedRealtime())
+            acceptOwnerLaneTurn(OwnerMissionLane.SEND, request)
+        }
         override fun outcome(outcome: OwnerLaneOutcome) {
+            command03SendWork.settled(sessionId, outcome, android.os.SystemClock.elapsedRealtime())
             continuumBriefing.laneOutcome(outcome)
             ownerMission.laneOutcome(OwnerMissionLane.SEND, outcome)
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.SEND.name, outcome)
