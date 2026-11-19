@@ -31,6 +31,13 @@ object ClaudeBrainFailure {
     const val LOCAL_ONLY_MEMORY = "CLAUDE_LOCAL_ONLY_MEMORY"
     /** Features that are labelled as local measurements of the on-device model. */
     const val LOCAL_ONLY_FEATURE = "CLAUDE_LOCAL_ONLY_FEATURE"
+    /**
+     * A turn that declared the cloud's web search or code execution was about to be continued, but the owner's
+     * switch, the internet mode or the one-turn approval no longer allows it. It is not continued.
+     */
+    const val CLOUD_TOOL_WITHDRAWN = "CLAUDE_CLOUD_TOOL_WITHDRAWN"
+    /** The per-turn cap on steps in the cloud's code sandbox was reached; the stream was closed. */
+    const val CLOUD_CODE_LIMIT = "CLAUDE_CLOUD_CODE_LIMIT"
 
     private const val SWITCH_BACK = " Du kannst unter „Modelle → Gehirn“ jederzeit auf „Lokal (Gemma, auf dem Gerät)“ " +
         "zurückschalten. Ich wechsle nicht von selbst und sende nichts an einen anderen Dienst."
@@ -82,7 +89,13 @@ object ClaudeBrainFailure {
             "Gerät“ markiert ist. Ich habe sie nicht gesendet. Du kannst das Mitsenden solcher Erinnerungen unter " +
             "„Modelle → Gehirn“ ausdrücklich erlauben.",
         LOCAL_ONLY_FEATURE to "Diese Funktion misst das lokale Modell auf dem Gerät. Solange Claude als Gehirn " +
-            "gewählt ist, starte ich sie nicht, damit nichts unbemerkt in die Cloud geht und kein Guthaben verbraucht wird."
+            "gewählt ist, starte ich sie nicht, damit nichts unbemerkt in die Cloud geht und kein Guthaben verbraucht wird.",
+        CLOUD_TOOL_WITHDRAWN to "Die Freigabe für die Websuche oder die Code-Ausführung über die Cloud gilt nicht mehr " +
+            "(Schalter, Internetmodus oder die einmalige Freigabe wurden geändert). Ich habe diese Antwort nicht " +
+            "fortgesetzt und nichts weiter gesendet. Stell die Frage bitte noch einmal.",
+        CLOUD_CODE_LIMIT to "Die Grenze von ${ClaudeServerToolPolicy.CODE_MAX_STEPS} Schritten der Code-Ausführung " +
+            "je Auftrag ist erreicht. Ich habe abgebrochen, damit keine weiteren Kosten entstehen; ein fertiges " +
+            "Ergebnis gibt es nicht. Stell die Aufgabe in kleineren Teilen noch einmal."
     )
 
     /**

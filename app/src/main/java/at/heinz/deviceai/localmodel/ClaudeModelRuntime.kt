@@ -26,6 +26,7 @@ import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageParam
 import com.anthropic.models.beta.messages.BetaOutputConfig
 import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent
+import com.anthropic.models.beta.messages.BetaServerToolUseBlock
 import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaTool
@@ -69,7 +70,20 @@ class ClaudeModelRuntime internal constructor(
      * ([ClaudeAbilityCatalogue]) and how the owner wants to be talked to. Null or blank = no such block. Read once
      * when a turn starts; a tool conversation keeps the frame it started with.
      */
-    private val ownerFrame: () -> List<String?> = { emptyList() }
+    private val ownerFrame: () -> List<String?> = { emptyList() },
+    /**
+     * The last constant block of the owner frame: what web search and code execution over the cloud may do in this
+     * turn, written from the very plan the request declares. Null = no such block.
+     */
+    private val cloudToolsFrame: (ClaudeServerToolPolicy.Decision) -> String? = { null },
+    /**
+     * The server tools (web search, web fetch, code execution) the owner's switches and the app's internet consent
+     * allow right now. Read when an owner turn starts – the turn keeps that plan – and again before every
+     * continuation of it, which only goes on while everything it declared is still allowed.
+     */
+    private val serverTools: () -> ClaudeServerToolPolicy.Decision = { ClaudeServerToolPolicy.Decision.NONE },
+    /** What the server tools did in one response (sources, counts, errors); called on a worker thread. */
+    private val onServerToolOutcome: (ClaudeServerToolOutcome) -> Unit = {}
 ) : LocalModelRuntime {
 
     /**
@@ -108,8 +122,19 @@ class ClaudeModelRuntime internal constructor(
         /** tool_use blocks of the last assistant turn that still need a tool_result, in the order they arrived. */
         val pendingToolUses: List<PendingToolUse>,
         val rounds: Int,
-        val approximateCharacters: Int
-    )
+        val approximateCharacters: Int,
+        /** Server tools this turn declares; fixed for the whole turn. */
+        val serverTools: ClaudeServerToolPlan = ClaudeServerToolPlan(),
+        /** What the server tools did in the earlier responses of this turn. */
+        val outcome: ClaudeServerToolOutcome = ClaudeServerToolOutcome(),
+        /** The code sandbox of this turn; sent back so a continuation keeps its files. */
+        val containerId: String? = null
+    ) {
+        fun next(messages: List<BetaMessageParam>, pendingToolUses: List<PendingToolUse>, rounds: Int,
+                 approximateCharacters: Int, outcome: ClaudeServerToolOutcome = this.outcome,
+                 containerId: String? = this.containerId) = Conversation(model, effort, maxTokens, system, tools,
+            messages, pendingToolUses, rounds, approximateCharacters, serverTools, outcome, containerId)
+    }
 
     /** [proposed]: the one call of the turn that went to the app as a proposal; the others are answered as not run. */
     private class PendingToolUse(val id: String, val name: String, val proposed: Boolean)
@@ -179,9 +204,9 @@ class ClaudeModelRuntime internal constructor(
         if (previous == null || previous.pendingToolUses.isEmpty() ||
             previous.rounds >= ClaudeGenerationPolicy.MAX_TOOL_ROUNDS)
             return finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.NO_TOOL_CONVERSATION))
-        preflight(previous.model)?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
-        val next = Conversation(previous.model, previous.effort, previous.maxTokens, previous.system, previous.tools,
-            previous.messages + toolResultMessage(previous.pendingToolUses, responses), emptyList(),
+        (preflight(previous.model) ?: withdrawn(previous.serverTools))
+            ?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
+        val next = previous.next(previous.messages + toolResultMessage(previous.pendingToolUses, responses), emptyList(),
             previous.rounds + 1, previous.approximateCharacters + payload.length)
         // The continuation is committed only when its answer arrived; a failed one ends this tool conversation.
         synchronized(lock) { toolConversation = null }
@@ -252,8 +277,15 @@ class ClaudeModelRuntime internal constructor(
         ClaudeLocalOnlyGuard.promptRefusal(prompt)?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
         val current = settings()
         preflight(current.model)?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
-        val frame = ClaudePromptFrame.frame(prompt, kind.isolatedWorker) { ownerFrame().filterNotNull() }
-        val declared = if (kind.withTools) tools() else emptyList()
+        // Server tools belong to the owner's own chat turn only – the one prompt shape that also carries the
+        // ability catalogue, so what the catalogue says and what the request declares cannot differ.
+        val cloudTools = if (!kind.isolatedWorker && ClaudePromptFrame.isOwnerTurn(prompt))
+            runCatching { serverTools() }.getOrDefault(ClaudeServerToolPolicy.Decision.NONE)
+            else ClaudeServerToolPolicy.Decision.NONE
+        val frame = ClaudePromptFrame.frame(prompt, kind.isolatedWorker) { (ownerFrame() + cloudToolsFrame(cloudTools)).filterNotNull() }
+        // A request cannot hold two tools named web_search: the cloud's web tools replace the app's own two.
+        val declared = if (kind.withTools) tools().filterNot { cloudTools.plan.web &&
+            it.name in ClaudeServerToolPolicy.CLIENT_WEB_TOOLS } else emptyList()
         val conversation = Conversation(
             model = current.model,
             effort = current.effortFor(kind.work),
@@ -264,7 +296,8 @@ class ClaudeModelRuntime internal constructor(
             pendingToolUses = emptyList(),
             rounds = 0,
             approximateCharacters = frame.user.length + frame.systemBlocks.sumOf { it.length } +
-                declared.sumOf { definition -> definition.description.length + definition.arguments.sumOf { it.description.length + 40 } })
+                declared.sumOf { definition -> definition.description.length + definition.arguments.sumOf { it.description.length + 40 } },
+            serverTools = cloudTools.plan)
         workers.execute { exchange(run, conversation) }
     }
 
@@ -278,6 +311,16 @@ class ClaudeModelRuntime internal constructor(
             model != current.model -> LocalTurnModelBinding.CHANGED
             else -> null
         }
+    }
+
+    /**
+     * A turn that declared server tools is continued only while the owner's switches and the app's internet consent
+     * still allow every one of them. Nothing is ever added to a running turn.
+     */
+    private fun withdrawn(plan: ClaudeServerToolPlan): String? {
+        if (!plan.any) return null
+        val now = runCatching { serverTools() }.getOrDefault(ClaudeServerToolPolicy.Decision.NONE).plan
+        return if ((plan.web && !now.web) || (plan.code && !now.code)) ClaudeBrainFailure.CLOUD_TOOL_WITHDRAWN else null
     }
 
     private fun begin(kind: Kind, callback: LocalInferenceCallback, promptCharacters: Int): Run =
@@ -333,6 +376,8 @@ class ClaudeModelRuntime internal constructor(
             val seen = attempt.promptUsage
             if (!attempt.settled && seen != null) ledger.record(current.model.id, current.model.id,
                 seen.copy(outputTokens = (run.responseCharacters.get() + 1L) / 2), estimated = true)
+            // Server-tool calls that were seen in a cut-off response are counted (and the searches priced) as well.
+            if (!attempt.settled) ledger.recordServerTools(attempt.seenServerTools)
             val paused = attempt.paused
             if (terminal != null || paused == null) { terminal?.let { finish(run, it) }; return }
             // stop_reason pause_turn: the API ended a long turn early. The same turn is sent again with what the
@@ -341,7 +386,7 @@ class ClaudeModelRuntime internal constructor(
             if (run.cancelled.get() || run.finished.get()) return
             if (resumed >= ClaudeGenerationPolicy.MAX_PAUSE_CONTINUATIONS)
                 return finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.UNEXPECTED_RESPONSE))
-            preflight(current.model, requireConsent = run.kind != Kind.PROBE)
+            (preflight(current.model, requireConsent = run.kind != Kind.PROBE) ?: withdrawn(current.serverTools))
                 ?.let { return finish(run, LocalInferenceEvent.Failed(it)) }
             resumed++
             current = paused
@@ -357,6 +402,8 @@ class ClaudeModelRuntime internal constructor(
         var settled = false
         /** stop_reason pause_turn: the conversation to send next so the API continues this turn. */
         var paused: Conversation? = null
+        /** Server-tool calls whose start was seen in the stream of this attempt. */
+        var seenServerTools = ClaudeServerToolUsage()
     }
 
     /** The terminal event of one attempt, or null when the run already ended (STOP, character limit). */
@@ -391,6 +438,9 @@ class ClaudeModelRuntime internal constructor(
                     event.contentBlockDelta().ifPresent { delta ->
                         delta.delta().text().ifPresent { text -> acceptText(run, text.text()) }
                     }
+                    event.contentBlockStart().ifPresent { start ->
+                        start.contentBlock().serverToolUse().ifPresent { use -> serverToolStarted(run, conversation, attempt, use.name()) }
+                    }
                     if (event.isMessageStop()) stopped = true
                     if (run.cancelled.get() || run.finished.get()) break
                 }
@@ -398,15 +448,23 @@ class ClaudeModelRuntime internal constructor(
                 if (!stopped) return@use LocalInferenceEvent.Failed(ClaudeBrainFailure.STREAM_INTERRUPTED)
                 val message = accumulator.message()
                 recordUsage(conversation.model, message)
+                // What the server tools did in this response: counted, and handed on for the sources and the note.
+                val seen = if (conversation.serverTools.any) ClaudeServerToolReading.outcome(message)
+                    else ClaudeServerToolOutcome()
+                if (conversation.serverTools.any) ledger.recordServerTools(ClaudeServerToolReading.usage(message, seen))
                 attempt.settled = true
+                if (!seen.none) runCatching { onServerToolOutcome(seen) }
+                val turn = conversation.outcome + seen
+                val container = message.container().map { it.id() }.orElse(conversation.containerId)
                 if (message.stopReason().orElse(null) == BetaStopReason.PAUSE_TURN) {
                     lastServedModel = message.model().asString()
-                    attempt.paused = Conversation(conversation.model, conversation.effort, conversation.maxTokens,
-                        conversation.system, conversation.tools, conversation.messages + assistantTurn(message),
-                        emptyList(), conversation.rounds, conversation.approximateCharacters + run.responseCharacters.get())
+                    attempt.paused = conversation.next(conversation.messages + assistantTurn(message), emptyList(),
+                        conversation.rounds, conversation.approximateCharacters + run.responseCharacters.get(),
+                        turn, container)
                     return@use null
                 }
-                complete(run, conversation, message)
+                complete(run, conversation.next(conversation.messages, conversation.pendingToolUses,
+                    conversation.rounds, conversation.approximateCharacters, turn, container), message)
             }
         } catch (failure: RateLimitException) {
             return LocalInferenceEvent.Failed(ClaudeBrainFailure.RATE_LIMITED)
@@ -442,6 +500,22 @@ class ClaudeModelRuntime internal constructor(
         }
     }
 
+    /**
+     * A server tool call starts in the stream. The API bounds search and fetch itself (`max_uses`); code execution
+     * has no such parameter, so its steps are counted here and the turn ends at the cap by closing the stream.
+     */
+    private fun serverToolStarted(run: Run, conversation: Conversation, attempt: Attempt, name: BetaServerToolUseBlock.Name) {
+        val code = ClaudeServerToolPolicy.isCodeStep(name)
+        attempt.seenServerTools = attempt.seenServerTools + ClaudeServerToolUsage(
+            webSearches = if (name == BetaServerToolUseBlock.Name.WEB_SEARCH) 1 else 0,
+            webFetches = if (name == BetaServerToolUseBlock.Name.WEB_FETCH) 1 else 0,
+            codeExecutions = if (code) 1 else 0)
+        if (code && conversation.outcome.codeSteps + attempt.seenServerTools.codeExecutions > ClaudeServerToolPolicy.CODE_MAX_STEPS) {
+            runCatching { run.stream?.close() }
+            finish(run, LocalInferenceEvent.Failed(ClaudeBrainFailure.CLOUD_CODE_LIMIT))
+        }
+    }
+
     /** Forwards streamed text; ends the run when the response reaches the app's character limit. */
     private fun acceptText(run: Run, text: String) {
         if (text.isEmpty() || run.finished.get() || run.cancelled.get()) return
@@ -463,7 +537,13 @@ class ClaudeModelRuntime internal constructor(
     private fun complete(run: Run, conversation: Conversation, message: BetaMessage): LocalInferenceEvent {
         lastServedModel = message.model().asString()
         return when (message.stopReason().orElse(null)) {
-            BetaStopReason.END_TURN, BetaStopReason.STOP_SEQUENCE -> completed(run, message)
+            BetaStopReason.END_TURN, BetaStopReason.STOP_SEQUENCE -> {
+                // The app's own lines under the answer: searched or computed in the cloud, and every error block.
+                conversation.outcome.note()?.let { note ->
+                    acceptText(run, (if (run.responseCharacters.get() > 0) "\n\n" else "") + note)
+                }
+                completed(run, message)
+            }
             BetaStopReason.TOOL_USE -> proposeTools(run, conversation, message)
             // Thinking and answer share the limit; a cut-off tool call is never proposed.
             BetaStopReason.MAX_TOKENS -> LocalInferenceEvent.Failed(LocalModelGenerationPolicy.OUTPUT_TOKEN_LIMIT)
@@ -497,9 +577,8 @@ class ClaudeModelRuntime internal constructor(
         }
         // Remember the assistant turn first: a rejection is answered through respondToTools as well.
         synchronized(lock) {
-            if (!run.cancelled.get() && !run.finished.get()) toolConversation = Conversation(
-                conversation.model, conversation.effort, conversation.maxTokens, conversation.system,
-                conversation.tools, conversation.messages + assistantTurn(message),
+            if (!run.cancelled.get() && !run.finished.get()) toolConversation = conversation.next(
+                conversation.messages + assistantTurn(message),
                 calls.mapIndexed { index, pending -> PendingToolUse(pending.id(), pending.name(), proposed = index == 0) },
                 conversation.rounds, conversation.approximateCharacters)
         }
@@ -546,11 +625,14 @@ class ClaudeModelRuntime internal constructor(
             // Thinking is adaptive on these models and is left to the API; effort is the only depth control.
             .outputConfig(BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.of(conversation.effort.wire)).build())
         if (conversation.system.isNotEmpty()) builder.systemOfBetaTextBlockParams(conversation.system)
-        if (conversation.tools.isNotEmpty()) {
+        if (conversation.tools.isNotEmpty() || conversation.serverTools.any) {
             conversation.tools.forEach { builder.addTool(it) }
+            // After the app's own tools, in a fixed order: the tool list stays byte-stable per switch state.
+            ClaudeServerToolPolicy.declare(builder, conversation.serverTools)
             // Never forced: "auto" with at most one call per turn, as the app accepts one proposal per turn.
             builder.toolChoice(BetaToolChoiceAuto.builder().disableParallelToolUse(true).build())
         }
+        conversation.containerId?.let { builder.container(it) }
         conversation.messages.forEach { builder.addMessage(it) }
         if (withFallback) {
             // A declined request is retried server-side on the model Anthropic recommends for that decline.

@@ -18,6 +18,18 @@ data class ClaudeTokenUsage(
 }
 
 /**
+ * Calls of Anthropic's server tools in one API attempt: `usage.server_tool_use.web_search_requests` and
+ * `web_fetch_requests`, and the code-execution calls (`code_execution_requests`, or the calls seen in the response
+ * when that field is absent). For a cut-off attempt these are the calls that were seen before the cut.
+ */
+data class ClaudeServerToolUsage(val webSearches: Long = 0L, val webFetches: Long = 0L, val codeExecutions: Long = 0L) {
+    init { require(webSearches >= 0 && webFetches >= 0 && codeExecutions >= 0) }
+    val none: Boolean get() = webSearches == 0L && webFetches == 0L && codeExecutions == 0L
+    operator fun plus(other: ClaudeServerToolUsage) = ClaudeServerToolUsage(webSearches + other.webSearches,
+        webFetches + other.webFetches, codeExecutions + other.codeExecutions)
+}
+
+/**
  * The one place for prices. USD per million tokens, kept as nano-USD per token so every sum stays an exact Long.
  * Stand 03.11.2026, kann sich ändern: the figures are the published list prices of that day and only feed the
  * owner's local estimate; the binding amount is always the one on the Anthropic account.
@@ -27,6 +39,21 @@ object ClaudePricing {
 
     data class Rate(val inputNanoUsd: Long, val outputNanoUsd: Long, val cacheReadNanoUsd: Long,
                     val cacheWriteNanoUsd: Long)
+
+    /**
+     * Server tools, read on 19.11.2026 from Anthropic's documentation (platform.claude.com/docs → web search tool,
+     * web fetch tool, code execution tool, each „Usage and pricing“):
+     *  - web search: 10 USD per 1,000 searches, on top of the tokens of the results;
+     *  - web fetch: no charge beyond the tokens of the fetched page;
+     *  - code execution: billed by execution time (at least 5 minutes per use; 1,550 hours per month and
+     *    organisation are free, then 0.05 USD per hour and container) and free of that charge while the web search
+     *    or web fetch tool of 2026-02-09 is declared in the same request. A response reports the number of calls
+     *    but no execution time, so this app cannot price it: code execution is counted, never part of the estimate.
+     */
+    const val SERVER_TOOLS_AS_OF = "Stand 19.11.2026, kann sich ändern"
+    const val WEB_SEARCH_NANO_USD = 10_000_000L
+
+    fun serverToolCostNanoUsd(usage: ClaudeServerToolUsage): Long = usage.webSearches * WEB_SEARCH_NANO_USD
 
     /** Claude Haiku 5.5 switches to its second rate card when the prompt is longer than this. */
     private const val HAIKU_LONG_PROMPT_TOKENS = 100_000L
@@ -107,8 +134,12 @@ class ClaudeUsageLedger(
                            val cacheReadTokens: Long = 0, val cacheWriteTokens: Long = 0, val costNanoUsd: Long = 0)
 
     data class Snapshot(val month: String, val models: Map<String, ModelTotals>, val estimatedRequests: Long,
-                        val unpricedRequests: Long) {
-        val costNanoUsd: Long get() = models.values.sumOf { it.costNanoUsd }
+                        val unpricedRequests: Long,
+                        /** Server-tool calls of the month; only the web searches have a price ([ClaudePricing]). */
+                        val serverTools: ClaudeServerToolUsage = ClaudeServerToolUsage(),
+                        val serverToolNanoUsd: Long = 0L) {
+        /** Tokens plus the priced server tools (web searches). Code execution is not in this figure. */
+        val costNanoUsd: Long get() = models.values.sumOf { it.costNanoUsd } + serverToolNanoUsd
         val requests: Long get() = models.values.sumOf { it.requests }
         /** Whole cents, rounded up: the limit must never be undercut by rounding. */
         val costCents: Long get() = (costNanoUsd + NANO_USD_PER_CENT - 1) / NANO_USD_PER_CENT
@@ -127,7 +158,37 @@ class ClaudeUsageLedger(
                     entry.optLong("cacheRead"), entry.optLong("cacheWrite"), entry.optLong("nanoUsd")))
             }
         }
-        return Snapshot(month, totals, stored.optLong("estimated"), stored.optLong("unpriced"))
+        val tools = stored.optJSONObject("serverTools")
+        return Snapshot(month, totals, stored.optLong("estimated"), stored.optLong("unpriced"),
+            ClaudeServerToolUsage((tools?.optLong("webSearch") ?: 0L).coerceAtLeast(0),
+                (tools?.optLong("webFetch") ?: 0L).coerceAtLeast(0), (tools?.optLong("code") ?: 0L).coerceAtLeast(0)),
+            (tools?.optLong("nanoUsd") ?: 0L).coerceAtLeast(0))
+    }
+
+    /**
+     * Adds the server-tool calls of one API attempt. The web searches are priced and count toward the monthly
+     * limit at once; page fetches and code executions are counted only (see [ClaudePricing]).
+     */
+    @Synchronized fun recordServerTools(usage: ClaudeServerToolUsage): Boolean {
+        if (usage.none) return true
+        val before = snapshot()
+        return write(before.copy(serverTools = before.serverTools + usage,
+            serverToolNanoUsd = before.serverToolNanoUsd + ClaudePricing.serverToolCostNanoUsd(usage)))
+    }
+
+    private fun write(next: Snapshot): Boolean {
+        val models = JSONObject()
+        next.models.toSortedMap().forEach { (id, totals) ->
+            models.put(id, JSONObject().put("requests", totals.requests).put("in", totals.inputTokens)
+                .put("out", totals.outputTokens).put("cacheRead", totals.cacheReadTokens)
+                .put("cacheWrite", totals.cacheWriteTokens).put("nanoUsd", totals.costNanoUsd))
+        }
+        val stored = JSONObject().put("month", next.month).put("models", models)
+            .put("estimated", next.estimatedRequests).put("unpriced", next.unpricedRequests)
+        if (!next.serverTools.none) stored.put("serverTools", JSONObject()
+            .put("webSearch", next.serverTools.webSearches).put("webFetch", next.serverTools.webFetches)
+            .put("code", next.serverTools.codeExecutions).put("nanoUsd", next.serverToolNanoUsd))
+        return storage.write(stored.toString())
     }
 
     /** True when the local estimate has reached the owner's monthly limit. */
@@ -148,16 +209,23 @@ class ClaudeUsageLedger(
             cacheReadTokens = previous.cacheReadTokens + usage.cacheReadTokens,
             cacheWriteTokens = previous.cacheWriteTokens + usage.cacheWriteTokens,
             costNanoUsd = previous.costNanoUsd + ClaudePricing.costNanoUsd(servedModelId, requestedModelId, usage))
-        val models = JSONObject()
-        (before.models + (servedModelId to updated)).toSortedMap().forEach { (id, totals) ->
-            models.put(id, JSONObject().put("requests", totals.requests).put("in", totals.inputTokens)
-                .put("out", totals.outputTokens).put("cacheRead", totals.cacheReadTokens)
-                .put("cacheWrite", totals.cacheWriteTokens).put("nanoUsd", totals.costNanoUsd))
-        }
-        return storage.write(JSONObject().put("month", before.month).put("models", models)
-            .put("estimated", before.estimatedRequests + if (estimated) 1 else 0)
-            .put("unpriced", before.unpricedRequests + if (ClaudePricing.knows(servedModelId)) 0 else 1)
-            .toString())
+        return write(before.copy(models = before.models + (servedModelId to updated),
+            estimatedRequests = before.estimatedRequests + if (estimated) 1 else 0,
+            unpricedRequests = before.unpricedRequests + if (ClaudePricing.knows(servedModelId)) 0 else 1))
+    }
+
+    /**
+     * The month's server-tool calls for the settings screen: always shown there, also at zero, with what is and
+     * what is not part of the estimate.
+     */
+    fun describeServerTools(): String {
+        val now = snapshot()
+        return "Cloud-Werkzeuge im Monat ${now.month}: ${now.serverTools.webSearches} Websuchen " +
+            "(${usd(now.serverToolNanoUsd)} USD, im Monatslimit enthalten) · ${now.serverTools.webFetches} " +
+            "Seitenabrufe (kein Aufpreis, nur die Token der Seite) · ${now.serverTools.codeExecutions} " +
+            "Code-Ausführungen (Preis nicht im Monatslimit enthalten: Anthropic rechnet sie nach Laufzeit ab, " +
+            "die diese App nicht erfährt). Preise der Websuche laut Anthropic-Dokumentation: 10 USD je 1.000 Suchen. " +
+            ClaudePricing.SERVER_TOOLS_AS_OF + "."
     }
 
     /** German summary for the settings screen. */
@@ -170,6 +238,9 @@ class ClaudeUsageLedger(
                 "(davon ${totals.cacheReadTokens} aus dem Cache) · Ausgabe ${totals.outputTokens} Token · " +
                 "${usd(totals.costNanoUsd)} USD"
         }
+        if (!now.serverTools.none) lines += "Cloud-Werkzeuge: ${now.serverTools.webSearches} Websuchen " +
+            "(${usd(now.serverToolNanoUsd)} USD, in der Schätzung enthalten) · ${now.serverTools.webFetches} " +
+            "Seitenabrufe · ${now.serverTools.codeExecutions} Code-Ausführungen (nicht in der Schätzung enthalten)"
         if (now.requests == 0L) lines += "Noch keine Anfrage in diesem Monat."
         if (now.estimatedRequests > 0) lines += "${now.estimatedRequests} abgebrochene Anfragen ohne Endabrechnung " +
             "sind vorsichtig geschätzt."

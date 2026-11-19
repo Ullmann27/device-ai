@@ -188,12 +188,127 @@ class FakeAnthropicEndpoint : AutoCloseable {
                     .put("delta", JSONObject().put("type", "input_json_delta").put("partial_json", fragment))
             } + listOf("content_block_stop" to JSONObject().put("type", "content_block_stop").put("index", index))
 
-        fun stop(reason: String, outputTokens: Int = 40, stopDetails: JSONObject? = null) = listOf(
+        /**
+         * [serverToolUse]: `usage.server_tool_use` as the final `message_delta` reports it, e.g.
+         * `{"web_search_requests":1}` (docs „Streaming messages“ → web search example: `"usage":{…,"output_tokens":510,
+         * "server_tool_use":{"web_search_requests":1}}`). [container]: the `container` of a response that ran code.
+         */
+        fun stop(reason: String, outputTokens: Int = 40, stopDetails: JSONObject? = null,
+                 serverToolUse: JSONObject? = null, container: String? = null) = listOf(
             "message_delta" to JSONObject().put("type", "message_delta")
                 .put("delta", JSONObject().put("stop_reason", reason).put("stop_sequence", JSONObject.NULL)
-                    .apply { stopDetails?.let { put("stop_details", it) } })
-                .put("usage", JSONObject().put("output_tokens", outputTokens)),
+                    .apply { stopDetails?.let { put("stop_details", it) } }
+                    .apply { container?.let { put("container", JSONObject().put("id", it)
+                        .put("expires_at", "2026-12-19T10:00:00Z")) } })
+                .put("usage", JSONObject().put("output_tokens", outputTokens)
+                    .apply { serverToolUse?.let { put("server_tool_use", it) } }),
             "message_stop" to JSONObject().put("type", "message_stop"))
+
+        // ── server tools (Anthropic runs them; shapes from platform.claude.com/docs, read 19.11.2026) ──────────
+
+        /**
+         * A server tool call as it streams. Docs „Streaming messages“, web search example:
+         * `{"type":"content_block_start","index":1,"content_block":{"type":"server_tool_use","id":"srvtoolu_…",
+         * "name":"web_search","input":{}}}` followed by `input_json_delta` events. [name] is `web_search`,
+         * `web_fetch`, `bash_code_execution` or `text_editor_code_execution`.
+         */
+        fun serverToolUse(index: Int, id: String, name: String, inputJson: String) = listOf(
+            "content_block_start" to JSONObject().put("type", "content_block_start").put("index", index)
+                .put("content_block", JSONObject().put("type", "server_tool_use").put("id", id).put("name", name)
+                    .put("input", JSONObject())),
+            "content_block_delta" to JSONObject().put("type", "content_block_delta").put("index", index)
+                .put("delta", JSONObject().put("type", "input_json_delta").put("partial_json", inputJson)),
+            "content_block_stop" to JSONObject().put("type", "content_block_stop").put("index", index))
+
+        /**
+         * A result block. Docs „Server tools“ → „Streaming server-tool events“: „The result block arrives complete in
+         * a single `content_block_start` event, with no deltas.“
+         */
+        fun resultBlock(index: Int, block: JSONObject) = listOf(
+            "content_block_start" to JSONObject().put("type", "content_block_start").put("index", index)
+                .put("content_block", block),
+            "content_block_stop" to JSONObject().put("type", "content_block_stop").put("index", index))
+
+        /**
+         * Docs „Web search tool“ → „Response“: `{"type":"web_search_tool_result","tool_use_id":…,"content":[{"type":
+         * "web_search_result","url":…,"title":…,"encrypted_content":…,"page_age":…}]}`. [results]: title to URL.
+         */
+        fun webSearchResult(toolUseId: String, vararg results: Pair<String, String>) = JSONObject()
+            .put("type", "web_search_tool_result").put("tool_use_id", toolUseId)
+            .put("content", JSONArray().apply {
+                results.forEach { (title, url) -> put(JSONObject().put("type", "web_search_result").put("url", url)
+                    .put("title", title).put("encrypted_content", "EqgfFAKE-encrypted-content").put("page_age", "17. November 2026")) }
+            })
+
+        /**
+         * Docs „Web search tool“ → „Errors“: HTTP 200, and „`content` is a single error object rather than a list of
+         * result blocks“: `{"type":"web_search_tool_result_error","error_code":"max_uses_exceeded"}`.
+         */
+        fun webSearchError(toolUseId: String, code: String) = JSONObject()
+            .put("type", "web_search_tool_result").put("tool_use_id", toolUseId)
+            .put("content", JSONObject().put("type", "web_search_tool_result_error").put("error_code", code))
+
+        /**
+         * Docs „Web fetch tool“ → „Response“: `{"type":"web_fetch_tool_result","tool_use_id":…,"content":{"type":
+         * "web_fetch_result","url":…,"content":{"type":"document","source":{"type":"text","media_type":"text/plain",
+         * "data":…},"title":…,"citations":{"enabled":true}},"retrieved_at":…}}`.
+         */
+        fun webFetchResult(toolUseId: String, url: String, title: String?, text: String) = JSONObject()
+            .put("type", "web_fetch_tool_result").put("tool_use_id", toolUseId)
+            .put("content", JSONObject().put("type", "web_fetch_result").put("url", url)
+                .put("content", JSONObject().put("type", "document")
+                    .put("source", JSONObject().put("type", "text").put("media_type", "text/plain").put("data", text))
+                    .put("title", title ?: JSONObject.NULL).put("citations", JSONObject().put("enabled", true)))
+                .put("retrieved_at", "2026-11-19T10:30:00Z"))
+
+        /** Docs „Web fetch tool“ → „Errors“: `{"type":"web_fetch_tool_result_error","error_code":"url_not_accessible"}`. */
+        fun webFetchError(toolUseId: String, code: String) = JSONObject()
+            .put("type", "web_fetch_tool_result").put("tool_use_id", toolUseId)
+            .put("content", JSONObject().put("type", "web_fetch_tool_result_error").put("error_code", code))
+
+        /**
+         * Docs „Code execution tool“ → „Bash command response“: `{"type":"bash_code_execution_tool_result",
+         * "tool_use_id":…,"content":{"type":"bash_code_execution_result","stdout":…,"stderr":"","return_code":0,
+         * "content":[]}}`; a generated file is an entry of `content` with a `file_id` („Results“).
+         */
+        fun bashResult(toolUseId: String, stdout: String, returnCode: Int = 0, fileIds: List<String> = emptyList()) = JSONObject()
+            .put("type", "bash_code_execution_tool_result").put("tool_use_id", toolUseId)
+            .put("content", JSONObject().put("type", "bash_code_execution_result").put("stdout", stdout)
+                .put("stderr", "").put("return_code", returnCode)
+                .put("content", JSONArray().apply { fileIds.forEach {
+                    put(JSONObject().put("type", "bash_code_execution_output").put("file_id", it)) } }))
+
+        /**
+         * Docs „Code execution tool“ → „Errors“: `{"type":"bash_code_execution_tool_result","tool_use_id":…,
+         * "content":{"type":"bash_code_execution_tool_result_error","error_code":"unavailable"}}`.
+         */
+        fun bashError(toolUseId: String, code: String) = JSONObject()
+            .put("type", "bash_code_execution_tool_result").put("tool_use_id", toolUseId)
+            .put("content", JSONObject().put("type", "bash_code_execution_tool_result_error").put("error_code", code))
+
+        /**
+         * Docs „Web search tool“ → „Citations“: a `web_search_result_location` with `url`, `title`,
+         * `encrypted_index` and `cited_text`.
+         */
+        fun searchCitation(url: String, title: String?, citedText: String) = JSONObject()
+            .put("type", "web_search_result_location").put("url", url).put("title", title ?: JSONObject.NULL)
+            .put("encrypted_index", "Eo8BFAKE-encrypted-index").put("cited_text", citedText)
+
+        /**
+         * A text block with citations. Docs „Citations“ → „Streaming support“: „citations arrive as a
+         * `citations_delta` delta type inside `content_block_delta` events. Each delta contains a single citation to
+         * add to the `citations` list on the current `text` content block.“
+         */
+        fun citedText(index: Int, text: String, vararg citations: JSONObject) = listOf(
+            "content_block_start" to JSONObject().put("type", "content_block_start").put("index", index)
+                .put("content_block", JSONObject().put("type", "text").put("text", ""))) +
+            citations.map { citation ->
+                "content_block_delta" to JSONObject().put("type", "content_block_delta").put("index", index)
+                    .put("delta", JSONObject().put("type", "citations_delta").put("citation", citation))
+            } + listOf(
+            "content_block_delta" to JSONObject().put("type", "content_block_delta").put("index", index)
+                .put("delta", JSONObject().put("type", "text_delta").put("text", text)),
+            "content_block_stop" to JSONObject().put("type", "content_block_stop").put("index", index))
 
         val PING = "ping" to JSONObject().put("type", "ping")
     }

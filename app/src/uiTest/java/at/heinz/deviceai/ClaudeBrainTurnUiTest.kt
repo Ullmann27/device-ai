@@ -153,8 +153,15 @@ class ClaudeBrainTurnUiTest {
             assertTrue(user.contains(task))
             // The activity's fixed instruction block went to `system`, byte for byte. Since 19.11.2026 two more
             // constant blocks follow it: what the app can do, and which model runs (for the direct question only).
+            // A fifth constant block says what web search and code execution over the cloud may do in this turn –
+            // here: nothing, both owner switches are off, and no server tool is declared.
             val system = body.getJSONArray("system")
-            assertEquals(4, system.length())
+            assertEquals(5, system.length())
+            assertEquals(at.heinz.deviceai.localmodel.ClaudeAbilityCatalogue.cloudTools(
+                at.heinz.deviceai.localmodel.ClaudeServerToolPolicy.Decision.NONE), system.getJSONObject(4).getString("text"))
+            val declared = body.getJSONArray("tools")
+            assertTrue((0 until declared.length()).none { declared.getJSONObject(it).has("type") &&
+                declared.getJSONObject(it).getString("type") != "custom" })
             assertTrue(system.getJSONObject(1).getString("text").endsWith(ClaudePromptFrame.OWNER_TURN_INSTRUCTIONS))
             assertEquals(at.heinz.deviceai.localmodel.ClaudeAbilityCatalogue.text(), system.getJSONObject(2).getString("text"))
             assertEquals(at.heinz.deviceai.localmodel.ClaudeAbilityCatalogue.runningOn(at.heinz.deviceai.localmodel.ClaudeModel.OPUS_5_5),
@@ -314,7 +321,9 @@ class ClaudeBrainTurnUiTest {
             val before = endpoint.requests.size
             val first = endpoint.requests.first().body.getJSONArray("system")
             val second = endpoint.requests.last().body.getJSONArray("system")
-            assertEquals(5, first.length())
+            // The tone block keeps its place; the block about the cloud's web search and code execution follows it.
+            assertEquals(6, first.length())
+            assertTrue(first.getJSONObject(5).getString("text").startsWith("CLOUD-WERKZEUGE"))
             val tone = first.getJSONObject(4).getString("text")
             assertEquals(at.heinz.deviceai.cognitive.OwnerToneStyle.claudeBlock(
                 at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL, null), tone)

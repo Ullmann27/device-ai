@@ -96,7 +96,47 @@ class ClaudeBrain internal constructor(
      */
     val runtime = ClaudeModelRuntime(settings = { current }, apiKey = ::loadedKey, ledger = ledger, endpoint = endpoint,
         ownerFrame = { listOf(ClaudeAbilityCatalogue.text(), ClaudeAbilityCatalogue.runningOn(current.model),
-            runCatching { ownerStyle() }.getOrNull()) })
+            runCatching { ownerStyle() }.getOrNull()) },
+        // Last, and written from the plan the request really declares: web search and code execution over the cloud.
+        cloudToolsFrame = ClaudeAbilityCatalogue::cloudTools,
+        serverTools = { ClaudeServerToolPolicy.decide(current, draftTurn, webTurn::grant) },
+        onServerToolOutcome = { outcome -> synchronized(outcomeLock) { turnOutcome = turnOutcome + outcome } })
+
+    /**
+     * The web side of the running owner turn: the app's internet mode and a one-turn approval. The cloud's web
+     * search is only ever declared within what this allows ([ClaudeServerToolPolicy]).
+     */
+    val webTurn = ClaudeWebTurn()
+
+    private val outcomeLock = Any()
+    private var turnOutcome = ClaudeServerToolOutcome()
+
+    @Volatile private var draftTurn = false
+
+    /**
+     * A model turn for the owner's sentence [request] starts. Nothing of an earlier turn carries over.
+     * [documentDraft]: its answer becomes the text of a document, so it gets no server tool.
+     */
+    fun beginOwnerTurn(request: String, documentDraft: Boolean = false) {
+        webTurn.begin(request)
+        draftTurn = documentDraft
+        synchronized(outcomeLock) { turnOutcome = ClaudeServerToolOutcome() }
+    }
+
+    /** What the server tools did in the turn that just ended (sources, counts), or null. Handed out once. */
+    fun takeServerToolOutcome(): ClaudeServerToolOutcome? = synchronized(outcomeLock) {
+        turnOutcome.takeUnless { it.none }.also { turnOutcome = ClaudeServerToolOutcome() }
+    }
+
+    /** The cloud's own web search would be used for a web request right now, if the internet consent allows it. */
+    val cloudWebReady: Boolean get() = current.claudeSelected && current.consentGiven && current.cloudWebSearch && hasKey()
+
+    /** Both switches need the stored consent to be turned on; turning off always works. */
+    fun setCloudWebSearch(on: Boolean): Boolean =
+        (!on || current.consentGiven) && store(current.copy(cloudWebSearch = on))
+
+    fun setCloudCodeExecution(on: Boolean): Boolean =
+        (!on || current.consentGiven) && store(current.copy(cloudCodeExecution = on))
 
     val settings: ClaudeBrainSettings get() = current
 
@@ -128,7 +168,7 @@ class ClaudeBrain internal constructor(
     fun revokeConsent(): Boolean {
         val wasClaude = current.claudeSelected
         val stored = store(current.copy(consentGiven = false, consentAtMillis = 0L, shareLocalMemory = false,
-            brain = BrainKind.LOCAL))
+            brain = BrainKind.LOCAL, cloudWebSearch = false, cloudCodeExecution = false))
         if (stored && wasClaude) onBrainChanged(BrainKind.LOCAL)
         return stored
     }

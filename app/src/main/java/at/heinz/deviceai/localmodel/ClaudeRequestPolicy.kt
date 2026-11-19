@@ -151,6 +151,64 @@ internal object ClaudeAbilityCatalogue {
     }
 
     /**
+     * Web search and code execution over the cloud, exactly as this request declares them ([decision]): an ability
+     * is named only when its tool is really in the request, and when it is not the block says why, so the brain
+     * never claims a search or a computation it cannot do. The text depends on the switch state and the web grant
+     * only – it is the same bytes for every turn in the same state.
+     */
+    fun cloudTools(decision: ClaudeServerToolPolicy.Decision): String = buildString {
+        append("CLOUD-WERKZEUGE (Anthropic führt sie aus, nicht die App; der Besitzer schaltet sie einzeln ein).\n")
+        append("Websuche: ")
+        append(when {
+            decision.plan.web -> "In dieser Anfrage freigeschaltet – die Werkzeuge web_search (suchen) und web_fetch " +
+                "(eine Seite abrufen). " + (if (decision.grant == ClaudeWebGrant.APPROVED_ONCE)
+                    "Der Besitzer hat das Internet für genau diesen Auftrag freigegeben. "
+                    else "Der Besitzer hat das Internet dauerhaft freigegeben. ") +
+                "Suche nur, wenn die Frage aktuelle oder nachprüfbare Angaben braucht; höchstens " +
+                "${ClaudeServerToolPolicy.WEB_SEARCH_MAX_USES} Suchen und ${ClaudeServerToolPolicy.WEB_FETCH_MAX_USES} " +
+                "Seitenabrufe je Auftrag. web_fetch ruft nur Adressen ab, die der Besitzer genannt hat oder die aus einer " +
+                "Suche stammen. Schreibe nichts Privates des Besitzers (Namen, Kontakte, Nachrichten, Erinnerungen, " +
+                "Zugangsdaten, Gerätedaten) in eine Suchanfrage oder Adresse. Stütze die Antwort auf die Treffer und " +
+                "erfinde keine Quelle und keine Adresse; die zitierten Quellen zeigt die App selbst an. Meldet eine " +
+                "Suche oder ein Abruf einen Fehler oder gibt es keine Treffer, sag das klar und behaupte kein Ergebnis. " +
+                "Die App-Werkzeuge web_search und web_read gibt es in dieser Anfrage nicht; nimm web_search und " +
+                "web_fetch der Cloud. Wo der Auftrag weiter unten „keine Webrecherche“ oder „maximal zwei Webaufrufe“ " +
+                "sagt, gilt für diese Anfrage die Regel hier."
+            !decision.webSwitch -> "Über die Cloud ausgeschaltet. Fürs Internet gibt es nur die Web-Werkzeuge und " +
+                "Abläufe der App mit ihren eigenen Freigaben; behaupte nicht, du könntest selbst im Internet suchen."
+            decision.documentDraft -> "In dieser Anfrage nicht freigeschaltet: Für einen Dokumententwurf sucht die " +
+                "Cloud nicht im Internet. Schreib den Entwurf aus dem vorhandenen Material und erfinde keine Angaben."
+            decision.grant == ClaudeWebGrant.INTERNET_OFF -> "In dieser Anfrage nicht freigeschaltet: Der Besitzer hat " +
+                "den Internetmodus der App ausgeschaltet. Du kannst nicht im Internet suchen. Braucht die Frage " +
+                "aktuelle Angaben, sag das und dass er dafür den Internetmodus ändern kann."
+            decision.grant == ClaudeWebGrant.OWNER_VETO -> "In dieser Anfrage nicht freigeschaltet: Der Auftrag " +
+                "schließt eine Internetrecherche aus oder betrifft nur dieses Gerät. Suche nicht im Internet."
+            else -> "In dieser Anfrage nicht freigeschaltet: Der Internetmodus steht auf „Auf Nachfrage“ und für " +
+                "diesen Auftrag hat der Besitzer kein Internet freigegeben. Braucht die Frage aktuelle Angaben, " +
+                "schlag das App-Werkzeug web_search vor, falls es deklariert ist (die App fragt ihn dann), oder sag " +
+                "ihm, dass er die Frage als Suche stellen kann („Such im Internet nach …“)."
+        })
+        append("\nCode-Ausführung: ")
+        append(if (decision.plan.code) "In dieser Anfrage freigeschaltet – das Werkzeug code_execution: eine " +
+            "abgeschottete Umgebung bei Anthropic, ohne Internet und ohne Zugriff auf das Gerät. Nutze sie für " +
+            "Rechnungen, die genau stimmen müssen, und für Datenauswertung, nicht für einfache Kopfrechnungen; " +
+            "höchstens ${ClaudeServerToolPolicy.CODE_MAX_STEPS} Schritte je Auftrag. Alles, was du dort hineinschreibst, " +
+            "verlässt das Gerät: Inhalte vom Gerät des Besitzers (Nachrichten, Kontakte, Dateien, Erinnerungen) gibst du " +
+            "nur hinein, wenn er in diesem Auftrag genau das verlangt. Dateien des Geräts liegen dort nicht, und was " +
+            "dort entsteht, kann die App noch nicht aufs Gerät holen: Lege kein Ergebnis als Datei ab, sondern nenne " +
+            "es im Text, und sag ehrlich, dass das Abholen von Dateien noch fehlt, wenn er eine Datei wollte (für PDF " +
+            "und Word gibt es den festen Ablauf der App). Gib das Ergebnis in eigenen Worten wieder, nicht die rohe " +
+            "Ausgabe; den Hinweis „berechnet in der Cloud“ ergänzt die App. Schlägt eine Ausführung fehl, sag das klar."
+            else if (decision.codeSwitch && decision.documentDraft) "In dieser Anfrage nicht freigeschaltet: Für " +
+                "einen Dokumententwurf wird kein Code ausgeführt. Behaupte keine nachgerechneten Ergebnisse."
+            else "Über die Cloud ausgeschaltet. Du kannst in dieser Anfrage keinen Code ausführen; behaupte keine " +
+                "nachgerechneten Ergebnisse und sag bei aufwendigen Rechnungen, dass du nicht nachrechnen konntest.")
+        append("\nEinschalten kann sie nur der Besitzer, unter „Modelle → Gehirn“ oder mit „" +
+            ClaudeServerToolTexts.SAY_WEB_ON + "“ und „" + ClaudeServerToolTexts.SAY_CODE_ON + "“; erwähne das nur, " +
+            "wenn er danach fragt oder wenn es für seinen Auftrag fehlt.")
+    }
+
+    /**
      * Which model answers, for the one case in which the owner asks directly: a constant line per selected model
      * (it changes only when he selects another one, which starts a new cache anyway).
      */
@@ -221,6 +279,10 @@ internal object ClaudePromptFrame {
      * [ownerFrame]: further constant blocks for the owner's own chat turn only (what the app can do, how to talk to
      * the owner). They follow the stable instruction block, most stable first; no other prompt shape gets them.
      */
+    /** The owner's own chat turn: the one prompt shape that gets the owner frame (and, with it, the server tools). */
+    fun isOwnerTurn(prompt: String): Boolean = STABLE_PREFIXES.any { prompt.startsWith(it) &&
+        prompt.length > it.length && prompt.substring(it.length).isNotBlank() }
+
     fun frame(prompt: String, isolatedWorker: Boolean, ownerFrame: () -> List<String> = { emptyList() }): Frame {
         if (isolatedWorker) return Frame(listOf(RUNTIME_PREFACE, ISOLATED_WORKER), prompt)
         val stable = STABLE_PREFIXES.firstOrNull { prompt.startsWith(it) && prompt.length > it.length }
