@@ -177,4 +177,11 @@ internal interface ContinuumBriefingHost {
     fun dial(number: String): String?
 
     fun store(): ContinuumBriefingStore
+
+    /**
+     * How an order of this lane ended, typed (see [at.heinz.deviceai.OwnerLaneOutcome]) – so a sequence of owner
+     * orders can go on after „Welche Termine habe ich diese Woche?“ without reading the wording of the answer.
+     * Nobody has to listen: the default drops it, and the lane behaves exactly the same.
+     */
+    fun outcome(outcome: at.heinz.deviceai.OwnerLaneOutcome) {}
 }

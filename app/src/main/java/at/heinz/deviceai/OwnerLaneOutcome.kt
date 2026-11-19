@@ -37,6 +37,13 @@ internal sealed interface OwnerLaneResult {
     /** [of] was written as [file]. [verified]: read back and equal; null when the lane does not read back. */
     data class FileSaved(val file: OwnerSavedFile, val of: OwnerDeliverable, val location: String?, val verified: Boolean?) : OwnerLaneResult
 
+    /**
+     * The calendar was read – never written – for [span] (the briefing lane's own words: „diese Woche“). [events]:
+     * entries still ahead, [findings]: what the fixed rules of the agenda check noticed, [freeBlocks]: free stretches
+     * of at least two hours. Counted from the entries themselves; no model saw them and nothing left the device.
+     */
+    data class Agenda(val span: String, val events: Int, val findings: Int, val freeBlocks: Int) : OwnerLaneResult
+
     /** A task chain found one file. [folderHint]: the desk's name for its folder, when it has one. */
     data class FileFound(val name: String, val folderHint: String?) : OwnerLaneResult
 

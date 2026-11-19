@@ -7,8 +7,29 @@ import java.util.Locale
 /** Which day an appointment or weather question is about. */
 internal enum class BriefingDay { TODAY, TOMORROW }
 
+/** The stretch of the calendar a question is about. „Diese Woche“ = today until Sunday, „nächste Woche“ = Monday to Sunday. */
+internal enum class AgendaSpan(val label: String) {
+    TODAY("heute"), TOMORROW("morgen"), THIS_WEEK("diese Woche"), NEXT_WEEK("nächste Woche")
+}
+
+/** What the owner wants to know about that stretch. */
+internal enum class AgendaAsk {
+    /** „Welche Termine habe ich diese Woche?“ */
+    LIST,
+    /** „Habe ich diese Woche etwas vergessen?“ – answered from the fixed rules of [AgendaCheck] only. */
+    CHECK,
+    /** „Wo habe ich diese Woche noch Zeit?“ */
+    FREE
+}
+
 /** What the owner asked of the briefing lane. Every command is a whole utterance; nothing is guessed. */
 internal sealed interface ContinuumBriefingCommand {
+    /**
+     * The calendar over a week, the check for what stands out, or the free time (owner sentence 19.11.2026: „Schau,
+     * welche Termine ich diese Woche habe, und sag mir, ob ich etwas vergessen könnte“). A plain list of today's or
+     * tomorrow's appointments stays [Appointments].
+     */
+    data class Agenda(val span: AgendaSpan, val ask: AgendaAsk) : ContinuumBriefingCommand
     /** „Systemcheck“, „Wie ist dein Status?“ */
     data object SystemCheck : ContinuumBriefingCommand
     /** „Was steht heute an?“, „Gib mir mein Briefing“; [withNews]: „… mit Nachrichten“ for this one time. */
@@ -30,6 +51,11 @@ internal sealed interface ContinuumBriefingCommand {
         SystemCheck -> "SYSTEM_CHECK"
         is Briefing -> if (withNews) "BRIEFING:NEWS" else "BRIEFING"
         is Appointments -> "APPOINTMENTS:" + day.name
+        is Agenda -> when (ask) {
+            AgendaAsk.LIST -> "APPOINTMENTS:"
+            AgendaAsk.CHECK -> "AGENDA_CHECK:"
+            AgendaAsk.FREE -> "FREE_TIME:"
+        } + span.name
         is Weather -> "WEATHER:" + day.name + (place?.let { "@$it" } ?: "")
         is SetPlace -> "PLACE:$place"
         is Call -> "CALL:$target"
@@ -99,6 +125,76 @@ internal object ContinuumBriefingCommands {
         rx("was\\s+(?:habe|hab)\\s+ich\\s+(?:$DAY\\s+)?für\\s+termine(?:\\s+$DAY)?"),
         rx("(?:meine\\s+)?termine(?:\\s+(?:für\\s+)?$DAY)?"),
         rx("(?:lies|sag|nenn|nenne|zeig|zeige)\\s+mir\\s+$P(?:meine|die)\\s+termine(?:\\s+(?:für\\s+|von\\s+)?$DAY)?(?:\\s+vor)?"))
+
+    // ── The calendar over a week, the check and the free time ───────────────────────────────────────────────
+    // Matched on the sentence without its commas, so „Schau, welche Termine ich diese Woche habe, und sag mir, ob …“
+    // is one form. Group 1 of WEEK: „diese“ / „nächste“ / „kommende“; a pattern without a span means this week.
+    private const val WEEK = "(?:(?:in|für|fuer)\\s+)?(?:(?:der|die)\\s+)?(diese[rn]?|nächste[rn]?|naechste[rn]?|kommende[rn]?)\\s+woche"
+    private const val WHEN = "(?:$WEEK|$DAY)"
+    private const val SOME = "(?:irgend)?(?:etwas|was)"
+    private const val FORGOT = "(?:vergessen|übersehen|uebersehen|verpasst|verschwitzt)"
+    private const val LOOK = "(?:schau|schaue|sieh|guck|gucke|geh|gehe|prüf|prüfe|pruef|pruefe|check|checke|kontrollier|kontrolliere)"
+    private const val TELL = "(?:sag|sage)\\s+mir\\s+${P}ob\\s+ich"
+
+    private val agendaList = listOf(
+        rx("(?:welche|was\\s+für)\\s+termine\\s+(?:habe|hab)\\s+ich\\s+$WEEK(?:\\s+noch)?"),
+        rx("welche\\s+termine\\s+stehen\\s+$WEEK\\s+an"),
+        rx("was\\s+(?:habe|hab)\\s+ich\\s+$WEEK\\s+für\\s+termine"),
+        rx("was\\s+(?:habe|hab)\\s+ich\\s+für\\s+termine\\s+$WEEK"),
+        rx("was\\s+(?:steht|liegt|ist)\\s+$WEEK\\s+(?:alles\\s+)?(?:an|los|im\\s+kalender|in\\s+meinem\\s+kalender)"),
+        rx("was\\s+(?:habe|hab)\\s+ich\\s+$WEEK\\s+(?:alles\\s+)?vor"),
+        rx("(?:habe|hab)\\s+ich\\s+$WEEK\\s+(?:noch\\s+)?(?:termine|einen\\s+termin|(?:was|etwas)\\s+im\\s+kalender)"),
+        rx("(?:meine\\s+)?termine\\s+$WEEK"),
+        rx("(?:lies|sag|nenn|nenne|zeig|zeige)\\s+mir\\s+$P(?:meine|die)\\s+termine\\s+(?:von\\s+)?$WEEK(?:\\s+vor)?"),
+        rx("$LOOK\\s+${P}welche\\s+termine\\s+ich\\s+$WEEK\\s+habe"),
+        rx("wie\\s+(?:sieht|schaut)\\s+(?:meine|die)\\s+(?:(nächste|naechste|kommende)\\s+)?woche\\s+aus"),
+        rx("(?:(?:gib|zeig|zeige)\\s+mir\\s+)?$P(?:(?:einen|den|meinen)\\s+)?(?:wochenüberblick|wochenueberblick|wochenübersicht|" +
+            "(?:überblick|ueberblick)\\s+(?:über|ueber)\\s+meine\\s+(?:(nächste|naechste|kommende)\\s+)?woche)"))
+
+    private val agendaCheck = listOf(
+        rx("(?:habe|hab)\\s+ich\\s+$WEEK\\s+$SOME\\s+$FORGOT"),
+        rx("(?:habe|hab)\\s+ich\\s+(?:bei|in|unter)\\s+(?:meinen|den)\\s+terminen\\s+$WHEN\\s+$SOME\\s+$FORGOT"),
+        rx("(?:habe|hab)\\s+ich\\s+$WHEN\\s+(?:bei|in|unter)\\s+(?:meinen|den)\\s+terminen\\s+$SOME\\s+$FORGOT"),
+        rx("könnte\\s+ich\\s+$WEEK\\s+$SOME\\s+(?:vergessen|übersehen|uebersehen)(?:\\s+haben)?"),
+        rx("was\\s+(?:könnte|koennte)\\s+ich\\s+$WEEK\\s+(?:vergessen|übersehen|uebersehen)(?:\\s+haben)?"),
+        rx("$TELL\\s+$WEEK\\s+$SOME\\s+$FORGOT\\s+(?:habe|hab|könnte|koennte|haben\\s+könnte)"),
+        rx("$LOOK\\s+$P(?:meinen\\s+kalender|meine\\s+termine|meine\\s+woche)(?:\\s+(?:von\\s+)?$WHEN)?(?:\\s+durch)?"),
+        rx("(?:gibt\\s+es|(?:habe|hab)\\s+ich)\\s+$WHEN\\s+(?:termin)?(?:überschneidungen|ueberschneidungen|konflikte|kollisionen)"),
+        rx("(?:überschneiden|ueberschneiden|überlappen|ueberlappen)\\s+sich\\s+$WHEN\\s+(?:meine\\s+)?termine"),
+        // The owner's sentence: look at the week AND say whether something could be forgotten.
+        rx("$LOOK\\s+${P}welche\\s+termine\\s+ich\\s+$WEEK\\s+habe\\s+und\\s+$TELL\\s+$SOME\\s+$FORGOT\\s+" +
+            "(?:habe|hab|könnte|koennte|haben\\s+könnte)"),
+        rx("$LOOK\\s+$P(?:dir\\s+)?(?:meine|die)\\s+termine\\s+(?:von\\s+)?$WEEK\\s+(?:durch|an)\\s+und\\s+$TELL\\s+$SOME\\s+$FORGOT\\s+" +
+            "(?:habe|hab|könnte|koennte|haben\\s+könnte)"))
+
+    private const val FREE = "(?:zeit|freie\\s+zeit|luft|$SOME\\s+frei|frei)"
+    private val agendaFree = listOf(
+        rx("(?:wann|wo)\\s+(?:habe|hab)\\s+ich\\s+$WHEN\\s+(?:noch\\s+)?$FREE"),
+        rx("(?:wann|wo)\\s+(?:habe|hab)\\s+ich\\s+(?:noch\\s+)?$FREE\\s+$WHEN"),
+        rx("(?:wann|wo)\\s+bin\\s+ich\\s+$WHEN\\s+(?:noch\\s+)?frei"),
+        rx("(?:habe|hab)\\s+ich\\s+$WHEN\\s+(?:noch\\s+)?(?:zeit|freie\\s+zeit|$SOME\\s+frei)"),
+        rx("(?:wann|wo)\\s+ist\\s+$WHEN\\s+(?:noch\\s+)?(?:$SOME\\s+)?frei"),
+        rx("(?:zeig|zeige|sag|nenn|nenne)\\s+mir\\s+$P(?:meine\\s+)?(?:freien\\s+zeiten|freie\\s+zeit|freien\\s+stunden|lücken|luecken)\\s+$WHEN"))
+
+    private fun span(groups: List<String>): AgendaSpan {
+        val said = groups.map { it.lowercase(Locale.GERMAN) }.filter { it.isNotEmpty() }
+        return when {
+            said.any { it.startsWith("nächste") || it.startsWith("naechste") || it.startsWith("kommende") } -> AgendaSpan.NEXT_WEEK
+            said.any { it.startsWith("diese") } -> AgendaSpan.THIS_WEEK
+            said.any { it == "morgen" } -> AgendaSpan.TOMORROW
+            said.any { it == "heute" } -> AgendaSpan.TODAY
+            else -> AgendaSpan.THIS_WEEK
+        }
+    }
+
+    private fun agenda(text: String): ContinuumBriefingCommand.Agenda? {
+        val flat = text.replace(',', ' ').replace(Regex("\\s+"), " ").trim()
+        fun first(patterns: List<Regex>) = patterns.firstNotNullOfOrNull { it.matchEntire(flat) }?.groupValues?.drop(1)
+        first(agendaCheck)?.let { return ContinuumBriefingCommand.Agenda(span(it), AgendaAsk.CHECK) }
+        first(agendaFree)?.let { return ContinuumBriefingCommand.Agenda(span(it), AgendaAsk.FREE) }
+        first(agendaList)?.let { return ContinuumBriefingCommand.Agenda(span(it), AgendaAsk.LIST) }
+        return null
+    }
 
     /** Each with the group index of an optional place. */
     private val weather: List<Pair<Regex, Int?>> = listOf(
@@ -209,6 +305,7 @@ internal object ContinuumBriefingCommands {
         appointments.firstNotNullOfOrNull { it.matchEntire(text) }?.let { match ->
             return ContinuumBriefingCommand.Appointments(day(match.groupValues.drop(1)))
         }
+        agenda(text)?.let { return it }
         weather.firstNotNullOfOrNull { (pattern, placeGroup) -> pattern.matchEntire(text)?.let { it to placeGroup } }
             ?.let { (match, placeGroup) ->
                 val named = placeGroup?.let { match.groupValues.getOrNull(it) }?.takeIf { it.isNotEmpty() }

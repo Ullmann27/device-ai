@@ -186,6 +186,10 @@ internal class ContinuumBriefingHarness(
     override fun store(): ContinuumBriefingStore = keyValue
     val settings = ContinuumBriefingSettings(keyValue)
 
+    /** How the lane said its orders ended (typed), in order. */
+    val outcomes = mutableListOf<at.heinz.deviceai.OwnerLaneOutcome>()
+    override fun outcome(outcome: at.heinz.deviceai.OwnerLaneOutcome) { outcomes += outcome }
+
     /** One owner turn through the lane; the answer is the last chat line when the lane took it. */
     fun say(text: String): Boolean = director.handle(text).also { drain() }
     val last: String get() = chat.last()

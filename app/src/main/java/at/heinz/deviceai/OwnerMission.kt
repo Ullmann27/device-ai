@@ -818,6 +818,8 @@ internal class OwnerMissionDirector(private val host: OwnerMissionHost) {
         is OwnerLaneResult.FileSaved -> "„${result.file.displayName}“ gespeichert (" + (result.location ?: result.file.folder) + ")" +
             if (result.verified == false) " – zurücklesen konnte ich die Datei nicht" else ""
         is OwnerLaneResult.FileOpened -> "„${result.file.displayName}“ geöffnet"
+        is OwnerLaneResult.Agenda -> "Kalender für ${result.span} gelesen (" + (if (result.events == 1) "1 Eintrag" else
+            "${result.events} Einträge") + ")"
         is OwnerLaneResult.Storage -> storageSentence(result)
         is OwnerLaneResult.Delivered -> {
             val attached = result.attachment?.let { if (it.displayName in named) ", diese Datei hängt an" else ", Anhang „${it.displayName}“" }

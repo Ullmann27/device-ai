@@ -258,6 +258,7 @@ internal class ContinuumBriefingDirector(
             ContinuumBriefingCommand.SystemCheck -> systemCheck(request)
             is ContinuumBriefingCommand.Briefing -> startBriefing(request, command.withNews)
             is ContinuumBriefingCommand.Appointments -> appointments(request, command.day)
+            is ContinuumBriefingCommand.Agenda -> agenda(request, command.span, command.ask)
             is ContinuumBriefingCommand.Weather -> weather(request, command.day, command.place)
             is ContinuumBriefingCommand.SetPlace -> setPlace(request, command.place)
             is ContinuumBriefingCommand.Call -> call(request, command.target)
@@ -429,6 +430,58 @@ internal class ContinuumBriefingDirector(
                 ContinuumCalendarRead.NotGranted -> ContinuumBriefingText.CALENDAR_DENIED
                 is ContinuumCalendarRead.Failed -> ContinuumBriefingText.CALENDAR_FAILED
             })
+        }
+    }
+
+    /**
+     * The calendar over [span]: the list, the check for what stands out, or the free time (owner sentence 19.11.2026:
+     * „Schau, welche Termine ich diese Woche habe, und sag mir, ob ich etwas vergessen könnte“). One read through the
+     * same READ_CALENDAR path as the briefing; the answer is built here from the entries and the fixed rules of
+     * [AgendaCheck] – no model sees a calendar entry and nothing goes to the network.
+     */
+    private fun agenda(request: String, span: AgendaSpan, ask: AgendaAsk) {
+        val today = today()
+        val dates = ContinuumAgenda.dates(span, today)
+        val label = span.label.replaceFirstChar { it.titlecase(java.util.Locale.GERMAN) }
+        readCalendar(request, mayAsk = true, ContinuumAgenda.window(dates, zone())) { read ->
+            host.activity("KALENDER · nur gelesen · " + when (read) {
+                is ContinuumCalendarRead.Events -> "${read.events.size} Einträge im Zeitraum · ${span.label} · geprüft nach festen Regeln, ohne Modell"
+                ContinuumCalendarRead.NotGranted -> "Zugriff nicht erlaubt"
+                is ContinuumCalendarRead.Failed -> "nicht lesbar"
+            })
+            when (read) {
+                ContinuumCalendarRead.NotGranted -> {
+                    ContinuumBriefingBoard.put(ContinuumBriefingText.calendarCard(read, null, "Termine " + span.label))
+                    host.answer(request, ContinuumBriefingText.CALENDAR_DENIED)
+                    host.outcome(at.heinz.deviceai.OwnerLaneOutcome.NeedsOwner(at.heinz.deviceai.OwnerLaneOutcome.Need.GRANT,
+                        ContinuumBriefingText.CALENDAR_DENIED))
+                }
+                is ContinuumCalendarRead.Failed -> {
+                    ContinuumBriefingBoard.put(ContinuumBriefingText.calendarCard(read, null, "Termine " + span.label))
+                    host.answer(request, ContinuumBriefingText.CALENDAR_FAILED)
+                    host.outcome(at.heinz.deviceai.OwnerLaneOutcome.Failed(ContinuumBriefingText.CALENDAR_FAILED))
+                }
+                is ContinuumCalendarRead.Events -> {
+                    val days = ContinuumAgenda.days(read.events, dates, zone(), now())
+                    val report = AgendaCheck.check(days, now().atZone(zone()).toLocalDateTime())
+                    val listed = if (days.size == 1) ContinuumAgenda.spoken(days.single(), label, detailed = true)
+                        else ContinuumAgenda.spokenWeek(days, label, today)
+                    val spoken = when (ask) {
+                        AgendaAsk.LIST -> listed
+                        AgendaAsk.CHECK -> listed + " " + AgendaCheck.spoken(report, span.label, today)
+                        AgendaAsk.FREE -> AgendaCheck.spokenFree(report, span.label, today)
+                    }
+                    val cardLines = if (ask == AgendaAsk.CHECK) AgendaCheck.lines(report) else
+                        ContinuumAgenda.weekLines(days, ContinuumBriefingBoard.MAX_LINES).ifEmpty { listOf("nichts im Kalender") }
+                    val attention = report.findings.any { it.kind == AgendaCheck.Kind.OVERLAP || it.kind == AgendaCheck.Kind.TIGHT_CHANGE }
+                    ContinuumBriefingBoard.put(ContinuumBriefingBoard.Card("calendar", ContinuumBriefingBoard.Kind.CALENDAR,
+                        (if (ask == AgendaAsk.CHECK) "Terminprüfung " else "Termine ") + span.label, cardLines,
+                        if (attention) ContinuumBriefingBoard.State.ATTENTION else ContinuumBriefingBoard.State.INFO))
+                    host.answer(request, spoken)
+                    host.outcome(at.heinz.deviceai.OwnerLaneOutcome.Done(OwnerLaneResult.Agenda(span.label, report.events + report.allDay,
+                        report.findings.size, report.free.size)))
+                }
+            }
         }
     }
 
