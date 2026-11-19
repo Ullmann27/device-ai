@@ -223,6 +223,14 @@ internal class OwnerWorkTools(
      */
     fun holdSubject() { held = Held(host.sessionId, host.ownerTurn, host.lastAssistantLine()) }
 
+    /**
+     * true = an order on the held moment („Speichere das als PDF“ after the owner's yes to a suggestion) would mean the
+     * answer that was held – it is a result worth keeping, and no result of this lane is the subject in its place.
+     */
+    val heldIsSubject: Boolean get() = held?.let {
+        it.session == host.sessionId && it.reply?.kind?.worthKeeping == true && !(deliverable != null && subjectThrough == it.turn)
+    } == true
+
     /** [handle] for an order of the sentence [holdSubject] was called for; without one it is [handle]. */
     fun handleOnHeld(request: String): Boolean =
         handle(request, held?.takeIf { it.session == host.sessionId }?.turn ?: host.ownerTurn)

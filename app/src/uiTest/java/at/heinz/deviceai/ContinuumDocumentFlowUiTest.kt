@@ -733,10 +733,15 @@ class ContinuumDocumentFlowUiTest {
         advance(64L)
         gate.countDown()
         fun chat() = descendants(field(activity, "chatContainer") as View).filterIsInstance<TextView>().map { it.text.toString() }
-        until(root, "the recall answer") { chat().any { it.startsWith("Heute:") } }
-        val answer = chat().last { it.startsWith("Heute:") }
-        assertFalse("never „still running“ after STOP: $answer", answer.contains("Entwurf in Arbeit"))
-        assertTrue("the state STOP recorded: $answer", answer.contains("mit STOP abgebrochen, nicht erledigt"))
+        // Since 19.11.2026 the chat answer is one natural sentence from the shared-work record (which mirrors the journal
+        // and is read after the queued writes); what this test protects is unchanged: the state STOP really recorded.
+        fun recall(line: String) = line.contains("„Bericht.pdf“") && line.contains("haben wir")
+        until(root, "the recall answer") { chat().any(::recall) }
+        val answer = chat().last(::recall)
+        assertFalse("never „still running“, „opened“ or „done“ after STOP: $answer",
+            answer.contains("in Arbeit") || answer.contains("geöffnet") || answer.contains("erstellt") || answer.contains("erledigt"))
+        assertTrue("the state STOP recorded: $answer", answer.contains("bei der Zusammenfassung von „Bericht.pdf“ abgebrochen"))
+        assertTrue("one answer, not a second list-shaped one: ${chat()}", chat().none { it.startsWith("Heute:") })
     }
 
     @Test fun stopRejectsAQueuedDecisionContinuation() = withFlow { activity, root, runtime ->

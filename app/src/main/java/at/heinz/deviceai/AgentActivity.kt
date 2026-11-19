@@ -1008,6 +1008,7 @@ class AgentActivity : Activity() {
         resumeOwnerDocumentDesk()
         codingAgents.attach()
         // The owner is back after a real pause: one personal greeting – in the foreground, once per return (OwnerTalk).
+        refreshOwnerTalkAppointment()
         mainHandler.post { if (foregroundLearningActive && !isFinishing && !isDestroyed) ownerTalk.onReturn() }
         mainHandler.post { maybeAskForConversationCamera() }
         refreshBotTeam()
@@ -3109,6 +3110,7 @@ class AgentActivity : Activity() {
     @Volatile private var openWork: List<String> = emptyList()
 
     private fun publishOpenWork() {
+        runCatching { ownerSharedWorkFeed.journal(workJournal.all()) }
         val open = runCatching { workJournal.openSteps(System.currentTimeMillis()) }.getOrDefault(emptyList())
         runOnUiThread {
             if (isFinishing || isDestroyed || open == openWork) return@runOnUiThread
@@ -3149,11 +3151,12 @@ class AgentActivity : Activity() {
         if (documentIoExecutor.isShutdown) read.run() else documentIoExecutor.execute(read)
     }
 
-    private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean) =
-        withWorkJournal { episodes -> presentWorkRecall(query, keepWindow, episodes) }
+    /** [answerInChat] = false: only the VERLAUF surface and the recall light – the sentence was already said (OwnerTalk). */
+    private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean, answerInChat: Boolean = true) =
+        withWorkJournal { episodes -> presentWorkRecall(query, keepWindow, episodes, answerInChat) }
 
     private fun presentWorkRecall(query: at.heinz.deviceai.cognitive.WorkRecall.Query, keepWindow: Boolean,
-                                  episodes: List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>) {
+                                  episodes: List<at.heinz.deviceai.cognitive.CockpitWorkJournal.Episode>, answerInChat: Boolean = true) {
         val now = System.currentTimeMillis()
         val zone = java.util.TimeZone.getDefault()
         val answer = at.heinz.deviceai.cognitive.WorkRecall.answer(episodes, query, now, zone)
@@ -3177,7 +3180,7 @@ class AgentActivity : Activity() {
                 .apply { tag = "jarvis-recall-origin" }, matchWidth(top = 10))
             workWindowHost.show(home, body, "VERLAUF", at.heinz.deviceai.ui.JarvisActionScenes.forDocument()) {}
         } else null
-        addAssistantMessage(answer, preserveLocalContext = true, keepCockpit = window != null || !keepWindow)
+        if (answerInChat) addAssistantMessage(answer, preserveLocalContext = true, keepCockpit = window != null || !keepWindow)
     }
 
     /** The decisions shown in this conversation (session-bound): „die Entscheidung davor“ / „was davon“ refer to them. */
@@ -7991,6 +7994,7 @@ class AgentActivity : Activity() {
         else result
         localConversationContext.recordToolResult(pending.session, pending.request, "owner_computer_workflow",
             "${accepted.status}: ${accepted.message}")
+        ownerSharedWorkFeed.computer(pending.intent.app.discoveryQuery, accepted.status, startedAt = 0L)
         addAssistantMessage(accepted.message, preserveLocalContext = true, keepCockpit = true,
             allowMaya = pending.allowMaya,
             speakNow = speakNow && pending.ownerRevision == ownerReplyRevision && continuousConversation.state !=
@@ -12749,6 +12753,10 @@ class AgentActivity : Activity() {
         val cancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
         activeResearchCancellation = cancellation
         setBusy(true)
+        val researchStartedAt = System.currentTimeMillis()
+        // The run has really started and says nothing by itself until its result: one short line (personal tone only).
+        if (mentorArea == null && ownerTalk.tone == at.heinz.deviceai.cognitive.OwnerConversationTone.PERSONAL)
+            addAssistantMessage(ownerTalk.acknowledge(), preserveLocalContext = true, keepCockpit = false)
         val budget = ResearchBudgetPolicy.forMode(mode)
         activityText.text = "RESEARCH · PLANNING · ${mode.name}"
         addToolActivity("WEB-RESEARCH · ${mode.name} · read-only")
@@ -12900,6 +12908,9 @@ class AgentActivity : Activity() {
                     generalDiscovery.lastIssue?.let { addToolActivity("WEB · "+it) }
                     addAssistantMessage(body.take(8_000), preserveLocalContext = true, keepCockpit = false,
                         kind = at.heinz.deviceai.cognitive.OwnerChatLine.Kind.LANE_DELIVERABLE)
+                    // The result is held as what a later „Speichere das als PDF“ means, before any notice follows it.
+                    ownerWorkTools.holdSubject()
+                    val reportable = dossier.sources.isNotEmpty() && ownerWorkTools.heldIsSubject
                     // B1: the research result becomes follow-up context for the local model (same brain,
                     // same session) – typed as external, unverified data, never an owner fact.
                     at.heinz.deviceai.cognitive.ResearchDialogueHandoff
@@ -12916,6 +12927,15 @@ class AgentActivity : Activity() {
                             "Prüfe sie über INTERNET · LERNSTOFF PRÜFEN. Noch keine automatische Wissensübernahme.")
                     }
                     addToolActivity("RESEARCH · ${dossier.phase.name} · ${dossier.sources.size} Quellen")
+                    if (mentorArea == null) {
+                        val distinct = dossier.sources.count { it.duplicateOf == null }
+                        ownerSharedWorkFeed.research(session.call.question, distinct, researchStartedAt)
+                        mainHandler.post {
+                            // The report offer is made only when „das“ of the export order would be this result.
+                            if (!isFinishing && !isDestroyed && sessionId == researchSessionId)
+                                ownerTalk.afterResult(if (reportable) OwnerResultHint.Research(distinct) else OwnerResultHint.Other)
+                        }
+                    }
                 }.onFailure { error ->
                     addAssistantMessage(ContinuumUiCopy.researchFailure(error.message))
                     addToolActivity("RESEARCH · PARTIAL")
@@ -12947,7 +12967,10 @@ class AgentActivity : Activity() {
             ownerMission.laneOutcome(OwnerMissionLane.WORK, outcome)
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.WORK.name, outcome)
         }
-        override fun offerToOpen(): Boolean = !ownerMission.active
+        override fun offerToOpen(): Boolean = !ownerMission.active &&
+            ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE).also {
+                if (it) ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
+            }
 
         override fun reply(request: String, text: String, kind: at.heinz.deviceai.cognitive.NonModelReplyKind) =
             addNonModelReply(request, text, kind)
@@ -13168,7 +13191,10 @@ class AgentActivity : Activity() {
             ownerMission.laneOutcome(OwnerMissionLane.DESK, outcome)
             ownerOpenQuestions.noteOutcome(OwnerMissionLane.DESK.name, outcome)
         }
-        override fun offerToOpen(): Boolean = !ownerMission.active
+        override fun offerToOpen(): Boolean = !ownerMission.active &&
+            ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE).also {
+                if (it) ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.OPEN_FILE)
+            }
 
         override fun reply(request: String, text: String) {
             val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(localConversationContext, sessionId,
@@ -13453,7 +13479,8 @@ class AgentActivity : Activity() {
         at.heinz.deviceai.codingagents.CodingAgentScreen(this, cockpitTriggers,
             say = { addAssistantMessage(it.take(8_000), preserveLocalContext = true, keepCockpit = activeWorkArea == ContinuumWorkArea.START) },
             log = ::addToolActivity, idle = { !busy && !botLookupPending }, ownerTurn = ::showOwnerLaneTurn,
-            assistantName = { continuumState?.archive?.identityState?.chosenName })
+            assistantName = { continuumState?.archive?.identityState?.chosenName },
+            runStartedHook = ownerSharedWorkFeed::codingAgentStarted, runEndedHook = ownerSharedWorkFeed::codingAgentEnded)
     }
 
     /** An order for the cloud coding agents, the answer to their one confirmation, an approval or their stop. */
@@ -13613,7 +13640,29 @@ class AgentActivity : Activity() {
     // ── Owner conversation manner (tone, name, greeting) – logic in OwnerTalk.kt and cognitive/OwnerConversationTone.kt,
     // cognitive/OwnerGreeting.kt. Thin adapter only: fixed replies of the app, no model turn, no tool, no plan.
     private val ownerTalkStore by lazy { OwnerTalkPreferences(this) }
-    internal val ownerTalk by lazy { OwnerTalk(OwnerTalkAdapter(), ownerTalkStore) }
+    /** The shared-work record („Wo waren wir?“) and the one policy for unsolicited offers – logic in cognitive/. */
+    internal val ownerSharedWork by lazy { at.heinz.deviceai.cognitive.OwnerSharedWorkRecord(OwnerSharedWorkPreferences(this)) }
+    internal val ownerInitiative by lazy { at.heinz.deviceai.cognitive.OwnerInitiative(OwnerInitiativePreferences(this)) }
+    private val ownerSharedWorkFeed by lazy { OwnerSharedWorkFeed(ownerSharedWork) }
+    internal val ownerTalk by lazy { OwnerTalk(OwnerTalkAdapter(), ownerTalkStore, ownerSharedWork, ownerInitiative) }
+    /** Today's next appointment as the calendar held it at the last read (off the UI thread); null = none or not readable. */
+    @Volatile private var ownerTalkAppointment: Triple<at.heinz.deviceai.briefing.ContinuumCalendarEvent, Long, Long>? = null
+
+    /** Reads today's calendar off the UI thread when the owner allowed it; the greeting only uses a fresh read. */
+    private fun refreshOwnerTalkAppointment() {
+        val source = continuumCalendarOverride ?: at.heinz.deviceai.briefing.AndroidContinuumCalendar(this)
+        if (ownerInitiative.level != at.heinz.deviceai.cognitive.OwnerInitiativeLevel.ACTIVE || documentIoExecutor.isShutdown) return
+        documentIoExecutor.execute {
+            ownerTalkAppointment = runCatching {
+                if (!source.granted()) return@runCatching null
+                val now = System.currentTimeMillis()
+                val read = source.read(now, now + OwnerContextSuggestions.APPOINTMENT_WINDOW_MILLIS)
+                (read as? at.heinz.deviceai.briefing.ContinuumCalendarRead.Events)?.events
+                    ?.filter { !it.allDay && it.startMillis > now }?.minByOrNull { it.startMillis }
+                    ?.let { Triple(it, it.startMillis, now) }
+            }.getOrNull()
+        }
+    }
 
     private inner class OwnerTalkAdapter : OwnerTalkHost {
         override val sessionId: String get() = this@AgentActivity.sessionId
@@ -13633,6 +13682,48 @@ class AgentActivity : Activity() {
             centerDialog?.isShowing != true && readinessDialog?.isShowing != true && !isFinishing && !isDestroyed
         override fun confirmedFacts(): List<String> = if (::bootstrapMemory.isInitialized) bootstrapMemory.facts() else emptyList()
         override fun cloudBrain(): Boolean = claudeBrain?.claudeSelected == true
+        override fun later(action: () -> Unit) { mainHandler.post { if (!isFinishing && !isDestroyed) action() } }
+        override fun continuationOpen(): Boolean = ownerMission.active || pausedTaskChain != null
+        /**
+         * After every journal write that is still queued on the serial document lane (a STOP of a moment ago), and
+         * with the journal mirrored once more – never file I/O on the UI thread, never a blocking wait for it.
+         */
+        override fun whenWorkSettled(action: () -> Unit) {
+            val session = sessionId
+            val settle = Runnable {
+                runCatching { ownerSharedWorkFeed.journal(workJournal.all()) }
+                runOnUiThread { if (!isFinishing && !isDestroyed && sessionId == session) action() }
+            }
+            if (documentIoExecutor.isShutdown) settle.run() else documentIoExecutor.execute(settle)
+        }
+        /**
+         * „Wo waren wir?“ in the cockpit: the sentence is said without leaving START, and – when work of the cockpit's
+         * journal is among what was named – the existing VERLAUF surface shows its source, state and open step.
+         */
+        override fun recallReply(request: String, text: String, period: at.heinz.deviceai.cognitive.OwnerSharedWorkCommand.Period,
+                                 entries: List<at.heinz.deviceai.cognitive.SharedWorkEntry>) {
+            val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(localConversationContext, sessionId, request,
+                at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
+            addAssistantMessage(text, preserveLocalContext = keep, keepCockpit = activeWorkArea == ContinuumWorkArea.START)
+            if (entries.none { it.provenance == OwnerSharedWorkFeed.JOURNAL }) return
+            val journalPeriod = when (period) {
+                at.heinz.deviceai.cognitive.OwnerSharedWorkCommand.Period.TODAY -> at.heinz.deviceai.cognitive.WorkRecall.Period.TODAY
+                at.heinz.deviceai.cognitive.OwnerSharedWorkCommand.Period.YESTERDAY -> at.heinz.deviceai.cognitive.WorkRecall.Period.YESTERDAY
+                else -> at.heinz.deviceai.cognitive.WorkRecall.Period.RECENT
+            }
+            presentWorkRecall(at.heinz.deviceai.cognitive.WorkRecall.Query(journalPeriod, openOnly = false), keepWindow = true, answerInChat = false)
+        }
+        /** The order goes through the owner input path; a held result goes to the work tools, which know what „das“ means. */
+        override fun submit(order: String, onHeldResult: Boolean) {
+            if (!::input.isInitialized || isFinishing || isDestroyed || busy) return
+            if (onHeldResult && ownerWorkTools.handleOnHeld(order)) return
+            input.setText(order)
+            sendCurrentInput()
+        }
+        override fun openMessages(): OwnerOpenMessageCount? = runCatching {
+            at.heinz.deviceai.notifications.IncomingMessages.inbox.open().filter { !it.hidden && it.sender.isNotBlank() }
+                .let { open -> OwnerOpenMessageCount(open.size, (open.maxOfOrNull { it.firstAtMs } ?: 0L).toString()) }
+        }.getOrNull()
     }
 
     /**
@@ -13656,6 +13747,11 @@ class AgentActivity : Activity() {
                 .map { at.heinz.deviceai.briefing.ContinuumOpenMessage(it.sender, it.appLabel, "Was ist noch offen?") }
         }
         ownerTalk.greetingExtra = { briefingOffer() }
+        ownerTalk.contextSuggestions = listOf(at.heinz.deviceai.cognitive.OwnerSuggestionProvider { now ->
+            ownerTalkAppointment?.let { (event, start, readAt) ->
+                OwnerContextSuggestions.appointment(event.title, start, now, java.time.ZoneId.systemDefault(), readAt)
+            }
+        })
     }
 
     private fun wireOwnerTalkToCloudBrain() {
@@ -13663,14 +13759,21 @@ class AgentActivity : Activity() {
         val brain = claudeBrain ?: return
         val store = OwnerTalkPreferences(applicationContext)
         val memory = BootstrapMemoryStore(applicationContext)
-        brain.ownerStyle = { OwnerTalk.cloudBlock(store, { memory.facts() }) { store.nameToCloud || brain.settings.shareLocalMemory } }
+        // Application context only: the record, the level and the names consent are read from their stores.
+        val initiative = OwnerInitiativePreferences(applicationContext)
+        val names = at.heinz.deviceai.devicetools.StoredDeviceToolSettings(applicationContext)
+        val workStore = OwnerSharedWorkPreferences(applicationContext)
+        val conversation = OwnerConversationFacts(
+            entries = { at.heinz.deviceai.cognitive.OwnerSharedWorkRecord(workStore).entries() },
+            level = { initiative.level }, titlesAllowed = { names.cloudNames })
+        brain.ownerStyle = { OwnerTalk.cloudBlock(store, { memory.facts() }, conversation) { store.nameToCloud || brain.settings.shareLocalMemory } }
         // The cloud's own web search stays inside the app's internet consent (localmodel/ClaudeServerTools.kt).
         brain.webTurn.internetMode = { internetConsent.mode }
     }
 
     private fun showOwnerTalkSettings() {
         centerDialog?.dismiss()
-        val dialog = at.heinz.deviceai.ui.OwnerTalkSettingsDialog.show(this, ownerTalkStore, ownerTalk)
+        val dialog = at.heinz.deviceai.ui.OwnerTalkSettingsDialog.show(this, ownerTalkStore, ownerTalk, ownerInitiative)
         centerDialog = dialog
         dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
     }
@@ -13678,7 +13781,13 @@ class AgentActivity : Activity() {
     // ── Owner missions („Auftragsfolge“) – logic in OwnerMission.kt and cognitive/OwnerMissionPlan*.kt ──────────
     // Thin adapter only: a mission hands every step to the owner entry of its lane above and listens to the lanes'
     // typed outcomes; it has no way of its own to read, write, open or send anything.
-    internal val ownerMission by lazy { OwnerMissionDirector(OwnerMissionAdapter()) }
+    internal val ownerMission by lazy {
+        OwnerMissionDirector(OwnerMissionAdapter()).also {
+            // The shared-work record listens where every lane's typed outcome passes, and to the mission's own end.
+            it.onLaneOutcome = ownerSharedWorkFeed::lane
+            it.onSettled = ownerSharedWorkFeed::mission
+        }
+    }
 
     /** Stop, „weiter“, „abbrechen“ and a correction for a running or waiting mission, before any lane sees the turn. */
     private fun interceptOwnerMission(spoken: String = input.text.toString().trim()): Boolean =
@@ -14056,6 +14165,17 @@ class AgentActivity : Activity() {
 
         override fun openWork(): List<String> = openWork
         override fun openMessages(): at.heinz.deviceai.briefing.ContinuumOpenMessages = continuumOpenMessages
+
+        // This lane's own offers pass the owner's one initiative policy (level, a recent no, the caps).
+        override fun allowDailyOffer(): Boolean = ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.BRIEFING)
+        override fun allowOffers(offers: List<at.heinz.deviceai.briefing.ContinuumBriefingBoard.Offer>) =
+            if (offers.isEmpty() || !ownerInitiative.allows(at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS)) emptyList()
+            else offers.also { ownerInitiative.offered(at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS) }
+        override fun offerAnswered(daily: Boolean, accepted: Boolean) {
+            val kind = if (daily) at.heinz.deviceai.cognitive.OwnerSuggestionKind.BRIEFING else at.heinz.deviceai.cognitive.OwnerSuggestionKind.NEXT_STEPS
+            if (accepted) ownerInitiative.accepted(kind) else ownerInitiative.declined(kind)
+        }
+        override fun briefingGiven() = ownerSharedWorkFeed.briefing()
         override fun contactsReadable(): Boolean = send.contactsReadable()
         override fun requestContacts(explanation: String, done: (Boolean) -> Unit) = send.requestContacts(explanation, done)
         override fun contacts(): at.heinz.deviceai.sending.OwnerSendContactSource = send.contacts()
@@ -18492,6 +18612,9 @@ class AgentActivity : Activity() {
         // „Ich habe „Thermux“ als Termux verstanden.“ – stated once, in front of the answer to the repaired turn.
         @Suppress("NAME_SHADOWING") val value = ownerUnderstanding.withNotice(sessionId, value)
         if (value.trimEnd().endsWith("?")) { incomingQuestionTurn = ownerReplyRevision; incomingQuestionAt = android.os.SystemClock.elapsedRealtime() }
+        ownerTalk.noteAppLine(value)
+        if (kind == at.heinz.deviceai.cognitive.OwnerChatLine.Kind.MODEL_ANSWER && selectedBot == null)
+            ownerSharedWorkFeed.conversation(sessionId)
         // First sign of life after a pause that was already an order: one short greeting clause in front of the answer,
         // as a line of its own (it is not part of the answer) – never before a question or a failure (OwnerTalk).
         val returnClause = ownerTalk.returnClause(sessionId, value)
