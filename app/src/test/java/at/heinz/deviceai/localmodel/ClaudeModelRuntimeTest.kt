@@ -570,6 +570,23 @@ class ClaudeModelRuntimeTest {
         } finally { DeviceLocalOnlyText.clear() }
     }
 
+    /** A response that names another tool is never put in as the proposed call's result (review 19.11.2026, point 6). */
+    @Test fun aResultOfAnotherToolIsNeverAssignedToTheProposedCall() {
+        endpoint.enqueue(Reply.Stream(listOf(messageStart()) + toolUse(0, "toolu_c", "get_battery_info", "{}") + stop("tool_use")),
+            Reply.Stream(listOf(messageStart()) + text(0, "Das konnte ich nicht prüfen.") + stop("end_turn")))
+        val runtime = runtime()
+        run { runtime.stream(toolPrompt, it) }
+        val other = LocalToolContinuation.encode("get_device_info", "SUCCEEDED", "model=Fold")!!
+        run { runtime.respondToTools(listOf(other), it) }
+        val content = endpoint.requests[1].body.getJSONArray("messages").getJSONObject(2).getJSONArray("content")
+        val result = content.getJSONObject(0)
+        assertEquals("toolu_c", result.getString("tool_use_id"))
+        assertEquals(ClaudeModelRuntime.NO_TOOL_RESULT, result.getString("content"))
+        assertTrue(result.getBoolean("is_error"))
+        // The other tool's data is still part of the turn – as data, not as this call's result.
+        assertTrue(content.getJSONObject(1).getString("text").startsWith("Additional tool data (get_device_info)"))
+    }
+
     // ---- usage ------------------------------------------------------------------------------------------------
 
     @Test fun usageOfEveryAnswerIsCountedPerModelWithCacheTokens() {

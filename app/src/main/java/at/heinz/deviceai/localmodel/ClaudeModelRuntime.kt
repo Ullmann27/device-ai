@@ -700,7 +700,8 @@ class ClaudeModelRuntime internal constructor(
         val blocks = mutableListOf<BetaContentBlockParam>()
         pending.forEach { call ->
             // Only the proposed call can have a result; it is the single one the app was handed.
-            val response = if (!call.proposed) null else unused.firstOrNull { it.toolName == call.name } ?: unused.firstOrNull()
+            // Never another tool's result: a response that names a different tool is no result of this call.
+            val response = if (!call.proposed) null else unused.firstOrNull { it.toolName == call.name }
             if (response != null) unused.remove(response)
             blocks += BetaContentBlockParam.ofToolResult(BetaToolResultBlockParam.builder()
                 .toolUseId(call.id)
