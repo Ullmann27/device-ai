@@ -1,6 +1,7 @@
 package at.heinz.deviceai.ui
 
 import at.heinz.deviceai.OwnerLaneOutcome
+import at.heinz.deviceai.sending.OwnerSendProgress
 import at.heinz.deviceai.OwnerLaneResult
 import org.json.JSONObject
 
@@ -112,7 +113,13 @@ internal class VisualWorkstationDirector(private val retainMillis: Long = RETAIN
  * Code73 · the send lane's order as the stage shows it (`sendWork`): accepted, waiting for the owner, and how it
  * ended – exactly what the lane reported through its host ([OwnerLaneOutcome]); never a message text or a number.
  * `{"phase": "RUNNING"|"WAITING"|"SENT"|"DRAFT"|"HANDED_OVER"|"FAILED"|"STOPPED", "channel": string|null,
- *   "to": string|null, "detail": string|null, "at": ms}`.
+ *   "to": string|null, "detail": string|null, "at": ms, "recipientResolved": bool, "channelChosen": bool,
+ *   "draftVerified": bool}`.
+ *
+ * The three flags are real events of the running order ([at.heinz.deviceai.sending.OwnerSendProgress]): the contact
+ * was resolved (then `to` holds the contact's name – never a number or an address), the channel is fixed before
+ * anything is opened, and the draft was read back on the app's own screen and matches – which happens before the send
+ * control is pressed. They are reset with every new order.
  */
 internal class Command03SendWork {
     private var session: String? = null
@@ -121,11 +128,27 @@ internal class Command03SendWork {
     private var to: String? = null
     private var detail: String? = null
     private var at = 0L
+    private var recipientResolved = false
+    private var channelChosen = false
+    private var draftVerified = false
 
     /** The lane accepted an owner turn of [session]: its order runs. */
     @Synchronized fun started(session: String, nowMillis: Long) {
         if (this.session != session) { channel = null; to = null }
         this.session = session; phase = "RUNNING"; detail = null; at = nowMillis
+        recipientResolved = false; channelChosen = false; draftVerified = false
+    }
+
+    /** A real step of the running order. Ignored for another chat or when no order runs. Called from the job's thread. */
+    @Synchronized fun progress(session: String, event: OwnerSendProgress, nowMillis: Long) {
+        if (this.session != session || phase !in LIVE) return
+        when (event) {
+            is OwnerSendProgress.RecipientResolved -> { to = event.name.take(60); recipientResolved = true }
+            is OwnerSendProgress.ChannelChosen -> { channel = event.channel.take(24); channelChosen = true }
+            OwnerSendProgress.DraftVerified -> draftVerified = true
+        }
+        phase = "RUNNING"
+        at = nowMillis
     }
 
     /** The lane settled its order. Outcomes of other lanes' kinds are ignored. */
@@ -152,7 +175,8 @@ internal class Command03SendWork {
         val current = phase ?: return null
         if (this.session != session) return null
         return JSONObject().put("phase", current).put("channel", channel ?: JSONObject.NULL).put("to", to ?: JSONObject.NULL)
-            .put("detail", detail ?: JSONObject.NULL).put("at", at)
+            .put("detail", detail ?: JSONObject.NULL).put("at", at).put("recipientResolved", recipientResolved)
+            .put("channelChosen", channelChosen).put("draftVerified", draftVerified)
     }
 
     companion object {

@@ -45,6 +45,8 @@ internal interface OwnerSendHost {
     fun appVersion(channel: SendChannel): String?
     /** How an order of this lane ended (see [OwnerLaneOutcome]); nobody has to listen. */
     fun outcome(outcome: OwnerLaneOutcome) {}
+    /** A real step of the running order, for the stage. Called from the job's thread; nobody has to listen. */
+    fun progress(event: OwnerSendProgress) {}
 }
 
 /**
@@ -73,12 +75,16 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
         val confirm: Boolean
         val learn: OwnerRelation?
         val via: OwnerRelation?
+        /** [guard]: the order is a step of a sequence; it stays with the order through every question and answer. */
+        val guard: OwnerSendGuard?
         data class Chat(override val request: String, val order: OwnerSendOrder, val recipient: Candidate?,
                         val text: String?, val origin: TextOrigin, override val confirm: Boolean = false,
-                        override val learn: OwnerRelation? = null, override val via: OwnerRelation? = null) : Work
+                        override val learn: OwnerRelation? = null, override val via: OwnerRelation? = null,
+                        override val guard: OwnerSendGuard? = null) : Work
         data class Mail(override val request: String, val handover: OwnerMailHandover, val recipient: Candidate?,
                         val origin: TextOrigin, override val confirm: Boolean = false,
-                        override val learn: OwnerRelation? = null, override val via: OwnerRelation? = null) : Work
+                        override val learn: OwnerRelation? = null, override val via: OwnerRelation? = null,
+                        override val guard: OwnerSendGuard? = null) : Work
     }
 
     private sealed interface Pending {
@@ -140,10 +146,58 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
      * The work tools call this for „schick das per Mail an …“ after they accepted the owner turn. false = no standing
      * Gmail grant (or no Gmail): the existing hand-over to the mail app stays exactly as it was.
      */
-    fun mail(handover: OwnerMailHandover): Boolean {
+    fun mail(handover: OwnerMailHandover, guard: OwnerSendGuard? = null): Boolean {
         if (!host.grants().enabled(SendChannel.GMAIL) || !host.device().installed(SendChannel.GMAIL)) return false
         open = null
-        start(Work.Mail(handover.request, handover, null, TextOrigin.DERIVED))
+        start(Work.Mail(handover.request, handover, null, TextOrigin.DERIVED, guard = guard))
+        return true
+    }
+
+    /**
+     * The entry for a message that is a step of a sequence of owner orders (OwnerMissionDirector). [order] is the
+     * owner's own clause; it is parsed here by this lane's parser and then takes exactly the way of an order he said
+     * alone: the same recipient resolution (a confirmed relation or the question, the first send through a new
+     * relation always confirmed), the same rule for wording that is not his own, the same standing grant, the same
+     * verification on screen, the same daily limit and the same single press. Nothing of a sequence can widen that.
+     *
+     * [channelGiven]: the owner said „Öffne WhatsApp und …“ in front of the clause. [recipientOverride]: he corrected
+     * the recipient of the planned step („nicht Papa, Mama“). [guard]: the sequence's journal, asked right before the
+     * one press. true = taken (an outcome follows through the host); false = not a send order, nothing happened.
+     */
+    fun missionSend(order: String, channelGiven: Boolean = false, recipientOverride: String? = null,
+                    guard: OwnerSendGuard? = null): Boolean {
+        open = null
+        when (val parsed = OwnerSendIntentParser.parse(order, host.assistantName, channelGiven)) {
+            null -> return false
+            is OwnerSendIntentParser.Result.Refused -> {
+                host.acceptOwnerTurn(order)
+                host.reply(order, parsed.message)
+                host.outcome(OwnerLaneOutcome.Failed(parsed.message))
+            }
+            is OwnerSendIntentParser.Result.Order -> {
+                var said = parsed.order
+                if (recipientOverride != null) {
+                    val unsplit = said.unsplit
+                    said = if (unsplit == null) said.copy(recipient = recipientOverride) else {
+                        // „meinem Vater guten Morgen“: the relation in front is replaced, the text behind it stays.
+                        val rest = OwnerRelation.split(unsplit)?.third
+                        val content = rest?.let(OwnerSendIntentParser::body)
+                        if (content == null) {
+                            val refused = "Bei dieser Nachricht kann ich den Empfänger nicht austauschen, weil Empfänger und Text " +
+                                "nicht getrennt sind. Sag sie bitte noch einmal mit dem richtigen Empfänger. Es wurde nichts gesendet."
+                            host.acceptOwnerTurn(order)
+                            host.reply(order, refused)
+                            host.outcome(OwnerLaneOutcome.Failed(refused))
+                            return true
+                        }
+                        said.copy(recipient = recipientOverride, unsplit = null, text = content.text, origin = content.origin,
+                            modelBrief = content.modelBrief, looseText = false)
+                    }
+                }
+                host.acceptOwnerTurn(order)
+                start(Work.Chat(order, said, null, said.text, said.origin, guard = guard))
+            }
+        }
         return true
     }
 
@@ -424,6 +478,7 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             }
             job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt gefunden", StepState.DONE)
         }
+        host.progress(OwnerSendProgress.RecipientResolved(recipient.displayName))
         if (recipient.value.isEmpty()) return Next("Die Nummer von ${recipient.displayName} ist ohne Ländervorwahl gespeichert. " +
             "Trag sie bitte mit +43 … im Kontakt ein. Es wurde nichts gesendet.")
         val resolved = work.copy(recipient = recipient, text = text, origin = origin,
@@ -453,7 +508,8 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             "Ich würde ${recipient.label} auf WhatsApp schreiben:\n\n„$text“\n\nSoll ich das so senden?",
             Pending.Confirm(resolved.copy(text = text, origin = if (origin.ownerWords) origin else TextOrigin.DERIVED, confirm = true)))
         val plan = SendPlan.WhatsApp(recipient.displayName, recipient.value, text, wantSend)
-        val outcome = OwnerSendFlow(host.device(), host.grants(), job::step).run(plan)
+        host.progress(OwnerSendProgress.ChannelChosen(SendChannel.WHATSAPP.label))
+        val outcome = OwnerSendFlow(host.device(), host.grants(), job::step, guard = work.guard, progress = host::progress).run(plan)
         return Next(OwnerSendReport.text(outcome, draftWanted = work.order.draftOnly), activity = activityLine(outcome), sent = outcome,
             via = via)
     }
@@ -492,6 +548,8 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
             }
             job.step(OwnerSendFlow.STEP_CONTACT, "Kontakt gefunden", StepState.DONE)
         }
+        // The stage shows who it goes to by the contact's name; a bare address is not shown there.
+        recipient.displayName.takeIf { it != recipient.value }?.let { host.progress(OwnerSendProgress.RecipientResolved(it)) }
         // A file the owner explicitly ordered to send goes out as it is, named by its own file name and without any
         // model-written text. Without a saved file the generated text itself would be the mail: shown once first.
         val file = order.attachment
@@ -511,7 +569,8 @@ internal class OwnerSendDirector(private val host: OwnerSendHost) {
                 "(Als gespeicherte Datei – „speichere das als PDF“ – geht es künftig ohne Rückfrage als Anhang hinaus.)",
             Pending.Confirm(settled.copy(origin = TextOrigin.DERIVED, confirm = true)))
         val plan = SendPlan.Mail(recipient.value, recipient.displayName.takeIf { it != recipient.value }, subject, body, file, send = true)
-        val outcome = OwnerSendFlow(host.device(), host.grants(), job::step).run(plan)
+        host.progress(OwnerSendProgress.ChannelChosen(SendChannel.GMAIL.label))
+        val outcome = OwnerSendFlow(host.device(), host.grants(), job::step, guard = work.guard, progress = host::progress).run(plan)
         return Next(OwnerSendReport.text(outcome), activity = activityLine(outcome), sent = outcome, via = via)
     }
 
