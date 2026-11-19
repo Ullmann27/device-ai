@@ -150,7 +150,8 @@ internal object ClaudeServerToolPolicy {
                 // Fetch cites only on request („citations are optional for web fetch and disabled by default“).
                 .citations(BetaCitationsConfigParam.builder().enabled(true).build())
                 // Addresses that only appear in a result of one of the app's device tools (a link in a message, a
-                // file) are not fetched: only what the owner wrote or what a search of this turn returned.
+                // file) are not fetched: only what the user message of the request carries (the owner's sentence
+                // and the context the app put beside it) or what a search of this turn returned.
                 .urlSources(BetaWebFetchUrlSources.builder()
                     .clientToolResults(BetaWebFetchUrlSourceNone.builder().build()).build())
                 .build())
@@ -326,8 +327,9 @@ object ClaudeServerToolTexts {
         "Ist der Schalter an, darf mein Cloud-Gehirn selbst im Internet suchen und Seiten abrufen. Die Suche und der " +
         "Abruf laufen bei Anthropic, nicht auf deinem Gerät.\n" +
         "Was das Gerät verlässt: Die Suchanfragen formuliert das Cloud-Modell selbst aus unserem Gespräch – die App " +
-        "sieht sie erst im Ergebnis und kann sie vorher nicht prüfen. Abgerufen werden nur Adressen, die du selbst " +
-        "genannt hast oder die aus einer Suche stammen; Adressen aus deinen Nachrichten oder Dateien ruft es nicht ab.\n" +
+        "sieht sie erst im Ergebnis und kann sie vorher nicht prüfen. Abgerufen werden nur Adressen, die in deiner " +
+        "Anfrage und dem mitgesendeten Gesprächs- und Dokumenttext stehen oder aus einer Suche stammen; Adressen, die " +
+        "erst ein Geräte-Werkzeug liefert (zum Beispiel aus einer gelesenen Nachricht oder Datei), ruft es nicht ab.\n" +
         "Kosten: Jede Suche kostet zusätzliches API-Guthaben (laut Anthropic-Dokumentation 10 USD je 1.000 Suchen, " +
         ClaudePricing.SERVER_TOOLS_AS_OF + "), dazu die Token der Treffer und Seiten. Die Suchen rechne ich in dein " +
         "Monatslimit ein. Ein Seitenabruf hat keinen Aufpreis, nur seine Token.\n" +
@@ -343,7 +345,7 @@ object ClaudeServerToolTexts {
         "dein Gerät.\n" +
         "Was das Gerät verlässt: Das Modell kann Inhalte aus unserem Gespräch in diese Umgebung schreiben. Dateien von " +
         "deinem Gerät kommen dort nur an, wenn deine Freigabe für Dateiinhalte an ist und du es in dem Auftrag " +
-        "verlangst. Bildschirminhalte anderer Apps gehen nie dorthin. Anthropic bewahrt die Daten der Umgebung bis " +
+        "verlangst; die App selbst lädt keine Datei dorthin hoch. Bildschirminhalte anderer Apps gehen nie dorthin. Anthropic bewahrt die Daten der Umgebung bis " +
         "zu 30 Tage auf.\n" +
         "Kosten: zusätzliches API-Guthaben. Anthropic rechnet die Code-Ausführung nach Laufzeit ab (laut " +
         "Dokumentation mindestens 5 Minuten je Nutzung; 1.550 Stunden im Monat je Organisation frei, danach 0,05 USD " +

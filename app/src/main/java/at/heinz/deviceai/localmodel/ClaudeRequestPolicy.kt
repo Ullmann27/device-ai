@@ -166,8 +166,8 @@ internal object ClaudeAbilityCatalogue {
                     else "Der Besitzer hat das Internet dauerhaft freigegeben. ") +
                 "Suche nur, wenn die Frage aktuelle oder nachprüfbare Angaben braucht; höchstens " +
                 "${ClaudeServerToolPolicy.WEB_SEARCH_MAX_USES} Suchen und ${ClaudeServerToolPolicy.WEB_FETCH_MAX_USES} " +
-                "Seitenabrufe je Auftrag. web_fetch ruft nur Adressen ab, die der Besitzer genannt hat oder die aus einer " +
-                "Suche stammen. Schreibe nichts Privates des Besitzers (Namen, Kontakte, Nachrichten, Erinnerungen, " +
+                "Seitenabrufe je Auftrag. web_fetch ruft nur Adressen ab, die im Auftrag des Besitzers stehen oder aus " +
+                "einer Suche stammen, keine Adressen aus Werkzeugergebnissen der App. Schreibe nichts Privates des Besitzers (Namen, Kontakte, Nachrichten, Erinnerungen, " +
                 "Zugangsdaten, Gerätedaten) in eine Suchanfrage oder Adresse. Stütze die Antwort auf die Treffer und " +
                 "erfinde keine Quelle und keine Adresse; die zitierten Quellen zeigt die App selbst an. Meldet eine " +
                 "Suche oder ein Abruf einen Fehler oder gibt es keine Treffer, sag das klar und behaupte kein Ergebnis. " +
