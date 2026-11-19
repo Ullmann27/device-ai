@@ -1151,3 +1151,498 @@ body[data-design="command03"][data-native-light-motion="off"] #native-computer-p
  body[data-design="command03"] .native-computer-marker::after,
  body[data-design="command03"] #native-computer-panel .op-browser-status .status-dot {animation:none!important;}
 }
+
+/* ───────── Code71 · tactical command centre. The owner's order of 19.11.2026: expand the layout, make it military,
+   real animation – windows and work orders slide in and out. Three regions are added to the stage column, each
+   only while Android reports what it shows: the status strip (`tactical`), the start-up check (`systemCheck`), the
+   order rail (`orders`) and the info cards (`briefingCards`). The look – chamfered plates, bracket corners, tick
+   rulers, uppercase call signs, state stripes – is a style; every word that reads like data is snapshot data.
+   Heat contract, checked in tools/command03-native-qa:
+   · no backdrop-filter, no filter, no transition and no new canvas in this section;
+   · every animation needs body[data-native-effects="full"] or ="balanced" in each of its selectors. The bridge
+     sets "rest" while the on-device model computes and "light" in Android's reduced tier: nothing here moves then,
+     and the bridge sets no entrance or departure mark either;
+   · keyframes use transform and opacity only. Every animation is one pass on a real event, except two loops in
+     "full": the lamp of an order that is really open and the sweep of the strip's ruler;
+   · while the device computes ("rest") no existing surface gets a style from this section; the new regions stand
+     still in flat colours.
+   The final state of every element is its state without animation: marks only add a way to get there. ───────── */
+body[data-design="command03"] {
+ --tac-line:rgba(112,231,255,.4);--tac-dim:#8fb9c9;--tac-ink:#e6f8fc;--tac-plate:#06131ff5;--tac-cell:#0a2030;
+ --tac-cyan:#83edff;--tac-violet:#c3a2ff;--tac-amber:#ffc880;--tac-red:#ff9d8c;--tac-green:#7fe3b8;--tac-slate:#9db4c4;
+ --tac-mech:cubic-bezier(.16,.84,.24,1);--tac-exit:cubic-bezier(.6,0,.9,.4);
+ --tac-cut:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));
+ /* The two cut corners of a plate, drawn as hairlines. */
+ --tac-edges:linear-gradient(45deg,transparent calc(50% - .7px),var(--tac-line) calc(50% - .7px) calc(50% + .7px),transparent calc(50% + .7px));
+}
+body[data-design="command03"] .native-tac-hud {display:grid;gap:7px;min-width:0;margin:0 0 9px;}
+body[data-design="command03"] .native-tac-hud:empty {display:none;}
+
+/* Status strip: one cell per reading; a ruler of ticks below it. */
+body[data-design="command03"] .native-tac-strip {
+ /* Clipped, not a scroll box: the sweep along the ruler must never make the strip scrollable (a cell that is
+    brought into view would otherwise shift the whole row). */
+ position:relative;display:flex;flex-wrap:wrap;gap:2px;min-width:0;padding:0 0 8px;overflow:hidden;overflow:clip;
+ background:
+  linear-gradient(var(--tac-line),var(--tac-line)) left bottom/100% 1px no-repeat,
+  repeating-linear-gradient(90deg,var(--tac-line) 0 1px,transparent 1px 8px) left calc(100% - 1px)/100% 4px no-repeat,
+  repeating-linear-gradient(90deg,var(--tac-line) 0 1px,transparent 1px 40px) left calc(100% - 1px)/100% 7px no-repeat;
+}
+body[data-design="command03"] .native-tac-cell {
+ --tone:var(--tac-slate);
+ /* As wide as its reading needs, then sharing the row: no reading is ever cut. */
+ flex:1 1 auto;display:grid;align-content:center;gap:1px;min-width:62px;max-width:100%;min-height:44px;margin:0;padding:5px 9px 5px 9px;
+ border:0;border-left:2px solid var(--tone);border-radius:0;background:var(--tac-cell);color:var(--tac-ink);
+ text-align:left;font:inherit;appearance:none;-webkit-appearance:none;
+}
+body[data-design="command03"] button.native-tac-cell {cursor:pointer;touch-action:manipulation;}
+body[data-design="command03"] button.native-tac-cell:focus-visible {outline:2px solid var(--tac-cyan);outline-offset:-2px;}
+body[data-design="command03"] .native-tac-key {
+ color:var(--tac-dim);font:600 10px/1.25 'Space Grotesk',system-ui,sans-serif;letter-spacing:.16em;white-space:nowrap;
+}
+body[data-design="command03"] .native-tac-value {
+ color:var(--tone);font:600 12px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.07em;white-space:nowrap;
+}
+body[data-design="command03"] .native-tac-cell[data-tone="cloud"] {--tone:var(--tac-violet);}
+body[data-design="command03"] .native-tac-cell[data-tone="local"],
+body[data-design="command03"] .native-tac-cell[data-tone="normal"],
+body[data-design="command03"] .native-tac-cell[data-tone="active"] {--tone:var(--tac-cyan);}
+body[data-design="command03"] .native-tac-cell[data-tone="ok"] {--tone:var(--tac-green);}
+body[data-design="command03"] .native-tac-cell[data-tone="warn"] {--tone:var(--tac-amber);}
+body[data-design="command03"] .native-tac-cell[data-tone="fail"] {--tone:var(--tac-red);}
+body[data-design="command03"] button.native-tac-cell[aria-expanded="true"] {background:#103349;}
+/* A real warning colours the ruler: amber for attention, red for a failure. */
+body[data-design="command03"][data-native-attention="warn"] .native-tac-strip {--tac-line:rgba(255,200,128,.62);}
+body[data-design="command03"][data-native-attention="fail"] .native-tac-strip {--tac-line:rgba(255,157,140,.7);}
+
+/* A plate: the chamfered frame shared by the rail, the start-up check and the info cards. */
+body[data-design="command03"] .native-order-rail,
+body[data-design="command03"] .native-arming,
+body[data-design="command03"] .native-brief-card {
+ --state:var(--tac-cyan);
+ position:relative;min-width:0;border:1px solid var(--tac-line);border-left:3px solid var(--state);
+ background:var(--tac-edges) right top/11px 11px no-repeat,var(--tac-edges) left bottom/11px 11px no-repeat,var(--tac-plate);
+ clip-path:var(--tac-cut);
+}
+
+/* Order rail. Its own region below the strip; it stays in view while the page scrolls to the work window. */
+body[data-design="command03"] .native-order-rail {
+ position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:grid;gap:5px;margin:0 0 10px;padding:0 9px 8px 10px;
+}
+body[data-design="command03"] .native-order-rail[data-order-state="waiting"] {--state:var(--tac-amber);--tac-line:rgba(255,200,128,.55);}
+body[data-design="command03"] .native-order-rail[data-order-state="completed"] {--state:var(--tac-green);}
+body[data-design="command03"] .native-order-rail[data-order-state="failed"] {--state:var(--tac-red);--tac-line:rgba(255,157,140,.6);}
+body[data-design="command03"] .native-order-rail[data-order-state="stopped"],
+body[data-design="command03"] .native-order-rail[data-order-state="ended"],
+body[data-design="command03"] .native-order-rail[data-order-state="idle"] {--state:var(--tac-slate);}
+body[data-design="command03"] .native-order-head {
+ display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;min-width:0;min-height:44px;width:100%;margin:0;padding:6px 0 4px;
+ border:0;border-bottom:1px solid rgba(112,231,255,.16);border-radius:0;background:none;color:var(--tac-ink);text-align:left;
+ font:inherit;appearance:none;-webkit-appearance:none;cursor:pointer;touch-action:manipulation;
+}
+body[data-design="command03"] .native-order-head:focus-visible {outline:2px solid var(--tac-cyan);outline-offset:-2px;}
+body[data-design="command03"] .native-order-call {
+ color:var(--state);font:600 11px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.2em;white-space:nowrap;
+}
+body[data-design="command03"] .native-order-title {
+ flex:1 1 150px;min-width:0;color:var(--tac-ink);font:500 13px/1.35 Manrope,system-ui,sans-serif;
+ overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-order-count {
+ color:var(--tac-dim);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;white-space:nowrap;
+}
+body[data-design="command03"] .native-order-stamp {
+ position:relative;padding:4px 8px 4px 19px;border:1px solid var(--state);color:var(--state);white-space:nowrap;
+ font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.16em;
+}
+body[data-design="command03"] .native-order-stamp::before {
+ content:"";position:absolute;left:7px;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--state);
+}
+body[data-design="command03"] .native-order-list,
+body[data-design="command03"] .native-order-done {list-style:none;margin:0;padding:0;min-width:0;}
+body[data-design="command03"] .native-order-list[hidden],
+body[data-design="command03"] .native-order-done[hidden] {display:none!important;}
+body[data-design="command03"] .native-order-list {
+ display:grid;gap:4px;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));
+}
+body[data-design="command03"] .native-order-card {
+ --state:var(--tac-cyan);
+ display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:9px;min-width:0;min-height:36px;
+ padding:5px 9px 5px 8px;border-left:3px solid var(--state);background:var(--tac-cell);
+ clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+}
+body[data-design="command03"] .native-order-no {
+ color:var(--state);font:600 13px/1.2 'Space Grotesk',system-ui,sans-serif;letter-spacing:.06em;font-variant-numeric:tabular-nums;
+}
+body[data-design="command03"] .native-order-card .native-order-label {
+ min-width:0;color:var(--tac-ink);font:500 13px/1.35 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-order-state {
+ color:var(--state);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;text-align:right;
+}
+body[data-design="command03"] .native-order-card[data-state="waiting"] {
+ --state:var(--tac-amber);
+ /* Hazard stripes: the step waits for the owner. */
+ background:repeating-linear-gradient(-45deg,rgba(255,200,128,.5) 0 5px,transparent 5px 10px) left top/7px 100% no-repeat,#2a2416;
+ padding-left:14px;
+}
+body[data-design="command03"] .native-order-card[data-state="failed"] {--state:var(--tac-red);background:#2a1719;}
+body[data-design="command03"] .native-order-card[data-state="done"] {--state:var(--tac-green);}
+body[data-design="command03"] .native-order-card[data-state="stopped"],
+body[data-design="command03"] .native-order-card[data-state="skipped"],
+body[data-design="command03"] .native-order-card[data-state="blocked"],
+body[data-design="command03"] .native-order-card[data-state="unverified"] {--state:var(--tac-slate);}
+/* Folded (the default) the rail stays compact, because it stays in view: its three newest open steps, two lines
+   each. Unfolded by its head it shows every step in full and scrolls with the page. */
+body[data-design="command03"] .native-order-rail:not([data-expanded="true"]) .native-order-card:nth-last-child(n+4) {display:none;}
+body[data-design="command03"] .native-order-rail:not([data-expanded="true"]) .native-order-card .native-order-label {
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
+body[data-design="command03"] .native-order-rail[data-expanded="true"] {position:relative;top:auto;}
+/* The compact stack of finished steps: number and tick; unfolded by the rail's head they show their label. */
+body[data-design="command03"] .native-order-done {display:flex;flex-wrap:wrap;gap:4px;}
+body[data-design="command03"] .native-order-chip {
+ display:inline-flex;align-items:baseline;gap:6px;min-width:0;padding:3px 7px;border:1px solid rgba(127,227,184,.45);
+ background:#0b2a26;--state:var(--tac-green);
+}
+body[data-design="command03"] .native-order-chip .native-order-no {font-size:11px;}
+body[data-design="command03"] .native-order-chip .native-order-no::after {content:" ✓";}
+body[data-design="command03"] .native-order-chip .native-order-label {
+ display:none;min-width:0;color:#cdeee0;font:500 12px/1.35 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-order-rail[data-expanded="true"] .native-order-chip {flex:1 1 100%;}
+body[data-design="command03"] .native-order-rail[data-expanded="true"] .native-order-chip .native-order-label {display:block;}
+/* The line that names the moment an order or a plan arrives; it is visible only while it passes. */
+body[data-design="command03"] .native-order-banner {
+ position:absolute;left:0;right:0;top:0;height:44px;display:grid;place-items:center;pointer-events:none;opacity:0;
+ background:#06131f;color:var(--tac-cyan);font:600 12px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.3em;
+ text-align:center;
+}
+/* With the keyboard open or in a low window the rail scrolls with the page: the composer keeps its room. */
+@media(max-height:620px) {
+ body[data-design="command03"] .native-order-rail {position:relative;top:auto;}
+}
+
+/* Start-up check: every real check with its state; "alles bereit" only when every one is ready. */
+body[data-design="command03"] .native-arming {display:grid;gap:6px;padding:4px 10px 11px 11px;}
+body[data-design="command03"] .native-arming[data-verdict="problems"] {--state:var(--tac-amber);}
+body[data-design="command03"] .native-arming-head {display:flex;align-items:center;gap:10px;min-width:0;}
+body[data-design="command03"] .native-arming-call {
+ color:var(--tac-cyan);font:600 11px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.2em;
+}
+body[data-design="command03"] .native-arming-count {
+ margin-left:auto;color:var(--tac-ink);font:600 11px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.12em;white-space:nowrap;
+}
+body[data-design="command03"] .native-arming-close {
+ min-width:44px;min-height:44px;margin:0;padding:0 10px;border:1px solid var(--tac-line);border-radius:0;background:var(--tac-cell);
+ color:var(--tac-ink);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;cursor:pointer;
+ appearance:none;-webkit-appearance:none;touch-action:manipulation;
+}
+body[data-design="command03"] .native-arming-list {
+ list-style:none;margin:0;padding:0;display:grid;gap:3px;min-width:0;
+ grid-template-columns:repeat(auto-fill,minmax(min(100%,232px),1fr));
+}
+body[data-design="command03"] .native-arming-row {
+ --state:var(--tac-green);
+ display:grid;grid-template-columns:8px minmax(0,1fr) auto;align-items:center;column-gap:9px;min-width:0;
+ padding:5px 9px 5px 8px;border-left:2px solid var(--state);background:var(--tac-cell);
+}
+body[data-design="command03"] .native-arming-row[data-state="warn"] {--state:var(--tac-amber);}
+body[data-design="command03"] .native-arming-row[data-state="fail"] {--state:var(--tac-red);}
+body[data-design="command03"] .native-arming-row[data-state="off"] {--state:var(--tac-slate);}
+body[data-design="command03"] .native-check-lamp {grid-column:1;grid-row:1;width:8px;height:8px;background:var(--state);}
+body[data-design="command03"] .native-check-label {
+ grid-column:2;grid-row:1;min-width:0;color:var(--tac-ink);font:600 12px/1.35 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-check-state {
+ grid-column:3;grid-row:1;color:var(--state);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.14em;
+}
+body[data-design="command03"] .native-check-detail {
+ grid-column:2/-1;grid-row:2;min-width:0;color:var(--tac-dim);font:400 11px/1.4 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-check-detail:empty {display:none;}
+/* While the checks tick in, a ready one is its name and its state; what it says is in the list the strip opens. */
+body[data-design="command03"] .native-arming[data-mode="run"] .native-arming-row[data-state="ok"] .native-check-detail {display:none;}
+body[data-design="command03"] .native-arming-verdict {
+ margin:2px 0 0;color:var(--tac-green);font:600 12px/1.5 'Space Grotesk',system-ui,sans-serif;letter-spacing:.08em;
+ overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-arming[data-verdict="problems"] .native-arming-verdict {color:var(--tac-amber);}
+/* The pass of the start-up sequence along the lower edge; without the sequence it is not there. */
+body[data-design="command03"] .native-arming::after {
+ content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--tac-cyan);
+ transform:scaleX(0);transform-origin:left center;
+}
+
+/* Info cards: a row that can be swiped on a phone, a grid on the unfolded display. */
+body[data-design="command03"] .native-briefing {
+ display:grid;gap:8px;min-width:0;margin:0 0 11px;
+ grid-template-columns:repeat(auto-fit,minmax(min(100%,208px),1fr));
+}
+body[data-design="command03"] .native-brief-card {
+ --state:var(--tac-cyan);display:grid;align-content:start;gap:4px;padding:9px 12px 11px 11px;
+}
+body[data-design="command03"] .native-brief-card[data-kind="weather"],
+body[data-design="command03"] .native-brief-card[data-kind="news"] {--state:var(--tac-violet);}
+body[data-design="command03"] .native-brief-card[data-kind="tasks"],
+body[data-design="command03"] .native-brief-card[data-kind="system"] {--state:var(--tac-green);}
+body[data-design="command03"] .native-brief-card[data-state="attention"] {
+ --state:var(--tac-amber);--tac-line:rgba(255,200,128,.6);
+}
+body[data-design="command03"] .native-brief-kind {
+ color:var(--state);font:600 10px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.18em;
+}
+body[data-design="command03"] .native-brief-title {
+ color:var(--tac-ink);font:600 15px/1.3 'Space Grotesk',system-ui,sans-serif;overflow-wrap:anywhere;
+}
+body[data-design="command03"] .native-brief-lines {list-style:none;margin:0;padding:0;display:grid;gap:2px;min-width:0;}
+body[data-design="command03"] .native-brief-lines[hidden] {display:none!important;}
+body[data-design="command03"] .native-brief-line {
+ color:#c4dde8;font:400 12px/1.45 Manrope,system-ui,sans-serif;overflow-wrap:anywhere;
+}
+@media(max-width:760px) {
+ body[data-design="command03"] .native-briefing {
+  display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;
+ }
+ body[data-design="command03"] .native-briefing::-webkit-scrollbar {display:none;}
+ body[data-design="command03"] .native-brief-card {flex:0 0 min(76%,250px);scroll-snap-align:start;}
+ body[data-design="command03"] .native-brief-card:only-child {flex-basis:100%;}
+}
+
+/* Installed-app hits in the file window: one tile per label Android matched. */
+body[data-design="command03"] #native-files-panel[data-kind="apps"] .native-files-list {
+ grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));
+}
+body[data-design="command03"] #native-files-panel[data-kind="apps"] .native-file-glyph {
+ width:16px;height:16px;border-radius:4px;
+ background:linear-gradient(#83edff,#83edff) center/6px 6px no-repeat;
+}
+
+/* The window that leaves: its plate with its name, shown only while it slides out. */
+body[data-design="command03"] .native-window-ghost {
+ position:absolute;left:14px;right:14px;top:70px;bottom:40px;z-index:3;display:grid;place-items:center;pointer-events:none;
+ opacity:0;border:1px solid var(--tac-line);background:#06131fd9;clip-path:var(--tac-cut);
+}
+body[data-design="command03"] .native-window-ghost-name {
+ color:var(--tac-cyan);font:600 13px/1.3 'Space Grotesk',system-ui,sans-serif;letter-spacing:.34em;text-align:center;
+}
+
+/* Tactical marks on the existing windows: never while the device computes. */
+body[data-design="command03"][data-native-effects]:not([data-native-effects="rest"]) .native-window-frame::after {
+ content:"";position:absolute;left:34px;right:34px;top:0;height:6px;opacity:.55;
+ background:repeating-linear-gradient(90deg,var(--frame-a) 0 1px,transparent 1px 9px) left top/100% 3px no-repeat,
+  repeating-linear-gradient(90deg,var(--frame-a) 0 1px,transparent 1px 45px) left top/100% 6px no-repeat;
+}
+body[data-design="command03"][data-native-effects]:not([data-native-effects="rest"]) #native-live-panel .op-mode-label,
+body[data-design="command03"][data-native-effects]:not([data-native-effects="rest"]) #native-computer-panel .op-mode-label,
+body[data-design="command03"][data-native-effects]:not([data-native-effects="rest"]) .native-record-badge {
+ border-radius:0;padding-left:12px;padding-right:12px;clip-path:polygon(7px 0,100% 0,calc(100% - 7px) 100%,0 100%);
+}
+
+/* Unfolded display: the live monitor uses the width – the picture on the left, what was done beside it. */
+@media(min-width:761px) {
+ body[data-design="command03"] #native-computer-panel {
+  display:grid;grid-template-columns:minmax(0,1.6fr) minmax(210px,1fr);column-gap:16px;align-items:start;
+ }
+ body[data-design="command03"] #native-computer-panel>* {grid-column:1/-1;}
+ body[data-design="command03"] #native-computer-panel>.op-browser-frame {grid-column:1;}
+ body[data-design="command03"] #native-computer-panel>.native-computer-work {grid-column:2;margin-top:0;}
+ body[data-design="command03"] #native-computer-panel:has(>.native-computer-work[hidden])>.op-browser-frame {grid-column:1/-1;}
+ body[data-design="command03"] #native-computer-panel>.native-computer-work .native-computer-log {grid-template-columns:minmax(0,1fr);}
+ body[data-design="command03"] #native-computer-panel .native-computer-image {max-height:min(72vh,760px);}
+}
+
+/* Motion. One pass per mark; marks are set by the bridge on a real event and removed when their pass has ended. */
+@keyframes native-tac-in-drop {from{transform:translateY(-12px);opacity:0}70%{transform:translateY(1px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-slide {from{transform:translateX(-26px);opacity:0}70%{transform:translateX(2px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-fly {from{transform:translateX(54px);opacity:0}70%{transform:translateX(-3px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-tick {from{transform:translateX(-10px);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-tac-in-chip {from{transform:scale(.55);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-tac-in-banner {from{transform:translateX(-18px);opacity:0}16%{transform:none;opacity:1}74%{transform:none;opacity:1}to{transform:translateX(18px);opacity:0}}
+@keyframes native-tac-in-window-a {from{transform:translateX(38px);opacity:0}68%{transform:translateX(-3px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-window-b {from{transform:translateX(38px);opacity:0}68%{transform:translateX(-3px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-part {from{transform:translateY(11px);opacity:0}to{transform:none;opacity:1}}
+@keyframes native-tac-in-wing-left {from{transform:translateX(-30px);opacity:0}72%{transform:translateX(2px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-in-wing-right {from{transform:translateX(30px);opacity:0}72%{transform:translateX(-2px);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-out-dock {from{transform:none;opacity:1}46%{transform:none;opacity:1}to{transform:translateX(30px) scale(.96);opacity:0}}
+@keyframes native-tac-out-slide {from{transform:none;opacity:1}to{transform:translateX(-30px);opacity:0}}
+@keyframes native-tac-out-fly {from{transform:none;opacity:1}to{transform:translateX(54px);opacity:0}}
+@keyframes native-tac-out-lift {from{transform:none;opacity:1}to{transform:translateY(-10px);opacity:0}}
+@keyframes native-tac-out-window {from{transform:none;opacity:.94}to{transform:translateX(-46px);opacity:0}}
+@keyframes native-tac-mark-stamp {from{transform:scale(1.75);opacity:0}55%{transform:scale(.93);opacity:1}to{transform:none;opacity:1}}
+@keyframes native-tac-mark-flash {from{opacity:.2}to{opacity:1}}
+@keyframes native-tac-arming-pass {from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes native-tac-loop-lamp {from{opacity:.3}to{opacity:1}}
+@keyframes native-tac-loop-sweep {from{transform:translateX(-120px)}to{transform:translateX(100vw)}}
+
+/* Entrances. */
+body[data-design="command03"][data-native-effects="full"] .native-tac-strip[data-native-enter],
+body[data-design="command03"][data-native-effects="full"] .native-order-rail[data-native-enter],
+body[data-design="command03"][data-native-effects="full"] .native-arming[data-native-enter] {
+ animation:native-tac-in-drop .46s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-tac-strip[data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-order-rail[data-native-enter],
+body[data-design="command03"][data-native-effects="balanced"] .native-arming[data-native-enter] {
+ animation:native-tac-in-drop .24s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-card[data-native-enter] {
+ animation:native-tac-in-slide .44s var(--tac-mech) 1 both;animation-delay:calc(.12s + var(--tac-i,0) * .07s);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-order-card[data-native-enter] {
+ animation:native-tac-in-slide .24s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-chip[data-native-enter] {
+ animation:native-tac-in-chip .3s var(--tac-mech) 1 both;animation-delay:.42s;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-order-chip[data-native-enter] {
+ animation:native-tac-in-chip .2s var(--tac-mech) 1 both;animation-delay:.2s;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-banner[data-native-enter] {
+ animation:native-tac-in-banner 1.25s var(--tac-mech) 1 both;animation-delay:.2s;
+}
+body[data-design="command03"][data-native-effects="full"] .native-brief-card[data-native-enter] {
+ animation:native-tac-in-fly .52s var(--tac-mech) 1 both;animation-delay:calc(var(--tac-i,0) * .09s);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-brief-card[data-native-enter] {
+ animation:native-tac-in-fly .26s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-files-list li[data-native-enter] {
+ animation:native-tac-in-fly .4s var(--tac-mech) 1 both;animation-delay:calc(.16s + var(--tac-i,0) * .05s);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-files-list li[data-native-enter] {
+ animation:native-tac-in-part .22s var(--tac-mech) 1 both;
+}
+/* Start-up sequence: each check ticks in, then the verdict; the pass along the edge is its length. */
+body[data-design="command03"][data-native-effects="full"] .native-arming-row[data-native-enter] {
+ animation:native-tac-in-tick .3s var(--tac-mech) 1 both;animation-delay:calc(.3s + var(--tac-i,0) * .17s);
+}
+body[data-design="command03"][data-native-effects="full"] .native-arming-verdict[data-native-enter] {
+ animation:native-tac-in-tick .34s var(--tac-mech) 1 both;animation-delay:calc(.5s + var(--tac-n,0) * .17s);
+}
+body[data-design="command03"][data-native-effects="full"] .native-arming[data-mode="run"][data-pass="true"]::after {
+ animation:native-tac-arming-pass calc(2.6s + var(--tac-n,0) * .17s) linear 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-arming-row[data-native-enter] {
+ animation:native-tac-in-tick .2s var(--tac-mech) 1 both;animation-delay:calc(.1s + var(--tac-i,0) * .06s);
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-arming[data-mode="run"][data-pass="true"]::after {
+ animation:native-tac-arming-pass calc(1.8s + var(--tac-n,0) * .06s) linear 1 both;
+}
+/* With the start-up sequence the instrument tiles come in from their sides. */
+body[data-design="command03"][data-native-effects="full"][data-native-arming="run"] .presence-wing-left {
+ animation:native-tac-in-wing-left .62s var(--tac-mech) 1 both;animation-delay:.18s;
+}
+body[data-design="command03"][data-native-effects="full"][data-native-arming="run"] .presence-wing-right {
+ animation:native-tac-in-wing-right .62s var(--tac-mech) 1 both;animation-delay:.3s;
+}
+
+/* Window choreography: the arriving window slides in and its parts follow; the leaving one slides out. */
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter="a"] {
+ animation:native-tac-in-window-a .6s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter="b"] {
+ animation:native-tac-in-window-b .6s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter]>* {
+ animation:native-tac-in-part .32s var(--tac-mech) 1 both;animation-delay:.1s;
+}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter]>:nth-child(2) {animation-delay:.15s;}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter]>:nth-child(3) {animation-delay:.2s;}
+body[data-design="command03"][data-native-effects="full"] #workspace>[data-native-enter]>:nth-child(n+4) {animation-delay:.25s;}
+body[data-design="command03"][data-native-effects="balanced"] #workspace>[data-native-enter="a"] {
+ animation:native-tac-in-window-a .3s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] #workspace>[data-native-enter="b"] {
+ animation:native-tac-in-window-b .3s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-window-ghost[data-native-leaving="true"] {
+ animation:native-tac-out-window .36s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-window-ghost[data-native-leaving="true"] {
+ animation:native-tac-out-window .2s var(--tac-exit) 1 both;
+}
+
+/* Departures. */
+body[data-design="command03"][data-native-effects="full"] .native-order-card[data-native-leaving="true"] {
+ animation:native-tac-out-slide .3s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-card[data-native-leaving="true"][data-state="done"] {
+ animation:native-tac-out-dock .62s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-order-card[data-native-leaving="true"] {
+ animation:native-tac-out-slide .18s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-rail[data-native-leaving="true"] {
+ animation:native-tac-out-slide .34s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-order-rail[data-native-leaving="true"] {
+ animation:native-tac-out-slide .18s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-brief-card[data-native-leaving="true"] {
+ animation:native-tac-out-fly .34s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-brief-card[data-native-leaving="true"] {
+ animation:native-tac-out-fly .18s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-arming[data-native-leaving="true"],
+body[data-design="command03"][data-native-effects="full"] .native-briefing[data-native-leaving="true"] {
+ animation:native-tac-out-lift .3s var(--tac-exit) 1 both;
+}
+body[data-design="command03"][data-native-effects="balanced"] .native-arming[data-native-leaving="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-briefing[data-native-leaving="true"] {
+ animation:native-tac-out-lift .18s var(--tac-exit) 1 both;
+}
+
+/* A state that Android just changed: stamped once. */
+body[data-design="command03"][data-native-effects="full"] .native-order-stamp[data-changed="true"],
+body[data-design="command03"][data-native-effects="balanced"] .native-order-stamp[data-changed="true"] {
+ animation:native-tac-mark-stamp .42s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-order-card[data-changed="true"] .native-order-state,
+body[data-design="command03"][data-native-effects="balanced"] .native-order-card[data-changed="true"] .native-order-state {
+ animation:native-tac-mark-stamp .42s var(--tac-mech) 1 both;
+}
+body[data-design="command03"][data-native-effects="full"] .native-tac-cell[data-changed="true"] .native-tac-value,
+body[data-design="command03"][data-native-effects="balanced"] .native-tac-cell[data-changed="true"] .native-tac-value,
+body[data-design="command03"][data-native-effects="full"] .native-brief-card[data-changed="true"] .native-brief-kind,
+body[data-design="command03"][data-native-effects="balanced"] .native-brief-card[data-changed="true"] .native-brief-kind {
+ animation:native-tac-mark-flash .22s ease-in-out 3 alternate both;
+}
+
+/* Two loops, in the full tier only: the lamp of an order that is open, and the sweep along the strip's ruler. */
+body[data-design="command03"][data-native-effects="full"] .native-order-rail[data-order-state="active"] .native-order-stamp::before,
+body[data-design="command03"][data-native-effects="full"] .native-order-rail[data-order-state="waiting"] .native-order-stamp::before {
+ animation:native-tac-loop-lamp .9s ease-in-out infinite alternate;
+}
+body[data-design="command03"] .native-tac-strip::after {
+ content:"";position:absolute;left:0;bottom:0;width:120px;height:2px;opacity:0;
+ background:linear-gradient(90deg,transparent,var(--tac-cyan),transparent);
+}
+body[data-design="command03"][data-native-effects="full"] .native-tac-strip::after {
+ opacity:.8;animation:native-tac-loop-sweep 5.2s linear infinite;
+}
+
+/* The owner's switch and the system preference stop every one of them. */
+body[data-design="command03"][data-native-light-motion="off"] .native-tac,
+body[data-design="command03"][data-native-light-motion="off"] .native-tac *,
+body[data-design="command03"][data-native-light-motion="off"] .native-tac::after,
+body[data-design="command03"][data-native-light-motion="off"] .native-tac *::before,
+body[data-design="command03"][data-native-light-motion="off"] .native-tac *::after,
+body[data-design="command03"][data-native-light-motion="off"] .native-window-ghost,
+body[data-design="command03"][data-native-light-motion="off"] .presence-wing,
+body[data-design="command03"][data-native-light-motion="off"] .native-files-list li,
+body[data-design="command03"][data-native-light-motion="off"] #workspace>[data-native-enter],
+body[data-design="command03"][data-native-light-motion="off"] #workspace>[data-native-enter]>* {animation:none!important;}
+@media(prefers-reduced-motion:reduce) {
+ body[data-design="command03"] .native-tac,
+ body[data-design="command03"] .native-tac *,
+ body[data-design="command03"] .native-tac::after,
+ body[data-design="command03"] .native-tac *::before,
+ body[data-design="command03"] .native-tac *::after,
+ body[data-design="command03"] .native-window-ghost,
+ body[data-design="command03"] .presence-wing,
+ body[data-design="command03"] .native-files-list li,
+ body[data-design="command03"] #workspace>[data-native-enter],
+ body[data-design="command03"] #workspace>[data-native-enter]>* {animation:none!important;}
+}
