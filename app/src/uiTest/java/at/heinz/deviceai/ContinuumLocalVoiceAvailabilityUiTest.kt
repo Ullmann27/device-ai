@@ -178,7 +178,9 @@ class ContinuumLocalVoiceAvailabilityUiTest {
             assertEquals("$mode: the offline voice speaks the reply", listOf("Das ist die lokale Antwort."), spoken(tts))
             assertEquals(false, read(a, "speechUsesMaya"))
             assertNull("no network voice was created", read(a, "mayaSpeech"))
-            assertEquals("Maya nicht verfügbar: Android-Offline-Stimme wird verwendet.", toasts().single())
+            // Voice profiles (20261119): the once-only notice also names the reason.
+            assertEquals("Maya nicht verfügbar: Android-Offline-Stimme wird verwendet. Grund: kein ElevenLabs-Schlüssel gespeichert.",
+                toasts().single())
         }
     }
 

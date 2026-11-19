@@ -478,6 +478,44 @@ class AgentActivity : Activity() {
         internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
         SecureTokenStore.loadElevenLabsToken(this) != null
     private fun replyVoiceReady() = voiceReady || mayaAvailable()
+    // Voice profiles (voice/): engine + voice + prosody; „weiter“ after an interruption; one plain fallback notice.
+    private val voiceProfileStore by lazy { at.heinz.deviceai.voice.VoiceProfileStore.android(this) }
+    private val resumableSpeech = at.heinz.deviceai.voice.ResumableReplySpeech(android.os.SystemClock::elapsedRealtime)
+    private val voiceFallbackNotice = at.heinz.deviceai.voice.VoiceFallbackNotice()
+    /** One-shot selection for „Mit Continuum-Satz testen“; consumed by the next reply. */
+    private var voiceTestOverride: at.heinz.deviceai.voice.VoiceProfileSelection? = null
+    /** Selection of the reply being spoken; the request factory runs on Maya's worker thread. */
+    @Volatile private var speechProfile = at.heinz.deviceai.voice.VoiceProfileSelection()
+    private fun elevenAvailable(selection: at.heinz.deviceai.voice.VoiceProfileSelection) =
+        selection.engine == at.heinz.deviceai.voice.VoiceEngine.ELEVENLABS &&
+            internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+            SecureTokenStore.loadElevenLabsToken(this) != null
+    private val voiceProfileDialogs by lazy { at.heinz.deviceai.voice.VoiceProfileDialogs(voiceProfileHost) }
+    private val voiceProfileHost = object : at.heinz.deviceai.voice.VoiceProfileDialogs.Host {
+        override val context: android.content.Context get() = this@AgentActivity
+        override fun selection() = voiceProfileStore.load()
+        override fun apply(selection: at.heinz.deviceai.voice.VoiceProfileSelection) {
+            interruptReplySpeech()
+            if (!voiceProfileStore.save(selection))
+                Toast.makeText(this@AgentActivity, "Die Stimmeinstellung konnte nicht gespeichert werden.", Toast.LENGTH_LONG).show()
+        }
+        override fun elevenLabsKey() = SecureTokenStore.loadElevenLabsToken(this@AgentActivity)
+        override fun internetAlwaysOn() = internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON
+        override fun speakTest(selection: at.heinz.deviceai.voice.VoiceProfileSelection): Boolean {
+            if (!voiceEnabled) { voiceEnabled = true; bootstrapMemory.voiceEnabled = true; voiceButton?.text = "TON AN" }
+            voiceTestOverride = selection
+            speakReply(at.heinz.deviceai.voice.VoiceProfiles.TEST_SENTENCE, allowMaya = true)
+            voiceTestOverride = null
+            return speechTurnId != null
+        }
+        override fun <T> io(work: () -> T, done: (Result<T>) -> Unit) {
+            Thread {
+                val result = runCatching(work)
+                runOnUiThread { if (!isFinishing && !isDestroyed) done(result) }
+            }.start()
+        }
+        override fun openElevenLabsKeySettings() = showMayaVoiceSettings()
+    }
 
     private var voiceButton: Button? = null
     private var cameraButton: Button? = null
@@ -6875,11 +6913,13 @@ class AgentActivity : Activity() {
             .setItems(arrayOf(
                 (if (mayaSelected()) "● " else "") + MayaSpeech.VOICE_NAME + " · ElevenLabs",
                 "Android · Offline-Stimme",
-                "Gespräch, Fahrmodus und Ansagen"
+                "Gespräch, Fahrmodus und Ansagen",
+                "Stimmprofil und Sprechweise · " + at.heinz.deviceai.voice.VoiceProfiles.describe(voiceProfileStore.load())
             )) { _, choice ->
                 when (choice) {
                     0 -> showMayaVoiceSettings()
                     2 -> showConversationSettings()
+                    3 -> voiceProfileDialogs.showMenu()
                     else -> {
                         interruptReplySpeech()
                         getSharedPreferences("continuum-voice", MODE_PRIVATE).edit()
@@ -8086,6 +8126,50 @@ class AgentActivity : Activity() {
         addToolActivity("GERÄTESTATUS · nur öffentliche Betriebsdaten · kein Modell- oder Werkzeugaufruf")
     }
 
+    /**
+     * Whole-utterance voice controls (voice/VoiceCommands): „weiter“ resumes an interrupted spoken reply from the
+     * interrupted piece (otherwise „weiter“ keeps its existing meaning), „Wechsle die Stimme“, „Nimm wieder die
+     * bisherige Stimme“, „Sprich langsamer/schneller/ruhiger/normal“. Never while a model turn is running.
+     */
+    private fun consumeVoiceCommand(): Boolean {
+        val spoken = input.text.toString().trim()
+        if (busy || botLookupPending) return false
+        val command = at.heinz.deviceai.voice.VoiceCommands.parse(spoken,
+            at.heinz.deviceai.cognitive.LocalAssistantIdentity.safeName(continuumState?.archive?.identityState?.chosenName))
+            ?: return false
+        val keep = activeWorkArea == ContinuumWorkArea.START
+        if (command == at.heinz.deviceai.voice.VoiceCommands.Command.RESUME) {
+            val rest = resumableSpeech.takeRest(sessionId) ?: return false
+            input.text.clear()
+            addUserMessage(spoken, keepCockpit = keep)
+            addToolActivity("Stimme · setzt beim unterbrochenen Satz fort")
+            // The reply is already in the chat in full; only its unspoken rest is read again.
+            speakReplyText(rest.joinToString(" "), ownerReplyAllowsMaya, shaped = true)
+            return true
+        }
+        input.text.clear()
+        addUserMessage(spoken, keepCockpit = keep)
+        val current = voiceProfileStore.load()
+        val reply = when (command) {
+            at.heinz.deviceai.voice.VoiceCommands.Command.CHOOSE_VOICE -> {
+                mainHandler.post { if (!isFinishing && !isDestroyed) voiceProfileDialogs.showMenu() }
+                "Ich öffne die Stimmauswahl. Wähle dort Stimme und Sprechweise; „Probe hören“ spielt ein Beispiel."
+            }
+            at.heinz.deviceai.voice.VoiceCommands.Command.FORMER_VOICE -> {
+                voiceProfileHost.apply(at.heinz.deviceai.voice.VoiceProfiles.former(current))
+                "Ich spreche wieder mit der bisherigen Stimme und den bisherigen Einstellungen."
+            }
+            else -> {
+                val step = at.heinz.deviceai.voice.VoiceProfiles.step(current,
+                    at.heinz.deviceai.voice.VoiceCommands.toStep(command) ?: return true)
+                if (step.changed) voiceProfileHost.apply(step.selection)
+                step.sentence
+            }
+        }
+        addAssistantMessage(reply, preserveLocalContext = true, keepCockpit = keep)
+        return true
+    }
+
     private fun consumeOwnerWorkInterruption(spoken: String = input.text.toString().trim()): Boolean {
         val addressed = OwnerAppLookupIntent.stripAddress(spoken,
             continuumState?.archive?.identityState?.chosenName)
@@ -8147,6 +8231,7 @@ class AgentActivity : Activity() {
             .strayDots(input.text.toString()).takeIf { it != input.text.toString() }
             ?.let { input.setText(it); input.setSelection(input.text.length) }
         if (pendingConversationSelection != null) return
+        if (selectedBot == null && consumeVoiceCommand()) return
         if (consumeOwnerWorkInterruption()) return
         if (interceptOwnerMission()) return
         if (interceptOwnerDocumentDesk()) return
@@ -11888,7 +11973,9 @@ class AgentActivity : Activity() {
         mayaSpeech?.stop()
         speechUsesMaya = false
         speechInternetRevision = -1L
-        // Any end of speech (STOP, error, new reply, pause) discards the unspoken rest of the reply.
+        // Any end of speech (STOP, error, new reply, pause) discards the unspoken rest of the reply from the queue;
+        // an interrupted rest is remembered for „weiter“ (voice/ResumableReplySpeech).
+        speechTurnId?.let { resumableSpeech.ended(it, interrupted) }
         speechTurnId?.let { speechChunks.stop(it) }
         speechTurnId = null
         speechChunkId = null
@@ -11969,20 +12056,30 @@ class AgentActivity : Activity() {
 
     private fun speakBootstrap(message: String) = speakReply(message, allowMaya = true)
 
-    private fun speakReply(message: String, allowMaya: Boolean) {
-        if (!voiceEnabled || !replyVoiceReady() || !foregroundLearningActive || voiceListening) return
-        val useMaya = allowMaya && ownerReplyAllowsMaya && mayaAvailable()
+    private fun speakReply(message: String, allowMaya: Boolean) = speakReplyText(message, allowMaya, shaped = false)
+
+    /** [shaped]: [message] already went through the speech-text shaper (resumed rest of a reply). */
+    private fun speakReplyText(message: String, allowMaya: Boolean, shaped: Boolean) {
+        val profile = voiceTestOverride ?: voiceProfileStore.load()
+        if (!voiceEnabled || !(voiceReady || elevenAvailable(profile)) || !foregroundLearningActive || voiceListening) return
+        val useMaya = allowMaya && ownerReplyAllowsMaya && elevenAvailable(profile)
         if (!useMaya && !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(
                 voiceEngine?.voice?.isNetworkConnectionRequired)) return
         voiceEngine?.stop()
         stopVoiceAnimation()
         speechUsesMaya = useMaya
+        speechProfile = profile
         speechInternetRevision = internetConsent.revision()
-        if (allowMaya && mayaSelected() && !useMaya) Toast.makeText(this,
-            "Maya nicht verfügbar: Android-Offline-Stimme wird verwendet.", Toast.LENGTH_SHORT).show()
+        if (allowMaya && profile.engine == at.heinz.deviceai.voice.VoiceEngine.ELEVENLABS && !useMaya)
+            at.heinz.deviceai.voice.VoiceFallbackNotice.cause(SecureTokenStore.loadElevenLabsToken(this) != null,
+                internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON, ownerReplyAllowsMaya)
+                ?.let { voiceFallbackNotice.unavailable(at.heinz.deviceai.voice.VoiceProfiles.voiceName(profile), it) }
+                ?.let { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
+        // Spoken form only (numbers, abbreviations, lists, links); the chat keeps the visible text.
+        val spokenText = if (shaped) message else at.heinz.deviceai.voice.SpeechTextShaper.shape(message)
         // Read substantially beyond the former 15-chunk ceiling while keeping a hard bounded queue.
         val chunks = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakableChunks(
-            message, maxChunks = SPEECH_CONTENT_MAX_CHUNKS)
+            spokenText, maxChunks = SPEECH_CONTENT_MAX_CHUNKS)
         if (chunks.pieces.isEmpty()) return
         // Beyond the queue capacity the cut is announced instead of ending silently.
         val pieces = if (chunks.truncated) chunks.pieces + SPOKEN_REST_IN_CHAT else chunks.pieces
@@ -11993,12 +12090,16 @@ class AgentActivity : Activity() {
         }
         speechChunks.markLastChunkSubmitted(turn)
         speechTurnId = turn
+        resumableSpeech.begin(turn, sessionId, pieces)
         mainHandler.removeCallbacks(conversationLatencyCue)
         // Outside the hands-free conversation no spoken turn set a tone: use the neutral one.
         if (!continuousConversation.active)
             spokenReplyRegister = at.heinz.deviceai.cognitive.ConversationRegister.CASUAL
         // Slightly faster when joking, slightly slower on serious matters; one recognisable speaker throughout.
-        voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate *
+        // The profile's rate/pitch also apply when the device voice stands in for ElevenLabs.
+        val prosody = at.heinz.deviceai.voice.VoiceProfiles.prosody(profile)
+        voiceEngine?.setPitch(prosody.devicePitch)
+        voiceEngine?.setSpeechRate(prosody.deviceRate *
             at.heinz.deviceai.cognitive.HumanSpeechTiming.rateFactor(spokenReplyRegister))
         if (!speakNextChunk(turn, TextToSpeech.QUEUE_FLUSH)) stopVoiceAnimation()
     }
@@ -12012,15 +12113,20 @@ class AgentActivity : Activity() {
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
         speechChunkId = chunk.chunkId
+        at.heinz.deviceai.voice.ResumableReplySpeech.pieceIndex(turn, chunk.chunkId)
+            ?.let { resumableSpeech.pieceStarted(turn, it) }
         updateUiFeedbackPolicy() // Pending synthesis already owns the voice channel.
         voiceSignal.activate(id)
         voiceAvatarText = chunk.approvedText
         if (speechUsesMaya) {
             val key = SecureTokenStore.loadElevenLabsToken(this) ?: return false
             val revision = speechInternetRevision
-            val engine = mayaSpeech ?: MayaSpeech(::ElevenLabsPcmRequest, { MayaPcmPlayer(this) },
+            // The request reads the selection of the reply being spoken (voice id, model, voice_settings).
+            val engine = mayaSpeech ?: MayaSpeech({ ElevenLabsPcmRequest.forSpec(
+                at.heinz.deviceai.voice.VoiceProfiles.elevenLabs(speechProfile)) }, { MayaPcmPlayer(this) },
                 { action -> mainHandler.post { action() } }, object : MayaSpeech.Listener {
                     override fun started(id: String, pcm: ByteArray) {
+                        voiceFallbackNotice.onElevenLabsSpoke()
                         voiceProgressListener?.onBeginSynthesis(id, MayaSpeech.SAMPLE_RATE,
                             android.media.AudioFormat.ENCODING_PCM_16BIT, 1)
                         var offset = 0
@@ -12058,12 +12164,12 @@ class AgentActivity : Activity() {
                 localVoiceState(), voiceEngine?.voice?.isNetworkConnectionRequired) &&
             voiceEngine?.speak(voiceAvatarText, TextToSpeech.QUEUE_FLUSH, null, id) == TextToSpeech.SUCCESS) {
             speechUsesMaya = false
-            Toast.makeText(this, "Maya konnte nicht sprechen. Die Android-Offline-Stimme spricht weiter.",
-                Toast.LENGTH_LONG).show()
+            // Said once; later failures of the same kind continue silently with the local voice.
+            voiceFallbackNotice.continuedLocally(at.heinz.deviceai.voice.VoiceProfiles.voiceName(speechProfile))
+                ?.let { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
             return
         }
-        Toast.makeText(this,
-            "Maya konnte nicht sprechen. Die Antwort bleibt im Chat. Prüfe Schlüssel, Credits und Internet.",
+        Toast.makeText(this, voiceFallbackNotice.silent(at.heinz.deviceai.voice.VoiceProfiles.voiceName(speechProfile)),
             Toast.LENGTH_LONG).show()
         voiceProgressListener?.onError(id, TextToSpeech.ERROR_NETWORK)
     }
@@ -12074,13 +12180,17 @@ class AgentActivity : Activity() {
         val chunk = speechChunkId ?: return false
         if (speechChunks.onChunkFinished(turn, chunk) !=
             at.heinz.deviceai.cognitive.ApprovedSpeechChunkQueue.Completion.MORE_CHUNKS) return false
+        at.heinz.deviceai.voice.ResumableReplySpeech.pieceIndex(turn, chunk)?.let { resumableSpeech.pieceFinished(turn, it) }
         // End the finished piece in the avatar now; a STOP before the next onStart then leaves no stale utterance.
         val finishedId = voiceUtteranceId
         finishedId?.let { avatarDirector.speechEnded(it, interrupted = false) }
         // People pause between sentences, and never by the same length twice. The next piece follows after a
-        // pause from the measured medium band.
-        val pause = at.heinz.deviceai.cognitive.HumanSpeechTiming.pauseBetweenMs(
-            voiceAvatarText, "next", spokenReplyRegister, ++spokenPieceCounter)
+        // pause from the measured medium band, scaled by the profile (Souverän pauses a little longer).
+        val pause = (at.heinz.deviceai.cognitive.HumanSpeechTiming.pauseBetweenMs(
+            voiceAvatarText, "next", spokenReplyRegister, ++spokenPieceCounter) *
+            at.heinz.deviceai.voice.VoiceProfiles.prosody(speechProfile).pausePercent / 100L)
+            .coerceIn(at.heinz.deviceai.cognitive.HumanSpeechTiming.MIN_PAUSE_MS,
+                at.heinz.deviceai.cognitive.HumanSpeechTiming.MAX_PAUSE_MS)
         // During the pause no utterance is current: a late or repeated engine callback for the finished piece
         // must neither end the reply nor reopen the microphone. The hands-free session stays bound to the
         // reply through a placeholder id until the next piece takes over.
