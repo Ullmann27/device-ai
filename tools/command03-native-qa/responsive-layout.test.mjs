@@ -6,6 +6,7 @@ import {readFile, mkdir, writeFile} from 'node:fs/promises';
 import {resolve, extname, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {tacticalStage} from './tactical-stage.checks.mjs';
+import {workScenes} from './work-scene.checks.mjs';
 
 const require = createRequire(import.meta.url);
 const {chromium} = require(process.env.COMMAND03_PLAYWRIGHT_MODULE || 'playwright');
@@ -1257,6 +1258,15 @@ try {
     report.code71.motion=tactical71.summary.motion;
     report.code71.result={expansion:baselineReady?'PASS':'NOT_RUN',regions:'PASS',motion:'PASS',tiers:'PASS',startUp:'PASS',
       restingStage:restFiles?'PASS':'PASS (literal list; Code69 comparison NOT_RUN)'};
+  }
+  // ───────── Code73: the bust's transition and the work scenes (work-scene.checks.mjs) ─────────
+  // The figure's alpha below the neck at every size (and the Code64 baseline's cut, to prove the measure), the scenes
+  // at every size above the composer, and what moves per tier.
+  {
+    for(const leftover of browser.contexts())await leftover.close();
+    const scenes73=await workScenes({browser,url,state,output,errors,baseline:baselineReady});
+    report.checks.push(...scenes73.items);
+    report.code73={bust:scenes73.summary.bust,motion:scenes73.summary.motion};
   }
   report.code64.result={arrangement:baselineReady?'PASS':'NOT_RUN',orbAnimated:baselineReady?'PASS':'NOT_RUN',
     presenceLight:'PASS',tiers:'PASS',workSequence:'PASS',filesWindow:'PASS',largeFont:'PASS'};
