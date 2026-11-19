@@ -113,7 +113,7 @@ class NotificationAnnouncementSettingsTest {
             NotificationAnnouncementSettings.messengerSuggestions(setOf("org.telegram.messenger"), AnnouncementMode.APP_ONLY),
         )
         assertEquals(
-            listOf("Aus", "Nur App nennen", "App und Absender nennen", "Inhalt vorlesen"),
+            listOf("Aus", "Nur App nennen", "App und Absender nennen", "Inhalt vorlesen", "Vor dem Vorlesen fragen"),
             AnnouncementMode.entries.map(NotificationAnnouncementSettings::modeLabel),
         )
     }
