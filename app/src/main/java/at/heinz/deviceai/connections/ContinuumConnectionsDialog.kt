@@ -2,6 +2,9 @@ package at.heinz.deviceai.connections
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import at.heinz.deviceai.gmail.GmailCapability
 import at.heinz.deviceai.gmail.GmailConnection
 import at.heinz.deviceai.gmail.GmailText
@@ -32,6 +35,8 @@ internal object ContinuumConnectionsDialog {
     const val TAG_ROW = "connection-row:"
     const val TAG_ACTION = "connection-action:"
     const val TAG_GMAIL = "continuum-gmail"
+    const val TAG_ARGOS_ATLAS = "connection-argos-atlas"
+    private const val ARGOS_ATLAS_URL = "https://www.argosatlas.com/"
 
     fun show(activity: Activity, actions: ContinuumConnectionsActions): AlertDialog {
         val cockpit = ContinuumBentoCockpit
@@ -54,6 +59,25 @@ internal object ContinuumConnectionsDialog {
                     }.apply { tag = TAG_ACTION + row.kind.name })
                 }
             }
+            rows.addView(cockpit.section(activity, "ARGOS ATLAS · EXTERN"))
+            rows.addView(label(activity,
+                "Weltkarte mit öffentlichen Kameras, Flugzeugen und Schiffen. " +
+                    "Noch keine direkte Datenverbindung: API/MCP ist beim Anbieter angekündigt, " +
+                    "aber hier nicht eingerichtet. Anmeldung nur auf der ARGOS-Website.", 13f))
+            rows.addView(cockpit.action(activity, "ARGOS ATLAS IM BROWSER ÖFFNEN") {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ARGOS_ATLAS_URL)).apply {
+                        addCategory(Intent.CATEGORY_BROWSABLE)
+                    }
+                    activity.startActivity(intent)
+                } catch (_: ActivityNotFoundException) {
+                    AlertDialog.Builder(activity)
+                        .setTitle("Kein Browser verfügbar")
+                        .setMessage("Öffne " + ARGOS_ATLAS_URL + " in einem Browser.")
+                        .setPositiveButton("OK", null)
+                        .show()
+                }
+            }.apply { tag = TAG_ARGOS_ATLAS })
             rows.addView(cockpit.section(activity, ContinuumConnectionRegistry.DRIVE_NOTE))
         }
         render()
