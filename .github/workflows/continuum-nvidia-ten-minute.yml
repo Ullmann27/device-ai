@@ -20,7 +20,7 @@ jobs:
       - name: Checkout immutable reviewed research sources
         uses: actions/checkout@v4
         with:
-          ref: fd2e5de1acf678ae4d6222bb433762ea8bb3d57f
+          ref: 22d6b27a959831d87ce9707eb6296f34c293af38
           persist-credentials: false
       - name: Node.js 22
         uses: actions/setup-node@v4
@@ -29,6 +29,7 @@ jobs:
       - name: Offline tests must pass before scheduling NVIDIA
         run: |
           node --test scripts/continuum-nvidia-scheduled.test.mjs \
+            scripts/continuum-nvidia-execution-claim.test.mjs \
             scripts/continuum-neuro-agent.test.mjs \
             scripts/continuum-nvidia-ultra-review.test.mjs
           node scripts/continuum-neuro-agent.mjs --check
@@ -57,6 +58,9 @@ jobs:
         if: steps.reserve.outputs.allowed == 'true'
         shell: bash
         env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           CONTINUUM_RESERVED_SEQUENCE: ${{ steps.reserve.outputs.sequence }}
           CONTINUUM_RESEARCH_OUTPUT_DIR: ${{ runner.temp }}/continuum-ultra-review
