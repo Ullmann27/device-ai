@@ -1,5 +1,8 @@
 # Device AI
 
+> **AKTUELLER PROJEKTHINWEIS (31.10.2026):** Diese README beschreibt den alten Grundstand, nicht die neuesten Continuum-Lokal-Forschungszweige. Für Sol/Astra/Opus vor Änderungen die [Agenten-Startanleitung](AGENTS.md), die [aktuelle kanonische Projektübergabe](https://github.com/Ullmann27/device-ai/blob/research/continuum-nemo-virtual-fabric-20261031/docs/CONTINUUM-CURRENT-STATE-20261031.md) und [Forschungs-PR #287](https://github.com/Ullmann27/device-ai/pull/287) lesen. Ziel: echte Android-JARVIS-Funktion mit M8-Coding-Agent, CRE1/EWM/SWB, biologisch/zeitabhängiger Forschung und originalsigniertem In-App-Update. 3.000 logische Experten sind **keine** 3.000 physischen Prozessoren; der synthetische 3.000→30-Befund ist noch kein realer Modellbenchmark. Installiert war zuletzt laut Geräteverlauf Continuum Lokal 0.3.28/code29; neue Version nur mit höherem code und Originalzertifikat.
+
+
 Persönlicher lokaler Android-Geräteassistent für ein eigenes Android-Gerät.
 
 ## Stand
