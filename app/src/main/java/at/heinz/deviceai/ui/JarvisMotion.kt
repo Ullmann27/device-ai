@@ -1,10 +1,12 @@
 package at.heinz.deviceai.ui
 
+import at.heinz.deviceai.motion.DampedSpring
+import at.heinz.deviceai.motion.Easings
+import at.heinz.deviceai.motion.MotionPresets
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.pow
 import kotlin.math.sin
 
 /**
@@ -15,31 +17,39 @@ import kotlin.math.sin
 object JarvisMotion {
     /** Durations in ms. */
     object Durations {
-        const val PANEL_FLY_IN = 600L     // Muster B: 0,5–0,6 s cubic ease-out (Spec)
-        const val STAGGER = 80L           // Muster B: 0,05–0,1 s (Spec-Bereich, Mittelwert gewählt)
+        const val PANEL_FLY_IN = MotionPresets.FLY_IN_MS     // Muster B: 0,5–0,6 s cubic ease-out (Spec)
+        const val STAGGER = MotionPresets.STAGGER_MS           // Muster B: 0,05–0,1 s (Spec-Bereich, Mittelwert gewählt)
         const val EDGE_FLASH = 300L       // Rand-Aufleuchten nach Landung – GESCHÄTZT
         const val PILL_FLY_IN = 450L      // Muster G: "schnell" – Dauer GESCHÄTZT
         const val WIDGET_GROW = 600L      // Widgets 50→100 % – Dauer wie Muster B angenommen (GESCHÄTZT)
-        const val SCENE_Z = 800L          // Muster A: 0,8 s exponential ease-in (Spec)
-        const val LASER = 300L            // Muster D: 0,3 s (Spec)
-        const val ENVELOPE_IN = 500L      // Muster F: 0,5 s aus Tiefe (Spec)
-        const val ENVELOPE_FLAP = 300L    // Muster F: Klappe 0,3 s (Spec)
+        const val SCENE_Z = MotionPresets.SCENE_MS          // Muster A: 0,8 s exponential ease-in (Spec)
+        const val LASER = MotionPresets.LASER_MS            // Muster D: 0,3 s (Spec)
+        const val ENVELOPE_IN = MotionPresets.ENVELOPE_IN_MS      // Muster F: 0,5 s aus Tiefe (Spec)
+        const val ENVELOPE_FLAP = MotionPresets.ENVELOPE_FLAP_MS    // Muster F: Klappe 0,3 s (Spec)
         const val STEP = 500L             // Ablauf-Schritt: Muster B unteres Ende angenommen (GESCHÄTZT)
-        const val IDLE_PERIOD = 4000L     // Muster C: 4 s sine (Spec)
-        const val BLINK = 150L            // Avatar-Blinzeln 0,15 s (Spec)
+        const val IDLE_PERIOD = MotionPresets.IDLE_PERIOD_MS     // Muster C: 4 s sine (Spec)
+        const val BLINK = MotionPresets.BLINK_MS            // Avatar-Blinzeln 0,15 s (Spec)
     }
 
+    /** Function-typed views of [Easings] (at.heinz.deviceai.motion), the single definition of every curve. */
     object Easing {
-        val linear: (Float) -> Float = { it }
-        val easeOutCubic: (Float) -> Float = { 1f - (1f - it).pow(3) }
-        val easeInOutCubic: (Float) -> Float = { if (it < .5f) 4f * it * it * it else 1f - (-2f * it + 2f).pow(3) / 2f }
+        val linear: (Float) -> Float = Easings.linear::at
+        val easeInCubic: (Float) -> Float = Easings.easeInCubic::at
+        val easeOutCubic: (Float) -> Float = Easings.easeOutCubic::at
+        val easeInOutCubic: (Float) -> Float = Easings.easeInOutCubic::at
         /** Strong deceleration for question pills (Muster G). */
-        val easeOutQuint: (Float) -> Float = { 1f - (1f - it).pow(5) }
+        val easeOutQuint: (Float) -> Float = Easings.easeOutQuint::at
         /** Scene change into depth (Muster A). */
-        val easeInExpo: (Float) -> Float = { if (it <= 0f) 0f else 2f.pow(10f * it - 10f) }
-        val easeInOutSine: (Float) -> Float = { -(kotlin.math.cos(PI.toFloat() * it) - 1f) / 2f }
-        val easeOutBack: (Float) -> Float = { val c = 1.2f; val x = it - 1f; 1f + (c + 1f) * x * x * x + c * x * x }
+        val easeInExpo: (Float) -> Float = Easings.easeInExpo::at
+        val easeInOutSine: (Float) -> Float = Easings.easeInOutSine::at
+        val easeOutBack: (Float) -> Float = Easings.easeOutBack::at
     }
+
+    /** Widget fly-in spring (Bildbeschrieb 6: ~0,5 s, slight overshoot); value via valueAtMs(elapsedMs). */
+    val widgetSpring: DampedSpring get() = MotionPresets.widgetSpring
+
+    /** Spring with classic parameters (unit mass), 0 → 1; value via valueAtMs(elapsedMs). */
+    fun spring(stiffness: Float, damping: Float): DampedSpring = DampedSpring.fromStiffness(stiffness, damping)
 
     enum class Direction(val dx: Float, val dy: Float) {
         LEFT(-1f, 0f), RIGHT(1f, 0f), TOP(0f, -1f), BOTTOM(0f, 1f), TOP_LEFT(-.7f, -.7f), TOP_RIGHT(.7f, -.7f), DEPTH(0f, 0f)
@@ -124,10 +134,10 @@ object JarvisMotion {
     data class SceneFrame(val oldScale: Float, val oldAlpha: Float, val newScale: Float, val newAlpha: Float, val done: Boolean)
 
     fun sceneZ(elapsedMs: Long, animatorScale: Float = 1f): SceneFrame {
-        if (off(animatorScale)) return SceneFrame(3.2f, 0f, 1f, 1f, true)
+        if (off(animatorScale)) return SceneFrame(MotionPresets.SCENE_OLD_SCALE, 0f, 1f, 1f, true)
         val p = (elapsedMs / (Durations.SCENE_Z * animatorScale)).coerceIn(0f, 1f)
         val e = Easing.easeInExpo(p)
-        return SceneFrame(1f + 2.2f * e, 1f - e, e, e, p >= 1f)
+        return SceneFrame(MotionPresets.sceneOldScale(e), 1f - e, e, e, p >= 1f)
     }
 
     /** Muster D: laser line progress 0..1 over 0,3 s (linear draw-on). */
@@ -143,7 +153,7 @@ object JarvisMotion {
 
     /** Muster C: avatar idle float, Y ±[amplitudeDp] (spec 2–3 px), 4 s sine loop. 0 when reduced motion. */
     fun idleOffset(timeMs: Long, amplitudeDp: Float = 2.5f, animatorScale: Float = 1f): Float =
-        if (off(animatorScale)) 0f else amplitudeDp * sin(2f * PI.toFloat() * (timeMs % Durations.IDLE_PERIOD) / Durations.IDLE_PERIOD)
+        if (off(animatorScale)) 0f else MotionPresets.idleFloat(timeMs, amplitudeDp)
 
     /**
      * Z-depth layers (VIDEO-ANALYSE Signatur 7 "UI schwebt in Z-Tiefe", 8 "Kamera nie statisch").
@@ -165,9 +175,9 @@ object JarvisMotion {
         /** Drift loop period. GESCHÄTZT. */
         const val DRIFT_PERIOD_MS = 14_000L
         /** Dolly-in: linear scale 1.00 → 1.03 "über mehrere Sekunden" (Bildbeschrieb 1). */
-        const val DOLLY_SCALE = 1.03f
+        const val DOLLY_SCALE = MotionPresets.DOLLY_MAX_SCALE
         /** Duration of one dolly-in leg; the camera then glides back the same way (ping-pong). GESCHÄTZT. */
-        const val DOLLY_PERIOD_MS = 8_000L
+        const val DOLLY_PERIOD_MS = MotionPresets.DOLLY_PERIOD_MS
 
         data class State(val scale: Float, val blurDp: Float, val rotationX: Float, val rotationY: Float,
                          val dx: Float, val dy: Float)
@@ -201,9 +211,7 @@ object JarvisMotion {
         /** Linear dolly-in camera scale 1.00..1.03 (ping-pong). 1 for reduced motion. */
         fun dolly(timeMs: Long, animatorScale: Float = 1f): Float {
             if (off(animatorScale)) return 1f
-            val t = (timeMs % (2 * DOLLY_PERIOD_MS)).toFloat() / DOLLY_PERIOD_MS
-            val k = if (t <= 1f) t else 2f - t
-            return 1f + (DOLLY_SCALE - 1f) * k
+            return MotionPresets.dollyScale(timeMs)
         }
 
         /** Full panel state. Reduced motion keeps the static depth composition (scale, blur, tilt) without drift. */
