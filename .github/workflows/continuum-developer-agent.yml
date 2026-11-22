@@ -1,0 +1,227 @@
+name: Continuum Developer Agent
+
+# Zero-cost, deterministic repair agent (no LLM, no paid API).
+# Copy of the development-branch workflow, placed on the DEFAULT branch because
+# GitHub evaluates `schedule` only there. Every job that runs agent code checks
+# out the development branch (DEV_BRANCH); this file only provides the hourly
+# trigger. Documentation: docs/DEVELOPER_AGENT.md on DEV_BRANCH.
+on:
+  push:
+    branches: ["copilot/pr-12-working-first-vertical-slice"]
+    paths:
+      - ".github/continuum/**"
+      - ".github/workflows/continuum-developer-agent.yml"
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+    inputs:
+      kotlin_benchmark:
+        description: "Run the Android Kotlin fault-injection benchmark (about 15-30 min)"
+        type: boolean
+        default: false
+      publish_demo:
+        description: "Publish one verified benchmark repair as demo branches and a draft PR"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-developer-agent
+  cancel-in-progress: false
+
+env:
+  DEV_BRANCH: copilot/pr-12-working-first-vertical-slice
+
+jobs:
+  # Cheap and read-only: agent tests, structural analysis, CI triage and the
+  # JavaScript fault-injection benchmark (real repair loop, node check chain).
+  agent:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Agent and continuum tests
+        run: node --test .github/continuum/*.test.mjs
+      - name: Structural Kotlin analysis (reachability, test-only and dead code)
+        run: node .github/continuum/code-analyzer.mjs .
+      - name: CI triage
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/continuum/developer-agent.mjs triage
+      - name: Fault-injection repair benchmark (JavaScript)
+        run: node .github/continuum/developer-agent.mjs benchmark --chains node=node --out developer-agent-report/benchmark-node
+      - name: Summary
+        if: always()
+        run: |
+          cat developer-agent-report/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+          cat developer-agent-report/benchmark-node/benchmark.md >> "$GITHUB_STEP_SUMMARY" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-developer-agent
+          path: developer-agent-report/
+          retention-days: 14
+          if-no-files-found: error
+
+  # Android Kotlin fault benchmark with the real Gradle/AGP check chain.
+  kotlin-benchmark:
+    # Dispatch input, or a push whose head commit message carries the marker
+    # (fallback where the caller's integration may not dispatch workflows).
+    if: >-
+      (github.event_name == 'workflow_dispatch' && inputs.kotlin_benchmark) ||
+      (github.event_name == 'push' && contains(github.event.head_commit.message, '[agent-kotlin-benchmark]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Android 36 SDK
+        run: |
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
+          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Fault-injection repair benchmark (Kotlin, Android check chain)
+        run: node .github/continuum/developer-agent.mjs benchmark --chains kotlin=android --out agent-kotlin-benchmark
+      - name: Summary
+        if: always()
+        run: cat agent-kotlin-benchmark/benchmark.md >> "$GITHUB_STEP_SUMMARY" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-kotlin-benchmark
+          path: agent-kotlin-benchmark/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  # Hourly (from main) or manual: API-only check of the development head.
+  watch:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      needs_repair: ${{ steps.watch.outputs.needs_repair }}
+      base: ${{ steps.watch.outputs.base }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEV_BRANCH }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - id: watch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/continuum/developer-agent.mjs watch --branch "$DEV_BRANCH" --ledger-branch continuum-agent-state
+
+  repair-head:
+    needs: watch
+    if: needs.watch.outputs.needs_repair == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.watch.outputs.base }}
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Android 36 SDK
+        run: |
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
+          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Reproduce, diagnose and verify a repair of the development head
+        run: node .github/continuum/developer-agent.mjs repair --chain android --base "${{ needs.watch.outputs.base }}" --out agent-repair --trigger schedule --minutes 40
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-agent-repair
+          path: agent-repair/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # The only job with a write token. It runs no build code: it re-validates
+  # verified patches, pushes continuum-agent/* branches, opens DRAFT pull
+  # requests and appends the repair ledger on continuum-agent-state.
+  publish:
+    needs: [agent, kotlin-benchmark, watch, repair-head]
+    if: >-
+      always() && (needs.agent.result == 'success' || needs.kotlin-benchmark.result == 'success' || needs.repair-head.result == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.watch.outputs.base || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Draft pull request for a verified repair of the development head
+        if: needs.repair-head.result == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/continuum/developer-agent.mjs publish --out artifacts/continuum-agent-repair --target-branch "$DEV_BRANCH"
+      - name: Publish a verified benchmark repair as demo branches and draft PR
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.publish_demo) ||
+          (github.event_name == 'push' && contains(github.event.head_commit.message, '[agent-publish-demo]'))
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          dir=artifacts/continuum-kotlin-benchmark
+          [ -d "$dir" ] || dir=artifacts/continuum-developer-agent/benchmark-node
+          fault=$(node -e "const b=require('./$dir/benchmark.json');const r=b.results.find(x=>x.outcome==='VERIFIED');process.stdout.write(r?r.fault:'')")
+          if [ -n "$fault" ]; then
+            node .github/continuum/developer-agent.mjs publish-demo --out "$dir" --fault "$fault" --run "$GITHUB_RUN_ID"
+          else
+            echo "No verified benchmark repair to publish."
+          fi
+      - name: Persist repair experience (ledger branch continuum-agent-state)
+        run: |
+          for dir in artifacts/continuum-agent-repair artifacts/continuum-kotlin-benchmark artifacts/continuum-developer-agent/benchmark-node; do
+            if [ -d "$dir" ]; then node .github/continuum/developer-agent.mjs ledger-save --out "$dir" --branch continuum-agent-state; fi
+          done
