@@ -525,3 +525,16 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 - Werkzeuge: `werkzeuge/frontier_contact_diag.gd`, `werkzeuge/godot_legionary_capture.gd`.
 
 **Gate-Stand gesamt, wenn #87 + #88 + #89 zusammengeführt werden:** 507 Befunde. #88 ändert nichts am Gate, #89 ist unabhängig von #88. Eine gemeinsame Messung aller drei habe ich nicht ausgeführt.
+
+### 14.12 Weitere Gate-Befunde analysiert, nicht geändert (Mess-Spezifikation)
+
+1. **Loop-Nähte „retreat“** (34 Befunde `frontier_people`, 14 `legacy_people`; 0,72 m / 58°):
+   - Der Clip selbst ist geschlossen: erster und letzter Keyframe sind bei allen 45 Kanälen identisch, geprüft in `frontier_legionary_0.glb` und `soldiers/heavy_near.glb`.
+   - Der Sprung entsteht im Messpfad, der „retreat“ über `village_person` abspielt. Dort ist „retreat“ nicht in `LOOPS`, und Dorfbewohner nutzen den Clip im Spiel nicht; als Schleife läuft er nur in der Schlacht (`soldier_visual.gd`, `LOOPING`).
+   - **Vorschlag an das Motion-Team:** „retreat“ für Personen nicht als Schleife messen oder nur über den Soldaten-Pfad messen.
+2. **Übergangssprünge `village_navigation`** (26 Befunde; Position 0,187 m, Rotation 23,4°):
+   - Laut Log (`companion_turn_motion.log`) liegt der schlimmste Fall bei Marcus (`villager_2.glb`) mit `run → run` ohne LOD-Wechsel, an `Foot_L`/`Foot_R`, bis 0,327 m pro Frame.
+   - Mein Diagnoselauf (`werkzeuge/run_jump_diag.gd`: gerader Lauf, Lauf mit Drehung, Marsch → Lauf) zeigt nur 0,066–0,069 m zusätzliche Fußbewegung pro Frame, also normale Schwunggeschwindigkeit.
+   - Der Sprung entsteht demnach im Missions-Navigationsfluss (Pause, Fortsetzen, Ankunft). Außerdem misst die Metrik Weltpositionen Frame-zu-Frame einschließlich der Körperbewegung; bei Laufgeschwindigkeit sind das bereits etwa 0,06–0,07 m pro Frame, gleich der Grenze von 0,06 m.
+   - **Empfehlung:** Metrik relativ zur Wurzelbewegung definieren und den Navigationsfall gezielt nachstellen.
+3. **Rückzugs-Gleiten** (neu messbar durch #89): 0,050 m (Grenze 0,015 m). Der Rückzug wird im Personen-Pfad mit Geschwindigkeit 0 abgespielt, obwohl er ein Gang-Clip ist; vermutlich derselbe Mess-Spezifikationspunkt wie unter 1.
