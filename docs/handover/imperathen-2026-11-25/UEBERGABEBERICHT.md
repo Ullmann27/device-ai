@@ -6,6 +6,17 @@ Dieser Bericht trennt strikt zwischen **in dieser Sitzung ausgeführt und gemess
 
 ---
 
+## Aktueller Stand (Nachtrag 26.11.2026, Details in §14)
+
+| Objekt | Stand |
+|---|---|
+| Draft-PR [#87](https://github.com/Ullmann27/Imperathen/pull/87): Sohlenkalibrierung + `village_person_test` | gegen `integration/imperathen-unified-20261125`. CI: Workflow „isolated installable ARM64 QA“ **grün** (vorher rot). Im Fold7-Workflow sind 85/85 `check_prototype`-Gruppen und alle Stadt-/Jungen-Tests grün; rot ist nur das vorbestehende globale Motion-Gate (587/61) |
+| Draft-PR [#88](https://github.com/Ullmann27/Imperathen/pull/88): verschmolzene Hände vom Rock trennen (setzt auf #87 auf) | überdehnte Tunika-Kanten LOD 0 2 925 → 152, Spitze 0,674 → 0,072 m; echte Godot-Bilder aller Schläge und Tritte vorher/nachher (`evidence/godot_frames/17_*`) |
+| Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln |
+| Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json` |
+
+Die folgende Tabelle beschreibt den Stand vor der Nachtschicht. Der Hinweis dort, ein Push nach Imperathen sei nicht erledigt, ist überholt.
+
 ## 0. Kurzfazit
 
 | Punkt | Ergebnis |
@@ -465,3 +476,30 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 - Gescheitert ist erst der letzte Befehl `motion_quality_gate.py`: `BLOCKED 587 / 61`, identisch zu lokal. Begründung als Kommentar am PR: <https://github.com/Ullmann27/Imperathen/pull/87#issuecomment-7176760097>.
 - Das Gate braucht menschliche Sichtprüfungen und Korrekturen an fremden Bewegungsfamilien. Die 5 Jungen-Befunde sind Registrierungslücken in `motion_contract.json`; eine Registrierung würde neue Messungen und Sichtprüfungen verlangen und ist eine Entscheidung des Motion-Teams.
 - `actual-city-visual-review` (echte Godot-Stadt-Framebuffer High/Very High mit Original-Jungen in der CI): **success**.
+
+### 14.9 PR #88: CI, sauberer Suite-Lauf, Stadtbilder
+
+**CI auf `6478fef`:**
+- grün: `signed-independent-arm64-city`, `actual-city-visual-review`, `local-checks`;
+- rot: `real-city-arm64-qa-apk`. Im Schritt sind alle 85 `check_prototype`-Gruppen bestanden, ebenso Stadt-Asset, Stadt-Gehtest, `YOUTH_MOCAP_RUNTIME_PASS` und Crowd. Gescheitert ist erst `motion_quality_gate.py` mit `BLOCKED 587/61`. Die Befundzeilen sind laut Log-Vergleich zeilengleich mit #87; #88 erzeugt also keinen neuen Befund. Kommentar: <https://github.com/Ullmann27/Imperathen/pull/88#issuecomment-7177188287>.
+
+**Lokal ohne parallele Eingriffe:** volle `check_prototype`-Suite **85/85 PASS** (667 s, Spitzen-RSS 785 MiB). Motion-Gate 587/61 mit identischer Befundliste wie #87 (`evidence/nacht/*_PR88.txt`).
+
+**Echte Godot-Stadtbilder** (`evidence/godot_frames/18_*`): Godot 4.7.2, GL Compatibility, llvmpipe unter Xvfb. Aufgenommen mit `roman_city_visual_capture.gd`, High und Very High, je Forum, Markt und Mauerwerk, Stadt aus Blender 4.0.2, Junge mit #87 + #88.
+- Ergebnis: `ROMAN_CITY_VISUAL_PASS` für beide Profile, `original_youth_active:true`, `mocap_active:true`, Teardown `scene_freed:true`.
+- Wanduhrzeit 18,8 s bzw. 11,6 s, Spitzen-RSS 1 257 bzw. 1 099 MiB (Werkzeugprozess, kein Gerätewert).
+- Beobachtung: High und Very High unterscheiden sich im Compatibility-Renderer optisch kaum. Im Hintergrund steht ein Amphitheater vom Typ Kolosseum. Das ist der bereits dokumentierte Epochenkonflikt (Handlung 58 v. Chr.); das Kolosseum wurde erst 70–80 n. Chr. errichtet.
+
+**Echte Schlag-/Tritt-Posen** (`17_*`, korrigiertes Aufnahmegerüst): Vorher (#87) reißen bei Jab, Haken und Uppercut große Tunika-Flächen mit den Händen mit; nachher (#88) sind alle Posen sauber. Kicks und Block sind ebenfalls sauber.
+
+### 14.10 Empfehlungen an Fable 5.2 (aktualisiert)
+
+1. #87 und #88 unabhängig prüfen. Insbesondere Bild 17 und eine eigene Sichtabnahme in Bewegung, auch in Nahaufnahme der Hand/Rock-Naht. Danach über Merge in `integration/imperathen-unified-20261125` entscheiden lassen, nicht nach `main`.
+2. Projektinhaber-Entscheidung zur ersetzten Sohlen-Schranke einholen (#87).
+3. Motion-Gate (587):
+   - Die Familien `frontier_people`, `battle_rigs`, `meshy_gear`/`service_gear`, `village_navigation` und `raid_motion` haben echte Messbefunde (Fußgleiten, Durchdringung, Übergangssprünge). Sie gehören in eigene Fix-PRs.
+   - 84 Befunde betreffen nicht klassifizierte Ressourcen und Skripte. Dafür braucht es eine Vertragsentscheidung, wie in der CI erzeugte Assets (Stadt, Junge) registriert werden, ohne in Workflows ohne Staging „missing“ zu melden.
+   - Die 12 fehlenden menschlichen Sichtprüfungen können nur Menschen liefern.
+4. Künstler-Pass am Originalnetz des Jungen: Fuß-Bindpose (Sandalen ca. 80° verrollt), eingeschmolzener Griffrest an der rechten Hand, saubere Trennung von Hand und Rock. Neues Original sichern und Laufzeitableitungen neu erzeugen.
+5. Epochenkonflikt der Stadt (Kolosseum in 58 v. Chr.) mit dem Kanon klären.
+6. Mein Aufnahmegerüst (`werkzeuge/godot_strikes_capture.gd`) als festen Bild-Regressionstest übernehmen, mit abgeschlossener Überblendung.

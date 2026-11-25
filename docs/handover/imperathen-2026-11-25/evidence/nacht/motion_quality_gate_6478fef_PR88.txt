@@ -1,0 +1,2 @@
+MOTION_QUALITY_GATE_BLOCKED blockers= 587 measured_assets= 61
+Diff der Befundliste gegen PR #87 (ffbe3ad): leer
