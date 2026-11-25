@@ -387,8 +387,8 @@ Nachweis: `evidence/nacht/`.
 
 `evidence/godot_frames/`: Godot 4.7.2, GL Compatibility, Mesa llvmpipe unter Xvfb. Aufgenommen wurde die echte Spielfigur `village_person.gd` mit dem Original-Jungen (LOD 0) und der Laufzeit-Erdung `youth_sole_contact.gd`; die tiefste Sohle liegt in allen 14 Aufnahmen bei +3 mm über dem Boden.
 - Bild `10`: Sandalen in Idle und Marsch flach aufgesetzt.
-- Bild `11`/`12`: Bei Block und Uppercut wird ein großer Tunika-Streifen bis zur erhobenen Hand gezogen (siehe 14.5). Der Rest des eingeschmolzenen Schwertgriffs ist an der linken Hand sichtbar.
-- Grenze: In der Jab-Aufnahme ist keine Schlagpose erkennbar. `sample_pose("jab_right", …)` hat sichtbar nichts verändert; das ist nicht geklärt und kein Beleg für die Kampfclips.
+- Bild `11`/`12`: Beim Block wird ein großer Tunika-Streifen bis zur erhobenen Hand gezogen (siehe 14.5). Der Rest des eingeschmolzenen Schwertgriffs ist sichtbar; er sitzt an der rechten Hand der Figur, im Bild links.
+- **Korrektur:** Die Kacheln „jab_right“ und „uppercut“ in Bild 11–14 zeigen wegen meines Aufnahmegerüsts nicht die Technik, sondern die Ausgangspose der Überblendung (siehe `evidence/godot_frames/HINWEIS_AUFNAHMEGERUEST.md`). Das ist kein Spielfehler. Korrekte Aufnahmen aller Schläge und Tritte liefert Bild `17`.
 - Das Aufnahmeskript liegt unter `werkzeuge/godot_youth_closeup.gd` (nur Nachweis, nicht im Spiel). Es setzt die Figur einmalig auf die gemessene Sohle, weil sie im Spiel unter einem Kapselkörper hängt.
 
 ### 14.4 Knöchel: Gewichtsglättung geprüft und verworfen
@@ -435,8 +435,9 @@ Prüfungen:
 - `youth_mocap_test` 85 495/0, `village_person_test` 233/0, `roman_city_real_walk_test` PASS.
 
 Godot-Bilder:
-- `evidence/godot_frames/13_*`: vorher/nachher LOD 0. Bei Block und Uppercut ist der Stoffstreifen weg, der Marsch-Saum ist sauber, Idle unverändert.
+- `evidence/godot_frames/13_*`: vorher/nachher LOD 0. Beim Block ist der Stoffstreifen weg, der Marsch-Saum ist sauber, Idle unverändert.
 - `14_*`: alle 4 LODs nachher.
+- **`17_*`** (korrigiertes Gerüst): Jab rechts/links, Haken, Uppercut rechts/links, Front- und Seitkick, Block, Idle. **Vorher (#87)** reißen bei jedem Schlag große Tunika-Flächen mit den Händen mit; **nachher (#88)** sind alle Posen sauber.
 
 Der Weg dorthin, mit verworfenen Varianten (Werkzeug `werkzeuge/garment_islands_experiment.py`):
 
