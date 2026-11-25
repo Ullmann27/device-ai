@@ -412,4 +412,55 @@ Das Originalnetz ist an den Händen mit dem Rock **verschmolzen** (LOD 0):
 - Die überdehnten Vertices liegen in Hüft- bis Handhöhe (y 0,59–0,82 m). Von ihnen haben 48 % ein Arm/Hand-Gewicht > 0,5 und weitere 33 % eines von 0,05–0,5; die schlimmsten Posen sind Block, Uppercut und Jab.
 - Das Netz besteht aus 2 622 getrennten UV-Inseln. Die Dehnung entsteht innerhalb gemischt gewichteter Inseln.
 
-Die vorhandene Reparatur verwirft alle Kandidaten. Lösungsansatz: Inseln nahe der Hand jeweils einheitlich Körper oder Hand zuordnen, über die Prüfposen gemessen; das öffnet die Naht an Inselgrenzen, statt Flächen zu dehnen. Weil das eine Netz- und Sichtentscheidung ist, wird er nur als eigener Versuch mit Vorher/Nachher-Bildern vorgelegt (siehe PR-Verweise am Ende dieses Abschnitts, falls vorhanden).
+Die vorhandene Reparatur verwirft alle Kandidaten.
+
+### 14.6 Tunika-Korrektur umgesetzt: Draft-PR [#88](https://github.com/Ullmann27/Imperathen/pull/88)
+
+Branch `fix/youth-hand-tunic-separation-20261126`, Commit `6478fef`. Er setzt auf #87 auf, Basis ist dessen Branch. Neue Funktion `separate_hand_islands()` in `youth_skin_polish.py`, aufgerufen nach der Waffenentfernung. Jede armgewichtete UV-Insel im Rock-/Oberschenkelbereich wird einheitlich zugeordnet:
+- **Hand**, wenn der Median-Abstand zur Unterarm/Hand/Finger-Kette unter 6 cm liegt;
+- sonst **Körper**, über das vorhandene `redistribute()`.
+
+Eine Körper-Insel, deren Nähte überwiegend an Handfläche grenzen, bleibt bei der Hand (gegen schwebende Fragmente). Übernommen wird nur, wenn Anzahl **und** Spitze der Überdehnung sinken.
+
+| LOD | überdehnte Kanten | Spitze | Nahtöffnungen > 20 mm |
+|---|---|---|---|
+| 0 | 2 925 → 152 | 0,674 → 0,072 m | 11 |
+| 1 | 1 710 → 98 | 0,689 → 0,079 m | 23 |
+| 2 | 737 → 42 | 0,659 → 0,083 m | 5 |
+| 3 | 140 → 8 | 0,503 → 0,106 m | 3 |
+
+Prüfungen:
+- Clips, Sohlenebenen und Waffenbericht sind identisch zu #87. Bewegung und Erdung bleiben also unverändert.
+- CI-Parität: Python 3.12 / NumPy 1.26.4 / SciPy 1.11.4 → 4/4 GLBs byte-identisch.
+- `youth_mocap_test` 85 495/0, `village_person_test` 233/0, `roman_city_real_walk_test` PASS.
+
+Godot-Bilder:
+- `evidence/godot_frames/13_*`: vorher/nachher LOD 0. Bei Block und Uppercut ist der Stoffstreifen weg, der Marsch-Saum ist sauber, Idle unverändert.
+- `14_*`: alle 4 LODs nachher.
+
+Der Weg dorthin, mit verworfenen Varianten (Werkzeug `werkzeuge/garment_islands_experiment.py`):
+
+| Variante | Messung | Bild |
+|---|---|---|
+| Zuordnung nach Hautfarbe | 2 923 → 360 Kanten | **schlechter**: Oberschenkelhaut flog mit der Hand (`15_*`) |
+| geometrisch, nur gemischte Inseln | 406 Kanten, Spitze 0,257 m | Streifen weg, aber Flocken und Fragmente |
+| alle armgewichteten Inseln im Rockbereich | 152 Kanten, 0,072 m | ein schwebendes Fragment an der Hüfte |
+| zusätzlich Nahtnachbar-Regel und 6 cm Radius | 152 Kanten, 0,072 m, Nahtöffnungen 36 | **Endstand**, Fragment weg |
+
+Offen bei #88:
+- menschliche Sichtabnahme, auch in Bewegung und in Nahaufnahme;
+- CI-Lauf auf #88;
+- eine volle Suite ohne parallele Eingriffe. Den ersten Lauf habe ich verworfen, weil ich währenddessen die LOD-0-Datei für einen anderen Versuch kurz ausgetauscht hatte; das Ergebnis der Wiederholung steht in 14.8.
+
+### 14.7 Schwertgriff-Rest an der rechten Hand: Versuch ohne Nutzen
+
+An der rechten Hand hängen goldbraune Fragmente des eingeschmolzenen Griffs. Die vorhandene Waffenentfernung erfasst sie nicht, weil sie Handgewicht > 0,65 und keine hautfarbene Ecke verlangt; die Reste liegen bei 0,4–0,6.
+
+Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Schwertnetzes liegen (LOD 0: 99 Inseln, 137–172 Flächen; LOD 2/3: wegen Dezimierung keine). Ergebnis in Godot-Nahaufnahmen: Die sichtbaren Fragmente bleiben weitgehend (`16_*`). **Nicht übernommen.** Das braucht einen Künstler-Pass am Originalnetz.
+
+### 14.8 CI und Motion-Gate auf #87
+
+- `real-city-arm64-qa-apk` ist rot. Laut CI-Log bestanden im roten Schritt alle 85 `check_prototype`-Gruppen (0 FAIL), Stadt-Asset, Stadt-Gehtest (Original-Junge und MoCap aktiv), `YOUTH_MOCAP_RUNTIME_PASS` und Crowd.
+- Gescheitert ist erst der letzte Befehl `motion_quality_gate.py`: `BLOCKED 587 / 61`, identisch zu lokal. Begründung als Kommentar am PR: <https://github.com/Ullmann27/Imperathen/pull/87#issuecomment-7176760097>.
+- Das Gate braucht menschliche Sichtprüfungen und Korrekturen an fremden Bewegungsfamilien. Die 5 Jungen-Befunde sind Registrierungslücken in `motion_contract.json`; eine Registrierung würde neue Messungen und Sichtprüfungen verlangen und ist eine Entscheidung des Motion-Teams.
+- `actual-city-visual-review` (echte Godot-Stadt-Framebuffer High/Very High mit Original-Jungen in der CI): **success**.
