@@ -1,0 +1,86 @@
+{
+ "0": {
+  "march": {
+   "frames": 61,
+   "contact_samples": 13,
+   "slab_tilt_deg_mean": 75.1,
+   "slab_tilt_deg_p95": 88.4,
+   "min_foot_vertex_height_m": -0.0008,
+   "max_leg_edge_stretch": 13.6,
+   "max_edges_over_1_5x": 39,
+   "leg_edges": 12521
+  },
+  "run": {
+   "frames": 47,
+   "contact_samples": 1,
+   "slab_tilt_deg_mean": 59.4,
+   "slab_tilt_deg_p95": 59.4,
+   "min_foot_vertex_height_m": -0.0,
+   "max_leg_edge_stretch": 16.89,
+   "max_edges_over_1_5x": 127,
+   "leg_edges": 12521
+  },
+  "idle": {
+   "frames": 121,
+   "contact_samples": 0,
+   "slab_tilt_deg_mean": null,
+   "slab_tilt_deg_p95": null,
+   "min_foot_vertex_height_m": 0.0,
+   "max_leg_edge_stretch": 1.51,
+   "max_edges_over_1_5x": 2,
+   "leg_edges": 12521
+  },
+  "jab_right": {
+   "frames": 42,
+   "contact_samples": 0,
+   "slab_tilt_deg_mean": null,
+   "slab_tilt_deg_p95": null,
+   "min_foot_vertex_height_m": -0.0003,
+   "max_leg_edge_stretch": 11.32,
+   "max_edges_over_1_5x": 56,
+   "leg_edges": 12521
+  }
+ },
+ "2": {
+  "march": {
+   "frames": 61,
+   "contact_samples": 22,
+   "slab_tilt_deg_mean": 75.9,
+   "slab_tilt_deg_p95": 88.8,
+   "min_foot_vertex_height_m": -0.0,
+   "max_leg_edge_stretch": 1.5,
+   "max_edges_over_1_5x": 2,
+   "leg_edges": 2716
+  },
+  "run": {
+   "frames": 47,
+   "contact_samples": 1,
+   "slab_tilt_deg_mean": 62.9,
+   "slab_tilt_deg_p95": 62.9,
+   "min_foot_vertex_height_m": 0.0,
+   "max_leg_edge_stretch": 1.8,
+   "max_edges_over_1_5x": 14,
+   "leg_edges": 2716
+  },
+  "idle": {
+   "frames": 121,
+   "contact_samples": 0,
+   "slab_tilt_deg_mean": null,
+   "slab_tilt_deg_p95": null,
+   "min_foot_vertex_height_m": 0.0,
+   "max_leg_edge_stretch": 1.42,
+   "max_edges_over_1_5x": 0,
+   "leg_edges": 2716
+  },
+  "jab_right": {
+   "frames": 42,
+   "contact_samples": 4,
+   "slab_tilt_deg_mean": 65.0,
+   "slab_tilt_deg_p95": 65.2,
+   "min_foot_vertex_height_m": -0.0,
+   "max_leg_edge_stretch": 1.58,
+   "max_edges_over_1_5x": 2,
+   "leg_edges": 2716
+  }
+ }
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "actual_city_glb": {
+    "bytes": 50945284,
+    "sha256": "f4d2a73f3d15ed90a06d2c6b7e2be7558c757ec020642c979d47a88bf57d2f05"
+  },
+  "actual_collision_glb": {
+    "bytes": 4331560,
+    "sha256": "5fccb4d98202332bcf05ac7a74402e804a3b86f4abc0ae5022e6b689afd1c8ba"
+  },
+  "residential_meshes_expected": 240,
+  "market_stalls_expected": 63,
+  "forum_embedded_in_city": true,
+  "additional_forum_glb_required": false,
+  "crowd_layout_entries": 12,
+  "private_temple": "not_supplied",
+  "private_temple_lod_count": 0,
+  "physical_fold7_20min_test": "not_performed",
+  "matching_existing_android_signer": "not_proven",
+  "release_approved": false
+}

@@ -1,0 +1,467 @@
+From 10031e18233c5a4b0f9774d46e65ae82bba7b519 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 25 Nov 2026 21:23:42 +0000
+Subject: [PATCH] fix(youth): calibrate the actual sandal sole slab instead of
+ lowest bind-pose vertices
+
+Root cause of the CI blocker "Original sandal plane is too ambiguous to
+flatten R" (LOD 3, runs 45693491554 / 45693492317): the original Meshy
+youth is bound with both sandals rolled ~80 deg inward. The lowest
+Foot/Toe-weighted vertices are the lateral foot wall, so the previous
+lowest-28%-per-segment plane fit was rolled 36-52 deg on LOD 0-2 and
+degenerate on LOD 3 (20 right-foot vertices).
+
+- youth_anatomy.sole_patch: largest connected coplanar (12 deg) Foot/Toe
+  surface = wooden sandal slab; coplanar fragments merged; gates: area
+  >= 40 cm2, dominance over differently oriented flat surfaces >= 1.5,
+  max plane residual 4 mm, slab faces away from the ankle, left/right
+  mirror <= 12 deg.
+- retarget_accad_youth: LOD-family gate (each LOD within 12 deg of
+  LOD 0), sole planes written to the report, grounding samples include
+  every foot vertex on or beyond the slab plane.
+- youth_sole_contact.gd: runtime grounding samples the same slab rule
+  from the report; youth_mocap_test checks it per LOD.
+
+Gate change (explicit, not silent): the former rest-normal y >= 0.35
+check is replaced. On this asset the true slab normal has y = 0.13-0.25
+on every LOD, so that check rejected the correct sole and accepted
+mis-fitted walls on LOD 0-2.
+
+Measured (local, Godot 4.7.2 headless + numpy skinning of the produced
+GLBs): sole slab tilt in ground contact before 59-76 deg, after idle
+1.7-4.7 deg, march mean 11-13 deg; no foot vertex below floor. Open:
+more >1.5x stretched leg edges at LOD 0 (idle 2 -> 36, march 39 -> 64
+of 12521); visual and Fold7 acceptance still required.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_016mth9Xm5Ur9MT7T4vToQbz
+---
+ .../scripts/visuals/youth_sole_contact.gd     | 116 ++++++++++----
+ prototype/tests/youth_mocap_test.gd           |   3 +
+ tools/characters/retarget_accad_youth.py      |  29 +++-
+ tools/characters/youth_anatomy.py             | 142 ++++++++++++++----
+ 4 files changed, 226 insertions(+), 64 deletions(-)
+
+diff --git a/prototype/scripts/visuals/youth_sole_contact.gd b/prototype/scripts/visuals/youth_sole_contact.gd
+index c347914..dbc401e 100644
+--- a/prototype/scripts/visuals/youth_sole_contact.gd
++++ b/prototype/scripts/visuals/youth_sole_contact.gd
+@@ -8,12 +8,34 @@ var run_clearance: Array = []
+ var last_lowest_world_y := INF
+ var last_correction_m := 0.0
+ var last_target_y := INF
++## Bind-space sandal sole planes per side from the offline retarget report
++## (Vector4: normal xyz, offset w). Empty for reports without calibration.
++var sole_planes: Array[Vector4] = []
++var slab_sample_count := 0
++const SOLE_CONTACT_BAND_M := .004
++const SAMPLES_PER_REGION := 24
+ 
+ 
+ func bind(model: Node3D, level: int) -> void:
+ 	samples.clear()
+ 	run_clearance.clear()
++	sole_planes.clear()
++	slab_sample_count=0
+ 	rig = null
++	var report: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/animations/accad_youth_motion.json"))
++	var lod_report: Dictionary = {}
++	if report is Dictionary:
++		var lods: Array = report.get("lods",[])
++		if level>=0 and level<lods.size() and lods[level] is Dictionary:
++			lod_report=lods[level]
++	var planes: Dictionary = lod_report.get("sole_planes",{})
++	for side_name in ["L","R"]:
++		var plane: Dictionary = planes.get(side_name,{})
++		var n: Array = plane.get("rest_normal",[])
++		if n.size()==3 and plane.has("plane_offset"):
++			sole_planes.append(Vector4(float(n[0]),float(n[1]),float(n[2]),float(plane.plane_offset)))
++	if sole_planes.size()!=2:
++		sole_planes.clear()
+ 	if not is_instance_valid(model):
+ 		return
+ 	var mesh := model.find_child("MeshyYouthBody",true,false) as MeshInstance3D
+@@ -35,7 +57,11 @@ func bind(model: Node3D, level: int) -> void:
+ 		binds.append(mesh.skin.get_bind_pose(i))
+ 		var name := rig.get_bone_name(bone)
+ 		foot_sides.append(1 if name in ["Foot_L","Toe_L"] else (2 if name in ["Foot_R","Toe_R"] else 0))
++	# Two pools per side: the lowest bind-pose band (legacy) and the actual
++	# sandal slab, which only becomes the contact surface once the inward
++	# rolled original feet are flattened by the retargeted clips.
+ 	var candidates: Array = [[],[]]
++	var slab_candidates: Array = [[],[]]
+ 	for surface in mesh.mesh.get_surface_count():
+ 		var arrays := mesh.mesh.surface_get_arrays(surface)
+ 		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+@@ -44,10 +70,34 @@ func bind(model: Node3D, level: int) -> void:
+ 		if vertices.is_empty() or joints.size()!=weights.size() or joints.size()!=vertices.size()*4:
+ 			continue
+ 		for v in vertices.size():
+-			# Same metric sole band as the offline source retargeter.
+-			if vertices[v].y > .065:
++			# Same metric sole band and slab rule as the offline retargeter.
++			var in_band := vertices[v].y <= .065
++			var plane_distance := INF
++			if not sole_planes.is_empty():
++				var x_side := 0 if vertices[v].x>0.0 else 1
++				var plane: Vector4 = sole_planes[x_side]
++				plane_distance=Vector3(plane.x,plane.y,plane.z).dot(vertices[v])+plane.w
++			var on_slab := plane_distance<=SOLE_CONTACT_BAND_M
++			if not in_band and not on_slab:
+ 				continue
++			# Classify by foot weight first; only foot vertices pay for the
++			# bind-space transforms below.
+ 			var side_weights := Vector2.ZERO
++			for slot in 4:
++				var k := v*4+slot
++				var index := joints[k]
++				if index<0 or index>=bone_ids.size() or weights[k]<=0.0:
++					continue
++				if foot_sides[index]==1: side_weights.x+=weights[k]
++				if foot_sides[index]==2: side_weights.y+=weights[k]
++			var side := 0 if side_weights.x>=.6 else (1 if side_weights.y>=.6 else -1)
++			if side<0:
++				continue
++			# The slab rule uses the plane of the vertex's own foot.
++			if on_slab and (side==0)!=(vertices[v].x>0.0):
++				on_slab=false
++			if not in_band and not on_slab:
++				continue
+ 			var ids := PackedInt32Array()
+ 			var local := PackedVector3Array()
+ 			var amounts := PackedFloat32Array()
+@@ -57,40 +107,50 @@ func bind(model: Node3D, level: int) -> void:
+ 				var w := weights[k]
+ 				if index<0 or index>=bone_ids.size() or w<=0.0:
+ 					continue
+-				if foot_sides[index]==1: side_weights.x+=w
+-				if foot_sides[index]==2: side_weights.y+=w
+ 				ids.append(bone_ids[index])
+ 				local.append(binds[index]*vertices[v])
+ 				amounts.append(w)
+-			var side := 0 if side_weights.x>=.6 else (1 if side_weights.y>=.6 else -1)
+-			if side>=0 and ids.size()>0:
+-				candidates[side].append({"y":vertices[v].y,"z":vertices[v].z,
+-					"bones":ids,"local":local,"weights":amounts})
++			if ids.size()>0:
++				var value := {"y":vertices[v].y,"z":vertices[v].z,"d":plane_distance,
++					"bones":ids,"local":local,"weights":amounts}
++				if in_band:
++					candidates[side].append(value)
++				if on_slab:
++					slab_candidates[side].append(value)
+ 	for side in 2:
+ 		var foot: Array = candidates[side]
+-		if foot.is_empty():
++		if foot.is_empty() and slab_candidates[side].is_empty():
+ 			samples.clear()
++			slab_sample_count=0
+ 			return
+ 		foot.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return float(a.y)<float(b.y))
+-		# Include the lowest heel/forefoot samples independently; a dense
+-		# heel patch must not hide the toe contact at push-off.
+-		var minimum_z := INF
+-		var maximum_z := -INF
+-		for value: Dictionary in foot:
+-			minimum_z=minf(minimum_z,float(value.z))
+-			maximum_z=maxf(maximum_z,float(value.z))
+-		var mid := (minimum_z+maximum_z)*.5
+-		var counts := [0,0]
+-		for value: Dictionary in foot:
+-			var region := 0 if float(value.z)<mid else 1
+-			if counts[region]<24:
+-				samples.append(value)
+-				counts[region]+=1
+-	var report: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/animations/accad_youth_motion.json"))
+-	if report is Dictionary:
+-		var lods: Array = report.get("lods",[])
+-		if level>=0 and level<lods.size():
+-			run_clearance=lods[level].get("clips",{}).get("run",{}).get("sole_clearance_curve_m",[])
++		_take_regions(foot)
++		# Most protruding slab/heel/toe-cap vertices first.
++		var slab: Array = slab_candidates[side]
++		slab.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return float(a.d)<float(b.d))
++		slab_sample_count+=_take_regions(slab)
++	if not lod_report.is_empty():
++		run_clearance=lod_report.get("clips",{}).get("run",{}).get("sole_clearance_curve_m",[])
++
++
++## Include the heel and forefoot halves independently; a dense heel patch
++## must not hide the toe contact at push-off. Returns the samples added.
++func _take_regions(foot: Array) -> int:
++	if foot.is_empty():
++		return 0
++	var minimum_z := INF
++	var maximum_z := -INF
++	for value: Dictionary in foot:
++		minimum_z=minf(minimum_z,float(value.z))
++		maximum_z=maxf(maximum_z,float(value.z))
++	var mid := (minimum_z+maximum_z)*.5
++	var counts := [0,0]
++	for value: Dictionary in foot:
++		var region := 0 if float(value.z)<mid else 1
++		if counts[region]<SAMPLES_PER_REGION:
++			samples.append(value)
++			counts[region]+=1
++	return counts[0]+counts[1]
+ 
+ 
+ func clearance(action: String, phase: float) -> float:
+diff --git a/prototype/tests/youth_mocap_test.gd b/prototype/tests/youth_mocap_test.gd
+index ce380d1..236d337 100644
+--- a/prototype/tests/youth_mocap_test.gd
++++ b/prototype/tests/youth_mocap_test.gd
+@@ -104,6 +104,9 @@ func _run() -> void:
+ 		var idle_review: Dictionary=proof.lods[level].get("clips",{}).get("idle",{})
+ 		_check(int(idle_review.get("frames",0))>0 and is_finite(float(idle_review.get("max_two_sole_height_difference_m",INF))),"Actual neutral sole heights are measured")
+ 		_check(not actor._youth_soles.samples.is_empty(),"Real skinned sole samples at LOD %d"%level)
++		var planes: Dictionary=proof.lods[level].get("sole_planes",{})
++		_check(planes.has("L") and planes.has("R"),"Calibrated sandal sole planes reported at LOD %d"%level)
++		_check(actor._youth_soles.sole_planes.size()==2 and actor._youth_soles.slab_sample_count>0,"Actual sandal slab sampled for grounding at LOD %d"%level)
+ 		for action: String in ["idle","march","run","block"]:
+ 			for f in [0.0,.25,.5,.75]:
+ 				actor.sample_pose(action,f)
+diff --git a/tools/characters/retarget_accad_youth.py b/tools/characters/retarget_accad_youth.py
+index 6659248..25b4e8e 100644
+--- a/tools/characters/retarget_accad_youth.py
++++ b/tools/characters/retarget_accad_youth.py
+@@ -12,7 +12,8 @@ import numpy as np
+ from scipy.spatial.transform import Rotation as R
+ from accad_bvh import load_bvh, unit
+ from youth_skin_polish import repair
+-from youth_anatomy import calibrate_soles,source_foot_angles,foot_global,toe_global,neutral_idle,original_structure,remove_start_weapon
++from youth_anatomy import calibrate_soles,sole_contact_mask,source_foot_angles,foot_global,toe_global,neutral_idle,original_structure,remove_start_weapon
++SOLE_LOD_MAX_DEGREES=12.0  # every LOD must find the same original sandal sole
+ 
+ SOURCE_URL="https://accad.ohio-state.edu/sites/accad.osu.edu/files/Male2_bvh.zip"
+ SOURCE_SHA="f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+@@ -105,6 +106,9 @@ class Target:
+             self.foot_frames["Foot_"+side]=foot_frame(self.pos("Toe_"+side)-self.pos("Foot_"+side),self.pelvis_frame[:,0])
+             self.foot_frames["Toe_"+side]=foot_frame(self.rest_r[self.ids["Toe_"+side]]@UP,self.pelvis_frame[:,0])
+         inv=read_access(d,b,d["skins"][0]["inverseBindMatrices"]).reshape(-1,4,4).transpose(0,2,1)
++        # The calibrated sandal slab is the actual contact surface once the
++        # feet are flattened; the lowest bind-pose band is kept as well.
++        self.sole_frames=calibrate_soles(self,read_access)
+         # Real lower sole vertices from original textured skin, not a capsule
+         # approximation. Exclude the sword mesh from grounding.
+         body=next(n for n in self.nodes if n.get("name")=="MeshyYouthBody")
+@@ -117,15 +121,18 @@ class Target:
+             for side,sign in (("L",1),("R",-1)):
+                 ids={self.ids["Foot_"+side],self.ids["Toe_"+side]}
+                 match=np.isin(j,[self.joints.index(i) for i in ids])
+-                mask=(v[:,1]<.065)&(v[:,0]*sign>0)&((w*match).sum(1)>.6)
+-                if not mask.any():continue
+-                # Sample bounded points, retaining lowest real sole vertices.
+-                ii=np.flatnonzero(mask);ii=ii[np.argsort(v[ii,1])[:384]]
++                skinned=(v[:,0]*sign>0)&((w*match).sum(1)>.6)
++                band=skinned&(v[:,1]<.065)
++                slab=skinned&sole_contact_mask(self.sole_frames[side],v.astype(float))
++                if not (band|slab).any():continue
++                # Sample bounded points, retaining lowest real sole vertices
++                # and every vertex of the calibrated sandal slab.
++                ii=np.flatnonzero(band);ii=ii[np.argsort(v[ii,1])[:384]]
++                ii=np.union1d(ii,np.flatnonzero(slab))
+                 pts=np.concatenate([v[ii],np.ones((len(ii),1))],axis=1)
+                 local=np.einsum("nkij,nj->nki",inv[j[ii]],pts)
+                 self.foot_points.setdefault(side,[]).append((j[ii],w[ii],local))
+         if set(self.foot_points)!={"L","R"}:raise ValueError("Both actual soles must be sampled")
+-        self.sole_frames=calibrate_soles(self,read_access)
+     def pos(self,n):return self.rest_p[self.ids[n]]
+     def fk(self,rot,shift=None):
+         g={};p={}
+@@ -296,8 +303,16 @@ def main():
+     a.output.mkdir(parents=True,exist_ok=True)
+     report={"schema":1,"source":SOURCE_URL,"source_sha256":SOURCE_SHA,"credit":SOURCE_CREDIT,"rig_joints":35,"method":"direction-based 60 Hz skeletal retarget, real skin sole grounding; in-place root with measured stride; no gameplay mutation","lods":[]}
+     with zipfile.ZipFile(a.archive) as z:
++        family={}
+         for i in range(4):
+             path=a.input/f"hero_meshy_italia_{i}.glb";d,b=decode(path);t=Target(d,b)
++            soles={side:{k:t.sole_frames[side][k] for k in ("rest_normal","plane_offset","area_m2","dominance","residual_m","samples","mirror_deg","primitive")} for side in ("L","R")}
++            for side,info in soles.items():
++                reference=family.setdefault(side,np.array(info["rest_normal"]))
++                angle=math.degrees(math.acos(float(np.clip(np.dot(reference,info["rest_normal"]),-1,1))))
++                info["lod0_angle_deg"]=angle
++                if angle>SOLE_LOD_MAX_DEGREES:raise ValueError(f"LOD {i} sandal sole {side} deviates {angle:.1f} deg from LOD 0")
++            print("YOUTH_SOLE_CALIBRATION",i,json.dumps(soles),flush=True)
+             original_buffer_size=len(b);original_buffer_sha=digest(b)
+             immutable=digest(json.dumps(original_structure(d),sort_keys=True,separators=(",",":")).encode())
+             records={name:adapt(t,z,name,spec) for name,spec in {**GAITS,**FIGHT}.items()}
+@@ -310,7 +325,7 @@ def main():
+             print("YOUTH_SURFACE_REVIEW",i,json.dumps(surface_review),flush=True)
+             d["asset"].setdefault("extras",{})["motion_credit"]=SOURCE_CREDIT
+             out=a.output/path.name;out.write_bytes(encode(d,b))
+-            report["lods"].append({"level":i,"sha256":digest(out.read_bytes()),"original_sha256":digest(path.read_bytes()),"clips":records,"original_mesh_skin_materials_and_binary_preserved":False,"original_positions_materials_bind_matrices_preserved":True,"original_binary_prefix_preserved":True,"surface_review":surface_review,"weapon_review":weapon_review})
++            report["lods"].append({"level":i,"sole_planes":soles,"sha256":digest(out.read_bytes()),"original_sha256":digest(path.read_bytes()),"clips":records,"original_mesh_skin_materials_and_binary_preserved":False,"original_positions_materials_bind_matrices_preserved":True,"original_binary_prefix_preserved":True,"surface_review":surface_review,"weapon_review":weapon_review})
+             print("ACCAD_RETARGET_LOD",i,"clips",len(records),flush=True)
+     report["gaits"]={k:report["lods"][0]["clips"][k] for k in GAITS}
+     a.report.parent.mkdir(parents=True,exist_ok=True);a.report.write_text(json.dumps(report,indent=2)+"\n")
+diff --git a/tools/characters/youth_anatomy.py b/tools/characters/youth_anatomy.py
+index 1a87342..fbe9703 100644
+--- a/tools/characters/youth_anatomy.py
++++ b/tools/characters/youth_anatomy.py
+@@ -23,49 +23,133 @@ def plane_frame(forward, normal):
+     x=unit(np.cross(y,z))
+     return np.column_stack((x,y,z))
+ 
+-def calibrate_soles(target, read_access):
+-    """Use the sole's actual rest geometry, not the direction of a toe bone."""
++# The original Meshy youth is bound with both sandals rolled about 80 deg
++# inward (soles facing each other). Its lowest bind-pose vertices are therefore
++# the lateral foot wall, not the sole, and a "lowest points" plane fit is
++# ambiguous (it flipped across LODs and failed on LOD 3). The actual sandal
++# sole is the dominant connected flat slab of the Foot/Toe-skinned surface;
++# it is identical across all four LODs and mirror-symmetric left/right.
++SOLE_PATCH_DEGREES = 12.0        # coplanarity tolerance for region growing
++SOLE_MIN_AREA_M2 = 0.004         # 40 cm2: real sandal slab, not a strap
++SOLE_MIN_DOMINANCE = 1.5         # measured minimum 1.93 (LOD 1 right), LOD 0 >= 3.6
++SOLE_MAX_RESIDUAL_M = 0.004      # slab vertices within 4 mm of their plane
++SOLE_MAX_MIRROR_DEGREES = 12.0   # left/right slabs must mirror each other
++SOLE_CONTACT_BAND_M = 0.004      # vertices sampled as sole contact points
++
++
++def _foot_faces(target, read_access, side):
+     d,b=target.d,target.b
+     node=next(n for n in target.nodes if n.get("name")=="MeshyYouthBody")
+-    points={"L":[],"R":[]}
+-    for primitive in d["meshes"][node["mesh"]]["primitives"]:
++    ids=[target.joints.index(target.ids[n+"_"+side]) for n in ("Foot","Toe")]
++    for index,primitive in enumerate(d["meshes"][node["mesh"]]["primitives"]):
+         a=primitive["attributes"]
+-        if not {"POSITION","JOINTS_0","WEIGHTS_0"}.issubset(a):continue
+-        v=read_access(d,b,a["POSITION"])
++        if not {"POSITION","JOINTS_0","WEIGHTS_0"}.issubset(a) or "indices" not in primitive:continue
++        v=read_access(d,b,a["POSITION"]).astype(float)
+         j=read_access(d,b,a["JOINTS_0"]).astype(int)
+         w=read_access(d,b,a["WEIGHTS_0"])
+-        for side in points:
+-            ids=[target.joints.index(target.ids[n+"_"+side]) for n in ("Foot","Toe")]
+-            mask=((w*np.isin(j,ids)).sum(1)>.55)&(v[:,1]<.14)
+-            points[side].extend(v[mask])
++        weight=(w*np.isin(j,ids)).sum(1)
++        faces=read_access(d,b,primitive["indices"]).reshape(-1,3).astype(int)
++        keep=(weight[faces].mean(1)>.5)&(v[faces][:,:,1].mean(1)<.14)
++        yield index,v,weight,faces[keep]
++
++
++def sole_patch(target, read_access, side):
++    """Largest connected coplanar Foot/Toe surface: the real sandal sole."""
++    best=[]
++    for index,v,weight,faces in _foot_faces(target,read_access,side):
++        if not len(faces):continue
++        p0,p1,p2=v[faces[:,0]],v[faces[:,1]],v[faces[:,2]]
++        cross=np.cross(p1-p0,p2-p0)
++        area=np.linalg.norm(cross,axis=1)/2
++        normal=cross/np.maximum(2*area[:,None],1e-12)
++        # Weld UV/normal seams so the slab is one connected component.
++        weld={}
++        welded=np.array([weld.setdefault(tuple(k),len(weld)) for k in np.round(v,5)])
++        edges={}
++        for f,(x,y,z) in enumerate(welded[faces]):
++            for e in ((x,y),(y,z),(z,x)):edges.setdefault((min(e),max(e)),[]).append(f)
++        neighbours=[[] for _ in faces]
++        for shared in edges.values():
++            for f in shared:neighbours[f].extend(g for g in shared if g!=f)
++        seen=np.zeros(len(faces),bool)
++        limit=math.cos(math.radians(SOLE_PATCH_DEGREES))
++        for seed in np.argsort(-area,kind="stable"):
++            if seen[seed]:continue
++            component=[seed];seen[seed]=True;queue=[seed]
++            while queue:
++                current=queue.pop()
++                for other in neighbours[current]:
++                    if not seen[other] and normal[other]@normal[seed]>limit:
++                        seen[other]=True;component.append(other);queue.append(other)
++            best.append((float(area[component].sum()),index,v,weight,faces[component],normal[component],area[component]))
++    if not best:raise ValueError("No skinned sandal surface "+side)
++    best.sort(key=lambda item:-item[0])
++    _,index,v,weight,faces,normals,areas=best[0]
++    outward=unit((normals*areas[:,None]).sum(0))
++    centre=v[np.unique(faces)].mean(0)
++    # Decimated LODs split the slab into non-adjacent fragments. A fragment
++    # belongs to the sole only if it has the same orientation and every one
++    # of its vertices lies on the slab plane. Only a flat surface with a
++    # different orientation (beyond the coplanarity tolerance) competes, since
++    # the calibrated quantity is the sole orientation.
++    limit=math.cos(math.radians(SOLE_PATCH_DEGREES))
++    second=0.
++    for total_,index_,v_,_,faces_,normals_,areas_ in best[1:]:
++        direction=unit((normals_*areas_[:,None]).sum(0))
++        distance=np.abs((v_[np.unique(faces_)]-centre)@outward).max()
++        if direction@outward<=limit:second=max(second,total_)
++        elif index_==index and distance<=SOLE_MAX_RESIDUAL_M:
++            faces=np.concatenate([faces,faces_]);normals=np.concatenate([normals,normals_]);areas=np.concatenate([areas,areas_])
++    total=float(areas.sum())
++    outward=unit((normals*areas[:,None]).sum(0))
++    corners=v[np.unique(faces)]
++    centre=corners.mean(0)
++    residual=float(np.abs((corners-centre)@outward).max())
++    if total<SOLE_MIN_AREA_M2:
++        raise ValueError(f"Original sandal sole too small {side}: {total:.5f} m2")
++    if second>0 and total/second<SOLE_MIN_DOMINANCE:
++        raise ValueError(f"Original sandal sole ambiguous {side}: dominance {total/second:.2f}")
++    if residual>SOLE_MAX_RESIDUAL_M:
++        raise ValueError(f"Original sandal sole not planar {side}: {residual:.4f} m")
++    return {"primitive":index,"normal":-outward,"offset":float(outward@centre),
++            "area_m2":total,"dominance":(total/second if second>0 else None),
++            "faces":len(faces),"residual_m":residual,"centre":centre}
++
++
++def calibrate_soles(target, read_access):
++    """Use the actual sandal sole slab, not the lowest bind-pose vertices."""
+     forward=unit(np.cross(target.pelvis_frame[:,0],UP))
+     result={}
+     for side,sign in (("L",1),("R",-1)):
+-        p=np.unique(np.round(np.asarray(points[side]),5),axis=0)
+-        if len(p)<12:raise ValueError("Too few real sandal vertices "+side)
+-        # Fit the lower surface, retaining the forefoot as well as the heel.
++        patch=sole_patch(target,read_access,side)
++        normal=patch["normal"]
++        # The slab belongs to this foot and faces away from its interior.
++        ankle=target.pos("Foot_"+side)
++        if float((patch["centre"]-ankle)@-normal)<=0:
++            raise ValueError("Sandal sole faces into the foot "+side)
+         direction=target.pos("Toe_"+side)-target.pos("Foot_"+side)
+-        longitudinal=unit(np.array([direction[0],0.,direction[2]]))
+-        if np.linalg.norm(longitudinal)<.5:longitudinal=forward
+-        projection=p@longitudinal
+-        pieces=[]
+-        for segment in np.array_split(p[np.argsort(projection)],6):
+-            if len(segment):
+-                count=max(3,math.ceil(len(segment)*.28))
+-                pieces.extend(segment[np.argsort(segment[:,1])[:count]])
+-        low=np.asarray(pieces)
+-        _,_,vh=np.linalg.svd(low-low.mean(0),full_matrices=False)
+-        normal=vh[-1]
+-        if normal[1]<0:normal=-normal
+-        if normal[1]<.35:
+-            raise ValueError("Original sandal plane is too ambiguous to flatten "+side)
+         rest=plane_frame(direction,normal)
+         # Slight outward toe angle, anatomically consistent on both sides.
+         neutral=plane_frame(R.from_rotvec(UP*(sign*.075)).apply(forward),UP)
+-        result[side]={"rest":rest,"neutral":neutral,"samples":len(low),
+-                      "rest_normal":normal.tolist()}
++        result[side]={"rest":rest,"neutral":neutral,"samples":patch["faces"],
++                      "rest_normal":normal.tolist(),"plane_offset":patch["offset"],
++                      "area_m2":patch["area_m2"],"dominance":patch["dominance"],
++                      "residual_m":patch["residual_m"],"primitive":patch["primitive"]}
++    mirrored=np.array(result["R"]["rest_normal"])*np.array([-1.,1.,1.])
++    mirror=math.degrees(math.acos(float(np.clip(np.dot(result["L"]["rest_normal"],mirrored),-1,1))))
++    if mirror>SOLE_MAX_MIRROR_DEGREES:
++        raise ValueError(f"Left/right sandal soles are not mirrored: {mirror:.1f} deg")
++    for side in result:result[side]["mirror_deg"]=mirror
+     return result
+ 
++def sole_contact_mask(info,positions):
++    """Vertices on, or protruding beyond, the calibrated sandal sole plane.
++
++    Curved heel/toe ends of the sandal protrude up to ~2 cm past the flat
++    slab; they touch the floor first when the foot pitches."""
++    normal=np.asarray(info["rest_normal"],float)
++    return positions@normal+info["plane_offset"]<=SOLE_CONTACT_BAND_M
++
+ def pitch_of(v):
+     return math.atan2(float(v[1]),float(np.linalg.norm(v[[0,2]])))
+ 
+-- 
+2.43.0
+

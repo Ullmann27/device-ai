@@ -1,0 +1,9 @@
+RESULT check_prototype exit=0 secs=24
+RESULT real-city-import PASS exit=0 secs=1
+RESULT real-city-walk PASS exit=0 secs=2
+RESULT original_youth_active PASS
+RESULT crowd-layout PASS exit=0 secs=0
+RESULT city-training PASS exit=0 secs=3
+RESULT mission-cinematics PASS exit=0 secs=0
+RESULT youth-mocap-runtime PASS exit=0 secs=2
+DONE

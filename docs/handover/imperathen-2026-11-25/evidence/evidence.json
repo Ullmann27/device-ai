@@ -1,0 +1,277 @@
+{
+ "schema": "Masterhandbuch 3.0 S.48 Evidence-Schema",
+ "created": "2026-11-25",
+ "entries": [
+  {
+   "gate_id": "P0-YOUTH-RETARGET-REPRO",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Python 3.12.3, NumPy 1.26.4, SciPy 1.11.4 (CI-Paritaet)",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "retarget_accad_youth all LODs",
+   "steps": [
+    "stage_original_youth.py",
+    "retarget_accad_youth.py --archive accad-male2.zip"
+   ],
+   "expected": "Fehler aus Handbuch S.5 reproduzierbar",
+   "observed": "Exit 1 bei LOD 3: ValueError: Original sandal plane is too ambiguous to flatten R; LOD 2 YOUTH_SURFACE_REVIEW 737 Kanten, max 0.658922 m",
+   "status": "FAIL",
+   "run_url": "https://github.com/Ullmann27/Imperathen/actions/runs/45693492317 (CI-Lauf, Schritt-Log nur angemeldet lesbar)",
+   "artifact_url": "evidence/logs/retarget_vorher_2c54954_fehler.txt",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": []
+  },
+  {
+   "gate_id": "P0-YOUTH-RETARGET-FIX",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Python 3.13.18 / NumPy 2.5.5 / SciPy 1.18.1 und Python 3.12.3 / NumPy 1.26.4 / SciPy 1.11.4",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "retarget_accad_youth all LODs",
+   "steps": [
+    "git am patch",
+    "stage_original_youth.py",
+    "retarget_accad_youth.py"
+   ],
+   "expected": "alle 4 LODs, neue Sohlengates bestanden, CI-Paritaet",
+   "observed": "Exit 0, ACCAD_RETARGET_COMPLETE; 4/4 GLBs byte-identisch zwischen beiden Python/NumPy-Staenden",
+   "status": "PASS",
+   "run_url": null,
+   "artifact_url": "evidence/logs/retarget_nachher.txt; evidence/metrics/sole_calibration_lod0-3.json",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": [
+    "Ersetzte Schranke rest_normal.y>=0.35 braucht Entscheidung",
+    "knappe Reserven: Residuum 3.7/4 mm, LOD-Abweichung 10.7/12 Grad"
+   ]
+  },
+  {
+   "gate_id": "YOUTH-SOLE-CONTACT-METRIC",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 vs 2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "NumPy LBS-Auswertung (Ad-hoc-Skript dieser Sitzung)",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "march, run, idle, jab_right (+front_kick, block nachher)",
+   "steps": [
+    "Skinning der Sohlenplatten-, Fuss- und Beinvertices je Frame aus GLB-Animationskanaelen"
+   ],
+   "expected": "Sohle im Bodenkontakt flach, keine Bodendurchdringung, keine neue Hautdehnung",
+   "observed": "Sohlenneigung im Kontakt vorher 59.4-75.9 Grad, nachher idle 1.7-4.7, march Mittel 11.1-12.6; min. Fuss-Vertex-Hoehe nachher >= -0.05 mm; >1.5x-Kanten LOD0 idle 2->36, march 39->64",
+   "status": "PASS mit Befund",
+   "run_url": null,
+   "artifact_url": "evidence/metrics/skinning_eval_vorher_2c54954.json; evidence/metrics/skinning_eval_nachher_patch.json; evidence/renders/06-08",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": [
+    "mehr ueberdehnte Knoechelkanten LOD0/1",
+    "visuelle Abnahme in Bewegung fehlt"
+   ]
+  },
+  {
+   "gate_id": "GODOT-YOUTH-MOCAP-RUNTIME",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Godot 4.7.2.stable.official.ed1daf0bf",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "res://tests/youth_mocap_test.gd",
+   "steps": [
+    "godot --headless --path prototype --import",
+    "godot --headless --path prototype --script res://tests/youth_mocap_test.gd"
+   ],
+   "expected": "YOUTH_MOCAP_RUNTIME_PASS inkl. Sohlenplatten-Stichprobe je LOD",
+   "observed": "YOUTH_MOCAP_RUNTIME_PASS, checks 85495, failures []",
+   "status": "PASS",
+   "run_url": null,
+   "artifact_url": "evidence/logs/youth_mocap_runtime.txt",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": []
+  },
+  {
+   "gate_id": "CI-MIRROR-FOLD7-UNRELEASED-QA-ENGINE",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Godot 4.7.2 + Blender 4.0.2",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "fold7-unreleased-qa.yml Schritte Stadtbau bis Engine-Pruefung (ohne APK)",
+   "steps": [
+    "build_roman_test_city.py",
+    "check_city_release_assets.py",
+    "check_prototype.py --only (12 Gruppen)",
+    "roman_city_real_asset_test",
+    "roman_city_real_walk_test (IMPERATHEN_REQUIRE_ORIGINAL_YOUTH=1)",
+    "city_crowd_layout_test",
+    "city_training_test",
+    "mission_cinematics_test",
+    "youth_mocap_test"
+   ],
+   "expected": "alle PASS-Marker",
+   "observed": "CITY_BUILD_COMPLETE, ROMAN_CITY_ASSET_AUDIT_PASS, 12/12 PASS, alle Godot-Marker PASS, original_youth_active:true, mocap_active:true, fps_measured:false",
+   "status": "PASS",
+   "run_url": null,
+   "artifact_url": "evidence/logs/ci_engine_step_lokal.txt; evidence/logs/check_prototype_ci_auswahl.txt; evidence/metrics/roman_city_asset_audit.json",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": []
+  },
+  {
+   "gate_id": "PY-ANDROID-UNIT",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Python 3.13.18",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "tests/android_*_test.py",
+   "steps": [
+    "python3 -m unittest discover -s tests -p 'android_*_test.py'"
+   ],
+   "expected": "OK",
+   "observed": "Ran 212 tests, OK",
+   "status": "PASS",
+   "run_url": null,
+   "artifact_url": null,
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": []
+  },
+  {
+   "gate_id": "APK-EXPORT-SIGN-IMAGECHECK",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": null,
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "fold7-unreleased-qa.yml / fold7-city-apk.yml APK-Schritte",
+   "steps": [],
+   "expected": "QA-APK mit ephemerem Schluessel, Bildpruefung",
+   "observed": "nicht ausgefuehrt: kein Android-SDK, keine Export-Templates in dieser Sitzung",
+   "status": "BLOCKED",
+   "run_url": null,
+   "artifact_url": null,
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": []
+  },
+  {
+   "gate_id": "FOLD7-PHYSICAL",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": null,
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "Handbuch F: 20-60 min, P50/P95/P99, Thermik",
+   "steps": [],
+   "expected": "Messung auf SM-F966B",
+   "observed": "kein Geraetezugriff",
+   "status": "BLOCKED",
+   "run_url": null,
+   "artifact_url": null,
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": []
+  },
+  {
+   "gate_id": "VISUAL-ACCEPTANCE-YOUTH-FEET",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Blender 4.0.2 Cycles CPU",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "Bindpose, idle, march",
+   "steps": [],
+   "expected": "menschliche Sichtfreigabe",
+   "observed": "Renderings vorher/nachher erzeugt; keine menschliche Freigabe",
+   "status": "BLOCKED",
+   "run_url": null,
+   "artifact_url": "evidence/renders/",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": []
+  },
+  {
+   "gate_id": "CHECK-PROTOTYPE-FULL",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Godot 4.7.2.stable.official.ed1daf0bf",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "tools/check_prototype.py --keep-going (alle Gruppen), mit lokal gebauter Stadt und Original-Jungen",
+   "steps": [
+    "python3 tools/check_prototype.py --godot <4.7.2> --keep-going --report engine-full"
+   ],
+   "expected": "alle Gruppen PASS",
+   "observed": "84 PASS, 1 FAIL: village_people (Zeitlimit 120 s); Ursache SCRIPT ERROR village_person_test.gd:53 bei vorhandenem Original-Jungen, identisch auf 2c54954; ohne Jungen-Assets 223 checks, 0 failed",
+   "status": "FAIL",
+   "run_url": null,
+   "artifact_url": "evidence/logs/check_prototype_volle_suite.txt; evidence/logs/village_person_test_analyse.txt",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": [
+    "village_person_test erwartet HeroBody/Civilian und beendet sich nach Script-Fehler nicht",
+    "voraussichtlich naechster Blocker in fold7-city-apk.yml (volle Suite nach Jungen-Staging, Z. 147) - abgeleitet, nicht in CI beobachtet"
+   ]
+  },
+  {
+   "gate_id": "MOTION-QUALITY-GATE",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Python 3.13.18",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "tools/motion_quality_gate.py --evidence engine-full",
+   "steps": [
+    "motion_quality_gate.py nach voller Suite"
+   ],
+   "expected": "MOTION_QUALITY_GATE_PASS",
+   "observed": "MOTION_QUALITY_GATE_BLOCKED blockers=591 measured_assets=61; groesste Kategorien: support_slip 126, sole_penetration 116, skeletal sampling errors 80, skin_edge_violations 63; Jungen-bezogen nur 5 Registrierungsbefunde (4 GLBs + youth_sole_contact.gd unklassifiziert)",
+   "status": "BLOCKED",
+   "run_url": null,
+   "artifact_url": "evidence/logs/motion_quality_gate.txt; evidence/metrics/motion-gate.json",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": [
+    "Vergleich mit historischem Wert 569 nicht belastbar: lokal zusaetzlich Stadt- und Jungen-Assets eingebunden"
+   ]
+  },
+  {
+   "gate_id": "YOUTH-SOLE-RUNTIME-COST",
+   "source_sha": "2c549548497aad901bda32d71c19c2a1961d9591 + patch 10031e1 (0001-fix-youth-sole-slab-calibration.patch)",
+   "input_hashes": {
+    "original_youth_runtime_zip_sha256": "d70e0ba665c16f520d8c859c5c6285a61cbc3375682e21625c3ec70bc1fb47e1",
+    "accad_male2_bvh_zip_sha256": "f30dc56f8557d4b9f1bd6b8b0c4218c076471de0a9c1a20f3bc4a8b776cc14b1"
+   },
+   "engine_version": "Godot 4.7.2.stable.official.ed1daf0bf",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "Benchmark YouthSoleContact.bind x5 und measure_lowest x300 je LOD (Ad-hoc, nicht im Patch)",
+   "steps": [
+    "godot --headless --script zz_bench_sole_bind.gd in 2c54954 und Patch-Stand"
+   ],
+   "expected": "Mehrkosten bekannt",
+   "observed": "measure_lowest je Aufruf: alt 0.073-0.118 ms, neu 0.112-0.170 ms; bind LOD0: alt 8.30 ms, neu 12.98 ms; Stichproben alt 96/96/96/78, neu 170/142/121/134 (Desktop-CPU, kein Geraet)",
+   "status": "PASS mit Befund",
+   "run_url": null,
+   "artifact_url": null,
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": [
+    "Geraetekosten auf Fold7 nicht gemessen"
+   ]
+  }
+ ]
+}

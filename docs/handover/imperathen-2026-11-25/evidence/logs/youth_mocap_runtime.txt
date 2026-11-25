@@ -1,0 +1,2 @@
+YOUTH_MOCAP_RUNTIME_RESULT {"checks":85495,"failures":[],"max_segment_error_m":0.000000223517417907715,"physical_fold7":false,"visual_quality_approved":false}
+YOUTH_MOCAP_RUNTIME_PASS

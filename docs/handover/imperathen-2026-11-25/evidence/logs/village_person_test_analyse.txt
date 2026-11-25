@@ -1,0 +1,10 @@
+# village_person_test.gd – Patch-Stand mit Original-Jungen (Zeitlimit 90 s):
+SCRIPT ERROR: Invalid access to property or key 'skin' on a base object of type 'null instance'.
+          at: run (res://tests/village_person_test.gd:53)
+
+# Stand 2c54954 (unverändertes youth_sole_contact.gd) mit den vom Patch erzeugten Jungen-GLBs:
+SCRIPT ERROR: Invalid access to property or key 'skin' on a base object of type 'null instance'.
+          at: run (res://tests/village_person_test.gd:53)
+
+# Patch-Stand ohne Jungen-Assets (.glb und .glb.import entfernt):
+VILLAGE_PERSON_TEST 223 checks, 0 failed

@@ -1,0 +1,12 @@
+PASS import: exit=0
+PASS city_trade: exit=0
+PASS city_market_bridge: exit=0
+PASS city_inventory_ui: exit=0
+PASS city_support: exit=0
+PASS city_exploration_detail: exit=0
+PASS city_viva_props: exit=0
+PASS npc_physical_conversation: exit=0
+PASS roman_menu: exit=0
+PASS fold7_graphics_policy: exit=0
+PASS touch_controls: exit=0
+PASS main_scene: exit=0
