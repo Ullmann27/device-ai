@@ -503,3 +503,25 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 4. Künstler-Pass am Originalnetz des Jungen: Fuß-Bindpose (Sandalen ca. 80° verrollt), eingeschmolzener Griffrest an der rechten Hand, saubere Trennung von Hand und Rock. Neues Original sichern und Laufzeitableitungen neu erzeugen.
 5. Epochenkonflikt der Stadt (Kolosseum in 58 v. Chr.) mit dem Kanon klären.
 6. Mein Aufnahmegerüst (`werkzeuge/godot_strikes_capture.gd`) als festen Bild-Regressionstest übernehmen, mit abgeschlossener Überblendung.
+
+### 14.11 Schwebende Militär-NPCs geerdet: Draft-PR [#89](https://github.com/Ullmann27/Imperathen/pull/89)
+
+**Befund aus dem Motion-Gate:** 80 × „No actual support-surface samples for foot L/R“ bei `frontier_people`. Ursache sind die militärischen Grenz-Exporte (Bogenschütze, Legionär, Offizier, Speerträger): Ihre Sohlen liegen im Bindpose und in allen Clips **3,41 cm** (LOD 0) bzw. **3,23 cm** (LOD 2) über dem Modell-Ursprung. Das stammt aus `fit_to_company()` in `build_frontier_people.py`, das den Heldenkörper auf das unveränderte Company-Skelett überträgt. Diese NPCs schwebten im Spiel sichtbar, und ihre Stand-/Gang-Clips waren für das Gate nicht messbar.
+
+**Lösung:** `scripts/visuals/authored_ground.gd` misst die Bindpose-Sohlenhöhe je Modellpfad; Dorf-/Stadt-NPC und Schlachtsoldat senken die Militärmodelle um diesen Wert ab. Zivilisten und der Junge bleiben unberührt. Das Skript ist im Bewegungsvertrag klassifiziert.
+
+**Ergebnis:**
+- Sohle im Idle bei 0,0000 m statt +3,41 cm.
+- Kontakt-Frames 60/60 statt 0/60.
+- Zivilisten-Werte identisch.
+- Suite 85/85.
+- **Motion-Gate 587 → 507.**
+- Bilder: `evidence/godot_frames/19_*` (Legionär vorher/nachher, Zivilist unverändert) und `20_*` (Todes-Clip).
+
+**Ehrlich offen:**
+- Im Todes-Clip steigt die maximale Fußdurchdringung von 13,9 auf 17,3 cm. Der Clip drückt schon vorher mitten im Fall die Zehen durch den Boden; die Endlage schwebt nicht mehr.
+- Neu messbar ist das Gleiten beim Rückzug: 0,050 m (Grenze 0,015 m).
+- Beides sind Authoring-Aufgaben an den Clips.
+- Werkzeuge: `werkzeuge/frontier_contact_diag.gd`, `werkzeuge/godot_legionary_capture.gd`.
+
+**Gate-Stand gesamt, wenn #87 + #88 + #89 zusammengeführt werden:** 507 Befunde. #88 ändert nichts am Gate, #89 ist unabhängig von #88. Eine gemeinsame Messung aller drei habe ich nicht ausgeführt.

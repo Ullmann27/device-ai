@@ -1,0 +1,183 @@
+MOTION_QUALITY_GATE_BLOCKED blockers= 507 measured_assets= 61
+Diff gegen #87 (eindeutige Zeilen): 65 entfernt, 64 neu (geaenderte Messwerte der Militaer-Assets)
+130,132c130,131
+< MOTION_GATE_BLOCKER frontier_people runtime: skeletal sampling reported errors
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/attack_guard_reaction: max_sole_penetration_m=0.139319 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/attack_guard_reaction: max_support_slip_m=0.799076 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/attack_guard_reaction: max_sole_penetration_m=0.173419 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/attack_guard_reaction: max_support_slip_m=0.856933 exceeds 0.015
+134,135c133,134
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/contact_and_weight: max_sole_penetration_m=0.139319 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/contact_and_weight: max_support_slip_m=0.799076 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/contact_and_weight: max_sole_penetration_m=0.173419 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/contact_and_weight: max_support_slip_m=0.856933 exceeds 0.015
+139,140c138,139
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/attack_guard_reaction: max_sole_penetration_m=0.130386 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/attack_guard_reaction: max_support_slip_m=0.789366 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/attack_guard_reaction: max_sole_penetration_m=0.16479 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/attack_guard_reaction: max_support_slip_m=0.849766 exceeds 0.015
+142,143c141,142
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/contact_and_weight: max_sole_penetration_m=0.130386 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/contact_and_weight: max_support_slip_m=0.789366 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/contact_and_weight: max_sole_penetration_m=0.16479 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/contact_and_weight: max_support_slip_m=0.849766 exceeds 0.015
+147,148c146,147
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/attack_guard_reaction: max_sole_penetration_m=0.130792 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/attack_guard_reaction: max_support_slip_m=0.797891 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/attack_guard_reaction: max_sole_penetration_m=0.163051 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/attack_guard_reaction: max_support_slip_m=0.848985 exceeds 0.015
+150,151c149,150
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/contact_and_weight: max_sole_penetration_m=0.130792 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/contact_and_weight: max_support_slip_m=0.797891 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/contact_and_weight: max_sole_penetration_m=0.163051 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/contact_and_weight: max_support_slip_m=0.848985 exceeds 0.015
+154,157c153,156
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/attack_guard_reaction: max_sole_penetration_m=0.135121 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/attack_guard_reaction: max_support_slip_m=0.803433 exceeds 0.015
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/contact_and_weight: max_sole_penetration_m=0.135121 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/contact_and_weight: max_support_slip_m=0.803433 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/attack_guard_reaction: max_sole_penetration_m=0.166003 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/attack_guard_reaction: max_support_slip_m=0.857936 exceeds 0.015
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/contact_and_weight: max_sole_penetration_m=0.166003 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/contact_and_weight: max_support_slip_m=0.857936 exceeds 0.015
+220,221c219,220
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/attack_guard_reaction: max_sole_penetration_m=0.139319 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/attack_guard_reaction: max_support_slip_m=0.799076 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/attack_guard_reaction: max_sole_penetration_m=0.173419 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/attack_guard_reaction: max_support_slip_m=0.856933 exceeds 0.015
+223,224c222,223
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/contact_and_weight: max_sole_penetration_m=0.139319 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/contact_and_weight: max_support_slip_m=0.799076 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/contact_and_weight: max_sole_penetration_m=0.173419 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/contact_and_weight: max_support_slip_m=0.856933 exceeds 0.015
+228,229c227,228
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/attack_guard_reaction: max_sole_penetration_m=0.130386 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/attack_guard_reaction: max_support_slip_m=0.789366 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/attack_guard_reaction: max_sole_penetration_m=0.16479 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/attack_guard_reaction: max_support_slip_m=0.849766 exceeds 0.015
+231,232c230,231
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/contact_and_weight: max_sole_penetration_m=0.130386 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/contact_and_weight: max_support_slip_m=0.789366 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/contact_and_weight: max_sole_penetration_m=0.16479 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/contact_and_weight: max_support_slip_m=0.849766 exceeds 0.015
+236,237c235,236
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/attack_guard_reaction: max_sole_penetration_m=0.130792 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/attack_guard_reaction: max_support_slip_m=0.797891 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/attack_guard_reaction: max_sole_penetration_m=0.163051 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/attack_guard_reaction: max_support_slip_m=0.848985 exceeds 0.015
+239,240c238,239
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/contact_and_weight: max_sole_penetration_m=0.130792 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/contact_and_weight: max_support_slip_m=0.797891 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/contact_and_weight: max_sole_penetration_m=0.163051 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/contact_and_weight: max_support_slip_m=0.848985 exceeds 0.015
+243,248c242,247
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/attack_guard_reaction: max_sole_penetration_m=0.135121 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/attack_guard_reaction: max_support_slip_m=0.803433 exceeds 0.015
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/contact_and_weight: max_sole_penetration_m=0.135121 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/contact_and_weight: max_support_slip_m=0.803433 exceeds 0.015
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/attack_guard_reaction: max_sole_penetration_m=0.139319 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/attack_guard_reaction: max_support_slip_m=0.799076 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/attack_guard_reaction: max_sole_penetration_m=0.166003 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/attack_guard_reaction: max_support_slip_m=0.857936 exceeds 0.015
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/contact_and_weight: max_sole_penetration_m=0.166003 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/contact_and_weight: max_support_slip_m=0.857936 exceeds 0.015
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/attack_guard_reaction: max_sole_penetration_m=0.173419 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/attack_guard_reaction: max_support_slip_m=0.856933 exceeds 0.015
+250,251c249,250
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/contact_and_weight: max_sole_penetration_m=0.139319 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/contact_and_weight: max_support_slip_m=0.799076 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/contact_and_weight: max_sole_penetration_m=0.173419 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/contact_and_weight: max_support_slip_m=0.856933 exceeds 0.015
+255,256c254,255
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/attack_guard_reaction: max_sole_penetration_m=0.130386 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/attack_guard_reaction: max_support_slip_m=0.789366 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/attack_guard_reaction: max_sole_penetration_m=0.16479 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/attack_guard_reaction: max_support_slip_m=0.849766 exceeds 0.015
+258,259c257,258
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/contact_and_weight: max_sole_penetration_m=0.130386 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/contact_and_weight: max_support_slip_m=0.789366 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/contact_and_weight: max_sole_penetration_m=0.16479 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/contact_and_weight: max_support_slip_m=0.849766 exceeds 0.015
+263,264c262,263
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/attack_guard_reaction: max_sole_penetration_m=0.130792 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/attack_guard_reaction: max_support_slip_m=0.797891 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/attack_guard_reaction: max_sole_penetration_m=0.163051 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/attack_guard_reaction: max_support_slip_m=0.848985 exceeds 0.015
+266,267c265,266
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/contact_and_weight: max_sole_penetration_m=0.130792 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/contact_and_weight: max_support_slip_m=0.797891 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/contact_and_weight: max_sole_penetration_m=0.163051 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/contact_and_weight: max_support_slip_m=0.848985 exceeds 0.015
+270,275c269,274
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/attack_guard_reaction: max_sole_penetration_m=0.135121 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/attack_guard_reaction: max_support_slip_m=0.803433 exceeds 0.015
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/contact_and_weight: max_sole_penetration_m=0.135121 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/contact_and_weight: max_support_slip_m=0.803433 exceeds 0.015
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/attack_guard_reaction: max_sole_penetration_m=0.139319 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/attack_guard_reaction: max_support_slip_m=0.799076 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/attack_guard_reaction: max_sole_penetration_m=0.166003 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/attack_guard_reaction: max_support_slip_m=0.857936 exceeds 0.015
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/contact_and_weight: max_sole_penetration_m=0.166003 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/contact_and_weight: max_support_slip_m=0.857936 exceeds 0.015
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/attack_guard_reaction: max_sole_penetration_m=0.173419 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/attack_guard_reaction: max_support_slip_m=0.856933 exceeds 0.015
+277,278c276,277
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/contact_and_weight: max_sole_penetration_m=0.139319 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/contact_and_weight: max_support_slip_m=0.799076 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/contact_and_weight: max_sole_penetration_m=0.173419 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/contact_and_weight: max_support_slip_m=0.856933 exceeds 0.015
+282,283c281,282
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/attack_guard_reaction: max_sole_penetration_m=0.130386 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/attack_guard_reaction: max_support_slip_m=0.789366 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/attack_guard_reaction: max_sole_penetration_m=0.16479 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/attack_guard_reaction: max_support_slip_m=0.849766 exceeds 0.015
+285,286c284,285
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/contact_and_weight: max_sole_penetration_m=0.130386 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/contact_and_weight: max_support_slip_m=0.789366 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/contact_and_weight: max_sole_penetration_m=0.16479 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/contact_and_weight: max_support_slip_m=0.849766 exceeds 0.015
+290,291c289,290
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/attack_guard_reaction: max_sole_penetration_m=0.130792 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/attack_guard_reaction: max_support_slip_m=0.797891 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/attack_guard_reaction: max_sole_penetration_m=0.163051 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/attack_guard_reaction: max_support_slip_m=0.848985 exceeds 0.015
+293,294c292,293
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/contact_and_weight: max_sole_penetration_m=0.130792 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/contact_and_weight: max_support_slip_m=0.797891 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/contact_and_weight: max_sole_penetration_m=0.163051 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/contact_and_weight: max_support_slip_m=0.848985 exceeds 0.015
+297,300c296,299
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/attack_guard_reaction: max_sole_penetration_m=0.135121 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/attack_guard_reaction: max_support_slip_m=0.803433 exceeds 0.015
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/contact_and_weight: max_sole_penetration_m=0.135121 exceeds 0.01
+< MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/contact_and_weight: max_support_slip_m=0.803433 exceeds 0.015
+---
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/attack_guard_reaction: max_sole_penetration_m=0.166003 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/attack_guard_reaction: max_support_slip_m=0.857936 exceeds 0.015
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/contact_and_weight: max_sole_penetration_m=0.166003 exceeds 0.01
+> MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/contact_and_weight: max_support_slip_m=0.857936 exceeds 0.015
