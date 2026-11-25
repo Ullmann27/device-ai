@@ -348,3 +348,68 @@ Maschinenlesbar in `evidence/evidence.json`. Felder: `gate_id`, `source_sha`, `i
 | `evidence/renders/` | 8 Blender-Cycles-Renderings und 1 Diagramm (§8) |
 | `inventory/INVENTAR_ROHDATEN_2c54954.md` | Rohinventur des Repositorys mit Befehlen und Fundstellen (stichprobenartig nachgeprüft) |
 | `werkzeuge/` | Ad-hoc-Skripte dieser Sitzung, **nicht reviewed, nicht Teil des Patches**: `skinning_eval.py` (Vorher/Nachher-Metriken), `sole_patch_scan.py`, drei Blender-Renderskripte, `bench_sole_bind.gd` (Laufzeitkosten), `ci_engine_step_local.sh` (lokale Spiegelung des CI-Engine-Schritts) |
+
+---
+
+## 14. Nachtrag: autonome Fortsetzung (25./26.11.2026)
+
+Der Projektinhaber hat Schreibzugriff auf Imperathen freigegeben und eine autonome Fortsetzung beauftragt (kein Merge nach `main`, keine Release-APK).
+
+### 14.1 GitHub
+
+| Objekt | Stand |
+|---|---|
+| Branch `fix/youth-sole-slab-calibration-20261125` | `beff419` (Sohlen-Patch, inhaltlich identisch mit lokal getestetem `10031e1`), `ffbe3ad` (Testkorrektur `village_person_test.gd`) |
+| Draft-PR [Ullmann27/Imperathen#87](https://github.com/Ullmann27/Imperathen/pull/87) | Basis `integration/imperathen-unified-20261125` (nicht `main`) |
+| CI „isolated installable ARM64 QA – NOT a release“ | **success** auf `beff419` ([45711418202](https://github.com/Ullmann27/Imperathen/actions/runs/45711418202)) und auf `ffbe3ad` ([45712174606](https://github.com/Ullmann27/Imperathen/actions/runs/45712174606)); derselbe Workflow scheiterte auf `2c54954` |
+| CI „Foundation checks“ | success auf beiden Commits |
+| CI „Fold7 candidate – real city, genuine APK, image checks“ | Lauf auf `beff419` wegen des Folge-Pushes abgebrochen; Lauf auf `ffbe3ad` siehe PR (Stand bei Abschluss dieses Abschnitts noch offen) |
+
+### 14.2 `village_person_test.gd` (vorher voraussichtlich nächster Blocker)
+
+Seit `2fa08cd` nutzt das Spiel für den italischen Spieler (12–17 Jahre) den Original-Jungen. Der Test kannte diesen Fall nicht. Mit vorhandenem Jungen brach er mit einem Script-Fehler an Zeile 53 ab und lief dann bis ins Zeitlimit.
+
+Die Korrektur (`ffbe3ad`):
+- Für den Jungen gibt es eigene, inhaltliche Prüfungen: Skin, exakt 35 Gelenke, Originaltextur, LOD-Pfad; Begleiter erhalten den Jungen nie.
+- Alle bisherigen Prüfungen für die übrigen Herkünfte bleiben; die Farbprüfung der Tuniken ist strenger.
+- Ein Wächter bricht nach 100 s mit Exit 1 ab, statt still zu hängen.
+
+Lokale Ergebnisse:
+- mit Jungen: 233 Prüfungen, 0 Fehler
+- ohne Jungen: 234 Prüfungen, 0 Fehler
+- erzwungener Fehler: Exit 1 nach 16 s (vorher Zeitlimit)
+- **volle `check_prototype`-Suite auf `ffbe3ad`: 85/85 PASS** (745 s)
+- Motion-Gate: 587 Blocker bei 61 Assets. Die 4 weggefallenen sind exakt die vom `village_people`-Fehlschlag verursachten.
+
+Nachweis: `evidence/nacht/`.
+
+### 14.3 Echte Godot-Bilder (nicht Blender)
+
+`evidence/godot_frames/`: Godot 4.7.2, GL Compatibility, Mesa llvmpipe unter Xvfb. Aufgenommen wurde die echte Spielfigur `village_person.gd` mit dem Original-Jungen (LOD 0) und der Laufzeit-Erdung `youth_sole_contact.gd`; die tiefste Sohle liegt in allen 14 Aufnahmen bei +3 mm über dem Boden.
+- Bild `10`: Sandalen in Idle und Marsch flach aufgesetzt.
+- Bild `11`/`12`: Bei Block und Uppercut wird ein großer Tunika-Streifen bis zur erhobenen Hand gezogen (siehe 14.5). Der Rest des eingeschmolzenen Schwertgriffs ist an der linken Hand sichtbar.
+- Grenze: In der Jab-Aufnahme ist keine Schlagpose erkennbar. `sample_pose("jab_right", …)` hat sichtbar nichts verändert; das ist nicht geklärt und kein Beleg für die Kampfclips.
+- Das Aufnahmeskript liegt unter `werkzeuge/godot_youth_closeup.gd` (nur Nachweis, nicht im Spiel). Es setzt die Figur einmalig auf die gemessene Sohle, weil sie im Spiel unter einem Kapselkörper hängt.
+
+### 14.4 Knöchel: Gewichtsglättung geprüft und verworfen
+
+Ich habe eine Laplace-Glättung des Schienbein/Fuß-Übergangs im Knöchelband getestet, mit derselben Übernahmeregel wie die vorhandene Tunika-Reparatur. Ergebnis über 140 Prüfposen: **schlechter**.
+
+| LOD | Kanten > 1,5× vorher | Kanten > 1,5× mit Glättung |
+|---|---|---|
+| 0 | 231 | 302 |
+| 1 | 85 | 113 |
+| 2 | 33 | 39 |
+| 3 | 8 | 37 |
+
+Die Übernahmeprüfung hat die Glättung verworfen, und ich habe den Code vollständig zurückgenommen (Diff und Log in `evidence/nacht/`). **Folgerung:** Die Knöchel-Dehnung lässt sich nicht über Gewichte lösen, sondern nur über einen korrigierten Fuß-Bindpose im Original-Rig.
+
+### 14.5 Tunika-Riss: Ursache gefunden
+
+Das Originalnetz ist an den Händen mit dem Rock **verschmolzen** (LOD 0):
+- 1 031 Kanten verbinden direkt hand-gewichtete mit becken-/oberschenkelgewichteten Vertices.
+- 546 cm² (links) bzw. 233 cm² (rechts) stoff-farbige Fläche sind an die Hände gebunden.
+- Die überdehnten Vertices liegen in Hüft- bis Handhöhe (y 0,59–0,82 m). Von ihnen haben 48 % ein Arm/Hand-Gewicht > 0,5 und weitere 33 % eines von 0,05–0,5; die schlimmsten Posen sind Block, Uppercut und Jab.
+- Das Netz besteht aus 2 622 getrennten UV-Inseln. Die Dehnung entsteht innerhalb gemischt gewichteter Inseln.
+
+Die vorhandene Reparatur verwirft alle Kandidaten. Lösungsansatz: Inseln nahe der Hand jeweils einheitlich Körper oder Hand zuordnen, über die Prüfposen gemessen; das öffnet die Naht an Inselgrenzen, statt Flächen zu dehnen. Weil das eine Netz- und Sichtentscheidung ist, wird er nur als eigener Versuch mit Vorher/Nachher-Bildern vorgelegt (siehe PR-Verweise am Ende dieses Abschnitts, falls vorhanden).

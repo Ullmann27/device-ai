@@ -1,0 +1,171 @@
+diff --git a/tools/characters/retarget_accad_youth.py b/tools/characters/retarget_accad_youth.py
+index 25b4e8e..e06e6d5 100644
+--- a/tools/characters/retarget_accad_youth.py
++++ b/tools/characters/retarget_accad_youth.py
+@@ -11,7 +11,7 @@ from pathlib import Path
+ import numpy as np
+ from scipy.spatial.transform import Rotation as R
+ from accad_bvh import load_bvh, unit
+-from youth_skin_polish import repair
++from youth_skin_polish import repair, smooth_ankles
+ from youth_anatomy import calibrate_soles,sole_contact_mask,source_foot_angles,foot_global,toe_global,neutral_idle,original_structure,remove_start_weapon
+ SOLE_LOD_MAX_DEGREES=12.0  # every LOD must find the same original sandal sole
+ 
+@@ -318,6 +318,8 @@ def main():
+             records={name:adapt(t,z,name,spec) for name,spec in {**GAITS,**FIGHT}.items()}
+             records["idle"]=neutral_idle(t,read_access)
+             surface_review=repair(t,read_access)
++            ankle_review=smooth_ankles(t,read_access)
++            print("YOUTH_ANKLE_REVIEW",i,json.dumps(ankle_review),flush=True)
+             weapon_review=remove_start_weapon(t,read_access)
+             print("YOUTH_WEAPON_REVIEW",i,json.dumps(weapon_review),flush=True)
+             assert digest(b[:original_buffer_size])==original_buffer_sha
+@@ -325,7 +327,7 @@ def main():
+             print("YOUTH_SURFACE_REVIEW",i,json.dumps(surface_review),flush=True)
+             d["asset"].setdefault("extras",{})["motion_credit"]=SOURCE_CREDIT
+             out=a.output/path.name;out.write_bytes(encode(d,b))
+-            report["lods"].append({"level":i,"sole_planes":soles,"sha256":digest(out.read_bytes()),"original_sha256":digest(path.read_bytes()),"clips":records,"original_mesh_skin_materials_and_binary_preserved":False,"original_positions_materials_bind_matrices_preserved":True,"original_binary_prefix_preserved":True,"surface_review":surface_review,"weapon_review":weapon_review})
++            report["lods"].append({"level":i,"sole_planes":soles,"sha256":digest(out.read_bytes()),"original_sha256":digest(path.read_bytes()),"clips":records,"original_mesh_skin_materials_and_binary_preserved":False,"original_positions_materials_bind_matrices_preserved":True,"original_binary_prefix_preserved":True,"surface_review":surface_review,"ankle_review":ankle_review,"weapon_review":weapon_review})
+             print("ACCAD_RETARGET_LOD",i,"clips",len(records),flush=True)
+     report["gaits"]={k:report["lods"][0]["clips"][k] for k in GAITS}
+     a.report.parent.mkdir(parents=True,exist_ok=True);a.report.write_text(json.dumps(report,indent=2)+"\n")
+diff --git a/tools/characters/youth_skin_polish.py b/tools/characters/youth_skin_polish.py
+index 3c2abc0..e3ef678 100644
+--- a/tools/characters/youth_skin_polish.py
++++ b/tools/characters/youth_skin_polish.py
+@@ -7,7 +7,7 @@ The original source archive remains immutable.
+ from __future__ import annotations
+ import copy
+ import numpy as np
+-from youth_anatomy import texture_colors, skin_color
++from youth_anatomy import texture_colors, skin_color, sole_contact_mask
+ 
+ ARM_PREFIXES = ("Arm_", "Forearm_", "Hand_", "Clavicle_", "UpperArmTwist_",
+                 "ForearmTwist_", "Palm_", "FingerCurl_", "Thumb_")
+@@ -184,3 +184,126 @@ def repair(target, read_access):
+             "new_overstretched_edges":int(((before<=.005)&(after>.005)).sum())})
+     report["status"] = "measured_no_large_edge_spikes" if report["remaining_overstretched_edges"]==0 else "unresolved_surface_deformation"
+     return report
++
++
++# Flattening the inward-rolled original sandals rotates each foot ~80 deg
++# relative to the shin. The source rig blends Shin->Foot over a very narrow
++# ankle ring, so a few short ankle edges stretch. Widen only that transition,
++# never the sole contact vertices sampled for grounding, and keep a change
++# only when every reviewed pose improves the stretched-edge count without a
++# higher peak.
++ANKLE_STRETCH_RATIO = 1.5
++ANKLE_BAND_ABOVE_ANKLE_M = .06
++ANKLE_SMOOTHING_PASSES = 12
++ANKLE_RADIUS_M = .05
++
++
++def _review_matrices(target, inv):
++    matrices = []
++    for name, (rotations, shifts) in target.review_poses.items():
++        stride = 3 if name == "block" else 6
++        for f in sorted(set(range(0, len(shifts), stride)) | {len(shifts)-1}):
++            g, p = target.fk(rotations[f], shifts[f])
++            matrices.append(np.stack([np.column_stack((g[i], p[i])) for i in target.joints]) @ inv)
++    return matrices
++
++
++def _edge_ratio(vertices, joints, weights, edges, matrices):
++    points = np.column_stack((vertices, np.ones(len(vertices))))
++    rest = np.maximum(np.linalg.norm(vertices[edges[:, 0]]-vertices[edges[:, 1]], axis=1), 1e-9)
++    worst = np.zeros(len(edges))
++    for transform in matrices:
++        posed = (np.einsum("vkij,vj->vki", transform[joints], points)*weights[..., None]).sum(axis=1)
++        worst = np.maximum(worst, np.linalg.norm(posed[edges[:, 0]]-posed[edges[:, 1]], axis=1)/rest)
++    return worst
++
++
++def smooth_ankles(target, read_access):
++    """Measured Shin/Foot weight transition repair around both ankles."""
++    d, b = target.d, target.b
++    node = next(n for n in target.nodes if n.get("name") == "MeshyYouthBody")
++    primitives = d["meshes"][node["mesh"]]["primitives"]
++    inv = read_access(d, b, d["skins"][0]["inverseBindMatrices"]).reshape(-1, 4, 4).transpose(0, 2, 1)
++    names = [target.nodes[i]["name"] for i in target.joints]
++    matrices = _review_matrices(target, inv)
++    report = {"pose_samples": len(matrices), "surfaces": [], "changed_vertices": 0}
++    groups = {}
++    for primitive in primitives:
++        attr = primitive["attributes"]
++        if {"POSITION", "JOINTS_0", "WEIGHTS_0"}.issubset(attr) and "indices" in primitive:
++            groups.setdefault(tuple(attr[k] for k in ("POSITION", "JOINTS_0", "WEIGHTS_0")), []).append(primitive)
++    for key, group in groups.items():
++        v = read_access(d, b, key[0]).astype(float)
++        j = read_access(d, b, key[1]).astype(np.int64)
++        w = read_access(d, b, key[2]).astype(float)
++        edges = triangles_to_edges(np.concatenate([read_access(d, b, p["indices"]).reshape(-1) for p in group]))
++        # Exactly the grounding sample rule of retarget_accad_youth.Target:
++        # foot-skinned vertices of the matching side in the low band or on or
++        # beyond the calibrated sandal slab plane.
++        protected = np.zeros(len(v), bool)
++        for side, sign in (("L", 1), ("R", -1)):
++            ids = [names.index("Foot_"+side), names.index("Toe_"+side)]
++            skinned = (v[:, 0]*sign > 0) & ((w*np.isin(j, ids)).sum(1) > .6)
++            protected |= skinned & ((v[:, 1] < .065) | sole_contact_mask(target.sole_frames[side], v))
++        welded = np.unique(np.round(v, 5), axis=0, return_inverse=True)[1].reshape(-1)
++        new_w = w.copy()
++        candidates = np.zeros(len(v), bool)
++        for side in ("L", "R"):
++            shin, foot, toe = (names.index(n+"_"+side) for n in ("Shin", "Foot", "Toe"))
++            leg = (w*np.isin(j, [shin, foot, toe])).sum(1)
++            share = (w*np.isin(j, [foot, toe])).sum(1)/np.maximum(leg, 1e-9)
++            ankle_y = target.pos("Foot_"+side)[1]
++            region = (leg > .98) & (v[:, 1] < ankle_y+ANKLE_BAND_ABOVE_ANKLE_M) & ~protected
++            # Spread the transition over the ankle neighbourhood instead of the
++            # source rig's ~1 cm ring of mixed Shin/Foot vertices.
++            ankle = target.pos("Foot_"+side)
++            band = region & (np.linalg.norm(v-ankle, axis=1) < ANKLE_RADIUS_M)
++            if not band.any():
++                continue
++            # Laplacian smoothing on the welded surface graph; vertices outside
++            # the band keep their original share and act as fixed boundary.
++            f = share.copy()
++            wa, wc = welded[edges[:, 0]], welded[edges[:, 1]]
++            for _ in range(ANKLE_SMOOTHING_PASSES):
++                node_f = np.zeros(welded.max()+1); count = np.zeros_like(node_f)
++                np.add.at(node_f, welded, f); np.add.at(count, welded, 1.0)
++                node_f /= np.maximum(count, 1)
++                total = np.zeros_like(node_f); deg = np.zeros_like(node_f)
++                np.add.at(total, wa, node_f[wc]); np.add.at(deg, wa, 1.0)
++                np.add.at(total, wc, node_f[wa]); np.add.at(deg, wc, 1.0)
++                smooth = total/np.maximum(deg, 1)
++                f = np.where(band, smooth[welded], f)
++            for i in np.flatnonzero(band):
++                old_foot = sum(w[i, k] for k in range(4) if j[i, k] in (foot, toe))
++                for k in range(4):
++                    if j[i, k] == shin:
++                        new_w[i, k] = leg[i]*(1-f[i])
++                    elif j[i, k] in (foot, toe):
++                        new_w[i, k] = w[i, k]/old_foot*leg[i]*f[i] if old_foot > 1e-9 else 0.0
++                # A vertex without a Foot slot cannot gain one without a new
++                # influence; keep its original weights.
++                if old_foot <= 1e-9 or shin not in j[i]:
++                    new_w[i] = w[i]
++            candidates |= band
++        new_w[candidates] /= new_w[candidates].sum(1, keepdims=True)
++        leg_all = np.isin(j, [names.index(n+"_"+s) for n in ("Shin", "Foot", "Toe") for s in "LR"])
++        review = ((w*leg_all).sum(1) > .3)
++        e = edges[review[edges[:, 0]] & review[edges[:, 1]]]
++        before = _edge_ratio(v, j, w, e, matrices)
++        after = _edge_ratio(v, j, new_w, e, matrices)
++        b_count, a_count = int((before > ANKLE_STRETCH_RATIO).sum()), int((after > ANKLE_STRETCH_RATIO).sum())
++        accepted = bool(candidates.any() and a_count < b_count and after.max(initial=0) <= before.max(initial=0)+1e-6
++                        and np.array_equal(new_w[protected], w[protected]))
++        changed = int(np.count_nonzero(np.any(np.abs(new_w-w) > 1e-7, axis=1))) if accepted else 0
++        if accepted:
++            joint_access = target.append(j, "VEC4", component_type=5123)
++            weight_access = target.append(new_w, "VEC4")
++            for primitive in group:
++                primitive["attributes"]["JOINTS_0"] = joint_access
++                primitive["attributes"]["WEIGHTS_0"] = weight_access
++        report["changed_vertices"] += changed
++        report["surfaces"].append({"vertices": len(v), "leg_edges": len(e), "candidates": int(candidates.sum()),
++            "before_edges_over_1_5x": b_count, "after_edges_over_1_5x": a_count if accepted else b_count,
++            "trial_edges_over_1_5x": a_count, "before_max_ratio": float(before.max(initial=0)),
++            "after_max_ratio": float((after if accepted else before).max(initial=0)), "accepted": accepted})
++    return report

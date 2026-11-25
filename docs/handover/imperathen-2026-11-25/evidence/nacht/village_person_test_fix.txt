@@ -1,0 +1,6 @@
+# village_person_test.gd nach Fix ffbe3ad (Godot 4.7.2 headless)
+mit Original-Jungen:
+VILLAGE_PERSON_TEST 233 checks, 0 failed
+ohne Jungen-Assets:
+VILLAGE_PERSON_TEST 234 checks, 0 failed
+erzwungener Fehler nach Weltaufbau (Wächter): exit 1 nach 16,1 s; unveränderter Test: Zeitlimit 150 s (exit 124)
