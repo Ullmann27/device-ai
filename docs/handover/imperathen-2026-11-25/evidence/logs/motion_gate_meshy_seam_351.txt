@@ -1,0 +1,352 @@
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/characters/hero_meshy_italia_0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/characters/hero_meshy_italia_1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/characters/hero_meshy_italia_2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/characters/hero_meshy_italia_3.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/city_detail/architecture/city_architecture_library.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_country/hinterland.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_country/scatter_library.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_country/terrain_0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_country/terrain_1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_country/terrain_2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_roma/props/helmet_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_roma/props/helmet_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_roma/props/helmet_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_roma/props/portal_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_roma/props/portal_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/viva_roma/props/portal_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world/roman_city_collision.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world/roman_city_test.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/basalt_road_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/basalt_road_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/basalt_road_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/basilica_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/basilica_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/basilica_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/insula_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/insula_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/insula_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/taberna_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/taberna_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/architecture/taberna_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/cypress_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/cypress_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/cypress_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/field_elm_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/field_elm_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/field_elm_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/laurel_lod0.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/laurel_lod1.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: assets/world_expansion/vegetation/laurel_lod2.glb
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: scenes/city_support_district.tscn
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: scenes/roman_material_lab/material_preview.tscn
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: scenes/viva_country/country_walk.tscn
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: scenes/viva_roma/closeup_lab.tscn
+MOTION_GATE_BLOCKER Unclassified runtime 3D resource: scenes/world_expansion/preview.tscn
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/city_support_district.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/city_support_panel.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/city_trade.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/city_trade_catalog.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/domain/npc_social_memory.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/rendering/city_architecture_detail.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/rendering/city_character_detail.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/rendering/city_exploration_detail_adapter.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/rendering/city_surface_microdetail.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/rendering/city_viva_closeup_props.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/rendering/fold7_quality_policy.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/rendering/viva_roma_atmosphere.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/roman_material_lab/material_preview.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/story/life_path_policy.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/story/mission_cinematics.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/tests/city_architecture_detail_test.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/visuals/youth_sole_contact.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/viva_country/country_field.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/viva_country/country_scenery.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/viva_country/country_sun.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/viva_country/country_walk.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/viva_roma/closeup_lab.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world/city_ambient_people.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world/city_exploration.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world/city_exploration_crowd.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world/city_exploration_state.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world/city_market_bridge.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world/city_market_signage.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world/city_training.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world_expansion/asset_library.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world_expansion/atlas.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world_expansion/environment_controller.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world_expansion/preview.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world_expansion/settlement_layout.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: scripts/world_expansion/settlement_view.gd
+MOTION_GATE_BLOCKER Unclassified runtime script: shaders/viva_country/blades.gdshader
+MOTION_GATE_BLOCKER Unclassified runtime script: shaders/viva_country/soil.gdshader
+MOTION_GATE_BLOCKER Unclassified runtime script: shaders/viva_roma_ground.gdshader
+MOTION_GATE_BLOCKER Unclassified runtime script: shaders/world_expansion/ground_detail.gdshader
+MOTION_GATE_BLOCKER Unclassified runtime script: shaders/world_expansion/vegetation_wind.gdshader
+MOTION_GATE_BLOCKER hero: max_support_slip_m=0.0198282 exceeds 0.015
+MOTION_GATE_BLOCKER hero/assets/characters/hero_quality_0.glb/attack_guard_reaction: max_support_slip_m=0.019816 exceeds 0.015
+MOTION_GATE_BLOCKER hero/assets/characters/hero_quality_1.glb/attack_guard_reaction: max_support_slip_m=0.019816 exceeds 0.015
+MOTION_GATE_BLOCKER hero/assets/characters/hero_quality_2.glb/attack_guard_reaction: max_support_slip_m=0.0198237 exceeds 0.015
+MOTION_GATE_BLOCKER hero/assets/characters/hero_quality_3.glb/attack_guard_reaction: max_support_slip_m=0.0198282 exceeds 0.015
+MOTION_GATE_BLOCKER hero: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER frontier_people: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people: skin_edge_violations=23336 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/attack_guard_reaction: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/attack_guard_reaction: skin_edge_violations=1297 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/contact_and_weight: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/contact_and_weight: skin_edge_violations=1297 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_0.glb/military_equipment: skin_edge_violations=1297 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/attack_guard_reaction: max_support_slip_m=0.0501773 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/attack_guard_reaction: skin_edge_violations=672 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/contact_and_weight: max_support_slip_m=0.0501773 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/contact_and_weight: skin_edge_violations=672 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_1.glb/military_equipment: skin_edge_violations=672 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/attack_guard_reaction: max_support_slip_m=0.0382531 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/attack_guard_reaction: skin_edge_violations=104 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/contact_and_weight: max_support_slip_m=0.0382531 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/contact_and_weight: skin_edge_violations=104 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_2.glb/military_equipment: skin_edge_violations=104 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/attack_guard_reaction: max_support_slip_m=0.0381662 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_archer_3.glb/contact_and_weight: max_support_slip_m=0.0381662 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_man_0.glb/attack_guard_reaction: skin_edge_violations=32 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_man_0.glb/contact_and_weight: skin_edge_violations=32 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_man_1.glb/attack_guard_reaction: skin_edge_violations=25 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_man_1.glb/contact_and_weight: skin_edge_violations=25 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_man_3.glb/attack_guard_reaction: max_support_slip_m=0.0162647 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_man_3.glb/contact_and_weight: max_support_slip_m=0.0162647 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_woman_0.glb/attack_guard_reaction: skin_edge_violations=33 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_woman_0.glb/contact_and_weight: skin_edge_violations=33 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_woman_1.glb/attack_guard_reaction: skin_edge_violations=46 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_woman_1.glb/contact_and_weight: skin_edge_violations=46 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_woman_3.glb/attack_guard_reaction: max_support_slip_m=0.0162637 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_civilian_woman_3.glb/contact_and_weight: max_support_slip_m=0.0162637 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_elder_0.glb/attack_guard_reaction: skin_edge_violations=32 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_elder_0.glb/contact_and_weight: skin_edge_violations=32 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_elder_1.glb/attack_guard_reaction: skin_edge_violations=25 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_elder_1.glb/contact_and_weight: skin_edge_violations=25 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_elder_3.glb/attack_guard_reaction: max_support_slip_m=0.0162648 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_elder_3.glb/contact_and_weight: max_support_slip_m=0.0162648 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/attack_guard_reaction: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/attack_guard_reaction: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/contact_and_weight: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/contact_and_weight: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_0.glb/military_equipment: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/attack_guard_reaction: max_support_slip_m=0.0501773 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/attack_guard_reaction: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/contact_and_weight: max_support_slip_m=0.0501773 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/contact_and_weight: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_1.glb/military_equipment: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/attack_guard_reaction: max_support_slip_m=0.0382531 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/attack_guard_reaction: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/contact_and_weight: max_support_slip_m=0.0382531 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/contact_and_weight: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_2.glb/military_equipment: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/attack_guard_reaction: max_support_slip_m=0.0381662 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_legionary_3.glb/contact_and_weight: max_support_slip_m=0.0381662 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/attack_guard_reaction: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/attack_guard_reaction: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/contact_and_weight: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/contact_and_weight: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_0.glb/military_equipment: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/attack_guard_reaction: max_support_slip_m=0.0501773 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/attack_guard_reaction: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/contact_and_weight: max_support_slip_m=0.0501773 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/contact_and_weight: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_1.glb/military_equipment: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/attack_guard_reaction: max_support_slip_m=0.0382531 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/attack_guard_reaction: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/contact_and_weight: max_support_slip_m=0.0382531 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/contact_and_weight: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_2.glb/military_equipment: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/attack_guard_reaction: max_support_slip_m=0.0381662 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_officer_3.glb/contact_and_weight: max_support_slip_m=0.0381662 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/attack_guard_reaction: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/attack_guard_reaction: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/contact_and_weight: max_support_slip_m=0.0501951 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/contact_and_weight: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_0.glb/military_equipment: skin_edge_violations=1167 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/attack_guard_reaction: max_support_slip_m=0.0501773 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/attack_guard_reaction: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/contact_and_weight: max_support_slip_m=0.0501773 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/contact_and_weight: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_1.glb/military_equipment: skin_edge_violations=586 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/attack_guard_reaction: max_support_slip_m=0.0382531 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/attack_guard_reaction: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/contact_and_weight: max_support_slip_m=0.0382531 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/contact_and_weight: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_2.glb/military_equipment: skin_edge_violations=106 exceeds 0
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/attack_guard_reaction: max_support_slip_m=0.0381662 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people/assets/characters/frontier_spearman_3.glb/contact_and_weight: max_support_slip_m=0.0381662 exceeds 0.015
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER frontier_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER frontier_people: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER legacy_people: max_support_slip_m=0.0387708 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/heavy_2.glb/combat_fallback: max_support_slip_m=0.0387708 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/heavy_2.glb/contact_and_weight: max_support_slip_m=0.0387708 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/heavy_3.glb/combat_fallback: max_support_slip_m=0.0326254 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/heavy_3.glb/contact_and_weight: max_support_slip_m=0.0326254 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/officer_2.glb/combat_fallback: max_support_slip_m=0.0387708 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/officer_2.glb/contact_and_weight: max_support_slip_m=0.0387708 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/officer_3.glb/combat_fallback: max_support_slip_m=0.0326254 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/officer_3.glb/contact_and_weight: max_support_slip_m=0.0326254 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/spear_2.glb/combat_fallback: max_support_slip_m=0.0387708 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/spear_2.glb/contact_and_weight: max_support_slip_m=0.0387708 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/spear_3.glb/combat_fallback: max_support_slip_m=0.0326254 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/spear_3.glb/contact_and_weight: max_support_slip_m=0.0326254 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/villager_0.glb/combat_fallback: max_support_slip_m=0.0379947 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/villager_0.glb/contact_and_weight: max_support_slip_m=0.0379947 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/villager_1.glb/combat_fallback: max_support_slip_m=0.0365595 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/villager_1.glb/contact_and_weight: max_support_slip_m=0.0365595 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/villager_2.glb/combat_fallback: max_support_slip_m=0.0348627 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/villager_2.glb/contact_and_weight: max_support_slip_m=0.0348627 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/villager_3.glb/combat_fallback: max_support_slip_m=0.0366624 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people/assets/village_characters/villager_3.glb/contact_and_weight: max_support_slip_m=0.0366624 exceeds 0.015
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_m=0.723249 exceeds 0.03
+MOTION_GATE_BLOCKER legacy_people runtime: max_loop_seam_deg=58.3499 exceeds 12
+MOTION_GATE_BLOCKER legacy_people: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER meshy_people: max_support_slip_m=0.024885 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_germanic_axe_fighter_0.glb/attack_guard_reaction: max_support_slip_m=0.0213204 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_germanic_axe_fighter_0.glb/contact_and_weight: max_support_slip_m=0.0213204 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_germanic_axe_fighter_1.glb/attack_guard_reaction: max_support_slip_m=0.0213163 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_germanic_axe_fighter_1.glb/contact_and_weight: max_support_slip_m=0.0213163 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_germanic_axe_fighter_2.glb/attack_guard_reaction: max_support_slip_m=0.0213266 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_germanic_axe_fighter_2.glb/contact_and_weight: max_support_slip_m=0.0213266 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_germanic_axe_fighter_3.glb/attack_guard_reaction: max_support_slip_m=0.0213124 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_germanic_axe_fighter_3.glb/contact_and_weight: max_support_slip_m=0.0213124 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_roman_signifer_0.glb/attack_guard_reaction: max_support_slip_m=0.024885 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_roman_signifer_0.glb/contact_and_weight: max_support_slip_m=0.024885 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_roman_signifer_1.glb/attack_guard_reaction: max_support_slip_m=0.0248699 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_roman_signifer_1.glb/contact_and_weight: max_support_slip_m=0.0248699 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_roman_signifer_2.glb/attack_guard_reaction: max_support_slip_m=0.0248265 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_roman_signifer_2.glb/contact_and_weight: max_support_slip_m=0.0248265 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_roman_signifer_3.glb/attack_guard_reaction: max_support_slip_m=0.023203 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people/assets/meshy/characters/unit_roman_signifer_3.glb/contact_and_weight: max_support_slip_m=0.023203 exceeds 0.015
+MOTION_GATE_BLOCKER meshy_people: unresolved: Complete world-space foot-contact and transition acceptance for both Meshy rigs remains open.
+MOTION_GATE_BLOCKER meshy_people: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER battle_rigs: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/archer_mid.glb/attack_guard_reaction: max_support_slip_m=0.16739 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/archer_mid.glb/contact_and_weight: max_support_slip_m=0.16739 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/archer_near.glb/attack_guard_reaction: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/archer_near.glb/contact_and_weight: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/heavy_mid.glb/attack_guard_reaction: max_support_slip_m=0.16739 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/heavy_mid.glb/contact_and_weight: max_support_slip_m=0.16739 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/heavy_near.glb/attack_guard_reaction: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/heavy_near.glb/contact_and_weight: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/officer_mid.glb/attack_guard_reaction: max_support_slip_m=0.16739 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/officer_mid.glb/contact_and_weight: max_support_slip_m=0.16739 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/officer_near.glb/attack_guard_reaction: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/officer_near.glb/contact_and_weight: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/spear_mid.glb/attack_guard_reaction: max_support_slip_m=0.16739 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/spear_mid.glb/contact_and_weight: max_support_slip_m=0.16739 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/spear_near.glb/attack_guard_reaction: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs/assets/soldiers/spear_near.glb/contact_and_weight: max_support_slip_m=0.167501 exceeds 0.015
+MOTION_GATE_BLOCKER battle_rigs: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER distant_ranks: max_lod_pose_jump_m=0.138079 exceeds 0.04
+MOTION_GATE_BLOCKER distant_ranks/assets/soldiers/heavy_far.glb/near_far_transition: max_lod_pose_jump_m=0.138078 exceeds 0.04
+MOTION_GATE_BLOCKER distant_ranks/assets/soldiers/spear_far.glb/near_far_transition: max_lod_pose_jump_m=0.138078 exceeds 0.04
+MOTION_GATE_BLOCKER distant_ranks/assets/soldiers/archer_far.glb/near_far_transition: max_lod_pose_jump_m=0.138078 exceeds 0.04
+MOTION_GATE_BLOCKER distant_ranks/assets/soldiers/officer_far.glb/near_far_transition: max_lod_pose_jump_m=0.138079 exceeds 0.04
+MOTION_GATE_BLOCKER distant_ranks: unresolved: Measured contact/phase/reaction and visible-distance acceptance of the distant-rank shader remains open.
+MOTION_GATE_BLOCKER distant_ranks: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER regional_workers: unresolved: Complete task/contact acceptance of every exported regional worker remains open.
+MOTION_GATE_BLOCKER regional_workers: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER service_gear: runtime sampling reported errors
+MOTION_GATE_BLOCKER service_gear: max_unintended_penetration_m=0.389812 exceeds 0.01
+MOTION_GATE_BLOCKER service_gear: invalid 60 Hz sample for assets/weapons/gladius_lod0.glb/clearance
+MOTION_GATE_BLOCKER service_gear/assets/weapons/gladius_lod0.glb/clearance: max_unintended_penetration_m=0.280241 exceeds 0.01
+MOTION_GATE_BLOCKER service_gear: invalid 60 Hz sample for assets/weapons/scutum_lod0.glb/clearance
+MOTION_GATE_BLOCKER service_gear/assets/weapons/scutum_lod0.glb/clearance: max_unintended_penetration_m=0.389812 exceeds 0.01
+MOTION_GATE_BLOCKER service_gear: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER meshy_gear: runtime sampling reported errors
+MOTION_GATE_BLOCKER meshy_gear: max_unintended_penetration_m=0.426852 exceeds 0.01
+MOTION_GATE_BLOCKER meshy_gear/assets/meshy/equipment/gear_roman_signum_0.glb/clearance: max_unintended_penetration_m=0.308857 exceeds 0.01
+MOTION_GATE_BLOCKER meshy_gear: invalid 60 Hz sample for assets/meshy/equipment/gear_roman_signum_1.glb/clearance
+MOTION_GATE_BLOCKER meshy_gear/assets/meshy/equipment/gear_roman_signum_1.glb/clearance: max_unintended_penetration_m=0.313044 exceeds 0.01
+MOTION_GATE_BLOCKER meshy_gear/assets/meshy/equipment/weap_germanic_hand_axe_0.glb/clearance: max_unintended_penetration_m=0.399051 exceeds 0.01
+MOTION_GATE_BLOCKER meshy_gear: invalid 60 Hz sample for assets/meshy/equipment/gear_germanic_round_shield_0.glb/clearance
+MOTION_GATE_BLOCKER meshy_gear/assets/meshy/equipment/gear_germanic_round_shield_0.glb/clearance: max_unintended_penetration_m=0.426329 exceeds 0.01
+MOTION_GATE_BLOCKER meshy_gear: invalid 60 Hz sample for assets/meshy/equipment/weap_germanic_hand_axe_1.glb/clearance
+MOTION_GATE_BLOCKER meshy_gear/assets/meshy/equipment/weap_germanic_hand_axe_1.glb/clearance: max_unintended_penetration_m=0.398294 exceeds 0.01
+MOTION_GATE_BLOCKER meshy_gear: invalid 60 Hz sample for assets/meshy/equipment/gear_germanic_round_shield_1.glb/clearance
+MOTION_GATE_BLOCKER meshy_gear/assets/meshy/equipment/gear_germanic_round_shield_1.glb/clearance: max_unintended_penetration_m=0.426852 exceeds 0.01
+MOTION_GATE_BLOCKER meshy_gear: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER village_navigation: max_support_slip_m=0.185436 exceeds 0.015
+MOTION_GATE_BLOCKER village_navigation: max_transition_position_jump_m=0.187169 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation: max_transition_rotation_jump_deg=23.3665 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_transition_position_jump_m=0.153833 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_support_slip_m=0.185436 exceeds 0.015
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_transition_rotation_jump_deg=23.3665 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/dialogue_transition: max_transition_position_jump_m=0.0857399 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/world_displacement: max_transition_position_jump_m=0.187169 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/world_displacement: max_transition_rotation_jump_deg=22.2767 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/contact_and_weight: max_transition_position_jump_m=0.187169 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/contact_and_weight: max_transition_rotation_jump_deg=22.2767 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/collision: max_transition_position_jump_m=0.187169 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/collision: max_transition_rotation_jump_deg=22.2767 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_transition_position_jump_m=0.187169 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_transition_rotation_jump_deg=22.2767 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_transition_position_jump_m=0.0613242 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/world_displacement: max_transition_position_jump_m=0.161454 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/world_displacement: max_transition_rotation_jump_deg=22.2207 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/contact_and_weight: max_transition_position_jump_m=0.161454 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/contact_and_weight: max_transition_rotation_jump_deg=22.2207 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/collision: max_transition_position_jump_m=0.161454 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/collision: max_transition_rotation_jump_deg=22.2207 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_transition_position_jump_m=0.161454 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_transition_rotation_jump_deg=22.2207 exceeds 20
+MOTION_GATE_BLOCKER village_navigation/family:village_navigation/walk_run_stop: max_transition_position_jump_m=0.0606205 exceeds 0.06
+MOTION_GATE_BLOCKER village_navigation: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER raid_motion: max_transition_position_jump_m=0.126669 exceeds 0.06
+MOTION_GATE_BLOCKER raid_motion: max_transition_rotation_jump_deg=24.575 exceeds 20
+MOTION_GATE_BLOCKER raid_motion/family:raid_motion/world_displacement: max_transition_position_jump_m=0.126669 exceeds 0.06
+MOTION_GATE_BLOCKER raid_motion/family:raid_motion/contact_and_weight: max_transition_position_jump_m=0.126669 exceeds 0.06
+MOTION_GATE_BLOCKER raid_motion/family:raid_motion/attack_guard_reaction: max_transition_position_jump_m=0.119882 exceeds 0.06
+MOTION_GATE_BLOCKER raid_motion/family:raid_motion/attack_guard_reaction: max_transition_rotation_jump_deg=24.575 exceeds 20
+MOTION_GATE_BLOCKER raid_motion/family:raid_motion/collision: max_transition_position_jump_m=0.0636528 exceeds 0.06
+MOTION_GATE_BLOCKER raid_motion: unresolved: Continuous raid physics is implemented; full contact, collision, transition and visual acceptance remains open.
+MOTION_GATE_BLOCKER raid_motion: exact-source visual review missing or duplicated
+MOTION_GATE_BLOCKER cinematic_people: exact-source visual review missing or duplicated
+MOTION_QUALITY_GATE_BLOCKED blockers= 351 measured_assets= 61

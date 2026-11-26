@@ -1,0 +1,82 @@
+[
+  {
+    "path": "prototype/assets/meshy/characters/unit_germanic_axe_fighter_0.glb",
+    "sha256_before": "bdc5e35a5a749e518034c4e10d0beba859c08753af5fac419a256cd2bb3b8ad3",
+    "body_vertices": 31810,
+    "before": {
+      "tearing": 211,
+      "neighbour_through_m": 0.019759061237989282
+    },
+    "after": {
+      "tearing": 0,
+      "neighbour_through_m": 0.010133835483221068
+    },
+    "smoothed_welded_vertices": 47,
+    "changed_vertices": 76,
+    "torn_vertices_before": 20,
+    "checked_neighbours": 52
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_germanic_axe_fighter_1.glb",
+    "sha256_before": "0996e1524943073cef1df3f2cdd63468d4c48638e1ea7a3aba950cfe4d152445",
+    "body_vertices": 13320,
+    "before": {
+      "tearing": 0
+    },
+    "unchanged": "body does not tear"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_germanic_axe_fighter_2.glb",
+    "sha256_before": "7d39c942c70e1a8025902f2d671b73e772132d285b3ebe9d207e63d1545e93ba",
+    "body_vertices": 4951,
+    "before": {
+      "tearing": 0
+    },
+    "unchanged": "body does not tear"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_germanic_axe_fighter_3.glb",
+    "sha256_before": "72d5fc909009bfa491f6022a318fc0a6f18188fb8542f37a49038061b85ca78d",
+    "body_vertices": 2058,
+    "before": {
+      "tearing": 0
+    },
+    "unchanged": "body does not tear"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_roman_signifer_0.glb",
+    "sha256_before": "ad59801df7955a100a77cd87ca48e4f5d274beacf58eff673b5012a3204a4bcb",
+    "body_vertices": 29972,
+    "before": {
+      "tearing": 0
+    },
+    "unchanged": "body does not tear"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_roman_signifer_1.glb",
+    "sha256_before": "12107addfa26aa540f7a034409fd705001d71223bf57249a55c1a451fe9a7004",
+    "body_vertices": 13019,
+    "before": {
+      "tearing": 0
+    },
+    "unchanged": "body does not tear"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_roman_signifer_2.glb",
+    "sha256_before": "55e8d6c230d2548feb83d7374f55e53f85ceef78057d0b124c1963547586ac18",
+    "body_vertices": 5522,
+    "before": {
+      "tearing": 0
+    },
+    "unchanged": "body does not tear"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_roman_signifer_3.glb",
+    "sha256_before": "1c7f1aba3b46f34ffd0975b479a9424599dff54e6c74ab79e7673b8641aa2f10",
+    "body_vertices": 2275,
+    "before": {
+      "tearing": 0
+    },
+    "unchanged": "body does not tear"
+  }
+]

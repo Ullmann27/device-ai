@@ -1,0 +1,128 @@
+{
+  "variant": "remove Forearm/Hand influence from cloak islands (islands reaching > 0.15 m below the lowest hand-core vertex, plus one seam-share step), harmonic refill from island neighbours",
+  "glb": "unit_germanic_axe_fighter_0.glb",
+  "tearing": {
+    "train": [
+      117,
+      0
+    ],
+    "attack": [
+      94,
+      0
+    ]
+  },
+  "cloak_through_before_after": {
+    "idle": [
+      [
+        0,
+        0.0
+      ],
+      [
+        0,
+        0.0
+      ]
+    ],
+    "march": [
+      [
+        53,
+        0.0039
+      ],
+      [
+        14,
+        0.0025
+      ]
+    ],
+    "run": [
+      [
+        208,
+        0.0252
+      ],
+      [
+        164,
+        0.0189
+      ]
+    ],
+    "talk": [
+      [
+        0,
+        0.0
+      ],
+      [
+        28,
+        0.0035
+      ]
+    ],
+    "work": [
+      [
+        0,
+        0.0
+      ],
+      [
+        0,
+        0.0
+      ]
+    ],
+    "gather": [
+      [
+        0,
+        0.0
+      ],
+      [
+        0,
+        0.0
+      ]
+    ],
+    "train": [
+      [
+        92,
+        0.037
+      ],
+      [
+        229,
+        0.1367
+      ]
+    ],
+    "attack": [
+      [
+        90,
+        0.0349
+      ],
+      [
+        197,
+        0.1363
+      ]
+    ],
+    "block": [
+      [
+        148,
+        0.0142
+      ],
+      [
+        212,
+        0.115
+      ]
+    ],
+    "hit": [
+      [
+        0,
+        0.0
+      ],
+      [
+        200,
+        0.0212
+      ]
+    ],
+    "death": [
+      [
+        0,
+        0.0
+      ],
+      [
+        707,
+        0.0504
+      ]
+    ]
+  },
+  "decision": "rejected: the arm lies under the cloak in the bind pose; without the forearm binding it comes up to 0.137 m out through the cloak",
+  "also_rejected": "the same rule on unit_roman_signifer_* creates tearing where there was none (up to 0.56 m excess); one ring (instead of two) fails the neighbour check (+0.87 mm)"
+}

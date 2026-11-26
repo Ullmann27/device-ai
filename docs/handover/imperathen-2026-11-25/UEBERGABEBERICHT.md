@@ -18,6 +18,7 @@ Dieser Bericht trennt strikt zwischen **in dieser Sitzung ausgeführt und gemess
 | Draft-PR [#92](https://github.com/Ullmann27/Imperathen/pull/92): Dorf-Hocke „gather“ geerdet (setzt auf #91 auf) | Dorf 3,15 cm → 0 im Boden, Gleiten 2,3 → 0 cm; mit #87–#91 gemessen: Suite 85/85, **Gate 372 → 359**, kein neuer Befund (§14.16). CI bestätigt (359) |
 | Draft-PR [#93](https://github.com/Ullmann27/Imperathen/pull/93): Tod und Hocke des Helden geerdet (setzt auf #92 auf) | Engine Tod 0,75/2,13 → 0,05/1,35 cm (Durchdringung/Gleiten), Hocke 0,69 → 0,05 cm; Suite 85/85, **Gate 359 → 355**, kein neuer Befund (§14.17). CI bestätigt (355) |
 | Draft-PR [#94](https://github.com/Ullmann27/Imperathen/pull/94): Nieten des Grenz-Kits auf ihren Platten (setzt auf #93 auf) | Schulter-Nieten heben bis 8 cm ab → 0 (an der Schulterplatte gebunden), Brust-Nieten schweben bis 4 cm vor der Platte → aufgesetzt; Suite 85/85, Gate 355 unverändert, jeder Messwert identisch (§14.19). CI bestätigt (355, Befundliste zeilengleich mit #93) |
+| Draft-PR [#95](https://github.com/Ullmann27/Imperathen/pull/95): gerissene Umhangnaht des Meshy-Axtkämpfers (setzt auf #94 auf) | Risse 211 → 0 (76 Vertices, Gewichte an Ort und Stelle überschrieben, +196 Bytes), Umhang-Durchdringung zahlengleich; Suite 85/85, **Gate 355 → 351** (§14.21). CI läuft |
 | Reproduzierbarkeit | Mit Blender 4.3.2 (glTF-IO 4.3.47) entstehen Kompanie- und Dorf-GLBs bytegleich neu (Bogenschütze bis auf Float-Rauschen im `shoot`-Clip). Die Erdung aus #90/#92 ist im Build durchgängig nachgewiesen (§14.16) |
 | Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln, Bein-IK und Hüftschwenk im Todes-Clip, Helden-Rockregel und Tunika-Glättung für die Grenz-NPCs |
 | Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88, #89 und #90. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json`. 5. #90: Abschalten von Godots Keyframe-Optimierer für 54 Modelle (+3,5 % Importgröße) annehmen; Todes-Pose der Kompanie für das verbleibende Gleiten neu gestalten. 6. Tunika der Grenz-NPCs: Risse gegen häufigeres Durchscheinen des Körpers abwägen oder Künstler-Pass (§14.15) |
@@ -742,6 +743,41 @@ In den Ein-/Ausblendfenstern wird der Fuß also bewusst nicht gehalten (aufgenom
 2. Den ersten Schritt aus dem Stand mit voller Haltekraft erfassen, also ohne Einblendung, wenn der Körper beschleunigt, und die Begrenzung von 7,5 cm am echten Bedarf prüfen.
 3. Danach Sichtabnahme in Bewegung.
 
+### 14.21 Umhangnaht des Meshy-Axtkämpfers: Draft-PR [#95](https://github.com/Ullmann27/Imperathen/pull/95)
+
+**Befund:** In `unit_germanic_axe_fighter_0.glb` (LOD 0) reißen am rechten vorderen Umhangrand 15 Kanten in `attack` und `train` (Gate: `skin_edge_violations` 18 je Laufzeitfamilie, 54 in `meshy_people`).
+- Die Gewichte der Meshy-Körper stammen aus dem projekteigenen, positionsbasierten `bind()` in `build_meshy_people.py`, nicht von Meshy.
+- Der Umhangrand liegt über dem hängenden rechten Unterarm. Innerhalb einer Reihe 6–7 cm langer Dreiecke auf Hüfthöhe (y 0,82 → 0,885 m) springt die Gewichtung von etwa 0,9 `Forearm_R`/`Hand_R` auf etwa 0,1.
+- Hebt sich der Arm, dehnen sich diese Dreiecke von etwa 6 cm auf über 50 cm. LOD 1–3 und der Signifer reißen nicht.
+
+**Verworfen nach Messung** (`evidence/metrics/meshy_cloak_unbinding_rejected.json`):
+1. **Unterarm aus dem Umhang entbinden** (Inseln, die mehr als 15 cm unter die tiefste Handfläche reichen; harmonische Nachfüllung): Risse 211 → 0, aber der Arm liegt im Bindpose unter dem Umhang. Ohne Unterarmbindung stößt er bis 13,7 cm durch den Umhang (`train`/`attack`; `block` 1,4 → 11,5 cm, `death` 0 → 5,0 cm). Godot-Bilder bestätigen das.
+2. Dieselbe Regel beim Signifer erzeugt neue Risse (bis 0,56 m Überdehnung).
+3. Glättung mit einem Ring statt zwei: Ein Nachbarpunkt der inneren Umhanglage tritt 0,87 mm weiter durch (Toleranz 0,5 mm).
+
+**Lösung `tools/characters/smooth_meshy_body_seam.py`** (Verfahren der Rocknaht aus #91, angewandt auf den Meshy-Körper):
+- Risskanten nach dem Gate-Kriterium auf allen Clips (60 Hz) finden;
+- diese Vertices plus zwei Ringe (UV-Nähte verschweißt) mit der Nachbarmischung aus #91 glätten (4 Durchgänge, 0,35, inverse Kantenlänge);
+- nur annehmen, wenn keine Kante mehr reißt und kein Nachbarpunkt weiter durch die geglättete Fläche tritt (hier 1,98 → 1,01 cm);
+- `JOINTS_0`/`WEIGHTS_0` an Ort und Stelle mit den Originaltypen überschreiben (`Glb.overwrite_accessor` in `ground_death_clip.py`): 76 Vertices, 1 452 Bytes; alle anderen Bytes sind nachweislich gleich, die Datei wächst um 196 Bytes (Marker). Die erste Fassung mit angehängten Accessoren hätte LOD 0 um 764 KB (+18,7 %) vergrößert.
+
+**Ergebnis:**
+- Risse auf den Roh-Clips 211 → 0.
+- Arm- und Körperdurchdringung durch die Umhang-Außenfläche: in allen 11 Clips zahlengleich (`evidence/metrics/meshy_cloak_through_final.json`).
+- Mit #87 … #94 (Godot 4.7.2): Suite 85/85, **Gate 355 → 351**. Es fallen die vier Hautkanten-Befunde des Axtkämpfers weg; die Durchdringung der gehaltenen Handaxt sinkt von 0,404 auf 0,399 m; alle übrigen Zeilen sind identisch (`evidence/logs/motion_gate_meshy_seam_351.txt`).
+- Neu-Lauf auf der HEAD-Datei ergibt bytegleich dieselbe Datei; Python-Tests 266/266, Foundation-Checks grün.
+- Bilder in Godot 4.7.2:
+  - `evidence/godot_frames/26_godot_meshy_umhang_naht_vorher_nachher.jpg`: Nahaufnahmen von `attack`, `train` und `block`. Die Wirkung ist klein; die scharfe Knickfalte am Umhangrand über der Gürteltasche ist nachher weicher.
+  - `26d_*`: das Umhang-„Segel“ bei LOD 0 und LOD 1 im Ausgangszustand.
+  - `26b_*`/`26c_*`: die verworfene Entbindung (Arm durchstößt den Umhang).
+- Werkzeuge: `werkzeuge/meshy_*.py`, `meshy_zz_*.gd`; Messdaten `evidence/metrics/meshy_body_seam_8_glb.json`, `meshy_cloak_through_final.json`.
+
+**Nicht behoben, Choreografie:** Die Meshy-Clips `attack`/`train` gleiten roh 18,5–19,4 cm (gleiche Posenquelle `art/soldiers/build.py` wie der Kompanie-Angriff); zur Laufzeit hält der Fuß-Solver das auf 2,1–2,5 cm. Das gehört zu Entscheidung 6 in §15.4.
+
+**Offen:**
+- **Vorbestehend, unverändert:** Tunika und Gürteltasche scheinen in `attack`/`train` als dunkle Flecken durch den Umhang (bis 3,7 cm, auch in `run` 2,5 cm).
+- Die Quellkorrektur gehört in `bind()` von `build_meshy_people.py` (topologiebewusste Gewichtung des Umhangs über dem Arm) oder in einen Künstler-Pass.
+
 ## 15. Gesamtbilanz der autonomen Nachtschicht (25./26.11.2026)
 
 ### 15.1 PR-Stapel und Merge-Reihenfolge (alle Draft, kein Merge nach `main`)
@@ -756,9 +792,10 @@ integration/imperathen-unified-20261125 (2c54954)
             └─ #92  Dorf-Hocke „gather“
                └─ #93  Tod und Hocke des Helden
                   └─ #94  Nieten des Grenz-Kits
+                     └─ #95  Umhangnaht des Meshy-Axtkämpfers
 ```
 
-Empfohlene Reihenfolge: #87 → #89 → #90 → #91 → #92 → #93 → #94. #88 ist unabhängig davon auf #87 einzuspielen; die gemeinsame Messung zeigt keine Wechselwirkung.
+Empfohlene Reihenfolge: #87 → #89 → #90 → #91 → #92 → #93 → #94 → #95. #88 ist unabhängig davon auf #87 einzuspielen; die gemeinsame Messung zeigt keine Wechselwirkung.
 
 | Stand (jeweils mit allen Vorgängern) | `check_prototype` | Motion-Gate | CI |
 |---|---|---|---|
@@ -769,8 +806,9 @@ Empfohlene Reihenfolge: #87 → #89 → #90 → #91 → #92 → #93 → #94. #88
 | + #92 | 85/85 | 359 | bestätigt |
 | + #93 | 85/85 | 355 | bestätigt |
 | + #94 | 85/85 | 355 (jeder Messwert identisch) | bestätigt (Befundliste zeilengleich mit #93) |
+| + #95 | 85/85 | 351 | läuft |
 
-Das Gate bleibt rot. Die restlichen 355 Befunde verteilen sich so:
+Das Gate bleibt rot. Die restlichen 351 Befunde verteilen sich so:
 - 84 Vertragsregistrierungen (nicht klassifizierte Ressourcen und Skripte, u. a. der in der CI erzeugte Junge und die Stadt);
 - fehlende menschliche Sichtprüfungen;
 - Tunika der Grenz-NPCs (Abwägung, §14.18);
@@ -780,6 +818,7 @@ Das Gate bleibt rot. Die restlichen 355 Befunde verteilen sich so:
 - Navigation und Spieler-Abrollen (§14.20);
 - Fernkolonnen-Shader (`rank_stride`, LOD-Sprung 13,8 cm);
 - Ausrüstungsdurchdringung mit konservativen Obergrenzen.
+- Gleiten der Meshy-Einheiten in `attack`/`train` (2,1–2,5 cm zur Laufzeit; Choreografie wie beim Kompanie-Angriff, §14.21).
 
 ### 15.2 Was nachgewiesen ist und was nicht
 
@@ -800,6 +839,7 @@ Das Gate bleibt rot. Die restlichen 355 Befunde verteilen sich so:
 - 60/120/180-Hz-Schlüsselraster (240 Hz gewählt);
 - Helden-Rockregel und Tunika-Glättung für die Grenz-NPCs;
 - Erdung von Gather bei Grenz-Zivilistin und Meshy (das Werkzeug hat sie selbst abgelehnt).
+- Unterarm aus dem Meshy-Umhang entbinden (Arm stößt bis 13,7 cm durch den Umhang) und Umhangglättung mit nur einem Ring (§14.21).
 
 ### 15.4 Entscheidungen für den Projektinhaber
 
@@ -819,6 +859,7 @@ Das Gate bleibt rot. Die restlichen 355 Befunde verteilen sich so:
 | `tools/characters/ground_death_clip.py` | Becken-Translation eines Clips erden; `--clip`, idempotent |
 | `tools/characters/smooth_frontier_skirt_seam.py` | reißende Rocknähte lokal glätten, mit Durchdringungsprüfung |
 | `tools/characters/rebind_frontier_kit_rivets.py` | Kit-Nieten umbinden und aufsetzen |
-| Tests | `tests/death_ground_contact_test.py`, `frontier_skirt_seam_test.py`, `frontier_kit_rivets_test.py` (NumPy-Teil wird übersprungen, wo NumPy fehlt) |
+| `tools/characters/smooth_meshy_body_seam.py` | reißende Gewichtsnähte des Meshy-Körpers lokal glätten; schreibt die Gewichte an Ort und Stelle (`Glb.overwrite_accessor`) |
+| Tests | `tests/death_ground_contact_test.py`, `frontier_skirt_seam_test.py`, `frontier_kit_rivets_test.py`, `meshy_body_seam_test.py` (NumPy-Teil wird übersprungen, wo NumPy fehlt) |
 
-Alle drei Werkzeuge werden von den Build-Skripten nach dem Export aufgerufen.
+Alle vier Werkzeuge werden von den Build-Skripten nach dem Export aufgerufen.

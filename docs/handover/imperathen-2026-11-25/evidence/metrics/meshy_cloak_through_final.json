@@ -1,0 +1,118 @@
+{
+  "glb": "unit_germanic_axe_fighter_0.glb",
+  "metric": "body/arm points within 6 cm behind the cloak's outer surface at rest that come out through it (offset > 2 mm along the posed outer normal, lateral < 2 cm), all clips at 60 Hz",
+  "outer_cloak_vertices": 591,
+  "tracked_points": 1087,
+  "per_clip": {
+    "idle": {
+      "before": {
+        "count": 0,
+        "max_m": 0.0
+      },
+      "after": {
+        "count": 0,
+        "max_m": 0.0
+      }
+    },
+    "march": {
+      "before": {
+        "count": 53,
+        "max_m": 0.0039
+      },
+      "after": {
+        "count": 53,
+        "max_m": 0.0039
+      }
+    },
+    "run": {
+      "before": {
+        "count": 208,
+        "max_m": 0.0252
+      },
+      "after": {
+        "count": 208,
+        "max_m": 0.0252
+      }
+    },
+    "talk": {
+      "before": {
+        "count": 0,
+        "max_m": 0.0
+      },
+      "after": {
+        "count": 0,
+        "max_m": 0.0
+      }
+    },
+    "work": {
+      "before": {
+        "count": 0,
+        "max_m": 0.0
+      },
+      "after": {
+        "count": 0,
+        "max_m": 0.0
+      }
+    },
+    "gather": {
+      "before": {
+        "count": 0,
+        "max_m": 0.0
+      },
+      "after": {
+        "count": 0,
+        "max_m": 0.0
+      }
+    },
+    "train": {
+      "before": {
+        "count": 92,
+        "max_m": 0.037
+      },
+      "after": {
+        "count": 92,
+        "max_m": 0.037
+      }
+    },
+    "attack": {
+      "before": {
+        "count": 90,
+        "max_m": 0.0349
+      },
+      "after": {
+        "count": 90,
+        "max_m": 0.0349
+      }
+    },
+    "block": {
+      "before": {
+        "count": 148,
+        "max_m": 0.0142
+      },
+      "after": {
+        "count": 148,
+        "max_m": 0.0142
+      }
+    },
+    "hit": {
+      "before": {
+        "count": 0,
+        "max_m": 0.0
+      },
+      "after": {
+        "count": 0,
+        "max_m": 0.0
+      }
+    },
+    "death": {
+      "before": {
+        "count": 0,
+        "max_m": 0.0
+      },
+      "after": {
+        "count": 0,
+        "max_m": 0.0
+      }
+    }
+  }
+}
