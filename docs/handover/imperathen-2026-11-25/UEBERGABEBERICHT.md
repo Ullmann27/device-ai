@@ -14,9 +14,10 @@ Dieser Bericht trennt strikt zwischen **in dieser Sitzung ausgeführt und gemess
 | Draft-PR [#88](https://github.com/Ullmann27/Imperathen/pull/88): verschmolzene Hände vom Rock trennen (setzt auf #87 auf) | überdehnte Tunika-Kanten LOD 0 2 925 → 152, Spitze 0,674 → 0,072 m; echte Godot-Bilder aller Schläge und Tritte vorher/nachher (`evidence/godot_frames/17_*`) |
 | Draft-PR [#89](https://github.com/Ullmann27/Imperathen/pull/89): schwebende Militär-NPCs geerdet (setzt auf #87 auf) | CI wie #87: 85/85 Gruppen, Stadt-/Jungen-Tests grün, rot nur das Motion-Gate, jetzt **507** statt 587 (§14.13) |
 | Draft-PR [#90](https://github.com/Ullmann27/Imperathen/pull/90): Todes-Clip der 54 Company-Exporte geerdet (setzt auf #89 auf) | Sohlen-Durchdringung 16–21 cm → 0 (Engine ≤ 0,28 cm), Gleiten 0,8–1,05 m → 0,3–3,9 cm. Gemeinsam mit #87 + #88 + #89 gemessen: Suite 85/85, **Motion-Gate 507 → 382**, kein neuer Befund (§14.14). CI läuft |
-| Draft-PR [#91](https://github.com/Ullmann27/Imperathen/pull/91): gerissene Rocknaht der Grenz-NPCs (setzt auf #90 auf) | 10 GLBs, Rockrisse → 0 ohne Durchdringung; mit #87–#90 gemessen: Suite 85/85, **Gate 382 → 372**, kein neuer Befund (§14.15). CI läuft |
-| Draft-PR [#92](https://github.com/Ullmann27/Imperathen/pull/92): Dorf-Hocke „gather“ geerdet (setzt auf #91 auf) | Dorf 3,15 cm → 0 im Boden, Gleiten 2,3 → 0 cm; mit #87–#91 gemessen: Suite 85/85, **Gate 372 → 359**, kein neuer Befund (§14.16). CI läuft |
-| Draft-PR [#93](https://github.com/Ullmann27/Imperathen/pull/93): Tod und Hocke des Helden geerdet (setzt auf #92 auf) | Engine Tod 0,75/2,13 → 0,05/1,35 cm (Durchdringung/Gleiten), Hocke 0,69 → 0,05 cm; Suite 85/85, **Gate 359 → 355**, kein neuer Befund (§14.17). CI läuft |
+| Draft-PR [#91](https://github.com/Ullmann27/Imperathen/pull/91): gerissene Rocknaht der Grenz-NPCs (setzt auf #90 auf) | 10 GLBs, Rockrisse → 0 ohne Durchdringung; mit #87–#90 gemessen: Suite 85/85, **Gate 382 → 372**, kein neuer Befund (§14.15). CI bestätigt (372) |
+| Draft-PR [#92](https://github.com/Ullmann27/Imperathen/pull/92): Dorf-Hocke „gather“ geerdet (setzt auf #91 auf) | Dorf 3,15 cm → 0 im Boden, Gleiten 2,3 → 0 cm; mit #87–#91 gemessen: Suite 85/85, **Gate 372 → 359**, kein neuer Befund (§14.16). CI bestätigt (359) |
+| Draft-PR [#93](https://github.com/Ullmann27/Imperathen/pull/93): Tod und Hocke des Helden geerdet (setzt auf #92 auf) | Engine Tod 0,75/2,13 → 0,05/1,35 cm (Durchdringung/Gleiten), Hocke 0,69 → 0,05 cm; Suite 85/85, **Gate 359 → 355**, kein neuer Befund (§14.17). CI bestätigt (355) |
+| Draft-PR [#94](https://github.com/Ullmann27/Imperathen/pull/94): Nieten des Grenz-Kits auf ihren Platten (setzt auf #93 auf) | Schulter-Nieten heben bis 8 cm ab → 0 (an der Schulterplatte gebunden), Brust-Nieten schweben bis 4 cm vor der Platte → aufgesetzt; Suite 85/85, Gate 355 unverändert, jeder Messwert identisch (§14.19). CI läuft |
 | Reproduzierbarkeit | Mit Blender 4.3.2 (glTF-IO 4.3.47) entstehen Kompanie- und Dorf-GLBs bytegleich neu (Bogenschütze bis auf Float-Rauschen im `shoot`-Clip). Die Erdung aus #90/#92 ist im Build durchgängig nachgewiesen (§14.16) |
 | Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln, Bein-IK und Hüftschwenk im Todes-Clip, Helden-Rockregel und Tunika-Glättung für die Grenz-NPCs |
 | Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88, #89 und #90. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json`. 5. #90: Abschalten von Godots Keyframe-Optimierer für 54 Modelle (+3,5 % Importgröße) annehmen; Todes-Pose der Kompanie für das verbleibende Gleiten neu gestalten. 6. Tunika der Grenz-NPCs: Risse gegen häufigeres Durchscheinen des Körpers abwägen oder Künstler-Pass (§14.15) |
@@ -680,9 +681,10 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 | #87 | 587 | bestätigt |
 | + #89 | 507 | bestätigt |
 | + #90 | 382 | bestätigt |
-| + #91 | 372 | läuft |
-| + #92 | 359 | läuft |
-| + #93 | 355 | läuft |
+| + #91 | 372 | bestätigt |
+| + #92 | 359 | bestätigt |
+| + #93 | 355 | bestätigt |
+| + #94 | 355 | läuft |
 
 ### 14.18 Entscheidungsgrundlage Tunika der Grenz-NPCs (nicht umgesetzt)
 
@@ -691,3 +693,24 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 - **Schussposition des Legionärs:** Die Tunika reißt an der Achsel in rote Splitter. Die Glättung verringert das nur leicht, während der Körper laut Messung öfter durch die Ärmel scheint (§14.15).
 - **Vorbestehender Zusatzbefund in derselben Pose (Seitenansicht):** Einzelne Nieten des `FrontierRomanKit` schweben unter dem Arm frei in der Luft. Die Gewichtung des Kits braucht einen Künstler-Pass.
 - **Empfehlung:** Tunika und Kit im Originalnetz mit sauberer Ärmel-/Achselgewichtung neu wichten (Künstler-Pass) statt weiter nachträglich zu glätten. Werkzeug: `werkzeuge/godot_tunic_tradeoff_capture.gd`.
+
+### 14.19 Nieten des Grenz-Kits: Draft-PR [#94](https://github.com/Ullmann27/Imperathen/pull/94)
+
+**Befund:** Die Nieten, die `build_frontier_people.py` dem Militär-Kit hinzufügt, sind alle starr an `Spine` gebunden und in fester Tiefe platziert.
+- **Schulter-Nieten:** Sie sitzen auf den an `Arm` gebundenen Schulterplatten und bleiben bei gehobenem Arm bis zu 8 cm in der Luft stehen.
+- **Brust-Nieten:** Sie schweben schon im Bindpose 0,8–4,0 cm vor der gewölbten Brustplatte.
+
+Messung: `werkzeuge/rivet_eval.py`, `rivet_gap.py` (exakter Punkt-Dreieck-Abstand).
+
+**Lösung `tools/characters/rebind_frontier_kit_rivets.py`:**
+1. Umbinden an die Platte, auf der eine Niete sitzt, wenn das Abheben über alle Clips nicht wächst: 1,7–8,0 cm → 0.
+2. Aufsetzen schwebender Nieten auf die Platte desselben Gelenks, 0,5 mm eingelassen.
+
+Alle verschobenen Inseln liegen auf dem Nietenraster des Build-Skripts. Betroffen sind 16 Militär-Exporte (`evidence/metrics/frontier_kit_rivets_16_glb.json`).
+
+**Ergebnis mit #87 … #93:**
+- Suite 85/85.
+- Gate 355 mit identischer Befundliste; jeder Messwert identisch, das Gate misst Nieten nicht.
+- Bilder: `evidence/godot_frames/25_godot_grenz_kit_nieten_vorher_nachher.jpg`, Wirkung klein, aber sichtbar.
+
+**Offen:** Die Quellkorrektur in `build_frontier_people.py` (Nieten auf die Plattenoberfläche, Schulter-Nieten an `Arm_*`).

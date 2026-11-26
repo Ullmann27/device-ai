@@ -1,0 +1,2208 @@
+[
+  {
+    "path": "prototype/assets/characters/frontier_legionary_0.glb",
+    "sha256_before": "fb93f36cf2628b548ea5862b4bda2d67354fc299b4c95731ee7c92f88f82ef9b",
+    "islands": [
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1843,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0134,
+        "own_plate_distance_m": 0.0461,
+        "lift_before_m": 0.0327,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1843,
+          1.3997,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0223,
+        "own_plate_distance_m": 0.0362,
+        "lift_before_m": 0.0139,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1857,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0146,
+        "own_plate_distance_m": 0.0462,
+        "lift_before_m": 0.0316,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1857,
+          1.3997,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0223,
+        "own_plate_distance_m": 0.0367,
+        "lift_before_m": 0.0144,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.09,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0334,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.1456,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0289,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.195,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0202,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0894,
+          1.2448,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0145,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.3006,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0083,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1844,
+          1.32,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0121,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.09,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0354,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.1456,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0297,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.195,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0909,
+          1.2446,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0139,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.3006,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0088,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1856,
+          1.32,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0139,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "8325b1227627261319a8199f03c7e24a4268b3653a67e74f91d7ecbaede760b3"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_1.glb",
+    "sha256_before": "e6eef53a7a48fa84d657e4db29aef5719b50c74b1f5d06e071090ed5e01b3cac",
+    "islands": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0124,
+        "own_plate_distance_m": 0.0602,
+        "lift_before_m": 0.0478,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0059,
+        "own_plate_distance_m": 0.0231,
+        "lift_before_m": 0.0172,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0324,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0266,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0204,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.185,
+          1.3191,
+          0.1038
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0187,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Arm_R",
+        "gap_before_m": 0.0014,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0361,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0316,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.0898,
+          1.2442,
+          0.1504
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0239,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "joint": "Arm_L",
+        "gap_before_m": 0.0024,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0249,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0393,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "36951fc546d3c27a4d9ef16ccb1f16880adf1d4d9c9e245e1cdfb22400160ff7"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_2.glb",
+    "sha256_before": "0eb66953ab9de059297b0b0c313d9c87658967e8daa1eeb8f15d9f450294c6e8",
+    "islands": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0076,
+        "own_plate_distance_m": 0.052,
+        "lift_before_m": 0.0444,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0127,
+        "own_plate_distance_m": 0.0925,
+        "lift_before_m": 0.0798,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.0904,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0246,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0168,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.023,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.022,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0299,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0321,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0399,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.0898,
+          1.2442,
+          0.1504
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0243,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0247,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0214,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "358213e64e6cab363268f503daf6fecf21ca4881b025c6a6db3b9929aea4d733"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_3.glb",
+    "sha256_before": "c174c6e83af2f410956e05c234146e5016bee3b0ad9a4da8f500984409093490",
+    "islands": [],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0374,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0355,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0202,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "b914efb5b104d3741f27f4a9e2dd06d964585d0dc171e519385582522926a870"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_0.glb",
+    "sha256_before": "eb6397c4011eb911f120969b279bfa92ff769b84abd4c3b90d6e03188fe354ce",
+    "islands": [
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1844,
+          1.32,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0124,
+        "own_plate_distance_m": 0.0197,
+        "lift_before_m": 0.0073,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1843,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0134,
+        "own_plate_distance_m": 0.0287,
+        "lift_before_m": 0.0153,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1843,
+          1.3997,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0223,
+        "own_plate_distance_m": 0.0362,
+        "lift_before_m": 0.0139,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1857,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0146,
+        "own_plate_distance_m": 0.0462,
+        "lift_before_m": 0.0316,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1857,
+          1.3997,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0223,
+        "own_plate_distance_m": 0.0367,
+        "lift_before_m": 0.0144,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.09,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0334,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.1456,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0289,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.195,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0202,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0894,
+          1.2448,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0145,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.3006,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0083,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1844,
+          1.32,
+          0.104
+        ],
+        "joint": "Arm_R",
+        "gap_before_m": 0.0043,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.09,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0354,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.1456,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0297,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.195,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0909,
+          1.2446,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0139,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.3006,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0088,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1856,
+          1.32,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0139,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "cb94bb52b6bd351c14cc451450c05c23e5342e360f122b98a11fedf7028b6e1a"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_1.glb",
+    "sha256_before": "f4ee0ae9018f6bc048ee4135ad60acfd1f7f7efa5ff7c70246d12e4df494c3bb",
+    "islands": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0124,
+        "own_plate_distance_m": 0.0272,
+        "lift_before_m": 0.0148,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0059,
+        "own_plate_distance_m": 0.0231,
+        "lift_before_m": 0.0172,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0324,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0266,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0204,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.185,
+          1.3191,
+          0.1038
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0187,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Arm_R",
+        "gap_before_m": 0.0014,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0015,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0384,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0316,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.0898,
+          1.2442,
+          0.1504
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0239,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "joint": "Arm_L",
+        "gap_before_m": 0.0024,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0249,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0393,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "e56c28e33e104aa4714f60ab26ac6c5999e1beff12f8d8d01fd871070b42824a"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_2.glb",
+    "sha256_before": "310fc1035019c7f1a8a2072c5a6bf9fc6aaea1c8b25885ff1d00b48213593347",
+    "islands": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0076,
+        "own_plate_distance_m": 0.052,
+        "lift_before_m": 0.0444,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0127,
+        "own_plate_distance_m": 0.0925,
+        "lift_before_m": 0.0798,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.0904,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0246,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0168,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.023,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.022,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0299,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0262,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0399,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.0898,
+          1.2442,
+          0.1504
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0243,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0247,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0214,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "8a11d210574283d1e9017ac9492ce8d208b334b03c62fb471e275e0fd9dd3c37"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_3.glb",
+    "sha256_before": "c41652d5da74af7308ad6162924d8c80b33cdd991b635f2c8293717c733148d7",
+    "islands": [],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0374,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0355,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0202,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0262,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "db19042cd1fe36c1e0846e4de2ff85dc88304a2f4a672bf4567735ecb1102888"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_0.glb",
+    "sha256_before": "f954e4bd89f86fd496dbf5accf9af6157236d2d331a035e5ad02c03e1964ed1e",
+    "islands": [
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1843,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0134,
+        "own_plate_distance_m": 0.0461,
+        "lift_before_m": 0.0327,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1843,
+          1.3997,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0223,
+        "own_plate_distance_m": 0.0362,
+        "lift_before_m": 0.0139,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1857,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0146,
+        "own_plate_distance_m": 0.0462,
+        "lift_before_m": 0.0316,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1857,
+          1.3997,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0223,
+        "own_plate_distance_m": 0.0367,
+        "lift_before_m": 0.0144,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.09,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0334,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.1456,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0289,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.195,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0202,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0894,
+          1.2448,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0145,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.0892,
+          1.3006,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0083,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1844,
+          1.32,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0121,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.09,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0354,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.1456,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0297,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.195,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0909,
+          1.2446,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0139,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.0908,
+          1.3006,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0088,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          0.1856,
+          1.32,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0139,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "198ee953c34af0121a1f1c5abf863dee35cda646ccfdd00694a818d0d6c7e65f"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_1.glb",
+    "sha256_before": "ab9e8d53945ec8211573e426f79156e0d26e5b5b855e7d9bd00470b59d078f58",
+    "islands": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0124,
+        "own_plate_distance_m": 0.0602,
+        "lift_before_m": 0.0478,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0059,
+        "own_plate_distance_m": 0.0231,
+        "lift_before_m": 0.0172,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0324,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0266,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0204,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.185,
+          1.3191,
+          0.1038
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0187,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Arm_R",
+        "gap_before_m": 0.0014,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0361,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0291,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.0898,
+          1.2442,
+          0.1504
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0234,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "joint": "Arm_L",
+        "gap_before_m": 0.0024,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0249,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0393,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "f16c28fa4e7f1b5ebce47562b0a49a95f98092eedaa11fdb58459be3c3e82354"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_2.glb",
+    "sha256_before": "cc76b36192ab53d054c5ab68d6c1cc2cebc290443af887773fd474ebda0908ff",
+    "islands": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_R",
+        "plate_distance_m": 0.0076,
+        "own_plate_distance_m": 0.052,
+        "lift_before_m": 0.0444,
+        "lift_after_m": 0.0,
+        "applied": true
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.185,
+          1.3191,
+          0.1038
+        ],
+        "from": "Spine",
+        "to": "Arm_L",
+        "plate_distance_m": 0.0127,
+        "own_plate_distance_m": 0.0925,
+        "lift_before_m": 0.0798,
+        "lift_after_m": 0.0,
+        "applied": true
+      }
+    ],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.0904,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0246,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0168,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.023,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.022,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0299,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0321,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0399,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.0898,
+          1.2442,
+          0.1504
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0243,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0247,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.1849,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0214,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "b08f4f5a59c36673239bae1ec930a86b37067cb53b22c583286f1aa3b7490ee3"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_3.glb",
+    "sha256_before": "44629e1ea30a487d9b443ea5b37c39fb3f424bc6f1bb07b30f6daaa6138a5b58",
+    "islands": [],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0374,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0355,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.0898,
+          1.2449,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0202,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0189,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0205,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "548acee998875f26af451b09b9c76276803587801034c8b3a4dbed8d98016a43"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_0.glb",
+    "sha256_before": "e323ff747ac2f3ee63d70dd8291be7d653dbf1f23bb545f4a842a816793cb801",
+    "islands": [],
+    "snapped": [
+      {
+        "vertices": 22,
+        "centre": [
+          -0.0895,
+          1.2446,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0318,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 22,
+        "centre": [
+          -0.0895,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0121,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1843,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0251,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 14,
+        "centre": [
+          -0.1843,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0126,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 22,
+        "centre": [
+          0.0905,
+          1.0897,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0086,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 22,
+        "centre": [
+          0.0905,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0121,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 22,
+        "centre": [
+          0.0905,
+          1.1947,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0227,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "c1e22d6f14c34d1f49e2a107084291c3aa465953fc1f23fa31866b0ea03bdbf3"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_1.glb",
+    "sha256_before": "adfc27b506491a60c205a1fdc96cda3c6a0068ae68917e13d18dde5e59aaefc2",
+    "islands": [],
+    "snapped": [
+      {
+        "vertices": 12,
+        "centre": [
+          -0.0887,
+          1.2444,
+          0.1499
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0349,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0163,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0349,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0272,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.0904,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0133,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0212,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0309,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "aed853ff5cd7da1b308728706c1f9c28c164df8de0c270bbda85755532e453fb"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_2.glb",
+    "sha256_before": "00471940e58c9e850e1592668fe08a01b79d71e3c5cc6af5ded452f86c6e55be",
+    "islands": [],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.02,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0357,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0272,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.0904,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0298,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0238,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0393,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "17990105ecfe72a07534796ef2f59aab8dbe38f74c754861245196e01ea5d681"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_3.glb",
+    "sha256_before": "5039526b1defe72dc87b6a346190f117ccb1b8798d8e8566c2179222bfcbf6da",
+    "islands": [],
+    "snapped": [
+      {
+        "vertices": 3,
+        "centre": [
+          -0.09,
+          1.3003,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.02,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3597,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0357,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          -0.1851,
+          1.3997,
+          0.104
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0272,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.0904,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0298,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1453,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0238,
+        "gap_after_m": 0.0005
+      },
+      {
+        "vertices": 3,
+        "centre": [
+          0.09,
+          1.1954,
+          0.15
+        ],
+        "joint": "Spine",
+        "gap_before_m": 0.0393,
+        "gap_after_m": 0.0005
+      }
+    ],
+    "sha256_after": "016b2a519f6385637a30f604e3074296b92a0f94e100f2d0864e3601587fb1d9"
+  }
+]
