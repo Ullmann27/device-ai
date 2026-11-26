@@ -741,3 +741,84 @@ In den Ein-/Ausblendfenstern wird der Fuß also bewusst nicht gehalten (aufgenom
 1. `_world_supported` beim Jungen nur melden, solange `envelope` ≈ 1 ist, oder das Gate auf Kontaktpunkte statt Knöchel umstellen.
 2. Den ersten Schritt aus dem Stand mit voller Haltekraft erfassen, also ohne Einblendung, wenn der Körper beschleunigt, und die Begrenzung von 7,5 cm am echten Bedarf prüfen.
 3. Danach Sichtabnahme in Bewegung.
+
+## 15. Gesamtbilanz der autonomen Nachtschicht (25./26.11.2026)
+
+### 15.1 PR-Stapel und Merge-Reihenfolge (alle Draft, kein Merge nach `main`)
+
+```
+integration/imperathen-unified-20261125 (2c54954)
+└─ #87  Sohlenkalibrierung Junge (P0) + village_person_test
+   ├─ #88  Hände vom Rock des Jungen trennen
+   └─ #89  schwebende Militär-NPCs geerdet
+      └─ #90  Todes-Clip der 54 Company-Exporte + Keyframe-Optimierer aus
+         └─ #91  Rocknaht der Grenz-NPCs
+            └─ #92  Dorf-Hocke „gather“
+               └─ #93  Tod und Hocke des Helden
+                  └─ #94  Nieten des Grenz-Kits
+```
+
+Empfohlene Reihenfolge: #87 → #89 → #90 → #91 → #92 → #93 → #94. #88 ist unabhängig davon auf #87 einzuspielen; die gemeinsame Messung zeigt keine Wechselwirkung.
+
+| Stand (jeweils mit allen Vorgängern) | `check_prototype` | Motion-Gate | CI |
+|---|---|---|---|
+| #87 | 85/85 | 587 | bestätigt |
+| + #89 | 85/85 | 507 | bestätigt |
+| + #90 | 85/85 | 382 | bestätigt |
+| + #91 | 85/85 | 372 | bestätigt |
+| + #92 | 85/85 | 359 | bestätigt |
+| + #93 | 85/85 | 355 | bestätigt |
+| + #94 | 85/85 | 355 (jeder Messwert identisch) | siehe PR |
+
+Das Gate bleibt rot. Die restlichen 355 Befunde verteilen sich so:
+- 84 Vertragsregistrierungen (nicht klassifizierte Ressourcen und Skripte, u. a. der in der CI erzeugte Junge und die Stadt);
+- fehlende menschliche Sichtprüfungen;
+- Tunika der Grenz-NPCs (Abwägung, §14.18);
+- Messspezifikation „retreat“ (Schleifennaht, §14.12);
+- Laufzeit-Kicks des Helden;
+- Angriffs- und Todes-Choreografie der Kompanie (§14.16);
+- Navigation und Spieler-Abrollen (§14.20);
+- Fernkolonnen-Shader (`rank_stride`, LOD-Sprung 13,8 cm);
+- Ausrüstungsdurchdringung mit konservativen Obergrenzen.
+
+### 15.2 Was nachgewiesen ist und was nicht
+
+- **Nachgewiesen (lokal und CI):**
+  - Alle PRs bestehen die volle Suite.
+  - Jede Gate-Zahl stimmt zwischen lokaler Messung und CI überein.
+  - Jede Asset-Änderung ist per Zugriffsvergleich auf die beabsichtigten Kanäle bzw. Attribute begrenzt.
+  - Kompanie- und Dorf-GLBs sind mit Blender 4.3.2 reproduzierbar; die Erdungsschritte sind im Build durchgängig nachgewiesen.
+- **Nur lokal/offline nachgewiesen:** Varianten-Messungen der verworfenen Ansätze.
+- **Nicht nachgewiesen:** menschliche Sichtabnahme, Fold7-Gerät, APK/Signatur, Neuaufbau von Grenz-NPCs, Meshy und Held mit Blender.
+
+### 15.3 Verworfen nach Messung (nicht in den PRs)
+
+- Knöchel-Gewichtsglättung;
+- farbbasierte Insel-Zuordnung;
+- Entfernen deckungsgleicher Griffinseln;
+- Bein-IK und Hüftschwenk im Todes-Clip;
+- 60/120/180-Hz-Schlüsselraster (240 Hz gewählt);
+- Helden-Rockregel und Tunika-Glättung für die Grenz-NPCs;
+- Erdung von Gather bei Grenz-Zivilistin und Meshy (das Werkzeug hat sie selbst abgelehnt).
+
+### 15.4 Entscheidungen für den Projektinhaber
+
+1. Ersetzte Sohlen-Schranke des Jungen bestätigen (#87).
+2. Sichtabnahme #88–#94 in Bewegung, insbesondere Tod in der Formation (Endlage etwa 0,9 m weiter hinten).
+3. Keyframe-Optimierer für die 58 Modelle aus Kompanie und Held aus (+3,5 % Importgröße).
+4. Tunika der Grenz-NPCs: Risse gegen häufigeres Durchscheinen des Körpers oder Künstler-Pass.
+5. Widerspruch `validate_hero.py` gegen verlustfreie Helden-Lieferung (externe Bild-URI).
+6. Choreografie: Angriff der Kompanie (Fuß gleitet 16,8 cm), Kniezug im Kompanie-Tod.
+7. Laufzeit des Spielers: Stützmeldung und Haltekraft beim ersten Schritt (§14.20).
+8. Registrierung des Jungen und der Stadt im Bewegungsvertrag.
+
+### 15.5 Neue Werkzeuge in Imperathen (über die PRs)
+
+| Werkzeug | Zweck |
+|---|---|
+| `tools/characters/ground_death_clip.py` | Becken-Translation eines Clips erden; `--clip`, idempotent |
+| `tools/characters/smooth_frontier_skirt_seam.py` | reißende Rocknähte lokal glätten, mit Durchdringungsprüfung |
+| `tools/characters/rebind_frontier_kit_rivets.py` | Kit-Nieten umbinden und aufsetzen |
+| Tests | `tests/death_ground_contact_test.py`, `frontier_skirt_seam_test.py`, `frontier_kit_rivets_test.py` (NumPy-Teil wird übersprungen, wo NumPy fehlt) |
+
+Alle drei Werkzeuge werden von den Build-Skripten nach dem Export aufgerufen.
