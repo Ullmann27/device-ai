@@ -551,7 +551,7 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
   - Rot ist nur der letzte Befehl `motion_quality_gate.py` mit **507** Befunden (#87: 587). Das entspricht exakt der lokalen Messung.
   - Kein `SCRIPT ERROR`, kein `Traceback`. Erläuternder Kommentar auf #89 gepostet.
 - **Gemeinsame lokale Messung** (lokaler Branch aus #87 + #89 + Cherry-Pick von #88, Godot 4.7.2): 85/85 Gruppen, Gate 507, Befundliste zeilengleich mit #89 allein.
-  - Logs: `evidence/logs/check_prototype_combined_87_88_89.log`, `motion_gate_combined_87_88_89.log`.
+  - Logs: `evidence/logs/check_prototype_combined_87_88_89.txt`, `motion_gate_combined_87_88_89.txt`.
 
 ### 14.14 Todes-Clip der Company-Riggs geerdet: Draft-PR [#90](https://github.com/Ullmann27/Imperathen/pull/90)
 
@@ -576,7 +576,7 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 | Offline, 54 GLBs (`evidence/metrics/death_ground_contact_54_glb.json`) | Durchdringung 0,163–0,214 m → 0; Gleiten Grenz-NPCs 0,8–1,3 cm, Meshy 0,3–1,0 cm, Kompanie 1,6–2,1 cm, Dorf 1,5–3,9 cm (vorher 0,79–1,05 m) |
 | Engine, Todes-Clip | Durchdringung ≤ 0,28 cm; Gleiten Meshy ≤ 1,13 cm, Grenz-NPCs 25 von 28 ≤ 1,5 cm, Kompanie 1,6–2,0 cm, Dorf bis 3,8 cm |
 | Volle Suite mit #87 + #88 + #89 | 85/85 in allen drei Läufen |
-| Motion-Gate | 507 → 416 (Erdung) → **382** (Import ohne Optimierer); in beiden Schritten **kein neuer Befund**. Logs: `evidence/logs/motion_gate_combined_plus_death_*.log` |
+| Motion-Gate | 507 → 416 (Erdung) → **382** (Import ohne Optimierer); in beiden Schritten **kein neuer Befund**. Logs: `evidence/logs/motion_gate_combined_plus_death_*.txt`, Suite: `check_prototype_combined_plus_death_pr90.txt` |
 | Nebenwirkungen | alle anderen Clip-Werte gleich oder besser, außer `villager_3` gather 2,22 → 2,24 cm (schon vorher über der Grenze); importierte Szenen +1,08 MB (+3,5 %) |
 | Bilder | `evidence/godot_frames/21_godot_todesclip_geerdet_vorher_nachher.jpg`: vier Modelle bei 0/35/55/75/100 %. Vorher sind die Füße zur Fallmitte vom Boden abgeschnitten und rutschen nach vorn; nachher stehen sie und der Körper kippt um sie |
 
