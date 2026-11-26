@@ -343,6 +343,34 @@
     "keine menschliche Sichtabnahme",
     "kein Fold7-Test"
    ]
+  },
+  {
+   "gate_id": "FRONTIER-SKIRT-SEAM-PR91",
+   "source_sha": "Imperathen 293d4b6 on 037ac6e (measured on combined #87+#88+#89+#90)",
+   "input_hashes": {
+    "report": "evidence/metrics/frontier_skirt_seam_28_glb.json"
+   },
+   "engine_version": "Godot 4.7.2.stable.official.ed1daf0bf",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "scenario_id": "frontier skirt tearing on own clips; full suite; motion gate; Godot frames",
+   "steps": [
+    "variant measurement (hero rule, tunic smoothing, local seam smoothing)",
+    "smooth_frontier_skirt_seam.py on 28 GLBs",
+    "check_prototype full",
+    "motion gate"
+   ],
+   "expected": "skirt tearing 0 without new body-through-cloth",
+   "observed": "10 GLBs changed, tearing 637/222/93 -> 0, body clearance unchanged; suite 85/85; frontier skin_edge_violations 31864 -> 23336; gate 382 -> 372, no new blocker",
+   "status": "PASS mit Befund",
+   "run_url": null,
+   "artifact_url": null,
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "unresolved": [
+    "Tunika-Risse (Abwaegung gegen Koerper-Durchdringung)",
+    "vorbestehend 8.2 cm Koerper durch Rock bei Zivilist/Alter LOD0",
+    "keine menschliche Sichtabnahme",
+    "kein Fold7-Test"
+   ]
   }
  ]
 }

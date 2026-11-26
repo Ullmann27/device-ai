@@ -1,0 +1,342 @@
+[
+  {
+    "path": "prototype/assets/characters/frontier_archer_0.glb",
+    "sha256_before": "0985484d3ba0a0a0fc3848e3d047070fb846eac6441b287a8e119637704a7481",
+    "skirt_vertices": 295,
+    "before": {
+      "tearing": 637,
+      "body_through_skirt_m": 0.0
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "smoothed_welded_vertices": 19,
+    "torn_vertices_before": 6,
+    "sha256_after": "e323ff747ac2f3ee63d70dd8291be7d653dbf1f23bb545f4a842a816793cb801"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_1.glb",
+    "sha256_before": "6e8a06d69e355e9fca99287ef36157df7ff458e0b9691bba65f0a7b057c70261",
+    "skirt_vertices": 124,
+    "before": {
+      "tearing": 222,
+      "body_through_skirt_m": 0.0
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "smoothed_welded_vertices": 13,
+    "torn_vertices_before": 4,
+    "sha256_after": "adfc27b506491a60c205a1fdc96cda3c6a0068ae68917e13d18dde5e59aaefc2"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_2.glb",
+    "sha256_before": "00471940e58c9e850e1592668fe08a01b79d71e3c5cc6af5ded452f86c6e55be",
+    "skirt_vertices": 41,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_3.glb",
+    "sha256_before": "5039526b1defe72dc87b6a346190f117ccb1b8798d8e8566c2179222bfcbf6da",
+    "skirt_vertices": 14,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_man_0.glb",
+    "sha256_before": "a9ee37ad48027189529284115276c8ad94c2cf8e025531202408a93156c73828",
+    "skirt_vertices": 295,
+    "before": {
+      "tearing": 93,
+      "body_through_skirt_m": 0.08227024244351026
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0822702424435103
+    },
+    "smoothed_welded_vertices": 14,
+    "torn_vertices_before": 4,
+    "sha256_after": "ae5d4eab78cedf837e886df32288a2b28924a23adbcda23d4932b85423977e3b"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_man_1.glb",
+    "sha256_before": "56458ad17f4f6e84729cd696414e1f7c26c776c44c93b6b24cc214281aadb55d",
+    "skirt_vertices": 122,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.07850376270136564
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_man_2.glb",
+    "sha256_before": "d31c64fe417f039b8d0bdb10211e31ae9c441a681e940871de0a1e4b789ee105",
+    "skirt_vertices": 43,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.08449843766181969
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_man_3.glb",
+    "sha256_before": "b0de0a35e3dcc2763f0ad888108f0009e09e41b6f310ef9665cde74bca03465a",
+    "skirt_vertices": 19,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0933410291845978
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_woman_0.glb",
+    "sha256_before": "24629494474116ac6049cc7c26bbb5d4defc495cd3e22e6ed7e9763253a1e787",
+    "skirt_vertices": 298,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.2333323255469783
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_woman_1.glb",
+    "sha256_before": "35183e840746c2dfcc232e8042f4e3ed83c771e9a6ed3f0d8cb47e94075fc002",
+    "skirt_vertices": 126,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.23154538062506233
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_woman_2.glb",
+    "sha256_before": "e2a9e06a12e3fc9e9b0db34ccc26df3a49b7cb215819e61663d0f955bb34034e",
+    "skirt_vertices": 45,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.19100078067425957
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_woman_3.glb",
+    "sha256_before": "1f650f51df44a3b7416f1a3609aed5d80612c5990faf080cc6081bddc23f71e5",
+    "skirt_vertices": 19,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.08997666187457762
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_elder_0.glb",
+    "sha256_before": "a15333f72696bed92e3bd826c34778a4e4ea51ce81735fc941dc299674e151bd",
+    "skirt_vertices": 295,
+    "before": {
+      "tearing": 93,
+      "body_through_skirt_m": 0.08227024244351026
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0822702424435103
+    },
+    "smoothed_welded_vertices": 14,
+    "torn_vertices_before": 4,
+    "sha256_after": "0297c8c921eace6387486a819490d573c606688327a38a6486cf7558bdd00993"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_elder_1.glb",
+    "sha256_before": "c91d6950250d8866daa63c52f2794b7a3d2fe7aef8b91cecdc49b7f919425d36",
+    "skirt_vertices": 122,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.07850376270136564
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_elder_2.glb",
+    "sha256_before": "3f999d0d125d0a81655d3c08ad52aff97713a7848121e7586ebb2275c7198ebc",
+    "skirt_vertices": 43,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.08449843766181969
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_elder_3.glb",
+    "sha256_before": "2b1206f4a6c770581e44c7efa05ceb28cdf95a787f19788e9910139a0b7679b4",
+    "skirt_vertices": 19,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0933410291845978
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_0.glb",
+    "sha256_before": "043095cce9ea710ca2b9b117b8dd8f09ca5382e1dc24de151110b4552c03d777",
+    "skirt_vertices": 295,
+    "before": {
+      "tearing": 637,
+      "body_through_skirt_m": 0.0
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "smoothed_welded_vertices": 19,
+    "torn_vertices_before": 6,
+    "sha256_after": "fb93f36cf2628b548ea5862b4bda2d67354fc299b4c95731ee7c92f88f82ef9b"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_1.glb",
+    "sha256_before": "6e80c91f2dc077bbff1ed0c25243f718dcbeacf5126f5f9d644a493adfd8a0b7",
+    "skirt_vertices": 124,
+    "before": {
+      "tearing": 222,
+      "body_through_skirt_m": 0.0
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "smoothed_welded_vertices": 13,
+    "torn_vertices_before": 4,
+    "sha256_after": "e6eef53a7a48fa84d657e4db29aef5719b50c74b1f5d06e071090ed5e01b3cac"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_2.glb",
+    "sha256_before": "0eb66953ab9de059297b0b0c313d9c87658967e8daa1eeb8f15d9f450294c6e8",
+    "skirt_vertices": 41,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_3.glb",
+    "sha256_before": "c174c6e83af2f410956e05c234146e5016bee3b0ad9a4da8f500984409093490",
+    "skirt_vertices": 14,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_0.glb",
+    "sha256_before": "29b02ef7574d24463e2faa63e7c19596b76bc5442141da152e3ddf0aa618c5bc",
+    "skirt_vertices": 295,
+    "before": {
+      "tearing": 637,
+      "body_through_skirt_m": 0.0
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "smoothed_welded_vertices": 19,
+    "torn_vertices_before": 6,
+    "sha256_after": "eb6397c4011eb911f120969b279bfa92ff769b84abd4c3b90d6e03188fe354ce"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_1.glb",
+    "sha256_before": "916bb6cf1e8e60bc0f7852e9a4d73ec40402678749f5495693f1fb4f2f1cd313",
+    "skirt_vertices": 124,
+    "before": {
+      "tearing": 222,
+      "body_through_skirt_m": 0.0
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "smoothed_welded_vertices": 13,
+    "torn_vertices_before": 4,
+    "sha256_after": "f4ee0ae9018f6bc048ee4135ad60acfd1f7f7efa5ff7c70246d12e4df494c3bb"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_2.glb",
+    "sha256_before": "310fc1035019c7f1a8a2072c5a6bf9fc6aaea1c8b25885ff1d00b48213593347",
+    "skirt_vertices": 41,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_3.glb",
+    "sha256_before": "c41652d5da74af7308ad6162924d8c80b33cdd991b635f2c8293717c733148d7",
+    "skirt_vertices": 14,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_0.glb",
+    "sha256_before": "92606770eef86ea574a79d9b88c8a1e1b049cf3da260afbc7bdc6e38e354b8f6",
+    "skirt_vertices": 295,
+    "before": {
+      "tearing": 637,
+      "body_through_skirt_m": 0.0
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "smoothed_welded_vertices": 19,
+    "torn_vertices_before": 6,
+    "sha256_after": "f954e4bd89f86fd496dbf5accf9af6157236d2d331a035e5ad02c03e1964ed1e"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_1.glb",
+    "sha256_before": "0b215daafd65a32461890537459cae0636c5df0a6233ee2be5ef6d6d24bb438d",
+    "skirt_vertices": 124,
+    "before": {
+      "tearing": 222,
+      "body_through_skirt_m": 0.0
+    },
+    "after": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "smoothed_welded_vertices": 13,
+    "torn_vertices_before": 4,
+    "sha256_after": "ab9e8d53945ec8211573e426f79156e0d26e5b5b855e7d9bd00470b59d078f58"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_2.glb",
+    "sha256_before": "cc76b36192ab53d054c5ab68d6c1cc2cebc290443af887773fd474ebda0908ff",
+    "skirt_vertices": 41,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "unchanged": "skirt does not tear"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_3.glb",
+    "sha256_before": "44629e1ea30a487d9b443ea5b37c39fb3f424bc6f1bb07b30f6daaa6138a5b58",
+    "skirt_vertices": 14,
+    "before": {
+      "tearing": 0,
+      "body_through_skirt_m": 0.0
+    },
+    "unchanged": "skirt does not tear"
+  }
+]

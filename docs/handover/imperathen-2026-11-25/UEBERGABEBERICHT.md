@@ -14,8 +14,9 @@ Dieser Bericht trennt strikt zwischen **in dieser Sitzung ausgeführt und gemess
 | Draft-PR [#88](https://github.com/Ullmann27/Imperathen/pull/88): verschmolzene Hände vom Rock trennen (setzt auf #87 auf) | überdehnte Tunika-Kanten LOD 0 2 925 → 152, Spitze 0,674 → 0,072 m; echte Godot-Bilder aller Schläge und Tritte vorher/nachher (`evidence/godot_frames/17_*`) |
 | Draft-PR [#89](https://github.com/Ullmann27/Imperathen/pull/89): schwebende Militär-NPCs geerdet (setzt auf #87 auf) | CI wie #87: 85/85 Gruppen, Stadt-/Jungen-Tests grün, rot nur das Motion-Gate, jetzt **507** statt 587 (§14.13) |
 | Draft-PR [#90](https://github.com/Ullmann27/Imperathen/pull/90): Todes-Clip der 54 Company-Exporte geerdet (setzt auf #89 auf) | Sohlen-Durchdringung 16–21 cm → 0 (Engine ≤ 0,28 cm), Gleiten 0,8–1,05 m → 0,3–3,9 cm. Gemeinsam mit #87 + #88 + #89 gemessen: Suite 85/85, **Motion-Gate 507 → 382**, kein neuer Befund (§14.14). CI läuft |
-| Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln, Bein-IK und Hüftschwenk im Todes-Clip |
-| Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88, #89 und #90. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json`. 5. #90: Abschalten von Godots Keyframe-Optimierer für 54 Modelle (+3,5 % Importgröße) annehmen; Todes-Pose der Kompanie für das verbleibende Gleiten neu gestalten |
+| Draft-PR [#91](https://github.com/Ullmann27/Imperathen/pull/91): gerissene Rocknaht der Grenz-NPCs (setzt auf #90 auf) | 10 GLBs, Rockrisse → 0 ohne Durchdringung; mit #87–#90 gemessen: Suite 85/85, **Gate 382 → 372**, kein neuer Befund (§14.15). CI läuft |
+| Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln, Bein-IK und Hüftschwenk im Todes-Clip, Helden-Rockregel und Tunika-Glättung für die Grenz-NPCs |
+| Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88, #89 und #90. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json`. 5. #90: Abschalten von Godots Keyframe-Optimierer für 54 Modelle (+3,5 % Importgröße) annehmen; Todes-Pose der Kompanie für das verbleibende Gleiten neu gestalten. 6. Tunika der Grenz-NPCs: Risse gegen häufigeres Durchscheinen des Körpers abwägen oder Künstler-Pass (§14.15) |
 
 Die folgende Tabelle beschreibt den Stand vor der Nachtschicht. Der Hinweis dort, ein Push nach Imperathen sei nicht erledigt, ist überholt.
 
@@ -595,3 +596,33 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 - Kein Neuaufbau mit Blender 4.3 (lokal nur 4.0.2; die committeten GLBs stammen aus glTF-IO v4.3.47).
 - Keine Sichtabnahme durch Menschen, kein Fold7-Test.
 - Werkzeuge: `werkzeuge/godot_death_capture.gd`, `compare_glb.py`, `hz_sweep.py`, `engine_emul.py`, `zz_dump_track.gd`.
+
+### 14.15 Gerissene Rocknaht der Grenz-NPCs: Draft-PR [#91](https://github.com/Ullmann27/Imperathen/pull/91)
+
+**Befund:**
+- Die Hautkanten-Befunde von `frontier_people` (31 864 Verletzungen) stammen aus Rock und Tunika.
+- Die Grenz-Exporte tragen noch den älteren Punkt-Klassifikator des Helden-Rocks: Benachbarte Vertices der Mittelnaht hängen vollständig an gegenüberliegenden Oberschenkeln.
+- `build_hero.py` korrigiert das inzwischen beim Helden (`fit_skirt_weights`, `fit_tunic_joint_weights`). Die Grenz-Exporte wurden danach nie neu gebaut.
+
+**Messung der Varianten** (Werkzeuge `werkzeuge/cloth_variants.py`, `tunic_variants.py`, `local_variants.py`):
+
+| Variante | Risse | Durchdringung |
+|---|---|---|
+| Helden-Rockregel (0,45) | 0 | Beine bis **11 cm** durch den Saum (2 989 Stichproben); im Godot-Bild sichtbar → **verworfen** |
+| Helden-Rockregel mit 0,7 / 0,9 | 0 | 5,6 / 1,1 cm → verworfen |
+| Tunika-Glättung global / lokal | Tunika 0 | Körper öfter durch die Ärmel (Legionär 1 408 → 1 660–2 069, Zivilist 959 → 1 618–2 078 Stichproben > 1 cm) → **nicht übernommen**, Abwägung offen |
+| **Rock: lokale Nahtglättung** (reißende Vertices + 1 Ring, 4 Durchgänge, Mischung 0,35) | **0** | **unverändert** → übernommen |
+
+**Ergebnis #91:**
+- Geändert sind 10 von 28 Exporten mit je 13–19 Rock-Vertices. Rockrisse 637 / 222 / 93 → 0 (`evidence/metrics/frontier_skirt_seam_28_glb.json`).
+- Gemeinsam mit #87 + #88 + #89 + #90 gemessen:
+  - Suite 85/85;
+  - `skin_edge_violations` 31 864 → 23 336;
+  - **Gate 382 → 372**: alle zehn `walk_run_stop`-Hautbefunde entfallen, kein Clip schlechter, kein neuer Befund.
+  - Logs: `evidence/logs/*_combined_plus_pr90_pr91.txt`.
+- Bilder: `evidence/godot_frames/22_godot_grenz_rocknaht_vorher_heldenregel_naht.jpg` (vorher / verworfene Helden-Regel / übernommen). Werkzeug: `werkzeuge/godot_cloth_capture.gd`.
+
+**Offen:**
+- Die Tunika-Risse bleiben; sie tragen die übrigen Hautbefunde.
+- Vorbestehend und unverändert: Bei Zivilist und Altem (LOD 0) tritt der Körper bis 8,2 cm durch den Rock.
+- Keine menschliche Sichtabnahme, kein Fold7-Test.
