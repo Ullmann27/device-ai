@@ -683,3 +683,11 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 | + #91 | 372 | läuft |
 | + #92 | 359 | läuft |
 | + #93 | 355 | läuft |
+
+### 14.18 Entscheidungsgrundlage Tunika der Grenz-NPCs (nicht umgesetzt)
+
+`evidence/godot_frames/24_godot_grenz_tunika_abwaegung_original_vs_glaettung.jpg` zeigt in Godot 4.7.2 den Export (oben) neben einer **temporären** Variante mit lokaler Tunika-Glättung (unten; reißende Vertices + 1 Ring, 2 Durchgänge). Die Variante ist nicht committet.
+
+- **Schussposition des Legionärs:** Die Tunika reißt an der Achsel in rote Splitter. Die Glättung verringert das nur leicht, während der Körper laut Messung öfter durch die Ärmel scheint (§14.15).
+- **Vorbestehender Zusatzbefund in derselben Pose (Seitenansicht):** Einzelne Nieten des `FrontierRomanKit` schweben unter dem Arm frei in der Luft. Die Gewichtung des Kits braucht einen Künstler-Pass.
+- **Empfehlung:** Tunika und Kit im Originalnetz mit sauberer Ärmel-/Achselgewichtung neu wichten (Künstler-Pass) statt weiter nachträglich zu glätten. Werkzeug: `werkzeuge/godot_tunic_tradeoff_capture.gd`.
