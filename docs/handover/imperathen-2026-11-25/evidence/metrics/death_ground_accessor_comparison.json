@@ -1,0 +1,869 @@
+{
+ "all_ok": true,
+ "files": [
+  {
+   "glb": "characters/frontier_archer_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_archer_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_archer_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_archer_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_civilian_man_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_civilian_man_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_civilian_man_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_civilian_man_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_civilian_woman_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_civilian_woman_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_civilian_woman_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_civilian_woman_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_elder_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_elder_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_elder_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_elder_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_legionary_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_legionary_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_legionary_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_legionary_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_officer_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_officer_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_officer_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_officer_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_spearman_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_spearman_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_spearman_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "characters/frontier_spearman_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "meshy/characters/unit_germanic_axe_fighter_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "meshy/characters/unit_germanic_axe_fighter_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "meshy/characters/unit_germanic_axe_fighter_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "meshy/characters/unit_germanic_axe_fighter_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "meshy/characters/unit_roman_signifer_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "meshy/characters/unit_roman_signifer_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "meshy/characters/unit_roman_signifer_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "meshy/characters/unit_roman_signifer_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "soldiers/archer_mid.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "soldiers/archer_near.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "soldiers/heavy_mid.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "soldiers/heavy_near.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "soldiers/officer_mid.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "soldiers/officer_near.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "soldiers/spear_mid.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "soldiers/spear_near.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/heavy_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/heavy_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/officer_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/officer_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/spear_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/spear_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/villager_0.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/villager_1.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/villager_2.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  },
+  {
+   "glb": "village_characters/villager_3.glb",
+   "ok": true,
+   "binary_prefix_identical": true,
+   "accessors_prefix_identical": true,
+   "bufferviews_prefix_identical": true,
+   "other_json_identical": true,
+   "death_new_samplers": 1,
+   "marker": true,
+   "changed_channels": [
+    [
+     "Pelvis",
+     "translation"
+    ]
+   ]
+  }
+ ]
+}

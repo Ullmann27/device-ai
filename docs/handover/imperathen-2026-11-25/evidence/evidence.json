@@ -272,6 +272,77 @@
    "unresolved": [
     "Geraetekosten auf Fold7 nicht gemessen"
    ]
+  },
+  {
+   "gate_id": "PR89-CI-FOLD7",
+   "source_sha": "e5bf8b9a0d6159368b68c513d59531366820af44",
+   "input_hashes": {},
+   "engine_version": "Godot 4.7.2.stable.official.ed1daf0bf",
+   "platform": "GitHub Actions ubuntu runner (CI), not Fold7",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "artifact_url": null,
+   "scenario_id": "Workflow real-city-arm64-qa-apk",
+   "steps": [
+    "CI run 45721459886"
+   ],
+   "expected": "check_prototype 85/85, motion gate reduced vs #87",
+   "observed": "85 PASS, city/youth checks PASS; motion gate BLOCKED 507 (#87: 587)",
+   "status": "PASS mit vorbestehendem Gate-Befund",
+   "run_url": "https://github.com/Ullmann27/Imperathen/actions/runs/45721459886",
+   "unresolved": [
+    "globales Motion-Gate rot (vorbestehend)"
+   ]
+  },
+  {
+   "gate_id": "COMBINED-87-88-89",
+   "source_sha": "local: #87 + #89 + cherry-pick #88 (91f082c)",
+   "input_hashes": {},
+   "engine_version": "Godot 4.7.2.stable.official.ed1daf0bf",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "artifact_url": null,
+   "scenario_id": "tools/check_prototype.py --keep-going; tools/motion_quality_gate.py",
+   "steps": [
+    "Godot import",
+    "full suite",
+    "motion gate"
+   ],
+   "expected": "kein Konflikt der drei PRs",
+   "observed": "85/85; gate 507, blocker list identical to #89 alone",
+   "status": "PASS",
+   "run_url": null,
+   "unresolved": []
+  },
+  {
+   "gate_id": "DEATH-GROUND-CONTACT-PR90",
+   "source_sha": "Imperathen 4b4d12f + 037ac6e on e5bf8b9 (measured on combined #87+#88+#89)",
+   "input_hashes": {
+    "glb_reports": "evidence/metrics/death_ground_contact_54_glb.json"
+   },
+   "engine_version": "Godot 4.7.2.stable.official.ed1daf0bf",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "artifact_url": null,
+   "scenario_id": "death clip of 54 company-skeleton exports; full suite and motion gate",
+   "steps": [
+    "ground_death_clip.py on 54 GLBs",
+    "accessor comparison",
+    "Godot import (optimizer off)",
+    "check_prototype full",
+    "motion gate",
+    "Godot frames 0/35/55/75/100 %"
+   ],
+   "expected": "no sole penetration, slip reduced, no new gate blocker",
+   "observed": "offline penetration 0.163-0.214 m -> 0, slip 0.79-1.05 m -> 0.3-3.9 cm; engine penetration <= 0.28 cm; suite 85/85; gate 507 -> 416 -> 382, no new blocker; imported size +3.5 %",
+   "status": "PASS mit Befund",
+   "run_url": null,
+   "unresolved": [
+    "Kompanie/Dorf-Gleiten 1.6-3.8 cm > 1.5 cm (gestaltetes Knie, Fersenrollen)",
+    "Endlage 0.9 m weiter hinten",
+    "kein Blender-4.3-Neuaufbau",
+    "keine menschliche Sichtabnahme",
+    "kein Fold7-Test"
+   ]
   }
  ]
 }

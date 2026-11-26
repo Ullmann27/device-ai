@@ -12,8 +12,10 @@ Dieser Bericht trennt strikt zwischen **in dieser Sitzung ausgeführt und gemess
 |---|---|
 | Draft-PR [#87](https://github.com/Ullmann27/Imperathen/pull/87): Sohlenkalibrierung + `village_person_test` | gegen `integration/imperathen-unified-20261125`. CI: Workflow „isolated installable ARM64 QA“ **grün** (vorher rot). Im Fold7-Workflow sind 85/85 `check_prototype`-Gruppen und alle Stadt-/Jungen-Tests grün; rot ist nur das vorbestehende globale Motion-Gate (587/61) |
 | Draft-PR [#88](https://github.com/Ullmann27/Imperathen/pull/88): verschmolzene Hände vom Rock trennen (setzt auf #87 auf) | überdehnte Tunika-Kanten LOD 0 2 925 → 152, Spitze 0,674 → 0,072 m; echte Godot-Bilder aller Schläge und Tritte vorher/nachher (`evidence/godot_frames/17_*`) |
-| Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln |
-| Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json` |
+| Draft-PR [#89](https://github.com/Ullmann27/Imperathen/pull/89): schwebende Militär-NPCs geerdet (setzt auf #87 auf) | CI wie #87: 85/85 Gruppen, Stadt-/Jungen-Tests grün, rot nur das Motion-Gate, jetzt **507** statt 587 (§14.13) |
+| Draft-PR [#90](https://github.com/Ullmann27/Imperathen/pull/90): Todes-Clip der 54 Company-Exporte geerdet (setzt auf #89 auf) | Sohlen-Durchdringung 16–21 cm → 0 (Engine ≤ 0,28 cm), Gleiten 0,8–1,05 m → 0,3–3,9 cm. Gemeinsam mit #87 + #88 + #89 gemessen: Suite 85/85, **Motion-Gate 507 → 382**, kein neuer Befund (§14.14). CI läuft |
+| Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln, Bein-IK und Hüftschwenk im Todes-Clip |
+| Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88, #89 und #90. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json`. 5. #90: Abschalten von Godots Keyframe-Optimierer für 54 Modelle (+3,5 % Importgröße) annehmen; Todes-Pose der Kompanie für das verbleibende Gleiten neu gestalten |
 
 Die folgende Tabelle beschreibt den Stand vor der Nachtschicht. Der Hinweis dort, ein Push nach Imperathen sei nicht erledigt, ist überholt.
 
@@ -494,15 +496,17 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 
 ### 14.10 Empfehlungen an Fable 5.2 (aktualisiert)
 
-1. #87 und #88 unabhängig prüfen. Insbesondere Bild 17 und eine eigene Sichtabnahme in Bewegung, auch in Nahaufnahme der Hand/Rock-Naht. Danach über Merge in `integration/imperathen-unified-20261125` entscheiden lassen, nicht nach `main`.
+1. #87, #88, #89 und #90 unabhängig prüfen. Insbesondere die Bilder 17, 19, 20 und 21 und eine eigene Sichtabnahme in Bewegung, auch in Nahaufnahme der Hand/Rock-Naht und eines Todes in der Formation. Danach über Merge in `integration/imperathen-unified-20261125` entscheiden lassen, nicht nach `main`. Reihenfolge: #87 → #89 → #90; #88 auf #87.
 2. Projektinhaber-Entscheidung zur ersetzten Sohlen-Schranke einholen (#87).
-3. Motion-Gate (587):
+3. Motion-Gate (587; mit #89 507, mit #90 382; §14.13/§14.14):
    - Die Familien `frontier_people`, `battle_rigs`, `meshy_gear`/`service_gear`, `village_navigation` und `raid_motion` haben echte Messbefunde (Fußgleiten, Durchdringung, Übergangssprünge). Sie gehören in eigene Fix-PRs.
    - 84 Befunde betreffen nicht klassifizierte Ressourcen und Skripte. Dafür braucht es eine Vertragsentscheidung, wie in der CI erzeugte Assets (Stadt, Junge) registriert werden, ohne in Workflows ohne Staging „missing“ zu melden.
    - Die 12 fehlenden menschlichen Sichtprüfungen können nur Menschen liefern.
 4. Künstler-Pass am Originalnetz des Jungen: Fuß-Bindpose (Sandalen ca. 80° verrollt), eingeschmolzener Griffrest an der rechten Hand, saubere Trennung von Hand und Rock. Neues Original sichern und Laufzeitableitungen neu erzeugen.
 5. Epochenkonflikt der Stadt (Kolosseum in 58 v. Chr.) mit dem Kanon klären.
 6. Mein Aufnahmegerüst (`werkzeuge/godot_strikes_capture.gd`) als festen Bild-Regressionstest übernehmen, mit abgeschlossener Überblendung.
+7. Todes-Pose der Kompanie (`art/soldiers/build.py`) neu gestalten, damit beide Sohlen beim Einknicken stehen bleiben, und mit Blender 4.3 neu aufbauen. Der Nachbearbeitungsschritt aus #90 bleibt dabei gültig und idempotent.
+8. Prüfen, ob Godots Keyframe-Optimierer auch andere kontaktkritische Clips verfälscht (Werkzeug: `werkzeuge/zz_dump_track.gd`).
 
 ### 14.11 Schwebende Militär-NPCs geerdet: Draft-PR [#89](https://github.com/Ullmann27/Imperathen/pull/89)
 
@@ -524,7 +528,7 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 - Beides sind Authoring-Aufgaben an den Clips.
 - Werkzeuge: `werkzeuge/frontier_contact_diag.gd`, `werkzeuge/godot_legionary_capture.gd`.
 
-**Gate-Stand gesamt, wenn #87 + #88 + #89 zusammengeführt werden:** 507 Befunde. #88 ändert nichts am Gate, #89 ist unabhängig von #88. Eine gemeinsame Messung aller drei habe ich nicht ausgeführt.
+**Gate-Stand gesamt, wenn #87 + #88 + #89 zusammengeführt werden:** 507 Befunde. #88 ändert nichts am Gate, #89 ist unabhängig von #88. Die gemeinsame Messung aller drei ist inzwischen ausgeführt (§14.13).
 
 ### 14.12 Weitere Gate-Befunde analysiert, nicht geändert (Mess-Spezifikation)
 
@@ -538,3 +542,56 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
    - Der Sprung entsteht demnach im Missions-Navigationsfluss (Pause, Fortsetzen, Ankunft). Außerdem misst die Metrik Weltpositionen Frame-zu-Frame einschließlich der Körperbewegung; bei Laufgeschwindigkeit sind das bereits etwa 0,06–0,07 m pro Frame, gleich der Grenze von 0,06 m.
    - **Empfehlung:** Metrik relativ zur Wurzelbewegung definieren und den Navigationsfall gezielt nachstellen.
 3. **Rückzugs-Gleiten** (neu messbar durch #89): 0,050 m (Grenze 0,015 m). Der Rückzug wird im Personen-Pfad mit Geschwindigkeit 0 abgespielt, obwohl er ein Gang-Clip ist; vermutlich derselbe Mess-Spezifikationspunkt wie unter 1.
+
+### 14.13 CI von #89 und gemeinsame Messung #87 + #88 + #89
+
+- **CI #89** (`e5bf8b9`, Lauf [45721459886](https://github.com/Ullmann27/Imperathen/actions/runs/45721459886)):
+  - `headless-regressions`, `actual-city-visual-review` und `signed-independent-arm64-city` sind grün.
+  - In `real-city-arm64-qa-apk` liefen alle 85 `check_prototype`-Gruppen mit `exit=0`, ebenso `ROMAN_CITY_REAL_ASSET_PASS`, `ROMAN_CITY_REAL_WALK_PASS`, `YOUTH_MOCAP_RUNTIME_PASS` und `CITY_CROWD_LAYOUT_PASS`.
+  - Rot ist nur der letzte Befehl `motion_quality_gate.py` mit **507** Befunden (#87: 587). Das entspricht exakt der lokalen Messung.
+  - Kein `SCRIPT ERROR`, kein `Traceback`. Erläuternder Kommentar auf #89 gepostet.
+- **Gemeinsame lokale Messung** (lokaler Branch aus #87 + #89 + Cherry-Pick von #88, Godot 4.7.2): 85/85 Gruppen, Gate 507, Befundliste zeilengleich mit #89 allein.
+  - Logs: `evidence/logs/check_prototype_combined_87_88_89.log`, `motion_gate_combined_87_88_89.log`.
+
+### 14.14 Todes-Clip der Company-Riggs geerdet: Draft-PR [#90](https://github.com/Ullmann27/Imperathen/pull/90)
+
+**Befund:**
+- Die Durchdringungs- und Gleitbefunde von `frontier_people`, `legacy_people`, `battle_rigs` und `meshy_people` stammen fast vollständig aus dem Todes-Clip: Sohlen bis 21 cm im Boden, bis 1,05 m Gleiten.
+- Ursache ist die feste Beckenabsenkung von 0,715 m in der gemeinsamen Todes-Pose (`art/soldiers/build.py`). Sie ignoriert die gehäuteten Füße. Alle 54 Company-Exporte übernehmen sie.
+- Der Held hat dafür bereits eine Blender-Korrektur (`fit_death_ground_contact`). Team A hatte den Meshy-Teil als offen dokumentiert (`docs/25_team_a/CONTACT_GROUNDING_CONTINUATION.md`, Punkt 2).
+
+**Lösung (2 Commits auf #89):**
+1. `tools/characters/ground_death_clip.py` stellt das exportierte GLB auf der CPU in Pose (lineares Blend-Skinning, glTF-Interpolation) und ersetzt nur den Sampler `death/Pelvis/translation` (240 Hz).
+   - Die tiefste Oberfläche bleibt auf dem Standboden.
+   - Kontaktpunkte im 2-cm-Band bleiben so gut stehen, wie es eine starre Verschiebung erlaubt (kleinster umschließender Kreis).
+   - Gliedmaßen, Netze und alle anderen Clips bleiben bytegleich (Zugriffsvergleich für alle 54 Dateien: `evidence/metrics/death_ground_accessor_comparison.json`).
+   - Alle fünf Blender-Exportstellen rufen den Schritt auf. Blenders eigenes Python erzeugt damit ein bytegleiches GLB.
+   - Ein Test sichert Marker, Kanal, Import-Einstellung und Grenzwerte.
+2. Godots Keyframe-Optimierer (Standard beim Szenenimport) hatte 267 von 289 neuen Schlüsseln verworfen und das Becken zur Fallmitte um 1,3 cm abgesenkt (Nachweis: `werkzeuge/zz_dump_track.gd`). Die `.import`-Dateien der 54 Exporte schalten ihn deshalb ab. Der Import behält dann den 30-fps-Bake auf 0,3 mm genau.
+
+**Ergebnis:**
+
+| Messung | Wert |
+|---|---|
+| Offline, 54 GLBs (`evidence/metrics/death_ground_contact_54_glb.json`) | Durchdringung 0,163–0,214 m → 0; Gleiten Grenz-NPCs 0,8–1,3 cm, Meshy 0,3–1,0 cm, Kompanie 1,6–2,1 cm, Dorf 1,5–3,9 cm (vorher 0,79–1,05 m) |
+| Engine, Todes-Clip | Durchdringung ≤ 0,28 cm; Gleiten Meshy ≤ 1,13 cm, Grenz-NPCs 25 von 28 ≤ 1,5 cm, Kompanie 1,6–2,0 cm, Dorf bis 3,8 cm |
+| Volle Suite mit #87 + #88 + #89 | 85/85 in allen drei Läufen |
+| Motion-Gate | 507 → 416 (Erdung) → **382** (Import ohne Optimierer); in beiden Schritten **kein neuer Befund**. Logs: `evidence/logs/motion_gate_combined_plus_death_*.log` |
+| Nebenwirkungen | alle anderen Clip-Werte gleich oder besser, außer `villager_3` gather 2,22 → 2,24 cm (schon vorher über der Grenze); importierte Szenen +1,08 MB (+3,5 %) |
+| Bilder | `evidence/godot_frames/21_godot_todesclip_geerdet_vorher_nachher.jpg`: vier Modelle bei 0/35/55/75/100 %. Vorher sind die Füße zur Fallmitte vom Boden abgeschnitten und rutschen nach vorn; nachher stehen sie und der Körper kippt um sie |
+
+**Ehrlich offen:**
+- Die liegende Endlage liegt jetzt etwa 0,9 m weiter hinten (der Körper kippt um die Füße statt die Füße unter ihm wegzuschieben). Das ist sichtbar, physikalisch plausibel, aber eine Verhaltensänderung, etwa in engen Formationen.
+- Kompanie und Dorf überschreiten die 1,5-cm-Gleitgrenze weiterhin. Ursachen:
+  - das gestaltete Einknicken des rechten Knies schiebt eine Sohle gegen die andere;
+  - die tragende Sohle rollt über die Ferse.
+
+  Geprüft und **verworfen**:
+  - zweiknochige Bein-IK: Kniewinkel bis 39° geändert, Knie bis 2 cm im Boden;
+  - Bein-IK nur am gebeugten Bein mit 10°-Deckel: Dorf bis 5,5 cm;
+  - reiner Hüftschwenk: Dorf 6,4 cm.
+
+  Richtig wäre eine neu gestaltete Todes-Pose in `art/soldiers/build.py` mit Neuaufbau unter Blender 4.3.
+- Kein Neuaufbau mit Blender 4.3 (lokal nur 4.0.2; die committeten GLBs stammen aus glTF-IO v4.3.47).
+- Keine Sichtabnahme durch Menschen, kein Fold7-Test.
+- Werkzeuge: `werkzeuge/godot_death_capture.gd`, `compare_glb.py`, `hz_sweep.py`, `engine_emul.py`, `zz_dump_track.gd`.

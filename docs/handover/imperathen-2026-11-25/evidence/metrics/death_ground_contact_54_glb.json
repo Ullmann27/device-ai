@@ -1,0 +1,1298 @@
+[
+  {
+    "path": "prototype/assets/characters/frontier_archer_0.glb",
+    "sha256_before": "b6f00b194403079db32647f2239e4d8fab90c245059e23a6c9dc6d089e461722",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.1763753302468184,
+    "endpoint_translation_delta_m": 0.8629929214197459,
+    "before": {
+      "max_sole_penetration_m": 0.17337126688971916,
+      "max_sole_slip_m": 0.8569329318493337,
+      "max_hull_penetration_m": 0.17337126688971916,
+      "max_contact_slip_m": 0.8569329318493337
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.009697254118629841,
+      "max_hull_penetration_m": 5.551115123125783e-17,
+      "max_contact_slip_m": 0.009697254118629841
+    },
+    "sha256_after": "0985484d3ba0a0a0fc3848e3d047070fb846eac6441b287a8e119637704a7481"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_1.glb",
+    "sha256_before": "14b2ffaab3191d75e4a624e6c7f2cbdfa8db6d470470783f302553adcb52fb6c",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16774666277503203,
+    "endpoint_translation_delta_m": 0.8505228652276744,
+    "before": {
+      "max_sole_penetration_m": 0.16474143253695434,
+      "max_sole_slip_m": 0.8497658778040881,
+      "max_hull_penetration_m": 0.16474143253695434,
+      "max_contact_slip_m": 0.8497658778040881
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.012010453208621688,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.012010453208621688
+    },
+    "sha256_after": "6e8a06d69e355e9fca99287ef36157df7ff458e0b9691bba65f0a7b057c70261"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_2.glb",
+    "sha256_before": "fcc4c04e26446f3b122852a3fb9c3252f84d403b41ddcb126e4636eeb7a6e87b",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16602647906392376,
+    "endpoint_translation_delta_m": 0.8539672453678371,
+    "before": {
+      "max_sole_penetration_m": 0.163005870838917,
+      "max_sole_slip_m": 0.8489850724406742,
+      "max_hull_penetration_m": 0.163005870838917,
+      "max_contact_slip_m": 0.8489850724406742
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.011677856562015473,
+      "max_hull_penetration_m": 6.938893903907228e-18,
+      "max_contact_slip_m": 0.011677856562015473
+    },
+    "sha256_after": "00471940e58c9e850e1592668fe08a01b79d71e3c5cc6af5ded452f86c6e55be"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_archer_3.glb",
+    "sha256_before": "b148570829a68da85d5bacd69845c8158d1b59584f95092571638e3d71aa0b6b",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16896504659371236,
+    "endpoint_translation_delta_m": 0.8575317358234038,
+    "before": {
+      "max_sole_penetration_m": 0.165957383773048,
+      "max_sole_slip_m": 0.85794907183952,
+      "max_hull_penetration_m": 0.165957383773048,
+      "max_contact_slip_m": 0.85794907183952
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008739019099622611,
+      "max_hull_penetration_m": 3.469446951953614e-18,
+      "max_contact_slip_m": 0.008739019099622611
+    },
+    "sha256_after": "5039526b1defe72dc87b6a346190f117ccb1b8798d8e8566c2179222bfcbf6da"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_man_0.glb",
+    "sha256_before": "477001694752dd67f6802da6c30cf246df0a97240914fc75e79315ebfe443622",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18807107230928316,
+    "endpoint_translation_delta_m": 0.8140772946784739,
+    "before": {
+      "max_sole_penetration_m": 0.18505268172065345,
+      "max_sole_slip_m": 0.817939655794347,
+      "max_hull_penetration_m": 0.18505268172065345,
+      "max_contact_slip_m": 0.817939655794347
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.01113059549848254,
+      "max_hull_penetration_m": 4.9873299934333204e-18,
+      "max_contact_slip_m": 0.01113059549848254
+    },
+    "sha256_after": "a9ee37ad48027189529284115276c8ad94c2cf8e025531202408a93156c73828"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_man_1.glb",
+    "sha256_before": "30aabba76fa5db4b2fa8b879905611d340998d6294f3e8a1a6636de55de1ecef",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.180895251835488,
+    "endpoint_translation_delta_m": 0.8056486580273919,
+    "before": {
+      "max_sole_penetration_m": 0.17789526899019986,
+      "max_sole_slip_m": 0.806782418031492,
+      "max_hull_penetration_m": 0.17789526899019986,
+      "max_contact_slip_m": 0.806782418031492
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008947885375770749,
+      "max_hull_penetration_m": 4.336808689942018e-19,
+      "max_contact_slip_m": 0.008947885375770749
+    },
+    "sha256_after": "56458ad17f4f6e84729cd696414e1f7c26c776c44c93b6b24cc214281aadb55d"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_man_2.glb",
+    "sha256_before": "fcae8394615557c9b4eee7f64ac683be88344295e2b8a7f07a4a536de92c0ec9",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17871928189400332,
+    "endpoint_translation_delta_m": 0.8045667046826879,
+    "before": {
+      "max_sole_penetration_m": 0.17566236405554322,
+      "max_sole_slip_m": 0.8068358471996434,
+      "max_hull_penetration_m": 0.17566236405554322,
+      "max_contact_slip_m": 0.8068358471996434
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008265426576280299,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.008265426576280299
+    },
+    "sha256_after": "d31c64fe417f039b8d0bdb10211e31ae9c441a681e940871de0a1e4b789ee105"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_man_3.glb",
+    "sha256_before": "69a97af3b49b3c8d4b996758470b83cc818b690a3833affc4913a1d25040075a",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17983381990866765,
+    "endpoint_translation_delta_m": 0.8104298896831861,
+    "before": {
+      "max_sole_penetration_m": 0.17681173573037648,
+      "max_sole_slip_m": 0.8104862832497677,
+      "max_hull_penetration_m": 0.17681173573037648,
+      "max_contact_slip_m": 0.8104862832497677
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008258026494470525,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.008258026494470525
+    },
+    "sha256_after": "b0de0a35e3dcc2763f0ad888108f0009e09e41b6f310ef9665cde74bca03465a"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_woman_0.glb",
+    "sha256_before": "3f445fed8e5564b5b5a8338564e343d8ec9f5e92c4117eff1c2b86acd0b54ca2",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.188075866225061,
+    "endpoint_translation_delta_m": 0.8213682474711341,
+    "before": {
+      "max_sole_penetration_m": 0.185057433003374,
+      "max_sole_slip_m": 0.8179462425573103,
+      "max_hull_penetration_m": 0.185057433003374,
+      "max_contact_slip_m": 0.8179462425573103
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.012227127371222026,
+      "max_hull_penetration_m": 2.927345865710862e-18,
+      "max_contact_slip_m": 0.012227127371222026
+    },
+    "sha256_after": "24629494474116ac6049cc7c26bbb5d4defc495cd3e22e6ed7e9763253a1e787"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_woman_1.glb",
+    "sha256_before": "0060242580c098f5d94ce144cdf320a4f47b26d84026042ab136c583c81acca1",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18089999676194668,
+    "endpoint_translation_delta_m": 0.8216389826156423,
+    "before": {
+      "max_sole_penetration_m": 0.17789997177869163,
+      "max_sole_slip_m": 0.8067890762569824,
+      "max_hull_penetration_m": 0.17789997177869163,
+      "max_contact_slip_m": 0.8067890762569824
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.011701362254272549,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.011701362254272549
+    },
+    "sha256_after": "35183e840746c2dfcc232e8042f4e3ed83c771e9a6ed3f0d8cb47e94075fc002"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_woman_2.glb",
+    "sha256_before": "c7d02261332c880df124ca75f437f5352ae9143777c61804745120706160c594",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17872396403652868,
+    "endpoint_translation_delta_m": 0.8223314448734508,
+    "before": {
+      "max_sole_penetration_m": 0.17566713609040613,
+      "max_sole_slip_m": 0.8068424593330924,
+      "max_hull_penetration_m": 0.17566713609040613,
+      "max_contact_slip_m": 0.8068424593330924
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.011308724187122442,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.011311702397735551
+    },
+    "sha256_after": "e2a9e06a12e3fc9e9b0db34ccc26df3a49b7cb215819e61663d0f955bb34034e"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_civilian_woman_3.glb",
+    "sha256_before": "c191923876021d4fec0e4fe7e343a101ac69925dc36ebe2b2f8de4ed626f3dc0",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.179838568472665,
+    "endpoint_translation_delta_m": 0.8137092499621007,
+    "before": {
+      "max_sole_penetration_m": 0.17681639800938875,
+      "max_sole_slip_m": 0.8104929328276869,
+      "max_hull_penetration_m": 0.17681639800938875,
+      "max_contact_slip_m": 0.8104929328276869
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008258072577487483,
+      "max_hull_penetration_m": 8.239936510889834e-18,
+      "max_contact_slip_m": 0.008258072577487483
+    },
+    "sha256_after": "1f650f51df44a3b7416f1a3609aed5d80612c5990faf080cc6081bddc23f71e5"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_elder_0.glb",
+    "sha256_before": "b03051329d7e344fb95bb5a7e6a0eab953163f1549f103f4592ebfc1e3f4fefb",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18807107230928316,
+    "endpoint_translation_delta_m": 0.8140772946784739,
+    "before": {
+      "max_sole_penetration_m": 0.18505268172065345,
+      "max_sole_slip_m": 0.817939655794347,
+      "max_hull_penetration_m": 0.18505268172065345,
+      "max_contact_slip_m": 0.817939655794347
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.01113059549848254,
+      "max_hull_penetration_m": 4.9873299934333204e-18,
+      "max_contact_slip_m": 0.01113059549848254
+    },
+    "sha256_after": "a15333f72696bed92e3bd826c34778a4e4ea51ce81735fc941dc299674e151bd"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_elder_1.glb",
+    "sha256_before": "5b1b3453f984f3e2c91c5535ecd5fef57f9733e4e41be33dc82111e073f5a12e",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.180895251835488,
+    "endpoint_translation_delta_m": 0.8056486580273919,
+    "before": {
+      "max_sole_penetration_m": 0.17789526899019986,
+      "max_sole_slip_m": 0.806782418031492,
+      "max_hull_penetration_m": 0.17789526899019986,
+      "max_contact_slip_m": 0.806782418031492
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008947885375770749,
+      "max_hull_penetration_m": 4.336808689942018e-19,
+      "max_contact_slip_m": 0.008947885375770749
+    },
+    "sha256_after": "c91d6950250d8866daa63c52f2794b7a3d2fe7aef8b91cecdc49b7f919425d36"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_elder_2.glb",
+    "sha256_before": "80435022982a4521a963185efd005d9413746c82c17247f5b1e4071a05f2e146",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17871928189400332,
+    "endpoint_translation_delta_m": 0.8045667046826879,
+    "before": {
+      "max_sole_penetration_m": 0.17566236405554322,
+      "max_sole_slip_m": 0.8068358471996434,
+      "max_hull_penetration_m": 0.17566236405554322,
+      "max_contact_slip_m": 0.8068358471996434
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008265426576280299,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.008265426576280299
+    },
+    "sha256_after": "3f999d0d125d0a81655d3c08ad52aff97713a7848121e7586ebb2275c7198ebc"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_elder_3.glb",
+    "sha256_before": "42f713f0b05aace710e337a468e5ccffb9a32b6238234a93cbec56b334909a3a",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17983381990866765,
+    "endpoint_translation_delta_m": 0.8104298896831861,
+    "before": {
+      "max_sole_penetration_m": 0.17681173573037648,
+      "max_sole_slip_m": 0.8104862832497677,
+      "max_hull_penetration_m": 0.17681173573037648,
+      "max_contact_slip_m": 0.8104862832497677
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008258026494470525,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.008258026494470525
+    },
+    "sha256_after": "2b1206f4a6c770581e44c7efa05ceb28cdf95a787f19788e9910139a0b7679b4"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_0.glb",
+    "sha256_before": "7937cbb3c3a510609d7a9d62b8adebf9f6a6678d997436faa2cce735146e8bda",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.1763753302468184,
+    "endpoint_translation_delta_m": 0.8615852521908268,
+    "before": {
+      "max_sole_penetration_m": 0.17337126688971916,
+      "max_sole_slip_m": 0.8569329318493337,
+      "max_hull_penetration_m": 0.17337126688971916,
+      "max_contact_slip_m": 0.8569329318493337
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.009697254118629841,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.009697254118629841
+    },
+    "sha256_after": "043095cce9ea710ca2b9b117b8dd8f09ca5382e1dc24de151110b4552c03d777"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_1.glb",
+    "sha256_before": "a7b3d582f378c6cd6fadbb2d42a778a5b2b567e7c64312c054d8eae207cd6148",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16774666277503203,
+    "endpoint_translation_delta_m": 0.8502891016544328,
+    "before": {
+      "max_sole_penetration_m": 0.16474143253695434,
+      "max_sole_slip_m": 0.8497658778040881,
+      "max_hull_penetration_m": 0.16474143253695434,
+      "max_contact_slip_m": 0.8497658778040881
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.012010453208621688,
+      "max_hull_penetration_m": 6.938893903907228e-18,
+      "max_contact_slip_m": 0.012010453208621688
+    },
+    "sha256_after": "6e80c91f2dc077bbff1ed0c25243f718dcbeacf5126f5f9d644a493adfd8a0b7"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_2.glb",
+    "sha256_before": "5e929aa27938c60fb94bad246c5ab7b6391110d0a12157df090a8eb6346eab05",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16602647906392376,
+    "endpoint_translation_delta_m": 0.8539672453678371,
+    "before": {
+      "max_sole_penetration_m": 0.163005870838917,
+      "max_sole_slip_m": 0.8489850724406742,
+      "max_hull_penetration_m": 0.163005870838917,
+      "max_contact_slip_m": 0.8489850724406742
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.011677856562015473,
+      "max_hull_penetration_m": 6.938893903907228e-18,
+      "max_contact_slip_m": 0.011677856562015473
+    },
+    "sha256_after": "0eb66953ab9de059297b0b0c313d9c87658967e8daa1eeb8f15d9f450294c6e8"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_legionary_3.glb",
+    "sha256_before": "05cced36031ec8f7627302dbed9235df8404617873d91e0f6ad569c9d65e47e3",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16896504659371236,
+    "endpoint_translation_delta_m": 0.8575317358234038,
+    "before": {
+      "max_sole_penetration_m": 0.165957383773048,
+      "max_sole_slip_m": 0.85794907183952,
+      "max_hull_penetration_m": 0.165957383773048,
+      "max_contact_slip_m": 0.85794907183952
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008739019099622611,
+      "max_hull_penetration_m": 3.469446951953614e-18,
+      "max_contact_slip_m": 0.008739019099622611
+    },
+    "sha256_after": "c174c6e83af2f410956e05c234146e5016bee3b0ad9a4da8f500984409093490"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_0.glb",
+    "sha256_before": "46152dd3fc4da12bc772ab04084947f40f3c1d391c37435402af2bab4f0f2e86",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17732603740686848,
+    "endpoint_translation_delta_m": 0.8925158024053712,
+    "before": {
+      "max_sole_penetration_m": 0.17337126688971916,
+      "max_sole_slip_m": 0.8569329318493337,
+      "max_hull_penetration_m": 0.17732603740686848,
+      "max_contact_slip_m": 0.8569329318493337
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008574962652797525,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.008574962652797525
+    },
+    "sha256_after": "29b02ef7574d24463e2faa63e7c19596b76bc5442141da152e3ddf0aa618c5bc"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_1.glb",
+    "sha256_before": "2d47a6f35dc7ce73ec959384090271c88ff3e0ea0a420197403912a4ed159bfc",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16774666277503203,
+    "endpoint_translation_delta_m": 0.8755247105532438,
+    "before": {
+      "max_sole_penetration_m": 0.16474143253695434,
+      "max_sole_slip_m": 0.8497658778040881,
+      "max_hull_penetration_m": 0.16474143253695434,
+      "max_contact_slip_m": 0.8497658778040881
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.010377656372830701,
+      "max_hull_penetration_m": 3.469446951953614e-17,
+      "max_contact_slip_m": 0.010377656372830701
+    },
+    "sha256_after": "916bb6cf1e8e60bc0f7852e9a4d73ec40402678749f5495693f1fb4f2f1cd313"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_2.glb",
+    "sha256_before": "3ae746ffe5f0380b7bf38ab8b098b387257c9a74e784f613872cde013f0ef66b",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16602647906392376,
+    "endpoint_translation_delta_m": 0.8711438167901271,
+    "before": {
+      "max_sole_penetration_m": 0.163005870838917,
+      "max_sole_slip_m": 0.8489850724406742,
+      "max_hull_penetration_m": 0.163005870838917,
+      "max_contact_slip_m": 0.8489850724406742
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.011677856562015473,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.011677856562015473
+    },
+    "sha256_after": "310fc1035019c7f1a8a2072c5a6bf9fc6aaea1c8b25885ff1d00b48213593347"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_officer_3.glb",
+    "sha256_before": "39eccc496ad4f61f5ba7473ee2fec5fc08a4b77c574c477fd728100f349f43d4",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16896504659371236,
+    "endpoint_translation_delta_m": 0.8864689294781801,
+    "before": {
+      "max_sole_penetration_m": 0.165957383773048,
+      "max_sole_slip_m": 0.85794907183952,
+      "max_hull_penetration_m": 0.165957383773048,
+      "max_contact_slip_m": 0.85794907183952
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008739019099622611,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.008739019099622611
+    },
+    "sha256_after": "c41652d5da74af7308ad6162924d8c80b33cdd991b635f2c8293717c733148d7"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_0.glb",
+    "sha256_before": "46a06aff153e865667933c22b9aec4173b9be987d40d2e6c9226829061a8e2b4",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.1763753302468184,
+    "endpoint_translation_delta_m": 0.8615852521908268,
+    "before": {
+      "max_sole_penetration_m": 0.17337126688971916,
+      "max_sole_slip_m": 0.8569329318493337,
+      "max_hull_penetration_m": 0.17337126688971916,
+      "max_contact_slip_m": 0.8569329318493337
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.009697254118629841,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.009697254118629841
+    },
+    "sha256_after": "92606770eef86ea574a79d9b88c8a1e1b049cf3da260afbc7bdc6e38e354b8f6"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_1.glb",
+    "sha256_before": "534e6d54304a3ffc75ad528fcb8f76063a0e75fafb744d0de18fe232fa3040a5",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16774666277503203,
+    "endpoint_translation_delta_m": 0.8502891016544328,
+    "before": {
+      "max_sole_penetration_m": 0.16474143253695434,
+      "max_sole_slip_m": 0.8497658778040881,
+      "max_hull_penetration_m": 0.16474143253695434,
+      "max_contact_slip_m": 0.8497658778040881
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.012010453208621688,
+      "max_hull_penetration_m": 6.938893903907228e-18,
+      "max_contact_slip_m": 0.012010453208621688
+    },
+    "sha256_after": "0b215daafd65a32461890537459cae0636c5df0a6233ee2be5ef6d6d24bb438d"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_2.glb",
+    "sha256_before": "fe2e7b71db6487e04bf5663996aabc770a4ae1422b205084922b3ea6602c828b",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16602647906392376,
+    "endpoint_translation_delta_m": 0.8539672453678371,
+    "before": {
+      "max_sole_penetration_m": 0.163005870838917,
+      "max_sole_slip_m": 0.8489850724406742,
+      "max_hull_penetration_m": 0.163005870838917,
+      "max_contact_slip_m": 0.8489850724406742
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.011677856562015473,
+      "max_hull_penetration_m": 6.938893903907228e-18,
+      "max_contact_slip_m": 0.011677856562015473
+    },
+    "sha256_after": "cc76b36192ab53d054c5ab68d6c1cc2cebc290443af887773fd474ebda0908ff"
+  },
+  {
+    "path": "prototype/assets/characters/frontier_spearman_3.glb",
+    "sha256_before": "8751356259a6caa85f66e74b84da9b8613ac2702f13ed25f91b004c875530e98",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.16896504659371236,
+    "endpoint_translation_delta_m": 0.8575317358234038,
+    "before": {
+      "max_sole_penetration_m": 0.165957383773048,
+      "max_sole_slip_m": 0.85794907183952,
+      "max_hull_penetration_m": 0.165957383773048,
+      "max_contact_slip_m": 0.85794907183952
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008739019099622611,
+      "max_hull_penetration_m": 3.469446951953614e-18,
+      "max_contact_slip_m": 0.008739019099622611
+    },
+    "sha256_after": "44629e1ea30a487d9b443ea5b37c39fb3f424bc6f1bb07b30f6daaa6138a5b58"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_germanic_axe_fighter_0.glb",
+    "sha256_before": "df13d9600341bd04186248be605ea65c2ba8e1fbdbd17df9150eb1e68f80aae5",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18570917943074594,
+    "endpoint_translation_delta_m": 1.022381508789667,
+    "before": {
+      "max_sole_penetration_m": 0.18277658218367357,
+      "max_sole_slip_m": 1.0075202782671089,
+      "max_hull_penetration_m": 0.18277658218367357,
+      "max_contact_slip_m": 1.0075202782671089
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008647724729336092,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.008647724729336092
+    },
+    "sha256_after": "bdc5e35a5a749e518034c4e10d0beba859c08753af5fac419a256cd2bb3b8ad3"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_germanic_axe_fighter_1.glb",
+    "sha256_before": "2df91c2d4c11ed0b1cfe942e2d577d096cfd539879ddaceef164c52eed467611",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18551295259691714,
+    "endpoint_translation_delta_m": 1.0259262846219515,
+    "before": {
+      "max_sole_penetration_m": 0.18257576165450162,
+      "max_sole_slip_m": 1.0077140307392867,
+      "max_hull_penetration_m": 0.18257576165450162,
+      "max_contact_slip_m": 1.0077140307392867
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.00863722631039331,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.00863722631039331
+    },
+    "sha256_after": "0996e1524943073cef1df3f2cdd63468d4c48638e1ea7a3aba950cfe4d152445"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_germanic_axe_fighter_2.glb",
+    "sha256_before": "a6cb21a43b8e57a9a38a3c77849eda921d17eecb0e1fa216c22883dc32140dbd",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18827188744901568,
+    "endpoint_translation_delta_m": 1.0276839161104927,
+    "before": {
+      "max_sole_penetration_m": 0.1853204510446443,
+      "max_sole_slip_m": 1.013110908778078,
+      "max_hull_penetration_m": 0.1853204510446443,
+      "max_contact_slip_m": 1.013110908778078
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.007326439655014383,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.007326439655014383
+    },
+    "sha256_after": "7d39c942c70e1a8025902f2d671b73e772132d285b3ebe9d207e63d1545e93ba"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_germanic_axe_fighter_3.glb",
+    "sha256_before": "473c7a741dd1a8cc6290e375d4f4e9a77eb3e0e6db9569bf4258b6c4628fcda5",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.19028337634351178,
+    "endpoint_translation_delta_m": 1.0317919612587052,
+    "before": {
+      "max_sole_penetration_m": 0.18731961762941193,
+      "max_sole_slip_m": 1.0167767940183248,
+      "max_hull_penetration_m": 0.18731961762941193,
+      "max_contact_slip_m": 1.0167767940183248
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.006163289178026864,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.006163289178026864
+    },
+    "sha256_after": "72d5fc909009bfa491f6022a318fc0a6f18188fb8542f37a49038061b85ca78d"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_roman_signifer_0.glb",
+    "sha256_before": "c7c7057f6f4c19b7d73e0a28f27e0c14d154ea2614394d7def5a8a0ddc3e9ee9",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.19533840297444083,
+    "endpoint_translation_delta_m": 1.04788426723664,
+    "before": {
+      "max_sole_penetration_m": 0.19231034680156095,
+      "max_sole_slip_m": 1.0459539063634784,
+      "max_hull_penetration_m": 0.19231034680156095,
+      "max_contact_slip_m": 1.0459539063634784
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.008538380409991326,
+      "max_hull_penetration_m": 4.4297105756989136e-10,
+      "max_contact_slip_m": 0.008538380409991326
+    },
+    "sha256_after": "ad59801df7955a100a77cd87ca48e4f5d274beacf58eff673b5012a3204a4bcb"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_roman_signifer_1.glb",
+    "sha256_before": "cc6e880d775f0739638d9121ccaa1b3693c0899acd283a9ccbeb41c553482cee",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.1956944473480452,
+    "endpoint_translation_delta_m": 1.0485440700427158,
+    "before": {
+      "max_sole_penetration_m": 0.19266639117516543,
+      "max_sole_slip_m": 1.0459539063634784,
+      "max_hull_penetration_m": 0.19266639117516543,
+      "max_contact_slip_m": 1.0459539063634784
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.007858033858522046,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.007858033858522046
+    },
+    "sha256_after": "12107addfa26aa540f7a034409fd705001d71223bf57249a55c1a451fe9a7004"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_roman_signifer_2.glb",
+    "sha256_before": "eca91d261ae664ba0c9ab5e3a9386f08cf9d8d5c07cf73a27fed0ee84318d5dd",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.19682688728610975,
+    "endpoint_translation_delta_m": 1.0561180629462816,
+    "before": {
+      "max_sole_penetration_m": 0.19380443732744765,
+      "max_sole_slip_m": 1.044703013355084,
+      "max_hull_penetration_m": 0.19380443732744765,
+      "max_contact_slip_m": 1.044703013355084
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.0032573462169063613,
+      "max_hull_penetration_m": 8.589601868322361e-10,
+      "max_contact_slip_m": 0.0032573462169063613
+    },
+    "sha256_after": "55e8d6c230d2548feb83d7374f55e53f85ceef78057d0b124c1963547586ac18"
+  },
+  {
+    "path": "prototype/assets/meshy/characters/unit_roman_signifer_3.glb",
+    "sha256_before": "da3797d9472505ca5f4f439e50acf01ad43f2616b861aca9c801792ab7a59087",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.19078453039244092,
+    "endpoint_translation_delta_m": 1.0454650433304222,
+    "before": {
+      "max_sole_penetration_m": 0.18783231626667973,
+      "max_sole_slip_m": 1.0267625688425877,
+      "max_hull_penetration_m": 0.18783231626667973,
+      "max_contact_slip_m": 1.0267625688425877
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.004430411223141494,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.004430411223141494
+    },
+    "sha256_after": "1c7f1aba3b46f34ffd0975b479a9424599dff54e6c74ab79e7673b8641aa2f10"
+  },
+  {
+    "path": "prototype/assets/soldiers/archer_near.glb",
+    "sha256_before": "0253e6b85c8a24ec3cdcef295da9f6cb47c992d4f7a4926df274eeb7a4a8becf",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18954489835478627,
+    "endpoint_translation_delta_m": 0.8950918877193879,
+    "before": {
+      "max_sole_penetration_m": 0.18648863580750047,
+      "max_sole_slip_m": 0.9149973342742682,
+      "max_hull_penetration_m": 0.18648863580750047,
+      "max_contact_slip_m": 0.9149973342742682
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.0194048704527146,
+      "max_hull_penetration_m": 6.071532165918825e-17,
+      "max_contact_slip_m": 0.0194048704527146
+    },
+    "sha256_after": "6c70f0ae124b76e31200996a88d8ae43f536833b1d799aeabcfd0957c2be252d"
+  },
+  {
+    "path": "prototype/assets/soldiers/heavy_near.glb",
+    "sha256_before": "ef880637b2915895666d97dfe3e5c7e5d320a276348d868f154d9bd2d927a658",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18954489835478627,
+    "endpoint_translation_delta_m": 0.8987962127225342,
+    "before": {
+      "max_sole_penetration_m": 0.18648863580750047,
+      "max_sole_slip_m": 0.9149973342742682,
+      "max_hull_penetration_m": 0.18648863580750047,
+      "max_contact_slip_m": 0.9149973342742682
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.0194048704527146,
+      "max_hull_penetration_m": 5.204170427930421e-18,
+      "max_contact_slip_m": 0.0194048704527146
+    },
+    "sha256_after": "9b7c3476882a7f888f83e800274e7b0e386a0bef15a7ea41d6e448bf7661b160"
+  },
+  {
+    "path": "prototype/assets/soldiers/officer_near.glb",
+    "sha256_before": "fa6f864f468c041d3b82bda02bbb2625aa54f781bfeb321ff8957dae0f2a7aa1",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18954489835478627,
+    "endpoint_translation_delta_m": 0.9282993920542923,
+    "before": {
+      "max_sole_penetration_m": 0.18648863580750047,
+      "max_sole_slip_m": 0.9149973342742682,
+      "max_hull_penetration_m": 0.18648863580750047,
+      "max_contact_slip_m": 0.9149973342742682
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.015735795423564975,
+      "max_hull_penetration_m": 5.204170427930421e-18,
+      "max_contact_slip_m": 0.015735795423564975
+    },
+    "sha256_after": "284c9b4b8959b5f5fe45fb8ae177e5de395f43df9cc1b6495925e0ece3fee8a2"
+  },
+  {
+    "path": "prototype/assets/soldiers/spear_near.glb",
+    "sha256_before": "790b85d0c73c9d1ff6cd9f731b7fb6c218be7ca293eedfc3bc3e2053328fce5e",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18954489835478627,
+    "endpoint_translation_delta_m": 0.8987962127225342,
+    "before": {
+      "max_sole_penetration_m": 0.18648863580750047,
+      "max_sole_slip_m": 0.9149973342742682,
+      "max_hull_penetration_m": 0.18648863580750047,
+      "max_contact_slip_m": 0.9149973342742682
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.0194048704527146,
+      "max_hull_penetration_m": 5.204170427930421e-18,
+      "max_contact_slip_m": 0.0194048704527146
+    },
+    "sha256_after": "240999fdb384c63e3baab20a70cc4a6672a0054ee0ac8ac9fc270afaddfc938b"
+  },
+  {
+    "path": "prototype/assets/soldiers/archer_mid.glb",
+    "sha256_before": "45d4c5d25b282ed1dfb1e465dba9f70d4fe01859cb91d07cc0efec4386f20252",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18682274948832645,
+    "endpoint_translation_delta_m": 0.887524078212236,
+    "before": {
+      "max_sole_penetration_m": 0.18381019517639277,
+      "max_sole_slip_m": 0.9092963233797107,
+      "max_hull_penetration_m": 0.18381019517639277,
+      "max_contact_slip_m": 0.9092963233797107
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.02096597438829982,
+      "max_hull_penetration_m": 5.204170427930421e-18,
+      "max_contact_slip_m": 0.02096597438829982
+    },
+    "sha256_after": "04fa8dbd9f34847978f89707b1b3a93bf1f8a31e1d4dfb1e8fa19f2b2d505731"
+  },
+  {
+    "path": "prototype/assets/soldiers/heavy_mid.glb",
+    "sha256_before": "67f147eea95f293a62e9c7706234304cf48889d7ff37dfbeffa69cd6d66827f5",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18682274948832645,
+    "endpoint_translation_delta_m": 0.8914282199740624,
+    "before": {
+      "max_sole_penetration_m": 0.18381019517639277,
+      "max_sole_slip_m": 0.9092963233797107,
+      "max_hull_penetration_m": 0.18381019517639277,
+      "max_contact_slip_m": 0.9092963233797107
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.02096597438829982,
+      "max_hull_penetration_m": 5.204170427930421e-18,
+      "max_contact_slip_m": 0.02096597438829982
+    },
+    "sha256_after": "fd536125b2f27912e6d5fbc93149e3c42a13b9d217143ceaef088768c5d4b165"
+  },
+  {
+    "path": "prototype/assets/soldiers/officer_mid.glb",
+    "sha256_before": "00af3fd7b8c0e165a7cd293b91ec395e13c1b935a94be53d4506c875e68e82df",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18682274948832645,
+    "endpoint_translation_delta_m": 0.9223327411079237,
+    "before": {
+      "max_sole_penetration_m": 0.18381019517639277,
+      "max_sole_slip_m": 0.9092963233797107,
+      "max_hull_penetration_m": 0.18381019517639277,
+      "max_contact_slip_m": 0.9092963233797107
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.017426356437964224,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.017426356437964224
+    },
+    "sha256_after": "27b8a7993a587c7251de9df4c4060bb5d9ec37f0d53ae1c4d23f7e9d4c5e0862"
+  },
+  {
+    "path": "prototype/assets/soldiers/spear_mid.glb",
+    "sha256_before": "e0577a50f5db1bdc5cc294c9ab866eb186bc2a1753ff0d89d27d152cb73c3bf3",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.18682274948832645,
+    "endpoint_translation_delta_m": 0.8914282199740624,
+    "before": {
+      "max_sole_penetration_m": 0.18381019517639277,
+      "max_sole_slip_m": 0.9092963233797107,
+      "max_hull_penetration_m": 0.18381019517639277,
+      "max_contact_slip_m": 0.9092963233797107
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.02096597438829982,
+      "max_hull_penetration_m": 5.204170427930421e-18,
+      "max_contact_slip_m": 0.02096597438829982
+    },
+    "sha256_after": "191a00da22e5f0b8a82bac41729e8e2dc72d1f6b1998d0702d74bf9b7ff04892"
+  },
+  {
+    "path": "prototype/assets/village_characters/heavy_2.glb",
+    "sha256_before": "21eb996a7213e2732731dea2ecdba5aaab102ca7f0db9f34d78bdcd96a623b79",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17900801676847033,
+    "endpoint_translation_delta_m": 0.8901325959667431,
+    "before": {
+      "max_sole_penetration_m": 0.1760145778223342,
+      "max_sole_slip_m": 0.901606374956709,
+      "max_hull_penetration_m": 0.1760145778223342,
+      "max_contact_slip_m": 0.901606374956709
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.017363396996412858,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.017363396996412858
+    },
+    "sha256_after": "a040f7d7ec81916bd63bd377af861d82acd97923250df9ad0443c0094ec48cb0"
+  },
+  {
+    "path": "prototype/assets/village_characters/heavy_3.glb",
+    "sha256_before": "f5b2d61646834c8bd1d536f8f12a779fcfae209cba3c205606b5c9abe484d1c9",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17012698947043225,
+    "endpoint_translation_delta_m": 0.8383338357245288,
+    "before": {
+      "max_sole_penetration_m": 0.16713778492091608,
+      "max_sole_slip_m": 0.8849304609540867,
+      "max_hull_penetration_m": 0.16713778492091608,
+      "max_contact_slip_m": 0.8849304609540867
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.036059472449517224,
+      "max_hull_penetration_m": 1.5612511283791264e-17,
+      "max_contact_slip_m": 0.036059472449517224
+    },
+    "sha256_after": "3528717fad44e0cd23a7ada99beeb5e2ad337a23f5aeecc689cdf1840d9b5aea"
+  },
+  {
+    "path": "prototype/assets/village_characters/officer_2.glb",
+    "sha256_before": "1f59921bfede757ec32ae7f5a0412b759f41745ccf4c82d60997b92966cb0635",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17900801676847033,
+    "endpoint_translation_delta_m": 0.9119574448357012,
+    "before": {
+      "max_sole_penetration_m": 0.1760145778223342,
+      "max_sole_slip_m": 0.901606374956709,
+      "max_hull_penetration_m": 0.1760145778223342,
+      "max_contact_slip_m": 0.901606374956709
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.015638828317393015,
+      "max_hull_penetration_m": 2.0816681711721685e-17,
+      "max_contact_slip_m": 0.015638828317393015
+    },
+    "sha256_after": "ef0fbd952dd8cf748c30356eeb26d72896d4cca69fef3f1a1b588cc73741db46"
+  },
+  {
+    "path": "prototype/assets/village_characters/officer_3.glb",
+    "sha256_before": "5efa499c743f1045f5a042d8ed63f193896c11bc7a8eabb425a83abfc5104d10",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17012698947043225,
+    "endpoint_translation_delta_m": 0.8772929888616017,
+    "before": {
+      "max_sole_penetration_m": 0.16713778492091608,
+      "max_sole_slip_m": 0.8849304609540867,
+      "max_hull_penetration_m": 0.16713778492091608,
+      "max_contact_slip_m": 0.8849304609540867
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.03458981883875416,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.03458981883875416
+    },
+    "sha256_after": "54765ee18741cd3d1c585c0315addb9d29d5e319eb5f5befa2e44ceedc856df5"
+  },
+  {
+    "path": "prototype/assets/village_characters/spear_2.glb",
+    "sha256_before": "a31a0fd40fb89fe1c2cc66bb9cd7ba4795077060cf59b3cdcdba24263de079e0",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17900801676847033,
+    "endpoint_translation_delta_m": 0.8901325959667431,
+    "before": {
+      "max_sole_penetration_m": 0.1760145778223342,
+      "max_sole_slip_m": 0.901606374956709,
+      "max_hull_penetration_m": 0.1760145778223342,
+      "max_contact_slip_m": 0.901606374956709
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.017363396996412858,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.017363396996412858
+    },
+    "sha256_after": "335d9db579421a29696c2c30e404bedb61068a6f257ad3e3d58d173d706fd673"
+  },
+  {
+    "path": "prototype/assets/village_characters/spear_3.glb",
+    "sha256_before": "bd4b28d1317b279c77991199abd6501f3a36aa1a9428daf2071d982685b73335",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.17012698947043225,
+    "endpoint_translation_delta_m": 0.8383338357245288,
+    "before": {
+      "max_sole_penetration_m": 0.16713778492091608,
+      "max_sole_slip_m": 0.8849304609540867,
+      "max_hull_penetration_m": 0.16713778492091608,
+      "max_contact_slip_m": 0.8849304609540867
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.036059472449517224,
+      "max_hull_penetration_m": 1.5612511283791264e-17,
+      "max_contact_slip_m": 0.036059472449517224
+    },
+    "sha256_after": "ac584681d161149a17b8dab6b72d2c5926c5a139ad5dc2959127c0cdcf3deea0"
+  },
+  {
+    "path": "prototype/assets/village_characters/villager_0.glb",
+    "sha256_before": "3122e876fba9986f96f13991d733d29cc60b2dcb6e2610b7068a693f3ed8330f",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.21673188221701645,
+    "endpoint_translation_delta_m": 0.7441153002179325,
+    "before": {
+      "max_sole_penetration_m": 0.21383120325465177,
+      "max_sole_slip_m": 0.7966101764216957,
+      "max_hull_penetration_m": 0.21383120325465177,
+      "max_contact_slip_m": 0.7966101764216957
+    },
+    "after": {
+      "max_sole_penetration_m": 8.445289061039798e-18,
+      "max_sole_slip_m": 0.035741726684310964,
+      "max_hull_penetration_m": 8.445289061039798e-18,
+      "max_contact_slip_m": 0.035741726684310964
+    },
+    "sha256_after": "5c4a255001007e25bf912caadd3677aae6c1734133884746e2bffd903e85968e"
+  },
+  {
+    "path": "prototype/assets/village_characters/villager_1.glb",
+    "sha256_before": "1e679f78c52dcf8975de18f1faafac259ce6e957b93a92e223086105e5351a0d",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.21672900311068743,
+    "endpoint_translation_delta_m": 0.7470239673203551,
+    "before": {
+      "max_sole_penetration_m": 0.21382832414832276,
+      "max_sole_slip_m": 0.7966101764216957,
+      "max_hull_penetration_m": 0.21382832414832276,
+      "max_contact_slip_m": 0.7966101764216957
+    },
+    "after": {
+      "max_sole_penetration_m": 1.2594109376250565e-17,
+      "max_sole_slip_m": 0.03436061801021568,
+      "max_hull_penetration_m": 1.2594109376250565e-17,
+      "max_contact_slip_m": 0.03436061801021568
+    },
+    "sha256_after": "ae90e4b857ffdd47b74d8e985ab7b19a4ca96c63ef11d19626d67e15a4202b4e"
+  },
+  {
+    "path": "prototype/assets/village_characters/villager_2.glb",
+    "sha256_before": "8d8368ef00ffeffc1ca5be528ce0a2d8c4d18c7e967c691af52d57ab8afdd8e8",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.21655321072865918,
+    "endpoint_translation_delta_m": 0.7501175506533684,
+    "before": {
+      "max_sole_penetration_m": 0.21365128171340605,
+      "max_sole_slip_m": 0.7967624376788998,
+      "max_hull_penetration_m": 0.21365128171340605,
+      "max_contact_slip_m": 0.7967624376788998
+    },
+    "after": {
+      "max_sole_penetration_m": 1.3388202764301471e-17,
+      "max_sole_slip_m": 0.03262685500576507,
+      "max_hull_penetration_m": 1.3388202764301471e-17,
+      "max_contact_slip_m": 0.03262685500576507
+    },
+    "sha256_after": "da2d95e9d1c76eb286fd6145ac4421c506562bd01d8e1b157fb2b25d160b64f7"
+  },
+  {
+    "path": "prototype/assets/village_characters/villager_3.glb",
+    "sha256_before": "c72d47ca66f7f49dde96ff078add05429b69842c14896e1e8c77db9275a3315e",
+    "keys": 289,
+    "key_hz": 240,
+    "measured_hz": 60,
+    "duration_s": 1.2000000476837158,
+    "method": "CPU linear blend skinning of every exported skinned primitive; lowest posed surface on the floor of the standing first pose; smallest-circle rigid offset of all 2 cm band contacts",
+    "maximum_floor_correction_m": 0.20897876594098924,
+    "endpoint_translation_delta_m": 0.7275768547846405,
+    "before": {
+      "max_sole_penetration_m": 0.20607247050910488,
+      "max_sole_slip_m": 0.7862256833880202,
+      "max_hull_penetration_m": 0.20607247050910488,
+      "max_contact_slip_m": 0.7862256833880202
+    },
+    "after": {
+      "max_sole_penetration_m": 0.0,
+      "max_sole_slip_m": 0.03932814151752691,
+      "max_hull_penetration_m": 0.0,
+      "max_contact_slip_m": 0.03932814151752691
+    },
+    "sha256_after": "97285dd28f454c0dd96247eeaa4d6d65286f6a7bce951c6a84fd4d853bef23d5"
+  }
+]
