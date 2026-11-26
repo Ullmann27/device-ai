@@ -714,3 +714,30 @@ Alle verschobenen Inseln liegen auf dem Nietenraster des Build-Skripts. Betroffe
 - Bilder: `evidence/godot_frames/25_godot_grenz_kit_nieten_vorher_nachher.jpg`, Wirkung klein, aber sichtbar.
 
 **Offen:** Die Quellkorrektur in `build_frontier_people.py` (Nieten auf die Plattenoberfläche, Schulter-Nieten an `Arm_*`).
+
+### 14.20 Gleiten des Spielers (Junge) in der Missionsnavigation: Ursache gefunden, nicht geändert
+
+**Befund:** Der größte einzelne Gleitwert des Gates (18,5 cm, `village_navigation/walk_run_stop`) gehört dem **Spieler**, also dem Jungen in LOD 3 (`hero_meshy_italia_3.glb`), beim ersten Marschschritt aus dem Stand.
+- In Team As Basislinie (`docs/25_team_a/evidence/contact-grounding/baseline-engine-2616391.zip`, vor der Integration des Jungen) lag das Maximum bei 5,5 cm und betraf nicht den Spieler.
+- Der Wert kam also mit dem Jungen als Spielerfigur. Ob 2c54954 selbst oder #87 ihn verursacht, lässt sich nicht trennen, weil 2c54954 LOD 3 gar nicht baut (P0).
+- Die Codestelle gehört nicht zu #87.
+
+**Messung Bild für Bild:** Werkzeug `werkzeuge/player_nav_slip_diag.gd` (dieselbe Fixture wie das Gate), Log `evidence/logs/player_nav_slip_diag.txt`.
+
+| Phase | Gleiten des gestützten Fußes |
+|---|---|
+| Gleichmäßiger Marsch, mittlere Standphase | 0 cm |
+| Abrollen am Ende jeder Standphase | 4–5,5 cm (Marsch und Lauf) |
+| Erster Schritt aus dem Stand (Beschleunigung 0 → 1,45 m/s) | rechter Fuß gleitet während des Einblendens rund 10 cm, dann 8 cm Abrollen, zusammen **18,5 cm** |
+
+**Ursache** in `prototype/scripts/visuals/character_motion.gd`, `plant_world_feet`, Zweig `preserve_authored_roll` (nur der Junge):
+- Zeile 245/260: Ein Fuß gilt in der ganzen zentralen Standphase als gestützt (`u` 0,08 … stance − 0,05).
+- Zeile 253: Die haltende Korrektur wird aber nur mit `envelope` eingeblendet (0,08 → 0,17) und wieder ausgeblendet (stance − 0,13 → stance − 0,05).
+- Zeile 254: Die Korrektur ist auf 7,5 cm × Skalierung begrenzt (`limit_length`).
+
+In den Ein-/Ausblendfenstern wird der Fuß also bewusst nicht gehalten (aufgenommenes Fersen-/Ballenabrollen), meldet sich aber als gestützt. Beim Anlaufen übersteigt die Abweichung zusätzlich die Begrenzung. Das Gate misst außerdem den Knöchel (`Foot_*`-Ursprung), nicht den Kontaktpunkt, und zählt das natürliche Vorrollen des Knöchels über den Ballen als Gleiten.
+
+**Nicht geändert**, weil es eine Laufzeit-Entscheidung zur Bewegungsqualität des Spielers ist, die eine Sichtabnahme braucht. **Empfehlung an Fable/Motion-Team:**
+1. `_world_supported` beim Jungen nur melden, solange `envelope` ≈ 1 ist, oder das Gate auf Kontaktpunkte statt Knöchel umstellen.
+2. Den ersten Schritt aus dem Stand mit voller Haltekraft erfassen, also ohne Einblendung, wenn der Körper beschleunigt, und die Begrenzung von 7,5 cm am echten Bedarf prüfen.
+3. Danach Sichtabnahme in Bewegung.
