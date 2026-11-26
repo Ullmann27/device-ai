@@ -1,0 +1,84 @@
+Info: Saved "heavy.blend"
+INFO Draco mesh compression is available, use library at /home/user/tools/blender-4.3.2-linux-x64/4.3/python/lib/python3.11/site-packages/libextern_draco.so
+01:13:56 | INFO: Starting glTF 2.0 export
+01:13:57 | INFO: Extracting primitive: Heavy_field_kit
+01:13:57 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:13:57 | INFO: Primitives created: 1
+01:13:57 | INFO: Finished glTF 2.0 export in 0.26450586318969727 s
+
+01:13:58 | INFO: Starting glTF 2.0 export
+01:13:58 | INFO: Extracting primitive: Heavy_field_kit
+01:13:58 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:13:58 | INFO: Primitives created: 1
+01:13:58 | INFO: Finished glTF 2.0 export in 0.26076626777648926 s
+
+01:13:59 | INFO: Starting glTF 2.0 export
+01:13:59 | INFO: Extracting primitive: Heavy_field_kit
+01:13:59 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:13:59 | INFO: Primitives created: 1
+01:13:59 | INFO: Finished glTF 2.0 export in 0.0054357051849365234 s
+
+Info: Saved "spear.blend"
+01:13:59 | INFO: Starting glTF 2.0 export
+01:13:59 | INFO: Extracting primitive: Spear_field_kit
+01:13:59 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:13:59 | INFO: Primitives created: 1
+01:14:00 | INFO: Finished glTF 2.0 export in 0.2730739116668701 s
+
+01:14:01 | INFO: Starting glTF 2.0 export
+01:14:01 | INFO: Extracting primitive: Spear_field_kit
+01:14:01 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:14:01 | INFO: Primitives created: 1
+01:14:01 | INFO: Finished glTF 2.0 export in 0.25686216354370117 s
+
+01:14:02 | INFO: Starting glTF 2.0 export
+01:14:02 | INFO: Extracting primitive: Spear_field_kit
+01:14:02 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:14:02 | INFO: Primitives created: 1
+01:14:02 | INFO: Finished glTF 2.0 export in 0.005034208297729492 s
+
+Info: Saved "archer.blend"
+01:14:02 | INFO: Starting glTF 2.0 export
+01:14:02 | INFO: Extracting primitive: Archer_field_kit
+01:14:02 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:14:02 | INFO: Primitives created: 1
+01:14:03 | INFO: Finished glTF 2.0 export in 0.2692601680755615 s
+
+01:14:04 | INFO: Starting glTF 2.0 export
+01:14:04 | INFO: Extracting primitive: Archer_field_kit
+01:14:04 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:14:04 | INFO: Primitives created: 1
+01:14:04 | INFO: Finished glTF 2.0 export in 0.25780415534973145 s
+
+01:14:05 | INFO: Starting glTF 2.0 export
+01:14:05 | INFO: Extracting primitive: Archer_field_kit
+01:14:05 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:14:05 | INFO: Primitives created: 1
+01:14:05 | INFO: Finished glTF 2.0 export in 0.2532169818878174 s
+
+Info: Saved "officer.blend"
+01:14:05 | INFO: Starting glTF 2.0 export
+01:14:05 | INFO: Extracting primitive: Officer_field_kit
+01:14:05 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:14:05 | INFO: Primitives created: 1
+01:14:06 | INFO: Finished glTF 2.0 export in 0.248429536819458 s
+
+01:14:07 | INFO: Starting glTF 2.0 export
+01:14:07 | INFO: Extracting primitive: Officer_field_kit
+01:14:07 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:14:07 | INFO: Primitives created: 1
+01:14:07 | INFO: Finished glTF 2.0 export in 0.24169254302978516 s
+
+01:14:08 | INFO: Starting glTF 2.0 export
+01:14:08 | INFO: Extracting primitive: Officer_field_kit
+01:14:08 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+01:14:08 | INFO: Primitives created: 1
+01:14:08 | INFO: Finished glTF 2.0 export in 0.005170583724975586 s
+
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 01:31:14)
+
+Blender quit
+
+real	0m12.298s
+user	0m12.143s
+sys	0m0.244s

@@ -15,6 +15,8 @@ Dieser Bericht trennt strikt zwischen **in dieser Sitzung ausgeführt und gemess
 | Draft-PR [#89](https://github.com/Ullmann27/Imperathen/pull/89): schwebende Militär-NPCs geerdet (setzt auf #87 auf) | CI wie #87: 85/85 Gruppen, Stadt-/Jungen-Tests grün, rot nur das Motion-Gate, jetzt **507** statt 587 (§14.13) |
 | Draft-PR [#90](https://github.com/Ullmann27/Imperathen/pull/90): Todes-Clip der 54 Company-Exporte geerdet (setzt auf #89 auf) | Sohlen-Durchdringung 16–21 cm → 0 (Engine ≤ 0,28 cm), Gleiten 0,8–1,05 m → 0,3–3,9 cm. Gemeinsam mit #87 + #88 + #89 gemessen: Suite 85/85, **Motion-Gate 507 → 382**, kein neuer Befund (§14.14). CI läuft |
 | Draft-PR [#91](https://github.com/Ullmann27/Imperathen/pull/91): gerissene Rocknaht der Grenz-NPCs (setzt auf #90 auf) | 10 GLBs, Rockrisse → 0 ohne Durchdringung; mit #87–#90 gemessen: Suite 85/85, **Gate 382 → 372**, kein neuer Befund (§14.15). CI läuft |
+| Draft-PR [#92](https://github.com/Ullmann27/Imperathen/pull/92): Dorf-Hocke „gather“ geerdet (setzt auf #91 auf) | Dorf 3,15 cm → 0 im Boden, Gleiten 2,3 → 0 cm; mit #87–#91 gemessen: Suite 85/85, **Gate 372 → 359**, kein neuer Befund (§14.16). CI läuft |
+| Reproduzierbarkeit | Mit Blender 4.3.2 (glTF-IO 4.3.47) entstehen Kompanie- und Dorf-GLBs bytegleich neu (Bogenschütze bis auf Float-Rauschen im `shoot`-Clip). Die Erdung aus #90/#92 ist im Build durchgängig nachgewiesen (§14.16) |
 | Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln, Bein-IK und Hüftschwenk im Todes-Clip, Helden-Rockregel und Tunika-Glättung für die Grenz-NPCs |
 | Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88, #89 und #90. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json`. 5. #90: Abschalten von Godots Keyframe-Optimierer für 54 Modelle (+3,5 % Importgröße) annehmen; Todes-Pose der Kompanie für das verbleibende Gleiten neu gestalten. 6. Tunika der Grenz-NPCs: Risse gegen häufigeres Durchscheinen des Körpers abwägen oder Künstler-Pass (§14.15) |
 
@@ -626,3 +628,30 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 - Die Tunika-Risse bleiben; sie tragen die übrigen Hautbefunde.
 - Vorbestehend und unverändert: Bei Zivilist und Altem (LOD 0) tritt der Körper bis 8,2 cm durch den Rock.
 - Keine menschliche Sichtabnahme, kein Fold7-Test.
+
+### 14.16 Dorf-Hocke „gather“ geerdet: Draft-PR [#92](https://github.com/Ullmann27/Imperathen/pull/92); Neuaufbau mit Blender 4.3.2
+
+**Befund:** Die Hocke `gather` senkt das Becken fest um 0,11 m. Dadurch stecken die Sohlen der Dorfbewohner 3,15 cm im Boden (Gleiten 2,3 cm); bei Grenz-Zivilist und Altem sind es 0,64 cm.
+
+**Lösung:**
+- Das Werkzeug aus #90 nimmt `--clip`.
+- Andere Clips als `death` schreibt es nur, wenn Durchdringung oder Gleiten um mehr als 1 mm besser wird und nichts schlechter.
+- Verworfen hat das Werkzeug dabei selbst: die Grenz-Zivilistin (Gleiten 0,97 → 1,97 cm) und Meshy (bereits sauber).
+- Geschrieben wurden 12 GLBs, jeweils nur `gather/Pelvis/translation` (`evidence/metrics/gather_ground_contact_24_glb.json`).
+
+**Ergebnis mit #87–#91:**
+- Suite 85/85.
+- Engine-Werte Dorf-`gather`: 3,06 → 0 cm Durchdringung, 2,21 → 0 cm Gleiten.
+- **Gate 372 → 359**, kein Clip schlechter, kein neuer Befund.
+- Logs: `evidence/logs/*_plus_pr90_pr91_pr92.txt`.
+
+**Neuaufbau mit Blender 4.3.2** (offizielles Archiv, SHA-256 geprüft; glTF-IO 4.3.47 = Generator der committeten GLBs):
+
+| Prüfung | Ergebnis |
+|---|---|
+| `art/soldiers/build.py` auf `2c54954` | 10 von 12 GLBs bytegleich; `archer_near/mid` weichen nur in fünf `shoot`-Kanälen um ≤ 3·10⁻⁷ ab (Bogen-IK) |
+| dasselbe auf #90 (Erdung im Build) | heavy/officer/spear bytegleich mit den committeten, geerdeten GLBs; beim Bogenschützen ist der Tod-Kanal identisch (Log: `evidence/logs/blender432_soldiers_rebuild_pr90.txt`) |
+| `art/village_characters/build.py` auf `2c54954` | alle vier `villager_*.glb` bytegleich |
+| dasselbe auf #92 | Tod-Kanal bytegleich; im Gather-Kanal 27 Werte mit ≤ 1,7·10⁻¹⁸ m Abweichung (NumPy 1.24.3 in Blender gegenüber lokal) |
+
+**Folge für Fable:** Kompanie und Dorf lassen sich künftig verlässlich mit Blender 4.3.2 neu bauen. Damit sind Quellkorrekturen möglich, etwa die Angriffspose der Kompanie, deren linker Fuß im Battle-Pfad 16,8 cm über den Boden gleitet (`art/soldiers/build.py`, Pose `attack`: `Thigh_L −12°` ohne Kniebeugung). Diese Choreografie-Änderung habe ich bewusst **nicht** vorgenommen. Grenz-NPCs und Meshy habe ich nicht neu gebaut, weil laut Team A dabei neuere Quellen einfließen würden.

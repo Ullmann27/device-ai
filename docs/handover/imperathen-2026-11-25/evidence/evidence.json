@@ -371,6 +371,56 @@
     "keine menschliche Sichtabnahme",
     "kein Fold7-Test"
    ]
+  },
+  {
+   "engine_version": "Godot 4.7.2.stable.official.ed1daf0bf",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "artifact_url": null,
+   "run_url": null,
+   "gate_id": "VILLAGE-GATHER-GROUND-PR92",
+   "source_sha": "Imperathen f30caec on 293d4b6 (measured on combined #87-#91)",
+   "input_hashes": {
+    "report": "evidence/metrics/gather_ground_contact_24_glb.json"
+   },
+   "scenario_id": "gather clip grounding; full suite; motion gate",
+   "steps": [
+    "ground_death_clip.py --clip gather on 24 GLBs",
+    "accessor comparison",
+    "check_prototype full",
+    "motion gate"
+   ],
+   "expected": "no sole penetration in gather, nothing worse",
+   "observed": "12 GLBs written (villager 3.15 cm -> 0, slip 2.29 -> 0; frontier man/elder 0.64 -> 0); engine villager gather 3.06 -> 0 cm; suite 85/85; gate 372 -> 359, no new blocker",
+   "status": "PASS",
+   "unresolved": [
+    "keine menschliche Sichtabnahme",
+    "kein Fold7-Test"
+   ]
+  },
+  {
+   "engine_version": "Blender 4.3.2 (hash 32f5fdce0a0a), glTF-IO 4.3.47",
+   "platform": "Linux x86_64 cloud container, 4 CPU, no GPU, headless; not Android, not Fold7",
+   "reviewer": "keiner (unabhaengige Pruefung durch Fable ausstehend)",
+   "artifact_url": null,
+   "run_url": null,
+   "gate_id": "BLENDER-432-REBUILD",
+   "source_sha": "2c54954, 037ac6e (#90), f30caec (#92)",
+   "input_hashes": {
+    "blender-4.3.2-linux-x64.tar.xz": "4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6"
+   },
+   "scenario_id": "blender -b --factory-startup -t 2 -P art/soldiers/build.py | art/village_characters/build.py",
+   "steps": [
+    "rebuild at base",
+    "rebuild with grounding integration",
+    "byte comparison with committed GLBs"
+   ],
+   "expected": "committed GLBs reproducible; post-export grounding reproduces committed bytes",
+   "observed": "soldiers 10/12 byte-identical (archer shoot float noise <=3e-7); villagers 4/4 identical; with #90/#92 integration: death channels identical, gather 27 values <=1.7e-18 m",
+   "status": "PASS",
+   "unresolved": [
+    "Grenz-NPCs und Meshy nicht neu gebaut (wuerden neuere Quellen uebernehmen)"
+   ]
   }
  ]
 }
