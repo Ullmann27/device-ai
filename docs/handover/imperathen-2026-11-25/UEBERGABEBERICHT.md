@@ -16,6 +16,7 @@ Dieser Bericht trennt strikt zwischen **in dieser Sitzung ausgeführt und gemess
 | Draft-PR [#90](https://github.com/Ullmann27/Imperathen/pull/90): Todes-Clip der 54 Company-Exporte geerdet (setzt auf #89 auf) | Sohlen-Durchdringung 16–21 cm → 0 (Engine ≤ 0,28 cm), Gleiten 0,8–1,05 m → 0,3–3,9 cm. Gemeinsam mit #87 + #88 + #89 gemessen: Suite 85/85, **Motion-Gate 507 → 382**, kein neuer Befund (§14.14). CI läuft |
 | Draft-PR [#91](https://github.com/Ullmann27/Imperathen/pull/91): gerissene Rocknaht der Grenz-NPCs (setzt auf #90 auf) | 10 GLBs, Rockrisse → 0 ohne Durchdringung; mit #87–#90 gemessen: Suite 85/85, **Gate 382 → 372**, kein neuer Befund (§14.15). CI läuft |
 | Draft-PR [#92](https://github.com/Ullmann27/Imperathen/pull/92): Dorf-Hocke „gather“ geerdet (setzt auf #91 auf) | Dorf 3,15 cm → 0 im Boden, Gleiten 2,3 → 0 cm; mit #87–#91 gemessen: Suite 85/85, **Gate 372 → 359**, kein neuer Befund (§14.16). CI läuft |
+| Draft-PR [#93](https://github.com/Ullmann27/Imperathen/pull/93): Tod und Hocke des Helden geerdet (setzt auf #92 auf) | Engine Tod 0,75/2,13 → 0,05/1,35 cm (Durchdringung/Gleiten), Hocke 0,69 → 0,05 cm; Suite 85/85, **Gate 359 → 355**, kein neuer Befund (§14.17). CI läuft |
 | Reproduzierbarkeit | Mit Blender 4.3.2 (glTF-IO 4.3.47) entstehen Kompanie- und Dorf-GLBs bytegleich neu (Bogenschütze bis auf Float-Rauschen im `shoot`-Clip). Die Erdung aus #90/#92 ist im Build durchgängig nachgewiesen (§14.16) |
 | Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln, Bein-IK und Hüftschwenk im Todes-Clip, Helden-Rockregel und Tunika-Glättung für die Grenz-NPCs |
 | Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88, #89 und #90. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json`. 5. #90: Abschalten von Godots Keyframe-Optimierer für 54 Modelle (+3,5 % Importgröße) annehmen; Todes-Pose der Kompanie für das verbleibende Gleiten neu gestalten. 6. Tunika der Grenz-NPCs: Risse gegen häufigeres Durchscheinen des Körpers abwägen oder Künstler-Pass (§14.15) |
@@ -655,3 +656,30 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 | dasselbe auf #92 | Tod-Kanal bytegleich; im Gather-Kanal 27 Werte mit ≤ 1,7·10⁻¹⁸ m Abweichung (NumPy 1.24.3 in Blender gegenüber lokal) |
 
 **Folge für Fable:** Kompanie und Dorf lassen sich künftig verlässlich mit Blender 4.3.2 neu bauen. Damit sind Quellkorrekturen möglich, etwa die Angriffspose der Kompanie, deren linker Fuß im Battle-Pfad 16,8 cm über den Boden gleitet (`art/soldiers/build.py`, Pose `attack`: `Thigh_L −12°` ohne Kniebeugung). Diese Choreografie-Änderung habe ich bewusst **nicht** vorgenommen. Grenz-NPCs und Meshy habe ich nicht neu gebaut, weil laut Team A dabei neuere Quellen einfließen würden.
+
+### 14.17 Tod und Hocke des Helden: Draft-PR [#93](https://github.com/Ullmann27/Imperathen/pull/93)
+
+**Messbasis:** Erst habe ich zwei Varianten nur mit der Messgruppe `motion_measurement` verglichen:
+- **Nur Optimierer aus:** Der Tod des Helden geht in der Engine von 0,75 → 0,08 cm Durchdringung; der Optimierer war hier also ebenfalls die Ursache. Das Gleiten bleibt bei 2,13 cm.
+- **Zusätzlich Erdung (Tod und Hocke):** Tod 0,05 cm / 1,35 cm, Hocke 0,05 / 0,05 cm.
+
+**#93 übernimmt Variante 2.** `build_hero.py` ruft den Schritt nach `pack_hero_glb` auf.
+
+**Volle Suite mit #87–#92:** 85/85, **Gate 359 → 355**, kein Messwert schlechter, kein neuer Befund.
+
+**Bilder:** `evidence/godot_frames/23_godot_held_tod_hocke_vorher_nachher.jpg`; die Unterschiede sind sichtbar klein, eine Regression ist nicht erkennbar. Werkzeug: `werkzeuge/godot_hero_death_capture.gd`.
+
+**Vorbestehender Befund (nicht durch #93):** `tools/characters/validate_hero.py` lehnt `hero_quality_0.glb` schon auf der Basis ab (`external URI/path is forbidden`). Grund ist der Lieferschritt `pack_hero_glb`, der ein Bild als externe Datei auslagert. Validator und Packer widersprechen sich; `art/hero_quality/validation.json` (Stand 22.11.) ist damit veraltet. Beleg: `evidence/metrics/validate_hero_vorher_lod0_externe_uri.json`. Entscheidung des Projektinhabers nötig.
+
+**Offen:** Die übrigen Gleit-Befunde des Helden stammen von prozeduralen Kicks zur Laufzeit (1,9–2,0 cm), nicht aus GLB-Clips.
+
+**Gate-Verlauf des PR-Stapels** (jeweils lokal gemessen mit allen Vorgängern, Godot 4.7.2):
+
+| Stand | Gate | CI |
+|---|---|---|
+| #87 | 587 | bestätigt |
+| + #89 | 507 | bestätigt |
+| + #90 | 382 | bestätigt |
+| + #91 | 372 | läuft |
+| + #92 | 359 | läuft |
+| + #93 | 355 | läuft |

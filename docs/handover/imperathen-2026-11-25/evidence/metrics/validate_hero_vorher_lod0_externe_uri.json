@@ -1,0 +1,723 @@
+{
+  "schema_version": 1,
+  "validator": "tools/characters/validate_hero.py",
+  "checked_at_utc": "2026-11-26T01:45:17.071545+00:00",
+  "scope": "Static decoded export bytes only; no visual, engine, or Android device approval.",
+  "status": "failed",
+  "triangles_strictly_decrease": false,
+  "errors": [
+    "Actual triangle counts must strictly decrease from LOD 0 to LOD 3"
+  ],
+  "assets": [
+    {
+      "path": "prototype/assets/characters/hero_quality_0.glb",
+      "lod": 0,
+      "status": "failed",
+      "errors": [
+        "InvalidAsset: images[1].uri: external URI/path is forbidden; embed the bytes in the GLB"
+      ],
+      "warnings": [],
+      "bytes": 9254508,
+      "sha256": "f0600db20ea4957fc50411439fa8b1591ec4fe4389326a27bde89aab6bb63f51"
+    },
+    {
+      "path": "prototype/assets/characters/hero_quality_1.glb",
+      "lod": 1,
+      "status": "passed",
+      "errors": [],
+      "warnings": [
+        "Skin/animation runtime behavior is outside this static export gate"
+      ],
+      "bytes": 6035452,
+      "sha256": "e6705a4a2eeae2f18c2c7fa761b442c4cf07382a294ac389939a630230e5ac0b",
+      "geometry": {
+        "triangles_unique_meshes": 16465,
+        "meshes": 14,
+        "primitives": 14,
+        "materials": 5,
+        "textured_materials": 4
+      },
+      "textures": {
+        "maximum_edge": 1024,
+        "allowed_maximum_edge": 1024,
+        "unique_embedded_images": 9,
+        "rgba8_top_level_bytes_estimate": 22020096,
+        "memory_note": "Unique source images at 4 bytes/pixel, without mipmaps; not measured Android VRAM or compressed GPU allocation",
+        "images": [
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 423373,
+            "sha256": "88c18151a4f4757f612ca8acf4ee5e8e6fb6b980f7142c40cfff9d77dca28685",
+            "index": 0,
+            "name": "HeroSkin_micro_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 1349313,
+            "sha256": "31fe2cb067f680617e586d64f00b36baf2f6a912be07d7cc8cb379dbb4b1bbad",
+            "index": 1,
+            "name": "young_lightskinned_female_diffuse",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 266342,
+            "sha256": "e26c5e4898af9e20811f453cc1e1c071fb129bf6da4712f38a634361fdd5094d",
+            "index": 2,
+            "name": "HeroSkin_roughness",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 5740,
+            "sha256": "0c12c174c08d9eaae4d79338bda138473722ad42842e22545dab53b2c7dcf014",
+            "index": 3,
+            "name": "HeroLinen_weave_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 349711,
+            "sha256": "9c929b72fae0a6e33d1e0e91bba4f575a8060021fd904db3c9cbc4559dc0c466",
+            "index": 4,
+            "name": "HeroLinen_woven_base",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 268651,
+            "sha256": "ddf78f07fe4773416f0c8983fe45d77594996e7eb8fb55804b016426a2650415",
+            "index": 5,
+            "name": "HeroLinen_roughness",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 610817,
+            "sha256": "4659691c7295ad6206c78b003e5fd0e5f91dcd53032fa914a229bb48cabe424b",
+            "index": 6,
+            "name": "brown_eye",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 551086,
+            "sha256": "0da14bf7738aff074e1190eb5f14285464757c7064eb420a188e8190d76ba8e3",
+            "index": 7,
+            "name": "short02_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 1024,
+            "height": 1024,
+            "bytes": 1027321,
+            "sha256": "89dd3e56a44b6d59729f6431f4aa42d3812cff4fc01d30e0256df902fa4dcd3a",
+            "index": 8,
+            "name": "short02_diffuse",
+            "embedded": true
+          }
+        ]
+      },
+      "skin_bones": [
+        [
+          "Pelvis",
+          "Spine",
+          "Head",
+          "Arm_L",
+          "Forearm_L",
+          "Hand_L",
+          "Arm_R",
+          "Forearm_R",
+          "Hand_R",
+          "Thigh_L",
+          "Shin_L",
+          "Foot_L",
+          "Thigh_R",
+          "Shin_R",
+          "Foot_R"
+        ]
+      ],
+      "skin_weights": {
+        "vertex_rows": 9317,
+        "maximum_sum_error": 1.1920928955078125e-07,
+        "invalid_joint_indices": 0,
+        "invalid_weights": 0
+      },
+      "body_morphs": {
+        "Mature": {
+          "nonzero_position_rows": 6191,
+          "maximum_displacement_m": 0.02959365729475211,
+          "position_delta_sha256": "79d5575f8b258c120b57a9c58e8d96513893a240fc076a5bad255a07b67ce1db"
+        },
+        "Companion": {
+          "nonzero_position_rows": 1962,
+          "maximum_displacement_m": 0.0058792219261085575,
+          "position_delta_sha256": "d73bd2140a9041ae335370a7059b81c31b5bf5560f8fdbf2c004f431e9dced7b"
+        },
+        "Blink_L": {
+          "nonzero_position_rows": 118,
+          "maximum_displacement_m": 0.010968679313062576,
+          "position_delta_sha256": "16baa12bc1d862722a77e337f44cc2e92d15844ecb77f792837ba43ef3174fee",
+          "maximum_difference_from_other_blink_m": 0.010968679313062576
+        },
+        "Blink_R": {
+          "nonzero_position_rows": 122,
+          "maximum_displacement_m": 0.010967226658152843,
+          "position_delta_sha256": "43978354b638e31fc131dbdfa46a7e011aa6aa9804199beb921168fac73ac781",
+          "maximum_difference_from_other_blink_m": 0.010968679313062576
+        },
+        "JawOpen": {
+          "nonzero_position_rows": 513,
+          "maximum_displacement_m": 0.018194614719773416,
+          "position_delta_sha256": "3414886551f03703c96ad843c88a3b7e523b6fe802a8d8817b5784751b69c762"
+        },
+        "Smile": {
+          "nonzero_position_rows": 478,
+          "maximum_displacement_m": 0.00508198621341003,
+          "position_delta_sha256": "b0e6759c2a8d652ae74346bb33f896e6e5a98eab22cd9e8be12a8dce885978ba"
+        },
+        "BrowDown": {
+          "nonzero_position_rows": 577,
+          "maximum_displacement_m": 0.0035582780838012695,
+          "position_delta_sha256": "2eb2d6fdb7e44324d2fb69b29dc3f82665c4948a0fc10c5a36698fd3b357cdce"
+        }
+      },
+      "clips": {
+        "idle": {
+          "duration_seconds": 2.0,
+          "varying_sampled_channels": 3
+        },
+        "march": {
+          "duration_seconds": 1.0,
+          "varying_sampled_channels": 13
+        },
+        "run": {
+          "duration_seconds": 0.7200000286102295,
+          "varying_sampled_channels": 13
+        },
+        "gather": {
+          "duration_seconds": 1.159999966621399,
+          "varying_sampled_channels": 9
+        },
+        "talk": {
+          "duration_seconds": 1.3600000143051147,
+          "varying_sampled_channels": 3
+        },
+        "train": {
+          "duration_seconds": 0.8799999952316284,
+          "varying_sampled_channels": 6
+        },
+        "work": {
+          "duration_seconds": 1.600000023841858,
+          "varying_sampled_channels": 4
+        },
+        "block": {
+          "duration_seconds": 1.2000000476837158,
+          "varying_sampled_channels": 1
+        },
+        "attack": {
+          "duration_seconds": 0.800000011920929,
+          "varying_sampled_channels": 6
+        },
+        "hit": {
+          "duration_seconds": 0.47999998927116394,
+          "varying_sampled_channels": 3
+        },
+        "death": {
+          "duration_seconds": 1.2000000476837158,
+          "varying_sampled_channels": 44
+        }
+      },
+      "belt_topology": {
+        "vertices": 96,
+        "triangles": 96,
+        "largest_circumferential_edge_degrees": 7.500002407358903,
+        "scope": "Rest topology only; animated garment clearance is checked separately"
+      }
+    },
+    {
+      "path": "prototype/assets/characters/hero_quality_2.glb",
+      "lod": 2,
+      "status": "passed",
+      "errors": [],
+      "warnings": [
+        "Skin/animation runtime behavior is outside this static export gate"
+      ],
+      "bytes": 3032928,
+      "sha256": "b61797af321454919d8ab0e7fd6fa6f5c1fcf0443acbc39ae0a96db38f8e4281",
+      "geometry": {
+        "triangles_unique_meshes": 7297,
+        "meshes": 14,
+        "primitives": 14,
+        "materials": 5,
+        "textured_materials": 4
+      },
+      "textures": {
+        "maximum_edge": 512,
+        "allowed_maximum_edge": 512,
+        "unique_embedded_images": 9,
+        "rgba8_top_level_bytes_estimate": 9437184,
+        "memory_note": "Unique source images at 4 bytes/pixel, without mipmaps; not measured Android VRAM or compressed GPU allocation",
+        "images": [
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 423373,
+            "sha256": "88c18151a4f4757f612ca8acf4ee5e8e6fb6b980f7142c40cfff9d77dca28685",
+            "index": 0,
+            "name": "HeroSkin_micro_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 367153,
+            "sha256": "5a4bf988586b1709a33b6b5d5c4a394a1e20e4a3896a0da68dba2c23d6460a6d",
+            "index": 1,
+            "name": "young_lightskinned_female_diffuse",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 266342,
+            "sha256": "e26c5e4898af9e20811f453cc1e1c071fb129bf6da4712f38a634361fdd5094d",
+            "index": 2,
+            "name": "HeroSkin_roughness",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 5740,
+            "sha256": "0c12c174c08d9eaae4d79338bda138473722ad42842e22545dab53b2c7dcf014",
+            "index": 3,
+            "name": "HeroLinen_weave_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 349711,
+            "sha256": "9c929b72fae0a6e33d1e0e91bba4f575a8060021fd904db3c9cbc4559dc0c466",
+            "index": 4,
+            "name": "HeroLinen_woven_base",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 268651,
+            "sha256": "ddf78f07fe4773416f0c8983fe45d77594996e7eb8fb55804b016426a2650415",
+            "index": 5,
+            "name": "HeroLinen_roughness",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 246739,
+            "sha256": "c74cc6b65f82046ffa99934424ef9409ecd2b379db68df894a4665bb5525dc16",
+            "index": 6,
+            "name": "brown_eye",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 186023,
+            "sha256": "858a8bd289026351587d6d5a84538b1d7615332b2d86cbab08cccbb4334a6440",
+            "index": 7,
+            "name": "short02_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 512,
+            "height": 512,
+            "bytes": 269168,
+            "sha256": "bee7c6d6994c404e7aaa1999f835026bd96aef2cd2fd6ad59b8090122248518f",
+            "index": 8,
+            "name": "short02_diffuse",
+            "embedded": true
+          }
+        ]
+      },
+      "skin_bones": [
+        [
+          "Pelvis",
+          "Spine",
+          "Head",
+          "Arm_L",
+          "Forearm_L",
+          "Hand_L",
+          "Arm_R",
+          "Forearm_R",
+          "Hand_R",
+          "Thigh_L",
+          "Shin_L",
+          "Foot_L",
+          "Thigh_R",
+          "Shin_R",
+          "Foot_R"
+        ]
+      ],
+      "skin_weights": {
+        "vertex_rows": 4408,
+        "maximum_sum_error": 1.1920928955078125e-07,
+        "invalid_joint_indices": 0,
+        "invalid_weights": 0
+      },
+      "body_morphs": {
+        "Mature": {
+          "nonzero_position_rows": 2899,
+          "maximum_displacement_m": 0.029476922759093784,
+          "position_delta_sha256": "44a168aaa0c994050531e5481126ab35f5b681859a9443a96514f144d492cd00"
+        },
+        "Companion": {
+          "nonzero_position_rows": 836,
+          "maximum_displacement_m": 0.005850505513413602,
+          "position_delta_sha256": "d56641e8ffcb55871c9522376854f50392b939bf919599fd4ff3ebbe46f7ca4a"
+        },
+        "Blink_L": {
+          "nonzero_position_rows": 51,
+          "maximum_displacement_m": 0.008683495309539426,
+          "position_delta_sha256": "0f1d192d2425a5b9c942fcd06246f00ffa5712d34aa20b0b0381231b1e2b20bf",
+          "maximum_difference_from_other_blink_m": 0.01069038407603987
+        },
+        "Blink_R": {
+          "nonzero_position_rows": 49,
+          "maximum_displacement_m": 0.01069038407603987,
+          "position_delta_sha256": "271b5c45a01251198aefe10e308bda053b0f7a782840cf1f0d65962320fef2ae",
+          "maximum_difference_from_other_blink_m": 0.01069038407603987
+        },
+        "JawOpen": {
+          "nonzero_position_rows": 220,
+          "maximum_displacement_m": 0.01788167585398247,
+          "position_delta_sha256": "940ceed13abb94852cb19d6cf3673739f4ac96c174e0fb60aef5db7d84d1de36"
+        },
+        "Smile": {
+          "nonzero_position_rows": 183,
+          "maximum_displacement_m": 0.004597001746080991,
+          "position_delta_sha256": "80c4cb98f666a99205c869425232b62d5190b13f72d10f66b7ed9f776129c1ab"
+        },
+        "BrowDown": {
+          "nonzero_position_rows": 237,
+          "maximum_displacement_m": 0.0029124021530151367,
+          "position_delta_sha256": "520f79f46d5460ffbeec677bc90541bf72463eb210f40b524f18393952b7c6c1"
+        }
+      },
+      "clips": {
+        "idle": {
+          "duration_seconds": 2.0,
+          "varying_sampled_channels": 3
+        },
+        "march": {
+          "duration_seconds": 1.0,
+          "varying_sampled_channels": 13
+        },
+        "run": {
+          "duration_seconds": 0.7200000286102295,
+          "varying_sampled_channels": 13
+        },
+        "gather": {
+          "duration_seconds": 1.159999966621399,
+          "varying_sampled_channels": 9
+        },
+        "talk": {
+          "duration_seconds": 1.3600000143051147,
+          "varying_sampled_channels": 3
+        },
+        "train": {
+          "duration_seconds": 0.8799999952316284,
+          "varying_sampled_channels": 6
+        },
+        "work": {
+          "duration_seconds": 1.600000023841858,
+          "varying_sampled_channels": 4
+        },
+        "block": {
+          "duration_seconds": 1.2000000476837158,
+          "varying_sampled_channels": 1
+        },
+        "attack": {
+          "duration_seconds": 0.800000011920929,
+          "varying_sampled_channels": 6
+        },
+        "hit": {
+          "duration_seconds": 0.47999998927116394,
+          "varying_sampled_channels": 3
+        },
+        "death": {
+          "duration_seconds": 1.2000000476837158,
+          "varying_sampled_channels": 44
+        }
+      },
+      "belt_topology": {
+        "vertices": 96,
+        "triangles": 96,
+        "largest_circumferential_edge_degrees": 7.50000434112582,
+        "scope": "Rest topology only; animated garment clearance is checked separately"
+      }
+    },
+    {
+      "path": "prototype/assets/characters/hero_quality_3.glb",
+      "lod": 3,
+      "status": "passed",
+      "errors": [],
+      "warnings": [
+        "Skin/animation runtime behavior is outside this static export gate"
+      ],
+      "bytes": 974108,
+      "sha256": "c125c6a7dd65d29dabfe309f1e21494dc62349cb04a5c9db959068e874bd6475",
+      "geometry": {
+        "triangles_unique_meshes": 2908,
+        "meshes": 14,
+        "primitives": 14,
+        "materials": 5,
+        "textured_materials": 4
+      },
+      "textures": {
+        "maximum_edge": 256,
+        "allowed_maximum_edge": 256,
+        "unique_embedded_images": 9,
+        "rgba8_top_level_bytes_estimate": 2359296,
+        "memory_note": "Unique source images at 4 bytes/pixel, without mipmaps; not measured Android VRAM or compressed GPU allocation",
+        "images": [
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 90730,
+            "sha256": "77b0eee955cdd80c532f851fd3cf3e906368ad19fb92bf960f5e6d24b10bcb5a",
+            "index": 0,
+            "name": "HeroSkin_micro_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 99424,
+            "sha256": "fc079fb446537386d0736a016fa03aaaf4d326e40d4061d8a26ec5e178b2dc95",
+            "index": 1,
+            "name": "young_lightskinned_female_diffuse",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 56580,
+            "sha256": "0cc33a058353c32cd0507d0aad3d844c060b5729537a1a7cdc94b4d67efabb2c",
+            "index": 2,
+            "name": "HeroSkin_roughness",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 2090,
+            "sha256": "7bbfba8fbf4124f4c3483a19914a1e6dc236dc031c0a7c698bc048f48560525f",
+            "index": 3,
+            "name": "HeroLinen_weave_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 81809,
+            "sha256": "c1af273886427671cc013aca5be9f195bd19e9cdc2ff52dec0ec8a72445c48a2",
+            "index": 4,
+            "name": "HeroLinen_woven_base",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 56474,
+            "sha256": "56e752f6de36461cc634dd1043b8dfbca0e6d21ca40197e9a6da2c35156bdd49",
+            "index": 5,
+            "name": "HeroLinen_roughness",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 71291,
+            "sha256": "2981ab1615717e9974a788ea4316b9dce501f62dab77a365ba40c67718c168af",
+            "index": 6,
+            "name": "brown_eye",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 60071,
+            "sha256": "3524254819145c0ef4d70a7c2b651033f9d2b57ef15e7a5f31ed6e2e934026c6",
+            "index": 7,
+            "name": "short02_normal",
+            "embedded": true
+          },
+          {
+            "mime_type": "image/png",
+            "width": 256,
+            "height": 256,
+            "bytes": 69890,
+            "sha256": "b08c13981c5127e3283c733d5062ca554b4e1dc8903d5a41a91dede4f31bdf32",
+            "index": 8,
+            "name": "short02_diffuse",
+            "embedded": true
+          }
+        ]
+      },
+      "skin_bones": [
+        [
+          "Pelvis",
+          "Spine",
+          "Head",
+          "Arm_L",
+          "Forearm_L",
+          "Hand_L",
+          "Arm_R",
+          "Forearm_R",
+          "Hand_R",
+          "Thigh_L",
+          "Shin_L",
+          "Foot_L",
+          "Thigh_R",
+          "Shin_R",
+          "Foot_R"
+        ]
+      ],
+      "skin_weights": {
+        "vertex_rows": 1955,
+        "maximum_sum_error": 8.335337042808533e-08,
+        "invalid_joint_indices": 0,
+        "invalid_weights": 0
+      },
+      "body_morphs": {
+        "Mature": {
+          "nonzero_position_rows": 1246,
+          "maximum_displacement_m": 0.02920835020869721,
+          "position_delta_sha256": "5b8f208a38d6fc79196e2325427e8e41e19d0bc7aad1b114caa775a7f0405f1e"
+        },
+        "Companion": {
+          "nonzero_position_rows": 349,
+          "maximum_displacement_m": 0.0058443495349552775,
+          "position_delta_sha256": "8608ef27ea030a7e477cac7cd35e643b423d3dd17a23b103a049f129a6b3f7f2"
+        },
+        "Blink_L": {
+          "nonzero_position_rows": 21,
+          "maximum_displacement_m": 0.00822883345916145,
+          "position_delta_sha256": "3a3b9b5e501ab93da4780664afd3167c0d1d18b1e0b1196f531067dda46e3680",
+          "maximum_difference_from_other_blink_m": 0.008547847334463695
+        },
+        "Blink_R": {
+          "nonzero_position_rows": 25,
+          "maximum_displacement_m": 0.008547847334463695,
+          "position_delta_sha256": "11c3e2598253ee1cf7f4f8c1b37027e7b4ac9436da66913fcc1b4ce91188bf3a",
+          "maximum_difference_from_other_blink_m": 0.008547847334463695
+        },
+        "JawOpen": {
+          "nonzero_position_rows": 95,
+          "maximum_displacement_m": 0.01786864036509931,
+          "position_delta_sha256": "3983d4ef6c80d5431352961c80506cf34ae8d0eb6b505858a9b3abd66e7af45d"
+        },
+        "Smile": {
+          "nonzero_position_rows": 80,
+          "maximum_displacement_m": 0.004699014665643962,
+          "position_delta_sha256": "bea82c8f52657e14302f79626d272f9060acfc134f547b3cdb5b93315a4fe3ce"
+        },
+        "BrowDown": {
+          "nonzero_position_rows": 99,
+          "maximum_displacement_m": 0.002760171890258789,
+          "position_delta_sha256": "9b41f8aaa1a12ffc718121eb0be7ea42b88159c4ceb4fda93d2a16025ffa8fe3"
+        }
+      },
+      "clips": {
+        "idle": {
+          "duration_seconds": 2.0,
+          "varying_sampled_channels": 3
+        },
+        "march": {
+          "duration_seconds": 1.0,
+          "varying_sampled_channels": 13
+        },
+        "run": {
+          "duration_seconds": 0.7200000286102295,
+          "varying_sampled_channels": 13
+        },
+        "gather": {
+          "duration_seconds": 1.159999966621399,
+          "varying_sampled_channels": 9
+        },
+        "talk": {
+          "duration_seconds": 1.3600000143051147,
+          "varying_sampled_channels": 3
+        },
+        "train": {
+          "duration_seconds": 0.8799999952316284,
+          "varying_sampled_channels": 6
+        },
+        "work": {
+          "duration_seconds": 1.600000023841858,
+          "varying_sampled_channels": 4
+        },
+        "block": {
+          "duration_seconds": 1.2000000476837158,
+          "varying_sampled_channels": 1
+        },
+        "attack": {
+          "duration_seconds": 0.800000011920929,
+          "varying_sampled_channels": 6
+        },
+        "hit": {
+          "duration_seconds": 0.47999998927116394,
+          "varying_sampled_channels": 3
+        },
+        "death": {
+          "duration_seconds": 1.2000000476837158,
+          "varying_sampled_channels": 44
+        }
+      },
+      "belt_topology": {
+        "vertices": 96,
+        "triangles": 96,
+        "largest_circumferential_edge_degrees": 7.500003704351547,
+        "scope": "Rest topology only; animated garment clearance is checked separately"
+      }
+    }
+  ]
+}
