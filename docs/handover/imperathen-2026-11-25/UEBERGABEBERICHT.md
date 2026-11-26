@@ -17,7 +17,7 @@ Dieser Bericht trennt strikt zwischen **in dieser Sitzung ausgeführt und gemess
 | Draft-PR [#91](https://github.com/Ullmann27/Imperathen/pull/91): gerissene Rocknaht der Grenz-NPCs (setzt auf #90 auf) | 10 GLBs, Rockrisse → 0 ohne Durchdringung; mit #87–#90 gemessen: Suite 85/85, **Gate 382 → 372**, kein neuer Befund (§14.15). CI bestätigt (372) |
 | Draft-PR [#92](https://github.com/Ullmann27/Imperathen/pull/92): Dorf-Hocke „gather“ geerdet (setzt auf #91 auf) | Dorf 3,15 cm → 0 im Boden, Gleiten 2,3 → 0 cm; mit #87–#91 gemessen: Suite 85/85, **Gate 372 → 359**, kein neuer Befund (§14.16). CI bestätigt (359) |
 | Draft-PR [#93](https://github.com/Ullmann27/Imperathen/pull/93): Tod und Hocke des Helden geerdet (setzt auf #92 auf) | Engine Tod 0,75/2,13 → 0,05/1,35 cm (Durchdringung/Gleiten), Hocke 0,69 → 0,05 cm; Suite 85/85, **Gate 359 → 355**, kein neuer Befund (§14.17). CI bestätigt (355) |
-| Draft-PR [#94](https://github.com/Ullmann27/Imperathen/pull/94): Nieten des Grenz-Kits auf ihren Platten (setzt auf #93 auf) | Schulter-Nieten heben bis 8 cm ab → 0 (an der Schulterplatte gebunden), Brust-Nieten schweben bis 4 cm vor der Platte → aufgesetzt; Suite 85/85, Gate 355 unverändert, jeder Messwert identisch (§14.19). CI läuft |
+| Draft-PR [#94](https://github.com/Ullmann27/Imperathen/pull/94): Nieten des Grenz-Kits auf ihren Platten (setzt auf #93 auf) | Schulter-Nieten heben bis 8 cm ab → 0 (an der Schulterplatte gebunden), Brust-Nieten schweben bis 4 cm vor der Platte → aufgesetzt; Suite 85/85, Gate 355 unverändert, jeder Messwert identisch (§14.19). CI bestätigt (355, Befundliste zeilengleich mit #93) |
 | Reproduzierbarkeit | Mit Blender 4.3.2 (glTF-IO 4.3.47) entstehen Kompanie- und Dorf-GLBs bytegleich neu (Bogenschütze bis auf Float-Rauschen im `shoot`-Clip). Die Erdung aus #90/#92 ist im Build durchgängig nachgewiesen (§14.16) |
 | Verworfen (gemessen schlechter oder ohne Nutzen) | Knöchel-Gewichtsglättung, farbbasierte Insel-Zuordnung, Entfernen deckungsgleicher Griffinseln, Bein-IK und Hüftschwenk im Todes-Clip, Helden-Rockregel und Tunika-Glättung für die Grenz-NPCs |
 | Entscheidungen für den Projektinhaber | 1. Ersetzte Sohlen-Schranke (`rest_normal.y ≥ 0,35`) bestätigen. 2. Sichtabnahme #88, #89 und #90. 3. Künstler-Pass am Originalnetz für Fuß-Bindpose, Griffrest und saubere Hand/Rock-Trennung. 4. Registrierung des Jungen im `motion_contract.json`. 5. #90: Abschalten von Godots Keyframe-Optimierer für 54 Modelle (+3,5 % Importgröße) annehmen; Todes-Pose der Kompanie für das verbleibende Gleiten neu gestalten. 6. Tunika der Grenz-NPCs: Risse gegen häufigeres Durchscheinen des Körpers abwägen oder Künstler-Pass (§14.15) |
@@ -684,7 +684,7 @@ Versuch: Inseln entfernen, deren Vertices exakt auf den Vertices des Original-Sc
 | + #91 | 372 | bestätigt |
 | + #92 | 359 | bestätigt |
 | + #93 | 355 | bestätigt |
-| + #94 | 355 | läuft |
+| + #94 | 355 | bestätigt |
 
 ### 14.18 Entscheidungsgrundlage Tunika der Grenz-NPCs (nicht umgesetzt)
 
@@ -768,7 +768,7 @@ Empfohlene Reihenfolge: #87 → #89 → #90 → #91 → #92 → #93 → #94. #88
 | + #91 | 85/85 | 372 | bestätigt |
 | + #92 | 85/85 | 359 | bestätigt |
 | + #93 | 85/85 | 355 | bestätigt |
-| + #94 | 85/85 | 355 (jeder Messwert identisch) | siehe PR |
+| + #94 | 85/85 | 355 (jeder Messwert identisch) | bestätigt (Befundliste zeilengleich mit #93) |
 
 Das Gate bleibt rot. Die restlichen 355 Befunde verteilen sich so:
 - 84 Vertragsregistrierungen (nicht klassifizierte Ressourcen und Skripte, u. a. der in der CI erzeugte Junge und die Stadt);
